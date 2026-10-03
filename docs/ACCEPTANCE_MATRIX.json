@@ -245,7 +245,7 @@
         "tests/test_archive_fee_window.py::test_permutations_and_redundant_clock_links_do_not_change_metric_semantics",
         "tests/test_archive_fee_window.py::test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency*",
         "tests/test_archive_fee_window.py::test_old_archive_interpretation_requires_rebuild_without_rewriting_saved_values*",
-        "tests/test_archive_fee_window.py::test_malformed_page_signature_remains_dependency_without_crashing",
+        "tests/test_archive_fee_window.py::test_malformed_page_signature_remains_dependency_without_crashing*",
         "tests/test_archive_fee_window.py::test_malformed_clock_page_normal_api_import_and_rebuild_remain_supported"
       ]
     },
