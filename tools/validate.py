@@ -34,28 +34,99 @@ def source_manifest(root=ROOT):
     return {'sha256': digest, 'files': hashes, 'modes': modes}
 
 
-def required_record(path, *, kind, locks, source_hash=None, runtime=None):
-    if path is None or not path.is_file():
-        return {'state': 'INCOMPLETE', 'reason': f'Missing {kind} evidence record.'}
+def read_receipt(path):
+    result = {'path': str(path), 'state': 'INCOMPLETE'}
     try:
-        record = json.loads(path.read_text())
-        if record.get('kind') != kind or record.get('state') != 'PASS':
-            return {'state': 'INCOMPLETE', 'reason': f'{kind} record does not declare completed passing checks.'}
-        if kind == 'clean-locked-install':
-            if record.get('locks') != locks or not record.get('disposable_install') or not record.get('commands'):
-                return {'state': 'INCOMPLETE', 'reason': 'Install record does not bind the current locks and disposable setup.'}
-            if runtime is not None and record.get('runtime') != runtime:
-                return {'state':'INCOMPLETE','reason':'Install record belongs to a different interpreter/Node/platform environment.'}
-            if any(c.get('exit_code') != 0 for c in record['commands']):
-                return {'state': 'FAILED', 'reason': 'An install command failed.'}
+        raw = path.read_bytes()
+        result['sha256'] = hashlib.sha256(raw).hexdigest()
+        record = json.loads(raw)
+        if not isinstance(record, dict):
+            raise ValueError('Receipt must be a JSON object')
+        result['record'] = record
+    except (ValueError, OSError, TypeError) as exc:
+        result['reason'] = f'Unusable evidence receipt: {exc}'
+    return result
+
+
+def required_record(path, *, kind, locks, source_hash=None, runtime=None):
+    if path is None:
+        return {'state': 'INCOMPLETE', 'reason': f'Missing {kind} evidence record.'}
+    result = read_receipt(path)
+    record = result.get('record')
+    if record is None:
+        return result
+    def reject(reason, state='INCOMPLETE'):
+        return {**result, 'state': state, 'reason': reason}
+    if record.get('kind') != kind or record.get('state') != 'PASS':
+        return reject(f'{kind} record does not declare completed passing checks.')
+    if kind == 'clean-locked-install':
+        commands = record.get('commands')
+        if (record.get('locks') != locks or record.get('disposable_install') is not True
+            or not isinstance(commands, list) or not commands or not all(isinstance(c, dict) for c in commands)):
+            return reject('Install record does not bind the current locks and disposable setup.')
+        if runtime is not None and record.get('runtime') != runtime:
+            return reject('Install record belongs to a different interpreter/Node/platform environment.')
+        if any(type(c.get('exit_code')) is not int for c in commands):
+            return reject('Install command exit codes must be explicit integers.')
+        if any(c['exit_code'] != 0 for c in commands):
+            return reject('An install command failed.', 'FAILED')
+    elif kind == 'consolidated-review':
+        findings = record.get('findings')
+        if (record.get('source_sha256') != source_hash or record.get('matrix_review_complete') is not True
+            or not isinstance(findings, list) or not all(isinstance(f, dict) for f in findings)):
+            return reject('Review does not bind the exact candidate and complete matrix/findings.')
+        if any(f.get('blocking') and f.get('status') != 'VERIFIED_IN_SCOPE' for f in findings):
+            return reject('Review retains an unresolved in-scope blocker.', 'FAILED')
+    else:
+        return reject('Unsupported evidence record kind.')
+    return {**result, 'state': 'PASS'}
+
+
+def structured_evidence_gate(command_gate, path, *, kind):
+    """A successful process and a usable passing producer receipt are both required."""
+    receipt = read_receipt(path)
+    record = receipt.get('record')
+    state = record.get('state') if record else None
+    receipt['state'] = state if state in ('PASS', 'FAILED', 'BLOCKED', 'INCOMPLETE') else 'INCOMPLETE'
+    if state == 'PASS':
+        if kind == 'browser':
+            flags = ('no_overflow', 'settings_saved_without_threshold_change', 'offline_candidate_import',
+                     'source_loss_and_exact_restoration', 'actual_UI_json_exports', 'evidence_inspection',
+                     'server_stopped', 'parents_unchanged')
+            ints = ('offline_children', 'captures', 'desktop_width', 'mobile_width')
+            guards = record.get('offline_guards')
+            cases = record.get('cases')
+            usable = (all(type(record.get(k)) is bool for k in flags)
+                and all(type(record.get(k)) is int and record[k] > 0 for k in ints)
+                and isinstance(cases, list) and bool(cases) and all(isinstance(c, dict) for c in cases)
+                and type(record.get('anonymous_state')) is int
+                and isinstance(record.get('usage_before'), dict) and isinstance(record.get('usage_after'), dict)
+                and isinstance(record.get('javascript_errors'), list) and isinstance(record.get('external_browser_requests'), list)
+                and isinstance(guards, dict) and all(type(guards.get(k)) is int for k in ('provider_requests', 'credential_lookups')))
+            passing = usable and (all(record[k] for k in flags) and record['anonymous_state'] == 401
+                and not record['javascript_errors'] and not record['external_browser_requests']
+                and record['usage_before'] == record['usage_after']
+                and all(guards[k] == 0 for k in ('provider_requests', 'credential_lookups'))
+                and len(cases) == record['offline_children']
+                and all(c.get('frozen_references_preserved') is True and c.get('parent_export_unchanged') is True for c in cases))
+        elif kind == 'matrix':
+            rows = record.get('requirements')
+            usable = (type(record.get('collected_unique_nodes')) is int and record['collected_unique_nodes'] > 0
+                and type(record.get('required_items')) is int and record['required_items'] > 0
+                and isinstance(rows, list) and len(rows) == record['required_items']
+                and all(isinstance(r, dict) and isinstance(r.get('nodes'), (dict, list)) for r in rows))
+            passing = usable and all(r.get('state') == 'PASS' and bool(r['nodes']) and
+                (all(isinstance(v, list) and bool(v) and all(isinstance(n, str) and n for n in v) for v in r['nodes'].values())
+                 if isinstance(r['nodes'], dict) else all(isinstance(n, str) and n for n in r['nodes'])) for r in rows)
         else:
-            if record.get('source_sha256') != source_hash or not record.get('matrix_review_complete'):
-                return {'state': 'INCOMPLETE', 'reason': 'Review does not bind the exact candidate and complete matrix.'}
-            if any(f.get('blocking') and f.get('status') != 'VERIFIED_IN_SCOPE' for f in record.get('findings', [])):
-                return {'state': 'FAILED', 'reason': 'Review retains an unresolved in-scope blocker.'}
-        return {'state': 'PASS', 'path': str(path), 'record': record}
-    except (ValueError, OSError, AttributeError, TypeError) as exc:
-        return {'state': 'INCOMPLETE', 'reason': f'Invalid {kind} evidence: {exc}'}
+            usable = passing = False
+        receipt['state'] = 'PASS' if passing else 'FAILED' if usable else 'INCOMPLETE'
+        if not passing:
+            receipt['reason'] = f'{kind} PASS receipt lacks usable required producer assertions or contradicts them.'
+    states = (command_gate['state'], receipt['state'])
+    merged = 'FAILED' if 'FAILED' in states else 'BLOCKED' if 'BLOCKED' in states else 'PASS' if states == ('PASS', 'PASS') else 'INCOMPLETE'
+    command_gate.update(state=merged, evidence_receipt=receipt)
+    return command_gate
 
 
 def gate_decision(gates, *, stable):
@@ -122,17 +193,17 @@ def main(argv=None):
     if args.profile == 'candidate':
         run('pip-check', [args.python, '-m', 'pip', 'check'])
         run('shell-syntax', ['bash', '-n', 'run.sh', 'setup.sh'])
-        run('matrix', [args.python, str(ROOT / 'tools/check_matrix.py'), '--output', str(output / 'matrix.json')])
+        matrix = run('matrix', [args.python, str(ROOT / 'tools/check_matrix.py'), '--output', str(output / 'matrix.json')])
+        structured_evidence_gate(matrix, output / 'matrix.json', kind='matrix'); save()
         run('frontend-locked-install', ['npm', 'ci', '--prefer-offline', '--no-audit', '--no-fund'], ROOT / 'frontend')
         for name in ('check:format', 'check:discovery', 'build'):
             run('frontend-' + name.replace(':', '-'), ['npm', 'run', name], ROOT / 'frontend')
         install = required_record(args.install_record, kind='clean-locked-install', locks=report['locks'],runtime=report['runtime'])
         install['name'] = 'clean-locked-install'; report['gates'].append(install); save()
-        run('launcher-browser-rebuild', [args.browser_python or args.python, str(ROOT / 'tools/browser_acceptance.py'),
+        browser = run('launcher-browser-rebuild', [args.browser_python or args.python, str(ROOT / 'tools/browser_acceptance.py'),
             '--python', args.python, '--chromium', args.chromium, '--output', str(output / 'browser')])
         browser_result = output / 'browser/result.json'
-        if browser_result.is_file() and json.loads(browser_result.read_text()).get('state') == 'BLOCKED':
-            report['gates'][-1]['state']='BLOCKED';save()
+        structured_evidence_gate(browser, browser_result, kind='browser'); save()
         review = required_record(args.review_record, kind='consolidated-review', locks=report['locks'], source_hash=before['sha256'])
         review['name'] = 'consolidated-review'; report['gates'].append(review); save()
     stable = source_manifest()['sha256'] == before['sha256']
