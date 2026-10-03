@@ -55,6 +55,49 @@ def derive(store, value):
     return result, coverage, digest
 
 
+def malformed_page(value, signature):
+    digest = source(value, 'signature-page', START)
+    payload = deepcopy(value['payloads'][digest])
+    payload['result'].append(dict(payload['result'][0], signature=signature))
+    replacement = hashlib.sha256(canonical_bytes(payload)).hexdigest()
+    value['payloads'][replacement] = payload
+    value['manifest']['evidence'][0]['hash'] = replacement
+    return replacement
+
+
+@pytest.mark.parametrize('signature', [{'malformed': True}, ['malformed'], True, None])
+def test_malformed_page_signature_remains_dependency_without_crashing(tmp_path, signature):
+    value = bundle()
+    digest = malformed_page(value, signature)
+    result, coverage, _ = derive(Store(tmp_path), value)
+    assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+    assert digest in result['metrics']['observed_network_fees_sol']['evidence']
+    assert coverage['provider_requests'] == coverage['credential_lookups'] == 0
+
+
+def test_malformed_clock_page_normal_api_import_and_rebuild_remain_supported(tmp_path, monkeypatch):
+    def denied(*args, **kwargs):
+        raise AssertionError('Offline import/rebuild may not dispatch a provider')
+    monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
+    monkeypatch.setattr(httpx.AsyncClient, 'request', denied)
+    value = bundle()
+    value['manifest']['dataset'] = 'real'
+    malformed_page(value, {'malformed': True})
+    app = application.create_app(tmp_path, 'isolated-malformed-clock-test')
+    with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+        csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'isolated-malformed-clock-test'}).json()['csrf']
+        client.headers['X-CSRF-Token'] = csrf
+        usage = client.get('/api/state').json()['usage']
+        response = client.post('/api/archives/import', content=pack_bytes(value))
+        assert response.status_code == 200, response.text
+        parent_id = response.json()['report_id']
+        saved = deepcopy(app.state.store.get('reports', parent_id))
+        child_id = client.post('/api/reports/' + parent_id + '/rebuild').json()['report_id']
+        assert client.get('/api/reports/' + child_id).json()['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+        assert app.state.store.get('reports', parent_id) == saved
+        assert client.get('/api/state').json()['usage'] == usage
+
+
 @pytest.mark.parametrize('role,timestamp', [(role, timestamp)
     for role in ('transaction', 'getTransaction', 'signature-page', 'block-order')
     for timestamp in (START - 1, END, None, True)

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime, timezone
+import json
 
 VERSION = "slot-chronology-evidence-v2"
 
@@ -276,7 +277,7 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
                                     "time_facts": sorted([
                                         {"timestamp": timestamp, "hash": digest, "kind": origin, "signature": signature}
                                         for timestamp, digest, origin, signature in facts],
-                                        key=lambda fact: (fact['kind'], fact['signature'] or '', fact['hash'] or '', repr(fact['timestamp']))),
+                                        key=lambda fact: (fact['kind'], json.dumps(fact['signature'], sort_keys=True), fact['hash'] or '', repr(fact['timestamp']))),
                                     "evidence": evidence, "reason": reason, "conflicts": slot_conflicts}
         for signature in rows:
             index = block_order.index(signature) if order_state == "PASS" and block_order is not None and signature in block_order else None
