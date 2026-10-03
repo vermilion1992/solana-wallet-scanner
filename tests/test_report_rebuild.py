@@ -110,7 +110,7 @@ def test_saved_receipt_assessment_is_read_only_on_state_report_and_export(sessio
     assert client.get("/api/state").json()["usage"] == before
 
 
-@pytest.mark.parametrize("saved_version,expected", [(None, "missing"), ("account-position-evidence-v1", "rebuild_required"), ("account-position-evidence-v2", "rebuild_required"), ("account-position-evidence-v3", "rebuild_required"), ("account-position-evidence-v4", "rebuild_required"), ("account-position-evidence-v5", "rebuild_required"), ("account-position-evidence-v6", "rebuild_required"), ("account-position-evidence-v7", "rebuild_required"), ("account-position-evidence-v8", "rebuild_required"), (POSITION_METHODOLOGY, "current")])
+@pytest.mark.parametrize("saved_version,expected", [(None, "missing"), ("account-position-evidence-v1", "rebuild_required"), ("account-position-evidence-v2", "rebuild_required"), ("account-position-evidence-v3", "rebuild_required"), ("account-position-evidence-v4", "rebuild_required"), ("account-position-evidence-v5", "rebuild_required"), ("account-position-evidence-v6", "rebuild_required"), ("account-position-evidence-v7", "rebuild_required"), ("account-position-evidence-v8", "rebuild_required"), ("account-position-evidence-v9", "rebuild_required"), (POSITION_METHODOLOGY, "current")])
 def test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds(session, saved_version, expected):
     client, app, _ = session
     report, _ = seed_report(app.state.store)

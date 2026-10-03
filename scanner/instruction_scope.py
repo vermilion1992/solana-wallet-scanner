@@ -31,7 +31,7 @@ _SYSTEM_REFERENCES = {
     'allocate': ('account',), 'allocateWithSeed': ('account', 'base'),
     'advanceNonce': ('nonceAccount', 'nonceAuthority', 'recentBlockhashesSysvar'),
     'initializeNonce': ('nonceAccount',), 'authorizeNonce': ('nonceAccount',),
-    'withdrawNonce': ('nonceAccount', 'destination'),
+    'withdrawFromNonce': ('nonceAccount', 'destination'),
 }
 _ASSOCIATED_REFERENCES = {'create': ('account', 'source', 'mint', 'wallet'),
                          'createIdempotent': ('account', 'source', 'mint', 'wallet')}

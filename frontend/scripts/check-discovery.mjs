@@ -83,7 +83,7 @@ try {
     methodology: "fifo-v3",
     evidence_audit_methodology: "scoped-evidence-audit-v2",
     history_evidence_methodology: "history-evidence-v8",
-    position_evidence_methodology: "account-position-evidence-v9",
+    position_evidence_methodology: "account-position-evidence-v10",
     source_consistency_methodology: "source-consistency-v4",
     settings: { limits: { deep_audit_cap: 5 }, refresh_minutes: 0 },
     preset: {},
