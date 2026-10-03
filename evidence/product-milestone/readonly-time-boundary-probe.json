@@ -1,0 +1,9 @@
+{
+  "source": "be07432",
+  "field": "blockTime",
+  "value": 9223372036854775807,
+  "result": {
+    "outcome": "exception",
+    "error": "OSError: [Errno 75] Value too large for defined data type"
+  }
+}

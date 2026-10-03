@@ -1,0 +1,1112 @@
+{
+  "state": "PASS",
+  "collected_unique_nodes": 1870,
+  "required_items": 65,
+  "requirements": [
+    {
+      "id": "role-transaction",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[transaction]": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[transaction]"
+        ],
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*transaction]": [
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[array-transaction]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[null-transaction]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[wrong-method-transaction]"
+        ]
+      }
+    },
+    {
+      "id": "role-signature-page",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[signature-page]": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[signature-page]"
+        ],
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*signature-page]": [
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[array-signature-page]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[null-signature-page]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[wrong-method-signature-page]"
+        ]
+      }
+    },
+    {
+      "id": "role-block-order",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[block-order]": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[block-order]"
+        ],
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*block-order]": [
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[array-block-order]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[null-block-order]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[wrong-method-block-order]"
+        ]
+      }
+    },
+    {
+      "id": "role-snapshot-slot",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[snapshot-slot]": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[snapshot-slot]"
+        ],
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*snapshot-slot]": [
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[array-snapshot-slot]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[null-snapshot-slot]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[wrong-method-snapshot-slot]"
+        ]
+      }
+    },
+    {
+      "id": "role-owned-accounts",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[owned-accounts]": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[owned-accounts]"
+        ],
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*owned-accounts]": [
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[array-owned-accounts]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[null-owned-accounts]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[wrong-method-owned-accounts]"
+        ]
+      }
+    },
+    {
+      "id": "role-native-balance",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[native-balance]": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[native-balance]"
+        ],
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*native-balance]": [
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[array-native-balance]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[null-native-balance]",
+          "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[wrong-method-native-balance]"
+        ]
+      }
+    },
+    {
+      "id": "metadata-and-unknown",
+      "axis": "Source role",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_unknown_native_declarations_do_not_gain_trusted_roles*": [
+          "tests/test_source_role_matrix.py::test_unknown_native_declarations_do_not_gain_trusted_roles[current-mint-controls]",
+          "tests/test_source_role_matrix.py::test_unknown_native_declarations_do_not_gain_trusted_roles[saved-rebuild-inputs]",
+          "tests/test_source_role_matrix.py::test_unknown_native_declarations_do_not_gain_trusted_roles[unknown]"
+        ],
+        "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role*": [
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[hybrid-native-envelope]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[inside-checkpoint]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[masqueraded-transaction]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[missing-archive]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[missing-risk-citation]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[missing-value]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[valid]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[wrong-method]",
+          "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role[wrong-mint]"
+        ],
+        "tests/test_review_v036_independent.py::test_caller_metadata_claim_does_not_replace_stored_report_authority*": [
+          "tests/test_review_v036_independent.py::test_caller_metadata_claim_does_not_replace_stored_report_authority[altered-citation]",
+          "tests/test_review_v036_independent.py::test_caller_metadata_claim_does_not_replace_stored_report_authority[unsaved-report]"
+        ]
+      }
+    },
+    {
+      "id": "source-loss-restoration",
+      "axis": "Availability",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration*": [
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[block-order]",
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[native-balance]",
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[owned-accounts]",
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[signature-page]",
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[snapshot-slot]",
+          "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[transaction]"
+        ],
+        "tests/test_token_instruction_schema.py::test_removing_a_required_canonical_source_revokes_hold_and_restoring_recovers*": [
+          "tests/test_token_instruction_schema.py::test_removing_a_required_canonical_source_revokes_hold_and_restoring_recovers[approve]",
+          "tests/test_token_instruction_schema.py::test_removing_a_required_canonical_source_revokes_hold_and_restoring_recovers[setAuthority-mintTokens]"
+        ],
+        "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild*": [
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[conflicting-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[conflicting-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[conflicting-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[conflicting-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[conflicting-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[conflicting-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[over-budget-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[over-budget-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[over-budget-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[over-budget-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[over-budget-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[over-budget-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-transaction]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-block-order]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-native-balance]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-owned-accounts]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-signature-page]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-snapshot-slot]",
+          "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-transaction]"
+        ]
+      }
+    },
+    {
+      "id": "source-conflicts",
+      "axis": "Availability",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict*": [
+          "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict[clock]",
+          "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict[instruction]",
+          "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict[quantity]"
+        ],
+        "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold*": [
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[boolean_index-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[boolean_index-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[decimals-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[decimals-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[duplicate_account_key-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[duplicate_account_key-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[duplicate_boundary-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[duplicate_boundary-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[duplicate_cpi_group-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[duplicate_cpi_group-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[execution-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[execution-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[malformed_cpi_groups-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[malformed_cpi_groups-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[malformed_instruction_program-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[malformed_instruction_program-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[malformed_program_annotation-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[malformed_program_annotation-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[mint-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[mint-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[missing_cpi-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[missing_cpi-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[missing_owner-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[missing_owner-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[missing_quantity-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[missing_quantity-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[opaque_operation-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[opaque_operation-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[owner-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[owner-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[parsed_quantity-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[parsed_quantity-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[post_quantity-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[post_quantity-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[pre_quantity-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[pre_quantity-2]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[program-0]",
+          "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold[program-2]"
+        ]
+      }
+    },
+    {
+      "id": "formats",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": {
+        "tests/review_v038/test_v038_regressions.py::*": [
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_account_hold[boolean-version-closing]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_account_hold[boolean-version-opening]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_account_hold[null-version-closing]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_account_hold[null-version-opening]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_account_hold[unsupported-v1-closing]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_account_hold[unsupported-v1-opening]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_actual_rebuild[boolean-version-closing]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_actual_rebuild[boolean-version-opening]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_actual_rebuild[null-version-closing]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_actual_rebuild[null-version-opening]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_actual_rebuild[unsupported-v1-closing]",
+          "tests/review_v038/test_v038_regressions.py::test_unsupported_linked_version_revokes_actual_rebuild[unsupported-v1-opening]"
+        ],
+        "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema*": [
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-approveChecked]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-approve]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-burnChecked]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-burn]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-closeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-freezeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-getAccountDataSize]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-initializeAccount2]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-initializeAccount3]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-initializeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-initializeImmutableOwner]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-initializeMint2]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-initializeMint]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-mintToChecked]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-mintTo]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-revoke]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-setAuthority-accountOwner]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-setAuthority-closeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-setAuthority-freezeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-setAuthority-mintTokens]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-syncNative]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-thawAccount]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-transferChecked]",
+          "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema[token-transfer]"
+        ]
+      }
+    },
+    {
+      "id": "outer-inner-selected-alternative",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": {
+        "tests/review_v039/test_v039_regressions.py::*": [
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_actual_rebuild[inner-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_actual_rebuild[inner-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_actual_rebuild[outer-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_actual_rebuild[outer-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-address-inner-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-address-inner-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-address-outer-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-address-outer-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-index-inner-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-index-inner-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-index-outer-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[disjoint-index-outer-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[empty-inner-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[empty-inner-selected]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[empty-outer-alternative]",
+          "tests/review_v039/test_v039_regressions.py::test_contradictory_instruction_references_revoke_hold[empty-outer-selected]"
+        ],
+        "tests/review_v0310/test_v0310_regressions.py::*": [
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[inner-alternative-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[inner-alternative-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[inner-alternative-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[inner-selected-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[inner-selected-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[inner-selected-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[outer-alternative-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[outer-alternative-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[outer-alternative-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[outer-selected-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[outer-selected-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_actual_rebuild[outer-selected-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-inner-alternative-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-inner-alternative-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-inner-alternative-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-inner-selected-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-inner-selected-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-inner-selected-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-outer-alternative-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-outer-alternative-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-outer-alternative-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-outer-selected-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-outer-selected-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[disjoint-outer-selected-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-inner-alternative-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-inner-alternative-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-inner-alternative-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-inner-selected-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-inner-selected-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-inner-selected-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-outer-alternative-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-outer-alternative-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-outer-alternative-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-outer-selected-approveChecked]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-outer-selected-approve]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_permission_schema_preserves_supported_hold[scoped-outer-selected-revoke]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_actual_rebuild[alternative-freezeAccount]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_actual_rebuild[alternative-mintTokens]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_actual_rebuild[selected-freezeAccount]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_actual_rebuild[selected-mintTokens]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_hold[inner-freezeAccount]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_hold[inner-mintTokens]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_hold[outer-freezeAccount]",
+          "tests/review_v0310/test_v0310_regressions.py::test_rpc_unrelated_mint_authority_shape_preserves_hold[outer-mintTokens]"
+        ],
+        "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api*": [
+          "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api[inner-alternative]",
+          "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api[inner-selected]",
+          "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api[outer-alternative]",
+          "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api[outer-selected]"
+        ]
+      }
+    },
+    {
+      "id": "compiled-partially-decoded-mixed",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses*": [
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[addresses-inner-alternative]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[addresses-inner-selected]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[addresses-outer-alternative]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[addresses-outer-selected]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[empty-inner-alternative]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[empty-inner-selected]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[empty-outer-alternative]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[empty-outer-selected]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[indices-inner-alternative]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[indices-inner-selected]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[indices-outer-alternative]",
+          "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses[indices-outer-selected]"
+        ],
+        "tests/test_review_v039_independent.py::test_hybrid_opaque_reference_list_is_not_an_admitted_shape*": [
+          "tests/test_review_v039_independent.py::test_hybrid_opaque_reference_list_is_not_an_admitted_shape[inner]",
+          "tests/test_review_v039_independent.py::test_hybrid_opaque_reference_list_is_not_an_admitted_shape[outer]"
+        ],
+        "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract*": [
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[associated-createIdempotent]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[associated-create]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-advanceNonce]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-allocateWithSeed]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-allocate]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-assignWithSeed]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-assign]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-authorizeNonce]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-createAccountWithSeed]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-createAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-initializeNonce]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-transferWithSeed]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-transfer]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[system-withdrawFromNonce]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-approveChecked]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-approve]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-burnChecked]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-burn]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-closeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-freezeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-getAccountDataSize]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-initializeAccount2]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-initializeAccount3]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-initializeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-initializeImmutableOwner]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-initializeMint2]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-initializeMint]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-mintToChecked]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-mintTo]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-revoke]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-setAuthority-accountOwner]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-setAuthority-closeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-setAuthority-freezeAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-setAuthority-mintTokens]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-syncNative]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-thawAccount]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-transferChecked]",
+          "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract[token-transfer]"
+        ],
+        "tests/test_review_v039_independent.py::test_disjoint_list_cannot_override_conflicting_program_identity*": [
+          "tests/test_review_v039_independent.py::test_disjoint_list_cannot_override_conflicting_program_identity[inner-alternative]",
+          "tests/test_review_v039_independent.py::test_disjoint_list_cannot_override_conflicting_program_identity[inner-selected]",
+          "tests/test_review_v039_independent.py::test_disjoint_list_cannot_override_conflicting_program_identity[outer-alternative]",
+          "tests/test_review_v039_independent.py::test_disjoint_list_cannot_override_conflicting_program_identity[outer-selected]"
+        ]
+      }
+    },
+    {
+      "id": "relevance-placement",
+      "axis": "Relevance/chronology",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_review_v034_independent.py::test_placement_ambiguity_revokes_only_the_intersected_episode*": [
+          "tests/test_review_v034_independent.py::test_placement_ambiguity_revokes_only_the_intersected_episode[False-199]",
+          "tests/test_review_v034_independent.py::test_placement_ambiguity_revokes_only_the_intersected_episode[False-203]",
+          "tests/test_review_v034_independent.py::test_placement_ambiguity_revokes_only_the_intersected_episode[True-199]",
+          "tests/test_review_v034_independent.py::test_placement_ambiguity_revokes_only_the_intersected_episode[True-203]"
+        ],
+        "tests/test_review_v034_independent.py::test_another_token_accounts_conflicting_placement_does_not_revoke_unrelated_episode*": [
+          "tests/test_review_v034_independent.py::test_another_token_accounts_conflicting_placement_does_not_revoke_unrelated_episode[199]",
+          "tests/test_review_v034_independent.py::test_another_token_accounts_conflicting_placement_does_not_revoke_unrelated_episode[203]"
+        ],
+        "tests/review_v034/test_v034_controls.py::test_consistent_failed_record_outside_episode_does_not_poison_valid_hold*": [
+          "tests/review_v034/test_v034_controls.py::test_consistent_failed_record_outside_episode_does_not_poison_valid_hold[103-1790028800]",
+          "tests/review_v034/test_v034_controls.py::test_consistent_failed_record_outside_episode_does_not_poison_valid_hold[99-1790000600]"
+        ]
+      }
+    },
+    {
+      "id": "same-slot",
+      "axis": "Relevance/chronology",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_chronology_evidence.py::ChronologyEvidenceTests::test_conflicting_order_receipts_never_choose_first_or_last": [
+          "tests/test_chronology_evidence.py::ChronologyEvidenceTests::test_conflicting_order_receipts_never_choose_first_or_last"
+        ],
+        "tests/test_chronology_evidence.py::ChronologyEvidenceTests::test_missing_same_slot_order_leaves_clock_known_and_order_unknown": [
+          "tests/test_chronology_evidence.py::ChronologyEvidenceTests::test_missing_same_slot_order_leaves_clock_known_and_order_unknown"
+        ]
+      }
+    },
+    {
+      "id": "half-open-boundaries",
+      "axis": "Relevance/chronology",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_position_evidence.py::PositionEvidenceTests::test_output_completed_population_remains_half_open_after_dependency_checks": [
+          "tests/test_position_evidence.py::PositionEvidenceTests::test_output_completed_population_remains_half_open_after_dependency_checks"
+        ],
+        "tests/test_history_evidence.py::HistoryEvidenceTests::test_r6_rawless_boundary_disagreements_revoke_completion_not_observations": [
+          "tests/test_history_evidence.py::HistoryEvidenceTests::test_r6_rawless_boundary_disagreements_revoke_completion_not_observations"
+        ]
+      }
+    },
+    {
+      "id": "atomic-and-ownership",
+      "axis": "Execution/quantity",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_review_v039_independent.py::test_failed_atomic_mixed_instructions_do_not_manufacture_executed_owner_changes*": [
+          "tests/test_review_v039_independent.py::test_failed_atomic_mixed_instructions_do_not_manufacture_executed_owner_changes[inner]",
+          "tests/test_review_v039_independent.py::test_failed_atomic_mixed_instructions_do_not_manufacture_executed_owner_changes[outer]"
+        ],
+        "tests/review_v0310/test_v0310_controls.py::test_account_owner_change_still_rejects*": [
+          "tests/review_v0310/test_v0310_controls.py::test_account_owner_change_still_rejects[inner-alternative]",
+          "tests/review_v0310/test_v0310_controls.py::test_account_owner_change_still_rejects[inner-selected]",
+          "tests/review_v0310/test_v0310_controls.py::test_account_owner_change_still_rejects[outer-alternative]",
+          "tests/review_v0310/test_v0310_controls.py::test_account_owner_change_still_rejects[outer-selected]"
+        ],
+        "tests/test_position_evidence.py::PositionEvidenceTests::test_multitransaction_account_strict_zero_branch_is_executable": [
+          "tests/test_position_evidence.py::PositionEvidenceTests::test_multitransaction_account_strict_zero_branch_is_executable"
+        ]
+      }
+    },
+    {
+      "id": "absolute-versus-delta",
+      "axis": "Execution/quantity",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_review_v035_independent.py::test_middle_absolute_inventory_offset_revokes_continuity_despite_same_transfer*": [
+          "tests/test_review_v035_independent.py::test_middle_absolute_inventory_offset_revokes_continuity_despite_same_transfer[False]",
+          "tests/test_review_v035_independent.py::test_middle_absolute_inventory_offset_revokes_continuity_despite_same_transfer[True]"
+        ],
+        "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact*": [
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[account_key_order-0]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[account_key_order-2]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[another_accounts_inventory-0]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[another_accounts_inventory-2]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[program_inferred-0]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[program_inferred-2]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[ui_metadata-0]",
+          "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact[ui_metadata-2]"
+        ]
+      }
+    },
+    {
+      "id": "fee-isolation",
+      "axis": "Execution/quantity",
+      "state": "PASS",
+      "nodes": {
+        "tests/review_v0310/test_v0310_controls.py::test_unmodified_episode_does_not_depend_on_fee_amount*": [
+          "tests/review_v0310/test_v0310_controls.py::test_unmodified_episode_does_not_depend_on_fee_amount[alternative]",
+          "tests/review_v0310/test_v0310_controls.py::test_unmodified_episode_does_not_depend_on_fee_amount[selected]"
+        ],
+        "tests/test_history_evidence.py::HistoryEvidenceTests::test_missing_same_slot_block_order_blocks_economic_paging_not_additive_native_total": [
+          "tests/test_history_evidence.py::HistoryEvidenceTests::test_missing_same_slot_block_order_blocks_economic_paging_not_additive_native_total"
+        ]
+      }
+    },
+    {
+      "id": "permutation-repeats-third-conflict",
+      "axis": "Source set",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_permutations_and_exact_repeats_preserve_semantics_and_fee_count*": [
+          "tests/test_source_role_matrix.py::test_permutations_and_exact_repeats_preserve_semantics_and_fee_count[17]",
+          "tests/test_source_role_matrix.py::test_permutations_and_exact_repeats_preserve_semantics_and_fee_count[41]",
+          "tests/test_source_role_matrix.py::test_permutations_and_exact_repeats_preserve_semantics_and_fee_count[91]"
+        ],
+        "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict*": [
+          "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict[clock]",
+          "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict[instruction]",
+          "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict[quantity]"
+        ]
+      }
+    },
+    {
+      "id": "actual-budget-boundaries",
+      "axis": "Source set",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_source_role_matrix.py::test_real_source_hash_budget_boundary*": [
+          "tests/test_source_role_matrix.py::test_real_source_hash_budget_boundary[39999]",
+          "tests/test_source_role_matrix.py::test_real_source_hash_budget_boundary[40000]",
+          "tests/test_source_role_matrix.py::test_real_source_hash_budget_boundary[40001]"
+        ],
+        "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency*": [
+          "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency[prefix-intervening-account-sale]",
+          "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency[prefix-unrelated-tail]",
+          "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency[prefix-unresolved-account-operation]",
+          "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency[tail-intervening-account-sale]",
+          "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency[tail-unrelated-tail]",
+          "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency[tail-unresolved-account-operation]"
+        ],
+        "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap*": [
+          "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap[1-prefix]",
+          "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap[1-reverse]",
+          "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap[1-tail]",
+          "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap[1000-prefix]",
+          "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap[1000-reverse]",
+          "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap[1000-tail]"
+        ],
+        "tests/test_review_v036_independent.py::test_report_metadata_inspection_obeys_candidate_and_combined_archive_budgets*": [
+          "tests/test_review_v036_independent.py::test_report_metadata_inspection_obeys_candidate_and_combined_archive_budgets[combined-40001-hashes]",
+          "tests/test_review_v036_independent.py::test_report_metadata_inspection_obeys_candidate_and_combined_archive_budgets[complete-64-metadata]",
+          "tests/test_review_v036_independent.py::test_report_metadata_inspection_obeys_candidate_and_combined_archive_budgets[refuse-65-metadata]"
+        ]
+      }
+    },
+    {
+      "id": "direct-frozen-rebuild-read-export",
+      "axis": "User path",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_report_rebuild.py::test_rebuild_uses_exact_sources_and_preserves_original_window_and_preset*": [
+          "tests/test_report_rebuild.py::test_rebuild_uses_exact_sources_and_preserves_original_window_and_preset[False]",
+          "tests/test_report_rebuild.py::test_rebuild_uses_exact_sources_and_preserves_original_window_and_preset[True]"
+        ],
+        "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds*": [
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[None-missing]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v1-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v10-current]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v2-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v3-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v4-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v5-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v6-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v7-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v8-rebuild_required]",
+          "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds[account-position-evidence-v9-rebuild_required]"
+        ],
+        "tests/test_discovery_integration_review.py::*": [
+          "tests/test_discovery_integration_review.py::test_discovery_audit_requires_all_native_identity_evidence[validation0]",
+          "tests/test_discovery_integration_review.py::test_discovery_audit_requires_all_native_identity_evidence[validation1]",
+          "tests/test_discovery_integration_review.py::test_discovery_audit_requires_all_native_identity_evidence[validation2]",
+          "tests/test_discovery_integration_review.py::test_discovery_audit_uses_fixed_setup_limits_and_partial_reports",
+          "tests/test_discovery_integration_review.py::test_discovery_mutations_require_local_session_and_csrf",
+          "tests/test_discovery_integration_review.py::test_discovery_rejects_unbounded_or_transactional_inputs_before_queueing[payload0]",
+          "tests/test_discovery_integration_review.py::test_discovery_rejects_unbounded_or_transactional_inputs_before_queueing[payload1]",
+          "tests/test_discovery_integration_review.py::test_discovery_rejects_unbounded_or_transactional_inputs_before_queueing[payload2]",
+          "tests/test_discovery_integration_review.py::test_discovery_rejects_unbounded_or_transactional_inputs_before_queueing[payload3]",
+          "tests/test_discovery_integration_review.py::test_discovery_rejects_unbounded_or_transactional_inputs_before_queueing[payload4]",
+          "tests/test_discovery_integration_review.py::test_discovery_rejects_unbounded_or_transactional_inputs_before_queueing[payload5]",
+          "tests/test_discovery_integration_review.py::test_exhausted_setup_scan_cannot_resume_into_unverified_monthly_budget",
+          "tests/test_discovery_integration_review.py::test_key_only_setup_keeps_entitlement_unknown_and_secret_backend_only",
+          "tests/test_discovery_integration_review.py::test_key_reentry_cannot_erase_active_monthly_cycle_anti_reset",
+          "tests/test_discovery_integration_review.py::test_mint_risk_requires_finalized_anchor_and_archives_requested_mint_with_pool_evidence[False]",
+          "tests/test_discovery_integration_review.py::test_mint_risk_requires_finalized_anchor_and_archives_requested_mint_with_pool_evidence[True]",
+          "tests/test_discovery_integration_review.py::test_native_checkpoint_reference_keeps_state_compact_and_resumes_saved_cursor_across_restart",
+          "tests/test_discovery_integration_review.py::test_pilot_skips_local_version_gap_but_preserves_global_stop_boundaries[Free application credit cap reached, including pending requests.-False]",
+          "tests/test_discovery_integration_review.py::test_pilot_skips_local_version_gap_but_preserves_global_stop_boundaries[Free disk space is below the configured reserve.-False]",
+          "tests/test_discovery_integration_review.py::test_pilot_skips_local_version_gap_but_preserves_global_stop_boundaries[Paused by user; archived work is retained.-False]",
+          "tests/test_discovery_integration_review.py::test_pilot_skips_local_version_gap_but_preserves_global_stop_boundaries[Provider requested extended rate-limit backoff; resume later.-False]",
+          "tests/test_discovery_integration_review.py::test_pilot_skips_local_version_gap_but_preserves_global_stop_boundaries[Unsupported transaction version is archived but cannot be decoded.-True]",
+          "tests/test_discovery_integration_review.py::test_positive_observed_lot_model_never_certifies_wallet_profit_or_safe_copying",
+          "tests/test_discovery_integration_review.py::test_setup_native_budget_counts_prior_usage_and_survives_key_reentry_and_restart",
+          "tests/test_discovery_integration_review.py::test_setup_scan_resume_preserves_checkpoint_and_adds_only_bounded_tranche",
+          "tests/test_discovery_integration_review.py::test_successful_swap_replacement_keeps_sibling_unresolved_native_flows"
+        ]
+      }
+    },
+    {
+      "id": "trusted-collector-ancestry",
+      "axis": "User path",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_history_evidence.py::HistoryEvidenceTests::test_arbitrary_import_cannot_supply_a_trusted_checkpoint": [
+          "tests/test_history_evidence.py::HistoryEvidenceTests::test_arbitrary_import_cannot_supply_a_trusted_checkpoint"
+        ]
+      }
+    },
+    {
+      "id": "no-green-backend-shortcut",
+      "axis": "User path",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_validation_gates.py::*": [
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[1-clean-locked-install]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[1-consolidated-review]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[None-clean-locked-install]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[None-consolidated-review]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[value0-clean-locked-install]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[value0-consolidated-review]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[value3-clean-locked-install]",
+          "tests/test_validation_gates.py::test_attestations_are_structured_incomplete_on_invalid_shapes[value3-consolidated-review]",
+          "tests/test_validation_gates.py::test_changed_candidate_cannot_use_old_results",
+          "tests/test_validation_gates.py::test_existing_aggregate_state_controls[BLOCKED-True-INCOMPLETE-2]",
+          "tests/test_validation_gates.py::test_existing_aggregate_state_controls[FAILED-True-FAILED-1]",
+          "tests/test_validation_gates.py::test_existing_aggregate_state_controls[INCOMPLETE-True-INCOMPLETE-2]",
+          "tests/test_validation_gates.py::test_existing_aggregate_state_controls[PASS-False-INCOMPLETE-2]",
+          "tests/test_validation_gates.py::test_existing_aggregate_state_controls[PASS-True-ACCEPTED_IN_SCOPE-0]",
+          "tests/test_validation_gates.py::test_existing_aggregate_state_controls[UNKNOWN-True-INCOMPLETE-2]",
+          "tests/test_validation_gates.py::test_existing_install_record_controls[change0-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_install_record_controls[change1-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_install_record_controls[change2-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_install_record_controls[change3-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_install_record_controls[change4-FAILED]",
+          "tests/test_validation_gates.py::test_existing_install_record_controls[change5-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_review_record_controls[change0-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_review_record_controls[change1-INCOMPLETE]",
+          "tests/test_validation_gates.py::test_existing_review_record_controls[change2-FAILED]",
+          "tests/test_validation_gates.py::test_existing_review_record_controls[change3-PASS]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[bad-exit-good-receipt]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[blocked-browser]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[changed-source]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[failed-backend]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[failed-browser]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[missing-install]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[missing-review]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[passing-candidate]",
+          "tests/test_validation_gates.py::test_existing_runner_controls[passing-focused]",
+          "tests/test_validation_gates.py::test_install_cache_is_bound_to_the_runtime_as_well_as_locks",
+          "tests/test_validation_gates.py::test_install_record_needs_current_locks_and_successful_command[command]",
+          "tests/test_validation_gates.py::test_install_record_needs_current_locks_and_successful_command[locks]",
+          "tests/test_validation_gates.py::test_matrix_receipt_has_the_same_required_boundary[None]",
+          "tests/test_validation_gates.py::test_matrix_receipt_has_the_same_required_boundary[[]]",
+          "tests/test_validation_gates.py::test_matrix_receipt_has_the_same_required_boundary[{\"state\":\"FAILED\"}]",
+          "tests/test_validation_gates.py::test_matrix_receipt_has_the_same_required_boundary[{\"state\":\"PASS\"}]",
+          "tests/test_validation_gates.py::test_matrix_receipt_has_the_same_required_boundary[{invalid]",
+          "tests/test_validation_gates.py::test_matrix_receipt_has_the_same_required_boundary[{}]",
+          "tests/test_validation_gates.py::test_missing_review_prevents_acceptance",
+          "tests/test_validation_gates.py::test_one_unclosed_required_gate_prevents_acceptance[BLOCKED-2]",
+          "tests/test_validation_gates.py::test_one_unclosed_required_gate_prevents_acceptance[FAILED-1]",
+          "tests/test_validation_gates.py::test_one_unclosed_required_gate_prevents_acceptance[INCOMPLETE-2]",
+          "tests/test_validation_gates.py::test_passing_receipt_bytes_are_hashed_and_false_guards_fail",
+          "tests/test_validation_gates.py::test_stale_review_and_live_blocker_are_not_accepted",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[failed]",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[incomplete]",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[malformed-json]",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[missing-state]",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[missing]",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[non-object-json]",
+          "tests/test_validation_gates.py::test_zero_exit_requires_a_usable_passing_browser_receipt[unknown]"
+        ]
+      }
+    },
+    {
+      "id": "archive-input-boundaries",
+      "axis": "User path",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_archive_input.py::test_normal_app_import_rebuild_sources_and_exports_preserve_parent_and_use_no_provider": [
+          "tests/test_archive_input.py::test_normal_app_import_rebuild_sources_and_exports_preserve_parent_and_use_no_provider"
+        ],
+        "tests/test_archive_input.py::test_archive_paths_hashes_and_expansion_are_bounded_before_mutation": [
+          "tests/test_archive_input.py::test_archive_paths_hashes_and_expansion_are_bounded_before_mutation"
+        ],
+        "tests/test_archive_input.py::test_compressed_expansion_and_upload_limits_are_enforced_without_writes": [
+          "tests/test_archive_input.py::test_compressed_expansion_and_upload_limits_are_enforced_without_writes"
+        ]
+      }
+    },
+    {
+      "id": "archive-financial-dependencies",
+      "axis": "Execution/quantity",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee": [
+          "tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee"
+        ],
+        "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[*]": [
+          "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[classification]",
+          "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[coherent_omission]",
+          "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[ownership]",
+          "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[transaction]",
+          "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[valuation]"
+        ],
+        "tests/test_archive_input.py::test_unknown_trade_fee_keeps_quantity_only_timing_but_not_profit": [
+          "tests/test_archive_input.py::test_unknown_trade_fee_keeps_quantity_only_timing_but_not_profit"
+        ],
+        "tests/test_archive_input.py::test_unknown_incoming_basis_is_not_a_free_profitable_acquisition": [
+          "tests/test_archive_input.py::test_unknown_incoming_basis_is_not_a_free_profitable_acquisition"
+        ]
+      }
+    },
+    {
+      "id": "archive-provenance-population",
+      "axis": "Source set",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_archive_input.py::test_claimed_real_world_or_completion_boolean_cannot_certify_a_wallet": [
+          "tests/test_archive_input.py::test_claimed_real_world_or_completion_boolean_cannot_certify_a_wallet"
+        ],
+        "tests/test_archive_input.py::test_duplicates_and_reference_permutation_do_not_count_trades_or_fees_twice": [
+          "tests/test_archive_input.py::test_duplicates_and_reference_permutation_do_not_count_trades_or_fees_twice"
+        ],
+        "tests/test_archive_input.py::test_conflicting_linked_alternative_is_not_outvoted_or_fixed_by_hiding_its_bytes": [
+          "tests/test_archive_input.py::test_conflicting_linked_alternative_is_not_outvoted_or_fixed_by_hiding_its_bytes"
+        ],
+        "tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period": [
+          "tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period"
+        ],
+        "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[*]": [
+          "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[blockTime-9223372036854775807]",
+          "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[blockTime-None]",
+          "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[meta-bad1]",
+          "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[slot-bad0]",
+          "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[transaction-None]"
+        ]
+      }
+    },
+    {
+      "id": "archive-native-container-parity",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": {
+        "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[*]": [
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[alternative-inner-group]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[alternative-inner-index]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[alternative-inner-instructions]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[alternative-program-id]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[alternative-program-label]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[selected-inner-group]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[selected-inner-index]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[selected-inner-instructions]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[selected-program-id]",
+          "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[selected-program-label]"
+        ],
+        "tests/test_archive_input.py::test_malformed_program_identity_normal_api_import_creates_an_unresolved_report[*]": [
+          "tests/test_archive_input.py::test_malformed_program_identity_normal_api_import_creates_an_unresolved_report[blockTime]",
+          "tests/test_archive_input.py::test_malformed_program_identity_normal_api_import_creates_an_unresolved_report[programId]"
+        ]
+      }
+    },
+    {
+      "id": "schema-token-transfer",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-transfer]"
+      ]
+    },
+    {
+      "id": "schema-token-transferChecked",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-transferChecked]"
+      ]
+    },
+    {
+      "id": "schema-token-approve",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-approve]"
+      ]
+    },
+    {
+      "id": "schema-token-approveChecked",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-approveChecked]"
+      ]
+    },
+    {
+      "id": "schema-token-revoke",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-revoke]"
+      ]
+    },
+    {
+      "id": "schema-token-setAuthority-mintTokens",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-setAuthority-mintTokens]"
+      ]
+    },
+    {
+      "id": "schema-token-setAuthority-freezeAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-setAuthority-freezeAccount]"
+      ]
+    },
+    {
+      "id": "schema-token-setAuthority-accountOwner",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-setAuthority-accountOwner]"
+      ]
+    },
+    {
+      "id": "schema-token-setAuthority-closeAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-setAuthority-closeAccount]"
+      ]
+    },
+    {
+      "id": "schema-token-closeAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-closeAccount]"
+      ]
+    },
+    {
+      "id": "schema-token-mintTo",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-mintTo]"
+      ]
+    },
+    {
+      "id": "schema-token-mintToChecked",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-mintToChecked]"
+      ]
+    },
+    {
+      "id": "schema-token-burn",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-burn]"
+      ]
+    },
+    {
+      "id": "schema-token-burnChecked",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-burnChecked]"
+      ]
+    },
+    {
+      "id": "schema-token-freezeAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-freezeAccount]"
+      ]
+    },
+    {
+      "id": "schema-token-thawAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-thawAccount]"
+      ]
+    },
+    {
+      "id": "schema-token-initializeAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-initializeAccount]"
+      ]
+    },
+    {
+      "id": "schema-token-initializeAccount2",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-initializeAccount2]"
+      ]
+    },
+    {
+      "id": "schema-token-initializeAccount3",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-initializeAccount3]"
+      ]
+    },
+    {
+      "id": "schema-token-initializeImmutableOwner",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-initializeImmutableOwner]"
+      ]
+    },
+    {
+      "id": "schema-token-syncNative",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-syncNative]"
+      ]
+    },
+    {
+      "id": "schema-token-getAccountDataSize",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-getAccountDataSize]"
+      ]
+    },
+    {
+      "id": "schema-token-initializeMint",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-initializeMint]"
+      ]
+    },
+    {
+      "id": "schema-token-initializeMint2",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[token-initializeMint2]"
+      ]
+    },
+    {
+      "id": "schema-system-transfer",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-transfer]"
+      ]
+    },
+    {
+      "id": "schema-system-transferWithSeed",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-transferWithSeed]"
+      ]
+    },
+    {
+      "id": "schema-system-createAccount",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-createAccount]"
+      ]
+    },
+    {
+      "id": "schema-system-createAccountWithSeed",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-createAccountWithSeed]"
+      ]
+    },
+    {
+      "id": "schema-system-assign",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-assign]"
+      ]
+    },
+    {
+      "id": "schema-system-assignWithSeed",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-assignWithSeed]"
+      ]
+    },
+    {
+      "id": "schema-system-allocate",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-allocate]"
+      ]
+    },
+    {
+      "id": "schema-system-allocateWithSeed",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-allocateWithSeed]"
+      ]
+    },
+    {
+      "id": "schema-system-advanceNonce",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-advanceNonce]"
+      ]
+    },
+    {
+      "id": "schema-system-initializeNonce",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-initializeNonce]"
+      ]
+    },
+    {
+      "id": "schema-system-authorizeNonce",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-authorizeNonce]"
+      ]
+    },
+    {
+      "id": "schema-system-withdrawFromNonce",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[system-withdrawFromNonce]"
+      ]
+    },
+    {
+      "id": "schema-associated-create",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[associated-create]"
+      ]
+    },
+    {
+      "id": "schema-associated-createIdempotent",
+      "axis": "Representation",
+      "state": "PASS",
+      "nodes": [
+        "tests/test_instruction_contract_matrix.py::test_every_primary_schema_contract_has_the_required_reference_paths[associated-createIdempotent]"
+      ]
+    }
+  ],
+  "purpose": "Coverage mapping, not a second test execution or proof of arbitrary combinations."
+}

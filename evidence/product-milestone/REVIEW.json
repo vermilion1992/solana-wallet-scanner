@@ -1,0 +1,73 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "source_sha256": "c914891c9086a70521fc897b0db22b2a2006389a29fe9c976ee8c2d258e258ca",
+  "source_commit": "a811e81",
+  "matrix_review_complete": true,
+  "reviewer": "Same implementation engineer in a distinct read-only worktree/pass; not independent third-party certification",
+  "scope": "Current declared Gate A plus executable archived development slice. Full real R1/B1/B2/B3 remains open.",
+  "worktree": "/workspace/scratch/scanner-product-readonly-review-accepted",
+  "worktree_source_unchanged": true,
+  "commands": [
+    {
+      "command": [
+        "configured-python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "changed-path/schema/source/history/accounting/decoder controls"
+      ],
+      "exit_code": 0,
+      "log": "evidence/product-milestone/readonly-review-accepted-tests.log"
+    },
+    {
+      "command": [
+        "configured-python",
+        "tools/check_matrix.py",
+        "--output",
+        "readonly-review-accepted-matrix.json"
+      ],
+      "exit_code": 0,
+      "log": "evidence/product-milestone/readonly-review-accepted-matrix.log"
+    }
+  ],
+  "findings": [
+    {
+      "id": "PROC-03",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "detail": "Command success and hashed usable current browser/matrix receipts required; malformed attestations are structured incomplete."
+    },
+    {
+      "id": "ARC-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "detail": "Reproduced raw instruction container and out-of-range time failures; shared boundary corrections, selected/alternative/direct/API negatives and supported controls pass."
+    },
+    {
+      "id": "CAP-01",
+      "blocking": false,
+      "status": "OPEN",
+      "detail": "Executable raw archive/report/FIFO development slice implemented. Accepted genuine historical-owner/classification/flow adapters and complete real financial qualification remain unimplemented/unverified."
+    },
+    {
+      "id": "DATA-01",
+      "blocking": false,
+      "status": "BLOCKED",
+      "detail": "Key entitlement and complete genuine historical ownership/population scope have not been probed. Synthetic arithmetic and genuine partial fee observations do not close Gate B."
+    }
+  ],
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "review_matrix": "evidence/product-milestone/readonly-review-accepted-matrix.json",
+  "matrix_result_verified": true,
+  "collected_unique_nodes": 1870,
+  "affected_review_tests": 574,
+  "subtests_separate": 62
+}

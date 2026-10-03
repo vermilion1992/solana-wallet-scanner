@@ -1,0 +1,68 @@
+.............F........................................................................................................ [ 59%]
+........................................................................ [ 95%]
+..........                                                               [100%]
+=================================== FAILURES ===================================
+_ test_malformed_native_record_retains_gap_without_crashing[blockTime-9223372036854775807] _
+
+value = 9223372036854775807
+
+    def utc(value: Any) -> datetime:
+        if isinstance(value, int) and not isinstance(value, bool):
+            try:
+>               return datetime.fromtimestamp(value, timezone.utc)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               OSError: [Errno 75] Value too large for defined data type
+
+scanner/accounting.py:76: OSError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-225/test_malformed_native_record_r4')
+field = 'blockTime', bad = 9223372036854775807
+
+    @pytest.mark.parametrize('field,bad', [('slot',[]),('meta',[]),('transaction',None),('blockTime',None),('blockTime',9223372036854775807)])
+    def test_malformed_native_record_retains_gap_without_crashing(tmp_path, field, bad):
+        value = bundle(); row=value['manifest']['transactions'][0]
+        raw=deepcopy(value['payloads'][row['hash']]);raw[field]=bad
+        replacement=replace_payload(value,row['hash'],raw);row['hash']=replacement
+>       result, coverage, _=derive(Store(tmp_path),value)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_archive_input.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_archive_input.py:39: in derive
+    result, events, coverage = analyze_archive(loaded, events)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/archive_input.py:450: in analyze_archive
+    result = analyze(events, start.isoformat(), end.isoformat(), history_complete=financial_scope, interval_coverage=intervals, **economic)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/accounting.py:228: in analyze
+    return _analyze(events, utc(start), utc(end), opening_equity, closing_equity,
+scanner/accounting.py:237: in _analyze
+    fee_allocations = validate_fee_allocations(events)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/accounting.py:156: in validate_fee_allocations
+    if utc(event.get('timestamp')) != utc(trade.get('timestamp')):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = 9223372036854775807
+
+    def utc(value: Any) -> datetime:
+        if isinstance(value, int) and not isinstance(value, bool):
+            try:
+                return datetime.fromtimestamp(value, timezone.utc)
+            except (ValueError, OverflowError, OSError) as exc:
+>               raise ValueError('Timestamp is outside the supported UTC date range') from exc
+E               ValueError: Timestamp is outside the supported UTC date range
+
+scanner/accounting.py:78: ValueError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[blockTime-9223372036854775807]
+1 failed, 199 passed, 1 warning, 26 subtests passed in 1.90s

@@ -1,0 +1,30 @@
+{
+  "kind": "clean-locked-install",
+  "state": "PASS",
+  "disposable_install": true,
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "node": "24.19.0"
+  },
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "source_sha256": "6463575c35b2155be22b3d6b7e4d92dc21267c0da713aa89d0a7ab0b243b7bd6",
+  "commands": [
+    {
+      "command": [
+        "bash",
+        "setup.sh"
+      ],
+      "cwd": "/workspace/scratch/scanner-product-clean-install",
+      "exit_code": 0,
+      "log": "evidence/product-milestone/clean-install.log"
+    }
+  ],
+  "seconds": 12.12,
+  "scope": "Actual current source Linux locked setup; Windows/macOS not executed"
+}

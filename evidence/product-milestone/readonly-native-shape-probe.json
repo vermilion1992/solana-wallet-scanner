@@ -1,0 +1,26 @@
+{
+  "source_commit": "06ec7bc",
+  "scope": "Read-only new archive path malformed native input probe",
+  "results": [
+    {
+      "field": "programId",
+      "outcome": "exception",
+      "error": "TypeError: unhashable type: 'dict'"
+    },
+    {
+      "field": "program",
+      "outcome": "structured-events",
+      "unsupported": 0
+    },
+    {
+      "field": "inner_index",
+      "outcome": "exception",
+      "error": "TypeError: unhashable type: 'list'"
+    },
+    {
+      "field": "token_index",
+      "outcome": "structured-events",
+      "unsupported": 2
+    }
+  ]
+}

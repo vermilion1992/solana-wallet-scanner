@@ -1,0 +1,104 @@
+Ignoring backports-tarfile: markers 'python_full_version < "3.12"' don't match your environment
+Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+Ignoring importlib-metadata: markers 'python_full_version < "3.12"' don't match your environment
+Ignoring pywin32-ctypes: markers 'sys_platform == "win32"' don't match your environment
+Ignoring zipp: markers 'python_full_version < "3.12"' don't match your environment
+Collecting annotated-doc==0.0.5 (from -r requirements.txt (line 3))
+  Using cached annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Collecting annotated-types==0.8.0 (from -r requirements.txt (line 7))
+  Using cached annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Collecting anyio==4.15.1 (from -r requirements.txt (line 11))
+  Using cached anyio-4.15.1-py3-none-any.whl (132 kB)
+Collecting certifi==2026.7.22 (from -r requirements.txt (line 21))
+  Using cached certifi-2026.7.22-py3-none-any.whl (136 kB)
+Collecting cffi==2.1.1 (from -r requirements.txt (line 27))
+  Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Collecting click==8.5.0 (from -r requirements.txt (line 129))
+  Using cached click-8.5.0-py3-none-any.whl (125 kB)
+Collecting cryptography==50.0.2 (from -r requirements.txt (line 137))
+  Using cached cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+Collecting fastapi==0.142.2 (from -r requirements.txt (line 198))
+  Using cached fastapi-0.142.2-py3-none-any.whl (144 kB)
+Collecting h11==0.16.0 (from -r requirements.txt (line 202))
+  Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Collecting httpcore==1.0.9 (from -r requirements.txt (line 208))
+  Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+Collecting httpx==0.28.1 (from -r requirements.txt (line 212))
+  Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+Collecting idna==3.20 (from -r requirements.txt (line 216))
+  Using cached idna-3.20-py3-none-any.whl (69 kB)
+Collecting iniconfig==2.3.0 (from -r requirements.txt (line 226))
+  Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Collecting jaraco-classes==3.4.0 (from -r requirements.txt (line 230))
+  Using cached jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+Collecting jaraco-context==6.1.2 (from -r requirements.txt (line 234))
+  Using cached jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+Collecting jaraco-functools==4.6.0 (from -r requirements.txt (line 238))
+  Using cached jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+Collecting jeepney==0.9.0 (from -r requirements.txt (line 242))
+  Using cached jeepney-0.9.0-py3-none-any.whl (49 kB)
+Collecting keyring==25.6.0 (from -r requirements.txt (line 248))
+  Using cached keyring-25.6.0-py3-none-any.whl (39 kB)
+Collecting more-itertools==11.1.0 (from -r requirements.txt (line 252))
+  Using cached more_itertools-11.1.0-py3-none-any.whl (72 kB)
+Collecting opentelemetry-api==1.45.0 (from -r requirements.txt (line 258))
+  Using cached opentelemetry_api-1.45.0-py3-none-any.whl (60 kB)
+Collecting packaging==26.3 (from -r requirements.txt (line 262))
+  Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Collecting pluggy==1.6.0 (from -r requirements.txt (line 266))
+  Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Collecting pycparser==3.0 (from -r requirements.txt (line 270))
+  Using cached pycparser-3.0-py3-none-any.whl (48 kB)
+Collecting pydantic==2.13.5 (from -r requirements.txt (line 274))
+  Using cached pydantic-2.13.5-py3-none-any.whl (472 kB)
+Collecting pydantic-core==2.46.5 (from -r requirements.txt (line 278))
+  Using cached pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+Collecting pygments==2.21.0 (from -r requirements.txt (line 400))
+  Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Collecting pytest==9.1.1 (from -r requirements.txt (line 404))
+  Using cached pytest-9.1.1-py3-none-any.whl (386 kB)
+Collecting secretstorage==3.5.0 (from -r requirements.txt (line 412))
+  Using cached secretstorage-3.5.0-py3-none-any.whl (15 kB)
+Collecting setuptools==84.0.0 (from -r requirements.txt (line 416))
+  Using cached setuptools-84.0.0-py3-none-any.whl (818 kB)
+Collecting starlette==1.7.0 (from -r requirements.txt (line 420))
+  Using cached starlette-1.7.0-py3-none-any.whl (78 kB)
+Collecting typing-extensions==4.16.0 (from -r requirements.txt (line 426))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Collecting typing-inspection==0.4.4 (from -r requirements.txt (line 437))
+  Using cached typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Collecting uvicorn==0.34.2 (from -r requirements.txt (line 443))
+  Using cached uvicorn-0.34.2-py3-none-any.whl (62 kB)
+Installing collected packages: typing-extensions, setuptools, pygments, pycparser, pluggy, packaging, more-itertools, jeepney, jaraco-context, iniconfig, idna, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, pytest, pydantic-core, opentelemetry-api, jaraco-functools, jaraco-classes, httpcore, cffi, anyio, starlette, pydantic, httpx, cryptography, secretstorage, fastapi, keyring
+Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 certifi-2026.7.22 cffi-2.1.1 click-8.5.0 cryptography-50.0.2 fastapi-0.142.2 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 iniconfig-2.3.0 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 jeepney-0.9.0 keyring-25.6.0 more-itertools-11.1.0 opentelemetry-api-1.45.0 packaging-26.3 pluggy-1.6.0 pycparser-3.0 pydantic-2.13.5 pydantic-core-2.46.5 pygments-2.21.0 pytest-9.1.1 secretstorage-3.5.0 setuptools-84.0.0 starlette-1.7.0 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.34.2
+Obtaining file:///workspace/scratch/scanner-product-clean-install-final
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: solana-wallet-scanner
+  Building editable for solana-wallet-scanner (pyproject.toml): started
+  Building editable for solana-wallet-scanner (pyproject.toml): finished with status 'done'
+  Created wheel for solana-wallet-scanner: filename=solana_wallet_scanner-0.3.11-0.editable-py3-none-any.whl size=3304 sha256=00c01b58280b574048c2b0417f42947179641d08b76242b25a5b944246f4f73f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-nmtxah18/wheels/49/80/81/65afff1da00bfc308e8e02087a0fd5a2af5fd26cc276adadf0
+Successfully built solana-wallet-scanner
+Installing collected packages: solana-wallet-scanner
+Successfully installed solana-wallet-scanner-0.3.11
+No broken requirements found.
+
+added 29 packages in 2s
+
+> solana-wallet-scanner-ui@0.3.11 build
+> tsc -b && vite build
+
+vite v8.3.2 building client environment for production...
+transforming...
+✓ 1573 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.57 kB │ gzip:  0.34 kB
+dist/assets/index-Brz2fDKJ.css   67.30 kB │ gzip: 14.38 kB
+dist/assets/index-BQoqt_xB.js   288.78 kB │ gzip: 84.68 kB
+
+✓ built in 186ms
+Setup complete. Start the scanner with ./run.sh
