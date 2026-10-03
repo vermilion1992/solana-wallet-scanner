@@ -131,7 +131,7 @@ def test_unknown_trade_fee_keeps_quantity_only_timing_but_not_profit(tmp_path):
     assert sorted(e['hold_hours']['value'] for e in coverage['quantity_episodes']) == sorted(['24','24','24','72','696'])
 
 
-@pytest.mark.parametrize('field,bad', [('slot',[]),('meta',[]),('transaction',None),('blockTime',None)])
+@pytest.mark.parametrize('field,bad', [('slot',[]),('meta',[]),('transaction',None),('blockTime',None),('blockTime',9223372036854775807)])
 def test_malformed_native_record_retains_gap_without_crashing(tmp_path, field, bad):
     value = bundle(); row=value['manifest']['transactions'][0]
     raw=deepcopy(value['payloads'][row['hash']]);raw[field]=bad
@@ -196,11 +196,14 @@ def test_malformed_instruction_containers_are_dependencies_with_preserved_fee_ob
     assert any(e['kind']=='fee' and e['amount_sol']=='0.000005' for e in decoded['events'])
 
 
-def test_malformed_program_identity_normal_api_import_creates_an_unresolved_report(tmp_path,monkeypatch):
+@pytest.mark.parametrize('field',['programId','blockTime'])
+def test_malformed_program_identity_normal_api_import_creates_an_unresolved_report(tmp_path,monkeypatch,field):
     from types import SimpleNamespace
     import scanner.app as application
     monkeypatch.setattr(application,'Credentials',lambda _:SimpleNamespace(key=None,storage='none',backend=None))
-    value=bundle();row=value['manifest']['transactions'][1];raw=deepcopy(value['payloads'][row['hash']]);raw['transaction']['message']['instructions'][0]['programId']={}
+    value=bundle();row=value['manifest']['transactions'][1];raw=deepcopy(value['payloads'][row['hash']])
+    if field=='programId':raw['transaction']['message']['instructions'][0]['programId']={}
+    else:raw['blockTime']=9223372036854775807
     h=hashlib.sha256(canonical_bytes(raw)).hexdigest();value['payloads'][h]=raw;row['hash']=h
     with TestClient(create_app(tmp_path,'isolated-test-session'),base_url='http://127.0.0.1:8765') as client:
         csrf=client.get('/api/bootstrap',headers={'X-Launch-Token':'isolated-test-session'}).json()['csrf']
@@ -208,7 +211,7 @@ def test_malformed_program_identity_normal_api_import_creates_an_unresolved_repo
         assert response.status_code==200,response.text
         report=client.get('/api/reports/'+response.json()['report_id']).json()
         assert report['metrics']['profit_sol']['status']=='unknown'
-        assert report['metrics']['observed_network_fees_sol']['value']=='0.000055'
+        assert report['metrics']['observed_network_fees_sol']['value']==('0.000055' if field=='programId' else None)
         assert report['qualification']['qualified'] is False
 
 

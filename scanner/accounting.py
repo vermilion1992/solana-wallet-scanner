@@ -72,7 +72,10 @@ def raw_quantity(value: Any) -> int:
 
 def utc(value: Any) -> datetime:
     if isinstance(value, int) and not isinstance(value, bool):
-        return datetime.fromtimestamp(value, timezone.utc)
+        try:
+            return datetime.fromtimestamp(value, timezone.utc)
+        except (ValueError, OverflowError, OSError) as exc:
+            raise ValueError('Timestamp is outside the supported UTC date range') from exc
     if not isinstance(value, str):
         raise ValueError('Timestamp must be timezone-aware ISO or integer seconds')
     parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))

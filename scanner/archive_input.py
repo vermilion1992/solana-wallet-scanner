@@ -228,6 +228,8 @@ def _safe_decoder_container(raw):
             return False
         if any(type(raw.get(k)) not in (int, type(None)) for k in ('slot', 'blockTime')):
             return False
+        if type(raw.get('blockTime')) is int:
+            utc(raw['blockTime'])
         keys = message.get('accountKeys')
         if not isinstance(keys, list) or any(not isinstance(k, str) and not (isinstance(k, dict) and isinstance(k.get('pubkey'), str)) for k in keys):
             return False
@@ -457,11 +459,16 @@ def analyze_archive(loaded, events):
             return start <= utc(value) < end
         except (ValueError, TypeError, OverflowError):
             return False
+    def timestamp_available(value):
+        try:
+            utc(value)
+            return type(value) is int
+        except (ValueError, TypeError, OverflowError):
+            return False
     fee_rows = [e for e in events if e['kind'] == 'fee' and e.get('paid_by_wallet') is True and within(e.get('timestamp'))]
-    relevant = [r for r in loaded['records'] if isinstance(r['raw'], dict) and type(r['raw'].get('blockTime')) is int
-                and start <= utc(r['raw']['blockTime']) < end]
+    relevant = [r for r in loaded['records'] if isinstance(r['raw'], dict) and within(r['raw'].get('blockTime'))]
     native_groups = loaded['consistency']['transactions']
-    fee_ok = all(isinstance(r['raw'], dict) and type(r['raw'].get('blockTime')) is int for r in loaded['records']) and all(
+    fee_ok = all(isinstance(r['raw'], dict) and timestamp_available(r['raw'].get('blockTime')) for r in loaded['records']) and all(
         native_groups.get(r['signature'], {}).get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' for r in relevant)
     fee_ok = fee_ok and all(e.get('amount_sol') is not None for e in fee_rows)
     fees = canonical(sum((decimal(e['amount_sol']) for e in fee_rows if e.get('amount_sol') is not None), Decimal(0)))
