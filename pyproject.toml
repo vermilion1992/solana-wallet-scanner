@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solana-wallet-scanner"
+version = "0.3.11"
+description = "A read-only, local Solana wallet research scanner"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi==0.142.2",
+  "starlette==1.7.0",
+  "httpx==0.28.1",
+  "uvicorn==0.34.2",
+  "keyring==25.6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+
+[project.scripts]
+solana-wallet-scanner = "scanner.__main__:main"
+
+[tool.setuptools]
+packages = ["scanner"]
+
+[tool.setuptools.package-data]
+scanner = ["examples/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
