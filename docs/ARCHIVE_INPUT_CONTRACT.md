@@ -1,6 +1,8 @@
 # Executable archived accounting contract
 
-This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v1` identifies this new input interpretation; existing FIFO v3 and account-position v10 interpretations remain unchanged.
+This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v2` adds source-derived fee-window membership; existing FIFO v3 and account-position v10 interpretations remain unchanged. Older archived calculations require an offline child rebuild; their saved values remain immutable.
+
+Selected **in-window** fees require the linked raw/page/block clock possibilities to agree on half-open window membership. Exact timestamps or same-slot ordering may remain unresolved when every bounded possibility belongs to the same interval side. Boundary-crossing, missing or unsupported relevant clocks revoke the total. Known disjoint clock sources, absent optional block time and independently proved zero wallet-paid fee projections do not erase supported fees. Native unordered observed-record totals have a different population and retain their existing clock-independent requirements.
 
 ## Input and provenance
 

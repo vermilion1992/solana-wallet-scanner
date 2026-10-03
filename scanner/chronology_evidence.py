@@ -8,6 +8,7 @@ no time fact. Quantities, native fees and source identity are separate checks.
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import datetime, timezone
 
 VERSION = "slot-chronology-evidence-v2"
 
@@ -272,6 +273,10 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
         canonical_time = next(iter(known_times)) if time_state == "PASS" else None
         assessed_slots[str(slot)] = {"state": state, "time_state": time_state, "order_state": order_state,
                                     "canonical_time": canonical_time, "signatures": sorted(rows),
+                                    "time_facts": sorted([
+                                        {"timestamp": timestamp, "hash": digest, "kind": origin, "signature": signature}
+                                        for timestamp, digest, origin, signature in facts],
+                                        key=lambda fact: (fact['kind'], fact['signature'] or '', fact['hash'] or '', repr(fact['timestamp']))),
                                     "evidence": evidence, "reason": reason, "conflicts": slot_conflicts}
         for signature in rows:
             index = block_order.index(signature) if order_state == "PASS" and block_order is not None and signature in block_order else None
@@ -296,3 +301,40 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
     return {"version": VERSION, "state": "PASS" if transactions and not conflicts and all(row["state"] == "PASS" for row in transactions.values()) else "UNKNOWN",
             "transactions": transactions, "slots": assessed_slots, "conflicts": conflicts,
             "placements": placements, "invalid_block_receipts": invalid_blocks}
+
+
+def assess_interval_membership(chronology, signature, start, end):
+    """Project every bounded clock possibility onto one half-open interval.
+
+    Fee addition needs interval membership, not exact time or same-slot order.
+    Disagreeing clocks all inside (or all outside) may support this narrower
+    fact. Missing/unbounded clocks and a boundary-crossing disagreement may not.
+    Callers derive chronology from raw sources; client declarations are not
+    accepted as chronology certificates by the application.
+    """
+    placement = chronology['placements'].get(signature, {})
+    evidence = set(placement.get('evidence', []))
+    memberships = set()
+    reason = None
+    if placement.get('unbounded', True) or not placement.get('possible_slots'):
+        reason = 'A linked transaction has unbounded or unavailable clock placement.'
+    for slot in placement.get('possible_slots', []):
+        facts = chronology['slots'].get(str(slot), {}).get('time_facts', [])
+        if not facts:
+            reason = 'A possible transaction slot lacks a supported time fact.'
+        for fact in facts:
+            if fact.get('hash'):
+                evidence.add(fact['hash'])
+            timestamp = fact.get('timestamp')
+            try:
+                if not _integer(timestamp):
+                    raise ValueError('Invalid clock')
+                when = datetime.fromtimestamp(timestamp, timezone.utc)
+                memberships.add(start <= when < end)
+            except (ValueError, OverflowError, OSError):
+                reason = 'A linked required timestamp is missing, malformed or outside the supported UTC range.'
+    if len(memberships) != 1:
+        reason = reason or 'Linked clock possibilities disagree about reporting-window membership.'
+    return {'state': 'UNKNOWN' if reason else 'PASS', 'member': None if reason else next(iter(memberships)),
+            'reason': reason or 'All bounded clock possibilities agree on this half-open interval; exact time/order is a separate fact.',
+            'evidence': sorted(evidence)}

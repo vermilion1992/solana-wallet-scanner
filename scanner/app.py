@@ -69,6 +69,14 @@ def create_app(data_dir, launch_token=None):
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
         from .position_evidence import VERSION as POSITION_METHODOLOGY
         result = {**report, "qualification": qualify_report(report), "copy_review": review_copy_behavior(report)}
+        if report.get('archive_input_hash') and not report.get('preview'):
+            from .archive_input import METHOD as ARCHIVE_METHODOLOGY
+            archive = report.get('archive_accounting')
+            saved = archive.get('version') if isinstance(archive, dict) else None
+            state = 'current' if saved == ARCHIVE_METHODOLOGY else 'rebuild_required' if saved else 'missing'
+            result['archive_assessment'] = {'saved_methodology': saved, 'current_methodology': ARCHIVE_METHODOLOGY,
+                'state': state, 'reason': 'Current archived-source interpretation; coverage and qualification remain separate.' if state == 'current' else
+                'Rebuild this archived report offline to apply current source and fee-window checks. Saved values remain unchanged.'}
         if report.get("source") == "live" and not report.get("preview"):
             coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}
             for name, current, scope in (("history", HISTORY_METHODOLOGY, "account-specific receipt"),

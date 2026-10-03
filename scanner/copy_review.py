@@ -81,6 +81,14 @@ def qualify_report(report):
         checks.append({"key": "position_methodology", "label": "Current account position methodology", "state": "UNKNOWN",
                        "actual": saved_position, "expected": POSITION_METHODOLOGY,
                        "reason": "Rebuild from saved records to evaluate all position chronology dependencies under the current methodology."})
+    if report.get('archive_input_hash'):
+        from .archive_input import METHOD as ARCHIVE_METHODOLOGY
+        archive = report.get('archive_accounting')
+        saved_archive = archive.get('version') if isinstance(archive, dict) else None
+        if saved_archive != ARCHIVE_METHODOLOGY:
+            checks.append({'key': 'archive_methodology', 'label': 'Current archived-source methodology', 'state': 'UNKNOWN',
+                           'actual': saved_archive, 'expected': ARCHIVE_METHODOLOGY,
+                           'reason': 'Rebuild this archived report offline before qualification under the current source interpretation.'})
     metrics = report.get("metrics") if isinstance(report.get("metrics"), dict) else {}
     profit = metrics.get("profit_sol") if isinstance(metrics.get("profit_sol"), dict) else {}
     amount = _number(profit.get("value"), signed=True) if profit.get("status") == "known" else None

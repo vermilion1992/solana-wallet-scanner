@@ -1127,6 +1127,8 @@ export function ReportView({
         <section className="panel" data-archive-accounting={report.archive_accounting.dataset} data-archive-report-id={report.id}>
           <SectionHeading title={report.archive_accounting.dataset === 'synthetic' ? 'Synthetic accounting · development' : 'Archived records · partial wallet coverage'}
             subtitle={report.archive_accounting.scope} />
+          {report.archive_assessment && report.archive_assessment.state !== 'current' &&
+            <p role="status">{report.archive_assessment.reason}</p>}
           <p>Selected network fees: {decimal(report.metrics.observed_network_fees_sol?.value, 9)} SOL. This observation does not establish all trading costs.</p>
           {report.archive_accounting.gaps.map((gap, i) => <p key={i}>{gap}</p>)}
           <details><summary>Inspect metric evidence requirements</summary>

@@ -230,6 +230,30 @@
         "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[*]",
         "tests/test_archive_input.py::test_malformed_program_identity_normal_api_import_creates_an_unresolved_report[*]"
       ]
+    },
+    {
+      "id": "archive-fee-window",
+      "axis": "Relevance/chronology and metric dependencies",
+      "selectors": [
+        "tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty*",
+        "tests/test_archive_fee_window.py::test_bounded_clocks_inside_same_window_preserve_independent_fees*",
+        "tests/test_archive_fee_window.py::test_required_clock_loss_never_strengthens_fees_and_restoration_recovers*",
+        "tests/test_archive_fee_window.py::test_available_disjoint_clock_records_do_not_erase_selected_fee_observations*",
+        "tests/test_archive_fee_window.py::test_fee_membership_is_independent_of_same_slot_ordering",
+        "tests/test_archive_fee_window.py::test_optional_null_block_time_does_not_replace_supported_raw_time",
+        "tests/test_archive_fee_window.py::test_zero_wallet_paid_fee_is_independent_of_ambiguous_interval_placement",
+        "tests/test_archive_fee_window.py::test_permutations_and_redundant_clock_links_do_not_change_metric_semantics",
+        "tests/test_archive_fee_window.py::test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency*",
+        "tests/test_archive_fee_window.py::test_old_archive_interpretation_requires_rebuild_without_rewriting_saved_values*"
+      ]
+    },
+    {
+      "id": "private-git-reproduction",
+      "axis": "Security/delivery",
+      "selectors": [
+        "tests/test_repository_audit.py::*",
+        "tests/test_private_publication.py::*"
+      ]
     }
   ],
   "browser_required": [

@@ -26,12 +26,12 @@ from .config import validate_address
 from .decoder import decode_transactions
 from .investigation import decode_supported_swaps, _keys, WSOL
 from .position_evidence import _balance, _quantity_point
-from .source_consistency import assess_source_consistency
-from .chronology_evidence import assess_chronology
+from .source_consistency import assess_source_consistency, source_archive_receipts
+from .chronology_evidence import assess_chronology, assess_interval_membership
 from .storage import EvidenceError, now
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v1'
+METHOD = 'archive-ledger-v2'
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
 MAX_TOTAL = 256 * 1024 * 1024
@@ -206,15 +206,28 @@ def load_archive(store, digest):
     for record in records:
         unique.setdefault(record['signature'], record)
     records = list(unique.values())
+    clock_sources, pages, blocks = [], [], []
     for ref in manifest.get('evidence', []):
-        read(ref['hash'], ref['kind'])
+        payload = read(ref['hash'], ref['kind'])
+        if ref['kind'] in ('signature-page', 'block-order'):
+            params = payload.get('params') if isinstance(payload, dict) else None
+            minimum = params.get('minContextSlot') if isinstance(params, dict) else None
+            # This only validates the raw clock role/request. A page's own
+            # context does not establish a historical population or snapshot.
+            typed = source_archive_receipts({'links': [{'kind': ref['kind'], 'hash': ref['hash']}]},
+                {ref['hash']: payload}, {ref['hash']: 'readable' if payload is not None else 'unavailable'},
+                snapshot_slot=minimum)['receipts'][0]
+            clock_sources.append(typed)
+            (pages if ref['kind'] == 'signature-page' else blocks).append({'hash': ref['hash'], 'payload': payload})
     classifications = [read(h, 'classification') for h in manifest.get('classification_hashes', [])]
     valuation = read(manifest['valuation_hash'], 'valuation') if manifest.get('valuation_hash') else None
     consistency = assess_source_consistency(all_records, wallet=manifest['address'])
-    chronology = assess_chronology(all_records)
+    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks)
     return {'manifest': manifest, 'records': records, 'all_records': all_records, 'world': world,
             'classifications': classifications, 'valuation': valuation, 'receipts': receipts,
-            'consistency': consistency, 'chronology': chronology, 'input_hash': digest}
+            'consistency': consistency, 'chronology': chronology, 'clock_sources': clock_sources,
+            'clock_payloads': {row['hash']: cache[row['hash']] for row in clock_sources},
+            'input_hash': digest}
 
 
 def _safe_decoder_container(raw):
@@ -459,23 +472,48 @@ def analyze_archive(loaded, events):
             return start <= utc(value) < end
         except (ValueError, TypeError, OverflowError):
             return False
-    def timestamp_available(value):
-        try:
-            utc(value)
-            return type(value) is int
-        except (ValueError, TypeError, OverflowError):
-            return False
     fee_rows = [e for e in events if e['kind'] == 'fee' and e.get('paid_by_wallet') is True and within(e.get('timestamp'))]
     relevant = [r for r in loaded['records'] if isinstance(r['raw'], dict) and within(r['raw'].get('blockTime'))]
     native_groups = loaded['consistency']['transactions']
-    fee_ok = all(isinstance(r['raw'], dict) and timestamp_available(r['raw'].get('blockTime')) for r in loaded['records']) and all(
+    membership = {}
+    zero_exclusions = []
+    unresolved_clocks = [clock for clock in loaded['clock_sources'] if clock['state'] != 'PASS']
+    for record in loaded['records']:
+        signature = record['signature']
+        receipt = assess_interval_membership(loaded['chronology'], signature, start, end)
+        slots = set(loaded['chronology']['placements'].get(signature, {}).get('possible_slots', []))
+        for clock in unresolved_clocks:
+            clock_scope = clock['scope']
+            unrelated = clock_scope.get('slot') is not None and clock_scope['slot'] not in slots
+            if clock_scope.get('signatures') is not None and signature not in clock_scope['signatures']:
+                # Supported role scope may prove unrelatedness even when a
+                # different page entry's timestamp is malformed.
+                payload = loaded['clock_payloads'].get(clock['hash'])
+                page_slots = {row.get('slot') for row in payload.get('result', [])
+                              if isinstance(row, dict) and type(row.get('slot')) is int} if payload else set()
+                unrelated = not bool(page_slots & slots)
+            if not unrelated:
+                receipt.update(state='UNKNOWN', member=None,
+                               reason='A still-linked clock source is missing, malformed or unsupported; its relevance is unresolved.')
+                receipt['evidence'] = sorted(set(receipt['evidence'] + clock['evidence']))
+        group = native_groups.get(signature, {})
+        raw = record['raw']
+        if receipt['state'] != 'PASS' and group.get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' and isinstance(raw, dict):
+            keys = _keys(raw['transaction']['message'], raw['meta'])
+            if raw['meta'].get('fee') == 0 or keys and keys[0] != manifest['address']:
+                # A independently proved zero wallet-paid fee contributes
+                # zero under every possible interval placement.
+                zero_exclusions.append(signature)
+        membership[signature] = receipt
+    fee_ok = all(row['state'] == 'PASS' or signature in zero_exclusions for signature, row in membership.items()) and all(
         native_groups.get(r['signature'], {}).get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' for r in relevant)
     fee_ok = fee_ok and all(e.get('amount_sol') is not None for e in fee_rows)
     fees = canonical(sum((decimal(e['amount_sol']) for e in fee_rows if e.get('amount_sol') is not None), Decimal(0)))
     result['metrics']['observed_network_fees_sol'] = {'value': fees if fee_ok else None, 'status': 'known' if fee_ok else 'unknown',
         'unit': 'SOL', 'population': 'Selected in-window records with an independently supported wallet fee payer; not all interval costs',
-        'reason': None if fee_ok else 'A linked selected fee/payer observation remains unavailable or conflicts.',
-        'evidence': sorted({h for e in fee_rows for h in e.get('evidence', [])})}
+        'reason': None if fee_ok else 'A linked selected fee/payer or reporting-window membership observation remains unavailable or conflicts.',
+        'evidence': sorted({h for e in fee_rows for h in e.get('evidence', [])} |
+                           {h for receipt in membership.values() for h in receipt['evidence']})}
     result['metrics']['economic_pnl_sol']['reason'] = economic_gap
     for metric in result['metrics'].values():
         if metric['status'] == 'unknown' and not scope and metric['population'] != result['metrics']['observed_network_fees_sol']['population']:
@@ -491,7 +529,7 @@ def analyze_archive(loaded, events):
         if key == 'economic_pnl_sol':
             required = ['historical_population', 'boundary_inventory', 'historical_marks', 'valued_external_flows']
         if key == 'observed_network_fees_sol':
-            required = ['selected_record_identity', 'native_fee', 'wallet_payer', 'linked_fee_alternatives']
+            required = ['selected_record_identity', 'native_fee', 'wallet_payer', 'linked_fee_alternatives', 'nonzero_fee_window_membership']
         if key == 'positive_weeks':
             required.append('independent_28_days')
         if key == 'completed_positions_90d':
@@ -505,6 +543,7 @@ def analyze_archive(loaded, events):
         'real_acceptance': 'NOT_APPLICABLE_SYNTHETIC' if manifest['dataset'] == 'synthetic' else 'BLOCKED',
         'population_state': 'PASS' if financial_scope else 'UNKNOWN', 'quantity_population_state': 'PASS' if scope else 'UNKNOWN', 'gaps': gaps,
         'source_receipts': loaded['receipts'], 'source_consistency': loaded['consistency'], 'chronology': loaded['chronology'],
+        'fee_interval_membership': membership, 'proved_zero_fee_exclusions': zero_exclusions,
         'account_quantity_points': points, 'quantity_episodes': _quantity_episodes(points, supported=scope, world_hash=manifest.get('world_hash')),
         'boundary_inventory': boundaries, 'metric_requirements': requirements,
         'input_hash': loaded['input_hash'], 'provider_requests': 0, 'credential_lookups': 0}

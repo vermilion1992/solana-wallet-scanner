@@ -238,6 +238,7 @@ export type Report = {
   evidence_status: string;
   preset?: Preset;
   archive_input_hash?: string;
+  archive_assessment?: HistoryAssessment;
   archive_accounting?: {
     dataset: 'real' | 'synthetic';
     scope: string;
