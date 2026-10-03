@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-03",
+  "scope": "targeted R15 replay and workflow handoff, not full release review",
+  "baseline_archive": "Solana_Wallet_Scanner_v0_3_11.zip",
+  "sha256": "8da8ee0519643c02b156279f117244ea545631cc5775ddb2dfe5d74a680302f7",
+  "unique_entries": 152,
+  "crc_ok": true,
+  "extracted_source_entries_unchanged": true,
+  "tests": {
+    "bundle": "untouched previous independent R15 review",
+    "passed": 79,
+    "former_regressions": 44,
+    "controls": 35,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "python": "3.13.5",
+  "packages": {
+    "pytest": "9.0.2",
+    "fastapi": "0.128.2",
+    "starlette": "0.50.0",
+    "httpx": "0.28.1",
+    "uvicorn": "0.48.0",
+    "pydantic": "2.13.4",
+    "keyring": "not installed in current environment"
+  },
+  "full_suite": "not run in this handoff",
+  "frontend_build": "not run in this handoff",
+  "browser": "not run in this handoff",
+  "exact_install": "not run in this handoff",
+  "real_wallet_acceptance": "not performed",
+  "application_patched": false,
+  "remote_repository_changed": false,
+  "codex_task_launched": false
+}

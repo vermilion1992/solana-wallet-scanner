@@ -8,3 +8,6 @@ local-data/
 data/
 .env
 .runtime.lock
+
+# Local acceptance logs and disposable installations
+evidence/runs/

@@ -1,0 +1,38 @@
+{
+  "baseline_commit": "3458aac9e39f598da9ec6adeb4c077126e9e33eb",
+  "archive": "Solana_Wallet_Scanner_v0_3_11.zip",
+  "archive_sha256": "8da8ee0519643c02b156279f117244ea545631cc5775ddb2dfe5d74a680302f7",
+  "entries": 152,
+  "supplied_manifests_matched": true,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "node": "24.19.0"
+  },
+  "methods": {
+    "history": "history-evidence-v8",
+    "position": "account-position-evidence-v9",
+    "source": "source-consistency-v4"
+  },
+  "previous_executed_baseline": {
+    "python_passed": 1527,
+    "subtests_passed": 264,
+    "log": "/workspace/scratch/v0311-pytest-accepted.log",
+    "seconds": 226.38,
+    "frontend_assertions": 315,
+    "offline_browser_children": 14,
+    "same_source_manifest": true,
+    "execution": "Developer-executed preceding release; current candidate checks still required"
+  },
+  "external_handoff_replay": {
+    "r15_passed": 79,
+    "full_suite_replayed": false,
+    "python": "3.13.5"
+  },
+  "gate_B": "OPEN"
+}
