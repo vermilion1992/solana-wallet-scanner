@@ -1,0 +1,17 @@
+{
+  "kind": "source-probe-user-authorisation",
+  "recorded_utc": "2026-10-03T16:36:50.141507+00:00",
+  "state": "APPROVED",
+  "user_message": "Yea you may",
+  "approved_plan": {
+    "path": "evidence/product-milestone/SOURCE_PROBE_PLAN.json",
+    "sha256": "c3b78e505e9052da901af9e29c6556a993ff147affad4b735083954182ee432f"
+  },
+  "request_cap": 10,
+  "credit_cap": 100,
+  "retries": 0,
+  "purchases": false,
+  "full_wallet_collection_authorised": false,
+  "scope": "The previously proposed bounded read-only Helius source-feasibility probe and necessary credential use are authorised. No repeat permission is required.",
+  "outstanding_information": "Current manual dashboard Free-plan/cycle/remaining-credit/autoscaling details were not supplied in the approval. They remain a required input, not another approval decision."
+}

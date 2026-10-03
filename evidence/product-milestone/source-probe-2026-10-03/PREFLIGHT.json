@@ -1,0 +1,116 @@
+{
+  "kind": "approved-source-probe-preflight",
+  "recorded_utc": "2026-10-03T16:36:50.141961+00:00",
+  "state": "BLOCKED_PENDING_DASHBOARD_DETAILS",
+  "authorization": {
+    "path": "evidence/product-milestone/source-probe-2026-10-03/AUTHORIZATION.json",
+    "sha256": "7e9353dc1acfa5299c3eee1c1766f9eea6440161d2813907ff840f61a3dcef5d",
+    "bytes": 829
+  },
+  "provider_requests": 0,
+  "provider_credits_reserved": 0,
+  "credential_lookups_authorised": true,
+  "credential_lookup_observation": {
+    "checks": 1,
+    "configured_key_available": false,
+    "environment_or_keyring_storage": "none",
+    "earlier_user_supplied_key_available_for_private_session_input": true,
+    "credential_values_retained": false
+  },
+  "network_policy": {
+    "observations_current": true,
+    "state": "enforced",
+    "mode": "unrestricted",
+    "http_proxy_preserved": true,
+    "vpn_configured": false
+  },
+  "required_input": [
+    "Plan name (Free)",
+    "Current billing-cycle start and end dates",
+    "At least 100 remaining credits",
+    "Autoscaling off"
+  ],
+  "requirement_source": {
+    "path": "evidence/product-milestone/SOURCE_PROBE_PLAN.json",
+    "quoted_requirement": "Manual current Free subscription/cycle/remaining-credit confirmation; no autoscaling."
+  },
+  "runner": {
+    "path": "evidence/product-milestone/source-probe-2026-10-03/execute_probe.py",
+    "sha256": "43a5a75ae79026a95a6ded9ccd2f7b7fb6d7d3cac6f91615828ecbd2fa2abe49",
+    "bytes": 16951
+  },
+  "offline_test_code": {
+    "path": "evidence/product-milestone/source-probe-2026-10-03/test_execute_probe.py",
+    "sha256": "c236f7d1756e974204585b825b994fccbc6751b9ff960ab70f8352f0426178d1",
+    "bytes": 9129
+  },
+  "offline_check": {
+    "state": "PASS",
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "evidence/product-milestone/source-probe-2026-10-03/test_execute_probe.py"
+    ],
+    "exit_code": 0,
+    "tests": 28,
+    "log": {
+      "path": "evidence/product-milestone/source-probe-2026-10-03/offline-controls.log",
+      "sha256": "421f5df3650105228307f3e49c77e33fef9fa0b32a0018d8ffee99b54d106ae7",
+      "bytes": 99
+    },
+    "scope": "Mock HTTP control tests for caps, denial/no-retry, redirects, credential redaction, retained evidence, response schema and supported preservation; no live access or financial acceptance claim."
+  },
+  "original_quota_ledgers": [
+    {
+      "path": "/workspace/scratch/helius-capability-pilot/scanner.sqlite",
+      "sha256": "1e0c85abf32dee8ba5241f402785989b964592b3076019f7ee6da67429269e0b",
+      "read_mode": "read-only SQLite URI",
+      "quota": [
+        {
+          "provider": "helius",
+          "cycle": "capability-pilot-2026-10-02",
+          "reserved_cost_sum": 2,
+          "requests": 2,
+          "states": "settled"
+        }
+      ]
+    },
+    {
+      "path": "/workspace/scratch/wallet-scanner-final/scanner.sqlite",
+      "sha256": "80d9ab4ead91709dd6630cac360ecdcf815794ed252ff0f67f0efe96d6a5e9f8",
+      "read_mode": "read-only SQLite URI",
+      "quota": [
+        {
+          "provider": "geckoterminal",
+          "cycle": "2026-10-02",
+          "reserved_cost_sum": 4,
+          "requests": 4,
+          "states": "settled"
+        },
+        {
+          "provider": "helius",
+          "cycle": "setup-pilot",
+          "reserved_cost_sum": 200,
+          "requests": 200,
+          "states": "settled"
+        }
+      ]
+    }
+  ],
+  "source_sha256": "c914891c9086a70521fc897b0db22b2a2006389a29fe9c976ee8c2d258e258ca",
+  "software_source_unchanged": true,
+  "documentation_note": {
+    "path": "evidence/references/product-milestone/helius-billing-nav.txt",
+    "line": 91,
+    "quote": "getTransactionsForAddress | 10+ | Enhanced history (Developer+ only).",
+    "decision": "The retained primary billing navigation lists Developer+ access. The supplied key entitlement remains untested; this does not prove that every free source route is unavailable."
+  },
+  "B1": "LIVE_ENTITLEMENT_UNTESTED",
+  "B2": "Existing archive development slice, full real capability OPEN",
+  "B3": "BLOCKED",
+  "next_action": "After the required dashboard details arrive, validate the existing cycle and run this same authorised probe. Stop on the first denial/error; retain sanitised source bytes and conservative settlement receipts. Do not purchase access or reset the exhausted setup pilot."
+}
