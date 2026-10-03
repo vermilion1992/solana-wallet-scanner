@@ -1,0 +1,109 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "recorded_at": "2026-10-03T14:24:15.440074+00:00",
+  "commit": "96fb1ebb7f6f41dc3c3c72ff4cac209a3fdcc272",
+  "source_sha256": "b3ec1bc2b862af41952d2a0f93d47f26ea1ba9add07dd6e6d8021745fc213534",
+  "scope": "Gate A declared subset; Gate B OPEN",
+  "review_type": "Distinct developer read-only pass in detached exact-candidate worktree; same engineer, not third-party or independent browser certification.",
+  "workspace": "/workspace/scratch/scanner-stabilise-final-review",
+  "workspace_unchanged": true,
+  "matrix_review_complete": true,
+  "matrix_required_items": 61,
+  "findings": [
+    {
+      "id": "SC-01",
+      "category": "confirmed defect",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "severity": "medium conservative false UNKNOWN",
+      "source": "scanner/instruction_scope.py:34",
+      "reproducer": "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api",
+      "baseline": "Seven final-oracle failures /207 controls in214 cases; one incorrect canonical name.",
+      "fix": "Canonical withdrawFromNonce with unchanged required targets; position interpretation v10.",
+      "positive_controls": "All38 primary declared contracts,24 standard Token-2022 counterparts, required-field negatives, disjoint timing preservation and four selected/alternative \u00d7 outer/inner API cases."
+    },
+    {
+      "id": "PROC-02",
+      "category": "confirmed validation-tool defect",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "severity": "medium essential candidate validation workflow",
+      "source": "tools/browser_acceptance.py:13",
+      "reproducer": "python tools/browser_acceptance.py --python .venv/bin/python --output evidence/runs/<new-relative-output>",
+      "baseline": "First candidate full backend/frontend passed; browser failed before launch when baseline subprocess could not read relative cases.json. Overall gate correctly FAILED.",
+      "fix": "Normalise output/corpus paths before changing directories; wrapper output is absolute. Virtualenv interpreter path remains intact.",
+      "positive_controls": "Actual corrected relative-path browser replay passed six children/16 captures, source loss/restoration, real case, immutable parents, zero provider/credential calls. Nine gate controls passed.",
+      "evidence": "evidence/runs/browser-relative-path-fixed/result.json"
+    }
+  ],
+  "remaining_gate_B_issues": [
+    {
+      "id": "CAP-01",
+      "state": "OPEN",
+      "reason": "Completed-wallet historical ownership/event/basis/population/classification/cost metric/report branch is not implemented."
+    },
+    {
+      "id": "DATA-01",
+      "state": "BLOCKED",
+      "reason": "No authorised archive/source contract establishes exhaustive historical ownership/lifecycle and complete real acceptance inputs; economic marks/valued flows also absent."
+    }
+  ],
+  "audit_completed": [
+    "source role/index/authenticated multiset and read loss",
+    "typed formats and mixed/program identity normalization",
+    "every admitted target family against pinned primary schemas",
+    "chronology, relevance and half-open selection",
+    "absolute quantity, execution and ownership across all linked alternatives",
+    "per-metric dependencies and independent fee preservation",
+    "actual cap boundaries, deterministic permutations/repeats/third conflicts",
+    "frozen reconstruction, original checkpoints/parent immutability and old-method freshness",
+    "UI/export method/status/paths and guarded harness behavior",
+    "locked install/runtime and validation runner gating",
+    "R1 actual archive inventory/source limitations and implementation separation"
+  ],
+  "executed_checks": [
+    {
+      "command": "git diff --check 3458aac..HEAD -- . :!evidence/",
+      "exit_code": 0,
+      "scope": "software/docs only; raw handoff/reference whitespace deliberately retained"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /workspace/solana-wallet-scanner/.venv/bin/python -m pytest -q -p no:cacheprovider tests/review_v039 tests/review_v0310 tests/test_token_instruction_schema.py tests/test_instruction_contract_matrix.py tests/test_source_role_matrix.py tests/test_validation_gates.py tests/test_report_rebuild.py",
+      "cwd": "/workspace/scratch/scanner-stabilise-final-review",
+      "exit_code": 0,
+      "result": "484 passed, one existing warning",
+      "log": "evidence/runs/readonly-final-review-tests.log"
+    },
+    {
+      "command": "Pinned-source operation-arm/manual field audit",
+      "exit_code": 0,
+      "result": "38 minimum name/field contracts passed",
+      "log": "evidence/runs/readonly-final-primary-review.json"
+    },
+    {
+      "command": "Configured Python tools/check_matrix.py with cache writing disabled",
+      "exit_code": 0,
+      "result": "61 required items resolve to1791 unique collected nodes",
+      "log": "evidence/runs/readonly-final-review-matrix.json"
+    }
+  ],
+  "investigated_non_defects": [
+    "ND-01 enclosing parsed rejection paths",
+    "ND-02 actual UI labels and legitimate preset version changes",
+    "ND-03 missing original collector ancestry in portable fixture"
+  ],
+  "review_probe_notes": [
+    "Full diff whitespace check returned2 for preserved handoff excerpts/reference text. The software-only check passed; raw evidence was not rewritten.",
+    "An initial manual probe expected citations to point at emitted type lines. They correctly point at operation-arm starts; all38 were inspected without changing software/fixtures."
+  ],
+  "input_integrity_record": "evidence/INPUT_INTEGRITY.json",
+  "decision": "No unresolved confirmed in-scope blocker after changed-path and complete declared-matrix review. Final Gate A acceptance still requires full frozen-candidate gates; this attestation alone is not acceptance.",
+  "reviewed_after_first_candidate_failure": {
+    "original_commit": "60931877e6f4f49f7f355825e699522bb00fb196",
+    "failed_gate_record": "evidence/runs/candidate-6093187/result.json",
+    "changed_paths": "Two tool path-boundary changes plus issue/scope documentation. Application mappings/fixtures/locks unchanged.",
+    "affected_actual_browser": "evidence/runs/browser-relative-path-fixed/result.json",
+    "affected_gate_controls": "evidence/runs/relative-path-gate-controls.log"
+  }
+}
