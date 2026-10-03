@@ -1,0 +1,568 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://www.helius.dev/docs/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Helius Credits
+
+> Complete guide to Helius credits including credit costs, how credits work, and credits for data streaming solutions.
+
+## What are credits?
+
+Credits are a unit of account that we use to bill usage for RPCs, API requests, and data streaming products like LaserStream gRPC and LaserStream WebSocket.
+
+Every plan has a base number of credits, and every API call has an assigned credit cost.
+
+Below, we outline the credits per plan, credit costs by API, and credits for streaming data.
+
+<CardGroup cols={3}>
+  <Card title="Monthly Allocation" icon="calendar">
+    Credits reset monthly
+  </Card>
+
+  <Card title="Credit Priority" icon="arrow-down">
+    Credits are consumed in this order: monthly, prepaid, autoscaling
+  </Card>
+
+  <Card title="Flexible Billing" icon="credit-card">
+    Pay for additional credits when needed
+  </Card>
+</CardGroup>
+
+***
+
+## Base Credits by Plan
+
+Here is a breakdown of the total number of credits that are included by default in each plan.
+
+If you need more credits, upgrade your plan, enable [autoscaling](/docs/billing/additional-credits), purchase prepaid credits, or contact sales to discuss enterprise options.
+
+For more information, read our [plans and pricing guide](/docs/billing/plans)
+
+<table>
+  <thead align="left">
+    <tr>
+      <th width="160">Feature</th>
+      <th width="140">Free</th>
+      <th width="140">Developer</th>
+      <th width="140">Business</th>
+      <th width="140">Professional</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>Pricing</strong></td>
+      <td>\$0/month</td>
+      <td>\$49/month</td>
+      <td>\$499/month</td>
+      <td>\$999/month</td>
+    </tr>
+
+    <tr>
+      <td><strong>Monthly Credits</strong></td>
+      <td>1M</td>
+      <td>10M</td>
+      <td>100M</td>
+      <td>200M</td>
+    </tr>
+  </tbody>
+</table>
+
+***
+
+## Standard Credits
+
+<table>
+  <thead align="left">
+    <tr>
+      <th style={{width: '200px'}}>Service</th>
+      <th style={{width: '50px'}}>Credits</th>
+      <th style={{width: '470px'}}>Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>Standard RPC Calls</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>All RPC calls except those listed separately</td>
+    </tr>
+
+    <tr>
+      <td><strong>getProgramAccounts</strong></td>
+      <td style={{textAlign: 'center'}}>10</td>
+      <td>Get all accounts/data owned by a program</td>
+    </tr>
+
+    <tr>
+      <td><strong>getProgramAccountsV2</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Paginated version of getProgramAccounts</td>
+    </tr>
+
+    <tr>
+      <td><strong>simulateBundle</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Simulate Jito Bundles</td>
+    </tr>
+
+    <tr>
+      <td><strong>Priority Fee API</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Estimate priority fees</td>
+    </tr>
+
+    <tr>
+      <td><strong>DAS API</strong></td>
+      <td style={{textAlign: 'center'}}>10</td>
+      <td>All DAS endpoints</td>
+    </tr>
+
+    <tr>
+      <td><strong>Enhanced Transactions</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Legacy transaction parsing, in maintenance mode</td>
+    </tr>
+
+    <tr>
+      <td><strong>Parsed Events</strong></td>
+      <td style={{textAlign: 'center'}}>10</td>
+      <td>Per request. Successor to Enhanced Transactions. All plans.</td>
+    </tr>
+  </tbody>
+</table>
+
+### Parsed Events
+
+[Parsed Events](/docs/parsed-events) parses transaction signatures and address history into decoded instructions over REST. Available on **all plans** at **10 credits per request**, for both `POST /v1/parsed-events/transactions` and `POST /v1/parsed-events/transaction-history`.
+
+Credit metering starts on **September 24, 2026**. Projects that used Parsed Events before that date are not charged until **October 1, 2026**.
+
+## Historical Data Credits
+
+<div id="historical-data" />
+
+[Historical data queries](/docs/rpc/guides/overview#historical-data-archival), sometimes called archival calls, cost **1 credit** each.
+
+Exceptions are [`getTransactionsForAddress`](/docs/rpc/gettransactionsforaddress), which starts at **10 credits** and is metered by returned results, and [`getTransfersByAddress`](/docs/rpc/gettransfersbyaddress), which costs **10 credits**.
+
+<table>
+  <thead align="left">
+    <tr>
+      <th style={{width: '200px'}}>Method</th>
+      <th style={{width: '100px', textAlign: 'center'}}>Credits</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><code>getBlock</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Retrieve block data and transactions for a specified slot</td>
+    </tr>
+
+    <tr>
+      <td><code>getBlocks</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Get list of blocks between two slots</td>
+    </tr>
+
+    <tr>
+      <td><code>getBlocksWithLimit</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Get blocks starting at a given slot with limit</td>
+    </tr>
+
+    <tr>
+      <td><code>getSignaturesForAddress</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Get transaction signatures for an address</td>
+    </tr>
+
+    <tr>
+      <td><code>getTransaction</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Retrieve transaction details for a specified signature</td>
+    </tr>
+
+    <tr>
+      <td><code>getBlockTime</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Get estimated production time of a block</td>
+    </tr>
+
+    <tr>
+      <td><code>getSignatureStatuses</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Get statuses for transaction signatures</td>
+    </tr>
+
+    <tr>
+      <td><code>getInflationReward</code></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Get inflation reward for a list of addresses for an epoch</td>
+    </tr>
+
+    <tr>
+      <td><code>getTransactionsForAddress</code></td>
+      <td style={{textAlign: 'center'}}>10+</td>
+      <td>Enhanced transaction history with advanced filtering and sorting. Full transactions cost 10 credits per 100 returned; signatures-only responses cost 10 credits flat. Returns up to 1,000 full transactions or signatures.</td>
+    </tr>
+
+    <tr>
+      <td><code>getTransfersByAddress</code></td>
+      <td style={{textAlign: 'center'}}>10</td>
+      <td>Parsed token and native SOL transfer history. Returns up to 100 transfers.</td>
+    </tr>
+  </tbody>
+</table>
+
+<Warning>
+  **Plan Requirement**: `getTransfersByAddress` is only available on Developer plans and above. Free plan users will receive an error when attempting to use this endpoint.
+</Warning>
+
+### getTransactionsForAddress
+
+`getTransactionsForAddress` metering scales with what a successful response returns:
+
+| Response type | Credits |
+| - | - |
+| Full transactions | 10 credits per 100 returned transactions, rounded up; 10-credit minimum |
+| Signatures only | 10 credits flat, regardless of count |
+| Failed API responses | Free |
+
+Examples:
+
+| Returned | Credits |
+| - | - |
+| 1-100 full transactions | 10 |
+| 250 full transactions | 30 |
+| 1,000 full transactions | 100 |
+
+## Data Streaming Credits
+
+Unlike regular credits that assign credits per call, data streaming products like LaserStream gRPC and LaserStream WebSocket assign credits per amount of data consumed. Parsed Streams, Preconfirmations, and Preprocessed Transactions are metered per delivered message instead.
+
+<table>
+  <thead>
+    <tr>
+      <th style={{width: '200px'}}>Service</th>
+      <th style={{width: '50px'}}>Credits</th>
+      <th style={{width: '470px'}}>Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>LaserStream WSS (standard Solana methods)</strong></td>
+      <td style={{textAlign: 'center'}}>2</td>
+      <td>Per 0.1 MB of streamed data (uncompressed). All plans.</td>
+    </tr>
+
+    <tr>
+      <td><strong>LaserStream WSS (Helius extensions)</strong></td>
+      <td style={{textAlign: 'center'}}>2</td>
+      <td>Per 0.1 MB of streamed data (uncompressed). Developer, Business, and Professional plans.</td>
+    </tr>
+
+    <tr>
+      <td><strong>LaserStream gRPC</strong></td>
+      <td style={{textAlign: 'center'}}>2</td>
+      <td>Per 0.1 MB of streamed data (uncompressed). Business and Professional plans (Mainnet); all plans (Devnet).</td>
+    </tr>
+
+    <tr>
+      <td><strong>Preprocessed Transactions — preprocessedSubscribe (WSS)</strong></td>
+      <td style={{textAlign: 'center'}}>0.1</td>
+      <td>Per message (one message per delivered transaction). All paid plans.</td>
+    </tr>
+
+    <tr>
+      <td><strong>Parsed Streams — parsedTransactionSubscribe (WSS)</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Per delivered event (one event per matching transaction). All plans.</td>
+    </tr>
+
+    <tr>
+      <td><strong>Data Add-on (Pro Plan only)</strong></td>
+      <td style={{textAlign: 'center'}}>2</td>
+      <td>Per 0.1 MB after included allowance (5-100TB). Applies to LaserStream gRPC and LaserStream WebSocket usage.</td>
+    </tr>
+  </tbody>
+</table>
+
+### Preconfirmations
+
+[Preconfirmations](/docs/pre-confirmations/overview) stream transactions over a WebSocket at the lowest possible latency. Available on **Professional plans and higher**. Metered at **10 credits per message** (one message per streamed transaction). Preconfirmations is a new product and pricing is subject to change.
+
+### LaserStream WebSocket
+
+[LaserStream WebSocket](/docs/rpc/websocket) serves the standard Solana subscription methods alongside the Helius-specific extensions (`transactionSubscribe`, enhanced `accountSubscribe`) on the unified `wss://mainnet.helius-rpc.com` endpoint. Standard methods are available on all plans; the Helius extensions require a Developer, Business, or Professional plan. All WebSocket usage is metered at **2 credits per 0.1 MB** of uncompressed streamed data.
+
+### LaserStream gRPC
+
+[LaserStream gRPC](/docs/laserstream) Mainnet is available on Business and Professional plans. LaserStream gRPC Devnet is available on all plans. All users pay **2 credits per 0.1 MB** of uncompressed streamed data.
+
+### Preprocessed Transactions
+
+[Preprocessed transactions](/docs/preprocessed-transactions/overview) (decoded shreds, \~8 ms ahead of `processed`) are delivered over the [`preprocessedSubscribe`](/docs/preprocessed-transactions/preprocessed-subscribe) WebSocket, available on **all paid plans** and metered at **0.1 credits per message** (one message per delivered transaction).
+
+### Parsed Streams
+
+[Parsed Streams](/docs/parsed-streams) push decoded, server-side filtered transactions over the [`parsedTransactionSubscribe`](/docs/api-reference/parsed-streams/parsedtransactionsubscribe) WebSocket. Available on **all plans** and metered at **1 credit per delivered event**, the same rate as webhook events. Parsed Streams is the successor to Enhanced Transaction Webhooks.
+
+Credit metering starts on **September 24, 2026**. Projects that used Parsed Streams before that date are not charged until **October 1, 2026**.
+
+### Shred Delivery — Raw Shreds
+
+[Raw Shreds (UDP)](/docs/shred-delivery/raw-shreds) is our premier, low-latency shred delivery service. You can [access raw shreds from your Helius Dashboard](https://dashboard.helius.dev/shred-delivery-seats). Simply add a seat and enter your IP address to start receiving shreds.
+
+Raw shreds do not consume credits. Raw shreds are available to all customers. Each seat is \$1,000/month and binds to one IP. If you are on a Professional plan, each seat costs \$800/month/IP.
+
+### Data Add-ons
+
+If you're on a Professional plan, you may purchase [Data Add-ons](/docs/billing/plans#data-add-ons) between 5TB-100TB per month to be used for both LaserStream gRPC and LaserStream WebSocket.
+
+Beyond your allowance, streamed data uses your plan credits at 2 credits per 0.1 MB of uncompressed data.
+
+### Data Size
+
+Billing for data streaming products is based on uncompressed message size.
+
+Typical sizes include:
+
+<ul>
+  <li>Block (\~4MB)</li>
+  <li>Account (\~0.0004MB)</li>
+  <li>Transaction (\~0.0006MB)</li>
+</ul>
+
+<Warning>
+  **These are rough estimates only.** Actual data usage depends on your specific use case, including account size, transaction type, which programs you're listening to, and transaction metadata size. You should estimate usage based on your own traffic. Treat the values above as directional estimates, not guarantees.
+</Warning>
+
+## Transaction Submission Credits
+
+Helius offers two primary transaction submission methods: [Sender](/docs/sending-transactions/sender), our specialized transaction landing service for traders and low-latency applications; and [Staked Connections](/docs/sending-transactions/overview) (default) for fast, reliable landing rates.
+
+<table>
+  <thead>
+    <tr>
+      <th style={{width: '300px'}}>Method</th>
+      <th style={{width: '100px'}}>Credits</th>
+      <th style={{width: '320px'}}>Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>Sender</strong></td>
+      <td style={{textAlign: 'center'}}>0</td>
+      <td>Ultra-low latency submission</td>
+    </tr>
+
+    <tr>
+      <td><strong>Staked Connections</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Highest reliability (default)</td>
+    </tr>
+
+    <tr>
+      <td><strong>sendBundle</strong></td>
+      <td style={{textAlign: 'center'}}>10</td>
+      <td>Bundle submission via Jito</td>
+    </tr>
+  </tbody>
+</table>
+
+<Info>
+  **Staked Transactions Are Now Default for All Paid Plans**: All transactions via `mainnet.helius-rpc.com` automatically use staked connections for highest success rates.
+</Info>
+
+## DAS API Credits
+
+All [DAS API](/docs/api-reference/das) requests cost **10 credits** each:
+
+<CardGroup cols={2}>
+  <Card title="Asset Information">
+    * `getAsset`
+    * `getAssetProof`
+    * `getAssetProofBatch`
+    * `getNftEditions`
+  </Card>
+
+  <Card title="Asset Discovery">
+    * `getAssetsByOwner`
+    * `getAssetsByAuthority`
+    * `getAssetsByCreator`
+    * `getAssetsByGroup`
+    * `searchAssets`
+    * `getAssetBatch`
+  </Card>
+
+  <Card title="Transaction History">
+    * `getSignaturesForAsset`
+  </Card>
+
+  <Card title="Account Information">
+    * `getTokenAccounts`
+  </Card>
+</CardGroup>
+
+***
+
+## Wallet API Credits
+
+All [Wallet API](/docs/api-reference/wallet-api) requests cost **100 credits** each:
+
+<table>
+  <thead>
+    <tr>
+      <th style={{width: '200px'}}>Service</th>
+      <th style={{width: '50px'}}>Credits</th>
+      <th style={{width: '470px'}}>Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>Wallet Identity</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Get wallet identity (exchanges, protocols, institutions)</td>
+    </tr>
+
+    <tr>
+      <td><strong>Batch Identity Lookup</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Look up up to 100 addresses in a single request</td>
+    </tr>
+
+    <tr>
+      <td><strong>Wallet Balances</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Get token and NFT balances with USD values</td>
+    </tr>
+
+    <tr>
+      <td><strong>Historical Balance</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Get a token or SOL balance at a past timestamp or slot</td>
+    </tr>
+
+    <tr>
+      <td><strong>Wallet History</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Get transaction history with balance changes</td>
+    </tr>
+
+    <tr>
+      <td><strong>Token Transfers</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Get all token transfer activity</td>
+    </tr>
+
+    <tr>
+      <td><strong>Wallet Funding Source</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Discover who originally funded a wallet</td>
+    </tr>
+  </tbody>
+</table>
+
+For more information on using the Wallet API, read our [Wallet API documentation](/docs/wallet-api/overview).
+
+***
+
+## Wallet-as-a-Service Credits
+
+[Wallet-as-a-Service](/docs/waas/overview) bills through your existing Helius credits — there is no separate subscription and no per-monthly-active-user fee. Each **signature costs 200 credits** (\$0.001 at the standard credit rate), which covers the embedded wallet and signing.
+
+<table>
+  <thead>
+    <tr>
+      <th style={{width: '200px'}}>Service</th>
+      <th style={{width: '50px'}}>Credits</th>
+      <th style={{width: '470px'}}>Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>WaaS Signature</strong></td>
+      <td style={{textAlign: 'center'}}>200</td>
+      <td>Per signature: <code>signMessage</code>, <code>signTransaction</code>, and <code>signAndSendTransaction</code> each produce one. Billed when the signature is produced, even if the transaction later fails on-chain; signing that never completes (e.g. a cancelled prompt) is free. Wallet creation is free.</td>
+    </tr>
+  </tbody>
+</table>
+
+<Warning>
+  **Plan Requirement**: Wallet-as-a-Service is available on paid plans only (Developer and above). WaaS is currently in beta and pricing is subject to change.
+</Warning>
+
+Track wallets, signatures, and credits spent on the [dashboard](https://dashboard.helius.dev) in **WaaS → Analytics**.
+
+***
+
+## Webhook Credits
+
+<table>
+  <thead>
+    <tr>
+      <th style={{width: '200px'}}>Service</th>
+      <th style={{width: '50px'}}>Credits</th>
+      <th style={{width: '470px'}}>Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>Webhook Events</strong></td>
+      <td style={{textAlign: 'center'}}>1</td>
+      <td>Per event sent by Helius, regardless of successful or failed endpoint responses</td>
+    </tr>
+
+    <tr>
+      <td><strong>Webhook Management</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Create, edit, delete webhooks</td>
+    </tr>
+  </tbody>
+</table>
+
+For more information on using webhooks, read our [quickstart guide](/docs/webhooks). For decoded transactions with instruction-level filtering over WebSocket, see [Parsed Streams](/docs/parsed-streams), billed at the same 1 credit per event.
+
+## ZK Compression Credits
+
+All [ZK Compression API](/docs/api-reference/zk-compression) calls cost **10 credits** each.
+
+One exception is `getValidityProof` which costs 100 credits per request because it is computationally intensive.
+
+<table>
+  <thead>
+    <tr>
+      <th style={{width: '200px'}}>Service</th>
+      <th style={{width: '50px'}}>Credits</th>
+      <th style={{width: '470px'}}>Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><strong>ZK Compression API</strong></td>
+      <td style={{textAlign: 'center'}}>10</td>
+      <td>ZK Compression RPC calls</td>
+    </tr>
+
+    <tr>
+      <td><strong>getValidityProofs</strong></td>
+      <td style={{textAlign: 'center'}}>100</td>
+      <td>Compute ZK proofs</td>
+    </tr>
+  </tbody>
+</table>
+
+***
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

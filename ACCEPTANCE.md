@@ -74,3 +74,8 @@ Do not stop investigating after one finding. Complete the agreed matrix and chan
 ## Final evidence
 
 Record source commit/manifest and lockfile hashes; runtime versions; command, exit status and logs for each gate; test changes with preserved intent; real versus synthetic corpus labels; parent/archive immutability; unresolved issues and explicit acceptance scope. Count test nodes once. Replayed copied tests, subtests, child API calls, permutations and screenshots are not additional unique test cases.
+
+
+## Active product checkpoint commands
+
+`python tools/check_product.py --output <new-directory>` executes the normal offline archive/report/rebuild/export application workflow independently of pytest. `python tools/product_browser.py --python <configured-app-python> --output <new-directory>` drives archive import, normal reports, source inspection, loss/restoration and downloads through the guarded real launcher at desktop/mobile widths. Run the browser command with the configured Playwright interpreter. Synthetic development and partial genuine inputs are distinct cases. `check_product.py --require-real-acceptance` must return BLOCKED/nonzero until an independently supported complete genuine corpus exists; a development PASS or Gate A acceptance does not close B1/B2/B3. Preserve historical `evidence/FINAL_GATES.json`; current checkpoint records live under `evidence/product-milestone/` with actual linked logs/captures.

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import type { Actions } from "./App";
 import type { Report, Scan } from "./types";
+import { api, uploadArchive } from "./api";
 import {
   Badge,
   Button,
@@ -351,10 +352,12 @@ export function Overview(actions: Actions) {
     </>
   );
 }
-export function ScanView({ state, busy, run, navigate, manualAddresses }: Actions) {
+export function ScanView({ state, busy, run, navigate, manualAddresses, refresh, open }: Actions) {
   const [input, setInput] = useState((manualAddresses ?? []).join("\n"));
   const [days, setDays] = useState(String(state.preset.window_days || 30));
   const [importError, setImportError] = useState("");
+  const [archiveBusy, setArchiveBusy] = useState(false);
+  const [archiveError, setArchiveError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const parsed = useMemo(() => parseAddresses(input), [input]);
   const cap = state.settings.limits.candidate_cap;
@@ -398,6 +401,28 @@ export function ScanView({ state, busy, run, navigate, manualAddresses }: Action
           Review saved transaction records
         </Button>
       </div>
+      <section className="panel" style={{ marginBottom: 20 }}>
+        <SectionHeading title="Account from saved records" subtitle="Import a scanner evidence ZIP to create a report locally. No provider credits are used." />
+        <p>Incomplete history keeps wallet profit and qualification unresolved. The offline example uses synthetic records to demonstrate accounting.</p>
+        <label htmlFor="wallet-archive">Wallet evidence ZIP (up to 20 MiB)</label>
+        <input id="wallet-archive" type="file" accept=".zip,application/zip" disabled={!!busy || archiveBusy}
+          onChange={async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            event.target.value = '';
+            if (file.size > 20 * 1024 * 1024) {setArchiveError('Evidence ZIP must be at most 20 MiB.'); return;}
+            setArchiveBusy(true); setArchiveError('');
+            try {
+              const result = await uploadArchive(file);
+              const report = await api<Report>(`/reports/${encodeURIComponent(result.report_id)}`);
+              await refresh(); open(report);
+            } catch (error) {setArchiveError(error instanceof Error ? error.message : 'Archive import failed.');}
+            finally {setArchiveBusy(false);}
+          }} />
+        {archiveBusy && <p role="status">Accounting from saved records…</p>}
+        {archiveError && <p role="alert">{archiveError}</p>}
+        <p><a href="/api/archives/example.zip" download>Download offline accounting example</a></p>
+      </section>
       <div className="scan-layout">
       <div>
         <section className="panel scan-input-panel">

@@ -1,0 +1,206 @@
+{
+  "kind": "bounded-source-probe-plan",
+  "state": "NEEDS_AUTHORISATION",
+  "executed": false,
+  "scope": "Read-only source feasibility; not full-wallet collection or acceptance",
+  "endpoint": "https://mainnet.helius-rpc.com/ (API key supplied privately only after approval)",
+  "wallet": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+  "window": {
+    "start": "2026-07-04T14:32:36+00:00",
+    "end": "2026-10-02T14:32:36+00:00"
+  },
+  "request_cap": 10,
+  "credit_cap": 100,
+  "planned_credit_upper_bound": 73,
+  "requests": [
+    {
+      "id": "direct-index",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+        {
+          "transactionDetails": "full",
+          "limit": 100,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "none",
+            "blockTime": {
+              "gte": 1783175556,
+              "lt": 1790951556
+            }
+          }
+        }
+      ],
+      "credit_upper_bound": 10
+    },
+    {
+      "id": "all-index",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+        {
+          "transactionDetails": "full",
+          "limit": 100,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all",
+            "blockTime": {
+              "gte": 1783175556,
+              "lt": 1790951556
+            }
+          }
+        }
+      ],
+      "credit_upper_bound": 10
+    },
+    {
+      "id": "all-continuation",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+        {
+          "transactionDetails": "full",
+          "limit": 100,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all",
+            "blockTime": {
+              "gte": 1783175556,
+              "lt": 1790951556
+            }
+          }
+        }
+      ],
+      "credit_upper_bound": 10,
+      "conditional": "Only if all-index returns a supported nonterminal pagination token.",
+      "paginationToken_from": "all-index.result.paginationToken"
+    },
+    {
+      "id": "primary-1",
+      "method": "getTransaction",
+      "params": [
+        "5Ts89XwXMJn3JV4jnsnBBzv1YJXYniF2rnntZ8as6Pq4AwzoGK8FZc8PtVKDtP9WrbD7QvExiBmarJL2wMGbRfsY",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ],
+      "credit_upper_bound": 10,
+      "archived_control_hash": "7ac041bce47e27de7a8e3f7bd61c4b7c3a9e2902798f1a05b6b0091822dadade"
+    },
+    {
+      "id": "primary-2",
+      "method": "getTransaction",
+      "params": [
+        "YDg1N7NpMrCdbM6D8gTU9au6kxSXW6hfhbyhZP4GXU1rjzLCQxM5FN8yr6TQ3yj7bSoYJw63Hgb4jN7gypJUkkN",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ],
+      "credit_upper_bound": 10,
+      "archived_control_hash": "43fc29a8bc85d94c3e333d09bf8c54a6ca1ec2812ad3dbb7a88cb21e648c1f60"
+    },
+    {
+      "id": "primary-3",
+      "method": "getTransaction",
+      "params": [
+        "4jcuv1MoCiLNY6kVFqy7pbFtpNytdFyYdhdgYryFb6Fimi8rr1g4gDgiVD3ZC6zYYs8AfkZhdDYV7jicknG8BGHt",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ],
+      "credit_upper_bound": 10,
+      "archived_control_hash": "dd29ce8e99470f030ae42edf147cce94e59fe766e8a2f162ae6e4508b14c78f6"
+    },
+    {
+      "id": "primary-4",
+      "method": "getTransaction",
+      "params": [
+        "fFLCxQwtrPqPGDSK688tZiRisMsdE5vhzqodDNDpdKTJHS8xCw1aANRxFZrfvtU96bFB27YrqNYuY2zDXgp2Bjg",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ],
+      "credit_upper_bound": 10,
+      "archived_control_hash": "329e3b730938b8fff40147806a380dde4f448e4aae9f5d299b27d50d5798ab38"
+    },
+    {
+      "id": "current-owned-legacy",
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+        {
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized"
+        }
+      ],
+      "credit_upper_bound": 1,
+      "scope": "Current observation only; never a historical owner witness."
+    },
+    {
+      "id": "current-owned-2022",
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+        {
+          "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized"
+        }
+      ],
+      "credit_upper_bound": 1,
+      "scope": "Current observation only; never a historical owner witness."
+    },
+    {
+      "id": "finalized-slot",
+      "method": "getSlot",
+      "params": [
+        {
+          "commitment": "finalized"
+        }
+      ],
+      "credit_upper_bound": 1
+    }
+  ],
+  "retries": 0,
+  "purchases": false,
+  "quota_reset": false,
+  "preconditions": [
+    "Explicit permission for this exact bounded probe.",
+    "Manual current Free subscription/cycle/remaining-credit confirmation; no autoscaling.",
+    "Do not repurpose or reset the exhausted setup-pilot ledger.",
+    "Independent known closed/reassigned controls are required before historic ownership can PASS."
+  ],
+  "required_receipts": [
+    "Sanitized exact request/response bytes with source URL without key, UTC retrieval and SHA-256.",
+    "Result count, finalized context, raw signatures/versions/owners/quantities, cursors and terminal/cap reasons.",
+    "Every charged reservation/settlement bound to the existing confirmed cycle.",
+    "Comparison against retained primary controls; missing closed/reassigned controls means INCONCLUSIVE."
+  ],
+  "stop_conditions": [
+    "Method/entitlement denial, unsupported response, request/credit cap, repeated cursor or mismatched primary identity.",
+    "No permission to continue collection follows from a successful probe."
+  ],
+  "current_outcome": "UNTESTED; docs do not prove no free route exists."
+}

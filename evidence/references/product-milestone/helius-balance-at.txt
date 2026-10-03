@@ -1,0 +1,277 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://www.helius.dev/docs/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# How to Get a Solana Wallet's Historical Token Balance
+
+> Query a wallet's balance of any token or native SOL at a past timestamp, datetime, or slot. Ideal for PnL, cost basis, tax reporting, and reconstructing wallet state.
+
+<Note>
+  The Wallet API is in Beta. Endpoints and response formats may change.
+</Note>
+
+## Overview
+
+The Historical Balance endpoint answers: **what was this wallet's balance of a specific token (or native SOL) at a specific point in the past?** While the [Balances](/docs/wallet-api/balances) endpoint reports *current* holdings, `balance-at` reports holdings as of any timestamp, datetime, or slot.
+
+It finds the **single most recent transaction at or before the requested point in time** that involved the wallet and the token, then reads the wallet's **post-transaction balance** from that transaction. A transaction's post-balance is the balance that held from that transaction until the next one, so "balance as of time T" is the post-balance of the last relevant transaction with a block time (or slot) at or before T. For the typical wallet, this is an exact value, not an estimate.
+
+* **Tokens (SPL / Token-2022)**: read from the transaction's post token balances, summed over the wallet's token accounts for that mint.
+* **Native SOL**: read from the transaction's lamport post-balances. Address native SOL with the pseudo-mint `So11111111111111111111111111111111111111111`.
+
+## When to use this
+
+Use the Historical Balance API for:
+
+* **PnL calculation**: determine holdings at the start and end of a period.
+* **Cost basis and tax lots**: reconstruct balances at acquisition or disposal events.
+* **Dispute resolution**: prove what a wallet held at a specific moment.
+* **Snapshot verification**: check a wallet's balance at an airdrop or governance snapshot.
+* **Accounting and audits**: reconstruct wallet state at period boundaries.
+
+## Quickstart
+
+### Token balance at a timestamp
+
+Get a wallet's USDC balance at a Unix timestamp:
+
+<Tabs>
+  <Tab title="JavaScript">
+    ```javascript theme={"system"}
+    const getBalanceAt = async (wallet, mint, time) => {
+      const url = `https://api.helius.xyz/v1/wallet/${wallet}/balance-at?mint=${mint}&time=${time}&api-key=YOUR_API_KEY`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.asOf === null) {
+        console.log('Wallet had no activity for this token by that time — balance is 0');
+        return result;
+      }
+
+      console.log(`Balance: ${result.balance}`);
+      console.log(`Raw amount: ${result.balanceRaw} (${result.decimals} decimals)`);
+      console.log(`As of slot ${result.asOf.slot}, signature ${result.asOf.signature}`);
+
+      return result;
+    };
+
+    // USDC balance on 2025-01-10 19:20:00 UTC
+    getBalanceAt(
+      "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      1736536800
+    );
+    ```
+  </Tab>
+
+  <Tab title="Python">
+    ```python theme={"system"}
+    import requests
+
+    def get_balance_at(wallet: str, mint: str, time: int):
+        url = f"https://api.helius.xyz/v1/wallet/{wallet}/balance-at"
+        headers = {"X-Api-Key": "YOUR_API_KEY"}
+        params = {"mint": mint, "time": time}
+
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        result = response.json()
+
+        if result["asOf"] is None:
+            print("Wallet had no activity for this token by that time — balance is 0")
+            return result
+
+        print(f"Balance: {result['balance']}")
+        print(f"Raw amount: {result['balanceRaw']} ({result['decimals']} decimals)")
+        print(f"As of slot {result['asOf']['slot']}, signature {result['asOf']['signature']}")
+
+        return result
+
+    # USDC balance on 2025-01-10 19:20:00 UTC
+    get_balance_at(
+        "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        1736536800
+    )
+    ```
+  </Tab>
+
+  <Tab title="cURL">
+    ```bash theme={"system"}
+    curl "https://api.helius.xyz/v1/wallet/5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9/balance-at?mint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&time=1736536800&api-key=YOUR_API_KEY"
+    ```
+  </Tab>
+</Tabs>
+
+### Token balance at a datetime
+
+Pass a human-readable datetime instead of a timestamp. Remember to URL-encode the space as `%20`:
+
+```bash theme={"system"}
+curl "https://api.helius.xyz/v1/wallet/5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9/balance-at?mint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&datetime=2025-01-10%2019:20:00&api-key=YOUR_API_KEY"
+```
+
+### Native SOL balance at a slot
+
+For native SOL, use the pseudo-mint `So11111111111111111111111111111111111111111`. Slot-based queries are exact and deterministic:
+
+```bash theme={"system"}
+curl "https://api.helius.xyz/v1/wallet/5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9/balance-at?mint=So11111111111111111111111111111111111111111&slot=313000000&api-key=YOUR_API_KEY"
+```
+
+## Query parameters
+
+| Param | Required | Type | Description |
+| - | - | - | - |
+| `mint` | Yes | string | Token mint address. For native SOL, use `So11111111111111111111111111111111111111111`. |
+| `time` | One-of | int | Unix timestamp in **seconds**. Balance as of this time. |
+| `datetime` | One-of | string | Datetime string, e.g. `2025-01-10 19:20:00`. UTC by default. |
+| `slot` | One-of | int | Slot number. Balance as of this slot. Exact and deterministic. |
+
+Exactly **one** of `time`, `datetime`, or `slot` must be provided. Providing zero or more than one returns a `400` error.
+
+### Datetime formats
+
+Accepted formats:
+
+* Date only: `2025-01-10` → UTC midnight
+* Date + time: `2025-01-10 19:20:00` or `2025-01-10T19:20:00` (seconds optional) → UTC
+* With explicit timezone: `2025-01-10T19:20:00Z`, `2025-01-10T19:20:00+02:00`, `2025-01-10T19:20:00-05:00` → honored as given
+
+Invalid or unsupported formats (`01/10/2025`, `2025-13-10`, `2025-02-30`) return a `400` error.
+
+<Warning>
+  Datetimes are interpreted as UTC by default. A bare datetime like `2025-01-10 19:20:00` is treated as UTC, not your local time. Include an explicit timezone offset if you mean something else. The response's `requested.time` field shows the resolved epoch seconds so you can verify the interpretation.
+</Warning>
+
+## Response format
+
+```json theme={"system"}
+{
+  "wallet": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+  "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "isNative": false,
+  "balance": "284961463.392936",
+  "balanceRaw": "284961463392936",
+  "decimals": 6,
+  "requested": {
+    "time": 1736536800,
+    "slot": null,
+    "datetime": null
+  },
+  "asOf": {
+    "slot": 313000000,
+    "blockTime": 1736536794,
+    "signature": "5Cyy7Mh9nVgFq3T8wJp2sKxR4dE6bA1uZoNcLrXmYqUpon"
+  }
+}
+```
+
+### Field notes
+
+* **`wallet`**: echo of the queried wallet address.
+* **`mint`**: echo of the queried mint (the SOL pseudo-mint when native).
+* **`isNative`**: `true` when the result is native SOL.
+* **`balance`**: human-readable amount as a **decimal string** — a string, not a number, so large balances don't lose precision. Trailing zeros are trimmed (`"1.5"`, not `"1.500000"`).
+* **`balanceRaw`**: exact amount in the smallest unit (lamports for SOL), as a string.
+* **`decimals`**: token decimals (9 for SOL).
+* **`requested`**: echo of the query. When `datetime` is used, `time` is also populated with the resolved epoch seconds, making the UTC interpretation visible.
+* **`asOf`**: the transaction the balance was read from (`slot`, `blockTime`, `signature`).
+
+`asOf: null` means zero, not an error. When the wallet had no matching transaction at or before the requested point in time, the endpoint returns `200` with `balance: "0"` and `asOf: null` — the wallet simply had not held the token by then.
+
+## Use cases
+
+### Balance change over a period
+
+Compare holdings at two points in time:
+
+```javascript theme={"system"}
+const getBalanceChange = async (wallet, mint, startTime, endTime) => {
+  const fetchBalance = (time) =>
+    fetch(
+      `https://api.helius.xyz/v1/wallet/${wallet}/balance-at?mint=${mint}&time=${time}&api-key=YOUR_API_KEY`
+    ).then(r => r.json());
+
+  const [start, end] = await Promise.all([
+    fetchBalance(startTime),
+    fetchBalance(endTime)
+  ]);
+
+  // balanceRaw is an exact integer string — use BigInt for precise arithmetic
+  const delta = BigInt(end.balanceRaw) - BigInt(start.balanceRaw);
+  const human = Number(delta) / 10 ** end.decimals;
+
+  console.log(`Start: ${start.balance}`);
+  console.log(`End: ${end.balance}`);
+  console.log(`Change: ${human > 0 ? '+' : ''}${human}`);
+
+  return { start, end, delta };
+};
+```
+
+### Snapshot eligibility check
+
+Verify a wallet held a token at a snapshot slot:
+
+```javascript theme={"system"}
+const heldAtSnapshot = async (wallet, mint, snapshotSlot, minimumRaw) => {
+  const result = await fetch(
+    `https://api.helius.xyz/v1/wallet/${wallet}/balance-at?mint=${mint}&slot=${snapshotSlot}&api-key=YOUR_API_KEY`
+  ).then(r => r.json());
+
+  const eligible = BigInt(result.balanceRaw) >= BigInt(minimumRaw);
+  console.log(`${wallet}: ${result.balance} at slot ${snapshotSlot} — ${eligible ? 'eligible' : 'not eligible'}`);
+
+  return eligible;
+};
+```
+
+## Best practices
+
+* **Use `slot` for deterministic results.** `time` and `datetime` resolve via validator-reported block times, which can drift by a few seconds. When exact reproducibility matters (snapshots, audits), query by `slot`.
+* **Parse balances as strings.** `balance` and `balanceRaw` are strings to preserve precision. Use `BigInt(balanceRaw)` (or your language's arbitrary-precision integers) for arithmetic — don't cast to a float.
+* **Treat `asOf: null` as zero.** A `null` `asOf` is a successful response meaning the wallet had no activity for that token by the requested point. Don't handle it as an error.
+* **Cache historical results.** A balance at a past point in time never changes. Cache results permanently to avoid repeated API calls.
+
+## Common errors
+
+| Error Code | Description | Solution |
+| - | - | - |
+| 400 | Missing `mint`, invalid mint, zero or multiple of `time`/`datetime`/`slot`, or unparseable `datetime` | Provide a valid mint and exactly one point-in-time parameter |
+| 401 | Missing or invalid API key | Check your API key is included in the request |
+| 404 | Invalid wallet address in the path | Verify the address is a valid base58 Solana address |
+| 429 | Rate limit exceeded | Reduce request frequency or upgrade your plan |
+| 502 | Upstream RPC error or timeout | Retry with exponential backoff |
+
+## Limitations
+
+* **Multi-token-account wallets may undercount.** The balance is read from the single most recent matching transaction. The common case — one associated token account per mint — is exact. A wallet holding the same mint across multiple token accounts, where the latest transaction touched only some of them, can be undercounted.
+* **Native SOL precision for very large balances.** For SOL balances beyond \~9,007,199 SOL (2⁵³ lamports), precision may be lost upstream. Token amounts are not affected.
+* **`time`/`datetime` precision depends on validator-reported block times**, which can drift a few seconds. Use `slot` for exact, deterministic results.
+* **Single token per request.** There is no multi-mint or "all balances at time T" batch form.
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Wallet Balances" icon="scale-balanced" href="/docs/wallet-api/balances">
+    Get a wallet's current token and NFT holdings with USD values.
+  </Card>
+
+  <Card title="Wallet API Overview" icon="wallet" href="/docs/wallet-api/overview">
+    All Wallet API endpoints and shared conventions.
+  </Card>
+
+  <Card title="API Reference" icon="code" href="/docs/api-reference/wallet-api/balance-at">
+    Request and response schemas for historical balance.
+  </Card>
+</CardGroup>
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

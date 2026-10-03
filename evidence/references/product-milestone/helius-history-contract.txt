@@ -1,0 +1,127 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://www.helius.dev/docs/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Solana Historical Data Overview & Tutorials
+
+> Query Solana historical data with Helius — enhanced transaction history via getTransactionsForAddress, transfer history, and archival RPC methods like getBlock.
+
+## What is Solana historical data?
+
+Solana's ledger is an append-only chain of blocks stretching back to genesis. Historical data means querying that ledger after the fact: a wallet's past transactions, the transfers a token has seen, the contents of a block, or the signatures that touched an address.
+
+Helius gives you two ways to read it. Standard archival RPC methods (`getBlock`, `getSignaturesForAddress`, `getTransaction`, and more) mirror the native Solana JSON-RPC surface. On top of those, Helius adds enhanced methods that standard RPC can't match: `getTransactionsForAddress` returns full filtered transaction history in a single call, and `getTransfersByAddress` returns parsed, reconciliation-ready transfer records.
+
+## Why Helius for historical data?
+
+Unlike providers relying on shared BigTable infrastructure, Helius maintains dedicated archival nodes optimized for fast historical data retrieval. Data spans Solana genesis to present, is continuously updated, and fully supports versioned transactions and all program types.
+
+<CardGroup cols={3}>
+  <Card title="Independent infrastructure" icon="server">
+    Helius runs its own archival system, not shared BigTable like other providers.
+  </Card>
+
+  <Card title="Faster queries" icon="bolt">
+    Direct access to optimized storage means faster response times for historical queries.
+  </Card>
+
+  <Card title="Higher reliability" icon="shield-check">
+    No shared infrastructure bottlenecks. Consistent performance even during network peaks.
+  </Card>
+</CardGroup>
+
+## Which method should I use?
+
+Start with `getTransactionsForAddress` for any address-based history work. Reach for the standard methods when you need raw block data or are wiring up existing Solana RPC tooling.
+
+| What you need | Use this | Returns |
+| - | - | - |
+| Complete transaction history for an address (backfill, indexing, analytics) | **`getTransactionsForAddress`** | Full or signatures-only transactions, filtered and paginated |
+| Token + native SOL transfer history for a wallet | **`getTransfersByAddress`** | Parsed, human-readable transfer records |
+| One transaction by signature | **`getTransaction`** | Full transaction details |
+| Confirmed signatures for an address | **`getSignaturesForAddress`** | Signature list (no associated token accounts) |
+| A specific block's full contents | **`getBlock`** | All transactions and metadata for a slot |
+| Inflation/staking rewards for an epoch | **`getInflationReward`** | Reward amounts per address |
+
+## Recommended path: getTransactionsForAddress
+
+<Card title="getTransactionsForAddress" icon="clock-rotate-left" href="/docs/rpc/gettransactionsforaddress">
+  Helius-exclusive transaction history that goes beyond standard Solana RPC. Query with time-based and slot-based filtering, bidirectional sorting, token-account history, efficient keyset pagination, and full transaction data in a single request.
+
+  Ideal for token launch analysis, complete wallet and token history, MEV research, compliance reporting, and portfolio tracking.
+</Card>
+
+## Key methods
+
+The enhanced, Helius-exclusive transaction-history methods. Each card links to its guide.
+
+### Transaction history
+
+<CardGroup cols={2}>
+  <Card title="getTransactionsForAddress" icon="clock-rotate-left" href="/docs/rpc/gettransactionsforaddress">
+    Enhanced, Helius-exclusive transaction history with filtering, bidirectional sorting, token-account support, and efficient pagination.
+  </Card>
+
+  <Card title="getTransfersByAddress" icon="arrow-right-arrow-left" href="/docs/rpc/gettransfersbyaddress">
+    Parsed token and native SOL transfer history for a wallet, with mint, time, amount, and counterparty filters. Developer+ only; 10 credits per request. See the [API reference](/docs/api-reference/rpc/http/gettransfersbyaddress).
+  </Card>
+
+  <Card title="getTransaction" icon="file-lines" href="/docs/rpc/guides/gettransaction">
+    Full transaction details for a single signature. For verification, detailed analysis, and debugging.
+  </Card>
+
+  <Card title="getSignaturesForAddress" icon="list" href="/docs/rpc/guides/getsignaturesforaddress">
+    Confirmed signatures for an address. For basic history and signature collection. Does not include associated token accounts — use getTransactionsForAddress for complete token history.
+  </Card>
+</CardGroup>
+
+## Common use cases
+
+<CardGroup cols={2}>
+  <Card title="Token launch analysis" icon="rocket">
+    Track mint creation and early holder activity. Identify project origins and initial distribution patterns.
+  </Card>
+
+  <Card title="Wallet forensics" icon="magnifying-glass">
+    Build complete transaction timelines. Discover funding sources and transaction patterns over time.
+  </Card>
+
+  <Card title="MEV research" icon="chart-line">
+    Analyze historical arbitrage and sandwich attacks. Study MEV opportunities with precise timing data.
+  </Card>
+
+  <Card title="Compliance & auditing" icon="clipboard-check">
+    Generate comprehensive transaction reports. Support regulatory compliance with complete historical records.
+  </Card>
+
+  <Card title="Portfolio tracking" icon="wallet">
+    Access complete DeFi transaction history. Build accurate portfolio analytics and performance tracking.
+  </Card>
+
+  <Card title="Block explorers" icon="globe">
+    Display complete blockchain history. Provide users with detailed block and transaction information.
+  </Card>
+</CardGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="getTransactionsForAddress" icon="clock-rotate-left" href="/docs/rpc/gettransactionsforaddress">
+    Full guide to the enhanced transaction history method.
+  </Card>
+
+  <Card title="getTransfersByAddress" icon="arrow-right-arrow-left" href="/docs/rpc/gettransfersbyaddress">
+    Parsed transfer history for payments and reconciliation.
+  </Card>
+
+  <Card title="Indexing guide" icon="layer-group" href="/docs/rpc/how-to-index-solana-data">
+    Build, backfill, and sync a Solana index.
+  </Card>
+
+  <Card title="Discord community" icon="discord" href="https://discord.com/invite/6GXdee3gBj">
+    Join thousands of developers building on Solana with Helius.
+  </Card>
+</CardGroup>
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

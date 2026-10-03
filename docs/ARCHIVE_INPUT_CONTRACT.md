@@ -1,0 +1,53 @@
+# Executable archived accounting contract
+
+This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v1` identifies this new input interpretation; existing FIFO v3 and account-position v10 interpretations remain unchanged.
+
+## Input and provenance
+
+`POST /api/archives/import` accepts a ZIP containing `manifest.json` and `archives/<sha256>.json.gz`. The manifest version is `archived-wallet-input-v1`, with an exact public wallet, UTC `[start,end)` window, `dataset: real|synthetic`, selected `{signature,hash}` transactions and optional typed evidence links. Optional `world_hash`, `classification_hashes` and `valuation_hash` cite separate archived inputs. Normalized events, caller checkpoints, positions, completeness flags and caller PASS receipts are rejected. Hashes establish bytes, not chain authentication.
+
+Upload: 20 MiB; manifest: 4 MiB; expanded individual source: 32 MiB; expanded bundle: 256 MiB; selected and alternative link lists: 10,000 each. The development quantity witness also has a 100,000 account/transaction inspection budget; exceeding it leaves coverage unresolved. Only the two declared ZIP path forms are admitted; duplicate paths/JSON keys, encryption, bad checksums and noncanonical JSON are rejected before source writes. Scanner source archives use sorted compact UTF-8 JSON and gzip. Existing exact source gzip bytes are retained. Original provider byte receipts can remain separate provenance artifacts; converting arbitrary provider JSON to canonical scanner archives is not a new independent chain observation.
+
+Missing referenced files remain unresolved receipts. Restoring the exact bytes recovers dependent interpretations. Each signature is decoded once; every linked alternative is checked, including unsupported operations and contradictory fee/quantity facts. Unknown source roles remain coverage dependencies. The immutable manifest is archived and cited by the saved report and every rebuilt child. Imports do not create `collector_checkpoints` or declare imported collector ancestry trusted.
+
+## Executable pipeline
+
+The normal report builder materializes archives, checks source identity/alternatives and chronology with the existing shared components, derives supported raw economic swaps and generic movements, and calls the existing FIFO engine. Pre-window acquisitions, partial exits, re-entry, losses, breakeven and failed fees pass through the same engine. Transfers and unsupported or unknown origins remain unresolved; no zero-cost lot is invented. Network/priority fees use raw `meta.fee`; allocation to basis or exit is matched once by the existing fee-allocation checks.
+
+Real imports expose selected fee observations and supported individual swaps with the remaining wallet dependencies UNKNOWN. The present importer has no accepted real historical-owner/population witness. This is an implemented archive workflow, not completed real-wallet B2/B3 acceptance. Existing live collection/pause/resume remains the metered acquisition path; importing or rebuilding never dispatches it.
+
+## Development witness and dependency separation
+
+The included `scanner/examples/archive-wallet-synthetic.json` is an explicit enumerated finite world, not genuine chain data. Its separately hashed `synthetic-world-v1` inventory fixes the exact transaction population, account identities/owners, initial zero nonsettlement quantities, native/settlement inventory and interval. Every native and token absolute transition must reconcile. Removing a selected record and its bytes still disagrees with the independently retained world inventory; a completion boolean cannot repair it. Ownership changes, external transfers or unsupported lifecycle operations invalidate this narrow witness.
+
+`synthetic-classification-v1` supplies explicitly synthetic meme/settlement labels. `synthetic-valuation-v1` supplies exact boundary inventories and marks, reconciled against the raw world transitions. Its present development scope admits no external capital flows; an external or unsupported movement prevents zero-flow certification. Real classification/valuation archives do not become trusted just by adopting those shapes.
+
+Reporting, 28-day consistency and 90-day verification are checked separately. Missing marks revoke economic P&L, not independently supported realised profit. Missing trade fee/basis invalidates financial results while separately validated physical quantity episode timings remain available in `archive_accounting.quantity_episodes`; those are labelled physical inventory timings, not substituted for PDF economic-sale/cohort filters. Selected payer/fee observations do not depend on class, basis, valuation or a historical owner index. A missing linked fee alternative still revokes that observation.
+
+Synthetic imports use `source: demo`, visibly label every report, and remain ineligible for strict wallet/copy qualification even when development arithmetic is known. Importing the same inputs as `real` cannot promote the finite-world witness or classification labels. Thresholds are unchanged.
+
+## Normal user path and reproduction
+
+In **Audit wallets**, download the offline accounting example or select a scanner evidence ZIP. The resulting normal report supports settings/preset snapshots, ledger/positions, per-metric requirements, source inspection, JSON/CSV export and immutable local child rebuilds. Ordinary older demos remain non-rebuildable; only persisted archive manifests support this development rebuild path.
+
+```sh
+.venv/bin/python tools/archive_input.py --bundle scanner/examples/archive-wallet-synthetic.json --output /tmp/development-wallet.zip
+.venv/bin/python tools/archive_input.py --partial-cache evidence/runs/real-cache --output /tmp/partial-real-wallet.zip
+.venv/bin/python tools/check_product.py --output /tmp/product-development-check
+```
+
+`tools/check_product.py` is a distinct executable application-path check. Its development result never closes real-wallet acceptance; `--require-real-acceptance` remains BLOCKED/nonzero without an independently supported genuine complete corpus. Gate A's test/build/browser checks are separate.
+
+## Independent development arithmetic
+
+The fixture has four asset mints, five completed episodes, one partial exit, one re-entry and a failed transaction. Raw integer network fees are 5,000 lamports per transaction. One acquisition precedes the reporting period.
+
+| Episode | Gross buys SOL | Gross sales SOL | Allocated fees SOL | Net SOL |
+| --- | ---: | ---: | ---: | ---: |
+| A first: 100 acquired, 40 then 60 sold | 1 | 3 | 0.000015 | 1.999985 |
+| A re-entry | 2 | 1 | 0.000010 | -1.000010 |
+| B loss | 2 | 1 | 0.000010 | -1.000010 |
+| C breakeven | 1 | 1.000010 | 0.000010 | 0 |
+| D pre-window acquisition | 1 | 1.5 | 0.000010 | 0.499990 |
+
+After the failed in-window fee of 0.000005 SOL, realised profit is **0.499950 SOL** on disposed basis **7.000025 SOL**. Win rate is 2/5 = 40%; median ROI is 0%; median hold is 24 hours; average sales is 6/5 = 1.2; two independent weeks are positive. Opening equity is 149.999995 SOL and closing equity 150.499950 SOL, so economic change is 0.499955 SOL. The 0.000005 difference from realised P&L is the capitalized pre-window acquisition fee. Selected in-window network fees are 11 × 5,000 / 10^9 = **0.000055 SOL**. These worked expectations are not generated by calling the production accounting functions.

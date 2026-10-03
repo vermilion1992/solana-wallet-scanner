@@ -1,6 +1,6 @@
 # R1 source and delivery decision
 
-Decision date: 3 October 2026. Original wallet-wide scope remains the product goal. **B1 has a concrete dependency/source decision; B2 implementation and B3 complete real acceptance remain OPEN.** The authorised cache supports selected-record research. It does not support a completed wallet financial pipeline, and no new provider collection or credentials were used for this decision.
+Decision date: 3 October 2026. Original wallet-wide scope remains the product goal. **B1 has a bounded documented source/probe decision; actual key entitlement and complete historical coverage are UNTESTED. B2 now has an executable archived-input development slice; complete real B2/B3 acceptance remains OPEN.** The authorised cache supports selected-record research. It does not support a completed wallet financial pipeline, and no new provider collection or credentials were used for this decision.
 
 ## Required evidence by metric
 
@@ -15,7 +15,7 @@ Decision date: 3 October 2026. Original wallet-wide scope remains the product go
 | Copy/scam observations | Specific primary evidence of permissions, creator/holder/liquidity/ownership links or relevant observed behavior; historical/future claims require their own evidence | Depends on claim | Current controls or a lack of findings cannot establish historical legitimacy, follower exploitation or copying safety |
 | Observed selected wallet network fees | Exact selected native records; payer identity, supported format and conserved native quantities; required linked alternatives checked | No | Available for supported cached subsets; does not certify all interval economic costs or profit |
 
-The actual metric code remains explicit: `history_evidence.py` constructs wallet-wide requirements/decisions UNKNOWN. The fee/account-scope branches and existing conditional FIFO engine are narrower implementations. A source plan cannot replace the missing completed-wallet adapter and evidence-specific normal report integration.
+The native collector metric code remains explicit: `history_evidence.py` constructs unproved wallet-wide requirements/decisions UNKNOWN. The new archived input path executes existing raw normalization, quantity checks and FIFO through normal reports, rebuilds and exports. Its finite-world positive witness is synthetic only; real imports do not bypass the historical ownership/population contract. See `docs/ARCHIVE_INPUT_CONTRACT.md`.
 
 ## Inventory of authorised archives
 
@@ -46,7 +46,7 @@ The indexed-history documentation improves source feasibility but does not answe
 4. Provide reviewable time-relevant eligible-asset classification. Complete mint aggregate strict-zero positions, preserving losses, breakeven and unresolved eligible cases. Derive realised metrics per dependency; derive economic metrics only with boundary inventories/marks/flows. Keep the 28-day calculation separate from the display window.
 5. Archive one genuine wallet/window corpus with independently worked integer/decimal expected results and source-removal, missing-record and unknown-basis controls. A loss or policy miss is acceptable; a profitable MATCH is not required.
 
-## Implementation tasks once that contract is supported
+## Implementation tasks and current evidence
 
 | Task | Existing code to extend | Acceptance |
 | --- | --- | --- |
@@ -56,10 +56,35 @@ The indexed-history documentation improves source feasibility but does not answe
 | B2.4 metric evidence/report | History metric requirements and normal report creation/rebuild | Replace unconditional UNKNOWN only for genuinely supported dependency sets, with per-metric source paths; immutable original parent |
 | B2.5 UI/real acceptance | Existing report/qualification panels and offline rebuild | Known and unknown fields match archived real expected results; source loss revokes dependents; no strict qualification from partial data |
 
-No empty adapter or imported completion boolean is introduced. B2 cannot be declared complete from a synthetic green pipeline. B3 needs independently calculated real inputs as well as implementation.
+The executable archived pipeline now implements local import, shared source/chronology validation, raw normalization, FIFO, physical quantity episodes, metric-specific requirements, normal reports/UI/rebuild/export and separate product checking. Synthetic known-value and source-loss controls are development evidence. An accepted real historical-owner/lifecycle adapter and independently worked complete genuine corpus remain outstanding; neither B2 nor B3 is closed by synthetic results.
 
 ## Product decision and stopping point
 
 Retain the original complete-wallet goal. Under current authorisation, the bounded alternative is **sampled, source-linked research of supplied/collected records**: observed fees, supported individual swaps, named-account evidence where available, current token controls and explicit unknowns. It has a separate scope and cannot satisfy the wallet-wide profit/median/count filters or copying safety.
 
 Gate A can accept a stabilised implementation of that existing declared subset. Full R1 is blocked by DATA-01 (unsupported historical-owner/population and complete acceptance inputs), CAP-01 (unimplemented completed-wallet branch), and historical classification/cost/valuation dependencies above. The next source acquisition would require a concrete bounded plan, method access/tariffs and explicit permission to use credentials/credits. This task grants documentation retrieval and offline work, so those acquisitions have not occurred. No subscription purchase, quota reset, threshold relaxation, trading or source-scope substitution is made.
+
+## Current primary documentation: bounded go/no-go
+
+The additional primary guide/billing/Wallet API documents are preserved byte-for-byte in `evidence/references/product-milestone/`, with URLs, UTC retrievals and SHA-256 in `documents.json`. No authenticated endpoint, provider credit or credential was used. These are source documentation claims, not observed service results or independent chain completeness.
+
+* The indexed-history guide advertises unlimited mainnet retention, raw full pages up to 1,000, `status:any`, finalized commitment and `tokenAccounts:all`. It documents owner metadata support only from **slot 111,491,819 (December 2022)**. Earlier ownership needs additional reconstruction; do not call a fixed-point current-account scan exhaustive. The exact event-time semantics for closed/reassigned/non-ATA accounts still need a genuine controlled check.
+* The guide and current billing credits page agree: full indexed results cost **10 credits per 100 returned records, rounded up, with a 10-credit minimum**; signatures-only cost 10 flat; failed indexed API responses are described as free. The newer billing guide says ordinary archival requests cost 1 credit, conflicting with the older pricing FAQ's 10-credit wording. Retain the app's conservative existing tariff and use upper bounds for any probe. Do not change the current paid/live manifest merely because a guide changed.
+* Advertised Free monthly allowance remains 1M credits. Actual subscription, cycle, method entitlement and remaining credits for this key have **not** been queried. The exhausted local 200-credit setup pilot is a distinct preserved ledger and does not establish monthly exhaustion. The documentation does not establish that no free solution exists.
+* The beta Wallet API history endpoint supplies an alternate indexed address history at 100 credits/request, up to 100 transactions, using the same post-2022 owner-metadata constraint. It is not an independent historical owner witness.
+* The beta historical `balance-at` endpoint documents slot-specific per-mint balances, but explicitly warns that it uses the most recent matching transaction and **may undercount multiple owned accounts of the same mint**. Native SOL above 2^53 lamports may also lose upstream precision. It is therefore a **NO-GO as a sole wallet-wide boundary inventory/strict-zero certificate**, even if entitlement is available. No current price or beta balance summary replaces historical marks and all-account inventory.
+
+| Dependency | Documented prospective source | Actual account/service result | Local implemented evidence | Acceptance decision |
+| --- | --- | --- | --- | --- |
+| Full successful/failed raw history | Indexed raw `getTransactionsForAddress`, finalized/all/no mint or transfer filters; terminal paging | UNTESTED for supplied key | Canonical archive import and raw normalization execute | GO for a bounded feasibility probe, not complete coverage acceptance |
+| Closed/reassigned historical ownership | Post-2022 owner metadata plus raw lifecycle instructions; exact historical membership semantics need controls | UNTESTED; no accepted closed/reassigned complete corpus | Enumerated synthetic lifecycle/absolute quantity witness; genuine inputs stay partial | Real wallet coverage remains BLOCKED until independently supported population/witness |
+| Acquisition basis and complete costs | Raw supported trades, origins and native fees; pre-window history and unknown incoming origins retained | Genuine complete acquisition/cost scope absent | FIFO partial sales/re-entry/loss/breakeven/failed-fee branch executes; dependent omissions tested | Synthetic development PASS; complete real acceptance OPEN |
+| Classification/cohort | Time-relevant reviewed identity/classification and whole mint aggregate | Complete genuine class/cohort absent | Explicit synthetic class witness; real class imports are not self-authenticating | Real filters BLOCKED; no winning-only selection |
+| 28-day/90-day intervals | Independently spanned indexed/raw intervals and ownership/population | UNTESTED | Interval checks separated from display, with retained known shorter-period results | Development branch executable; genuine coverage absent |
+| Economic boundaries/flows/marks | Reconciled all-account inventories, historical mark sources and complete valued flows | No authorised accepted complete data | Exact synthetic inventory/mark branch; external flow adapter remains explicit unsupported | NO-GO for `balance-at` alone; missing valuation does not block realised-only branch |
+
+The concrete proposed probe is `evidence/product-milestone/SOURCE_PROBE_PLAN.json`, generated by `tools/source_probe_plan.py --output ...`. It is a reviewable **plan only**, capped at **10 read-only requests and 100 credits**, no retries, no purchases, no quota reset. It selects the already-authorised 23-record wallet and its existing primary controls; requests at most three 100-row indexed pages (direct vs all plus one continuation), four exact existing primary records, two current token-program inventories and one finalized slot. Every actual request/response/cursor/bound would be retained with method cost and byte hashes. API keys never appear in plan/receipts.
+
+Preconditions: explicit authorisation for this probe; manual confirmation of current Free entitlement/cycle/remaining credits and no autoscaling; exact terminal bounds/cursors and known lifecycle controls. If the selected wallet lacks an independently known closed/reassigned-account control, the result is **INCONCLUSIVE for historic owner completeness** rather than PASS. An unsupported v1, cap, repeat/missing cursor, nonterminal page or inaccessible required field keeps affected coverage unresolved. A method denial stops the probe. A successful first page does not authorise an unbounded full scan.
+
+The one remaining source decision is whether to authorise that bounded Free-key feasibility probe. The current uploaded task authorises public documents and offline work, so it has **not run**. Until then, complete real-wallet B1/B3 stays unverified while the executable archived development work continues.

@@ -192,6 +192,36 @@
       "selectors": [
         "tests/test_validation_gates.py::*"
       ]
+    },
+    {
+      "id": "archive-input-boundaries",
+      "axis": "User path",
+      "selectors": [
+        "tests/test_archive_input.py::test_normal_app_import_rebuild_sources_and_exports_preserve_parent_and_use_no_provider",
+        "tests/test_archive_input.py::test_archive_paths_hashes_and_expansion_are_bounded_before_mutation",
+        "tests/test_archive_input.py::test_compressed_expansion_and_upload_limits_are_enforced_without_writes"
+      ]
+    },
+    {
+      "id": "archive-financial-dependencies",
+      "axis": "Execution/quantity",
+      "selectors": [
+        "tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee",
+        "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[*]",
+        "tests/test_archive_input.py::test_unknown_trade_fee_keeps_quantity_only_timing_but_not_profit",
+        "tests/test_archive_input.py::test_unknown_incoming_basis_is_not_a_free_profitable_acquisition"
+      ]
+    },
+    {
+      "id": "archive-provenance-population",
+      "axis": "Source set",
+      "selectors": [
+        "tests/test_archive_input.py::test_claimed_real_world_or_completion_boolean_cannot_certify_a_wallet",
+        "tests/test_archive_input.py::test_duplicates_and_reference_permutation_do_not_count_trades_or_fees_twice",
+        "tests/test_archive_input.py::test_conflicting_linked_alternative_is_not_outvoted_or_fixed_by_hiding_its_bytes",
+        "tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period",
+        "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[*]"
+      ]
     }
   ],
   "browser_required": [
@@ -203,6 +233,7 @@
     "evidence inspection and UI JSON export",
     "desktop/mobile",
     "cached real case when available",
-    "immutable parents and zero provider/credential activity"
+    "immutable parents and zero provider/credential activity",
+    "separate archived-accounting product browser: synthetic positive, valuation/ownership loss/restoration, partial genuine input, normal source inspection/export"
   ]
 }

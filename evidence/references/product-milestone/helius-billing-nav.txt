@@ -1,0 +1,316 @@
+---
+url: https://www.helius.dev/docs/billing/plans
+last_updated: 2026-04-09
+---
+
+# Helius Billing, Plans & Pricing
+
+Complete guide to Helius plans, pricing, credits, rate limits, autoscaling, and payment options.
+
+## Quick Reference
+
+- Dashboard: https://dashboard.helius.dev/billing
+- Free tier: 1M credits/month, no card required
+- Paid plans: Start at $49/month (Developer)
+- Enterprise plans: Custom pricing
+- Additional credits: $5 per million
+- Payment methods: Credit card, USDC on Solana
+
+## Standard Plans
+
+| Feature | Free | Developer | Business | Professional |
+|---------|------|-----------|----------|--------------|
+| **Price** | $0/mo | $49/mo | $499/mo | $999/mo |
+| **Monthly Credits** | 1M | 10M | 100M | 200M |
+| **RPC Rate Limit** | 10 req/s | 50 req/s | 200 req/s | 500 req/s |
+| **DAS API** | 2 req/s | 10 req/s | 50 req/s | 100 req/s |
+| **Enhanced APIs** | 2 req/s | 10 req/s | 50 req/s | 100 req/s |
+| **WebSockets** | Yes | Yes | Yes | Yes |
+| **Enhanced WebSockets** | No | Yes | Yes | Yes |
+| **LaserStream gRPC** | No | Devnet | Devnet + Mainnet | Devnet + Mainnet |
+| **Preconfirmations** | No | No | No | Yes (10 credits/msg) |
+| **Wallet API** | Yes | Yes | Yes | Yes |
+| **Support** | Community | Chat | Priority Chat | Slack/Telegram |
+
+## Data Add-Ons (Professional Plan Only)
+
+Transform pay-per-use into predictable costs. Covers LaserStream gRPC and Enhanced WebSockets.
+
+| Data | 5TB | 10TB | 25TB | 50TB | 100TB |
+|------|-----|------|------|------|-------|
+| **Price** | $400/mo | $750/mo | $1,750/mo | $3,250/mo | $6,000/mo |
+| **Overage** | 2 credits/0.1MB | 2 credits/0.1MB | 2 credits/0.1MB | 2 credits/0.1MB | 2 credits/0.1MB |
+
+Need more than 100TB? Contact sales: https://www.helius.dev/contact
+
+## Enterprise Plans
+
+Custom solutions for high-volume applications:
+- Custom rate limits
+- Volume discounts
+- SLA guarantees
+- Direct engineering support
+- Advanced analytics
+- Priority support channels
+
+Contact sales: https://www.helius.dev/contact
+
+## Credits System
+
+Credits are the unit of billing for RPCs, APIs, and streaming data. Every plan includes monthly credits that reset each billing cycle.
+
+### Credit Priority Order
+1. Monthly allocation (resets monthly)
+2. Prepaid credits (never expire)
+3. Autoscaling credits ($5/M)
+
+### Standard RPC Credits
+
+| Service | Credits | Notes |
+|---------|---------|-------|
+| Standard RPC calls | 1 | Most RPC methods |
+| getProgramAccountsV2 | 1 | Paginated version |
+| simulateBundle | 1 | Jito bundle simulation |
+| Priority Fee API | 1 | Fee estimation |
+| getProgramAccounts | 10 | Get all program accounts |
+| DAS API (all methods) | 10 | Digital assets |
+| Enhanced Transactions | 100 | Parsed transactions |
+
+### Historical Data Credits
+
+| Method | Credits | Description |
+|--------|---------|-------------|
+| getBlock | 1 | Block data and transactions |
+| getBlocks | 1 | List of blocks |
+| getBlocksWithLimit | 1 | Blocks with limit |
+| getSignaturesForAddress | 1 | Transaction signatures |
+| getTransaction | 1 | Transaction details |
+| getBlockTime | 1 | Block timestamp |
+| getInflationReward | 1 | Inflation rewards |
+| getSignatureStatuses | 1 | Transaction signature statuses |
+| getTransactionsForAddress | 10+ | Enhanced history (Developer+ only). Full transactions cost 10 credits per 100 returned; signatures-only responses cost 10 credits flat. |
+| getTransfersByAddress | 10 | Parsed token and native SOL transfer history (Developer+ only) |
+
+### Data Streaming Credits
+
+Billed per data volume (uncompressed):
+
+| Service | Credits | Notes |
+|---------|---------|-------|
+| Preconfirmations | 10 | Per streamed transaction. Professional plan or higher. |
+| LaserStream gRPC | 2 | Per 0.1 MB streamed (uncompressed) |
+| Enhanced WebSockets | 2 | Per 0.1 MB streamed (uncompressed) |
+
+**Typical sizes:**
+- Block: ~4MB
+- Account: ~0.0004MB
+- Transaction: ~0.0006MB
+
+### Transaction Submission Credits
+
+| Method | Credits | Description |
+|--------|---------|-------------|
+| Sender | 0 | Ultra-low latency |
+| Staked Connections | 1 | Default for paid plans |
+
+### Wallet API Credits
+
+All Wallet API endpoints cost 100 credits:
+- Wallet Identity
+- Batch Identity Lookup
+- Wallet Balances
+- Wallet History
+- Token Transfers
+- Wallet Funding Source
+
+### Webhook Credits
+
+| Service | Credits | Notes |
+|---------|---------|-------|
+| Webhook Events | 1 | Per event sent |
+| Webhook Management | 100 | Create/edit/delete |
+
+### ZK Compression Credits
+
+| Service | Credits | Notes |
+|---------|---------|-------|
+| ZK Compression API | 10 | Most methods |
+| getValidityProof | 100 | Compute ZK proofs |
+
+## Rate Limits
+
+Rate limits control requests per second. Exceeding limits returns HTTP 429.
+
+### Standard Rate Limits
+
+| Plan | RPC | DAS & Enhanced APIs |
+|------|-----|---------------------|
+| Free | 10 req/s | 2 req/s |
+| Developer | 50 req/s | 10 req/s |
+| Business | 200 req/s | 50 req/s |
+| Professional | 500 req/s | 100 req/s |
+| Enterprise | Custom | Custom |
+
+**Increase Rate Limits:**
+- Professional plans: +100 RPS for $100/month
+- Custom limits: Contact sales
+
+### Special Rate Limits
+
+**Transaction Submission:**
+
+| Endpoint | Free | Developer | Business | Professional |
+|----------|------|-----------|----------|--------------|
+| Sender | 15/s | 15/s | 15/s | 15/s |
+| sendTransaction | 1/s | 5/s | 50/s | 100/s |
+| simulateBundle | 10/s | 50/s | 200/s | 500/s |
+
+**Complex RPC:**
+
+| Endpoint | Free | Developer | Business | Professional |
+|----------|------|-----------|----------|--------------|
+| getProgramAccounts | 5/s | 25/s | 50/s | 75/s |
+
+**LaserStream:**
+
+| Resource | Free | Developer | Business | Professional |
+|----------|------|-----------|----------|--------------|
+| Networks | — | Devnet | Devnet | Devnet + Mainnet |
+| Max Pubkeys | — | 10M | 10M | 10M |
+| Active Connections | — | 100 | 100 | 100 |
+
+**WebSockets:**
+
+| Resource | Free | Developer | Business | Professional |
+|----------|------|-----------|----------|--------------|
+| Concurrent Connections | 5 | 150 | 250 | 250 |
+| WebSocket Types | Standard | Standard | Standard + Enhanced | Standard + Enhanced |
+
+**Webhooks:**
+
+| Resource | Free | Developer | Business | Professional |
+|----------|------|-----------|----------|--------------|
+| Max Webhooks | 5 | 50 | 50 | 50 |
+| Addresses per Webhook | 100k | 100k | 100k | 100k |
+
+**ZK Compression:**
+
+| Service | Free | Developer | Business | Professional |
+|----------|------|-----------|----------|--------------|
+| Photon APIs | 2/s | 10/s | 50/s | 100/s |
+| getValidityProof | 1/s | 5/s | 10/s | 20/s |
+
+### Historical Data Batch Limits
+
+| Method | Max Batch Size |
+|--------|----------------|
+| getTransaction | 100 items per request |
+| getTransactionsForAddress | No batch requests |
+| All other historical methods | 10 items per request |
+
+## Autoscaling
+
+Automatically purchase additional credits when monthly allocation is exhausted.
+
+### How It Works
+
+1. Enable autoscaling on your Billing page
+2. When credits run out, system auto-purchases more
+3. Additional credits: $5 per million
+4. Email notifications sent
+
+### Setup Steps
+
+1. Go to your [Billing](https://dashboard.helius.dev/billing) page
+2. Find the Autoscaling section
+3. Toggle autoscaling on
+
+### Autoscaling Limits
+
+- **Developer & Business**: Capped to avoid unexpected charges
+- **Professional**: Unlimited autoscaling
+- **Enterprise**: Custom configuration
+
+### Payment Options
+
+**Card Payments:**
+- Autoscaling charges payment method automatically
+
+**Crypto Payments:**
+- Some users: Autoscaling available
+- Others: Purchase prepaid credits manually
+
+Prepaid credits:
+- Never expire
+- Purchased via dashboard
+- Paid in USDC on Solana
+
+### Tracking Usage
+
+- **Email Alerts**: Notifications at credit limits
+- **Dashboard**: [Usage tracking](https://dashboard.helius.dev/)
+
+## Paying with Crypto
+
+Pay for Helius plans using USDC on Solana.
+
+### How Crypto Payments Work
+
+1. Navigate to [Billing Page](https://dashboard.helius.dev/billing)
+2. Select plan (monthly or annual)
+3. Click **Pay with Crypto**
+4. Enter billing information
+5. Connect wallet or scan QR code
+6. Complete payment in USDC
+7. Wait for on-chain confirmation
+
+### Key Details
+
+- **Payment Links**: Sent by email and dashboard when due
+- **Currency**: USDC on Solana only
+- **Confirmation**: Up to 1 hour for dashboard update
+- **Cancellation**: Cancel anytime from billing page
+
+### Switching Payment Methods
+
+Contact support to switch between fiat and crypto: https://dashboard.helius.dev/support
+
+## Guides
+
+- Plans Overview: https://www.helius.dev/docs/billing/plans.md
+- Rate Limits Guide: https://www.helius.dev/docs/billing/rate-limits.md
+- Credits Guide: https://www.helius.dev/docs/billing/credits.md
+- Autoscaling Setup: https://www.helius.dev/docs/billing/additional-credits.md
+- Pay with Crypto: https://www.helius.dev/docs/billing/pay-with-crypto.md
+
+## Common Questions
+
+**Q: What happens when I run out of credits?**
+A: With autoscaling enabled, credits auto-purchase. Without it, API requests fail until next billing cycle or manual credit purchase.
+
+**Q: Do credits roll over?**
+A: Monthly credits reset each billing cycle. Prepaid credits never expire.
+
+**Q: Can I upgrade mid-month?**
+A: Yes. You'll be prorated and receive new credit allocation immediately.
+
+**Q: How do I monitor credit usage?**
+A: Dashboard shows real-time usage: https://dashboard.helius.dev/
+
+**Q: What's the difference between RPC and DAS rate limits?**
+A: RPC limits apply to standard Solana RPC calls. DAS limits apply to Digital Asset Standard API and other enhanced APIs.
+
+**Q: Can I get a refund?**
+A: Contact support for refund requests: https://dashboard.helius.dev/support
+
+## Resources
+
+- Dashboard: https://dashboard.helius.dev/
+- Billing Page: https://dashboard.helius.dev/billing
+- Usage Tracking: https://dashboard.helius.dev/ (Usage section)
+- Support: https://dashboard.helius.dev/support
+- Enterprise Sales: https://www.helius.dev/contact
+- Discord: https://discord.com/invite/6GXdee3gBj
+
+---
+Full documentation index: https://www.helius.dev/docs/llms.txt

@@ -1,0 +1,2341 @@
+{
+  "label": "Synthetic finite-world development data; no mainnet provenance",
+  "manifest": {
+    "version": "archived-wallet-input-v1",
+    "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "window": {
+      "start": "2026-06-01T00:00:00+00:00",
+      "end": "2026-07-01T00:00:00+00:00"
+    },
+    "dataset": "synthetic",
+    "transactions": [
+      {
+        "signature": "development-1",
+        "hash": "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb"
+      },
+      {
+        "signature": "development-2",
+        "hash": "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+      },
+      {
+        "signature": "development-3",
+        "hash": "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41"
+      },
+      {
+        "signature": "development-4",
+        "hash": "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae"
+      },
+      {
+        "signature": "development-5",
+        "hash": "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad"
+      },
+      {
+        "signature": "development-6",
+        "hash": "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95"
+      },
+      {
+        "signature": "development-7",
+        "hash": "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b"
+      },
+      {
+        "signature": "development-8",
+        "hash": "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74"
+      },
+      {
+        "signature": "development-9",
+        "hash": "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      },
+      {
+        "signature": "development-10",
+        "hash": "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf"
+      },
+      {
+        "signature": "development-11",
+        "hash": "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51"
+      },
+      {
+        "signature": "development-12",
+        "hash": "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190"
+      }
+    ],
+    "world_hash": "e3ce0490b22b24b603ec8a8f9b8cd41154118bc6e99f85176956c96b057c1c92",
+    "classification_hashes": [
+      "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+      "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+      "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+      "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035"
+    ],
+    "valuation_hash": "6fb6e22e7c167c43b12652e1cd772132d9819d68c3986701f067b59737e52031",
+    "evidence": []
+  },
+  "payloads": {
+    "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb": {
+      "slot": 1000,
+      "blockTime": 1780099200,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-1"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                "So11111111111111111111111111111111111111112",
+                "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          100000000000,
+          2039280,
+          50002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999995000,
+          2039280,
+          49002039280,
+          2039280,
+          101002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "50000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "999900",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "101000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                    "destination": "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                    "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff": {
+      "slot": 1001,
+      "blockTime": 1780358400,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-2"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "So11111111111111111111111111111111111111112",
+                "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999995000,
+          2039280,
+          49002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999990000,
+          2039280,
+          48002039280,
+          2039280,
+          101002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "48000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "999900",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "101000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                    "destination": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                    "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41": {
+      "slot": 1002,
+      "blockTime": 1780444800,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-3"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "So11111111111111111111111111111111111111112",
+                "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999990000,
+          2039280,
+          48002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999985000,
+          2039280,
+          49202039280,
+          2039280,
+          98802039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "48000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "60",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49200000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000040",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "98800000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                    "destination": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                    "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                    "tokenAmount": {
+                      "amount": "40",
+                      "decimals": 0
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1200000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae": {
+      "slot": 1003,
+      "blockTime": 1780617600,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-4"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "So11111111111111111111111111111111111111112",
+                "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999985000,
+          2039280,
+          49202039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999980000,
+          2039280,
+          51002039280,
+          2039280,
+          98202039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "60",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49200000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "51000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000060",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "98200000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                    "destination": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                    "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                    "tokenAmount": {
+                      "amount": "60",
+                      "decimals": 0
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1800000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad": {
+      "slot": 1004,
+      "blockTime": 1780963200,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-5"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "So11111111111111111111111111111111111111112",
+                "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999980000,
+          2039280,
+          51002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999975000,
+          2039280,
+          49002039280,
+          2039280,
+          102002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "51000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "999900",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "102000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "2000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                    "destination": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                    "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95": {
+      "slot": 1005,
+      "blockTime": 1781049600,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-6"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "So11111111111111111111111111111111111111112",
+                "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999975000,
+          2039280,
+          49002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999970000,
+          2039280,
+          50002039280,
+          2039280,
+          99002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "50000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "99000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                    "destination": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                    "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b": {
+      "slot": 1006,
+      "blockTime": 1781654400,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-7"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                "So11111111111111111111111111111111111111112",
+                "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999970000,
+          2039280,
+          50002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999965000,
+          2039280,
+          48002039280,
+          2039280,
+          102002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "50000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "48000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "999900",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "102000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "2000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                    "destination": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                    "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74": {
+      "slot": 1007,
+      "blockTime": 1781740800,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-8"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                "So11111111111111111111111111111111111111112",
+                "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999965000,
+          2039280,
+          48002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999960000,
+          2039280,
+          49002039280,
+          2039280,
+          99002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "48000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "99000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                    "destination": "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                    "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99": {
+      "slot": 1008,
+      "blockTime": 1782086400,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-9"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3qbR1eZRqXUWroWKKYhbDmR3FfqTHfqSU8zZSxtANzYh",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+                "So11111111111111111111111111111111111111112",
+                "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3qbR1eZRqXUWroWKKYhbDmR3FfqTHfqSU8zZSxtANzYh",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999960000,
+          2039280,
+          49002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999955000,
+          2039280,
+          48002039280,
+          2039280,
+          101002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "48000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "999900",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "101000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "3qbR1eZRqXUWroWKKYhbDmR3FfqTHfqSU8zZSxtANzYh",
+                    "destination": "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+                    "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf": {
+      "slot": 1009,
+      "blockTime": 1782172800,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-10"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3qbR1eZRqXUWroWKKYhbDmR3FfqTHfqSU8zZSxtANzYh",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+                "So11111111111111111111111111111111111111112",
+                "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3qbR1eZRqXUWroWKKYhbDmR3FfqTHfqSU8zZSxtANzYh",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999955000,
+          2039280,
+          48002039280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999950000,
+          2039280,
+          49002049280,
+          2039280,
+          99002029280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "48000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000010000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "98999990000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+                    "destination": "3qbR1eZRqXUWroWKKYhbDmR3FfqTHfqSU8zZSxtANzYh",
+                    "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000010000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51": {
+      "slot": 1010,
+      "blockTime": 1782604800,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-11"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "pool",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "global",
+                "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                "So11111111111111111111111111111111111111112",
+                "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                "recipient",
+                "fee-account",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          99999950000,
+          2039280,
+          49002049280,
+          2039280,
+          100002039280
+        ],
+        "postBalances": [
+          99999945000,
+          2039280,
+          50502049280,
+          2039280,
+          98502039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "49000010000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "50500010000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000100",
+              "decimals": 0
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "pool",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "98500000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                    "destination": "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                    "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 0
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "program": "spl-token",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1500000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190": {
+      "slot": 1011,
+      "blockTime": 1782691200,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "development-12"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+          ],
+          "instructions": []
+        }
+      },
+      "meta": {
+        "err": {
+          "InstructionError": [
+            0,
+            "Custom"
+          ]
+        },
+        "fee": 5000,
+        "preBalances": [
+          99999945000
+        ],
+        "postBalances": [
+          99999940000
+        ],
+        "preTokenBalances": [],
+        "postTokenBalances": [],
+        "innerInstructions": []
+      }
+    },
+    "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03": {
+      "kind": "synthetic-classification-v1",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+      "classification": "meme"
+    },
+    "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d": {
+      "kind": "synthetic-classification-v1",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+      "classification": "meme"
+    },
+    "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d": {
+      "kind": "synthetic-classification-v1",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+      "classification": "meme"
+    },
+    "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035": {
+      "kind": "synthetic-classification-v1",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+      "classification": "meme"
+    },
+    "e3ce0490b22b24b603ec8a8f9b8cd41154118bc6e99f85176956c96b057c1c92": {
+      "kind": "synthetic-world-v1",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "start": "2026-03-23T00:00:00+00:00",
+      "end": "2026-07-01T00:00:00+00:00",
+      "opening_native_lamports": "100000000000",
+      "transactions": [
+        {
+          "signature": "development-1",
+          "hash": "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb"
+        },
+        {
+          "signature": "development-2",
+          "hash": "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+        },
+        {
+          "signature": "development-3",
+          "hash": "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41"
+        },
+        {
+          "signature": "development-4",
+          "hash": "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae"
+        },
+        {
+          "signature": "development-5",
+          "hash": "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad"
+        },
+        {
+          "signature": "development-6",
+          "hash": "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95"
+        },
+        {
+          "signature": "development-7",
+          "hash": "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b"
+        },
+        {
+          "signature": "development-8",
+          "hash": "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74"
+        },
+        {
+          "signature": "development-9",
+          "hash": "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+        },
+        {
+          "signature": "development-10",
+          "hash": "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf"
+        },
+        {
+          "signature": "development-11",
+          "hash": "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51"
+        },
+        {
+          "signature": "development-12",
+          "hash": "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190"
+        }
+      ],
+      "accounts": [
+        {
+          "address": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+          "decimals": 0,
+          "opening_quantity_raw": "0"
+        },
+        {
+          "address": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+          "decimals": 0,
+          "opening_quantity_raw": "0"
+        },
+        {
+          "address": "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+          "decimals": 0,
+          "opening_quantity_raw": "0"
+        },
+        {
+          "address": "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+          "decimals": 0,
+          "opening_quantity_raw": "0"
+        },
+        {
+          "address": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "mint": "So11111111111111111111111111111111111111112",
+          "decimals": 9,
+          "opening_quantity_raw": "50000000000"
+        }
+      ]
+    },
+    "6fb6e22e7c167c43b12652e1cd772132d9819d68c3986701f067b59737e52031": {
+      "kind": "synthetic-valuation-v1",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "window": {
+        "start": "2026-06-01T00:00:00+00:00",
+        "end": "2026-07-01T00:00:00+00:00"
+      },
+      "external_flows": [],
+      "opening": {
+        "at": "2026-06-01T00:00:00+00:00",
+        "native_lamports": "99999995000",
+        "assets": [
+          {
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "decimals": 0,
+            "quantity_raw": "100",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "decimals": 9,
+            "quantity_raw": "49000000000",
+            "mark_sol_per_token": "1"
+          }
+        ]
+      },
+      "closing": {
+        "at": "2026-07-01T00:00:00+00:00",
+        "native_lamports": "99999940000",
+        "assets": [
+          {
+            "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "p2Yicb86aZig616Eav2VWG9vuXR5mEqhtzshZYBxzsV",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "decimals": 0,
+            "quantity_raw": "0",
+            "mark_sol_per_token": "0.01"
+          },
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "decimals": 9,
+            "quantity_raw": "50500010000",
+            "mark_sol_per_token": "1"
+          }
+        ]
+      }
+    }
+  }
+}

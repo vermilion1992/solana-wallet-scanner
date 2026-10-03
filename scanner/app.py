@@ -147,7 +147,7 @@ def create_app(data_dir, launch_token=None):
         info = require_provider()
         return Gateway(store, credentials.key, info["cycle_start"], settings()["limits"]["helius_cap"])
 
-    async def build_report(scan, address, collected, *, rebuilt_from=None):
+    async def build_report(scan, address, collected, *, rebuilt_from=None, archive_loaded=None):
         from .accounting import analyze, evaluate_policy, METHODOLOGY
         from .decoder import decode_transactions
         from .investigation import decode_supported_swaps, inspect_token_risk
@@ -175,9 +175,13 @@ def create_app(data_dir, launch_token=None):
         result = analyze(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete,
                          interval_coverage={name: history_evidence["intervals"][name]
                                             for name in ("report_period", "four_weeks", "verification_90d")})
+        archive_accounting = None
+        if archive_loaded is not None:
+            from .archive_input import analyze_archive
+            result, events, archive_accounting = analyze_archive(archive_loaded, events)
         research = summarize_research(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete)
         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
-        mints = [] if rebuilt_from else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
+        mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
         risk_evidence = []
         from .providers import ProviderError
         for mint in mints:
@@ -223,6 +227,16 @@ def create_app(data_dir, launch_token=None):
                   "notes": ["Native RPC verifies the fetched account scope; it cannot prove discovery of every historical owned account.",
                             "Only recognized spot instructions with reconciled SOL consideration become buys/sells; unsupported wrappers, crossquotes and missing marks remain unresolved.",
                             "No current market price is substituted for historical valuation. No paid data path is enabled."]}
+        if archive_loaded is not None:
+            manifest = archive_loaded["manifest"]
+            report.update(archive_input_hash=archive_loaded["input_hash"], archive_accounting=archive_accounting,
+                          source="demo" if manifest["dataset"] == "synthetic" else "live", evidence_status="partial")
+            witness_refs = [{"kind": "archived-wallet-manifest", "hash": archive_loaded["input_hash"]}]
+            witness_refs += [{"kind": "archive-witness", "hash": h} for h in
+                            [manifest.get("world_hash"), manifest.get("valuation_hash"), *manifest.get("classification_hashes", [])] if h]
+            report["evidence"] += witness_refs
+            report["notes"][0] = "Imported archive checks establish byte integrity and selected raw observations; genuine chain authentication and historical wallet completeness require independent evidence."
+            report["notes"].append(archive_accounting["scope"] + "; imported records do not establish native collector ancestry or complete real-wallet acceptance.")
         if rebuilt_from:
             report.update(rebuilt_from=rebuilt_from["id"], previous_methodology=rebuilt_from.get("methodology"),
                           previous_history_methodology=rebuilt_from.get("coverage", {}).get("history_evidence", {}).get("version"),
@@ -487,7 +501,7 @@ def create_app(data_dir, launch_token=None):
                 return JSONResponse({"detail": "CSRF token required"}, 403)
         if request.method in ("POST", "PUT", "PATCH"):
             length = request.headers.get("content-length", "0")
-            limit = 4 * 1024 * 1024 if request.url.path == "/api/evidence/audit" else 65536
+            limit = 20 * 1024 * 1024 if request.url.path == "/api/archives/import" else 4 * 1024 * 1024 if request.url.path == "/api/evidence/audit" else 65536
             if not length.isdigit() or int(length) > limit:
                 return JSONResponse({"detail": "Request body exceeds local pilot limit"}, 413)
             content = bytearray()
@@ -825,6 +839,27 @@ def create_app(data_dir, launch_token=None):
         wake.set()
         return {"ok": True}
 
+    @app.get("/api/archives/example.zip")
+    async def archive_example():
+        from .archive_input import pack_bytes
+        example = json.loads((Path(__file__).parent / "examples/archive-wallet-synthetic.json").read_text())
+        return Response(pack_bytes(example), media_type="application/zip",
+                        headers={"Content-Disposition": 'attachment; filename="synthetic-wallet-accounting.zip"'})
+
+    @app.post("/api/archives/import")
+    async def archive_import(request: Request):
+        from .archive_input import import_archive, load_archive, collected_archive
+        digest = import_archive(store, await request.body(),
+                                reserve_bytes=settings()["limits"]["min_free_disk_mb"] * 1024 ** 2)
+        loaded = load_archive(store, digest)
+        manifest = loaded["manifest"]
+        scan = {"id": uuid.uuid4().hex, "audit_addresses": [manifest["address"]], "window": deepcopy(manifest["window"]),
+                "preset": deepcopy(preset()), "source": "archive", "status": "completed", "created_at": now(),
+                "stage": "Offline archived accounting", "progress": {"wallets_completed": 1, "transactions": len(loaded["records"]), "credits": 0}}
+        store.put("scans", scan["id"], scan)
+        result = await build_report(scan, manifest["address"], collected_archive(loaded), archive_loaded=loaded)
+        return {"report_id": result["id"], "input_hash": digest, "dataset": manifest["dataset"], "provider_requests": 0}
+
     @app.get("/api/reports/{identifier}")
     async def report(identifier):
         result = store.get("reports", identifier)
@@ -839,16 +874,25 @@ def create_app(data_dir, launch_token=None):
         previous = store.get("reports", identifier)
         if not previous:
             raise HTTPException(404, "Report not found")
-        if previous.get("source") != "live" or previous.get("preview"):
+        if (previous.get("source") != "live" and not previous.get("archive_input_hash")) or previous.get("preview"):
             raise HTTPException(409, "Only a saved live report can be rebuilt from archived native records")
         if shutil.disk_usage(store.path).free < settings()["limits"]["min_free_disk_mb"] * 1024 ** 2:
             raise HTTPException(409, "Free disk space is below the configured reserve; free space before saving a rebuilt report")
-        collected = load_report_inputs(store, previous)
+        archive_loaded = None
+        if previous.get("archive_input_hash"):
+            from .archive_input import load_archive, collected_archive
+            archive_loaded = load_archive(store, previous["archive_input_hash"])
+            manifest = archive_loaded["manifest"]
+            if manifest["address"] != previous["address"] or manifest["window"] != previous["window"] or (manifest["dataset"] == "synthetic") != (previous["source"] == "demo"):
+                raise EvidenceError("Frozen archive identity/window/dataset disagrees with the original report")
+            collected = collected_archive(archive_loaded)
+        else:
+            collected = load_report_inputs(store, previous)
         original_scan = store.get("scans", previous.get("scan_id"))
         if not original_scan or previous["address"] not in original_scan.get("audit_addresses", []):
             raise HTTPException(409, "The original native collection job is missing; its source context cannot be rebuilt")
         scan = {**deepcopy(original_scan), "window": deepcopy(previous["window"]), "preset": deepcopy(previous["preset"])}
-        result = await build_report(scan, previous["address"], collected, rebuilt_from=previous)
+        result = await build_report(scan, previous["address"], collected, rebuilt_from=previous, archive_loaded=archive_loaded)
         return {"report_id": result["id"]}
 
     @app.get("/api/evidence/{digest}")

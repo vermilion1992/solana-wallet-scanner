@@ -237,6 +237,14 @@ export type Report = {
   policy: Policy;
   evidence_status: string;
   preset?: Preset;
+  archive_input_hash?: string;
+  archive_accounting?: {
+    dataset: 'real' | 'synthetic';
+    scope: string;
+    population_state: 'PASS' | 'UNKNOWN';
+    gaps: string[];
+    metric_requirements: Record<string, {state: string; reason?: string; dependencies: string[]}>;
+  };
   preview?: boolean;
   history_assessment?: HistoryAssessment;
   position_assessment?: PositionAssessment;

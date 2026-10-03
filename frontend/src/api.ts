@@ -43,3 +43,14 @@ export async function api<T = unknown>(
   }
   return response.status === 204 ? (undefined as T) : response.json();
 }
+
+export async function uploadArchive(file: File): Promise<{ report_id: string }> {
+  const response = await fetch('/api/archives/import', {
+    method: 'POST', credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/zip', 'X-CSRF-Token': csrf },
+    body: file,
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : `Import failed (${response.status})`);
+  return result;
+}

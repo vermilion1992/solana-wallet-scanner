@@ -1,0 +1,74 @@
+[
+  {
+    "name": "helius-public-nav",
+    "url": "https://www.helius.dev/docs/llms.txt",
+    "status": 200,
+    "sha256": "30ec90055271f8555da38262621bf2dea4f9d8c7269ccd3707c02330c81bab6e",
+    "bytes": 33641,
+    "retrieved_at": "2026-10-03T15:24:21.744348+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-index-markdown",
+    "url": "https://www.helius.dev/docs/api-reference/rpc/http/gettransactionsforaddress.md",
+    "status": 200,
+    "sha256": "9dbb7415eb7389752ed7f0a0601983bd73bd0d32ff14f0d4e3b61a1e2aa6acec",
+    "bytes": 35807,
+    "retrieved_at": "2026-10-03T15:24:22.078269+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-index-guide",
+    "url": "https://www.helius.dev/docs/rpc/gettransactionsforaddress.md",
+    "status": 200,
+    "sha256": "ecb75c9566dfcda8e209ea1b5ed829373749d181a1c9326e363abe8eb346c54c",
+    "bytes": 40596,
+    "retrieved_at": "2026-10-03T15:25:35.853810+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-history-contract",
+    "url": "https://www.helius.dev/docs/rpc/historical-data.md",
+    "status": 200,
+    "sha256": "ed2236a25accce0ab93f2c926a7c6d4508f78c02885e9bf41836963534411e9a",
+    "bytes": 6651,
+    "retrieved_at": "2026-10-03T15:25:35.794014+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-credit-costs",
+    "url": "https://www.helius.dev/docs/billing/credits.md",
+    "status": 200,
+    "sha256": "2ad3dec9062edf57a2c6939b20884a9f014344708b551ed2d18f1899d768f9df",
+    "bytes": 19221,
+    "retrieved_at": "2026-10-03T15:25:35.767813+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-balance-at",
+    "url": "https://www.helius.dev/docs/wallet-api/balance-at.md",
+    "status": 200,
+    "sha256": "4a5c392798d098ebf3630c5bb901614e9b3065034455a94d6ac970c2045c0e15",
+    "bytes": 12292,
+    "retrieved_at": "2026-10-03T15:25:35.780397+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-wallet-history",
+    "url": "https://www.helius.dev/docs/wallet-api/history.md",
+    "status": 200,
+    "sha256": "e4e44c48f97344b51f899afa537fe84616d0fa636a624aec2adc0b00879ebe22",
+    "bytes": 17619,
+    "retrieved_at": "2026-10-03T15:25:35.824815+00:00",
+    "provider_requests": 0
+  },
+  {
+    "name": "helius-billing-nav",
+    "url": "https://www.helius.dev/docs/billing/llms.txt",
+    "status": 200,
+    "sha256": "18a77d5f1d304d4cdeefee773d0d47a93026bb8086296a2aff96b0a7ca85704e",
+    "bytes": 10071,
+    "retrieved_at": "2026-10-03T15:25:35.895049+00:00",
+    "provider_requests": 0
+  }
+]

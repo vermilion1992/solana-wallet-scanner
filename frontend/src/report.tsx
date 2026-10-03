@@ -959,7 +959,7 @@ export function ReportView({
           <ArrowLeft size={15} /> Back to results
         </button>
         <div>
-          {report.source === "live" && !report.preview && (
+          {(report.source === "live" || report.archive_input_hash) && !report.preview && (
             <Button
               variant="secondary"
               icon={RotateCcw}
@@ -1122,6 +1122,23 @@ export function ReportView({
             events, and conclusions are demonstration controls.
           </span>
         </div>
+      )}
+      {report.archive_accounting && (
+        <section className="panel" data-archive-accounting={report.archive_accounting.dataset} data-archive-report-id={report.id}>
+          <SectionHeading title={report.archive_accounting.dataset === 'synthetic' ? 'Synthetic accounting · development' : 'Archived records · partial wallet coverage'}
+            subtitle={report.archive_accounting.scope} />
+          <p>Selected network fees: {decimal(report.metrics.observed_network_fees_sol?.value, 9)} SOL. This observation does not establish all trading costs.</p>
+          {report.archive_accounting.gaps.map((gap, i) => <p key={i}>{gap}</p>)}
+          <details><summary>Inspect metric evidence requirements</summary>
+            {Object.entries(report.archive_accounting.metric_requirements).map(([name, requirement]) => (
+              <div key={name} style={{ overflowWrap: 'anywhere', marginTop: 12 }} data-archive-metric={name}>
+                <strong>{label(name)} · {requirement.state}</strong>
+                <p>{requirement.dependencies.map(label).join(', ')}</p>
+                {requirement.reason && <p>{requirement.reason}</p>}
+              </div>
+            ))}
+          </details>
+        </section>
       )}
       <div className="report-tabs" role="tablist" aria-label="Report sections">
         {[
