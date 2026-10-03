@@ -84,7 +84,7 @@ def main(argv=None):
     if args.browser_python:
         args.browser_python = os.path.abspath(shutil.which(args.browser_python) or args.browser_python)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
-    output = args.output or ROOT / 'evidence/runs' / (args.profile + '-' + stamp)
+    output = (args.output or ROOT / 'evidence/runs' / (args.profile + '-' + stamp)).absolute()
     output.mkdir(parents=True, exist_ok=False)
     before = source_manifest()
     env = {k: v for k, v in os.environ.items() if k != 'HELIUS_API_KEY'}

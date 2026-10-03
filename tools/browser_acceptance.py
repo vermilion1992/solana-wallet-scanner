@@ -9,6 +9,9 @@ class BrowserEnvironmentUnavailable(Exception):
 
 def run(args):
     args.python=os.path.abspath(shutil.which(args.python) or args.python)
+    args.output=args.output.absolute()
+    if args.real_corpus:
+        args.real_corpus=args.real_corpus.absolute()
     out=args.output;out.mkdir(parents=True,exist_ok=False);data=out/'data';data.mkdir()
     env={k:v for k,v in os.environ.items() if k!='HELIUS_API_KEY'}
     try:

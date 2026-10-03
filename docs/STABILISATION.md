@@ -20,6 +20,8 @@ The portable cached-real fixture initially omitted the original persisted collec
 
 Before freezing, the expanded focused runner passed 457 tests and the affected freshness/gate checks passed 36. The development guarded browser passed six child rebuilds and 16 captures at 1440/390 px, including source loss/restoration and the unchanged cached real case. These are iteration evidence, not final candidate gates. Intermediate failures and raw logs are retained under `evidence/runs/`.
 
+The first full candidate (`6093187`) passed 1,791 backend tests, 264 subtests and frontend checks/build, but its overall gate failed: an explicit relative output path was reused after the browser helper changed directories. PROC-02 is a validation-tool defect. Output/corpus paths now become absolute at the tool boundary, preserving the selected virtualenv path without resolving its interpreter symlink. The failed candidate record is retained; a passing backend never overrides a failed browser gate. The corrected frozen candidate requires its own review and complete gate run.
+
 ## Repeatable validation
 
 From the application root:
