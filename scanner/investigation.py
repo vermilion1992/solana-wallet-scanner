@@ -442,9 +442,19 @@ def decode_supported_swaps(transactions, address):
                     target[account] = raw_quantity(token['amount'])
             owned = {account: value for account, value in identities.items() if value['owner'] == address}
             inner = defaultdict(list)
-            for group in meta.get('innerInstructions') or []:
+            groups = meta.get('innerInstructions')
+            if groups is not None and not isinstance(groups, list):
+                raise ValueError('Malformed inner instruction container')
+            for group in groups or []:
+                if not isinstance(group, dict) or not isinstance(group.get('instructions'), list):
+                    raise ValueError('Malformed inner instruction association')
                 outer = _integer(group['index'])
-                for index, instruction in enumerate(group.get('instructions') or []):
+                if outer >= len(instructions) or outer in inner:
+                    raise ValueError('Out-of-range or duplicate inner instruction association')
+                inner[outer] = []
+                for index, instruction in enumerate(group['instructions']):
+                    if not isinstance(instruction, dict):
+                        raise ValueError('Malformed inner instruction')
                     inner[outer].append((f'innerInstructions.{outer}.{index}', instruction))
             flat = []
             for index, instruction in enumerate(instructions):

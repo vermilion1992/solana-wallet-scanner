@@ -240,10 +240,8 @@ def _safe_decoder_container(raw):
         for name in ('preTokenBalances', 'postTokenBalances'):
             if not isinstance(meta.get(name), list) or any(not isinstance(v, dict) for v in meta[name]):
                 return False
-        if not isinstance(message.get('instructions'), list) or any(not isinstance(v, dict) for v in message['instructions']):
-            return False
-        if meta.get('innerInstructions') is not None and (not isinstance(meta['innerInstructions'], list) or any(not isinstance(g, dict) or not isinstance(g.get('instructions'), list) for g in meta['innerInstructions'])):
-            return False
+        # Instruction failures are handled by both shared decoders after retaining
+        # independent native fee facts; they must not erase this raw record.
         return True
     except (ValueError, TypeError, KeyError):
         return False
@@ -277,7 +275,7 @@ def _world_scope(loaded):
             raise ValueError('Independent finite-world inventory and selected transaction population disagree')
         accounts = world['accounts']
         identities = {a['address']: a for a in accounts}
-        if not accounts or len(identities) != len(accounts) or len(accounts) * len(loaded['records']) > MAX_QUANTITY_STEPS:
+        if not accounts or len(identities) != len(accounts) or len(accounts) * len(loaded['all_records']) > MAX_QUANTITY_STEPS:
             raise ValueError('World account inventory is empty, duplicated or exceeds the quantity inspection budget')
         quantities = {a['address']: raw_quantity(a['opening_quantity_raw']) for a in accounts}
         if any(a['owner'] != manifest['address'] or a['mint'] != WSOL and quantities[a['address']] != 0 for a in accounts):

@@ -222,6 +222,14 @@
         "tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period",
         "tests/test_archive_input.py::test_malformed_native_record_retains_gap_without_crashing[*]"
       ]
+    },
+    {
+      "id": "archive-native-container-parity",
+      "axis": "Representation",
+      "selectors": [
+        "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[*]",
+        "tests/test_archive_input.py::test_malformed_program_identity_normal_api_import_creates_an_unresolved_report"
+      ]
     }
   ],
   "browser_required": [

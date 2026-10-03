@@ -152,10 +152,24 @@ def decode_transactions(transactions, address):
         flow = defaultdict(int)
         ownership = {account: dict(identity) for account, identity in identities.items() if account not in conflicting}
         inner = defaultdict(list)
-        for group in meta.get('innerInstructions') or []:
-            inner[group.get('index')].extend(group.get('instructions') or [])
+        instructions = message.get('instructions')
+        groups = meta.get('innerInstructions')
+        if not isinstance(instructions, list) or groups is not None and not isinstance(groups, list):
+            unsupported('Successful instruction containers are malformed', 'transaction.message.instructions')
+            continue
+        invalid_inner = False
+        for group_index, group in enumerate(groups or []):
+            if (not isinstance(group, dict) or type(group.get('index')) is not int or
+                not 0 <= group['index'] < len(instructions) or group['index'] in inner or
+                not isinstance(group.get('instructions'), list)):
+                unsupported('Inner instruction association is malformed or duplicated', f'meta.innerInstructions.{group_index}')
+                invalid_inner = True
+                break
+            inner[group['index']].extend(group['instructions'])
+        if invalid_inner:
+            continue
         flattened = []
-        for outer_index, instruction in enumerate(message.get('instructions') or []):
+        for outer_index, instruction in enumerate(instructions):
             flattened.append((f'instructions.{outer_index}', instruction))
             for inner_index, nested in enumerate(inner.get(outer_index, [])):
                 flattened.append((f'innerInstructions.{outer_index}.{inner_index}', nested))
@@ -170,6 +184,10 @@ def decode_transactions(transactions, address):
             program = instruction.get('program')
             program_id = instruction.get('programId')
             parsed = instruction.get('parsed')
+            if (program is not None and not isinstance(program, str) or
+                program_id is not None and not isinstance(program_id, str)):
+                unsupported('Instruction program identity has an invalid container type', path)
+                continue
             expected_ids = {'system': {SYSTEM_ID}, 'spl-token': {'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'},
                             'spl-token-2022': {'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'},
                             'spl-associated-token-account': {ASSOCIATED_ID}, 'compute-budget': {COMPUTE_ID}}

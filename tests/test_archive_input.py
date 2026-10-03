@@ -171,6 +171,47 @@ def test_compressed_expansion_and_upload_limits_are_enforced_without_writes(tmp_
     assert store.list('artifacts')==[]
 
 
+@pytest.mark.parametrize('variant',['program-id','program-label','inner-index','inner-group','inner-instructions'])
+@pytest.mark.parametrize('role',['selected','alternative'])
+def test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations(tmp_path,variant,role):
+    value=bundle();row=value['manifest']['transactions'][1];raw=deepcopy(value['payloads'][row['hash']])
+    if variant=='program-id':raw['transaction']['message']['instructions'][0]['programId']={}
+    elif variant=='program-label':
+        raw['transaction']['message']['instructions'][0]['programId']='unreviewed-program'
+        raw['transaction']['message']['instructions'][0]['program']={}
+    elif variant=='inner-index':raw['meta']['innerInstructions'][0]['index']=[]
+    elif variant=='inner-group':raw['meta']['innerInstructions']=[[]]
+    else:raw['meta']['innerInstructions'][0]['instructions']={}
+    h=hashlib.sha256(canonical_bytes(raw)).hexdigest();value['payloads'][h]=raw
+    if role=='selected':row['hash']=h
+    else:value['manifest']['evidence']=[{'kind':'transaction','signature':row['signature'],'hash':h}]
+    store=Store(tmp_path);result,coverage,digest=derive(store,value)
+    assert result['metrics']['profit_sol']['status']=='unknown'
+    assert result['metrics']['observed_network_fees_sol']['value']=='0.000055'
+    assert coverage['population_state']=='UNKNOWN'
+    # Exercise the shared generic decoder directly, outside the archive container guard.
+    from scanner.decoder import decode_transactions
+    decoded=decode_transactions([{'signature':row['signature'],'raw':raw,'evidence_hash':h}],value['manifest']['address'])
+    assert any(e['kind']=='unsupported' for e in decoded['events'])
+    assert any(e['kind']=='fee' and e['amount_sol']=='0.000005' for e in decoded['events'])
+
+
+def test_malformed_program_identity_normal_api_import_creates_an_unresolved_report(tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    import scanner.app as application
+    monkeypatch.setattr(application,'Credentials',lambda _:SimpleNamespace(key=None,storage='none',backend=None))
+    value=bundle();row=value['manifest']['transactions'][1];raw=deepcopy(value['payloads'][row['hash']]);raw['transaction']['message']['instructions'][0]['programId']={}
+    h=hashlib.sha256(canonical_bytes(raw)).hexdigest();value['payloads'][h]=raw;row['hash']=h
+    with TestClient(create_app(tmp_path,'isolated-test-session'),base_url='http://127.0.0.1:8765') as client:
+        csrf=client.get('/api/bootstrap',headers={'X-Launch-Token':'isolated-test-session'}).json()['csrf']
+        response=client.post('/api/archives/import',content=packed(value),headers={'X-CSRF-Token':csrf})
+        assert response.status_code==200,response.text
+        report=client.get('/api/reports/'+response.json()['report_id']).json()
+        assert report['metrics']['profit_sol']['status']=='unknown'
+        assert report['metrics']['observed_network_fees_sol']['value']=='0.000055'
+        assert report['qualification']['qualified'] is False
+
+
 def test_claimed_real_world_or_completion_boolean_cannot_certify_a_wallet(tmp_path):
     value = bundle(); value['manifest']['dataset'] = 'real'
     result, coverage, _ = derive(Store(tmp_path), value)
