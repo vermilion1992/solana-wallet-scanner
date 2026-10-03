@@ -1,0 +1,121 @@
+{
+  "scope": "Hashes of available files and internal manifest consistency only; not full-source or run verification.",
+  "original_input_hashes": {
+    "FINAL_GATES.json": "2db4840c72c3bdb3190f0829e1878de8ba3696af9c319c8586599a7a5f689827",
+    "validate.py": "de0c1f12894dc3565699852f96a2613b7f1bbb6e1cc74b5374c582b1b876c30b",
+    "test_instruction_contract_matrix.py": "57e6f76dd5a0a2850b615c9a777d87f9f627814f93637b0630cfd173e8f5534c",
+    "ISSUES.md": "83f798bdba046dc8e3424aa46cfe24014325987b469e2695943a0768b8de48e0"
+  },
+  "claimed_candidate_commit": "96fb1ebb7f6f41dc3c3c72ff4cac209a3fdcc272",
+  "claimed_candidate_source_sha256": "b3ec1bc2b862af41952d2a0f93d47f26ea1ba9add07dd6e6d8021745fc213534",
+  "manifest_digest_recomputed_from_listed_hashes_and_modes": "b3ec1bc2b862af41952d2a0f93d47f26ea1ba9add07dd6e6d8021745fc213534",
+  "manifest_self_consistent": true,
+  "manifest_listed_files": 169,
+  "available_file_matches": {
+    "validate.py": true,
+    "test_instruction_contract_matrix.py": true,
+    "ISSUES.md": true
+  },
+  "review_commit_matches": true,
+  "review_source_matches": true,
+  "install_locks_match": true,
+  "install_runtime_matches": true,
+  "listed_gates": [
+    {
+      "name": "runtime",
+      "state": "PASS"
+    },
+    {
+      "name": "node-runtime",
+      "state": "PASS"
+    },
+    {
+      "name": "backend",
+      "state": "PASS"
+    },
+    {
+      "name": "pip-check",
+      "state": "PASS"
+    },
+    {
+      "name": "shell-syntax",
+      "state": "PASS"
+    },
+    {
+      "name": "matrix",
+      "state": "PASS"
+    },
+    {
+      "name": "frontend-locked-install",
+      "state": "PASS"
+    },
+    {
+      "name": "frontend-check-format",
+      "state": "PASS"
+    },
+    {
+      "name": "frontend-check-discovery",
+      "state": "PASS"
+    },
+    {
+      "name": "frontend-build",
+      "state": "PASS"
+    },
+    {
+      "name": "clean-locked-install",
+      "state": "PASS"
+    },
+    {
+      "name": "launcher-browser-rebuild",
+      "state": "PASS"
+    },
+    {
+      "name": "consolidated-review",
+      "state": "PASS"
+    }
+  ],
+  "comparison_to_earlier_v0311_zip": {
+    "zip_sha256": "8da8ee0519643c02b156279f117244ea545631cc5775ddb2dfe5d74a680302f7",
+    "listed_baseline_files": 152,
+    "new_paths": [
+      "ACCEPTANCE.md",
+      "AGENTS.md",
+      "CODEX_TASK.md",
+      "ISSUES.md",
+      "REVIEWER_TASK.md",
+      "docs/ACCEPTANCE_MATRIX.json",
+      "docs/R1_SOURCE_DECISION.md",
+      "docs/STABILISATION.md",
+      "tests/fixtures/instruction_family_schema.json",
+      "tests/test_instruction_contract_matrix.py",
+      "tests/test_source_role_matrix.py",
+      "tests/test_validation_gates.py",
+      "tools/browser_acceptance.py",
+      "tools/browser_seed.py",
+      "tools/check_matrix.py",
+      "tools/guarded_launcher.py",
+      "tools/validate.py"
+    ],
+    "changed_paths": [
+      ".gitignore",
+      "README.md",
+      "docs/CONTRACT.md",
+      "frontend/scripts/check-discovery.mjs",
+      "scanner/instruction_scope.py",
+      "scanner/position_evidence.py",
+      "tests/test_position_evidence.py",
+      "tests/test_report_rebuild.py"
+    ]
+  },
+  "current_dependencies_not_found_as_mounted_files": [
+    "docs/R1_SOURCE_DECISION.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "tests/fixtures/instruction_family_schema.json",
+    "tools/check_matrix.py",
+    "tools/browser_acceptance.py",
+    "tests/test_validation_gates.py"
+  ],
+  "application_full_suite_executed_by_this_review": false,
+  "instruction_matrix_executed_by_this_review": false,
+  "actual_browser_or_live_provider_executed_by_this_review": false
+}

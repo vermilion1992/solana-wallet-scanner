@@ -36,3 +36,15 @@ Keep implementation, unavailable data and environment blockers separate. A green
 | DEFER-01 | Deferred improvement; unclaimed protocol support | DEFERRED | New System/ATA/token-extension operations are absent from the declared supported contract and stay unresolved. | Separate future reviewed contracts; not this batch |
 
 Baseline identity is in `evidence/BASELINE.json`. The table's verified scopes describe affected/iteration evidence, not full candidate acceptance. The final outcome is exclusively the exact-source `evidence/FINAL_GATES.json`, its linked command logs and `evidence/REVIEW.json`; missing/failed/blocked required gates prevent Gate A closure. R1 remains OPEN even with Gate A acceptance. Current raw execution logs are in `evidence/runs/`. No new release ZIP is produced for an individual fix.
+
+## Active product milestone
+
+Continue source `96fb1eb` and evidence commit `4e08331` on the existing branch. The historical `FINAL_GATES.json` remains byte-identical. The new authorised task and its proposed patch/tests are preserved under `evidence/product-completion-handoff/`; the active instructions are reconciled into `CODEX_TASK.md`.
+
+| ID | Current work / category | Status | Evidence and remaining dependency |
+| --- | --- | --- | --- |
+| PROC-03 | Confirmed validator receipt boundary; medium release assurance, no wallet-accounting finding | IN_PROGRESS | Untouched supplied runner tests reproduce 25 passes /7 ordinary failures on the current runner. Zero exit can override a missing/nonpassing browser receipt; invalid JSON can escape without a structured decision. Integrate current producer shape and audit the matrix/install/review receipt boundaries. |
+| DATA-01 | B1 source decision | IN_PROGRESS (acceptance still BLOCKED) | Read the actual source decision/inventory. Produce metric-specific go/no-go and a minimum bounded source probe if needed. Unknown entitlement does not prove unavailable capability; the task grants no provider/credential use. |
+| CAP-01 | B2 evidence-to-report implementation | IN_PROGRESS | Specify the input contract and implement executable local archive handling, normalization/lifecycle/ledger, per-metric dependencies and existing report/UI/rebuild/export integration while source verification is pending. Synthetic development cannot close B3. |
+| R1-B3 | Independent genuine complete-wallet acceptance | BLOCKED | Existing genuine cached subsets do not establish the claimed complete ownership/population/acquisition/classification/cost/valuation scope. Preserve the original complete-wallet objective. |
+| DELIVERY-01 | One portable candidate/evidence checkpoint | IN_PROGRESS | Export source, canonical fixtures, original final gates plus raw logs, new gates/review/install/browser receipts and supporting captures with relative paths/hashes; exclude secrets, runtime dependencies and private databases. |

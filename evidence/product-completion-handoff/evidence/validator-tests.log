@@ -1,0 +1,301 @@
+.........FFFFFFF................                                         [100%]
+=================================== FAILURES ===================================
+______ test_zero_exit_requires_a_usable_passing_browser_receipt[missing] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc7174534d0>
+receipt = None
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+        assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+>       assert result['return_code'] != 0 and result['state'] in {'FAILED','INCOMPLETE'}, result
+E       AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+E       assert (0 != 0)
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:129: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab0/repo/evidence/run
+_______ test_zero_exit_requires_a_usable_passing_browser_receipt[failed] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc717453cb0>
+receipt = '{"state":"FAILED"}'
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+        assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+>       assert result['return_code'] != 0 and result['state'] in {'FAILED','INCOMPLETE'}, result
+E       AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+E       assert (0 != 0)
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:129: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab1/repo/evidence/run
+_____ test_zero_exit_requires_a_usable_passing_browser_receipt[incomplete] _____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc725c47790>
+receipt = '{"state":"INCOMPLETE"}'
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+        assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+>       assert result['return_code'] != 0 and result['state'] in {'FAILED','INCOMPLETE'}, result
+E       AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+E       assert (0 != 0)
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:129: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab2/repo/evidence/run
+______ test_zero_exit_requires_a_usable_passing_browser_receipt[unknown] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc716e7bc50>
+receipt = '{"state":"UNKNOWN"}'
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+        assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+>       assert result['return_code'] != 0 and result['state'] in {'FAILED','INCOMPLETE'}, result
+E       AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+E       assert (0 != 0)
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:129: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab3/repo/evidence/run
+___ test_zero_exit_requires_a_usable_passing_browser_receipt[missing-state] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc716e7ae10>
+receipt = '{}'
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+        assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+>       assert result['return_code'] != 0 and result['state'] in {'FAILED','INCOMPLETE'}, result
+E       AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+E       assert (0 != 0)
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:129: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab4/repo/evidence/run
+___ test_zero_exit_requires_a_usable_passing_browser_receipt[malformed-json] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc717406410>
+receipt = '{invalid json'
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+>       assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+E       AssertionError: ('Must persist a structured non-passing result, not crash', {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': 'JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)', ...})
+E       assert 'JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)' is None
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:128: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+__ test_zero_exit_requires_a_usable_passing_browser_receipt[non-object-json] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_zero_exit_requires_a_usab6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc717406200>
+receipt = '[]'
+
+    @pytest.mark.parametrize('receipt', [None, '{"state":"FAILED"}', '{"state":"INCOMPLETE"}',
+        '{"state":"UNKNOWN"}', '{}', '{invalid json', '[]'],
+        ids=['missing','failed','incomplete','unknown','missing-state','malformed-json','non-object-json'])
+    def test_zero_exit_requires_a_usable_passing_browser_receipt(tmp_path, monkeypatch, receipt):
+        result = execute_main(tmp_path, monkeypatch, receipt=receipt)
+>       assert result['exception'] is None, ('Must persist a structured non-passing result, not crash', result)
+E       AssertionError: ('Must persist a structured non-passing result, not crash', {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': "AttributeError: 'list' object has no attribute 'get'", ...})
+E       assert "AttributeError: 'list' object has no attribute 'get'" is None
+
+mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py:128: AssertionError
+----------------------------- Captured stdout call -----------------------------
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+=========================== short test summary info ============================
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[missing] - AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+assert (0 != 0)
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[failed] - AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+assert (0 != 0)
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[incomplete] - AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+assert (0 != 0)
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[unknown] - AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+assert (0 != 0)
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[missing-state] - AssertionError: {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': None, ...}
+assert (0 != 0)
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[malformed-json] - AssertionError: ('Must persist a structured non-passing result, not crash', {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': 'JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)', ...})
+assert 'JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)' is None
+FAILED mnt/data/Scanner_Product_Completion_Review/tests/test_validation_receipt_boundary.py::test_zero_exit_requires_a_usable_passing_browser_receipt[non-object-json] - AssertionError: ('Must persist a structured non-passing result, not crash', {'backend_exit': 0, 'browser_exit': 0, 'browser_gate': 'PASS', 'exception': "AttributeError: 'list' object has no attribute 'get'", ...})
+assert "AttributeError: 'list' object has no attribute 'get'" is None
+7 failed, 25 passed in 0.18s

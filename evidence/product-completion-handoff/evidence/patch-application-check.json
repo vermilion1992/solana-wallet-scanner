@@ -1,0 +1,7 @@
+{
+  "scope": "Patch applied to isolated copy of unchanged uploaded tools/validate.py, not current application checkout",
+  "check_exit_code": 0,
+  "check_stderr": "",
+  "apply_exit_code": 0,
+  "matches_tested_reference": true
+}

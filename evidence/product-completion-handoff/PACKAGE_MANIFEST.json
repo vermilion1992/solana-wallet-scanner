@@ -1,0 +1,15 @@
+{
+  "CODEX_NEXT_PRODUCT_MILESTONE.md": "fc8a7a04266a5c93c5480d7b24ee6c0a9b6a01a122d115bef298bce3b1dc4707",
+  "REVIEW.md": "c4c31032758faf71807bef6007c6af2a8b95eeca5920739d0f923af6caf8dcd0",
+  "README.md": "c8ace759dde4a597521368dc2094a04b16c0626072697d219784134b1ccd89ed",
+  "evidence/validator-tests.log": "3a93786ddb6b4603c8d3a8aadcd5e39ae9a9280ed1cf699c02806c31caf20c16",
+  "evidence/proposed-fix-scenarios.json": "313888f405cb51e2ba78d23ceb1fc01dd41f788cc82a294f7950d91bead13ca4",
+  "evidence/runner-scenarios.json": "135f345db1040ebfec9cee62a3507acdeb950f8b5a9436d473fe770e0e34c015",
+  "evidence/patch-application-check.json": "5589755e090798babef89f04e21d13f1fa4ac91936673efff4b953e4794fae84",
+  "evidence/input-integrity.json": "ba78314b2ee434ea7cb6333a89de310bbb12144f1e4237277e1328f7043d58a7",
+  "evidence/proposed-fix-tests.log": "592f1fd59f98bd34b46c4c7f21e72978861b97e3cbb1c53379719e319c67c21c",
+  "evidence/review-summary.json": "c7831d3e5aee1626565597de47da594276d9b9f6e3e9c7e184e0ffc38f3e2180",
+  "tests/test_validation_receipt_boundary.py": "991d00fbb9a72a8706658a1b794e259ad0e3f04ea7488e489232f23aca03de23",
+  "proposed_fix/validate_receipt_guard.patch": "3c3460439dfabba80dc6d5ac25afb0e44feae301072509cc221e8d2e0ee5658f",
+  "proposed_fix/validate.py": "feff018e056ce87ca8d154c87f49261e69000f1335bde948da6620fe18f958d8"
+}

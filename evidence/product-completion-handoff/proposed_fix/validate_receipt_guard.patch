@@ -1,0 +1,55 @@
+--- a/tools/validate.py
++++ b/tools/validate.py
+@@ -56,6 +56,41 @@
+         return {'state': 'PASS', 'path': str(path), 'record': record}
+     except (ValueError, OSError, AttributeError, TypeError) as exc:
+         return {'state': 'INCOMPLETE', 'reason': f'Invalid {kind} evidence: {exc}'}
++
++
++def browser_evidence_gate(command_gate, path):
++    """Require command success and a readable, explicitly passing browser result.
++
++    This checks receipt availability/state, not the truth of the browser assertions.
++    Preserve command failures and blocked execution even when a receipt says PASS.
++    """
++    gate = dict(command_gate)
++    gate['evidence_path'] = str(path)
++    evidence_state = 'INCOMPLETE'
++    try:
++        raw = path.read_bytes()
++        gate['evidence_sha256'] = hashlib.sha256(raw).hexdigest()
++        record = json.loads(raw.decode('utf-8'))
++        if not isinstance(record, dict):
++            raise ValueError('Browser evidence must be a JSON object.')
++        state = record.get('state')
++        if not isinstance(state, str) or state not in ('PASS', 'FAILED', 'BLOCKED', 'INCOMPLETE'):
++            raise ValueError('Browser evidence has a missing or unsupported state.')
++        evidence_state = state
++        gate['record'] = record
++    except (OSError, ValueError, UnicodeError) as exc:
++        gate['evidence_reason'] = f'Unavailable or invalid browser evidence: {exc}'
++    gate['evidence_state'] = evidence_state
++    command_state = command_gate.get('state', 'INCOMPLETE')
++    if command_state == 'FAILED' or evidence_state == 'FAILED':
++        gate['state'] = 'FAILED'
++    elif command_state == 'BLOCKED' or evidence_state == 'BLOCKED':
++        gate['state'] = 'BLOCKED'
++    elif command_state == 'PASS' and evidence_state == 'PASS':
++        gate['state'] = 'PASS'
++    else:
++        gate['state'] = 'INCOMPLETE'
++    return gate
+ 
+ 
+ def gate_decision(gates, *, stable):
+@@ -131,8 +166,8 @@
+         run('launcher-browser-rebuild', [args.browser_python or args.python, str(ROOT / 'tools/browser_acceptance.py'),
+             '--python', args.python, '--chromium', args.chromium, '--output', str(output / 'browser')])
+         browser_result = output / 'browser/result.json'
+-        if browser_result.is_file() and json.loads(browser_result.read_text()).get('state') == 'BLOCKED':
+-            report['gates'][-1]['state']='BLOCKED';save()
++        report['gates'][-1] = browser_evidence_gate(report['gates'][-1], browser_result)
++        save()
+         review = required_record(args.review_record, kind='consolidated-review', locks=report['locks'], source_hash=before['sha256'])
+         review['name'] = 'consolidated-review'; report['gates'].append(review); save()
+     stable = source_manifest()['sha256'] == before['sha256']
