@@ -1,0 +1,37 @@
+{
+  "source_commit": "d42f83a7a68dc639ddf3f610f347a70f33400b31",
+  "source_sha256": "ed49f8db8972ee57b45d4e36401875d759b85d24cf28dbcc867c598e457e54e6",
+  "legacy_browser_source_commit": "3458aac9e39f598da9ec6adeb4c077126e9e33eb",
+  "inputs": {
+    "genuine_corpus": "evidence/runs/real-cache",
+    "genuine_corpus_archives": 63,
+    "genuine_subset_transactions": 23,
+    "independent_selected_fee_expectation_sol": "0.000240394",
+    "worked_expectations": "evidence/product-completion/WORKED_EXPECTATIONS.json",
+    "development_fixture": "scanner/examples/archive-wallet-synthetic.json",
+    "synthetic_proves_real_acceptance": false
+  },
+  "records": {
+    "baseline": "evidence/product-completion/BASELINE_IDENTITY.json",
+    "candidate": "evidence/product-completion/CANDIDATE_FINAL_IDENTITY.json",
+    "review": "evidence/product-completion/REVIEW_FINAL.json",
+    "fresh_git_checkout": "evidence/product-completion/GIT_CHECKOUT_FINAL_IDENTITY.json",
+    "git_replay": "evidence/product-completion/git-replay/result.json",
+    "archive_browser": "evidence/product-completion/product-browser/result.json",
+    "gate_a": "evidence/product-completion/gate-a-final/result.json",
+    "github_access": "evidence/product-completion/GITHUB_ACCESS.json",
+    "final_gates": "evidence/product-completion/FINAL_GATES.json",
+    "security_audit": "evidence/product-completion/PRE_PUSH_AUDIT_CONFIRMED.json",
+    "retained_regressions": "evidence/product-completion/RETAINED_REGRESSIONS.json",
+    "doc_only_gate_correction": "evidence/product-completion/DOC_CORRECTION_IDENTITY.json",
+    "final_diff": "evidence/product-completion/read-only-final.diff"
+  },
+  "excluded_generated_private_state": [
+    "data/ runtime SQLite and mutable local state",
+    "node_modules/ and .venv/",
+    "generated gate-a/browser/baseline source copy; exact source remains in preserved Git history"
+  ],
+  "no_new_release_zip": true,
+  "live_helius_probe_executed": false,
+  "product_ready": false
+}

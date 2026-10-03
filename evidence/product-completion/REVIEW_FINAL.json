@@ -1,0 +1,170 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "review_scope": "Distinct same-engineer read-only commit/diff review; not third-party certification or full product acceptance",
+  "reviewed_at": "2026-10-03T19:16:29.251285+00:00",
+  "commit": "d42f83a7a68dc639ddf3f610f347a70f33400b31",
+  "source_sha256": "ed49f8db8972ee57b45d4e36401875d759b85d24cf28dbcc867c598e457e54e6",
+  "source_files": 184,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "matrix_review_complete": true,
+  "workspace": "/workspace/scratch/scanner-git-product-review",
+  "source_unchanged": true,
+  "git_only_checkout_matches": true,
+  "findings": [
+    {
+      "id": "ARC-02",
+      "category": "A",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "decision": "All linked clock possibilities determine narrow fee-window membership; exact time/order and complete trading costs remain separate. Positive bounded/disjoint/optional-null/zero-paid cases remain useful; direct and normal API source-loss/restoration preserve immutable parents."
+    },
+    {
+      "id": "ARC-02-neighbour",
+      "category": "A",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "decision": "e9e18cf read-only review reproduced malformed page-signature sort TypeErrors. eac18ab canonical sort fixes dict/list/bool/null and normal API import/rebuild; original raw probe retained."
+    },
+    {
+      "id": "GIT-02",
+      "category": "D",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "decision": "Non-secret genuine corpus and existing archive inputs are tracked. Secret paths/content/current/history audit and private-only publication guards are tested. Fresh Git checkout has exact full source hash and executes development/partial-real archive workflow."
+    },
+    {
+      "id": "CAP-01",
+      "category": "B",
+      "blocking": false,
+      "product_blocking": true,
+      "status": "OPEN",
+      "decision": "Native metric decisions still unconditionally UNKNOWN, positions named-account only; archive population/classification/valuation synthetic-only. Complete real adapter/ownership/basis/aggregation/cost/flow/derived-gate implementation remains missing."
+    },
+    {
+      "id": "DATA-01",
+      "category": "C",
+      "blocking": false,
+      "product_blocking": true,
+      "status": "BLOCKED",
+      "decision": "B1 account entitlement and coverage untested; four dashboard facts absent. Developer+ documentation is separate from actual access/schema/history completeness; live probe not run."
+    },
+    {
+      "id": "R1-B3",
+      "category": "C",
+      "blocking": false,
+      "product_blocking": true,
+      "status": "BLOCKED",
+      "decision": "No complete genuine dataset and independently worked whole-wallet expected calculations. The 23-record integer-fee oracle supports only a selected observation."
+    },
+    {
+      "id": "GIT-01",
+      "category": "D",
+      "blocking": false,
+      "delivery_blocking": true,
+      "status": "BLOCKED",
+      "decision": "Connected GitHub integration cannot create repository (403); no public repository or push. User needs to create/grant private repository access."
+    },
+    {
+      "id": "ENV-01",
+      "category": "D",
+      "blocking": false,
+      "status": "LIMITED",
+      "decision": "Linux locks/runtime match retained actual disposable clean install. Windows/macOS and external independent review not executed."
+    },
+    {
+      "id": "ENV-01-matrix-selector",
+      "category": "D",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "decision": "First candidate correctly FAILED because parametrized node selector omitted wildcard. Mapping corrected; actual matrix collection is PASS with all 67 requirements and 1927 unique nodes. Application/tests/tools/compiled assets unchanged."
+    }
+  ],
+  "review_axes": [
+    "Original a811e81 application manifest and b1296c1 evidence-only difference verified",
+    "Selected and all linked alternatives; supported and malformed/page/block clocks",
+    "Half-open boundaries, missing/unsupported/corrupt/restored evidence, permutations",
+    "Useful independently known fee/zero projections despite unrelated token/ordering uncertainty",
+    "Production native/history/position siblings and separate 28/90-day scopes",
+    "Manifest/content paths/hash/expansion limits and rejection of trusted caller certificates",
+    "Report/API/export/rebuild freshness, parent immutability, offline provider/credential guards",
+    "Git-only replay inputs, private runtime ignores, reachable history and publication boundary",
+    "Retained regression modules and single matrix/runner/source-decision/register",
+    "Read-only doc-only correction review: parametrized selector wildcard; all application/test/tool/input bytes unchanged"
+  ],
+  "checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "b1296c1..HEAD"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_archive_fee_window.py",
+        "tests/test_chronology_evidence.py",
+        "tests/test_source_role_matrix.py",
+        "tests/test_source_consistency.py",
+        "tests/test_validation_gates.py",
+        "tests/test_repository_audit.py",
+        "tests/test_private_publication.py"
+      ],
+      "exit_code": 0,
+      "ordinary_cases_passed": 194,
+      "subtests_passed_separately": 36
+    },
+    {
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "tools/check_product.py",
+        "--require-real-acceptance",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/product-completion/git-replay"
+      ],
+      "exit_code": 2,
+      "development": "PASS",
+      "real_acceptance": "BLOCKED",
+      "provider_requests": 0,
+      "credential_lookups": 0
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "tools/check_matrix.py",
+        "--output",
+        "evidence/product-completion/matrix-correction.json"
+      ],
+      "exit_code": 0,
+      "purpose": "Mapping only; not additional test executions"
+    }
+  ],
+  "artifacts": {
+    "read-only-diff-check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "read-only-diff-files.log": "ae8fbf23c3ce587585af8e71a8ca8fd7b89f631b4ba6b91421d64f57e1db7687",
+    "read-only-candidate.diff": "43db2280f3cc1f7d93292cacea24422dc306da312b1b770d88a4e75e19c6e923",
+    "read-only-review-tests.log": "e3e77688758db4bcd804f13b6356ae0df90be9662f5a12fff3289271e3f9cdfa",
+    "GIT_CHECKOUT_IDENTITY.json": "1b0f452d25324344f35f2b6e69f899175b7f7cd3f382d4f373c3ebdde47e8f47",
+    "git-replay.log": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7",
+    "git-replay/result.json": "2c1b10f8563fe9e9b6b402fd6f5b31f0afff378eb478ed14edabb3eaa2684b79",
+    "READ_ONLY_REVIEW_CLOCK_SCHEMA.json": "4bdefda29a8684d01a0a436cbc12b9c64b6597118cbcb6f79ce22e80484728a2",
+    "matrix-correction.json": "eaa244a7331a288b7b56c85f07beeed39bde4223fd5f42d702a424e10e8f6e1f",
+    "matrix-correction.log": "37eb3a0680c2befdc21e60a4ba83aa5e3cd3f14c027650eb1401e920871e182f",
+    "DOC_CORRECTION_IDENTITY.json": "de5f16c9552d9feda9670227c247b956361e2c1ab4d722386cb11fd98b4c39a0",
+    "GIT_CHECKOUT_FINAL_IDENTITY.json": "904f0ebb65055fe981ac81e4b088b22cf87515bcc6502cc70fb7965dab0f9b98"
+  },
+  "full_candidate_validation": "Required next; this review record does not claim backend/frontend/browser acceptance",
+  "product_ready": false,
+  "prior_review_receipt_sha256": "3975ec7cc0112ac01f2df3a590e7020896b09733428bbb187a8ffeb2f6a43af7"
+}

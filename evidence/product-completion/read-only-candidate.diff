@@ -1,0 +1,1129 @@
+diff --git a/.gitignore b/.gitignore
+index 570a832..d96c61c 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,7 +7,26 @@ __pycache__/
+ local-data/
+ data/
+ .env
++.env.*
++!.env.example
++!.env.sample
++credentials/
++keyring/
++.secrets/
++.solana/
++*.pem
++*.key
++*.p12
++*.pfx
++*.db
++*.db-*
++*.sqlite
++*.sqlite-*
++*.sqlite3
++*.sqlite3-*
+ .runtime.lock
+ 
+ # Local acceptance logs and disposable installations
+-evidence/runs/
++evidence/runs/*
++!evidence/runs/real-cache/
++!evidence/runs/real-cache/**
+diff --git a/ISSUES.md b/ISSUES.md
+index 2ffedbd..34ad65c 100644
+--- a/ISSUES.md
++++ b/ISSUES.md
+@@ -39,7 +39,7 @@ Baseline identity is in `evidence/BASELINE.json`. The table's verified scopes de
+ 
+ ## Active product milestone
+ 
+-Continue source `96fb1eb` and evidence commit `4e08331` on the existing branch. The historical `FINAL_GATES.json` remains byte-identical. The new authorised task and its proposed patch/tests are preserved under `evidence/product-completion-handoff/`; the active instructions are reconciled into `CODEX_TASK.md`.
++The earlier milestone continued source `96fb1eb` and evidence commit `4e08331`; subsequent tested application `a811e81` and preparation `b1296c1` supersede that source identity. The current Git batch below records the active branch and findings. Historical gate records remain byte-identical. Earlier task material is preserved under `evidence/product-completion-handoff/` and reconciled into `CODEX_TASK.md`; the user's current Git workflow replaces routine ZIP delivery.
+ 
+ | ID | Current work / category | Status | Evidence and remaining dependency |
+ | --- | --- | --- | --- |
+@@ -52,3 +52,21 @@ Continue source `96fb1eb` and evidence commit `4e08331` on the existing branch.
+ Current product checkpoint bindings and final executed outcomes are retained in `evidence/product-milestone/FINAL_GATES.json`; export delivery is checked by `tools/checkpoint_export.py`. The active register keeps R1 real B2/B3 open. Gate A and the development workflow are separate acceptance scopes, and final evidence must bind the current complete software manifest. No later result overwrites historical `evidence/FINAL_GATES.json`.
+ 
+ | ARC-01 | Confirmed defect; native instruction container boundary; essential offline import can fail | VERIFIED_IN_SCOPE (affected checks) | Read-only source `06ec7bc` probe reproduces unhashable program-ID dict / inner-index list exceptions. Shared generic and spot decoders now validate associations/program container types and retain fee events; a separate archived UTC-boundary probe reproduced platform OSError for an out-of-range i64 blockTime, now an unsupported timestamp dependency; the archive does not discard a record merely for invalid instructions. Ten selected/alternative variants plus direct/API controls preserve unresolved financial results and independent fees; supported raw swaps/nonce/decoder/accounting controls pass (201 tests +26 subtests), including direct/API timestamp variants. Final candidate binding remains required. |
++
++## Current product-completion / Git batch
++
++Active implementation branch: `codex/product-completion`. History is retained; exact commits/diffs replace routine release ZIPs. The pre-change source is verified in `evidence/product-completion/BASELINE_IDENTITY.json`; new candidate receipts bind changes separately. Historical R5–R15 corrections and every retained regression module remain intact.
++
++| ID / category | Current finding | Status / next deliverable |
++| --- | --- | --- |
++| ARC-02 / **A: confirmed application defect** | Archive fee totals used selected raw time while ignoring linked alternative/page/block clocks. A linked alternative places `development-2` at report end; chronology is UNKNOWN but baseline reports known `0.000055` SOL in-window fees. The corrected 33-case baseline matrix produces 18 ordinary failures/15 passes for one shared cause; raw logs/direct reproduction are retained. | VERIFIED_IN_SCOPE (affected checks). Shared clock facts/interval projection, typed clock dependencies, raw alternatives, zero-fee independence, missing/corrupt/unsupported/restored sources, permutations and real/synthetic API rebuild/export/parent immutability are covered. `archive-ledger-v2` and archive freshness preserve old snapshots; full candidate acceptance is bound separately in current batch receipts. |
++| CAP-01 / **B: missing implementation** | Native wallet-wide requirements/intervals remain UNKNOWN/partial; native positions remain named-account scope; archive population/classification/valuation witnesses are synthetic-only. Complete historical owner/lifecycle adapters, wallet-mint aggregates/origins, complete cost/flow/classification and derived metric-gate branches are missing. | Complete real B2 OPEN; development archive workflow executable. Follow the stage/acceptance order in the existing `docs/R1_SOURCE_DECISION.md`. Missing code is not categorised entirely as missing data. Do not bridge a missing source contract with trusted caller declarations. |
++| DATA-01 / **C: missing source capability (B1)** | Account plan/cycle/remaining credits/autoscaling unknown. Retained billing docs list indexed history as Developer+ only. Historical closed/reassigned ownership, relevant 28/90-day coverage and all-record formats/routes remain empirically unproved. | Live probe BLOCKED. Missing exactly the four dashboard facts in the current source decision. Preserve independent 10-request/100-credit caps, no retries/purchases. No provider call this batch. Documentation ≠ entitlement ≠ response compatibility ≠ completeness ≠ qualification. |
++| R1-B3 / **C: missing real acceptance data** | Five cached wallets/94 selected records, including the 23-record corpus, lack a complete genuine population, acquisition/cost/classification dependencies, required marks/flows and independently worked whole-wallet expectations. | BLOCKED. Genuine losing/MISS report is acceptable. Known selected observations survive unrelated uncertainty; synthetic arithmetic and selected real transactions cannot close B3. |
++| GIT-01 / **D: repository access/environment** | Connected GitHub account: `vermilion1992`; no remote or target repository. GraphQL and REST private creation both return “Resource not accessible by integration”/403. | External creation/access BLOCKED. Local active branch/history, private-only publisher, secret audit, replay inputs, original PDF and expectations are prepared. User must create/grant access to an empty private repository or provide an authorised existing private destination. No public repository/push occurred. |
++| GIT-02 / **D: Git reproduction/private-state protection** | Old `evidence/runs/` ignore excluded the genuine replay corpus; `.env.*`/keyring/private databases lacked generic ignore protection. A Git-only checkout omitted raw inputs referenced by acceptance. | VERIFIED_IN_SCOPE (audit guards and retained raw-input checks). Explicit non-secret real-cache/current input ZIP tracking and private-state ignores; `tools/repository_audit.py` scans current files/reachable history/nested inputs and checks ignore guards before push, without printing matching values. Fresh-checkout replay and final candidate receipts are retained separately; no history rewrite required. |
++| ENV-01 / **D: validation limits** | Existing Linux clean-lock evidence is reusable only with matching locks/runtime. Windows/macOS and third-party independent review are not demonstrated. | Changed candidate requires Linux gates and a distinct same-engineer read-only diff review. Full product readiness remains independent. |
++
++The distinct read-only review of `e9e18cf` reproduced a neighbouring ARC-02 implementation error: heterogeneous malformed page signatures raised `TypeError` while sorting retained clock facts. The raw review probe is `evidence/product-completion/READ_ONLY_REVIEW_CLOCK_SCHEMA.json`. Stable canonical sort keys now preserve malformed evidence as UNKNOWN dependencies; direct dict/list/bool/null and normal API import/rebuild controls verify the repair. This was caught before full candidate acceptance; it is not a new historical R5–R15 finding.
++
++One matrix remains `docs/ACCEPTANCE_MATRIX.json`, one candidate entry point remains `tools/validate.py`, and one source decision remains `docs/R1_SOURCE_DECISION.md`. The product adjunct `tools/check_product.py --require-real-acceptance` must remain BLOCKED/exit 2 while B3 is absent. Policy thresholds, native method allowlist, signing/custody/trading exclusions, quotas and local session protections are unchanged.
+diff --git a/README.md b/README.md
+index 8b58e65..55ab6ab 100644
+--- a/README.md
++++ b/README.md
+@@ -151,3 +151,19 @@ npm run build
+ ```
+ 
+ On Windows, use `.venv\Scripts\python.exe`. The production launcher serves `frontend/dist`; it does not run a development server. Rebuild the interface after editing frontend code. See [docs/VALIDATION.md](docs/VALIDATION.md) for actual checks and remaining limitations, and [docs/CONTRACT.md](docs/CONTRACT.md) for module/API contracts.
++
++## Git review workflow
++
++Use `codex/product-completion` as the active implementation branch. Review by exact commit and diff; release ZIPs are not the routine handoff. The tested application baseline is `a811e81aa2d46807d50915f47193a99f890eb854`; `b1296c1952f94ac67dcd63792eb845129cb48b1b` adds evidence and probe preparation. `evidence/product-completion/BASELINE_IDENTITY.json` binds the original 179-file source. Current source and acceptance are bound separately in the current candidate receipts. Git history is preserved.
++
++The original PDF, non-secret 63-archive genuine partial corpus, current archive-workflow inputs and separately worked expectations are tracked for commit-based reproduction. The real sample remains partial; it cannot close B3. Runtime credentials, `.env.*`, keyring files and private databases are ignored. `tools/repository_audit.py` checks tracked files, reachable history, nested inputs and private-state ignore guards without printing credential values.
++
++After an accessible **private** repository exists, the already-authorised publication can use:
++
++```sh
++.venv/bin/python tools/publish_private.py OWNER/REPOSITORY --push --output evidence/product-completion/PUBLISH.json
++```
++
++The publisher requires the committed active branch, both retained baseline ancestors, a passing audit, exact private repository metadata and push access; it uses no force push and verifies remote HEAD/privacy. It cannot create a repository when the GitHub app lacks creation permission. A private repository must also be granted to the ChatGPT GitHub connection for ChatGPT to inspect it; its URL alone does not grant access.
++
++Keep the one issue register (`ISSUES.md`), acceptance matrix (`docs/ACCEPTANCE_MATRIX.json`), validation entry point (`tools/validate.py`) and source decision (`docs/R1_SOURCE_DECISION.md`). Full product readiness stays false until B1/B2/B3 close. No live Helius probe, credit spend, trading or required subscription is part of Git publication.
+diff --git a/docs/ACCEPTANCE_MATRIX.json b/docs/ACCEPTANCE_MATRIX.json
+index 7333fec..b8ce553 100644
+--- a/docs/ACCEPTANCE_MATRIX.json
++++ b/docs/ACCEPTANCE_MATRIX.json
+@@ -230,6 +230,32 @@
+         "tests/test_archive_input.py::test_malformed_instruction_containers_are_dependencies_with_preserved_fee_observations[*]",
+         "tests/test_archive_input.py::test_malformed_program_identity_normal_api_import_creates_an_unresolved_report[*]"
+       ]
++    },
++    {
++      "id": "archive-fee-window",
++      "axis": "Relevance/chronology and metric dependencies",
++      "selectors": [
++        "tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty*",
++        "tests/test_archive_fee_window.py::test_bounded_clocks_inside_same_window_preserve_independent_fees*",
++        "tests/test_archive_fee_window.py::test_required_clock_loss_never_strengthens_fees_and_restoration_recovers*",
++        "tests/test_archive_fee_window.py::test_available_disjoint_clock_records_do_not_erase_selected_fee_observations*",
++        "tests/test_archive_fee_window.py::test_fee_membership_is_independent_of_same_slot_ordering",
++        "tests/test_archive_fee_window.py::test_optional_null_block_time_does_not_replace_supported_raw_time",
++        "tests/test_archive_fee_window.py::test_zero_wallet_paid_fee_is_independent_of_ambiguous_interval_placement",
++        "tests/test_archive_fee_window.py::test_permutations_and_redundant_clock_links_do_not_change_metric_semantics",
++        "tests/test_archive_fee_window.py::test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency*",
++        "tests/test_archive_fee_window.py::test_old_archive_interpretation_requires_rebuild_without_rewriting_saved_values*",
++        "tests/test_archive_fee_window.py::test_malformed_page_signature_remains_dependency_without_crashing",
++        "tests/test_archive_fee_window.py::test_malformed_clock_page_normal_api_import_and_rebuild_remain_supported"
++      ]
++    },
++    {
++      "id": "private-git-reproduction",
++      "axis": "Security/delivery",
++      "selectors": [
++        "tests/test_repository_audit.py::*",
++        "tests/test_private_publication.py::*"
++      ]
+     }
+   ],
+   "browser_required": [
+diff --git a/docs/ARCHIVE_INPUT_CONTRACT.md b/docs/ARCHIVE_INPUT_CONTRACT.md
+index bf85e00..47ea551 100644
+--- a/docs/ARCHIVE_INPUT_CONTRACT.md
++++ b/docs/ARCHIVE_INPUT_CONTRACT.md
+@@ -1,6 +1,8 @@
+ # Executable archived accounting contract
+ 
+-This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v1` identifies this new input interpretation; existing FIFO v3 and account-position v10 interpretations remain unchanged.
++This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v2` adds source-derived fee-window membership; existing FIFO v3 and account-position v10 interpretations remain unchanged. Older archived calculations require an offline child rebuild; their saved values remain immutable.
++
++Selected **in-window** fees require the linked raw/page/block clock possibilities to agree on half-open window membership. Exact timestamps or same-slot ordering may remain unresolved when every bounded possibility belongs to the same interval side. Boundary-crossing, missing or unsupported relevant clocks revoke the total. Known disjoint clock sources, absent optional block time and independently proved zero wallet-paid fee projections do not erase supported fees. Native unordered observed-record totals have a different population and retain their existing clock-independent requirements.
+ 
+ ## Input and provenance
+ 
+diff --git a/docs/CONTRACT.md b/docs/CONTRACT.md
+index b1a1607..ee671af 100644
+--- a/docs/CONTRACT.md
++++ b/docs/CONTRACT.md
+@@ -167,4 +167,4 @@ The System nonce withdrawal scope contract uses canonical `withdrawFromNonce` (p
+ 
+ ## Archived evidence accounting (new local input path)
+ 
+-`POST /api/archives/import` accepts the bounded canonical evidence ZIP described in `docs/ARCHIVE_INPUT_CONTRACT.md`; `GET /api/archives/example.zip` downloads its labelled synthetic development example. The normal report path executes shared source/chronology/quantity checks and FIFO; source bytes, manifest/window/preset and parent snapshots are retained. Rebuild is allowed for persisted archive reports, including this explicit synthetic example; ordinary demo/preview restrictions remain. Real imports cannot manufacture collector ancestry or historical coverage. The archive interpretation has its own `archive-ledger-v1` method label. Synthetic arithmetic/physical timing results remain demo/ineligible, and missing real history keeps wallet-wide qualification UNKNOWN. No provider call or credential lookup is needed by import/rebuild. All existing authentication, CSRF, reserve and ordinary request limits remain; only this ZIP route admits 20 MiB, with bounded expansion before writes.
++`POST /api/archives/import` accepts the bounded canonical evidence ZIP described in `docs/ARCHIVE_INPUT_CONTRACT.md`; `GET /api/archives/example.zip` downloads its labelled synthetic development example. The normal report path executes shared source/chronology/quantity checks and FIFO; source bytes, manifest/window/preset and parent snapshots are retained. Rebuild is allowed for persisted archive reports, including this explicit synthetic example; ordinary demo/preview restrictions remain. Real imports cannot manufacture collector ancestry or historical coverage. The archive interpretation has its own `archive-ledger-v2` method label. Selected nonzero wallet-paid fee totals require every bounded linked transaction/page/block clock possibility to agree on reporting-window membership; exact timestamp and same-slot order remain separate facts. Read-time `archive_assessment` marks older interpretations for offline child rebuild without rewriting the saved snapshot. Synthetic arithmetic/physical timing results remain demo/ineligible, and missing real history keeps wallet-wide qualification UNKNOWN. No provider call or credential lookup is needed by import/rebuild. All existing authentication, CSRF, reserve and ordinary request limits remain; only this ZIP route admits 20 MiB, with bounded expansion before writes.
+diff --git a/docs/R1_SOURCE_DECISION.md b/docs/R1_SOURCE_DECISION.md
+index 8d850dd..18afbf7 100644
+--- a/docs/R1_SOURCE_DECISION.md
++++ b/docs/R1_SOURCE_DECISION.md
+@@ -87,4 +87,24 @@ The concrete proposed probe is `evidence/product-milestone/SOURCE_PROBE_PLAN.jso
+ 
+ Preconditions: explicit authorisation for this probe; manual confirmation of current Free entitlement/cycle/remaining credits and no autoscaling; exact terminal bounds/cursors and known lifecycle controls. If the selected wallet lacks an independently known closed/reassigned-account control, the result is **INCONCLUSIVE for historic owner completeness** rather than PASS. An unsupported v1, cap, repeat/missing cursor, nonterminal page or inaccessible required field keeps affected coverage unresolved. A method denial stops the probe. A successful first page does not authorise an unbounded full scan.
+ 
+-The one remaining source decision is whether to authorise that bounded Free-key feasibility probe. The current uploaded task authorises public documents and offline work, so it has **not run**. Until then, complete real-wallet B1/B3 stays unverified while the executable archived development work continues.
++The 10-request/100-credit feasibility probe was subsequently authorised; `b1296c1` records preparation and 28 offline controls, not live execution. Its `PREFLIGHT.json` remains **BLOCKED_PENDING_DASHBOARD_DETAILS**. Missing exactly: actual account plan, current billing-cycle start/end dates, at least 100 remaining credits, and autoscaling/automatic spend status (must be off). The current Git workflow task keeps live execution blocked; no probe has run in this batch.
++
++The retained primary billing navigation (`evidence/references/product-milestone/helius-billing-nav.txt:91`) says **getTransactionsForAddress is Developer+ only**. This documented restriction is separate from the advertised Free allowance and from an empirical denial for this account. Actual entitlement is untested. Do not purchase access or infer that every free native route is unavailable. The indexed method cannot become a required source under the no-required-subscription goal unless an authorised available entitlement and adequate coverage are demonstrated.
++
++## Current production trace and consolidated implementation order
++
++The Git baseline was verified before changes: application `a811e81aa2d46807d50915f47193a99f890eb854`, preparation `b1296c1952f94ac67dcd63792eb845129cb48b1b`, 179 source files, SHA-256 `c914891c9086a70521fc897b0db22b2a2006389a29fe9c976ee8c2d258e258ca`. The intervening diff is entirely evidence/preparation. `evidence/product-completion/BASELINE_IDENTITY.json` preserves that verification; subsequent changes have new source bindings.
++
++| Stage | Current implementation / forced uncertainty | Remaining implementation and evidence |
++| --- | --- | --- |
++| Discovery/import → raw evidence | `discovery.discover_candidates`, `collector.collect_wallet`, `archive_input.import_archive`, `Store.archive/evidence`. Bounded leads and canonical hash-checked ZIP import execute. Original gzip bytes and manifest references are retained; event/position/completion declarations are rejected. | Accepted historical source contract and raw ingestion adapter. No new live allowlisted method is activated by offline import. |
++| Ownership/history → chronology/source consistency | `derive_history_evidence`, `derive_position_evidence`, `assess_chronology`, `assess_source_consistency`. Current account scope, cursor chains, alternative formats, absolute quantities, instruction operations and clock conflicts are checked. | Independent historical owner/lifecycle population witness. Current lists/fixed-point paging are insufficient; raw lifecycle and wallet-mint aggregates need an accepted historical membership contract. |
++| Decoding → acquisition/costs → positions/FIFO | `decode_transactions`, `decode_supported_swaps`, `accounting.analyze`. Supported SOL/wSOL spot consideration and fees reach existing FIFO. Unsupported routes, unknown incoming basis and unresolved quantities remain dependencies. | Complete real origins/basis, event-time owner reconstruction, mint aggregates, non-SOL conversion, actual cost-role/allocation and external-flow adapters are not implemented for complete production coverage. FIFO arithmetic is reusable; caller flags are not proof. |
++| Metric evidence → policy | Native `history_evidence` builds unconditional wallet-level UNKNOWN decisions and partial intervals. Native account timing is narrower; its basis/cost/classification/valuation stages stay unresolved. `app.build_report` uses native gates. Archive `_world_scope`, classification and valuation accept synthetic witness kinds only. | A completed native evidence-derived metric branch is missing, alongside its required sources. Preserve separate report/28-day/90-day scopes and per-metric dependencies: marks are unnecessary for realised-only P&L; basis/cost are necessary. |
++| Saved report → UI/export/rebuild | Guarded normal APIs persist frozen inputs and distinct reports; source inspection, JSON/CSV and offline rebuild execute without live dispatch. Qualification requires saved policy/evidence/current interpretations; synthetic/partial real inputs cannot qualify. | Genuine complete B3 corpus, separately worked expectations and selective removal/restoration controls. A losing wallet or policy MISS is valid acceptance. |
++
++`ARC-02` corrects one current application defect in this pipeline: selected in-window fee totals previously ignored linked alternative/page/block clocks. `archive-ledger-v2` derives narrow window membership from raw clock possibilities. Boundary-crossing or unavailable relevant clocks revoke the total; bounded clocks agreeing on membership, disjoint clock records, absent optional block time, unrelated token uncertainty and proved zero wallet-paid fee projections retain their independent results. This supplies no historical population or complete real accounting claim.
++
++Implementation order: (1) secure Git/history/replay inputs and correct confirmed shared dependency defects; (2) resolve B1 entitlement/coverage against the existing per-metric table; (3) implement accepted ownership/lifecycle, aggregate origins/costs/classification/flows and derived gates in the existing components; (4) acquire one genuine bounded corpus with independently worked ledger and source-removal/restoration controls; (5) freeze source, execute the existing candidate and product workflows, then a distinct read-only diff review. No generic source-plan replacement, trusted completion override or synthetic B3 substitute is proposed.
++
++Current decision: **B1 live entitlement/complete coverage UNTESTED; B2 development-functional archived slice, complete real implementation OPEN; B3 BLOCKED; PRODUCT_READY=false.** Endpoint access, response compatibility, historical completeness and wallet qualification remain separate. The current A/B/C/D work list is in the single `ISSUES.md` register.
+diff --git a/frontend/src/report.tsx b/frontend/src/report.tsx
+index 9088d59..6eefa0a 100644
+--- a/frontend/src/report.tsx
++++ b/frontend/src/report.tsx
+@@ -1127,6 +1127,8 @@ export function ReportView({
+         <section className="panel" data-archive-accounting={report.archive_accounting.dataset} data-archive-report-id={report.id}>
+           <SectionHeading title={report.archive_accounting.dataset === 'synthetic' ? 'Synthetic accounting · development' : 'Archived records · partial wallet coverage'}
+             subtitle={report.archive_accounting.scope} />
++          {report.archive_assessment && report.archive_assessment.state !== 'current' &&
++            <p role="status">{report.archive_assessment.reason}</p>}
+           <p>Selected network fees: {decimal(report.metrics.observed_network_fees_sol?.value, 9)} SOL. This observation does not establish all trading costs.</p>
+           {report.archive_accounting.gaps.map((gap, i) => <p key={i}>{gap}</p>)}
+           <details><summary>Inspect metric evidence requirements</summary>
+diff --git a/frontend/src/types.ts b/frontend/src/types.ts
+index 0b71978..88408b7 100644
+--- a/frontend/src/types.ts
++++ b/frontend/src/types.ts
+@@ -238,6 +238,7 @@ export type Report = {
+   evidence_status: string;
+   preset?: Preset;
+   archive_input_hash?: string;
++  archive_assessment?: HistoryAssessment;
+   archive_accounting?: {
+     dataset: 'real' | 'synthetic';
+     scope: string;
+diff --git a/scanner/app.py b/scanner/app.py
+index 1a73d25..1f067e0 100644
+--- a/scanner/app.py
++++ b/scanner/app.py
+@@ -69,6 +69,14 @@ def create_app(data_dir, launch_token=None):
+         from .history_evidence import VERSION as HISTORY_METHODOLOGY
+         from .position_evidence import VERSION as POSITION_METHODOLOGY
+         result = {**report, "qualification": qualify_report(report), "copy_review": review_copy_behavior(report)}
++        if report.get('archive_input_hash') and not report.get('preview'):
++            from .archive_input import METHOD as ARCHIVE_METHODOLOGY
++            archive = report.get('archive_accounting')
++            saved = archive.get('version') if isinstance(archive, dict) else None
++            state = 'current' if saved == ARCHIVE_METHODOLOGY else 'rebuild_required' if saved else 'missing'
++            result['archive_assessment'] = {'saved_methodology': saved, 'current_methodology': ARCHIVE_METHODOLOGY,
++                'state': state, 'reason': 'Current archived-source interpretation; coverage and qualification remain separate.' if state == 'current' else
++                'Rebuild this archived report offline to apply current source and fee-window checks. Saved values remain unchanged.'}
+         if report.get("source") == "live" and not report.get("preview"):
+             coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}
+             for name, current, scope in (("history", HISTORY_METHODOLOGY, "account-specific receipt"),
+diff --git a/scanner/archive_input.py b/scanner/archive_input.py
+index bda1dd0..265a081 100644
+--- a/scanner/archive_input.py
++++ b/scanner/archive_input.py
+@@ -26,12 +26,12 @@ from .config import validate_address
+ from .decoder import decode_transactions
+ from .investigation import decode_supported_swaps, _keys, WSOL
+ from .position_evidence import _balance, _quantity_point
+-from .source_consistency import assess_source_consistency
+-from .chronology_evidence import assess_chronology
++from .source_consistency import assess_source_consistency, source_archive_receipts
++from .chronology_evidence import assess_chronology, assess_interval_membership
+ from .storage import EvidenceError, now
+ 
+ VERSION = 'archived-wallet-input-v1'
+-METHOD = 'archive-ledger-v1'
++METHOD = 'archive-ledger-v2'
+ MAX_UPLOAD = 20 * 1024 * 1024
+ MAX_ENTRY = 32 * 1024 * 1024
+ MAX_TOTAL = 256 * 1024 * 1024
+@@ -206,15 +206,28 @@ def load_archive(store, digest):
+     for record in records:
+         unique.setdefault(record['signature'], record)
+     records = list(unique.values())
++    clock_sources, pages, blocks = [], [], []
+     for ref in manifest.get('evidence', []):
+-        read(ref['hash'], ref['kind'])
++        payload = read(ref['hash'], ref['kind'])
++        if ref['kind'] in ('signature-page', 'block-order'):
++            params = payload.get('params') if isinstance(payload, dict) else None
++            minimum = params.get('minContextSlot') if isinstance(params, dict) else None
++            # This only validates the raw clock role/request. A page's own
++            # context does not establish a historical population or snapshot.
++            typed = source_archive_receipts({'links': [{'kind': ref['kind'], 'hash': ref['hash']}]},
++                {ref['hash']: payload}, {ref['hash']: 'readable' if payload is not None else 'unavailable'},
++                snapshot_slot=minimum)['receipts'][0]
++            clock_sources.append(typed)
++            (pages if ref['kind'] == 'signature-page' else blocks).append({'hash': ref['hash'], 'payload': payload})
+     classifications = [read(h, 'classification') for h in manifest.get('classification_hashes', [])]
+     valuation = read(manifest['valuation_hash'], 'valuation') if manifest.get('valuation_hash') else None
+     consistency = assess_source_consistency(all_records, wallet=manifest['address'])
+-    chronology = assess_chronology(all_records)
++    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks)
+     return {'manifest': manifest, 'records': records, 'all_records': all_records, 'world': world,
+             'classifications': classifications, 'valuation': valuation, 'receipts': receipts,
+-            'consistency': consistency, 'chronology': chronology, 'input_hash': digest}
++            'consistency': consistency, 'chronology': chronology, 'clock_sources': clock_sources,
++            'clock_payloads': {row['hash']: cache[row['hash']] for row in clock_sources},
++            'input_hash': digest}
+ 
+ 
+ def _safe_decoder_container(raw):
+@@ -459,23 +472,48 @@ def analyze_archive(loaded, events):
+             return start <= utc(value) < end
+         except (ValueError, TypeError, OverflowError):
+             return False
+-    def timestamp_available(value):
+-        try:
+-            utc(value)
+-            return type(value) is int
+-        except (ValueError, TypeError, OverflowError):
+-            return False
+     fee_rows = [e for e in events if e['kind'] == 'fee' and e.get('paid_by_wallet') is True and within(e.get('timestamp'))]
+     relevant = [r for r in loaded['records'] if isinstance(r['raw'], dict) and within(r['raw'].get('blockTime'))]
+     native_groups = loaded['consistency']['transactions']
+-    fee_ok = all(isinstance(r['raw'], dict) and timestamp_available(r['raw'].get('blockTime')) for r in loaded['records']) and all(
++    membership = {}
++    zero_exclusions = []
++    unresolved_clocks = [clock for clock in loaded['clock_sources'] if clock['state'] != 'PASS']
++    for record in loaded['records']:
++        signature = record['signature']
++        receipt = assess_interval_membership(loaded['chronology'], signature, start, end)
++        slots = set(loaded['chronology']['placements'].get(signature, {}).get('possible_slots', []))
++        for clock in unresolved_clocks:
++            clock_scope = clock['scope']
++            unrelated = clock_scope.get('slot') is not None and clock_scope['slot'] not in slots
++            if clock_scope.get('signatures') is not None and signature not in clock_scope['signatures']:
++                # Supported role scope may prove unrelatedness even when a
++                # different page entry's timestamp is malformed.
++                payload = loaded['clock_payloads'].get(clock['hash'])
++                page_slots = {row.get('slot') for row in payload.get('result', [])
++                              if isinstance(row, dict) and type(row.get('slot')) is int} if payload else set()
++                unrelated = not bool(page_slots & slots)
++            if not unrelated:
++                receipt.update(state='UNKNOWN', member=None,
++                               reason='A still-linked clock source is missing, malformed or unsupported; its relevance is unresolved.')
++                receipt['evidence'] = sorted(set(receipt['evidence'] + clock['evidence']))
++        group = native_groups.get(signature, {})
++        raw = record['raw']
++        if receipt['state'] != 'PASS' and group.get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' and isinstance(raw, dict):
++            keys = _keys(raw['transaction']['message'], raw['meta'])
++            if raw['meta'].get('fee') == 0 or keys and keys[0] != manifest['address']:
++                # A independently proved zero wallet-paid fee contributes
++                # zero under every possible interval placement.
++                zero_exclusions.append(signature)
++        membership[signature] = receipt
++    fee_ok = all(row['state'] == 'PASS' or signature in zero_exclusions for signature, row in membership.items()) and all(
+         native_groups.get(r['signature'], {}).get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' for r in relevant)
+     fee_ok = fee_ok and all(e.get('amount_sol') is not None for e in fee_rows)
+     fees = canonical(sum((decimal(e['amount_sol']) for e in fee_rows if e.get('amount_sol') is not None), Decimal(0)))
+     result['metrics']['observed_network_fees_sol'] = {'value': fees if fee_ok else None, 'status': 'known' if fee_ok else 'unknown',
+         'unit': 'SOL', 'population': 'Selected in-window records with an independently supported wallet fee payer; not all interval costs',
+-        'reason': None if fee_ok else 'A linked selected fee/payer observation remains unavailable or conflicts.',
+-        'evidence': sorted({h for e in fee_rows for h in e.get('evidence', [])})}
++        'reason': None if fee_ok else 'A linked selected fee/payer or reporting-window membership observation remains unavailable or conflicts.',
++        'evidence': sorted({h for e in fee_rows for h in e.get('evidence', [])} |
++                           {h for receipt in membership.values() for h in receipt['evidence']})}
+     result['metrics']['economic_pnl_sol']['reason'] = economic_gap
+     for metric in result['metrics'].values():
+         if metric['status'] == 'unknown' and not scope and metric['population'] != result['metrics']['observed_network_fees_sol']['population']:
+@@ -491,7 +529,7 @@ def analyze_archive(loaded, events):
+         if key == 'economic_pnl_sol':
+             required = ['historical_population', 'boundary_inventory', 'historical_marks', 'valued_external_flows']
+         if key == 'observed_network_fees_sol':
+-            required = ['selected_record_identity', 'native_fee', 'wallet_payer', 'linked_fee_alternatives']
++            required = ['selected_record_identity', 'native_fee', 'wallet_payer', 'linked_fee_alternatives', 'nonzero_fee_window_membership']
+         if key == 'positive_weeks':
+             required.append('independent_28_days')
+         if key == 'completed_positions_90d':
+@@ -505,6 +543,7 @@ def analyze_archive(loaded, events):
+         'real_acceptance': 'NOT_APPLICABLE_SYNTHETIC' if manifest['dataset'] == 'synthetic' else 'BLOCKED',
+         'population_state': 'PASS' if financial_scope else 'UNKNOWN', 'quantity_population_state': 'PASS' if scope else 'UNKNOWN', 'gaps': gaps,
+         'source_receipts': loaded['receipts'], 'source_consistency': loaded['consistency'], 'chronology': loaded['chronology'],
++        'fee_interval_membership': membership, 'proved_zero_fee_exclusions': zero_exclusions,
+         'account_quantity_points': points, 'quantity_episodes': _quantity_episodes(points, supported=scope, world_hash=manifest.get('world_hash')),
+         'boundary_inventory': boundaries, 'metric_requirements': requirements,
+         'input_hash': loaded['input_hash'], 'provider_requests': 0, 'credential_lookups': 0}
+diff --git a/scanner/chronology_evidence.py b/scanner/chronology_evidence.py
+index 0095e89..75374c7 100644
+--- a/scanner/chronology_evidence.py
++++ b/scanner/chronology_evidence.py
+@@ -8,6 +8,8 @@ no time fact. Quantities, native fees and source identity are separate checks.
+ from __future__ import annotations
+ 
+ from collections import defaultdict
++from datetime import datetime, timezone
++import json
+ 
+ VERSION = "slot-chronology-evidence-v2"
+ 
+@@ -272,6 +274,10 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
+         canonical_time = next(iter(known_times)) if time_state == "PASS" else None
+         assessed_slots[str(slot)] = {"state": state, "time_state": time_state, "order_state": order_state,
+                                     "canonical_time": canonical_time, "signatures": sorted(rows),
++                                    "time_facts": sorted([
++                                        {"timestamp": timestamp, "hash": digest, "kind": origin, "signature": signature}
++                                        for timestamp, digest, origin, signature in facts],
++                                        key=lambda fact: (fact['kind'], json.dumps(fact['signature'], sort_keys=True), fact['hash'] or '', repr(fact['timestamp']))),
+                                     "evidence": evidence, "reason": reason, "conflicts": slot_conflicts}
+         for signature in rows:
+             index = block_order.index(signature) if order_state == "PASS" and block_order is not None and signature in block_order else None
+@@ -296,3 +302,40 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
+     return {"version": VERSION, "state": "PASS" if transactions and not conflicts and all(row["state"] == "PASS" for row in transactions.values()) else "UNKNOWN",
+             "transactions": transactions, "slots": assessed_slots, "conflicts": conflicts,
+             "placements": placements, "invalid_block_receipts": invalid_blocks}
++
++
++def assess_interval_membership(chronology, signature, start, end):
++    """Project every bounded clock possibility onto one half-open interval.
++
++    Fee addition needs interval membership, not exact time or same-slot order.
++    Disagreeing clocks all inside (or all outside) may support this narrower
++    fact. Missing/unbounded clocks and a boundary-crossing disagreement may not.
++    Callers derive chronology from raw sources; client declarations are not
++    accepted as chronology certificates by the application.
++    """
++    placement = chronology['placements'].get(signature, {})
++    evidence = set(placement.get('evidence', []))
++    memberships = set()
++    reason = None
++    if placement.get('unbounded', True) or not placement.get('possible_slots'):
++        reason = 'A linked transaction has unbounded or unavailable clock placement.'
++    for slot in placement.get('possible_slots', []):
++        facts = chronology['slots'].get(str(slot), {}).get('time_facts', [])
++        if not facts:
++            reason = 'A possible transaction slot lacks a supported time fact.'
++        for fact in facts:
++            if fact.get('hash'):
++                evidence.add(fact['hash'])
++            timestamp = fact.get('timestamp')
++            try:
++                if not _integer(timestamp):
++                    raise ValueError('Invalid clock')
++                when = datetime.fromtimestamp(timestamp, timezone.utc)
++                memberships.add(start <= when < end)
++            except (ValueError, OverflowError, OSError):
++                reason = 'A linked required timestamp is missing, malformed or outside the supported UTC range.'
++    if len(memberships) != 1:
++        reason = reason or 'Linked clock possibilities disagree about reporting-window membership.'
++    return {'state': 'UNKNOWN' if reason else 'PASS', 'member': None if reason else next(iter(memberships)),
++            'reason': reason or 'All bounded clock possibilities agree on this half-open interval; exact time/order is a separate fact.',
++            'evidence': sorted(evidence)}
+diff --git a/scanner/copy_review.py b/scanner/copy_review.py
+index 0fc14d7..29d2754 100644
+--- a/scanner/copy_review.py
++++ b/scanner/copy_review.py
+@@ -81,6 +81,14 @@ def qualify_report(report):
+         checks.append({"key": "position_methodology", "label": "Current account position methodology", "state": "UNKNOWN",
+                        "actual": saved_position, "expected": POSITION_METHODOLOGY,
+                        "reason": "Rebuild from saved records to evaluate all position chronology dependencies under the current methodology."})
++    if report.get('archive_input_hash'):
++        from .archive_input import METHOD as ARCHIVE_METHODOLOGY
++        archive = report.get('archive_accounting')
++        saved_archive = archive.get('version') if isinstance(archive, dict) else None
++        if saved_archive != ARCHIVE_METHODOLOGY:
++            checks.append({'key': 'archive_methodology', 'label': 'Current archived-source methodology', 'state': 'UNKNOWN',
++                           'actual': saved_archive, 'expected': ARCHIVE_METHODOLOGY,
++                           'reason': 'Rebuild this archived report offline before qualification under the current source interpretation.'})
+     metrics = report.get("metrics") if isinstance(report.get("metrics"), dict) else {}
+     profit = metrics.get("profit_sol") if isinstance(metrics.get("profit_sol"), dict) else {}
+     amount = _number(profit.get("value"), signed=True) if profit.get("status") == "known" else None
+diff --git a/tests/test_archive_fee_window.py b/tests/test_archive_fee_window.py
+new file mode 100644
+index 0000000..7fb0827
+--- /dev/null
++++ b/tests/test_archive_fee_window.py
+@@ -0,0 +1,280 @@
++"""Fee-window projections have clock dependencies, unlike unordered native fees."""
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++from fastapi.testclient import TestClient
++import httpx
++import pytest
++
++import scanner.app as application
++from scanner.archive_input import (analyze_archive, canonical_bytes, decode_archive,
++                                  import_archive, load_archive, pack_bytes)
++from scanner.storage import Store
++
++FIXTURE = Path(__file__).resolve().parents[1] / 'scanner/examples/archive-wallet-synthetic.json'
++START = 1780272000
++END = 1782864000
++
++
++def bundle():
++    return json.loads(FIXTURE.read_text())
++
++
++def source(value, role, timestamp, *, disjoint=False):
++    selected = value['manifest']['transactions'][1]
++    raw = deepcopy(value['payloads'][selected['hash']])
++    if role in ('transaction', 'getTransaction'):
++        raw['blockTime'] = timestamp
++        payload = raw
++        link = {'kind': role, 'signature': selected['signature']}
++    elif role == 'signature-page':
++        payload = {'method': 'getSignaturesForAddress', 'address': value['manifest']['address'],
++                   'params': {'commitment': 'finalized', 'minContextSlot': raw['slot'] + 100, 'limit': 1000},
++                   'result': [{'signature': 'disjoint-clock' if disjoint else selected['signature'],
++                               'slot': raw['slot'] + 10000 if disjoint else raw['slot'],
++                               'blockTime': timestamp, 'err': raw['meta']['err'], 'confirmationStatus': 'finalized'}]}
++        link = {'kind': role}
++    else:
++        payload = {'method': 'getBlock', 'slot': raw['slot'] + 10000 if disjoint else raw['slot'],
++                   'result': {'signatures': ['disjoint-clock' if disjoint else selected['signature']], 'blockTime': timestamp}}
++        link = {'kind': role}
++    digest = hashlib.sha256(canonical_bytes(payload)).hexdigest()
++    value['payloads'][digest] = payload
++    value['manifest']['evidence'].append({**link, 'hash': digest})
++    return digest
++
++
++def derive(store, value):
++    digest = import_archive(store, pack_bytes(value))
++    loaded = load_archive(store, digest)
++    events, _ = decode_archive(loaded)
++    result, _, coverage = analyze_archive(loaded, events)
++    return result, coverage, digest
++
++
++def malformed_page(value, signature):
++    digest = source(value, 'signature-page', START)
++    payload = deepcopy(value['payloads'][digest])
++    payload['result'].append(dict(payload['result'][0], signature=signature))
++    replacement = hashlib.sha256(canonical_bytes(payload)).hexdigest()
++    value['payloads'][replacement] = payload
++    value['manifest']['evidence'][0]['hash'] = replacement
++    return replacement
++
++
++@pytest.mark.parametrize('signature', [{'malformed': True}, ['malformed'], True, None])
++def test_malformed_page_signature_remains_dependency_without_crashing(tmp_path, signature):
++    value = bundle()
++    digest = malformed_page(value, signature)
++    result, coverage, _ = derive(Store(tmp_path), value)
++    assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++    assert digest in result['metrics']['observed_network_fees_sol']['evidence']
++    assert coverage['provider_requests'] == coverage['credential_lookups'] == 0
++
++
++def test_malformed_clock_page_normal_api_import_and_rebuild_remain_supported(tmp_path, monkeypatch):
++    def denied(*args, **kwargs):
++        raise AssertionError('Offline import/rebuild may not dispatch a provider')
++    monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
++    monkeypatch.setattr(httpx.AsyncClient, 'request', denied)
++    value = bundle()
++    value['manifest']['dataset'] = 'real'
++    malformed_page(value, {'malformed': True})
++    app = application.create_app(tmp_path, 'isolated-malformed-clock-test')
++    with TestClient(app, base_url='http://127.0.0.1:8765') as client:
++        csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'isolated-malformed-clock-test'}).json()['csrf']
++        client.headers['X-CSRF-Token'] = csrf
++        usage = client.get('/api/state').json()['usage']
++        response = client.post('/api/archives/import', content=pack_bytes(value))
++        assert response.status_code == 200, response.text
++        parent_id = response.json()['report_id']
++        saved = deepcopy(app.state.store.get('reports', parent_id))
++        child_id = client.post('/api/reports/' + parent_id + '/rebuild').json()['report_id']
++        assert client.get('/api/reports/' + child_id).json()['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++        assert app.state.store.get('reports', parent_id) == saved
++        assert client.get('/api/state').json()['usage'] == usage
++
++
++@pytest.mark.parametrize('role,timestamp', [(role, timestamp)
++    for role in ('transaction', 'getTransaction', 'signature-page', 'block-order')
++    for timestamp in (START - 1, END, None, True)
++    if not (role == 'block-order' and timestamp is None)])
++def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
++    value = bundle()
++    source(value, role, timestamp)
++    result, _, _ = derive(Store(tmp_path), value)
++    assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++    assert result['metrics']['observed_network_fees_sol']['value'] is None
++
++
++@pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
++@pytest.mark.parametrize('timestamp', [START, END - 1])
++def test_bounded_clocks_inside_same_window_preserve_independent_fees(tmp_path, role, timestamp):
++    value = bundle()
++    source(value, role, timestamp)
++    result, _, _ = derive(Store(tmp_path), value)
++    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000055'
++    assert result['metrics']['observed_network_fees_sol']['status'] == 'known'
++
++
++@pytest.mark.parametrize('role', ['signature-page', 'block-order'])
++def test_available_disjoint_clock_records_do_not_erase_selected_fee_observations(tmp_path, role):
++    value = bundle()
++    source(value, role, END, disjoint=True)
++    result, _, _ = derive(Store(tmp_path), value)
++    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000055'
++
++
++def test_optional_null_block_time_does_not_replace_supported_raw_time(tmp_path):
++    value = bundle()
++    source(value, 'block-order', None)
++    result, _, _ = derive(Store(tmp_path), value)
++    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000055'
++
++
++@pytest.mark.parametrize('loss', ['missing', 'corrupt', 'unsupported'])
++def test_required_clock_loss_never_strengthens_fees_and_restoration_recovers(tmp_path, loss):
++    value = bundle()
++    digest = source(value, 'signature-page', END)
++    store = Store(tmp_path)
++    result, _, manifest = derive(store, value)
++    assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++    original_metrics = deepcopy(result['metrics'])
++    path = store.path / 'evidence' / f'{digest}.json.gz'
++    original = path.read_bytes()
++    if loss == 'missing':
++        path.unlink()
++    elif loss == 'corrupt':
++        path.write_bytes(b'corrupt')
++    else:
++        altered = deepcopy(value)
++        bad = deepcopy(altered['payloads'][digest])
++        bad['method'] = 'unsupported-clock-method'
++        new = hashlib.sha256(canonical_bytes(bad)).hexdigest()
++        altered['payloads'][new] = bad
++        altered['manifest']['evidence'][0]['hash'] = new
++        result, _, _ = derive(store, altered)
++        assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++    loaded = load_archive(store, manifest)
++    events, _ = decode_archive(loaded)
++    changed, _, _ = analyze_archive(loaded, events)
++    assert changed['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++    path.write_bytes(original)
++    loaded = load_archive(store, manifest)
++    events, _ = decode_archive(loaded)
++    restored, _, _ = analyze_archive(loaded, events)
++    assert restored['metrics'] == original_metrics
++
++
++def test_fee_membership_is_independent_of_same_slot_ordering(tmp_path):
++    value = bundle()
++    second = value['manifest']['transactions'][2]
++    first_raw = value['payloads'][value['manifest']['transactions'][1]['hash']]
++    changed = deepcopy(value['payloads'][second['hash']])
++    changed['slot'] = first_raw['slot']
++    changed['blockTime'] = first_raw['blockTime']
++    digest = hashlib.sha256(canonical_bytes(changed)).hexdigest()
++    value['payloads'][digest] = changed
++    second['hash'] = digest
++    result, coverage, _ = derive(Store(tmp_path), value)
++    assert coverage['chronology']['state'] == 'UNKNOWN'
++    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000055'
++
++
++def test_zero_wallet_paid_fee_is_independent_of_ambiguous_interval_placement(tmp_path):
++    value = bundle()
++    selected = value['manifest']['transactions'][1]
++    raw = deepcopy(value['payloads'][selected['hash']])
++    raw['transaction']['message']['accountKeys'][0] = '11111111111111111111111111111111'
++    raw['transaction']['message']['accountKeys'].append(value['manifest']['address'])
++    raw['meta']['preBalances'].append(10000000000)
++    raw['meta']['postBalances'].append(10000000000)
++    digest = hashlib.sha256(canonical_bytes(raw)).hexdigest()
++    selected['hash'] = digest
++    value['payloads'][digest] = raw
++    value['manifest']['dataset'] = 'real'
++    source(value, 'signature-page', END)
++    value['manifest']['transactions'] = [selected]
++    result, coverage, _ = derive(Store(tmp_path), value)
++    assert result['metrics']['observed_network_fees_sol']['value'] == '0'
++    assert coverage['fee_interval_membership'][selected['signature']]['state'] == 'UNKNOWN'
++    assert coverage['proved_zero_fee_exclusions'] == [selected['signature']]
++
++
++def test_permutations_and_redundant_clock_links_do_not_change_metric_semantics(tmp_path):
++    value = bundle()
++    source(value, 'signature-page', END)
++    source(value, 'block-order', END - 1)
++    store = Store(tmp_path)
++    first, _, _ = derive(store, value)
++    value['manifest']['transactions'].reverse()
++    value['manifest']['evidence'] = list(reversed(value['manifest']['evidence'] * 2))
++    second, _, _ = derive(store, value)
++    assert first['metrics'] == second['metrics']
++
++
++@pytest.mark.parametrize('dataset', ['real', 'synthetic'])
++def test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency(tmp_path, monkeypatch, dataset):
++    def denied(*args, **kwargs):
++        raise AssertionError('Offline operations may not request credentials or dispatch a provider')
++    monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
++    monkeypatch.setattr(httpx.AsyncClient, 'request', denied)
++    value = bundle()
++    value['manifest']['dataset'] = dataset
++    raw = value['payloads'][value['manifest']['transactions'][1]['hash']]
++    clock = source(value, 'signature-page', raw['blockTime'])
++    app = application.create_app(tmp_path, 'isolated-archive-clock-test')
++    with TestClient(app, base_url='http://127.0.0.1:8765') as client:
++        csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'isolated-archive-clock-test'}).json()['csrf']
++        client.headers['X-CSRF-Token'] = csrf
++        usage = client.get('/api/state').json()['usage']
++        response = client.post('/api/archives/import', content=pack_bytes(value))
++        assert response.status_code == 200, response.text
++        pid = response.json()['report_id']
++        parent = client.get('/api/reports/' + pid).json()
++        saved = deepcopy(app.state.store.get('reports', pid))
++        assert parent['metrics']['observed_network_fees_sol']['value'] == '0.000055'
++        path = app.state.store.path / 'evidence' / f'{clock}.json.gz'
++        before = path.read_bytes()
++        path.unlink()
++        child_id = client.post('/api/reports/' + pid + '/rebuild').json()['report_id']
++        child = client.get('/api/reports/' + child_id).json()
++        assert child['metrics']['observed_network_fees_sol']['status'] == 'unknown'
++        assert child['window'] == parent['window'] and child['preset'] == parent['preset']
++        assert child['archive_input_hash'] == parent['archive_input_hash']
++        assert client.get('/api/export/reports/' + child_id + '.json').json()['metrics'] == child['metrics']
++        assert client.get('/api/export/reports/' + child_id + '.csv').status_code == 200
++        path.write_bytes(before)
++        restored_id = client.post('/api/reports/' + pid + '/rebuild').json()['report_id']
++        restored = client.get('/api/reports/' + restored_id).json()
++        assert restored['metrics'] == parent['metrics']
++        assert app.state.store.get('reports', pid) == saved
++        assert client.get('/api/state').json()['usage'] == usage
++        assert not app.state.store.list('collector_checkpoints')
++
++
++@pytest.mark.parametrize('dataset', ['real', 'synthetic'])
++def test_old_archive_interpretation_requires_rebuild_without_rewriting_saved_values(tmp_path, monkeypatch, dataset):
++    monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
++    app = application.create_app(tmp_path, 'isolated-archive-freshness-test')
++    value = bundle()
++    value['manifest']['dataset'] = dataset
++    with TestClient(app, base_url='http://127.0.0.1:8765') as client:
++        csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'isolated-archive-freshness-test'}).json()['csrf']
++        client.headers['X-CSRF-Token'] = csrf
++        pid = client.post('/api/archives/import', content=pack_bytes(value)).json()['report_id']
++        saved = app.state.store.get('reports', pid)
++        saved['archive_accounting']['version'] = 'archive-ledger-v1'
++        app.state.store.put('reports', pid, saved)
++        old = client.get('/api/reports/' + pid).json()
++        assert old['archive_assessment']['state'] == 'rebuild_required'
++        assert any(x['key'] == 'archive_methodology' for x in old['qualification']['unknown_checks'])
++        assert old['metrics'] == saved['metrics']
++        child_id = client.post('/api/reports/' + pid + '/rebuild').json()['report_id']
++        child = client.get('/api/reports/' + child_id).json()
++        assert child['archive_assessment']['state'] == 'current'
++        assert child['metrics'] == old['metrics']
++        assert app.state.store.get('reports', pid) == saved
+diff --git a/tests/test_private_publication.py b/tests/test_private_publication.py
+new file mode 100644
+index 0000000..cb38ea2
+--- /dev/null
++++ b/tests/test_private_publication.py
+@@ -0,0 +1,57 @@
++import json
++import pytest
++from tools import publish_private as publisher
++
++
++@pytest.mark.parametrize('privacy', [False, 'true', None])
++def test_public_or_unverified_privacy_cannot_dispatch_push(monkeypatch, privacy):
++    calls = []
++    def fake(argv):
++        calls.append(argv)
++        if argv[:3] == ['git', 'branch', '--show-current']:
++            return publisher.BRANCH
++        if argv[:2] == ['gh', 'api']:
++            return json.dumps({'full_name': 'owner/scanner', 'private': privacy,
++                               'permissions': {'push': True}, 'html_url': 'https://github.com/owner/scanner'})
++        return ''
++    monkeypatch.setattr(publisher, 'run', fake)
++    monkeypatch.setattr(publisher, 'audit', lambda _: {'state': 'PASS', 'counts': {}})
++    with pytest.raises(ValueError, match='private'):
++        publisher.publish('owner/scanner', push=True)
++    assert not any('push' in call for call in calls)
++    assert not any(call[:3] == ['git', 'remote', 'add'] for call in calls)
++
++
++def test_unrelated_destination_or_missing_push_access_is_not_published(monkeypatch):
++    def fake(argv):
++        if argv[:3] == ['git', 'branch', '--show-current']:
++            return publisher.BRANCH
++        if argv[:2] == ['gh', 'api']:
++            return json.dumps({'full_name': 'owner/scanner', 'private': True, 'permissions': {'push': False}})
++        return ''
++    monkeypatch.setattr(publisher, 'run', fake)
++    monkeypatch.setattr(publisher, 'audit', lambda _: {'state': 'PASS', 'counts': {}})
++    with pytest.raises(ValueError, match='push access'):
++        publisher.publish('owner/scanner', push=True)
++    with pytest.raises(ValueError, match='exact destination'):
++        publisher.publish('different/scanner', push=True)
++
++
++def test_blocked_secret_audit_prevents_even_repository_metadata_request(monkeypatch):
++    calls = []
++    def fake(argv):
++        calls.append(argv)
++        return publisher.BRANCH if argv[:3] == ['git', 'branch', '--show-current'] else ''
++    monkeypatch.setattr(publisher, 'run', fake)
++    monkeypatch.setattr(publisher, 'audit', lambda _: {'state': 'BLOCKED', 'counts': {}})
++    with pytest.raises(ValueError, match='audit is blocked'):
++        publisher.publish('owner/scanner', push=True)
++    assert not any(call[0] == 'gh' or 'push' in call for call in calls)
++
++
++def test_dirty_candidate_cannot_be_published(monkeypatch):
++    def fake(argv):
++        return publisher.BRANCH if argv[:3] == ['git', 'branch', '--show-current'] else ' M scanner/app.py'
++    monkeypatch.setattr(publisher, 'run', fake)
++    with pytest.raises(ValueError, match='committed and clean'):
++        publisher.publish('owner/scanner', push=True)
+diff --git a/tests/test_repository_audit.py b/tests/test_repository_audit.py
+new file mode 100644
+index 0000000..c539ab6
+--- /dev/null
++++ b/tests/test_repository_audit.py
+@@ -0,0 +1,80 @@
++import gzip
++import io
++import json
++import subprocess
++import zipfile
++
++import pytest
++
++from tools.repository_audit import audit, inspect_bytes, sensitive_path
++
++
++def scan(raw):
++    findings = []
++    inspect_bytes(raw, 'fixture', findings, {'text_payloads': 0})
++    return findings
++
++
++@pytest.mark.parametrize('path', ['.env.local', 'credentials/helius.json', 'private.sqlite3-wal', 'keyring/provider.key'])
++def test_runtime_secret_paths_are_sensitive(path):
++    assert sensitive_path(path)
++
++
++def test_source_fixtures_and_placeholder_environment_samples_are_preserved():
++    assert not sensitive_path('.env.example')
++    assert not sensitive_path('tests/fixtures/mainnet-wrapper-0.json')
++    assert not sensitive_path('evidence/references/helius-billing-nav.gz')
++    assert not scan(b'https://example.invalid/?api-key=your-api-key-here')
++
++
++def test_nested_raw_input_credentials_block_without_echoing_the_value():
++    value = 'a' * 8 + '-' + '-'.join(['b' * 4] * 3) + '-' + 'c' * 12
++    raw = gzip.compress(json.dumps({'api_key': value}).encode())
++    buffer = io.BytesIO()
++    with zipfile.ZipFile(buffer, 'w') as archive:
++        archive.writestr('archives/input.json.gz', raw)
++    findings = scan(buffer.getvalue())
++    assert any(x['rule'] == 'literal-api-credential' for x in findings)
++    assert value not in json.dumps(findings)
++
++
++def test_private_key_and_keypair_arrays_block():
++    assert scan(('-----BEGIN ' + 'PRIVATE KEY-----').encode())
++    assert scan(json.dumps(list(range(64))).encode())
++
++
++def test_opaque_literal_credential_is_blocked_in_an_environment_sample():
++    value = 'q' * 32
++    assert any(x['rule'] == 'literal-opaque-credential' for x in scan(('API_KEY="' + value + '"').encode()))
++    assert not scan(b'API_KEY = os.environ.get("PROVIDER_KEY")')
++
++
++def test_removed_historical_credential_still_blocks_push(tmp_path):
++    def git(*args):
++        subprocess.run(['git', *args], cwd=tmp_path, check=True, capture_output=True)
++    git('init', '-q')
++    git('config', 'user.name', 'Audit test')
++    git('config', 'user.email', 'audit@example.invalid')
++    (tmp_path / '.gitignore').write_text('.env*\ncredentials/\nkeyring/\n*.db*\n*.sqlite*\nlocal-data/\n.solana/\n')
++    token = 'gh' + 'p_' + 'a' * 36
++    (tmp_path / 'removed.txt').write_text(token)
++    git('add', '.')
++    git('commit', '-qm', 'historical fixture')
++    (tmp_path / 'removed.txt').unlink()
++    git('add', '-u')
++    git('commit', '-qm', 'remove file')
++    record = audit(tmp_path, require_corpus=False)
++    assert record['state'] == 'BLOCKED'
++    assert any(x['rule'] == 'github-token' and x['path'].startswith('history:') for x in record['findings'])
++    assert token not in json.dumps(record)
++
++
++def test_untracked_runtime_guard_and_missing_corpus_cannot_pass(tmp_path):
++    subprocess.run(['git', 'init', '-q'], cwd=tmp_path, check=True)
++    subprocess.run(['git', '-c', 'user.name=Audit test', '-c', 'user.email=audit@example.invalid',
++                    'commit', '--allow-empty', '-qm', 'fixture'], cwd=tmp_path, check=True)
++    record = audit(tmp_path)
++    rules = {x['rule'] for x in record['findings']}
++    assert record['state'] == 'BLOCKED'
++    assert 'runtime-path-not-ignored' in rules
++    assert 'required-replay-corpus-not-tracked' in rules
+diff --git a/tools/publish_private.py b/tools/publish_private.py
+new file mode 100644
+index 0000000..6ccf67a
+--- /dev/null
++++ b/tools/publish_private.py
+@@ -0,0 +1,90 @@
++#!/usr/bin/env python3
++"""Publish preserved history to an existing, API-verified private GitHub repository."""
++import argparse
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import sys
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT))
++from tools.repository_audit import audit
++from tools.validate import source_manifest
++
++APP = 'a811e81aa2d46807d50915f47193a99f890eb854'
++PREPARATION = 'b1296c1952f94ac67dcd63792eb845129cb48b1b'
++BRANCH = 'codex/product-completion'
++
++
++def run(argv):
++    env = {k: v for k, v in os.environ.items() if k not in
++           ('HELIUS_API_KEY', 'GH_DEBUG', 'GIT_TRACE', 'GIT_TRACE_CURL', 'GIT_CURL_VERBOSE', 'GIT_TRACE_PACKET')}
++    result = subprocess.run(argv, cwd=ROOT, env=env, capture_output=True, text=True)
++    if result.returncode:
++        raise RuntimeError(f'{argv[0]} failed with exit {result.returncode}: {result.stderr.strip()}')
++    return result.stdout.strip()
++
++
++def publish(repo, *, push=False):
++    if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repo):
++        raise ValueError('Use an exact GitHub owner/repository identifier')
++    branch = run(['git', 'branch', '--show-current'])
++    if branch != BRANCH or run(['git', 'status', '--short', '--untracked-files=no']):
++        raise ValueError('The active candidate branch must be committed and clean')
++    if any(n and not n.startswith('evidence/') for n in run(['git', 'ls-files', '--others', '--exclude-standard']).splitlines()):
++        raise ValueError('Commit untracked implementation files before publishing')
++    for baseline in (APP, PREPARATION):
++        run(['git', 'merge-base', '--is-ancestor', baseline, 'HEAD'])
++    if run(['git', 'rev-list', '--all', '--not', 'HEAD']):
++        raise ValueError('Preserve additional local history not reachable from this branch before publication')
++    checked = audit(ROOT)
++    if checked['state'] != 'PASS':
++        raise ValueError('The pre-push secret/history/replay-input audit is blocked')
++    metadata = json.loads(run(['gh', 'api', 'repos/' + repo, '--jq', '{full_name,private,html_url,permissions}']))
++    if metadata.get('full_name', '').lower() != repo.lower() or metadata.get('private') is not True:
++        raise ValueError('GitHub did not confirm the exact destination is private')
++    if metadata.get('permissions', {}).get('push') is not True:
++        raise ValueError('The connected account/app lacks push access')
++    head = run(['git', 'rev-parse', 'HEAD'])
++    record = {'kind': 'private-github-publication', 'state': 'PREPARED', 'repository': metadata['full_name'],
++              'url': metadata['html_url'], 'private': True, 'branch': branch, 'head': head,
++              'tested_application_baseline': APP, 'preparation_baseline': PREPARATION,
++              'source': source_manifest(ROOT), 'audit_counts': checked['counts'],
++              'history_preserved': True, 'force_push': False, 'product_ready': False, 'helius_probe_executed': False}
++    if not push:
++        return record
++    url = 'https://github.com/' + metadata['full_name'] + '.git'
++    if 'origin' in run(['git', 'remote']).splitlines():
++        if run(['git', 'remote', 'get-url', 'origin']) != url:
++            raise ValueError('Existing origin differs; do not silently replace it')
++    else:
++        run(['git', 'remote', 'add', 'origin', url])
++    run(['git', '-c', 'credential.helper=', '-c', 'credential.helper=!gh auth git-credential',
++         'push', '--set-upstream', 'origin', 'HEAD:refs/heads/' + BRANCH])
++    remote = json.loads(run(['gh', 'api', 'repos/' + repo + '/git/ref/heads/' + BRANCH, '--jq', '{ref,object}']))
++    privacy = json.loads(run(['gh', 'api', 'repos/' + repo, '--jq', '{private,html_url}']))
++    if remote.get('object', {}).get('sha') != head or privacy.get('private') is not True:
++        raise ValueError('Remote commit/privacy verification failed after push')
++    record.update(state='PUSHED_AND_VERIFIED', remote_head=head)
++    return record
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('repository')
++    parser.add_argument('--push', action='store_true')
++    parser.add_argument('--output', type=Path, required=True)
++    args = parser.parse_args()
++    try:
++        record = publish(args.repository, push=args.push)
++        code = 0
++    except (ValueError, RuntimeError) as exc:
++        record = {'kind': 'private-github-publication', 'state': 'BLOCKED', 'reason': str(exc),
++                  'requested_repository': args.repository, 'public_repository_created': False, 'helius_probe_executed': False}
++        code = 2
++    args.output.parent.mkdir(parents=True, exist_ok=True)
++    args.output.write_text(json.dumps(record, indent=2) + '\n')
++    print(json.dumps({k: v for k, v in record.items() if k != 'source'}))
++    raise SystemExit(code)
+diff --git a/tools/repository_audit.py b/tools/repository_audit.py
+new file mode 100644
+index 0000000..234c8ec
+--- /dev/null
++++ b/tools/repository_audit.py
+@@ -0,0 +1,155 @@
++#!/usr/bin/env python3
++"""Read-only pre-push audit of tracked files, reachable Git history and replay inputs.
++
++This is a local credential-pattern/path check, not a guarantee against every
++possible secret. It never reads environment/keyring credentials or contacts a
++provider. Findings contain paths and rule names, never matching values.
++"""
++from __future__ import annotations
++
++import argparse
++import gzip
++import hashlib
++import io
++import json
++from pathlib import Path
++import re
++import subprocess
++import zipfile
++
++ROOT = Path(__file__).resolve().parents[1]
++SENSITIVE = re.compile(r'(^|/)(?:\.env(?:\..*)?|credentials?|keyring|\.secrets|\.solana)(?:/|$)|\.(?:db|sqlite3?|pem|key|p12|pfx)(?:$|-)', re.I)
++SAMPLES = {'.env.example', '.env.sample'}
++UUID = rb'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}'
++RULES = {
++    'private-key': re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
++    'github-token': re.compile(rb'\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{35,})\b'),
++    'aws-access-key': re.compile(rb'\b(?:AKIA|ASIA)[A-Z0-9]{16}\b'),
++    'literal-api-credential': re.compile(rb'(?i)(?:api[-_]?key|authorization|password|secret)[\s"\x27:=]+(?:bearer\s+)?' + UUID),
++    'literal-opaque-credential': re.compile(rb'(?i)\b(?:api[-_]?key|access_token|private[-_]?key|authorization|password|secret)\b["\x27]?\s*[:=]\s*["\x27](?:bearer\s+)?([A-Za-z0-9_/+=-]{20,})["\x27]'),
++    'credential-query': re.compile(rb'(?i)(?:api-key|api_key|apikey)=([A-Za-z0-9_-]{16,})'),
++}
++PLACEHOLDERS = {b'your-api-key-here', b'synthetic-offline-key'}
++GUARD_PATHS = ('.env', '.env.local', 'credentials/helius.json', 'keyring/provider.key',
++               'local-data/wallets.sqlite3', 'private.sqlite3', 'private.db-wal', '.solana/id.json')
++CORPUS = 'evidence/runs/real-cache'
++
++
++def git(root, *args):
++    return subprocess.check_output(['git', *args], cwd=root)
++
++
++def sensitive_path(path):
++    return Path(path).name not in SAMPLES and bool(SENSITIVE.search(path))
++
++
++def inspect_bytes(raw, path, findings, counters, depth=0):
++    if depth > 5:
++        findings.append({'path': path, 'rule': 'nested-archive-depth'})
++        return
++    if raw.startswith(b'\x1f\x8b'):
++        try:
++            inspect_bytes(gzip.decompress(raw), path + '!gzip', findings, counters, depth + 1)
++        except (OSError, EOFError):
++            findings.append({'path': path, 'rule': 'unreadable-gzip'})
++        return
++    if raw.startswith(b'PK\x03\x04'):
++        try:
++            with zipfile.ZipFile(io.BytesIO(raw)) as archive:
++                for name in archive.namelist():
++                    if not name.endswith('/'):
++                        if sensitive_path(name):
++                            findings.append({'path': path + '!' + name, 'rule': 'sensitive-archive-path'})
++                        inspect_bytes(archive.read(name), path + '!' + name, findings, counters, depth + 1)
++        except (OSError, RuntimeError, zipfile.BadZipFile):
++            findings.append({'path': path, 'rule': 'unreadable-zip'})
++        return
++    try:
++        raw.decode('utf-8')
++    except UnicodeDecodeError:
++        return
++    counters['text_payloads'] += 1
++    for name, pattern in RULES.items():
++        matches = list(pattern.finditer(raw))
++        if name == 'credential-query':
++            matches = [m for m in matches if m.group(1).lower() not in PLACEHOLDERS]
++        if matches:
++            findings.append({'path': path, 'rule': name, 'matches': len(matches)})
++    try:
++        value = json.loads(raw)
++    except (ValueError, UnicodeError):
++        return
++    if isinstance(value, list) and len(value) in (32, 64) and all(type(x) is int and 0 <= x <= 255 for x in value):
++        findings.append({'path': path, 'rule': 'possible-solana-private-key-array'})
++
++
++def audit(root=ROOT, *, require_corpus=True):
++    root = Path(root)
++    findings, counters = [], {'current_files': 0, 'history_blobs': 0, 'text_payloads': 0}
++    names = [n for n in git(root, 'ls-files', '-z').decode().split('\0') if n]
++    file_hashes = {}
++    inspected = set()
++    for name in names:
++        if sensitive_path(name):
++            findings.append({'path': name, 'rule': 'sensitive-tracked-path'})
++        path = root / name
++        if not path.is_file() or path.is_symlink():
++            findings.append({'path': name, 'rule': 'missing-or-symbolic-tracked-file'})
++            continue
++        raw = path.read_bytes()
++        digest = hashlib.sha256(raw).hexdigest()
++        file_hashes[name] = digest
++        counters['current_files'] += 1
++        if digest not in inspected:
++            inspect_bytes(raw, name, findings, counters)
++            inspected.add(digest)
++    objects = git(root, 'rev-list', '--objects', '--all').decode().splitlines()
++    types = git(root, 'cat-file', '--batch-check=%(objectname) %(objecttype)', '--batch-all-objects').decode()
++    blobs = {line.split()[0] for line in types.splitlines() if line.endswith(' blob')}
++    for line in objects:
++        oid, _, path = line.partition(' ')
++        if oid not in blobs:
++            continue
++        if path and sensitive_path(path):
++            findings.append({'path': path, 'object': oid, 'rule': 'sensitive-history-path'})
++        raw = git(root, 'cat-file', 'blob', oid)
++        counters['history_blobs'] += 1
++        digest = hashlib.sha256(raw).hexdigest()
++        if digest not in inspected:
++            inspect_bytes(raw, 'history:' + oid + ':' + path, findings, counters)
++            inspected.add(digest)
++    guards = {}
++    for name in GUARD_PATHS:
++        result = subprocess.run(['git', 'check-ignore', '--no-index', '-q', name], cwd=root)
++        guards[name] = result.returncode == 0
++        if not guards[name]:
++            findings.append({'path': name, 'rule': 'runtime-path-not-ignored'})
++    corpus = root / CORPUS
++    corpus_files = list((corpus / 'archives').glob('*.json.gz'))
++    if require_corpus:
++        required = [str(p.relative_to(root)) for p in corpus_files] + [CORPUS + '/manifest.json.gz']
++        if len(corpus_files) != 63 or any(n not in names for n in required):
++            findings.append({'path': CORPUS, 'rule': 'required-replay-corpus-not-tracked'})
++        for path in corpus_files:
++            digest = path.name.removesuffix('.json.gz')
++            if hashlib.sha256(gzip.decompress(path.read_bytes())).hexdigest() != digest:
++                findings.append({'path': str(path.relative_to(root)), 'rule': 'corpus-content-hash'})
++    return {'kind': 'pre-push-repository-audit', 'state': 'PASS' if not findings else 'BLOCKED',
++            'scope': 'Tracked files and reachable history, nested ZIP/gzip credential patterns, runtime ignore protections and retained replay corpus. Not an exhaustive secret guarantee.',
++            'head': git(root, 'rev-parse', 'HEAD').decode().strip(),
++            'branch': git(root, 'branch', '--show-current').decode().strip(), 'counts': counters,
++            'runtime_ignore_guards': guards, 'replay_corpus_archives': len(corpus_files),
++            'file_hashes': file_hashes, 'findings': findings,
++            'network_requests': 0, 'credential_lookups': 0}
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--root', type=Path, default=ROOT)
++    parser.add_argument('--output', type=Path, required=True)
++    args = parser.parse_args()
++    record = audit(args.root)
++    args.output.parent.mkdir(parents=True, exist_ok=True)
++    args.output.write_text(json.dumps(record, indent=2) + '\n')
++    print(json.dumps({k: record[k] for k in ('state', 'head', 'branch', 'counts', 'findings')}))
++    raise SystemExit(0 if record['state'] == 'PASS' else 2)

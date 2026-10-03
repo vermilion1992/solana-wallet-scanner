@@ -1,0 +1,27 @@
+{
+  "candidate": "e9e18cf73e4792e119021aff6ca113569d029a57",
+  "records": [
+    {
+      "signature_type": "dict",
+      "exception": "TypeError",
+      "detail": "'<' not supported between instances of 'dict' and 'str'",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 17, in <module>\n  File \"tests/test_archive_fee_window.py\", line 52, in derive\n    loaded = load_archive(store, digest)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 225, in load_archive\n    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/chronology_evidence.py\", line 276, in assess_chronology\n    \"time_facts\": sorted([\n                  ^^^^^^^^\nTypeError: '<' not supported between instances of 'dict' and 'str'\n"
+    },
+    {
+      "signature_type": "list",
+      "exception": "TypeError",
+      "detail": "'<' not supported between instances of 'list' and 'str'",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 17, in <module>\n  File \"tests/test_archive_fee_window.py\", line 52, in derive\n    loaded = load_archive(store, digest)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 225, in load_archive\n    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/chronology_evidence.py\", line 276, in assess_chronology\n    \"time_facts\": sorted([\n                  ^^^^^^^^\nTypeError: '<' not supported between instances of 'list' and 'str'\n"
+    },
+    {
+      "signature_type": "bool",
+      "exception": "TypeError",
+      "detail": "'<' not supported between instances of 'bool' and 'str'",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 17, in <module>\n  File \"tests/test_archive_fee_window.py\", line 52, in derive\n    loaded = load_archive(store, digest)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 225, in load_archive\n    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/chronology_evidence.py\", line 276, in assess_chronology\n    \"time_facts\": sorted([\n                  ^^^^^^^^\nTypeError: '<' not supported between instances of 'bool' and 'str'\n"
+    },
+    {
+      "signature_type": "NoneType",
+      "metric": "unknown"
+    }
+  ]
+}

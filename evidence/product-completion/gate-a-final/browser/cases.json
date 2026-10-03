@@ -1,0 +1,30 @@
+{
+  "synthetic": [
+    {
+      "id": "synthetic-batch-canonical-nonce",
+      "hash": "79b0634d47ba03372015578de2e6da2318a637d97b70131bb35bb83f34858369",
+      "held": true,
+      "kind": "canonical-nonce",
+      "baseline_known_closed": 0
+    },
+    {
+      "id": "synthetic-batch-loss-restoration",
+      "hash": "180519af003f9f4af8ea1f0482c0148a7c7d03007db5ff9333f82b5f3eb7a621",
+      "held": true,
+      "kind": "loss-restoration",
+      "baseline_known_closed": 1
+    },
+    {
+      "id": "synthetic-batch-owner-change",
+      "hash": "67deddf665295fef82b0ffeb7f23f2ab083c0252c239bc9d08647ae76af544d8",
+      "held": false,
+      "kind": "owner-change",
+      "baseline_known_closed": 0
+    }
+  ],
+  "real": {
+    "id": "97c69333a40e4ff5a3d85b4b3ffbcf19",
+    "fees": "0.000240394",
+    "scope": "Cached native selected records, not complete wallet history; no credentials, ledger or configuration copied."
+  }
+}

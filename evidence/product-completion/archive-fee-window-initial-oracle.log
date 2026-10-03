@@ -1,0 +1,392 @@
+FFFFFFFFFFFF...........FFF..FF                                           [100%]
+=================================== FAILURES ===================================
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-transaction] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing0')
+role = 'transaction', timestamp = 1780271999
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-getTransaction] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing1')
+role = 'getTransaction', timestamp = 1780271999
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-signature-page] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing2')
+role = 'signature-page', timestamp = 1780271999
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-block-order] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing3')
+role = 'block-order', timestamp = 1780271999
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-transaction] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing4')
+role = 'transaction', timestamp = 1782864000
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-getTransaction] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing5')
+role = 'getTransaction', timestamp = 1782864000
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-signature-page] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing6')
+role = 'signature-page', timestamp = 1782864000
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-block-order] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing7')
+role = 'block-order', timestamp = 1782864000
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-transaction] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing8')
+role = 'transaction', timestamp = None
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-getTransaction] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing9')
+role = 'getTransaction', timestamp = None
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-signature-page] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing10')
+role = 'signature-page', timestamp = None
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-block-order] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_cross_boundary_or_missing11')
+role = 'block-order', timestamp = None
+
+    @pytest.mark.parametrize('role', ['transaction', 'getTransaction', 'signature-page', 'block-order'])
+    @pytest.mark.parametrize('timestamp', [START - 1, END, None])
+    def test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty(tmp_path, role, timestamp):
+        value = bundle()
+        source(value, role, timestamp)
+        result, _, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:64: AssertionError
+_ test_required_clock_loss_never_strengthens_fees_and_restoration_recovers[missing] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_required_clock_loss_never0')
+loss = 'missing'
+
+    @pytest.mark.parametrize('loss', ['missing', 'corrupt', 'unsupported'])
+    def test_required_clock_loss_never_strengthens_fees_and_restoration_recovers(tmp_path, loss):
+        value = bundle()
+        digest = source(value, 'signature-page', END)
+        store = Store(tmp_path)
+        result, _, manifest = derive(store, value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:99: AssertionError
+_ test_required_clock_loss_never_strengthens_fees_and_restoration_recovers[corrupt] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_required_clock_loss_never1')
+loss = 'corrupt'
+
+    @pytest.mark.parametrize('loss', ['missing', 'corrupt', 'unsupported'])
+    def test_required_clock_loss_never_strengthens_fees_and_restoration_recovers(tmp_path, loss):
+        value = bundle()
+        digest = source(value, 'signature-page', END)
+        store = Store(tmp_path)
+        result, _, manifest = derive(store, value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:99: AssertionError
+_ test_required_clock_loss_never_strengthens_fees_and_restoration_recovers[unsupported] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_required_clock_loss_never2')
+loss = 'unsupported'
+
+    @pytest.mark.parametrize('loss', ['missing', 'corrupt', 'unsupported'])
+    def test_required_clock_loss_never_strengthens_fees_and_restoration_recovers(tmp_path, loss):
+        value = bundle()
+        digest = source(value, 'signature-page', END)
+        store = Store(tmp_path)
+        result, _, manifest = derive(store, value)
+>       assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E       AssertionError: assert 'known' == 'unknown'
+E         
+E         - unknown
+E         ? --
+E         + known
+
+tests/test_archive_fee_window.py:99: AssertionError
+_ test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency[real] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_normal_api_rebuild_export0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6e33693290>
+dataset = 'real'
+
+    @pytest.mark.parametrize('dataset', ['real', 'synthetic'])
+    def test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency(tmp_path, monkeypatch, dataset):
+        def denied(*args, **kwargs):
+            raise AssertionError('Offline operations may not request credentials or dispatch a provider')
+        monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', denied)
+        value = bundle()
+        value['manifest']['dataset'] = dataset
+        raw = value['payloads'][value['manifest']['transactions'][1]['hash']]
+        clock = source(value, 'signature-page', raw['blockTime'])
+        app = application.create_app(tmp_path, 'isolated-archive-clock-test')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'isolated-archive-clock-test'}).json()['csrf']
+            client.headers['X-CSRF-Token'] = csrf
+            usage = client.get('/api/state').json()['usage']
+            response = client.post('/api/archives/import', content=pack_bytes(value))
+            assert response.status_code == 200, response.text
+            pid = response.json()['report_id']
+            parent = client.get('/api/reports/' + pid).json()
+            saved = deepcopy(app.state.store.get('reports', pid))
+            assert parent['metrics']['observed_network_fees_sol']['value'] == '0.000055'
+            path = app.state.store.path / 'evidence' / f'{clock}.json.gz'
+            before = path.read_bytes()
+            path.unlink()
+            child_id = client.post('/api/reports/' + pid + '/rebuild').json()['report_id']
+            child = client.get('/api/reports/' + child_id).json()
+>           assert child['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E           AssertionError: assert 'known' == 'unknown'
+E             
+E             - unknown
+E             ? --
+E             + known
+
+tests/test_archive_fee_window.py:179: AssertionError
+_ test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency[synthetic] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-231/test_normal_api_rebuild_export1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6e325fb380>
+dataset = 'synthetic'
+
+    @pytest.mark.parametrize('dataset', ['real', 'synthetic'])
+    def test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency(tmp_path, monkeypatch, dataset):
+        def denied(*args, **kwargs):
+            raise AssertionError('Offline operations may not request credentials or dispatch a provider')
+        monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', denied)
+        value = bundle()
+        value['manifest']['dataset'] = dataset
+        raw = value['payloads'][value['manifest']['transactions'][1]['hash']]
+        clock = source(value, 'signature-page', raw['blockTime'])
+        app = application.create_app(tmp_path, 'isolated-archive-clock-test')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'isolated-archive-clock-test'}).json()['csrf']
+            client.headers['X-CSRF-Token'] = csrf
+            usage = client.get('/api/state').json()['usage']
+            response = client.post('/api/archives/import', content=pack_bytes(value))
+            assert response.status_code == 200, response.text
+            pid = response.json()['report_id']
+            parent = client.get('/api/reports/' + pid).json()
+            saved = deepcopy(app.state.store.get('reports', pid))
+            assert parent['metrics']['observed_network_fees_sol']['value'] == '0.000055'
+            path = app.state.store.path / 'evidence' / f'{clock}.json.gz'
+            before = path.read_bytes()
+            path.unlink()
+            child_id = client.post('/api/reports/' + pid + '/rebuild').json()['report_id']
+            child = client.get('/api/reports/' + child_id).json()
+>           assert child['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+E           AssertionError: assert 'known' == 'unknown'
+E             
+E             - unknown
+E             ? --
+E             + known
+
+tests/test_archive_fee_window.py:179: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-transaction]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-getTransaction]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-signature-page]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1780271999-block-order]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-transaction]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-getTransaction]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-signature-page]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[1782864000-block-order]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-transaction]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-getTransaction]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-signature-page]
+FAILED tests/test_archive_fee_window.py::test_cross_boundary_or_missing_linked_clocks_revoke_window_fee_certainty[None-block-order]
+FAILED tests/test_archive_fee_window.py::test_required_clock_loss_never_strengthens_fees_and_restoration_recovers[missing]
+FAILED tests/test_archive_fee_window.py::test_required_clock_loss_never_strengthens_fees_and_restoration_recovers[corrupt]
+FAILED tests/test_archive_fee_window.py::test_required_clock_loss_never_strengthens_fees_and_restoration_recovers[unsupported]
+FAILED tests/test_archive_fee_window.py::test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency[real]
+FAILED tests/test_archive_fee_window.py::test_normal_api_rebuild_export_preserves_parent_and_restores_clock_dependency[synthetic]
+17 failed, 13 passed, 1 warning in 1.24s

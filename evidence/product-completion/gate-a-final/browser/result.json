@@ -1,0 +1,118 @@
+{
+  "state": "PASS",
+  "offline_children": 6,
+  "cases": [
+    {
+      "case": "canonical-nonce",
+      "child": "adff01faffea435f994e66b751a46f59",
+      "known_closed": 1,
+      "frozen_references_preserved": true,
+      "parent_export_unchanged": true
+    },
+    {
+      "case": "loss-restoration",
+      "child": "2d793cf3864440be987f86010ecb7342",
+      "known_closed": 1,
+      "frozen_references_preserved": true,
+      "parent_export_unchanged": true
+    },
+    {
+      "case": "required-source-missing",
+      "child": "463b23941f4247c2b5bfaded559bcc00",
+      "known_closed": 0,
+      "frozen_references_preserved": true,
+      "parent_export_unchanged": true
+    },
+    {
+      "case": "required-source-restored",
+      "child": "fdbf08764679481aabc2505bc3c405a9",
+      "known_closed": 1,
+      "frozen_references_preserved": true,
+      "parent_export_unchanged": true
+    },
+    {
+      "case": "owner-change",
+      "child": "f54c844c1188462c856be98a44d670d8",
+      "known_closed": 0,
+      "frozen_references_preserved": true,
+      "parent_export_unchanged": true
+    },
+    {
+      "case": "cached-real",
+      "child": "11f2604ed25c4a3c895bedc2f3163b8b",
+      "known_closed": 0,
+      "frozen_references_preserved": true,
+      "parent_export_unchanged": true
+    }
+  ],
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "settings_saved_without_threshold_change": true,
+  "offline_candidate_import": true,
+  "source_loss_and_exact_restoration": true,
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-03"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-03"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "real_case_executed": true,
+  "historical_parents": "actual committed v0.3.11 position-v9 source",
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "parents_unchanged": true
+}

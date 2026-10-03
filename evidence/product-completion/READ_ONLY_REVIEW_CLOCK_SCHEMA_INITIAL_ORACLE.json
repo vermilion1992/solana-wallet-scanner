@@ -1,0 +1,29 @@
+{
+  "candidate": "e9e18cf73e4792e119021aff6ca113569d029a57",
+  "records": [
+    {
+      "signature_type": "dict",
+      "exception": "ValueError",
+      "detail": "Payload hash disagrees with archive name",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\n  File \"tests/test_archive_fee_window.py\", line 51, in derive\n    digest = import_archive(store, pack_bytes(value))\n                                   ^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 101, in pack_bytes\n    raise ValueError('Payload hash disagrees with archive name')\nValueError: Payload hash disagrees with archive name\n"
+    },
+    {
+      "signature_type": "list",
+      "exception": "ValueError",
+      "detail": "Payload hash disagrees with archive name",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\n  File \"tests/test_archive_fee_window.py\", line 51, in derive\n    digest = import_archive(store, pack_bytes(value))\n                                   ^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 101, in pack_bytes\n    raise ValueError('Payload hash disagrees with archive name')\nValueError: Payload hash disagrees with archive name\n"
+    },
+    {
+      "signature_type": "bool",
+      "exception": "ValueError",
+      "detail": "Payload hash disagrees with archive name",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\n  File \"tests/test_archive_fee_window.py\", line 51, in derive\n    digest = import_archive(store, pack_bytes(value))\n                                   ^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 101, in pack_bytes\n    raise ValueError('Payload hash disagrees with archive name')\nValueError: Payload hash disagrees with archive name\n"
+    },
+    {
+      "signature_type": "NoneType",
+      "exception": "ValueError",
+      "detail": "Payload hash disagrees with archive name",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 18, in <module>\n  File \"tests/test_archive_fee_window.py\", line 51, in derive\n    digest = import_archive(store, pack_bytes(value))\n                                   ^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 101, in pack_bytes\n    raise ValueError('Payload hash disagrees with archive name')\nValueError: Payload hash disagrees with archive name\n"
+    }
+  ]
+}

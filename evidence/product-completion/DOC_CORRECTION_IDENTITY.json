@@ -1,0 +1,12 @@
+{
+  "prior_source_commit": "eac18ab1e9ab958298f9330431800353f1273e1d",
+  "final_source_commit": "d42f83a7a68dc639ddf3f610f347a70f33400b31",
+  "changed_source_files": [
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json"
+  ],
+  "all_other_source_bytes_and_modes_match": true,
+  "prior_source_sha256": "206abc6fe2ce6c1860910985891280cd02c098c25a2fe1b8815fc8a931d1859a",
+  "final_source_sha256": "ed49f8db8972ee57b45d4e36401875d759b85d24cf28dbcc867c598e457e54e6",
+  "unchanged_application_tests_tools_assets_inputs": true
+}

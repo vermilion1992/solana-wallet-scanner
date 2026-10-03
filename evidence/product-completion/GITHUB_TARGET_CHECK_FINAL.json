@@ -1,0 +1,17 @@
+{
+  "kind": "github-target-access-check",
+  "checked_at": "2026-10-03T19:12:58.144941+00:00",
+  "requested_repository": "vermilion1992/solana-wallet-scanner",
+  "command": [
+    "gh",
+    "api",
+    "repos/vermilion1992/solana-wallet-scanner",
+    "--jq",
+    "{full_name,private,html_url,permissions}"
+  ],
+  "exit_code": 1,
+  "metadata": null,
+  "error": "gh: Not Found (HTTP 404)",
+  "push_executed": false,
+  "repository_created": false
+}

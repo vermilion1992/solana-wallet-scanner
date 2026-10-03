@@ -1,0 +1,30 @@
+{
+  "kind": "archive-fee-window-reproduction",
+  "source": "current b129 application bytes; workflow tooling added separately",
+  "primary_signature": "development-2",
+  "primary_block_time": 1780358400,
+  "alternative_block_time": 1782864000,
+  "report_end": "2026-07-01T00:00:00+00:00",
+  "chronology": "UNKNOWN",
+  "reported_observed_fee": {
+    "value": "0.000055",
+    "status": "known",
+    "unit": "SOL",
+    "population": "Selected in-window records with an independently supported wallet fee payer; not all interval costs",
+    "reason": null,
+    "evidence": [
+      "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+      "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+      "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+      "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+      "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+      "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+      "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+      "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+      "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+      "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+      "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+    ]
+  },
+  "expected_status": "unknown: linked alternative crosses the report upper boundary"
+}

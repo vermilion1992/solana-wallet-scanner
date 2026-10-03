@@ -1,0 +1,43 @@
+..............................F............................................................................. [ 72%]
+..........................................  [100%]
+=================================== FAILURES ===================================
+___ test_zero_wallet_paid_fee_is_independent_of_ambiguous_interval_placement ___
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-234/test_zero_wallet_paid_fee_is_i0')
+
+    def test_zero_wallet_paid_fee_is_independent_of_ambiguous_interval_placement(tmp_path):
+        value = bundle()
+        selected = value['manifest']['transactions'][1]
+        raw = deepcopy(value['payloads'][selected['hash']])
+        raw['transaction']['message']['accountKeys'][0] = '11111111111111111111111111111111'
+        raw['transaction']['message']['accountKeys'].append(value['manifest']['address'])
+        raw['meta']['preBalances'].append(10000000000)
+        raw['meta']['postBalances'].append(10000000000)
+        digest = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+        selected['hash'] = digest
+        value['payloads'][digest] = raw
+        value['manifest']['transactions'] = [selected]
+        value['manifest']['dataset'] = 'real'
+>       source(value, 'signature-page', END)
+
+tests/test_archive_fee_window.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'label': 'Synthetic finite-world development data; no mainnet provenance', 'manifest': {'version': 'archived-wallet-i...JSx3ke1sWmMR3wYToMKfFLCnxtKuH', '43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp'], 'instructions': [{...}]}}, ...}, ...}}
+role = 'signature-page', timestamp = 1782864000, disjoint = False
+
+    def source(value, role, timestamp, *, disjoint=False):
+>       selected = value['manifest']['transactions'][1]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_archive_fee_window.py:27: IndexError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_archive_fee_window.py::test_zero_wallet_paid_fee_is_independent_of_ambiguous_interval_placement
+1 failed, 149 passed, 1 warning, 65 subtests passed in 4.50s
