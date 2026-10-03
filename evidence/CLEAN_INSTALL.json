@@ -1,0 +1,37 @@
+{
+  "kind": "clean-locked-install",
+  "state": "PASS",
+  "disposable_install": true,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "source": "immutable v0.3.11, exact matching candidate dependency locks",
+  "workspace": "/workspace/scratch/scanner-stabilise-clean-install/solana-wallet-scanner",
+  "commands": [
+    {
+      "command": [
+        "./setup.sh"
+      ],
+      "environment": {
+        "SCANNER_PYTHON": "/workspace/solana-wallet-scanner/.venv/bin/python"
+      },
+      "exit_code": 0,
+      "log": "evidence/runs/clean-install.log"
+    }
+  ],
+  "python": "3.12.14",
+  "node": "24.19.0",
+  "pip_hash_enforced": true,
+  "npm_ci": true,
+  "pip_check": true,
+  "compiled_asset": "index-B-AqKu-Q.js",
+  "refresh_or_provider_activity": "No scanner was launched during installation.",
+  "runtime": {
+    "python": "3.12.14",
+    "node": "24.19.0",
+    "platform": "linux"
+  }
+}

@@ -1,0 +1,814 @@
+getTransactionsForAddress Solana RPC Method
+Documentation Index
+Fetch the complete documentation index at:
+/docs/llms.txt
+Use this file to discover all available pages before exploring further.
+Skip to main content
+New: Try Gatekeeper (Beta) for significantly lower latency.
+Learn More
+Helius Docs
+home page
+English
+Documentation
+API Reference
+Guides
+Agents
+FAQs
+Search...
+⌘
+K
+Ask Assistant
+⌘
+I
+Support
+Get started
+Helius Docs
+home page
+Search or ask...
+Navigation
+Transactions
+getTransactionsForAddress
+Get Started
+Overview
+Authentication
+Endpoints
+Data Streaming & Event Listening
+Data APIs & RPCs
+Solana RPC
+Transactions
+getTransactionsForAddress
+getTransfersByAddress
+Enhanced Transactions (Legacy)
+Parsed Events
+Tokens & NFTs (DAS)
+Wallets
+Beta
+ZK Compression
+Trading
+Preconfirmations
+Helius Sender
+Sending Transactions
+Priority Fee API
+Account Management
+Admin
+Transactions
+getTransactionsForAddress
+Copy page
+Copy page
+getTransactionsForAddress returns complete Solana transaction history for an address in one call — time, slot, and status filters, sorting, and keyset paging.
+Copy page
+Copy page
+POST
+https://mainnet.helius-rpc.com
+https://devnet.helius-rpc.com
+/
+Try it
+getTransactionsForAddress
+cURL
+curl --request POST \
+  --url 'https://mainnet.helius-rpc.com/?api-key=' \
+  --header 'Content-Type: application/json' \
+  --data '
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "getTransactionsForAddress",
+  "params": [
+    "Vote111111111111111111111111111111111111111",
+    {
+      "transactionDetails": "signatures",
+      "limit": 50,
+      "sortOrder": "desc",
+      "filters": {
+        "status": "succeeded",
+        "slot": {
+          "gte": 1000,
+          "lt": 2000
+        },
+        "tokenTransfer": {
+          "direction": "in",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+        }
+      }
+    }
+  ]
+}
+'
+import requests
+
+url = "https://mainnet.helius-rpc.com/?api-key="
+
+payload = {
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "getTransactionsForAddress",
+    "params": [
+        "Vote111111111111111111111111111111111111111",
+        {
+            "transactionDetails": "signatures",
+            "limit": 50,
+            "sortOrder": "desc",
+            "filters": {
+                "status": "succeeded",
+                "slot": {
+                    "gte": 1000,
+                    "lt": 2000
+                },
+                "tokenTransfer": {
+                    "direction": "in",
+                    "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+                }
+            }
+        }
+    ]
+}
+headers = {"Content-Type": "application/json"}
+
+response = requests.post(url, json=payload, headers=headers)
+
+print(response.text)
+const options = {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    jsonrpc: '2.0',
+    id: '1',
+    method: 'getTransactionsForAddress',
+    params: [
+      'Vote111111111111111111111111111111111111111',
+      {
+        transactionDetails: 'signatures',
+        limit: 50,
+        sortOrder: 'desc',
+        filters: {
+          status: 'succeeded',
+          slot: {gte: 1000, lt: 2000},
+          tokenTransfer: {direction: 'in', mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'}
+        }
+      }
+    ]
+  })
+};
+
+fetch('https://mainnet.helius-rpc.com/?api-key=', options)
+  .then(res => res.json())
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://mainnet.helius-rpc.com/?api-key=",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => json_encode([
+    'jsonrpc' => '2.0',
+    'id' => '1',
+    'method' => 'getTransactionsForAddress',
+    'params' => [
+        'Vote111111111111111111111111111111111111111',
+        [
+                'transactionDetails' => 'signatures',
+                'limit' => 50,
+                'sortOrder' => 'desc',
+                'filters' => [
+                                'status' => 'succeeded',
+                                'slot' => [
+                                                                'gte' => 1000,
+                                                                'lt' => 2000
+                                ],
+                                'tokenTransfer' => [
+                                                                'direction' => 'in',
+                                                                'mint' => 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+                                ]
+                ]
+        ]
+    ]
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
+package main
+
+import (
+	"fmt"
+	"strings"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://mainnet.helius-rpc.com/?api-key="
+
+	payload := strings.NewReader("{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"1\",\n  \"method\": \"getTransactionsForAddress\",\n  \"params\": [\n    \"Vote111111111111111111111111111111111111111\",\n    {\n      \"transactionDetails\": \"signatures\",\n      \"limit\": 50,\n      \"sortOrder\": \"desc\",\n      \"filters\": {\n        \"status\": \"succeeded\",\n        \"slot\": {\n          \"gte\": 1000,\n          \"lt\": 2000\n        },\n        \"tokenTransfer\": {\n          \"direction\": \"in\",\n          \"mint\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\"\n        }\n      }\n    }\n  ]\n}")
+
+	req, _ := http.NewRequest("POST", url, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+HttpResponse<String> response = Unirest.post("https://mainnet.helius-rpc.com/?api-key=")
+  .header("Content-Type", "application/json")
+  .body("{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"1\",\n  \"method\": \"getTransactionsForAddress\",\n  \"params\": [\n    \"Vote111111111111111111111111111111111111111\",\n    {\n      \"transactionDetails\": \"signatures\",\n      \"limit\": 50,\n      \"sortOrder\": \"desc\",\n      \"filters\": {\n        \"status\": \"succeeded\",\n        \"slot\": {\n          \"gte\": 1000,\n          \"lt\": 2000\n        },\n        \"tokenTransfer\": {\n          \"direction\": \"in\",\n          \"mint\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\"\n        }\n      }\n    }\n  ]\n}")
+  .asString();
+require 'uri'
+require 'net/http'
+
+url = URI("https://mainnet.helius-rpc.com/?api-key=")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request.body = "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"1\",\n  \"method\": \"getTransactionsForAddress\",\n  \"params\": [\n    \"Vote111111111111111111111111111111111111111\",\n    {\n      \"transactionDetails\": \"signatures\",\n      \"limit\": 50,\n      \"sortOrder\": \"desc\",\n      \"filters\": {\n        \"status\": \"succeeded\",\n        \"slot\": {\n          \"gte\": 1000,\n          \"lt\": 2000\n        },\n        \"tokenTransfer\": {\n          \"direction\": \"in\",\n          \"mint\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\"\n        }\n      }\n    }\n  ]\n}"
+
+response = http.request(request)
+puts response.read_body
+200
+signaturesResponse
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "data": [
+      {
+        "signature": "5h6xBEauJ3PK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv",
+        "slot": 1054,
+        "transactionIndex": 42,
+        "err": null,
+        "memo": null,
+        "blockTime": 1641038400,
+        "confirmationStatus": "finalized"
+      },
+      {
+        "signature": "kwjd820slPK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv",
+        "slot": 1055,
+        "transactionIndex": 15,
+        "err": null,
+        "memo": null,
+        "blockTime": 1641038460,
+        "confirmationStatus": "finalized"
+      }
+    ],
+    "paginationToken": "1055:5"
+  }
+}
+​
+Request Parameters
+​
+address
+string
+required
+Solana account address to retrieve transaction history for (wallet, token, program, NFT, etc.).
+​
+transactionDetails
+string
+default:
+"signatures"
+Level of transaction detail to return.
+signatures
+full
+​
+sortOrder
+string
+default:
+"desc"
+Sort order for returned transactions.
+asc
+desc
+​
+commitment
+string
+default:
+"finalized"
+The commitment level for the request. The
+processed
+commitment is not supported.
+confirmed
+finalized
+​
+minContextSlot
+number
+Minimum context slot to use for request (optional).
+​
+limit
+number
+default:
+"1000"
+Maximum number of transactions per request. Use 1–1000 for transactionDetails:“signatures” and 1–1000 for transactionDetails:“full”.
+​
+paginationToken
+string
+Pagination token from previous response to get next page of results (format “slot:position”).
+​
+encoding
+string
+default:
+"json"
+Encoding format for transaction data (applies only when transactionDetails=full).
+json
+jsonParsed
+base58
+base64
+​
+maxSupportedTransactionVersion
+number
+Maximum transaction version to return (applies only when transactionDetails=full). Set to 1 to receive legacy, v0, and v1 transactions.
+​
+filters
+object
+Advanced filters to narrow down transaction results.
+​
+filters.slot
+object
+Filter by slot number.
+​
+filters.slot.gte
+number
+Greater than or equal to slot number.
+​
+filters.slot.gt
+number
+Greater than slot number.
+​
+filters.slot.lte
+number
+Less than or equal to slot number.
+​
+filters.slot.lt
+number
+Less than slot number.
+​
+filters.blockTime
+object
+Filter by block timestamp (Unix timestamp).
+​
+filters.blockTime.gte
+number
+Greater than or equal to timestamp.
+​
+filters.blockTime.gt
+number
+Greater than timestamp.
+​
+filters.blockTime.lte
+number
+Less than or equal to timestamp.
+​
+filters.blockTime.lt
+number
+Less than timestamp.
+​
+filters.blockTime.eq
+number
+Equal to timestamp.
+​
+filters.signature
+object
+Filter by transaction signature.
+​
+filters.signature.gte
+string
+Get transactions with signatures greater than or equal to this value.
+​
+filters.signature.gt
+string
+Get transactions after this signature.
+​
+filters.signature.lte
+string
+Get transactions with signatures less than or equal to this value.
+​
+filters.signature.lt
+string
+Get transactions before this signature.
+​
+filters.status
+string
+default:
+"any"
+Filter by transaction status.
+succeeded
+failed
+any
+​
+filters.tokenAccounts
+string
+default:
+"none"
+Filter transactions for related token accounts. Controls whether to include transactions involving token accounts owned by the address.
+none
+balanceChanged
+all
+​
+filters.tokenTransfer
+object
+Narrows results to transactions where the queried address participated in a token transfer matching specific criteria. All fields are optional and combined with AND semantics.
+​
+filters.tokenTransfer.with
+string
+Counterparty address. Matches transfers whose other side is this address.
+​
+filters.tokenTransfer.direction
+string
+default:
+"any"
+Transfer direction relative to the queried address.
+in
+out
+any
+​
+filters.tokenTransfer.mint
+string
+Token mint to filter on.
+​
+filters.tokenTransfer.amount
+object
+Raw on-chain amount range filter. All fields are optional and can be combined.
+Authorizations
+​
+api-key
+string
+query
+required
+Your Helius API key. You can get one for free in the
+dashboard
+.
+Body
+application/json
+​
+jsonrpc
+enum<string>
+default:
+2.0
+required
+The JSON-RPC protocol version.
+Available options
+:
+2.0
+Example
+:
+"2.0"
+​
+id
+string
+default:
+1
+required
+A unique identifier for the request.
+Example
+:
+"1"
+​
+method
+enum<string>
+default:
+getTransactionsForAddress
+required
+The name of the RPC method to invoke.
+Available options
+:
+getTransactionsForAddress
+Example
+:
+"getTransactionsForAddress"
+​
+params
+(string | object)[]
+required
+Array containing the required account address and optional configuration object.
+Required array length:
+1 - 2
+element
+s
+Solana account address to retrieve transaction history for (wallet, token, program, NFT, etc.).
+Example
+:
+"Vote111111111111111111111111111111111111111"
+Response
+200
+application/json
+Successfully retrieved transactions for the specified address.
+​
+jsonrpc
+enum<string>
+The JSON-RPC protocol version.
+Available options
+:
+2.0
+Example
+:
+"2.0"
+​
+id
+string
+Identifier matching the request.
+Example
+:
+"1"
+​
+result
+object
+Transaction data and pagination information.
+Show
+child attributes
+Was this page helpful?
+Yes
+No
+simulateTransaction
+Previous
+getTransfersByAddress
+Next
+⌘
+I
+getTransactionsForAddress
+cURL
+curl --request POST \
+  --url 'https://mainnet.helius-rpc.com/?api-key=' \
+  --header 'Content-Type: application/json' \
+  --data '
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "getTransactionsForAddress",
+  "params": [
+    "Vote111111111111111111111111111111111111111",
+    {
+      "transactionDetails": "signatures",
+      "limit": 50,
+      "sortOrder": "desc",
+      "filters": {
+        "status": "succeeded",
+        "slot": {
+          "gte": 1000,
+          "lt": 2000
+        },
+        "tokenTransfer": {
+          "direction": "in",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+        }
+      }
+    }
+  ]
+}
+'
+import requests
+
+url = "https://mainnet.helius-rpc.com/?api-key="
+
+payload = {
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "getTransactionsForAddress",
+    "params": [
+        "Vote111111111111111111111111111111111111111",
+        {
+            "transactionDetails": "signatures",
+            "limit": 50,
+            "sortOrder": "desc",
+            "filters": {
+                "status": "succeeded",
+                "slot": {
+                    "gte": 1000,
+                    "lt": 2000
+                },
+                "tokenTransfer": {
+                    "direction": "in",
+                    "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+                }
+            }
+        }
+    ]
+}
+headers = {"Content-Type": "application/json"}
+
+response = requests.post(url, json=payload, headers=headers)
+
+print(response.text)
+const options = {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    jsonrpc: '2.0',
+    id: '1',
+    method: 'getTransactionsForAddress',
+    params: [
+      'Vote111111111111111111111111111111111111111',
+      {
+        transactionDetails: 'signatures',
+        limit: 50,
+        sortOrder: 'desc',
+        filters: {
+          status: 'succeeded',
+          slot: {gte: 1000, lt: 2000},
+          tokenTransfer: {direction: 'in', mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'}
+        }
+      }
+    ]
+  })
+};
+
+fetch('https://mainnet.helius-rpc.com/?api-key=', options)
+  .then(res => res.json())
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://mainnet.helius-rpc.com/?api-key=",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => json_encode([
+    'jsonrpc' => '2.0',
+    'id' => '1',
+    'method' => 'getTransactionsForAddress',
+    'params' => [
+        'Vote111111111111111111111111111111111111111',
+        [
+                'transactionDetails' => 'signatures',
+                'limit' => 50,
+                'sortOrder' => 'desc',
+                'filters' => [
+                                'status' => 'succeeded',
+                                'slot' => [
+                                                                'gte' => 1000,
+                                                                'lt' => 2000
+                                ],
+                                'tokenTransfer' => [
+                                                                'direction' => 'in',
+                                                                'mint' => 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+                                ]
+                ]
+        ]
+    ]
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
+package main
+
+import (
+	"fmt"
+	"strings"
+	"net/http"
+	"io"
+)
+
+func main() {
+
+	url := "https://mainnet.helius-rpc.com/?api-key="
+
+	payload := strings.NewReader("{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"1\",\n  \"method\": \"getTransactionsForAddress\",\n  \"params\": [\n    \"Vote111111111111111111111111111111111111111\",\n    {\n      \"transactionDetails\": \"signatures\",\n      \"limit\": 50,\n      \"sortOrder\": \"desc\",\n      \"filters\": {\n        \"status\": \"succeeded\",\n        \"slot\": {\n          \"gte\": 1000,\n          \"lt\": 2000\n        },\n        \"tokenTransfer\": {\n          \"direction\": \"in\",\n          \"mint\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\"\n        }\n      }\n    }\n  ]\n}")
+
+	req, _ := http.NewRequest("POST", url, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+
+}
+HttpResponse<String> response = Unirest.post("https://mainnet.helius-rpc.com/?api-key=")
+  .header("Content-Type", "application/json")
+  .body("{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"1\",\n  \"method\": \"getTransactionsForAddress\",\n  \"params\": [\n    \"Vote111111111111111111111111111111111111111\",\n    {\n      \"transactionDetails\": \"signatures\",\n      \"limit\": 50,\n      \"sortOrder\": \"desc\",\n      \"filters\": {\n        \"status\": \"succeeded\",\n        \"slot\": {\n          \"gte\": 1000,\n          \"lt\": 2000\n        },\n        \"tokenTransfer\": {\n          \"direction\": \"in\",\n          \"mint\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\"\n        }\n      }\n    }\n  ]\n}")
+  .asString();
+require 'uri'
+require 'net/http'
+
+url = URI("https://mainnet.helius-rpc.com/?api-key=")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request.body = "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": \"1\",\n  \"method\": \"getTransactionsForAddress\",\n  \"params\": [\n    \"Vote111111111111111111111111111111111111111\",\n    {\n      \"transactionDetails\": \"signatures\",\n      \"limit\": 50,\n      \"sortOrder\": \"desc\",\n      \"filters\": {\n        \"status\": \"succeeded\",\n        \"slot\": {\n          \"gte\": 1000,\n          \"lt\": 2000\n        },\n        \"tokenTransfer\": {\n          \"direction\": \"in\",\n          \"mint\": \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\"\n        }\n      }\n    }\n  ]\n}"
+
+response = http.request(request)
+puts response.read_body
+200
+signaturesResponse
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "data": [
+      {
+        "signature": "5h6xBEauJ3PK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv",
+        "slot": 1054,
+        "transactionIndex": 42,
+        "err": null,
+        "memo": null,
+        "blockTime": 1641038400,
+        "confirmationStatus": "finalized"
+      },
+      {
+        "signature": "kwjd820slPK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv",
+        "slot": 1055,
+        "transactionIndex": 15,
+        "err": null,
+        "memo": null,
+        "blockTime": 1641038460,
+        "confirmationStatus": "finalized"
+      }
+    ],
+    "paginationToken": "1055:5"
+  }
+}
+Helius Docs
+home page
+x
+telegram
+discord
+linkedin
+Product
+Staked Connections
+Sender
+LaserStream
+Shred Delivery
+Webhooks & Websockets
+Token APIs
+Historical Data
+RPC Nodes
+Helius Validator
+Validator-as-a-Service
+Solutions
+Traders & MMs
+Exchanges
+Wallets
+Fintech
+DeFi
+Resources
+Orb
+Blog
+Docs
+Status
+Pricing
+Benchmarks
+Sign Up
+Agents Docs
+Stake with Us
+Built with Helius
+Startup Launchpad
+Staking Calculator
+Company
+Careers
+Contact Sales
+Support
+Media Kit
+Security
+Privacy Policy
+Terms & Conditions
+Solana Roadmap
+Powered by
+This documentation is built and hosted on Mintlify, a developer documentation platform
+Assistant
+Responses are generated using AI and may contain mistakes.

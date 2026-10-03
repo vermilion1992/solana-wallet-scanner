@@ -1,0 +1,54 @@
+[
+  {
+    "name": "solana-history",
+    "url": "https://solana.com/docs/rpc/http/getsignaturesforaddress",
+    "resolved_url": "https://solana.com/docs/rpc/http/getsignaturesforaddress",
+    "sha256": "7005c6d6ccca6dc797480917b5b111b9104d18a7fa6d84fef3c7fa92ca3bef26",
+    "bytes": 1098601,
+    "status": "retrieved"
+  },
+  {
+    "name": "solana-ownership",
+    "url": "https://solana.com/docs/rpc/http/gettokenaccountsbyowner",
+    "resolved_url": "https://solana.com/docs/rpc/http/gettokenaccountsbyowner",
+    "sha256": "70536b9dd2ea26cc79f0473f919dae3b8316cbf449248db4e5e81e79bfc277de",
+    "bytes": 1159631,
+    "status": "retrieved"
+  },
+  {
+    "name": "solana-account",
+    "url": "https://solana.com/docs/rpc/http/getaccountinfo",
+    "resolved_url": "https://solana.com/docs/rpc/http/getaccountinfo",
+    "sha256": "61acb2a1e09b6dd5b2e3f4ee6b150a9994d79e141b91e5f5cf7b783ae824ab60",
+    "bytes": 1089402,
+    "status": "retrieved"
+  },
+  {
+    "name": "helius-transactions",
+    "url": "https://www.helius.dev/docs/api-reference/enhanced-transactions/gettransactionsbyaddress",
+    "resolved_url": "https://www.helius.dev/docs/api-reference/enhanced-transactions/gettransactionsbyaddress",
+    "sha256": "9b9874d9e4288418c94638e211fbee04bf87be4bb0213da5126fad074934fd79",
+    "bytes": 652594,
+    "status": "retrieved"
+  },
+  {
+    "name": "helius-pricing",
+    "url": "https://www.helius.dev/pricing",
+    "resolved_url": "https://www.helius.dev/pricing",
+    "sha256": "e77050048b2b41377ca3ca502d6dda7421582d1433e4d847e7aa94835f9fc5da",
+    "bytes": 633382,
+    "status": "retrieved"
+  },
+  {
+    "name": "helius-history",
+    "url": "https://www.helius.dev/docs/rpc/guides/gettransactionsforaddress",
+    "status": "blocked",
+    "reason": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "coingecko-history",
+    "url": "https://docs.coingecko.com/reference/coins-contract-address-market-chart-range",
+    "status": "blocked",
+    "reason": "HTTP Error 404: Not Found"
+  }
+]

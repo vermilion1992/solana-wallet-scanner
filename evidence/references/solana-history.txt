@@ -1,0 +1,382 @@
+Use Solana
+Build
+Enterprise
+Products
+Ecosystem
+Search
+⌘ K
+en
+Start here
+Concepts
+API
+Finance
+Resources
+Choosing an RPC Provider
+JSON Reference
+HTTP Methods
+getAccountInfo
+getAgGenesisCert
+getBalance
+getBlock
+getBlockCommitment
+getBlockHeight
+getBlockProduction
+getBlocks
+getBlocksWithLimit
+getBlockTime
+getClusterNodes
+getEpochInfo
+getEpochSchedule
+getFeeForMessage
+getFirstAvailableBlock
+getGenesisHash
+getHealth
+getHighestSnapshotSlot
+getIdentity
+getInflationGovernor
+getInflationRate
+getInflationReward
+getLargestAccounts
+getLatestBlockhash
+getLeaderSchedule
+getMaxRetransmitSlot
+getMaxShredInsertSlot
+getMinimumBalanceForRentExemption
+getMultipleAccounts
+getProgramAccounts
+getRecentPerformanceSamples
+getRecentPrioritizationFees
+getSignaturesForAddress
+getSignatureStatuses
+getSlot
+getSlotLeader
+getSlotLeaders
+getStakeMinimumDelegation
+getSupply
+getTokenAccountBalance
+getTokenAccountsByDelegate
+getTokenAccountsByOwner
+getTokenLargestAccounts
+getTokenSupply
+getTransaction
+getTransactionCount
+getVersion
+getVoteAccounts
+isBlockhashValid
+minimumLedgerSlot
+requestAirdrop
+sendTransaction
+simulateTransaction
+Websocket Methods
+Removed Methods
+Solana RPC Methods
+HTTP Methods
+getSignaturesForAddress
+Copy Markdown
+Open
+Returns confirmed transaction signatures for transactions that reference the
+supplied address in
+accountKeys
+, newest first.
+Source
+get_signatures_for_address
+params
+string
+required
+Account address as base-58 encoded string
+object
+optional
+Configuration object containing the following fields:
+commitment
+string
+minContextSlot
+number
+limit
+usize
+before
+string
+until
+string
+result
+array
+An array of transaction signature information objects, ordered from
+newest
+to
+oldest
+transaction, containing:
+signature
+string
+slot
+u64
+err
+object | string | null
+memo
+string | null
+blockTime
+i64 | null
+confirmationStatus
+string | null
+cURL
+Kit
+web3.js
+Rust
+$
+curl
+https://api.devnet.solana.com
+-s -X \
+>
+POST -H "Content-Type: application/json" -d '
+>
+{
+>
+"jsonrpc"
+:
+"2.0"
+,
+>
+"id"
+:
+1
+,
+>
+"method"
+:
+"getSignaturesForAddress"
+,
+>
+"params"
+: [
+>
+"Vote111111111111111111111111111111111111111"
+,
+>
+{
+>
+"commitment"
+:
+"finalized"
+,
+>
+"limit"
+:
+1
+>
+}
+>
+]
+>
+}
+>
+'
+Try it
+Response
+{
+"jsonrpc"
+:
+"2.0"
+,
+"result"
+: [
+{
+"signature"
+:
+"5h6xBEauJ3PK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv"
+,
+"slot"
+:
+114
+,
+"err"
+:
+null
+,
+"memo"
+:
+null
+,
+"blockTime"
+:
+null
+,
+"confirmationStatus"
+:
+"finalized"
+}
+],
+"id"
+:
+1
+}
+cURL
+Kit
+web3.js
+Rust
+$
+curl
+https://api.devnet.solana.com
+-s -X \
+>
+POST -H "Content-Type: application/json" -d '
+>
+{
+>
+"jsonrpc"
+:
+"2.0"
+,
+>
+"id"
+:
+1
+,
+>
+"method"
+:
+"getSignaturesForAddress"
+,
+>
+"params"
+: [
+>
+"Vote111111111111111111111111111111111111111"
+,
+>
+{
+>
+"commitment"
+:
+"finalized"
+,
+>
+"limit"
+:
+1
+>
+}
+>
+]
+>
+}
+>
+'
+Try it
+params
+string
+required
+Account address as base-58 encoded string
+object
+optional
+Configuration object containing the following fields:
+commitment
+string
+minContextSlot
+number
+limit
+usize
+before
+string
+until
+string
+result
+Response
+{
+"jsonrpc"
+:
+"2.0"
+,
+"result"
+: [
+{
+"signature"
+:
+"5h6xBEauJ3PK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv"
+,
+"slot"
+:
+114
+,
+"err"
+:
+null
+,
+"memo"
+:
+null
+,
+"blockTime"
+:
+null
+,
+"confirmationStatus"
+:
+"finalized"
+}
+],
+"id"
+:
+1
+}
+array
+An array of transaction signature information objects, ordered from
+newest
+to
+oldest
+transaction, containing:
+signature
+string
+slot
+u64
+err
+object | string | null
+memo
+string | null
+blockTime
+i64 | null
+confirmationStatus
+string | null
+Is this page helpful?
+Previous
+getRecentPrioritizationFees
+Next
+getSignatureStatuses
+Ask AI
+en
+Use Solana
+Use Solana
+Wallets
+Learn
+Staking
+Build
+Developer hub
+Docs
+Templates
+Enterprise
+Enterprise
+Institutional payments
+Tokenization
+Reports
+Products
+Products
+Solana Developer Platform
+x402
+Agent Registry
+Skills
+Ecosystem
+Ecosystem
+Network
+Events
+Community
+News
+Newsletter
+AI agents
+llms.txt
+llms-full.txt
+SKILL.md
+Agent skills
+Grants
+Media Kit
+Careers
+Disclaimer
+Privacy Policy
+© 2026 Solana Foundation. All rights reserved.
+getSignaturesForAddress | Solana

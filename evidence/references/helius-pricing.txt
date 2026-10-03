@@ -1,0 +1,856 @@
+Helius Pricing: Solana RPCs and APIs
+NEW: Helius acquires Light Protocol
+NEW: Helius acquires Light Protocol to build the canonical privacy layer for Solana
+Read more
+Dismiss
+Helius
+Docs
+Sign In
+Open main menu
+Products
+Solutions
+Use cases
+Traders & Market Makers
+Convert milliseconds into PnL
+Exchanges
+Infra built for scale and reliability
+Wallets
+Fast balances, token data, and alerts
+Fintech
+Infra for global rails and 24/7 settlement
+DeFi
+Reliable reads with faster execution
+Case study
+How DFlow Uses LaserStream
+to Quote Solana's Best Prices
+Read more →
+Resources
+Tools
+Helius for Agents
+Helius MCP, CLI, plugins, and skills for agents
+Orb
+A human readable Solana block explorer
+Solana Staking Calculator
+Compare validators and estimate rewards
+Solana RPC Benchmarks
+Test RPC performance across providers
+Programs
+Startup Launchpad
+Scale, Speed, Support for Your Success
+Guides
+Stream the earliest onchain signals
+Subscribe to preconfs over WebSocket
+Land transactions on Solana
+Use Sender to reliably land trades and payments
+Monitor accounts with gRPC
+Get real-time account updates via LaserStream
+Query historical Solana data
+Fetch full transaction history by address
+Get token and asset data
+NFTs, tokens, and compressed assets in one API
+Build private apps and payments
+Programmable, fully onchain privacy solutions
+Learn
+Blog
+Media
+EVM vs. SVM
+Staking Rewards
+Company
+About
+Contact
+Support
+Security
+Careers
+Brand
+Pricing
+Stake
+English
+中文
+日本語
+Português (Brasil)
+한국어
+Deutsch
+Docs
+Sign In
+Trading
+See the full stack →
+Preconfirmations
+Stream scheduled Solana transactions
+Shred Delivery
+Specialized delivery of raw shreds via UDP
+Preprocessed Transactions
+Stream pre-execution Solana data
+Sender
+Land latency-sensitive trades first
+Transaction Rebates
+Earn SOL back on backrun-eligible trades
+Infrastructure
+RPC Nodes
+High availability RPC for reads and writes
+Helius Validator
+0% fees, 100% inflation rewards, 100% tips
+Validator-as-a-Service
+Reliable white label validators
+Validator Monetization
+Boost validator rewards, no client changes
+Privacy
+Solana Privacy Protocol
+Private payments and finance on Solana
+Read data
+LaserStream
+Reliable, low latency gRPC data streaming
+Webhooks & WebSockets
+Listen to onchain events & stream updates
+Parsed Events & Streams
+Parsed history and real-time streams
+Historical Data
+Fast archival data for backfills and indexing
+Token APIs
+Get all token and transaction data instantly
+Wallet API (Beta)
+REST endpoints for Solana wallet data
+Helius
+/
+products
+/
+solutions
+/
+resources
+/
+Language
+Close menu
+Products
+Solutions
+Resources
+Docs
+Pricing
+Stake
+Language
+English
+English
+中文
+日本語
+Português (Brasil)
+한국어
+Deutsch
+Trading
+See the full stack →
+Preconfirmations
+Stream scheduled Solana transactions
+Shred Delivery
+Specialized delivery of raw shreds via UDP
+Preprocessed Transactions
+Stream pre-execution Solana data
+Sender
+Land latency-sensitive trades first
+Transaction Rebates
+Earn SOL back on backrun-eligible trades
+Read data
+LaserStream
+Reliable, low latency gRPC data streaming
+Webhooks & WebSockets
+Listen to onchain events & stream updates
+Parsed Events & Streams
+Parsed history and real-time streams
+Historical Data
+Fast archival data for backfills and indexing
+Token APIs
+Get all token and transaction data instantly
+Wallet API (Beta)
+REST endpoints for Solana wallet data
+Infrastructure
+RPC Nodes
+High availability RPC for reads and writes
+Helius Validator
+0% fees, 100% inflation rewards, 100% tips
+Validator-as-a-Service
+Reliable white label validators
+Validator Monetization
+Boost validator rewards, no client changes
+Privacy
+Solana Privacy Protocol
+Private payments and finance on Solana
+Use cases
+Traders & Market Makers
+Convert milliseconds into PnL
+Exchanges
+Infra built for scale and reliability
+Wallets
+Fast balances, token data, and alerts
+Fintech
+Infra for global rails and 24/7 settlement
+DeFi
+Reliable reads with faster execution
+Case study
+How DFlow Uses LaserStream
+to Quote Solana's Best Prices
+Read more →
+Tools
+Helius for Agents
+Helius MCP, CLI, plugins, and skills for agents
+Orb
+A human readable Solana block explorer
+Solana Staking Calculator
+Compare validators and estimate rewards
+Solana RPC Benchmarks
+Test RPC performance across providers
+Programs
+Startup Launchpad
+Scale, Speed, Support for Your Success
+Guides
+Stream the earliest onchain signals
+Subscribe to preconfs over WebSocket
+Land transactions on Solana
+Use Sender to reliably land trades and payments
+Monitor accounts with gRPC
+Get real-time account updates via LaserStream
+Query historical Solana data
+Fetch full transaction history by address
+Get token and asset data
+NFTs, tokens, and compressed assets in one API
+Build private apps and payments
+Programmable, fully onchain privacy solutions
+Company
+About
+Contact
+Support
+Security
+Careers
+Brand
+Learn
+Blog
+Media
+EVM vs. SVM
+Staking Rewards
+Simple pricing 
+for teams of any scale
+Compare plans
+Monthly
+Yearly
+2 months free
+Free
+Ideal for testing
+$0
+/
+month
+1M credits
+10 Requests / sec
+1 sendTransaction / sec
+LaserStream WSS (standard)
+Community support
+Start building
+Recommended
+Developer
+For small projects
+$49
+/
+month
+10M credits
+50 Requests / sec
+5 sendTransaction / sec
+Staked Connections
+LaserStream WSS
+LaserStream gRPC (devnet)
+Preprocessed Transactions
+Shreds - $1,000/month/IP
+Chat support
+Start building
+Business
+For growing teams
+$499
+/
+month
+100M credits
+200 Requests / sec
+50 sendTransaction / sec
+5 sendBundle / sec
+Staked Connections
+LaserStream WSS & gRPC
+Preprocessed Transactions
+Shreds - $1,000/month/IP
+Priority chat support
+Start building
+Professional
+For teams at scale
+$999
+/
+month
+200M credits
+500 Requests / sec
+100 sendTransaction / sec
+5 sendBundle / sec
+Staked Connections
+LaserStream WSS & gRPC
+LaserStream Data Add-ons
+Preprocessed Transactions
+Shreds - $800/month/IP
+Telegram + Slack support
+Start building
+Enterprise
+Ideal for teams at enterprise scale or with custom requirements
+Talk to us
+Volume discounts
+SOC 2 Compliance
+Custom rate limits
+Advanced geographic coverage
+LaserStream gRPC
+Custom optimized infrastructure
+Latency and uptime SLAs
+Direct access to our engineering team
+Talk to us
+Are you an AI agent? See pricing
+Premium Infrastructure
+Outperform the Market
+Get high-performance, SOC 2-compliant infra. For traders, we recommend
+Preconfs
+plus Shred Delivery for low latency trading feeds, and
+Sender Max
+for the best landing rates.
+LaserStream
+For reliable, low-latency streaming data
+Included with Business plans and higher ($499/mon)
+2 credits
+/ 0.1 MB
+Drop-in replacement for Geyser gRPC
+Globally distributed, regional redundancy
+Data add-ons start at $400/mon
+Learn more
+Sender
+For the fastest transaction landing rates
+Included with all plans
+0.000005 SOL
+minimum tip
+Routes across every high-speed pathway
+7 regional endpoints for global coverage
+50 TPS (default)
+Learn more
+Dedicated nodes
+For custom requirements & advanced teams
+Starting from
+$2,900
+/ month
+Stream real-time data using gRPC
+Simulate Jito bundles
+Colocate for a trading edge
+Order now
+$400
+/ month
+Data add-on
+For LaserStream gRPC and WebSockets
+Predictable:
+Pay fixed monthly rates instead of variable fees
+Flexible:
+Works for LaserStream gRPC and WebSockets
+Scalable:
+Upgrade to larger tiers at fixed prices as you scale
+Monthly pricing:
+Additional 5TB ($400), 10TB ($750), 25TB ($1,750), 50TB ($3,250), and 100TB ($6,000)
+Starting from
+$400
+/ month
+Buy now
+Transparent. Flexible. Risk-free.
+Try before you commit
+Test-drive our developer platform for free. When your project demands more, our paid plans scale with you.
+Autoscaling on your terms
+Control costs with precision. Set your autoscaling limits, track real-time usage, and use alerts to stay within budget.
+Pay how you want
+Pay with crypto or credit card. Subscribe monthly, get 2 months off with annual plans and save more on Enterprise.
+Try before you commit
+Test-drive our developer platform for free. When your project demands more, our paid plans scale with you.
+Autoscaling on your terms
+Control costs with precision. Set your autoscaling limits, track real-time usage, and use alerts to stay within budget.
+Pay how you want
+Pay with crypto or credit card. Subscribe monthly, get 2 months off with annual plans and save more on Enterprise.
+Compare
+Free
+Start building
+Developer
+Start building
+Business
+Start building
+Professional
+Start building
+Enterprise
+Contact sales
+Features
+Price per month
+$0
+$49
+$499
+$999
+Custom
+Credits per month
+1M
+10M
+100M
+200M
+1B+
+Additional credits per million
+-
+$5
+$5
+$5
+Custom
+RPC requests per second (RPS)
+10
+50
+200
+500
+Custom
+Additional 100 RPC RPS/month
+-
+-
+-
+$100
+Custom
+sendTransaction per second
+1
+5
+50
+100
+Custom
+sendBundle per second
+-
+-
+5
+5
+Custom
+getProgramAccounts per second
+5
+25
+50
+75
+Custom
+DAS requests per second
+2
+10
+50
+100
+Custom
+Staked Connections
+-
+Archival data
+Webhooks
+LaserStream WSS (standard)
+transactionSubscribe
+-
+LaserStream gRPC
+-
+Devnet
+LaserStream Data Add-ons
+-
+-
+-
+Starting at $400/month
+Custom
+Preprocessed Transactions
+-
+0.1 credits/msg
+0.1 credits/msg
+0.1 credits/msg
+0.1 credits/msg
+Raw Shreds price per month / IP
+$1,000
+$1,000
+$1,000
+$800
+Custom
+Preconfirmations (Preconfs)
+-
+-
+-
+Support
+Support response time SLA
+-
+24 hours
+12 hours
+8 hours
+4 hours
+Chat support
+-
+Dedicated Slack + Telegram
+-
+-
+-
+Compare plans
+Free
+Developer
+Business
+Professional
+Enterprise
+Features
+Price per month
+$0
+$49
+$499
+$999
+Custom
+Credits per month
+1M
+10M
+100M
+200M
+1B+
+Additional credits per million
+-
+$5
+$5
+$5
+Custom
+RPC requests per second (RPS)
+10
+50
+200
+500
+Custom
+Additional 100 RPC RPS/month
+-
+-
+-
+$100
+Custom
+sendTransaction per second
+1
+5
+50
+100
+Custom
+sendBundle per second
+-
+-
+5
+5
+Custom
+getProgramAccounts per second
+5
+25
+50
+75
+Custom
+DAS requests per second
+2
+10
+50
+100
+Custom
+Staked Connections
+-
+Archival data
+Webhooks
+LaserStream WSS (standard)
+transactionSubscribe
+-
+LaserStream gRPC
+-
+Devnet
+LaserStream Data Add-ons
+-
+-
+-
+Starting at $400/month
+Custom
+Preprocessed Transactions
+-
+0.1 credits/msg
+0.1 credits/msg
+0.1 credits/msg
+0.1 credits/msg
+Raw Shreds price per month / IP
+$1,000
+$1,000
+$1,000
+$800
+Custom
+Preconfirmations (Preconfs)
+-
+-
+-
+Support
+Support response time SLA
+-
+24 hours
+12 hours
+8 hours
+4 hours
+Chat support
+-
+Dedicated Slack + Telegram
+-
+-
+-
+Start building
+Start building
+Helius vs.
+other RPC providers
+Compare
+Solana RPC provider benchmarks
+across methods and regions.
+Quicknode
+Alchemy
+Quicknode
+Dedicated RPC Nodes
+-
+-
+-
+-
+Solana Domain Expertise and Consulting
+-
+-
+-
+-
+Indexing Support for All Tokens
+-
+-
+-
+-
+Transaction Parsing API
+-
+-
+-
+-
+Webhook Support
+-
+-
+-
+-
+Wallet Signup & Crypto Subscriptions
+-
+-
+-
+-
+RPC rate limit*
+500 RPS
+500 RPS
+120 RPS
+500 RPS
+120 RPS
+Uptime**
+99.99%
+99.84%
+99.85%
+99.84%
+99.85%
+Support SLA*
+8 hours
+8 hours
+12 hours
+8 hours
+12 hours
+Get started
+Compare
+Compare
+Compare
+Compare
+*Data for largest listed shared RPC plan.
+**Snapshot taken at Feb 19, 2024.
+FAQs
+Can't find the answer you're looking for? We're always here to help you.
+Talk to our team
+What are credits?
+Credits
+vary by usage. RPC calls are 1 credit with two exceptions: getProgramAccounts and archival calls are 10 credits. DAS calls are 10 credits. Webhook pushes are 1 credit. Priority Fee API calls are 1 credit. If you're currently using the Enhanced Transactions API, migrate to the
+Parsed Events API
+. Parsed Events usage is free on all paid plans until September 21st, 2026 while the product is in open beta; final credit costs are subject to change.
+What are data add-ons?
+Data add-ons for LaserStream and Enhanced WebSockets give you access to flexible, scalable data streaming bandwidth at a predictable, fixed monthly rate.
+Add-on plans
+are available on the Professional tier only, and are priced as follows: 5TB ($400/mon), 10TB ($750/mon), 25TB ($1,750/mon), 50TB ($3,250/mon), and 100TB ($6,000/mon). For larger data add-ons and volume-based pricing, please
+contact sales
+.
+What plan is right for me?
+Developer gives you the core functionality to get started - great for small projects. Business offers more usage and throughput - perfect for mid-size projects. Professional supports even more usage and throughput - ideal for teams operating at scale.
+How do I upgrade/downgrade my plan?
+Login to the
+dashboard
+, click on the link to Manage My Subscription, and select your desired option.
+What is your cancellation policy?
+Plans are billed month-to-month, meaning you can cancel at any time. Cancellations will become effective the following month, and your service will continue until the end of your current month.
+I have more questions, who can I ask?
+For
+more FAQs
+, visit the support section in our docs.For technical support questions please join our
+Discord
+server,
+Telegram
+group, or if you have a paid plan, use the chat feature in the
+dashboard
+.‍For sales and pricing questions, email
+sales@helius.xyz.
+Trusted by
+Solana's best teams
+The number one thing we care about is safety for users. To give traders the best price and tightest spreads, we depend on LaserStream to feed our price engine with the freshest, fastest onchain data.
+Nitesh Nath
+CEO, DFLOW
+Helius is super fast, reliable, and I'd recommend them to anyone looking for the best developer experience on Solana. They power a great portion of our infrastructure at Backpack.
+Armani Ferrante
+CO-FOUNDER & CEO, BACKPACK
+The Helius team makes building on Solana smoother and easier. They've done an amazing job at streamlining and removing complexity from app development on the network.
+Anatoly Yakovenko
+CO-FOUNDER & CEO, SOLANA
+The Helius team's deep technical expertise in Solana and node management was absolutely critical during one of our most challenging and busiest days. Thanks to their support, we handled extreme congestion and enabled our users to complete more than 10 million transactions in just one day.
+Jorge Valdeiglesias
+STAFF SOFTWARE ENGINEER, PHANTOM
+The Helius team is the GOAT. They ship fast, intake product feedback overnight, and power a great deal of Crossmint infrastructure. A big percentage of Crossmint products couldn't exist without Helius.
+Alfonso Gomez Manas
+CO-FOUNDER, CROSSMINT
+Having personally built our own in-house indexing and data pipelines at Zeta, I know how much of a headache it is for new teams. Being able to save countless hours of data engineering work and costly AWS bills is a big advantage for us.
+Tristan Frizza
+FOUNDER & CEO, ZETA MARKETS
+Helius has been instrumental in kickstarting our Pythnet operations. Their seamless infrastructure management ensures everything runs smoothly, allowing us to focus on building and scaling our trading operations without worrying about the details of running Solana nodes.
+Jeremy De Groodt
+CO-FOUNDER & CTO, KEYROCK
+As Solana activity continues to grow, Helius stands out as one of the leading Solana infrastructure providers, enabling our team to access reliable data that meets the demands of an enterprise-grade platform.
+Jonathan Levin
+CEO AND CO-FOUNDER, CHAINALYSIS
+We tried every strategy to land transactions on Solana, but nothing was working. The moment we switched our RPCs to Helius and started sending transactions through staked connections, all of our problems disappeared. Now we can confidently scale our business on Solana without worrying about our customer's transactions getting dropped.
+Cody Lambert
+SOFTWARE ENGINEER, BRALE
+When it comes to SOL staking, Helius is truly differentiated. Helius is the industry leader when it comes to running secure, reliable, and performant validators. Since launching in 2022, they have championed Solana's success, built world-class infrastructure, and stewarded the network to become what it is today - the foundation on which the new financial system will be built.
+Cosmo Jiang
+GENERAL PARTNER AT PANTERA CAPITAL AND BOARD OBSERVER AT HSDT
+We're thrilled to partner with Helius in building our own Solana validator for the Bitwise Solana Staking ETF. Not only is Helius the standard bearer for Solana validators when it comes to areas like performance, reliability, and security, but their native understanding of Solana and its ecosystem is unmatched. They've helped us build the perfect high performance validator—one that meets our stringent needs around security and reporting as an ETF issuer.
+Hong Kim
+CTO, BITWISE ASSET MANAGEMENT
+The number one thing we care about is safety for users. To give traders the best price and tightest spreads, we depend on LaserStream to feed our price engine with the freshest, fastest onchain data.
+Nitesh Nath
+CEO, DFLOW
+Helius is super fast, reliable, and I'd recommend them to anyone looking for the best developer experience on Solana. They power a great portion of our infrastructure at Backpack.
+Armani Ferrante
+CO-FOUNDER & CEO, BACKPACK
+The Helius team makes building on Solana smoother and easier. They've done an amazing job at streamlining and removing complexity from app development on the network.
+Anatoly Yakovenko
+CO-FOUNDER & CEO, SOLANA
+The Helius team's deep technical expertise in Solana and node management was absolutely critical during one of our most challenging and busiest days. Thanks to their support, we handled extreme congestion and enabled our users to complete more than 10 million transactions in just one day.
+Jorge Valdeiglesias
+STAFF SOFTWARE ENGINEER, PHANTOM
+The Helius team is the GOAT. They ship fast, intake product feedback overnight, and power a great deal of Crossmint infrastructure. A big percentage of Crossmint products couldn't exist without Helius.
+Alfonso Gomez Manas
+CO-FOUNDER, CROSSMINT
+Having personally built our own in-house indexing and data pipelines at Zeta, I know how much of a headache it is for new teams. Being able to save countless hours of data engineering work and costly AWS bills is a big advantage for us.
+Tristan Frizza
+FOUNDER & CEO, ZETA MARKETS
+Helius has been instrumental in kickstarting our Pythnet operations. Their seamless infrastructure management ensures everything runs smoothly, allowing us to focus on building and scaling our trading operations without worrying about the details of running Solana nodes.
+Jeremy De Groodt
+CO-FOUNDER & CTO, KEYROCK
+As Solana activity continues to grow, Helius stands out as one of the leading Solana infrastructure providers, enabling our team to access reliable data that meets the demands of an enterprise-grade platform.
+Jonathan Levin
+CEO AND CO-FOUNDER, CHAINALYSIS
+We tried every strategy to land transactions on Solana, but nothing was working. The moment we switched our RPCs to Helius and started sending transactions through staked connections, all of our problems disappeared. Now we can confidently scale our business on Solana without worrying about our customer's transactions getting dropped.
+Cody Lambert
+SOFTWARE ENGINEER, BRALE
+When it comes to SOL staking, Helius is truly differentiated. Helius is the industry leader when it comes to running secure, reliable, and performant validators. Since launching in 2022, they have championed Solana's success, built world-class infrastructure, and stewarded the network to become what it is today - the foundation on which the new financial system will be built.
+Cosmo Jiang
+GENERAL PARTNER AT PANTERA CAPITAL AND BOARD OBSERVER AT HSDT
+We're thrilled to partner with Helius in building our own Solana validator for the Bitwise Solana Staking ETF. Not only is Helius the standard bearer for Solana validators when it comes to areas like performance, reliability, and security, but their native understanding of Solana and its ecosystem is unmatched. They've helped us build the perfect high performance validator—one that meets our stringent needs around security and reporting as an ETF issuer.
+Hong Kim
+CTO, BITWISE ASSET MANAGEMENT
+experience the difference
+Ready to build?
+Get started in less than 10 seconds. No credit cards or email required.
+Start for free
+Learn more
+Product
+TRADING
+Preconfirmations (Preconfs)
+Shred Delivery
+Preprocessed Transactions
+NEW
+Sender
+Transaction Rebates
+READ DATA
+LaserStream
+Webhooks & Websockets
+Parsed Events & Streams
+NEW
+Token APIs
+Wallet API (Beta)
+Historical Data
+INFRASTRUCTURE
+RPC Nodes
+Helius Validator
+Validator-as-a-Service
+Validator Monetization
+Solutions
+Traders & MMs
+Exchanges
+Wallets
+Fintech
+DeFi
+COMPARE PROVIDERS
+Alchemy
+Quicknode
+Triton
+PRIVACY
+Solana Privacy Protocol
+Resources
+Agents
+Orb
+Blog
+Docs
+Status
+Pricing
+Sign Up
+Agent Sign Up
+RPC Benchmarks
+AirShip
+Stake with Us
+Staking Rewards
+Staking Calculator
+Startup Launchpad
+EVM vs. SVM
+NEW
+Resources
+Agents
+Orb
+Blog
+Docs
+Status
+Pricing
+Sign Up
+Agent Sign Up
+RPC Benchmarks
+AirShip
+Stake with Us
+Staking Rewards
+Staking Calculator
+Startup Launchpad
+EVM vs. SVM
+NEW
+Company
+About
+Careers
+Contact Sales
+Support
+Media
+Brand
+Security
+LEGAL
+Privacy Policy
+Terms & Conditions
+Solana Roadmap
+Privacy Preferences
+About
+Careers
+Contact Sales
+Support
+Media
+Brand
+Security
+Privacy Policy
+Terms & Conditions
+Solana Roadmap
+Privacy Preferences
+© 2026 Helius. All rights reserved.
+X
+LinkedIn
+Discord
+© 2026 Helius. All rights reserved.
+X
+LinkedIn
+Discord
+This site uses tracking technologies. You may opt in or opt out of the use of these technologies. Read our
+Privacy Policy
+.
+Reject
+Accept

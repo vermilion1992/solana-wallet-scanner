@@ -141,6 +141,8 @@ On Windows, use `.\run.ps1` with Windows paths. A ZIP containing the backup fold
 
 ## Development and validation
 
+The unreleased stabilisation branch adds a repeatable acceptance runner. Use `.venv/bin/python tools/validate.py --profile focused` while editing and `--profile candidate` for the frozen candidate. Candidate acceptance also requires exact-source review evidence, a compatible clean locked installation, and the guarded launcher/browser checks. See [docs/STABILISATION.md](docs/STABILISATION.md) for setup, evidence paths and scope, and [docs/R1_SOURCE_DECISION.md](docs/R1_SOURCE_DECISION.md) for the remaining complete-wallet milestone.
+
 ```sh
 .venv/bin/python -m pytest
 .venv/bin/python -m pip check

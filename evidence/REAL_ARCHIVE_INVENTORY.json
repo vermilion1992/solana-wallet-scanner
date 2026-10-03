@@ -1,0 +1,160 @@
+{
+  "source": "isolated prior QA copy, no live database testing",
+  "wallets": [
+    {
+      "wallet_id": "e639fcc35dd7",
+      "reports": [
+        {
+          "id": "97c69333a40e4ff5a3d85b4b3ffbcf19",
+          "rebuilt": true,
+          "frozen": true,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": "account-position-evidence-v9"
+        },
+        {
+          "id": "237b73e9aeed470d930876077b7e8f88",
+          "rebuilt": false,
+          "frozen": false,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": null
+        }
+      ],
+      "distinct_selected_raw_records": 23,
+      "distinct_signatures": 23,
+      "wallet_paid_fee_records": 23,
+      "independent_selected_fee_sum_sol": "0.000240394",
+      "raw_time_bounds": [
+        1790951548,
+        1790951555
+      ],
+      "historical_owned_account_witness": false,
+      "full_window_population_established": false
+    },
+    {
+      "wallet_id": "9ea998bf6558",
+      "reports": [
+        {
+          "id": "f6b4fefd76ee4acfa5f7d12260161c42",
+          "rebuilt": false,
+          "frozen": false,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": null
+        }
+      ],
+      "distinct_selected_raw_records": 22,
+      "distinct_signatures": 22,
+      "wallet_paid_fee_records": 20,
+      "independent_selected_fee_sum_sol": "0.000903",
+      "raw_time_bounds": [
+        1790951447,
+        1790951553
+      ],
+      "historical_owned_account_witness": false,
+      "full_window_population_established": false
+    },
+    {
+      "wallet_id": "4065369ec809",
+      "reports": [
+        {
+          "id": "6d5352d9e16f4e3eb732a2f9d9fdf217",
+          "rebuilt": false,
+          "frozen": false,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": null
+        }
+      ],
+      "distinct_selected_raw_records": 23,
+      "distinct_signatures": 23,
+      "wallet_paid_fee_records": 23,
+      "independent_selected_fee_sum_sol": "0.003015891",
+      "raw_time_bounds": [
+        1790951505,
+        1790951554
+      ],
+      "historical_owned_account_witness": false,
+      "full_window_population_established": false
+    },
+    {
+      "wallet_id": "c627b741e43a",
+      "reports": [
+        {
+          "id": "71f802e901664c33b56dff9a85e3173e",
+          "rebuilt": false,
+          "frozen": false,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": null
+        }
+      ],
+      "distinct_selected_raw_records": 23,
+      "distinct_signatures": 23,
+      "wallet_paid_fee_records": 0,
+      "independent_selected_fee_sum_sol": "0",
+      "raw_time_bounds": [
+        1790939885,
+        1790951049
+      ],
+      "historical_owned_account_witness": false,
+      "full_window_population_established": false
+    },
+    {
+      "wallet_id": "b2597220ddde",
+      "reports": [
+        {
+          "id": "efd6981feb9c490ab2c6c1172168ff7c",
+          "rebuilt": false,
+          "frozen": false,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": null
+        },
+        {
+          "id": "414ec5cabf514c50985cdb4bb12680b7",
+          "rebuilt": false,
+          "frozen": false,
+          "policy": "UNRESOLVED",
+          "window": {
+            "start": "2026-09-02T14:32:36+00:00",
+            "end": "2026-10-02T14:32:36+00:00"
+          },
+          "position_method": null
+        }
+      ],
+      "distinct_selected_raw_records": 3,
+      "distinct_signatures": 3,
+      "wallet_paid_fee_records": 0,
+      "independent_selected_fee_sum_sol": "0",
+      "raw_time_bounds": [
+        1790950911,
+        1790951377
+      ],
+      "historical_owned_account_witness": false,
+      "full_window_population_established": false
+    }
+  ],
+  "distinct_real_wallets": 5,
+  "complete_real_acceptance_dataset": false,
+  "independent_calculation": "Direct integer sum of retained wallet-paid raw meta.fee, independent of production metric functions; archived byte integrity is not independent chain authentication."
+}

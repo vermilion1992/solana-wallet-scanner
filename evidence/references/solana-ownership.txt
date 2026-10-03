@@ -1,0 +1,519 @@
+getTokenAccountsByOwner | Solana
+Use Solana
+Build
+Enterprise
+Products
+Ecosystem
+Search
+⌘ K
+en
+Start here
+Concepts
+API
+Finance
+Resources
+Choosing an RPC Provider
+JSON Reference
+HTTP Methods
+getAccountInfo
+getAgGenesisCert
+getBalance
+getBlock
+getBlockCommitment
+getBlockHeight
+getBlockProduction
+getBlocks
+getBlocksWithLimit
+getBlockTime
+getClusterNodes
+getEpochInfo
+getEpochSchedule
+getFeeForMessage
+getFirstAvailableBlock
+getGenesisHash
+getHealth
+getHighestSnapshotSlot
+getIdentity
+getInflationGovernor
+getInflationRate
+getInflationReward
+getLargestAccounts
+getLatestBlockhash
+getLeaderSchedule
+getMaxRetransmitSlot
+getMaxShredInsertSlot
+getMinimumBalanceForRentExemption
+getMultipleAccounts
+getProgramAccounts
+getRecentPerformanceSamples
+getRecentPrioritizationFees
+getSignaturesForAddress
+getSignatureStatuses
+getSlot
+getSlotLeader
+getSlotLeaders
+getStakeMinimumDelegation
+getSupply
+getTokenAccountBalance
+getTokenAccountsByDelegate
+getTokenAccountsByOwner
+getTokenLargestAccounts
+getTokenSupply
+getTransaction
+getTransactionCount
+getVersion
+getVoteAccounts
+isBlockhashValid
+minimumLedgerSlot
+requestAirdrop
+sendTransaction
+simulateTransaction
+Websocket Methods
+Removed Methods
+Solana RPC Methods
+HTTP Methods
+getTokenAccountsByOwner
+Copy Markdown
+Open
+Returns SPL Token accounts whose owner matches the supplied address.
+Source
+get_token_accounts_by_owner
+params
+string
+required
+Pubkey of account owner to query, as base-58 encoded string
+object
+required
+A JSON object with one of the following fields:
+mint
+string
+programId
+string
+object
+optional
+Configuration object containing the following fields:
+commitment
+string
+minContextSlot
+number
+dataSlice
+object
+encoding
+string
+result
+object
+RpcResponse object containing:
+context
+object
+value
+array
+cURL
+Kit
+web3.js
+Rust
+$
+curl
+https://api.devnet.solana.com
+-s -X \
+>
+POST -H "Content-Type: application/json" -d '
+>
+{
+>
+"jsonrpc"
+:
+"2.0"
+,
+>
+"id"
+:
+1
+,
+>
+"method"
+:
+"getTokenAccountsByOwner"
+,
+>
+"params"
+: [
+>
+"A1TMhSGzQxMr1TboBKtgixKz1sS6REASMxPo1qsyTSJd"
+,
+>
+{
+>
+"programId"
+:
+"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+>
+},
+>
+{
+>
+"commitment"
+:
+"finalized"
+,
+>
+"encoding"
+:
+"jsonParsed"
+>
+}
+>
+]
+>
+}
+>
+'
+Try it
+Response
+{
+"jsonrpc"
+:
+"2.0"
+,
+"result"
+: {
+"context"
+: {
+"apiVersion"
+:
+"3.1.8"
+,
+"slot"
+:
+341197933
+},
+"value"
+: [
+{
+"pubkey"
+:
+"BGocb4GEpbTFm8UFV2VsDSaBXHELPfAXrvd4vtt8QWrA"
+,
+"account"
+: {
+"data"
+: {
+"program"
+:
+"spl-token"
+,
+"parsed"
+: {
+"info"
+: {
+"isNative"
+:
+false
+,
+"mint"
+:
+"2cHr7QS3xfuSV8wdxo3ztuF4xbiarF6Nrgx3qpx3HzXR"
+,
+"owner"
+:
+"A1TMhSGzQxMr1TboBKtgixKz1sS6REASMxPo1qsyTSJd"
+,
+"state"
+:
+"initialized"
+,
+"tokenAmount"
+: {
+"amount"
+:
+"420000000000000"
+,
+"decimals"
+:
+6
+,
+"uiAmount"
+:
+420000000.0
+,
+"uiAmountString"
+:
+"420000000"
+}
+},
+"type"
+:
+"account"
+},
+"space"
+:
+165
+},
+"executable"
+:
+false
+,
+"lamports"
+:
+2039280
+,
+"owner"
+:
+"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+,
+"rentEpoch"
+:
+18446744073709551615
+,
+"space"
+:
+165
+}
+}
+]
+},
+"id"
+:
+1
+}
+cURL
+Kit
+web3.js
+Rust
+$
+curl
+https://api.devnet.solana.com
+-s -X \
+>
+POST -H "Content-Type: application/json" -d '
+>
+{
+>
+"jsonrpc"
+:
+"2.0"
+,
+>
+"id"
+:
+1
+,
+>
+"method"
+:
+"getTokenAccountsByOwner"
+,
+>
+"params"
+: [
+>
+"A1TMhSGzQxMr1TboBKtgixKz1sS6REASMxPo1qsyTSJd"
+,
+>
+{
+>
+"programId"
+:
+"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+>
+},
+>
+{
+>
+"commitment"
+:
+"finalized"
+,
+>
+"encoding"
+:
+"jsonParsed"
+>
+}
+>
+]
+>
+}
+>
+'
+Try it
+params
+string
+required
+Pubkey of account owner to query, as base-58 encoded string
+object
+required
+A JSON object with one of the following fields:
+mint
+string
+programId
+string
+object
+optional
+Configuration object containing the following fields:
+commitment
+string
+minContextSlot
+number
+dataSlice
+object
+encoding
+string
+result
+Response
+{
+"jsonrpc"
+:
+"2.0"
+,
+"result"
+: {
+"context"
+: {
+"apiVersion"
+:
+"3.1.8"
+,
+"slot"
+:
+341197933
+},
+"value"
+: [
+{
+"pubkey"
+:
+"BGocb4GEpbTFm8UFV2VsDSaBXHELPfAXrvd4vtt8QWrA"
+,
+"account"
+: {
+"data"
+: {
+"program"
+:
+"spl-token"
+,
+"parsed"
+: {
+"info"
+: {
+"isNative"
+:
+false
+,
+"mint"
+:
+"2cHr7QS3xfuSV8wdxo3ztuF4xbiarF6Nrgx3qpx3HzXR"
+,
+"owner"
+:
+"A1TMhSGzQxMr1TboBKtgixKz1sS6REASMxPo1qsyTSJd"
+,
+"state"
+:
+"initialized"
+,
+"tokenAmount"
+: {
+"amount"
+:
+"420000000000000"
+,
+"decimals"
+:
+6
+,
+"uiAmount"
+:
+420000000.0
+,
+"uiAmountString"
+:
+"420000000"
+}
+},
+"type"
+:
+"account"
+},
+"space"
+:
+165
+},
+"executable"
+:
+false
+,
+"lamports"
+:
+2039280
+,
+"owner"
+:
+"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+,
+"rentEpoch"
+:
+18446744073709551615
+,
+"space"
+:
+165
+}
+}
+]
+},
+"id"
+:
+1
+}
+object
+RpcResponse object containing:
+context
+object
+value
+array
+Is this page helpful?
+Previous
+getTokenAccountsByDelegate
+Next
+getTokenLargestAccounts
+Ask AI
+en
+Use Solana
+Use Solana
+Wallets
+Learn
+Staking
+Build
+Developer hub
+Docs
+Templates
+Enterprise
+Enterprise
+Institutional payments
+Tokenization
+Reports
+Products
+Products
+Solana Developer Platform
+x402
+Agent Registry
+Skills
+Ecosystem
+Ecosystem
+Network
+Events
+Community
+News
+Newsletter
+AI agents
+llms.txt
+llms-full.txt
+SKILL.md
+Agent skills
+Grants
+Media Kit
+Careers
+Disclaimer
+Privacy Policy
+© 2026 Solana Foundation. All rights reserved.
