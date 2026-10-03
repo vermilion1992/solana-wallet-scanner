@@ -1,0 +1,208 @@
+{
+  "scope": "Gate A: declared subset, not whole-wallet R1. Every selector must map to collected nodes. Expensive integration uses representative cross-axis interactions.",
+  "requirements": [
+    {
+      "id": "role-transaction",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[transaction]",
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*transaction]"
+      ]
+    },
+    {
+      "id": "role-signature-page",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[signature-page]",
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*signature-page]"
+      ]
+    },
+    {
+      "id": "role-block-order",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[block-order]",
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*block-order]"
+      ]
+    },
+    {
+      "id": "role-snapshot-slot",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[snapshot-slot]",
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*snapshot-slot]"
+      ]
+    },
+    {
+      "id": "role-owned-accounts",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[owned-accounts]",
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*owned-accounts]"
+      ]
+    },
+    {
+      "id": "role-native-balance",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration[native-balance]",
+        "tests/test_source_role_matrix.py::test_each_role_retains_a_malformed_archive_as_unknown[*native-balance]"
+      ]
+    },
+    {
+      "id": "metadata-and-unknown",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_unknown_native_declarations_do_not_gain_trusted_roles*",
+        "tests/test_review_v036_independent.py::test_stored_legacy_metadata_exemption_requires_its_actual_archive_and_report_role*",
+        "tests/test_review_v036_independent.py::test_caller_metadata_claim_does_not_replace_stored_report_authority*"
+      ]
+    },
+    {
+      "id": "source-loss-restoration",
+      "axis": "Availability",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_role_positive_missing_corrupt_and_exact_restoration*",
+        "tests/test_token_instruction_schema.py::test_removing_a_required_canonical_source_revokes_hold_and_restoring_recovers*",
+        "tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild*"
+      ]
+    },
+    {
+      "id": "source-conflicts",
+      "axis": "Availability",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict*",
+        "tests/test_review_v035_independent.py::test_each_required_alternative_fact_revokes_the_dependent_hold*"
+      ]
+    },
+    {
+      "id": "formats",
+      "axis": "Representation",
+      "selectors": [
+        "tests/review_v038/test_v038_regressions.py::*",
+        "tests/test_instruction_contract_matrix.py::test_standard_token_2022_targets_use_the_same_declared_schema*"
+      ]
+    },
+    {
+      "id": "outer-inner-selected-alternative",
+      "axis": "Representation",
+      "selectors": [
+        "tests/review_v039/test_v039_regressions.py::*",
+        "tests/review_v0310/test_v0310_regressions.py::*",
+        "tests/test_instruction_contract_matrix.py::test_canonical_nonce_withdrawal_through_frozen_api*"
+      ]
+    },
+    {
+      "id": "compiled-partially-decoded-mixed",
+      "axis": "Representation",
+      "selectors": [
+        "tests/test_review_v039_independent.py::test_opaque_disjoint_account_lists_remain_valid_witnesses*",
+        "tests/test_review_v039_independent.py::test_hybrid_opaque_reference_list_is_not_an_admitted_shape*",
+        "tests/test_instruction_contract_matrix.py::test_mixed_representations_cannot_bypass_any_declared_target_contract*",
+        "tests/test_review_v039_independent.py::test_disjoint_list_cannot_override_conflicting_program_identity*"
+      ]
+    },
+    {
+      "id": "relevance-placement",
+      "axis": "Relevance/chronology",
+      "selectors": [
+        "tests/test_review_v034_independent.py::test_placement_ambiguity_revokes_only_the_intersected_episode*",
+        "tests/test_review_v034_independent.py::test_another_token_accounts_conflicting_placement_does_not_revoke_unrelated_episode*",
+        "tests/review_v034/test_v034_controls.py::test_consistent_failed_record_outside_episode_does_not_poison_valid_hold*"
+      ]
+    },
+    {
+      "id": "same-slot",
+      "axis": "Relevance/chronology",
+      "selectors": [
+        "tests/test_chronology_evidence.py::ChronologyEvidenceTests::test_conflicting_order_receipts_never_choose_first_or_last",
+        "tests/test_chronology_evidence.py::ChronologyEvidenceTests::test_missing_same_slot_order_leaves_clock_known_and_order_unknown"
+      ]
+    },
+    {
+      "id": "half-open-boundaries",
+      "axis": "Relevance/chronology",
+      "selectors": [
+        "tests/test_position_evidence.py::PositionEvidenceTests::test_output_completed_population_remains_half_open_after_dependency_checks",
+        "tests/test_history_evidence.py::HistoryEvidenceTests::test_r6_rawless_boundary_disagreements_revoke_completion_not_observations"
+      ]
+    },
+    {
+      "id": "atomic-and-ownership",
+      "axis": "Execution/quantity",
+      "selectors": [
+        "tests/test_review_v039_independent.py::test_failed_atomic_mixed_instructions_do_not_manufacture_executed_owner_changes*",
+        "tests/review_v0310/test_v0310_controls.py::test_account_owner_change_still_rejects*",
+        "tests/test_position_evidence.py::PositionEvidenceTests::test_multitransaction_account_strict_zero_branch_is_executable"
+      ]
+    },
+    {
+      "id": "absolute-versus-delta",
+      "axis": "Execution/quantity",
+      "selectors": [
+        "tests/test_review_v035_independent.py::test_middle_absolute_inventory_offset_revokes_continuity_despite_same_transfer*",
+        "tests/test_review_v035_independent.py::test_metric_equivalent_distinct_archives_preserve_the_named_account_fact*"
+      ]
+    },
+    {
+      "id": "fee-isolation",
+      "axis": "Execution/quantity",
+      "selectors": [
+        "tests/review_v0310/test_v0310_controls.py::test_unmodified_episode_does_not_depend_on_fee_amount*",
+        "tests/test_history_evidence.py::HistoryEvidenceTests::test_missing_same_slot_block_order_blocks_economic_paging_not_additive_native_total"
+      ]
+    },
+    {
+      "id": "permutation-repeats-third-conflict",
+      "axis": "Source set",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_permutations_and_exact_repeats_preserve_semantics_and_fee_count*",
+        "tests/test_source_role_matrix.py::test_two_agreeing_sources_do_not_outvote_or_lose_a_third_conflict*"
+      ]
+    },
+    {
+      "id": "actual-budget-boundaries",
+      "axis": "Source set",
+      "selectors": [
+        "tests/test_source_role_matrix.py::test_real_source_hash_budget_boundary*",
+        "tests/test_review_v036_independent.py::test_actual_selected_record_cap_cannot_hide_indexed_account_dependency*",
+        "tests/test_review_v036_independent.py::test_agreeing_oversized_manifest_uses_complete_unique_set_but_retains_native_raw_cap*",
+        "tests/test_review_v036_independent.py::test_report_metadata_inspection_obeys_candidate_and_combined_archive_budgets*"
+      ]
+    },
+    {
+      "id": "direct-frozen-rebuild-read-export",
+      "axis": "User path",
+      "selectors": [
+        "tests/test_report_rebuild.py::test_rebuild_uses_exact_sources_and_preserves_original_window_and_preset*",
+        "tests/test_report_rebuild.py::test_position_freshness_is_independent_of_current_history_and_preserves_saved_holds*",
+        "tests/test_discovery_integration_review.py::*"
+      ]
+    },
+    {
+      "id": "trusted-collector-ancestry",
+      "axis": "User path",
+      "selectors": [
+        "tests/test_history_evidence.py::HistoryEvidenceTests::test_arbitrary_import_cannot_supply_a_trusted_checkpoint"
+      ]
+    },
+    {
+      "id": "no-green-backend-shortcut",
+      "axis": "User path",
+      "selectors": [
+        "tests/test_validation_gates.py::*"
+      ]
+    }
+  ],
+  "browser_required": [
+    "guarded actual launcher",
+    "anonymous denial/authenticated access",
+    "settings and candidate loading",
+    "supported old-method rebuild",
+    "required-source loss and exact restoration",
+    "evidence inspection and UI JSON export",
+    "desktop/mobile",
+    "cached real case when available",
+    "immutable parents and zero provider/credential activity"
+  ]
+}
