@@ -1,0 +1,66 @@
+{
+  "kind": "retained-worked-expectations",
+  "scope": "Synthetic development arithmetic and selected genuine fee arithmetic only",
+  "provenance": "Transcribed from the existing docs/ARCHIVE_INPUT_CONTRACT.md worked table and original partial-sample fee check; not new third-party acceptance.",
+  "synthetic": {
+    "realised_profit_sol": "0.499950",
+    "disposed_basis_sol": "7.000025",
+    "economic_change_sol": "0.499955",
+    "opening_equity_sol": "149.999995",
+    "closing_equity_sol": "150.499950",
+    "completed_episodes": 5,
+    "asset_mints": 4,
+    "win_rate_pct": "40",
+    "median_roi_pct": "0",
+    "median_hold_hours": "24",
+    "average_buys": "1",
+    "average_sales": "1.2",
+    "positive_weeks": 2,
+    "selected_in_window_fee_sol": "0.000055",
+    "failed_in_window_fee_sol": "0.000005",
+    "episodes": [
+      {
+        "id": "A-first",
+        "gross_buys_sol": "1",
+        "gross_sales_sol": "3",
+        "allocated_fees_sol": "0.000015",
+        "net_sol": "1.999985"
+      },
+      {
+        "id": "A-reentry",
+        "gross_buys_sol": "2",
+        "gross_sales_sol": "1",
+        "allocated_fees_sol": "0.000010",
+        "net_sol": "-1.000010"
+      },
+      {
+        "id": "B-loss",
+        "gross_buys_sol": "2",
+        "gross_sales_sol": "1",
+        "allocated_fees_sol": "0.000010",
+        "net_sol": "-1.000010"
+      },
+      {
+        "id": "C-breakeven",
+        "gross_buys_sol": "1",
+        "gross_sales_sol": "1.000010",
+        "allocated_fees_sol": "0.000010",
+        "net_sol": "0"
+      },
+      {
+        "id": "D-pre-window",
+        "gross_buys_sol": "1",
+        "gross_sales_sol": "1.5",
+        "allocated_fees_sol": "0.000010",
+        "net_sol": "0.499990"
+      }
+    ]
+  },
+  "genuine_partial": {
+    "selected_records": 23,
+    "expected_payer_matched_fee_lamports": 240394,
+    "expected_selected_fee_sol": "0.000240394",
+    "whole_wallet_profit": "UNKNOWN",
+    "B3": "BLOCKED"
+  }
+}

@@ -7,7 +7,26 @@ __pycache__/
 local-data/
 data/
 .env
+.env.*
+!.env.example
+!.env.sample
+credentials/
+keyring/
+.secrets/
+.solana/
+*.pem
+*.key
+*.p12
+*.pfx
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
 .runtime.lock
 
 # Local acceptance logs and disposable installations
-evidence/runs/
+evidence/runs/*
+!evidence/runs/real-cache/
+!evidence/runs/real-cache/**

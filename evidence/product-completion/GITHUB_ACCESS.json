@@ -1,0 +1,41 @@
+{
+  "kind": "github-creation-capability",
+  "account": "vermilion1992",
+  "requested_private_repository": "vermilion1992/solana-wallet-scanner",
+  "existing_target": "GET returned 404",
+  "attempts": [
+    {
+      "command": [
+        "gh",
+        "repo",
+        "create",
+        "vermilion1992/solana-wallet-scanner",
+        "--private"
+      ],
+      "exit_code": 1,
+      "response": "GraphQL: Resource not accessible by integration (createRepository)"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "--method",
+        "POST",
+        "/user/repos",
+        "-f",
+        "name=solana-wallet-scanner",
+        "-F",
+        "private=true"
+      ],
+      "exit_code": 1,
+      "http_status": 403,
+      "response": "Resource not accessible by integration"
+    }
+  ],
+  "state": "BLOCKED_CREATION_PERMISSION",
+  "remote_configured": false,
+  "repository_created": false,
+  "code_pushed": false,
+  "public_repository_created": false,
+  "required_action": "Create an empty private repository and grant the ChatGPT/Codex GitHub connection access, or supply an authorised existing private repository."
+}

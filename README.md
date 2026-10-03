@@ -151,3 +151,19 @@ npm run build
 ```
 
 On Windows, use `.venv\Scripts\python.exe`. The production launcher serves `frontend/dist`; it does not run a development server. Rebuild the interface after editing frontend code. See [docs/VALIDATION.md](docs/VALIDATION.md) for actual checks and remaining limitations, and [docs/CONTRACT.md](docs/CONTRACT.md) for module/API contracts.
+
+## Git review workflow
+
+Use `codex/product-completion` as the active implementation branch. Review by exact commit and diff; release ZIPs are not the routine handoff. The tested application baseline is `a811e81aa2d46807d50915f47193a99f890eb854`; `b1296c1952f94ac67dcd63792eb845129cb48b1b` adds evidence and probe preparation. `evidence/product-completion/BASELINE_IDENTITY.json` binds the original 179-file source. Current source and acceptance are bound separately in the current candidate receipts. Git history is preserved.
+
+The original PDF, non-secret 63-archive genuine partial corpus, current archive-workflow inputs and separately worked expectations are tracked for commit-based reproduction. The real sample remains partial; it cannot close B3. Runtime credentials, `.env.*`, keyring files and private databases are ignored. `tools/repository_audit.py` checks tracked files, reachable history, nested inputs and private-state ignore guards without printing credential values.
+
+After an accessible **private** repository exists, the already-authorised publication can use:
+
+```sh
+.venv/bin/python tools/publish_private.py OWNER/REPOSITORY --push --output evidence/product-completion/PUBLISH.json
+```
+
+The publisher requires the committed active branch, both retained baseline ancestors, a passing audit, exact private repository metadata and push access; it uses no force push and verifies remote HEAD/privacy. It cannot create a repository when the GitHub app lacks creation permission. A private repository must also be granted to the ChatGPT GitHub connection for ChatGPT to inspect it; its URL alone does not grant access.
+
+Keep the one issue register (`ISSUES.md`), acceptance matrix (`docs/ACCEPTANCE_MATRIX.json`), validation entry point (`tools/validate.py`) and source decision (`docs/R1_SOURCE_DECISION.md`). Full product readiness stays false until B1/B2/B3 close. No live Helius probe, credit spend, trading or required subscription is part of Git publication.
