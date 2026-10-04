@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from scanner.archive_input import canonical_bytes
-from scanner.wallet_evidence import derive_wallet_evidence
+from scanner.wallet_evidence import derive_wallet_evidence, raw_native_dependencies
 from scanner.providers import TOKEN_PROGRAM
 from test_position_evidence import (raw_exchange, transfer, address, WALLET, ACCOUNT,
                                     MINT, POOL_TOKEN, START, END, WINDOW)
@@ -408,7 +408,8 @@ def test_mint_target_authority_changes_keep_account_owner_and_quantity_observati
 
 def mint_metadata():
     return {'method': 'getAccountInfo', 'address': MINT, 'commitment': 'finalized',
-            'result': {'context': {'slot': 1000}, 'value': {'owner': TOKEN_PROGRAM, 'data': {'parsed': {'type': 'mint', 'info': {}}}}}}
+            'result': {'context': {'slot': 1000}, 'value': {'owner': TOKEN_PROGRAM, 'lamports': 1, 'executable': False,
+                'data': {'parsed': {'type': 'mint', 'info': {}}}}}}
 
 
 @pytest.mark.parametrize('kind', ['current-mint-controls', 'other-report-metadata'])
@@ -457,6 +458,99 @@ def test_present_malformed_current_metadata_does_not_gain_exemption_from_label(v
         payload['result']['transaction'] = {'signatures': ['buy']}
     source = {'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest(), 'kind': 'current-mint-controls', 'payload': payload}
     assert derive([raw], raw_sources=[source])['components']['native_fee']['state'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('role', ['classification', 'valuation', 'current-mint-controls'])
+@pytest.mark.parametrize('location', ['root', 'result', 'value'])
+def test_native_shaped_unassignable_evidence_keeps_negative_affinity_for_every_role(role, location):
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    alternative = deepcopy(raw); alternative['transaction']['signatures'] = []
+    payload = alternative
+    if location == 'result':
+        payload = {'result': alternative}
+    elif location == 'value':
+        payload = mint_metadata(); payload['result']['value'] = alternative
+    source = {'kind': role, 'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest(), 'payload': payload}
+    dependencies = raw_native_dependencies([source], (), {'buy'})
+    assert dependencies == [{'signature': None, 'evidence_hash': source['hash'], 'raw': None}]
+    result = derive([raw], raw_sources=[source])
+    assert result['components']['native_fee']['state'] == 'UNKNOWN'
+    # The importing/report caller freezes the negative links. Raw source loss
+    # then cannot remove the original unassignable native dependency.
+    assert derive([raw], alternatives=dependencies)['components']['native_fee']['state'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('location', ['root', 'result', 'value'])
+def test_raw_native_dependency_helper_binds_selected_signature_under_wrappers(location):
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    alternative = deepcopy(raw); alternative['meta']['fee'] = 6000
+    payload = alternative
+    if location == 'result':
+        payload = {'result': alternative}
+    elif location == 'value':
+        payload = mint_metadata(); payload['result']['value'] = alternative
+    source = {'kind': 'current-mint-controls', 'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest(), 'payload': payload}
+    dependencies = raw_native_dependencies([source], (), {'buy'})
+    assert dependencies == [{'signature': 'buy', 'evidence_hash': source['hash'], 'raw': None}]
+    assert derive([raw], raw_sources=[source])['components']['native_fee']['state'] == 'UNKNOWN'
+    assert derive([raw], alternatives=dependencies)['components']['native_fee']['state'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('bad_hints', [1, None, {'buy': True}, ['buy', 1]])
+def test_invalid_signature_hint_container_is_negative_ambiguity_without_runtime_exception(bad_hints):
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    payload = {'arbitrary': 'unsupported'}
+    source = {'kind': 'unsupported-role', 'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest(),
+              'payload': payload, 'signature_hints': bad_hints}
+    assert derive([raw], raw_sources=[source])['components']['native_fee']['state'] == 'UNKNOWN'
+
+
+def test_account_union_version_budget_is_graceful_and_preserves_independent_native_fees(monkeypatch):
+    # Exercise the same Cartesian limit as 512 distinct account alternatives,
+    # with a smaller bound so this regression stays fast and meaningful.
+    import scanner.wallet_evidence as module
+    raw = base('same-signature')
+    alternatives = []
+    for i in range(10):
+        variant = deepcopy(raw)
+        variant['transaction']['message']['accountKeys'][1] = address(30 + i)
+        alternatives.append(record(variant))
+    monkeypatch.setattr(module, 'MAX_ACCOUNT_STEPS', 100)
+    result = derive([raw], alternatives=alternatives)
+    assert result['inspection_budget']['account_steps'] <= 100
+    assert result['inspection_budget']['account_version_steps'] > 100
+    assert result['inspection_budget']['quantity_state'] == 'UNKNOWN'
+    assert result['components']['observed_quantities']['state'] == 'UNKNOWN'
+    assert result['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    assert result['components']['native_fee']['state'] == 'PASS'
+
+
+def test_unexplained_native_flow_revokes_economic_role_but_preserves_actual_fee():
+    raw = base()
+    positive = derive([raw])
+    assert positive['components']['observed_economic_roles']['state'] == 'PASS'
+    raw['meta']['postBalances'][0] -= 1_000_000_000
+    raw['meta']['postBalances'][3] += 1_000_000_000
+    result = derive([raw])
+    assert result['components']['native_fee']['state'] == 'PASS'
+    assert result['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    assert result['native_role_checks'][0]['actual_lamports'] == '-1000005000'
+    assert result['native_role_checks'][0]['expected_lamports'] == '-5000'
+
+
+def test_budget_loss_cannot_drop_a_negative_cost_role_or_disposed_basis_dependency(monkeypatch):
+    import scanner.wallet_evidence as module
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    variant = deepcopy(raw)
+    variant['meta']['innerInstructions'][0]['instructions'][1]['parsed']['info']['tokenAmount']['amount'] = '2000000000'
+    alternatives = [record(variant)]
+    before = derive([raw], alternatives=alternatives)
+    assert before['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    monkeypatch.setattr(module, 'MAX_ACCOUNT_STEPS', 1)
+    after = derive([raw], alternatives=alternatives)
+    assert after['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    assert after['components']['observed_disposed_basis']['state'] == 'UNKNOWN'
+    assert after['components']['native_fee']['state'] == 'PASS'
 
 
 def test_permutation_duplicate_sources_and_caller_pass_flags_do_not_change_results():

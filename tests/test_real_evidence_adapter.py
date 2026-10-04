@@ -25,6 +25,126 @@ def development_inputs():
     return value
 
 
+@pytest.mark.parametrize('role', ['classification', 'valuation', 'current-mint-controls'])
+def test_wrong_role_native_dependency_is_frozen_across_loss_restoration_and_pointer_change(tmp_path, monkeypatch, role):
+    value = development_inputs()
+    row = value['manifest']['transactions'][1]
+    alternate = deepcopy(value['payloads'][row['hash']])
+    alternate['meta']['fee'] += 1
+    other = hashlib.sha256(canonical_bytes(alternate)).hexdigest()
+    value['payloads'][other] = alternate
+    if role == 'classification':
+        value['manifest']['classification_hashes'].append(other)
+    elif role == 'valuation':
+        value['manifest']['valuation_hash'] = other
+    else:
+        value['manifest'].setdefault('evidence', []).append({'kind': role, 'hash': other})
+    calls = {'provider': 0, 'credentials': 0}
+    def forbidden_provider(*args, **kwargs):
+        calls['provider'] += 1
+        raise AssertionError('Offline operation attempted provider dispatch')
+    def forbidden_credentials(*args, **kwargs):
+        calls['credentials'] += 1
+        raise AssertionError('Offline operation attempted credential lookup')
+    monkeypatch.setattr(httpx.AsyncClient, 'request', forbidden_provider)
+    monkeypatch.setattr(application, 'Credentials', lambda _: SimpleNamespace(key=None, storage='none', backend=None))
+    import keyring
+    monkeypatch.setattr(keyring, 'get_password', forbidden_credentials)
+    app = application.create_app(tmp_path, 'negative-role-session')
+    with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+        csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'negative-role-session'}).json()['csrf']
+        client.headers['X-CSRF-Token'] = csrf
+        response = client.post('/api/archives/import', content=pack_bytes(value), headers={'Content-Type': 'application/zip'})
+        assert response.status_code == 200, response.text
+        parent_id = response.json()['report_id']
+        parent = client.get('/api/reports/' + parent_id).json()
+        assert parent['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+        assert app.state.store.evidence(parent['archive_input_hash']) == value['manifest']
+        dependency_hash = parent['archive_dependency_input_hash']
+        assert {'signature': row['signature'], 'hash': other} in app.state.store.evidence(dependency_hash)['links']
+        original_export = client.get(f'/api/export/reports/{parent_id}.json').content
+        path = app.state.store.path / 'evidence' / f'{other}.json.gz'
+        original_bytes = path.read_bytes()
+        path.unlink()
+        # A later index cannot expand or replace this parent's frozen input.
+        empty = app.state.store.archive({'version': 'archive-native-dependencies-v1',
+            'manifest_hash': parent['archive_input_hash'], 'links': []})
+        app.state.store.put('archive_dependency_inputs', parent['archive_input_hash'], {'hash': empty})
+        child_response = client.post(f'/api/reports/{parent_id}/rebuild')
+        assert child_response.status_code == 200, child_response.text
+        child = client.get('/api/reports/' + child_response.json()['report_id']).json()
+        assert child['archive_dependency_input_hash'] == dependency_hash
+        assert child['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+        assert other in child['coverage']['wallet_evidence']['components']['native_fee']['evidence']
+        path.write_bytes(original_bytes)
+        restored_response = client.post(f'/api/reports/{parent_id}/rebuild')
+        assert restored_response.status_code == 200, restored_response.text
+        restored = client.get('/api/reports/' + restored_response.json()['report_id']).json()
+        assert restored['metrics'] == parent['metrics']
+        assert client.get(f'/api/export/reports/{parent_id}.json').content == original_export
+    assert calls == {'provider': 0, 'credentials': 0}
+
+
+@pytest.mark.parametrize('loss', ['missing', 'corrupt'])
+def test_auxiliary_dependency_inventory_loss_blocks_its_projection_and_restores(tmp_path, loss):
+    value = development_inputs()
+    store = Store(tmp_path)
+    digest = import_archive(store, pack_bytes(value))
+    parent = load_archive(store, digest)
+    events, _ = decode_archive(parent)
+    original, _, _ = analyze_archive(parent, events)
+    dependency_hash = parent['dependency_input_hash']
+    path = store.path / 'evidence' / f'{dependency_hash}.json.gz'
+    raw = path.read_bytes()
+    path.unlink() if loss == 'missing' else path.write_bytes(b'corrupt')
+    child = load_archive(store, digest, dependency_input_hash=dependency_hash)
+    events, _ = decode_archive(child)
+    missing, _, _ = analyze_archive(child, events)
+    assert missing['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+    path.write_bytes(raw)
+    restored = load_archive(store, digest, dependency_input_hash=dependency_hash)
+    events, _ = decode_archive(restored)
+    recovered, _, _ = analyze_archive(restored, events)
+    assert recovered['metrics'] == original['metrics']
+
+
+def test_legacy_archive_parent_does_not_adopt_a_later_import_inventory(tmp_path):
+    value = development_inputs()
+    store = Store(tmp_path)
+    digest = import_archive(store, pack_bytes(value))
+    loaded = load_archive(store, digest, dependency_input_hash=None)
+    assert loaded['dependency_input_hash'] is None
+    events, _ = decode_archive(loaded)
+    result, _, _ = analyze_archive(loaded, events)
+    assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+
+
+def test_native_saved_inputs_retain_content_derived_negative_links(tmp_path):
+    from scanner.report_rebuild import freeze_report_inputs
+    from scanner.wallet_evidence import derive_wallet_evidence
+    value = development_inputs(); store = Store(tmp_path)
+    row = value['manifest']['transactions'][1]
+    original = value['payloads'][row['hash']]; store.archive(original)
+    changed = deepcopy(original); changed['meta']['fee'] += 1
+    other = store.archive(changed)
+    collected = {'transactions': [{'signature': row['signature'], 'evidence_hash': row['hash']}],
+                 'evidence': [{'kind': 'classification', 'hash': other}]}
+    address, window = value['manifest']['address'], value['manifest']['window']
+    frozen, *_ = application._freeze_native_dependencies(store, collected, address=address, window=window)
+    assert collected['evidence'] == [{'kind': 'classification', 'hash': other}]
+    digest = freeze_report_inputs(store, address, window, frozen)
+    before = store.evidence(digest)
+    path = store.path / 'evidence' / f'{other}.json.gz'; raw = path.read_bytes()
+    path.unlink()
+    selected, linked, sources, receipts = application._wallet_adapter_inputs(store,
+        {**store.evidence(digest), 'frozen_input_hash': digest}, address=address, window=window)
+    result = derive_wallet_evidence(selected, all_records=linked, wallet=address, window=window,
+        source_consistency={}, chronology={}, raw_sources=sources, source_receipts=receipts)
+    assert result['components']['native_fee']['state'] == 'UNKNOWN'
+    path.write_bytes(raw)
+    assert store.evidence(digest) == before
+
+
 def test_native_adapter_reads_original_bytes_and_every_linked_alternative(tmp_path):
     value = development_inputs()
     store = Store(tmp_path)

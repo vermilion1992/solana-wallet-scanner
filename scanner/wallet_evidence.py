@@ -32,7 +32,7 @@ MAX_ACCOUNT_STEPS = 100_000
 OBSERVED_SCOPE = 'Selected archived records only; hidden accounts and intervening records are unproved'
 _NONTRANSACTION_ROLES = {'signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance',
                         'classification', 'valuation', 'boundary-inventory', 'historical-mark', 'capital-flow',
-                        'synthetic-population', 'population-inventory', 'current-mint-controls'}
+                        'synthetic-population', 'population-inventory', 'current-mint-controls', 'archive-native-dependencies'}
 
 
 def with_derived_order(records, chronology):
@@ -346,11 +346,16 @@ def _resolved_sources(raw_sources, source_receipts):
         kind = kind if isinstance(kind, str) else None
         digest = declaration['hash']
         source = resolved.setdefault((kind, digest), {'kind': kind, 'hash': digest, 'payload': None,
-                                                     'signature_hints': set(), 'invalid_body': False})
+                                                     'signature_hints': set(), 'invalid_body': False, 'invalid_hints': False})
         signature = declaration.get('signature')
         if isinstance(signature, str) and signature:
             source['signature_hints'].add(signature)
-        source['signature_hints'].update(s for s in declaration.get('signature_hints', []) if isinstance(s, str))
+        hints = declaration.get('signature_hints', [])
+        if not isinstance(hints, list) or any(not isinstance(s, str) or not s for s in hints):
+            source['invalid_hints'] = True
+            hints = hints if isinstance(hints, list) else []
+        source['signature_hints'].update(s for s in hints if isinstance(s, str) and s)
+        source['invalid_hints'] = source['invalid_hints'] or declaration.get('invalid_hints') is True
         payload = declaration.get('payload')
         if payload is None:
             continue
@@ -373,6 +378,30 @@ def _resolved_sources(raw_sources, source_receipts):
     return result
 
 
+def _native_claims(payload):
+    """Inspect response/account wrappers without trusting their role label."""
+    nodes, claims, ambiguous = [payload], set(), False
+    inspected = 0
+    while nodes:
+        value = nodes.pop()
+        if not isinstance(value, dict):
+            continue
+        inspected += 1
+        if inspected > 64:
+            ambiguous = True
+            break
+        if {'transaction', 'meta'} & value.keys():
+            transaction = value.get('transaction')
+            signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+            if (isinstance(signatures, list) and signatures and isinstance(signatures[0], str)
+                and 1 <= len(signatures[0]) <= 128):
+                claims.add(signatures[0])
+            else:
+                ambiguous = True
+        nodes += [value[k] for k in ('result', 'value') if isinstance(value.get(k), dict)]
+    return claims, ambiguous
+
+
 def _mint_metadata(payload):
     """Current account metadata cannot assert native transaction endpoints.
 
@@ -385,11 +414,109 @@ def _mint_metadata(payload):
     result = payload.get('result')
     context = result.get('context') if isinstance(result, dict) else None
     slot = context.get('slot') if isinstance(context, dict) else None
+    value = result.get('value') if isinstance(result, dict) else None
+    account_shape = value is None or (isinstance(value, dict) and _valid_account(value.get('owner'))
+        and type(value.get('lamports')) is int and 0 <= value['lamports'] <= 2**64 - 1
+        and type(value.get('executable')) is bool and isinstance(value.get('data'), (dict, list, str))
+        and not {'transaction', 'meta'}.intersection(value))
     return (payload.get('method') == 'getAccountInfo' and _valid_account(payload.get('address'))
             and payload.get('commitment') == 'finalized' and type(slot) is int and slot >= 0
-            and 'value' in result and (result['value'] is None or isinstance(result['value'], dict))
+            and 'value' in result and account_shape
             and not {'transaction', 'meta'}.intersection(payload)
             and not {'transaction', 'meta'}.intersection(result))
+
+
+def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
+    """Return negative native associations to freeze before raw source loss.
+
+    The helper only derives dependencies from checksum-verified native-shaped
+    content, malformed/unassignable source scope or negative selectors. It never
+    authenticates completeness. Import/report callers freeze these links beside
+    original raw evidence so later loss cannot erase an observed contradiction.
+    """
+    selected = {s for s in selected_signatures if isinstance(s, str) and s}
+    negative = set()
+    for source in _resolved_sources(raw_sources, source_receipts):
+        kind, digest, payload = source['kind'], source['hash'], source['payload']
+        if kind in ('transaction', 'getTransaction'):
+            continue  # Explicit native links are checked by the normal loader.
+        claims, ambiguous = _native_claims(payload)
+        hints = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES else []
+        affected = selected & (claims | set(hints))
+        negative.update((signature, digest) for signature in affected)
+        if ambiguous or source['invalid_hints']:
+            negative.add((None, digest))
+        elif not affected and not claims:
+            if kind not in _NONTRANSACTION_ROLES and not _mint_metadata(payload):
+                negative.add((None, digest))
+            elif kind == 'current-mint-controls' and payload is not None and not _mint_metadata(payload):
+                negative.add((None, digest))
+    return [{'signature': signature, 'evidence_hash': digest, 'raw': None}
+            for signature, digest in sorted(negative, key=lambda key: (key[0] or '', key[1]))]
+
+
+def _native_role_check(record, wallet, expected_lamports):
+    """Reconcile decoded roles to raw native wealth movement, not FIFO profits.
+
+    Include lamports held by evidenced wallet token accounts (including wSOL
+    reserve/rent). This avoids double counting SOL representation changes. It
+    gives no historical inventory/value/population proof or external-flow price.
+    """
+    digest, raw = record.get('evidence_hash'), record.get('raw')
+    paths = ['meta.preBalances', 'meta.postBalances', 'meta.preTokenBalances', 'meta.postTokenBalances']
+    try:
+        if expected_lamports is None or not _safe_raw(raw):
+            raise ValueError('Native economic role or raw endpoint is unavailable')
+        keys = _keys(raw['transaction']['message'], raw['meta'])
+        if len(set(keys)) != len(keys):
+            raise ValueError('Native account membership is ambiguous')
+        before, after = (raw['meta'][name] for name in ('preBalances', 'postBalances'))
+        if len(before) != len(after) or len(before) != len(keys):
+            raise ValueError('Native endpoint population is incomplete')
+        owned = {'pre': set(), 'post': set()}
+        for phase, name in (('pre', 'preTokenBalances'), ('post', 'postTokenBalances')):
+            for row in raw['meta'][name]:
+                index = row.get('accountIndex')
+                if type(index) is not int or not 0 <= index < len(keys):
+                    raise ValueError('Token-account native wealth membership is malformed')
+                if row.get('owner') == wallet:
+                    if index in owned[phase]:
+                        raise ValueError('Duplicate owned native account membership')
+                    owned[phase].add(index)
+        if wallet in keys:
+            for phase in owned:
+                owned[phase].add(keys.index(wallet))
+        actual = sum(after[i] for i in owned['post']) - sum(before[i] for i in owned['pre'])
+        known = actual == expected_lamports
+        check = _check(known, 'Decoded supported consideration/network fees reconcile exactly to observed wallet/owned-account native endpoints.' if known else
+            'Raw native movement contains an unexplained or conflicting economic role.', [digest], paths=paths,
+            dependencies=['supported_native_movement_roles', 'observed_event_ownership'])
+        return {**check, 'actual_lamports': str(actual), 'expected_lamports': str(expected_lamports)}
+    except (ValueError, TypeError, KeyError, IndexError) as exc:
+        return _check(False, str(exc), [digest], paths=paths, dependencies=['supported_native_movement_roles'])
+
+
+def _decoded_native_movement(events):
+    """Exact native movement projection of already decoded events, fees once."""
+    expected = 0
+    try:
+        for event in events:
+            kind = event['kind']
+            if kind == 'internal_transfer':
+                continue
+            if kind not in ('buy', 'sell', 'fee'):
+                return None
+            if kind == 'fee' and event.get('paid_by_wallet') is not True:
+                continue
+            amount = decimal(event.get('amount_sol')) * Decimal(10**9)
+            if amount != amount.to_integral_value():
+                return None
+            # The display fee is counted exactly once; fee_sol embedded in a
+            # trade is basis/allocation information, not another native debit.
+            expected += int(amount) * (1 if kind == 'sell' else -1)
+        return expected
+    except (ValueError, TypeError, KeyError):
+        return None
 
 
 def _clock_inputs(raw_sources, source_receipts, wallet):
@@ -459,36 +586,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
             raise ValueError('Selected raw records require explicit signature identities')
         selected.setdefault(row['signature'], row)
     source_rows = _resolved_sources(raw_sources, source_receipts)
-    negative_links = []
-    for source in source_rows:
-        if not isinstance(source, dict):
-            continue
-        kind = source.get('kind', source.get('role'))
-        if kind in ('transaction', 'getTransaction'):
-            continue  # These are explicitly represented by all_records.
-        payload = source.get('payload')
-        payload = payload.get('result') if isinstance(payload, dict) and isinstance(payload.get('result'), dict) and 'transaction' in payload['result'] else payload
-        transaction = payload.get('transaction') if isinstance(payload, dict) else None
-        signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
-        native_signature = signatures[0] if isinstance(signatures, list) and signatures and isinstance(signatures[0], str) else None
-        claims = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES else []
-        affected = {s for s in [native_signature] + claims if isinstance(s, str) and s in selected}
-        if affected:
-            # An unsupported role cannot hide a selected transaction version.
-            # Its original body remains retained in the source dependency receipt.
-            negative_links += [{'signature': s, 'evidence_hash': source.get('hash'), 'raw': None} for s in sorted(affected)]
-        elif kind not in _NONTRANSACTION_ROLES:
-            # A raw native identity can prove disjointness. An arbitrary role or
-            # missing body cannot supply an exclusion by caller annotations.
-            if native_signature is None or native_signature in selected:
-                if not _mint_metadata(source.get('payload')):
-                    negative_links.append({'signature': None, 'evidence_hash': source.get('hash'), 'raw': None})
-        elif kind == 'current-mint-controls' and source.get('payload') is not None and native_signature is None:
-            # A current-mint label cannot exempt a malformed native-shaped or
-            # wrong-method body. Missing mint metadata remains its own narrower
-            # dependency, as do missing classification/current snapshots.
-            if not _mint_metadata(source['payload']):
-                negative_links.append({'signature': None, 'evidence_hash': source.get('hash'), 'raw': None})
+    negative_links = raw_native_dependencies(source_rows, (), selected)
     for row in list(all_records) + selected_rows + negative_links:
         if isinstance(row, dict):
             key = (row.get('signature'), row.get('evidence_hash'))
@@ -512,8 +610,9 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     clocks = apply_unresolved_chronology(assess_chronology(safe_linked, page_receipts=pages, block_receipts=blocks), safe_linked, contents)
     def derived_record(row):
         return with_derived_order([row], clocks)[0]
-    versions = defaultdict(list)
+    versions, raw_versions = defaultdict(list), defaultdict(list)
     for row in linked:
+        raw_versions[row.get('signature')].append(row)
         if quantity_budget_exceeded:
             # The archive's declared input capacity remains valid. Inspection
             # budget loss revokes physical/ownership observations while native
@@ -527,6 +626,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         versions[row.get('signature')].append(observation)
     transactions, accounts, acquisitions, fee_checks, identity_checks = {}, defaultdict(list), [], [], []
     quantity_checks, owner_checks, lifecycle_checks, cost_checks = [], [], [], []
+    cartesian_budget_exceeded, account_version_steps = False, 0
     for signature, primary in selected.items():
         variants = versions[signature]
         evidence = [row['hash'] for row in variants]
@@ -543,8 +643,14 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
                     'disjoint_operations': selected_observation['disjoint_operations'],
                     'gaps': sorted({gap for row in variants for gap in row['gaps']})}
         relevant_accounts = sorted({account for row in variants for account in row['boundaries']})
-        if len(relevant_accounts) * len(variants) > MAX_ACCOUNT_STEPS:
-            raise ValueError('Wallet account-version inspection budget exceeded')
+        version_steps = len(relevant_accounts) * len(variants)
+        account_version_steps += version_steps
+        if version_steps > MAX_ACCOUNT_STEPS:
+            cartesian_budget_exceeded = True
+            observed['gaps'].append('Linked account-union/version inspection budget exceeded; physical/ownership evidence is unresolved.')
+            budget_check = _check(False, observed['gaps'][-1], evidence, dependencies=['complete_account_version_inspection'])
+            quantity_checks.append(budget_check); owner_checks.append(budget_check); lifecycle_checks.append(budget_check)
+            relevant_accounts = []  # No arbitrary inspected prefix certifies this population.
         for account in relevant_accounts:
             pairs = [r['boundaries'].get(account) for r in variants]
             primary_pair = selected_observation['boundaries'].get(account)
@@ -644,18 +750,30 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     supported_signatures = {e['signature'] for e in native_events if e['kind'] in ('buy', 'sell')}
     generic = decode_transactions([row for row in safe_selected if row['signature'] not in supported_signatures], wallet)
     ledger_events = generic['events'] + [e for e in native_events if e.get('signature') in supported_signatures]
+    native_role_checks = []
+    for signature in selected:
+        group = consistency['transactions'].get(signature, {})
+        native_delta = group.get('native', {}).get('native_wallet_delta_sol', {})
+        expected = _decoded_native_movement([e for e in ledger_events if e.get('signature') == signature])
+        for row in raw_versions[signature]:
+            check = _native_role_check(row, wallet, expected)
+            if native_delta.get('state') != 'PASS' or quantity_budget_exceeded or cartesian_budget_exceeded:
+                check.update(state='UNKNOWN', reason='Linked native endpoint or account/role inspection is unresolved; no role certainty survives its loss.')
+            native_role_checks.append(check)
     fifo_positions, fifo_gap = [], None
     try:
         fifo_positions = analyze(ledger_events, start.isoformat(), end.isoformat(), history_complete=False)['positions']
     except (ValueError, TypeError, KeyError, IndexError, OverflowError) as exc:
         fifo_gap = str(exc)
-    observed_disposed_basis = _check(not fifo_gap and bool(fifo_positions) and all(p['basis_sol'] is not None and
+    observed_disposed_basis = _check(not fifo_gap and not quantity_budget_exceeded and not cartesian_budget_exceeded
+        and bool(fifo_positions) and all(p['basis_sol'] is not None and
         p['matched_basis_sol'] is not None and p['status'] != 'interrupted' for p in fifo_positions)
         and all(c['state'] == 'PASS' for c in identity_checks + cost_checks + owner_checks + quantity_checks),
         fifo_gap or 'The existing FIFO engine resolves basis for selected observed units; unobserved inventory remains separately unproved.',
         (h for p in fifo_positions for h in p['evidence']), dependencies=['observed_raw_trade_costs', 'observed_incoming_origins'])
     raw_roles = _check(bool(ledger_events) and all(e['kind'] in ('buy', 'sell', 'fee', 'internal_transfer') for e in ledger_events)
-        and all(c['state'] == 'PASS' for c in cost_checks + fee_checks),
+        and not quantity_budget_exceeded and not cartesian_budget_exceeded
+        and bool(native_role_checks) and all(c['state'] == 'PASS' for c in cost_checks + fee_checks + owner_checks + quantity_checks + native_role_checks),
         'Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.', all_hashes,
         paths=(e.get('path', 'meta') for e in ledger_events))
     observed_positions = _check(not fifo_gap and bool(fifo_positions) and all(p['quantity_raw'] == '0' and p['end'] is not None
@@ -719,11 +837,13 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     return {'version': VERSION, 'scope': OBSERVED_SCOPE, 'components': components,
         'inspection_budget': {'max_records': MAX_RECORDS, 'linked_records': len(linked),
             'max_account_steps': MAX_ACCOUNT_STEPS, 'account_steps': account_steps,
-            'quantity_state': 'UNKNOWN' if quantity_budget_exceeded else 'PASS'},
+            'account_version_steps': account_version_steps,
+            'quantity_state': 'UNKNOWN' if quantity_budget_exceeded or cartesian_budget_exceeded else 'PASS'},
         'accounts': dict(sorted(accounts.items())), 'transactions': transactions, 'acquisitions': acquisitions,
         'observed_fifo_positions': fifo_positions,
         'interval_checks': intervals, 'intervals': intervals, 'metric_dependencies': compose_metric_decisions(components, intervals),
         'fee_projection_checks': fee_projection_checks,
+        'native_role_checks': native_role_checks,
         'source_dependencies': contents['receipts'], 'source_consistency': consistency, 'chronology': clocks,
         'gaps': sorted({gap for row in transactions.values() for gap in row['gaps']} | {unresolved['reason']}),
         'provider_requests': 0, 'credential_lookups': 0}

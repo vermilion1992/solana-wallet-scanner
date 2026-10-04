@@ -101,6 +101,18 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
     return primary, records, sources, receipts
 
 
+def _freeze_native_dependencies(store, collected, *, address, window):
+    from .wallet_evidence import raw_native_dependencies
+    primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
+    negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
+    # These are negative associations, not completion or position certificates.
+    frozen = {**collected, 'evidence': deepcopy(collected.get('evidence', [])) + [
+        {'kind': 'transaction' if r.get('signature') else 'unresolved-native-source',
+         'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in negatives
+        if isinstance(r.get('evidence_hash'), str) and re.fullmatch(r'[a-f0-9]{64}', r['evidence_hash'])]}
+    return frozen, primary, linked, raw_sources, raw_receipts
+
+
 def create_app(data_dir, launch_token=None):
     store = Store(data_dir)
     launch_token = launch_token or secrets.token_urlsafe(32)
@@ -244,6 +256,9 @@ def create_app(data_dir, launch_token=None):
         history_complete = history_evidence["metric_decisions"]["history"]["state"] == "PASS"
         evidence_verified = all(history_evidence["evidence_gates"].get(gate) == "PASS"
                                 for gate in ("history", "identity", "basis", "positions", "fees", "classification", "valuation", "findings"))
+        if archive_loaded is None:
+            collected, primary, linked, raw_sources, raw_receipts = _freeze_native_dependencies(
+                store, collected, address=address, window=scan['window'])
         collection_input_hash = freeze_report_inputs(store, address, scan["window"], collected)
         from .wallet_evidence import with_derived_order
         records = with_derived_order(collected.get("transactions", []),
@@ -263,7 +278,6 @@ def create_app(data_dir, launch_token=None):
             wallet_evidence = archive_accounting['wallet_evidence']
             derived_decisions = archive_accounting['metric_requirements']
         else:
-            primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=scan['window'])
             wallet_evidence = derive_wallet_evidence(primary, all_records=linked, wallet=address,
                 window=scan['window'], events=events, raw_sources=raw_sources, source_receipts=raw_receipts,
                 source_consistency=history_evidence['source_consistency'],
@@ -328,9 +342,11 @@ def create_app(data_dir, launch_token=None):
                             "No current market price is substituted for historical valuation. No paid data path is enabled."]}
         if archive_loaded is not None:
             manifest = archive_loaded["manifest"]
-            report.update(archive_input_hash=archive_loaded["input_hash"], archive_accounting=archive_accounting,
+            report.update(archive_input_hash=archive_loaded["input_hash"], archive_dependency_input_hash=archive_loaded.get('dependency_input_hash'), archive_accounting=archive_accounting,
                           source="demo" if manifest["dataset"] == "synthetic" else "live", evidence_status="partial")
             witness_refs = [{"kind": "archived-wallet-manifest", "hash": archive_loaded["input_hash"]}]
+            if archive_loaded.get('dependency_input_hash'):
+                witness_refs.append({'kind': 'archive-native-dependencies', 'hash': archive_loaded['dependency_input_hash']})
             witness_refs += [{"kind": "archive-witness", "hash": h} for h in
                             [manifest.get("world_hash"), manifest.get("valuation_hash"), *manifest.get("classification_hashes", [])] if h]
             report["evidence"] += witness_refs
@@ -980,7 +996,7 @@ def create_app(data_dir, launch_token=None):
         archive_loaded = None
         if previous.get("archive_input_hash"):
             from .archive_input import load_archive, collected_archive
-            archive_loaded = load_archive(store, previous["archive_input_hash"])
+            archive_loaded = load_archive(store, previous["archive_input_hash"], dependency_input_hash=previous.get('archive_dependency_input_hash'))
             manifest = archive_loaded["manifest"]
             if manifest["address"] != previous["address"] or manifest["window"] != previous["window"] or (manifest["dataset"] == "synthetic") != (previous["source"] == "demo"):
                 raise EvidenceError("Frozen archive identity/window/dataset disagrees with the original report")

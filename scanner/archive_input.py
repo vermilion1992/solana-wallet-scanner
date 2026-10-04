@@ -31,7 +31,8 @@ from .chronology_evidence import assess_chronology, assess_interval_membership
 from .storage import EvidenceError, now
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v3'
+METHOD = 'archive-ledger-v4'
+_CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
 MAX_TOTAL = 256 * 1024 * 1024
@@ -165,10 +166,54 @@ def import_archive(store, content, *, reserve_bytes=0):
         finally:
             if os.path.exists(temporary):
                 os.unlink(temporary)
-    return store.archive(manifest)
+    digest = store.archive(manifest)
+    # Preserve negative native associations observed in the uploaded bytes.
+    # Caller role labels cannot make a conflicting source disappear on loss.
+    from .wallet_evidence import raw_native_dependencies
+    sources = deepcopy(manifest.get('evidence', []))
+    sources += [{'kind': 'classification', 'hash': h} for h in manifest.get('classification_hashes', [])]
+    sources += [{'kind': 'valuation', 'hash': manifest['valuation_hash']}] if manifest.get('valuation_hash') else []
+    sources += [{'kind': 'synthetic-population', 'hash': manifest['world_hash']}] if manifest.get('world_hash') else []
+    for source in sources:
+        identifier = source['hash']
+        try:
+            source['payload'] = _json(payloads[identifier][1]) if identifier in payloads else store.evidence(identifier)
+        except (EvidenceError, ValueError, OSError):
+            source['payload'] = None
+    dependencies = raw_native_dependencies(sources, (), {r['signature'] for r in manifest['transactions']})
+    links = [{'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in dependencies
+             if isinstance(r.get('evidence_hash'), str) and HASH.fullmatch(r['evidence_hash'])]
+    previous = store.get('archive_dependency_inputs', digest, {})
+    previous_hash = previous.get('hash') if isinstance(previous, dict) else None
+    if previous_hash:
+        try:
+            links += _dependency_links(store.evidence(previous_hash), digest)
+        except (EvidenceError, ValueError, OSError):
+            links.append({'signature': None, 'hash': previous_hash})
+    links = list({(r['signature'], r['hash']): r for r in links}.values())
+    inputs = {'version': 'archive-native-dependencies-v1', 'manifest_hash': digest,
+              'links': sorted(links, key=lambda r: (r['signature'] or '', r['hash']))}
+    _dependency_links(inputs, digest)
+    dependency_hash = store.archive(inputs)
+    store.put('archive_dependency_inputs', digest, {'hash': dependency_hash})
+    return digest
 
 
-def load_archive(store, digest):
+def _dependency_links(value, manifest_hash):
+    from .source_consistency import SOURCE_HASH_LIMIT
+    if (not isinstance(value, dict) or set(value) != {'version', 'manifest_hash', 'links'}
+        or value.get('version') != 'archive-native-dependencies-v1' or value.get('manifest_hash') != manifest_hash
+        or not isinstance(value.get('links'), list) or len(value['links']) > SOURCE_HASH_LIMIT):
+        raise ValueError('Frozen native dependency inventory disagrees with this manifest')
+    for row in value['links']:
+        if (not isinstance(row, dict) or set(row) != {'signature', 'hash'}
+            or not isinstance(row.get('hash'), str) or not HASH.fullmatch(row['hash'])
+            or row.get('signature') is not None and (not isinstance(row['signature'], str) or not 1 <= len(row['signature']) <= 128)):
+            raise ValueError('Frozen native dependency link is malformed')
+    return deepcopy(value['links'])
+
+
+def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
     manifest = validate_manifest(store.evidence(digest))
     links = deepcopy(manifest['transactions'])
     links += [{'signature': ref.get('signature'), 'hash': ref['hash']} for ref in manifest.get('evidence', [])
@@ -189,6 +234,20 @@ def load_archive(store, digest):
         for item in world['transactions']:
             if isinstance(item, dict) and isinstance(item.get('hash'), str) and HASH.fullmatch(item['hash']):
                 read(item['hash'], 'population-inventory')
+    dependency_input = None
+    if dependency_input_hash is _CURRENT_IMPORT:
+        index = store.get('archive_dependency_inputs', digest, {})
+        dependency_input_hash = index.get('hash') if isinstance(index, dict) else None
+    if dependency_input_hash:
+        dependency_input = read(dependency_input_hash, 'archive-native-dependencies')
+        try:
+            links += _dependency_links(dependency_input, digest)
+        except (ValueError, TypeError):
+            links.append({'signature': None, 'hash': dependency_input_hash})
+    else:
+        # A legacy parent has no frozen role-affinity proof. Never substitute
+        # a later mutable import index for that parent's original references.
+        links.append({'signature': None, 'hash': None})
     all_records, seen = [], set()
     for link in links:
         key = (link.get('signature'), link['hash'])
@@ -233,8 +292,11 @@ def load_archive(store, digest):
                 + [{'hash': h, 'kind': 'classification', 'payload': cache.get(h)}
                    for h in manifest.get('classification_hashes', [])]
                 + ([{'hash': manifest['valuation_hash'], 'kind': 'valuation',
-                     'payload': valuation}] if manifest.get('valuation_hash') else []),
-            'input_hash': digest}
+                     'payload': valuation}] if manifest.get('valuation_hash') else [])
+                + ([{'hash': dependency_input_hash, 'kind': 'archive-native-dependencies',
+                     'payload': dependency_input}] if dependency_input_hash else []),
+            'dependency_input_hash': dependency_input_hash,
+            'dependency_input': dependency_input, 'input_hash': digest}
 
 
 def _safe_decoder_container(raw):
