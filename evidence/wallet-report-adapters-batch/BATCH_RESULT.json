@@ -1,0 +1,42 @@
+{
+  "B1": "HISTORICAL_COVERAGE_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "application_commit": "93a370b40a58b28813810a217821a510630bb059",
+  "application_source_files": 254,
+  "application_source_sha256": "1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d",
+  "baseline_head": "3f14f188933bd5d9a9270e1f591e0bb9fadd94bf",
+  "candidate_status": "development-functional; real-acceptance-blocked",
+  "checks": {
+    "distinct_read_only_review": "PASS",
+    "frontend_build": "PASS",
+    "frontend_discovery": "PASS",
+    "frontend_format": "PASS",
+    "source_unchanged": true,
+    "unique_backend_nodes": 45
+  },
+  "full_Gate_A": "previous application 0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd only",
+  "implemented": [
+    "exact native snapshot RPC bytes and separately frozen dependencies",
+    "gross wallet-address native cash observations",
+    "source-derived settlement/classification observations and independent interval dependencies",
+    "raw phase/protocol mark/boundary interfaces with separate zero-flow inputs",
+    "current source-bound observation UI"
+  ],
+  "kind": "wallet-report-adapter-batch-result",
+  "live_provider_requests": 0,
+  "new_full_application_acceptance": false,
+  "new_scan_time_claim": false,
+  "probe_executed": false,
+  "publication_confirmation": "External exact-object journal verifies final branch HEAD after the evidence-only commit.",
+  "published_destination": "private vermilion1992/solana-wallet-scanner, codex/product-completion",
+  "remaining": [
+    "exhaustive historical ownership/format population",
+    "all acquisition origins and unsupported economic roles",
+    "historical meme/nonspam classification",
+    "exact all-account historical equity and nonsettlement marks",
+    "complete genuine independently worked wallet acceptance"
+  ],
+  "scope": "focused-implementation-checks-only"
+}

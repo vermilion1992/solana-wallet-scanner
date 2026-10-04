@@ -1,0 +1,24 @@
+{
+  "kind": "retained-development-log-index",
+  "records": [
+    {
+      "path": "evidence/wallet-report-adapters-batch/development-integration.log",
+      "bytes": 600,
+      "sha256": "c79d58f1ec623127f9225c4d705eab46b23a82a5bb1f9fbd18d139dc2168d016",
+      "scope": "Draft integrated targeted checks; not final source-bound acceptance"
+    },
+    {
+      "path": "evidence/wallet-report-adapters-batch/classification-gross-before-fix.log",
+      "bytes": 1044,
+      "sha256": "fe83ec62f61bf73edbc6eb838e99258168a928ab18913d40ae3768e25de22277",
+      "scope": "Actual reproduced new-adapter gross-activity failure, subsequently corrected"
+    },
+    {
+      "path": "evidence/wallet-report-adapters-batch/native-selector-budget-before-fix.log",
+      "bytes": 2537,
+      "sha256": "76c50fd6538d066ebc67ed24f8c9ca1e04cec957b90b4b00febb28d4c71ee816",
+      "scope": "Actual reproduced new-selector budget failure, subsequently corrected"
+    }
+  ],
+  "final_acceptance": false
+}

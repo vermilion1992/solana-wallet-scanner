@@ -1,0 +1,61 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /workspace/solana-wallet-scanner/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/solana-wallet-scanner
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 45 items
+
+tests/test_native_inventory_capture.py::test_capture_keeps_exact_success_bodies_and_existing_allowlist PASSED [  2%]
+tests/test_native_inventory_capture.py::test_captured_projection_cannot_disagree_with_original_request_or_result PASSED [  4%]
+tests/test_native_inventory_capture.py::test_native_selector_union_is_bounded_before_archiving_and_replays_at_exact_cap PASSED [  6%]
+tests/test_native_inventory_capture.py::test_native_collection_and_two_offline_generations_keep_snapshot_dependencies PASSED [  8%]
+tests/test_asset_classification.py::test_literal_wrapped_native_is_excluded_without_claiming_a_complete_meme_population PASSED [ 11%]
+tests/test_asset_classification.py::test_real_token_program_or_authority_metadata_cannot_manufacture_meme_eligibility[TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 13%]
+tests/test_asset_classification.py::test_real_token_program_or_authority_metadata_cannot_manufacture_meme_eligibility[TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 15%]
+tests/test_asset_classification.py::test_linked_native_loss_conflict_and_unsupported_identity_revoke_then_restore[missing] PASSED [ 17%]
+tests/test_asset_classification.py::test_linked_native_loss_conflict_and_unsupported_identity_revoke_then_restore[mint-conflict] PASSED [ 20%]
+tests/test_asset_classification.py::test_linked_native_loss_conflict_and_unsupported_identity_revoke_then_restore[wrong-program] PASSED [ 22%]
+tests/test_asset_classification.py::test_linked_native_loss_conflict_and_unsupported_identity_revoke_then_restore[malformed] PASSED [ 24%]
+tests/test_asset_classification.py::test_independent_report_and_28_day_scopes_exclude_only_proved_old_unknown_assets PASSED [ 26%]
+tests/test_asset_classification.py::test_exact_byte_current_controls_remain_independent_and_never_become_historical_classification PASSED [ 28%]
+tests/test_asset_classification.py::test_detached_raw_object_and_caller_pass_classification_flags_are_not_admitted PASSED [ 31%]
+tests/test_asset_classification.py::test_supported_nonsettlement_roundtrip_remains_activity_despite_zero_net_change PASSED [ 33%]
+tests/test_asset_classification.py::test_indexed_pointer_identity_is_recovered_only_from_retained_original_page_bytes PASSED [ 35%]
+tests/test_native_cash_observations.py::test_sponsored_outer_and_inner_transfers_have_original_paths_and_unknown_economic_roles PASSED [ 37%]
+tests/test_native_cash_observations.py::test_equal_gross_movements_survive_net_cancellation_and_failed_attempts_move_zero PASSED [ 40%]
+tests/test_native_cash_observations.py::test_malformed_quantity_or_inner_association_cannot_supply_known_gross_transfer_set PASSED [ 42%]
+tests/test_native_cash_observations.py::test_linked_source_loss_conflict_and_restoration_revoke_cash_but_keep_parent_immutable PASSED [ 44%]
+tests/test_native_cash_observations.py::test_independent_intervals_and_missing_fee_do_not_erase_supported_transfer_facts PASSED [ 46%]
+tests/test_native_cash_observations.py::test_hash_substitution_cannot_become_a_trusted_transfer_declaration PASSED [ 48%]
+tests/test_native_cash_observations.py::test_unrecorded_wallet_cpi_cannot_prove_zero_but_builtin_and_disjoint_scopes_remain_supported PASSED [ 51%]
+tests/test_native_cash_observations.py::test_all_proved_outside_records_supply_scoped_zero_with_retained_exclusion_and_loss_dependencies PASSED [ 53%]
+tests/test_native_cash_observations.py::test_genuine_original_sponsored_transfer_matches_independently_worked_integer_expectation PASSED [ 55%]
+tests/test_economic_evidence.py::test_protocol_wrapped_sol_mark_and_native_phase_survive_missing_unrelated_fee PASSED [ 57%]
+tests/test_economic_evidence.py::test_absolute_native_conflict_does_not_erase_independent_protocol_unit_mark PASSED [ 60%]
+tests/test_economic_evidence.py::test_equivalent_native_phase_array_locations_are_not_conflicting_facts PASSED [ 62%]
+tests/test_economic_evidence.py::test_required_alternative_loss_revokes_dependent_observations_and_restoration_is_exact PASSED [ 64%]
+tests/test_economic_evidence.py::test_independent_windows_and_absent_native_address_never_manufacture_zero_inventory PASSED [ 66%]
+tests/test_economic_evidence.py::test_nonsettlement_units_are_not_valued_and_zero_units_need_no_price PASSED [ 68%]
+tests/test_economic_evidence.py::test_partial_internal_zero_flow_result_never_supplies_equity_or_complete_economic_inputs PASSED [ 71%]
+tests/test_economic_evidence.py::test_retained_genuine_original_native_phase_is_known_without_complete_wallet_profit PASSED [ 73%]
+tests/test_wallet_evidence.py::test_unexplained_native_flow_revokes_economic_role_but_preserves_actual_fee PASSED [ 75%]
+tests/test_selected_cohort_observations.py::test_missing_trade_fee_revokes_money_and_open_basis_but_preserves_closed_holding_time PASSED [ 77%]
+tests/test_selected_cohort_observations.py::test_missing_exit_fee_retains_quantity_timing_and_independent_remaining_basis[selected] PASSED [ 80%]
+tests/test_selected_cohort_observations.py::test_missing_exit_fee_retains_quantity_timing_and_independent_remaining_basis[alternative] PASSED [ 82%]
+tests/test_disposed_origin_scopes.py::test_old_disposal_cost_gap_cannot_certify_90_days_or_erase_newer_scopes PASSED [ 84%]
+tests/test_selected_cohort_observations.py::test_real_input_flags_classification_and_valuation_cannot_promote_selected_cohort PASSED [ 86%]
+tests/test_selected_cohort_observations.py::test_normal_archive_saved_report_rebuild_exports_and_source_restoration_stay_offline PASSED [ 88%]
+tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee PASSED [ 91%]
+tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period PASSED [ 93%]
+tests/test_report_rebuild.py::test_rebuild_uses_exact_sources_and_preserves_original_window_and_preset[True] PASSED [ 95%]
+tests/test_report_rebuild.py::test_rebuild_uses_exact_sources_and_preserves_original_window_and_preset[False] PASSED [ 97%]
+tests/test_validation_gates.py::test_focused_batches_preserve_the_exact_existing_union PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 45 passed, 1 warning in 6.10s =========================

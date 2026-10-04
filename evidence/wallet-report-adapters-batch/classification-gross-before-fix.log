@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_supported_nonsettlement_roundtrip_remains_activity_despite_zero_net_change _
+
+    def test_supported_nonsettlement_roundtrip_remains_activity_despite_zero_net_change():
+        raw = base('nonsettlement-roundtrip', 100)
+        raw['transaction']['message']['instructions'] = [transfer(ACCOUNT, POOL_TOKEN, 40),
+                                                        transfer(POOL_TOKEN, ACCOUNT, 40)]
+        result = classification([raw])
+        asset = result['records']['nonsettlement-roundtrip']['assets'][MINT]
+>       assert asset['activity_observed'] is True
+E       assert False is True
+
+tests/test_asset_classification.py:165: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_asset_classification.py::test_supported_nonsettlement_roundtrip_remains_activity_despite_zero_net_change
+1 failed in 0.10s

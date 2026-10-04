@@ -1,0 +1,159 @@
+{
+  "kind": "distinct-read-only-focused-diff-review",
+  "state": "PASS",
+  "created_at": "2026-10-04T19:30:23.965708+00:00",
+  "baseline_head": "3f14f188933bd5d9a9270e1f591e0bb9fadd94bf",
+  "application_commit": "93a370b40a58b28813810a217821a510630bb059",
+  "source_sha256": "1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d",
+  "source_file_count": 254,
+  "source_manifest": {
+    "path": "evidence/wallet-report-adapters-batch/SOURCE_MANIFEST.json",
+    "bytes": 38855,
+    "sha256": "a28c35664afbf7adea4192af11e29f044cc5b7c2f050b849d102a8d57875507a"
+  },
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "focused_only": true,
+  "no_open_confirmed_findings": true,
+  "new_full_application_acceptance": false,
+  "PRODUCT_READY": false,
+  "scope": "Independent read-only review of the complete remaining-wallet-report batch and neighbouring source contracts. This is a focused iteration review, not execution of application tests, a full Gate A acceptance, or genuine complete-wallet B3 acceptance.",
+  "review_execution": {
+    "source_diff_read": true,
+    "all_254_file_bytes_and_modes_rechecked": true,
+    "all_source_paths_and_native_blob_ids_match_application_commit": true,
+    "lock_bytes_unchanged_from_baseline": true,
+    "test_bodies_executed_by_reviewer": 0,
+    "provider_requests": 0,
+    "credential_reads": 0,
+    "network_calls": 0,
+    "application_or_git_mutations": false,
+    "generated_assets_scope": "Index reference and exact committed bytes checked; production build is a separate producer, no independent pixel or compiled-code semantic claim."
+  },
+  "corrected_findings": [
+    {
+      "issue": "Gross asset activity was hidden by cancelling endpoint quantities",
+      "state": "CORRECTED",
+      "correction": "Original positive transfers and supported mint/burn operations touching the owned account now preserve activity; ordinary unchanged endpoints remain independently usable. Nonsettlement activity remains unclassified without historical meme/nonspam sources.",
+      "regression": "tests/test_asset_classification.py::test_supported_nonsettlement_roundtrip_remains_activity_despite_zero_net_change"
+    },
+    {
+      "issue": "All proved-outside selected records lacked a supported scoped zero and its exclusion evidence",
+      "state": "CORRECTED",
+      "correction": "Retain each independent outside-interval placement and its original evidence. A complete selected source set can produce scoped zero without claiming a complete wallet population.",
+      "regression": "tests/test_native_cash_observations.py::test_all_proved_outside_records_supply_scoped_zero_with_retained_exclusion_and_loss_dependencies"
+    },
+    {
+      "issue": "Missing or null wallet-touching CPI recording could be mistaken for recorded empty transfers",
+      "state": "CORRECTED",
+      "correction": "Unrecorded relevant CPI leaves gross transfers UNKNOWN. Explicit empty recording, inherently non-CPI builtins, failed execution and proved disjoint instructions retain their narrower supported facts.",
+      "regression": "tests/test_native_cash_observations.py::test_unrecorded_wallet_cpi_cannot_prove_zero_but_builtin_and_disjoint_scopes_remain_supported"
+    },
+    {
+      "issue": "Initial native selector capture could exceed the budget enforced by its own saved replay",
+      "state": "CORRECTED",
+      "correction": "Canonical selector hashes and the complete inspected source/selector union are bounded before selector archive writes; saved consumption uses the same union, including inspected nested hashes. Selectors never expand authenticated collector roles.",
+      "regression": "tests/test_native_inventory_capture.py::test_native_selector_union_is_bounded_before_archiving_and_replays_at_exact_cap"
+    },
+    {
+      "issue": "Cash and inventory amounts could render from PASS checks without usable source references",
+      "state": "CORRECTED",
+      "correction": "Amount-bearing checks and inventory points require nonempty arrays of valid SHA256 references. Same-slot inventory also requires references; valid source buttons remain inspectable when mixed references make amounts UNKNOWN.",
+      "regression": "frontend/scripts/check-discovery.mjs source-reference and point-loss/restoration SSR assertions"
+    },
+    {
+      "issue": "Outside-interval cash exclusion could bypass an unresolved frozen source inventory",
+      "state": "CORRECTED",
+      "correction": "The exclusion branch independently requires source_set PASS and retains both source-set and exclusion evidence. An unreadable unassignable link now revokes the zero while unrelated outside-window transfer/fee decoding is not required.",
+      "regression": "Existing all-proved-outside native-cash node includes unassignable source-loss assertions"
+    },
+    {
+      "issue": "Inventory freshness could treat missing methods as equal or ignore a stale wallet assessment",
+      "state": "CORRECTED",
+      "correction": "Inventory requires a nonempty current method, matching saved wallet version and current saved/current wallet assessment methodology, alongside history freshness. Original values and source buttons are preserved.",
+      "regression": "frontend/scripts/check-discovery.mjs missing method/version, missing saved_methodology and rebuild_required SSR assertions"
+    }
+  ],
+  "reviewed_contracts": [
+    "Native capture shares the pinned allowlist, reservation/dispatch/settlement, quotas, retries and error handling; retained body bytes exclude request URLs and headers. Legacy snapshots do not acquire fabricated byte evidence.",
+    "Separately frozen selector metadata is bound to exact immutable saved-report input, address/window and report; missing originals cannot be promoted by negative affinities and child reports preserve collector/checkpoint references.",
+    "Asset identity and activity use original selected and linked native representations, with independent report/28/90 membership and frozen source inventory. Current mint authorities/extensions are observations, not historical meme/nonspam eligibility.",
+    "Gross native transfer directions, linked alternatives, execution and interval placement remain distinct from network fees, economic roles and complete owned-account movements. Equal incoming/outgoing movement is preserved.",
+    "Native/token phase observations and protocol WSOL denomination remain separate from complete historical boundaries and marks. Account/rent lamports are not added to token units. Partial zero external flows leave economic_inputs empty and cannot supply equity.",
+    "Normal native/archive saved reports, import/rebuild/export and independent metric gates share the new adapters. The synthetic finite-world override remains explicitly development-only; genuine uploaded valuation flags cannot supply these economic inputs.",
+    "Native cash exact amounts use bounded integer text and BigInt; interval/method/assessment/source guards hide unsupported amounts while preserving source inspection. Wallet v9/archive v12 and CAP documentation describe partial observations and remaining gaps accurately."
+  ],
+  "selector_source_inspection": {
+    "method": "AST literal inspection only; no pytest collection or execution",
+    "baseline_selectors_retained": 41,
+    "current_selectors": 45,
+    "disjoint_groups": 10,
+    "new_modules_each_assigned_once": [
+      "tests/test_asset_classification.py",
+      "tests/test_economic_evidence.py",
+      "tests/test_native_cash_observations.py",
+      "tests/test_native_inventory_capture.py"
+    ]
+  },
+  "remaining_CAP_source_gaps": [
+    {
+      "contract": "CAP-NATIVE-CAPTURE",
+      "remaining": "Legacy snapshots lack original RPC bytes; current independent slots do not supply historical all-account report/28/90 boundaries."
+    },
+    {
+      "contract": "CAP-ROUTES",
+      "remaining": "Gross wallet-address System transfers do not establish payment/tip/capital roles, complete owned-account movement or complete cost/valued-flow population."
+    },
+    {
+      "contract": "CAP-CLASS",
+      "remaining": "Accepted time-relevant meme identity and nonspam evidence for nonsettlement assets remain absent; current controls and mint suffixes are insufficient."
+    },
+    {
+      "contract": "CAP-VALUATION",
+      "remaining": "Exact all-account historical opening/closing inventory, nonsettlement historical marks and complete valued-flow roles remain unresolved; no genuine complete economic inputs are emitted."
+    },
+    {
+      "contract": "CAP-ORIGIN-COMPLETE/CAP-HIST-EXHAUSTIVE/B1/B2/B3",
+      "remaining": "Exhaustive historical ownership/record and acquisition coverage, complete real accounting and independently worked whole-wallet genuine acceptance remain open or blocked. No paid/live collection, new release ZIP or whole-product acceptance is claimed."
+    }
+  ],
+  "changed_source_paths": [
+    "ACCEPTANCE.md",
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "frontend/dist/assets/index-DLyxdI99.js",
+    "frontend/dist/assets/index-DT2ipYAA.js",
+    "frontend/dist/index.html",
+    "frontend/scripts/check-discovery.mjs",
+    "frontend/src/InventoryObservations.tsx",
+    "frontend/src/NativeCashObservations.tsx",
+    "frontend/src/report.tsx",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/asset_classification.py",
+    "scanner/collector.py",
+    "scanner/economic_evidence.py",
+    "scanner/inventory_evidence.py",
+    "scanner/native_cash_observations.py",
+    "scanner/providers.py",
+    "scanner/report_rebuild.py",
+    "scanner/wallet_evidence.py",
+    "tests/test_asset_classification.py",
+    "tests/test_economic_evidence.py",
+    "tests/test_native_cash_observations.py",
+    "tests/test_native_inventory_capture.py",
+    "tools/validate.py"
+  ],
+  "prior_review_observations_preserved": {
+    "initial_child_path": "/workspace/outputs/remaining-wallet-report-review/ASSET_CASH_DRAFT_STATIC.json",
+    "first_frozen_child_path": "/workspace/outputs/remaining-wallet-report-review/ASSET_CASH_FROZEN_STATIC.json",
+    "first_frozen_source_sha256": "6ccb0eca34a200c1266b894349a8b7adde97d287a10a1209e91d65dc95a4c1ad",
+    "note": "These earlier observations are not relabelled as the corrected current source. Final owner checks are a separate producer; repeated assertions/commands are not added to unique test counts."
+  }
+}
