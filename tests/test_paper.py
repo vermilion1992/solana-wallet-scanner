@@ -392,3 +392,123 @@ def test_late_quote_response_after_deadline_is_retained_without_spending_simulat
     assert value["quote_requests"][0]["quote_evidence_hash"]
     assert value["positions"] == []
     assert value["cash_lamports"] == "2000000000"
+
+
+def test_missing_settings_source_still_exports_recorded_history_with_unavailable_evidence(store):
+    value = run(store)
+    digest = value["settings_snapshot_hash"]
+    (store.path / "evidence" / (digest + ".json.gz")).unlink()
+    exported = export_run(store, value["id"])
+    assert exported["settings_evidence"] is None
+    assert exported["settings_evidence_availability"]["state"] == "UNKNOWN"
+    assert exported["run"]["settings"] == value["settings"]
+    assert exported["run"]["cash_lamports"] == "2000000000"
+    assert exported["run"]["summary"]["source_availability"]["state"] == "UNKNOWN"
+
+
+def test_unfundable_modeled_mark_cannot_manufacture_negative_equity_beyond_initial_cash(store):
+    value = emit(store, run(store, execution_fee_sol="0.9"), signal())
+    value = settle(store, value, 10000, 12)
+    assert value["summary"]["cash_sol"] == "0.1"
+    value = request_marks(store, value["id"], at=stamp(30))
+    value = settle(store, value, 200000000, 30, "mark")
+    assert value["quote_requests"][-1]["status"] == "unavailable"
+    assert value["quote_requests"][-1]["reason"] == "insufficient_simulated_cash_for_exit_cost"
+    assert value["summary"]["economic_pnl_sol"] is None
+    assert value["summary"]["cash_sol"] == "0.1"
+    assert value["positions"][0]["raw_units"] == "10000"
+
+
+def test_stop_and_pause_cannot_reopen_exhausted_immutable_quote_budget(store):
+    value = emit(store, run(store, max_quotes=1), signal())
+    value = settle(store, value, 10000, 12)
+    value = request_marks(store, value["id"], at=stamp(30))
+    assert value["status"] == "budget_exhausted"
+    assert stop_run(store, value["id"], at=stamp(31))["status"] == "budget_exhausted"
+    assert pause_run(store, value["id"], at=stamp(32))["status"] == "budget_exhausted"
+    with pytest.raises(ValueError, match="cannot be extended"):
+        resume_run(store, value["id"], at=stamp(33))
+
+
+def test_decode_crossing_recorded_monitoring_gap_is_excluded_without_hindsight_entry(store):
+    from scanner.paper import record_gap
+    value = run(store)
+    value = record_gap(store, value["id"], "Disconnected before decoding finished", stamp(2), stamp(20))
+    value = emit(store, value, signal(decoded_at=stamp(21)), at=stamp(21))
+    assert value["signals"][0]["decision"] == "excluded"
+    assert value["signals"][0]["reason"] == "signal_crosses_unobserved_monitoring_gap"
+    assert value["quote_requests"] == []
+    assert value["cash_lamports"] == "2000000000"
+
+
+def test_concurrent_quote_reservations_and_responses_charge_cash_and_budget_once(store):
+    from concurrent.futures import ThreadPoolExecutor
+    value = emit(store, run(store), signal())
+    request_id = value["quote_requests"][0]["id"]
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        dispatched = list(pool.map(lambda _: begin_quote(store, value["id"], request_id, at=stamp(12)), range(8)))
+    assert sum(request is not None for request in dispatched) == 1
+    request = next(request for request in dispatched if request is not None)
+    quote = {"status": "available", "input_mint": request["input_mint"],
+             "output_mint": request["output_mint"], "in_amount": request["input_amount"],
+             "out_amount": "10000", "price_impact_pct": "1", "received_at": stamp(13)}
+    quote["evidence_hash"] = store.archive({"scope": "Synthetic concurrent quote mechanics", "quote": quote})
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        list(pool.map(lambda _: apply_quote(store, value["id"], request_id, quote, at=stamp(13)), range(8)))
+    value = get_run(store, value["id"], at=stamp(14))
+    assert value["budgets"]["quotes_used"] == 1
+    assert value["cash_lamports"] == "990000000"
+    assert len(value["positions"]) == 1
+
+
+def test_quote_begin_at_deadline_persists_expiry_even_when_it_returns_no_dispatch(store):
+    value = emit(store, run(store, max_duration_minutes=1), signal())
+    request_id = due_quotes(store, value["id"], at=stamp(59))[0]["id"]
+    assert begin_quote(store, value["id"], request_id, at=stamp(60)) is None
+    saved = store.get("paper_runs", value["id"])
+    assert saved["status"] == "budget_exhausted"
+    assert saved["quote_requests"][0]["status"] == "cancelled"
+    assert saved["budgets"]["quotes_used"] == 0
+
+
+def test_portfolio_mark_costs_cannot_collectively_borrow_simulated_capital(store):
+    value = run(store, capital_sol="3", entry_sol="0.1", execution_fee_sol="0.9")
+    value = emit(store, value, signal())
+    value = settle(store, value, 10000, 12)
+    value = emit(store, value, signal("buy-other", seconds=20, mint=MINT_B))
+    value = settle(store, value, 10000, 31)
+    assert value["cash_lamports"] == "1000000000"
+    value = request_marks(store, value["id"], at=stamp(40))
+    value = settle(store, value, 200000000, 40, "mark")
+    value = settle(store, value, 200000000, 42, "mark")
+    assert value["summary"]["known_marked_open_value_sol"] == "-1.4"
+    assert value["summary"]["economic_pnl_sol"] is None
+    assert value["summary"]["complete_observation"] is False
+    assert "unfunded" in value["summary"]["valuation_reason"]
+
+
+@pytest.mark.parametrize("entry_already_dispatched", [False, True])
+def test_exit_cost_cannot_turn_pending_entry_reservation_into_borrowed_cash(store, entry_already_dispatched):
+    value = emit(store, run(store, capital_sol="4", execution_fee_sol="0.9"), signal())
+    value = settle(store, value, 10000, 12)
+    value = emit(store, value, signal("sell-first", "sell", 20))
+    value = emit(store, value, signal("buy-second", seconds=22, mint=MINT_B))
+    second = next(r for r in value["quote_requests"] if r["action"] == "entry" and r["mint"] == MINT_B)
+    if entry_already_dispatched:
+        request = begin_quote(store, value["id"], second["id"], at=stamp(33))
+        value = settle(store, value, 100000000, 34, "exit")
+        quote = {"status": "available", "input_mint": request["input_mint"],
+                 "output_mint": request["output_mint"], "in_amount": request["input_amount"],
+                 "out_amount": "10000", "price_impact_pct": "1", "received_at": stamp(36)}
+        quote["evidence_hash"] = store.archive({"scope": "Synthetic concurrent cash mechanics", "quote": quote})
+        value = apply_quote(store, value["id"], second["id"], quote, at=stamp(36))
+    else:
+        value = settle(store, value, 100000000, 31, "exit")
+        assert begin_quote(store, value["id"], second["id"], at=stamp(33)) is None
+        value = get_run(store, value["id"], at=stamp(34))
+    assert value["cash_lamports"] == "1300000000"
+    assert len(value["positions"]) == 1
+    assert value["positions"][0]["status"] == "closed"
+    second = next(r for r in value["quote_requests"] if r["id"] == second["id"])
+    assert second["status"] == "unavailable"
+    assert second["reason"] == "insufficient_simulated_cash_for_entry_cost"

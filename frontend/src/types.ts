@@ -535,6 +535,12 @@ export type Screening = {
   address: string;
   preset_snapshot?: Preset;
   identity?: { state: string; reason: string; evidence: string[] };
+  current_source_availability?: { state: string; missing: (string | null)[] };
+  current_result?: string;
+  current_label?: string;
+  current_reason?: string;
+  current_identity?: { state: string; reason: string; evidence: string[] };
+  current_eligibility?: { can_start_observation: boolean; reason: string };
   result: string;
   label: string;
   reason: string;
@@ -606,6 +612,20 @@ export type PaperObservation = {
   quote_requests: Record<string, unknown>[];
   positions: Record<string, unknown>[];
   gaps: Record<string, unknown>[];
+  observer?: {
+    status?: string;
+    stop_reason?: string;
+    connected_at?: string;
+    updated_at?: string;
+    connection_attempts?: number;
+    notifications?: number;
+    transactions?: number;
+    limits?: { max_notifications?: number; max_transactions?: number; max_minutes?: number };
+    last_error?: { code: string; message: string; http_status?: number; at: string };
+    monitoring_gap_started_at?: string | null;
+    scope?: string;
+  };
+  notifications?: Record<string, unknown>[];
   risk_observations?: Screening["risk_observations"];
   copyability?: { status: string; reasons: string[]; preset_snapshot?: unknown };
   summary: {

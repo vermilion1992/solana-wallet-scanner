@@ -22,6 +22,9 @@ SCREENING_FORWARD = [
     'tests/test_candidate_import.py', 'tests/test_copy_review.py', 'tests/test_app.py',
     'tests/test_storage.py', 'tests/test_launcher.py', 'tests/test_validation_gates.py',
     'tests/test_cost_flow_evidence.py', 'tests/test_historical_reserve_marks.py',
+    'tests/test_asset_classification.py', 'tests/test_wallet_evidence.py',
+    'tests/test_real_evidence_adapter.py',
+    'tests/test_inventory_evidence.py',
 ]
 FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruction_schema.py',
            'tests/test_instruction_contract_matrix.py', 'tests/test_source_role_matrix.py', 'tests/test_validation_gates.py',
@@ -40,7 +43,10 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_inventory_evidence.py', 'tests/test_report_benchmark.py',
            'tests/test_native_inventory_capture.py', 'tests/test_asset_classification.py',
            'tests/test_native_cash_observations.py', 'tests/test_economic_evidence.py',
-           'tests/test_cost_flow_evidence.py', 'tests/test_historical_reserve_marks.py']
+           'tests/test_cost_flow_evidence.py', 'tests/test_historical_reserve_marks.py',
+           'tests/test_screening.py', 'tests/test_screening_routes.py',
+           'tests/test_public_sample_budget.py', 'tests/test_paper.py',
+           'tests/test_observer.py', 'tests/test_candidate_import.py']
 
 # Retain all 35 baseline selectors (original 30 plus five metric regressions) and
 # include the retained development-contract/performance modules, inventory admission
@@ -74,6 +80,9 @@ FOCUSED_GROUPS = {
     'discovery': ['tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py',
                   'tests/test_discovery_native_identity.py', 'tests/test_bounded_collection.py',
                   'tests/test_genuine_collection_workflow.py'],
+    'screening': ['tests/test_screening.py', 'tests/test_screening_routes.py',
+                  'tests/test_public_sample_budget.py', 'tests/test_paper.py',
+                  'tests/test_observer.py', 'tests/test_candidate_import.py'],
 }
 
 

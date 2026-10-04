@@ -439,6 +439,8 @@ def create_app(data_dir, launch_token=None):
                                           history_complete=history_complete, wallet_evidence=wallet_evidence)
         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
         mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
+        mint_refresh_available = scan.get('status') == 'running' and (
+            scan.get('budget_mode') == 'public-sample' or bool(credentials.key))
         risk_evidence = []
         from .providers import ProviderError
         for mint in mints:
@@ -452,6 +454,8 @@ def create_app(data_dir, launch_token=None):
                         raise EvidenceError("Current mint observation identity is inconsistent")
                     raw = observation.get("result")
                 else:
+                    if not mint_refresh_available:
+                        raise EvidenceError('Optional current mint controls are unavailable; cached report construction performs no provider or credential lookup.')
                     async with network_lock:
                         async with gateway(scan.get("budget_mode", "monthly"), sample_scan_id=scan['id'], sample_address=address) as native:
                             raw = await native.rpc("getAccountInfo", [mint, {"encoding": "jsonParsed", "commitment": "finalized", "minContextSlot": minimum_slot}])
@@ -470,7 +474,7 @@ def create_app(data_dir, launch_token=None):
                 inspected = inspect_token_risk(raw, {"pools": pools, "evidence": hashes})
                 token_risk.append({"mint": mint, **inspected, "observed_at": cached["observed_at"], "context_slot": context["slot"], "pool_observations": pools, "evidence": hashes})
                 risk_evidence.append({"hash": cached["hash"], "kind": "current-mint-controls", "mint": mint})
-            except (ProviderError, QuotaExceeded, EvidenceError):
+            except (ProviderError, QuotaExceeded, EvidenceError, HTTPException):
                 token_risk.append({"mint": mint, **inspect_token_risk(None), "evidence": []})
         if scan.get('budget_mode') == 'public-sample':
             sample_cp = store.get('public_sample_checkpoints', scan['id'] + ':' + address, {})
@@ -873,7 +877,7 @@ def create_app(data_dir, launch_token=None):
         from .candidate_import import aggregate_candidate_universe
         from .real_coverage import historical_source_decision
         from .paper import list_runs
-        from .screening_routes import observation_view
+        from .screening_routes import observation_view, screening_views
         disk = store.stats()
         disk["warnings"] = []
         if disk["evidence_bytes"] >= 10 * 1024 ** 3:
@@ -892,7 +896,7 @@ def create_app(data_dir, launch_token=None):
                 "historical_source_decision": historical_source_decision(),
                 "settings": settings(), "preset": preset(), "provider": provider(), "usage": usage(),
                 "scans": store.list("scans"), "discovery_cohorts": cohorts, "reports": saved_reports,
-                "screenings": store.list("screenings"), "observations": [observation_view(store, run) for run in list_runs(store)],
+                "screenings": screening_views(store), "observations": [observation_view(store, run) for run in list_runs(store)],
                 "candidate_universe": aggregate_candidate_universe(cohorts, saved_reports, candidate_cap=settings()["limits"]["candidate_cap"]),
                 "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk})
 

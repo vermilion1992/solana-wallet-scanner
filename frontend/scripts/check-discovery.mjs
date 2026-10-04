@@ -53,7 +53,7 @@ try {
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
-  const { PaperDetail, ScreeningDetail, defaultPaperSettings, paperSolFromLamports } = require(join(output, "Research.js"));
+  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -126,6 +126,8 @@ try {
   assert.ok(initial.includes('type="password"'));
   assert.ok(initial.includes("Discovery leads are not recommendations"));
   assert.ok(initial.includes("third-party sample is not 30-day accounting"));
+  assert.ok(button(initial, "Paste public wallets"));
+  assert.ok(initial.includes("Optional: connect deeper historical collection"));
 
   assert.deepEqual(auditableCandidates(cohort), []);
   const plannedCohort = { ...cohort, candidates: [verified], audit_plan: { selected_addresses: [], deferred: [], excluded: [] } };
@@ -640,6 +642,31 @@ try {
   assert.ok(paperHtml.includes("Frozen at run creation"));
   assert.ok(paperHtml.includes("Quotes do not guarantee execution"));
   assert.ok(paperHtml.includes("counted once"), "Pool/provider fees are not modeled a second time");
+  const reconnectingHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, status: "running", stop_reason: undefined,
+    observer: { status: "reconnecting", notifications: 3, transactions: 2,
+      limits: { max_notifications: 1000, max_transactions: 100 },
+      last_error: { code: "proxy_access_denied", message: "The configured proxy denied the read-only connection.", http_status: 403, at: cohort.created_at } },
+    notifications: [{ id: "missed", status: "missed", signature: "synthetic", reason: "Transaction unavailable at confirmed commitment" }],
+    quote_requests: [{ id: "denied", status: "unavailable", action: "exit", mint: address, reason: "access_denied" }],
+  } }));
+  assert.ok(reconnectingHtml.includes("Reconnecting"));
+  assert.ok(reconnectingHtml.includes("Monitoring is not connected"));
+  assert.ok(reconnectingHtml.includes("The configured proxy denied the read-only connection"));
+  assert.ok(reconnectingHtml.includes("Transaction retrieval allowance"));
+  assert.ok(reconnectingHtml.includes("Transaction unavailable at confirmed commitment"));
+  assert.ok(reconnectingHtml.includes("The quote provider denied read-only access"));
+  const recoveredHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, status: "running", stop_reason: undefined, observer: { status: "listening",
+      last_error: { code: "connection_timeout", message: "A prior connection timed out", at: cohort.created_at } },
+  } }));
+  assert.ok(recoveredHtml.includes("Listening for address mentions"));
+  assert.ok(recoveredHtml.includes("Prior connection failure · now reconnected"));
+  assert.ok(!recoveredHtml.includes("Monitoring is not connected"));
+  const emptyResearchHtml = renderToStaticMarkup(React.createElement(ResearchView, { ...actions, showEvidence: () => undefined }));
+  assert.ok(emptyResearchHtml.includes('max="25"'), "UI open-position cap matches the bounded paper contract");
+  assert.ok(emptyResearchHtml.includes('max="480"'), "UI duration cannot request a run beyond its eight-hour cap");
+  assert.ok(emptyResearchHtml.includes("Whole seconds after detection and decoding"));
   const unknownPaperHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
     ...paper, summary: { ...paper.summary, economic_pnl_sol: null, marked_open_value_sol: null, valuation_status: "unknown" },
   } }));
@@ -668,6 +695,44 @@ try {
   assert.ok(screenHtml.includes("3 unmatched or basis-unresolved sales"));
   assert.ok(screenHtml.includes("No reviewed relationship proof"));
   assert.ok(screenHtml.includes("Strict financial qualification"));
+  const lostScreen = {
+    id: "source-dependent-screen", version: "wallet-screening-v1", created_at: cohort.created_at,
+    report_id: "report", address, result: "worth_observing", label: "Worth observing", reason: "Frozen matched-lot observations met this preset",
+    identity: { state: "PASS", reason: "Saved native proof", evidence: ["a".repeat(64)] },
+    trading_evidence: { supported_swaps: 2, matched_sales: 1, unmatched_sales: 0, conditional_matched_lot_profit_sol: "0.5", open_exposure: [] },
+    risk_observations: [{ key: "mint_controls", state: "PASS", reason: "Saved original mint observation", evidence: ["a".repeat(64)] }],
+    strict_qualification: { ...qualification }, collection: { stop_reason: "Sample tranche completed" },
+    current_source_availability: { state: "UNKNOWN", missing: ["a".repeat(64)] },
+    current_result: "insufficient_evidence", current_label: "Insufficient current evidence", current_reason: "Required archive is unavailable",
+    current_identity: { state: "UNKNOWN", reason: "Native proof archive unavailable", evidence: ["a".repeat(64)] },
+    current_eligibility: { can_start_observation: false, reason: "Restore the missing original sources" },
+  };
+  const frozenScreenBefore = structuredClone(lostScreen);
+  const lostScreenHtml = renderToStaticMarkup(React.createElement(ScreeningDetail, { screening: lostScreen, showEvidence: () => undefined }));
+  assert.ok(lostScreenHtml.includes("Insufficient current evidence"));
+  assert.ok(lostScreenHtml.includes("Current screening evidence unavailable"));
+  assert.ok(lostScreenHtml.includes("Current source evidence unavailable"));
+  assert.ok(lostScreenHtml.includes("Saved assessment: Worth observing"));
+  assert.ok(lostScreenHtml.includes("Current evidence does not support the saved qualification"));
+  assert.equal(canObserveScreening(lostScreen), false);
+  assert.deepEqual(lostScreen, frozenScreenBefore, "Reading current source loss never rewrites the frozen original assessment");
+  const restoredScreen = { ...lostScreen,
+    current_source_availability: { state: "PASS", missing: [] }, current_result: "worth_observing", current_label: "Worth observing",
+    current_reason: lostScreen.reason, current_identity: lostScreen.identity,
+    current_eligibility: { can_start_observation: true, reason: "Current original sources and native proof remain available" },
+  };
+  assert.equal(canObserveScreening(restoredScreen), true);
+  assert.notEqual(screeningReviewKey(restoredScreen), screeningReviewKey(lostScreen), "A state refresh invalidates cached current support after source loss or restoration");
+  assert.equal(canObserveScreening({ ...restoredScreen, current_identity: lostScreen.current_identity,
+    current_eligibility: { can_start_observation: false, reason: "Current identity is unresolved" } }), false);
+  const lostResearchHtml = renderToStaticMarkup(React.createElement(ResearchView, { ...actions, state: { ...state, screenings: [lostScreen] }, showEvidence: () => undefined }));
+  assert.ok(button(lostResearchHtml, "Start quote-only observation").includes("disabled="));
+  assert.ok(lostResearchHtml.includes("Restore the missing original sources"));
+  const newlyOpenedRun = { ...paper, updated_at: "2026-10-04T18:00:01+00:00" };
+  assert.equal(newerObservationState({ ...paper, updated_at: "2026-10-04T18:00:00+00:00" }, newlyOpenedRun), false,
+    "An older workspace list cannot discard a fresh source-loss detail read");
+  assert.equal(newerObservationState({ ...paper, updated_at: "2026-10-04T18:00:02+00:00" }, newlyOpenedRun), true,
+    "A later workspace refresh replaces older opened observation support");
   const intervals = {
     four_weeks: {
       start: "2026-09-04T00:00:00+00:00",

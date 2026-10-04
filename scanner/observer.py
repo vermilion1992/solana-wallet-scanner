@@ -12,13 +12,16 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import hashlib
 import json
+import ssl
 import time
 
 import httpx
-from websockets.asyncio.client import connect
+from websockets.asyncio.client import connect as _WebSocketConnect
+from websockets.exceptions import InvalidProxyStatus, InvalidStatus, ProxyError
 
 from .config import validate_address
 from .investigation import WSOL, decode_supported_swaps
+from .json_boundary import canonical_bytes, parse_json
 from .providers import CapturedRPC, ProviderError, _rate_gate, _wait_for_rate
 from .storage import QuotaExceeded, now
 
@@ -28,6 +31,53 @@ JUPITER_ORDER = "https://api.jup.ag/swap/v2/order"
 OBSERVER_VERSION = "forward-observer-v1"
 
 
+class StaticWebSocket(_WebSocketConnect):
+    """Preserve proxy/TLS handling while forbidding destination redirects.
+
+    websockets follows redirects by default, including other origins. This app
+    has one reviewed notification source and must never send wallet subscriptions
+    to an endpoint selected by a redirect response.
+    """
+
+    def process_redirect(self, exc):
+        return exc
+
+
+# Keep the injectable connector name used by offline browser/transport controls.
+connect = StaticWebSocket
+
+
+def _connection_failure(error):
+    """Operator diagnostics from exception types only, never URLs or messages."""
+    result = {"code": "connection_failed", "message": "The notification connection failed.", "at": _stamp()}
+    if isinstance(error, InvalidProxyStatus):
+        result.update(code="proxy_access_denied", message="The configured network proxy rejected the notification connection.",
+                      http_status=error.response.status_code)
+    elif isinstance(error, ProxyError):
+        result.update(code="proxy_unavailable", message="The configured network proxy could not establish the notification connection.")
+    elif isinstance(error, ssl.SSLCertVerificationError):
+        result.update(code="tls_verification_failed", message="The notification source certificate could not be verified.")
+    elif isinstance(error, InvalidStatus):
+        status = error.response.status_code
+        if status in (300, 301, 302, 303, 307, 308):
+            result.update(code="redirect_blocked", message="The notification source redirected; redirects are blocked.")
+        elif status in (401, 403):
+            result.update(code="provider_access_denied", message="The public notification source denied access.")
+        elif status == 429:
+            result.update(code="provider_rate_limit", message="The public notification source limited requests.")
+        else:
+            result.update(code="websocket_handshake_rejected", message="The notification source rejected the WebSocket handshake.")
+        result["http_status"] = status
+    elif isinstance(error, TimeoutError):
+        result.update(code="connection_timeout", message="The notification connection or subscription handshake timed out.")
+    elif isinstance(error, ProviderError) and error.code in ("subscription_rejected", "subscription_error", "disconnected"):
+        result.update(code=error.code, message={
+            "subscription_rejected": "The public source rejected the single-wallet subscription.",
+            "subscription_error": "The public source reported a subscription error.",
+            "disconnected": "The public notification connection ended."}[error.code])
+    return result
+
+
 def _stamp():
     return now()
 
@@ -35,6 +85,26 @@ def _stamp():
 def _bytes(raw):
     return {"base64": base64.b64encode(raw).decode("ascii"),
             "sha256": hashlib.sha256(raw).hexdigest()}
+
+
+def _parse_wire_json(raw):
+    value = parse_json(raw, max_nodes=100_000)
+    # parse_constant rejects literal NaN/Infinity; exponent overflow (1e999)
+    # must also remain a malformed response rather than unarchivable metadata.
+    canonical_bytes(value, max_nodes=100_000, string_keys=True)
+    return value
+
+
+def _public_http_message(status):
+    if status == 429:
+        return "Public RPC rate limit (HTTP 429); collection paused without retry."
+    if status in (401, 403):
+        return f"Public RPC access denied (HTTP {status}); check source availability before resuming."
+    if 300 <= status < 400:
+        return f"Public RPC redirect blocked (HTTP {status}); the source destination remains fixed."
+    if status >= 500:
+        return f"Public RPC temporary provider failure (HTTP {status}); collection paused without retry."
+    return f"Public RPC request unavailable (HTTP {status}); collection paused without retry."
 
 
 def _unsigned(value):
@@ -137,6 +207,7 @@ class PublicRPC:
             raise
         dispatched = False
         pending = True
+        content, status, request_bytes, started = None, None, None, None
         try:
             await _wait_for_rate(self._gate, self._interval)
             self.store.dispatch(reservation)
@@ -148,27 +219,38 @@ class PublicRPC:
             request_id = self.requests
             request = self._client.build_request("POST", PUBLIC_RPC, json={
                 "jsonrpc": "2.0", "id": request_id, "method": method, "params": params})
+            request_bytes, started = request.content, _stamp()
             async with self._client.stream(request.method, request.url, content=request.content,
                                            headers={"content-type": "application/json"}) as response:
+                status = response.status_code
                 content = await _body(response, 2_000_000)
                 if response.status_code != 200:
-                    raise ProviderError("Public RPC request unavailable", response.status_code)
+                    raise ProviderError(_public_http_message(response.status_code), response.status_code)
             try:
-                payload = json.loads(content)
+                payload = _parse_wire_json(content)
             except ValueError:
                 raise ProviderError("Public RPC response is malformed", "malformed") from None
-            if (not isinstance(payload, dict) or payload.get("id") != request_id
+            if (not isinstance(payload, dict) or type(payload.get("id")) is not int or payload.get("id") != request_id
                     or payload.get("jsonrpc") != "2.0"):
                 raise ProviderError("Public RPC response identity disagrees", "malformed")
             if "error" in payload:
                 error = payload["error"]
+                code = error.get("code") if isinstance(error, dict) else None
                 raise ProviderError("Public RPC rejected the bounded read",
-                                    error.get("code") if isinstance(error, dict) else "rpc_error")
+                                    code if type(code) is int else "rpc_error")
             if "result" not in payload:
                 raise ProviderError("Public RPC omitted its result", "malformed")
             return CapturedRPC(payload["result"], request.content, content)
         except httpx.TransportError:
             raise ProviderError("Public RPC connection failed; dispatched attempt was charged", "transport") from None
+        except ProviderError as error:
+            if request_bytes is not None:
+                error.evidence_hash = self.store.archive({"version": "public-native-error-capture-v1",
+                    "endpoint": PUBLIC_RPC, "method": method, "request_bytes": _bytes(request_bytes),
+                    "response_bytes": _bytes(content) if content is not None else None,
+                    "http_status": status, "request_started_at": started, "response_received_at": _stamp(),
+                    "error_code": error.code, "response_body_captured": content is not None})
+            raise
         finally:
             if pending:
                 self._pending_requests -= 1
@@ -228,7 +310,7 @@ class JupiterQuotes:
                     except ValueError:
                         self._backoff_until = time.time() + 60
                 try:
-                    payload = json.loads(raw)
+                    payload = _parse_wire_json(raw)
                 except ValueError:
                     unavailable = "malformed_response"
                 if status in (401, 403):
@@ -395,18 +477,48 @@ class ObserverService:
         await self.process_quotes(run_id)
         return get_run(self.store, run_id)
 
+    def _reject_notification(self, run_id, message, reason, detected_at=None):
+        """Retain malformed wire evidence without poisoning signature dedupe."""
+        captured = detected_at or _stamp()
+        with self.store.lock:
+            state = self.snapshot(run_id)
+            if state["notifications"] >= state["limits"]["max_notifications"]:
+                self._update(run_id, status="budget_exhausted", stop_reason="notification_budget")
+                self._gap(run_id, "Notification budget exhausted; further activity is unobserved")
+                return
+            self._update(run_id, notifications=state["notifications"] + 1, last_detection_at=captured)
+            digest = self.store.archive({"version": OBSERVER_VERSION, "run_id": run_id,
+                "detected_at": captured, "notification": message})
+            params = message.get("params")
+            result = params.get("result") if isinstance(params, dict) else None
+            value = result.get("value") if isinstance(result, dict) else None
+            signature = value.get("signature") if isinstance(value, dict) else None
+            identifier = run_id + ":rejected:" + digest
+            self.store.put("observer_events", identifier, {"id": identifier, "run_id": run_id,
+                "signature": signature if isinstance(signature, str) and len(signature) <= 128 else None,
+                "detected_at": captured, "notification_hash": digest, "status": "excluded",
+                "reason": reason, "updated_at": captured})
+            self._gap(run_id, reason, captured)
+
     async def accept_notification(self, run_id, message, detected_at=None, subscription=None):
         """Persist before RPC dispatch; duplicates retain their original timestamp."""
         if not isinstance(message, dict) or message.get("method") != "logsNotification":
             return None
         params = message.get("params")
-        if not isinstance(params, dict) or (subscription is not None and params.get("subscription") != subscription):
+        if message.get("jsonrpc") != "2.0" or "error" in message or not isinstance(params, dict):
+            self._reject_notification(run_id, message, "Malformed notification JSON-RPC envelope; activity may have been missed", detected_at)
+            return None
+        received_subscription = params.get("subscription")
+        if type(received_subscription) is not int or received_subscription < 0:
+            self._reject_notification(run_id, message, "Malformed notification subscription identity; activity may have been missed", detected_at)
+            return None
+        if subscription is not None and received_subscription != subscription:
             return None
         result = params.get("result")
         value = result.get("value") if isinstance(result, dict) else None
         slot = result.get("context", {}).get("slot") if isinstance(result, dict) and isinstance(result.get("context"), dict) else None
         if not isinstance(value, dict) or not isinstance(value.get("signature"), str) or not 1 <= len(value["signature"]) <= 128:
-            self._gap(run_id, "Malformed notification; activity may have been missed")
+            self._reject_notification(run_id, message, "Malformed notification; activity may have been missed", detected_at)
             return None
         event_id = run_id + ":" + value["signature"]
         with self.store.lock:
@@ -550,19 +662,31 @@ class ObserverService:
                     await asyncio.sleep(min(2**attempt, 4))
                 async with self.websocket_connect(PUBLIC_WS, open_timeout=10, close_timeout=3,
                         ping_interval=20, ping_timeout=20, max_size=256_000, max_queue=32) as socket:
-                    await socket.send(json.dumps({"jsonrpc": "2.0", "id": 1, "method": "logsSubscribe",
-                        "params": [{"mentions": [state["address"]]}, {"commitment": "confirmed"}]}))
-                    answer = json.loads(await asyncio.wait_for(socket.recv(), timeout=10))
+                    subscribe = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "logsSubscribe",
+                        "params": [{"mentions": [state["address"]]}, {"commitment": "confirmed"}]})
+                    sent_at = _stamp()
+                    await socket.send(subscribe)
+                    received = await asyncio.wait_for(socket.recv(), timeout=10)
+                    received_at = _stamp()
+                    subscription_hash = self.store.archive({"version": "forward-subscription-capture-v1",
+                        "endpoint": PUBLIC_WS, "run_id": run_id, "address": state["address"],
+                        "request_started_at": sent_at, "response_received_at": received_at,
+                        "request_bytes": _bytes(subscribe.encode("utf-8")),
+                        "response_bytes": _bytes(received.encode("utf-8") if isinstance(received, str) else received)})
+                    answer = _parse_wire_json(received)
                     subscription = answer.get("result") if isinstance(answer, dict) else None
-                    if (not isinstance(answer, dict) or answer.get("id") != 1
+                    if (not isinstance(answer, dict) or answer.get("jsonrpc") != "2.0"
+                            or "error" in answer
+                            or type(answer.get("id")) is not int or answer.get("id") != 1
                             or type(subscription) is not int or subscription < 0):
                         raise ProviderError("Address subscription was rejected", "subscription_rejected")
                     self._close_subscription_gap(run_id, "Connecting/reconnecting interval; activity was not replayed")
-                    self._update(run_id, status="listening", connected_at=_stamp(), subscription=subscription)
+                    self._update(run_id, status="listening", connected_at=received_at, subscription=subscription,
+                                 subscription_evidence_hash=subscription_hash)
                     async for raw in socket:
                         detected = _stamp()
                         try:
-                            message = json.loads(raw)
+                            message = _parse_wire_json(raw)
                         except (ValueError, TypeError):
                             self._gap(run_id, "Malformed subscription response; activity may have been missed")
                             continue
@@ -575,12 +699,13 @@ class ObserverService:
             except asyncio.CancelledError:
                 self._close_subscription_gap(run_id, "Connection attempt stopped; activity was not replayed")
                 raise
-            except Exception:
+            except Exception as error:
                 # Never store exception text: websocket failures can contain proxy
                 # credentials or connection URLs. A gap is evidence, not an error dump.
                 existing = self.snapshot(run_id).get("monitoring_gap_started_at")
                 self._interrupt_monitoring(run_id, "monitoring_interrupted_no_hindsight_replay")
-                self._update(run_id, status="reconnecting", monitoring_gap_started_at=existing or _stamp())
+                self._update(run_id, status="reconnecting", monitoring_gap_started_at=existing or _stamp(),
+                             last_error=_connection_failure(error))
         self._close_subscription_gap(run_id, "Subscription unavailable; all reconnect attempts were unobserved")
         self._update(run_id, status="paused", stop_reason="subscription_unavailable")
 

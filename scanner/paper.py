@@ -169,7 +169,8 @@ def _summary(run, store):
     marked = [position for position in opened if position.get("mark") is not None]
     open_cost = sum(int(position["cost_lamports"]) for position in opened)
     marked_value = sum(int(position["mark"]["net_value_lamports"]) for position in marked)
-    all_marked = len(marked) == len(opened)
+    affordable_liquidation = int(run["cash_lamports"]) + marked_value >= 0
+    all_marked = len(marked) == len(opened) and affordable_liquidation
     realised = sum(int(position["realised_pnl_lamports"]) for position in closed)
     requests = run["quote_requests"]
     incomplete = bool(run["gaps"] or any(position.get("exit_unavailable") for position in opened)
@@ -190,6 +191,7 @@ def _summary(run, store):
         "supported_performance_state": "SUPPORTED_QUOTE_RESEARCH" if has_activity and sources["state"] == "KNOWN" and all_marked and not incomplete else "INCOMPLETE",
         "open_pnl_sol": _sol(marked_value - open_cost) if all_marked else None,
         "valuation_status": "known" if all_marked else "partial" if marked else "unknown",
+        "valuation_reason": None if affordable_liquidation else "Modeled liquidation costs exceed available simulated cash; complete portfolio exit is unfunded.",
         "valuation_times": [position["mark"]["received_at"] for position in marked],
         "signal_count": len(run["signals"]), "quote_count": run["budgets"]["quotes_used"],
         "unavailable_quotes": sum(request["status"] in ("unavailable", "interrupted") for request in requests),
@@ -253,7 +255,7 @@ def _copyability(run):
                 {"open_pnl_sol": summary["open_pnl_sol"], "valuation_times": summary["valuation_times"]},
                 [p["mark"]["quote_evidence_hash"] for p in run["positions"] if p.get("mark")], "investigate")
     if summary["valuation_status"] != "known":
-        missing.append("Open hypothetical exposure lacks complete current sell-quote valuation.")
+        missing.append(summary.get("valuation_reason") or "Open hypothetical exposure lacks complete current sell-quote valuation.")
     if run["gaps"]:
         missing.append("Monitoring gaps remain; missed periods were not reconstructed as followed activity.")
     if not source_known:
@@ -367,9 +369,9 @@ def record_signal(store, run_id, signal, at=None):
     identifier = f"{signature}:{mint}:{side}"
     with store.lock:
         run = _load(store, run_id)
-        if any(item["id"] == identifier for item in run["signals"]):
-            return deepcopy(run)
         _limits(run, timestamp)
+        if any(item["id"] == identifier for item in run["signals"]):
+            return _save(store, run, timestamp)
         if run["status"] != "running":
             return _save(store, run, timestamp)
         if run["budgets"]["events_used"] >= run["settings"]["max_events"]:
@@ -386,6 +388,9 @@ def record_signal(store, run_id, signal, at=None):
         run["checkpoint"] = {"last_signal_id": identifier, "last_detected_at": detected.isoformat()}
         if detected < _time(run["started_at"]):
             item.update(decision="excluded", reason="signal_detected_before_run_started")
+        elif any((detected <= _time(gap["start_at"]) <= decoded if gap["start_at"] == gap["end_at"] else
+                  detected < _time(gap["end_at"]) and decoded > _time(gap["start_at"])) for gap in run["gaps"]):
+            item.update(decision="excluded", reason="signal_crosses_unobserved_monitoring_gap")
         elif not item["eligible"]:
             item.update(decision="excluded", reason=item.get("reason") or "unsupported_or_ineligible_signal")
         else:
@@ -438,12 +443,17 @@ def begin_quote(store, run_id, request_id, at=None):
         if request is None:
             raise ValueError("Quote request was not found")
         if request["status"] != "pending":
+            _save(store, run, at)
             return None
         if (run["status"] != "running" and request["action"] != "mark") or _time(at) >= _time(run["deadline_at"]):
             _save(store, run, at)
             return None
         if _time(at) < _time(request["due_at"]):
             raise ValueError("Quote request must wait for decoding and the selected reaction delay")
+        if request["action"] == "entry" and int(run["cash_lamports"]) < int(request["input_amount"]) + _sol_units(run["settings"]["execution_fee_sol"]):
+            _unavailable(run, request, "insufficient_simulated_cash_for_entry_cost")
+            _save(store, run, at)
+            return None
         if run["budgets"]["quotes_used"] >= run["settings"]["max_quotes"]:
             run.update(status="budget_exhausted", stop_reason="quote_budget_exhausted", stopped_at=_stamp(at))
             _cancel_pending(run, run["stop_reason"])
@@ -479,10 +489,10 @@ def apply_quote(store, run_id, request_id, quote, at=None):
             raise ValueError("Quote request was not found")
         if request["status"] not in ("in_flight", "cancelled", "interrupted") or not request.get("request_started_at"):
             if request["status"] in ("available", "unavailable", "interrupted", "cancelled"):
-                return deepcopy(run)
+                return _save(store, run, timestamp)
             raise ValueError("Quote must have a durable dispatched request")
         if request["status"] in ("cancelled", "interrupted") and request.get("received_at"):
-            return deepcopy(run)
+            return _save(store, run, timestamp)
         if quote.get("received_at") is None:
             raise ValueError("Quote receipt timestamp is required")
         received = _time(quote["received_at"])
@@ -527,6 +537,9 @@ def apply_quote(store, run_id, request_id, quote, at=None):
                         _unavailable(run, request, "adverse_adjusted_output_is_zero")
                         return _save(store, run, timestamp)
                     cost = int(request["input_amount"]) + fee
+                    if int(run["cash_lamports"]) < cost:
+                        _unavailable(run, request, "insufficient_simulated_cash_for_entry_cost")
+                        return _save(store, run, timestamp)
                     run["cash_lamports"] = str(int(run["cash_lamports"]) - cost)
                     position = {"id": uuid.uuid4().hex, "mint": request["mint"], "decimals": signal["decimals"],
                                 "status": "open", "raw_units": str(adjusted), "cost_lamports": str(cost),
@@ -548,8 +561,11 @@ def apply_quote(store, run_id, request_id, quote, at=None):
                                         realised_pnl_lamports=str(net - int(position["cost_lamports"])), mark=None)
                         signal["decision"] = "hypothetical_exit"
                 else:
-                    position["mark"] = {"request_id": request["id"], "received_at": received.isoformat(),
-                                        "net_value_lamports": str(adjusted - fee), "quote_evidence_hash": request["quote_evidence_hash"]}
+                    if int(run["cash_lamports"]) + adjusted - fee < 0:
+                        _unavailable(run, request, "insufficient_simulated_cash_for_exit_cost")
+                    else:
+                        position["mark"] = {"request_id": request["id"], "received_at": received.isoformat(),
+                                            "net_value_lamports": str(adjusted - fee), "quote_evidence_hash": request["quote_evidence_hash"]}
         _limits(run, timestamp)
         return _save(store, run, timestamp)
 
@@ -593,7 +609,9 @@ def record_gap(store, run_id, reason, start_at=None, end_at=None, *, started_at=
 def stop_run(store, run_id, reason="user_stopped", at=None):
     with store.lock:
         run = _load(store, run_id)
-        run.update(status="stopped", stop_reason=str(reason)[:500], stopped_at=_stamp(at))
+        _limits(run, at)
+        if run["status"] != "budget_exhausted":
+            run.update(status="stopped", stop_reason=str(reason)[:500], stopped_at=_stamp(at))
         _cancel_pending(run, run["stop_reason"])
         return _save(store, run, at)
 
@@ -601,7 +619,9 @@ def stop_run(store, run_id, reason="user_stopped", at=None):
 def pause_run(store, run_id, reason="observer_interrupted", at=None):
     with store.lock:
         run = _load(store, run_id)
-        run.update(status="paused", stop_reason=str(reason)[:500], stopped_at=_stamp(at))
+        _limits(run, at)
+        if run["status"] != "budget_exhausted":
+            run.update(status="paused", stop_reason=str(reason)[:500], stopped_at=_stamp(at))
         return _save(store, run, at)
 
 
@@ -619,9 +639,16 @@ def interrupt_requests(store, run_id, reason="monitoring_interrupted_no_hindsigh
 def resume_run(store, run_id, at=None):
     with store.lock:
         run = _load(store, run_id)
+        _limits(run, at)
         if run["status"] == "running":
-            return deepcopy(run)
+            return _save(store, run, at)
+        for key, setting, reason in (("quotes_used", "max_quotes", "quote_budget_exhausted"),
+                                     ("events_used", "max_events", "event_budget_exhausted")):
+            if run["status"] != "budget_exhausted" and run["budgets"][key] >= run["settings"][setting]:
+                run.update(status="budget_exhausted", stop_reason=reason, stopped_at=_stamp(at))
+                _cancel_pending(run, reason)
         if run["status"] == "budget_exhausted":
+            _save(store, run, at)
             raise ValueError("An exhausted immutable run cannot be extended; start a new run")
         timestamp = _time(at)
         gap_start = _time(run.get("stopped_at", run["updated_at"]))
@@ -640,6 +667,13 @@ def resume_run(store, run_id, at=None):
 
 def export_run(store, run_id):
     run = get_run(store, run_id)
+    try:
+        settings = store.evidence(run["settings_snapshot_hash"])
+    except (EvidenceError, ValueError, TypeError) as error:
+        settings = None
+        availability = {"state": "UNKNOWN", "hash": run["settings_snapshot_hash"], "reason": str(error)[:300]}
+    else:
+        availability = {"state": "KNOWN", "hash": run["settings_snapshot_hash"], "reason": "Original settings archive is readable."}
     return {"export_version": VERSION, "exported_at": now(), "run": run,
             "scope": "Forward quote-only paper observation; no signed transaction, actual fill or verified leader profit.",
-            "settings_evidence": store.evidence(run["settings_snapshot_hash"])}
+            "settings_evidence": settings, "settings_evidence_availability": availability}

@@ -1,5 +1,30 @@
 # Single issue register — initialise from v0.3.11
 
+## Screening and observation operational hardening — 4 October 2026
+
+Continue from the private draft PR candidate `38eed4d7b3fcdd258daf60fff52f4644851367b9`.
+The user requests a usable product with reproduced failures repaired, rather than
+another candidate handoff. Final software receipts belong in
+`evidence/screening-forward-research/hardening-final-checks/`; bounded live
+workflow evidence is separate at `hardening-live-workflow/` under that prefix.
+
+| Reproduced issue | Repair scope | Validation obligation |
+| --- | --- | --- |
+| Failed native identity recheck erased valid dated proof | Retain prior proof on interruption, preserve newly linked contradictions and precise failed-provider captures | Native identity, API and durable sample controls |
+| Saved screening hid later source loss | Show current source/identity support separately from the immutable recorded conclusion across detail, lists and exports | Source loss/restoration and browser-cache controls |
+| Monitoring connection and excluded notifications hidden in UI | Display connecting/listening/reconnecting status, safe failure reasons and retrieval budgets; expose the paste-wallet entry | Actual launcher browser at desktop/mobile widths |
+| Paper cash, gap and terminal-budget boundaries | Prevent unfunded entries/marks, preserve exhausted runs, exclude gap-crossing signals and persist expiry; export recorded history when original settings are missing with explicit dependency | Delayed paper, loss, concurrency and restart controls |
+| WebSocket destination redirects and malformed response metadata | Fixed notification destination, verified TLS/proxy retained, strict JSON and captured subscription acknowledgement | Real loopback transport plus bounded public subscription |
+| Hosted archive classification regressions | Asset classification v2 / wallet receipts v12 preserve unaccepted declared source dependencies and supported native archive capacity, keeping independent fees and bounded mint controls | Existing failing wallet/archive controls plus classification siblings |
+| Cached report build initialized unavailable live provider | Reuse valid cached controls; optional current mint refresh requires an active authorized collection | Existing initial-native inventory and offline build/rebuild controls |
+| New tests absent from hosted CI | One disjoint screening group in the existing guarded matrix and strict union | Validator bindings and exact published-candidate CI |
+
+The live default screening legitimately excluded the sampled wallet under token
+control rules. A separately named transport-validation preset may disable those
+screening exclusions while retaining their observations; it remains insufficient
+evidence and cannot qualify the wallet financially. No winner is required.
+B1 remains NO_GO_CURRENT_SOURCE, B2 OPEN, B3 BLOCKED and PRODUCT_READY=false.
+
 ## Current mixed refunds and retained phase prices — 4 October 2026
 
 Continue private `vermilion1992/solana-wallet-scanner`, branch

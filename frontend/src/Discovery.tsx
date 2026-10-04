@@ -365,6 +365,8 @@ export function DiscoveryView({
   const [importInput, setImportInput] = useState("");
   const [importError, setImportError] = useState("");
   const importFileRef = useRef<HTMLInputElement>(null);
+  const importPanelRef = useRef<HTMLDetailsElement>(null);
+  const importInputRef = useRef<HTMLTextAreaElement>(null);
   const importedAddresses = useMemo(() => parseAddresses(importInput), [importInput]);
   const [selection, setSelection] = useState<{
     cohortId: string;
@@ -498,6 +500,19 @@ export function DiscoveryView({
             >
               {isDiscovering ? "Finding candidates…" : "Find wallet candidates"}
             </Button>
+            <Button
+              variant="secondary"
+              icon={Upload}
+              onClick={() => {
+                if (importPanelRef.current) {
+                  importPanelRef.current.open = true;
+                  importPanelRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+                  importInputRef.current?.focus({ preventScroll: true });
+                }
+              }}
+            >
+              Paste public wallets
+            </Button>
             <button
               className="discovery-manual"
               onClick={() => navigate("scan")}
@@ -562,12 +577,14 @@ export function DiscoveryView({
       </div>
       {!state.provider.configured && (
         <section className="discovery-key-card">
+          <details className="discovery-optional-provider">
+            <summary>Optional: connect deeper historical collection</summary>
           <div>
             <strong>Connect historical collection with your Helius key</strong>
             <p>
-              Native identity checks can use public RPC. Historical audits use
-              the saved provider allowance; confirm your billing cycle in Settings
-              for extended audits.
+              Native identity checks and small wallet-address samples can use
+              public RPC without a key. Helius collection uses the saved provider
+              allowance; confirm your billing cycle in Settings for extended audits.
             </p>
           </div>
           <form
@@ -598,6 +615,7 @@ export function DiscoveryView({
               Connect historical collection
             </Button>
           </form>
+          </details>
         </section>
       )}
       <div className="discovery-stats">
@@ -663,7 +681,7 @@ export function DiscoveryView({
         </div>
       </section>
       <section className="panel public-list-panel">
-        <details>
+        <details ref={importPanelRef}>
           <summary><Upload size={16} /> Import a public candidate list</summary>
           <div className="public-list-content">
             <p>
@@ -695,6 +713,7 @@ export function DiscoveryView({
               />
             </div>
             <textarea
+              ref={importInputRef}
               id="candidate-import-addresses"
               className="mono public-list-input"
               placeholder="Paste public addresses, one per line…"

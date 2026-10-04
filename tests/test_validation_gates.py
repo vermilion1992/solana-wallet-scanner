@@ -300,9 +300,27 @@ def read_group_records(paths):
 def test_focused_batches_preserve_the_exact_existing_union():
     groups = VALIDATOR.focused_groups()
     selectors = [selector for paths in groups.values() for selector in paths]
-    assert len(groups) == 10
+    assert len(groups) == 11
     assert len(selectors) == len(set(selectors)) == len(VALIDATOR.FOCUSED)
     assert set(selectors) == set(VALIDATOR.FOCUSED)
+
+
+def test_hosted_matrix_and_union_require_the_new_screening_paths():
+    import re
+    workflow = (Path(__file__).resolve().parents[1] / '.github/workflows/offline-focused.yml').read_text()
+    match = re.search(r'group:\s*\[([^\]]+)\]', workflow)
+    assert match is not None
+    hosted_groups = [value.strip() for value in match.group(1).split(',')]
+    assert len(hosted_groups) == len(set(hosted_groups))
+    assert set(hosted_groups) == set(VALIDATOR.focused_groups())
+    receipt_groups = re.findall(r'--group-record "\$CI_RECEIPTS/focused-([^/]+)/result.json"', workflow)
+    assert len(receipt_groups) == len(set(receipt_groups))
+    assert set(receipt_groups) == set(hosted_groups)
+    assert set(VALIDATOR.FOCUSED_GROUPS['screening']) == {
+        'tests/test_screening.py', 'tests/test_screening_routes.py',
+        'tests/test_public_sample_budget.py', 'tests/test_paper.py',
+        'tests/test_observer.py', 'tests/test_candidate_import.py',
+    }
 
 
 @pytest.mark.parametrize('change', ['duplicate', 'missing', 'extra', 'directory-overlap'])
@@ -325,7 +343,7 @@ def test_focused_partition_rejects_selector_loss_and_overlap(monkeypatch, change
 def test_complete_bound_group_receipts_pass_in_any_order(tmp_path):
     paths = group_receipts(tmp_path)
     result = read_group_records(list(reversed(paths)))
-    assert result['state'] == 'PASS' and len(result['receipts']) == 10
+    assert result['state'] == 'PASS' and len(result['receipts']) == 11
     assert all(receipt['state'] == 'PASS' and len(receipt['sha256']) == 64 for receipt in result['receipts'])
     assert result['selectors'] == VALIDATOR.FOCUSED
 

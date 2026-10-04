@@ -62,6 +62,71 @@ def test_literal_wrapped_native_is_excluded_without_claiming_a_complete_meme_pop
     assert raw == frozen
 
 
+@pytest.mark.parametrize('availability', ['present', 'missing', 'corrupt'])
+def test_unaccepted_classification_declarations_remain_visible_without_certifying_labels(availability):
+    payload = {'kind': 'classification', 'classification': 'meme', 'complete': True}
+    digest = hashlib.sha256(canonical_bytes(payload)).hexdigest()
+    source = {'kind': 'classification', 'hash': digest, 'payload': payload}
+    if availability == 'missing':
+        source['payload'] = None
+    elif availability == 'corrupt':
+        source['payload'] = {**payload, 'classification': 'safe'}
+    result = classification([wrapped_transfer()], sources=[source])
+    declaration = result['declared_classification_sources'][digest]
+    assert declaration['state'] == 'UNKNOWN' and declaration['evidence'] == [digest]
+    assert 'accepted_historical_asset_classification' in declaration['dependencies']
+    for check in result['classification_by_interval'].values():
+        assert digest in check['evidence']
+    assert result['historical_eligibility_state'] == 'UNKNOWN'
+
+
+def test_optional_classification_budget_preserves_fees_and_independent_current_controls(monkeypatch):
+    import scanner.asset_classification as module
+    raw = wrapped_transfer()
+    native = {'kind': 'getTransaction', 'hash': record(raw)['evidence_hash'], 'payload': raw}
+    mint = mint_source()
+    sources = [native, mint]
+    frozen = deepcopy(sources)
+    monkeypatch.setattr(module, 'MAX_SOURCES', 1)
+    bounded = derive([raw], raw_sources=sources)
+    observed = bounded['classification_observations']
+    assert bounded['components']['native_fee']['state'] == 'PASS'
+    assert observed['inspection_budget']['state'] == 'UNKNOWN'
+    assert observed['classification_by_interval']['report_period']['state'] == 'UNKNOWN'
+    assert set(observed['classification_by_interval']['report_period']['evidence']) >= {native['hash'], mint['hash']}
+    assert 'complete_classification_source_inspection' in observed['records']['wrapped-transfer']['check']['dependencies']
+    assert observed['mint_snapshots'][0]['controls']['mintAuthority']['state'] == 'PASS'
+    assert observed['provider_requests'] == observed['credential_lookups'] == 0
+    monkeypatch.setattr(module, 'MAX_SOURCES', 2)
+    restored = derive([raw], raw_sources=sources)
+    assert restored['classification_observations']['inspection_budget']['state'] == 'PASS'
+    assert restored['classification_observations']['classification_by_interval']['report_period']['state'] == 'PASS'
+    assert sources == frozen
+
+
+@pytest.mark.parametrize('variant', ['valid', 'unfinalized', 'id-type', 'native-alternative'])
+def test_current_mint_original_byte_scope_preserves_fees_only_when_semantically_disjoint(variant):
+    from scanner.wallet_identity import account_source_bytes
+    raw = wrapped_transfer()
+    source = mint_source()
+    original = account_source_bytes(source['payload'])
+    request, response = (json.loads(original[name]) for name in ('request', 'response'))
+    if variant == 'unfinalized':
+        request['params'][1]['commitment'] = 'confirmed'
+    elif variant == 'id-type':
+        response['id'] = str(request['id'])
+    elif variant == 'native-alternative':
+        request.update(method='getTransaction', params=['wrapped-transfer', {'commitment': 'finalized'}])
+        alternative = deepcopy(raw)
+        alternative['meta']['fee'] += 1000
+        response['result'] = alternative
+    payload = account_info_source(json.dumps(request).encode(), json.dumps(response).encode())
+    source = {**source, 'payload': payload, 'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest()}
+    result = derive([raw], raw_sources=[source])
+    assert result['components']['native_fee']['state'] == ('PASS' if variant == 'valid' else 'UNKNOWN')
+    assert result['provider_requests'] == result['credential_lookups'] == 0
+
+
 @pytest.mark.parametrize('program', [TOKEN_PROGRAM, TOKEN_2022_PROGRAM])
 def test_real_token_program_or_authority_metadata_cannot_manufacture_meme_eligibility(program):
     raw = wrapped_transfer(program=program)

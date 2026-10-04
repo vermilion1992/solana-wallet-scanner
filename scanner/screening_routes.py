@@ -13,9 +13,90 @@ from .storage import now, EvidenceError, QuotaExceeded
 from .providers import ProviderError
 
 
+def _provider_stop(error):
+    """Retain a bounded failure receipt without treating it as chain activity."""
+    code = getattr(error, 'code', None)
+    if not (type(code) is int or isinstance(code, str) and len(code) <= 128):
+        code = 'budget_exhausted' if isinstance(error, QuotaExceeded) else 'provider_unavailable'
+    digest = getattr(error, 'evidence_hash', None)
+    if not (isinstance(digest, str) and len(digest) == 64 and all(character in '0123456789abcdef' for character in digest)):
+        digest = None
+    return {'code': code, 'http_status': code if type(code) is int and 100 <= code <= 599 else None,
+            'evidence_hash': digest, 'observed_at': now()}
+
+
 def observation_view(store, run):
     return {**run, 'observer': store.get('observer_runtime', run['id'], {}),
             'notifications': [event for event in store.list('observer_events') if event.get('run_id') == run['id']]}
+
+
+def screening_view(store, frozen, *, source_cache=None, identity_cache=None):
+    """Recheck cited archives without changing the immutable saved assessment."""
+    source_cache = {} if source_cache is None else source_cache
+    identity_cache = {} if identity_cache is None else identity_cache
+    hashes, malformed, nodes = set(), False, [frozen]
+    while nodes:
+        item = nodes.pop()
+        if isinstance(item, list):
+            nodes.extend(item)
+        elif isinstance(item, dict):
+            for key, value in item.items():
+                if key == 'evidence':
+                    if not isinstance(value, list):
+                        malformed = True
+                    else:
+                        for citation in value:
+                            digest = citation.get('hash') if isinstance(citation, dict) else citation
+                            if isinstance(digest, str) and len(digest) == 64 and all(c in '0123456789abcdef' for c in digest):
+                                hashes.add(digest)
+                            else:
+                                malformed = True
+                elif key in ('evidence_hash', 'report_input_hash') and value is not None:
+                    if isinstance(value, str) and len(value) == 64 and all(c in '0123456789abcdef' for c in value):
+                        hashes.add(value)
+                    else:
+                        malformed = True
+                if isinstance(value, (dict, list)):
+                    nodes.append(value)
+    missing = []
+    for digest in sorted(hashes):
+        if digest not in source_cache:
+            try:
+                store.evidence(digest)
+                source_cache[digest] = True
+            except (EvidenceError, ValueError, TypeError):
+                source_cache[digest] = False
+        if not source_cache[digest]:
+            missing.append(digest)
+    if malformed:
+        missing.append(None)
+    address = frozen['address']
+    if address not in identity_cache:
+        identity_cache[address] = saved_identity(store, address)
+    identity = deepcopy(identity_cache[address])
+    if missing:
+        reason = 'Cited archived sources are unavailable or malformed. The saved assessment is retained; its result cannot establish a supported current conclusion.'
+    elif identity['state'] != 'PASS':
+        reason = identity['reason']
+    else:
+        reason = frozen['reason']
+    supportable = not missing and identity['state'] == 'PASS'
+    eligible = supportable and frozen['result'] != 'excluded_by_preset'
+    return {**deepcopy(frozen),
+            'current_source_availability': {'state': 'UNKNOWN' if missing else 'PASS', 'missing': missing},
+            'current_identity': identity,
+            'current_result': frozen['result'] if supportable else 'insufficient_evidence',
+            'current_label': frozen['label'] if supportable else 'Insufficient current evidence',
+            'current_reason': reason,
+            'current_eligibility': {'can_start_observation': eligible,
+                'reason': 'Current cited sources and native identity support starting separate forward quote-only research.' if eligible else reason}}
+
+
+def screening_views(store):
+    """One fresh invocation cache for state/list consistency and bounded reads."""
+    sources, identities = {}, {}
+    return [screening_view(store, frozen, source_cache=sources, identity_cache=identities)
+            for frozen in store.list('screenings')]
 
 
 def saved_identity(store, address):
@@ -44,7 +125,7 @@ def saved_identity(store, address):
             return {'state': 'UNKNOWN', 'reason': 'A still-linked identity alternative is unavailable.', 'evidence': [link['hash']]}
         if isinstance(payload, dict) and payload.get('method') == 'getAccountInfo' and payload.get('address') == address:
             account_hashes.add(link['hash'])
-    for digest in account_hashes:
+    for digest in sorted(account_hashes):
         try:
             payload = store.evidence(digest)
             result = payload.get('result') if isinstance(payload, dict) else None
@@ -97,11 +178,14 @@ def saved_identity(store, address):
 
 async def check_cohort_identity(store, cohort, addresses):
     from .observer import PublicRPC
-    from .discovery import _native_signers, SYSTEM_PROGRAM
+    from .discovery import _native_signers, _public_address, SYSTEM_PROGRAM
     checked = []
     async with PublicRPC(store, max_requests=7 * len(addresses)) as native:
         for address in addresses:
             candidate = next(c for c in cohort['candidates'] if c['address'] == address)
+            previous_validation = deepcopy(candidate['validation']) if isinstance(candidate.get('validation'), dict) else {}
+            previous_status = candidate.get('status')
+            account_observed, attempt_state, provider_stop = False, 'unresolved', None
             candidate['validation'] = {'identity_verified': False}
             candidate.update(status='unresolved', reason='No supported native signer movement has been found in this bounded check.')
             try:
@@ -118,18 +202,34 @@ async def check_cohort_identity(store, cohort, addresses):
                     capture = await native.rpc_capture('getTransaction', [signature, {'encoding': 'jsonParsed', 'commitment': 'finalized', 'maxSupportedTransactionVersion': 0}])
                     raw = capture.result
                     flows, reason = _native_signers(raw, signature)
+                    # A new body for the previously selected transaction is an
+                    # identity dependency even when its new schema/facts reject.
+                    # Other unsuccessful samples do not establish activity and
+                    # cannot become a historical-population prerequisite.
+                    if address in flows or signature == previous_validation.get('signature'):
+                        digest = store.archive(raw)
+                        candidate['evidence'] = list(dict.fromkeys(candidate.get('evidence', []) + [digest]))
+                        link = {'kind': 'transaction', 'signature': signature, 'hash': digest}
+                        if link not in cohort.setdefault('evidence', []):
+                            cohort['evidence'].append(link)
                     if reason or address not in flows:
                         continue
                     digest = store.archive(raw)
                     store.put('transactions', signature, {'signature': signature, 'raw': raw, 'evidence_hash': digest})
                     account = await native.rpc('getAccountInfo', [address, {'encoding': 'jsonParsed', 'commitment': 'finalized', 'minContextSlot': raw['slot']}])
                     account_hash = store.archive({'method': 'getAccountInfo', 'address': address, 'commitment': 'finalized', 'observed_at': now(), 'result': account})
+                    account_observed = True
                     value = account.get('value') if isinstance(account, dict) else None
                     context = account.get('context') if isinstance(account, dict) else None
-                    verified = (isinstance(value, dict) and value.get('owner') == SYSTEM_PROGRAM and value.get('executable') is False
-                                and isinstance(context, dict) and type(context.get('slot')) is int and context['slot'] >= raw['slot'])
-                    candidate.update(status='candidate' if verified else 'rejected',
-                                     reason='Native signer with owned token movement and current system account checked.' if verified else 'Current account does not establish a non-executable system wallet.',
+                    account_known = (isinstance(value, dict) and _public_address(value.get('owner')) and type(value.get('executable')) is bool
+                                     and isinstance(context, dict) and type(context.get('slot')) is int and context['slot'] >= raw['slot'])
+                    verified = account_known and value['owner'] == SYSTEM_PROGRAM and value['executable'] is False
+                    excluded = account_known and not verified
+                    attempt_state = 'verified' if verified else 'excluded' if excluded else 'unresolved'
+                    candidate.update(status='candidate' if verified else 'rejected' if excluded else 'unresolved',
+                                     reason='Native signer with owned token movement and current system account checked.' if verified else
+                                            'Observed current account is executable or program-owned and is excluded.' if excluded else
+                                            'Current account identity evidence is incomplete or unresolved.',
                                      evidence=list(dict.fromkeys(candidate.get('evidence', []) + [digest, account_hash])))
                     candidate['validation'] = {'identity_verified': verified, 'account_type': 'system-owned signer' if verified else 'unresolved',
                                                'signature': signature, 'economic_signers': list(flows), 'token_flows': flows[address],
@@ -142,6 +242,15 @@ async def check_cohort_identity(store, cohort, addresses):
                     break
             except (ProviderError, QuotaExceeded) as error:
                 candidate['reason'] = str(error)
+                attempt_state = 'interrupted'
+                provider_stop = _provider_stop(error)
+            attempt_reason = candidate['reason']
+            retained = not account_observed and previous_status == 'candidate' and previous_validation.get('identity_verified') is True
+            if retained:
+                candidate.update(status=previous_status, validation=previous_validation,
+                                 reason=f'Identity recheck did not establish a new result: {attempt_reason}. Prior dated identity evidence is retained.')
+            candidate['identity_recheck'] = {'state': attempt_state, 'reason': attempt_reason, 'observed_at': now(),
+                                           'prior_evidence_retained': retained, 'provider_stop': provider_stop}
             checked.append({'address': address, 'status': candidate['status'], 'reason': candidate['reason']})
             store.put('discovery_cohorts', cohort['id'], cohort)
     return checked
@@ -248,6 +357,7 @@ async def collect_public_sample(store, scan, build_report, should_pause):
         key = scan['id'] + ':' + address
         cp = store.get('public_sample_checkpoints', key, PublicSampleRPC._empty())
         stop = 'Transaction tranche exhausted; more wallet-address history may be collected.'
+        provider_stop = None
         try:
             async with PublicSampleRPC(store, scan['id'], address, max_requests=scan['limits']['wallet_credit_limit']) as native:
                 cp = store.get('public_sample_checkpoints', key)
@@ -290,13 +400,18 @@ async def collect_public_sample(store, scan, build_report, should_pause):
                     store.put('public_sample_checkpoints', key, cp)
         except (ProviderError, QuotaExceeded) as error:
             stop = str(error)
+            provider_stop = _provider_stop(error)
             cp = store.get('public_sample_checkpoints', key, cp)
         cp['stop_reason'] = stop
+        cp['provider_stop'] = provider_stop
+        if provider_stop is not None:
+            cp.setdefault('interruptions', []).append(deepcopy(provider_stop))
         store.put('public_sample_checkpoints', key, cp)
         collected = {'transactions': cp['transactions'], 'evidence': cp['evidence'], 'checkpoint': {},
                      'coverage': {'collection_stop_reason': stop, 'scope': 'Bounded finalized wallet-address signature sample; no exhaustive token-account history.',
                                   'transactions': len(cp['transactions']), 'pages': cp['pages'], 'credits': cp['credits'],
                                   'requests_used': cp.get('requests_used', cp['credits']), 'tranche_request_limit': cp.get('tranche_request_limit'),
+                                  'provider_stop': deepcopy(provider_stop), 'interruptions': deepcopy(cp.get('interruptions', [])),
                                   'history_scope_complete': False, 'historical_ownership_verified': False}}
         if cp['transactions']:
             await build_report(scan, address, collected)
@@ -325,7 +440,7 @@ def install_research_routes(app, store, body, observer, *, build_report, queue_s
         result = store.get('screenings', identifier)
         if result is None:
             raise HTTPException(404, 'Screening not found')
-        return result
+        return screening_view(store, result)
 
     @app.post('/api/discovery/{identifier}/identity')
     async def identity(identifier: str, request: Request):
@@ -353,6 +468,8 @@ def install_research_routes(app, store, body, observer, *, build_report, queue_s
         if report is None:
             raise HTTPException(404, 'Report not found')
         frozen = build_screening(report, data.get('preset'), saved_identity(store, report['address']))
+        frozen['collection']['provider_stop'] = deepcopy(report.get('coverage', {}).get('provider_stop'))
+        frozen['collection']['interruptions'] = deepcopy(report.get('coverage', {}).get('interruptions', []))
         frozen.update(id=uuid.uuid4().hex, created_at=now(), source=report.get('source'), report_input_hash=report.get('collection_input_hash'))
         source_scan = store.get('scans', report.get('scan_id'))
         sample_cp = store.get('public_sample_checkpoints', report.get('scan_id', '') + ':' + report['address'], {})
@@ -369,11 +486,11 @@ def install_research_routes(app, store, body, observer, *, build_report, queue_s
         if missing and frozen['result'] == 'worth_observing':
             frozen.update(result='insufficient_evidence', label='Insufficient evidence', reason='Required archived sources are unavailable.')
         store.put('screenings', frozen['id'], frozen)
-        return frozen
+        return screening_view(store, frozen)
 
     @app.get('/api/screenings')
     async def screenings():
-        return store.list('screenings')
+        return screening_views(store)
 
     @app.get('/api/screenings/{identifier}')
     async def screening(identifier: str):
@@ -433,6 +550,8 @@ def install_research_routes(app, store, body, observer, *, build_report, queue_s
         if set(data) - {'screening_id', 'settings'} or 'screening_id' not in data:
             raise ValueError('Select a saved screening and paper settings')
         selected = assessment(data['screening_id'])
+        if not selected['current_eligibility']['can_start_observation']:
+            raise HTTPException(409, selected['current_eligibility']['reason'])
         if saved_identity(store, selected['address'])['state'] != 'PASS':
             raise HTTPException(409, 'Native identity evidence must be checked before forward observation')
         if selected['result'] == 'excluded_by_preset':

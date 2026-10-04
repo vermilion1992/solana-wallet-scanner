@@ -83,6 +83,29 @@ def test_failed_attempts_and_process_restart_preserve_exhausted_sample_budget(tm
     store.close()
 
 
+def test_provider_failure_status_and_capture_stay_with_stopped_sample_without_entering_chain_records(tmp_path, native, monkeypatch):
+    store = Store(tmp_path)
+    selected = scan()
+
+    async def limited(self, method, params):
+        self.calls.append((method, deepcopy(params)))
+        error = ProviderError('Public RPC rate limit (HTTP 429); collection paused without retry.', 429)
+        error.evidence_hash = self.store.archive({'kind': 'development-http-failure', 'status': 429})
+        raise error
+    monkeypatch.setattr(native, 'rpc', limited)
+
+    async def never_build(*_):
+        pytest.fail('Failed reads cannot establish native source records')
+    asyncio.run(collect_public_sample(store, selected, never_build, lambda: False))
+    cp = store.get('public_sample_checkpoints', 'sample-budget:first-wallet')
+    assert cp['provider_stop']['http_status'] == cp['provider_stop']['code'] == 429
+    assert store.evidence(cp['provider_stop']['evidence_hash'])['status'] == 429
+    assert cp['transactions'] == [] and cp['evidence'] == []
+    assert cp['requests_used'] == 1 and len(cp['interruptions']) == 1
+    assert 'HTTP 429' in cp['stop_reason']
+    store.close()
+
+
 def test_explicit_continuation_adds_only_its_persisted_allowance_and_mint_reads_share_it(tmp_path, native):
     store = Store(tmp_path)
 

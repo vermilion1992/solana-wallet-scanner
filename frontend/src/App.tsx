@@ -377,20 +377,20 @@ export default function App() {
             <span>
               {state.usage.mode === "setup-pilot"
                 ? "Setup pilot allowance"
-                : "Free-data allowance"}
+                : "Provider collection allowance"}
             </span>
             <ShieldCheck size={15} />
           </div>
           <div className="allowance-number">
             {state.provider.configured
               ? count(state.usage.remaining)
-              : "Not connected"}
+              : "Public samples available"}
             <small>
               {state.provider.configured
                 ? state.usage.mode === "setup-pilot"
                   ? "pilot credits remaining"
                   : "credits remaining"
-                : "Configure in Settings"}
+                : "Keyless bounded research"}
             </small>
           </div>
           <div className="usage-track">

@@ -4,11 +4,13 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
+import ssl
 
 import httpx
 import pytest
 
-from scanner.observer import ObserverService, PublicRPC, JupiterQuotes, PUBLIC_RPC, PUBLIC_WS, WSOL
+from scanner.observer import (ObserverService, PublicRPC, JupiterQuotes, PUBLIC_RPC, PUBLIC_WS,
+                              WSOL, StaticWebSocket, _connection_failure)
 from scanner.paper import create_run, get_run, record_signal, pause_run
 from scanner.providers import CapturedRPC, ProviderError
 from scanner.storage import Store, QuotaExceeded, now
@@ -118,6 +120,21 @@ def test_public_rpc_redirect_is_not_followed_and_failure_is_charged(store):
     run(scenario())
 
 
+def test_public_rate_limit_preserves_safe_stop_reason_and_original_error_bytes(store):
+    raw = b'{"error":"upstream body is evidence, never a UI error message"}'
+    async def scenario():
+        async with PublicRPC(store, transport=httpx.MockTransport(lambda r: httpx.Response(429, content=raw))) as rpc:
+            with pytest.raises(ProviderError, match="rate limit.*HTTP 429") as failure:
+                await rpc.rpc("getVersion")
+        assert failure.value.code == 429 and "upstream body" not in str(failure.value)
+        import base64
+        captured = store.evidence(failure.value.evidence_hash)
+        assert captured["http_status"] == 429 and captured["response_body_captured"] is True
+        assert base64.b64decode(captured["response_bytes"]["base64"]) == raw
+        assert json.loads(base64.b64decode(captured["request_bytes"]["base64"]))["method"] == "getVersion"
+    run(scenario())
+
+
 def quote_payload():
     # Primary API fields, specified independently of the adapter; transaction:null
     # is the valid no-taker path, not proof of a fill or zero execution costs.
@@ -191,6 +208,22 @@ def test_quote_pair_and_signed_transaction_contract_must_match(store):
     run(scenario())
 
 
+@pytest.mark.parametrize("malformation", ["nan", "overflow", "duplicate"])
+def test_malformed_quote_metadata_is_unavailable_and_raw_bytes_survive(store, malformation):
+    raw = json.dumps(quote_payload()).encode()
+    addition = {"nan": b',"metadata":NaN}', "overflow": b',"metadata":1e999}',
+                "duplicate": b',"outAmount":"999999999"}'}[malformation]
+    raw = raw[:-1] + addition
+    async def scenario():
+        client = JupiterQuotes(store, transport=httpx.MockTransport(lambda r: httpx.Response(200, content=raw)))
+        quote = await client.quote({"input_mint": WSOL, "output_mint": MINT, "input_amount": "10000000"})
+        await client.close()
+        assert quote["status"] == "unavailable" and quote["reason"] == "malformed_response"
+        import base64
+        assert base64.b64decode(store.evidence(quote["evidence_hash"])["response_bytes"]["base64"]) == raw
+    run(scenario())
+
+
 @pytest.mark.parametrize("expired", [False, True])
 def test_quote_expiry_accepts_aware_iso_and_rejects_elapsed_quote(store, expired):
     payload = quote_payload()
@@ -218,6 +251,33 @@ def test_duplicate_notification_preserves_original_detection_and_budget(store):
         del missing_execution["params"]["result"]["value"]["err"]
         await observer.accept_notification(identifier, missing_execution)
         assert get_run(store, identifier)["gaps"][-1]["reason"].startswith("Notification omitted execution state")
+        await observer.shutdown()
+    run(scenario())
+
+
+@pytest.mark.parametrize("malformation", ["jsonrpc_version", "boolean_subscription", "error_and_result"])
+def test_malformed_protocol_notification_retains_rejection_without_blocking_valid_signal(store, malformation):
+    identifier, observer = setup_observer(store, quotes=Quotes())
+    message = notification("same-signature")
+    message["params"]["subscription"] = 1
+    if malformation == "jsonrpc_version":
+        message["jsonrpc"] = "1.0"
+    elif malformation == "boolean_subscription":
+        message["params"]["subscription"] = True
+    else:
+        message["error"] = {"code": -32603, "message": "rejected"}
+    async def scenario():
+        assert await observer.accept_notification(identifier, message, subscription=1) is None
+        rejected = store.list("observer_events")[0]
+        assert rejected["status"] == "excluded" and ":rejected:" in rejected["id"]
+        assert store.evidence(rejected["notification_hash"])["notification"] == message
+        assert observer.snapshot(identifier)["notifications"] == 1
+        assert get_run(store, identifier)["gaps"]
+        valid = notification("same-signature")
+        valid["params"]["subscription"] = 1
+        accepted = await observer.accept_notification(identifier, valid, subscription=1)
+        assert accepted["status"] == "queued" and accepted["id"] == identifier + ":same-signature"
+        assert observer.snapshot(identifier)["notifications"] == 2
         await observer.shutdown()
     run(scenario())
 
@@ -344,3 +404,127 @@ def test_subscription_mentions_exactly_one_address_and_stops_at_notification_bud
         assert len([e for e in store.list("observer_events") if e["run_id"] == identifier]) == 1
         await observer.shutdown()
     run(scenario())
+
+
+def test_subscription_ack_cannot_contain_both_success_and_error(store, monkeypatch):
+    identifier, observer = setup_observer(store, quotes=Quotes())
+    streams = []
+    ack = {"jsonrpc": "2.0", "id": 1, "result": 7,
+           "error": {"code": -32603, "message": "rejected"}}
+    class Socket:
+        async def __aenter__(self):
+            return self
+        async def __aexit__(self, *_):
+            pass
+        async def send(self, payload):
+            pass
+        async def recv(self):
+            return json.dumps(ack)
+        async def messages(self):
+            streams.append(True)
+            yield json.dumps(notification("must-not-be-admitted"))
+        def __aiter__(self):
+            return self.messages()
+    async def no_backoff(seconds):
+        pass
+    monkeypatch.setattr("scanner.observer.asyncio.sleep", no_backoff)
+    observer.websocket_connect = lambda *args, **kwargs: Socket()
+    async def scenario():
+        await observer._listen(identifier)
+        state = observer.snapshot(identifier)
+        assert state["status"] == "paused" and state["notifications"] == 0
+        assert state.get("connected_at") is None and state.get("subscription") is None
+        assert state["last_error"]["code"] == "subscription_rejected"
+        assert streams == [] and store.list("observer_events") == []
+        import base64
+        captured = [store.evidence(a["hash"]) for a in store.list("artifacts")]
+        responses = [json.loads(base64.b64decode(a["response_bytes"]["base64"]))
+                     for a in captured if a.get("version") == "forward-subscription-capture-v1"]
+        assert responses and all(response == ack for response in responses)
+        await observer.shutdown()
+    run(scenario())
+
+
+def test_real_websocket_reader_reaches_paper_and_closes_on_stop(store):
+    """Real loopback handshake/framing; archived transaction and quotes stay offline."""
+    from websockets.asyncio.server import serve
+    record = json.loads((FIXTURES / "mainnet-pumpswap-buy-exact-quote.json").read_text())
+    requests, gateway_calls = [], []
+    filled = asyncio.Event()
+    class CapturedQuotes(Quotes):
+        async def quote(self, request, settings):
+            result = await super().quote(request, settings)
+            filled.set()
+            return result
+    quotes = CapturedQuotes()
+    def gateway():
+        return Gateway(record["raw"], lambda *call: gateway_calls.append(call))
+    paper = create_run(store, WALLET, {"reaction_delay_seconds": 0})
+    observer = ObserverService(store, native_factory=gateway, quote_client=quotes)
+    async def server(socket):
+        requests.append(json.loads(await socket.recv()))
+        await socket.send(json.dumps({"jsonrpc": "2.0", "id": 1, "result": 7}))
+        message = json.dumps(notification(record["signature"], slot=record["raw"]["slot"]))
+        await socket.send(message)
+        await socket.send(message)
+        await socket.wait_closed()
+    async def scenario():
+        async with serve(server, "127.0.0.1", 0) as listener:
+            port = listener.sockets[0].getsockname()[1]
+            def local_connector(endpoint, **kwargs):
+                assert endpoint == PUBLIC_WS
+                # This explicit test adapter never changes a production endpoint.
+                return StaticWebSocket(f"ws://127.0.0.1:{port}", proxy=None, **kwargs)
+            observer.websocket_connect = local_connector
+            try:
+                await observer.start(paper["id"])
+                await asyncio.wait_for(filled.wait(), timeout=3)
+                assert len(get_run(store, paper["id"])["positions"]) == 1
+                assert len(gateway_calls) == 1 and len(quotes.requests) == 1
+                assert observer.snapshot(paper["id"])["notifications"] == 1
+                assert requests[0]["params"][0] == {"mentions": [WALLET]}
+                import base64
+                subscription = store.evidence(observer.snapshot(paper["id"])["subscription_evidence_hash"])
+                assert json.loads(base64.b64decode(subscription["request_bytes"]["base64"])) == requests[0]
+                assert json.loads(base64.b64decode(subscription["response_bytes"]["base64"]))["result"] == 7
+                assert subscription["request_started_at"] <= subscription["response_received_at"]
+                await observer.stop(paper["id"])
+                assert get_run(store, paper["id"])["status"] == "paused"
+                assert observer.snapshot(paper["id"])["status"] == "stopped"
+            finally:
+                await observer.shutdown()
+    run(scenario())
+
+
+def test_websocket_redirect_cannot_choose_a_new_notification_source():
+    from websockets.asyncio.server import serve
+    from websockets.datastructures import Headers
+    from websockets.exceptions import InvalidStatus
+    from websockets.http11 import Response
+    received = []
+    async def destination(socket):
+        received.append(await socket.recv())
+    async def scenario():
+        async with serve(destination, "127.0.0.1", 0) as target:
+            port = target.sockets[0].getsockname()[1]
+            def redirect(connection, request):
+                return Response(302, "Found", Headers({"Location": f"ws://127.0.0.1:{port}/other"}), b"")
+            async with serve(destination, "127.0.0.1", 0, process_request=redirect) as source:
+                source_port = source.sockets[0].getsockname()[1]
+                with pytest.raises(InvalidStatus) as failure:
+                    async with StaticWebSocket(f"ws://127.0.0.1:{source_port}/fixed", proxy=None) as socket:
+                        await socket.send("subscription")
+                assert _connection_failure(failure.value)["code"] == "redirect_blocked"
+                assert received == []
+    run(scenario())
+
+
+def test_connection_diagnostics_do_not_store_exception_text_or_credentials():
+    from websockets.exceptions import ProxyError
+    errors = [(ssl.SSLCertVerificationError(1, "credential-url-must-not-leak"), "tls_verification_failed"),
+              (ProxyError("credential-url-must-not-leak"), "proxy_unavailable"),
+              (TimeoutError("credential-url-must-not-leak"), "connection_timeout")]
+    for error, expected in errors:
+        diagnostic = _connection_failure(error)
+        assert diagnostic["code"] == expected and "credential-url-must-not-leak" not in json.dumps(diagnostic)
+        assert datetime.fromisoformat(diagnostic["at"]).tzinfo is not None
