@@ -1,0 +1,18 @@
+{
+  "PRODUCT_READY": false,
+  "all_modes_identical": true,
+  "current_source_file_count": 241,
+  "current_source_sha256": "0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365",
+  "kind": "validation-only-source-equivalence",
+  "new_application_acceptance": false,
+  "only_change": "Two usage-only fixture calls use the existing same-closure direct usage endpoint; no assertion or accounting change.",
+  "production_frontend_locks_tools_workflow_unchanged": true,
+  "published_parent": "af02789bb33a3baa0ddf4592d883bab3074c093d",
+  "source_paths_changed": [
+    "tests/test_indexed_report_integration.py"
+  ],
+  "source_paths_unchanged": 240,
+  "tested_application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "tested_application_source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "validation_commit": "59a4c1e6a4f6556382f49961ddc13284ebca2604"
+}

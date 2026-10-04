@@ -1,0 +1,110 @@
+{
+  "JSONResponse.render": {
+    "calls": 7,
+    "errors": 0,
+    "max_seconds": 0.8178329140064307,
+    "total_seconds": 1.5703918980143499
+  },
+  "Store.close": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.02228028597892262,
+    "total_seconds": 0.02228028597892262
+  },
+  "Store.evidence": {
+    "calls": 1020,
+    "errors": 0,
+    "max_seconds": 0.008336858998518437,
+    "total_seconds": 0.11020456679398194
+  },
+  "Store.get": {
+    "calls": 23,
+    "errors": 0,
+    "max_seconds": 1.2925451689807232,
+    "total_seconds": 5.675372993951896
+  },
+  "Store.list": {
+    "calls": 4,
+    "errors": 0,
+    "max_seconds": 9.361098636873066e-05,
+    "total_seconds": 0.00011979095870628953
+  },
+  "TestClient.__exit__": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.024192184006096795,
+    "total_seconds": 0.024192184006096795
+  },
+  "TestClient.get": {
+    "calls": 5,
+    "errors": 0,
+    "max_seconds": 11.20700036099879,
+    "total_seconds": 19.832509324973216
+  },
+  "TestClient.post": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 12.032231557997875,
+    "total_seconds": 20.34874744899571
+  },
+  "app.build_report": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 6.4991276979853865,
+    "total_seconds": 11.894546853989596
+  },
+  "app.decorate_report": {
+    "calls": 4,
+    "errors": 0,
+    "max_seconds": 0.0017054889758583158,
+    "total_seconds": 0.0058837319957092404
+  },
+  "copy_review.qualify_report": {
+    "calls": 4,
+    "errors": 0,
+    "max_seconds": 0.00016951598809100688,
+    "total_seconds": 0.0005568600026890635
+  },
+  "copy_review.review_copy_behavior": {
+    "calls": 4,
+    "errors": 0,
+    "max_seconds": 0.0008697000157553703,
+    "total_seconds": 0.002916927041951567
+  },
+  "endpoint./api/archives/import": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 8.312973739986774,
+    "total_seconds": 8.312973739986774
+  },
+  "endpoint./api/reports/{identifier}": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 1.294817861984484,
+    "total_seconds": 2.348310302972095
+  },
+  "endpoint./api/reports/{identifier}/rebuild": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 12.027951764990576,
+    "total_seconds": 12.027951764990576
+  },
+  "fastapi.serialize_response": {
+    "calls": 6,
+    "errors": 0,
+    "max_seconds": 8.624378801003331,
+    "total_seconds": 15.037000186013756
+  },
+  "httpx.Response.json": {
+    "calls": 7,
+    "errors": 0,
+    "max_seconds": 1.2276402449933812,
+    "total_seconds": 2.193386663973797
+  },
+  "scanner.archive_input.load_archive": {
+    "calls": 3,
+    "errors": 0,
+    "max_seconds": 4.209360334993107,
+    "total_seconds": 9.726105009031016
+  }
+}

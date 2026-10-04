@@ -1,0 +1,505 @@
+{
+  "findings": [
+    "Original fixture post-call teardown reloaded both immutable full reports and encoded a 362,400,903-byte /api/state response solely to compare usage.",
+    "Original local teardown 20.7901 seconds: endpoint work4.5967s, response serialization11.3960s, JSON rendering1.5086s, client JSON decode2.0708s; TestClient exit0.0280s.",
+    "The two-expression fixture correction retains identical usage() semantics and all assertions while using /api/usage. Modified teardown0.0292s, actual command exit0, archived inputs unchanged and all three original guards0.",
+    "Peak RSS remains ~2.46GiB because the original genuine import/report/rebuild assertions still materialize both full report proof trees. This change removes redundant fixture transport, not application proof content.",
+    "The actual native command timeout is confirmed by parent artifacts; this local investigation identifies a concrete expensive post-PASS fixture operation but does not reproduce hosted 600-second timing or prove its entire cause."
+  ],
+  "kind": "bounded-offline-single-genuine-performance-comparison",
+  "original": {
+    "function_totals": {
+      "JSONResponse.render": {
+        "calls": 7,
+        "errors": 0,
+        "max_seconds": 1.508553897991078,
+        "total_seconds": 3.0937149039818905
+      },
+      "Store.close": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 0.02609410200966522,
+        "total_seconds": 0.02609410200966522
+      },
+      "Store.evidence": {
+        "calls": 1020,
+        "errors": 0,
+        "max_seconds": 0.008832008024910465,
+        "total_seconds": 0.10642670973902568
+      },
+      "Store.get": {
+        "calls": 34,
+        "errors": 0,
+        "max_seconds": 1.2796315790037625,
+        "total_seconds": 5.782774339051684
+      },
+      "Store.list": {
+        "calls": 14,
+        "errors": 0,
+        "max_seconds": 2.928400309989229,
+        "total_seconds": 2.9287234169314615
+      },
+      "Store.stats": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 0.0012223899830132723,
+        "total_seconds": 0.0013746189943049103
+      },
+      "TestClient.__exit__": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 0.027970747993094847,
+        "total_seconds": 0.027970747993094847
+      },
+      "TestClient.get": {
+        "calls": 5,
+        "errors": 0,
+        "max_seconds": 18.375496980006574,
+        "total_seconds": 38.227265224035364
+      },
+      "TestClient.post": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 12.060382231982658,
+        "total_seconds": 21.393539965967648
+      },
+      "app.build_report": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 6.694370452984003,
+        "total_seconds": 12.664317796967225
+      },
+      "app.decorate_report": {
+        "calls": 6,
+        "errors": 0,
+        "max_seconds": 0.004060323000885546,
+        "total_seconds": 0.011356128001352772
+      },
+      "app.discovery_cohorts": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 1.6605191190028563,
+        "total_seconds": 1.662519837002037
+      },
+      "app.report_inputs": {
+        "calls": 4,
+        "errors": 0,
+        "max_seconds": 2.9289895980036817,
+        "total_seconds": 4.587368634965969
+      },
+      "app.reports": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 2.9327956670022104,
+        "total_seconds": 2.9333183240087237
+      },
+      "copy_review.qualify_report": {
+        "calls": 6,
+        "errors": 0,
+        "max_seconds": 0.00017006599227897823,
+        "total_seconds": 0.0009210569551214576
+      },
+      "copy_review.review_copy_behavior": {
+        "calls": 6,
+        "errors": 0,
+        "max_seconds": 0.0008516729867551476,
+        "total_seconds": 0.004309569951146841
+      },
+      "endpoint./api/archives/import": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 9.329141397000058,
+        "total_seconds": 9.329141397000058
+      },
+      "endpoint./api/reports/{identifier}": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 1.2842804300016724,
+        "total_seconds": 2.5211403380089905
+      },
+      "endpoint./api/reports/{identifier}/rebuild": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 12.056611638981849,
+        "total_seconds": 12.056611638981849
+      },
+      "endpoint./api/state": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 4.596695415995782,
+        "total_seconds": 4.602934896014631
+      },
+      "fastapi.serialize_response": {
+        "calls": 6,
+        "errors": 0,
+        "max_seconds": 11.395972645026632,
+        "total_seconds": 26.272271767025813
+      },
+      "httpx.Response.json": {
+        "calls": 7,
+        "errors": 0,
+        "max_seconds": 2.0708156009786762,
+        "total_seconds": 4.261002828978235
+      },
+      "report_view.summary_inputs": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 1.6570985300058965,
+        "total_seconds": 1.6572655310155824
+      },
+      "scanner.archive_input.load_archive": {
+        "calls": 3,
+        "errors": 0,
+        "max_seconds": 4.01659959499375,
+        "total_seconds": 9.90207023199764
+      }
+    },
+    "pytest_phases": {
+      "call": {
+        "duration_seconds": 55.3174357060052,
+        "outcome": "passed"
+      },
+      "setup": {
+        "duration_seconds": 0.05041697801789269,
+        "outcome": "passed"
+      },
+      "teardown": {
+        "duration_seconds": 20.790082942985464,
+        "outcome": "passed"
+      }
+    },
+    "response_json_reads": [
+      {
+        "duration_seconds": 1.6e-05,
+        "peak_rss_kib": 53208,
+        "response_bytes": 73,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 3.5e-05,
+        "peak_rss_kib": 54016,
+        "response_bytes": 2910,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 9.3e-05,
+        "peak_rss_kib": 747504,
+        "response_bytes": 167,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 0.984376,
+        "peak_rss_kib": 1237632,
+        "response_bytes": 181198289,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 1.5e-05,
+        "peak_rss_kib": 2254380,
+        "response_bytes": 48,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 1.205652,
+        "peak_rss_kib": 2282052,
+        "response_bytes": 181198784,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 2.070816,
+        "peak_rss_kib": 2571140,
+        "response_bytes": 362400903,
+        "status_code": 200
+      }
+    ],
+    "sessionfinish": {
+      "exitstatus": 0,
+      "guard_calls": {
+        "credential": 0,
+        "provider": 0,
+        "transport": 0
+      },
+      "peak_rss_kib": 2571140
+    },
+    "testclient_requests": [
+      {
+        "duration_seconds": 0.003021,
+        "error": null,
+        "path": "/api/bootstrap",
+        "peak_rss_kib": 53208
+      },
+      {
+        "duration_seconds": 0.008598,
+        "error": null,
+        "path": "/api/state",
+        "peak_rss_kib": 54016
+      },
+      {
+        "duration_seconds": 9.333158,
+        "error": null,
+        "path": "/api/archives/import",
+        "peak_rss_kib": 747504
+      },
+      {
+        "duration_seconds": 9.099096,
+        "error": null,
+        "path": "/api/reports/a022aaeba6c14624b77c1e59ceb2a96d",
+        "peak_rss_kib": 1237632
+      },
+      {
+        "duration_seconds": 12.060382,
+        "error": null,
+        "path": "/api/reports/a022aaeba6c14624b77c1e59ceb2a96d/rebuild",
+        "peak_rss_kib": 2254380
+      },
+      {
+        "duration_seconds": 10.741052,
+        "error": null,
+        "path": "/api/reports/ca4a235f26f84bbe9b1c66e3f9f8566b",
+        "peak_rss_kib": 2282052
+      },
+      {
+        "duration_seconds": 18.375497,
+        "error": null,
+        "path": "/api/state",
+        "peak_rss_kib": 2571140
+      }
+    ]
+  },
+  "original_lifecycle_limit": "Original stdout/checkpoints have pytest PASS/sessionfinish0, but outer command actual exit/source-after receipt unavailable; preserved LIFECYCLE_LIMITATION.json and root independent prepatch source recheck. Original is diagnostic only.",
+  "scope": "one existing 200-record genuine authorized archive test; no full-suite/native acceptance claim",
+  "usage_guard": {
+    "function_totals": {
+      "JSONResponse.render": {
+        "calls": 7,
+        "errors": 0,
+        "max_seconds": 0.8178329140064307,
+        "total_seconds": 1.5703918980143499
+      },
+      "Store.close": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 0.02228028597892262,
+        "total_seconds": 0.02228028597892262
+      },
+      "Store.evidence": {
+        "calls": 1020,
+        "errors": 0,
+        "max_seconds": 0.008336858998518437,
+        "total_seconds": 0.11020456679398194
+      },
+      "Store.get": {
+        "calls": 23,
+        "errors": 0,
+        "max_seconds": 1.2925451689807232,
+        "total_seconds": 5.675372993951896
+      },
+      "Store.list": {
+        "calls": 4,
+        "errors": 0,
+        "max_seconds": 9.361098636873066e-05,
+        "total_seconds": 0.00011979095870628953
+      },
+      "TestClient.__exit__": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 0.024192184006096795,
+        "total_seconds": 0.024192184006096795
+      },
+      "TestClient.get": {
+        "calls": 5,
+        "errors": 0,
+        "max_seconds": 11.20700036099879,
+        "total_seconds": 19.832509324973216
+      },
+      "TestClient.post": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 12.032231557997875,
+        "total_seconds": 20.34874744899571
+      },
+      "app.build_report": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 6.4991276979853865,
+        "total_seconds": 11.894546853989596
+      },
+      "app.decorate_report": {
+        "calls": 4,
+        "errors": 0,
+        "max_seconds": 0.0017054889758583158,
+        "total_seconds": 0.0058837319957092404
+      },
+      "copy_review.qualify_report": {
+        "calls": 4,
+        "errors": 0,
+        "max_seconds": 0.00016951598809100688,
+        "total_seconds": 0.0005568600026890635
+      },
+      "copy_review.review_copy_behavior": {
+        "calls": 4,
+        "errors": 0,
+        "max_seconds": 0.0008697000157553703,
+        "total_seconds": 0.002916927041951567
+      },
+      "endpoint./api/archives/import": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 8.312973739986774,
+        "total_seconds": 8.312973739986774
+      },
+      "endpoint./api/reports/{identifier}": {
+        "calls": 2,
+        "errors": 0,
+        "max_seconds": 1.294817861984484,
+        "total_seconds": 2.348310302972095
+      },
+      "endpoint./api/reports/{identifier}/rebuild": {
+        "calls": 1,
+        "errors": 0,
+        "max_seconds": 12.027951764990576,
+        "total_seconds": 12.027951764990576
+      },
+      "fastapi.serialize_response": {
+        "calls": 6,
+        "errors": 0,
+        "max_seconds": 8.624378801003331,
+        "total_seconds": 15.037000186013756
+      },
+      "httpx.Response.json": {
+        "calls": 7,
+        "errors": 0,
+        "max_seconds": 1.2276402449933812,
+        "total_seconds": 2.193386663973797
+      },
+      "scanner.archive_input.load_archive": {
+        "calls": 3,
+        "errors": 0,
+        "max_seconds": 4.209360334993107,
+        "total_seconds": 9.726105009031016
+      }
+    },
+    "pytest_phases": {
+      "call": {
+        "duration_seconds": 54.475223431014456,
+        "outcome": "passed"
+      },
+      "setup": {
+        "duration_seconds": 0.03965962797519751,
+        "outcome": "passed"
+      },
+      "teardown": {
+        "duration_seconds": 0.02919743797974661,
+        "outcome": "passed"
+      }
+    },
+    "response_json_reads": [
+      {
+        "duration_seconds": 2.2e-05,
+        "peak_rss_kib": 54112,
+        "response_bytes": 73,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 1.4e-05,
+        "peak_rss_kib": 54240,
+        "response_bytes": 383,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 1.8e-05,
+        "peak_rss_kib": 747228,
+        "response_bytes": 167,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 0.965658,
+        "peak_rss_kib": 1236360,
+        "response_bytes": 181198289,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 1.4e-05,
+        "peak_rss_kib": 2259720,
+        "response_bytes": 48,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 1.22764,
+        "peak_rss_kib": 2287920,
+        "response_bytes": 181198784,
+        "status_code": 200
+      },
+      {
+        "duration_seconds": 2e-05,
+        "peak_rss_kib": 2577120,
+        "response_bytes": 383,
+        "status_code": 200
+      }
+    ],
+    "sessionfinish": {
+      "exitstatus": 0,
+      "guard_calls": {
+        "credential": 0,
+        "provider": 0,
+        "transport": 0
+      },
+      "peak_rss_kib": 2577120
+    },
+    "testclient_requests": [
+      {
+        "duration_seconds": 0.002481,
+        "error": null,
+        "path": "/api/bootstrap",
+        "peak_rss_kib": 54112
+      },
+      {
+        "duration_seconds": 0.002199,
+        "error": null,
+        "path": "/api/usage",
+        "peak_rss_kib": 54240
+      },
+      {
+        "duration_seconds": 8.316516,
+        "error": null,
+        "path": "/api/archives/import",
+        "peak_rss_kib": 747228
+      },
+      {
+        "duration_seconds": 8.617896,
+        "error": null,
+        "path": "/api/reports/d57e7a1860e041b8ba3e97e70bb4f6fb",
+        "peak_rss_kib": 1236360
+      },
+      {
+        "duration_seconds": 12.032232,
+        "error": null,
+        "path": "/api/reports/d57e7a1860e041b8ba3e97e70bb4f6fb/rebuild",
+        "peak_rss_kib": 2259720
+      },
+      {
+        "duration_seconds": 11.207,
+        "error": null,
+        "path": "/api/reports/073f22f083da42edafb7909af88bd835",
+        "peak_rss_kib": 2287920
+      },
+      {
+        "duration_seconds": 0.002933,
+        "error": null,
+        "path": "/api/usage",
+        "peak_rss_kib": 2577120
+      }
+    ]
+  },
+  "usage_guard_complete_outer_receipt": {
+    "duration_seconds": 55.55194422401837,
+    "exit_code": 0,
+    "git_unchanged": true,
+    "locks_unchanged": true,
+    "original_inputs_unchanged": true,
+    "path": "/workspace/outputs/native-timeout-investigation/profile-single-genuine-usage/receipt.json",
+    "sha256": "5f72b0ef0c9744d419e43d647c3e7a1bd0bb3b529204e14480a5067dfd44a82e",
+    "source_unchanged": true,
+    "timed_out": false
+  }
+}

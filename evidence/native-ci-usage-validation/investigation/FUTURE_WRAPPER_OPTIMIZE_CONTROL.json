@@ -1,0 +1,20 @@
+{
+  "actual_producer_preserved_sha256": "f9a8ca5cd78d5cbd77e706f37c29cfd530eed2e0a8a6b637326b7cc2328d5775",
+  "current_shell_runtime_observed": {
+    "optimize": 0,
+    "version": "3.12.14"
+  },
+  "executed_command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-O",
+    "/workspace/outputs/native-timeout-investigation/run_validation_followup_hardened_future.py",
+    "backend",
+    "59a4c1e6a4f6556382f49961ddc13284ebca2604"
+  ],
+  "exit_code": 1,
+  "future_producer_sha256": "282b5bc6cb8d68df2045459afb97a8162572b35e50b1167043366d5d9f1a9727",
+  "guard_rejected": true,
+  "kind": "future-only-procedural-wrapper-optimize-control",
+  "new_test_suite_run": false,
+  "produced_actual_fixture_or_backend_receipts": false
+}

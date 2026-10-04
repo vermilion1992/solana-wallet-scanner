@@ -1,0 +1,42 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /workspace/solana-wallet-scanner/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/solana-wallet-scanner
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 15 items
+
+tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild PASSED [  6%]
+tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[missing-page] PASSED [ 13%]
+tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[corrupt-page] PASSED [ 20%]
+tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[missing-pointer] PASSED [ 26%]
+tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[fee-conflict] PASSED [ 33%]
+tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[malformed-native] PASSED [ 40%]
+tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[missing-native-bytes] PASSED [ 46%]
+tests/test_indexed_report_integration.py::test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results PASSED [ 53%]
+tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[history_complete] PASSED [ 60%]
+tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[positions] PASSED [ 66%]
+tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[events] PASSED [ 73%]
+tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[transaction_index] PASSED [ 80%]
+tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim PASSED [ 86%]
+tests/test_indexed_report_integration.py::test_indexed_cli_packs_exact_raw_bytes_and_preserves_missing_links PASSED [ 93%]
+tests/test_indexed_report_integration.py::test_indexed_cli_rejects_symlink_escape_before_writing_output PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+51.92s call     tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim
+0.24s call     tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[missing-pointer]
+0.23s call     tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[missing-page]
+0.21s call     tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[corrupt-page]
+0.20s call     tests/test_indexed_report_integration.py::test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results
+0.19s call     tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[missing-native-bytes]
+0.17s call     tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild
+0.16s call     tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[malformed-native]
+0.15s call     tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[fee-conflict]
+0.04s setup    tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild
+======================== 15 passed, 1 warning in 53.97s ========================

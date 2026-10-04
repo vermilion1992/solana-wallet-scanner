@@ -1,0 +1,56 @@
+{
+  "kind": "distinct-read-only-fixture-usage-endpoint-diff-review",
+  "state": "PASS",
+  "scope": "Exactly two fixture usage endpoint expressions. No test execution, source mutation, provider/network/credential calls, or acceptance promotion.",
+  "base_head": "af02789bb33a3baa0ddf4592d883bab3074c093d",
+  "file": "tests/test_indexed_report_integration.py",
+  "old_file": {
+    "bytes": 14254,
+    "sha256": "396313d4f3cf33dde4599e0900ea23c9f014a7af7aa2d601f22c9a5e627f14f2"
+  },
+  "new_file": {
+    "bytes": 14236,
+    "sha256": "f25a2736f4d214af0cbca3535baef9f479b1382858eb2d4a003bbbd2e9493856"
+  },
+  "replacement": {
+    "old": "client.get('/api/state').json()['usage']",
+    "new": "client.get('/api/usage').json()",
+    "count": 2
+  },
+  "exact_two_expression_byte_replacement": true,
+  "normalized_entire_module_AST_equal": true,
+  "all_test_function_bodies_decorators_and_assertions_unchanged": true,
+  "test_function_count": 8,
+  "original_collected_nodes": 15,
+  "test_collection_contract_unchanged": true,
+  "test_selection_unchanged": true,
+  "zero_provider_credential_transport_assertion_preserved": true,
+  "same_usage_closure_verified_in_unchanged_scanner_app": true,
+  "fixture_reads_same_usage_value_without_full_state_report_projection": true,
+  "application_file_hashes_unchanged": true,
+  "all_241_frozen_source_file_deltas": [
+    "tests/test_indexed_report_integration.py"
+  ],
+  "staged_files": [],
+  "tests_reexecuted": false,
+  "application_changes": false,
+  "prepatch_original_profile_source_recheck": {
+    "path": "/workspace/outputs/native-timeout-investigation/ORIGINAL_PROFILE_SOURCE_RECHECK.json",
+    "bytes": 39153,
+    "sha256": "6b0a609c3e5576cfec62b6624bfacd1ccc3839b3e5f7d8894913f7a7e0aa7810"
+  },
+  "frozen_manifest": {
+    "bytes": 36842,
+    "sha256": "199700f1a89641c552c9ac50150e1beee84cf04b9b7fa4d8e80e61b11f8c652d"
+  },
+  "native_original_integration_archive": {
+    "path": "/workspace/outputs/position-history-publication/native-ci/incoming/11308841499.zip",
+    "bytes": 15428,
+    "sha256": "f909e431b98d7e9feae5d4f7e77c139c198ed74143cbc16481a18df817b210ae"
+  },
+  "reviewer_network_requests": 0,
+  "reviewer_provider_requests": 0,
+  "reviewer_credential_lookups": 0,
+  "PRODUCT_READY": false,
+  "note": "Original native collection establishes15 nodes; exact equality of every test definition/decorator and the normalized complete module preserves that contract. Native originalrun remains nonpassing; this review does not infer its timeout root cause."
+}

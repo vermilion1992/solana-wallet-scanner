@@ -1,0 +1,71 @@
+{
+  "after_source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "artifacts": {
+    "checkpoints.jsonl": {
+      "bytes": 376893,
+      "sha256": "3aeb6a91f19b125ee41cb194e26e4b4b385681d724baf4f6bb3ec607bbe1a92e"
+    },
+    "function-totals.json": {
+      "bytes": 1450,
+      "sha256": "3d35027ac03a79e8e99c473dbf761c9e20cd4fa02dfaf32f357458f2707ec21b"
+    },
+    "native_profile_plugin.py": {
+      "bytes": 8562,
+      "sha256": "c01576237cc77f03a69d7424835af8de80abb4b15eab5b4acb22417326cc5faf"
+    },
+    "process-samples.jsonl": {
+      "bytes": 826,
+      "sha256": "2c0fc02b97cffb9f4f06b789cec3a359f941bac50e2125704387baf7b8ab9fc2"
+    },
+    "run_profile.py": {
+      "bytes": 7035,
+      "sha256": "eee6d8db6554ecbcac4857eed8a2aee5bd6ca910f5b83d1e8b4376b377099342"
+    },
+    "stdout.log": {
+      "bytes": 189601,
+      "sha256": "42c9aa7dfce76cc2bd122ac6096a772e3f63ceb5c6adc950a8a2bd96778feb7e"
+    }
+  },
+  "before_source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "child_resource_usage": {
+    "involuntary_context_switches": 837,
+    "major_page_faults": 0,
+    "max_rss_kib": 82412,
+    "minor_page_faults": 26894,
+    "system_seconds": 0.21951099999999998,
+    "user_seconds": 2.162291,
+    "voluntary_context_switches": 287
+  },
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-vv",
+    "-s",
+    "--durations=0",
+    "-p",
+    "native_profile_plugin",
+    "-o",
+    "cache_dir=/workspace/outputs/native-timeout-investigation/profile-single-genuine/pytest-cache",
+    "--basetemp=/workspace/outputs/native-timeout-investigation/profile-single-genuine/pytest-temp",
+    "tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "duration_seconds": 2.5051555079990067,
+  "exit_code": 1,
+  "git_unchanged": true,
+  "instrumentation": "/workspace/outputs/native-timeout-investigation/profile-single-genuine/native_profile_plugin.py",
+  "kind": "bounded-read-only-current-source-performance-investigation",
+  "locks_unchanged": true,
+  "original_inputs_unchanged": true,
+  "pid": 155945,
+  "process_group": 155945,
+  "resource_method": "os.wait4 rusage + /proc sampled per-process RSS; /usr/bin/time unavailable",
+  "sampled_peak_rss_kib": 79796,
+  "scope": "one original genuine two-page test; original offline fixtures/assertions unchanged",
+  "source_file_count": 241,
+  "source_unchanged": true,
+  "started_at_utc": "2026-10-04T16:25:01.879415+00:00",
+  "timed_out": false,
+  "timeout_seconds": 600
+}

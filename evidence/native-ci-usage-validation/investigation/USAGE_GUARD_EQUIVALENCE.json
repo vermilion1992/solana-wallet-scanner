@@ -1,0 +1,29 @@
+{
+  "state": "READ_ONLY_STATIC_EQUIVALENCE_VERIFIED",
+  "head": "af02789bb33a3baa0ddf4592d883bab3074c093d",
+  "source_sha256": {
+    "scanner/app.py": "b437ab3dc61a49c261949fb2b003957ccf5278337e38da09840161448940a3f6",
+    "tests/test_indexed_report_integration.py": "396313d4f3cf33dde4599e0900ea23c9f014a7af7aa2d601f22c9a5e627f14f2"
+  },
+  "shared_usage_closure": {
+    "definition_line": 255,
+    "state_call_line": 788,
+    "direct_call_line": 795,
+    "same_ast": "Call(func=Name(id='usage', ctx=Load()), args=[], keywords=[])"
+  },
+  "proposal": {
+    "applied": false,
+    "changed_statement_lines": [
+      46,
+      49
+    ],
+    "initial_deepcopy_preserved": true,
+    "counter_dictionary_and_zero_assertion_preserved": true,
+    "all_non_guarded_ast_preserved": true,
+    "all_other_guarded_statements_preserved": true,
+    "proposed_file_sha256": "f25a2736f4d214af0cbca3535baef9f479b1382858eb2d4a003bbbd2e9493856",
+    "patch_sha256": "fe82e68d712dc0df672ed177a518ad04607876555460990545f846dcb6fcd608"
+  },
+  "runtime_limit": "Static source equivalence does not reproduce the native timeout; unchanged-source profiling is separate.",
+  "counter_guard": "provider=0, credential=0, transport=0; original same calls dictionary and assertion unchanged"
+}

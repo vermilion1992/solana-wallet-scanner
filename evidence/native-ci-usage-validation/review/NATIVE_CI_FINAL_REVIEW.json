@@ -1,0 +1,465 @@
+{
+  "kind": "distinct-read-only-native-ci-artifact-review",
+  "state": "PASS",
+  "native_result": "NONPASSING",
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "branch": "codex/product-completion",
+  "head": "af02789bb33a3baa0ddf4592d883bab3074c093d",
+  "run_id": 37215031205,
+  "run_attempt": 1,
+  "artifacts_reviewed": 12,
+  "completed_focused_groups": 9,
+  "group_counts": {
+    "archives": {
+      "unique_passed_nodes": 387,
+      "subtests_separate": 21,
+      "summary": "============= 387 passed, 1 warning, 21 subtests passed in 59.08s =============="
+    },
+    "discovery": {
+      "unique_passed_nodes": 218,
+      "subtests_separate": 0,
+      "summary": "======================= 218 passed, 1 warning in 15.69s ========================"
+    },
+    "historical": {
+      "unique_passed_nodes": 136,
+      "subtests_separate": 0,
+      "summary": "======================= 136 passed, 1 warning in 15.55s ========================"
+    },
+    "indexed-chronology": {
+      "unique_passed_nodes": 26,
+      "subtests_separate": 0,
+      "summary": "============================== 26 passed in 1.40s =============================="
+    },
+    "indexed-coverage": {
+      "unique_passed_nodes": 120,
+      "subtests_separate": 0,
+      "summary": "======================= 120 passed, 1 warning in 12.65s ========================"
+    },
+    "indexed-dependencies": {
+      "unique_passed_nodes": 48,
+      "subtests_separate": 0,
+      "summary": "============================== 48 passed in 1.66s =============================="
+    },
+    "indexed-input": {
+      "unique_passed_nodes": 76,
+      "subtests_separate": 0,
+      "summary": "======================== 76 passed, 1 warning in 3.22s ========================="
+    },
+    "research": {
+      "unique_passed_nodes": 111,
+      "subtests_separate": 169,
+      "summary": "============= 111 passed, 1 warning, 169 subtests passed in 21.90s ============="
+    },
+    "schemas": {
+      "unique_passed_nodes": 713,
+      "subtests_separate": 0,
+      "summary": "======================= 713 passed, 1 warning in 58.35s ========================"
+    }
+  },
+  "unique_focused_passed_nodes": 1835,
+  "subtests_separately_reported": 190,
+  "incomplete_groups_not_credited_as_completed_tests": {
+    "indexed-integration": {
+      "collected_nodes": 15,
+      "call_phase_pass_markers": 13,
+      "terminal_summary_present": false,
+      "completed_nodes_credited": 0,
+      "state": "INCOMPLETE",
+      "backend_state": "BLOCKED",
+      "timeout_abort": true,
+      "timeout_seconds": 600,
+      "reported_elapsed_seconds": 789.56,
+      "reason": "Command '['/home/runner/work/solana-wallet-scanner/solana-wallet-scanner/.venv/bin/python', '-m', 'pytest', '-v', '--durations=10', 'tests/test_indexed_report_integration.py']' timed out after 600 seconds",
+      "source_unchanged": true,
+      "call_phase_nodes": [
+        "tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild",
+        "tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[missing-page]",
+        "tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[corrupt-page]",
+        "tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers[missing-pointer]",
+        "tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[fee-conflict]",
+        "tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[malformed-native]",
+        "tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[missing-native-bytes]",
+        "tests/test_indexed_report_integration.py::test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results",
+        "tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[history_complete]",
+        "tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[positions]",
+        "tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[events]",
+        "tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[transaction_index]",
+        "tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim"
+      ]
+    }
+  },
+  "test_count_policy": "Distinct passing pytest node IDs from ten disjoint execution groups form one focused suite. Subtests separately reported; strict union adds no tests.",
+  "source_files": 241,
+  "portable_source_bytes_sha256": "44b97a6675806000f478e8096bec2f3aa0de06cd0c1cada00d55bb1a3e1eaf13",
+  "hosted_mode_source_sha256": "247935db4fd1558cacf29361fd6c429b336b68a226ff51e8f9ee85ffaf06058a",
+  "hosted_runtime": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "node": "24.21.0"
+  },
+  "local_accepted_runtime_separately_reported": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "node": "24.19.0"
+  },
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "source_bytes_equal": true,
+  "source_executable_classes_equal": true,
+  "all_twelve_jobs_success": false,
+  "native_job_success_count": 10,
+  "native_job_failure_count": 2,
+  "all_twelve_digest_bound_original_zips": true,
+  "strict_union_embedded_inputs_match_original_zip_receipts": true,
+  "strict_union_rejected_actual_incomplete_input": true,
+  "offline_product_actual_provider_requests": 0,
+  "offline_product_actual_credential_lookups": 0,
+  "frozen_network_namespace_and_token_absence_contract": true,
+  "PRODUCT_READY": false,
+  "real_acceptance": "BLOCKED",
+  "application_changes": false,
+  "reviewer_network_requests": 0,
+  "reviewer_provider_requests": 0,
+  "reviewer_credential_lookups": 0,
+  "tests_reexecuted": false,
+  "indexes_mutated": false,
+  "artifact_reports": [
+    {
+      "name": "focused-archives",
+      "id": 11308101316,
+      "archive": {
+        "bytes": 22397,
+        "sha256": "f9a74bfb0c2dd318197d647960d7375ae3d4ec3df8c863026fd43b5fe451380e"
+      },
+      "raw_receipt": {
+        "bytes": 41659,
+        "sha256": "a463e31fee06598176f05b322bcb5a1c33bd89150cec5c303a70470b0462793e"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687086,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-discovery",
+      "id": 11307274587,
+      "archive": {
+        "bytes": 19365,
+        "sha256": "90ec8d93750174a2f9c89e0f5b98f7f42e13fb08a6a06216b5cb61741d905762"
+      },
+      "raw_receipt": {
+        "bytes": 41252,
+        "sha256": "94ee19924b347258e04fe223f56275de2e684ac041ed7d9004953bd525c649e4"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687121,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-historical",
+      "id": 11308096360,
+      "archive": {
+        "bytes": 16693,
+        "sha256": "397e1a811ecaedc631d6f3aa06f866c69faff723b647b4753167e12842d1921d"
+      },
+      "raw_receipt": {
+        "bytes": 40906,
+        "sha256": "034fa320bec5aa8652b5245f1319763e285830d0fc36b3d619e92920677dff05"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687056,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-indexed-chronology",
+      "id": 11308071664,
+      "archive": {
+        "bytes": 15807,
+        "sha256": "f4cea42d3c2ac9f60d9e70534c54cbf4d461974be7179f51fe45eb971f711b8e"
+      },
+      "raw_receipt": {
+        "bytes": 40909,
+        "sha256": "c5574c277c269a923c75f413bba6dc27fbae2f492ea449e6cb282df658093b42"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687006,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-indexed-coverage",
+      "id": 11307839328,
+      "archive": {
+        "bytes": 18097,
+        "sha256": "09c0a14ab930bb3e66c1130adedc3431e2970f5b0162860c7a054f8cdb7aacd1"
+      },
+      "raw_receipt": {
+        "bytes": 40984,
+        "sha256": "f243c149d959d35f5a65a9cbbd09bc58d11958a676e51589089a45c8a8717baa"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687118,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-indexed-dependencies",
+      "id": 11307927513,
+      "archive": {
+        "bytes": 16234,
+        "sha256": "08be7df4873f073c8114571ddf88a107a76c3c7f8b63a300115ece789ca8fcd0"
+      },
+      "raw_receipt": {
+        "bytes": 41018,
+        "sha256": "413daf8a521dec35ce653941b15228be3659872c9eb34435766789c2138862f2"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687032,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-indexed-input",
+      "id": 11308415671,
+      "archive": {
+        "bytes": 16957,
+        "sha256": "4fe59ef6c636962d115d2d79c8d4d1b95ac98e428d226cb4ce94d465e190c780"
+      },
+      "raw_receipt": {
+        "bytes": 40881,
+        "sha256": "c4ff9b4e805094ec3c7c54f31205159bf855103ffae2aeb12589ef636ba2efa7"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687022,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-indexed-integration",
+      "id": 11308841499,
+      "archive": {
+        "bytes": 15428,
+        "sha256": "f909e431b98d7e9feae5d4f7e77c139c198ed74143cbc16481a18df817b210ae"
+      },
+      "raw_receipt": {
+        "bytes": 41050,
+        "sha256": "0a34e137d6a438a8ce19d22b256e870b02a93979e946d8941f2c6c67a5689de3"
+      },
+      "producer_state": "INCOMPLETE",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687126,
+      "producer_job_success": false,
+      "producer_job_conclusion": "failure"
+    },
+    {
+      "name": "focused-research",
+      "id": 11307199933,
+      "archive": {
+        "bytes": 18186,
+        "sha256": "a116e4dbd0571e378dca418ed4c2cd5af8ccc2ba32b237b63cd5c0ecbe4350c2"
+      },
+      "raw_receipt": {
+        "bytes": 41302,
+        "sha256": "622f8d55262eb858ccaf687ac60cd1abd641313f9c2dd2aaa6f328e8d4649e91"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687061,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-schemas",
+      "id": 11307649558,
+      "archive": {
+        "bytes": 23537,
+        "sha256": "98bd41cd3acd654b931f7b167e79fb17f22bf79359b6b0733c982c6a49315eed"
+      },
+      "raw_receipt": {
+        "bytes": 41607,
+        "sha256": "383e259749616d8de829396a13c9cb6b20d2cfa1b4218aff43dd6338ed7b18cc"
+      },
+      "producer_state": "FOCUSED_GROUP_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "backend.log",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473687108,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    },
+    {
+      "name": "focused-union-receipt",
+      "id": 11308976181,
+      "archive": {
+        "bytes": 114516,
+        "sha256": "3edcf24d233a3cdeade49d9f5c8ad583092badb810f37f8520f8d1fc56878e6e"
+      },
+      "raw_receipt": {
+        "bytes": 418735,
+        "sha256": "2017915b8494d5149ade6316366b3308f0d0cc06f6472482586fa24ddfee9d14"
+      },
+      "producer_state": "INCOMPLETE",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "node-runtime.log",
+        "result.json",
+        "runtime.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111477464471,
+      "producer_job_success": false,
+      "producer_job_conclusion": "failure"
+    },
+    {
+      "name": "offline-development-receipt",
+      "id": 11307976935,
+      "archive": {
+        "bytes": 17210,
+        "sha256": "ddc5c49cf6b4a3539b7ba83966c457539ef1e8a64b3a17024ab8e3f24756baaf"
+      },
+      "raw_receipt": {
+        "bytes": 44161,
+        "sha256": "862673c68ad937a10b1dd09b7211c6b2e748b224f1981ae39b10a49f5ccf2ac3"
+      },
+      "producer_state": "DEVELOPMENT_CHECK_PASS",
+      "members": [
+        "DIAGNOSTIC_STATUS.json",
+        "frontend-build.log",
+        "frontend-check-discovery.log",
+        "frontend-check-format.log",
+        "node-runtime.log",
+        "pip-check.log",
+        "product.log",
+        "result.json",
+        "runtime.log",
+        "shell-syntax.log"
+      ],
+      "original_api_digest_bound": true,
+      "raw_command_logs_match": true,
+      "producer_job_id": 111473686861,
+      "producer_job_success": true,
+      "producer_job_conclusion": "success"
+    }
+  ],
+  "evidence_inputs": {
+    "status": {
+      "path": "/workspace/outputs/position-history-publication/native-ci/FINAL_NATIVE_STATUS.json",
+      "bytes": 527263,
+      "sha256": "41bcc069b0b0c948b0ace67aad3cd1a7cba2a51f47b4c17dfc9103490cfe6922"
+    },
+    "incoming_index": {
+      "path": "/workspace/outputs/position-history-publication/native-ci/incoming/INDEX.json",
+      "bytes": 7052,
+      "sha256": "ddb9be9dd7188eaf3a60d7f7fe99a5cbb08b06b133b22eaa04eb9a24bee54e11"
+    },
+    "frozen_source_manifest": {
+      "bytes": 36842,
+      "sha256": "199700f1a89641c552c9ac50150e1beee84cf04b9b7fa4d8e80e61b11f8c652d"
+    },
+    "frozen_final_gates": {
+      "bytes": 13852,
+      "sha256": "f724c845807dd669c302ec3507e210a6c847a9763b1a4f2a2fd98339f5fd64bf"
+    },
+    "validator": {
+      "bytes": 35699,
+      "sha256": "11a46d561039ecc6073e7b59aa6771f3411c98dc56d537ed3c1a45283a8e3b22"
+    },
+    "workflow": {
+      "bytes": 13406,
+      "sha256": "4db013ce2dd68b0d790e20af80548c8e2d42786c9adfa44cc88c234f06073795"
+    }
+  },
+  "scope": "Actual original native offline iteration evidence only. Review PASS means provenance/outcome verified, not native acceptance. Original integration timed out and strict union failed closed; no root-cause, OOM or provider-performance attribution is inferred. Later fixture changes/profiles are separate. Full candidate/local acceptance and genuine B1/B2/B3 remain separate. GitHub metadata is reviewed from root-retained read-only API snapshots; this reviewer made no external calls."
+}

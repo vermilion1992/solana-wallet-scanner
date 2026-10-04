@@ -1,0 +1,25 @@
+{
+  "kind": "bounded-read-only-current-source-performance-investigation",
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-vv",
+    "-s",
+    "--durations=0",
+    "-p",
+    "native_profile_plugin",
+    "-o",
+    "cache_dir=/workspace/outputs/native-timeout-investigation/profile-single-genuine/pytest-cache",
+    "--basetemp=/workspace/outputs/native-timeout-investigation/profile-single-genuine/pytest-temp",
+    "tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "started_at_utc": "2026-10-04T16:25:21.940723+00:00",
+  "timeout_seconds": 600,
+  "scope": "one original genuine two-page test; original offline fixtures/assertions unchanged",
+  "instrumentation": "/workspace/outputs/native-timeout-investigation/profile-single-genuine/native_profile_plugin.py",
+  "resource_method": "os.wait4 rusage + /proc sampled per-process RSS; /usr/bin/time unavailable",
+  "before_source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "source_file_count": 241
+}

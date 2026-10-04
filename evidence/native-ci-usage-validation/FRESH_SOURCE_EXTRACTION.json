@@ -1,0 +1,14 @@
+{
+  "all_executable_classes_equal": true,
+  "all_file_bytes_equal": true,
+  "archive_bytes": 5611520,
+  "archive_sha256": "4312b4bfbc700629c3351d55063003d6e323994715ffd3261ff4a2bfc493322f",
+  "current_source_sha256": "0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365",
+  "files_verified": 241,
+  "kind": "fresh-git-source-extraction-verification",
+  "literal_workspace_permission_modes_claimed_equal": false,
+  "new_application_acceptance": false,
+  "state": "PASS",
+  "tested_application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "validation_commit": "59a4c1e6a4f6556382f49961ddc13284ebca2604"
+}

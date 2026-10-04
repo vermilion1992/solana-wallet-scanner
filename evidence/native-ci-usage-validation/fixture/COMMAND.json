@@ -1,0 +1,51 @@
+{
+  "PRODUCT_READY": false,
+  "actual_terminal_summary_matches": true,
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-v",
+    "--durations=10",
+    "tests/test_indexed_report_integration.py"
+  ],
+  "credential_lookups": 0,
+  "current_source_sha256": "0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365",
+  "cwd": "/workspace/solana-wallet-scanner",
+  "exit_code": 0,
+  "external_transport_calls": 0,
+  "guard_assertions": "all fifteen retained guarded fixture finalizers completed",
+  "kind": "actual-validation-only-command",
+  "locks": {
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+  },
+  "new_application_acceptance": false,
+  "provider_requests": 0,
+  "raw_log": {
+    "bytes": 4813,
+    "path": "evidence/native-ci-usage-validation/fixture/RAW.log",
+    "sha256": "46746d9212949784d523215c5f82c3838bfb078278c3e9975a1c56a043f9e3f5"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "platform": "linux",
+    "python": "3.12.14"
+  },
+  "runtime_unchanged": true,
+  "seconds": 54.383,
+  "separately_reported_subtests": 0,
+  "source_file_count": 241,
+  "source_unchanged": true,
+  "started_at_utc": "2026-10-04T16:39:18.910485+00:00",
+  "state": "PASS",
+  "tested_application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "tested_application_source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "timed_out": false,
+  "timeout_seconds": 600,
+  "unique_nodes": 15,
+  "validation_commit": "59a4c1e6a4f6556382f49961ddc13284ebca2604",
+  "zero_live_calls_scope": "retained indexed fixture assertions, offline input sources; mocked provider tests are not live calls"
+}

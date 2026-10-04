@@ -1,0 +1,62 @@
+{
+  "JSONResponse.render": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 7.441994966939092e-06,
+    "total_seconds": 7.441994966939092e-06
+  },
+  "Store.close": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.001562132005346939,
+    "total_seconds": 0.001562132005346939
+  },
+  "Store.get": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 4.3785024899989367e-05,
+    "total_seconds": 4.3785024899989367e-05
+  },
+  "Store.list": {
+    "calls": 4,
+    "errors": 0,
+    "max_seconds": 0.0001165650028269738,
+    "total_seconds": 0.0001412130077369511
+  },
+  "Store.stats": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.00018394700600765646,
+    "total_seconds": 0.00018394700600765646
+  },
+  "TestClient.__exit__": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.0031474190182052553,
+    "total_seconds": 0.0031474190182052553
+  },
+  "TestClient.get": {
+    "calls": 2,
+    "errors": 1,
+    "max_seconds": 0.22232288101804443,
+    "total_seconds": 0.22518164501525462
+  },
+  "app.reports": {
+    "calls": 964,
+    "errors": 964,
+    "max_seconds": 0.21706439901026897,
+    "total_seconds": 106.02594431117177
+  },
+  "endpoint./api/state": {
+    "calls": 1,
+    "errors": 1,
+    "max_seconds": 0.22016952498233877,
+    "total_seconds": 0.22016952498233877
+  },
+  "httpx.Response.json": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 2.7922011213377118e-05,
+    "total_seconds": 2.7922011213377118e-05
+  }
+}

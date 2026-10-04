@@ -1,0 +1,192 @@
+{
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "head": "af02789bb33a3baa0ddf4592d883bab3074c093d",
+  "branch": "codex/product-completion",
+  "run_id": 37215031205,
+  "run_attempt": 1,
+  "required_artifacts": [
+    "focused-archives",
+    "focused-discovery",
+    "focused-historical",
+    "focused-indexed-chronology",
+    "focused-indexed-coverage",
+    "focused-indexed-dependencies",
+    "focused-indexed-input",
+    "focused-indexed-integration",
+    "focused-research",
+    "focused-schemas",
+    "focused-union-receipt",
+    "offline-development-receipt"
+  ],
+  "available_artifacts": [
+    {
+      "id": 11308976181,
+      "name": "focused-union-receipt",
+      "size_in_bytes": 114516,
+      "digest": "sha256:3edcf24d233a3cdeade49d9f5c8ad583092badb810f37f8520f8d1fc56878e6e",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11308841499,
+      "name": "focused-indexed-integration",
+      "size_in_bytes": 15428,
+      "digest": "sha256:f909e431b98d7e9feae5d4f7e77c139c198ed74143cbc16481a18df817b210ae",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11308415671,
+      "name": "focused-indexed-input",
+      "size_in_bytes": 16957,
+      "digest": "sha256:4fe59ef6c636962d115d2d79c8d4d1b95ac98e428d226cb4ce94d465e190c780",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11308101316,
+      "name": "focused-archives",
+      "size_in_bytes": 22397,
+      "digest": "sha256:f9a74bfb0c2dd318197d647960d7375ae3d4ec3df8c863026fd43b5fe451380e",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11308096360,
+      "name": "focused-historical",
+      "size_in_bytes": 16693,
+      "digest": "sha256:397e1a811ecaedc631d6f3aa06f866c69faff723b647b4753167e12842d1921d",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11308071664,
+      "name": "focused-indexed-chronology",
+      "size_in_bytes": 15807,
+      "digest": "sha256:f4cea42d3c2ac9f60d9e70534c54cbf4d461974be7179f51fe45eb971f711b8e",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11307976935,
+      "name": "offline-development-receipt",
+      "size_in_bytes": 17210,
+      "digest": "sha256:ddc5c49cf6b4a3539b7ba83966c457539ef1e8a64b3a17024ab8e3f24756baaf",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11307927513,
+      "name": "focused-indexed-dependencies",
+      "size_in_bytes": 16234,
+      "digest": "sha256:08be7df4873f073c8114571ddf88a107a76c3c7f8b63a300115ece789ca8fcd0",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11307839328,
+      "name": "focused-indexed-coverage",
+      "size_in_bytes": 18097,
+      "digest": "sha256:09c0a14ab930bb3e66c1130adedc3431e2970f5b0162860c7a054f8cdb7aacd1",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11307649558,
+      "name": "focused-schemas",
+      "size_in_bytes": 23537,
+      "digest": "sha256:98bd41cd3acd654b931f7b167e79fb17f22bf79359b6b0733c982c6a49315eed",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11307274587,
+      "name": "focused-discovery",
+      "size_in_bytes": 19365,
+      "digest": "sha256:90ec8d93750174a2f9c89e0f5b98f7f42e13fb08a6a06216b5cb61741d905762",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    },
+    {
+      "id": 11307199933,
+      "name": "focused-research",
+      "size_in_bytes": 18186,
+      "digest": "sha256:a116e4dbd0571e378dca418ed4c2cd5af8ccc2ba32b237b63cd5c0ecbe4350c2",
+      "expired": false,
+      "workflow_run": {
+        "id": 37215031205,
+        "repository_id": 1403762619,
+        "head_repository_id": 1403762619,
+        "head_branch": "codex/product-completion",
+        "head_sha": "af02789bb33a3baa0ddf4592d883bab3074c093d"
+      }
+    }
+  ],
+  "mechanism": "Use supported GitHub connector download_workflow_artifact; retain only returned file ID and independently hashed bytes, never signedURL."
+}

@@ -1,0 +1,146 @@
+{
+  "JSONResponse.render": {
+    "calls": 7,
+    "errors": 0,
+    "max_seconds": 1.508553897991078,
+    "total_seconds": 3.0937149039818905
+  },
+  "Store.close": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.02609410200966522,
+    "total_seconds": 0.02609410200966522
+  },
+  "Store.evidence": {
+    "calls": 1020,
+    "errors": 0,
+    "max_seconds": 0.008832008024910465,
+    "total_seconds": 0.10642670973902568
+  },
+  "Store.get": {
+    "calls": 34,
+    "errors": 0,
+    "max_seconds": 1.2796315790037625,
+    "total_seconds": 5.782774339051684
+  },
+  "Store.list": {
+    "calls": 14,
+    "errors": 0,
+    "max_seconds": 2.928400309989229,
+    "total_seconds": 2.9287234169314615
+  },
+  "Store.stats": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 0.0012223899830132723,
+    "total_seconds": 0.0013746189943049103
+  },
+  "TestClient.__exit__": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 0.027970747993094847,
+    "total_seconds": 0.027970747993094847
+  },
+  "TestClient.get": {
+    "calls": 5,
+    "errors": 0,
+    "max_seconds": 18.375496980006574,
+    "total_seconds": 38.227265224035364
+  },
+  "TestClient.post": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 12.060382231982658,
+    "total_seconds": 21.393539965967648
+  },
+  "app.build_report": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 6.694370452984003,
+    "total_seconds": 12.664317796967225
+  },
+  "app.decorate_report": {
+    "calls": 6,
+    "errors": 0,
+    "max_seconds": 0.004060323000885546,
+    "total_seconds": 0.011356128001352772
+  },
+  "app.discovery_cohorts": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 1.6605191190028563,
+    "total_seconds": 1.662519837002037
+  },
+  "app.report_inputs": {
+    "calls": 4,
+    "errors": 0,
+    "max_seconds": 2.9289895980036817,
+    "total_seconds": 4.587368634965969
+  },
+  "app.reports": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 2.9327956670022104,
+    "total_seconds": 2.9333183240087237
+  },
+  "copy_review.qualify_report": {
+    "calls": 6,
+    "errors": 0,
+    "max_seconds": 0.00017006599227897823,
+    "total_seconds": 0.0009210569551214576
+  },
+  "copy_review.review_copy_behavior": {
+    "calls": 6,
+    "errors": 0,
+    "max_seconds": 0.0008516729867551476,
+    "total_seconds": 0.004309569951146841
+  },
+  "endpoint./api/archives/import": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 9.329141397000058,
+    "total_seconds": 9.329141397000058
+  },
+  "endpoint./api/reports/{identifier}": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 1.2842804300016724,
+    "total_seconds": 2.5211403380089905
+  },
+  "endpoint./api/reports/{identifier}/rebuild": {
+    "calls": 1,
+    "errors": 0,
+    "max_seconds": 12.056611638981849,
+    "total_seconds": 12.056611638981849
+  },
+  "endpoint./api/state": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 4.596695415995782,
+    "total_seconds": 4.602934896014631
+  },
+  "fastapi.serialize_response": {
+    "calls": 6,
+    "errors": 0,
+    "max_seconds": 11.395972645026632,
+    "total_seconds": 26.272271767025813
+  },
+  "httpx.Response.json": {
+    "calls": 7,
+    "errors": 0,
+    "max_seconds": 2.0708156009786762,
+    "total_seconds": 4.261002828978235
+  },
+  "report_view.summary_inputs": {
+    "calls": 2,
+    "errors": 0,
+    "max_seconds": 1.6570985300058965,
+    "total_seconds": 1.6572655310155824
+  },
+  "scanner.archive_input.load_archive": {
+    "calls": 3,
+    "errors": 0,
+    "max_seconds": 4.01659959499375,
+    "total_seconds": 9.90207023199764
+  }
+}
