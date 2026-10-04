@@ -1,0 +1,305 @@
+{
+  "native-incoming-close": {
+    "input_sha256": "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22",
+    "independently_worked": {
+      "opening_account_lamports": 1002000000,
+      "earlier_incoming_native_token_units": 100,
+      "refund_lamports": 1002000100,
+      "network_fee_lamports": 5000,
+      "wallet_native_delta_lamports": 1001995100,
+      "all_observed_wallet_owned_native_delta_lamports": -5000
+    },
+    "actual": {
+      "roles": [
+        {
+          "event_path": "instructions.1",
+          "role": "wallet_owned_account_refund",
+          "account": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "lamports": "1002000100",
+          "raw_paths": [
+            "meta.fee",
+            "meta.postBalances.0",
+            "meta.postBalances.1",
+            "meta.postBalances.2",
+            "meta.preBalances.0",
+            "meta.preBalances.1",
+            "meta.preBalances.2",
+            "transaction.message.instructions.0.parsed.info",
+            "transaction.message.instructions.0.parsed.info.authority",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.mint",
+            "transaction.message.instructions.0.parsed.info.source",
+            "transaction.message.instructions.0.parsed.info.tokenAmount.amount",
+            "transaction.message.instructions.0.programId",
+            "transaction.message.instructions.1.parsed.info",
+            "transaction.message.instructions.1.parsed.info.account",
+            "transaction.message.instructions.1.parsed.info.destination",
+            "transaction.message.instructions.1.parsed.info.owner",
+            "transaction.message.instructions.1.programId"
+          ],
+          "cash_effects": [
+            {
+              "kind": "native_token_transfer",
+              "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "destination": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+              "lamports": "100"
+            }
+          ],
+          "check": {
+            "state": "PASS",
+            "reason": "Every linked original supports the same wallet-internal native administration roles.",
+            "evidence": [
+              "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+            ],
+            "raw_paths": [
+              "meta.fee",
+              "meta.postBalances.0",
+              "meta.postBalances.1",
+              "meta.postBalances.2",
+              "meta.preBalances.0",
+              "meta.preBalances.1",
+              "meta.preBalances.2",
+              "transaction.message.instructions.0.parsed.info",
+              "transaction.message.instructions.0.parsed.info.authority",
+              "transaction.message.instructions.0.parsed.info.destination",
+              "transaction.message.instructions.0.parsed.info.mint",
+              "transaction.message.instructions.0.parsed.info.source",
+              "transaction.message.instructions.0.parsed.info.tokenAmount.amount",
+              "transaction.message.instructions.0.programId",
+              "transaction.message.instructions.1.parsed.info",
+              "transaction.message.instructions.1.parsed.info.account",
+              "transaction.message.instructions.1.parsed.info.destination",
+              "transaction.message.instructions.1.parsed.info.owner",
+              "transaction.message.instructions.1.programId"
+            ],
+            "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+          }
+        }
+      ],
+      "check": {
+        "state": "PASS",
+        "reason": "Every linked original supports the same wallet-internal native administration roles.",
+        "evidence": [
+          "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+        ],
+        "raw_paths": [
+          "meta.fee",
+          "meta.postBalances.0",
+          "meta.postBalances.1",
+          "meta.postBalances.2",
+          "meta.preBalances.0",
+          "meta.preBalances.1",
+          "meta.preBalances.2",
+          "transaction.message.instructions.0.parsed.info",
+          "transaction.message.instructions.0.parsed.info.authority",
+          "transaction.message.instructions.0.parsed.info.destination",
+          "transaction.message.instructions.0.parsed.info.mint",
+          "transaction.message.instructions.0.parsed.info.source",
+          "transaction.message.instructions.0.parsed.info.tokenAmount.amount",
+          "transaction.message.instructions.0.programId",
+          "transaction.message.instructions.1.parsed.info",
+          "transaction.message.instructions.1.parsed.info.account",
+          "transaction.message.instructions.1.parsed.info.destination",
+          "transaction.message.instructions.1.parsed.info.owner",
+          "transaction.message.instructions.1.programId"
+        ],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "unresolved_paths": [],
+      "observed_economic_roles": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+        "evidence": [
+          "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+        ],
+        "raw_paths": [
+          "instructions.0",
+          "instructions.1",
+          "meta.fee",
+          "meta.tokenBalances"
+        ],
+        "dependencies": []
+      },
+      "native_fee": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+        "evidence": [
+          "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+        ],
+        "raw_paths": [],
+        "dependencies": []
+      },
+      "ledger_kinds": [
+        "fee",
+        "internal_transfer",
+        "internal_transfer",
+        "internal_transfer"
+      ],
+      "wallet_population": "UNKNOWN"
+    }
+  },
+  "system-topup-close": {
+    "input_sha256": "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2",
+    "independently_worked": {
+      "opening_account_lamports": 2000000,
+      "earlier_system_topup_lamports": 1000,
+      "refund_lamports": 2001000,
+      "network_fee_lamports": 5000,
+      "wallet_native_delta_lamports": 1995000,
+      "all_observed_wallet_owned_native_delta_lamports": -5000
+    },
+    "actual": {
+      "roles": [
+        {
+          "event_path": "instructions.0",
+          "role": "wallet_owned_account_funding",
+          "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "program": "11111111111111111111111111111111",
+          "lamports": "1000",
+          "raw_paths": [
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.source",
+            "transaction.message.instructions.0.programId"
+          ],
+          "check": {
+            "state": "PASS",
+            "reason": "Every linked original supports the same wallet-internal native administration roles.",
+            "evidence": [
+              "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+            ],
+            "raw_paths": [
+              "meta.fee",
+              "meta.postBalances.0",
+              "meta.postBalances.1",
+              "meta.preBalances.0",
+              "meta.preBalances.1",
+              "transaction.message.instructions.0.parsed.info",
+              "transaction.message.instructions.0.parsed.info.destination",
+              "transaction.message.instructions.0.parsed.info.source",
+              "transaction.message.instructions.0.programId",
+              "transaction.message.instructions.1.parsed.info",
+              "transaction.message.instructions.1.parsed.info.account",
+              "transaction.message.instructions.1.parsed.info.destination",
+              "transaction.message.instructions.1.parsed.info.owner",
+              "transaction.message.instructions.1.programId"
+            ],
+            "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+          }
+        },
+        {
+          "event_path": "instructions.1",
+          "role": "wallet_owned_account_refund",
+          "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "lamports": "2001000",
+          "raw_paths": [
+            "meta.fee",
+            "meta.postBalances.0",
+            "meta.postBalances.1",
+            "meta.preBalances.0",
+            "meta.preBalances.1",
+            "transaction.message.instructions.0.parsed.info",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.source",
+            "transaction.message.instructions.0.programId",
+            "transaction.message.instructions.1.parsed.info",
+            "transaction.message.instructions.1.parsed.info.account",
+            "transaction.message.instructions.1.parsed.info.destination",
+            "transaction.message.instructions.1.parsed.info.owner",
+            "transaction.message.instructions.1.programId"
+          ],
+          "cash_effects": [
+            {
+              "kind": "system_transfer",
+              "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "lamports": "1000"
+            }
+          ],
+          "check": {
+            "state": "PASS",
+            "reason": "Every linked original supports the same wallet-internal native administration roles.",
+            "evidence": [
+              "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+            ],
+            "raw_paths": [
+              "meta.fee",
+              "meta.postBalances.0",
+              "meta.postBalances.1",
+              "meta.preBalances.0",
+              "meta.preBalances.1",
+              "transaction.message.instructions.0.parsed.info",
+              "transaction.message.instructions.0.parsed.info.destination",
+              "transaction.message.instructions.0.parsed.info.source",
+              "transaction.message.instructions.0.programId",
+              "transaction.message.instructions.1.parsed.info",
+              "transaction.message.instructions.1.parsed.info.account",
+              "transaction.message.instructions.1.parsed.info.destination",
+              "transaction.message.instructions.1.parsed.info.owner",
+              "transaction.message.instructions.1.programId"
+            ],
+            "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+          }
+        }
+      ],
+      "check": {
+        "state": "PASS",
+        "reason": "Every linked original supports the same wallet-internal native administration roles.",
+        "evidence": [
+          "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+        ],
+        "raw_paths": [
+          "meta.fee",
+          "meta.postBalances.0",
+          "meta.postBalances.1",
+          "meta.preBalances.0",
+          "meta.preBalances.1",
+          "transaction.message.instructions.0.parsed.info",
+          "transaction.message.instructions.0.parsed.info.destination",
+          "transaction.message.instructions.0.parsed.info.source",
+          "transaction.message.instructions.0.programId",
+          "transaction.message.instructions.1.parsed.info",
+          "transaction.message.instructions.1.parsed.info.account",
+          "transaction.message.instructions.1.parsed.info.destination",
+          "transaction.message.instructions.1.parsed.info.owner",
+          "transaction.message.instructions.1.programId"
+        ],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "unresolved_paths": [],
+      "observed_economic_roles": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+        "evidence": [
+          "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+        ],
+        "raw_paths": [
+          "instructions.0",
+          "instructions.1",
+          "meta.fee"
+        ],
+        "dependencies": []
+      },
+      "native_fee": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+        "evidence": [
+          "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+        ],
+        "raw_paths": [],
+        "dependencies": []
+      },
+      "ledger_kinds": [
+        "fee",
+        "internal_transfer",
+        "internal_transfer"
+      ],
+      "wallet_population": "UNKNOWN"
+    }
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "scope": "Underlying CPI discriminator/account compatibility only; not wrapper semantics, independent economic allocation or wallet qualification.",
+  "records": [
+    {
+      "signature": "5oJxhKA9zi9LYYkjJjBgnqQA4nRLXqTAC2Quzr2NCcn2bVWcHtHN4WDsr5RcWVFwQYufUzDXNRMWrkH3oCPY3VQX",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 18144,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "4VanEMtk2Kqs5uLKngyP5qAu44ZdL8rGeao4yS5dyEqybUYMJ22ty5FMzEZFtjXC8RcfsEsQXybXAjafMLfdoCeg",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 55367,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "5nY9TGpazpYBUAG2cUaumcVoNQAspbUAhy5Rhg7eDiMvNwTUigm8xdo1FFYMUcVahpLahtDePojvecF1cvv6HAK4",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 5351,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "2b3FRyj3Yhs2qLcgFTTNSJ31q4nWJG7v8snLfHozcfHM5MwV3sbV4cffk3L6aeqBfHEwoE3xmnNrqzSkVLHbS1QC",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 21946,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.6",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "5PeQ5Dy8sV8yNwi9YsxYQFd7Yuppe4YGT29FG35aXLoRUMFH3fd9qpSgiDgCk2URy95u7JvCQSJs275WoBRptYQM",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 5350,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "3Hg5UK3u5EbeXmh9S3TfDZA4QpvVRZkEFiSWd3jkNg6uxZM9KEVhB7ZYnkKWtGghB89FuBEAsBCoW78pQr2Fm5Fh",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 5211,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "5H4d5nTHaAxNNdcwhToqP7sq3mmTenBeFphHS6ZDkqrkQPNWc3wx2Fy5tx4c5DmB7NtdWhWLQoqAFavrX43JraMe",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 5351,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.6",
+          "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "instruction": "swap_v2",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "31ZMBWuJUP9aC18YY4tVg8uGj8mw4nGbisKf1Czc2BKwib251gpUpSRkaLznxhDEMUB589DARzQ5JEfvaevnb2XT",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 5211,
+      "reviewed_inner_routes": []
+    },
+    {
+      "signature": "5PNdvgSBHYFetGx1NvDXa4C44H354R8LoXmvvX4JxrLyEVJtJ3dXc8rQ4VospCae1pjhhgmq5jMqkiE3kqYSMkQw",
+      "original_source_hash": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "fee_lamports": 111397,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "38fFYnSBUKjeXpTqHGKq2UUZ1kxxWRnpJJHL8pjXBE4UWa8ZVCxKu6gaU7F7AvstHggNcwFip75LyNiH3JXSdGWe",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 13532,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.11",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "5FoBYCFfibHBLTawhrkaQ4YmeUezfpL4wTRNKVRdAjkkcPAhchHSG85qS6X8kYxvcZfbU8tPmrzuD4RSoBHCoHQs",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 21742,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.1.instructions.5",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "MG8fBywB1Ht8TLYtS3yFbe5dZsphJbwzX2s9MLRxvPiyo5hZajvrmfn63K5GHe7HubqrYKgAmFPJeLzsFkLMXhF",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 48505,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.13",
+          "program": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+          "instruction": "swap_base_in_v2",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "2H2C52zAZesBM5o4bt3fppeREDxFM41zcEbpmSEmv5toi7mfXPgu3pxmYrUgD5bNTvAhmV6XmjiLnvgrdyBCjQrz",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 49599,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "333dYLHp32UhpGQkUjZj6tV69XRS2oUF2sRJpqcYNVjdtvkw3ZsRuLiNty1PxH7Ezj4XGMmF3A665FuCFGEDE7RU",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 52345,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "3FqPxqkanG7Hx7CQJfVjhzmdGGEbNd23BP3s6AT6nXb2X9tpgLpW7HDa9hYoxBoQstmksc1krVZ2Qro73QmK6Xxv",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 26619,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.12",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    },
+    {
+      "signature": "iHmRV7jsoLHQSNkD2XHMQ81rccUDmCSGuAbHpXakXcLDEc1NjgmkTwJVA84nnq3hzYAVYdVXBAQk3bqbsxfbAYg",
+      "original_source_hash": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "fee_lamports": 26711,
+      "reviewed_inner_routes": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.14",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell",
+          "authority": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "authority_is_wallet": true
+        }
+      ]
+    }
+  ]
+}

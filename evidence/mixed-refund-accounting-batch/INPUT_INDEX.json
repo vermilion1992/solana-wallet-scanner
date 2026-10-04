@@ -1,0 +1,199 @@
+{
+  "complete_genuine_dataset": false,
+  "files": [
+    {
+      "bytes": 6278,
+      "original_path": "/workspace/outputs/mixed-accounting-route-inventory/FINDINGS.json",
+      "path": "evidence/mixed-refund-accounting-batch/retained-routes/FINDINGS.json",
+      "sha256": "56907dcaaae65ec6da74606e4ff63e46e4510991d3c6ccc242dfb35f7b454cc6"
+    },
+    {
+      "bytes": 21456,
+      "original_path": "/workspace/outputs/mixed-accounting-route-inventory/WORKED_ROUTE_OPPORTUNITIES.json",
+      "path": "evidence/mixed-refund-accounting-batch/retained-routes/WORKED_ROUTE_OPPORTUNITIES.json",
+      "sha256": "e09d4b1d9f134914418b1f3c3348ec5ea78afcb363304b9a69fd958ddc3981f4"
+    },
+    {
+      "bytes": 3192,
+      "original_path": "/workspace/outputs/mixed-accounting-route-inventory/MARK_REPRODUCTION.json",
+      "path": "evidence/mixed-refund-accounting-batch/retained-routes/MARK_REPRODUCTION.json",
+      "sha256": "8a8c47702b50af4272b016304e1d8e203906e9e534a1e52e08403a9c9dc93950"
+    },
+    {
+      "bytes": 10082,
+      "original_path": "/workspace/outputs/mixed-accounting-route-inventory/OPAQUE_WRAPPER_INNER_SCHEMAS.json",
+      "path": "evidence/mixed-refund-accounting-batch/retained-routes/OPAQUE_WRAPPER_INNER_SCHEMAS.json",
+      "sha256": "9df8d4614b2b2153c898908f5858072b93f79d8faedeadcf97104a7e3752b202"
+    },
+    {
+      "bytes": 4267,
+      "original_path": "/workspace/outputs/mixed-accounting-route-inventory/inventory.py",
+      "path": "evidence/mixed-refund-accounting-batch/retained-routes/inventory.py",
+      "sha256": "bed6e59932d3977deabb3f4336e109e30a50a9eea20fa86eae4651f7511f40e4"
+    },
+    {
+      "bytes": 5407,
+      "original_path": "/workspace/outputs/mixed-accounting-route-inventory/worked_routes.py",
+      "path": "evidence/mixed-refund-accounting-batch/retained-routes/worked_routes.py",
+      "sha256": "e28a06433ed5b7401b0abea1e3a4a8f244bb0954a2e55f6f2fe9c15ff2807107"
+    },
+    {
+      "bytes": 88700,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/APPLICATION_DIFF.patch",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/APPLICATION_DIFF.patch",
+      "sha256": "edf411daccddafb32a7335fd02aafd760742e78f2300cd05d7fb37f49467054f"
+    },
+    {
+      "bytes": 4304,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/BASELINE_REPRODUCTIONS.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/BASELINE_REPRODUCTIONS.json",
+      "sha256": "ea3f90ee0c0b4deb600afc6ac95b75b7e90ba17eec6ebb0a6e74350d5096c3bb"
+    },
+    {
+      "bytes": 13568,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/CANDIDATE_REPRODUCTIONS.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/CANDIDATE_REPRODUCTIONS.json",
+      "sha256": "80fbec5659255c681787639c35420210efd2e3776931c19ffc99173a5bc7aed2"
+    },
+    {
+      "bytes": 1037,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/CANDIDATE_REVIEW_ASSERTIONS.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/CANDIDATE_REVIEW_ASSERTIONS.json",
+      "sha256": "7fffb14f3f3f11814e1421d49ccef0aa3a02b945fb7b83f3558f5cef4b0de178"
+    },
+    {
+      "bytes": 442,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/FINAL_RESERVE_ASSERTIONS.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/FINAL_RESERVE_ASSERTIONS.json",
+      "sha256": "01e3458ec7df95ef5efb84ae459a046f8aa601c99039224d1a4eb19b2081cc89"
+    },
+    {
+      "bytes": 559,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/FINAL_SIBLING_ASSERTIONS.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/FINAL_SIBLING_ASSERTIONS.json",
+      "sha256": "9bb2c72d2e59c444ef48d4fee8fc3c2bbc32e223c4c8bffe4fc031aaf18cada9"
+    },
+    {
+      "bytes": 39646,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/FINAL_SOURCE_MANIFEST.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/FINAL_SOURCE_MANIFEST.json",
+      "sha256": "7569a3b06edcd6819b0535a9b2527db0584f3848536f952bb452585e0dbbeaca"
+    },
+    {
+      "bytes": 6133,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/MISSING_FEE_BEFORE.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/MISSING_FEE_BEFORE.json",
+      "sha256": "6b3d8fc1d2bb16d163853e0c94f1c8f3774d657fae99b3aba9d840ae9dbcd075"
+    },
+    {
+      "bytes": 1461,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/MISSING_FEE_FUNDS_AFTER.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/MISSING_FEE_FUNDS_AFTER.json",
+      "sha256": "60a09ec2c81f9999587120fb9ada85145be624da15c00316881a9aaefbb1c02e"
+    },
+    {
+      "bytes": 6525,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/MISSING_FEE_FUNDS_BEFORE.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/MISSING_FEE_FUNDS_BEFORE.json",
+      "sha256": "47196e2151282058afe4c3f63a6c20fb7f2599e1b8729354922a46ef7e64ba3f"
+    },
+    {
+      "bytes": 10088,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/MISSING_FEE_IMPOSSIBLE_SOURCE_BEFORE.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/MISSING_FEE_IMPOSSIBLE_SOURCE_BEFORE.json",
+      "sha256": "ff3fe056f96e8238485b0c1b789852611c6dc308ce934c86dddd0f2e5670d65e"
+    },
+    {
+      "bytes": 9383,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/NATIVE_PRINCIPAL_AFTER.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/NATIVE_PRINCIPAL_AFTER.json",
+      "sha256": "0d96576907060049785496bf24018edc965c5072db1d00c3c4888f1e0961b0b0"
+    },
+    {
+      "bytes": 11423,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/NATIVE_PRINCIPAL_BEFORE.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/NATIVE_PRINCIPAL_BEFORE.json",
+      "sha256": "328c89a309dc5e1baa8dd80ce49a8a55435118146045e8523bba8e9e24eb4d6d"
+    },
+    {
+      "bytes": 697,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/RESERVE_ADMIN_INNER_BEFORE.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/RESERVE_ADMIN_INNER_BEFORE.json",
+      "sha256": "31f382c2fc039abec243acaa4389a03c7be52f9d0fbdeea92b95d3576bcc2005"
+    },
+    {
+      "bytes": 33407,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/RESERVE_QUOTE_COLLATERAL_BEFORE.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/RESERVE_QUOTE_COLLATERAL_BEFORE.json",
+      "sha256": "91247167a72dc12597b42e77c9dc90ea1b0058e96be59d03572f1fd96892b6ca"
+    },
+    {
+      "bytes": 649,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/REVIEW_ORACLE_CORRECTION.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/REVIEW_ORACLE_CORRECTION.json",
+      "sha256": "6f783329586fc8b45c1257bbc6304b06e5fa43bb842743f16196fcef76d46f7d"
+    },
+    {
+      "bytes": 1837,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/STARTING_IDENTITY.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/STARTING_IDENTITY.json",
+      "sha256": "aaf1841b3eb6936900290162a1ad121462eae5e3fc63556692f2734a4d0c2a65"
+    },
+    {
+      "bytes": 3979,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/final_siblings.py",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/final_siblings.py",
+      "sha256": "b540d0c436b356c6020eefa942433b94bed7d0542050c0fc5256f6cab68efb4f"
+    },
+    {
+      "bytes": 927,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/missing_fee_funds_repro.py",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/missing_fee_funds_repro.py",
+      "sha256": "11714f55445e96940cee4193849f66d2fdff186be7fcce6b358b2aac09347ad9"
+    },
+    {
+      "bytes": 3126,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/native-incoming-close-input.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/native-incoming-close-input.json",
+      "sha256": "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+    },
+    {
+      "bytes": 1607,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/native_principal_repro.py",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/native_principal_repro.py",
+      "sha256": "f8a3d56a1c0f638eca0d72bfb3a9cfa2abdd1cf9f77fb588fa1725075b030957"
+    },
+    {
+      "bytes": 5229,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/reproduce.py",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/reproduce.py",
+      "sha256": "f97659a6a18d63a7342c0a2e9d9b09d4991bc3e00b853dde1bcb5e9b3b47ac6e"
+    },
+    {
+      "bytes": 3516,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/reserve_sibling_review.py",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/reserve_sibling_review.py",
+      "sha256": "956941f499eb92c51655978530899fa915e1280dfdb590d8d0dcdf0d3e02e0a6"
+    },
+    {
+      "bytes": 8679,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/review_candidate.py",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/review_candidate.py",
+      "sha256": "e718356012b1ca7cd4ed7327d400deed6f283c8b1fdbce4062bdcb66b19c5880"
+    },
+    {
+      "bytes": 2890,
+      "original_path": "/workspace/outputs/mixed-accounting-readonly-review/system-topup-close-input.json",
+      "path": "evidence/mixed-refund-accounting-batch/independent-review-inputs/system-topup-close-input.json",
+      "sha256": "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+    }
+  ],
+  "kind": "retained-input-and-independent-oracle-index",
+  "provider_requests": 0,
+  "review_receipt": {
+    "bytes": 10982,
+    "path": "evidence/mixed-refund-accounting-batch/READ_ONLY_REVIEW.json",
+    "sha256": "31bc7ca7ee96a51e4a13dfbb397f0e1d69b31abe0287cc9ba757e01e919b6968"
+  },
+  "scope": "genuine partial records and synthetic development controls; not genuine complete B3"
+}

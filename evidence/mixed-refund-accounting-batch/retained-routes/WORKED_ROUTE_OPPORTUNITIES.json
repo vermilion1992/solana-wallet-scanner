@@ -1,0 +1,516 @@
+{
+  "version": "retained-route-worked-opportunities-v1",
+  "source_identity": "bad28e11d7a281aa201eb08761e2a17161a9180a",
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "source_mutations": 0,
+  "full_report_builds": 0,
+  "oracle": "Independent tiny base58 + fixed SPL transferChecked raw-byte integer decoding. Account roles read from retained primary PumpSwap IDL, not production route table. Inspection only, not acceptance.",
+  "schemas": [
+    {
+      "path": "tests/fixtures/retained_protocol_funding/pump_amm.json",
+      "sha256": "2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1",
+      "commit": "cb188ce08b5069196eef1f3e4a0c43b70099793b"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+      "sha256": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc"
+    }
+  ],
+  "wallet_authority_buy_candidates": [
+    {
+      "signature": "bJUHFDZ1vZ3hMYBN6CDquGvJe7VLst1WPq2VjrgAC8uaSRYPzuwTe22Yv6zMhMLsr2mmoFaxCYEoaDHyvM29QSH",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 411087612,
+      "blockTime": 1775351390,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "HtsL2niY4PrJvf3twaFjUh8VSbrMThMuehuUokx3pump",
+      "quote_mint": "So11111111111111111111111111111111111111112",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "43375633770",
+          "decimals": 6,
+          "source": "EbDuiXwrJQw2mToGwsPk4FiCA4wtmcPyEcVxEj4Nc5TH"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "43375633770",
+          "decimals": 6,
+          "destination": "EQ1wjZFCzJ69jovwnkHsE9uwxSsjZmHP8PCc63kZFMsp"
+        }
+      ],
+      "exact_quote_instruction_legs": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "lamports": 80140286,
+          "destination": "84XcyGk2ddaXiUgEM1t3Ud5ENmdE2H9Z98bSxq7P1ySg"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.4",
+          "lamports": 39991,
+          "destination": "FGptqdxjahafaCzpZ1T6EDtCzYMv7Dyn5MgBLyB3VUFW"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.5",
+          "lamports": 719823,
+          "destination": "HyYNGzNPQfZoYa7RCBqQzNTmYb4PaGzgFdMFy2xe2A7B"
+        }
+      ],
+      "quoted_instruction_total_lamports": 80900100,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "bJUHFDZ1vZ3hMYBN6CDquGvJe7VLst1WPq2VjrgAC8uaSRYPzuwTe22Yv6zMhMLsr2mmoFaxCYEoaDHyvM29QSH",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    },
+    {
+      "signature": "66WYUVrLf3whzMudiLCxGuLRLjaqWDGReVXBjGdJhkpJE1Nw2RMmk2aZdU8PNfXQqhrzGPn4ndtSePXafv3PZkYQ",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 413080115,
+      "blockTime": 1776136770,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "FzDnTNsE63Dg7o9Hxi2WavVnA2pxXPW1dPtcQa8qpump",
+      "quote_mint": "So11111111111111111111111111111111111111112",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "39804878213",
+          "decimals": 6,
+          "source": "2PcyiZcFcQaTijdHmsV3pWi62iPz5k8hUbLhybcnWgBM"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "39804878213",
+          "decimals": 6,
+          "destination": "DcSGbWGhXJbeiHtuweBakiRy8bu87uFtiaBzJMAWxJTE"
+        }
+      ],
+      "exact_quote_instruction_legs": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "lamports": 49768644,
+          "destination": "Aoe9JzJYu9NY2zhKLG7vNNCUehTS9Btyzrfbai6Ng2ts"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.4",
+          "lamports": 24835,
+          "destination": "X5QPJcpph4mBAJDzc4hRziFftSbcygV59kRb2Fu6Je1"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.5",
+          "lamports": 471859,
+          "destination": "cwx2SDjXmSju9MpwVSCA1Z5yuEYyz9PmmbcHmXzZ12k"
+        }
+      ],
+      "quoted_instruction_total_lamports": 50265338,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "66WYUVrLf3whzMudiLCxGuLRLjaqWDGReVXBjGdJhkpJE1Nw2RMmk2aZdU8PNfXQqhrzGPn4ndtSePXafv3PZkYQ",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    },
+    {
+      "signature": "5Nb8HEnFuBTy4w665pJRdeSWNiBMHLvJZgPpXs5QGJv8HWUiDXdJENXDU5KsvqFNRj1TeHE29qbQr3miGJUgkuz3",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 431043560,
+      "blockTime": 1783292662,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "Bg442NKifW9Ma9tapZDK7VpP9C9nhTjGHot14L1vpump",
+      "quote_mint": "So11111111111111111111111111111111111111112",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "336297929138",
+          "decimals": 6,
+          "source": "9p67SV3Rdeymxf89FFcRLQcH6xLSW58mg3AqxDNjDWs5"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "336297929138",
+          "decimals": 6,
+          "destination": "3CR2twSSkdEKm9CQweUFd3g3KrvCNKbzMSpSdV5esNhw"
+        }
+      ],
+      "exact_quote_instruction_legs": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "lamports": 161264286,
+          "destination": "HY88f9zDx4xDfNornjnqTCquJVxbdB9LFDcFydj27bSU"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.4",
+          "lamports": 40236,
+          "destination": "7GFUN3bWzJMKMRZ34JLsvcqdssDbXnp589SiE33KVwcC"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.5",
+          "lamports": 1528953,
+          "destination": "BAB8NgYsaFbdN5yQZffMze1Mf6CH8z8EagFZXUBEqpn2"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.6",
+          "lamports": 40236,
+          "destination": "qkYdTGRPHbWTWuBMz45bCiU6a23axRqf6sBHm9295WY"
+        }
+      ],
+      "quoted_instruction_total_lamports": 162873711,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "5Nb8HEnFuBTy4w665pJRdeSWNiBMHLvJZgPpXs5QGJv8HWUiDXdJENXDU5KsvqFNRj1TeHE29qbQr3miGJUgkuz3",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    },
+    {
+      "signature": "3uq7yWnYFbhAisy6FdZ2vSM1mZuyvXZhD2pitmjNkHPCC8jaJpCq4mJt4aYULjBzosZ1XpnNFrUJQqqA4agxpmue",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 432369822,
+      "blockTime": 1783833446,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "5VMbcRosto1RT6GZHRucUZEM26XEoTYcmoSbNhq3pump",
+      "quote_mint": "So11111111111111111111111111111111111111112",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "362247105459",
+          "decimals": 6,
+          "source": "GStzZzvsFHKciRzKRSbtw76JyYyHuzvt9BNpAXKeRxxH"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "362247105459",
+          "decimals": 6,
+          "destination": "CgEYZkMY4cTmi4PgF2igpdEz8F4UNMzhvS4J2RHCwuUt"
+        }
+      ],
+      "exact_quote_instruction_legs": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "lamports": 416308875,
+          "destination": "Db3pU9yE36x6zCLyR1cv18qBtrizLjah44pfusK9GncB"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.4",
+          "lamports": 103870,
+          "destination": "Bvtgim23rfocUzxVX9j9QFxTbBnH8JZxnaGLCEkXvjKS"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.5",
+          "lamports": 3947041,
+          "destination": "EomX5tFJ46pBENrZ6UWw7HbEs4tg6LoW6HXwBCD9zDvt"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.6",
+          "lamports": 103869,
+          "destination": "qkYdTGRPHbWTWuBMz45bCiU6a23axRqf6sBHm9295WY"
+        }
+      ],
+      "quoted_instruction_total_lamports": 420463655,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "3uq7yWnYFbhAisy6FdZ2vSM1mZuyvXZhD2pitmjNkHPCC8jaJpCq4mJt4aYULjBzosZ1XpnNFrUJQqqA4agxpmue",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    },
+    {
+      "signature": "4fvdfkPYbwAoiE57k9xhrgkfvhrXd5MZbAUjnj2fQjiPrKP4qgxYHQ95ckK1JPcTPxe2HzJpVF5pAAZ1eJ6Nq63n",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 434042021,
+      "blockTime": 1784526132,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "62yzpmKJB6XiVtZcQZhUkUXhqwN3UgCbffUi4JM9pump",
+      "quote_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "179721749184",
+          "decimals": 6,
+          "source": "8L5wkxNcCrJqvzSbcydsD48GJhfAucuihKrmj86sjZpA"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "179721749184",
+          "decimals": 6,
+          "destination": "HaPGzx56cACzf75MePgfFnhDpSt8Ps9tW85RhC4sotxa"
+        }
+      ],
+      "exact_quote_instruction_legs": [],
+      "quoted_instruction_total_lamports": null,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "4fvdfkPYbwAoiE57k9xhrgkfvhrXd5MZbAUjnj2fQjiPrKP4qgxYHQ95ckK1JPcTPxe2HzJpVF5pAAZ1eJ6Nq63n",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    },
+    {
+      "signature": "3JVGrbKLUqW1Unxa2PAWSHA6k73V3W2hWbm71e5WsLGEKFJpN4YUdM7Q2VWgoUvzfjvpH5tcKJossqmbXnkNrUzz",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 438951738,
+      "blockTime": 1786596374,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "CZEGT2GyNRNwvD7TG5Lz512dUGH8enxwZVKJoAgxpump",
+      "quote_mint": "So11111111111111111111111111111111111111112",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "71352933264",
+          "decimals": 6,
+          "source": "68C2zt18ork9KhAjimST3McyvEKB795cVTimeLnr78Zp"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "71352933264",
+          "decimals": 6,
+          "destination": "5vWNRq3FyubU6TQ7gXsvVc9pim8iWrUQB69FKtFaBFJj"
+        }
+      ],
+      "exact_quote_instruction_legs": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "lamports": 87504816,
+          "destination": "GHnW7FAMwtYGyd9FJHmt73v2iRB9tSPs1Xfw6aoLHSrL"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.4",
+          "lamports": 21833,
+          "destination": "94qWNrtmfn42h3ZjUZwWvK1MEo9uVmmrBPd2hpNjYDjb"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.5",
+          "lamports": 829637,
+          "destination": "3ciDq5y5ooUWaNRKmqYBjSudP2kiAwNKRuDM3C9haDLH"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.6",
+          "lamports": 21833,
+          "destination": "HjQjngTDqoHE6aaGhUqfz9aQ7WZcBRjy5xB8PScLSr8i"
+        }
+      ],
+      "quoted_instruction_total_lamports": 88378119,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "3JVGrbKLUqW1Unxa2PAWSHA6k73V3W2hWbm71e5WsLGEKFJpN4YUdM7Q2VWgoUvzfjvpH5tcKJossqmbXnkNrUzz",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    },
+    {
+      "signature": "2ampQuHvc9Si49Pz1qL7rT1gG8gB9pgyGhWkbW2RgbCuALFX4Mi3qz5R4upqhP8uW2FPy8Jfjb7aGbGiG2fuo6sH",
+      "original_source_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+      "source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+      "slot": 443661802,
+      "blockTime": 1788341092,
+      "raw_fee_lamports": 5000,
+      "user": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "base_mint": "DnQu6xQd9zzW5dWpKppjNTRcTYFS6JDpK5xLXEZypump",
+      "quote_mint": "So11111111111111111111111111111111111111112",
+      "base_received": [
+        {
+          "path": "meta.innerInstructions.0.instructions.2",
+          "quantity_raw": "107615426596",
+          "decimals": 6,
+          "source": "GLjHWWcP4ghtqFsxY3BA9oCJzT3LsBt8Z2zH4CvXgvKv"
+        }
+      ],
+      "base_exported": [
+        {
+          "path": "transaction.message.instructions.3",
+          "quantity_raw": "107615426596",
+          "decimals": 6,
+          "destination": "6p1LA7tEKwuzRAiciJA65A9PXtbDUPmDufUDCfgD9MA4"
+        }
+      ],
+      "exact_quote_instruction_legs": [
+        {
+          "path": "meta.innerInstructions.0.instructions.3",
+          "lamports": 108885612,
+          "destination": "2EjfGirs9PCE2zLAeXeJeo41oF1pY2NK3fcC9B44FJwE"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.4",
+          "lamports": 27168,
+          "destination": "7GFUN3bWzJMKMRZ34JLsvcqdssDbXnp589SiE33KVwcC"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.5",
+          "lamports": 1032349,
+          "destination": "F1psMXZZBHxGWgsyajarJHNoiYjMQVFqNsYtv4BDCJQX"
+        },
+        {
+          "path": "meta.innerInstructions.0.instructions.6",
+          "lamports": 27167,
+          "destination": "6rVkF4HSgy1jrnC3HogfRgPHrq4CtLg5f11URpsC4i9D"
+        }
+      ],
+      "quoted_instruction_total_lamports": 109972296,
+      "volume_account_funding": [
+        {
+          "path": "meta.innerInstructions.0.instructions.0",
+          "lamports": 1844400,
+          "space": 137
+        }
+      ],
+      "current_decoder_result": [
+        {
+          "signature": "2ampQuHvc9Si49Pz1qL7rT1gG8gB9pgyGhWkbW2RgbCuALFX4Mi3qz5R4upqhP8uW2FPy8Jfjb7aGbGiG2fuo6sH",
+          "path": "meta",
+          "reason": "No reviewed spot swap instruction for this program and discriminator",
+          "evidence": [
+            "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+          ]
+        }
+      ],
+      "wallet_pnl": "UNKNOWN",
+      "whole_trade_cost_allocation": "UNKNOWN",
+      "limitations": [
+        "No historical acquisition/population completeness from these rows.",
+        "All base units subsequently leave this wallet in a separate original outer instruction; external economic role is unproved.",
+        "Exact quote movement is not a wallet-wide trade or economic profit certificate.",
+        "IDL names account roles; native Pump-PDA closure refund recipient/amount semantics require independent acceptance, not only zero endpoints."
+      ]
+    }
+  ]
+}

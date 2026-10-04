@@ -1,0 +1,20 @@
+{
+  "control": "known disjoint admin outer refs contradict explicit protected-vault inner CPI",
+  "expected": "UNKNOWN",
+  "direct_points": 2,
+  "projected_marks": 2,
+  "receipt": {
+    "state": "PASS",
+    "reason": "Every linked original agrees on exact contemporaneous pool phase reserves and shared chronology.",
+    "scope": "Original transaction phase pool-reserve spot mark; no report-boundary or executable liquidation assertion",
+    "evidence": [
+      "d0713ba7719b7146f20c138e92ea913784ddc18b218a3e32583b52dfe2176d11"
+    ],
+    "raw_paths": [],
+    "dependencies": [
+      "original_pool_vault_identity",
+      "linked_pool_phase_reserves",
+      "exact_phase_chronology"
+    ]
+  }
+}

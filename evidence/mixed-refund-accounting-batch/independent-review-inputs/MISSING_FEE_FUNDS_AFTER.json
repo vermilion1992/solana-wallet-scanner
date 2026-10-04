@@ -1,0 +1,44 @@
+{
+  "control": "First 1000lamport Systemtransfer from walletopening0 cannot execute for any fee>=0 before laterrefund",
+  "expected": {
+    "known_fee": "UNKNOWN",
+    "fee_removed": "UNKNOWN"
+  },
+  "actual": {
+    "5000": {
+      "check": {
+        "state": "UNKNOWN",
+        "reason": "Reconstructed native cash disagrees with a required original closing account endpoint",
+        "evidence": [
+          "eeb627406d2fbf78631657920cb33ae21665cef375230cf70b25c7c7f4d5518b"
+        ],
+        "raw_paths": [],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "admitted_internal_roles": [],
+      "unresolved_economic_paths": [
+        "instructions.0",
+        "instructions.1"
+      ],
+      "wallet_population_state": "UNKNOWN"
+    },
+    "None": {
+      "check": {
+        "state": "UNKNOWN",
+        "reason": "Reconstructed native cash disagrees with a required original closing account endpoint",
+        "evidence": [
+          "6ebb24c881568c1515833df81df2b50e93ccf56312b3221addb1cad2dd8062a0"
+        ],
+        "raw_paths": [],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "admitted_internal_roles": [],
+      "unresolved_economic_paths": [
+        "instructions.0",
+        "instructions.1",
+        "meta"
+      ],
+      "wallet_population_state": "UNKNOWN"
+    }
+  }
+}

@@ -1,0 +1,274 @@
+{
+  "control": "Fee missing cannot fund first Systemtransfer1000 from zero walletopeningcash, before laterclose",
+  "expected": "UNKNOWN",
+  "actual": {
+    "check": {
+      "state": "PASS",
+      "reason": "Every linked original supports the same wallet-internal native administration roles.",
+      "evidence": [
+        "6ebb24c881568c1515833df81df2b50e93ccf56312b3221addb1cad2dd8062a0"
+      ],
+      "raw_paths": [
+        "meta.fee",
+        "meta.postBalances.0",
+        "meta.postBalances.1",
+        "meta.preBalances.0",
+        "meta.preBalances.1",
+        "transaction.message.instructions.0.parsed.info",
+        "transaction.message.instructions.0.parsed.info.destination",
+        "transaction.message.instructions.0.parsed.info.source",
+        "transaction.message.instructions.0.programId",
+        "transaction.message.instructions.1.parsed.info",
+        "transaction.message.instructions.1.parsed.info.account",
+        "transaction.message.instructions.1.parsed.info.destination",
+        "transaction.message.instructions.1.parsed.info.owner",
+        "transaction.message.instructions.1.programId"
+      ],
+      "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+    },
+    "admitted_internal_roles": [
+      {
+        "event_path": "instructions.0",
+        "role": "wallet_owned_account_funding",
+        "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+        "program": "11111111111111111111111111111111",
+        "lamports": "1000",
+        "raw_paths": [
+          "transaction.message.instructions.0.parsed.info.destination",
+          "transaction.message.instructions.0.parsed.info.source",
+          "transaction.message.instructions.0.programId"
+        ],
+        "check": {
+          "state": "PASS",
+          "reason": "Every linked original supports the same wallet-internal native administration roles.",
+          "evidence": [
+            "6ebb24c881568c1515833df81df2b50e93ccf56312b3221addb1cad2dd8062a0"
+          ],
+          "raw_paths": [
+            "meta.fee",
+            "meta.postBalances.0",
+            "meta.postBalances.1",
+            "meta.preBalances.0",
+            "meta.preBalances.1",
+            "transaction.message.instructions.0.parsed.info",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.source",
+            "transaction.message.instructions.0.programId",
+            "transaction.message.instructions.1.parsed.info",
+            "transaction.message.instructions.1.parsed.info.account",
+            "transaction.message.instructions.1.parsed.info.destination",
+            "transaction.message.instructions.1.parsed.info.owner",
+            "transaction.message.instructions.1.programId"
+          ],
+          "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+        }
+      },
+      {
+        "event_path": "instructions.1",
+        "role": "wallet_owned_account_refund",
+        "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "lamports": "2001000",
+        "raw_paths": [
+          "meta.fee",
+          "meta.postBalances.0",
+          "meta.postBalances.1",
+          "meta.preBalances.0",
+          "meta.preBalances.1",
+          "transaction.message.instructions.0.parsed.info",
+          "transaction.message.instructions.0.parsed.info.destination",
+          "transaction.message.instructions.0.parsed.info.source",
+          "transaction.message.instructions.0.programId",
+          "transaction.message.instructions.1.parsed.info",
+          "transaction.message.instructions.1.parsed.info.account",
+          "transaction.message.instructions.1.parsed.info.destination",
+          "transaction.message.instructions.1.parsed.info.owner",
+          "transaction.message.instructions.1.programId"
+        ],
+        "cash_effects": [
+          {
+            "kind": "system_transfer",
+            "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "lamports": "1000"
+          }
+        ],
+        "check": {
+          "state": "PASS",
+          "reason": "Every linked original supports the same wallet-internal native administration roles.",
+          "evidence": [
+            "6ebb24c881568c1515833df81df2b50e93ccf56312b3221addb1cad2dd8062a0"
+          ],
+          "raw_paths": [
+            "meta.fee",
+            "meta.postBalances.0",
+            "meta.postBalances.1",
+            "meta.preBalances.0",
+            "meta.preBalances.1",
+            "transaction.message.instructions.0.parsed.info",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.source",
+            "transaction.message.instructions.0.programId",
+            "transaction.message.instructions.1.parsed.info",
+            "transaction.message.instructions.1.parsed.info.account",
+            "transaction.message.instructions.1.parsed.info.destination",
+            "transaction.message.instructions.1.parsed.info.owner",
+            "transaction.message.instructions.1.programId"
+          ],
+          "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+        }
+      }
+    ],
+    "unresolved_economic_paths": [
+      "meta"
+    ],
+    "wallet_population_state": "UNKNOWN"
+  },
+  "input": {
+    "slot": 100,
+    "blockTime": 1790003600,
+    "version": 0,
+    "transaction": {
+      "signatures": [
+        "mixed-system-topup-close"
+      ],
+      "message": {
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+          "11111111111111111111111111111111",
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        ],
+        "instructions": [
+          {
+            "programId": "11111111111111111111111111111111",
+            "parsed": {
+              "type": "transfer",
+              "info": {
+                "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "lamports": 1000
+              }
+            }
+          },
+          {
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "parsed": {
+              "type": "closeAccount",
+              "info": {
+                "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+              }
+            }
+          }
+        ],
+        "header": {
+          "numRequiredSignatures": 1,
+          "numReadonlySignedAccounts": 0,
+          "numReadonlyUnsignedAccounts": 2
+        }
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": null,
+      "preBalances": [
+        0,
+        2000000,
+        2000000,
+        2000000,
+        1002000000,
+        1,
+        1
+      ],
+      "postBalances": [
+        1995000,
+        0,
+        2000000,
+        2000000,
+        1002000000,
+        1,
+        1
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "innerInstructions": []
+    }
+  }
+}

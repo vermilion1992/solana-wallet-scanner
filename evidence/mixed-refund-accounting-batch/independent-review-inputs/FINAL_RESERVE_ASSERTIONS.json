@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "method": "historical-pumpswap-reserve-marks-v2",
+  "genuine_disjoint_admin_positive": {
+    "phases": 2,
+    "original_immutable": true,
+    "independent_integer_reserve_ratios": true
+  },
+  "protected_inner_cpi_contradiction": "UNKNOWN",
+  "quote_collateral_contradiction": "UNKNOWN",
+  "missing_unrelated_network_fee": "PASS",
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "full_wallet_qualification": false
+}

@@ -1,0 +1,8 @@
+{
+  "state": "CORRECTED_REVIEW_FIXTURE",
+  "scope": "Initial independent read-only negative control, no application defect claim",
+  "initial_assertion": "Unexplained wallet post credit +1 must preserve independently known fee",
+  "reason": "Initial mutation failed to debit a counterparty and violated global native conservation; source-native-validation appropriately became UNKNOWN",
+  "correction": "Add a matching foreign post debit -1 so original global native sum and fee remain valid; this isolates unsupported economic cash credit",
+  "result": "Corrected direct/API review controls PASS; only scoped numeric/economic conclusions tested"
+}

@@ -1,0 +1,66 @@
+{
+  "scope": "Read-only current-source direct reproduction; no acceptance or product readiness. Raw original retained, independent Fraction expected reserve ratios. No provider calls.",
+  "signature": "bJUHFDZ1vZ3hMYBN6CDquGvJe7VLst1WPq2VjrgAC8uaSRYPzuwTe22Yv6zMhMLsr2mmoFaxCYEoaDHyvM29QSH",
+  "archive": "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+  "archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+  "original_source_member": "raw/7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a.json",
+  "original_source_sha256": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+  "current_source_result": {
+    "state": "raises",
+    "exception": "ValueError",
+    "reason": "No reviewed spot swap instruction for this program and discriminator"
+  },
+  "known_admin_disjoint_references": [
+    {
+      "path": "transaction.message.instructions.1",
+      "accounts": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        "C2aFPdENg4A2HQsmrd5rTw5TaYBX5Ku887cWjbFKtZpw",
+        "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg",
+        "GS4CU59F31iL7aR2Q8zVS8DRrcRnXX1yjQ66TqNVQnaR",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+      ],
+      "protected_pool_identity_intersection": []
+    },
+    {
+      "path": "transaction.message.instructions.2",
+      "accounts": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg",
+        "GS4CU59F31iL7aR2Q8zVS8DRrcRnXX1yjQ66TqNVQnaR",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+      ],
+      "protected_pool_identity_intersection": []
+    }
+  ],
+  "independent_expected_exact_phase_ratios": [
+    {
+      "phase": "pre",
+      "base_reserve_raw": "102735740968698",
+      "quote_reserve_raw": "189354435726",
+      "base_decimals": 6,
+      "quote_decimals": 9,
+      "base_owner": "7ExMpBL7C3ZDaCQsaeCwY7tDK5EoTxs3sCCE7cELCzSv",
+      "quote_owner": "7ExMpBL7C3ZDaCQsaeCwY7tDK5EoTxs3sCCE7cELCzSv",
+      "base_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "quote_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "price_fraction_numerator": "31559072621",
+      "price_fraction_denominator": "17122623494783000"
+    },
+    {
+      "phase": "post",
+      "base_reserve_raw": "102692365334928",
+      "quote_reserve_raw": "189434576012",
+      "base_decimals": 6,
+      "quote_decimals": 9,
+      "base_owner": "7ExMpBL7C3ZDaCQsaeCwY7tDK5EoTxs3sCCE7cELCzSv",
+      "quote_owner": "7ExMpBL7C3ZDaCQsaeCwY7tDK5EoTxs3sCCE7cELCzSv",
+      "base_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "quote_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "price_fraction_numerator": "47358644003",
+      "price_fraction_denominator": "25673091333732000"
+    }
+  ],
+  "available_primary_schema": "tests/fixtures/retained_protocol_funding/pump_amm.json at cb188ce08b5069196eef1f3e4a0c43b70099793b",
+  "needed_fix": "Schema-validate known disjoint PumpSwap administration in the shared route-consumer boundary so independently supported whole-record reserve phases are retained. Mixed trade/FIFO outcome stays unsupported."
+}
