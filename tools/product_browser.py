@@ -110,6 +110,15 @@ def run(args):
                 observations=report.get('coverage',{}).get('wallet_evidence',{}).get('query_accounting',{}).get('selected_cohort_observations')
                 panel=page.locator('[data-selected-cohort-freshness]')
                 assert isinstance(observations,dict), 'Current archive report must retain its selected-cohort observations'
+                if report.get('archive_accounting',{}).get('dataset')=='synthetic':
+                    assert report.get('source')=='demo' and report['qualification']['qualified'] is False
+                    expect(panel).to_have_count(0)
+                    result.setdefault('selected_cohort_ui_assertions',[]).append({'case':label,'state':'PASS',
+                        'dataset':'synthetic','source':'demo','panel_absent':True,
+                        'scope':'Synthetic demonstration does not render the live selected-record panel',
+                        'wallet_qualification':False})
+                    return
+                assert report.get('source')=='live' and report.get('archive_accounting',{}).get('dataset')=='real'
                 expect(panel).to_have_attribute('data-selected-cohort-freshness','current')
                 expect(panel).to_contain_text('selected records only')
                 expect(panel).to_contain_text('wallet-wide profit or a copy-trading recommendation')
