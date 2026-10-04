@@ -8,6 +8,15 @@ dependencies only; it cannot supply response facts, marks, capital-flow roles or
 wallet completeness. Existing accounting/policy methods and strict thresholds
 remain unchanged. This batch requires its own source-bound acceptance records.
 
+Inventory request affinities belong to the archive's internally derived v4
+dependency metadata. They are not appended to native collector reference lists.
+Native saved-report rebuilds preserve the original collector/checkpoint universe;
+legacy method/result snapshots without original RPC bytes remain unsupported for
+positive inventory admission. Exact-byte native inputs can supply current facts
+while present, but absent unassignable inputs remain unresolved. Original-byte
+capture and separately frozen native selector metadata remain implementation
+work; the archive path already retains selectors for precise loss isolation.
+
 Report/state/preview/enrichment presentation returns the same strict JSON-native
 payload directly, avoiding a redundant recursive transport conversion. Default
 full views and immutable JSON/CSV export contracts remain available. The local

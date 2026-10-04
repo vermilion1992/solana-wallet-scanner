@@ -110,7 +110,6 @@ def _freeze_native_dependencies(store, collected, *, address, window):
     from .wallet_evidence import raw_native_dependencies
     from .real_coverage import query_source_dependencies
     from .wallet_identity import wallet_identity_dependencies
-    from .inventory_evidence import inventory_request_affinities
     primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
     negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
     # These are negative associations, not completion or position certificates.
@@ -122,8 +121,6 @@ def _freeze_native_dependencies(store, collected, *, address, window):
                           for digest in query_source_dependencies(raw_sources)]
     frozen['evidence'] += [{'kind': 'wallet-identity-affinity', 'hash': digest}
                           for digest in wallet_identity_dependencies(raw_sources, wallet=address)]
-    frozen['evidence'] += [{'kind': 'inventory-affinity', 'hash': store.archive(affinity)}
-                          for affinity in inventory_request_affinities(raw_sources, wallet=address)]
     return frozen, primary, linked, raw_sources, raw_receipts
 
 

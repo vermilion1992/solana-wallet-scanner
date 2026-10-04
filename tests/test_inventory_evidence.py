@@ -23,6 +23,7 @@ from scanner.inventory_evidence import (AFFINITY_VERSION, SOURCE_VERSION, VERSIO
 from scanner.json_boundary import canonical_bytes
 from scanner.providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
 from tests.test_position_evidence import address
+from tests.review_v037.review_helpers import builder
 from tests.test_indexed_report_integration import guarded
 from tests.test_discovery_integration_review import session, isolate_credentials_and_transport
 
@@ -445,7 +446,7 @@ def test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_
     assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
 
 
-def test_native_frozen_inputs_replay_inventory_loss_without_altering_independent_fee_or_parent(tmp_path):
+def test_native_original_byte_presence_loss_restoration_preserves_fee_and_frozen_inputs(tmp_path):
     import scanner.app as application
     from scanner.report_rebuild import freeze_report_inputs
     from scanner.storage import Store
@@ -458,7 +459,7 @@ def test_native_frozen_inputs_replay_inventory_loss_without_altering_independent
     collected = {'transactions': [{'signature': selected['signature'], 'evidence_hash': selected['hash']}],
                  'evidence': deepcopy(bundle['manifest']['evidence'])}
     frozen_inputs, *_ = application._freeze_native_dependencies(store, collected, address=WALLET, window=WINDOW)
-    assert any(ref['kind'] == 'inventory-affinity' for ref in frozen_inputs['evidence'])
+    assert not any(ref['kind'] == 'inventory-affinity' for ref in frozen_inputs['evidence'])
     identifier = freeze_report_inputs(store, WALLET, WINDOW, frozen_inputs)
     parent = deepcopy(store.evidence(identifier))
     def replay():
@@ -474,8 +475,81 @@ def test_native_frozen_inputs_replay_inventory_loss_without_altering_independent
     path.unlink()
     missing = replay()
     assert missing['inventory_observations']['components']['token_programs'][TOKEN_2022_PROGRAM]['state'] == 'UNKNOWN'
-    assert missing['inventory_observations']['components']['native_account']['state'] == 'PASS'
+    # Native collector inputs have no internally admitted inventory selector
+    # inventory. A missing misleadingly labelled source cannot be excluded by
+    # caller role; its unassignable inventory scope remains UNKNOWN. Checked
+    # readable observations and independent native fees are still retained.
+    native = missing['inventory_observations']['components']['native_account']
+    assert native['state'] == 'UNKNOWN'
+    assert native['observations'][0]['lamports'] == '650240'
     assert missing['components']['native_fee']['state'] == 'PASS'
     path.write_bytes(original)
     assert replay()['inventory_observations'] == before['inventory_observations']
     assert store.evidence(identifier) == parent
+
+
+@pytest.mark.parametrize('role',['owned-accounts','native-balance'])
+@pytest.mark.parametrize('origin',['legacy-parent','initial-native'])
+def test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing(builder,role,origin,tmp_path,monkeypatch):
+    import inspect
+    import sys
+    import httpx
+    from types import SimpleNamespace
+    from fastapi.testclient import TestClient
+    import scanner.app as application
+    from tests.review_v037.review_helpers import pb
+    from tests.test_review_v037_independent import role_source, seed_actual_report
+    role_source(builder,role,'agreeing')
+    calls={'provider':0,'credential':0,'transport':0}
+    monkeypatch.delenv('HELIUS_API_KEY',raising=False)
+    def denied_credential(*args,**kwargs):
+        calls['credential']+=1;raise AssertionError('Offline native rebuild must not read credentials')
+    async def denied_provider(*args,**kwargs):
+        calls['provider']+=1;raise AssertionError('Offline native rebuild must not dispatch a provider')
+    async def denied_transport(*args,**kwargs):
+        calls['transport']+=1;raise AssertionError('Offline native rebuild must not use external transport')
+    monkeypatch.setitem(sys.modules,'keyring',SimpleNamespace(get_keyring=lambda:object(),get_password=denied_credential))
+    monkeypatch.setattr('scanner.providers.Gateway.rpc',denied_provider)
+    monkeypatch.setattr(httpx.AsyncHTTPTransport,'handle_async_request',denied_transport)
+    app=application.create_app(tmp_path/'app','native-inventory-scope-test')
+    with TestClient(app,base_url='http://127.0.0.1:8765') as client:
+        client.headers['X-CSRF-Token']=client.get('/api/bootstrap',headers={'X-Launch-Token':'native-inventory-scope-test'}).json()['csrf']
+        store=app.state.store
+        original,checkpoint=seed_actual_report(builder,store,role,'agreeing')
+        if origin=='initial-native':
+            # Use the same production builder invoked by the collection worker;
+            # every record is already archived and all provider dispatch is
+            # guarded. No parallel calculation or fake completion receipt.
+            endpoint=next(route.endpoint for route in app.routes if getattr(route,'path',None)=='/api/reports/{identifier}/rebuild')
+            implementation=inspect.getclosurevars(endpoint).nonlocals['_rebuild_report']
+            build=inspect.getclosurevars(implementation).nonlocals['build_report']
+            scan=store.get('scans',original['scan_id'])
+            collected={'transactions':builder.records,'checkpoint':deepcopy(checkpoint),
+                       'evidence':deepcopy(checkpoint['evidence']),'snapshot':deepcopy(checkpoint['snapshot']),
+                       'coverage':{'status':'partial'}}
+            original=client.portal.call(build,scan,pb.WALLET,collected)
+        usage=deepcopy(client.get('/api/usage').json())
+        parent=deepcopy(store.get('reports',original['id']))
+        identifier=parent['id']
+        for generation in range(2):
+            immediate_parent=deepcopy(store.get('reports',identifier))
+            response=client.post('/api/reports/'+identifier+'/rebuild')
+            assert response.status_code==200,response.text
+            child=client.get('/api/reports/'+response.json()['report_id']).json()
+            assert child['id']!=identifier
+            frozen=store.evidence(child['collection_input_hash'])
+            assert frozen['evidence']==frozen['checkpoint']['evidence']==checkpoint['evidence']
+            assert not any(row['kind']=='inventory-affinity' for row in frozen['evidence'])
+            history=child['coverage']['history_evidence'];position=child['coverage']['position_evidence']
+            assert history['source_consistency']['source_set']['complete'] is True
+            assert position['counts']['known_closed']==1
+            assert position['positions'][0]['hold_hours']['value']=='6'
+            assert history['native_address_metrics']['observed']['wallet_network_fees_sol']['value']=='0.000015'
+            assert history['native_address_metrics']['observed']['native_wallet_delta_sol']['value']=='-0.000016'
+            inventory=child['coverage']['wallet_evidence']['inventory_observations']['components']
+            assert inventory['same_slot_inventory']['state']==inventory['report_boundaries']['state']=='UNKNOWN'
+            assert store.get('reports',identifier)==immediate_parent
+            assert store.get('reports',parent['id'])==parent
+            assert client.get('/api/usage').json()==usage
+            identifier=child['id']
+        assert calls=={'provider':0,'credential':0,'transport':0}

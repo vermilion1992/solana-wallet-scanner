@@ -4,7 +4,7 @@ Continue the private `codex/product-completion` branch from
 `ab62858dca7eccbdb18b3365a83dedd9b2e8f413`, with 43 preserved commits and
 241 source files: workspace manifest
 `0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365`.
-The accepted application remains `8aee62e50297d6773f347b77cecc3e8794f233cf`;
+The starting accepted application is `8aee62e50297d6773f347b77cecc3e8794f233cf`;
 the later test-only usage correction and its full backend execution are bound by
 `evidence/native-ci-usage-validation/`. Native run `37218468031` passed on the
 exact starting HEAD. Preserve those historical records and all genuine inputs.
@@ -31,6 +31,13 @@ sufficiency unresolved, complete real B2 OPEN, B3 BLOCKED, PRODUCT_READY=false.
 The present archives do not contain an exhaustive historical owner witness;
 additional paging or a paid account does not itself resolve that requirement.
 This batch uses retained data only, without provider calls or credential reads.
+
+The first frozen inventory/speed candidate `eea37dc95b5a012a62d36f4b300f1097fc311f87`
+failed its full native rebuild checks despite passing the separate archive/browser
+and timing scopes. Preserve that evidence. Correct the shared INV-02 reference
+expansion without weakening accepted regressions or the archive dependency path.
+The corrected candidate requires fresh full gates; earlier observations retain
+their exact source identity and are not relabelled as corrected acceptance.
 
 # Prior assignment — historical membership and position integration, 4 October 2026
 
