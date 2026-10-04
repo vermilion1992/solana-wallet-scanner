@@ -1,11 +1,15 @@
 {
   "milestone": "Sampled wallet screening and forward quote-only research v1",
   "acceptance": "Separate from wallet-wide PRODUCT_READY",
-  "software_result_receipt": "evidence/screening-forward-research/hardening-final-checks/result.json",
-  "prior_software_result_receipt": "evidence/screening-forward-research/release-checks/result.json",
+  "software_result_receipt": "evidence/screening-forward-research/verified-release-checks/result.json",
+  "prior_software_result_receipts": [
+    "evidence/screening-forward-research/hardening-final-checks/result.json",
+    "evidence/screening-forward-research/release-checks/result.json"
+  ],
   "software_status": "Read the passing source-bound software receipt; implemented code alone is not acceptance",
   "genuine_evidence_receipt": "evidence/screening-forward-research/live-adapters/RESULT.json",
   "genuine_live_workflow_receipt": "evidence/screening-forward-research/hardening-live-workflow/result.json",
+  "live_runtime_equivalence_receipt": "evidence/screening-forward-research/ci-loopback-repair/runtime-equivalence.json",
   "genuine_evidence_scope": "Selected native PumpSwap transaction and keyless Jupiter quote, plus bounded native screening and address subscription through the ordinary launcher; no genuine profitable-wallet or copied-outcome demonstration",
   "full_historical_acceptance": {
     "B1": "NO_GO_CURRENT_SOURCE",

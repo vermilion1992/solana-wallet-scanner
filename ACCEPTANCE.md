@@ -200,8 +200,10 @@ live followed activity, and a quote is never relabeled an actual fill.
 Operational hardening additionally requires the existing archive/classification
 regressions affected by hosted CI findings, exact cash/budget/gap boundaries,
 visible observer connection state and first-run access without a provider key.
-The final narrower receipt is `hardening-final-checks/result.json` under that
+The final narrower receipt is `verified-release-checks/result.json` under that
 evidence prefix; prior receipts retain their original source identities. Hosted
-CI includes one disjoint screening group alongside the retained groups. A bounded
+CI includes one disjoint screening group alongside the retained groups. Its
+isolated network namespace enables only loopback for real local WebSocket tests,
+with no routed interface and privileges dropped before checks. A bounded
 public subscription and native sample demonstrate source access only; a live run
 without signals cannot support a copying-performance conclusion.

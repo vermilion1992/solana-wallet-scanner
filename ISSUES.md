@@ -5,7 +5,8 @@
 Continue from the private draft PR candidate `38eed4d7b3fcdd258daf60fff52f4644851367b9`.
 The user requests a usable product with reproduced failures repaired, rather than
 another candidate handoff. Final software receipts belong in
-`evidence/screening-forward-research/hardening-final-checks/`; bounded live
+`evidence/screening-forward-research/verified-release-checks/`; the preceding
+`hardening-final-checks/` receipt retains its source identity. Bounded live
 workflow evidence is separate at `hardening-live-workflow/` under that prefix.
 
 | Reproduced issue | Repair scope | Validation obligation |
@@ -18,6 +19,7 @@ workflow evidence is separate at `hardening-live-workflow/` under that prefix.
 | Hosted archive classification regressions | Asset classification v2 / wallet receipts v12 preserve unaccepted declared source dependencies and supported native archive capacity, keeping independent fees and bounded mint controls | Existing failing wallet/archive controls plus classification siblings |
 | Cached report build initialized unavailable live provider | Reuse valid cached controls; optional current mint refresh requires an active authorized collection | Existing initial-native inventory and offline build/rebuild controls |
 | New tests absent from hosted CI | One disjoint screening group in the existing guarded matrix and strict union | Validator bindings and exact published-candidate CI |
+| Network-isolated CI also disabled localhost | Enable only loopback before dropping privileges; retain no routed interfaces | Reproduced unreachable-loopback baseline, real WebSocket tests in the isolated namespace and explicit no-outbound-route check |
 
 The live default screening legitimately excluded the sampled wallet under token
 control rules. A separately named transport-validation preset may disable those

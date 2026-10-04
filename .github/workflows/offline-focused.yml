@@ -43,7 +43,8 @@ jobs:
         shell: bash
         run: ./setup.sh --skip-frontend
       # Download dependencies before isolation; never load provider/repository
-      # credentials. The isolated namespace has no routed interface. Drop root.
+      # credentials. Enable only loopback in the isolated namespace; there is
+      # no routed interface. Then drop root before running local transport tests.
       - name: Run the exact focused group without network access
         timeout-minutes: 15
         shell: bash
@@ -52,6 +53,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo unshare --net -- \
+            bash --noprofile --norc -euo pipefail -c 'ip link set dev lo up; exec "$@"' namespace-bootstrap \
             setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups \
             env PATH="$PATH" CI_EVIDENCE="$RUNNER_TEMP/offline-focused" CI_GROUP="$CI_GROUP" \
             bash --noprofile --norc -euo pipefail <<'CHECKS'
@@ -130,6 +132,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo unshare --net -- \
+            bash --noprofile --norc -euo pipefail -c 'ip link set dev lo up; exec "$@"' namespace-bootstrap \
             setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups \
             env PATH="$PATH" CI_EVIDENCE="$RUNNER_TEMP/offline-development" \
             bash --noprofile --norc -euo pipefail <<'CHECKS'
@@ -211,6 +214,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo unshare --net -- \
+            bash --noprofile --norc -euo pipefail -c 'ip link set dev lo up; exec "$@"' namespace-bootstrap \
             setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups \
             env PATH="$PATH" CI_RECEIPTS="$RUNNER_TEMP/focused-receipts" CI_SUMMARY="$RUNNER_TEMP/focused-summary" \
             bash --noprofile --norc -euo pipefail <<'CHECKS'
