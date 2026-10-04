@@ -324,3 +324,19 @@ def test_fresh_named_lot_origin_is_required_for_money_and_holding_time(gap):
     restored = summarize_research(restored_events, REAL_WINDOW['start'], REAL_WINDOW['end'], wallet_evidence=restored_receipt)
     assert restored['episodes'][0]['timing_state'] == restored['episodes'][0]['monetary_state'] == 'PASS'
     assert restored['episodes'][0]['pnl_sol'] == '-0.013270924'
+
+
+def test_development_opening_anchor_and_fresh_receipt_preserve_original_evidence_union():
+    from test_position_evidence import MINT
+    raws = closing_raws()
+    events, receipt = facts(raws, WALLET, WINDOW)
+    opening = {MINT: {'quantity_raw': '0', 'timestamp': WINDOW['start'],
+        'evidence': ['development-independent-opening'], 'scope': 'wallet_owned_mint',
+        'verified': True, 'intervening_flows_complete': True}}
+    result = summarize_research(events, WINDOW['start'], WINDOW['end'], wallet_evidence=receipt,
+        opening_inventory=opening)
+    assert result['known_matched_profit_sol'] == result['observed_profit_sol'] == '-0.00001'
+    assert 'development-independent-opening' in result['evidence']
+    assert set(h for event in events for h in event['evidence']) <= set(result['evidence'])
+    assert result['episodes'][0]['attributable'] is True
+    assert result['wallet_profit_verified'] is False

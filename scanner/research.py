@@ -226,10 +226,10 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings,
         key = (mint, position['start'], position['end'], position['acquired_raw'], position['sold_raw'],
                position['quantity_raw'], position['buy_count'], position['sell_count'])
         for proof in proof_index.get(key, []):
-            hashes = proof.get('evidence')
+            proof_hashes = proof.get('evidence')
             signatures = proof.get('required_signatures')
-            if not (isinstance(hashes, list) and all(isinstance(h, str) for h in hashes)
-                    and evidence and evidence <= set(hashes)
+            if not (isinstance(proof_hashes, list) and all(isinstance(h, str) for h in proof_hashes)
+                    and evidence and evidence <= set(proof_hashes)
                     and isinstance(signatures, list) and all(isinstance(s, str) and s for s in signatures)):
                 continue
             matches.append(proof)
