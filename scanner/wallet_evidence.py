@@ -25,7 +25,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v5'
+VERSION = 'wallet-raw-evidence-v6'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -849,8 +849,11 @@ def _selected_lot_observations(positions, selected, raw_versions, transactions, 
         evidence.update(h for check in physical + money + timing for h in check.get('evidence', []))
         results.append({'id': position['id'], 'mint': mint, 'accounts': sorted(named),
             'scope': 'Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved',
+            'fifo_bounds': {'start': position['start'], 'end': position['end']},
             'monetary_state': 'PASS' if money_known else 'UNKNOWN', 'timing_state': 'PASS' if timing_known else 'UNKNOWN',
             'quantity_state': 'PASS' if physical_known and not scope_gaps else 'UNKNOWN',
+            'origin_state': 'PASS' if origin_known and physical_known and not scope_gaps else 'UNKNOWN',
+            'chronology_state': 'PASS' if chronology_known else 'UNKNOWN',
             'classification_state': 'UNKNOWN', 'wallet_population_state': 'UNKNOWN', 'qualification': False,
             'acquired_raw': position['acquired_raw'], 'disposed_raw': position['sold_raw'], 'remaining_raw': position['quantity_raw'],
             'buy_count': position['buy_count'], 'sell_count': position['sell_count'],
@@ -1168,8 +1171,18 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     # engine.  These are conditional selected-lot observations and never feed
     # strict wallet metrics.  Loss of a required raw origin/role revokes the
     # monetary observation while independent timing/fees retain their checks.
+    lot_steps = len(fifo_positions) * len(raw_versions)
+    lot_inspection = {'state': 'PASS' if lot_steps <= MAX_ACCOUNT_STEPS else 'UNKNOWN',
+        'steps': lot_steps, 'max_steps': MAX_ACCOUNT_STEPS,
+        'reason': 'Every named-account candidate is inspected.' if lot_steps <= MAX_ACCOUNT_STEPS else
+            'Named-account dependency inspection budget exceeded; no prefix certifies supported lots.'}
+    supported_lots = _selected_lot_observations(fifo_positions, selected, raw_versions,
+        transactions, clocks, native_role_checks, ledger_events, source_rows, wallet) if lot_steps <= MAX_ACCOUNT_STEPS else []
     from .research import summarize_research
-    research = summarize_research(ledger_events, start.isoformat(), end.isoformat(), history_complete=False)
+    research = summarize_research(ledger_events, start.isoformat(), end.isoformat(), history_complete=False,
+        wallet_evidence={'version': VERSION, 'transactions': transactions, 'intervals': intervals,
+                         'fee_projection_checks': fee_projection_checks,
+                         'query_accounting': {'selected_lot_inspection': lot_inspection, 'supported_selected_lots': supported_lots}})
     conditional_profit = research.get('conditional_observed_lot_profit_sol')
     monetary_supported = observed_disposed_basis['state'] == 'PASS' and raw_roles['state'] == 'PASS'
     timing_supported = observed_positions['state'] == 'PASS'
@@ -1188,13 +1201,8 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         'evidence': sorted({h for row in (observed_disposed_basis, raw_roles) for h in row['evidence']}),
         'query_records_state': query_coverage['intervals']['report_period']['query_records_state'],
         'wallet_population_state': unresolved['state'], 'qualification': False}
-    lot_steps = len(fifo_positions) * len(raw_versions)
-    query_accounting['selected_lot_inspection'] = {'state': 'PASS' if lot_steps <= MAX_ACCOUNT_STEPS else 'UNKNOWN',
-        'steps': lot_steps, 'max_steps': MAX_ACCOUNT_STEPS,
-        'reason': 'Every named-account candidate is inspected.' if lot_steps <= MAX_ACCOUNT_STEPS else
-            'Named-account dependency inspection budget exceeded; no prefix certifies supported lots.'}
-    query_accounting['supported_selected_lots'] = _selected_lot_observations(fifo_positions, selected, raw_versions,
-        transactions, clocks, native_role_checks, ledger_events, source_rows, wallet) if lot_steps <= MAX_ACCOUNT_STEPS else []
+    query_accounting['selected_lot_inspection'] = lot_inspection
+    query_accounting['supported_selected_lots'] = supported_lots
     from .metric_evidence import compose_metric_decisions
     return {'version': VERSION, 'scope': OBSERVED_SCOPE, 'components': components,
         'inspection_budget': {'max_records': MAX_RECORDS, 'linked_records': len(linked),
@@ -1203,6 +1211,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
             'quantity_state': 'UNKNOWN' if quantity_budget_exceeded or cartesian_budget_exceeded else 'PASS'},
         'accounts': dict(sorted(accounts.items())), 'transactions': transactions, 'acquisitions': acquisitions,
         'observed_fifo_positions': fifo_positions,
+        'observed_fifo_scope': 'Raw selected-event FIFO observations before linked-source proof gates; financial authority is the typed query_accounting and metric dependencies.',
         'interval_checks': intervals, 'intervals': intervals, 'metric_dependencies': compose_metric_decisions(components, intervals),
         'fee_projection_checks': fee_projection_checks,
         'native_role_checks': native_role_checks,

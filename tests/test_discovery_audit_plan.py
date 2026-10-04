@@ -22,6 +22,7 @@ from scanner.copy_review import EVIDENCE_KEYS, METRIC_KEYS
 from scanner.discovery import SYSTEM_PROGRAM, WRAPPED_SOL, plan_candidate_audits
 from scanner.history_evidence import VERSION as HISTORY_VERSION
 from scanner.position_evidence import VERSION as POSITION_VERSION
+from scanner.research import VERSION as RESEARCH_VERSION
 from scanner.report_view import summary_inputs, summary_view
 from scanner.storage import Store
 
@@ -84,6 +85,7 @@ def development_cohort(store, addresses=None, *, two_way=()):
 
 def financial_snapshot(candidate, *, partial=False, identifier='saved-report'):
     report = {'id': identifier, 'address': candidate['address'], 'source': 'live', 'methodology': METHODOLOGY, 'preset': dict(STRICT),
+              'research': {'version': RESEARCH_VERSION},
               'created_at': TIME, 'window': {'start': '2026-09-04T12:00:00+00:00', 'end': TIME}, 'policy': 'MATCH',
               'evidence_status': 'verified', 'metrics': {'profit_sol': {'status': 'known', 'value': '12.5'}},
               'checks': [{'key': key, 'state': 'PASS', 'actual': '12.5' if key == 'profit_sol' else '1', 'reason': 'Development saved-policy fixture'}
@@ -192,7 +194,7 @@ def test_linked_native_alternative_loss_conflict_and_irrelevant_fee_difference(s
 
 def test_current_partial_report_defers_repeated_collection_without_conditional_profit_upgrade(store):
     cohort = development_cohort(store); report = financial_snapshot(cohort['candidates'][0], partial=True)
-    report['research'] = {'conditional_observed_lot_profit_sol': '9999999'}; original = deepcopy(report)
+    report['research']['conditional_observed_lot_profit_sol'] = '9999999'; original = deepcopy(report)
     plan = plan_candidate_audits(store, cohort, reports=[report], preset=STRICT); row = plan['deferred'][0]
     assert not plan['selected_addresses'] and row['action'] == 'resolve_report_dependencies'
     assert row['report_id'] == report['id'] and not row['qualified'] and row['saved_qualification']['profit_sol'] is None

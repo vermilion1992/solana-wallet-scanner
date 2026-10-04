@@ -7,6 +7,7 @@ from scanner.config import STRICT
 from scanner.accounting import METHODOLOGY
 from scanner.history_evidence import VERSION as HISTORY_METHODOLOGY
 from scanner.position_evidence import VERSION as POSITION_METHODOLOGY
+from scanner.research import VERSION as RESEARCH_METHODOLOGY
 from scanner.copy_review import EVIDENCE_KEYS, METRIC_KEYS, qualify_report, review_copy_behavior
 
 
@@ -15,6 +16,7 @@ HASH = "a" * 64
 
 def report():
     return {"id": "report-1", "source": "live", "methodology": METHODOLOGY, "policy": "MATCH", "evidence_status": "verified", "preset": dict(STRICT),
+            "research": {"version": RESEARCH_METHODOLOGY},
             "window": {"start": "2026-09-02T00:00:00+00:00", "end": "2026-10-02T00:00:00+00:00"},
             "metrics": {"profit_sol": {"status": "known", "value": "12.50"}},
             "coverage": {"history_evidence": {"version": HISTORY_METHODOLOGY}, "position_evidence": {"version": POSITION_METHODOLOGY}},
@@ -32,13 +34,44 @@ def episode(hold="2", exit90="0.05", first="0.01"):
 def observed_report(episodes=None):
     value = report()
     value.update(policy="UNRESOLVED", evidence_status="partial", events=[])
-    value["research"] = {"episodes": episodes if episodes is not None else [episode()], "chronology_unknown": False,
+    value["research"] = {"version": RESEARCH_METHODOLOGY, "episodes": episodes if episodes is not None else [episode()], "chronology_unknown": False,
                          "conditional_observed_lot_profit_sol": "999999", "unresolved_basis_sales": 2,
                          "observed_unmatched_sales": 1, "evidence": [HASH]}
     return value
 
 
 class QualificationTests(unittest.TestCase):
+    def test_auxiliary_research_generation_does_not_revoke_independent_current_strict_results(self):
+        value = report()
+        value['research'] = {'version': 'supported-subset-research-v2', 'episodes': [episode()]}
+        value['positions'] = [episode()]
+        original = deepcopy(value)
+        self.assertTrue(qualify_report(value)['qualified'])
+        review = review_copy_behavior(value)
+        self.assertFalse(review['conditional'])
+        self.assertEqual(review['checks']['rapid_first_sales']['state'], 'OBSERVED')
+        self.assertNotIn('research_methodology', review['checks'])
+        self.assertEqual(value, original)
+
+    def test_stale_research_fallback_is_disclosed_and_cannot_supply_copy_timing(self):
+        value = observed_report()
+        value['research']['version'] = 'supported-subset-research-v2'
+        result = review_copy_behavior(value)
+        self.assertEqual(result['checks']['research_methodology']['state'], 'UNKNOWN')
+        self.assertEqual(result['checks']['rapid_first_sales']['state'], 'UNKNOWN')
+        self.assertEqual(result['checks']['long_tail_holds']['state'], 'UNKNOWN')
+        self.assertEqual(result['checks']['unmatched_basis']['state'], 'UNKNOWN')
+
+    def test_scoped_unknown_timing_never_disappears_from_rapid_sale_denominator(self):
+        first, second = episode(), episode(first='2')
+        first['timing_state'] = 'UNKNOWN'
+        value = observed_report([first, second])
+        result = review_copy_behavior(value)
+        self.assertEqual(result['checks']['rapid_first_sales']['state'], 'UNKNOWN')
+        self.assertEqual(result['checks']['long_tail_holds']['actual']['episodes_with_known_timings'], 1)
+        first['timing_state'] = 'PASS'
+        self.assertEqual(review_copy_behavior(value)['checks']['rapid_first_sales']['state'], 'OBSERVED')
+
     def test_live_saved_match_requires_complete_explicit_passes_and_known_strict_profit(self):
         value = report()
         original = deepcopy(value)
@@ -310,7 +343,7 @@ class CopyBehaviorTests(unittest.TestCase):
         result = review_copy_behavior({})
         self.assertTrue(result["conditional"])
         self.assertEqual(result["findings"], [])
-        self.assertEqual(len(result["unknown_checks"]), 9)
+        self.assertEqual(len(result["unknown_checks"]), 10)
 
     def test_malformed_legacy_provenance_cannot_raise_or_grant_reviewed_gate(self):
         value = observed_report()

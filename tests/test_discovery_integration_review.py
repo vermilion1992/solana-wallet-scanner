@@ -307,7 +307,7 @@ def test_positive_observed_lot_model_never_certifies_wallet_profit_or_safe_copyi
 
     async def observed_pair(gateway, store, address, start, end, limits, **options):
         return {"transactions": deepcopy([buy, sale]), "coverage": {"status": "partial", "history_scope_complete": False},
-                "evidence": [{"hash": entry["evidence_hash"], "kind": "transaction"} for entry in (buy, sale)]}
+                "evidence": [{"hash": entry["evidence_hash"], "kind": "transaction", "signature": entry["signature"]} for entry in (buy, sale)]}
     monkeypatch.setattr(collector, "collect_wallet", observed_pair)
     assert client.post("/api/provider/key", json={"api_key": TEST_KEY}).status_code == 200
     cohort_id = save_cohort(app.state.store, [candidate()])
@@ -448,12 +448,18 @@ def test_successful_swap_replacement_keeps_sibling_unresolved_native_flows(sessi
     buys = [event for event in report["events"] if event["kind"] == "buy"]
     assert len(buys) == 1 and buys[0]["amount_sol"] == "0.25"
     assert [event["amount_sol"] for event in report["events"] if event["kind"] == "capital"] == ["0.0025", "0.001"]
-    assert len([event for event in report["events"] if event["kind"] == "unsupported"]) == 2
+    assert not [event for event in report['events'] if event['kind'] == 'unsupported']
+    assert buys[0]['native_cash_role_state'] == 'UNKNOWN'
+    assert all(event['economic_role'] == 'unknown' for event in report['events'] if event['kind'] == 'capital')
     assert len([event for event in report["events"] if event["kind"] == "fee"]) == 1
     assert report["coverage"]["swap_reconstruction"]["unresolved_transactions"] == 1
     assert report["evidence_status"] == "partial" and report["policy"] != "MATCH"
     assert report["metrics"]["profit_sol"]["status"] == "unknown"
     assert report["research"]["unresolved_transactions"] == 2
+    assert report['research']['conditional_observed_lot_profit_sol'] is None
+    assert report['research']['observed_profit_sol'] is None
+    assert report['research_assessment']['state'] == 'current'
+    assert any(finding['title'] == 'Native monetary roles remain unresolved' for finding in report['research']['risk_findings'])
 
 
 @pytest.mark.parametrize("meets_anchor", [False, True])

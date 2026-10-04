@@ -258,6 +258,7 @@ export type Report = {
   preview?: boolean;
   history_assessment?: HistoryAssessment;
   position_assessment?: PositionAssessment;
+  research_assessment?: HistoryAssessment;
   qualification?: Qualification;
   copy_review?: CopyReview;
   metrics: Record<string, Metric>;

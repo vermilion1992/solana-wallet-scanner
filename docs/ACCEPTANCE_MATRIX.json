@@ -259,9 +259,11 @@
     },
     {
       "id": "real-raw-evidence-adapter",
-      "axis": "Ownership/quantity/cost source contract; development controls only",
+      "axis": "Ownership/quantity/cost source contract and scoped research consumers; development controls only",
       "selectors": [
-        "tests/test_wallet_evidence.py::*"
+        "tests/test_wallet_evidence.py::*",
+        "tests/test_research.py::*",
+        "tests/test_research_source_roles.py::*"
       ]
     },
     {

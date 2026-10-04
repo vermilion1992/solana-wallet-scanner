@@ -13,6 +13,7 @@ import re
 from .accounting import METHODOLOGY, canonical, decimal
 from .history_evidence import VERSION as HISTORY_METHODOLOGY
 from .position_evidence import VERSION as POSITION_METHODOLOGY
+from .research import VERSION as RESEARCH_METHODOLOGY
 
 
 EVIDENCE_KEYS = tuple("evidence_" + name for name in
@@ -140,6 +141,7 @@ def review_copy_behavior(report):
         raise ValueError("Copy review requires a report object.")
     preset = report.get("preset") if isinstance(report.get("preset"), dict) else {}
     research = report.get("research") if isinstance(report.get("research"), dict) else {}
+    current_research = research.get('version') == RESEARCH_METHODOLOGY
     source_checks = report.get("checks") if isinstance(report.get("checks"), list) else []
     position_checks = [check for check in source_checks if isinstance(check, dict) and check.get("key") == "evidence_positions"]
     coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}
@@ -149,12 +151,12 @@ def review_copy_behavior(report):
                           position.get("version") == POSITION_METHODOLOGY and
                           report.get("methodology") == METHODOLOGY and report.get("preview", False) is False and
                           len(position_checks) == 1 and position_checks[0].get("state") == "PASS")
-    rows = report.get("positions", []) if verified_positions else research.get("episodes", [])
+    rows = report.get("positions", []) if verified_positions else research.get("episodes", []) if current_research else []
     rows = [row for row in rows if isinstance(row, dict) and row.get("status") == "closed" and row.get("in_window", True) is True] if isinstance(rows, list) else []
     conditional = not verified_positions
     scope = ("Verified strict completed positions in the saved reporting window" if verified_positions else
              "Observed supported spot episodes in the fetched subset; timing remains conditional on earlier inventory and intervening flows")
-    chronology_known = research.get("chronology_unknown") is not True or verified_positions
+    chronology_known = research.get("chronology_unknown") is not True or verified_positions or current_research
     findings, checks = [], {}
     min_hold = _number(preset.get("min_hold_hours", "1"))
     max_rapid = _number(preset.get("max_rapid_sale_pct", "10"))
@@ -170,8 +172,21 @@ def review_copy_behavior(report):
     def unknown(key, detail):
         checks[key] = {"state": "UNKNOWN", "detail": detail, "actual": None, "evidence": [], "conditional": conditional}
 
+    if not current_research and not verified_positions:
+        unknown('research_methodology', 'Saved scoped research is stale or missing; create an immutable offline child before using its observations.')
+
+    def timing_supported(row):
+        # Global uncertainty may coexist with an independently supported v3
+        # episode. A roleless legacy row cannot declare that disjointness.
+        state = row.get('timing_state')
+        if not verified_positions and research.get('chronology_unknown') is True:
+            return current_research and state == 'PASS'
+        return row.get('timing_state', 'PASS') == 'PASS'
+
     timing_rows = []
     for row in rows if chronology_known else []:
+        if not timing_supported(row):
+            continue
         hold, exit90, first = (_number(row.get(key)) for key in ("hold_hours", "sold_90_pct_hours", "first_sale_hours"))
         evidence = _hashes(row.get("evidence"))
         if hold is not None and exit90 is not None and exit90 <= hold:
@@ -189,7 +204,8 @@ def review_copy_behavior(report):
                 [digest for _, _, _, _, hashes in timing_rows for digest in hashes])
     else:
         unknown("long_tail_holds", "Completed episodes with evidenced final and 90% exit timings are needed.")
-    first_values = [(row, _number(row.get("first_sale_hours"))) for row in rows] if chronology_known else []
+    first_values = [(row, _number(row.get("first_sale_hours")) if timing_supported(row) else None)
+                    for row in rows] if chronology_known else []
     if first_values and all(value is not None for _, value in first_values):
         with localcontext() as context:
             context.prec = 192
@@ -208,8 +224,8 @@ def review_copy_behavior(report):
 
     def count(value):
         return value if type(value) is int and value >= 0 else None
-    unresolved_basis = count(research.get("unresolved_basis_sales"))
-    unmatched = count(research.get("observed_unmatched_sales"))
+    unresolved_basis = count(research.get("unresolved_basis_sales")) if current_research else None
+    unmatched = count(research.get("observed_unmatched_sales")) if current_research else None
     if unresolved_basis is not None or unmatched is not None:
         observe("unmatched_basis", "Sales with unresolved earlier inventory or unmatched fetched purchase cost remain counted; they cannot be treated as zero-cost profit.",
                 {"unresolved_basis_sales": unresolved_basis, "observed_unmatched_sales": unmatched}, research.get("evidence"))

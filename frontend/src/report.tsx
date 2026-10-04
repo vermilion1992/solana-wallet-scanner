@@ -1297,6 +1297,10 @@ export function ReportView({
                 subtitle={`${report.research.scope} · ${count(report.research.supported_swaps)} supported swaps · ${count(report.research.closed_episodes)} observed closed episodes`}
                 action={<Badge value="partial">Fetched subset</Badge>}
               />
+              {report.research_assessment &&
+                report.research_assessment.state !== "current" && (
+                  <p role="status">{report.research_assessment.reason}</p>
+                )}
               <div className="observed-research-note">
                 These conditional calculations assume no earlier undiscovered
                 holdings. Sales without fetched cost basis are excluded. They do

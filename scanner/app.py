@@ -170,7 +170,15 @@ def create_app(data_dir, launch_token=None):
         from .copy_review import qualify_report, review_copy_behavior
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
         from .position_evidence import VERSION as POSITION_METHODOLOGY
+        from .research import VERSION as RESEARCH_METHODOLOGY
         result = {**report, "qualification": qualify_report(report), "copy_review": review_copy_behavior(report)}
+        if not report.get('preview'):
+            research = report.get('research')
+            saved = research.get('version') if isinstance(research, dict) else None
+            state = 'current' if saved == RESEARCH_METHODOLOGY else 'rebuild_required' if saved else 'missing'
+            result['research_assessment'] = {'saved_methodology': saved, 'current_methodology': RESEARCH_METHODOLOGY,
+                'state': state, 'reason': 'Current scoped research interpretation; inspect each monetary/timing dependency.' if state == 'current' else
+                'Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.'}
         if report.get('archive_input_hash') and not report.get('preview'):
             from .archive_input import METHOD as ARCHIVE_METHODOLOGY
             archive = report.get('archive_accounting')
@@ -314,7 +322,8 @@ def create_app(data_dir, launch_token=None):
                              interval_coverage={name: history_evidence["intervals"][name]
                                                 for name in ("report_period", "four_weeks", "verification_90d")})
             result = apply_metric_decisions(result, derived_decisions)
-        research = summarize_research(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete)
+        research = summarize_research(events, scan["window"]["start"], scan["window"]["end"],
+                                      history_complete=history_complete, wallet_evidence=wallet_evidence)
         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
         mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
         risk_evidence = []
