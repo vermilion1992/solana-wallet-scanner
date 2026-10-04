@@ -14,11 +14,11 @@ import re
 
 from .accounting import canonical, raw_quantity
 from .collector import _valid_account
-from .investigation import PUMP_SWAP, WSOL, _keys, _program, _route
+from .investigation import PUMP_SWAP, WSOL, _keys, _program, _route, _accounts, _data
 from .providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
 from .transaction_format import _needs_instruction_view, supported_transaction_format
 
-VERSION = 'historical-pumpswap-reserve-marks-v1'
+VERSION = 'historical-pumpswap-reserve-marks-v2'
 METHOD = 'pumpswap-exact-phase-quote-base-reserve-ratio-sol-v1'
 MAX_LINKED_RECORDS = 40_000
 MAX_BALANCES = 200_000
@@ -27,6 +27,13 @@ IDL = {'commit': 'cb188ce08b5069196eef1f3e4a0c43b70099793b',
        'path': 'tests/fixtures/retained_protocol_funding/pump_amm.json',
        'sha256': '2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1'}
 SCOPE = 'Original transaction phase pool-reserve spot mark; no report-boundary or executable liquidation assertion'
+# Exact no-argument layouts in the pinned primary IDL above. These references
+# may prove disjointness for reserve marks only; they supply no native cash,
+# refund, no-op or complete trade interpretation.
+_RESERVE_DISJOINT_ADMINISTRATION = {
+    bytes.fromhex('561fc057a3574fee'): 5,  # sync_user_volume_accumulator
+    bytes.fromhex('f945a4da9667548a'): 4,  # close_user_volume_accumulator
+}
 
 
 def _check(known, reason, evidence=(), *, paths=()):
@@ -75,7 +82,8 @@ def _points(raw):
     if raw.get('meta', {}).get('err') is not None:
         return []  # A failed call is not evidence of an executed pool state transition.
     from .compiled_instructions import normalize_transaction
-    semantic = normalize_transaction(raw)['raw'] if _needs_instruction_view(raw) else raw
+    normalization = normalize_transaction(raw) if _needs_instruction_view(raw) else None
+    semantic = normalization['raw'] if normalization is not None else raw
     message, meta = semantic['transaction']['message'], semantic['meta']
     keys = _keys(message, meta)
     if len(keys) != len(set(keys)) or any(not _valid_account(key) for key in keys):
@@ -83,7 +91,7 @@ def _points(raw):
     instructions = message.get('instructions')
     if not isinstance(instructions, list):
         raise ValueError('Original outer instruction population is absent')
-    routes = []
+    routes, administration = [], []
     for index, instruction in enumerate(instructions):
         if not isinstance(instruction, dict):
             raise ValueError('Malformed outer instruction has unresolved pool relevance')
@@ -95,7 +103,17 @@ def _points(raw):
         if _program(instruction, keys) != PUMP_SWAP:
             continue
         from .instruction_scope import inspect_instruction
-        inspect_instruction(instruction, keys, path=f'transaction.message.instructions.{index}')
+        path = f'transaction.message.instructions.{index}'
+        inspected = inspect_instruction(instruction, keys, path=path)
+        payload = _data(instruction.get('data'))
+        if payload[:8] in _RESERVE_DISJOINT_ADMINISTRATION:
+            accounts = _accounts(instruction, keys)
+            if (len(payload) != 8 or len(accounts) != _RESERVE_DISJOINT_ADMINISTRATION[payload[:8]]
+                or len(accounts) != len(set(accounts)) or accounts[-1] != PUMP_SWAP
+                or any(account not in keys for account in accounts)):
+                raise ValueError('PumpSwap administration lacks its exact pinned reference layout')
+            administration.append((index, set(inspected['references']), inspected['paths'] + [path + '.data']))
+            continue
         route = _route(instruction, keys)
         accounts = route['accounts']
         if (route['instruction'] not in ('buy', 'buy_exact_quote_in', 'sell') or len(accounts) < 17
@@ -107,6 +125,41 @@ def _points(raw):
         routes.append((index, route))
     if not routes:
         return []
+    if administration:
+        # Executed inner references are also original evidence. Contradictory
+        # or malformed associations cannot be hidden behind disjoint outer
+        # accounts, even though this projection grants no CPI economic role.
+        by_index = {index: (references, paths) for index, references, paths in administration}
+        groups = meta.get('innerInstructions')
+        if groups is not None and not isinstance(groups, list):
+            raise ValueError('Recorded administration inner references are malformed')
+        seen = set()
+        for group_index, group in enumerate(groups or []):
+            if (not isinstance(group, dict) or type(group.get('index')) is not int
+                or not 0 <= group['index'] < len(instructions) or group['index'] in seen
+                or not isinstance(group.get('instructions'), list)):
+                raise ValueError('Recorded administration inner association is malformed or duplicated')
+            seen.add(group['index'])
+            if group['index'] not in by_index:
+                continue
+            references, paths = by_index[group['index']]
+            paths += [f'meta.innerInstructions.{group_index}.index']
+            for ordinal, nested in enumerate(group['instructions']):
+                path = f'meta.innerInstructions.{group_index}.instructions.{ordinal}'
+                inspected = inspect_instruction(nested, keys, path=path)
+                if (inspected['program'] not in keys
+                    or inspected['shape'] == 'opaque' and not inspected['references'] <= set(keys)):
+                    raise ValueError('Administration CPI references are absent from original primary keys')
+                references.update(inspected['references'])
+                references.add(inspected['program'])
+                paths += inspected['paths'] + ([path + '.data'] if 'data' in nested else [])
+    # Check every route, including later or repeated pool calls. A valid known
+    # layout does not excuse access to any actual reserve/identity role.
+    reserve_roles = {route['accounts'][position] for _, route in routes for position in (0, 3, 4, 7, 8)}
+    for _, references, _ in administration:
+        if references & reserve_roles:
+            raise ValueError('PumpSwap administration overlaps a pool/vault/mint reserve identity')
+    administration_paths = [path for _, _, paths in administration for path in paths]
     phases = {phase: _phase_balances(semantic, keys, field) for phase, field in
               (('pre', 'preTokenBalances'), ('post', 'postTokenBalances'))}
     points = []
@@ -118,6 +171,16 @@ def _points(raw):
                 raise ValueError('Both exact pool vault reserves are required at each original transaction phase')
             base, precision, base_paths = _reserve(balances[accounts[7]], mint=accounts[3], owner=accounts[0], program=accounts[11])
             quote, _, quote_paths = _reserve(balances[accounts[8]], mint=WSOL, owner=accounts[0], program=TOKEN_PROGRAM, quote=True)
+            # Denominating a legacy native-mint reserve in SOL requires its
+            # native backing at this exact phase. Other wallet/account cash
+            # and fee uncertainty remains independent of this reserve mark.
+            cash_field = 'preBalances' if phase == 'pre' else 'postBalances'
+            cash = meta.get(cash_field)
+            quote_index = keys.index(accounts[8])
+            value = cash[quote_index] if isinstance(cash, list) and quote_index < len(cash) else None
+            if type(value) is not int or not 0 <= value <= 2**64 - 1 or value < quote:
+                raise ValueError('Legacy WSOL quote reserve lacks exact phase unsigned native backing')
+            quote_paths.append(f'meta.{cash_field}.{quote_index}')
             if decimals is not None and precision != decimals:
                 raise ValueError('Base precision changes across original pool phases')
             decimals = precision
@@ -132,7 +195,7 @@ def _points(raw):
                 'quote_mint': WSOL, 'mark_sol_per_token': price,
                 'price_ratio_numerator': str(numerator), 'price_ratio_denominator': str(denominator),
                 'raw_paths': [f'transaction.message.instructions.{index}.accounts.{n}' for n in (0, 3, 4, 7, 8, 11, 12)]
-                    + base_paths + quote_paths})
+                    + base_paths + quote_paths + administration_paths})
     # Repeated calls to the same pool share the whole transaction phase; they
     # must not become several independent observations or intermediate prices.
     output = {}
@@ -143,6 +206,9 @@ def _points(raw):
             old['raw_paths'] = sorted(set(old['raw_paths'] + point['raw_paths']))
         else:
             output[key] = point
+    from .transaction_format import original_instruction_paths
+    for point in output.values():
+        point['raw_paths'] = original_instruction_paths(raw, point['raw_paths'], normalized=normalization)
     return [output[key] for key in sorted(output)]
 
 
@@ -210,5 +276,6 @@ def project_historical_reserve_marks(records, *, all_records, raw_sources, consi
         'historical_boundary_completeness': 'UNKNOWN', 'qualification': False,
         'provider_requests': 0, 'credential_lookups': 0,
         'limitations': ['Observed reserve ratio is a spot marking method, not executable proceeds, liquidity depth or token eligibility.',
+            'Known disjoint administration references do not prove cash roles, refund amounts or a supported whole-transaction trade.',
             'A mark cannot be carried to another signature, transaction phase, slot or report boundary.',
             'All boundary assets and external flows still require their independent accepted evidence.']}

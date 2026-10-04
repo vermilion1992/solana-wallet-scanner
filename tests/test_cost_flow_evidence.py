@@ -27,6 +27,37 @@ def wrapped_funding():
     return raw, account
 
 
+def mixed_refund(kind):
+    """Literal original cash/unit controls; neither is a genuine B3 dataset."""
+    if kind == 'system':
+        raw = primary(base('mixed-system-refund'))
+        account, index, amount = ACCOUNT, 1, 2_001_000
+        operations = [parsed('transfer', {'source': WALLET, 'destination': ACCOUNT, 'lamports': 1000}, SYSTEM_ID)]
+        raw['meta']['postBalances'][0] = raw['meta']['preBalances'][0] - 5000 - 1000 + amount
+    else:
+        raw, account = wrapped_funding()
+        raw['transaction']['signatures'] = ['mixed-native-refund']
+        index, amount = 2, 1_002_000_100
+        keys = raw['transaction']['message']['accountKeys']
+        keys.append(WSOL)
+        raw['meta']['preBalances'].append(1_461_600)
+        raw['meta']['postBalances'].append(1_461_600)
+        raw['transaction']['message']['header']['numReadonlyUnsignedAccounts'] += 1
+        for phase, quantity in (('preTokenBalances', '100'), ('postTokenBalances', '0')):
+            source = next(row for row in raw['meta'][phase] if row['accountIndex'] == 1)
+            source['mint'] = WSOL
+            source['uiTokenAmount'] = {'amount': quantity, 'decimals': 9}
+        raw['meta']['preBalances'][1], raw['meta']['postBalances'][1] = 2_000_100, 2_000_000
+        operations = [parsed('transferChecked', {'source': ACCOUNT, 'destination': account, 'mint': WSOL,
+            'authority': WALLET, 'tokenAmount': {'amount': '100', 'decimals': 9}})]
+        raw['meta']['postBalances'][0] = raw['meta']['preBalances'][0] - 5000 + amount
+    raw['meta']['postBalances'][index] = 0
+    raw['meta']['postTokenBalances'] = [row for row in raw['meta']['postTokenBalances'] if row['accountIndex'] != index]
+    raw['transaction']['message']['instructions'] = operations + [parsed('closeAccount', {
+        'account': account, 'destination': WALLET, 'owner': WALLET})]
+    return raw, account, amount
+
+
 def encode(data):
     """Independent test conversion; byte layouts below are pinned literals."""
     value = int.from_bytes(data, 'big')
@@ -199,7 +230,7 @@ def test_retained_genuine_compiled_account_creation_admits_exact_funding_without
         assert result['provider_requests'] == result['credential_lookups'] == 0
 
 
-def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(tmp_path, monkeypatch):
+def test_mixed_refund_normal_saved_report_offline_rebuild_and_source_loss(tmp_path, monkeypatch):
     """Synthetic interface input exercises the ordinary real adapter, not B3."""
     import hashlib
     import json
@@ -232,10 +263,11 @@ def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(t
 
     monkeypatch.setattr(app_module, 'Credentials', EmptyCredentials)
     monkeypatch.setattr(httpx.AsyncClient, 'post', denied)
-    raw = primary(creation())
+    raw, _, refund = mixed_refund('system')
+    signature = raw['transaction']['signatures'][0]
     digest = hashlib.sha256(canonical_bytes(raw)).hexdigest()
     manifest = {'version': INPUT_VERSION, 'address': WALLET, 'window': WINDOW, 'dataset': 'real',
-                'transactions': [{'signature': 'synthetic-operation', 'hash': digest}], 'evidence': []}
+                'transactions': [{'signature': signature, 'hash': digest}], 'evidence': []}
     content = pack_bytes({'manifest': manifest, 'payloads': {digest: raw}})
     app = app_module.create_app(tmp_path, 'cost-flow-local-session')
     with TestClient(app, base_url='http://127.0.0.1:8765') as client:
@@ -248,7 +280,9 @@ def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(t
         original = client.get(f'/api/export/reports/{identifier}.json').content
         parent = json.loads(original)
         adapter = parent['coverage']['wallet_evidence']
-        assert [event['kind'] for event in adapter['accounting_events']] == ['fee', 'internal_transfer']
+        assert [event['kind'] for event in adapter['accounting_events']] == ['fee', 'internal_transfer', 'internal_transfer']
+        receipt = adapter['cost_flow_evidence']['transactions'][signature]
+        assert receipt['admitted_internal_roles'][-1]['lamports'] == str(refund)
         assert adapter['components']['observed_economic_roles']['state'] == 'PASS'
         assert parent['metrics']['observed_network_fees_sol']['value'] == '0.000005'
         assert parent['metrics']['profit_sol']['status'] == 'unknown'
@@ -259,7 +293,7 @@ def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(t
         missing = client.post(f'/api/reports/{identifier}/rebuild')
         assert missing.status_code == 200, missing.text
         child = client.get('/api/reports/' + missing.json()['report_id']).json()
-        assert child['coverage']['wallet_evidence']['cost_flow_evidence']['transactions']['synthetic-operation']['check']['state'] == 'UNKNOWN'
+        assert child['coverage']['wallet_evidence']['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'UNKNOWN'
         source_path.write_bytes(retained)
         restored = client.post(f'/api/reports/{identifier}/rebuild')
         assert restored.status_code == 200, restored.text
@@ -366,15 +400,161 @@ def test_nonzero_legacy_wsol_close_returns_principal_and_rent_once_with_loss_res
         'account': account, 'authorityType': 'closeAccount', 'authority': WALLET,
         'newAuthority': address(40)}))
     assert derive([wrong])['components']['observed_economic_roles']['state'] == 'UNKNOWN'
-    # Prior native-affecting instructions make the opening endpoint an
-    # inexact refund. Retain that dependency instead of publishing its number.
+    # Exact original funding is now included in the executed refund, while
+    # generic token ownership alone still cannot prove refund entitlement.
     preceded = deepcopy(raw)
     preceded['transaction']['message']['instructions'].insert(0, parsed('transfer', {
         'source': WALLET, 'destination': account, 'lamports': 1000}, SYSTEM_ID))
     preceded['meta']['postBalances'][0] = raw['meta']['postBalances'][0]
-    unsupported = derive([preceded])
-    receipt = unsupported['cost_flow_evidence']['transactions']['wrapped-principal']
-    assert receipt['check']['state'] == 'UNKNOWN'
-    assert receipt['admitted_internal_roles'] == []
-    assert 'exact refund' in receipt['check']['reason']
+    supported = derive([preceded])
+    receipt = supported['cost_flow_evidence']['transactions']['wrapped-principal']
+    assert receipt['check']['state'] == 'PASS'
+    assert receipt['admitted_internal_roles'][-1]['lamports'] == '1002001000'
+    assert supported['components']['observed_economic_roles']['state'] == 'PASS'
+    impossible = deepcopy(raw)
+    impossible['meta']['preBalances'][2] = 999_999_999
+    impossible['meta']['postBalances'][0] = impossible['meta']['preBalances'][0] - 5000 + 999_999_999
+    rejected = derive([impossible])
+    boundary = rejected['transactions']['wrapped-principal']['boundaries'][account]
+    assert boundary['checks']['quantities']['state'] == 'UNKNOWN'
+    assert 'collateral' in boundary['checks']['quantities']['reason']
+    assert rejected['components']['native_fee']['state'] == 'PASS'
+    assert derive([raw]) == parent
+
+
+def test_mixed_original_cash_reconstruction_parsed_compiled_and_checked_transfer_gross_roles():
+    for kind in ('system', 'native'):
+        raw, account, refund = mixed_refund(kind)
+        for representation in ('parsed', 'compiled', 'unchecked-native'):
+            if representation == 'unchecked-native' and kind != 'native':
+                continue
+            original = deepcopy(raw)
+            keys = original['transaction']['message']['accountKeys']
+            if representation == 'compiled':
+                operations = ([{'programIdIndex': keys.index(SYSTEM_ID), 'accounts': [0, 1],
+                    'data': encode(bytes.fromhex('02000000e803000000000000'))}] if kind == 'system' else
+                    [{'programIdIndex': keys.index(TOKEN_PROGRAM), 'accounts': [1, keys.index(WSOL), 2, 0],
+                    'data': encode(bytes.fromhex('0c640000000000000009'))}])
+                original['transaction']['message']['instructions'] = operations + [
+                    {'programIdIndex': keys.index(TOKEN_PROGRAM), 'accounts': [keys.index(account), 0, 0],
+                    'data': encode(bytes.fromhex('09'))}]
+            elif representation == 'unchecked-native':
+                original['transaction']['message']['instructions'][0] = parsed('transfer', {
+                    'source': ACCOUNT, 'destination': account, 'authority': WALLET, 'amount': '100'})
+            result = derive([original])
+            row = result['cost_flow_evidence']['transactions'][original['transaction']['signatures'][0]]
+            assert row['check']['state'] == result['components']['observed_economic_roles']['state'] == 'PASS'
+            role = row['admitted_internal_roles'][-1]
+            assert role['role'] == 'wallet_owned_account_refund' and role['lamports'] == str(refund)
+            assert role['cash_effects'][0]['lamports'] == ('1000' if kind == 'system' else '100')
+            assert all(event['kind'] in ('fee', 'internal_transfer') for event in result['accounting_events'])
+            assert _decoded_native_movement(result['accounting_events']) == -5000
+            assert _native_role_check(record(original), WALLET, -5000)['state'] == 'PASS'
+            assert result['components']['historical_population']['state'] == 'UNKNOWN'
+            assert 'meta.fee' in role['raw_paths']
+            if representation == 'compiled':
+                assert any(path.endswith('.data') for path in role['raw_paths'])
+
+
+def test_mixed_cash_required_loss_conflict_order_opaque_and_exact_restoration_isolate_fees():
+    raw, account, _ = mixed_refund('native')
+    signature = raw['transaction']['signatures'][0]
+    alternative = deepcopy(raw)
+    alternative['meta']['logMessages'] = ['Independent original optional field']
+    link = record(alternative)
+    parent = derive([raw], alternatives=[link])
+    frozen = deepcopy(parent)
+    lost = derive([raw], alternatives=[{**link, 'raw': None}])
+    assert lost['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    for case in ('endpoint', 'order', 'authority', 'u64', 'self-unfunded', 'opaque-relevant', 'opaque-inner'):
+        broken = deepcopy(raw)
+        instructions = broken['transaction']['message']['instructions']
+        if case == 'endpoint':
+            broken['meta']['postBalances'][1] += 1
+            broken['meta']['postBalances'][0] -= 1  # Preserve independent raw fee conservation.
+        elif case == 'order':
+            instructions.reverse()
+        elif case == 'authority':
+            instructions[0]['parsed']['info']['authority'] = ACCOUNT
+        elif case == 'u64':
+            instructions[0]['parsed']['info']['tokenAmount']['amount'] = str(2**64)
+        elif case == 'self-unfunded':
+            instructions.insert(0, parsed('transfer', {'source': ACCOUNT, 'destination': ACCOUNT,
+                'authority': WALLET, 'amount': '101'}))
+        else:
+            opaque = {'programId': raw['transaction']['message']['accountKeys'][3], 'accounts': [account], 'data': '2'}
+            if case == 'opaque-relevant':
+                instructions.insert(0, opaque)
+            else:
+                broken['meta']['innerInstructions'] = [{'index': 0, 'instructions': deepcopy(instructions)}]
+                broken['transaction']['message']['instructions'] = [opaque]
+        result = derive([broken])
+        row = result['cost_flow_evidence']['transactions'][signature]
+        assert row['check']['state'] == 'UNKNOWN', (case, row)
+        assert row['admitted_internal_roles'] == []
+        assert result['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+        assert result['components']['native_fee']['state'] == 'PASS'
+    disjoint = deepcopy(raw)
+    disjoint['transaction']['message']['instructions'].insert(0, {
+        'programId': raw['transaction']['message']['accountKeys'][3], 'accounts': [], 'data': '2'})
+    assert derive([disjoint])['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'PASS'
+    conflict = derive([raw], alternatives=[record(broken)])
+    assert conflict['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    assert derive([raw], alternatives=[link]) == parent == frozen
+
+
+def test_foreign_canonical_native_peer_proves_refund_cash_without_acquisition_or_economic_role():
+    raw, _, refund = mixed_refund('native')
+    signature = raw['transaction']['signatures'][0]
+    for phase in ('preTokenBalances', 'postTokenBalances'):
+        next(row for row in raw['meta'][phase] if row['accountIndex'] == 1)['owner'] = address(40)
+    # Execution can use an already delegated wallet authority; checksum-bound
+    # source units prove cash denomination, never economic ownership or basis.
+    parent = derive([raw])
+    receipt = parent['cost_flow_evidence']['transactions'][signature]
+    assert receipt['check']['state'] == 'PASS'
+    assert receipt['admitted_internal_roles'][-1]['lamports'] == str(refund)
+    assert 'meta.preTokenBalances.0' in receipt['check']['raw_paths']
+    assert any(event['kind'] == 'transfer_in' for event in parent['accounting_events'])
+    assert parent['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    assert parent['components']['historical_population']['state'] == 'UNKNOWN'
+    for case in ('mint', 'program', 'missing-post', 'cash-less-than-native-units'):
+        broken = deepcopy(raw)
+        if case == 'missing-post':
+            broken['meta']['postTokenBalances'] = [row for row in broken['meta']['postTokenBalances'] if row['accountIndex'] != 1]
+        elif case == 'cash-less-than-native-units':
+            broken['meta']['preBalances'][1] = 99
+            broken['meta']['postBalances'][1] = 0
+            broken['meta']['postBalances'][0] -= 1  # Independent fee still conserves exactly.
+        else:
+            field = 'mint' if case == 'mint' else 'programId'
+            next(row for row in broken['meta']['preTokenBalances'] if row['accountIndex'] == 1)[field] = address(40)
+        result = derive([broken])
+        assert result['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'UNKNOWN'
+        assert not result['cost_flow_evidence']['transactions'][signature]['admitted_internal_roles']
+        assert result['components']['native_fee']['state'] == 'PASS'
+    lost = derive([raw], alternatives=[{'signature': signature, 'evidence_hash': 'a' * 64, 'raw': None}])
+    assert lost['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'UNKNOWN'
+    independent, _, expected = mixed_refund('system')
+    independent['meta']['fee'] = None
+    missing_fee = derive([independent])
+    independent_row = missing_fee['cost_flow_evidence']['transactions'][independent['transaction']['signatures'][0]]
+    assert independent_row['check']['state'] == 'PASS'
+    assert independent_row['admitted_internal_roles'][-1]['lamports'] == str(expected)
+    assert missing_fee['components']['native_fee']['state'] == 'UNKNOWN'
+    assert missing_fee['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+    for case in ('impossible-prefix', 'impossible-ending-cash', 'malformed-fee'):
+        impossible = deepcopy(independent)
+        if case == 'impossible-prefix':
+            impossible['meta']['preBalances'][0] = 0
+            impossible['meta']['postBalances'][0] = 1_995_000
+        elif case == 'impossible-ending-cash':
+            impossible['meta']['postBalances'][0] = impossible['meta']['preBalances'][0] + 2_001_000
+        else:
+            impossible['meta']['fee'] = -1
+        rejected = derive([impossible])
+        row = rejected['cost_flow_evidence']['transactions'][impossible['transaction']['signatures'][0]]
+        assert row['check']['state'] == 'UNKNOWN' and not row['admitted_internal_roles']
+        assert rejected['components']['native_fee']['state'] == 'UNKNOWN'
+    assert derive([independent]) == missing_fee
     assert derive([raw]) == parent

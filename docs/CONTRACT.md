@@ -1,15 +1,41 @@
 # Implementation contracts
 
-## Current wallet accounting and source capability contract
+## Current mixed accounting interpretation
 
-Current methods are wallet v10, archive v13, economic observations v2,
+The follow-up extends existing instruction/quantity/source validation and FIFO;
+it adds no second financial engine. Cost roles v2 derive intermediate account
+cash for supported System and canonical legacy WSOL instructions before an
+actual wallet-authorized closure. Unknown relevant effects, conflicting or lost
+originals, overflow and failed execution cannot supply an exact refund. A
+supported same-record refund may establish a funded account's entitlement;
+owner-only persistent top-ups remain unresolved. Missing-fee payer cash retains
+a nonnegative bounded range: impossible prefix funding and closing cash are
+rejected without erasing an independently exact refund.
+
+Reserve marks v2 exclude only pinned, schema-valid PumpSwap administration whose
+actual references are disjoint from all accepted pool/mint/vault roles, including associated inner
+instructions. Original canonical WSOL quantities require phase-local account cash
+at least as large as their token principal in both owned holdings and quote
+vaults; contradictory units cannot support a value. A missing unrelated fee does
+not erase independently proved nonpayer account cash or reserve prices. These are
+exact-phase spot observations; the original mixed trade's exports and foreign
+closures remain unsupported economic dependencies. Wallet v11/archive v14/economic
+v3 give new reports their current interpretations without editing parents.
+Execution/source identities and raw evidence are recorded under
+`evidence/mixed-refund-accounting-batch/`; this is focused validation, not a new
+full Gate A or genuine B3 acceptance. The historical-source decision below remains
+unchanged: B1 NO_GO_CURRENT_SOURCE, complete real B2 OPEN and B3 BLOCKED.
+
+## Prior wallet accounting and source capability contract
+
+The preceding batch used wallet v10, archive v13, economic observations v2,
 indexed-query coverage v3, raw cost/flow roles v1 and historical PumpSwap reserve
 marks v1. Existing FIFO v4, research v5, selected-cohort v2 and metric-evidence v2
 remain the shared accounting/report path. New interpretations create immutable
 children; parents, original bytes and separately worked genuine expectations are
-not rewritten. Current-batch evidence is
-`evidence/wallet-accounting-finalization-batch/`; validation and publication must
-be recorded against the actual final source, not inferred from this contract.
+not rewritten. Its retained evidence is
+`evidence/wallet-accounting-finalization-batch/`; these records bind their own
+source and do not constitute acceptance of later modifications.
 
 `historical_source_decision()` exposes `UNSUPPORTED_CURRENT_SOURCE` independently
 of authentication/entitlement, response compatibility, terminal query coverage
@@ -45,7 +71,7 @@ Complete ownership, acquisition origins, time-relevant meme/nonspam eligibility,
 exact all-account historical boundaries and valued external flows remain separate
 requirements. Complete real B2 is OPEN, genuine B3 is BLOCKED and
 PRODUCT_READY=false. Earlier method paragraphs below describe historical stages
-where they differ from this current section.
+where they differ from the first current section.
 
 The preceding inventory/speed batch added versioned original-byte observations
 and invocation-scoped indexed-page parsing reuse. Known current native/token

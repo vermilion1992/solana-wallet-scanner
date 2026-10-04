@@ -18,7 +18,7 @@ from .investigation import _keys, WSOL
 from .providers import TOKEN_PROGRAM
 from .transaction_format import supported_transaction_format
 
-VERSION = 'economic-raw-observations-v2'
+VERSION = 'economic-raw-observations-v3'
 MAX_RECORDS = 40_000
 MAX_ACCOUNT_PHASES = 200_000
 _HASH = re.compile(r'^[a-f0-9]{64}$')

@@ -8,11 +8,11 @@ wallet history.** The application exposes this as
 UNKNOWN when their population evidence is unavailable. This is a final decision
 about the currently authorized source contract, not another open research plan.
 
-Starting private HEAD is `9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb`, binding
-tested application `93a370b40a58b28813810a217821a510630bb059`: 254 application
+Starting private HEAD is `bad28e11d7a281aa201eb08761e2a17161a9180a`, binding
+focused tested application `3cb89255c43768a6dc8059c222b189a47fc31680`: 259 application
 files, source SHA-256
-`1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d`.
-Current-batch evidence belongs under `evidence/wallet-accounting-finalization-batch/`;
+`1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366`.
+Current-batch evidence belongs under `evidence/mixed-refund-accounting-batch/`;
 it must bind its own final candidate. No new acceptance or publication is claimed here.
 
 | Question | Concrete decision |
@@ -23,8 +23,8 @@ it must bind its own final candidate. No new acceptance or publication is claime
 | Exhaustive historical ownership | NO_GO_CURRENT_SOURCE. The primary owner predicate does not establish event-time coverage for formerly closed, reassigned, transient and non-ATA accounts across both token programs. Terminal paging cannot supply the missing semantics. |
 | Qualification | Unproved. Query completeness and selected observations cannot certify the PDF's wallet-wide filters or copying safety. |
 
-Four fresh unauthenticated primary-document retrievals match the retained bytes
-exactly. The guide documents ownership-metadata filtering only from slot
+Four unauthenticated primary-document retrievals archived in the preceding
+accounting-finalization batch match the retained bytes exactly. The guide documents ownership-metadata filtering only from slot
 111,491,819 and unlimited mainnet retention; neither statement supplies the
 missing event-time owner contract. The historical-balance endpoint also warns
 that one latest transaction can undercount a mint held across multiple accounts.
@@ -39,14 +39,14 @@ dataset meets that contract; imported completion flags and fixed-point account
 discovery are insufficient.
 
 The offline implementation batch extends the existing accounting engine:
-`raw-cost-flow-roles-v1` admits source-proved wallet-internal account funding and
-closure movement rather than treating it automatically as income, fees or
+`raw-cost-flow-roles-v2` admits source-proved wallet-internal account funding and
+ordered supported System/native-token closure movement rather than treating it automatically as income, fees or
 capital. The genuine 1,513,840-lamport account funding is such a narrow role
-observation. `historical-pumpswap-reserve-marks-v1` derives contemporaneous
+observation. `historical-pumpswap-reserve-marks-v2` derives contemporaneous
 pre/post pool reserve-ratio SOL spot marks from original vault quantities. These
 marks are neither exact report-boundary equity nor executable liquidation prices.
 
-Wallet v10/archive v13/economic v2/coverage v3 apply the changed interpretations
+Wallet v11/archive v14/economic v3/coverage v3 apply the changed interpretations
 only to new reports and immutable child rebuilds. Complete acquisition origins,
 unsupported trade/cost roles, time-relevant meme/nonspam eligibility, exact
 all-account boundaries and complete valued external flows still require accepted

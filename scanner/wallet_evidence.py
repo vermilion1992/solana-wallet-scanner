@@ -26,7 +26,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v10'
+VERSION = 'wallet-raw-evidence-v11'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -437,6 +437,20 @@ def _observe(record, wallet):
                     quantity_known = quantity_known and running >= 0
             if result['failed']:
                 quantity_known = identity_known and before['quantity'] == after['quantity']
+            if identity_known and programs == {TOKEN_PROGRAM} and before['mint'] == WSOL and before['decimals'] == 9:
+                # Canonical native token units are collateralized by this
+                # exact account's lamports. This minimum invariant does not
+                # assume rent/refund ownership or a complete monetary ledger.
+                index = keys.index(account)
+                collateral_known = True
+                for phase, point in (('pre', before), ('post', after)):
+                    native = meta.get(phase + 'Balances')
+                    amount = native[index] if isinstance(native, list) and len(native) == len(keys) else None
+                    paths.append(f'meta.{phase}Balances.{index}')
+                    collateral_known = collateral_known and type(amount) is int and 0 <= amount <= 2**64 - 1 and amount >= point['quantity']
+                quantity_known = quantity_known and collateral_known
+                if not collateral_known:
+                    operation_errors.append('Canonical native token units exceed or lack their exact original account lamport collateral')
             owner_known = identity_known
             if before and after:
                 expected_owner = before['owner']
@@ -1450,9 +1464,12 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
             agreement = bool(primary_pair) and all(pair is not None and _semantic(pair) == _semantic(primary_pair) for pair in pairs)
             checks = {}
             for key in ('ownership', 'quantities', 'lifecycle'):
+                rejected_reasons = sorted({pair['checks'][key]['reason'] for pair in pairs
+                    if pair is not None and pair['checks'][key]['state'] != 'PASS'})
                 checks[key] = _check(identity.get('state') == 'PASS' and agreement and all(
                     pair is not None and pair['checks'][key]['state'] == 'PASS' for pair in pairs),
-                    'Every linked raw version supports the same phase-specific account facts and executed operations.' if agreement else
+                    ('; '.join(rejected_reasons) if rejected_reasons else
+                     'Every linked raw version supports the same phase-specific account facts and executed operations.') if agreement else
                     'A linked account boundary/operation is missing or disagrees; no selected version overrides it.', evidence,
                     paths=(p for pair in pairs if pair for p in pair['checks'][key]['raw_paths']))
             pair = primary_pair or next(pair for pair in pairs if pair)
