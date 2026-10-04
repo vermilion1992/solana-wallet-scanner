@@ -41,6 +41,8 @@ def run(args):
         if not getattr(args, 'indexed_expected_fees', None):
             raise ValueError('Indexed browser replay requires independently worked expected fees')
         shutil.copyfile(indexed, out/'indexed-input.zip')
+        expect.set_options(timeout=120000)
+        result['assertion_timeout_ms'] = 120000
     with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
     server=subprocess.Popen([python,str(ROOT/'tools/guarded_launcher.py'),'--data',str(data),'--port',str(port),
                              '--guard',str(out/'guards.json')],cwd=ROOT,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
@@ -60,12 +62,40 @@ def run(args):
         base=url.split('/#')[0];captures=0
         with sync_playwright() as pw:
             browser=pw.chromium.launch(executable_path=args.chromium,headless=True,args=['--no-sandbox'])
-            page=browser.new_page(viewport={'width':1440,'height':900});errors=[];external=[]
+            page=browser.new_page(viewport={'width':1440,'height':900});errors=[];external=[];view_transport=[]
             page.on('pageerror',lambda e:errors.append(str(e)))
             page.on('request',lambda r:external.append(r.url) if not r.url.startswith(base+'/') else None)
+            def record_view(response):
+                path=response.url.removeprefix(base)
+                if response.status==200 and response.request.method=='GET' and (path.startswith('/api/state') or re.fullmatch(r'/api/reports/[a-f0-9]{32}(?:\?.*)?',path)):
+                    view_transport.append({'path':path,'status':response.status,
+                                           'bytes':int(response.headers.get('content-length','0'))})
+            page.on('response',record_view)
             assert page.request.get(base+'/api/state').status==401
             page.goto(url);page.get_by_role('button',name='Find wallet candidates',exact=True).first.wait_for()
-            usage=page.request.get(base+'/api/state').json()['usage']
+            usage=page.request.get(base+'/api/state?report_view=summary').json()['usage']
+            def export_download(identifier, destination):
+                # Browser downloads stream full immutable bytes without routing a
+                # potentially huge base64 APIResponse through Playwright's pipe.
+                page.get_by_role('tab',name=re.compile('^Source evidence')).click()
+                with page.expect_download() as downloaded:
+                    page.get_by_role('link',name='Export report JSON',exact=False).click()
+                shutil.copyfile(downloaded.value.path(), destination)
+                page.get_by_role('tab',name='Summary',exact=True).click()
+                assert page.locator('[data-archive-report-id]').get_attribute('data-archive-report-id') == identifier
+            def export_hash(identifier):
+                # Independent loopback HTTP read, with the same browser session;
+                # never expose cookies or copy the report through the JS protocol.
+                from urllib.request import Request, urlopen
+                cookies=page.context.cookies(base)
+                cookie='; '.join(item['name']+'='+item['value'] for item in cookies)
+                digest=hashlib.sha256()
+                with urlopen(Request(base+f'/api/export/reports/{identifier}.json',
+                                     headers={'Cookie':cookie}), timeout=120) as response:
+                    assert response.status == 200
+                    for chunk in iter(lambda:response.read(1024*1024),b''):
+                        digest.update(chunk)
+                return digest.hexdigest()
             def capture(name):
                 nonlocal captures
                 for width,height,device in ((1440,900,'desktop'),(390,844,'mobile')):
@@ -82,7 +112,7 @@ def run(args):
                 panel=page.locator(f'[data-archive-accounting="{dataset}"]')
                 expect(panel).to_be_visible()
                 identifier=panel.get_attribute('data-archive-report-id')
-                report=page.request.get(base+'/api/reports/'+identifier).json()
+                report=page.request.get(base+'/api/reports/'+identifier+'?view=display').json()
                 assert report['qualification']['qualified'] is False
                 return report
             parent=import_ui(out/'synthetic-input.zip','synthetic');pid=parent['id']
@@ -107,13 +137,13 @@ def run(args):
                 assert pending.value.status==200,pending.value.text()
                 panel=page.locator('[data-archive-accounting="synthetic"]')
                 expect(panel).to_have_attribute('data-archive-report-id',re.compile('^(?!'+prior+'$)[a-f0-9]{32}$'))
-                child=page.request.get(base+'/api/reports/'+panel.get_attribute('data-archive-report-id')).json()
+                child=page.request.get(base+'/api/reports/'+panel.get_attribute('data-archive-report-id')+'?view=display').json()
                 assert child['metrics']['profit_sol']['value']==expected_profit
                 assert child['metrics']['economic_pnl_sol']['value']==expected_economic
                 assert child['metrics']['observed_network_fees_sol']['value']=='0.000055'
                 assert child['archive_input_hash']==parent['archive_input_hash'] and child['preset']==parent['preset'] and child['window']==parent['window']
                 assert page.request.get(base+f'/api/export/reports/{pid}.json').body()==original
-                assert page.request.get(base+'/api/state').json()['usage']==usage
+                assert page.request.get(base+'/api/state?report_view=summary').json()['usage']==usage
                 (out/(label+'-report.json')).write_text(json.dumps(child,indent=2)+'\n')
                 capture(label);result['cases'].append({'case':label,'state':'PASS','parent_unchanged':True})
             fixture=json.loads((ROOT/'scanner/examples/archive-wallet-synthetic.json').read_text())
@@ -138,8 +168,12 @@ def run(args):
                 assert real['metrics']['observed_network_fees_sol']['value']==args.indexed_expected_fees
                 assert real['metrics']['profit_sol']['status']=='unknown'
                 assert real['coverage']['indexed_sources']['historical_population']=='UNKNOWN'
-                original_indexed=page.request.get(base+f"/api/export/reports/{real['id']}.json").body()
-                (out/'indexed-partial-parent.json').write_bytes(original_indexed)
+                export_download(real['id'], out/'indexed-partial-parent.json')
+                original_indexed_hash=hashlib.sha256((out/'indexed-partial-parent.json').read_bytes()).hexdigest()
+                full_indexed=json.loads((out/'indexed-partial-parent.json').read_bytes())
+                assert full_indexed['id']==real['id'] and full_indexed['metrics']==real['metrics']
+                assert full_indexed['coverage']['indexed_sources']['historical_population']=='UNKNOWN'
+                del full_indexed
                 capture('indexed-partial')
                 page.get_by_role('tab',name=re.compile('^Source evidence')).click()
                 page.get_by_role('button',name='Inspect record',exact=True).first.click()
@@ -151,21 +185,25 @@ def run(args):
                 assert pending.value.status==200,pending.value.text()
                 child_id=pending.value.json()['report_id']
                 expect(page.locator('[data-archive-accounting="real"]')).to_have_attribute('data-archive-report-id',child_id)
-                child=page.request.get(base+'/api/reports/'+child_id).json()
+                child=page.request.get(base+'/api/reports/'+child_id+'?view=display').json()
                 assert child['metrics']==real['metrics'] and child['rebuilt_from']==real['id']
-                assert page.request.get(base+f"/api/export/reports/{real['id']}.json").body()==original_indexed
-                (out/'indexed-partial-child.json').write_text(json.dumps(child,indent=2)+'\n')
+                assert export_hash(real['id'])==original_indexed_hash
+                export_download(child_id, out/'indexed-partial-child.json')
                 capture('indexed-partial-rebuilt')
                 result['cases'].append({'case':'indexed-partial-ui-import-inspection-immutable-rebuild','state':'PASS',
                     'source_archive_sha256':hashlib.sha256(indexed.read_bytes()).hexdigest(),
                     'expected_selected_fees_sol':args.indexed_expected_fees,'parent_unchanged':True,'real_acceptance':'BLOCKED'})
-            assert page.request.get(base+'/api/state').json()['usage']==usage
+            assert page.request.get(base+'/api/state?report_view=summary').json()['usage']==usage
             assert not errors and not external,(errors,external)
+            assert view_transport and all(
+                item['path'].endswith('?report_view=summary') if item['path'].startswith('/api/state')
+                else item['path'].endswith('?view=display') for item in view_transport)
             browser.close()
             result.update(state='PASS',scope='Development archive workflow; genuine partial input is not B3',
                           captures=captures,desktop_width=1440,mobile_width=390,no_overflow=True,javascript_errors=errors,
                           external_browser_requests=external,anonymous_state=401,usage_before=usage,usage_after=usage,
                           actual_UI_json_exports=True,evidence_inspection=True,source_loss_and_exact_restoration=True,parent_unchanged=True)
+            result['browser_report_transfers']=view_transport
     except Exception as exc:
         result.update(state='FAILED',reason=type(exc).__name__+': '+str(exc));raise
     finally:

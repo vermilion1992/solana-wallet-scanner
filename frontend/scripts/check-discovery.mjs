@@ -45,8 +45,11 @@ try {
     PositionAssessmentBanner,
     AccountPositionEvidenceSection,
     SourceConsistencySection,
+    CoverageDetails,
     sourceSetComplete,
   } = require(join(output, "report.js"));
+  const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
+  const { replaceActiveReport } = require(join(output, "App.js"));
   const {
     parseRawEvidenceBundle,
     EvidenceAuditResult,
@@ -1461,8 +1464,74 @@ try {
   assert.ok(boundedAccountScope.includes("1,000 of 1,001 candidate accounts"));
   assert.ok(boundedAccountScope.includes("1 omitted"));
   assert.ok(boundedAccountScope.includes("evaluated known account-episode subset only"));
+  const viewMetadata = {
+    version: "report-view-v1", view: "display", source_report_id: report.id,
+    omitted_paths: ["coverage.wallet_evidence.transactions", "archive_accounting.source_consistency"],
+    full_report_url: `/api/reports/${report.id}`, full_export_url: `/api/export/reports/${report.id}.json`,
+    scope: "Transient presentation projection; saved report and evidence unchanged",
+  };
+  const displayReport = { ...report, report_view: viewMetadata, coverage: { wallet_evidence: { state: "UNKNOWN", gaps: ["Missing historical population"] } }, metrics: { profit_sol: { status: "unknown", value: null, reason: "Missing acquisition basis" }, wallet_network_fees_sol: { status: "known", value: "0.008904733" } } };
+  const displaySnapshot = structuredClone(displayReport);
+  const enrichedDisplay = { ...displayReport, market_observations: [{ mint: address, scope: "Current indicative only" }] };
+  assert.equal(replaceActiveReport(displayReport, enrichedDisplay), enrichedDisplay);
+  assert.equal(replaceActiveReport({ ...displayReport, id: "different-selection" }, enrichedDisplay).id, "different-selection");
+  assert.equal(replaceActiveReport(null, enrichedDisplay), null);
+  assert.equal(replaceActiveReport(displayReport, { ...enrichedDisplay, report_view: { ...viewMetadata, view: "summary" } }), displayReport);
+  const projectedHtml = renderFreshnessReport(displayReport);
+  assert.ok(projectedHtml.includes("Inspect coverage summary"));
+  assert.ok(projectedHtml.includes("Saved decisions and metrics are unchanged"));
+  assert.ok(projectedHtml.includes("Missing acquisition basis"));
+  assert.ok(projectedHtml.includes(`/api/export/reports/${report.id}.csv`));
+  assert.deepEqual(displayReport, displaySnapshot);
+  const closedCoverage = Object.defineProperty({}, "large_nested_payload", { enumerable: true, get() { throw new Error("Collapsed coverage must not serialize its payload"); } });
+  const closedHtml = renderToStaticMarkup(React.createElement(CoverageDetails, { value: closedCoverage }));
+  assert.ok(closedHtml.includes("Inspect saved coverage"));
+  assert.ok(!closedHtml.includes("<pre"));
+  const projectedSource = { ...sourceEvidence, transactions: {} };
+  const projectedSourceHtml = renderConsistency(projectedSource, { projection: { ...viewMetadata, omitted_paths: ["coverage.history_evidence.source_consistency.transactions"] } });
+  assert.ok(projectedSourceHtml.includes('data-source-receipts-view="export"'));
+  assert.ok(projectedSourceHtml.includes('data-source-set-state="PASS"'));
+  assert.ok(!projectedSourceHtml.includes("No linked native receipts are available"));
+  const originalFetch = globalThis.fetch;
+  const summaryReport = { ...report, report_view: { ...viewMetadata, view: "summary" } };
+  const summarySnapshot = structuredClone(summaryReport);
+  const requested = [];
+  try {
+    globalThis.fetch = async (url, options) => {
+      requested.push({ url, options });
+      return { ok: true, status: 200, json: async () => url.includes("/state?") ? { ...state, reports: [summaryReport] } : displayReport };
+    };
+    const summaryState = await workspaceSummary();
+    assert.equal(requested[0].url, "/api/state?report_view=summary");
+    assert.equal(requested[0].options.credentials, "same-origin");
+    assert.equal(summaryState.reports[0].report_view.view, "summary");
+    const pendingDisplay = loadReportDisplay(summaryReport);
+    const samePendingDisplay = loadReportDisplay(summaryReport);
+    assert.equal(pendingDisplay, samePendingDisplay);
+    assert.equal(await pendingDisplay, displayReport);
+    assert.equal(requested.length, 2);
+    assert.equal(requested[1].url, `/api/reports/${report.id}?view=display`);
+    assert.equal(requested[1].options.method, "GET");
+    assert.equal(await loadReportDisplay(displayReport), displayReport);
+    assert.equal(requested.length, 2);
+    await reportDisplay("report /+");
+    assert.equal(requested[2].url, "/api/reports/report%20%2F%2B?view=display");
+    await loadReportDisplay(summaryReport);
+    assert.equal(requested.length, 4, "Later explicit openings refresh display rather than retaining a stale projection");
+    globalThis.fetch = async (url) => {
+      requested.push({ url });
+      return { ok: false, status: 404, json: async () => ({ detail: "Frozen report is unavailable" }) };
+    };
+    await assert.rejects(loadReportDisplay(summaryReport), /Frozen report is unavailable/);
+    assert.equal(requested.length, 5);
+    assert.ok(requested.every(({ url }) => url.includes("report_view=summary") || url.endsWith("?view=display")));
+    assert.deepEqual(summaryReport, summarySnapshot);
+    assert.deepEqual(displayReport, displaySnapshot);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
   console.log(
-    "299 discovery, interval coverage, independent history/position freshness, source-set completeness, source consistency, unresolved source recovery, scoped account-episode, and rebuild assertions passed.",
+    "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );
 } finally {
   rmSync(output, { recursive: true, force: true });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Activity,
   ArrowRight,
@@ -19,7 +19,7 @@ import {
   Star,
   X,
 } from "lucide-react";
-import { api, bootstrap } from "./api";
+import { api, bootstrap, loadReportDisplay, workspaceSummary } from "./api";
 import { Badge, Button } from "./components";
 import { count } from "./format";
 import type { Report, State } from "./types";
@@ -57,7 +57,8 @@ export type Actions = {
   ) => Promise<unknown>;
   refresh: () => Promise<void>;
   navigate: (view: View) => void;
-  open: (report: Report) => void;
+  open: (report: Report) => Promise<void>;
+  updateReport: (report: Report) => void;
   manualAddresses?: string[];
   auditManually?: (addresses: string[]) => void;
 };
@@ -128,10 +129,18 @@ const pages: Record<
   },
 };
 let bootPromise: Promise<unknown> | undefined;
+
+export function replaceActiveReport(current: Report | null, next: Report) {
+  return current?.id === next.id && next.report_view?.view === "display"
+    ? next
+    : current;
+}
+
 export default function App() {
   const [state, setState] = useState<State | null>(null);
   const [view, setView] = useState<View>("discover");
   const [activeReport, setActiveReport] = useState<Report | null>(null);
+  const reportRequest = useRef(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [manualAddresses, setManualAddresses] = useState<string[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
@@ -145,13 +154,13 @@ export default function App() {
     data: unknown;
   } | null>(null);
   const refresh = useCallback(async () => {
-    setState(await api<State>("/state"));
+    setState(await workspaceSummary());
   }, []);
   useEffect(() => {
     let canceled = false;
     bootPromise ??= bootstrap();
     bootPromise
-      .then(() => api<State>("/state"))
+      .then(() => workspaceSummary())
       .then((data) => {
         if (!canceled) setState(data);
       })
@@ -184,13 +193,35 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [toast]);
   const navigate = (next: View) => {
+    if (next !== "report") {
+      reportRequest.current += 1;
+      setBusy((current) => current === "report-open" ? null : current);
+    }
     setView(next);
     setMenu(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const open = (report: Report) => {
-    setActiveReport(report);
-    navigate("report");
+  const open: Actions["open"] = async (report) => {
+    const request = ++reportRequest.current;
+    setBusy("report-open");
+    try {
+      const detail = await loadReportDisplay(report);
+      if (request !== reportRequest.current) return;
+      setActiveReport(detail);
+      navigate("report");
+    } catch (error) {
+      if (request === reportRequest.current)
+        setToast({
+          text:
+            error instanceof Error
+              ? error.message
+              : "The report could not be opened.",
+          error: true,
+        });
+    } finally {
+      if (request === reportRequest.current)
+        setBusy((current) => current === "report-open" ? null : current);
+    }
   };
   const run: Actions["run"] = async (
     name,
@@ -273,6 +304,7 @@ export default function App() {
     refresh,
     navigate,
     open,
+    updateReport: (report) => setActiveReport((current) => replaceActiveReport(current, report)),
     manualAddresses,
     auditManually: (addresses) => {
       setManualAddresses(addresses);
@@ -282,10 +314,7 @@ export default function App() {
   const hasDemo = state.reports.some((report) => report.source === "demo");
   const hasLive = state.reports.some((report) => report.source === "live");
   const page = pages[view];
-  const currentReport = activeReport
-    ? (state.reports.find((report) => report.id === activeReport.id) ??
-      activeReport)
-    : null;
+  const currentReport = activeReport;
   const showDemoBanner =
     hasDemo &&
     (["overview", "results", "compare"].includes(view) ||

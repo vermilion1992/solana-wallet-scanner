@@ -313,6 +313,13 @@
       "selectors": [
         "tests/test_indexed_report_integration.py::*"
       ]
+    },
+    {
+      "id": "immutable-report-display-views",
+      "axis": "Report/rebuild",
+      "selectors": [
+        "tests/test_report_view.py::*"
+      ]
     }
   ],
   "browser_required": [

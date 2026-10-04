@@ -142,7 +142,7 @@ export function SettingsView({ state, busy, run, open }: Actions) {
   };
   const previewPreset = async () => {
     if (!validPreset()) return;
-    const result = (await run("preset-preview", "/presets/preview", {
+    const result = (await run("preset-preview", "/presets/preview?view=summary", {
       preset,
     })) as { reports: Report[] } | undefined;
     if (result) setPreview(result.reports);

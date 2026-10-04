@@ -1,4 +1,7 @@
+import type { Report, State } from "./types";
+
 let csrf = "";
+const displayRequests = new Map<string, Promise<Report>>();
 export async function bootstrap() {
   const params = new URLSearchParams(location.hash.slice(1));
   const token = params.get("session");
@@ -42,6 +45,27 @@ export async function api<T = unknown>(
     );
   }
   return response.status === 204 ? (undefined as T) : response.json();
+}
+
+export function workspaceSummary(): Promise<State> {
+  return api<State>("/state?report_view=summary");
+}
+
+export function reportDisplay(id: string): Promise<Report> {
+  const pending = displayRequests.get(id);
+  if (pending) return pending;
+  const request = api<Report>(`/reports/${encodeURIComponent(id)}?view=display`)
+    .finally(() => {
+      if (displayRequests.get(id) === request) displayRequests.delete(id);
+    });
+  displayRequests.set(id, request);
+  return request;
+}
+
+export function loadReportDisplay(report: Report): Promise<Report> {
+  return report.report_view?.view === "display"
+    ? Promise.resolve(report)
+    : reportDisplay(report.id);
 }
 
 export async function uploadArchive(file: File): Promise<{ report_id: string }> {

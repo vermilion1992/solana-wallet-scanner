@@ -39,7 +39,7 @@ import {
 } from "./components";
 import { count, date, dateTime, decimal, label, shorten } from "./format";
 import { samePresetSnapshot } from "./Discovery";
-import { api } from "./api";
+import { reportDisplay } from "./api";
 
 export function currentHistoryState(
   report: Report,
@@ -191,14 +191,20 @@ export function SourceConsistencySection({
   currentMethodology,
   historyCurrent,
   showEvidence,
+  projection,
 }: {
   evidence?: SourceConsistency;
   currentMethodology?: string;
   historyCurrent: boolean;
   showEvidence: (hash: string) => void;
+  projection?: Report["report_view"];
 }) {
   const [page, setPage] = useState(0);
   const transactions = Object.entries(evidence?.transactions ?? {});
+  const transactionsProjected = projection?.omitted_paths.some((path) =>
+    path === "coverage.history_evidence.source_consistency.transactions" ||
+    path.startsWith("coverage.history_evidence.source_consistency.transactions."),
+  );
   const freshness = !currentMethodology
     ? "method_unavailable"
     : !evidence
@@ -284,7 +290,13 @@ export function SourceConsistencySection({
         Saved method: <span className="mono">{evidence?.version ?? "not recorded"}</span> · Current method: <span className="mono">{currentMethodology ?? "not supplied"}</span>.
         {!fresh && " Saved consistency checks are historical or unavailable. Rebuild from saved records to assess them under the current method."}
       </p>
-      {!evidence ? <p className="report-note">No shared source-consistency assessment is saved. Missing facts remain unknown.</p> : (
+      {!evidence ? <p className="report-note">No shared source-consistency assessment is saved. Missing facts remain unknown.</p> : transactionsProjected ? (
+        <p className="report-note" data-source-receipts-view="export">
+          Detailed linked receipt checks remain in the full saved report JSON
+          export. The source index and recorded assessment above are unchanged;
+          individual archives remain available in Source records.
+        </p>
+      ) : (
         <details>
           <summary>Inspect linked receipt checks · {count(transactions.length)} signatures</summary>
           {transactions.length ? <>
@@ -854,6 +866,37 @@ function RecordTable({
     </>
   );
 }
+
+export function CoverageDetails({
+  value,
+  projected = false,
+}: {
+  value: unknown;
+  projected?: boolean;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <details onToggle={(event) => setExpanded(event.currentTarget.open)}>
+      <summary style={{ cursor: "pointer" }}>
+        {projected ? "Inspect coverage summary" : "Inspect saved coverage"}
+      </summary>
+      {projected && <p className="small-note" data-coverage-view="summary">Repeated derivation details remain in the full saved report JSON export. Saved decisions and metrics are unchanged.</p>}
+      {expanded && (
+        <pre
+          style={{
+            maxHeight: 240,
+            overflow: "auto",
+            textAlign: "left",
+            fontSize: 9,
+          }}
+        >
+          {JSON.stringify(value, null, 2)}
+        </pre>
+      )}
+    </details>
+  );
+}
+
 export function ReportView({
   state,
   report,
@@ -861,6 +904,7 @@ export function ReportView({
   run,
   navigate,
   open,
+  updateReport,
   showEvidence,
   selected,
   onSelect,
@@ -929,9 +973,7 @@ export function ReportView({
         "Report rebuilt from saved records. Missing history remains unresolved.",
       )) as { report_id?: string } | undefined;
       if (result?.report_id)
-        open(
-          await api<Report>(`/reports/${encodeURIComponent(result.report_id)}`),
-        );
+        await open(await reportDisplay(result.report_id));
     } catch (issue) {
       setRebuildError(
         issue instanceof Error
@@ -1336,6 +1378,7 @@ export function ReportView({
               currentMethodology={state.source_consistency_methodology}
               historyCurrent={historyCurrent}
               showEvidence={showEvidence}
+              projection={report.report_view}
             />
             <AccountPositionEvidenceSection
               evidence={report.coverage.position_evidence}
@@ -1505,21 +1548,9 @@ export function ReportView({
                               "No"
                             )
                           ) : value !== null && typeof value === "object" ? (
-                            <details>
-                              <summary style={{ cursor: "pointer" }}>
-                                Inspect saved coverage
-                              </summary>
-                              <pre
-                                style={{
-                                  maxHeight: 240,
-                                  overflow: "auto",
-                                  textAlign: "left",
-                                  fontSize: 9,
-                                }}
-                              >
-                                {JSON.stringify(value, null, 2)}
-                              </pre>
-                            </details>
+                            <CoverageDetails value={value} projected={report.report_view?.omitted_paths.some((path) =>
+                              path === `coverage.${key}` || path.startsWith(`coverage.${key}.`),
+                            )} />
                           ) : (
                             String(value ?? "Unknown")
                           )}
@@ -1700,15 +1731,16 @@ export function ReportView({
                 variant="secondary"
                 icon={Search}
                 busy={busy === "enrich"}
-                onClick={() =>
-                  run(
+                onClick={async () => {
+                  const result = await run(
                     "enrich",
-                    `/reports/${report.id}/enrich`,
+                    `/reports/${encodeURIComponent(report.id)}/enrich?view=display`,
                     {},
                     "POST",
                     "Current observations saved. Historical metrics remain unchanged.",
-                  )
-                }
+                  ) as Report | undefined;
+                  if (result?.id === report.id) updateReport(result);
+                }}
               >
                 Get current token observations
               </Button>

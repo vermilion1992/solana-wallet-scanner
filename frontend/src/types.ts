@@ -226,6 +226,15 @@ export type AccountPositionEvidence = {
   limitations: string[];
 };
 export type Report = {
+  report_view?: {
+    version: "report-view-v1";
+    view: "summary" | "display";
+    source_report_id: string;
+    omitted_paths: string[];
+    full_report_url: string;
+    full_export_url: string;
+    scope: string;
+  };
   id: string;
   scan_id?: string;
   address: string;

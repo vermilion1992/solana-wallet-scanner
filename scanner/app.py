@@ -149,9 +149,19 @@ def create_app(data_dir, launch_token=None):
     def preset():
         return store.get("configuration", "preset", dict(STRICT))
 
-    def reports():
+    def report_inputs(view="full"):
+        if view == 'summary':
+            from .report_view import summary_inputs
+            return summary_inputs(store)
         # Enriching an old snapshot must not make it the latest wallet report.
-        return [decorate_report(report) for report in sorted(store.list("reports"), key=lambda report: report["created_at"], reverse=True)]
+        return sorted(store.list("reports"), key=lambda report: report["created_at"], reverse=True)
+
+    def reports(view="full"):
+        result = [decorate_report(report) for report in report_inputs(view)]
+        if view == 'summary':
+            from .report_view import summary_view
+            return [summary_view(report) for report in result]
+        return result
 
     def decorate_report(report):
         from .copy_review import qualify_report, review_copy_behavior
@@ -699,7 +709,9 @@ def create_app(data_dir, launch_token=None):
         return response
 
     @app.get("/api/state")
-    async def state():
+    async def state(report_view: str = "full"):
+        from .report_view import validate_view
+        validate_view(report_view, ('full', 'summary'))
         from .accounting import METHODOLOGY
         from .evidence_audit import VERSION as EVIDENCE_AUDIT_METHODOLOGY
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
@@ -712,7 +724,7 @@ def create_app(data_dir, launch_token=None):
             disk["warnings"].append("Evidence exceeds 10 GiB; review storage and backup space before further ingestion.")
         if disk["free_disk_bytes"] < settings()["limits"]["min_free_disk_mb"] * 1024 ** 2:
             disk["warnings"].append("Low free disk space; ingestion pauses before further requests or evidence writes.")
-        saved_reports = reports()
+        saved_reports = reports(report_view)
         cohorts = discovery_cohorts(saved_reports)
         return {"version": __version__, "methodology": METHODOLOGY, "evidence_audit_methodology": EVIDENCE_AUDIT_METHODOLOGY,
                 "history_evidence_methodology": HISTORY_METHODOLOGY,
@@ -760,11 +772,14 @@ def create_app(data_dir, launch_token=None):
         return {"ok": True}
 
     @app.post("/api/presets/preview")
-    async def preview(request: Request):
+    async def preview(request: Request, view: str = "full"):
         from .accounting import evaluate_policy
+        from .report_view import summary_view, validate_view
+        validate_view(view, ('full', 'summary'))
         new_preset = validate_preset((await body(request)).get("preset", {}), preset())
         results = []
-        for report in reports():
+        for report in report_inputs(view):
+            report = decorate_report(report)
             duration = datetime.fromisoformat(report["window"]["end"]) - datetime.fromisoformat(report["window"]["start"])
             same_period = duration == timedelta(days=new_preset["window_days"])
             same_history = report.get("preset", {}).get("verification_days", 90) == new_preset["verification_days"]
@@ -773,8 +788,9 @@ def create_app(data_dir, launch_token=None):
             if not same_period or not same_history:
                 reason = "Reporting or verification period changed. Collect/rebuild this scope before evaluating it; cached metrics belong to the displayed saved window."
                 metrics = {key: {**metric, "value": None, "status": "unknown", "reason": reason} for key, metric in metrics.items()}
-            results.append(decorate_report({**report, "preview": True, "preview_reason": reason, "metrics": metrics,
-                            **evaluate_policy(metrics, new_preset, evidence_verified=report["evidence_status"] == "verified" and same_period and same_history)}))
+            projected = decorate_report({**report, "preview": True, "preview_reason": reason, "metrics": metrics,
+                            **evaluate_policy(metrics, new_preset, evidence_verified=report["evidence_status"] == "verified" and same_period and same_history)})
+            results.append(summary_view(projected) if view == 'summary' else projected)
         return {"reports": results}
 
     @app.post("/api/provider")
@@ -990,11 +1006,14 @@ def create_app(data_dir, launch_token=None):
         return {"report_id": result["id"], "input_hash": digest, "dataset": manifest["dataset"], "provider_requests": 0}
 
     @app.get("/api/reports/{identifier}")
-    async def report(identifier):
+    async def report(identifier, view: str = "full"):
+        from .report_view import display_view, validate_view
+        validate_view(view, ('full', 'display'))
         result = store.get("reports", identifier)
         if not result:
             raise HTTPException(404, "Report not found")
-        return decorate_report(result)
+        decorated = decorate_report(result)
+        return display_view(decorated) if view == 'display' else decorated
 
     @app.post("/api/reports/{identifier}/rebuild")
     async def rebuild_report(identifier):
@@ -1049,8 +1068,10 @@ def create_app(data_dir, launch_token=None):
         return store.backup()
 
     @app.post("/api/reports/{identifier}/enrich")
-    async def enrich(identifier):
+    async def enrich(identifier, view: str = "full"):
         from .providers import GeckoTerminal, ProviderError
+        from .report_view import display_view, validate_view
+        validate_view(view, ('full', 'display'))
         report = store.get("reports", identifier)
         if not report:
             raise HTTPException(404, "Report not found")
@@ -1071,7 +1092,7 @@ def create_app(data_dir, launch_token=None):
         report["market_observations"] = observations
         report["market_observation_scope"] = "Up to five current token observations. Indicative only; no historical ledger or screening metric is changed."
         store.put("reports", identifier, report)
-        return report
+        return display_view(decorate_report(report)) if view == 'display' else report
 
     @app.get("/api/export/reports/{filename}")
     async def export(filename):

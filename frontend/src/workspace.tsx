@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import type { Actions } from "./App";
 import type { Report, Scan } from "./types";
-import { api, uploadArchive } from "./api";
+import { reportDisplay, uploadArchive } from "./api";
 import {
   Badge,
   Button,
@@ -414,8 +414,9 @@ export function ScanView({ state, busy, run, navigate, manualAddresses, refresh,
             setArchiveBusy(true); setArchiveError('');
             try {
               const result = await uploadArchive(file);
-              const report = await api<Report>(`/reports/${encodeURIComponent(result.report_id)}`);
-              await refresh(); open(report);
+              const report = await reportDisplay(result.report_id);
+              await refresh();
+              await open(report);
             } catch (error) {setArchiveError(error instanceof Error ? error.message : 'Archive import failed.');}
             finally {setArchiveBusy(false);}
           }} />
