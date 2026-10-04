@@ -113,4 +113,3 @@ def test_explicit_scoped_dependency_does_not_fall_back_to_global_pass(missing):
         assert compose_metric_decisions(components, intervals)['positive_weeks']['state'] == 'UNKNOWN'
     else:
         assert compose_metric_decisions(components, intervals)['positive_weeks']['state'] == 'PASS'
-
