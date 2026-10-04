@@ -52,6 +52,7 @@ try {
   const { SelectedCohortSection, selectedCohortFreshness } = require(join(output, "SelectedCohorts.js"));
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
+  const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -1779,6 +1780,20 @@ try {
     report: { ...cashReport, history_assessment: visibleCohortReport.history_assessment },
     showEvidence: () => undefined, selected: [], onSelect: () => undefined }));
   assert.ok(integratedCashHtml.includes('data-native-cash-observations="current"'));
+  const sourceDecision = { version: "historical-source-capability-v1", state: "UNSUPPORTED_CURRENT_SOURCE",
+    source_contract_id: "helius-indexed-address-query-2026-10-03",
+    scope: "Exhaustive event-time historical wallet ownership and token-account lifecycle population",
+    reason: "Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership." };
+  const sourceNoticeHtml = renderToStaticMarkup(React.createElement(ReportView, { ...actions,
+    state: { ...selectedState, historical_source_decision: sourceDecision },
+    report: { ...cashReport, history_assessment: visibleCohortReport.history_assessment },
+    showEvidence: () => undefined, selected: [], onSelect: () => undefined }));
+  assert.ok(sourceNoticeHtml.includes('data-historical-source-decision="UNSUPPORTED_CURRENT_SOURCE"') &&
+    sourceNoticeHtml.includes("Independently supported fees and selected trades can still be reported") &&
+    sourceNoticeHtml.includes("A paid plan alone does not prove complete coverage"),
+    "Current source limits stay visible in a real report without erasing independent observations");
+  assert.equal(renderToStaticMarkup(React.createElement(HistoricalSourceNotice, { decision: undefined })), "",
+    "Older state responses remain compatible when the source-decision field is absent");
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

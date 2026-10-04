@@ -18,7 +18,8 @@ from .indexed_input import (PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, MAX_PA
                             validate_page_envelope)
 from .transaction_format import supported_transaction_format
 
-VERSION = 'indexed-query-coverage-v2'
+VERSION = 'indexed-query-coverage-v3'
+SOURCE_DECISION_VERSION = 'historical-source-capability-v1'
 MAX_RECORDS = 10_000
 _HASH = re.compile(r'[a-f0-9]{64}')
 _SCOPE = 'Complete documented indexed address-query population only; historical wallet membership is separate'
@@ -35,6 +36,66 @@ _PROVIDER_CONTRACT = {
     'format_population_state': 'UNKNOWN',
     'reason': 'Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.',
 }
+
+
+def historical_source_decision():
+    """Return the current software-pinned capability decision before collection.
+
+    This decision concerns source sufficiency, not an imported dataset or a
+    provider access test.  Query bytes can prove the documented query; they
+    cannot supply ownership semantics that the primary contract does not state.
+    A new accepted source contract requires a versioned implementation change.
+    """
+    return {
+        'version': SOURCE_DECISION_VERSION,
+        'state': 'UNSUPPORTED_CURRENT_SOURCE',
+        'source_contract_id': _PROVIDER_CONTRACT['id'],
+        'scope': 'Exhaustive event-time historical wallet ownership and token-account lifecycle population',
+        'reason': _PROVIDER_CONTRACT['reason'],
+        'documented_query': {
+            'state': 'SUPPORTED_DOCUMENTED_QUERY',
+            'predicate': _PROVIDER_CONTRACT['documented_predicate'],
+            'ownership_metadata_cutoff_slot': 111_491_819,
+            'mainnet_documented_retention': 'Unlimited',
+            'receipt': 'Independently derived from original terminal request/response pages and linked records.',
+        },
+        'independent_checks': [
+            'authentication and account entitlement',
+            'endpoint support and response schema compatibility',
+            'documented query coverage and supported returned records',
+            'exhaustive event-time ownership and lifecycle population',
+            'wallet metric evidence and qualification',
+        ],
+        'documents': [
+            {'path': _PROVIDER_CONTRACT['document'],
+             'url': 'https://www.helius.dev/docs/rpc/gettransactionsforaddress.md',
+             'sha256': _PROVIDER_CONTRACT['document_sha256']},
+            {'path': 'evidence/references/product-milestone/helius-index-markdown.txt',
+             'url': 'https://www.helius.dev/docs/api-reference/rpc/http/gettransactionsforaddress.md',
+             'sha256': '9dbb7415eb7389752ed7f0a0601983bd73bd0d32ff14f0d4e3b61a1e2aa6acec'},
+            {'path': 'evidence/references/product-milestone/helius-history-contract.txt',
+             'url': 'https://www.helius.dev/docs/rpc/historical-data.md',
+             'sha256': 'ed2236a25accce0ab93f2c926a7c6d4508f78c02885e9bf41836963534411e9a'},
+        ],
+        'missing_contract': [
+            'Explicit event-time coverage of incoming and outgoing owner reassignment, closed, transient and non-ATA accounts across both token programs.',
+            'Defined ownership-index cutoff, retention, supported transaction formats and complete successful/failed query population.',
+            'Independent genuine hidden-wallet, closed-account and reassignment controls for that historical ownership predicate.',
+        ],
+        'required_original_evidence': [
+            'Terminal unfiltered finalized pages with exact original bytes and all selected/linked raw records for each independent interval and required older acquisitions.',
+            'Original lifecycle and account-boundary records sufficient to derive ownership intervals and wallet-mint aggregates under the accepted population contract.',
+        ],
+        'not_sufficient': [
+            'additional pages under the same ownership predicate',
+            'a paid plan or a successful API call',
+            'current owned-account lists or minContextSlot floors',
+            'fixed-point account discovery or selected real transactions',
+            'caller completion flags or saved passing receipts',
+        ],
+        'provider_requests': 0,
+        'credential_lookups': 0,
+    }
 
 
 def _receipt(known, reason, evidence=(), **details):
@@ -308,9 +369,12 @@ def derive_indexed_coverage(records, *, all_records, raw_sources, wallet, window
         result = {**result, 'interval': name, 'start': begin.isoformat(), 'end': end.isoformat()}
         interval_results[name] = result
     evidence = [row['hash'] for row in pages]
+    decision = historical_source_decision()
     historical = _receipt(False, _PROVIDER_CONTRACT['reason'], evidence,
+        capability_state=decision['state'], source_contract_id=decision['source_contract_id'],
         dependencies=['accepted_historical_owner_source_contract', 'independent_closed_reassigned_lifecycle_controls'])
     return {'version': VERSION, 'scope': _SCOPE, 'provider_contract': dict(_PROVIDER_CONTRACT),
+            'source_decision': decision,
             'historical_population': historical, 'intervals': interval_results,
             'inspection_budget': {'max_pages': MAX_PAGES, 'max_records': MAX_RECORDS,
                                   'records': total, 'exceeded': budget_exceeded},

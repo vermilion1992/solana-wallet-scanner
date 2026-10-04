@@ -43,6 +43,7 @@ import { reportDisplay } from "./api";
 import { SelectedCohortSection } from "./SelectedCohorts";
 import { InventoryObservations } from "./InventoryObservations";
 import { NativeCashObservations } from "./NativeCashObservations";
+import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
 
 export function currentHistoryState(
   report: Report,
@@ -1056,6 +1057,7 @@ export function ReportView({
           {rebuildError}
         </div>
       )}
+      {report.source === "live" && <HistoricalSourceNotice decision={state.historical_source_decision} />}
       <section className="panel report-summary">
         <div className="report-identity">
           <span

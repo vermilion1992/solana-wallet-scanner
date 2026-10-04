@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
 from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v12'
+METHOD = 'archive-ledger-v13'
 _CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
@@ -633,6 +633,7 @@ def analyze_archive(loaded, events):
         source_receipts=loaded['receipts'], raw_sources=loaded.get('raw_sources', []))
     real_intervals = accounting_intervals(adapter['intervals'], manifest['window'])
     if manifest['dataset'] == 'real':
+        events = deepcopy(adapter['accounting_events'])
         # Genuine inputs use the common raw adapter, not the finite-world
         # witness.  Query termination is separate from wallet membership;
         # neither an uploaded source decision nor a terminal page activates it.

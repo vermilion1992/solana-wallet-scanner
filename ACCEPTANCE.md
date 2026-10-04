@@ -153,4 +153,20 @@ previous selectors and include each new regression module once for future CI.
 | UI exact amounts, interval/method freshness and unknown states | Existing frontend checks plus production build; repeated assertions are not unique backend tests |
 
 B3 requires the unchanged genuine whole-wallet acceptance conditions above.
+
+## Historical source decision and accounting finalization
+
+The current bounded batch records source feasibility as `NO_GO_CURRENT_SOURCE`
+for exhaustive historical ownership under the original PDF. Endpoint access,
+returned-record compatibility and terminal query coverage remain independent.
+This source decision does not close complete real B2 or genuine B3.
+
+Source-bound targeted checks and a distinct read-only review are recorded in
+`evidence/wallet-accounting-finalization-batch/`. New source-derived administration
+roles and exact-phase reserve marks feed the existing wallet/FIFO/saved-report
+path. `tests/test_cost_flow_evidence.py` and
+`tests/test_historical_reserve_marks.py` each appear once in the existing focused
+partition. The existing coverage module tests the precollection decision; the
+small guarded API control tests immutable offline loss/restoration and exports.
+No new full Gate A, browser acceptance, live provider probe or B3 is claimed.
 Focused implementation tests cannot establish PRODUCT_READY.

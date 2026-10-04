@@ -20,12 +20,13 @@ from .decoder import TOKEN_IDS, SYSTEM_ID, ASSOCIATED_ID, decode_transactions
 from .instruction_scope import inspect_instruction
 from .investigation import _keys, _route, decode_supported_swaps, WSOL
 from .position_evidence import _balance, _quantity_point, VENUES
+from .providers import TOKEN_PROGRAM
 from .source_consistency import (assess_source_consistency, source_archive_receipts,
                                  apply_unresolved_chronology, SOURCE_HASH_LIMIT)
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v9'
+VERSION = 'wallet-raw-evidence-v10'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -284,6 +285,9 @@ def _observe(record, wallet):
             creates, initializes, closes, owner_changes = [], [], [], []
             operation_errors = []
             operation_positions = {row[1]: index for index, row in enumerate(flat)}
+            pending_native_funding = 0
+            native_synchronizations = []
+            native_closure_paths = set()
             for outer, path, instruction, inner, view in flat:
                 if view['non_economic'] or account not in view['references']:
                     continue
@@ -324,15 +328,57 @@ def _observe(record, wallet):
                             initializes.append((path, info, program))
                         elif kind == 'closeAccount':
                             closes.append((path, info))
+                            if (program == TOKEN_PROGRAM and identity and identity['mint'] == WSOL
+                                    and identity['decimals'] == 9):
+                                if (set(info) != {'account', 'destination', 'owner'} or info.get('owner') != wallet
+                                        or info.get('destination') != wallet or not pair['pre']
+                                        or pair['pre']['owner'] != wallet or meta['postBalances'][keys.index(account)] != 0):
+                                    raise ValueError('Native closure requires exact wallet authority/refund and zero native account endpoint')
+                                if not inner:
+                                    from .compiled_instructions import resolve_account_keys
+                                    if wallet not in resolve_account_keys(raw)['signers']:
+                                        raise ValueError('Outer native closure lacks the primary wallet authority signer')
+                                remaining = pair['pre']['quantity'] + flow
+                                if remaining < 0:
+                                    raise ValueError('Native closure cannot redeem negative wrapped units')
+                                flow -= remaining
+                                ordered_flows.append((operation_positions[path], -remaining))
+                                native_closure_paths.add(path)
                         elif kind == 'setAuthority':
                             if info.get('authorityType') == 'accountOwner':
                                 owner_changes.append((path, info))
+                        elif kind == 'syncNative':
+                            # Native wrapping is a token-quantity operation only
+                            # after the actual legacy Token sync instruction.
+                            # No endpoint delta or caller event can substitute
+                            # for that executed operation and exact funding.
+                            if (program != TOKEN_PROGRAM or not identity or identity['mint'] != WSOL
+                                    or identity['decimals'] != 9 or set(info) != {'account'}
+                                    or info['account'] != account):
+                                raise ValueError('Native synchronization requires the exact legacy WSOL account schema')
+                            flow += pending_native_funding
+                            ordered_flows.append((operation_positions[path], pending_native_funding))
+                            pending_native_funding = 0
+                            native_synchronizations.append(path)
                         elif kind not in ('approve', 'approveChecked', 'revoke', 'freezeAccount', 'thawAccount', 'initializeImmutableOwner', 'getAccountDataSize'):
                             raise ValueError('Relevant token extension/operation needs a reviewed semantic contract')
                     elif program == SYSTEM_ID and kind in ('createAccount', 'createAccountWithSeed') and info.get('newAccount') == account:
                         creates.append((path, info))
                     elif program == SYSTEM_ID and kind == 'transfer':
-                        pass  # Lamports do not change this token's raw quantity.
+                        if identity and identity['mint'] == WSOL and identity['decimals'] == 9:
+                            amount = info.get('lamports')
+                            if (set(info) != {'source', 'destination', 'lamports'} or type(amount) is not int
+                                    or not 0 <= amount <= 2**64 - 1 or info.get('source') not in keys
+                                    or info.get('destination') not in keys or info.get('source') == account):
+                                raise ValueError('Native WSOL funding requires an exact original System transfer')
+                            if info['destination'] == account:
+                                if not inner:
+                                    from .compiled_instructions import resolve_account_keys
+                                    if info['source'] not in resolve_account_keys(raw)['signers']:
+                                        raise ValueError('Outer native WSOL funding lacks its primary source signer')
+                                pending_native_funding += amount
+                                paths.append(path + '.parsed.info.lamports')
+                        # Other token accounts do not gain token units from SOL.
                     elif program == ASSOCIATED_ID and kind in ('create', 'createIdempotent'):
                         pass  # Idempotence is not an opening-zero certificate.
                     elif program in VENUES and not inner:
@@ -363,12 +409,27 @@ def _observe(record, wallet):
             if pair['post'] is None and len(closes) == 1 and pair['pre']:
                 index = keys.index(account)
                 if (type(meta['postBalances'][index]) is int and meta['postBalances'][index] == 0 and pair['pre']['quantity'] + flow == 0
-                    and all(position < operation_positions[closes[0][0]] for position, _ in ordered_flows)):
+                    and all(position < operation_positions[closes[0][0]] or
+                        closes[0][0] in native_closure_paths and position == operation_positions[closes[0][0]]
+                        for position, _ in ordered_flows)):
                     pair['post'] = {**pair['pre'], 'quantity': 0, 'path': closes[0][0]}
                     errors = []
             before, after = pair['pre'], pair['post']
             identity_known = bool(before and after) and (before['mint'], before['decimals']) == (after['mint'], after['decimals']) and len(programs) == 1
             quantity_known = identity_known and not operation_errors and after['quantity'] - before['quantity'] == flow
+            if native_synchronizations:
+                index = keys.index(account)
+                native_before, native_after = meta['preBalances'][index], meta['postBalances'][index]
+                native_known = (bool(before and after) and not creates and not closes
+                    and pending_native_funding == 0 and programs == {TOKEN_PROGRAM}
+                    and all(type(value) is int and 0 <= value <= 2**64 - 1 for value in (native_before, native_after))
+                    and native_before >= before['quantity'] and native_after >= after['quantity']
+                    and native_before - before['quantity'] == native_after - after['quantity']
+                    and native_after - native_before == flow)
+                quantity_known = quantity_known and native_known
+                if not native_known:
+                    operation_errors.append('Native synchronization lacks exact funded units and a stable reserve across existing raw endpoints')
+                paths += [f'meta.preBalances.{index}', f'meta.postBalances.{index}']
             running = before['quantity'] if before else None
             for _, movement in ordered_flows:
                 if running is not None:
@@ -1505,6 +1566,10 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     quantity_signatures = {event['signature'] for event in quantity_only}
     generic = decode_transactions([row for row in safe_selected if row['signature'] not in supported_signatures | quantity_signatures], wallet)
     ledger_events = generic['events'] + [e for e in native_events if e.get('signature') in supported_signatures] + quantity_only
+    from .cost_flow_evidence import project_cost_flow_evidence
+    cost_flow_evidence = project_cost_flow_evidence(selected=selected, raw_versions=raw_versions,
+        transactions=transactions, consistency=consistency, ledger_events=ledger_events, wallet=wallet)
+    ledger_events = cost_flow_evidence.pop('ledger_events')
     native_role_checks = []
     for signature in selected:
         group = consistency['transactions'].get(signature, {})
@@ -1729,7 +1794,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     components['observed_native_cash_moves'] = native_cash_observations['intervals']['report_period']['check']
     from .economic_evidence import derive_economic_evidence
     economic_evidence = derive_economic_evidence(list(selected.values()), all_records=linked,
-        wallet=wallet, window=window, wallet_evidence={
+        wallet=wallet, window=window, raw_sources=source_rows, wallet_evidence={
             'components': components, 'transactions': transactions, 'intervals': intervals,
             'query_coverage': query_coverage, 'inventory_observations': inventory_observations,
             'source_consistency': consistency, 'chronology': clocks,
@@ -1747,6 +1812,8 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         'interval_checks': intervals, 'intervals': intervals, 'metric_dependencies': compose_metric_decisions(components, intervals),
         'fee_projection_checks': fee_projection_checks,
         'native_role_checks': native_role_checks,
+        'cost_flow_evidence': cost_flow_evidence,
+        'accounting_events': ledger_events,
         'source_dependencies': contents['receipts'], 'source_consistency': consistency, 'chronology': clocks,
         'query_coverage': query_coverage, 'query_accounting': query_accounting, 'wallet_identity': wallet_identity,
         'inventory_observations': inventory_observations,

@@ -1,4 +1,52 @@
-# Active assignment — remaining wallet-report adapters, 4 October 2026
+# Active assignment — wallet accounting finalization, 4 October 2026
+
+Continue private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, exact published starting HEAD
+`9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb`. Its evidence binds tested application
+`93a370b40a58b28813810a217821a510630bb059`, with 254 application files and source
+SHA-256 `1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d`.
+Preserve history, accepted corrections, genuine originals and worked expectations.
+
+The user requests fast, efficient finalization of the remaining historical and
+accounting gaps, with small meaningful checks. Finalize the current source
+feasibility decision as **NO_GO_CURRENT_SOURCE** for exhaustive full-PDF wallet
+ownership: accessible Free endpoints, compatible returned records and terminal
+documented queries are independent facts. The code exposes
+`UNSUPPORTED_CURRENT_SOURCE`; unavailable wallet population remains UNKNOWN.
+Neither more pages, another probe nor a paid account supplies the missing
+event-time closed/reassigned/transient/non-ATA contract across both token programs.
+Do not produce another generic research plan or silently narrow qualification.
+
+Finish the feasible existing-engine path: source-proved internal account funding
+and closure roles, including the genuine 1,513,840-lamport funding; exact-phase
+PumpSwap reserve-ratio SOL marks; bounded canonical WSOL quantity admission;
+current report freshness and visible capability limits. Current method family is
+wallet v10/archive v13/economic v2/coverage v3/cost-flow roles v1/historical reserve
+marks v1. Spot marks are not liquidation prices or exact report-boundary equity.
+Keep origins, classification, independent report/28/90-day coverage and complete
+external flows as explicit dependencies. Do not replace UNKNOWN with caller PASS,
+invent basis, assign unknown assets zero value or treat internal movement as profit.
+
+Use retained original inputs only, without provider requests or credentials.
+Preserve immutable parents and selected/linked alternatives. Targeted controls
+must show positive supported results, dependency loss/restoration and independent
+fee/basis/realised/valuation behavior, with zero provider calls during offline
+import/rebuild/export. Avoid full or overlapping suites without a specific need.
+Keep the existing validation entry point, distinct read-only diff review and
+source-bound raw receipts under `evidence/wallet-accounting-finalization-batch/`.
+Make coherent private commits after the final source checks; no ZIP, public
+repository, trading/signing/custody, purchase or unsupported scope expansion.
+
+B1's current-source decision is final, but full historical acceptance is blocked.
+Complete real B2 remains OPEN, genuine B3 remains BLOCKED, PRODUCT_READY=false.
+Record current fixes, implementation gaps, source/data gaps and environment
+limitations separately. No new full acceptance, scan speed or published SHA is
+claimed until the actual batch evidence establishes it.
+
+All assignments below are retained historical instructions and execution context.
+Their former active labels and collection plans do not supersede this assignment.
+
+# Prior assignment — remaining wallet-report adapters, 4 October 2026
 
 Continue from private `vermilion1992/solana-wallet-scanner`, branch
 `codex/product-completion`, published HEAD
@@ -141,7 +189,7 @@ B1 coverage remains unresolved, complete real B2 OPEN, genuine B3 BLOCKED and
 PRODUCT_READY=false. Current execution/review is under
 `evidence/metric-completion-batch/`; earlier assignments remain history below.
 
-# Active assignment — genuine wallet product batch, 4 October 2026
+# Prior assignment — genuine wallet product batch, 4 October 2026
 
 The user explicitly requested all four next items: finish the real evidence path,
 select a manageable existing public wallet, collect bounded genuine inputs, and

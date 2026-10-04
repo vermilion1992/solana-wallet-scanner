@@ -34,6 +34,7 @@ import { ReportView } from "./report";
 import { SettingsView } from "./settings";
 import { DiscoveryView } from "./Discovery";
 import { EvidenceAuditView } from "./EvidenceAudit";
+import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
 
 export type View =
   | "overview"
@@ -475,6 +476,9 @@ export default function App() {
               </Button>
             )}
           </div>
+          {["overview", "discover", "scan", "results"].includes(view) && (
+            <HistoricalSourceNotice decision={state.historical_source_decision} />
+          )}
           {view === "overview" && <Overview {...actions} />}
           {view === "discover" && <DiscoveryView {...actions} />}
           {view === "scan" && <ScanView {...actions} />}

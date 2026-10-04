@@ -29,7 +29,7 @@ _SUMMARY_NESTED = (
 )
 _SUMMARY_PATHS = tuple((key,) for key in _SUMMARY_TOP) + _SUMMARY_NESTED
 _SUMMARY_OMIT = ('positions', 'events', 'research', 'token_risk', 'reviewed_copy_checks', 'archive_accounting')
-_WALLET_DETAIL = ('accounts', 'transactions', 'acquisitions', 'observed_fifo_positions', 'source_consistency', 'chronology')
+_WALLET_DETAIL = ('accounts', 'transactions', 'acquisitions', 'observed_fifo_positions', 'source_consistency', 'chronology', 'accounting_events')
 _ARCHIVE_DUPLICATES = ('wallet_evidence', 'source_consistency', 'chronology')
 
 

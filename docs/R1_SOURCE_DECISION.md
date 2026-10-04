@@ -1,6 +1,63 @@
 # R1 source and delivery decision
 
-## Current genuine-report decision — 4 October 2026
+## Current source decision — wallet accounting finalization, 4 October 2026
+
+**B1 feasibility decision: NO_GO_CURRENT_SOURCE for the original PDF's exhaustive
+wallet history.** The application exposes this as
+`UNSUPPORTED_CURRENT_SOURCE`, separately from raw metric gates, which remain
+UNKNOWN when their population evidence is unavailable. This is a final decision
+about the currently authorized source contract, not another open research plan.
+
+Starting private HEAD is `9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb`, binding
+tested application `93a370b40a58b28813810a217821a510630bb059`: 254 application
+files, source SHA-256
+`1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d`.
+Current-batch evidence belongs under `evidence/wallet-accounting-finalization-batch/`;
+it must bind its own final candidate. No new acceptance or publication is claimed here.
+
+| Question | Concrete decision |
+| --- | --- |
+| Authentication and entitlement | The retained bounded requests succeeded on the user's Free account. This establishes those calls, not future entitlement or complete history. |
+| Response compatibility | The retained legacy/v0 records are compatible with the reviewed raw path. Any unsupported record remains a dependency. |
+| Documented query coverage | The genuine 87-record lifetime query requests `status=any`, `tokenAccounts=all`, finalized full records and maximum version 1, and has an original empty terminal continuation. Its independent report/28-day/90-day query receipts remain useful. |
+| Exhaustive historical ownership | NO_GO_CURRENT_SOURCE. The primary owner predicate does not establish event-time coverage for formerly closed, reassigned, transient and non-ATA accounts across both token programs. Terminal paging cannot supply the missing semantics. |
+| Qualification | Unproved. Query completeness and selected observations cannot certify the PDF's wallet-wide filters or copying safety. |
+
+Four fresh unauthenticated primary-document retrievals match the retained bytes
+exactly. The guide documents ownership-metadata filtering only from slot
+111,491,819 and unlimited mainnet retention; neither statement supplies the
+missing event-time owner contract. The historical-balance endpoint also warns
+that one latest transaction can undercount a mint held across multiple accounts.
+A paid plan, another page or another successful probe cannot resolve these gaps.
+
+To admit complete history, the source must explicitly cover event-time incoming
+and outgoing owner reassignment, closed/transient/non-ATA accounts, both token
+programs, retention/cutoff, transaction formats and successful/failed population.
+Retain independent genuine controls and complete original terminal records for
+each required interval and older acquisition recovery. No current authorized
+dataset meets that contract; imported completion flags and fixed-point account
+discovery are insufficient.
+
+The offline implementation batch extends the existing accounting engine:
+`raw-cost-flow-roles-v1` admits source-proved wallet-internal account funding and
+closure movement rather than treating it automatically as income, fees or
+capital. The genuine 1,513,840-lamport account funding is such a narrow role
+observation. `historical-pumpswap-reserve-marks-v1` derives contemporaneous
+pre/post pool reserve-ratio SOL spot marks from original vault quantities. These
+marks are neither exact report-boundary equity nor executable liquidation prices.
+
+Wallet v10/archive v13/economic v2/coverage v3 apply the changed interpretations
+only to new reports and immutable child rebuilds. Complete acquisition origins,
+unsupported trade/cost roles, time-relevant meme/nonspam eligibility, exact
+all-account boundaries and complete valued external flows still require accepted
+evidence and remaining implementation. Missing valuation cannot erase supported
+realised/basis/fee observations. **Complete real B2 remains OPEN, genuine B3
+remains BLOCKED and PRODUCT_READY=false.**
+
+All sections below are historical source decisions and execution records. Their
+former unresolved/pending labels do not supersede the current decision above.
+
+## Historical genuine-report decision — before accounting finalization
 
 Starting private HEAD: `ab62858dca7eccbdb18b3365a83dedd9b2e8f413`.
 Fresh unauthenticated retrieval of the indexed guide/reference matches the

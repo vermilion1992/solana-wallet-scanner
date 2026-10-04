@@ -1,10 +1,40 @@
 # Single issue register — initialise from v0.3.11
 
+## Current wallet accounting finalization — 4 October 2026
+
+Continue private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, published starting HEAD
+`9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb`. Its tested application is
+`93a370b40a58b28813810a217821a510630bb059`: 254 source files, SHA-256
+`1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d`.
+Current evidence prefix is `evidence/wallet-accounting-finalization-batch/`.
+The current batch requires its own focused source-bound checks and distinct diff
+review; this section claims no new full acceptance or published candidate.
+
+| Item | Category | Current disposition | Remaining dependency |
+| --- | --- | --- | --- |
+| WSOL wrap/unwrap quantities | B: missing implementation addressed | The shared quantity path admits exact legacy WSOL System funding plus executed syncNative and successful wallet-authorized native closure. Parsed/compiled controls and required-source loss/restoration use the same engine. | Current-batch receipts bind the final correction; other native/token operations and programs remain independently unsupported. |
+| CAP-REFUND-EXACT / CAP-WRAP-DEPENDENCY | A: confirmed receipt defects corrected in this batch | Read-only review reproduced an incorrect pre-balance refund amount after earlier movement and omission of a second unresolved native-account representation. The final roles must retain these dependencies rather than certify the incomplete receipt. | Final targeted checks and source-bound read-only review; the before-fix reproductions remain as development evidence. |
+| CAP-ROUTES | B: implementation partly completed | `raw-cost-flow-roles-v1` rechecks selected and linked originals before the shared native endpoint reconciler. The genuine 1,513,840-lamport funding is a supported internal-role observation. | Mixed intratransaction refund reconstruction, unsupported routes, external payment/tip/capital roles and complete cost allocation remain unfinished where not evidenced. |
+| CAP-VALUATION | B: implementation partly completed; C: source inputs missing | `historical-pumpswap-reserve-marks-v1` supplies original exact-phase reserve-ratio SOL marks to economic v2. | A spot phase is not a historical wallet boundary or liquidation quote. Exact all-account equity, relevant nonsettlement boundary marks and complete valued flows remain missing. |
+| CAP-ORIGIN-COMPLETE / CAP-CLASS | B: implementation and C: source inputs | Existing FIFO, consumed-unit basis and protocol settlement exclusion remain usable within their independent scopes. | All real acquisition origins and time-relevant meme/nonspam evidence; current controls or token suffixes cannot supply them. |
+| DATA-01 / B1 | C: source capability decision finalized | **NO_GO_CURRENT_SOURCE** for full-PDF exhaustive historical ownership. Free endpoint access, retained record compatibility and genuine terminal documented-query coverage are observed separately. Coverage v3 exposes `UNSUPPORTED_CURRENT_SOURCE` before scans. | Accepted event-time closed/reassigned/transient/non-ATA ownership across both programs, defined retention/formats and independent genuine controls. More pages, another probe or a paid plan alone cannot supply the contract. |
+| CAP-01 / B2 | B: complete real accounting | Development-functional normal import/report/source/export/immutable offline rebuild path; wallet v10/archive v13 retain metric-specific dependencies. Complete real B2 remains OPEN. | Accepted full population plus remaining origin/role/classification/boundary/flow implementation and source evidence. |
+| R1-B3 | C: genuine acceptance dataset | BLOCKED. The 23/87/200-record genuine partial corpora and separately worked calculations remain unchanged. | One complete genuine supported corpus with independent whole-wallet expectations and selective removal/restoration. Synthetic tests cannot close it. |
+| ENV / validation | D: environment and validation | Private repository access is resolved. Existing scoped/full records retain their original source identities; no new install, OS, provider or full-suite acceptance is inferred. | Targeted current-batch checks, exact source binding and distinct read-only diff review, recorded separately from application/source blockers. |
+
+PRODUCT_READY=false; development-functional, real-acceptance-blocked. The source
+feasibility decision is final for this source; the product objective is still
+blocked. No new collection, key reads, purchases, trading or signing in this
+offline batch. Historical R5–R15, PROC-03 and ARC-02 corrections remain retained.
+
+## Historical issue and execution records
+
 Status is deliberately split between execution evidence and future work. The starting workflow handoff asserted no new application defect; the bounded audit below subsequently reproduced SC-01.
 
-Current identity and status are in the final **remaining wallet-report adapters**
-section below. Earlier tables remain historical findings and scoped
-execution records; their pending or active labels do not supersede that section.
+The first current section above is authoritative. All following tables and
+former current sections are historical findings and scoped execution records;
+their pending or active labels do not supersede that section.
 
 | Work item | Existing finding IDs | Starting status | Owner / next deliverable | Acceptance |
 |---|---|---|---|---|

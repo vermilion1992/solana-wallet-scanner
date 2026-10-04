@@ -477,6 +477,13 @@ export type DiscoveryCohort = {
   [key: string]: unknown;
 };
 export type Preset = Record<string, string | number | boolean>;
+export type HistoricalSourceDecision = {
+  version: string;
+  state: string;
+  source_contract_id: string;
+  scope: string;
+  reason: string;
+};
 export type State = {
   methodology: string;
   evidence_audit_methodology: string;
@@ -484,6 +491,7 @@ export type State = {
   position_evidence_methodology?: string;
   source_consistency_methodology?: string;
   wallet_evidence_methodology?: string;
+  historical_source_decision?: HistoricalSourceDecision;
   settings: { limits: Record<string, number>; refresh_minutes: number };
   preset: Preset;
   scans: Scan[];

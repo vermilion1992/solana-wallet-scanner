@@ -10,7 +10,8 @@ import pytest
 from scanner.accounting import utc
 from scanner.archive_input import (VERSION as ARCHIVE_VERSION, canonical_bytes, pack_bytes,
     import_archive, load_archive, decode_archive, analyze_archive, _dependency_links)
-from scanner.real_coverage import derive_indexed_coverage, query_source_dependencies
+from scanner.real_coverage import (derive_indexed_coverage, query_source_dependencies,
+                                  historical_source_decision)
 from scanner.storage import Store
 from scanner.wallet_evidence import derive_wallet_evidence, raw_native_dependencies
 from test_indexed_source_dependencies import native, source, derive
@@ -134,6 +135,38 @@ def closing_raws():
     return [buy, sell]
 
 
+def test_current_historical_source_decision_binds_primary_bytes_and_separates_capabilities():
+    from pathlib import Path
+    decision = historical_source_decision()
+    root = Path(__file__).resolve().parents[1]
+    assert decision['state'] == 'UNSUPPORTED_CURRENT_SOURCE'
+    assert decision['documented_query']['state'] == 'SUPPORTED_DOCUMENTED_QUERY'
+    assert decision['documented_query']['ownership_metadata_cutoff_slot'] == 111_491_819
+    assert len(decision['independent_checks']) == 5
+    assert decision['missing_contract'] and decision['required_original_evidence']
+    assert decision['provider_requests'] == decision['credential_lookups'] == 0
+    for document in decision['documents']:
+        assert hashlib.sha256((root / document['path']).read_bytes()).hexdigest() == document['sha256']
+
+
+def test_returned_source_decision_mutation_cannot_promote_a_future_query_or_capability():
+    original = historical_source_decision()
+    caller = historical_source_decision()
+    caller['state'] = 'PASS'
+    caller['documents'][0]['sha256'] = '0' * 64
+    caller['missing_contract'].clear()
+    assert historical_source_decision() == original
+    raw = native(slot=111_491_820)
+    page = source([raw])
+    page.update(complete=True, historical_owner_population=True, source_decision=caller)
+    result = derive([raw], [page])
+    assert query(result)['state'] == query(result)['supported_record_state'] == 'PASS'
+    assert result['query_coverage']['source_decision'] == original
+    assert result['query_coverage']['historical_population']['state'] == 'UNKNOWN'
+    assert result['query_coverage']['historical_population']['capability_state'] == 'UNSUPPORTED_CURRENT_SOURCE'
+    assert result['components']['native_fee']['state'] == 'PASS'
+
+
 def test_terminal_original_query_derives_coverage_without_promoting_wallet_population():
     raw = native(slot=111_491_820)
     page = source([raw])
@@ -147,6 +180,7 @@ def test_terminal_original_query_derives_coverage_without_promoting_wallet_popul
         assert result['intervals'][name]['query_records_state'] == 'PASS'
     assert query(result, 'verification_90d')['state'] == 'UNKNOWN'
     assert result['query_coverage']['provider_contract']['historical_membership_state'] == 'UNKNOWN'
+    assert result['query_coverage']['source_decision']['state'] == 'UNSUPPORTED_CURRENT_SOURCE'
     assert query(result)['format_population_state'] == 'UNKNOWN'
     assert result['components']['historical_population']['state'] == 'UNKNOWN'
     assert result['metric_dependencies']['profit_sol']['state'] == 'UNKNOWN'
@@ -294,10 +328,14 @@ def test_genuine_compiled_and_native_parsed_selection_retains_every_original_que
         window=loaded['manifest']['window'], source_consistency=loaded['consistency'],
         chronology=loaded['chronology'])
     result = derive_indexed_coverage(selected, all_records=linked, **kwargs)
+    assert result['source_decision']['state'] == 'UNSUPPORTED_CURRENT_SOURCE'
+    assert result['historical_population']['capability_state'] == 'UNSUPPORTED_CURRENT_SOURCE'
     for receipt in result['intervals'].values():
         assert receipt['state'] == receipt['query_records_state'] == 'PASS'
         assert receipt['record_count'] == len(selected) == 87
         assert receipt['historical_population_state'] == 'UNKNOWN'
+        assert receipt['supported_record_state'] == 'PASS'
+        assert receipt['request_scope']['max_version'] == 1
     assert result == derive_indexed_coverage(list(reversed(selected)),
         all_records=list(reversed(linked)), **kwargs)
     signatures = [

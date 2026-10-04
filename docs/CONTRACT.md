@@ -1,6 +1,53 @@
 # Implementation contracts
 
-Current development batch adds versioned original-byte inventory observations
+## Current wallet accounting and source capability contract
+
+Current methods are wallet v10, archive v13, economic observations v2,
+indexed-query coverage v3, raw cost/flow roles v1 and historical PumpSwap reserve
+marks v1. Existing FIFO v4, research v5, selected-cohort v2 and metric-evidence v2
+remain the shared accounting/report path. New interpretations create immutable
+children; parents, original bytes and separately worked genuine expectations are
+not rewritten. Current-batch evidence is
+`evidence/wallet-accounting-finalization-batch/`; validation and publication must
+be recorded against the actual final source, not inferred from this contract.
+
+`historical_source_decision()` exposes `UNSUPPORTED_CURRENT_SOURCE` independently
+of authentication/entitlement, response compatibility, terminal query coverage
+and wallet qualification. The corresponding B1 decision is
+`NO_GO_CURRENT_SOURCE` for the original exhaustive wallet objective. Its pinned
+primary-document paths/hashes and missing event-time owner/lifecycle requirements
+cannot be promoted by caller flags or saved receipts. Known supported query
+records and selected fees remain usable while wallet-wide population is UNKNOWN.
+The genuine lifetime request includes documented maximum transaction version 1;
+unsupported returned formats remain dependencies. Another page, successful probe
+or paid plan cannot supply an absent historical-owner contract.
+
+`raw-cost-flow-roles-v1` derives executed internal wallet-owned token-account
+funding and closure roles from original instructions, ownership/lifecycle,
+quantities and agreeing linked alternatives. Its events feed the existing FIFO
+and ordinary native endpoint reconciler. Internal movement creates no purchase,
+income, fee or external flow. The genuine 1,513,840-lamport funding remains an
+exact scoped observation; external transfers and unsupported economic roles are
+not cleared merely because native balances conserve or movements net to zero.
+
+`historical-pumpswap-reserve-marks-v1` requires the fixed reviewed pool/vault
+identities, exact positive reserve units/decimals and source-consistent chronology
+at the original transaction's pre or post phase. Its quote/base ratio is a SOL
+spot mark. It proves neither an executable liquidation price nor a report-boundary
+inventory. Canonical WSOL denomination separately requires the legacy mint and
+token program, nine decimals and exact bounded u64 raw quantities; malformed or
+unsupported token facts cannot manufacture a protocol-valued observation.
+
+Report, 28-day and 90-day dependencies remain independent. Missing consumed
+acquisition cost blocks dependent realised money; missing boundary marks blocks
+economic equity without erasing independently supported realised/basis/fee facts.
+Complete ownership, acquisition origins, time-relevant meme/nonspam eligibility,
+exact all-account historical boundaries and valued external flows remain separate
+requirements. Complete real B2 is OPEN, genuine B3 is BLOCKED and
+PRODUCT_READY=false. Earlier method paragraphs below describe historical stages
+where they differ from this current section.
+
+The preceding inventory/speed batch added versioned original-byte observations
 and invocation-scoped indexed-page parsing reuse. Known current native/token
 observations remain distinct from same-slot all-program inventory and exact
 historical opening/closing inventory. Frozen request affinity routes negative
@@ -27,10 +74,10 @@ partial archived sample exclude live acquisition and complete-wallet workload.
 
 Single-user local research app, loopback only. Python FastAPI serves built React assets. No signing, wallet connection, blockchain submission, simulations, paid endpoints, or arbitrary URL proxy.
 
-Current integration methods are wallet v9, archive v12, research v5,
+The preceding adapter batch used wallet v9, archive v12, research v5,
 selected-cohort v2 and metric-evidence v2, using existing FIFO v4 and internal
 production composition v1. Earlier method descriptions below retain their
-history; the final sections define the current scope. Current edits remain
+history; the first current section defines the current scope. Current edits remain
 pending their own focused source-bound validation. Full Gate A from the prior
 published candidate remains historical acceptance. Development-functional archived
 research does not close B1 historical coverage, complete real B2 or genuine B3;

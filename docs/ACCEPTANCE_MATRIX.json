@@ -438,6 +438,27 @@
       "selectors": [
         "tests/test_report_benchmark.py::*"
       ]
+    },
+    {
+      "id": "original-account-funding-cost-role-admission",
+      "axis": "Pinned administration roles, refund entitlement, gross-flow isolation and immutable normal offline reports",
+      "selectors": [
+        "tests/test_cost_flow_evidence.py::*"
+      ]
+    },
+    {
+      "id": "exact-phase-historical-reserve-valuation",
+      "axis": "Genuine original reserve ratios, source loss/restoration and independent metric gates",
+      "selectors": [
+        "tests/test_historical_reserve_marks.py::*"
+      ]
+    },
+    {
+      "id": "precollection-historical-source-capability",
+      "axis": "Provider docs, entitlement and query coverage remain separate from historical wallet population",
+      "selectors": [
+        "tests/test_real_coverage.py::test_current_historical_source_decision_binds_primary_bytes_and_separates_capabilities"
+      ]
     }
   ],
   "browser_required": [

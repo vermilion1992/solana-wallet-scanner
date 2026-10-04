@@ -397,6 +397,7 @@ def create_app(data_dir, launch_token=None):
                 window=scan['window'], events=events, raw_sources=raw_sources, source_receipts=raw_receipts,
                 source_consistency=history_evidence['source_consistency'],
                 chronology=history_evidence['paging']['chronology'])
+            events = deepcopy(wallet_evidence['accounting_events'])
             # Current raw receipts, including explicit independent bounds,
             # govern FIFO. Old account-page receipts remain visible and cannot
             # veto a future admitted proof or substitute for a missing one.
@@ -845,6 +846,7 @@ def create_app(data_dir, launch_token=None):
         from .source_consistency import VERSION as SOURCE_CONSISTENCY_METHODOLOGY
         from .wallet_evidence import VERSION as WALLET_METHODOLOGY
         from .candidate_import import aggregate_candidate_universe
+        from .real_coverage import historical_source_decision
         disk = store.stats()
         disk["warnings"] = []
         if disk["evidence_bytes"] >= 10 * 1024 ** 3:
@@ -860,6 +862,7 @@ def create_app(data_dir, launch_token=None):
                 "position_evidence_methodology": POSITION_METHODOLOGY,
                 "source_consistency_methodology": SOURCE_CONSISTENCY_METHODOLOGY,
                 "wallet_evidence_methodology": WALLET_METHODOLOGY,
+                "historical_source_decision": historical_source_decision(),
                 "settings": settings(), "preset": preset(), "provider": provider(), "usage": usage(),
                 "scans": store.list("scans"), "discovery_cohorts": cohorts, "reports": saved_reports,
                 "candidate_universe": aggregate_candidate_universe(cohorts, saved_reports, candidate_cap=settings()["limits"]["candidate_cap"]),

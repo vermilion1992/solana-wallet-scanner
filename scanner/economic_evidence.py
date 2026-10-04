@@ -18,7 +18,7 @@ from .investigation import _keys, WSOL
 from .providers import TOKEN_PROGRAM
 from .transaction_format import supported_transaction_format
 
-VERSION = 'economic-raw-observations-v1'
+VERSION = 'economic-raw-observations-v2'
 MAX_RECORDS = 40_000
 MAX_ACCOUNT_PHASES = 200_000
 _HASH = re.compile(r'^[a-f0-9]{64}$')
@@ -108,7 +108,11 @@ def _native_observation(signature, variants, consistency, wallet):
         'post_sol': canonical(Decimal(value['post']) / _LAMPORTS) if value['post'] is not None else None}
 
 
-def _token_observations(transactions, wallet):
+def _token_observations(transactions, wallet, reserve_marks=None, clocks=None):
+    reserve_marks, clocks = reserve_marks or {}, clocks or {}
+    mark_index = defaultdict(list)
+    for index, row in enumerate(reserve_marks.get('marks', [])):
+        mark_index[row['signature'], row['phase'], row['mint']].append((index, row))
     phases, marks = {}, []
     if sum(2 * len(row.get('boundaries', {})) for row in transactions.values()) > MAX_ACCOUNT_PHASES:
         return {}, [], True
@@ -122,6 +126,7 @@ def _token_observations(transactions, wallet):
                 if not isinstance(point, dict) or point.get('owner') != wallet:
                     continue
                 quantity, value, mark, known, gap = None, None, None, False, None
+                price_refs, price_indexes, ratio, valuation_method = [], [], None, None
                 try:
                     quantity = raw_quantity(point.get('quantity'))
                     if quantity > _U64 or not all(_usable(row) for row in required):
@@ -133,19 +138,48 @@ def _token_observations(transactions, wallet):
                     elif quantity == 0:
                         value, known = '0', True
                     else:
-                        gap = 'Nonzero nonsettlement units have no accepted historical SOL mark'
+                        price_refs = [reserve_marks.get('records', {}).get(signature, {})]
+                        candidates = mark_index.get((signature, phase, point.get('mint')), [])
+                        clock = clocks.get('transactions', {}).get(signature, {})
+                        valid = [(index, row) for index, row in candidates if _usable(row.get('check'))
+                            and row.get('base_decimals') == point.get('decimals')
+                            and row.get('base_program') == pair.get('program')
+                            and row.get('slot') == clock.get('slot')
+                            and row.get('block_time') == clock.get('canonical_time')
+                            and clock.get('state') == clock.get('time_state') == 'PASS']
+                        ratios = [(int(row['price_ratio_numerator']), int(row['price_ratio_denominator']))
+                                  for _, row in valid]
+                        if valid and len(valid) == len(candidates) and all(
+                            numerator * ratios[0][1] == ratios[0][0] * denominator
+                            for numerator, denominator in ratios):
+                            numerator, denominator = ratios[0]
+                            mark = valid[0][1]['mark_sol_per_token']
+                            value = canonical(Decimal(quantity) * Decimal(numerator)
+                                / (Decimal(10**point['decimals']) * Decimal(denominator)))
+                            ratio = {'numerator': str(numerator), 'denominator': str(denominator)}
+                            valuation_method = reserve_marks['method']
+                            price_indexes = [index for index, _ in valid]
+                            price_refs += [row['check'] for _, row in valid]
+                            known = True
+                        else:
+                            gap = ('Contemporaneous raw pool marks disagree or do not match this exact owned-token phase.'
+                                   if candidates else 'Nonzero nonsettlement units have no accepted exact-phase historical SOL mark')
                 except (ValueError, TypeError) as exc:
                     gap = str(exc)
-                check = _check(known, gap or ('Protocol wrapped SOL denomination, with no rent/reserve double counting.'
+                check = _check(known, gap or ('Exact-phase reserve-ratio spot value; no report-boundary or executable liquidation assertion.'
+                    if valuation_method else 'Protocol wrapped SOL denomination, with no rent/reserve double counting.'
                     if mark else 'Proved zero token units need no historical price; account lamports remain separate.'),
-                    _refs(*required), dependencies=['linked_token_phase_identity', 'linked_token_phase_units']
+                    _refs(*required, *price_refs), dependencies=['linked_token_phase_identity', 'linked_token_phase_units']
                         + ([] if known else ['accepted_historical_asset_mark']))
                 row = {'account': account, 'mint': point.get('mint'), 'program': pair.get('program'),
                     'decimals': point.get('decimals'), 'quantity_raw': str(quantity) if quantity is not None else None,
                     'mark_sol_per_token': mark, 'observed_token_value_sol': value if known else None,
                     'check': check, 'account_lamports_value_state': 'UNKNOWN'}
+                if valuation_method:
+                    row.update(valuation_method=valuation_method, mark_ratio=ratio,
+                               reserve_mark_indexes=price_indexes, executable_liquidation_state='UNKNOWN')
                 output[phase].append(row)
-                if mark:
+                if mark and point.get('mint') == WSOL:
                     marks.append({'signature': signature, 'phase': phase, 'mint': WSOL,
                         'program': TOKEN_PROGRAM, 'mark_sol_per_token': '1', 'check': check})
         phases[signature] = output
@@ -195,7 +229,7 @@ def _boundary_candidates(native, wallet_evidence, window):
     return output
 
 
-def derive_economic_evidence(records, *, all_records, wallet, window, wallet_evidence):
+def derive_economic_evidence(records, *, all_records, wallet, window, wallet_evidence, raw_sources=()):
     """Project raw supported observations without manufacturing economic inputs.
 
     The ordinary adapter supplies freshly derived shared consistency, chronology
@@ -219,11 +253,15 @@ def derive_economic_evidence(records, *, all_records, wallet, window, wallet_evi
     if sum(len(v) for v in linked.values()) > MAX_RECORDS:
         raise ValueError('Economic raw observations exceed the fixed distinct linked-record budget')
     consistency = wallet_evidence.get('source_consistency', {})
+    from .historical_reserve_marks import project_historical_reserve_marks
+    reserve_marks = project_historical_reserve_marks(records, all_records=all_records,
+        raw_sources=raw_sources, consistency=consistency, chronology=wallet_evidence.get('chronology', {}))
     with localcontext() as context:
         context.prec = 100
         native = {signature: _native_observation(signature, list(variants.values()), consistency, wallet)
                   for signature, variants in sorted(linked.items())}
-        tokens, marks, token_budget = _token_observations(wallet_evidence.get('transactions', {}), wallet)
+        tokens, marks, token_budget = _token_observations(wallet_evidence.get('transactions', {}), wallet,
+            reserve_marks, wallet_evidence.get('chronology', {}))
         boundaries = _boundary_candidates(native, wallet_evidence, window)
     components = wallet_evidence.get('components', {})
     intervals = wallet_evidence.get('intervals', {})
@@ -266,9 +304,11 @@ def derive_economic_evidence(records, *, all_records, wallet, window, wallet_evi
         ('boundary_inventory', 'historical_marks', 'valued_external_flows')}
     # Existing complete economic inputs must come from the accepted source
     # adapters, not inferred from selected native endpoints or a unit mark.
-    # This method has no genuine all-account inventory/mark/flow source contract.
+    # Exact-phase reserve marks are usable observations, but are not a genuine
+    # all-account boundary inventory/mark/flow completion contract.
     return {'version': VERSION, 'scope': _SCOPE, 'observed_native_phases': native,
         'observed_token_phases': tokens, 'protocol_settlement_marks': marks,
+        'historical_reserve_marks': reserve_marks,
         'boundary_candidates_by_interval': boundaries,
         'native_cash_observation_binding': {
             'path': 'wallet_evidence.native_cash_observations',
@@ -283,6 +323,6 @@ def derive_economic_evidence(records, *, all_records, wallet, window, wallet_evi
         'economic_inputs': {},
         'inspection_budget': {'max_linked_records': MAX_RECORDS, 'linked_records': sum(len(v) for v in linked.values()),
                               'max_account_phases': MAX_ACCOUNT_PHASES, 'account_phases_exceeded': token_budget},
-        'remaining_source_contracts': ['exact_all_account_boundary_inventory', 'historical_nonsettlement_marks',
+        'remaining_source_contracts': ['exact_all_account_boundary_inventory', 'exact_boundary_nonsettlement_marks',
                                       'complete_valued_external_flow_roles'],
         'qualification': False, 'provider_requests': 0, 'credential_lookups': 0}
