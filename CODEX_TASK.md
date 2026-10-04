@@ -1,4 +1,33 @@
-# Active assignment — mixed refunds and retained phase prices, 4 October 2026
+# Active assignment — wallet screening and forward copy research, 4 October 2026
+
+The user's current delivery target supersedes historical full-wallet accounting as
+a prerequisite for useful sampled research. Preserve the existing engine, strict
+qualification, immutable reports, accounting regressions and B1 source decision.
+Build a runnable discover/import → native identity → sampled screening → inspect
+and save → shortlist → delayed quote-only paper observation → reopen/export path.
+
+Use the separately named sampled screening and fixed-entry-first-sale-v1 strategy.
+Persist original settings, known initial simulated SOL cash, raw units, detection
+and decoding times, delayed request/response times, evidence, omissions and open
+exposure. Jupiter Swap V2 order without taker provides quote-only research;
+quotes are not actual fills. Never sign, build or submit trades, spend money,
+replay monitoring gaps with hindsight or weaken strict qualification.
+
+Bounded free public native RPC and keyless Jupiter reads are authorized for this
+workflow and genuine adapter validation. Offline tests/browser workflows use
+explicitly synthetic transports and zero external traffic. Preserve prior raw
+receipts; synthetic mechanics, genuine captured adapter evidence and full-wallet
+acceptance are separate outcomes. B1 remains NO_GO_CURRENT_SOURCE, complete real
+B2 OPEN, B3 BLOCKED, PRODUCT_READY=false.
+
+Run affected accounting/screening/observer/storage-security checks while editing.
+After source freeze, run the final affected-path checks, frontend assertions/build
+and one actual guarded-launcher browser workflow. Broaden only for shared changes
+or unresolved findings; do not run repeated historical full matrices by default.
+Document narrower acceptance in docs/SCREENING_FORWARD_ACCEPTANCE.json and
+retain current receipts under evidence/screening-forward-research/.
+
+# Prior assignment — mixed refunds and retained phase prices, 4 October 2026
 
 Continue only from private `vermilion1992/solana-wallet-scanner`, branch
 `codex/product-completion`, published HEAD

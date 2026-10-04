@@ -183,3 +183,16 @@ The existing validation runner already includes both modules once. Independently
 worked mixed-refund interface controls and retained genuine phase-price originals
 remain separate from complete genuine B3. No live provider requests or credits
 are required. B1 NO_GO_CURRENT_SOURCE and PRODUCT_READY=false are unchanged.
+
+
+## Separate screening and forward-research checkpoint
+
+This user-requested milestone is independently accepted without closing B1/B2/B3
+or wallet-wide R1. PRODUCT_READY remains false. Its final evidence belongs in
+`evidence/screening-forward-research/`. Required checks are the affected monetary,
+screening, observer, native identity, API/security, storage and launcher modules;
+frontend assertions/build; and the actual guarded launcher browser workflow.
+Synthetic transport fixtures validate mechanics only. Genuinely captured native
+transactions and quote responses validate their adapter scopes separately. No
+profitable candidate is a release requirement, no monitoring gap is replayed as
+live followed activity, and a quote is never relabeled an actual fill.

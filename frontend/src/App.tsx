@@ -35,6 +35,7 @@ import { SettingsView } from "./settings";
 import { DiscoveryView } from "./Discovery";
 import { EvidenceAuditView } from "./EvidenceAudit";
 import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
+import { ResearchView } from "./Research";
 
 export type View =
   | "overview"
@@ -45,7 +46,8 @@ export type View =
   | "compare"
   | "watchlist"
   | "settings"
-  | "evidence";
+  | "evidence"
+  | "research";
 export type Actions = {
   state: State;
   busy: string | null;
@@ -65,6 +67,7 @@ export type Actions = {
 };
 const nav: { view: View; label: string; icon: typeof Compass }[] = [
   { view: "discover", label: "Discover", icon: Search },
+  { view: "research", label: "Research", icon: Activity },
   { view: "overview", label: "Overview", icon: LayoutDashboard },
   { view: "results", label: "Results", icon: ListFilter },
   { view: "compare", label: "Compare", icon: GitCompareArrows },
@@ -76,10 +79,15 @@ const pages: Record<
   { title: string; eyebrow: string; description: string }
 > = {
   discover: {
-    title: "Find wallets that meet your filters",
+    title: "Find wallets worth investigating",
     eyebrow: "WALLET DISCOVERY",
     description:
-      "Apply the blueprint's strict profit filters, then inspect evidence and copy-trading concerns.",
+      "Discover or paste public wallets, check identity, then screen a bounded sample.",
+  },
+  research: {
+    title: "Would following the signals have worked?",
+    eyebrow: "SCREENING & FORWARD RESEARCH",
+    description: "Saved trading evidence, risk observations, and quote-based paper portfolios with realistic delays and costs.",
   },
   overview: {
     title: "Your research workspace",
@@ -173,6 +181,7 @@ export default function App() {
     };
   }, []);
   const active =
+    state?.observations?.some((observation) => observation.status === "running") ||
     state?.scans.some((scan) => ["queued", "running"].includes(scan.status)) ||
     state?.discovery_cohorts?.some((cohort) =>
       ["queued", "running"].includes(cohort.status),
@@ -481,6 +490,7 @@ export default function App() {
           )}
           {view === "overview" && <Overview {...actions} />}
           {view === "discover" && <DiscoveryView {...actions} />}
+          {view === "research" && <ResearchView {...actions} showEvidence={showEvidence} />}
           {view === "scan" && <ScanView {...actions} />}
           {view === "results" && (
             <Results {...actions} selected={selected} onSelect={toggleSelect} />

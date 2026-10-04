@@ -53,6 +53,7 @@ try {
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
+  const { PaperDetail, ScreeningDetail, defaultPaperSettings, paperSolFromLamports } = require(join(output, "Research.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -603,7 +604,7 @@ try {
   });
   assert.ok(listedHtml.includes("Listed public addresses"));
   assert.ok(
-    listedHtml.includes("Imported public list · no chain observation supplied"),
+    listedHtml.includes("Imported public list · identity unresolved"),
   );
   assert.ok(listedHtml.includes("No wallet qualifies yet"));
   assert.ok(listedHtml.includes("Saved candidate universe"));
@@ -613,6 +614,60 @@ try {
   assert.ok(listedHtml.includes("History reconstructed"));
   assert.ok(listedHtml.includes("Not established"));
   assert.ok(!listedHtml.includes("Signer verified"));
+  assert.ok(listedHtml.includes("Check native identity"));
+  const checkedImport = { ...qualifiedLead, source: "user-list" };
+  assert.deepEqual(auditableCandidates({ ...cohort, candidates: [checkedImport] }), [checkedImport],
+    "An imported address needs the same native identity proof as a discovered candidate");
+  assert.deepEqual(qualifiedCandidates({ ...cohort, candidates: [checkedImport] }, [qualifiedReport], strictPreset, state.methodology), [checkedImport],
+    "Import provenance alone cannot permanently exclude a fully evidenced native wallet");
+  assert.deepEqual(auditableCandidates({ ...cohort, candidates: [{ ...checkedImport, validation: { ...checkedImport.validation, identity_verified: false } }] }), [],
+    "Import alone never supplies native identity");
+  const paper = {
+    id: "paper-synthetic", address, strategy: "fixed-entry-first-sale-v1", status: "stopped",
+    settings: { ...defaultPaperSettings }, started_at: cohort.created_at, updated_at: cohort.created_at,
+    stop_reason: "Stopped by owner", signals: [], quote_requests: [],
+    positions: [{ id: "open-loss", mint: address, status: "open", cost_lamports: "100010000", opened_at: cohort.created_at,
+      mark: { net_value_lamports: "40000000" }, exit_unavailable: true }],
+    gaps: [{ reason: "subscription disconnected" }],
+    summary: { initial_capital_sol: "10", cash_sol: "9.89999", realised_pnl_sol: "0.02", open_positions: 1,
+      closed_positions: 1, open_cost_sol: "0.10001", marked_open_value_sol: "0.04", economic_pnl_sol: "-0.04001",
+      valuation_status: "known", signal_count: 4, quote_count: 3, unavailable_quotes: 1, complete_observation: false },
+  };
+  const paperHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: paper }));
+  assert.ok(paperHtml.includes("-0.04001"), "Open losses remain in overall paper outcomes");
+  assert.ok(paperHtml.includes("sell quote unavailable"));
+  assert.ok(paperHtml.includes("subscription disconnected"));
+  assert.ok(paperHtml.includes("Frozen at run creation"));
+  assert.ok(paperHtml.includes("Quotes do not guarantee execution"));
+  assert.ok(paperHtml.includes("counted once"), "Pool/provider fees are not modeled a second time");
+  const unknownPaperHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, summary: { ...paper.summary, economic_pnl_sol: null, marked_open_value_sol: null, valuation_status: "unknown" },
+  } }));
+  assert.ok(unknownPaperHtml.includes("Incomplete valuation"));
+  assert.ok(unknownPaperHtml.includes("Open value unavailable"));
+  const missingPaperSourceHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, summary: { ...paper.summary, source_availability: { state: "UNKNOWN", reason: "Quote source archive unavailable" }, supported_economic_pnl_sol: null },
+    copyability: { status: "insufficient_evidence", reasons: ["Quote source archive unavailable"], preset_snapshot: { name: "Forward quote research" } },
+  } }));
+  assert.ok(missingPaperSourceHtml.includes("Unsupported source evidence"));
+  assert.ok(missingPaperSourceHtml.includes("cannot support a complete positive copying conclusion"));
+  assert.ok(missingPaperSourceHtml.includes("Quote source archive unavailable"));
+  assert.equal(paperSolFromLamports("-100000001"), "-0.100000001");
+  assert.equal(paperSolFromLamports("9007199254740993000001"), "9007199254740.993000001");
+  assert.equal(paperSolFromLamports(100), undefined);
+  const screenHtml = renderToStaticMarkup(React.createElement(ScreeningDetail, { screening: {
+    id: "synthetic-screen", version: "wallet-screening-v1", report_id: "report", address,
+    result: "insufficient_evidence", label: "Insufficient evidence", reason: "Budget stopped collection",
+    reasons: [{ key: "identity", state: "UNKNOWN", reason: "Native evidence missing", evidence: [] }],
+    trading_evidence: { supported_swaps: 2, matched_sales: 1, unmatched_sales: 3, conditional_matched_lot_profit_sol: "0.5", open_exposure: [], early_exits: {} },
+    risk_observations: [{ key: "creator_relationship", state: "UNKNOWN", reason: "No reviewed relationship proof", evidence: [] }],
+    collection: { stop_reason: "Transaction budget exhausted", transactions: 20 },
+  }, showEvidence: () => undefined }));
+  assert.ok(screenHtml.includes("Transaction budget exhausted"));
+  assert.ok(screenHtml.includes("Native evidence missing"));
+  assert.ok(screenHtml.includes("3 unmatched or basis-unresolved sales"));
+  assert.ok(screenHtml.includes("No reviewed relationship proof"));
+  assert.ok(screenHtml.includes("Strict financial qualification"));
   const intervals = {
     four_weeks: {
       start: "2026-09-04T00:00:00+00:00",

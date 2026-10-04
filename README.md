@@ -171,3 +171,56 @@ Keep the one issue register (`ISSUES.md`), acceptance matrix (`docs/ACCEPTANCE_M
 The current completion batch adds source-backed discovery audit planning and terminal indexed-query replay from genuine archived records. The separate bounded collection operator is documented by its explicit plans and durable request/credit receipts; it does not broaden the production provider allowlist. Existing public Solana addresses can be inspected without connecting Phantom or another wallet. Never provide a seed phrase or signing key.
 
 Current source feasibility and supported coverage are recorded in `docs/R1_SOURCE_DECISION.md`. Genuine inputs, independently worked raw calculations, source loss/restoration and final candidate evidence are under `evidence/genuine-wallet-batch/`. Indexed query completion is distinct from exhaustive historical wallet ownership and financial qualification. PRODUCT_READY remains false while those required proofs are absent; no paid plan is required by the implemented local/offline workflow.
+
+
+## Sampled screening and forward copy research
+
+Start with `./setup.sh` and `./run.sh` (or the existing Windows launcher). Open the
+private launch URL. Discovery accepts pasted public addresses as well as public
+pool leads. **Check native identity**, then **Investigate** to collect a bounded
+sample. Keyless public native RPC is available for this sampled route; configured
+Helius retains its existing accounting and free-plan quotas. A public endpoint
+can refuse or rate-limit access; the saved reason and checkpoint stay visible.
+
+Open **Research**, screen a saved report, inspect the evidence, save the assessment
+and shortlist the wallet. Screening has its own adjustable preset and labels:
+insufficient evidence, excluded by this preset, or worth observing. Conditional
+matched-lot results describe only the supported fetched sample. Strict financial
+qualification remains separately visible and unchanged. Continue investigation
+uses the saved assessment's transaction/request allowance; it does not establish
+exhaustive historical ownership. Initial public samples use at most 20 transactions
+and 50 conservative wallet request attempts, including mint-risk reads. Failed
+attempts and restarts do not reset that allowance. Explicit continuation can add
+at most the saved preset allowance, while the shared public RPC cap is 1,000/day.
+
+Start a **quote-based paper observation** with simulated SOL capital, fixed entry,
+position limit, reaction delay, adverse output adjustment, modeled execution cost,
+price-impact limit and event/quote/time budgets. The named strategy enters on an
+eligible observed buy only while not holding that mint, and exits on the first
+eligible subsequent observed leader sale. Additional buys and excluded events are
+retained. Each run freezes its settings; changing a filter cannot rewrite it.
+
+The observer subscribes to one wallet address per Solana logs subscription,
+retrieves and decodes newly detected transactions and requests Jupiter Swap V2
+quotes after decoding plus the selected delay. It omits `taker` and never requests
+an executable transaction. Provider/pool fees are included in quote outputs;
+modeled adverse execution and the additional SOL execution cost are applied once.
+Quotes are observations, not execution guarantees. The app must stay running to
+monitor; stop, disconnect, restart and missing-period gaps remain explicit and are
+never filled using hindsight. These subscriptions do not prove complete wallet
+activity. The older 15-minute watchlist refresh is separate.
+
+Run details retain cash, closed outcomes, open losses or unknown exposure,
+unavailable exits, exact timing, captured sources and evidence-backed strategy
+exclusions. Stop/resume preserves the portfolio and settings with an explicit gap.
+Request a current sell quote to mark remaining exposure within the original budget.
+Expired or unavailable marks cannot support a current positive portfolio conclusion.
+Reopen saved runs and export JSON from Research. Exports include excluded
+notifications, observer checkpoints, source references and the frozen strategy.
+No honest-wallet, intent or safe-to-copy score is produced.
+
+Software workflow acceptance, genuinely captured adapter evidence and historical
+full-wallet acceptance are recorded separately in
+`docs/SCREENING_FORWARD_ACCEPTANCE.json`. `PRODUCT_READY` remains false.
+
+Run the separate checkpoint with `.venv/bin/python tools/validate.py --profile screening-forward --browser-python .venv/bin/python --output <new-directory>`. It runs affected checks, the frontend build and the actual launcher browser workflow; it does not run or claim the historical full-wallet gates. Browser verification requires the test-only Playwright package and Chromium.

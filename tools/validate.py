@@ -15,6 +15,14 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCKS = ('requirements.txt', 'requirements-build.in', 'pyproject.toml', 'frontend/package-lock.json')
+SCREENING_FORWARD = [
+    'tests/test_screening.py', 'tests/test_screening_routes.py', 'tests/test_public_sample_budget.py',
+    'tests/test_paper.py', 'tests/test_observer.py', 'tests/test_discovery_audit_plan.py',
+    'tests/test_discovery_plan_views.py', 'tests/test_discovery_native_identity.py',
+    'tests/test_candidate_import.py', 'tests/test_copy_review.py', 'tests/test_app.py',
+    'tests/test_storage.py', 'tests/test_launcher.py', 'tests/test_validation_gates.py',
+    'tests/test_cost_flow_evidence.py', 'tests/test_historical_reserve_marks.py',
+]
 FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruction_schema.py',
            'tests/test_instruction_contract_matrix.py', 'tests/test_source_role_matrix.py', 'tests/test_validation_gates.py',
            'tests/test_archive_input.py', 'tests/test_archive_fee_window.py', 'tests/test_report_rebuild.py',
@@ -425,7 +433,7 @@ def execute_command(command, *, cwd, env, stdout, timeout):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--profile', choices=('focused', 'focused-summary', 'offline-development', 'candidate'), default='focused')
+    parser.add_argument('--profile', choices=('focused', 'focused-summary', 'offline-development', 'candidate', 'screening-forward'), default='focused')
     parser.add_argument('--focused-group', choices=tuple(FOCUSED_GROUPS))
     parser.add_argument('--group-record', type=Path, action='append', default=[])
     parser.add_argument('--development-record', type=Path)
@@ -514,6 +522,21 @@ def main(argv=None):
         report['gates'].append(offline_development_record(args.development_record, source=before,
             locks=report['locks'], runtime=report['runtime'], commit=report['commit']))
         save()
+    elif args.profile == 'screening-forward':
+        report.update(scope='Sampled screening and quote-only forward research; historical full-wallet acceptance unchanged',
+                      PRODUCT_READY=False, selection=SCREENING_FORWARD)
+        run('backend-screening-forward', [args.python, '-m', 'pytest', '-q', *SCREENING_FORWARD])
+        run('pip-check', [args.python, '-m', 'pip', 'check'])
+        run('shell-syntax', ['bash', '-n', 'run.sh', 'setup.sh'])
+        for name in ('check:format', 'check:discovery', 'build'):
+            run('frontend-' + name.replace(':', '-'), ['npm', 'run', name], ROOT / 'frontend')
+        browser = run('screening-launcher-browser', [args.browser_python or args.python, str(ROOT / 'tools/screening_browser.py'),
+            '--chromium', args.chromium, '--output', str(output / 'browser')])
+        receipt = read_receipt(output / 'browser/result.json')
+        browser['receipt'] = receipt
+        if browser['state'] != 'PASS' or receipt.get('record', {}).get('state') != 'PASS':
+            browser.update(state='INCOMPLETE', reason='The actual launcher workflow did not produce a passing browser receipt.')
+        save()
     elif args.profile == 'offline-development':
         run('pip-check', [args.python, '-m', 'pip', 'check'])
         run('shell-syntax', ['bash', '-n', 'run.sh', 'setup.sh'])
@@ -547,6 +570,8 @@ def main(argv=None):
         report['state'] = 'FOCUSED_GROUP_PASS' if args.focused_group else 'FOCUSED_PASS'
     elif args.profile == 'offline-development' and code == 0:
         report['state'] = 'DEVELOPMENT_CHECK_PASS'
+    elif args.profile == 'screening-forward' and code == 0:
+        report['state'] = 'SCREENING_FORWARD_SOFTWARE_PASS'
     save()
     print(f'{report["state"]}; Gate B remains OPEN. Evidence: {output}', flush=True)
     return code

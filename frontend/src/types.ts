@@ -498,6 +498,8 @@ export type State = {
   discovery_cohorts?: DiscoveryCohort[];
   candidate_universe?: CandidateUniverse;
   evidence_audits?: EvidenceAudit[];
+  screenings?: Screening[];
+  observations?: PaperObservation[];
   reports: Report[];
   watchlist: { address: string; label: string; added_at?: string }[];
   usage: {
@@ -523,4 +525,104 @@ export type State = {
     cycle_end?: string;
   };
   storage: Record<string, unknown>;
+};
+
+export type Screening = {
+  id: string;
+  version: string;
+  created_at: string;
+  report_id: string;
+  address: string;
+  preset_snapshot?: Preset;
+  identity?: { state: string; reason: string; evidence: string[] };
+  result: string;
+  label: string;
+  reason: string;
+  reasons?: (string | { key: string; state: string; reason: string; actual?: unknown; evidence?: string[] })[];
+  strict_qualification?: Qualification;
+  trading_evidence: {
+    supported_swaps?: number;
+    buy_signals?: number;
+    sell_signals?: number;
+    matched_sales?: number;
+    unmatched_sales?: number;
+    unresolved_basis_sales?: number;
+    conditional_matched_lot_profit_sol?: string | null;
+    open_exposure?: unknown;
+    early_exits?: unknown;
+    scope?: unknown;
+    window?: { start: string; end: string };
+  };
+  risk_observations: {
+    key: string;
+    state: string;
+    reason: string;
+    actual?: unknown;
+    evidence?: string[];
+    mint?: string;
+    relationship?: unknown;
+  }[];
+  collection: {
+    stop_reason?: string;
+    scope?: unknown;
+    transactions?: number;
+    pages?: number;
+    credits?: number;
+    gaps?: unknown[];
+    terminal_evidence?: unknown;
+  };
+  continuation?: {
+    recommended?: boolean;
+    action?: string;
+    reason?: string;
+    budget?: { max_transactions?: number; max_credits?: number; max_accounts?: number };
+    checkpoint_required?: boolean;
+  };
+};
+
+export type PaperSettings = {
+  capital_sol: string;
+  entry_sol: string;
+  max_open_positions: number;
+  reaction_delay_seconds: number;
+  adverse_bps: number;
+  execution_fee_sol: string;
+  max_price_impact_pct: string;
+  max_events: number;
+  max_quotes: number;
+  max_duration_minutes: number;
+};
+export type PaperObservation = {
+  id: string;
+  address: string;
+  screening_id?: string;
+  strategy: string;
+  status: string;
+  settings: PaperSettings;
+  started_at: string;
+  updated_at: string;
+  stop_reason?: string;
+  signals: Record<string, unknown>[];
+  quote_requests: Record<string, unknown>[];
+  positions: Record<string, unknown>[];
+  gaps: Record<string, unknown>[];
+  risk_observations?: Screening["risk_observations"];
+  copyability?: { status: string; reasons: string[]; preset_snapshot?: unknown };
+  summary: {
+    initial_capital_sol: string;
+    cash_sol: string;
+    realised_pnl_sol: string;
+    open_positions: number;
+    closed_positions: number;
+    open_cost_sol: string;
+    marked_open_value_sol: string | null;
+    economic_pnl_sol: string | null;
+    valuation_status: string;
+    signal_count: number;
+    quote_count: number;
+    unavailable_quotes: number;
+    complete_observation: boolean;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
 };

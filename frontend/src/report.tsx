@@ -1005,6 +1005,20 @@ export function ReportView({
           <ArrowLeft size={15} /> Back to results
         </button>
         <div>
+          {!report.preview && (
+            <Button
+              variant="secondary"
+              icon={Search}
+              disabled={!!busy}
+              busy={busy === "report-screen"}
+              onClick={async () => {
+                const assessment = await run("report-screen", "/screenings", { report_id: report.id }, "POST", "Screening assessment saved. Inspect its reasons in Research.");
+                if (assessment) navigate("research");
+              }}
+            >
+              Screen and save assessment
+            </Button>
+          )}
           {(report.source === "live" || report.archive_input_hash) && !report.preview && (
             <Button
               variant="secondary"

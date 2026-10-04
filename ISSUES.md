@@ -294,3 +294,13 @@ No new baseline arithmetic defect is asserted. Distinct read-only review correct
 in the new adapters and their small regressions are recorded in the batch review.
 Installation/host/provider limits remain separate from application findings.
 PRODUCT_READY=false; development-functional, real-acceptance-blocked.
+
+
+## Screening and forward research delivery
+
+The current user assignment changes the delivery target: exhaustive historical
+ownership remains blocked and strict qualification stays unchanged. The new
+sampled screening and quote-only observer reuse the existing engine. Record final
+software/browser acceptance and genuine adapter evidence separately under
+`evidence/screening-forward-research/`; no old acceptance receipt is superseded by
+synthetic checks. Full historical R1/B1/B2/B3 blockers remain as documented.

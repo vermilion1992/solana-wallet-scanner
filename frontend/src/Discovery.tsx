@@ -33,7 +33,6 @@ export function auditableCandidates(cohort?: DiscoveryCohort) {
     (candidate) =>
       validAddress(candidate.address) &&
       (!sourceEligible || sourceEligible.has(candidate.address)) &&
-      candidate.source !== "user-list" &&
       candidate.status === "candidate" &&
       candidate.validation?.identity_verified === true &&
       candidate.validation?.account_type === "system-owned signer" &&
@@ -59,7 +58,10 @@ export function qualifiedCandidates(
       (item) => item.id === (qualification?.report_id ?? candidate.report_id),
     );
     return (
-      candidate.source !== "user-list" &&
+      candidate.status === "candidate" &&
+      candidate.validation?.identity_verified === true &&
+      candidate.validation?.account_type === "system-owned signer" &&
+      candidate.validation?.economic_signers?.includes(candidate.address) &&
       typeof currentMethodology === "string" && !!currentMethodology &&
       qualification?.qualified === true &&
       qualification.financial_policy === "MATCH" &&
@@ -144,6 +146,7 @@ function CandidateCard({
   qualified,
   activePreset,
   auditManually,
+  checkIdentity,
 }: {
   candidate: DiscoveryCandidate;
   eligible: boolean;
@@ -154,6 +157,7 @@ function CandidateCard({
   qualified: boolean;
   activePreset: Preset;
   auditManually?: () => void;
+  checkIdentity?: () => void;
 }) {
   const findings = candidate.risk?.findings ?? [];
   const unresolved = candidate.risk?.unresolved ?? [];
@@ -197,7 +201,7 @@ function CandidateCard({
             {shorten(candidate.address, 6)} <ArrowUpRight size={13} />
           </a>
           <span>
-            {imported ? "Imported public list · no chain observation supplied" : <>
+            {imported ? eligible ? "Imported public list · native identity checked" : "Imported public list · identity unresolved" : <>
               {count(candidate.pools?.length ?? 0)} sampled pools ·{" "}
               {count(candidate.signatures?.length ?? 0)} source transactions
             </>}
@@ -218,9 +222,9 @@ function CandidateCard({
       </div>
       <div className="candidate-status">
         <Badge value={candidate.status}>
-          {imported ? "Listed" : eligible ? "Signer verified" : label(candidate.status)}
+          {eligible ? "Signer verified" : imported ? "Listed" : label(candidate.status)}
         </Badge>
-        <span>{imported ? "Awaiting chain evidence" : eligible ? "Ready for audit" : "Identity review"}</span>
+        <span>{eligible ? "Ready for audit" : "Identity review"}</span>
       </div>
       <p className="candidate-reason">{candidate.reason}</p>
       <div className={`candidate-qualification ${qualified ? "qualified" : ""}`}>
@@ -334,6 +338,11 @@ function CandidateCard({
           Open audit report <ArrowRight size={13} />
         </button>
       )}
+      {!eligible && checkIdentity && (
+        <button className="candidate-open-report text-button" disabled={disabled} onClick={checkIdentity}>
+          Check native identity <ShieldCheck size={13} />
+        </button>
+      )}
       {imported && auditManually && (
         <button className="candidate-open-report text-button" onClick={auditManually}>
           Open advanced manual audit <ArrowRight size={13} />
@@ -385,7 +394,6 @@ export function DiscoveryView({
   const scanIds = new Set(auditScans.map((scan) => scan.id));
   const auditReports = state.reports.filter(
     (report) =>
-      cohort?.source !== "user-list" &&
       report.source === "live" &&
       candidateAddresses.has(report.address) &&
       (!auditScans.length || (report.scan_id && scanIds.has(report.scan_id))),
@@ -420,6 +428,16 @@ export function DiscoveryView({
       { addresses: selected },
       "POST",
       "Candidate audit queued. Reports will show missing evidence explicitly.",
+    );
+  };
+  const checkIdentity = async (addresses: string[]) => {
+    if (!cohort) return;
+    await run(
+      `identity-${cohort.id}`,
+      `/discovery/${encodeURIComponent(cohort.id)}/identity`,
+      { addresses: addresses.slice(0, auditCap) },
+      "POST",
+      "Native identity results saved. Missing evidence stays unresolved.",
     );
   };
   const connectKey = async () => {
@@ -461,15 +479,15 @@ export function DiscoveryView({
             <span className="status-dot" /> START WITH PUBLIC TRADES
           </div>
           <h2>
-            Screen for profit.
+            Find credible trading evidence.
             <br />
-            <span>Verify the whole picture.</span>
+            <span>Observe whether you could follow.</span>
           </h2>
           <p>
             Find trading addresses from a small sample of active Solana pools.
-            Use native transaction checks to identify the economic signer,
-            then apply your PDF's profit, activity, holding, and concentration
-            filters. Copy-trading concerns require their own evidence.
+            Or paste public addresses below. Check native identity, investigate
+            a small sample, and save a screening assessment. Shortlist wallets
+            for forward quote-based paper observation in Research.
           </p>
           <div className="discovery-actions">
             <Button
@@ -538,17 +556,18 @@ export function DiscoveryView({
           </span>
         ) : (
           <button className="text-button" onClick={() => navigate("settings")}>
-            Add Helius for identity checks and audits <ArrowRight size={14} />
+            Configure historical collection <ArrowRight size={14} />
           </button>
         )}
       </div>
       {!state.provider.configured && (
         <section className="discovery-key-card">
           <div>
-            <strong>Enable native checks with your Helius key</strong>
+            <strong>Connect historical collection with your Helius key</strong>
             <p>
-              Identity checks and a setup pilot share a 200-credit ceiling.
-              Confirm your billing cycle in Settings for extended audits.
+              Native identity checks can use public RPC. Historical audits use
+              the saved provider allowance; confirm your billing cycle in Settings
+              for extended audits.
             </p>
           </div>
           <form
@@ -576,7 +595,7 @@ export function DiscoveryView({
               busy={busy === "discovery-key"}
               disabled={!providerKey.trim() || !!busy}
             >
-              Enable native checks
+              Connect historical collection
             </Button>
           </form>
         </section>
@@ -806,16 +825,27 @@ export function DiscoveryView({
               <div>
                 <strong>{count(selected.length)} selected for audit</strong>
                 <p>
-                  Select up to {auditCap} verified economic addresses. A small
-                  pilot stays bounded; extended audits need billing-cycle
-                  settings.
+                  Select up to {auditCap} verified economic addresses. Start
+                  with a small sample, then use an explicit continuation budget
+                  from its saved screening assessment.
                 </p>
               </div>
+              {candidates.some((candidate) => candidate.validation?.identity_verified !== true) && (
+                <Button
+                  variant="secondary"
+                  icon={ShieldCheck}
+                  busy={busy === `identity-${cohort?.id}`}
+                  disabled={!!busy}
+                  onClick={() => checkIdentity(candidates.filter((candidate) => candidate.validation?.identity_verified !== true).map((candidate) => candidate.address))}
+                >
+                  Check native identities (up to {auditCap})
+                </Button>
+              )}
               <Button
                 icon={Search}
                 busy={busy === `audit-${cohort?.id}`}
                 disabled={
-                  !state.provider.configured || !selected.length || !!busy
+                  !selected.length || !!busy
                 }
                 onClick={audit}
               >
@@ -824,9 +854,7 @@ export function DiscoveryView({
             </div>
             {!eligible.length && (
               <div className="discovery-no-verified">
-                <CircleHelp size={16} /> {cohort?.source === "user-list"
-                  ? "These addresses are listed only. Use the advanced manual audit after configuring its data allowance; the import supplies no native identity evidence."
-                  : "No economic signer passed the sampled native checks. Keep these as leads until identity is resolved."}
+                <CircleHelp size={16} /> No economic signer passed the sampled native checks. Use Check native identity to collect bounded evidence. An imported address alone establishes no trust.
               </div>
             )}
             <div className="candidate-grid">
@@ -837,6 +865,7 @@ export function DiscoveryView({
                   qualified={qualified.some((item) => item.address === candidate.address)}
                   activePreset={state.preset}
                   auditManually={auditManually ? () => auditManually([candidate.address]) : undefined}
+                  checkIdentity={() => checkIdentity([candidate.address])}
                   eligible={eligible.some(
                     (item) => item.address === candidate.address,
                   )}
