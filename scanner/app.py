@@ -108,6 +108,7 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
 
 def _freeze_native_dependencies(store, collected, *, address, window):
     from .wallet_evidence import raw_native_dependencies
+    from .real_coverage import query_source_dependencies
     primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
     negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
     # These are negative associations, not completion or position certificates.
@@ -115,6 +116,8 @@ def _freeze_native_dependencies(store, collected, *, address, window):
         {'kind': 'transaction' if r.get('signature') else 'unresolved-native-source',
          'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in negatives
         if isinstance(r.get('evidence_hash'), str) and re.fullmatch(r'[a-f0-9]{64}', r['evidence_hash'])]}
+    frozen['evidence'] += [{'kind': 'query-affinity', 'hash': digest}
+                          for digest in query_source_dependencies(raw_sources)]
     return frozen, primary, linked, raw_sources, raw_receipts
 
 
@@ -191,7 +194,9 @@ def create_app(data_dir, launch_token=None):
 
     def discovery_cohorts(saved_reports=None):
         from .candidate_import import derive_candidate_progress
+        from .discovery import plan_candidate_audits
         saved_reports = reports() if saved_reports is None else saved_reports
+        planner_reports = report_inputs('summary')
         saved = {report["id"]: report for report in saved_reports}
         result = store.list("discovery_cohorts")
         for cohort in result:
@@ -204,6 +209,9 @@ def create_app(data_dir, launch_token=None):
                                                   "preset_version": None, "evidence_status": "unknown", "failed_checks": [], "unknown_checks": [],
                                                   "reason": "A native identity check is a research lead. Historical accounting and all PDF evidence gates must be audited."}
                 candidate.update(derive_candidate_progress(candidate, cohort, saved_reports))
+            cohort['audit_plan'] = plan_candidate_audits(
+                store, cohort, reports=planner_reports, preset=preset(),
+                audit_cap=settings()['limits']['deep_audit_cap'])
         return result
 
     def checkpoint_reference(checkpoint):
@@ -873,6 +881,7 @@ def create_app(data_dir, launch_token=None):
 
     @app.post("/api/discovery/{identifier}/audit")
     async def audit_discovery(identifier, request: Request):
+        from .discovery import plan_candidate_audits
         data = await body(request)
         if set(data) - {"addresses"}:
             raise ValueError("Unknown discovery audit setting")
@@ -885,7 +894,13 @@ def create_app(data_dir, launch_token=None):
                     and candidate.get("validation", {}).get("identity_verified") is True
                     and candidate.get("validation", {}).get("account_type") == "system-owned signer"
                     and candidate["address"] in candidate.get("validation", {}).get("economic_signers", [])]
-        addresses = data.get("addresses", eligible[:settings()["limits"]["deep_audit_cap"]])
+        audit_plan = plan_candidate_audits(
+            store, cohort, reports=report_inputs('summary'), preset=preset(),
+            audit_cap=settings()['limits']['deep_audit_cap'])
+        planned_eligible = set(audit_plan['selected_addresses']) | {
+            row['address'] for row in audit_plan['deferred']}
+        eligible = [address for address in eligible if address in planned_eligible]
+        addresses = data.get("addresses", audit_plan['selected_addresses'])
         if not isinstance(addresses, list) or not addresses or len(addresses) > settings()["limits"]["deep_audit_cap"]:
             raise ValueError("Select 1–5 verified candidate wallets within the configured audit cap")
         addresses = list(dict.fromkeys(validate_address(address) for address in addresses))
@@ -898,6 +913,9 @@ def create_app(data_dir, launch_token=None):
             raise HTTPException(409, "The research credit cap has been reached; saved evidence remains available")
         scan_id = queue_scan(addresses, preset()["window_days"], "automatic-discovery", mode, identifier)
         cohort.setdefault("audit_scan_ids", []).append(scan_id)
+        cohort['last_queued_audit_plan'] = {**audit_plan, 'queued_addresses': addresses,
+                                          'explicit_selection': 'addresses' in data,
+                                          'scan_id': scan_id}
         store.put("discovery_cohorts", identifier, cohort)
         return {"scan_id": scan_id, "budget_mode": mode}
 

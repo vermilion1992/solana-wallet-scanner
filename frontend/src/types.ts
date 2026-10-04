@@ -466,6 +466,11 @@ export type DiscoveryCohort = {
   universe?: Record<string, unknown>[];
   sample?: Record<string, unknown>;
   audit_scan_ids?: string[];
+  audit_plan?: {
+    selected_addresses: string[];
+    deferred: { address: string; reason?: string }[];
+    excluded: { address?: string; reason?: string }[];
+  };
   reason?: string;
   [key: string]: unknown;
 };

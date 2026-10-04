@@ -1,0 +1,109 @@
+{
+  "kind": "bounded-native-collection-plan-v1",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "retries": 0,
+  "purpose": "Phase6: eight native representation/account-lifecycle crosschecks for the frozen genuine87 corpus; current owner snapshots are observations and do not certify historic population. No retries or pagination.",
+  "requests": [
+    {
+      "id": "current-wallet-account",
+      "method": "getAccountInfo",
+      "params": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized"
+        }
+      ]
+    },
+    {
+      "id": "current-legacy-accounts",
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        {
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized"
+        }
+      ]
+    },
+    {
+      "id": "current-token2022-accounts",
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        {
+          "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized"
+        }
+      ]
+    },
+    {
+      "id": "selected-buy",
+      "method": "getTransaction",
+      "params": [
+        "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ]
+    },
+    {
+      "id": "selected-sell",
+      "method": "getTransaction",
+      "params": [
+        "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ]
+    },
+    {
+      "id": "legacy-transfer-close",
+      "method": "getTransaction",
+      "params": [
+        "4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ]
+    },
+    {
+      "id": "owner-in-data-token2022",
+      "method": "getTransaction",
+      "params": [
+        "4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ]
+    },
+    {
+      "id": "token2022-burn-close",
+      "method": "getTransaction",
+      "params": [
+        "wsjwGqMmfsEW1PVGsmJ4xWzzdWGwfSvRnqjJkZV9mtdwmQmVMYyQGmAoMVi1QiPtXx6wrza7ts788gcRuCcBoJH",
+        {
+          "encoding": "jsonParsed",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1
+        }
+      ]
+    }
+  ]
+}

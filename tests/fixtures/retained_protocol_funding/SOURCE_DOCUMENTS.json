@@ -1,0 +1,28 @@
+{
+  "version": "retained-protocol-funding-primary-sources-v1",
+  "commit": "cb188ce08b5069196eef1f3e4a0c43b70099793b",
+  "documents": [
+    {
+      "path": "pump_amm.json",
+      "url": "https://raw.githubusercontent.com/pump-fun/pump-public-docs/cb188ce08b5069196eef1f3e4a0c43b70099793b/idl/pump_amm.json",
+      "bytes": 160724,
+      "sha256": "2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1",
+      "retrieved_at": "2026-10-04T06:22:10.772954+00:00"
+    },
+    {
+      "path": "PUMP_CASHBACK_README.md",
+      "url": "https://raw.githubusercontent.com/pump-fun/pump-public-docs/cb188ce08b5069196eef1f3e4a0c43b70099793b/docs/PUMP_CASHBACK_README.md",
+      "bytes": 5566,
+      "sha256": "fa0f8703b406b872309131754e33ddcd15f0a36426733e0d26f329293b3c48f6",
+      "retrieved_at": "2026-10-04T06:22:10.791481+00:00"
+    },
+    {
+      "path": "solana_pubkey.rs",
+      "url": "https://raw.githubusercontent.com/solana-labs/solana/7700cb3128c1f19820de67b81aa45d18f73d2ac0/sdk/program/src/pubkey.rs",
+      "bytes": 35843,
+      "sha256": "d2d3e31f542c7e662c0e36f3eabfb73c2146e485fd0ba10738f2e748d8ab2c26",
+      "retrieved_at": "2026-10-04T06:26:55.072833+00:00"
+    }
+  ],
+  "guard": "Primary user-volume seed/account ordinal plus actual successful native creation and retained endpoint. No universal allocation LEN or future refund entitlement inferred."
+}

@@ -1,0 +1,7 @@
+{
+  "state": "CANCELLED_BEFORE_CREDENTIAL_INPUT",
+  "reason": "Collector schema refinements were pending, so the initial terminal process was stopped and final57controls were executed before the actual invocation.",
+  "provider_requests": 0,
+  "credential_input": false,
+  "phase_claim_created": false
+}

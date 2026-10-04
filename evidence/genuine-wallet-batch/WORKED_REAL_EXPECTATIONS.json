@@ -1,0 +1,4191 @@
+{
+  "version": "genuine-wallet-worked-expectations-v1",
+  "archive_sha256": "3c409ce6c1bec579f852616ada235e99e3063810c7a841cf4544751ba6c0c481",
+  "archive_binding_scope": "Initial phase5 indexed archive; parent may reseal only archive binding after checksum-identical native controls/current snapshots are added. Calculated raw-page identity and arithmetic must remain unchanged.",
+  "address": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+  "source_page_sha256": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+  "source_page_bytes": 894784,
+  "oracle": "Independent raw integer/base58/Fraction arithmetic; no scanner imports or production calculation functions; frozen before application report run.",
+  "metrics": {
+    "profit_sol": {
+      "status": "unknown",
+      "value": null
+    },
+    "realised_roi_pct": {
+      "status": "unknown",
+      "value": null
+    },
+    "median_roi_pct": {
+      "status": "unknown",
+      "value": null
+    },
+    "win_rate_pct": {
+      "status": "unknown",
+      "value": null
+    },
+    "median_hold_hours": {
+      "status": "unknown",
+      "value": null
+    },
+    "completed_positions": {
+      "status": "unknown",
+      "value": null
+    },
+    "completed_positions_90d": {
+      "status": "unknown",
+      "value": null
+    },
+    "traded_mints": {
+      "status": "unknown",
+      "value": null
+    },
+    "rapid_sale_pct": {
+      "status": "unknown",
+      "value": null
+    },
+    "avg_buys": {
+      "status": "unknown",
+      "value": null
+    },
+    "avg_sells": {
+      "status": "unknown",
+      "value": null
+    },
+    "positive_weeks": {
+      "status": "unknown",
+      "value": null
+    },
+    "largest_contribution_pct": {
+      "status": "unknown",
+      "value": null
+    },
+    "economic_pnl_sol": {
+      "status": "unknown",
+      "value": null
+    },
+    "observed_network_fees_sol": {
+      "status": "known",
+      "value": "0.000158868"
+    }
+  },
+  "query_accounting": {
+    "monetary_state": "UNKNOWN",
+    "conditional_observed_lot_profit_sol": null,
+    "wallet_population_state": "UNKNOWN",
+    "qualification": false
+  },
+  "calculations": [
+    {
+      "description": "Sum integer meta.fee only where the native first account key equals this wallet; keep sponsors and the genuine failed record separately. Report-window payer indices are independently selected from raw Unix timestamps.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "formula": "sum(meta.fee for selected records with first_key==wallet and report_start<=blockTime<report_end)",
+      "result_lamports": 158868
+    },
+    {
+      "description": "Independently scope the same selected raw records over report30, trailing28 and verification90 days, never reusing a report receipt as another interval certificate.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "results": {
+        "report": {
+          "start": "2026-09-04T06:00:00+00:00",
+          "end": "2026-10-04T06:00:00+00:00",
+          "record_indices": [
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86
+          ],
+          "selected_records": 17,
+          "wallet_payer_indices": [
+            72,
+            73,
+            74,
+            79,
+            83,
+            85,
+            86
+          ],
+          "network_fee_lamports": 158868,
+          "network_fee_sol": "0.000158868",
+          "selected_native_wallet_delta_lamports": 650240,
+          "scope": "Selected 87-record provider query population in this independent half-open interval; never whole-wallet profit."
+        },
+        "four_weeks": {
+          "start": "2026-09-06T06:00:00+00:00",
+          "end": "2026-10-04T06:00:00+00:00",
+          "record_indices": [
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86
+          ],
+          "selected_records": 17,
+          "wallet_payer_indices": [
+            72,
+            73,
+            74,
+            79,
+            83,
+            85,
+            86
+          ],
+          "network_fee_lamports": 158868,
+          "network_fee_sol": "0.000158868",
+          "selected_native_wallet_delta_lamports": 650240,
+          "scope": "Selected 87-record provider query population in this independent half-open interval; never whole-wallet profit."
+        },
+        "verification_90d": {
+          "start": "2026-07-06T06:00:00+00:00",
+          "end": "2026-10-04T06:00:00+00:00",
+          "record_indices": [
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86
+          ],
+          "selected_records": 34,
+          "wallet_payer_indices": [
+            55,
+            60,
+            63,
+            66,
+            69,
+            72,
+            73,
+            74,
+            79,
+            83,
+            85,
+            86
+          ],
+          "network_fee_lamports": 188868,
+          "network_fee_sol": "0.000188868",
+          "selected_native_wallet_delta_lamports": 650240,
+          "scope": "Selected 87-record provider query population in this independent half-open interval; never whole-wallet profit."
+        }
+      }
+    },
+    {
+      "description": "BQJ purchase quote is the sum of four actual wSOL TransferChecked amounts, including embedded venue fees, not the System wrap maximum or wallet native debit.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "formula": "559550761+139609+5305122+139608",
+      "result_lamports": 565135100
+    },
+    {
+      "description": "One selected FIFO lot: acquired and disposed 516612982765 integer units. Matched basis=(565135100+58918)*(516612982765/516612982765)=565194018. Separate persisted accumulator funding1346200 from purchase costs; temporary wSOL rent1488440 is returned.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "result_lamports": {
+        "numerator": "565194018",
+        "denominator": "1"
+      }
+    },
+    {
+      "description": "Sell received wSOL551929943 less actual wallet-paid network fee6849=551923094. Matched selected-lot loss=551923094−565194018=−13270924lamports. This preserves a genuine losing lot without inventing wallet qualification.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "result_sol": "-0.013270924"
+    },
+    {
+      "description": "Named-account first purchase at1791079700 and final full sale at1791080229 gives529seconds=529/3600hours; full zero observed. No hidden-account population certificate or meme classification follows from this.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "result_hours": {
+        "numerator": "529",
+        "denominator": "3600"
+      }
+    },
+    {
+      "description": "Whole-wallet metric expectations remain UNKNOWN because historical membership, complete economic roles/origins, eligibility and economic boundary marks/flows are not established. Native fee observation retains its independent requirements.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "not_b3": true
+    },
+    {
+      "description": "Genuine owner-not-key Token2022 lifecycle: rows56/57 retain10,000,000 units for a wallet absent from both message key lists, then burn and close; this observes provider support for one such case, not universal enumeration.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "records": [
+        56,
+        57
+      ]
+    },
+    {
+      "description": "Do not reinterpret residual-token cleanup as a sale: GJ row73 leaves1raw unit; row76 transfers1 and closes. F1z row79 acquires131200547457units; row81 transfers them out and closes. Transfer-interrupted and unresolved routes stay visible.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "records": [
+        72,
+        73,
+        76,
+        79,
+        81
+      ]
+    }
+  ],
+  "supported_selected_lots": [
+    {
+      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+      "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+      "decimals": 6,
+      "scope": "Selected named-account 0→purchase→full-sale→0; assumes no hidden same-mint holdings/intervening activity. Does not establish whole-wallet eligibility or population.",
+      "buy_record_index": 83,
+      "sell_record_index": 85,
+      "quantity_acquired_raw": "516612982765",
+      "quantity_disposed_raw": "516612982765",
+      "remaining_raw": "0",
+      "buy_quote_components_lamports": [
+        559550761,
+        139609,
+        5305122,
+        139608
+      ],
+      "buy_quote_lamports": 565135100,
+      "buy_network_fee_lamports": 58918,
+      "buy_basis_lamports": {
+        "numerator": "565194018",
+        "denominator": "1"
+      },
+      "matched_disposed_basis_lamports": {
+        "numerator": "565194018",
+        "denominator": "1"
+      },
+      "sell_received_quote_lamports": 551929943,
+      "sell_network_fee_lamports": 6849,
+      "sell_net_proceeds_lamports": 551923094,
+      "conditional_lot_profit_lamports": {
+        "numerator": "-13270924",
+        "denominator": "1"
+      },
+      "conditional_lot_profit_sol": "-0.013270924",
+      "conditional_lot_roi_pct": {
+        "numerator": "-663546200",
+        "denominator": "282597009"
+      },
+      "conditional_lot_roi_pct_display_192_digit": "-2.34802980522699021205847228199078356133627727107331132439551049883900222029596923299354523600071082139443308828509221766037870556513922622585152697069062043752911765601878680888657246899594751",
+      "hold_seconds": 529,
+      "hold_hours": {
+        "numerator": "529",
+        "denominator": "3600"
+      },
+      "first_positive_sale_within_5_minutes": false,
+      "buy_count": 1,
+      "sell_count": 1,
+      "persisted_user_volume_accumulator_lamports": 1346200,
+      "temporary_wsol_rent_lamports": 1488440,
+      "cost_treatment": "wSOL outgoing transfers include embedded venue fees. Actual network fee once in basis/exit. Persisted accumulator account funding remains a separately located/refundable balance, not automatic expense. Temporary wSOL rent cancels on same-record closure.",
+      "source_hashes": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ],
+      "raw_instruction_facts": [
+        {
+          "path": "result.data[83].meta.innerInstructions[index=3].instructions[3]",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "accounts": [
+            "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+            "So11111111111111111111111111111111111111112",
+            "5UYBcWeQiGkhifyq8VdcQexKbsnGPkxkGb9TYukABRT9",
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY"
+          ],
+          "data_hex": "0c29115a210000000009",
+          "tag": 12,
+          "amount_raw": 559550761,
+          "decimals": 9
+        },
+        {
+          "path": "result.data[83].meta.innerInstructions[index=3].instructions[4]",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "accounts": [
+            "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+            "So11111111111111111111111111111111111111112",
+            "BWXT6RUhit9FfJQM3pBmqeFLPYmuxgmyhMGC5sGr8RbA",
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY"
+          ],
+          "data_hex": "0c592102000000000009",
+          "tag": 12,
+          "amount_raw": 139609,
+          "decimals": 9
+        },
+        {
+          "path": "result.data[83].meta.innerInstructions[index=3].instructions[5]",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "accounts": [
+            "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+            "So11111111111111111111111111111111111111112",
+            "k7hBJaidpgPPn6mw8M8Xqnm2nfopYuKeAGyjg3bLcC1",
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY"
+          ],
+          "data_hex": "0c22f350000000000009",
+          "tag": 12,
+          "amount_raw": 5305122,
+          "decimals": 9
+        },
+        {
+          "path": "result.data[83].meta.innerInstructions[index=3].instructions[6]",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "accounts": [
+            "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+            "So11111111111111111111111111111111111111112",
+            "6rVkF4HSgy1jrnC3HogfRgPHrq4CtLg5f11URpsC4i9D",
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY"
+          ],
+          "data_hex": "0c582102000000000009",
+          "tag": 12,
+          "amount_raw": 139608,
+          "decimals": 9
+        },
+        {
+          "path": "result.data[83].meta.innerInstructions[index=3].instructions[2]",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "accounts": [
+            "5LTwGaTZgwAKNoTMyFhyxhdKBLygmeB7zEy85EWV2Mxe",
+            "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+            "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+            "39e3inYn9tDu4GAeBJ4L1MZrRW8hMhu2yqJ59vhPeCai"
+          ],
+          "data_hex": "0ced8788487800000006",
+          "tag": 12,
+          "amount_raw": 516612982765,
+          "decimals": 6
+        },
+        {
+          "path": "result.data[85].meta.innerInstructions[index=1].instructions[1]",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "accounts": [
+            "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+            "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+            "5LTwGaTZgwAKNoTMyFhyxhdKBLygmeB7zEy85EWV2Mxe",
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY"
+          ],
+          "data_hex": "0ced8788487800000006",
+          "tag": 12,
+          "amount_raw": 516612982765,
+          "decimals": 6
+        },
+        {
+          "path": "result.data[85].meta.innerInstructions[index=1].instructions[2]",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "accounts": [
+            "5UYBcWeQiGkhifyq8VdcQexKbsnGPkxkGb9TYukABRT9",
+            "So11111111111111111111111111111111111111112",
+            "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+            "39e3inYn9tDu4GAeBJ4L1MZrRW8hMhu2yqJ59vhPeCai"
+          ],
+          "data_hex": "0c57c8e5200000000009",
+          "tag": 12,
+          "amount_raw": 551929943,
+          "decimals": 9
+        },
+        {
+          "path": "result.data[83].meta.innerInstructions[index=3].instructions[0]",
+          "program": "11111111111111111111111111111111",
+          "accounts": [
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg"
+          ],
+          "data_hex": "00000000988a14000000000089000000000000000c14defc825ec67694250818bb654065f4298d3156d571b4d4f8090c18e9a863",
+          "tag": 0,
+          "lamports": 1346200
+        }
+      ]
+    }
+  ],
+  "network_fee_totals": {
+    "all_provider_reported_lamports": 1060181,
+    "all_selected_wallet_paid_lamports": 464817,
+    "all_selected_wallet_paid_sol": "0.000464817",
+    "all_selected_sponsored_fee_lamports": 595364,
+    "failed_records": [
+      {
+        "index": 15,
+        "payer": "odinw3goGe1k2WwCsRcNJd4FswDtP8cqVGW1Cw9Cskc",
+        "fee_lamports": 5825,
+        "wallet_fee_lamports": 0
+      }
+    ],
+    "independent_intervals": {
+      "report": {
+        "start": "2026-09-04T06:00:00+00:00",
+        "end": "2026-10-04T06:00:00+00:00",
+        "record_indices": [
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86
+        ],
+        "selected_records": 17,
+        "wallet_payer_indices": [
+          72,
+          73,
+          74,
+          79,
+          83,
+          85,
+          86
+        ],
+        "network_fee_lamports": 158868,
+        "network_fee_sol": "0.000158868",
+        "selected_native_wallet_delta_lamports": 650240,
+        "scope": "Selected 87-record provider query population in this independent half-open interval; never whole-wallet profit."
+      },
+      "four_weeks": {
+        "start": "2026-09-06T06:00:00+00:00",
+        "end": "2026-10-04T06:00:00+00:00",
+        "record_indices": [
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86
+        ],
+        "selected_records": 17,
+        "wallet_payer_indices": [
+          72,
+          73,
+          74,
+          79,
+          83,
+          85,
+          86
+        ],
+        "network_fee_lamports": 158868,
+        "network_fee_sol": "0.000158868",
+        "selected_native_wallet_delta_lamports": 650240,
+        "scope": "Selected 87-record provider query population in this independent half-open interval; never whole-wallet profit."
+      },
+      "verification_90d": {
+        "start": "2026-07-06T06:00:00+00:00",
+        "end": "2026-10-04T06:00:00+00:00",
+        "record_indices": [
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86
+        ],
+        "selected_records": 34,
+        "wallet_payer_indices": [
+          55,
+          60,
+          63,
+          66,
+          69,
+          72,
+          73,
+          74,
+          79,
+          83,
+          85,
+          86
+        ],
+        "network_fee_lamports": 188868,
+        "network_fee_sol": "0.000188868",
+        "selected_native_wallet_delta_lamports": 650240,
+        "scope": "Selected 87-record provider query population in this independent half-open interval; never whole-wallet profit."
+      }
+    }
+  },
+  "raw_record_inventory": [
+    {
+      "record_pointer": "result.data[0]",
+      "signature": "8KfCCiCGBAWukz4wC5fbpf2jR6gRBeDqDK2MvvaQ6HEc2JwXkUXYME8Vs2NVwLEDsjC6x4mb63T2VYnRW9pjk6M",
+      "slot": 407606118,
+      "transaction_index": 1040,
+      "block_time": 1773985199,
+      "timestamp": "2026-03-20T05:39:59+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "9XkjsKedKa7F5kkapGJrWmZwYeKGFYNy7mmsNPRwE3Mv",
+      "provider_reported_network_fee_lamports": 6737,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 9615229319,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 2,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[1]",
+      "signature": "Qzznpofr955erGVmBaeLSQKoyeAwUGPdjWR6EJjNvA93dYcnRs6XpXDz18uRGNxdpsQuzwxL26Hr7wKT284PmCP",
+      "slot": 407606165,
+      "transaction_index": 120,
+      "block_time": 1773985218,
+      "timestamp": "2026-03-20T05:40:18+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -1410580924,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[2]",
+      "signature": "4fCrC5thTGsmytLFBzRAm6cgSBtoVM2GHoGwQogLJC1AHKs93y3jZQ94nYq3dKYtnDA9KaSh31Pc13sxMzwGshjj",
+      "slot": 407606169,
+      "transaction_index": 923,
+      "block_time": 1773985219,
+      "timestamp": "2026-03-20T05:40:19+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "HQFgRtybHpW6spEriZrx9z52vV5FXQTBPYqq2GY8ponC",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 34039344,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 4,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 4,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "411728489383",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[3]",
+      "signature": "2dL3PvAsaQQbW4VeLafYodUiCprgXF8qyQHZ6cEMap13weo6Tdc8a5oky9qtbLMqfBBRWtSZaueWxktNNhLq8BF1",
+      "slot": 407606169,
+      "transaction_index": 924,
+      "block_time": 1773985219,
+      "timestamp": "2026-03-20T05:40:19+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "3eZpmaybXVJ5TVqtn1Zz2CMJc83G13VBYU34aJyyKeKb",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 15770619,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 4,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "411728489383",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 4,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "585999203684",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[4]",
+      "signature": "4qiBuLz2bmm6AVZrHivTCAEuAB86qvBCRa46mGM2Wpponi7izvwobxn3Erqjshcago7mBEqid85HFxoeb3dJ7LBV",
+      "slot": 407606169,
+      "transaction_index": 925,
+      "block_time": 1773985219,
+      "timestamp": "2026-03-20T05:40:19+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "959BBtEiVrvH2H4oUBveUYszm3AavhpLTkPoaCFfxMBL",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 28237905,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 5,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "585999203684",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 5,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "958574712535",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[5]",
+      "signature": "5ZBWrdMY2FD9DLBA5Y9bht6pwsbCYyjjrdWrN6aLdn9CufMfQJydeMA8JfTNBCxGXU6PtSxzNz8k6nXgjfiBGHfG",
+      "slot": 407606169,
+      "transaction_index": 926,
+      "block_time": 1773985219,
+      "timestamp": "2026-03-20T05:40:19+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "EgVoxUEdXLDEqmKmwQioPsCTD5VyxzywXMjzuyrQQd6u",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 28291378,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 5,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "958574712535",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 5,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1363456599892",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[6]",
+      "signature": "3fBQ9HnWj4vFVKQtTnsTcJqt4os4EGrJB9vRvLyotMVUoK54Rkca9VLZ8GYVYoZj1SnVveax8TjnbMpa9RAcNSVL",
+      "slot": 407606169,
+      "transaction_index": 927,
+      "block_time": 1773985219,
+      "timestamp": "2026-03-20T05:40:19+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "4nv1SJBWgdr7oPkP2wPRkiHRpjcAvvDbpCXZQi9Gthdv",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1262704485,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 3,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1363456599892",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 3,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[7]",
+      "signature": "5cYksb5pxJonwS3xo6Wy5W3ixKGr5fZ6kvuNJ3gnCM29qyLmRYDqTZpVR7jG73BYFcoUW7Xddb99PRYcCpkPyZi5",
+      "slot": 407606170,
+      "transaction_index": 892,
+      "block_time": 1773985220,
+      "timestamp": "2026-03-20T05:40:20+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "AFXigaYuRKYmvd9HZQCobtZ98FNAwnwpsnjvJRztUGb6",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[8]",
+      "signature": "4bK5a4SNpL6FtRnxBiZpUkPBwRN4kbbBmPHzmxnrMD5UCdkEwnVyzLCtfUBUkMz6TmMqG4QiPi3f7qFS7zgXKoUf",
+      "slot": 407606170,
+      "transaction_index": 909,
+      "block_time": 1773985220,
+      "timestamp": "2026-03-20T05:40:20+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "BMq4XUa3UCneuw84GBr4DZ5Awam42tefLwxj9q1pGxqG",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[9]",
+      "signature": "3UrirwTGwVrfYQGc4Qd2CLtKxxfZmCdmkUMi1Uxyq3m8wUaPCYDgeQ11KeJspN7kqZUp81C3BB2F2Q11tsrbwy5A",
+      "slot": 407606179,
+      "transaction_index": 1260,
+      "block_time": 1773985223,
+      "timestamp": "2026-03-20T05:40:23+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "BMq4XUa3UCneuw84GBr4DZ5Awam42tefLwxj9q1pGxqG",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[10]",
+      "signature": "2hbeLoSaYHgKHBe2yDJ92FbTUccxTfrmQEGRbHvcdE6p8bYmhCrmynguMHZj6azPkEgsK9zqRiP3zNkxeUc7PQ4k",
+      "slot": 407606180,
+      "transaction_index": 57,
+      "block_time": 1773985224,
+      "timestamp": "2026-03-20T05:40:24+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "AFXigaYuRKYmvd9HZQCobtZ98FNAwnwpsnjvJRztUGb6",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[11]",
+      "signature": "5VmbQg6yqAJ8yZqjX9khx7rtxzHhU1Rxe1jL2WfCohM4TL3LS2A1ediv3pDJStpCFfEBgAcXosJcihFgy3WakXBb",
+      "slot": 407606208,
+      "transaction_index": 935,
+      "block_time": 1773985235,
+      "timestamp": "2026-03-20T05:40:35+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 6826,
+      "wallet_paid_network_fee_lamports": 6826,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -9573692130,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[12]",
+      "signature": "Bao5toQxfoxbyiK5a1ZbofKDSsVjmexvMa83yKH2Qsh5SiCe9RWaqF5fF5WrLV2uh3qJF8KtLGuQkLzkSCjvqk7",
+      "slot": 410689455,
+      "transaction_index": 815,
+      "block_time": 1775194904,
+      "timestamp": "2026-04-03T05:41:44+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6vPhRQa5xQJxXdu7UDPMFB9myjkX3xrJi9F3LYrysciH",
+          "account_index": 2,
+          "mint": "GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[13]",
+      "signature": "4Rj4RCe5UUvrqvjkXdzN6b1GasKPBTiSGmsiunrwSEViVj2nSQBYYNzPRbMV91eMgATVkdouQS9Mc7MJEjZHwtLc",
+      "slot": 411087609,
+      "transaction_index": 896,
+      "block_time": 1775351389,
+      "timestamp": "2026-04-05T01:09:49+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "C4cuQk4XsZaYkv5g8SDv1BudFSydphedpvzLyxc5V3SM",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2864400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "EK66S1VZbmuZy2wzNEiBbvbzcuqCpDEtbSxDJh3eecBK",
+          "account_index": 5,
+          "mint": "HtsL2niY4PrJvf3twaFjUh8VSbrMThMuehuUokx3pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 6,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "87199928",
+          "decimals": 9
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[14]",
+      "signature": "bJUHFDZ1vZ3hMYBN6CDquGvJe7VLst1WPq2VjrgAC8uaSRYPzuwTe22Yv6zMhMLsr2mmoFaxCYEoaDHyvM29QSH",
+      "slot": 411087612,
+      "transaction_index": 726,
+      "block_time": 1775351390,
+      "timestamp": "2026-04-05T01:09:50+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2864400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "EK66S1VZbmuZy2wzNEiBbvbzcuqCpDEtbSxDJh3eecBK",
+          "account_index": 7,
+          "mint": "HtsL2niY4PrJvf3twaFjUh8VSbrMThMuehuUokx3pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 10,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "87199928",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[15]",
+      "signature": "5eFE5HjoHCKdKf81TDR3hKoXBhaPEvJF4XootMkPKC3SX1oAvcUkeg6GCZWMiFwrNYwbpnv9CXMy5C99Xt6dSsm3",
+      "slot": 411087615,
+      "transaction_index": 1397,
+      "block_time": 1775351391,
+      "timestamp": "2026-04-05T01:09:51+00:00",
+      "version": "legacy",
+      "error": {
+        "InsufficientFundsForRent": {
+          "account_index": 2
+        }
+      },
+      "payer": "odinw3goGe1k2WwCsRcNJd4FswDtP8cqVGW1Cw9Cskc",
+      "provider_reported_network_fee_lamports": 5825,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[16]",
+      "signature": "5PE3RrLzfp4hFYVovVKokjqV6WWgWPuUYC2Ef1W8M4qDkVbKqjByMoa2EAQjC5AyF6JeTfp13hTQ8T4jsfdQHvCg",
+      "slot": 413080109,
+      "transaction_index": 543,
+      "block_time": 1776136768,
+      "timestamp": "2026-04-14T03:19:28+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "81cbBjvFPZgRi2dCNKqNDvoYdvmgeEjaMkEs7qhA1v3x",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "CzHGvTTruGRXJw6GJ7MfXUX8CGQABrr5JfZudPeAQ8PQ",
+          "account_index": 8,
+          "mint": "FzDnTNsE63Dg7o9Hxi2WavVnA2pxXPW1dPtcQa8qpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 10,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "54438739",
+          "decimals": 9
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[17]",
+      "signature": "5oouM1qtsT764Ca9XMkk9CXbwrxJoeN6gB5W4PiwEcxijjLn3E2bGY8K58awvFrRcydnCKDEHcj5bo2FW2HRu6Ns",
+      "slot": 413080115,
+      "transaction_index": 1011,
+      "block_time": 1776136770,
+      "timestamp": "2026-04-14T03:19:30+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "FzoMzhESgVvXCNjE4FtJgmvbj3WYED81tjc3QY6NFg2k",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2864400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[18]",
+      "signature": "66WYUVrLf3whzMudiLCxGuLRLjaqWDGReVXBjGdJhkpJE1Nw2RMmk2aZdU8PNfXQqhrzGPn4ndtSePXafv3PZkYQ",
+      "slot": 413080115,
+      "transaction_index": 1012,
+      "block_time": 1776136770,
+      "timestamp": "2026-04-14T03:19:30+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2864400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "CzHGvTTruGRXJw6GJ7MfXUX8CGQABrr5JfZudPeAQ8PQ",
+          "account_index": 7,
+          "mint": "FzDnTNsE63Dg7o9Hxi2WavVnA2pxXPW1dPtcQa8qpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 10,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "54438739",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[19]",
+      "signature": "3Yye4hYHThqdQJSgwkRJZ9F7qi7uEg2YiW8jRJtEMT9eJ3ptGWBp66xTqoXY28p2ZScdHcM7csCSfFvj3umSqTfu",
+      "slot": 418465685,
+      "transaction_index": 710,
+      "block_time": 1778270989,
+      "timestamp": "2026-05-08T20:09:49+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "CkGQChv4QJoNHrR9zk36WBCScWtkkugVaUb1UD6HBJQg",
+      "provider_reported_network_fee_lamports": 15436,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 11387447530,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[20]",
+      "signature": "2koT7xwLE1ksPrdaioMYHr6dWvF6u8fJWdKfFNiAhxT5ekaE4xVHBh9ef6qp2E7XrxT73S15UX1LFxCdsbimba6Q",
+      "slot": 418465744,
+      "transaction_index": 299,
+      "block_time": 1778271012,
+      "timestamp": "2026-05-08T20:10:12+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 13147,
+      "wallet_paid_network_fee_lamports": 13147,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -161927455,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "160712168827",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[21]",
+      "signature": "2DdPDAWxcP21Ncby5Yp9kUp3c7VYZQdcrK1QRqmSDzSaTsoGwBQqeJvoLTZ5Lsr6ZQKKS87UCq1Saxy4WCi699a1",
+      "slot": 418465752,
+      "transaction_index": 482,
+      "block_time": 1778271015,
+      "timestamp": "2026-05-08T20:10:15+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "odin3qW5kwWMpudPNVXFwQevqZDNePKbe94csqaENwS",
+      "provider_reported_network_fee_lamports": 5825,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[22]",
+      "signature": "3oypg4t8STL1mr24xA6ATkJKy3BU84UpAMURS7zXGXcx9rBYUVc9bFzJNSKHPB4hGMpxZtvsC8CX2sft1P6hGkLo",
+      "slot": 418465844,
+      "transaction_index": 131,
+      "block_time": 1778271053,
+      "timestamp": "2026-05-08T20:10:53+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 11647,
+      "wallet_paid_network_fee_lamports": 11647,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -78733372,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "160712168827",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "241670496989",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[23]",
+      "signature": "4JRRGwafoWW5TmZrfoS9dZVwMRvbxihJHMVU4ropuqhELxmY5mbYtRpXdYWX1N7G4BnF6hRNUojVgxLoT3Ttx9Qg",
+      "slot": 418465945,
+      "transaction_index": 798,
+      "block_time": 1778271093,
+      "timestamp": "2026-05-08T20:11:33+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 12977,
+      "wallet_paid_network_fee_lamports": 12977,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -110196669,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "241670496989",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "352350383275",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[24]",
+      "signature": "2dj5wYE8drY1ntb5odwfwQWBAXGagCqHsbNgjjVfCPNAcdYsqy42MiBYzLfgLswZs1KNGakUf3jCrwnGaXsyBWf8",
+      "slot": 418466055,
+      "transaction_index": 88,
+      "block_time": 1778271137,
+      "timestamp": "2026-05-08T20:12:17+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 12976,
+      "wallet_paid_network_fee_lamports": 12976,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -184869358,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "352350383275",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "542412659286",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[25]",
+      "signature": "3zKWmaasoiBZN4RVDCbAYKhREL1D2jBUwPGjw1cKKPgPmpU6afMPUvQhFijhYoZ27EdgiatFjrYW2T85ouVAuviS",
+      "slot": 418466158,
+      "transaction_index": 1020,
+      "block_time": 1778271177,
+      "timestamp": "2026-05-08T20:12:57+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 13056,
+      "wallet_paid_network_fee_lamports": 13056,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -104788283,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "542412659286",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "649144819746",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[26]",
+      "signature": "2HJHWV9is2H2iXxpZYNXDhVQe63Ze6mjsA4RaTZxCZxE3w1dt2ti7atvVwwJxjpACU8U43fH4g8zwhSaZ7BMTB7q",
+      "slot": 418466258,
+      "transaction_index": 56,
+      "block_time": 1778271218,
+      "timestamp": "2026-05-08T20:13:38+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 69477,
+      "wallet_paid_network_fee_lamports": 69477,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -33848063,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "649144819746",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "683390796208",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[27]",
+      "signature": "kvtUXKohGe9NhnmQHvrtm4vyjExqSYCNkkX5DXgZayHFM7fNhL55z7YwPfjNzGRiR6eiuzfVWPEMdDR3ZxmRjQJ",
+      "slot": 418466361,
+      "transaction_index": 85,
+      "block_time": 1778271258,
+      "timestamp": "2026-05-08T20:14:18+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 21274,
+      "wallet_paid_network_fee_lamports": 21274,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -55580476,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "683390796208",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "739246473356",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[28]",
+      "signature": "4RAZ2W9UHMLppyn7K6UotX5x9KXP1NUvzdsVgPZ9bnZbCiERzt9Mj3tZMkXsM6qBFDxEfgBMBCrZNgSTAqeB56oD",
+      "slot": 418466468,
+      "transaction_index": 245,
+      "block_time": 1778271300,
+      "timestamp": "2026-05-08T20:15:00+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 21111,
+      "wallet_paid_network_fee_lamports": 21111,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -136238085,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "739246473356",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "875414028688",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[29]",
+      "signature": "3A857nTw7QzobvWJNUPoMBEDeHTyMp6RkKQDUu5HVrbricTVGXGSri7aMtLKEoadMFMe5YcA8WzUKH5vwnwnTcQ8",
+      "slot": 418466575,
+      "transaction_index": 44,
+      "block_time": 1778271342,
+      "timestamp": "2026-05-08T20:15:42+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 12411,
+      "wallet_paid_network_fee_lamports": 12411,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 832826448,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "875414028688",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[30]",
+      "signature": "2NyFDhjyHGbUDHF7wus9MT3cBfhi3i2HrsLLPUSxzNNKaKNuU85v8eENMcS9Aj3cSYjDGQ68GBJFFAWE4a2VDrYZ",
+      "slot": 418466581,
+      "transaction_index": 183,
+      "block_time": 1778271344,
+      "timestamp": "2026-05-08T20:15:44+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 17266,
+      "wallet_paid_network_fee_lamports": 17266,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -11354092218,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[31]",
+      "signature": "5Ra6m6PNL4FkZLJveDmmDB4edRiBvFUGkFhDXQE91ykMueqTPqHkY9CjkffiW5AM6You1WEkbjDDbtiMNvizSdAL",
+      "slot": 421488698,
+      "transaction_index": 343,
+      "block_time": 1779480982,
+      "timestamp": "2026-05-22T20:16:22+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1844400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[32]",
+      "signature": "29Zo3tQ1L6g5CKvvMBFv3x4AqZgRyFSJznhX5fsubg5UQcU1jTC3A8eKCYyAyZbafaHDYzawsnd8i2feWnLsQTmL",
+      "slot": 421488707,
+      "transaction_index": 858,
+      "block_time": 1779480986,
+      "timestamp": "2026-05-22T20:16:26+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ohMBZLhcgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9",
+          "account_index": 3,
+          "mint": "F1nZKrkEmzBFHp7xooWyhHiq839n85QwGAGQ8DD6pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[33]",
+      "signature": "3GbnsWy12KCkDeG3xVyj8av79Brp4bNoZX3xyy3tMNReNUAtm7cbbqUSVTDrAbPVaqePknKhuZ8mwABwSsvDGygR",
+      "slot": 421488713,
+      "transaction_index": 1150,
+      "block_time": 1779480988,
+      "timestamp": "2026-05-22T20:16:28+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -1844400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[34]",
+      "signature": "4kiYVtjjuAM2xisSxH2gE5JJTg76TCvQmgHN4bGdLXfqaVqPxCRrqM5LCPZ4VZCGDjSY3wTcY4pZupMEMXsPnQou",
+      "slot": 423549735,
+      "transaction_index": 1168,
+      "block_time": 1780300108,
+      "timestamp": "2026-06-01T07:48:28+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "EY7rXnmwyqJbsUoCd2wayHfkrPVn1aw5qdAH7Wci87Bx",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 18355714,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[35]",
+      "signature": "5JzqoERMsbtcn8xGNytmvi6Q8NHiMBTVTR2T67EDj9yxe2WkmGeGACJ3YnAs7huVmmyCyVhKhTqLKTG6seVGFD3C",
+      "slot": 423549974,
+      "transaction_index": 920,
+      "block_time": 1780300203,
+      "timestamp": "2026-06-01T07:50:03+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 7076,
+      "wallet_paid_network_fee_lamports": 7076,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -14872274,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "GxG5jXK98LFBv7mti3oB1TLxapK23QLLQSfFyCxaoBMp",
+          "account_index": 1,
+          "mint": "58y1A3ZnVTJFoDEZ3pkjxpY7tYbsXGf1aTrfsHPXpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "9482387353",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[36]",
+      "signature": "3692TFtkGE3wCcjTdeMVsi87mRhYCthaYMruukXpoeuX7ESDUqEareHaGXQLANgs2d6SiAxy4AmdMe6KxkLMyYGf",
+      "slot": 423549983,
+      "transaction_index": 1117,
+      "block_time": 1780300207,
+      "timestamp": "2026-06-01T07:50:07+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "CGjQbWkkxHpBMmi8dDLcVQY5doqAu7DgC7eGJTAyZpdK",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[37]",
+      "signature": "4jLwb2kfiAaunTEZkSURn1T71ogssuc4zz1RbdWzrzNGJ8DzVoJAuFG1668R3Yor4ktWZNRr96j8Ex8j6wZMcQTu",
+      "slot": 423550205,
+      "transaction_index": 1191,
+      "block_time": 1780300295,
+      "timestamp": "2026-06-01T07:51:35+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "EY7rXnmwyqJbsUoCd2wayHfkrPVn1aw5qdAH7Wci87Bx",
+      "provider_reported_network_fee_lamports": 30000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1844400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[38]",
+      "signature": "2BC8os6gRzf9hhSTpBSoP4zkwEsAu5aCxspiMK2gRgHvzXPp59RK9TRJ92B4WhDRVSL5PHNhaSbGpDJn2XiMYpfJ",
+      "slot": 423550218,
+      "transaction_index": 226,
+      "block_time": 1780300301,
+      "timestamp": "2026-06-01T07:51:41+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "EY7rXnmwyqJbsUoCd2wayHfkrPVn1aw5qdAH7Wci87Bx",
+      "provider_reported_network_fee_lamports": 25000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -5327841,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "GxG5jXK98LFBv7mti3oB1TLxapK23QLLQSfFyCxaoBMp",
+          "account_index": 9,
+          "mint": "58y1A3ZnVTJFoDEZ3pkjxpY7tYbsXGf1aTrfsHPXpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "9482387353",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[39]",
+      "signature": "5ahwRARDih7FEGnDteNQgo1twNenJsgBhqMNzVRGevAhDv3fFUADr1RPRecLTLQxYQBmadFKi6qncFwTXHtNKeX5",
+      "slot": 425261178,
+      "transaction_index": 499,
+      "block_time": 1780981643,
+      "timestamp": "2026-06-09T05:07:23+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "DkwR564JCx4nSkYLjUSpuuKrXZU3Fm3sNEo51tVfoDD9",
+      "provider_reported_network_fee_lamports": 21905,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 116221209,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 3,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[40]",
+      "signature": "57FehvLCH7kGhCkqbPR71a4wm8kUuca2XjBo6R5YnajsAeN9rwrJB3t33dmVG58EByEPM4CJEByh7622Fn8zdngA",
+      "slot": 425261185,
+      "transaction_index": 1000,
+      "block_time": 1780981645,
+      "timestamp": "2026-06-09T05:07:25+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -86343702,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[41]",
+      "signature": "5RCe52v7CW6DdGUZaYSoMTNuqPF9pWrNcduyH6dAcRzGHvQ1LeqkVpLhsbd4TLbqcqh8BBaEBheDo7jeoHZuLyNm",
+      "slot": 425261191,
+      "transaction_index": 1039,
+      "block_time": 1780981648,
+      "timestamp": "2026-06-09T05:07:28+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "CR7mNhR23Qi8ihBzK1G9HacqcDGBA8HWze6yZdu57Wm6",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 5492133,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 8,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 8,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "192845519",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[42]",
+      "signature": "2LY5JcH2kfmfzxMkjqq3B5hqjh26pKiK5MHskBSC6tzN7GodFDSAfRsKCLHrRLucDq1hBquaQzx87c1FtMSiaqik",
+      "slot": 425261191,
+      "transaction_index": 1040,
+      "block_time": 1780981648,
+      "timestamp": "2026-06-09T05:07:28+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "51ZxQnqU9mbK1BLj8GZstm8C3ALhfgKp8HgPwMdGTNdQ",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 7132602,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 8,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "192845519",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 8,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "615237653",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[43]",
+      "signature": "F21A4DvhTRfsiKtHJepnFcJpxG38zpuNqmT8Fkqur9nNEaQ7wBjSdoE1zusA87xC1GWojj63LR2pdZV9KEYPN1J",
+      "slot": 425261191,
+      "transaction_index": 1041,
+      "block_time": 1780981648,
+      "timestamp": "2026-06-09T05:07:28+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2chHYCpXDfveVHUm2pD27n5UMZx6XwZ13qjf1m4U8my7",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 4951455,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 8,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "615237653",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 8,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "732558841",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[44]",
+      "signature": "2gwkZRwf4xayRepkwvbjEtT54Wq1zHqxxeC2QrxnTVWvJPPTNuHiV7yke4F4SQU86dDDBTSLYa5uXMUxWVpm8pjt",
+      "slot": 425261191,
+      "transaction_index": 1042,
+      "block_time": 1780981648,
+      "timestamp": "2026-06-09T05:07:28+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "8iBcgT6etBVYrBrc7i59mGUCcuS4ivBAdcApftbWu4iA",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 67451918,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 2,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "732558841",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 2,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[45]",
+      "signature": "3UCT7dkczQYuyse8zPTswagEJZmG4S4ZcBuzXxz3S1dC78pHvY3QwsX9HNR6LoJfSstLucuWzg4pFZ9BAytNfUez",
+      "slot": 425261200,
+      "transaction_index": 473,
+      "block_time": 1780981651,
+      "timestamp": "2026-06-09T05:07:31+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 21899,
+      "wallet_paid_network_fee_lamports": 21899,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -114905615,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[46]",
+      "signature": "35gFKyjftFTG8qMtTGVbdgpFCB3AujMcNLBzEofBLbDV3DmFmS8LNQsCST7yCSD5XmTAx49wJCJjD7aH7RRN7K2B",
+      "slot": 428308836,
+      "transaction_index": 1384,
+      "block_time": 1782191321,
+      "timestamp": "2026-06-23T05:08:41+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "6PhRg1azuVc2yddSG4YwLyanxxa9RWsG7L9Hjyfo9cto",
+          "account_index": 2,
+          "mint": "Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[47]",
+      "signature": "4tY8Zdyj9LaMtQTdsnkPJh4eyZ8k7RfCVNfr4KQqAKHuzhTNm3oMXdgfD2XRuRUhDsEWzgJRwVu6exRe19tSHKP",
+      "slot": 429965836,
+      "transaction_index": 47,
+      "block_time": 1782857870,
+      "timestamp": "2026-06-30T22:17:50+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "AExFPCZm6vcVy8P4pRbJEdkhvaXLzKXqF7Bq4cYptG3t",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 17272455,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[48]",
+      "signature": "44z84CWn4d1JydpYnuyi21gR7a33o2g8TvkNtioPazXesduD5DjuuSJDFQCLVdSSxzKN4WqXKpMZ6aHn5wT1R2BT",
+      "slot": 429965920,
+      "transaction_index": 1236,
+      "block_time": 1782857903,
+      "timestamp": "2026-06-30T22:18:23+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 9806,
+      "wallet_paid_network_fee_lamports": 9806,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -11771756,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "FkDhJUyL3x6QSu1ozy43oRWb2dVK757o8HtU2nH3TPei",
+          "account_index": 1,
+          "mint": "8RzLtzrucoKMoYAFUtfu6Tcg7LZSAGar78VWREeGpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "3622280839",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[49]",
+      "signature": "2hVAHrWHZyzuf7p78TiyBah6pnpWwqV4S5HLJHp8bjyHMzZYe4fHo3BKbPtDUYC5cXZqHk3zV7Gz6ne1r87KPxyA",
+      "slot": 429966602,
+      "transaction_index": 128,
+      "block_time": 1782858183,
+      "timestamp": "2026-06-30T22:23:03+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "AExFPCZm6vcVy8P4pRbJEdkhvaXLzKXqF7Bq4cYptG3t",
+      "provider_reported_network_fee_lamports": 30000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1844400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[50]",
+      "signature": "EyFMra9h73ihVuWkXE1BG6Y3wKDRLQxsE4KLJ1QUUTUUKJ4kSU1VJLAq6kb4HXuEscDj3pwdQNs5679hhjyVARx",
+      "slot": 429966613,
+      "transaction_index": 166,
+      "block_time": 1782858187,
+      "timestamp": "2026-06-30T22:23:07+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "AExFPCZm6vcVy8P4pRbJEdkhvaXLzKXqF7Bq4cYptG3t",
+      "provider_reported_network_fee_lamports": 25000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -7345099,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "FkDhJUyL3x6QSu1ozy43oRWb2dVK757o8HtU2nH3TPei",
+          "account_index": 7,
+          "mint": "8RzLtzrucoKMoYAFUtfu6Tcg7LZSAGar78VWREeGpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "3622280839",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[51]",
+      "signature": "2cMQFyr511G5Fij1RL3Czj5wYZxUJ8E3vo8sCwmyPEBbfYTQ4YhhhnmVdsAaGdC1S9v4gCQay9mrvf8LFxip7t8D",
+      "slot": 431043543,
+      "transaction_index": 1053,
+      "block_time": 1783292655,
+      "timestamp": "2026-07-05T23:04:15+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "BRm4Tk1T4JZN8mUNhSNPV6uJ736X6MUJygkdZPGBxyZv",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2864400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "ARGW1yEiHAF2xemYN3QaArneUxwb3YaB8rqPonTKTUrX",
+          "account_index": 4,
+          "mint": "Bg442NKifW9Ma9tapZDK7VpP9C9nhTjGHot14L1vpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 6,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "175490341",
+          "decimals": 9
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[52]",
+      "signature": "5Nb8HEnFuBTy4w665pJRdeSWNiBMHLvJZgPpXs5QGJv8HWUiDXdJENXDU5KsvqFNRj1TeHE29qbQr3miGJUgkuz3",
+      "slot": 431043560,
+      "transaction_index": 383,
+      "block_time": 1783292662,
+      "timestamp": "2026-07-05T23:04:22+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2864400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "ARGW1yEiHAF2xemYN3QaArneUxwb3YaB8rqPonTKTUrX",
+          "account_index": 2,
+          "mint": "Bg442NKifW9Ma9tapZDK7VpP9C9nhTjGHot14L1vpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 3,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "175490341",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[53]",
+      "signature": "3sYK47WWMCVgKPKkibDGUxJtrkKiD5XKg3CxQ76WCNmhPk55dAhtKsm3u4F6Z3rEE7NMFbqErFk8Eh811P2RmBEg",
+      "slot": 432369817,
+      "transaction_index": 352,
+      "block_time": 1783833443,
+      "timestamp": "2026-07-12T05:17:23+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "Aya7UY7cZwCyPDWR1WMM7RE4PxJ73cFuRQr3ECBGmine",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 7,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "449838761",
+          "decimals": 9
+        },
+        {
+          "account": "SbM1cQX3gzk41Ug8B1udZorY1upp7Xy37Fz4KRvWtPJ",
+          "account_index": 10,
+          "mint": "5VMbcRosto1RT6GZHRucUZEM26XEoTYcmoSbNhq3pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[54]",
+      "signature": "2euCFeKedRfzHwuwzxBpgzFWW5bCJrStfMpZAyi7xtBb34j2Zhzo7J31CUZYN31DP7an2eTn2rTwEqQQNDtxnTRT",
+      "slot": 432369822,
+      "transaction_index": 36,
+      "block_time": 1783833446,
+      "timestamp": "2026-07-12T05:17:26+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "8Tg4aQigzXVERffAX6fnmtFwP2ajZB8mx8R2KCUjpbz4",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2859400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[55]",
+      "signature": "3uq7yWnYFbhAisy6FdZ2vSM1mZuyvXZhD2pitmjNkHPCC8jaJpCq4mJt4aYULjBzosZ1XpnNFrUJQqqA4agxpmue",
+      "slot": 432369822,
+      "transaction_index": 37,
+      "block_time": 1783833446,
+      "timestamp": "2026-07-12T05:17:26+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2859400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "SbM1cQX3gzk41Ug8B1udZorY1upp7Xy37Fz4KRvWtPJ",
+          "account_index": 2,
+          "mint": "5VMbcRosto1RT6GZHRucUZEM26XEoTYcmoSbNhq3pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 3,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "449838761",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[56]",
+      "signature": "4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U",
+      "slot": 432369824,
+      "transaction_index": 20,
+      "block_time": 1783833447,
+      "timestamp": "2026-07-12T05:17:27+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "APiKepcjY7dqqXMSffW9mMfhbdNEC7mQqP2atsL1fxLU",
+      "provider_reported_network_fee_lamports": 20000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": false,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "FWETtBpcXZEFZREyqqYbptacLeUk81GvbBCXNLhpk2Vj",
+          "account_index": 3,
+          "mint": "Gja5EvVDBjaMj9UyFdq2ocoZMbW7xAXGBjEZPMaCpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "10000000",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[57]",
+      "signature": "wsjwGqMmfsEW1PVGsmJ4xWzzdWGwfSvRnqjJkZV9mtdwmQmVMYyQGmAoMVi1QiPtXx6wrza7ts788gcRuCcBoJH",
+      "slot": 432375663,
+      "transaction_index": 458,
+      "block_time": 1783835838,
+      "timestamp": "2026-07-12T05:57:18+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "APiKepcjY7dqqXMSffW9mMfhbdNEC7mQqP2atsL1fxLU",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": false,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "FWETtBpcXZEFZREyqqYbptacLeUk81GvbBCXNLhpk2Vj",
+          "account_index": 9,
+          "mint": "Gja5EvVDBjaMj9UyFdq2ocoZMbW7xAXGBjEZPMaCpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "10000000",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[58]",
+      "signature": "2waj6bSnMs4N2z7TgqVkEZVMu2YABvWwpSFpkWevy7nnmfLWqf6L76g79aZM2ZNZNwQrGbK3AXcTRSFzmQvs1jr3",
+      "slot": 434042012,
+      "transaction_index": 156,
+      "block_time": 1784526128,
+      "timestamp": "2026-07-20T05:42:08+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "KhhZANRb8mj3Z2RcMqgDE3bkZPeCj4WQFmbNNZHHmFe",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "CRK5icX7oycNb4h9V5UmbqnvSbpW4Q72ZuMXirg5LK1G",
+          "account_index": 7,
+          "mint": "62yzpmKJB6XiVtZcQZhUkUXhqwN3UgCbffUi4JM9pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "D2k3DCStd9fWe6WSC5iNsqRyWcCwBtoRGAeZuD5ZwpAt",
+          "account_index": 8,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "26368912",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[59]",
+      "signature": "676mbBaqULbgwPiecg8fggHzaJ8e1uair583ga9yj3at1eetQwn37nJ3eWbTq9TwwsQPsHSQmoWdufNYv1npHe4H",
+      "slot": 434042021,
+      "transaction_index": 388,
+      "block_time": 1784526132,
+      "timestamp": "2026-07-20T05:42:12+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "JCmLqHHgKwyZnkuS3pLp7Tp9dQa3coXMqkNuapjnATSS",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2869400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[60]",
+      "signature": "4fvdfkPYbwAoiE57k9xhrgkfvhrXd5MZbAUjnj2fQjiPrKP4qgxYHQ95ckK1JPcTPxe2HzJpVF5pAAZ1eJ6Nq63n",
+      "slot": 434042021,
+      "transaction_index": 389,
+      "block_time": 1784526132,
+      "timestamp": "2026-07-20T05:42:12+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2869400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "CRK5icX7oycNb4h9V5UmbqnvSbpW4Q72ZuMXirg5LK1G",
+          "account_index": 2,
+          "mint": "62yzpmKJB6XiVtZcQZhUkUXhqwN3UgCbffUi4JM9pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "D2k3DCStd9fWe6WSC5iNsqRyWcCwBtoRGAeZuD5ZwpAt",
+          "account_index": 3,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "26368912",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "D2k3DCStd9fWe6WSC5iNsqRyWcCwBtoRGAeZuD5ZwpAt",
+          "account_index": 3,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "1862241",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[61]",
+      "signature": "P5taGQFWJ5YfXrxYEJu2rtGYprG4DcoRnUndpr1LKUjWTp2DZ9VaP27CgUSWQ4SXLx3MkhHdspPaaZffWKKARMM",
+      "slot": 434042062,
+      "transaction_index": 939,
+      "block_time": 1784526151,
+      "timestamp": "2026-07-20T05:42:31+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "KhhZANRb8mj3Z2RcMqgDE3bkZPeCj4WQFmbNNZHHmFe",
+      "provider_reported_network_fee_lamports": 30000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "D2k3DCStd9fWe6WSC5iNsqRyWcCwBtoRGAeZuD5ZwpAt",
+          "account_index": 9,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "1862241",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[62]",
+      "signature": "4PRHeke4gHFJo4TcJhbEAAeTJHRmUtDNEHPVSnYkh3fMxDrrjgR3X7aTMg9RRfX8igVFDBKgdf3F8nESgr8Wu6dM",
+      "slot": 438951730,
+      "transaction_index": 20,
+      "block_time": 1786596371,
+      "timestamp": "2026-08-13T04:46:11+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "Fm7XV7gzmGSrMR3rTRPfKsHs3xxrqsF4BZaYkrekDo5s",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2864400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "2GMHYussnZNsGKbp6SbfocgTVf4pnUcqpAqdJCsAVHjx",
+          "account_index": 2,
+          "mint": "CZEGT2GyNRNwvD7TG5Lz512dUGH8enxwZVKJoAgxpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 6,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "95214509",
+          "decimals": 9
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[63]",
+      "signature": "3JVGrbKLUqW1Unxa2PAWSHA6k73V3W2hWbm71e5WsLGEKFJpN4YUdM7Q2VWgoUvzfjvpH5tcKJossqmbXnkNrUzz",
+      "slot": 438951738,
+      "transaction_index": 347,
+      "block_time": 1786596374,
+      "timestamp": "2026-08-13T04:46:14+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2864400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "2GMHYussnZNsGKbp6SbfocgTVf4pnUcqpAqdJCsAVHjx",
+          "account_index": 2,
+          "mint": "CZEGT2GyNRNwvD7TG5Lz512dUGH8enxwZVKJoAgxpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 3,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "95214509",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[64]",
+      "signature": "5JELqSXxTEG8Tccf9f5v64fedWM1AadmuSJHdKEteBoN33pdKCsqmvbzXFZVLtUK2oTfQsNMSQNtB67Gw7qszwDx",
+      "slot": 441113886,
+      "transaction_index": 1328,
+      "block_time": 1787472118,
+      "timestamp": "2026-08-23T08:01:58+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "8abE4Kn47gaHSDGP38KW6eEs2pfbqmAUbYJ3GDQwdJc1",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "2CsFTi37A6CHAX9GQushSYgM5KVxAjZpepAsD2PTg5v8",
+          "account_index": 1,
+          "mint": "AJHqMoBpMpujUnbE4vSmPbBduzJBB9GZyeuqZ7M7pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 7,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "0",
+          "decimals": 9
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[65]",
+      "signature": "5Lq7rH34ne16PWnCKWtZhRyFoaVHEM8rMgZPtHwGGKenDuHMJyjXG5tkcva3bDdnTWbJb4UXtacNMU65DKnnmF8p",
+      "slot": 441113892,
+      "transaction_index": 1706,
+      "block_time": 1787472121,
+      "timestamp": "2026-08-23T08:02:01+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "AnbGfLfPPtveSv9Lmyt4En6nSoG1tS1hCfz5odvHcC6C",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2854400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[66]",
+      "signature": "4ABL51ZQQTLjhp94K6PnBRAG1PepVxsYRPBYKkKm9zfaReJS7HxqqPyKwkAzxbMJxAc2QBo5gvrXA9uqkz3fm1tt",
+      "slot": 441113892,
+      "transaction_index": 1707,
+      "block_time": 1787472121,
+      "timestamp": "2026-08-23T08:02:01+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 10000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2854400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "2CsFTi37A6CHAX9GQushSYgM5KVxAjZpepAsD2PTg5v8",
+          "account_index": 3,
+          "mint": "AJHqMoBpMpujUnbE4vSmPbBduzJBB9GZyeuqZ7M7pump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 5,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "0",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[67]",
+      "signature": "2ufa6qqtQvE5rjoFuMEjtTF5Ym6UG5v4pqJMUwHiJ7vZpQyt8yE4TpkkJSqnftbk62bq6jFPTeNapksBNtnUYsTr",
+      "slot": 443661796,
+      "transaction_index": 42,
+      "block_time": 1788341090,
+      "timestamp": "2026-09-02T09:24:50+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "E8UX9oPHGJNUt1Wa57bektoThf1BHoPmHWcmuWx6ehSe",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 0,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 9,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "117848541",
+          "decimals": 9
+        },
+        {
+          "account": "G6yJ6JxiJo4wPUxjgryPZ7j9JHtdPXhYrXQs1Do58RtQ",
+          "account_index": 10,
+          "mint": "DnQu6xQd9zzW5dWpKppjNTRcTYFS6JDpK5xLXEZypump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[68]",
+      "signature": "2m7Awbv6VCbRAmZ2FpHSauyWGY6yEj35Zb6jDqtVEyrpFqQPA1enm73bZHzQQV8ZgAcs8kTMivtGDeb26oV9YsPq",
+      "slot": 443661802,
+      "transaction_index": 1242,
+      "block_time": 1788341092,
+      "timestamp": "2026-09-02T09:24:52+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "7WHy6jjqw6yZixKFpikpN2tFjJR3S278LAPLauPzKkJe",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 2859400,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[69]",
+      "signature": "2ampQuHvc9Si49Pz1qL7rT1gG8gB9pgyGhWkbW2RgbCuALFX4Mi3qz5R4upqhP8uW2FPy8Jfjb7aGbGiG2fuo6sH",
+      "slot": 443661802,
+      "transaction_index": 1243,
+      "block_time": 1788341092,
+      "timestamp": "2026-09-02T09:24:52+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 5000,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2859400,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "G6yJ6JxiJo4wPUxjgryPZ7j9JHtdPXhYrXQs1Do58RtQ",
+          "account_index": 2,
+          "mint": "DnQu6xQd9zzW5dWpKppjNTRcTYFS6JDpK5xLXEZypump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        },
+        {
+          "account": "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+          "account_index": 3,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity_raw": "117848541",
+          "decimals": 9
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[70]",
+      "signature": "5aQQmDSXeVhmReZuDuHHthRkdjPgDmCSEty8FJLByX7hKaeB9NEo1SjsYbcGs9Fq82maTQNsSG56NbfdkjYePWDV",
+      "slot": 446818712,
+      "transaction_index": 69,
+      "block_time": 1789339076,
+      "timestamp": "2026-09-13T22:37:56+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "7v3d3hXH3v48HWsSGEkxvYGu8HDm4QEDBpL1Aqppjxub",
+      "provider_reported_network_fee_lamports": 63217,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 12810488350,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "Bd42jNQErVaj4EgribKywKPvTbgSNMjhkwMJCseGoDed",
+          "account_index": 2,
+          "mint": "GJRxYW8MiEPhJztdh41EXsuZvNQj7sJZRnuKSrTBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[71]",
+      "signature": "49Sw3ia6HGaXdpcFdjCAQhp77K6XGJztCSK4FxbfeKdjD8tLzdVdaMzEAH7KrPMCjdztwddRvvuJMhNEWLxb9FPN",
+      "slot": 446818746,
+      "transaction_index": 59,
+      "block_time": 1789339087,
+      "timestamp": "2026-09-13T22:38:07+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "7AYN6BXWrA2j1oMak4MVD6tdLE12GpGf94pazuyna2iJ",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[72]",
+      "signature": "4ME1U6UxSAJgFnhUit3otZdGqFsXnRUNvAX9qxKqUm2cd4zPYKU5YGUGWnJibZ7hWeiAc1YkaotzAZd76DMwbCN5",
+      "slot": 446818851,
+      "transaction_index": 155,
+      "block_time": 1789339120,
+      "timestamp": "2026-09-13T22:38:40+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 14021,
+      "wallet_paid_network_fee_lamports": 14021,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -1031820188,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "Bd42jNQErVaj4EgribKywKPvTbgSNMjhkwMJCseGoDed",
+          "account_index": 3,
+          "mint": "GJRxYW8MiEPhJztdh41EXsuZvNQj7sJZRnuKSrTBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "Bd42jNQErVaj4EgribKywKPvTbgSNMjhkwMJCseGoDed",
+          "account_index": 3,
+          "mint": "GJRxYW8MiEPhJztdh41EXsuZvNQj7sJZRnuKSrTBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1121722096295",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[73]",
+      "signature": "4iRzZkwUMoscY8gzvM5i2a1XSspyBBGFVdx2bcsqYi4igoqYdW7hF89y2K7e1dGyLqPmC8iK18VpEDVW7Rj15wet",
+      "slot": 446819104,
+      "transaction_index": 249,
+      "block_time": 1789339201,
+      "timestamp": "2026-09-13T22:40:01+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 11637,
+      "wallet_paid_network_fee_lamports": 11637,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1087116916,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "Bd42jNQErVaj4EgribKywKPvTbgSNMjhkwMJCseGoDed",
+          "account_index": 3,
+          "mint": "GJRxYW8MiEPhJztdh41EXsuZvNQj7sJZRnuKSrTBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1121722096295",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "Bd42jNQErVaj4EgribKywKPvTbgSNMjhkwMJCseGoDed",
+          "account_index": 3,
+          "mint": "GJRxYW8MiEPhJztdh41EXsuZvNQj7sJZRnuKSrTBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[74]",
+      "signature": "23gQnMFztqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A",
+      "slot": 446819112,
+      "transaction_index": 923,
+      "block_time": 1789339203,
+      "timestamp": "2026-09-13T22:40:03+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 47663,
+      "wallet_paid_network_fee_lamports": 47663,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -12865785079,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[75]",
+      "signature": "26q1P9YKXrhQQeZ4FAqtT82jm8xWQwTx2mKK6qNKtuWZKajPs5K82h2L3Ndw22KJXYpa7rjNV8PVDAv1RPuSMjeM",
+      "slot": 451133998,
+      "transaction_index": 139,
+      "block_time": 1790548884,
+      "timestamp": "2026-09-27T22:41:24+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1346200,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[76]",
+      "signature": "4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7",
+      "slot": 451134008,
+      "transaction_index": 283,
+      "block_time": 1790548886,
+      "timestamp": "2026-09-27T22:41:26+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1513840,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "Bd42jNQErVaj4EgribKywKPvTbgSNMjhkwMJCseGoDed",
+          "account_index": 3,
+          "mint": "GJRxYW8MiEPhJztdh41EXsuZvNQj7sJZRnuKSrTBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "1",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[77]",
+      "signature": "2f3NcAezdhbqBYNRf6CrkAFZAs2ShV8sdACvVUxFZP5yJqExd9nDK16LqXuiBwTteVMFjNxx7vsrrux4dDM4nS94",
+      "slot": 451134012,
+      "transaction_index": 1548,
+      "block_time": 1790548887,
+      "timestamp": "2026-09-27T22:41:27+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "B6TZUPYfuxhdUhGr2YNGKr89SCN87rkwJVUm3KsqPCfD",
+      "provider_reported_network_fee_lamports": 10000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -2209800,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[78]",
+      "signature": "2kB4ci6iK27GTeYxe6reQ6n44ENdw49dyJFXDckr2b1WzN6Qkao3rxGYvYGCS3veKh6FNkDKURpST8HcX4hYV4RX",
+      "slot": 451435366,
+      "transaction_index": 697,
+      "block_time": 1790629697,
+      "timestamp": "2026-09-28T21:08:17+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "Gtd9Dkgn2SAiPwvKNAp23eWontHjYEuYCbT52T2eMszD",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 117765573,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[79]",
+      "signature": "2NWtBmk33d83Vy7wo25s8tBEbfx5yMmjn6j5ywSaTZip1gwCEGRcKNBRU9PGFrfRZ1Tkcwa7fm9YUY9LTd28c5Nm",
+      "slot": 451435915,
+      "transaction_index": 1438,
+      "block_time": 1790629843,
+      "timestamp": "2026-09-28T21:10:43+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 12563,
+      "wallet_paid_network_fee_lamports": 12563,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -106928032,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "CpNbj25i45abLZanriD2karU8ZPfGKnS2GAjQc8tjdry",
+          "account_index": 1,
+          "mint": "F1z5FQdToNDLQYJ72grqePaWJrcrf39HR4gaKA57ySUQ",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "131200547457",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[80]",
+      "signature": "p6mphEpeQT7v1nibFhLyih5ium8XRiLfadKtCnAzmeaiGJanC3Yk1B2ghvHSt96XRX8KGcxiBkSz4MpvMyS9hzn",
+      "slot": 451436705,
+      "transaction_index": 372,
+      "block_time": 1790630055,
+      "timestamp": "2026-09-28T21:14:15+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "Gtd9Dkgn2SAiPwvKNAp23eWontHjYEuYCbT52T2eMszD",
+      "provider_reported_network_fee_lamports": 30000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1346200,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[81]",
+      "signature": "5WywugqUuZXt2rdG4iEwGnT6es9bUnmeizHpnq95C1zirp8Hdpm6WUzKAARPAo7v4vXKgrP5eT5MdqworFBi3fxQ",
+      "slot": 451436714,
+      "transaction_index": 469,
+      "block_time": 1790630058,
+      "timestamp": "2026-09-28T21:14:18+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "Gtd9Dkgn2SAiPwvKNAp23eWontHjYEuYCbT52T2eMszD",
+      "provider_reported_network_fee_lamports": 25000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -12183741,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "CpNbj25i45abLZanriD2karU8ZPfGKnS2GAjQc8tjdry",
+          "account_index": 8,
+          "mint": "F1z5FQdToNDLQYJ72grqePaWJrcrf39HR4gaKA57ySUQ",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "131200547457",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "11111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[82]",
+      "signature": "NtjpucuTXB7rDCeBrXNWYQZcEXiCKktPegKo3YnG4pET7ehTwBcro1p2ByCEci8aS7dqyohsGaaEDH7XyDefCWk",
+      "slot": 453115202,
+      "transaction_index": 404,
+      "block_time": 1791079143,
+      "timestamp": "2026-10-04T01:59:03+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "4x56VefYzVW4eqhBbiL8jrziVX1tf6XXq3z9Key1U1To",
+      "provider_reported_network_fee_lamports": 6419,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 691630570,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [
+        {
+          "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+          "account_index": 2,
+          "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[83]",
+      "signature": "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+      "slot": 453117276,
+      "transaction_index": 517,
+      "block_time": 1791079700,
+      "timestamp": "2026-10-04T02:08:20+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 58918,
+      "wallet_paid_network_fee_lamports": 58918,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -566540218,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+          "account_index": 3,
+          "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+          "account_index": 3,
+          "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "516612982765",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[84]",
+      "signature": "1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6",
+      "slot": 453117278,
+      "transaction_index": 575,
+      "block_time": 1791079700,
+      "timestamp": "2026-10-04T02:08:20+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "q5gmdW6aS84HRci75WEtTAX4FZa1GSeeafi2Y23ivMn",
+      "provider_reported_network_fee_lamports": 5000,
+      "wallet_paid_network_fee_lamports": 0,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 1,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[85]",
+      "signature": "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn",
+      "slot": 453119271,
+      "transaction_index": 537,
+      "block_time": 1791080229,
+      "timestamp": "2026-10-04T02:17:09+00:00",
+      "version": 0,
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 6849,
+      "wallet_paid_network_fee_lamports": 6849,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": 551923094,
+      "pre_wallet_owned_balances": [
+        {
+          "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+          "account_index": 3,
+          "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "516612982765",
+          "decimals": 6
+        }
+      ],
+      "post_wallet_owned_balances": [
+        {
+          "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+          "account_index": 3,
+          "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+          "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "quantity_raw": "0",
+          "decimals": 6
+        }
+      ],
+      "outer_programs": [
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    },
+    {
+      "record_pointer": "result.data[86]",
+      "signature": "3EAbH7aHZcVfkafc8VJrv97ZSWYEtv2WKLTp1ofpHbo1WzuSNMyWU7zVkrxvqHSRSV6doPZRLBK5faunS96qXRnY",
+      "slot": 453119311,
+      "transaction_index": 589,
+      "block_time": 1791080239,
+      "timestamp": "2026-10-04T02:17:19+00:00",
+      "version": "legacy",
+      "error": null,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "provider_reported_network_fee_lamports": 7217,
+      "wallet_paid_network_fee_lamports": 7217,
+      "wallet_in_account_keys": true,
+      "selected_record_native_wallet_delta_lamports": -677013447,
+      "pre_wallet_owned_balances": [],
+      "post_wallet_owned_balances": [],
+      "outer_programs": [
+        "ComputeBudget111111111111111111111111111111",
+        "ComputeBudget111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "11111111111111111111111111111111"
+      ],
+      "economic_scope": "Retained raw observation; unreviewed instruction/cost/flow/eligibility roles are unresolved, never silently omitted."
+    }
+  ],
+  "native_control_choices": [
+    {
+      "row": 83,
+      "signature": "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+      "slot": 453117276,
+      "transaction_index": 517
+    },
+    {
+      "row": 85,
+      "signature": "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn",
+      "slot": 453119271,
+      "transaction_index": 537
+    },
+    {
+      "row": 76,
+      "signature": "4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7",
+      "slot": 451134008,
+      "transaction_index": 283
+    },
+    {
+      "row": 56,
+      "signature": "4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U",
+      "slot": 432369824,
+      "transaction_index": 20
+    },
+    {
+      "row": 57,
+      "signature": "wsjwGqMmfsEW1PVGsmJ4xWzzdWGwfSvRnqjJkZV9mtdwmQmVMYyQGmAoMVi1QiPtXx6wrza7ts788gcRuCcBoJH",
+      "slot": 432375663,
+      "transaction_index": 458
+    }
+  ],
+  "unresolved_dependencies": [
+    "Exhaustive historical owned-account population for both programs, including all hidden accounts",
+    "Complete incoming origins and event-time acquisition basis across every relevant record",
+    "Unreviewed multi-user/forwarder, authority, mint/burn/freeze and non-SOL routes and economic roles",
+    "Time-relevant meme/settlement/spam classification",
+    "Exact all-asset report-boundary inventory, historical marks and valued external flows"
+  ],
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false
+}

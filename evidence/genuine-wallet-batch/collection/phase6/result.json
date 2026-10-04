@@ -1,0 +1,410 @@
+{
+  "kind": "authorised-bounded-native-collection",
+  "started_utc": "2026-10-04T06:17:27.630615+00:00",
+  "state": "COLLECTED_IN_SCOPE",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "plan_sha256": "09cf07de775f6180be5616d11979f47ff6d108ec24b0d1b76a313c4cb80d7c83",
+  "endpoint": "https://mainnet.helius-rpc.com/",
+  "endpoints_used": [
+    "https://mainnet.helius-rpc.com/"
+  ],
+  "confirmation": {
+    "plan": "Free",
+    "cycle_start": "2026-10-02",
+    "cycle_end": "2026-11-02",
+    "remaining_credits": 999801,
+    "autoscaling": false,
+    "confirmed_by": "user-dashboard"
+  },
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "provider_requests": 8,
+  "conservative_credits": 80,
+  "public_request_cap": 4,
+  "native_provider_requests": 8,
+  "public_provider_requests": 0,
+  "retries": 0,
+  "purchases": false,
+  "quota_reset": false,
+  "quota_before": {
+    "credits": {
+      "used": 90,
+      "reserved": 0,
+      "cap": 1000,
+      "remaining": 910,
+      "cycle_start": "2026-10-02"
+    },
+    "requests": {
+      "used": 11,
+      "reserved": 0,
+      "cap": 30,
+      "remaining": 19,
+      "cycle_start": "2026-10-02"
+    },
+    "public_requests": {
+      "used": 2,
+      "reserved": 0,
+      "cap": 4,
+      "remaining": 2,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "billing_actual_credits": null,
+  "billing_scope": "Conservative reservations; dashboard snapshot is operator supplied and provider invoice delta is unverified.",
+  "requests": [
+    {
+      "id": "current-wallet-account",
+      "method": "getAccountInfo",
+      "request_id": 1,
+      "request_reservation": "dd3ba93dca19427a95cbb2cc90b47f0b",
+      "credit_reservation": "c48f1fbdafcd4ba6839f6fcbbce616b0",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "01-current-wallet-account-request.json",
+      "request_sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+      "started_utc": "2026-10-04T06:17:27.670040+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:27 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "01-current-wallet-account-response.raw.gz",
+      "response_sha256": "feabb86540e5c606f765d034aa523643e4c469744e4d2ef684e2b1e04c673ebd",
+      "response_bytes": 247,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "context_slot": 453173211,
+        "account_present": true
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:27.980389+00:00"
+    },
+    {
+      "id": "current-legacy-accounts",
+      "method": "getTokenAccountsByOwner",
+      "request_id": 2,
+      "request_reservation": "aef74a9a8aba47868372a640c6ba3f89",
+      "credit_reservation": "17a5868645d44996b23ed2ab76d6d979",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "02-current-legacy-accounts-request.json",
+      "request_sha256": "ed44f19d919499ac45424e0f40d47ace46bb373d278983e766119b994f341704",
+      "started_utc": "2026-10-04T06:17:28.317144+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:28 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "02-current-legacy-accounts-response.raw.gz",
+      "response_sha256": "0842531d6a0f6d49937d9b314bd13096320d52543ff13839861640ade28728e4",
+      "response_bytes": 104,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "accounts": 0,
+        "context_slot": 453173213,
+        "coverage": "Current ownership only; historical closed/reassigned lifecycle remains unproved."
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:28.455887+00:00"
+    },
+    {
+      "id": "current-token2022-accounts",
+      "method": "getTokenAccountsByOwner",
+      "request_id": 3,
+      "request_reservation": "76edaad50f12432894ea9b3a5e100372",
+      "credit_reservation": "d654cbdd87664b5eb1318c8d36cc8abe",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "03-current-token2022-accounts-request.json",
+      "request_sha256": "91a6efe9c3137ca8a8d1f805d3ecafe4447ef1bb16ec7ad9c5f968940780ab90",
+      "started_utc": "2026-10-04T06:17:28.792104+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:29 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "03-current-token2022-accounts-response.raw.gz",
+      "response_sha256": "6497a39b1f7f34f1c054ef140473300762dd9f5c3fd2017b4318d755ffae0d3e",
+      "response_bytes": 667,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "accounts": 1,
+        "context_slot": 453173215,
+        "coverage": "Current ownership only; historical closed/reassigned lifecycle remains unproved."
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:29.033254+00:00"
+    },
+    {
+      "id": "selected-buy",
+      "method": "getTransaction",
+      "request_id": 4,
+      "request_reservation": "ceba56e1922948709d53697299e13915",
+      "credit_reservation": "e371fb78b3b74403b61b602e8875d31f",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "04-selected-buy-request.json",
+      "request_sha256": "128273ef36d883c5fc341acbf74c59ae7c6ec43a613b8530f77ff009ef74daee",
+      "started_utc": "2026-10-04T06:17:29.369564+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:29 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "04-selected-buy-response.raw.gz",
+      "response_sha256": "d8d947c50371ad25a707172d323b055ca95c3dddebdaae20feae6ea683984a5a",
+      "response_bytes": 20184,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "signature": "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+        "slot": 453117276,
+        "block_time": 1791079700,
+        "failed": false
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:29.545728+00:00"
+    },
+    {
+      "id": "selected-sell",
+      "method": "getTransaction",
+      "request_id": 5,
+      "request_reservation": "abfccac3680b457c8ea2dede82e46b68",
+      "credit_reservation": "8861077e47444f01a2cc6ae0e0a74df5",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "05-selected-sell-request.json",
+      "request_sha256": "35cf84b6d2537f4875edf8517fd23ec96db55ec730ddcf3fcd647619b2deebbc",
+      "started_utc": "2026-10-04T06:17:29.881975+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:30 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "05-selected-sell-response.raw.gz",
+      "response_sha256": "be9ed43c64087da645edfa1e37931b6aa04e479ecb305470fbd07c73d1b9c9f0",
+      "response_bytes": 18481,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "signature": "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn",
+        "slot": 453119271,
+        "block_time": 1791080229,
+        "failed": false
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:30.187392+00:00"
+    },
+    {
+      "id": "legacy-transfer-close",
+      "method": "getTransaction",
+      "request_id": 6,
+      "request_reservation": "7c77a4a3cafe434bb1cef91f944562b8",
+      "credit_reservation": "211e2520029247bfb8a4f093273cd31c",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "06-legacy-transfer-close-request.json",
+      "request_sha256": "20f1213965746dd4f2109c4584f6062294b411f0c666fb920a4176ba3663fe31",
+      "started_utc": "2026-10-04T06:17:30.523989+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:30 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "06-legacy-transfer-close-response.raw.gz",
+      "response_sha256": "9e9b07779105ceeb697d4441684e04c70923c47ce57c0b63a5f4ecc84f0b416b",
+      "response_bytes": 4903,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "signature": "4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7",
+        "slot": 451134008,
+        "block_time": 1790548886,
+        "failed": false
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:30.772702+00:00"
+    },
+    {
+      "id": "owner-in-data-token2022",
+      "method": "getTransaction",
+      "request_id": 7,
+      "request_reservation": "0e2ca0866e5a4d739691356e058558d9",
+      "credit_reservation": "9140c86febfc46f4b0eb0912b8841067",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "07-owner-in-data-token2022-request.json",
+      "request_sha256": "af3bd1c43f13eff8a0128becf05b98853218a60c4478bc04101322e48781f172",
+      "started_utc": "2026-10-04T06:17:31.109021+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:31 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "07-owner-in-data-token2022-response.raw.gz",
+      "response_sha256": "6aa959d4d6a715d03446730fbf3a82266b1d74f039b5fbe4338e271108aaf0ac",
+      "response_bytes": 13626,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "signature": "4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U",
+        "slot": 432369824,
+        "block_time": 1783833447,
+        "failed": false
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:31.240305+00:00"
+    },
+    {
+      "id": "token2022-burn-close",
+      "method": "getTransaction",
+      "request_id": 8,
+      "request_reservation": "61b0ec32aa644c838c90339d02adce3a",
+      "credit_reservation": "ecfa171d68c24eecb0638346cc9abf9e",
+      "public_request_reservation": null,
+      "source_url": "https://mainnet.helius-rpc.com/",
+      "conservative_credits": 10,
+      "request_path": "08-token2022-burn-close-request.json",
+      "request_sha256": "53f97a2f3a156255aefc006dc1d7611582b11b2b1e8ef1eda1d0684765b6d3a3",
+      "started_utc": "2026-10-04T06:17:31.580157+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:17:31 GMT",
+        "content-type": "application/json"
+      },
+      "response_path": "08-token2022-burn-close-response.raw.gz",
+      "response_sha256": "4c765521f438630a5e426fe0f5748f41093f2e001963cd4c583848562e693303",
+      "response_bytes": 30984,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "signature": "wsjwGqMmfsEW1PVGsmJ4xWzzdWGwfSvRnqjJkZV9mtdwmQmVMYyQGmAoMVi1QiPtXx6wrza7ts788gcRuCcBoJH",
+        "slot": 432375663,
+        "block_time": 1783835838,
+        "failed": false
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:17:31.774009+00:00"
+    }
+  ],
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "scope": "Raw acquisition only; neither endpoint success nor terminal paging certifies historical population, accounting or wallet qualification.",
+  "quota_after": {
+    "credits": {
+      "used": 170,
+      "reserved": 0,
+      "cap": 1000,
+      "remaining": 830,
+      "cycle_start": "2026-10-02"
+    },
+    "requests": {
+      "used": 19,
+      "reserved": 0,
+      "cap": 30,
+      "remaining": 11,
+      "cycle_start": "2026-10-02"
+    },
+    "public_requests": {
+      "used": 2,
+      "reserved": 0,
+      "cap": 4,
+      "remaining": 2,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "finished_utc": "2026-10-04T06:17:32.109889+00:00",
+  "artifacts": {
+    "01-current-wallet-account-response.raw.gz": {
+      "sha256": "b43a4e1e155fb5c2c872f328fccf1809a7063ba00c3e67daf91a1d52d24a5108",
+      "bytes": 195
+    },
+    "03-current-token2022-accounts-request.json": {
+      "sha256": "91a6efe9c3137ca8a8d1f805d3ecafe4447ef1bb16ec7ad9c5f968940780ab90",
+      "bytes": 228
+    },
+    "04-selected-buy-response.raw.gz": {
+      "sha256": "ca0a81a0bb7d1f374c41c0776cdd9ce1f2d461844bce36f173a5c4cdc036232c",
+      "bytes": 4163
+    },
+    "08-token2022-burn-close-response.raw.gz": {
+      "sha256": "64bb9c3c755c5de903f7880c16056294ecb1344d5a601e8c8efcdb184bcd1d09",
+      "bytes": 2628
+    },
+    "07-owner-in-data-token2022-request.json": {
+      "sha256": "af3bd1c43f13eff8a0128becf05b98853218a60c4478bc04101322e48781f172",
+      "bytes": 238
+    },
+    "08-token2022-burn-close-request.json": {
+      "sha256": "53f97a2f3a156255aefc006dc1d7611582b11b2b1e8ef1eda1d0684765b6d3a3",
+      "bytes": 237
+    },
+    "04-selected-buy-request.json": {
+      "sha256": "128273ef36d883c5fc341acbf74c59ae7c6ec43a613b8530f77ff009ef74daee",
+      "bytes": 238
+    },
+    "05-selected-sell-request.json": {
+      "sha256": "35cf84b6d2537f4875edf8517fd23ec96db55ec730ddcf3fcd647619b2deebbc",
+      "bytes": 238
+    },
+    "05-selected-sell-response.raw.gz": {
+      "sha256": "08628e5695017fa3f7a0133aef0567cfc80b281fe92245d78d877038281fa647",
+      "bytes": 3904
+    },
+    "06-legacy-transfer-close-request.json": {
+      "sha256": "20f1213965746dd4f2109c4584f6062294b411f0c666fb920a4176ba3663fe31",
+      "bytes": 238
+    },
+    "06-legacy-transfer-close-response.raw.gz": {
+      "sha256": "acb1bcb6e818c03a065f2764a756ba3de4313aec514095add3d12b6d74214d24",
+      "bytes": 1326
+    },
+    "02-current-legacy-accounts-request.json": {
+      "sha256": "ed44f19d919499ac45424e0f40d47ace46bb373d278983e766119b994f341704",
+      "bytes": 228
+    },
+    "03-current-token2022-accounts-response.raw.gz": {
+      "sha256": "fc124e03a6d9366a356a7fe8412a04f2af2325a89127ec11a6715201d1971113",
+      "bytes": 488
+    },
+    "07-owner-in-data-token2022-response.raw.gz": {
+      "sha256": "a2d7a7a7cc3a5976baea71033f1a5108c09c64fd19c36990933582435fe1be92",
+      "bytes": 1795
+    },
+    "01-current-wallet-account-request.json": {
+      "sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+      "bytes": 159
+    },
+    "02-current-legacy-accounts-response.raw.gz": {
+      "sha256": "e77588eb113107477809599d54fbe8cf72a288b1c4b357ae642429d9979d7afd",
+      "bytes": 112
+    }
+  },
+  "unexecuted_request_ids": []
+}

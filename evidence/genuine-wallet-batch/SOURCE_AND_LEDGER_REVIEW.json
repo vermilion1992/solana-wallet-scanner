@@ -1,0 +1,289 @@
+{
+  "schema": "independent-source-ledger-review-v1",
+  "created_at": "2026-10-04T05:58:13.891844+00:00",
+  "baseline_head": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "review_state": "SOURCE_FEASIBILITY_AND_ORACLE_METHOD_REVIEWED; NO_COMPLETE_GENUINE_DATASET_VALIDATED",
+  "scope": "Read-only archived documentation and source-contract review; no provider calls, credentials, code changes, full suite, Git writes or acceptance execution.",
+  "source_bindings": [
+    {
+      "path": "evidence/product-completion/references/original-wallet-scanner-blueprint.pdf",
+      "bytes": 343703,
+      "sha256": "895561cadc998775cc9e488d82e598aa34da8211cfeeca586b7c964cd9a06db3"
+    },
+    {
+      "path": "evidence/references/product-milestone/helius-index-guide.txt",
+      "bytes": 40596,
+      "sha256": "ecb75c9566dfcda8e209ea1b5ed829373749d181a1c9326e363abe8eb346c54c"
+    },
+    {
+      "path": "evidence/references/product-milestone/helius-wallet-history.txt",
+      "bytes": 17619,
+      "sha256": "e4e44c48f97344b51f899afa537fe84616d0fa636a624aec2adc0b00879ebe22"
+    },
+    {
+      "path": "docs/R1_SOURCE_DECISION.md",
+      "bytes": 34820,
+      "sha256": "db3c4fe0cdad6e6042121429919f9fbb98179af9aa92e4c8761687ac2dab1968"
+    },
+    {
+      "path": "scanner/accounting.py",
+      "bytes": 39373,
+      "sha256": "9c5fb7fd1b1d63d2382caeb3eb98ce9c97862d081231022d62631ce5dc253708"
+    },
+    {
+      "path": "scanner/metric_evidence.py",
+      "bytes": 10876,
+      "sha256": "744b2b011a7e625fc111cc7608709a3815742bfbb44b450095ab04198797ceea"
+    },
+    {
+      "path": "evidence/references/parse_token.rs",
+      "bytes": 95739,
+      "sha256": "50370cf477d4d526960a226a945f712426c059f220fd4c84f63f493da64d88c0"
+    }
+  ],
+  "primary_findings": [
+    {
+      "id": "DOC-OWNER-01",
+      "path": "evidence/references/product-milestone/helius-index-guide.txt",
+      "lines": [
+        179,
+        186
+      ],
+      "quote": "all: Return transactions that reference either the provided address or any token account owned by the provided address",
+      "result": "Documents an owned-token query predicate. Does not explicitly define former/closed/reassigned/event-time ownership or both token programs."
+    },
+    {
+      "id": "DOC-OWNER-02",
+      "path": "evidence/references/product-milestone/helius-index-guide.txt",
+      "lines": [
+        399,
+        411
+      ],
+      "quotes": [
+        "This method is unique because it can query complete token history, including a wallet's associated token accounts (ATAs).",
+        "The tokenAccounts filter does not support transactions prior to December 2022. It depends on token transfer metadata introduced to Solana on slot 111,491,819."
+      ],
+      "result": "Broad complete-history advertisement plus a concrete cutoff; neither alone establishes exact historical membership semantics for hidden transient accounts."
+    },
+    {
+      "id": "DOC-OWNER-03",
+      "path": "evidence/references/product-milestone/helius-index-guide.txt",
+      "lines": [
+        775,
+        839
+      ],
+      "result": "The pre-cutoff workaround discovers accounts from direct wallet records. Its spl-token-2022 program check is not a documented post-cutoff both-program index completeness guarantee. A hidden entirely unreferenced account can evade direct-wallet discovery."
+    },
+    {
+      "id": "DOC-VERSION-01",
+      "path": "evidence/references/product-milestone/helius-index-guide.txt",
+      "lines": [
+        218,
+        225
+      ],
+      "quote": "If omitted, only legacy transactions will be returned. Set to 1 to include legacy, v0, and v1 transactions.",
+      "result": "A terminal max0 query covers its admitted-format predicate. Native legacy/v0 support cannot itself certify absence of all relevant unsupported versions; preserve this population dependency."
+    },
+    {
+      "id": "PDF-POPULATION-01",
+      "path": "evidence/product-completion/references/original-wallet-scanner-blueprint.pdf",
+      "physical_page": 6,
+      "quote": "A completely hidden round trip can leave zero residual mismatch. Mark that scope limitation explicitly; require independent historical ownership evidence before a global completeness claim.",
+      "result": "Current owner snapshots, direct-address history, repeated/fixed-point discovery, exact balance reconciliation and apparent first wallet funding are insufficient population witnesses."
+    },
+    {
+      "id": "NATIVE-OWNER-01",
+      "path": "evidence/references/parse_token.rs",
+      "lines": [
+        104,
+        125,
+        220,
+        247
+      ],
+      "upstream": "https://raw.githubusercontent.com/anza-xyz/agave/9480479ff42af8a9db3da1649297dfcd9d27e5be/transaction-status/src/parse_token.rs",
+      "result": "InitializeAccount2/3 owner and SetAuthority new_authority come from decoded instruction payload. Initialization can assign a wallet as token owner without that owner appearing in message account keys; an exhaustive direct-wallet account-key history cannot exclude those initially hidden accounts. This is a native schema counterexample, not a new application defect."
+    }
+  ],
+  "concrete_source_decision": {
+    "endpoint_access": "Previously empirically observed for the bounded calls; not repeated by this review.",
+    "query_completion": "May become known from immutable native request/response page chains satisfying exact bounded query contract, independent of global population.",
+    "historical_population": "UNKNOWN under current documented semantics and existing inputs. Do not activate trusted completion flags or a built-in global PASS contract from these pages.",
+    "missing_exact_source_capability": "An independently supported exhaustive historical token-account membership/lifecycle witness for closed, reassigned, transient/non-ATA accounts and both token programs, plus relevant format coverage.",
+    "finite_alternative": "Contemporaneous complete finalized account-state anchors for both programs and a complete finalized global block inventory/replay over the interval, inspecting ownership initialization/change/closure and all relevant supported/unsupported operations. This can prove a finite interval under stated source trust. No such past anchors or feasible complete 90-day replay is present; current snapshots and bounded indexed pages cannot substitute.",
+    "controlled_checks": "Genuine independently known closed/reassigned/non-ATA/Token2022 examples can test provider compatibility, but do not mathematically establish global enumeration by themselves. Only combine them with an explicitly supported source membership contract."
+  },
+  "minimum_genuine_inputs": [
+    {
+      "group": "Identity and scopes",
+      "records": [
+        "Network/wallet identities and finalized snapshot/source context",
+        "Exact half-open report [end-30d,end), independent [end-28d,end), independent verification [end-90d,end)",
+        "Pinned source-contract/documentation bytes and exclusions; methodology/policy versions"
+      ]
+    },
+    {
+      "group": "Record coverage",
+      "records": [
+        "Original full request/response bytes for every relevant page; status:any, tokenAccounts:all, explicit finalized and exact range; no success-only, mint, counterparty or direction filter",
+        "First-page/root and complete continuation chain ending in successful documented terminal evidence; no repeated/missing cursor, error-as-terminal, cap or omitted page",
+        "Every selected native record and linked alternative, exact page pointers and hashes; unsupported formats/operations retained",
+        "Independent raw block/order evidence when material ordering is ambiguous; raw lifecycle controls"
+      ]
+    },
+    {
+      "group": "Historical membership",
+      "records": [
+        "Exhaustive accepted event-time ownership/lifecycle population for both programs including closed/reassigned/transient/non-ATA accounts",
+        "Opening and closing owner/account sets or supported equivalent witness, with changes and interval coverage",
+        "Explicit relevant unsupported-format coverage rather than inferring absence from max-version filtering"
+      ]
+    },
+    {
+      "group": "Inventory, origin and cost",
+      "records": [
+        "Opening raw inventory for all relevant owned accounts/mints and complete intervening flow records",
+        "Pre-window/pre-90d acquisitions whenever included disposals need them; unknown incoming origin never zero basis",
+        "Raw economic exchange paths and exact integer consideration/fees; network payer/meta.fee, venue fees, tips, rent/returns, sponsors and external capital roles",
+        "Mint decimals and time-relevant eligible meme/settlement/spam classification primary evidence under explicit accepted criteria; caller labels alone insufficient"
+      ]
+    },
+    {
+      "group": "Economic only when claimed",
+      "records": [
+        "Complete all-asset/native boundary inventory including evidenced economic ownership/recoverable balances without wrap/rent double counting",
+        "Historical boundary and external-flow valuation records with exact units/time/price provenance",
+        "Complete valued external deposits/withdrawals; current prices and beta per-mint summaries do not fill these gaps"
+      ]
+    },
+    {
+      "group": "Independent expectations and replay",
+      "records": [
+        "Separately worked raw-input ledger and rational arithmetic oracle not importing scanner accounting/decoders",
+        "Immutable archive/report/source links plus expected selected observations and each claimed metric/position/weekly interval",
+        "Required-source removal and restoration controls, alternative-source and ordering controls, saved-report/offline rebuild/export expectations",
+        "Original parent byte hashes and zero-provider/credential-dispatch evidence during import/rebuild"
+      ]
+    }
+  ],
+  "independent_ledger_method": {
+    "row_columns": [
+      "raw_sha256",
+      "signature",
+      "slot",
+      "block_transaction_index",
+      "outer_instruction_path",
+      "inner_instruction_path",
+      "wallet",
+      "token_account",
+      "token_program",
+      "event_time_owner",
+      "mint",
+      "decimals",
+      "pre_raw_units",
+      "post_raw_units",
+      "event_kind",
+      "economic_role",
+      "quantity_raw",
+      "consideration_lamports_or_valued_exact_amount",
+      "network_fee_lamports",
+      "network_fee_payer",
+      "allocated_cost_role",
+      "external_flow_role",
+      "source_dependencies"
+    ],
+    "numbers": "Keep raw units and lamports as integers. Use independently implemented Fraction arithmetic for FIFO proportional basis; convert lamports/1e9 only for display. Never use float or scanner decoder/analyze as the oracle.",
+    "chronology": "Canonical native slot/block/instruction order; UTC timestamps govern half-open membership. Signature lexical order and caller order are not primary chronology.",
+    "reconciliation": "For each event-time-owned account/mint, opening + inflows - outflows = closing; then aggregate all historically owned accounts by mint. Internal transfer cancels only with proved ownership at both ends. Reconciliation is not enumeration proof.",
+    "fifo": "Each acquisition lot carries raw units and proved consideration plus attributable buy cost. For a partial lot removal take basis*removed_units/current_lot_units and retain exact remaining basis; final removal takes the entire remaining basis. Missing acquisition cost revokes dependent disposals.",
+    "disposals": "Net disposal = proved proceeds - matched FIFO basis - attributable exit costs. Keep distinct swaps and all losing/breakeven/open/transfer-interrupted/unknown episodes. Transfer out is not a sale; unproved transfer-in basis is unknown.",
+    "cost_once": "Buy cost capitalized; exit cost deducted; remaining actual wallet-paid trading costs deducted once in their own time interval, including failed transaction costs. meta.fee already includes priority; embedded venue costs already in consideration are not deducted twice. Sponsored network fees do not automatically become wallet spend; any reimbursement requires its own role evidence. Refundable rent and wrap/unwrap are not automatic expense.",
+    "realised_period": "Sum in-window net disposal slices minus in-window unallocated trading overhead. Realised ROI = this profit / positive disposed basis *100.",
+    "completed_cohort": "Mint aggregate strict-zero episodes whose final economic sale falls in the interval. Hold = first acquisition to final sale. ROI uses whole episode; win numerator is net-positive episodes, denominator includes breakeven. Unknown eligible episodes may not be removed to improve denominators.",
+    "other_metrics": "Distinct eligible traded mints in report interval; rapid share first positive sale <=5 minutes; average event buys/sells per completed episode; largest positive aggregate mint realised contribution / positive total net period profit. If denominator is zero/nonpositive, ratio is undefined rather than invented zero.",
+    "weekly": "Four consecutive independent seven-day half-open periods over [end-28d,end). For each independently sum disposal slices, matched basis/exit costs and that week overhead; positive iff >0. Do not crop to a shorter display/report interval.",
+    "economic": "Closing equity - opening equity - valued external deposits + valued external withdrawals. Costs already reflected in equity changes are not subtracted again. Unavailable marks block this branch, not proved realised-only arithmetic."
+  },
+  "dependency_removal_expectations": [
+    {
+      "remove": "Required acquisition origin/cost",
+      "revoke": [
+        "dependent realised P&L",
+        "dependent ROI",
+        "dependent whole-episode financial outcomes"
+      ],
+      "retain_if_independent": [
+        "native fee observations",
+        "raw quantities",
+        "supported ownership/chronology/timing"
+      ]
+    },
+    {
+      "remove": "Required historical boundary mark",
+      "revoke": [
+        "dependent economic P&L"
+      ],
+      "retain_if_independent": [
+        "realised P&L/ROI",
+        "quantity/holding/cohort measures not using that mark",
+        "native fees"
+      ]
+    },
+    {
+      "remove": "Required historical population/lifecycle witness",
+      "revoke": [
+        "whole-wallet cohort/count/traded-mint population",
+        "dependent whole-wallet financial totals"
+      ],
+      "retain_if_independent": [
+        "selected native fees",
+        "supported individual raw quantities/consideration and named-account observations"
+      ]
+    },
+    {
+      "remove": "Relevant raw/alternative record or placement source",
+      "revoke": [
+        "only results whose source content, ordering, membership or coverage is unresolved"
+      ],
+      "retain_if_independent": [
+        "proved disjoint observations",
+        "independently bounded interval decisions",
+        "independent exact native fees when their own prerequisites remain"
+      ]
+    },
+    {
+      "remove": "Relevant classification primary record",
+      "revoke": [
+        "eligible meme population and dependent meme financial/cohort metrics"
+      ],
+      "retain_if_independent": [
+        "raw mint identity/quantity",
+        "native fees",
+        "economic equity if its independent valuation/flow contract remains complete"
+      ]
+    },
+    {
+      "remove": "Actual cost/fee source",
+      "revoke": [
+        "dependent net financial results and complete cost totals"
+      ],
+      "retain_if_independent": [
+        "gross consideration/quantity/timing where supported"
+      ]
+    },
+    {
+      "restore": "Exact original required bytes",
+      "expect": "Reproduce original supported observations/decisions in a new immutable report; do not mutate original parent or use provider calls."
+    }
+  ],
+  "acceptance_limits": {
+    "genuine_b3": "A losing wallet or policy MISS is valid once a complete supported genuine wallet accounting scope and independently worked calculations are proven. Economic-only unknowns can remain explicit if that result is excluded from the supported coverage claim; this does not qualify the strict preset or establish full product readiness.",
+    "not_b3": [
+      "Selected real transaction handful",
+      "Synthetic world/fixtures",
+      "Terminal direct-address/current-owner subset",
+      "Failed-fee-only known observations without exhaustive membership and relevant cost roles",
+      "Arbitrary completion/position/event/classification flags"
+    ],
+    "current_status": "B1 historical completeness unresolved; complete real B2 open; B3 blocked; PRODUCT_READY remains false. This artifact is preparatory independent review, not application or product acceptance."
+  }
+}

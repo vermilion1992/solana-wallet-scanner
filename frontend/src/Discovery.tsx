@@ -26,15 +26,25 @@ import { count, dateTime, decimal, label, parseAddresses, shorten, validAddress 
 import { ScanCard } from "./workspace";
 
 export function auditableCandidates(cohort?: DiscoveryCohort) {
+  const sourceEligible = cohort?.audit_plan
+    ? new Set([...cohort.audit_plan.selected_addresses, ...cohort.audit_plan.deferred.map((item) => item.address)])
+    : null;
   return (cohort?.candidates ?? []).filter(
     (candidate) =>
       validAddress(candidate.address) &&
+      (!sourceEligible || sourceEligible.has(candidate.address)) &&
       candidate.source !== "user-list" &&
       candidate.status === "candidate" &&
       candidate.validation?.identity_verified === true &&
       candidate.validation?.account_type === "system-owned signer" &&
       candidate.validation?.economic_signers?.includes(candidate.address),
   );
+}
+
+export function plannedAuditAddresses(cohort: DiscoveryCohort | undefined, auditCap: number, manual?: string[]) {
+  const eligible = new Set(auditableCandidates(cohort).map((candidate) => candidate.address));
+  const proposed = manual ?? cohort?.audit_plan?.selected_addresses ?? [...eligible];
+  return [...new Set(proposed)].filter((address) => eligible.has(address)).slice(0, auditCap);
 }
 
 export function qualifiedCandidates(
@@ -360,10 +370,8 @@ export function DiscoveryView({
   const presetVersion = String(state.preset.version ?? "");
   const qualified = qualifiedCandidates(cohort, state.reports, state.preset, state.methodology);
   const auditCap = Math.min(5, state.settings.limits.deep_audit_cap || 5);
-  const selected =
-    selection && cohort && selection.cohortId === cohort.id
-      ? selection.addresses
-      : eligible.slice(0, auditCap).map((candidate) => candidate.address);
+  const selected = plannedAuditAddresses(cohort, auditCap,
+    selection && cohort && selection.cohortId === cohort.id ? selection.addresses : undefined);
   const isDiscovering =
     busy === "discovery" ||
     cohorts.some((item) => ["queued", "running"].includes(item.status));
@@ -784,6 +792,14 @@ export function DiscoveryView({
             ))}
           </details>
         ) : null}
+        {!!cohort?.audit_plan?.deferred.length && (
+          <details className="discovery-limitations">
+            <summary>Deferred research ({cohort.audit_plan.deferred.length})</summary>
+            {cohort.audit_plan.deferred.map((item) => (
+              <p key={item.address}>{shorten(item.address)} · {item.reason || "Review saved evidence before collecting again."}</p>
+            ))}
+          </details>
+        )}
         {candidates.length ? (
           <>
             <div className="discovery-audit-bar">

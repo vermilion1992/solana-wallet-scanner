@@ -39,7 +39,7 @@ RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v5-compiled-instructions'
+DECODER_VERSION = 'spot-v6-real-query-instructions'
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -306,6 +306,79 @@ def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
         # refund without counting rent or representation changes as trade cost.
 
 
+def _canonical_user_volume_address(address):
+    """Derive the primary-IDL PumpSwap PDA without signing or an SDK.
+
+    Solana hashes seeds, bump, program and ProgramDerivedAddress, rejecting
+    compressed Edwards points. The first off-curve bump is canonical; subgroup
+    membership is insufficient for this check.
+    """
+    user, program = _data(address), _data(PUMP_SWAP)
+    if len(user) != 32 or len(program) != 32:
+        raise ValueError('User-volume PDA requires exact 32-byte public keys')
+    prime = 2**255 - 19
+    curve_d = -121665 * pow(121666, prime - 2, prime) % prime
+    for bump in range(255, -1, -1):
+        candidate = sha256(b'user_volume_accumulator' + user + bytes([bump]) + program + b'ProgramDerivedAddress').digest()
+        y = (int.from_bytes(candidate, 'little') & (2**255 - 1)) % prime
+        square = (y * y - 1) * pow(curve_d * y * y + 1, prime - 2, prime) % prime
+        on_curve = square == 0 or pow(square, (prime - 1) // 2, prime) == 1
+        if not on_curve:
+            return candidate, bump
+    raise ValueError('User-volume PDA has no supported canonical bump')
+
+
+def _retained_user_volume_funding(flat, keys, before, after, address, route):
+    """Locate one primary user-PDA creation separately from swap consideration.
+
+    The pinned PumpSwap IDL places user_volume_accumulator at ordinal20 in buy
+    and buy_exact_quote_in and derives it from the user. Allocation size is an
+    observed fact, not a universal137-byte contract. No refund or valuation is
+    inferred from the existence of a close instruction.
+    """
+    if route['program'] != PUMP_SWAP or route['instruction'] not in ('buy', 'buy_exact_quote_in') or len(route['accounts']) <= 20:
+        return []
+    account = route['accounts'][20]
+    creates = []
+    for outer, path, instruction, nested in flat:
+        parsed = instruction.get('parsed')
+        info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+        if (_program(instruction, keys) == SYSTEM_ID and isinstance(parsed, dict)
+            and parsed.get('type') in ('createAccount', 'createAccountWithSeed') and info.get('newAccount') == account):
+            creates.append((outer, path, nested, parsed['type'], info))
+    if not creates:
+        return []
+    derived, bump = _canonical_user_volume_address(address)
+    if len(creates) != 1 or _data(account) != derived or keys.count(account) != 1:
+        raise ValueError('Retained user-volume funding lacks one exact primary user PDA')
+    outer, path, nested, kind, info = creates[0]
+    index, lamports = keys.index(account), _integer(info.get('lamports'))
+    # The native creation supplies the allocation; primary sources do not
+    # promise a universal numeric LEN. Its size alone is not the role proof.
+    space = _integer(info.get('space'))
+    if (outer != route['index'] or not nested or kind != 'createAccount'
+        or info.get('source') != address or info.get('owner') != PUMP_SWAP
+        or not 0 < space <= 2**64 - 1 or not 0 < lamports <= 2**64 - 1
+        or before[index] != 0 or after[index] != lamports
+        or account in route['owned_accounts']):
+        raise ValueError('Retained user-volume funding disagrees with primary payer/program/allocation/native endpoints')
+    for _, other_path, instruction, _ in flat:
+        if other_path == path or _program(instruction, keys) != SYSTEM_ID:
+            continue
+        parsed = instruction.get('parsed')
+        info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+        if account in (info.get('source'), info.get('destination'), info.get('newAccount')):
+            raise ValueError('Retained user-volume account has another unresolved native movement')
+    return [{'account': account, 'payer': address, 'program': PUMP_SWAP, 'lamports': lamports,
+        'space': space, 'path': path, 'pda_bump': bump,
+        'allocation_profile': 'Native creation allocation; no universal protocol LEN is inferred',
+        'role': 'retained-user-volume-account-funding',
+        'contract': 'pump-public-docs-cb188ce08b5069196eef1f3e4a0c43b70099793b',
+        'contract_sha256': '2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1',
+        'recovery_state': 'UNKNOWN', 'valuation_state': 'UNKNOWN',
+        'reason': 'Exact user-PDA funding remains located in its program-owned native endpoint; trade quote is separate. Refund entitlement and economic value are unproved.'}]
+
+
 def decode_supported_swaps(transactions, address):
     """Decode record wrappers {signature,raw,evidence_hash,transaction_index?}.
 
@@ -560,6 +633,17 @@ def decode_supported_swaps(transactions, address):
                 # still require exact parsed-transfer reconciliation below.
             _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
                                       post_lamports, address, route, fee)
+            retained_funding = _retained_user_volume_funding(flat, keys, pre_lamports, post_lamports, address, route)
+            if retained_funding:
+                from .transaction_format import original_instruction_paths
+                original = record.get('raw')
+                original = original.get('result') if isinstance(original, dict) and 'result' in original else original
+                for item in retained_funding:
+                    _, outer, ordinal = item['path'].split('.')
+                    group_index = next(index for index, group in enumerate(meta['innerInstructions']) if group['index'] == int(outer))
+                    path = f'meta.innerInstructions.{group_index}.instructions.{ordinal}'
+                    item['raw_paths'] = original_instruction_paths(original,
+                        [path + '.parsed.info.' + field for field in ('source', 'newAccount', 'lamports', 'space', 'owner')])
             for account in route['owned_accounts']:
                 if account not in owned and account not in allowed_wrapped:
                     raise ValueError('Route user account lacks event-time wallet ownership')
@@ -615,7 +699,7 @@ def decode_supported_swaps(transactions, address):
             wallet_index = keys.index(address)
             settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
-                          - outside_native_delta)
+                          - outside_native_delta + sum(item['lamports'] for item in retained_funding))
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
                 raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
@@ -637,6 +721,7 @@ def decode_supported_swaps(transactions, address):
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
                  owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
                  settlement_mint=WSOL,
+                 retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
                  observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',

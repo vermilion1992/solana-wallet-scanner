@@ -1,0 +1,1927 @@
+{
+  "kind": "authorised-bounded-native-collection",
+  "started_utc": "2026-10-04T06:07:15.151050+00:00",
+  "state": "COLLECTED_IN_SCOPE",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "plan_sha256": "2dce45527fc80e5ff5769e6effb4cf046721c2a8cd7111c793653dddd7844501",
+  "endpoint": "https://mainnet.helius-rpc.com/",
+  "confirmation": {
+    "plan": "Free",
+    "cycle_start": "2026-10-02",
+    "cycle_end": "2026-11-02",
+    "remaining_credits": 999801,
+    "autoscaling": false,
+    "confirmed_by": "user-dashboard"
+  },
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "provider_requests": 1,
+  "conservative_credits": 0,
+  "public_request_cap": 4,
+  "native_provider_requests": 0,
+  "public_provider_requests": 1,
+  "retries": 0,
+  "purchases": false,
+  "quota_reset": false,
+  "quota_before": {
+    "credits": {
+      "used": 10,
+      "reserved": 0,
+      "cap": 1000,
+      "remaining": 990,
+      "cycle_start": "2026-10-02"
+    },
+    "requests": {
+      "used": 2,
+      "reserved": 0,
+      "cap": 30,
+      "remaining": 28,
+      "cycle_start": "2026-10-02"
+    },
+    "public_requests": {
+      "used": 1,
+      "reserved": 0,
+      "cap": 4,
+      "remaining": 3,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "billing_actual_credits": null,
+  "billing_scope": "Conservative reservations; dashboard snapshot is operator supplied and provider invoice delta is unverified.",
+  "requests": [
+    {
+      "id": "pool-trades-cackle",
+      "method": "publicPoolTrades",
+      "request_id": 1,
+      "request_reservation": "2b18782f381641e692cc472515df0190",
+      "credit_reservation": null,
+      "public_request_reservation": "97b4cdf4a55c4dda936c1ba7dcdc59e2",
+      "source_url": "https://api.geckoterminal.com/api/v2/networks/solana/pools/39e3inYn9tDu4GAeBJ4L1MZrRW8hMhu2yqJ59vhPeCai/trades",
+      "conservative_credits": 0,
+      "request_path": "01-pool-trades-cackle-request.json",
+      "request_sha256": "5af989cc35702c8b37e36dcbac3fe5f0473017a03f0ec30bfdf18b8c94ddc2c5",
+      "started_utc": "2026-10-04T06:07:15.182534+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:07:15 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "response_path": "01-pool-trades-cackle-response.raw.gz",
+      "response_sha256": "6fe2be690de70bdf41db29a1a84827f3494ea4e99ade90199ac983eb34608866",
+      "response_bytes": 280830,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "rows": 300,
+        "usable_rows": 300,
+        "row_gaps": [],
+        "pools": [],
+        "leads": [
+          {
+            "address": "4xbyaDNLPRJt4XK4mnTp3tfsWVonGKKHmczghJ3zEGEJ",
+            "signature": "kUocGLg8PvV2aqpuR9tvaaxQUwrdK1SPo2Z4DDsY5rtX7HDm5AjzAdJkjERhqXa1SLBa8LePgUhB4a6gdPez2nx",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T06:04:38Z"
+          },
+          {
+            "address": "AH5z7Stfo3LJiwkPcs8CCgKnbxNd2t2Hst8WnGgFNSSh",
+            "signature": "5nxtBFy3TF3tU2Faiz5Rwr7ZQAqZhbZmaCT8zbcHpkRkXGGEbGDWtfCL2PmAogx8583jFw2hwB2cNXJXV6T3M1Uf",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T06:01:31Z"
+          },
+          {
+            "address": "4WLZMwyirQ9iSZpd1fk4ecsL3DhQkaF1xCMLjizezEvM",
+            "signature": "54bVNcn4AeuyK3bgw76aMUBsDRY14eG66w5WE9MctonDaT8jdQhEYCs6ekgShRMnaaZgPz9UVujDmZtwS7wP2eC8",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:59:26Z"
+          },
+          {
+            "address": "91zJPjSMJnpEYq8zTf5tznuqJaE8nNHU9QCM1YXvReu",
+            "signature": "5kBpu4cFvP5MbUAkmqQWnFZKpVxMTKT1PpsFYBvR31S75agb1DMCrSjqtrgxDdfSjjqXjGgBW1BakP5QNQ8m7QVX",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:55:39Z"
+          },
+          {
+            "address": "3pYSHKuN6iwG4iqock1ZSAERLv9gNRcQxsZqVEM5QiPP",
+            "signature": "yM2oMN1ZxmPdJV15wuU9xqqnyT34JUxDb5BQCaDusrEZ3RTwH3fVPKaq7BEjyc4Sv7xNJPG9oz98YeAuMXnxyqW",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:46:41Z"
+          },
+          {
+            "address": "7g2oxyu8uA6QkXe4isEr4yS2ntzbXHR7vjfw7bJWWpwp",
+            "signature": "zJXU4aNmve3GQssCxqGBFDRgTk8gDwm1FRxGfpGpjNP9CY6cvnkLpqame7ryqsUf1ZGriGSD6LZeP5bx9eM5YF7",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:45:32Z"
+          },
+          {
+            "address": "6nW27iUXBgjNSuyfJFivBZa72wsiirNYYxtTfs5MRfjK",
+            "signature": "YTrh1V8hocdJYsge24yPHERZBQjrYPGRpyaf884EiyFQE7V7HKsNLNwrk98UK7amsERy99SaZdgFQA7uEGBiSuU",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:45:07Z"
+          },
+          {
+            "address": "SmijR1wQAzJJiki3zJLAQokQqTrH2L96u1iv7VGeTEn",
+            "signature": "u5kx8VeUSFX8xsPCSDQsjgqMTZPcWZPG4y6Wk9BnV2Fbihp17pFQEsRMr6BpQb5vJzwFzmn8PY3GhsoU1DSiVr3",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:44:56Z"
+          },
+          {
+            "address": "9NvJyXp8KsS2DzyonZjVn1g1VZtkGXZ1KYpXiVjtSX4r",
+            "signature": "2mMnqEabj7jVEP7GVfdgcCCVFx1WcT5gsB3H8DKWjmWYQb1U6C9bnbRZjhgbXB9pck5RC7sG7cndvyGKnXmZJJGM",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:44:45Z"
+          },
+          {
+            "address": "8UpGQMcoBCXTit8pcyjbA5kvCDXxpPSHnBL3ZzN8Kz5d",
+            "signature": "4b94qAzc26oWvEjee1mcYLczVGi9KRUCG5rUisRg4LfdfWQ3CvocV7LHa4meEUEcjVssD7tqsZ14QFiopNBPqXgX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:44:36Z"
+          },
+          {
+            "address": "EMywtPNMWaNFmEH1CFpqdG4PYFjmnAYZMpr8W9FRdsaZ",
+            "signature": "2qiHczpp6CEjbMPAb4hGpRN6Qp9nxqATqTKKe7XigxQj1t64MMEGiCAU93FqmKDhSWjsuMKv2nPm59AuG3vVbVuY",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:44:24Z"
+          },
+          {
+            "address": "hgJPQLDVGRPnk3H6FKYQRGxXKXtpdGwCT5xNMNM7AKM",
+            "signature": "3dK3saFqAGo5UyzeMufWS5sBPemZAdHRAMTSeAgaGN9eRLm8EDf2BuwboLf8kRTv1EHsKnfn751wPY8Q7TfBmmh4",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:44:12Z"
+          },
+          {
+            "address": "3uE8d1HajJGYJPxE9R9R3fKcdyV9sHRraMdyN7ncaF97",
+            "signature": "3STnnaa61QjQibY5frRncFRmi7mTNXTXMnxVoNLDGH3jkDpV459ji4kWUXb9F1iuYwmS3L55jjTxsiX2gst8iLH2",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:44:00Z"
+          },
+          {
+            "address": "CtMaViPRvo4bXjQaF5ZsrB22nZA2yvnuSZyR4seFhJdp",
+            "signature": "2ycBBKwqYHzcvNPBcLKjazn21UXG4YKRR2SHodQBGYEMwntgUtycXG5uByuWqYJRYT7VSHN5m4jonLi6ZsZYHqQX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:43:50Z"
+          },
+          {
+            "address": "DBiRt9QiiU3BvUnCKgWaviSWWvTyaH2ivyABDSK39MJj",
+            "signature": "5DkdqSnR65gVp7rrm4hX5ZnPC4R2M1CCDixQCBzDPFo8Jqwpi63DQByBgkDWaUH8otmnDyvTfn82RxrcHnzj9Doj",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:37:54Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "VeAM6vwwY4epaV1GBmn9aANwfqSSsiBwXbytMPpkfUwH69q41L5xizNM5v2Kh1cSxdUPybY6Luj99hGvVxBv7sJ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:34:30Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "2Gxfz2ZwcsAdMSQGbhCyL8jV5ZXqN1metz7pjuYSbt8EPtmb4iRNdBViAfmyfdzDEGFECtzccHsMXmHtJtE6SCqB",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:34:29Z"
+          },
+          {
+            "address": "3pYSHKuN6iwG4iqock1ZSAERLv9gNRcQxsZqVEM5QiPP",
+            "signature": "2n1aJmuQpE2C3dWtmnJ6hcnJ8CYkmg3XL8DkCiSYE8E5bienyaoKwgiUfbdgnWSvE2Jsdmtfh7ZBjAsPzvvNx5HN",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:30:09Z"
+          },
+          {
+            "address": "DBiRt9QiiU3BvUnCKgWaviSWWvTyaH2ivyABDSK39MJj",
+            "signature": "63aosPoU4EvBwgu47QAkrcPvvaEtE7ntm1ER6pa5SAdW28AhGUZHmTy4UAwAthUm51g9bFj3C5rsBTLrhQMUcEWv",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:28:10Z"
+          },
+          {
+            "address": "25eBaPpu97X9RMEpLuqXz7kSfjNqaUqELaHSPuujpeSX",
+            "signature": "5j25RfT1yKT5ZjmqJubMdFyyGR81kANQE16uq5iGD4acfhZfVMe9tJtGW7Qt7guLC3e1GxUP83pCDgmXitU5nKt",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:24:26Z"
+          },
+          {
+            "address": "C3DRE5oyZgy9JpzNf4XamuMpjMUFvtbXXAHhJfgh4f9r",
+            "signature": "27D2aXFahMuW6KZ59jeLBoM9JpNDnQg6fAVoGtwsrKZ5AbTFrp8SJVV9zgUKtTmScRFwMVBypbqK8KxJHxeULCuo",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:17:54Z"
+          },
+          {
+            "address": "C3DRE5oyZgy9JpzNf4XamuMpjMUFvtbXXAHhJfgh4f9r",
+            "signature": "5fZTPMvrfvjp1YxFUQ4R9kXckYpu7bjkPqRRHAgNckqmcBcbUrmyhqxh9JCV9k81CtWDCcu8MqsBhbqvtkqdvNi1",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:11:21Z"
+          },
+          {
+            "address": "8f8ekYWzsvKwHx8YmCuevF8SrBAf2fFhQAdNX8m29nxF",
+            "signature": "VM4mZFigpW2SSQvPxFvf5MQYiSaJFRRzc1JbqZWpnKqjtPUdzCiubE8AKgFvhoDxuMmqAML1NowZrccQiUwqAhx",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:04:30Z"
+          },
+          {
+            "address": "G9fMng591EzhwF6kGNDeXza6sDg5cwEcRG1ojJhn4ZZs",
+            "signature": "Ns2XYSKrvR2SRb7UYZirJxzPXjLs4dtTK5XMgs21euuyDhAeFmSWHuwD88gYA49DUT9swETxwkbLNzs6eUnTAQK",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T05:04:30Z"
+          },
+          {
+            "address": "6cJLNMWWWgt41qEXU1k8kRg9bUmkm5RrjVEdsHxcrAJN",
+            "signature": "4g3PRiH96THhVYX3yer8czYmfKS9XQKCV461zUmuwQwFZsdGPKJpTkqVdAowJyQGckK55in8Dtjj8ZLTsc6BLaXR",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:04:30Z"
+          },
+          {
+            "address": "GRW31VWihA85s4uyENpeaQU4Pusj7ADZx3FyTPaYPdoi",
+            "signature": "3dcwZknwYbyefzUtGVRZUpNoAJMtxySknCLztjShpUFdESsGkTF3PTYAkHzgAyAGUYzoFcm3uoqTfms4xUH2DJim",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T05:04:30Z"
+          },
+          {
+            "address": "BbprGn1szcA5Dg9d8ppzKZh9AfCQHRPeL8mERYnWv2Vb",
+            "signature": "417xDVhEyKyKLRFMoAardzacy5zkR7wzbT5PipKR38gqauaYepLDbeaaTf31mNCvevZmaazRQef3kqcHoY8sWEZo",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:58:07Z"
+          },
+          {
+            "address": "FS3dHMc5BQTqBmnCm4JyzXbNFFe6BpxS5pwyab3w1oNE",
+            "signature": "2HD8iF78oDcHBLRjxc6Y214M5NaFSBmyjibyUvQYT7vBq6zQXMAZ6XFgkEhdeeaPMNfj3jgcj4ndmKGnygz9kMCi",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:54:38Z"
+          },
+          {
+            "address": "D24y1SsG8dkjUxbgdFK62FKEerviuq6iQsXXuG8TiXcy",
+            "signature": "2waXad8Tj7sSduBR64do7QjqtxdrXSawvM8cKj7X1sSSfpbYXRDENYQRb7Un5zXU5pBgTkHQ1XQahW1196qVU5FD",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:49:36Z"
+          },
+          {
+            "address": "BbprGn1szcA5Dg9d8ppzKZh9AfCQHRPeL8mERYnWv2Vb",
+            "signature": "42sbhrjszw8A8whMMqHAisaADuFMTWEhAtjWug4u9UB6KJLvJdYUsxzEPKRZhBkah9pbvDLiM6WNbsBcCxY6jKgb",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:48:18Z"
+          },
+          {
+            "address": "B463XjMdaDQZFr3WkoP43YN1tmw3yGFCmEb2nKgRrEVG",
+            "signature": "8nxwCM7HBGWQgSiG2MEBPscBQ3ozFpPMEviSpQpN2EyfiUqwysivTYZk4eKYebbSHa2UZGkCULPdpDTxmXfz2Fq",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:42:17Z"
+          },
+          {
+            "address": "2CZKVjPiKBvDrh8MznPDLgpgkcqFTGTSwSZkii15E4op",
+            "signature": "4YoePaiJC8S5hvJNNtaNjiQciZ6mD27xjE6ptQRm3Fg5RyWqxqckcRrUfPvZPa1FWhFK5EXUYzrvXrDHWBN7KTmQ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:42:17Z"
+          },
+          {
+            "address": "TuQQQkYWPpzfA25NiEuqocas74jSahFCemFy5amgZFf",
+            "signature": "2KbFLJWXhxCzv2yNcND3d7FGs5NN8XdK1XbvBKEhHRs4CLozVbLs8XxCMdhCs9VKrrnaeXHizaTcBGUx27BeSPLn",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:42:17Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "2Lw7JRFGCzDEVpZpLmaKNtSYK5jEbdu2eUAuZRBkRZCbAUowwoZef4d3pZrsjU7LKKLgUpDoS2cWSGkSK8p7BdgF",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:34:28Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "CPs4w2hp74y5ijGq9MYP1Xg1WWyH5rjgwoKJxEiLjxHqdLYuW4oVMAwULJwEBXepeHMMGsp92xVBzcBpLvdMJXL",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:34:27Z"
+          },
+          {
+            "address": "5GKgziTD7vFomUMKddr2rXuDJ1Y5afA6DkY5tsEKMXAT",
+            "signature": "4rckjmn4m8PdR4Qnm2gzydqr7TYJhbgxiDX1rrqPpDUjRofY6kHoVvdqhtjJC63E1d5bQr5b2ChxV9MoiG7CzZTJ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:32:46Z"
+          },
+          {
+            "address": "FkyE7mbUhwppY1dMRwDHugL5JN3Z3tsfSjS1uUaRsSba",
+            "signature": "2XsbpvwKKAgrRqMTH9EHC9QShS5NxNMwpP5Vp7Sa3wndVNjocqGzJfJPv2qMaRZ1YXYJes4q3VxfR2Nhq88Ajt3i",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:25:11Z"
+          },
+          {
+            "address": "EK1XnQS7UDvu1EZCm1hzKCFfCqtgLyUFZDmbMHYchvxQ",
+            "signature": "46wAaS5h1BjpiApEoCCi5G8nKsTTkyfivT8ANqqCXad2F6Ahe6LVAV5FycnSuqrfiAAPF1dc1qoW6fbYtWe8cpjb",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:25:00Z"
+          },
+          {
+            "address": "7ceWSDL8Wn8c8sMLppVB7UqswNRvZ9s24HgxcNLc2wTa",
+            "signature": "5m4s61rsztweZjsaeTmqym2MPCB6BgKcw8TN17jfx3XMWGobAPC1TruRHdVwv6CSPwoykb8rBSofBuE5HpHLqL9c",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:24:48Z"
+          },
+          {
+            "address": "5oksKFyBnzoLfKxonxej46pRV21WPyX7WYRb969FbUPb",
+            "signature": "4pYFGaSw9MvR89iJg3iweYPuyd3QsAQx2bWdryP6MoAHBcUH5WV2jCpExdhcSxurxtSK8LzrMACqzFJnYV3RceK8",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:24:36Z"
+          },
+          {
+            "address": "ACfJomQwmAJQ6zH5pBbm8vTm3tBRY9gK2wR7BAbA1bQx",
+            "signature": "qk3KCa1xQ3VQuicTwYaBzXbxsrtLc28t8TepE9htSzJbyycaXY8YgzA27mfTfbF87cJsBEyXLyoFNDBWp7Dp5Qc",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:24:26Z"
+          },
+          {
+            "address": "G3iKX3Tek91oZVttfAfr5k5E3AfPUK4i469pE5riKA26",
+            "signature": "51bgLnRJmbWDbrLJAX7An6KQDCPYosvJY6khGJvagYckGnW3FH2oajnrLMiB3tTjZvYb3GknjhJauwjTLTFCcoCc",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:24:15Z"
+          },
+          {
+            "address": "HarQvMNkWPypWhvvMKdzicgg9ubcPze7rUmrUnTzkSaW",
+            "signature": "ZPCWTToMFu9WjS36nUjZiz8fgw8Ahr2GwjY1Z94V1XV4PyefrS3zhLYwMThSMTg13ZJTSYnJCiVwhgnQF5inbAQ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:24:04Z"
+          },
+          {
+            "address": "2tsigSmyWaucGscpaTP9Vzrtc5pczsmKFD9hd1y1dUMu",
+            "signature": "3mZm9gsRqGTvpWziWW8ejaEWTkVaDwfUojjnFwvYHntFCNQtgYgHrf27ZU77TrM6LyHXJEjZJVfckKLZ4T1Dj7uV",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:23:53Z"
+          },
+          {
+            "address": "J1vkCkxZYvC29KjGJhpC5fVjeV2S9ENsYq1nko9EYaGj",
+            "signature": "2hXkAgxyFk8wKJf8bnR7k3yjunR8K7UvnYQrncqs4T8vVVPLbjBLYyeYwBMU1JDRebmwyGMFF6PsnghFwfMcYrqv",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:23:42Z"
+          },
+          {
+            "address": "8rxYsVm5SShE4XSr6KdKrVkd9G75X1QJqHCRUQeYVtYm",
+            "signature": "K4FKtQ6V95QUuYMmffzeXK7rXxyTsDc5z2BaRFQCHabcHA3Tpru2LQE7ZZh3jfVr6ibk9q8hM1KPxPUNqD4K15S",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:23:30Z"
+          },
+          {
+            "address": "3pYSHKuN6iwG4iqock1ZSAERLv9gNRcQxsZqVEM5QiPP",
+            "signature": "WEJ2MqwU5ufGNktqPYoqenjiGJHXLgmCzPgj2kD2E4BVmgxckMifWnchnZnviSxuvhrbbGjcSR5Rk3rzmnH2boC",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:19:20Z"
+          },
+          {
+            "address": "3pYSHKuN6iwG4iqock1ZSAERLv9gNRcQxsZqVEM5QiPP",
+            "signature": "2srBoFiHW56XoFXb9WV2dGz2ErdM2Wv9dXMXNj2CuiuZk8vZafLCrZHn6ix5bBiVXKRgFmbBzkTzcyj829HW6j1B",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:16:58Z"
+          },
+          {
+            "address": "FWJtTCFmwKZV96jHKJRqPWYSaAC88e718KJYph3q3kSk",
+            "signature": "55ov6xfVs4U7GWJ91FG9u9Cihib28M8uP3UjrQzFLND59V9HozpeeFQTZXBzytJa2QreVhBoKF62mLoarkwnWZUL",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T04:15:42Z"
+          },
+          {
+            "address": "7HBjKHNNCfV7tdi4gtUqkDLj92e5KNEdrtKgXMSWc7Zq",
+            "signature": "3L8QXjseg5qrRBL2FkEe249VHVqGvCBvh6coHPUGk6roPPp1BUmQGHaLGqMSmic245tJ9grudhcKBTxR8rGdgDbm",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:13:35Z"
+          },
+          {
+            "address": "48tk8scnNAVcFouuA4BZPPtQbHdDdMMH4UpcJXLWWxiB",
+            "signature": "5XxR4j8Kor7itdds1S2QXYCMhMCAZ1zBUNK1pWrz3434CrQhMrAv8oqhibCFhntnNTHRFgCmS5184Nv2YEVnpoUE",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:05:58Z"
+          },
+          {
+            "address": "DHHQ8esh53hoJedmhqF3fAqgGoAqXcd8uWAWFgWgVyH4",
+            "signature": "4hEmg8SgZkgsfXwiF1Suwvwx3mA9VSdVnhqpRTwURna7z2bLa7pGhtiGvAV2J5pWfRoGnphF2dTdjmfHAAL7zEUo",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:05:47Z"
+          },
+          {
+            "address": "5vwE7QVfe2j846v9Qpkx7UPiYyX2e8bGwiA9LVcrnree",
+            "signature": "4pbSSMxv8VDCPR9xYcvSJrJD88XanUqqTV3eb6hqZJ1pBhaLmTUKJrykEhkoRsSziSgX4FVaJTeCcfU7uRqJGjpJ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:05:37Z"
+          },
+          {
+            "address": "Gtx9ad1ZbFuKCYx14CeUpX2m7BfXBroxgudZYxBgzRfy",
+            "signature": "4GjgxihHn5WCbLTEqrphb8AjfSza2DaA8x2qsVT1YoVUA13rjt7PoXn64xmi1JNaugxyzm5bySsMZi5m8G3wnxLP",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:05:26Z"
+          },
+          {
+            "address": "Aki6EvML9Q9TeWWo4trdCQhe8aYhmCC6dUDTyA1SLA3t",
+            "signature": "3iU2gtSoukX9NqR1o2LWXnMLXohERGd4EQFmQ9ELGpYFH2EEExnZJGtHUuZnJztqJy8moJfVqVXpvxHipoEA2kcw",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:05:15Z"
+          },
+          {
+            "address": "8S783wxqZWjxrCNaPLfavM7VG8MkTAJwog3iLhjCk5UZ",
+            "signature": "4K1YfsxzjzLh4eqYRnm18vnCBM7SE6dQUaJt2yWXqRJy9hpuCv4Bbdgc3VtAnRmSfPtzGQs8FsyUxwXugA3eCtNJ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:05:02Z"
+          },
+          {
+            "address": "GXzB6tZaXwvyhABotjFxEjESiMk72N6LvkfQ7PwudmPz",
+            "signature": "WewbakhmoykWG3JMnqngbqqKas4Y4cvL8DPd4JKtPBA5w2Ud15cRSV7AidDp9eqebC4z7BAmRwLtqiJ7jySyuTB",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:04:50Z"
+          },
+          {
+            "address": "7uTQHxbNJA2Kzv1cSt9dtt3hYYbZx1CrZKVNLZ5mwRUb",
+            "signature": "Q75a5F2pGvsoX35fHjDf9JNCRAjPNkLwXcet77Da745XRugwSqGN9nYpTQ9EU5znQJitSdSvbnu1NLeRepnx6ZB",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:04:38Z"
+          },
+          {
+            "address": "Hg4zXmhwqPSen4Ffu64qK3WLNDuWVcsV4Wgskaw9Q9qA",
+            "signature": "5QWDSrr8UseBLcdb1ZeyKsqeQrbQ8whcfCr1nnYdz8wHruEemu2J8k69CpAB5vXPgvQdyfcXmDtUjBKAEQm5QUg",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:04:28Z"
+          },
+          {
+            "address": "24Y5ammK3h9LHyPEUejcP1EyWGjxvtMtTnHm1d9f2TDu",
+            "signature": "78BRSsy6NQfu2xJy3PYsa51Jk6pYC3Kwt2xpVsHSb9diGzhRs6YoaX5m1i81oqZPuNYnkxDdLgMtNCph7W1yfdo",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T04:04:18Z"
+          },
+          {
+            "address": "E8QyNKppCammD85W8kCHhrk5vvDVNcSKfeaVA2efHvuL",
+            "signature": "XXnHAaaNpsKk2i4pW3nxHGcuGgXjkYvorXsaSonKWCZamsH8MLGVA3EEjJbXhbni7bFUSWAGjGCQheU7oVuUMHg",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:56:54Z"
+          },
+          {
+            "address": "4HM8V5dw2tUZa8VXSdHtCm6ErG8Q1BAerKJ4cznk4bo6",
+            "signature": "NmYi7FxM8vq9vnHazZW6XUCs5bWgWkcPpKh34VSJMjmW79pAQuFPwVQu5P83nsGkGfzaZzcmC7yWp24Fs57RPHx",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:56:54Z"
+          },
+          {
+            "address": "HKoCfdA6yEBF6nctgJGydgGFuLEXufreiC4y9j24GgJW",
+            "signature": "5GjcRYtseMGsqQpJjHykyEDYxFkQ4pxktuQqej2oSbMKt12WLa5cic8ARKXghwA56JTn8sE1bXw8RMKfYH8XTZD3",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:56:54Z"
+          },
+          {
+            "address": "67FNN5oR2SMKFcGsw5GeRiKBTAWft64Kqg2GWj4aLeJT",
+            "signature": "4USjunJKQpfScNkZfxPft4CsAPoeetoyszs1X1oBWxZAYACDPRWW1Uyk6SkPWpaTqjzTC2P2kTcnBTQxZLxVyw94",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:56:54Z"
+          },
+          {
+            "address": "C15A13dtbfz4Gcr1wd8odwGoBn9wgvCR2Xhp3iiBqLxM",
+            "signature": "45kYhKH5jpbxsCr4h56zXW8iJnSmXrh2MCB3cS4L3QCD8dP75NsaafjuNrXPHvgyfryjE54qASCvtvC7TH6hsmBh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:54:16Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "3otEL4v9XrqpvfnyDdwsfU7PeaHYcbxSXX2utisy9JYFP9s8AYxDA9Zno7knVSqpTmBYpMFA8uouVm3kigc5rAtr",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:53:00Z"
+          },
+          {
+            "address": "67LwNGrukVFFcA1XZQ9U8ddZGCBuPvPHgMxw81AeRtQ7",
+            "signature": "5y2j1h8Lq6D24sgqEDCH2FAcqu8NZJS6urzAYgCrUvUV8rFTbpbarzsii3zDHNZ9s3Ur9pguW9hFH82TNLoFoMF4",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:50:34Z"
+          },
+          {
+            "address": "Fy9q6yEoG4NpoBRhNq1ZTssfa2c2LWwjwqRScBSch8Rn",
+            "signature": "5q6PhEAmAJeU3NVNm9tJnzMDxKAGWUTjbJA75MAvXaL3wpXpy4rEK53bd6wXKnXHZocSoFZ6FSFGcY3uUWA8SQPM",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:50:02Z"
+          },
+          {
+            "address": "67LwNGrukVFFcA1XZQ9U8ddZGCBuPvPHgMxw81AeRtQ7",
+            "signature": "5CBT1S1RpsRXKRbE6gD72RFxvZhMXoBcMf4jbAweFc5sMBb7c9WxZpbTqj6124jVbWMyRwdFCdcK6RqmGYCVRyoT",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:49:37Z"
+          },
+          {
+            "address": "D24y1SsG8dkjUxbgdFK62FKEerviuq6iQsXXuG8TiXcy",
+            "signature": "ueEM76HDfUNFQg6VebUkFFi6PdzE7jViv5EVdW3QWHDN9R889ksKhGWywLsP4qBXWR7LDZBHupczdU6hsULzvmV",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:49:35Z"
+          },
+          {
+            "address": "Fy9q6yEoG4NpoBRhNq1ZTssfa2c2LWwjwqRScBSch8Rn",
+            "signature": "56hBfD18qceGfAigbqqRC6mraPbkajwt32A31LeggAfNxnj1nuJpbJgNcAmuKPWErkmYT2zSRedVgyptjzpP41MB",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:44:01Z"
+          },
+          {
+            "address": "AZ9oUEZjDvJimEBGpPRWG1gFGDCvMVrkC7Cydyz5z8Zz",
+            "signature": "56jHWdZEHrKQkQiMvpYA3GqV3GErLB1fq9xJgHeTfPpRyWY25k5EvG1uQ6huNqyD8buPu32dedtLwK7b3JaHAEks",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:42:56Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "jRchE5SwDqD2Dk5PksYvQuQD9AbMvtgpwWfAwrZZeKZ6JYKWYUwpygURRGDxqxE511x99jLrephA8LzEBrXwm9S",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:39:01Z"
+          },
+          {
+            "address": "64dwqMebLKmfs9aK3nyuzzud7PDGMEckhFMh3tCPyMhj",
+            "signature": "64gYmXUohwufqXCpYyRANVofDtJE177ZQdtP9LXpGdUYS9VQJEdw7JyiG7KqP3obkQ5uETMYcYWN1YspXhYeJLcH",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:36:18Z"
+          },
+          {
+            "address": "Ffn24hwkCNQX8VbgBxwEhX6bctcH99eSyTg3d6cLjyXk",
+            "signature": "49WhGmDadBHudMzLCqGSvvQBThmEZKDcCqnPgaRXtFoB5gTutR6izuawS7b4bn5wv86P848Znwsiboa5Wg4RQcXL",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:36:18Z"
+          },
+          {
+            "address": "69VErEtBHiK3MxgzYMCzN9zSTzsS98ubdaB55NcgWe9h",
+            "signature": "21m7B5Z6kvVB6vefaqXR4G7pxJTSiBvbbA9boZfpDvbfd9iCN9T7Uamycybo3soEEVwoxgy3MjPaJBP52zFRBFoQ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:36:18Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "3wpQsG2nUBtFzi8DoSQNBZRYbwtuvNp2jXZfqR8nxHbfobRGS294VzCg4isJQRjXt2D53bQxaMxfPHPTydtXGZLX",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:34:26Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "5G33VrkNsZg2JLkzrZv7h3BrRh92u4e18QF1R1ifwRyX4kPxLm9K37282NekKTqWuuPTRGrxwpoE9X6ogmZmnUz4",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:34:24Z"
+          },
+          {
+            "address": "FZ7ctZ47L8Wnb6ZjDb8U6tKVKe5WLsZ6dFiecBrmfye6",
+            "signature": "spCXjSyREZPwVUcSrphrdb3TuoRAEGbQHauTzgXW5eZQ2WivJSm8pamSQMkga16xnCfoiWWm1FpovKooBvAEY7M",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:25:45Z"
+          },
+          {
+            "address": "D5qFDXirFuiRMSuarD2eoGNRsGGVg7cnT46oQ4khJKjG",
+            "signature": "CBVHUNHKZqxHLip2DJGLwQBqkDovkmpa5AqBpM2bxs24pJmn9dpYN6aJcf9NJjV4aH5w2YPEKR9Kn68ApgpWTKm",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:25:45Z"
+          },
+          {
+            "address": "DFqaRP43PrbdZL339zHCo7sdQG4TEJZ6i7B8E7MxHXcT",
+            "signature": "53BRWcEUZvdAVg7NaNMCAfFbxbUFANTsr5iyxYDZgQxehNvjwFd8NvJrtrVXmBqnqLggKdrVL9QxaBrArJ7NN2u1",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:25:45Z"
+          },
+          {
+            "address": "ExxT82JtLXXjb4Hg4mwcQQxEZGoExEQHdkroEbZe26xH",
+            "signature": "3Tnp7HHoQ3Tkhkwt7554jhhgFamPNjavqcu4sLiY5957DzWGSCtuGdz7uoRNQGc8tfmiCRe1JXvKZe12seA2PBUV",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:25:45Z"
+          },
+          {
+            "address": "6PBHu3dq3p7FQge1p9fr63Ga87sSKm8j4qBYWkAhTf7R",
+            "signature": "21F7HzraB7MgnBWWCSs1LE9BSqMNDxBS5CJDcq2MwHcWPsrVXht2AocFp2DNXQJsHAKysQUxB2fC6fynhW9pm6ZA",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:25:45Z"
+          },
+          {
+            "address": "6o66QcfcNp7wDVPFW1cunrX3QBvZYJUuang8bKf3r6HN",
+            "signature": "2zorkxd6iRRzNXqaT7g3EKrsQC4Y1AZdAciQjPCnXuYp3JUVYtJuXMWMcY1fXtdBBrsJfLuooWoZkU96MxBb2c4h",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:20:00Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "ugXdz4zZQcZSQvdRg2xUPPondAPNy6W3CTN3GJK4nGaPUUSC4Q7bN6Aj1YGKg9nunA9B5i4mihfHsYcXpRYZxaU",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:19:24Z"
+          },
+          {
+            "address": "LiWewfw1enXvnKsV9AmimBtXK3NomVG2ehQzPzbMKMo",
+            "signature": "9PzeXZcFoYRwEFQFvAmSBevh5UzpEgTjVXr5TZxqhSxXmb2pPMZ8ziPcExYyhjRqrnh8oLPTZjE3wfrTkkiiLWj",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:18:25Z"
+          },
+          {
+            "address": "2FbtAL4i347h7xKo8cwM4ek4BcvPu7Z3x41LZB7Xbe6R",
+            "signature": "5KFaBUKRDzLBgCaeKmuQeVpFujhHECXoRgHczeNnD4FbBYnRU3uQghhjrg32JzEUUZ19cQ9nvK2wfcPKt5bPHAAX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:18:25Z"
+          },
+          {
+            "address": "iEEeTsZuojv7ZYfL3EZsDnmGk8ikJWiY5rJvqUeeptZ",
+            "signature": "52BYUJJCh6uhrnjNm8LMGqmqTqnUtdG9fANV2gzF6VUh21St4DffqNCQ1rn6Hd3KMivJ7LwG5S51hRob13byv1RP",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:18:25Z"
+          },
+          {
+            "address": "93M898hAJT1qcGw3h4umrLbDWF9HLW69pL4pvsgjk9zk",
+            "signature": "2Znfe8SRaBG8WuYZGzPeVA6sVNntHLKABERAKqb1BE2yGt8FvcZ8M3oJERPY2U8PKVq3ZpPT3qUxYfVebSWKPsEU",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:12:50Z"
+          },
+          {
+            "address": "G3zdHe1b7uXBtRbRWJrCkf1akxJxiJkgZHF6EJhXnBtb",
+            "signature": "22P6y9tzK66CabKZfW5uuWsLyTjtScbwARrMcB1UiJUWL7ThLhSvcUiQ7GdTjTba2m6swzUe3f4Bu6hbMAkwHfay",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T03:12:39Z"
+          },
+          {
+            "address": "6o66QcfcNp7wDVPFW1cunrX3QBvZYJUuang8bKf3r6HN",
+            "signature": "5CsRhwGWowhc9KwNUWSXoJ3ncTFjU2DyveKUEoMrTKMVwyhbTQS4z5FL1iEGxjyaM7QXecRtjjK6wfTkPn2ToxMT",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:08:48Z"
+          },
+          {
+            "address": "G3zdHe1b7uXBtRbRWJrCkf1akxJxiJkgZHF6EJhXnBtb",
+            "signature": "4GtDvQsrHQtSuRX9z3oCHtv4vJUvgjBD3EvrT8hLNA8ekXZathGrbL9PjV44BTzTNHCFdrkBq7WUFMbj62mQj8NG",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:07:14Z"
+          },
+          {
+            "address": "93M898hAJT1qcGw3h4umrLbDWF9HLW69pL4pvsgjk9zk",
+            "signature": "5sZ3ZRCY4osDW8PCB1nG8dL5ZCn8i273zK94LfCNh3Lrr3JA2CvBWcuce7jZXVDiyPfxSyLfZMunGuonJr5RYSuh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T03:01:14Z"
+          },
+          {
+            "address": "4Eh3n5jJKmXwzHv786fHtYfwsVZ9zxn3AAJuECsL6eu3",
+            "signature": "4L22WQByc2TaN6L1zSnZACAZckHC2qWLP1sfbU8LrGjt9abjhMFc6EDmKC8zkKe8Xm4jAb5GFpmWKpu5K57kdRCK",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:58:41Z"
+          },
+          {
+            "address": "DEiVVYEMAgYcELje3AzVq8TpP9t2bXU27wzjyXwKcvgn",
+            "signature": "2WBLiWChAidZzh9x9DSeDwnJ8gowkC5AsJqzkeTzAhwedMaizFjtQC2sX7NWwKuErppxQWBUhQvfGyPCUW45FtHg",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:52:14Z"
+          },
+          {
+            "address": "HXG9GQm2AmdcAvhzojZrqdnporvfFYuNyF4JTWdezPaA",
+            "signature": "xmdYBFAns9PT1BgNjqe7jqah7SgVp17fNhTXDKZqyVQnL8m3maGpw4hjg6Sq1j4Ec13pAGCsdkC4xWvAQHCn5GW",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:52:03Z"
+          },
+          {
+            "address": "BHwTtQ4uvqfzVY3jhD7cHUuB9mMKy4vbAiEa63eSF6U3",
+            "signature": "5sgXcrFRop5tUwiwoxUcdtyoPGP7KHCpbpUZo5N2FFNQ1HqvzSt6RkovZJnG4zPxFPVy9GGerdqVooZj9C1FaGAN",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:51:53Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "5zngB6NnoxDFsE4eN7b1JC7jwVc541k44RNvd7AT9nAgRbbM2esj1xKwLaXF2Kef2S5Gc4rEtVUxbNo2Wn7RgyEZ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:46:02Z"
+          },
+          {
+            "address": "9JyxzrDQ6J2teYyeRzSnLE3UrPEX8PqF1W1XertGiZRU",
+            "signature": "4bzBncTHeXHEdfiNgoaHJxYT3s1ASACHeRqS3Dpatj51DVBFbgEdvtbk2e5WsD6zvqzCxTG1VUhWVGHN4u8P2EyN",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:44:30Z"
+          },
+          {
+            "address": "GMuBia32eVC1aUrC3VrG4m4QPSEc41FySTdcYW3sTtvt",
+            "signature": "K4CusbPJEgWLgERxk9cCKUDR2MHd8eUnnndDeRg3cgJi1RKNUxskw2YNJagC1HUmP25p28VkApSx9VsnVMC6eBR",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:37:01Z"
+          },
+          {
+            "address": "2PGZ146cWNiLTbf666SRYrcCmqGYaTFsf8FffQwSnpHU",
+            "signature": "23MjMETpgsBt6Pz5NB7bKLdVTnRmgiLwTqWBbED8CpFZRL17kf9gHX7EWRuGhKP1h3zZNMLY9CGvv7w4PL2q92rd",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:36:51Z"
+          },
+          {
+            "address": "3y79J9Ym9ZBREAnZyu7heXqHahxwbDjacazM79pLpWa8",
+            "signature": "2MhZn8jpjZNdrzLA947sH3e1zdh6uzkuvN4bGHvnfg8Qd27W4r62ZjtZa1PW8CmeRNoMZGYxaA8P3NAgNqCyStAA",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:36:38Z"
+          },
+          {
+            "address": "9B9dPPsqRvekGKcAJmLzHhgZiKrU7WchXCwcrxf4THnB",
+            "signature": "XexGocJb9pPaG9modQxYb1cY8QiaPr8RjKt4afAB82D6geK4cVvexbKzdNn1mtdyWXYWNmnvcjeCuvfkjfsKPAo",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:36:26Z"
+          },
+          {
+            "address": "FF9xktCD4YwCqco2qJfM57CRUcXFDtr2WVm3QdRArqvX",
+            "signature": "3PLMLxbKN67Y9Mnx2wYQkMAL5hNXYuR5zu5QAjX9B3JcBkjqEfo2L9psZDfJ5eqhx8qg1wphZzH9THsB2tzm6xXU",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:36:16Z"
+          },
+          {
+            "address": "GymuaCjAPqUUub5wF6nhZpX12vsebWrA6dRgwoY6RFw6",
+            "signature": "2PEnmboHgCQ2yLHTog4GuCanQF2hmcvsZSSmKaKUSqiYWxLJwEq4CA2JkPo3eSLLWT9cZrVKff1Kpy4AeWic2hHE",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:36:03Z"
+          },
+          {
+            "address": "3fpouzH5uHJMeZyA48KzDRrpKmj6Sy7u53CSn4sZ9XzK",
+            "signature": "8RUPqJQn9ArFggooXMgyC7nuEjHsLqwLmVix3ZaAntTaoDvPcWoXtThLM1NJzKmBHEteHU8p6Z7asLgZB4uWWbQ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:35:52Z"
+          },
+          {
+            "address": "2pDVaMf3UDsUx78qxaJyVYaWSPk34DLPTYUb8nnkLZJf",
+            "signature": "47AzJZUSkCLqPih3Xz6DfbvYbG3zw6gikwB6vpAL1vPCdv24iV9qjASuymjeVa5vQFogVUYhHZuvLMyiYU2mQHU",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:35:41Z"
+          },
+          {
+            "address": "3B4VEWr6XYKeXdPkCwoJRraSWsZkXfffSWusFDqVD33Q",
+            "signature": "MEYqX62fuGRd35t9VxBczN9JvL5SQRRCaEWJZiL2sLjNiEh3qSv2phXckjYDeGsjmNTnXP7Uno7sr38LoTsgvAE",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:35:29Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "3fkoTNSH79Mk7fQgAWZ2BzBvnSsnZe1D6QqLQaXYdutZCsjnhEGdYbG1gkswwyWCdfWMSejQQS2vDnCjvEcr5QC4",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:34:23Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "3VMonedpDFpZ1gADK5wzQszvPM8Z199J7tH6sYxke19wdPwMUE76JCRTgdhspc8azJq8HeLguxM4xzFLdiPwzaAG",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:34:23Z"
+          },
+          {
+            "address": "9dPojYpaCtJTBaevEEVVsuc3Ks5RNw7GminR7wKbEj4r",
+            "signature": "4tzj1VoddGZU7xV7hqzCvn5Q6H82BRGAwcNstceuNxwXa9EsEah763UpaUrHmgMESbbfrFZxY8sNJ2ajvmqAL9Db",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:30:30Z"
+          },
+          {
+            "address": "5Bk4SgXTEosHzYa87txHVYXMsHQT75VTxesELsHJB2DW",
+            "signature": "5LAYe9FUXnTUQcLDEQAgnr3i5hfp7xYSNrY9QFtzKbXrKEty6L8BzZTmfgT7gCjpfpxuqPvQVhg4dHUkUMDdDLrh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:27:38Z"
+          },
+          {
+            "address": "8PAJeQBJAr6ZT7mmh92URozVQ4pEkk19ZJK5yMmbP4Yc",
+            "signature": "3vs77WX6FdyoTPeBaPv6pqjkCqLAFnSCfuuAGsJnaXyvQvCC5XVQFFJ4JgrFJA5TAeGMufN7Dzq2Gj6az7iXYdxh",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:27:38Z"
+          },
+          {
+            "address": "5kBhZRTUqEv4j8N7QHk61DSNF9UUkKcs6eDMobhE445r",
+            "signature": "2v3yWDa1jjvUmo7NYAkzuAj4D7XXNfNQViicizHnr9RJcAUcSabsiacYcb8RPhrX34rqSqwgBdZcLYN3TL8Lvu1U",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:27:38Z"
+          },
+          {
+            "address": "6GTmeudp8sR8uxBAQ9YgQ5gF45oWRtnhm8PbGKZv4KaU",
+            "signature": "NPD8PYMHVuhen1yEY3CoeuJpTbM4vWEGAmKo76XYLoM7pBXMbEbqd3Yb14YdqPtTGA9pPxWGmxrK1a76xD5t1Tt",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:24:29Z"
+          },
+          {
+            "address": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "signature": "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:17:09Z"
+          },
+          {
+            "address": "6GTmeudp8sR8uxBAQ9YgQ5gF45oWRtnhm8PbGKZv4KaU",
+            "signature": "4SncKt1h5xaHpG8G3idT1d24PPEZAxyWS9XFW3HNn8ZsFqo6uqgzW4mQuZCxYSXtDAFGbyWwp5uLWimirDMZe2cg",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:12:17Z"
+          },
+          {
+            "address": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "signature": "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T02:08:20Z"
+          },
+          {
+            "address": "AcPbgBAbWfe25HpcXy8qrUF3hJiTozW9dwTLpA1igeUL",
+            "signature": "4XyLXrEFSmfDprioNBYZkx9pCei9G2rXZVZFHGkriLEjMgqRmXAhMDqfpsTjcyoqG3DRjP3i7tHJ8N4tKrXdqaCj",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T02:00:52Z"
+          },
+          {
+            "address": "4x56VefYzVW4eqhBbiL8jrziVX1tf6XXq3z9Key1U1To",
+            "signature": "3ein782RfGSMMh4LAxQoFdCpUgurYjtUbWgKMWFx5quGKbFb9oEepLBdphZoaGbHWBww4X2q7MyVht37GJZh1gi8",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:58:53Z"
+          },
+          {
+            "address": "AZ9oUEZjDvJimEBGpPRWG1gFGDCvMVrkC7Cydyz5z8Zz",
+            "signature": "4mjmvUTNbQ7zzz7VuZUBSyreA9DfujSyfQW98TaProYkQNmsemin6gVGUeeM5937ZUotqqCXTq3Ja7dfPHXWNcZ7",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:57:20Z"
+          },
+          {
+            "address": "9dPojYpaCtJTBaevEEVVsuc3Ks5RNw7GminR7wKbEj4r",
+            "signature": "5AfRqicGbBwLwJQ4ZsMg6FUR38aq6BSWGhmWHNXA17aT1UhvgW1jvNyQeokSELkY8PQT4XRbzAq5puPaPiXPmkSF",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:55:53Z"
+          },
+          {
+            "address": "AcPbgBAbWfe25HpcXy8qrUF3hJiTozW9dwTLpA1igeUL",
+            "signature": "2tJaTX6yR4J8B8nNqADwgjFwKUfDiqFSwEwbu22tVZt4XR17HgXyAjtscioK7tk97uLgPCay4CTAkdn46CA5XqBr",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:53:07Z"
+          },
+          {
+            "address": "4x56VefYzVW4eqhBbiL8jrziVX1tf6XXq3z9Key1U1To",
+            "signature": "675GoLC6kxmyhuEQCsnKttjFUic7eSJ55We8694xoyRzt89qVieSRCNY1DwdDJqpWT4nWPVuQ95tuoYwddx5u6eq",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:49:47Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "27biVAf1fA4AuWkPKbyQE4zZU1izKqYHZks7Uo3VSjAhjR8jU3U35L25THfNftF7C8s37TZo94aqrmUP3vAcJzrs",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:49:39Z"
+          },
+          {
+            "address": "8LgNrwTGY6hnhYy6ptytojmEru5wjkMF2HhF4HBA9D2z",
+            "signature": "5R3zFJ79NLRukW2kQ4zhQvPt6z8SmZH1P517JdyFx7GydkG4PDTsRK7Sz7Aphv9XXyJVqX22Z9ja8y9UKJRvQMA8",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:46:35Z"
+          },
+          {
+            "address": "3J82LUKjWZDpjeq5oDrNtXFBo47z2bfHxSAdZsXkKfdK",
+            "signature": "4GVcC8mfZzjNFS83QAMmgvCAJU5NDre9G4a8a7eqpU7W1KWCbdh5tCbja3FXWFgHTaiaHhUqjzRma3WzXbU16GHi",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:46:31Z"
+          },
+          {
+            "address": "3vp5qsdQVtQtf6vMWfXWRHSFS58LfvbaWzYDHGGy4bWc",
+            "signature": "NVprLNGWHrVYuiaSZava9ntkCQYovb21tyhPxGUWj5yTaEF2DEtNcsM66w6QeskuoeP6wWxbKBviezShm4WWbgn",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:41:51Z"
+          },
+          {
+            "address": "YgR72QvPb4NaCzjHi7A1H3cd9yoNg4f6GMw2rYmPuPH",
+            "signature": "5RaKJhSHx4sPCQu9km8QwfBktk3znZwY6cFdZCGNtdSdscL7LwwYn5k4SZZNHexgcpXLzH6D5GTdXPkAwgQwwmv",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:41:51Z"
+          },
+          {
+            "address": "4v8KFk9vCrYRTjtjPmXF2a1zznPrTGSgt9oR4hD4LdrD",
+            "signature": "44a9871Yjysq4znfhAjdoBHHCPunyN4WDa88nbxv914sUnAH6fvSpeR5vV7496L3g2qK854orHfifWmU9H7mYScz",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:41:51Z"
+          },
+          {
+            "address": "DQBwec1XiaysRnYrVEqPMNEqsQWAUG8ww7KanGvgMmq1",
+            "signature": "2SzsUG7bMDCoVwPQ2ZPzjAFLPYPzDVExyh2wShADv8yUPyzMmge5xZbtv2wp9zir1SoyTG3yXG5tHEy3UXvCY68N",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:41:51Z"
+          },
+          {
+            "address": "9f9VYaakujeZ8jCUuhqwYo8XyqZTG263R6GuZYkMNKfR",
+            "signature": "4HqfAsvLXcUVvDg5bz9fj1MBeX8udMshvEJpAPdahvmSpEoZzpp8uR8X9UhybGgmoJokyLZ9EVNs8niXhnTvzSDL",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:38:21Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "TUzo4qSA46v9Q8hNcfYWvowBf6kky7WXMQ7NALtJ3HqAfdN3UNn15Sx1QrTjhHj19puWzXe4SyEspgthLEEMajP",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:34:21Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "4GaAEJGWCmHWYjg539v786XNvsTfUWFv1YTufAUztcuL7ox2RSyuxuD8z2trWFTa1Ei8B4MSz5UwEzkCJDa8ELSM",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:34:20Z"
+          },
+          {
+            "address": "EyrjRQXBwL7KhrTCYVDsHwx6sAAMQATCCQAFagqwui62",
+            "signature": "3k4bk5SkVt14SKBTuEvY233ToySYKtbHoGPaR8Yhb75n4s1PB86V7wSt3kbMCuMAZNQtjMEKp69Q7KMzt8zePz77",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:33:41Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "4Z2Z55AMQ8iJPBP3t5KvGWZZupzJgX19waNfbkP2fXq8zjXmaZnUKp9EhoKCieZza1jeHQAVoTyXmoKvWfPTnLXo",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:27:16Z"
+          },
+          {
+            "address": "8QHMfvsukb4iiTzQKv8JKfcZpVi3eKLb5sRDhyU3GYma",
+            "signature": "2mwNk4U7RCKNRvvYJsoCeVx7JC1XBy8fwoQgfW1caLaERJ4JjVfkRx5nk6GKKEqAfWWUQnrrR4AziZmBy4HAB6wv",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:24:56Z"
+          },
+          {
+            "address": "rHeDgnTRUmfa6fKg1MjCBcFnrkbkvYeiYpiFz8BihsZ",
+            "signature": "3UBumzwaeFW26UBp9XQodZnMwQqdhSLkPWCjmduXPDwmjvnDumaPUQvESyjE6bA6DEtjqCngHTKXyAxZLas9XaKX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:24:46Z"
+          },
+          {
+            "address": "6v4FZMACLRxWiRyNtA4eMN1x8WxDe6UvHnVJXyjJnaHN",
+            "signature": "2CpyrYbRtN3vxYFS5WqbDqeXo21RJctrXoKr5RyAKz3Lhuzrb4aeV2eLeanSrP42BRxAJx7JWxoUpj95Qhh21a4i",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:24:36Z"
+          },
+          {
+            "address": "BKVxZCoYY1VvuRLhehqq5F5CBmWfny9kCNiiVuKGgTxx",
+            "signature": "4tHnimnSjMXaFEqFi6HszqnLj9oys61dQtpzi3ijLw8tWesM6NsMeddBg9vXtTG3sddG21QgtWwoC5SitHpmimbM",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:24:25Z"
+          },
+          {
+            "address": "DyuwPJ9AV6Cv8yRoA7BqyLN7yMfpY4GX5QE3JK9XbCGT",
+            "signature": "4kU9WVT34gMQ2mZk9HmqCKsxNPSKHaTnBxtYPvYsKCNLag6M6wh8bzErLamcvyYnNbJnKyCj87SnuXTnoMsmQxtX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:18:16Z"
+          },
+          {
+            "address": "Duica5mhkWBJZaLzMzckDNDWyrPuP3pchZTCr9ri4em5",
+            "signature": "3sZ6hFgWFrcSPZ1gEdgfgPaMgkJbBtpjAk4dWoJQeP6Q8B3VJAoGW8s5dQnwXSUQ5hL65WNwoGVt4FnvyHhUYyMR",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:18:16Z"
+          },
+          {
+            "address": "kiTZ9pKcgH3vftq8s29DdiyzjWT2KjHjgbaqrBfXMbM",
+            "signature": "3QFY9oxVMDFw4Yq8fREK7Sj8bdex7EydvZUgiqo1W6eXpUydrWWYF3uwREaVUiKA4z4MxEj6qJznnHchuxah8jU8",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:18:16Z"
+          },
+          {
+            "address": "GEhK7y8Ex3UwQ5mMrjNC5fZkcgu2QzmkwjAmr7Cyhq9Y",
+            "signature": "2MAg1TXQWDr2eKoCqb6Jh95jJqHeRLS48rTCM3V8D1H8ZvgdZVDGn2QxHovXtUrw3C7CK22sY5bdyRT2y3gvtLUF",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:18:16Z"
+          },
+          {
+            "address": "3J82LUKjWZDpjeq5oDrNtXFBo47z2bfHxSAdZsXkKfdK",
+            "signature": "2NCZgzYmJB9gTgcgB9yamQ7F9MMpE8GpRBZgJ7zNex8dV5LR5dtiKKxMkg5MfFtPiQw9hrpXsG1tJK8CortLygsh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:16:02Z"
+          },
+          {
+            "address": "3gm7NhR9K6yMjZVFw63seEuyqBjytRV1ykMVJQN7fnV2",
+            "signature": "tAMZFbDM63aJE7pPCdhbnrD7RotuEybZLWNXRRq3Bkd46UG3CnA8vCrtdYccmY721qusk4GUDKpD2xe5WuMGmZz",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:15:32Z"
+          },
+          {
+            "address": "9dPojYpaCtJTBaevEEVVsuc3Ks5RNw7GminR7wKbEj4r",
+            "signature": "2LvuGDMQ575H6wBnuCp46Zaf3wzz8ueSw7Re6MAiymBxwwfkD9QUPvfAPGR1aNpB4Ts9PP6TQDXe9fcRaoatY77g",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:15:21Z"
+          },
+          {
+            "address": "5F1N5RLPGyBWCxT2NHYhDLFar8jdtnePEftSXC3EPeaW",
+            "signature": "5DCDqtJdbq2CfJCjbC56SLbw5RWLq9uPUPkqDcx3kxyMfUwgyeG7a95j5TDyruVacxc2qFzgqaPNK267LkmSDzXG",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T01:11:52Z"
+          },
+          {
+            "address": "5wv2TCjWbebihRMm3wGUi4462eGnSNsTrqxef42EWk8t",
+            "signature": "LPLjr51ovssXMfvxSKgpekKZcc5pGSvo3ZzGrZJfUA7qR5epxfugsb8VF6e8J18hoToPSKZ5qoXAx98uGuj7dve",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:09:14Z"
+          },
+          {
+            "address": "6144HeSpQDtSrbcRNZ14pyW87wxoRtxX6DzdfSvXu3gh",
+            "signature": "3LT4S2ZAHbCEmHxvKUm2BECEkAh8gx63rqs3K9vqHzw4DAHA26SUvPnPfna3Ba7tmbFeqGir4f5mwGqiLvQVr3UX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:06:08Z"
+          },
+          {
+            "address": "3eXojnjhCWM3HHkwzcZygExDEHCTnz7oVTMvvxH3ZaLq",
+            "signature": "bdw1axK7gb24KzS1Y24HsWqbi4eKBnynvopXn8M8NBVYsegBaUGSSY4T2QD4vxPN9YYp3GWPcVBrrc5U9qriuD5",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:05:58Z"
+          },
+          {
+            "address": "rNW9Qkm6C9M7EHSroBaC461VHjMjBkqryozewBWiVLx",
+            "signature": "3qeFTp7CtXXQZT7yjVCivvgcdcBesRP44o6xzTwUi7SPhQJZgm77iUBWBXyfKHWqYH3MQ4fwt48V5gss9sBb1Zxy",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:05:47Z"
+          },
+          {
+            "address": "GXKMhSTSBNAEh5q1EWNAPGvp2n1HTv56XczK2ykvgeRR",
+            "signature": "2yKS4H1Eq6t84sTcMCG4FvUcn4dDtJtfwAiVPSazuCPTEytdchcQnZSgdL5fPcu6bAPArjuLLuS4BLvz464TZVyi",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T01:00:40Z"
+          },
+          {
+            "address": "FL4RQjqoP62sgA6FPKtdyeSAkdvGZS9es8C2gENk6kw4",
+            "signature": "T4wfC4f4NQifyn47MDgWStShfUrDkhV64AhfGfx5pM9Gi5yMutRShmnqNwQgJ3SBdZpJ3rsYiiiYyzxvxyuCtov",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:56:20Z"
+          },
+          {
+            "address": "F1HTkpfmHmDFt8NPg1AHgkC49NoKGWoHeyyB1pgvhEFo",
+            "signature": "H1JqoqEok86b7XbAWp6KQggoGjMwzx7JHPkP7wCuFRQCg9Jzzvpawg7vmuHQSbfY7ViMCWdVwosmiYGyji9Jmoh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:56:20Z"
+          },
+          {
+            "address": "3XBHi1AFC551EtoJbDAkzAAaUghCfgagLYH6mZ7AxgBC",
+            "signature": "3SyzTi6TG7ccgoa1UHbLKfDK2bTY5HZfu4vz6zUYLGi46YavY8BdyDBf6bNdixMsrNHyu54jsxjosqczD7kCQPB4",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:56:20Z"
+          },
+          {
+            "address": "F4zPszUKseUPtrWEYTsGzbCSMq9xoV2KjAXhTcjSkX2t",
+            "signature": "2NRzMjNFw93MPzspW25Bv8SCrG7rKZKAkY6FdHKb92btE1i36DUo6DKNSdJ6RGKRMvYW6rsy9bNZNsms5sPYFns5",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:56:20Z"
+          },
+          {
+            "address": "7ixLwkJqtZydHJ7JYeYUVeo1tVPBHwHDzdh1vJpHm9ui",
+            "signature": "2fRrBZDFvL1jcfb7ppgRTumstoLkCT4Hmt9hWX9AqyShh2mS89cZrrh3j5NSy21PbqetZURt1cBjvYKFXdLJmdhM",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:56:20Z"
+          },
+          {
+            "address": "12tM2Fk7hFoDyWKazrg7j926GNkVQ1jCL3pDdAGKHH2w",
+            "signature": "JXgEWqVTcyrbSrZ2UT9NBZGRoTS32WkEtgWPUZgNyEku5VMsKK5UDpjcEd9LxRZvEAkFGBt4PZYCzR4xqAhzzsd",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:50:59Z"
+          },
+          {
+            "address": "12tM2Fk7hFoDyWKazrg7j926GNkVQ1jCL3pDdAGKHH2w",
+            "signature": "4uYsEfNQWXN2HeWEoYLHSHjjhT7sb7LJp3yNyg8cCXqDqYvE9XANNJTDX1A53EYSzGVUX4ZaoHoVR3TLApvPzZyu",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:50:32Z"
+          },
+          {
+            "address": "3y62jEnKBsBcst9sAF8yacuECPCT1iXuQM1MLiyYfg1T",
+            "signature": "yqG2AWCwrNQgojwa7gNP5vXnvgSjFFWgYBRkrXN9Uk4T13M1Xvip3ZMPis1QYxTQxe7RpSxBE1TNJbSPBKn6iqG",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:50:25Z"
+          },
+          {
+            "address": "9j7oDqLsctdER3VMzpcdnim5Ndzmc7PDyisot2qcNvRb",
+            "signature": "4SfYxdb5dUayayjtTPMdYjeVQyczfXzdR9ae893E2NLbJCAgX5NRTzW1M9HBqmuwRVRBqghtSmXU7vCCvdyxiR2K",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:50:25Z"
+          },
+          {
+            "address": "7NGhdeonSwH253PdQvf4u3cT47V9GqkuTN7reKwFpTiH",
+            "signature": "4n9xhXoFK5EG7uwdLzpvrJSWWx24voP99s87kaK9pZoSzfdMoQrQCJ9XjY9eNv49rV6AcAb5RvUnfm6Eo7VNNbxq",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:50:25Z"
+          },
+          {
+            "address": "12tM2Fk7hFoDyWKazrg7j926GNkVQ1jCL3pDdAGKHH2w",
+            "signature": "9wCbD4U638jFrZYR1gB4XQNK5AnggJGzxgmP4HRq4koS1QAsggeBz4o2Kd4FfrTVbVb7xEHYpMwrt6L4Tvvxihj",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:47:17Z"
+          },
+          {
+            "address": "C8LEmrj4yEnrrHzkbxu9KwnyJbejXn867AjLpk9SVxUK",
+            "signature": "oiHNe2VHKA1CPoHTxosnDQ2SY3BgLSQkiBcqhNXCbKqh6MyYknrBk8pb2SWoF2cVHAHsBhizVDJ1eUqaKnHKt9X",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:46:14Z"
+          },
+          {
+            "address": "D1qjznebRNJ7dEeAkgWWTHE1sxCwTxTyJ5URgjkbyUpV",
+            "signature": "2qYNTc3Ub8RYnjYS5nyNsfedCVYi8r1nVZcjt2Ud43m3SQdGEb9WpJbSGgQHsHqtAaTjT4ea6LpNsmmBmkTd8cty",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:42:35Z"
+          },
+          {
+            "address": "CpjEe3odiQBabcy8RSMWRcS7mpxxAMcKDU9254LQtjp8",
+            "signature": "3DQ2kYNZGypMXyyW2r7oFGMxrHF2PyX7r21jD8aer1XUsEVLDR74AbCweRjxhPLnko5BGuFTBsah2UL78JcZnMGm",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:34:32Z"
+          },
+          {
+            "address": "6fYm1g9thjQnVq6KjsjnHD5hktJri5zxXT1XAZYgBUJf",
+            "signature": "2fCmPuvqFrtxo5TwDtfcdHVDcbas7MFhCTLoDmCNSCFjbi6qzGUaBNwyg38rCpS2jpdbCpmQSZ1AjYg7gSoESrq7",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:34:21Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "3m8TSULgFL2PTMqsicFh581es7of6P2tZxD5QsYxreD8ArGwSByCsGcaEG7B4WmnD5s3raqfWzyHRqHwjZFDdXCn",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:34:19Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "27TCk6NwE33n2dg1d2r59zA7KoVNbyo5us6TgQsR686oM9xSnUwocZgyYF3vU155rPXDinfudjmQXNHbmXw9Jmnw",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:34:17Z"
+          },
+          {
+            "address": "FvV3HYWAMskxLTVjFPsU5TJwe9PLa8KPvwSkFeE5UhNM",
+            "signature": "5fSyjEhQKTNKfqDeMq93LFNumLNWX857PCiNjqgxdb6WR6DppnfCSUdD9NkgWGyhFYA3zMKXtRSuECD7zRgzuDbH",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:33:27Z"
+          },
+          {
+            "address": "9dPojYpaCtJTBaevEEVVsuc3Ks5RNw7GminR7wKbEj4r",
+            "signature": "37KGEAgLepTQeWp2M5anjfDV8A8kNjcAU5gWtBPgapShjjGaYyXKXAfMrfZT5mVdSDNHQLFRAFwst9rav89EU2W3",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:25:58Z"
+          },
+          {
+            "address": "DNpTe31o6S6kp1FtHdvpDHyqNi54xCLWhQq9P32QysFo",
+            "signature": "55Co2Dq2m8LDq922tbhrPNTATWR3gkze1SRXfqwu9pwAfKZrKSvKB3kjV4xDRkuJBq1wCpadwV3MQ4rRHaTAsdmZ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:25:32Z"
+          },
+          {
+            "address": "DNpTe31o6S6kp1FtHdvpDHyqNi54xCLWhQq9P32QysFo",
+            "signature": "PDHVPRMZAKVctekHemPXpxhtUMh5i39NE8nmTMo5QCmuX9BFS7TijSP8z6UqjVCYBhD2drQh8C2HARA8985dyVK",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:19:19Z"
+          },
+          {
+            "address": "9dPojYpaCtJTBaevEEVVsuc3Ks5RNw7GminR7wKbEj4r",
+            "signature": "ftrN3UTTVjiGDb7fW2mU7BMSmF7kuwHCBVxjA1TpKX3fQJq2iR7pDdXm5oTzfSSYvVQWJJ7KXBBrmTdwiCNSMJ1",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:13:23Z"
+          },
+          {
+            "address": "4DCXzNzq2jcCMNAJsxpgKJ6Mmgp6SHZjrmp5rZq5Rb7x",
+            "signature": "55NAoJmwufAbTpgCiGTSusXL4MyLQuq7eTgRGRkhQUiUt8RhKA95Q4GYV5dCDXKYWo6HBwn1MjQEqMdQF5vThHHg",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:10:08Z"
+          },
+          {
+            "address": "DpR6bP2UAGP39LfeS8uCEQoWRmUtzMwEyYeUTV4YLTvz",
+            "signature": "4HsnEN8rpiLLJHSeZQnricGUY5RDbtwDu5xySGE4QNYLQKrqihnSz1Fsd2NjhMSQRvokXjK6xMGbXLCinzEK4Qdk",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:10:08Z"
+          },
+          {
+            "address": "6XF8iZhroJymy3eMPFGr9jT6UMHwm7HudqE8xEkgGsru",
+            "signature": "2LVvXtmuphJP3qxWh5Mbv7NkWzT8VDme1uRTYcbZeGLp7neV8jwhJCRwB4n9TnkMYDGArcGG54znEBwZ1MCMpdir",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:10:08Z"
+          },
+          {
+            "address": "AWvsPCYbSyWwyse2Eb8ncRYAHLpUSoK3PETbYbHu8uDq",
+            "signature": "2Dz42dUSGwEwR7YC6U2mV55UkZm8iB9pNiUYABirxKSn9nNUvSXkaXRL1bPFfx4yF5LhN2m8LaEy3MqV51kjwQq4",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:10:08Z"
+          },
+          {
+            "address": "HKngtxNTgMiTytMYtTxTSqv5MvoULViwHQoPvXTSxsYk",
+            "signature": "4Vrwe4u8sEfQH3SfRSRbtPGZUGiw2Cag4Bbx7wFeXcc7oKymyqKArxr9vZawJVgZ6THSxyfbTULkPPmVa8prk5Y4",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:08:17Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "WM8S7tk9FNFCBLTYzTpmZ7wU8uuCp1XzKCX3TQjdrvYQuvoSgVeFVjJRfREGuYr6dcVMWagyxDQ5GxwzoTELNJt",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:07:11Z"
+          },
+          {
+            "address": "3Dqx4NjazTUUi3w2qwsw4cLLGvgXvmsYBmYd6d6GpcFW",
+            "signature": "LJWcwgVJUza19ZWbBjdLfUr4qV9smJrj2JepNVSyDFQKKR7VE3q1YUc5NxFoaypHWU2WznZerTzgBfApeb1MDQ3",
+            "kind": "sell",
+            "block_timestamp": "2026-10-04T00:04:02Z"
+          },
+          {
+            "address": "6o66QcfcNp7wDVPFW1cunrX3QBvZYJUuang8bKf3r6HN",
+            "signature": "22JnF1kv76ejKxTnCZ1QvqoL2Ks4iqMaWXy7JgT3D11AhstDBodz322DLLPqN2xx6peMnzULeiYnpJbMdXERLfoh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:01:34Z"
+          },
+          {
+            "address": "7Xgb3UGXQTWsd7wVnkoFzHX2LGfMKUXim2dbcaZgs6jR",
+            "signature": "2yz2c1LkSGyMzf1rbqHDeUw1t4mVNtAJ6U95KZjRid5KFv9UR1hP5x791BKo7XDDmy6ih2tJPFwuw1a5xuZrkUcD",
+            "kind": "buy",
+            "block_timestamp": "2026-10-04T00:00:05Z"
+          },
+          {
+            "address": "4aiazJg6uSPD8o6xC9KokEq5heLMo3GvHdpxLosHFBzz",
+            "signature": "47S9gUFKU5UXFwT1g4yA5GZKpdkJQEGing7zvRAozBBn7AHFJihafG3P7tWxDUsvUzxRi95gTAXJGsi7b9qEcd8N",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:56:15Z"
+          },
+          {
+            "address": "DhPV5ijS5qBXa6yCcDRDVaWU2CNby29QxcCGp4eVy2kX",
+            "signature": "2BxpVHVs7mWiUK8E9yGCKP47EWAxe8Gws4yHQVNdrJADLVbMrdXaXxkeELoFPunhU2HX9CEXAc9tW7cXa9mwsaAn",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:56:04Z"
+          },
+          {
+            "address": "3QgmXxrYsq7qAgFjwUsRFfDYZDKTBN95QveBbTUCmLdA",
+            "signature": "3Fk7aRgdJcw9M4owD9jchJ1CzsS3z5EDAkDCVboSz2cVmR7gWdKwE1w2Jy1e8K3U6mbkZGpWPrbnvvGHgVQJQ6Ho",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:51:58Z"
+          },
+          {
+            "address": "HiP73QU6eAsFzjuwXhsRh9cSWWaMxSg55DNoTzT636NC",
+            "signature": "5j22Uh3qRjb89SX79xtoFbnK8DSjCes4ZKn2wfUR2B4tNHHnU7UYQCB86VFjmsQwUhfZfqF5f5CkZsb57eLsfh21",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:45:38Z"
+          },
+          {
+            "address": "C8LEmrj4yEnrrHzkbxu9KwnyJbejXn867AjLpk9SVxUK",
+            "signature": "56pcn1GAHUtmp9F13PFcKzxF1rA4e5tKrqLe8dQ795uCmd8QkN4ZEt9GfmUUH261AaAHFsuP2Z8yQVR7W5PRnVUt",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:41:26Z"
+          },
+          {
+            "address": "HiP73QU6eAsFzjuwXhsRh9cSWWaMxSg55DNoTzT636NC",
+            "signature": "xzcwygaDEF6TatupigenfJH8cHjdWsUiyBTDAK2mEiqCY7GTTMv5JNXCBTUb3Csurx8c56CrgCoJ5ZpQCfcGYU6",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:40:17Z"
+          },
+          {
+            "address": "EDgymQP1PS1681d7jRnzFVNK7TMpUPzGWLUr2vXzWAbR",
+            "signature": "5oYTRARoBu9jWmA1yWEhspCBH9Fj7wpsKRf51mcxHPVJcxqrJrYGhUYREH7oL83w22AknnbfNdm1uNvaD1jcVfNY",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:35:00Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "4uATL7qhJ3RzfpiGDjeCJGxhcbbjmTtnq4cHNGGwLBxnEvLRD4jjq4zXJ1SvhSuZWUxhLMRTVdQnmEHEyckswq5p",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:34:17Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "uh6AmwK1aYyUGNH2veyo2psDCKQzYpX3jHT1haojDZhCZ8DCTztSFvUejMHiW7uKEWbLpn4upxua7m3Ep4SNasQ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:34:15Z"
+          },
+          {
+            "address": "37GQCK2Uac4BNp6Y3RkQPSaehmZWA9gqV3v7uRJtvvZv",
+            "signature": "4t92FdwZCe1uP2RXqjzE57Cwx3oeSEoJGiDnxkL5TCxeZumJL2tGMT2s8uSvb8FCBFA61G15GEdqLSw6iqUC46pb",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:32:51Z"
+          },
+          {
+            "address": "FasbxBTqZcBJb51SfeFGTyDfB3MKLKMdX1NhbXqsxbNZ",
+            "signature": "4TbwFWmDyEKLR9ywgDiqjtgs1z5uWDdKZfvp6VcoiGN381jrGxbBUfN33tFNEdZqvm1115kPLaD94JkTrJ6NwCg2",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:31:23Z"
+          },
+          {
+            "address": "DD2yuQ14hTU1zxJVzZJ3AnKbw2Rk15tCW9E5hLuYwFcP",
+            "signature": "5iSeVG1BB52wGju4VxNEkVxB24RDCEojRAQERZprCpAtViwmTy7JVDmQdUDULKZKpCBJY3AA9GQXHj71wLaCta2i",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:30:25Z"
+          },
+          {
+            "address": "5Bfb8r9y2S9Pt2SwFU3hoWmyuKoJwxn9w2XGxkVmqUGu",
+            "signature": "3mx52MjpqzHwnUYZJcCqJGo3qMAodj2PKxNMLgtfQRpC1myiWvbxF2gLecZ19BAiB5uwAkUPuB73fNNkMpqH1bC3",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:28:09Z"
+          },
+          {
+            "address": "FasbxBTqZcBJb51SfeFGTyDfB3MKLKMdX1NhbXqsxbNZ",
+            "signature": "LLcXdHS4bUSKDzZ6D7ZiqZgswBdEXo6DYBKtYrxgh89iqtpT3V3JTFDf1ixCgvLrkc6JJXUCVk7Cff59QLvV42N",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:22:55Z"
+          },
+          {
+            "address": "G5RyQvSw96fe3TU8kZqzY2CDQQcyomJ5CuZqzkkSFBdN",
+            "signature": "4oPWTxpG6XtLDAYnvHiz7wPaDKGb7j83pCcAXDheSs9EMrDfRjnT4qZdMJyd69bc5zXkYa8K7mWV9Kqwf8VidJUT",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:15:31Z"
+          },
+          {
+            "address": "6VWnMvF1zP4PHEXCiNYUGaFoigeRy8zsdbvBvXZnceNo",
+            "signature": "3cZ4p4cQMwSQHYwgjwVF7xK8JXnhm5rkQbaGHWJUwKD3FgovBjtEBSKSrVJeXqgkEjP5RfBGXKct9d8bfiYsoFmg",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T23:13:48Z"
+          },
+          {
+            "address": "6o66QcfcNp7wDVPFW1cunrX3QBvZYJUuang8bKf3r6HN",
+            "signature": "41TMAa6qsgJvmNowpZ3oNStzNPDBGwpU9Yxs9fKEpBNFwc8VJgTY2f4pXYDL1NY65nbUB3xiFmYtraYHDV9a7e97",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:07:39Z"
+          },
+          {
+            "address": "6VWnMvF1zP4PHEXCiNYUGaFoigeRy8zsdbvBvXZnceNo",
+            "signature": "5FabGfn2wZByDeqfpyPPjf5qHMXgu8wanWB1D2BfmJiREkyMEpEaAPnuDkxfg75FTEPzRNhVs2xpMU6YPUh3Uycf",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T23:06:16Z"
+          },
+          {
+            "address": "3a9L9nYJb5CCgsbnKStqFLCZLhVWB8uQbnpCMSVwGPN8",
+            "signature": "4SKGhWZPu8euHKPAdkd9PrbnQfREqUZw4gS4vNfm1pLuKFeXs5aCS5cncDbZS9m7nTanuaE1wCUigtAi6DVAKYL5",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:58:09Z"
+          },
+          {
+            "address": "Gq9hCB9HKJ6b9DStHJQwYrDtD8Ad2zVnBTNu3xK4MTAN",
+            "signature": "3JJ8y82RKdZ3sEHiZDakn3srN38Mpuq2aPRvSMRPTRdLHtihLp7n45m2AHonLkut7AAgT6Tag8KoGA6Vh5RYDEBe",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:58:09Z"
+          },
+          {
+            "address": "J6QmXjz8nfbeG2uebJ8PHizmpVTkUMVcyZukzrJZyqB6",
+            "signature": "3hdkgK9NF1VmnXrt7jgiU6tAj1ZUE5jeHZy7oaxGoPAZfVb4yLcHrJRHgykP9FXQQMeqyJiSDhBkPR128C6W67Q2",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:58:09Z"
+          },
+          {
+            "address": "5Bfb8r9y2S9Pt2SwFU3hoWmyuKoJwxn9w2XGxkVmqUGu",
+            "signature": "4rfkzCVyXAUmwoNLg8QxmSYaj2EVEXgvyVxohyd3GsBUng7naUvpq7hwa4yHwGzbEhtD6NQfrWJJmZ9DozzUhxGG",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:56:46Z"
+          },
+          {
+            "address": "EfaU6hNVfcJHj347rJrMrx779aJeFPq5FUfr4VUd4Pbz",
+            "signature": "21oozdWyQbSpSavgKrLVRP94oTfGDSvL7ZV1mCBXxe6U9vhoML2stXcAcDykzoBaBU2pUHe2yEm9E6ktuUG4nmeZ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:48:18Z"
+          },
+          {
+            "address": "FPaabdzPQAtFNyzUvmvxJnSUeHBVbs7seCCqpqZWTGRZ",
+            "signature": "66FD5vwRv8QqYh7PCeZpweQ6xJMg2HFenG6AbAM8AwnUfaXAbbbejndeNJQA6Xxm3RyrnMY4jKYA7XydVRTvMZNW",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:44:17Z"
+          },
+          {
+            "address": "GuhvZWaPHwBY7QL6YniHsEJaqhZ249Caot8qhYt9Nio8",
+            "signature": "tebzm3uYPXxx1F4umuToEgaz9fHWCr145fVh9c9zsvKFjFd9R7i3uRxZewYzqATh5mK2SY3DBxKGxsGauYCXE55",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:41:27Z"
+          },
+          {
+            "address": "9Bvdj2B4xLToqXAGcJGhxVWe7WfbH4izf5uvbc1J4vF7",
+            "signature": "2wXCs6nuE4Djf8TdhpMPXoFFrHwCiq7zdWuXty66RwJNkCQsNWAAwMZMUyt5mgFQx4U5bFfr1JAymA42mPFGNJ1m",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:41:16Z"
+          },
+          {
+            "address": "9iDhDcJ6SPLof9CVjBDm45PsGb3tprKWc38V1axa57D1",
+            "signature": "5HkhhP39r8jvciKtnbmrF59SUduZjNYGUX1RsUNfdkdh4Zj8izLEZktGhmhAMJdiTJnS35V7tS5GbjGH87GinbFU",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:41:05Z"
+          },
+          {
+            "address": "3tcbPcttSMUsj9cTfDYgidCaqB9RNKkB6fyPnxRuaKrf",
+            "signature": "2oDTSBB3Eq8iSpeSWT5bmBtwkPxKnzMpqkz6NJccNTo3fwd5t4rNq4QZnuAWmKXxyZmppLHKQ1AL9ouf7ZJNAv6R",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:40:55Z"
+          },
+          {
+            "address": "DMCLVvWe6cE7K2iTibPutyJ1eCPdwEc553MLRpM31WUR",
+            "signature": "3QqLPtGLDLH48S8nAJxQuVjL7SRbtHUC3byFQ3S3b1ojUi7nU24YYAxfrEANFmYGuWd7Wsgd91hJXMvNc5or4uga",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:40:44Z"
+          },
+          {
+            "address": "oVZcfE8KGzWvqHXtePc7or8UZArCnXuX1jEjr1tWQgR",
+            "signature": "nTPtHQMwii2koBsHipY7Rjn7eLrhFEjm8hs9x99rfpaEqRn5Nezzs1in8zw15EusFb7ccAGLa95EeV77bRBXz1z",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:40:32Z"
+          },
+          {
+            "address": "7LhjZPBd3srUMSxzivjmLZ9MPnP1brnUctB9b4XGY7xG",
+            "signature": "3SYjNQkGfUsAuRHsRKxncGXbxg4VKFyN2ZFyuxzMceqU6YN3a7CkpS6aAp5NNScrXLJgUigDqkBuB7MGSSdxZYEH",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:36:28Z"
+          },
+          {
+            "address": "Gr8BLquEkHZah7pWLZAKMtWPYLiC7eD62vQE8ACAzhzQ",
+            "signature": "52mkzDgvjKRphkBxk1ijA6WAhbkUnpdR6NaB23sioW8vkbZKKoAQmptF3B3RxpXRw1xDtxPg49VRZjeggdHyhueJ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:34:55Z"
+          },
+          {
+            "address": "4zBoA1uJuZymyTYuyMR2uEFMmMPtiVqhERfmR5ZE611w",
+            "signature": "43DuTc2ufwJ1jX539ahJ4yP1ezdcKmVRLJxWZNgH6KD6CDrm9Dy86vPz3YoWboRWbGY4CfXaQ6SQ64Zv8BnnLwCE",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:34:55Z"
+          },
+          {
+            "address": "5jCUtPyAJyNkDbjY63fU9dFWEgWgWrNtYFQ3oHESUn3i",
+            "signature": "3EKwaZzJeEdNa8X5ddtCPVXBi33V3RWKUJzuwvmzknpnKJu2kjwgFpgTSzc4H25PLFfYG9iuA6gdMLH69fzYKuDY",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:34:55Z"
+          },
+          {
+            "address": "E2a7wdv5Jgc1vG5XFbNV5FLz3TUoHrjKp6r5pRqN4Biw",
+            "signature": "3BEM5hAuMaZJUWJkw4fXNsmLJ5TfciHhS2uLaFnLbVnTVF8ZKqLyTiSds6kWPRgLisRA3tYwRbH3SpVTqQz69psh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:34:55Z"
+          },
+          {
+            "address": "HvJhZBaezA3oeottKQbNz2zSYZPZxDorTxvsR4QFuYTD",
+            "signature": "3aj1Hi3aEgaZkvep8uPD9pWRnwprCctL2SHQ6wUP5EgP5UYENxtAeXSEBV4A92eqRPgiw2Y6q64nLAhDr1zhbrdG",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:34:55Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "4LWA2kMFBGAvFHRPoWAGyfMRdwXPpSesydn1iCwxY5aLvyutXyRWvHHu1eKAVKg8XN44kWrimRx1apPDdPkcjjTU",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:34:15Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "3W6RsMhnDTP6dfcJgnduVgoT2DB18skY8n7FiRCgLv4xsxznH9qDcjcKXfxzTpc9hD8PPbrgt6qt5qNnTpr1dBxd",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:34:13Z"
+          },
+          {
+            "address": "G5RyQvSw96fe3TU8kZqzY2CDQQcyomJ5CuZqzkkSFBdN",
+            "signature": "52M6h5MpKQgTXCTzo6EQZiugwE2oJSYwWLgbLMzDodvMo1Rq3uVwVN2ApWze1FPHLpgR9nTm8swgbuLmB9YesdVV",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:28:37Z"
+          },
+          {
+            "address": "Ey9pQ6TWQppnpJKWoXBST3u4kZdqgb1Yehx6kUVvnQb7",
+            "signature": "39esHXk1JoGxAb8DVsfGYbrqK64QdUBVWRMe8H19nSDfNwSbsXbSHyfofgRc1RBRFHQ4QD8imnsyGCrAFzN6mTpd",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:27:15Z"
+          },
+          {
+            "address": "dgt5jUzvUn2XU2xCuhiZJvL15NgPcDyZZQs58VJmqRZ",
+            "signature": "4xZTXgTy3m4pLZHVbHU3UrkMgcJs4jwQGHo2F6GFC9DEinUgWxdi16sFEpDJjjHfTt9abYpzNm2vuMvMZNS8HpGu",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:17:33Z"
+          },
+          {
+            "address": "6Jru1JCyig53bq6TA6narm9vMN4uwjCapKBG4ZKV661o",
+            "signature": "NE6hop9BzffMaGYQJdpjV58Ri3DekMmGW1wkc2T2yNAM8uRbwsPjMhY1srwcPDJDzDNh6a7Ke2BEUnWsJKpccUF",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:17:20Z"
+          },
+          {
+            "address": "AyUGD7Nru1bYuNwWxQJFrzTutsk3p9dL9eKLFHQEVraC",
+            "signature": "4MX77Z3LB2rPTvprjv87ZgPHrFh2az97a424q9ScdiDt7CJwk2XEKLBGqYxxgwsBgF1LdoEpPLRq8WNohVpcHtSd",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:17:08Z"
+          },
+          {
+            "address": "FPaabdzPQAtFNyzUvmvxJnSUeHBVbs7seCCqpqZWTGRZ",
+            "signature": "2wfkscGjy6BDFwRJGmZdJiy5rKpCy57uHCeu922qCYXLsS2oadYsa8gPmhqP1bDM9Um6v1CiLSwUArTZbr1CduhQ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:14:29Z"
+          },
+          {
+            "address": "4EYYUVtyQWZmp394ZhdMzERazYN5DZmCWhjWKa57UiRh",
+            "signature": "KEd1cpD5fvqytQ7SZaKCyc2GLaeJSMMZohD9C3Tb3tzrTJFRYCwL4LKsw8LhRgtzJNq3hzV3uTRXECKKeW5WR35",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T22:06:51Z"
+          },
+          {
+            "address": "4EYYUVtyQWZmp394ZhdMzERazYN5DZmCWhjWKa57UiRh",
+            "signature": "5Bhzn8Qu8sTycvcvPgbE6dM9ScFdG6f1dD67cHKGPpr1w76cA9SGfZsoMVpbXFK7QNFZS41mT1Tg4URJen9CKua5",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T22:00:51Z"
+          },
+          {
+            "address": "7LhjZPBd3srUMSxzivjmLZ9MPnP1brnUctB9b4XGY7xG",
+            "signature": "5K5FSZEqcwSVc6PsLz2qhgVcdKyp72Q6PGb8AhZoZG6B5ZKstELU1FmVZUHkyerFSDwmkcovwGaZv7kErLpRiAnC",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:57:59Z"
+          },
+          {
+            "address": "EeqXk6ENZUwAKWoQyAiYfHX3GL3aeucYRViZoRNrVZtA",
+            "signature": "3UFnxLU2SV7JGVJ4HZwiCBdoCg4dAaTo9fNHGxiuuUaBadBgYJatRtNyzX9ZNgkv8JAQ634c2kGzSrWCgefgXh8w",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:53:31Z"
+          },
+          {
+            "address": "AhVn2veujfJoJpmZongYmN5CDocZKmUbB4jr6CUrqF97",
+            "signature": "54PAmKzSSiNzygjrkrjJPPQq9HBEU8xSs3TJW5zXcBNsG6Cbvq8y2dczbeKuQAZ2ZNV2Evd5uWENFJZfsdMzz8zj",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:49:59Z"
+          },
+          {
+            "address": "65Zx2TdoCzCM9C1f8vjrLWbRw8BsZEv3SQPRybihRa3n",
+            "signature": "4Vn9T4Mbgasa1AWxHzqffPW5cqLgBFzi2gzWg4LoKo77KUdexo7JHka6J4TaCfDwE8vcZvhx4m7pDiSNsHadRYmN",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:45:54Z"
+          },
+          {
+            "address": "AoVrn2jKGE1SvnvkLZwtFSehhL3YfMpsXcdwYLeajdoN",
+            "signature": "3FwKvu18EwaqC3TfQszJaEuQZNY8oCSBShbi6YoQyD5jbgXUW7VPr2JrZgEH2F2AE8rAksBewfvjm86i7yQpknfB",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:45:44Z"
+          },
+          {
+            "address": "AzgEjoWWaP6J19S65HLj3QuNTdgcRxnPSnEizJzXUZF3",
+            "signature": "5WJyEkd4BAynvz8BKjapep8MJ7urVivyYs9S2V21engVDxmC1qgZ13fHaSaP696BcjSp4cHro3bjQx7URVP7PXnN",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:37:46Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "3vPamPAJyZPqMypsykh1g25fGT4WoPFBHnNjZ82tRVpoDUEWX4aJfmKkbazf7Jfp81hqdBdADmnE5NsHmzK6XVGr",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:34:12Z"
+          },
+          {
+            "address": "8zjyNBzLujMGLZeFpRWaJfph8CX6ZxYXWPRztrHunEed",
+            "signature": "23Bq9Zu4wSULpNqM123n3n2XuJubnSmdHjHcfJ5NB9vyN8Qq7jqhmHfvqJ8PvYoU7HMS7unrKEw9xdw16w9Pp3Y5",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:34:11Z"
+          },
+          {
+            "address": "AzgEjoWWaP6J19S65HLj3QuNTdgcRxnPSnEizJzXUZF3",
+            "signature": "5R4i3SExnSsXN3Fg7mgKkApE69KyRa1Yao6fiLnM7b6AWKVJsY7RnK6TyNkNtpFR4RPtmdg8eaYg7PcyJrsSTK4t",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:28:00Z"
+          },
+          {
+            "address": "GEGgBuG8SywGmsrFUQt4eA5nnoR2ANiVUhg81NGqdLab",
+            "signature": "2C1dpeW4FCF8W1i5zDDziUYqiBHoWebzYuchuywM8QTAjchmE2R9XjHhUgNPNWtT38X4gKkLR6eMqZVoMR8yUHth",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:21:37Z"
+          },
+          {
+            "address": "CiGDesbeEnvZGneryY5URHSf9vrTbpQgy13cMYTFuWW8",
+            "signature": "444kqNB7ew1nAQiarxBusnH6jtWBbcFeTstrYp9yWXDdxTdSVai6hCjhrnEw89v2hBMcHTPg9qT6NvGFVpoKpFcb",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:19:23Z"
+          },
+          {
+            "address": "F4gXGrbE5CL6tcNKurQTiWuLQqXFom8GegTipYH1SHsw",
+            "signature": "cp7TVUsPHLGDVLja1JVuYQUpnJHWvaX6GnytVxtuCYgQDahRgyjPUbW8qDmnhukc8ZmiL71qjCAtzsYf39i9XoR",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:11:25Z"
+          },
+          {
+            "address": "HuFhCBQugoGAztidrXZb2pnYcmBdRriRBosDNUes7U1S",
+            "signature": "5ajNgk1cbr5XTMHAFEwKeDD6epgG5doZpNxtpk6cFape88U8PtcUgkNnbPJzp22J4jt5kc9wWRR9JNDi5EtA5dox",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:11:14Z"
+          },
+          {
+            "address": "GXKMhSTSBNAEh5q1EWNAPGvp2n1HTv56XczK2ykvgeRR",
+            "signature": "2pTDy4cHnPZaedCCm6fS7ELFewvqqYfGJAdxYdrYPNhmTgMRSUnK2QcMA7kp1LiYWqvF2LTEDsmWzzuYqXAh7mZG",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:03:29Z"
+          },
+          {
+            "address": "AZ6x9xJZSaCd4Fk5HycS4WDkt7osFgLzjXstHZH6DUP2",
+            "signature": "LFsGbiHYDmUT1x9RqjgoRhuMgWnHsngS9dQ8eHQExBBuooRECDShyGXXS8BrdJig6jvC18J63nMjffB5DDGDUXd",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:03:17Z"
+          },
+          {
+            "address": "D4G7ENg6NZEpW24S9EBGfNgkYcRXj4sNGCZDWQNNZm7X",
+            "signature": "5KmFiEbctmzpNAwrjdyGZt5JnyUTY52rdR3HTNnkYdLr29Ln8revvcqEq5cMXYSGh99pficbF1BU58ypS1MdJ1AU",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T21:03:17Z"
+          },
+          {
+            "address": "2ns3Nzb1KcZnMbkSMvJEdhMmVkRFpKzm7Q5FFgbCqqZL",
+            "signature": "4TDPRzUPKz27XNZYzFY2sq4vK8FeNV1FPFb9ws8P1fphpHmrcz9L4y2ymiSNNGHwNtYna7fPQrnw5CvFvAJn7Gu2",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:03:17Z"
+          },
+          {
+            "address": "GXKMhSTSBNAEh5q1EWNAPGvp2n1HTv56XczK2ykvgeRR",
+            "signature": "F6pZ7rUrNZNKr1UzsPSCBs6aHWTu981QwcxmB6e3UBnwLQE7rBy8HM5zDahwz4aMcjKSqyck4J9cxwr9cvpxCAJ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:02:55Z"
+          },
+          {
+            "address": "GXKMhSTSBNAEh5q1EWNAPGvp2n1HTv56XczK2ykvgeRR",
+            "signature": "bMVRGzzQZGTkPp2gEFY7GCbLBfjQLih7hwLosseerfVv1x81uhmxTiCYJrDHipeagiw3jtkzHb4sSMTRrdPVNW5",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T21:01:11Z"
+          },
+          {
+            "address": "J4QcWZnCbdcZY1NQVPS1dDgUPQ8U2HedXDPfaQWSX1jQ",
+            "signature": "5awadvUPELV7EabLQnsDuhgBVC9UBEgBvhF1kTv8Wc1cKjYNPqiBQDF42zRNJoz1v9nR6kcPk14W8AYf9ZzGWk4y",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:57:19Z"
+          },
+          {
+            "address": "FPFC3iDuXTF2mmGGN4jxbzgc39qK3jhA4YhNkqsgVxQd",
+            "signature": "5x4X1a51jvstvVgPd38yZDAi1ojkgjWPiscXUbcVCtoHWb5QD959zhRE424jovdpUHGgwpWXYxZ3dgLQaNeBVCMN",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:55:31Z"
+          },
+          {
+            "address": "9m8LLgCfNJoswv8Gtcte3dehc2xzPUXoAeLAK7eE1ydD",
+            "signature": "3DNVCfkifgT9Ybz2yUmYKX7sU9WnAWvug4Vs7y9C8tabv35RKV9FYhrjGtBoBfDopF6miUKi4NToh25e4t3dPviR",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:45:27Z"
+          },
+          {
+            "address": "DSs8X33Zyzws9B8rj1dVFH1BL9SMkzPitUbjFqGsqZ8M",
+            "signature": "4FqjBgPmQTMjG5BPydYLhErXzNvauG4znv8sLLFEhby5grPKjLBkwxJUcNjYts3qHCbZVMDa5AYQQrk4imkBenXf",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:45:16Z"
+          },
+          {
+            "address": "7gBoGJBnViS2xEz2RwAnZZYBzfdJR7SdripWjWexdLZf",
+            "signature": "26JHi7W4k3ArzrmyYGBb3EBpRL8tCPMLvX2PgbQNHtE8pwEADfHtgc9kkSMAfJsPAwopoc54KMsAM919KY191Muj",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:37:55Z"
+          },
+          {
+            "address": "2Pv4uBQ6pfVNJbBaYxwt9dYmXezQGrT9pYKG18sA22or",
+            "signature": "3wM8yX1gTXY1Vq7GANQqZ1sTcxXNaUaptiwVo27r7UKxWQSwtEPk2A8nPVLtKPD616zzHaqKypXuqRdvH14QmDYY",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:34:10Z"
+          },
+          {
+            "address": "Bw5aT3YFiCYjRz8Agke8jKgpBSKX2tHy3gH49omykTdx",
+            "signature": "3ica8tFf8oyT3qoQyXm1TQ9XR5XbRXMRy1NsjgTLQvHhFJyW7RS5S2buPYwyG8ScAMFznKj43fk2BBzRdBPJSZQL",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:32:28Z"
+          },
+          {
+            "address": "GizKGxTJfeurR32ay1VawRmodaNMYLrwPUVCtohpyi2n",
+            "signature": "2AZbFAe9qSaYGgGq3u1pAKYwiBktNxibquwe2wNmRErkuH94aULYKR6uEn8pSE4YRhLjbeSZ6XVf3ywgHZEvrX43",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:28:31Z"
+          },
+          {
+            "address": "92d2ky2mniwQ4wCE7sJU6QivcKTahjB3tBeUDJpCaCFQ",
+            "signature": "3DsmBBgyoYBepgdNXDmuUURw8NxF73F9X22DYGYmBGuJE3xrqz8KvGhfDUpJGob8AG8e6jrsXuTg25rVoTSrH8Qe",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:28:19Z"
+          },
+          {
+            "address": "2Dk2ujPhi9H7z8GV5oDnzyDQ6Z798MtmEiaFMGSBBoLn",
+            "signature": "3ZmkDFrVZBEDo7QraWfaAakfpiSxJJd296LxAE5qqqEdNf8VeZMswR15U3EnZU1LAR7YKdscqFvfqVRHnfwqDRgk",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:28:08Z"
+          },
+          {
+            "address": "5TQJjycp4KmbBYvvqSHh8mgmCDdTKKBJYtUWo24V3jav",
+            "signature": "eWQ5sLBPY2k9kkGnz626hMddQYkMBDHkHCv8Qfe4WYDEe9iF28YqkhTqzHWF3tgPfhM5bQMTLGud4ku12RCQ9Ft",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:27:56Z"
+          },
+          {
+            "address": "EvUoywNNEgeXRr41Srne83imN1sZmmkfeLrpB7wPkLwF",
+            "signature": "45q6qP4CnwQY6hmSBLkLKx7rAyuvfXWw5ZKjQS3nsWmyBEz5EFWm9j2mY4KLR8xKXgTvW9SxDWDkdhjBJbyn6BPJ",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:27:46Z"
+          },
+          {
+            "address": "iMQqiwAWwmeT8dhdWD8KEn16uECiKkJ7vhAYHaTWpZo",
+            "signature": "wPZGeowDFjeovx5MuKDPqK1saPQYy6r4xFZ9hqjyMW1wDpZdsdECsCKqxf96goGE5xaewzScHBZj1dTxrz8AxmX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:27:35Z"
+          },
+          {
+            "address": "AaPMng8tLXj9QiRcaANkdePCZNFtLFiEvVpYZoyCYMnn",
+            "signature": "4knzK22uYDfbJVue9ry2DhUhnYjhfNtz9JK869uQJG7TmG4sf5sKE1uYgByCB6fQMqCEwrMnQ9GANCVs1Wj5q2ow",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:27:25Z"
+          },
+          {
+            "address": "BQNAYw47KSVRe7DmxAMSjcv8y4AKvoFhKZJCUzDDaa8X",
+            "signature": "5eqDytvSFShGUuer41gQ572oKS5x9rWUBnV5D27WRGneo62u9EvxvURA1fBswhyzUK5Dyqwy8GWqA7qmL6tUyUrF",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:27:13Z"
+          },
+          {
+            "address": "b5zSXL1U6tDwyY7B5wLNBSTc7SoByVUq95P25TEFa7G",
+            "signature": "3brGyoVYho95tqPSFCozrQstzakAyhDrthrVJ867MYS2EwWYzqH7kGdrtpaksfnCTB7KBRfYoMXkAAjUe1yx89kd",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:19:58Z"
+          },
+          {
+            "address": "DPanNQpMDaGHiQEsRCXjs4XePMXdD6W5F2A8TwA7S247",
+            "signature": "2dE1nBHbr26YZk31bqU4E2XDKfTJrvbw9CnCLDqUpuS2A4crnHPYLMUCRRa1MBwgGu5P1meTdX3CheR69VL1ovaA",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:19:58Z"
+          },
+          {
+            "address": "FUSDkUTQmaT8tMbXuhPUdokVPkiyUDvVbnF9dNAvcHg8",
+            "signature": "241JV9yYr1PbCUEcef1nKdh5z3w1uqJQvSKJQESgAfygoTqqvWyYiH6hxp49KhEgyBg5x6fsTQNZLfzFSNKLj5Mh",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:19:58Z"
+          },
+          {
+            "address": "ZdYA5xNAHP95TRLtazrDf32pndt3buHYBEzdWc5LU4b",
+            "signature": "T6HeeHhnJtTiKTimUXUqtbgoWDcJonsPDkLeXZm32Sgrb5qaxZXE1PPwHPgEGLkKLSGgeNyknWiseDV5LV7gdKt",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:14:16Z"
+          },
+          {
+            "address": "2ubYG3ehwzBJcGtshZNWz4KyM8WFskj4YvruTijtVrH9",
+            "signature": "ghQi1zXntBJdMD8kPSew1S9NYyoDz1bfMiMRNUjgPq8corwCzvfsBPe4Nptj99mt5QZrStvAJZjZeCQgiP4XBwC",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:14:16Z"
+          },
+          {
+            "address": "HTAPTNXNu5p1kZfm359uRjgNQmn16bAUQovPfcFyXGh4",
+            "signature": "5rjmAtAmB51bqkQFoBfAKWTJPwqbf251FMysJScbUAmzSvWpHEimLpxW2W2VXeG8Y6s4s6rUxWYBrv4C6EhnLuKX",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:14:16Z"
+          },
+          {
+            "address": "8HMo39hwyUUqZkCqvaDDDazDXb8yWncZa2TtuN7skvrZ",
+            "signature": "41wAwRRQGiYzqWf3boWhm8U7nEvYDaoWXqKRYoJ7E6KjXZJE968fNyDCzG2C4B8aTbujUoPk82v2JKREqsVF6Bgc",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:14:16Z"
+          },
+          {
+            "address": "H6rsZKJFZhDpfwxwuYfAChSmedggN8qMvEjBkok5L9hf",
+            "signature": "2UTmtG3WbDVLQAhTQw1LnpRL2KHXGiGGd9XQT1R4d7GQ3MUoKjdPBtZDTzwRWSujeXMpdBnsANastr4YQaH43Zi2",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:06:27Z"
+          },
+          {
+            "address": "5KsKuuUSNqi6t1XtJgCUF4HZVDiUZUScr42o1n2f4v48",
+            "signature": "5hFRYocXtcrL4r4pDNYWE1BqxtMNxTwXFhcRfaB2eTAamWq2DFaActhfH1C7WJj7CV96ozprGDJt4JByjFcJ6EXm",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:03:12Z"
+          },
+          {
+            "address": "2WH9AQVbE75rt3VHAxcPwerQUmpwPBhixvV2t72rkUkM",
+            "signature": "2dCpR4pzm3mRejUPByeTU5VhcXaPu41eoZxXpSUvKNnz7D7TPdQ44qnYzYQege1dMnq5XhZ9SYZfGxAMi6wrzFWE",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:57Z"
+          },
+          {
+            "address": "7XvGPzKz1aWRTFGqbSpTLH8W8XbjHXuewaVhrRgZdpq3",
+            "signature": "5VHkFWkgZCJEWeQGo3VZKeJ5CW6z5do886cVTeD5jvdngpXeUV6oTCQZSod9LnFEy3qwwxgnsvraNHVgrAkx1ZVY",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:54Z"
+          },
+          {
+            "address": "5RnFGKu2H3tbRcjMf95LCrfh1TFQMPfEhCok6PqVcoH8",
+            "signature": "5ztEXv5qQfCN66zLqAWvTYVNqTVgnRxe8ckqB8wLdfSBvYcQtZ7DNXNdmL47JbnhuMM7K9KxFS6Xq1XhnVJLAm1S",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:52Z"
+          },
+          {
+            "address": "CT8JjucLXiQYfCJq4gTd1GC7hPKzyCitqhgQSBtymrzi",
+            "signature": "5qr7prgf9ibrcSM9QKd1EfHmYrbU21eNiar6A8zJjtYbjsBFS4LFPuEzdSL5Btt4opM8PyVpUERLLLg14LdBEW3L",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:50Z"
+          },
+          {
+            "address": "6MkAcz9aFhojgQoY3vueNdJ79ik2A5nqBmuxCKeWjBBG",
+            "signature": "4agyLVoERBTgadhde7tehscThFgM6z79YpswBZkGoAfeigQ8syuqusEXP32iNjLkf6Rrv7pGqQP5cVoXSKMyPs3R",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:46Z"
+          },
+          {
+            "address": "4udeGkcqjao9ENpvdnoTMF3zMvt4F82K9dFrApvYK2Jr",
+            "signature": "xTYqbtJ7WsJARP82LYz1KHjKs6FEDX5mTDhUXWWFkd8FcZ7S5X3aWPDZ9yN8Mjd79hNj6rhsMKokSoghFAZCGqv",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:44Z"
+          },
+          {
+            "address": "9y535NdDDYMAT8g5w9H7voKgBhnEkveg78RBFJXud7Fd",
+            "signature": "5nuGTEh5HJ1ntp6C1BzEahzyWh6DJmioNB26KQYYFFBtJWhFZSwCxG5onwqGJ9SGBi9cLsRp9czY3SmsZNbfF7hN",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:40Z"
+          },
+          {
+            "address": "7E295ZM46GsMSa6DZuPnMDmtPPvWngvNCGZ4o2fCyPHq",
+            "signature": "qr8oyWLrUe4kxAhY4bF7SppT6qE2NfZCnEWfUDwzb1Rg83NNufDkxNCCndS4AcwkvHTmm6SycWcVNA4UpXFWX2s",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:38Z"
+          },
+          {
+            "address": "AXKYKzWMBGfZaF6Lbw5xEDw78X1XjWMYQHzy64rkXYKB",
+            "signature": "4BFJiS3EkBdNg6Lgoogw2SRuar1zUhv1qrNeUPMR2wcTHqkhnXmjYx4sdhFVdTv1WFF39YSyFvPJCbpAxNxE1cPs",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:02:25Z"
+          },
+          {
+            "address": "AXKYKzWMBGfZaF6Lbw5xEDw78X1XjWMYQHzy64rkXYKB",
+            "signature": "4EkmSd19DFpmpEx62Kt5VucF4brZgzuwdDptW5sg9aSuwTk7CgqSYMTeDNg79H25P8SYdQrdCAZym2PASyKMVjpM",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:22Z"
+          },
+          {
+            "address": "GKx2ANAcXbovXwc2xzBFnbrM5527kvApMcGsh8ToCPFB",
+            "signature": "5KzndvQwzs2LF1xkCXRNexujue5TkjBJQzZc8VnhfoQMrzLNhvubgTvCdP1nm52xm512SwvAkj1z93MaKSNjyba9",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:02:18Z"
+          },
+          {
+            "address": "GKx2ANAcXbovXwc2xzBFnbrM5527kvApMcGsh8ToCPFB",
+            "signature": "mLapSK2Rn899neAdwqqB6juxwnsy1sd3jLGmAx4TvcuJp54jzRU9xvBfy2F51w1rX1iuTGXJQ5AUgK5b5mfTWEG",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:15Z"
+          },
+          {
+            "address": "CypwhzmhsFA8MeKg3H6ieLv3yiqcSKrJHtSZKfPwhYUm",
+            "signature": "5xM3TnjRkzRkdUHF3NQRdfbRAGnkFbfipZYtLzxJFMyQtjCMhT55HjCFyQwxvsVuZ1E7Jw926nprX5T1RGdJGm1m",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:02:09Z"
+          },
+          {
+            "address": "Yvds3tatVsPobscq1zsHB2hxNwrrJ9zhBui8JVUqsd3",
+            "signature": "52oy7gP5RNVjzbUy6iypgtstmFeshUxdueWuQ5bx2eHQ6tPd92FxhbC1GGuDgSosrgGvcATqRwYy3f1i4WceBms4",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:02:01Z"
+          },
+          {
+            "address": "GkTz4Jqk9yNFQeqzxjCHBjXUtuY1JkrasM3m5Xco9Rox",
+            "signature": "vZVimqe7zzYjkAum8zVnsGLnT4De5EiG6UJ3ryUXVGUvYhecnQkibjP54o3bDYS2zbKs3jSjmVPNE5VLMdCBCdE",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:58Z"
+          },
+          {
+            "address": "6j13AguwtNToCCGngy97N61EfRzeJuTp3uxa26agtSWJ",
+            "signature": "5tpfryP1C5w16ewZemFVW9WMSdQsxDR5PdRiSydL1maMKSKT3eYiayhUN9pp1VLrThMR6vS9o5E3Z7XN8VKVCG8U",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:56Z"
+          },
+          {
+            "address": "677S2ECZKNRniYHoWE6GhGQsnjwQC1KkDQmxiJJQMPkw",
+            "signature": "2UoNnx69gu4YUeJaLC2JJZgVgU6DVnhJL4DrNhFaeoss5TXFxREaefmGh2AEGWvBhxBQQY3ok92vWyRzBuqMFPLz",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:52Z"
+          },
+          {
+            "address": "CCzQ2SY1J82d78bDt5uNW4h9w4KRKtwBUdcDiZTk9zoL",
+            "signature": "583RYYt1yq8YzMSrg5Hc6cydXM3R2irA7tVV1DaQDbNwDJfNTEDcbmdvTU1k7yfD2AScYvH84ZjLdngUb3NWuby7",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:01:44Z"
+          },
+          {
+            "address": "QPyCrW1AoqZrMs7Szw2ub2yBZNNk7HJ5CgQWnD24q1S",
+            "signature": "25sa88wn3amDLHVruvLfwtqWcRL2xNBYZUrFg5QQVSjUFTtudBEL2N7fNFLA67xChbsrtrQu61BQrWPFYunhpxHz",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:37Z"
+          },
+          {
+            "address": "FR3F2RWTWiUhxidU9FbGuJuS3fixrjnYGU343EM63H9M",
+            "signature": "5gGVszkhjnzJhRAVUbQFJQLR2zbXuHNRzuaqHshFDXaCSAVREFKxCx4QWZYsZyuW3EAsUyVoTxH3RMEUBeDBng61",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:35Z"
+          },
+          {
+            "address": "Ddj7k21y1ZBwb8q5coxiEEuZfdHG2Pq8pPZuhhwUKE1z",
+            "signature": "xx21rLZuwmbEJqq4BLu9a9kWA59pJefwTTttsK6bayVccpLxLSUZHGdk7BYGPD7cEjDjx3jBXT5HK3Mi2Dxf4zQ",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:01:28Z"
+          },
+          {
+            "address": "Ddj7k21y1ZBwb8q5coxiEEuZfdHG2Pq8pPZuhhwUKE1z",
+            "signature": "5DWwcx6W2B3ogDMoAYR4xShnKD1HsGYqW1GSVYUXXXQoYsse4L3bfGppEMhxU5h3idU93FW4JP2qM5AtJxRyfuEP",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:25Z"
+          },
+          {
+            "address": "37SYDrKXPtAjZF754DDwQ7ejqFW1Qqr8jmMBmzKamSkv",
+            "signature": "UK24K8Z5fe6key99DLVnjATE6nnEcUiELVJdqxUL9nYrP8LU6e1VA1wXkr2dyr1NQy9ijktELHuJvBcZf4pBdzk",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:01:17Z"
+          },
+          {
+            "address": "37SYDrKXPtAjZF754DDwQ7ejqFW1Qqr8jmMBmzKamSkv",
+            "signature": "5DK6aQTvsFMw5CZW6YMH3mrNJHt1Ssn43D6j6Rysc3QDPk1Kcgbuzjtrckk9HTLHVUdXrgxBLKcRfeTszJUKhwik",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:15Z"
+          },
+          {
+            "address": "EwyqLsAUzqLeaXqqTN5YcQNsp2QYYYjom2ccYs1rYdGt",
+            "signature": "3HHD436iaNtTL2EYFEc1LyYbkfiMHJaqj6p8gN3tdmVpcRimefaUog6AEsJzGQBCRDPXPSkQQdkK8Jbb9gi8sG6g",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:01:10Z"
+          },
+          {
+            "address": "EwyqLsAUzqLeaXqqTN5YcQNsp2QYYYjom2ccYs1rYdGt",
+            "signature": "2vGfRuuwt7qBEd6pHJ8Q26GRUx4aoJPhhXFeNEeFhosPKSh3oiNGmMTahFo7hzmyZ683ycdBD1t2h7sEcA2Ku929",
+            "kind": "buy",
+            "block_timestamp": "2026-10-03T20:01:07Z"
+          },
+          {
+            "address": "54D6i9ioFtTiroLcovom1SwxdjYRjk3hEHHiynGuQRkh",
+            "signature": "gRbXVT5x92R3VZFaCrhibNq8ZsqpApH7GN1XuFNAhQk1Fzn9Sh9bqJbgx8VVqhAkvPPV7gJVxcuREWizRtqReb5",
+            "kind": "sell",
+            "block_timestamp": "2026-10-03T20:01:00Z"
+          }
+        ],
+        "coverage": "Current public sample and alleged trader leads only; native ownership, profit, historical population and legitimacy remain unproved."
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:07:15.671875+00:00"
+    }
+  ],
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "scope": "Raw acquisition only; neither endpoint success nor terminal paging certifies historical population, accounting or wallet qualification.",
+  "quota_after": {
+    "credits": {
+      "used": 10,
+      "reserved": 0,
+      "cap": 1000,
+      "remaining": 990,
+      "cycle_start": "2026-10-02"
+    },
+    "requests": {
+      "used": 3,
+      "reserved": 0,
+      "cap": 30,
+      "remaining": 27,
+      "cycle_start": "2026-10-02"
+    },
+    "public_requests": {
+      "used": 2,
+      "reserved": 0,
+      "cap": 4,
+      "remaining": 2,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "finished_utc": "2026-10-04T06:07:16.008095+00:00",
+  "artifacts": {
+    "01-pool-trades-cackle-request.json": {
+      "sha256": "5af989cc35702c8b37e36dcbac3fe5f0473017a03f0ec30bfdf18b8c94ddc2c5",
+      "bytes": 146
+    },
+    "01-pool-trades-cackle-response.raw.gz": {
+      "sha256": "f2d523c9e13f6a12515ca86d32cd81cd04919035107377c7e675ef5753dd8eef",
+      "bytes": 76790
+    }
+  },
+  "unexecuted_request_ids": []
+}

@@ -14,14 +14,14 @@ import re
 from .providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
 from .transaction_format import supported_transaction_format
 
-VERSION = "source-consistency-v5"
+VERSION = "source-consistency-v6"
 SOURCE_HASH_LIMIT = 40_000
 _U64 = 2**64 - 1
 _TOKEN_IDS = {TOKEN_PROGRAM, TOKEN_2022_PROGRAM}
 _QUANTITY = re.compile(r"[0-9]+")
 _HASH = re.compile(r"[a-f0-9]{64}")
 _ROLES = {"transaction", "signature-page", "block-order", "snapshot-slot", "owned-accounts", "native-balance",
-          "indexed-page", "indexed-native-source", "indexed-input-manifest"}
+          "indexed-page", "indexed-native-source", "indexed-input-manifest", "query-affinity"}
 
 
 def _indexed_payload(payload, digest):

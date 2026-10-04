@@ -22,7 +22,8 @@ from .providers import GeckoTerminal, Gateway, ProviderError, _public_address, _
 from .storage import EvidenceError, QuotaExceeded, now
 from .candidate_import import derive_candidate_progress
 
-VERSION = "public-pool-discovery-v1"
+VERSION = "public-pool-discovery-v2"
+AUDIT_PLAN_VERSION = "evidence-linked-audit-plan-v2"
 SYSTEM_PROGRAM = "11111111111111111111111111111111"
 SAMPLE_LIMIT = 300
 PUBLIC_DAILY_CAP = 200
@@ -166,30 +167,17 @@ def _native_signers(raw, signature):
         return {}, "Native transaction version is unsupported."
     if type(raw.get("slot")) is not int or raw["slot"] < 0 or type(raw.get("blockTime")) is not int or raw["blockTime"] < 0:
         return {}, "Native transaction slot or time is missing."
-    message = body.get("message")
-    if not isinstance(message, dict) or not isinstance(message.get("accountKeys"), list):
-        return {}, "Native transaction account keys are missing."
-    entries = message["accountKeys"]
-    if all(isinstance(entry, dict) for entry in entries):
-        if not all(_public_address(entry.get("pubkey")) and type(entry.get("signer")) is bool for entry in entries):
-            return {}, "Native signer account keys or flags are malformed."
-        keys = [entry.get("pubkey") for entry in entries]
-        signers = {entry.get("pubkey") for entry in entries if entry.get("signer") is True and _public_address(entry.get("pubkey"))}
-        if len(signers) != len(signatures):
-            return {}, "Native signer flags disagree with the transaction signatures."
-    elif all(isinstance(entry, str) for entry in entries):
-        keys = list(entries)
-        header = message.get("header")
-        count = header.get("numRequiredSignatures") if isinstance(header, dict) else None
-        if type(count) is not int or not 0 < count <= len(keys) or count != len(signatures) or not all(_public_address(key) for key in keys):
-            return {}, "Native signer flags or signature header are missing."
-        signers = {key for key in keys[:count] if _public_address(key)}
-        loaded = meta.get("loadedAddresses") or {}
-        if not isinstance(loaded, dict) or any(not isinstance(loaded.get(side, []), list) or not all(_public_address(key) for key in loaded.get(side, [])) for side in ("writable", "readonly")):
-            return {}, "Native loaded account keys are malformed."
-        keys += loaded.get("writable", []) + loaded.get("readonly", [])
-    else:
-        return {}, "Native signer account keys are malformed."
+    # Discovery and accounting must use the same primary key/header/lookup
+    # interpretation. Parsed signer flags cannot override a contradictory
+    # optional header; compiled keys need complete header and loader evidence.
+    from .compiled_instructions import CompiledInstructionError, resolve_account_keys
+    try:
+        context = resolve_account_keys(raw)
+    except CompiledInstructionError as error:
+        return {}, "Native signer account evidence is unresolved: " + str(error)
+    keys, signers = context['keys'], context['signers']
+    if len(signers) != len(signatures):
+        return {}, "Native signer flags disagree with the transaction signatures."
     balances = {}
     malformed = set()
     for side, field in (("pre", "preTokenBalances"), ("post", "postTokenBalances")):
@@ -203,7 +191,7 @@ def _native_signers(raw, signature):
             if type(index) is not int or not 0 <= index < len(keys) or not isinstance(token, dict):
                 return {}, "Native token-balance identity is malformed."
             amount, decimals = token.get("amount"), token.get("decimals")
-            if not _public_address(mint) or type(decimals) is not int or not 0 <= decimals <= 255 or not isinstance(amount, str) or not amount.isascii() or not amount.isdigit() or len(amount) > 100:
+            if not _public_address(owner) or not _public_address(mint) or type(decimals) is not int or not 0 <= decimals <= 255 or not isinstance(amount, str) or not amount.isascii() or not amount.isdigit() or len(amount) > 100:
                 return {}, "Native token-balance amount or mint is malformed."
             previous = balances.setdefault(index, {"owner": owner, "mint": mint, "decimals": decimals, "pre": 0, "post": 0})
             if (owner, mint, decimals) != (previous["owner"], previous["mint"], previous["decimals"]):
@@ -227,6 +215,270 @@ def _native_signers(raw, signature):
         if values:
             result[address] = values
     return result, None if result else "No native signer has verified event-time owned token movements."
+
+
+def plan_candidate_audits(store, cohort, *, reports=(), preset=None, audit_cap=5):
+    """Select bounded next audits from archived identities, never profit guesses.
+
+    This read-only projection replays the discovery sources before suggesting an
+    address. Saved report decisions use the existing qualification/copy-review
+    functions. A current partial report is not automatically fetched again:
+    its missing dependencies remain visible and an explicit user retry remains
+    separate. Neither a plan nor an identity check certifies safe copying.
+    """
+    from .copy_review import qualify_report, review_copy_behavior
+    from .config import validate_preset
+
+    if not isinstance(cohort, dict) or not isinstance(cohort.get("candidates"), list):
+        raise ValueError("An audit plan requires a saved discovery cohort.")
+    if type(audit_cap) is not int or not 1 <= audit_cap <= 5:
+        raise ValueError("Audit cap must be between 1 and 5.")
+    if len(cohort["candidates"]) > 20:
+        raise ValueError("An audit plan supports at most 20 cohort candidates.")
+    if not isinstance(reports, (list, tuple)):
+        raise ValueError("Audit-plan reports must be a saved report list.")
+    if any(isinstance(report, dict) and isinstance(report.get("report_view"), dict) and report["report_view"].get("view") == "summary" for report in reports):
+        raise ValueError("Audit planning requires saved semantic report inputs, not projected presentation summaries.")
+    current_preset = validate_preset(preset) if preset is not None else None
+    cache = {}
+
+    def read(digest):
+        if not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest):
+            return None, "The required source identifier is missing or malformed."
+        if digest not in cache:
+            try:
+                cache[digest] = (store.evidence(digest), None)
+            except (EvidenceError, ValueError, TypeError, RecursionError):
+                cache[digest] = (None, "The checksum-matching required source is missing, unreadable or malformed.")
+        return cache[digest]
+
+    source_links = cohort.get("evidence") if isinstance(cohort.get("evidence"), list) else []
+    universe = cohort.get("universe") if isinstance(cohort.get("universe"), list) else []
+    cohort_hashes = {row.get("hash") for row in source_links if isinstance(row, dict) and isinstance(row.get("hash"), str)}
+
+    def check_identity(candidate):
+        checks, receipts, activity_counts = [], [], {"buys": 0, "sells": 0, "signatures": 0}
+
+        def check(key, state, reason, hashes=(), paths=()):
+            checks.append({"key": key, "state": state, "reason": reason,
+                           "evidence": sorted(set(h for h in hashes if isinstance(h, str) and re.fullmatch(r"[a-f0-9]{64}", h))),
+                           "paths": list(paths)})
+
+        address = candidate.get("address")
+        validation = candidate.get("validation") if isinstance(candidate.get("validation"), dict) else {}
+        signature = validation.get("signature")
+        native_hash, account_hash = validation.get("transaction_evidence_hash"), validation.get("account_evidence_hash")
+        candidate_hashes = set(h for h in candidate.get("evidence", []) if isinstance(h, str)) if isinstance(candidate.get("evidence"), list) else set()
+        if (any(not isinstance(link, dict) or not isinstance(link.get("hash"), str) or not re.fullmatch(r"[a-f0-9]{64}", link["hash"]) for link in source_links) or
+                not isinstance(candidate.get("evidence"), list) or any(not isinstance(h, str) or not re.fullmatch(r"[a-f0-9]{64}", h) for h in candidate.get("evidence", []))):
+            check("source_links", "UNKNOWN", "Malformed frozen source links cannot be omitted from identity dependency inspection.")
+        if not _public_address(address) or not _signature(signature):
+            check("native_identity", "UNKNOWN", "A valid wallet and sampled transaction identity are required.")
+            return checks, receipts, activity_counts
+        if any(not isinstance(h, str) or not re.fullmatch(r"[a-f0-9]{64}", h) or h not in candidate_hashes | cohort_hashes for h in (native_hash, account_hash)):
+            check("source_links", "UNKNOWN", "Required identity sources are not linked to this saved cohort.", (native_hash, account_hash))
+            return checks, receipts, activity_counts
+        raw, error = read(native_hash)
+        flows, reason = _native_signers(raw, signature)
+        if error or reason or address not in flows:
+            check("native_identity", "UNKNOWN" if error or reason else "FAIL",
+                  error or reason or "The provider lead is not a native signer with owned token movement.", (native_hash,),
+                  ("transaction.signatures[0]", "transaction.message.accountKeys", "meta.preTokenBalances", "meta.postTokenBalances"))
+            return checks, receipts, activity_counts
+        check("native_identity", "PASS", "The archived transaction proves a signer with event-time owned token movement.", (native_hash,),
+              ("transaction.signatures[0]", "transaction.message.accountKeys", "meta.preTokenBalances", "meta.postTokenBalances"))
+        # Roles are hints, never exclusion proofs. Inspect every frozen hash,
+        # including candidate-only and mislabelled native alternatives. Missing
+        # bytes cannot erase a formerly visible conflicting native association.
+        from .wallet_evidence import _native_claims, _indexed_native_rows
+        linked_hashes = candidate_hashes | cohort_hashes
+        for digest in sorted(linked_hashes - {native_hash}):
+            payload, issue = read(digest)
+            if issue:
+                check("linked_source_scope", "UNKNOWN", issue + " Its possible native identity association cannot be excluded.", (digest,))
+                continue
+            native_rows, _, _, _ = _indexed_native_rows(payload)
+            claims, ambiguous = _native_claims(payload)
+            hinted = any(isinstance(link, dict) and link.get("hash") == digest and link.get("signature") == signature for link in source_links)
+            if ambiguous:
+                check("linked_source_scope", "UNKNOWN", "A linked native-shaped source cannot be assigned to a supported signature identity.", (digest,))
+            if signature not in claims and not hinted:
+                public_observation = (isinstance(payload, dict) and payload.get("provider") == "geckoterminal" and
+                    payload.get("network") == "solana" and payload.get("kind") in ("trending-pools", "pool-trades") and
+                    isinstance(payload.get("result"), dict) and isinstance(payload["result"].get("data"), list))
+                account_observation = (isinstance(payload, dict) and payload.get("method") == "getAccountInfo" and
+                    _public_address(payload.get("address")) and isinstance(payload.get("result"), dict))
+                if account_observation and payload["address"] == address:
+                    account_result = payload["result"]
+                    account_value, account_context = account_result.get("value"), account_result.get("context")
+                    if (not isinstance(account_context, dict) or type(account_context.get("slot")) is not int or
+                            not isinstance(account_value, dict) or account_value.get("owner") != SYSTEM_PROGRAM or account_value.get("executable") is not False):
+                        check("linked_account_identity", "UNKNOWN", "A linked current account observation lacks or contradicts the required wallet identity facts.", (digest,))
+                if not claims and not public_observation and not account_observation:
+                    check("linked_source_scope", "UNKNOWN", "A linked source has no supported native or independently disjoint observation scope.", (digest,))
+                continue
+            nodes, variants = [payload] + native_rows, []
+            for _ in range(64):
+                if not nodes:
+                    break
+                node = nodes.pop()
+                if not isinstance(node, dict):
+                    continue
+                transaction = node.get("transaction")
+                signatures = transaction.get("signatures") if isinstance(transaction, dict) else None
+                if isinstance(signatures, list) and signatures and signatures[0] == signature:
+                    variants.append(node)
+                nodes.extend(node[key] for key in ("result", "value") if isinstance(node.get(key), dict))
+            if nodes or not variants:
+                check("linked_native_identity", "UNKNOWN", "A linked native identity association has no completely inspected supported raw body.", (native_hash, digest))
+            for alternative in variants:
+                alt_flows, alt_reason = _native_signers(alternative, signature)
+                facts = lambda values: sorted((flow["mint"], flow["raw_delta"], flow["decimals"]) for flow in values)
+                if alt_reason or facts(alt_flows.get(address, [])) != facts(flows[address]) or alternative.get("slot") != raw["slot"] or alternative.get("blockTime") != raw["blockTime"]:
+                    check("linked_native_identity", "UNKNOWN", alt_reason or "Linked sampled identity, token movement or chronology disagrees.", (native_hash, digest))
+                else:
+                    check("linked_native_identity", "PASS", "Linked sampled identity and movement facts agree; unrelated fee/log differences do not change this identity proof.", (native_hash, digest))
+        account, error = read(account_hash)
+        result = account.get("result") if isinstance(account, dict) else None
+        value = result.get("value") if isinstance(result, dict) else None
+        context = result.get("context") if isinstance(result, dict) else None
+        if (error or not isinstance(account, dict) or account.get("method") != "getAccountInfo" or account.get("address") != address or
+                not isinstance(value, dict) or not isinstance(context, dict) or type(context.get("slot")) is not int or context["slot"] < raw["slot"] or
+                type(value.get("executable")) is not bool or not _public_address(value.get("owner"))):
+            check("current_account", "UNKNOWN", error or "The archived account observation does not prove this wallet's finalized current identity.", (account_hash,),
+                  ("method", "address", "result.context.slot", "result.value.owner", "result.value.executable"))
+        elif value["executable"] or value["owner"] != SYSTEM_PROGRAM:
+            check("current_account", "FAIL", "The signer is executable or program-owned and is excluded from wallet research candidates.", (account_hash,))
+        else:
+            check("current_account", "PASS", "The archived current account is a non-executable system-owned signer; this is not a historical ownership certificate.", (account_hash,))
+        seen_activity = set()
+        for activity in candidate.get("sampled_activity", []) if isinstance(candidate.get("sampled_activity"), list) else []:
+            if not isinstance(activity, dict) or not _signature(activity.get("signature")):
+                continue
+            pool_address = activity.get("pool_address")
+            pools = [pool for pool in universe if isinstance(pool, dict) and pool.get("pool_address") == pool_address]
+            if len(pools) != 1:
+                continue
+            pool = pools[0]
+            trade_hash, pool_hash = pool.get("trade_evidence_hash"), pool.get("evidence_hash")
+            if (not isinstance(trade_hash, str) or not isinstance(pool_hash, str) or
+                    trade_hash not in candidate_hashes | cohort_hashes or pool_hash not in cohort_hashes):
+                continue
+            trades, trade_error = read(trade_hash)
+            trend, pool_error = read(pool_hash)
+            if (trade_error or pool_error or not isinstance(trades, dict) or trades.get("provider") != "geckoterminal" or trades.get("network") != "solana" or trades.get("kind") != "pool-trades" or trades.get("pool_address") != pool_address or
+                    not isinstance(trades.get("result"), dict) or not isinstance(trades["result"].get("data"), list) or
+                    not isinstance(trend, dict) or trend.get("provider") != "geckoterminal" or trend.get("network") != "solana" or trend.get("kind") != "trending-pools" or not isinstance(trend.get("result"), dict) or not isinstance(trend["result"].get("data"), list)):
+                continue
+            pool_rows = [row for row in trend["result"]["data"] if isinstance(row, dict) and isinstance(row.get("attributes"), dict) and row["attributes"].get("address") == pool_address]
+            if len(pool_rows) != 1:
+                continue
+            relationships = pool_rows[0].get("relationships")
+            mints = set()
+            for side in ("base_token", "quote_token"):
+                relationship = relationships.get(side) if isinstance(relationships, dict) else None
+                token = relationship.get("data") if isinstance(relationship, dict) else None
+                token_id = token.get("id") if isinstance(token, dict) else None
+                mint = token_id[7:] if isinstance(token_id, str) and token_id.startswith("solana_") else None
+                if _public_address(mint) and mint != WRAPPED_SOL:
+                    mints.add(mint)
+            for index, row in enumerate(trades["result"]["data"][:SAMPLE_LIMIT]):
+                attrs = row.get("attributes") if isinstance(row, dict) else None
+                if not isinstance(attrs, dict) or attrs.get("tx_hash") != activity["signature"]:
+                    continue
+                senders = {address, *[a for a in candidate.get("provider_leads", []) if _public_address(a)]} if isinstance(candidate.get("provider_leads", []), list) else {address}
+                observed = _time(attrs.get("block_timestamp"))
+                sample = cohort.get("sample") if isinstance(cohort.get("sample"), dict) else {}
+                lower, upper = _time(sample.get("window_start")), _time(sample.get("window_end"))
+                if (attrs.get("tx_from_address") not in senders or attrs.get("kind") not in ("buy", "sell") or observed is None or
+                        lower is None or upper is None or not lower <= observed < upper or
+                        activity.get("kind") != attrs["kind"] or activity.get("block_time") != int(observed.timestamp())):
+                    continue
+                if activity["signature"] not in seen_activity:
+                    seen_activity.add(activity["signature"])
+                    activity_counts["buys" if attrs["kind"] == "buy" else "sells"] += 1
+                    activity_counts["signatures"] += 1
+                if activity["signature"] == signature and any(flow["mint"] in mints for flow in flows[address]):
+                    block = attrs.get("block_number")
+                    if int(observed.timestamp()) != raw["blockTime"] or block is not None and (type(block) is not int or block != raw["slot"]):
+                        continue
+                    receipts.append({"signature": signature, "pool_address": pool_address, "kind": attrs["kind"],
+                                     "evidence": [native_hash, account_hash, pool_hash, trade_hash],
+                                     "paths": [f"result.data[{index}].attributes", "slot", "blockTime", "meta.preTokenBalances", "meta.postTokenBalances"]})
+        check("sample_association", "PASS" if receipts else "UNKNOWN",
+              "Original archived pool/trade records link the sampled native movement to a non-SOL pool asset." if receipts else
+              "Original archived pool/trade identity, chronology or token association is missing or inconsistent.",
+              tuple(h for receipt in receipts for h in receipt["evidence"]))
+        return checks, receipts, activity_counts
+
+    rows, seen = [], set()
+    for candidate in cohort["candidates"]:
+        if not isinstance(candidate, dict) or not _public_address(candidate.get("address")):
+            rows.append({"address": None, "identity_state": "UNKNOWN", "action": "restore_identity_sources", "reason": "Malformed candidate identity cannot be selected.",
+                         "source_checks": [], "source_receipts": [], "financial_policy": "NOT_AUDITED", "evidence_status": "unknown", "qualified": False, "copy_risks_unknown": True})
+            continue
+        address = candidate["address"]
+        if address in seen:
+            continue
+        seen.add(address)
+        checks, receipts, activity = check_identity(candidate)
+        identity = "FAIL" if any(check["state"] == "FAIL" for check in checks) else "PASS" if checks and all(check["state"] == "PASS" for check in checks) else "UNKNOWN"
+        linked_reports = [report for report in reports if isinstance(report, dict) and report.get("address") == address and
+                          report.get("source") == "live" and report.get("preview", False) is False and isinstance(report.get("id"), str)]
+        linked_reports.sort(key=lambda report: (_time(report.get("created_at")) or datetime.min.replace(tzinfo=timezone.utc), report["id"]), reverse=True)
+        saved = linked_reports[0] if linked_reports else None
+        qualification = qualify_report(saved) if saved else None
+        review = review_copy_behavior(saved) if saved else None
+        preset_current = bool(saved and (current_preset is None or saved.get("preset") == current_preset))
+        qualified = bool(identity == "PASS" and qualification and qualification["qualified"] and preset_current)
+        if identity != "PASS":
+            action, reason = "exclude_identity" if identity == "FAIL" else "restore_identity_sources", "Archived identity dependencies must pass before a new audit can be selected."
+        elif not saved:
+            action, reason = "audit_wallet", "Verified sampled identity has no saved live report; collect one bounded wallet report under the existing quota."
+        elif any(isinstance(check.get("key"), str) and check["key"].endswith("methodology") for check in qualification["unknown_checks"]):
+            action, reason = "offline_rebuild", "A saved interpretation is stale or missing; rebuild archived sources before another provider audit."
+        elif not preset_current:
+            action, reason = "cached_filter_preview", "This report uses different saved filters; preview the current preset against cached data before collecting again."
+        elif qualified:
+            action, reason = "inspect_qualified_report", "The saved report passes its current financial filters; inspect separate risk findings and unresolved copy review."
+        elif qualification["failed_checks"]:
+            action, reason = "inspect_policy_miss", "Known filter misses remain recorded alongside unresolved dependencies; a miss is not a misconduct finding."
+        else:
+            action, reason = "resolve_report_dependencies", "The current partial report records missing sources or unsupported paths; another automatic replay of the same audit is deferred."
+        rows.append({"address": address, "identity_state": identity, "action": action, "reason": reason,
+                     "source_checks": checks, "source_receipts": receipts, "activity": activity,
+                     "report_id": saved.get("id") if saved else None,
+                     "financial_policy": qualification["financial_policy"] if qualification else "NOT_AUDITED",
+                     "evidence_status": qualification["evidence_status"] if qualification else "unknown", "qualified": qualified,
+                     "saved_qualification": {key: qualification[key] for key in ("qualified", "reason", "profit_sol", "preset_version", "methodology", "failed_checks", "unknown_checks")} if qualification else None,
+                     "preset_current": preset_current, "copy_review": review,
+                     "copy_risks_unknown": True if review is None else bool(review["unknown_checks"]),
+                     "evidence": sorted(set(h for check in checks for h in check["evidence"]))})
+    priorities = {"inspect_qualified_report": 0, "audit_wallet": 1, "offline_rebuild": 2, "cached_filter_preview": 3,
+                  "resolve_report_dependencies": 4, "inspect_policy_miss": 5, "restore_identity_sources": 6, "exclude_identity": 7}
+    rows.sort(key=lambda row: (priorities.get(row["action"], 8),
+                               -int(bool(row.get("activity", {}).get("buys") and row.get("activity", {}).get("sells"))),
+                               -row.get("activity", {}).get("signatures", 0), row["address"] or ""))
+    eligible = [row for row in rows if row["action"] == "audit_wallet"]
+    selected = eligible[:audit_cap]
+    selected_addresses = {row["address"] for row in selected}
+    deferred = [row for row in rows if row["identity_state"] == "PASS" and row["address"] not in selected_addresses]
+    excluded = [row for row in rows if row["identity_state"] != "PASS"]
+    def concise(row):
+        # Keep one canonical proof/review tree rather than repeating it in each
+        # navigation group; the public address identifies its research row.
+        return {**{key: value for key, value in row.items() if key not in ("source_checks", "source_receipts", "copy_review")},
+                "proof_address": row["address"]}
+    return {"version": AUDIT_PLAN_VERSION, "cohort_id": cohort.get("id"), "selected_addresses": [row["address"] for row in selected],
+            "selected": [concise(row) for row in selected], "deferred": [concise(row) for row in deferred],
+            "excluded": [concise(row) for row in excluded], "research_order": rows,
+            "counts": {"candidates": len(rows), "selected": len(selected), "deferred": len(deferred), "excluded": len(excluded)},
+            "audit_cap": audit_cap, "provider_requests": 0,
+            "scope": "Evidence-linked bounded research priorities; financial policy, evidence scope and specific findings remain separate.",
+            "limitations": ["Provider buy/sell activity only orders new research effort; it is not profit or a safe-copying score.",
+                            "Missing archived identity evidence revokes selection until exact sources are restored.",
+                            "Current partial reports are not automatically retried; source/basis/coverage gaps require an explicit next source decision.",
+                            "A qualifying saved report does not prove legitimacy, follower intent, copied fills or future returns."]}
 
 
 async def discover_candidates(store, gateway=None, *, pool_cap=3, candidate_cap=20,
@@ -518,6 +770,7 @@ async def discover_candidates(store, gateway=None, *, pool_cap=3, candidate_cap=
         miss(str(error))
     except Exception:
         cohort.update(status="failed", stage="Discovery stopped", reason="Discovery stopped after a local storage, configuration, or response error.")
+    cohort["audit_plan"] = plan_candidate_audits(store, cohort)
     await notify()
     return cohort
 

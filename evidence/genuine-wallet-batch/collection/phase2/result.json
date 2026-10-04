@@ -1,0 +1,147 @@
+{
+  "kind": "authorised-bounded-native-collection",
+  "started_utc": "2026-10-04T06:06:32.176583+00:00",
+  "state": "COLLECTED_IN_SCOPE",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "plan_sha256": "a1dbf4baf85299da66aca9c98ae5b140705d481563b73a18980cf247ddce00e8",
+  "endpoint": "https://mainnet.helius-rpc.com/",
+  "confirmation": {
+    "plan": "Free",
+    "cycle_start": "2026-10-02",
+    "cycle_end": "2026-11-02",
+    "remaining_credits": 999801,
+    "autoscaling": false,
+    "confirmed_by": "user-dashboard"
+  },
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "provider_requests": 1,
+  "conservative_credits": 0,
+  "public_request_cap": 4,
+  "native_provider_requests": 0,
+  "public_provider_requests": 1,
+  "retries": 0,
+  "purchases": false,
+  "quota_reset": false,
+  "quota_before": {
+    "credits": {
+      "used": 10,
+      "reserved": 0,
+      "cap": 1000,
+      "remaining": 990,
+      "cycle_start": "2026-10-02"
+    },
+    "requests": {
+      "used": 1,
+      "reserved": 0,
+      "cap": 30,
+      "remaining": 29,
+      "cycle_start": "2026-10-02"
+    },
+    "public_requests": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 4,
+      "remaining": 4,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "billing_actual_credits": null,
+  "billing_scope": "Conservative reservations; dashboard snapshot is operator supplied and provider invoice delta is unverified.",
+  "requests": [
+    {
+      "id": "trending-pools",
+      "method": "publicTrendingPools",
+      "request_id": 1,
+      "request_reservation": "76ec8fb53e064111841acd2592dbc18f",
+      "credit_reservation": null,
+      "public_request_reservation": "92d1f3276ea84a968b0c171e58abfbe5",
+      "source_url": "https://api.geckoterminal.com/api/v2/networks/solana/trending_pools",
+      "conservative_credits": 0,
+      "request_path": "01-trending-pools-request.json",
+      "request_sha256": "a122322233d4c35eeece64f6f620f4ba161e84ff71dd23009c910ea12f19cb1c",
+      "started_utc": "2026-10-04T06:06:32.208753+00:00",
+      "http_status": 200,
+      "secret_reflected_in_response_headers": false,
+      "response_headers": {
+        "date": "Sun, 04 Oct 2026 06:06:32 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "response_path": "01-trending-pools-response.raw.gz",
+      "response_sha256": "55df6cbdf295b29c77d4c1cf24fd20c9dcb1835cba373bec78a949eaa34dc5c5",
+      "response_bytes": 31102,
+      "credential_redaction_applied": false,
+      "byte_exact_response_retained": true,
+      "assessment": {
+        "state": "OBSERVED",
+        "rows": 20,
+        "usable_rows": 20,
+        "row_gaps": [],
+        "pools": [
+          "2B8tftZ5ww8TREMr3pgkgERLNjJyJxEAPWMENViGMsL4",
+          "2qWF4dn1JnqhCpAYJQnKVaKezzuUiG4xdnbnCSK1Pgcw",
+          "39e3inYn9tDu4GAeBJ4L1MZrRW8hMhu2yqJ59vhPeCai",
+          "4R8CiMnJWDNoes3fQi1ccPFJygPXazaHaWpHrN3rZeNj",
+          "5VbavvxS1NLmyNJLS3QbDoRFsUHKn6rBzmfVQdWWSniq",
+          "6e3jZLtf4tQbWZm3f7A66jF8tfZn6MRQVrbDFgcNWarA",
+          "7Nj7mBE7iVmjvnBHNvjgaz6G3ZktTHFNbf7aQDfZ7iNR",
+          "8ewuF2o8ACro7fqWepZ3tKhkbBjndZU4Ldk9scRPw83d",
+          "9KBF3KqYErfs1NXRK35gb4J8wnAD2i9ePZAzcwn7yhFT",
+          "BA2YYZ4YUKsMCMDGpqrV5FQiotGnyKrc571pFhc66Gje",
+          "BTKS1a21rbBqcX9cM5xYrAwsSp2UTu8YE8b2AzpH7WBK",
+          "Bd4wKg3xEBKJ4Xrw8skXMmJ4W65gk3x8yd7AovuBJisZ",
+          "BoiL8W7CfhoGfjr3VHFH34GfKdkmGm7y1YyXbweLfcX7",
+          "C2agfYkMTrQp9G34KXcX5J44eLuUseqySZmkQUQ2fXK7",
+          "Cr469Kh7oCPtQk5YADEmjVpBWx1DiXXLiooPFJn23jsg",
+          "CyJwKnLiiY4fmiwqMCSWFSHxo7T9Ubshgs2uRAuJCrk5",
+          "FtiotJckV2ZG4S1YgJDJLiXKKDAnKWXgQxo7vxsjPwPe",
+          "HCAZia1gVGy1hrfWR2FyLAXZFzC1REfDcPwC2MHao5rm",
+          "HMzvsEEmtzHhvZNw9uwbaG85HCTmFnkbhzUx16cy7ca3",
+          "zxTpi4BtaWX3mgdAPoezkMD1hxx8CdeCfrqXMWvSCLX"
+        ],
+        "leads": [],
+        "coverage": "Current public sample and alleged trader leads only; native ownership, profit, historical population and legitimacy remain unproved."
+      },
+      "state": "OBSERVED",
+      "finished_utc": "2026-10-04T06:06:32.414140+00:00"
+    }
+  ],
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "scope": "Raw acquisition only; neither endpoint success nor terminal paging certifies historical population, accounting or wallet qualification.",
+  "quota_after": {
+    "credits": {
+      "used": 10,
+      "reserved": 0,
+      "cap": 1000,
+      "remaining": 990,
+      "cycle_start": "2026-10-02"
+    },
+    "requests": {
+      "used": 2,
+      "reserved": 0,
+      "cap": 30,
+      "remaining": 28,
+      "cycle_start": "2026-10-02"
+    },
+    "public_requests": {
+      "used": 1,
+      "reserved": 0,
+      "cap": 4,
+      "remaining": 3,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "finished_utc": "2026-10-04T06:06:32.750516+00:00",
+  "artifacts": {
+    "01-trending-pools-request.json": {
+      "sha256": "a122322233d4c35eeece64f6f620f4ba161e84ff71dd23009c910ea12f19cb1c",
+      "bytes": 111
+    },
+    "01-trending-pools-response.raw.gz": {
+      "sha256": "ba11cbf1f4ec426c1798981a0fd14fa4ac73ee22f7d2c906329cbd2881eb37bf",
+      "bytes": 8396
+    }
+  },
+  "unexecuted_request_ids": []
+}

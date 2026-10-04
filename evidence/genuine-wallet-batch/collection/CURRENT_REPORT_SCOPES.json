@@ -1,0 +1,17 @@
+{
+  "report": {
+    "start": "2026-09-04T06:00:00+00:00",
+    "end": "2026-10-04T06:00:00+00:00"
+  },
+  "four_weeks": {
+    "start": "2026-09-06T06:00:00+00:00",
+    "end": "2026-10-04T06:00:00+00:00"
+  },
+  "verification_90d": {
+    "start": "2026-07-06T06:00:00+00:00",
+    "end": "2026-10-04T06:00:00+00:00"
+  },
+  "selection_basis": "Firstfive lexicographicallyordered publictwo-way addresses with2sampleobservations, after highactivityseedrejected; no P&L selection.",
+  "lead_source": "phase3/01-pool-trades-cackle-response.raw.gz",
+  "complete_wallet_claim": false
+}

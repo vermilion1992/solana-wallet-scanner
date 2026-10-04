@@ -8,7 +8,7 @@ remain present as original evidence alongside explicit rejecting raw paths.
 from copy import deepcopy
 
 
-METHOD = 'compiled-instructions-v1'
+METHOD = 'compiled-instructions-v2'
 SYSTEM_ID = '11111111111111111111111111111111'
 TOKEN_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
 TOKEN_2022_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
@@ -24,6 +24,19 @@ _PROGRAM_NAMES = {SYSTEM_ID: 'system', TOKEN_ID: 'spl-token',
                   TOKEN_2022_ID: 'spl-token-2022', COMPUTE_ID: 'compute-budget',
                   ASSOCIATED_ID: 'spl-associated-token-account',
                   **{program: 'spl-memo' for program in MEMO_IDS}}
+# Read-only GetAccountDataSize request descriptors. The u16 ordering is pinned
+# to spl-token-2022-interface 3.1.1, not to the presentation enum ordering in
+# Agave. Describing an extension request proves no extension/account state.
+_SIZE_EXTENSIONS = (
+    'uninitialized', 'transferFeeConfig', 'transferFeeAmount', 'mintCloseAuthority',
+    'confidentialTransferMint', 'confidentialTransferAccount', 'defaultAccountState',
+    'immutableOwner', 'memoTransfer', 'nonTransferable', 'interestBearingConfig',
+    'cpiGuard', 'permanentDelegate', 'nonTransferableAccount', 'transferHook',
+    'transferHookAccount', 'confidentialTransferFeeConfig', 'confidentialTransferFeeAmount',
+    'metadataPointer', 'tokenMetadata', 'groupPointer', 'tokenGroup',
+    'groupMemberPointer', 'tokenGroupMember', 'confidentialMintBurn', 'scaledUiAmount',
+    'pausable', 'pausableAccount', 'permissionedBurn',
+)
 
 
 class CompiledInstructionError(ValueError):
@@ -376,6 +389,23 @@ def _token(data, accounts, signers, inner, path, program):
                     rent_index = 3 if tag == 1 else 2
                     _sysvar(accounts, rent_index, RENT_ID, path)
                     info['rentSysvar'] = accounts[rent_index]
+    elif tag == 21:
+        _arity(accounts, 1, path)
+        kind, info = 'getAccountDataSize', {'mint': accounts[0]}
+        # The classic Token program ignores trailing data for this opcode. Its
+        # bytes remain in the original immutable source and receipt coordinates.
+        # Token-2022 instead parses every trailing pair as a known u16 enum.
+        if program == TOKEN_2022_ID:
+            if (len(data) - 1) % 2:
+                _reject('unsupported-layout', 'Token-2022 size query has a truncated extension type', path + '.data')
+            extensions = []
+            for offset in range(1, len(data), 2):
+                number = int.from_bytes(data[offset:offset + 2], 'little')
+                if number >= len(_SIZE_EXTENSIONS):
+                    _reject('unsupported-extension-type', 'Token-2022 size query names an unknown pinned extension type', path + '.data')
+                extensions.append(_SIZE_EXTENSIONS[number])
+            if extensions:
+                info['extensionTypes'] = extensions
     elif tag == 6:
         if len(data) < 3 or data[1] > 3 or data[2] not in (0, 1):
             _reject('unsupported-authority', 'Malformed option or unsupported Token authority type', path + '.data')

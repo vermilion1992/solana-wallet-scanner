@@ -1,0 +1,30 @@
+{
+  "kind": "offline-genuine-checker-input-freeze",
+  "archive": "evidence/genuine-wallet-batch/checker-inputs/phase5-indexed-input.zip",
+  "archive_sha256": "3c409ce6c1bec579f852616ada235e99e3063810c7a841cf4544751ba6c0c481",
+  "bytes": 139019,
+  "oracle_sha256": "c56a0d429cb9dd470c885002062237ebd5f3c957386af1a28418a0532226b143",
+  "acquisition": [
+    {
+      "receipt_sha256": "dd17302050f1693289c435bf7c0633255faa15ab96a7625299a7ffb2437dc280",
+      "kind": "authorised-bounded-native-collection",
+      "state": "COLLECTED_IN_SCOPE",
+      "plan_sha256": "b97617552df403897080c97ea45f292daa8cc08b7b2cd4d9871e6e49bc32f447",
+      "provider_requests": 3,
+      "included_raw_sources": [
+        {
+          "request_hash": "53ebcc07235c05da043f5067660d435af9d10b99257811115a09c434e4f0a9a8",
+          "response_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+        },
+        {
+          "request_hash": "9d0a345bd5799f82788b1e4c58b81a5ea337e958d5665fb62cecf0754b60a0eb",
+          "response_hash": "c3c2ac505c1c3f076f7cda9abf698a68e657bf5de308db4316de94e22226673c"
+        }
+      ],
+      "scope": "Acquisition provenance; does not prove historical population."
+    }
+  ],
+  "production_application_executed": false,
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

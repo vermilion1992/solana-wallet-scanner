@@ -18,9 +18,11 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_instruction_contract_matrix.py', 'tests/test_source_role_matrix.py', 'tests/test_validation_gates.py',
            'tests/test_archive_input.py', 'tests/test_archive_fee_window.py', 'tests/test_report_rebuild.py',
            'tests/test_wallet_evidence.py', 'tests/test_metric_evidence.py', 'tests/test_real_evidence_adapter.py',
-           'tests/test_compiled_instructions.py', 'tests/test_compiled_report_integration.py',
+           'tests/test_compiled_instructions.py', 'tests/test_compiled_getter.py', 'tests/test_compiled_report_integration.py',
            'tests/test_indexed_input.py', 'tests/test_indexed_chronology.py',
-           'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py', 'tests/test_report_view.py']
+           'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py', 'tests/test_report_view.py',
+           'tests/test_real_coverage.py', 'tests/test_retained_protocol_funding.py', 'tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py', 'tests/test_discovery_native_identity.py',
+           'tests/test_bounded_collection.py', 'tests/test_genuine_collection_workflow.py']
 
 
 def lock_hashes(root=ROOT):

@@ -1,0 +1,61 @@
+{
+  "kind": "bounded-collection-final-budget-v1",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "requests": 19,
+  "conservative_credits": 170,
+  "public_requests": 2,
+  "public_helius_credits": 0,
+  "retries": 0,
+  "purchases": 0,
+  "automatic_spend_enabled": false,
+  "actual_vendor_credit_delta": "NOT_OBSERVED; conservative dispatch bounds are separate from billing",
+  "old_probe": "unchanged; separate original10request/73credit reservation",
+  "phases": [
+    {
+      "phase": 1,
+      "state": "COLLECTED_IN_SCOPE",
+      "requests": 1,
+      "conservative_credits": 10,
+      "result_sha256": "7cd824cb5a3bfcd820fb9fe1b08f970d258d206d0925aeac739b4d614e2aa8f4"
+    },
+    {
+      "phase": 2,
+      "state": "COLLECTED_IN_SCOPE",
+      "requests": 1,
+      "conservative_credits": 0,
+      "result_sha256": "765ceac0911e1ed5eef49cc74b34e932de58d00b35dafb4c440a62ad993dbdd7"
+    },
+    {
+      "phase": 3,
+      "state": "COLLECTED_IN_SCOPE",
+      "requests": 1,
+      "conservative_credits": 0,
+      "result_sha256": "cc6c283071aa5386aafd1dd641d78f16216bc118b2c4e80e90a1b59e9929876b"
+    },
+    {
+      "phase": 4,
+      "state": "COLLECTED_IN_SCOPE",
+      "requests": 5,
+      "conservative_credits": 50,
+      "result_sha256": "0d2c1b21ca1e19d65c8820f26a62b19383b2399fade92d865534931407a3ba93"
+    },
+    {
+      "phase": 5,
+      "state": "COLLECTED_IN_SCOPE",
+      "requests": 3,
+      "conservative_credits": 30,
+      "result_sha256": "dd17302050f1693289c435bf7c0633255faa15ab96a7625299a7ffb2437dc280"
+    },
+    {
+      "phase": 6,
+      "state": "COLLECTED_IN_SCOPE",
+      "requests": 8,
+      "conservative_credits": 80,
+      "result_sha256": "0524aaa8966381285c1501b5cded4fb9054b8fa309cc1233f05d0e6554809705"
+    }
+  ],
+  "collection_stopped": true,
+  "reason": "Required bounded corpus and crosschecks acquired; no use of spare allowance merely to consume it."
+}

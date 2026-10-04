@@ -19,6 +19,7 @@ from scanner.storage import Store
 WALLET = '2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T'
 WINDOW = {'start': '2026-07-04T00:00:00+00:00', 'end': '2026-10-02T00:00:00+00:00'}
 PROBE = Path(__file__).resolve().parents[1] / 'evidence/source-probe-2026-10-04/live'
+INDEX_REFERENCE = Path(__file__).resolve().parents[1] / 'evidence/references/product-milestone/helius-index-markdown.txt'
 
 
 def digest(raw):
@@ -79,6 +80,70 @@ def resolve_all(manifest, payloads):
 def sources(manifest, payloads):
     return [{'hash': row['hash'], 'payload': payloads.get(row['hash'])}
             for row in manifest['evidence'] if row['kind'] == 'indexed-page']
+
+
+@pytest.mark.parametrize('encoding', ['json', 'jsonParsed'])
+def test_pinned_provider_json_encodings_accept_archived_compiled_and_parsed_shapes_exactly(encoding):
+    # Independent API reference downloaded 3 October, including JSON default;
+    # the accepted values are not copied from the implementation's allowlist.
+    reference = INDEX_REFERENCE.read_bytes()
+    assert digest(reference) == '9dbb7415eb7389752ed7f0a0601983bd73bd0d32ff14f0d4e3b61a1e2aa6acec'
+    excerpt = reference.decode().split('                          encoding:', 1)[1].split('                          maxSupportedTransactionVersion:', 1)[0]
+    assert '- json\n' in excerpt and '- jsonParsed\n' in excerpt and 'default: json' in excerpt
+    if encoding == 'json':
+        request = json.loads((PROBE / '02-all-index-request.json').read_bytes())
+        response_bytes = gzip.decompress((PROBE / '02-all-index-response.raw.gz').read_bytes())
+        wallet = request['params'][0]
+        request['params'][1]['encoding'] = encoding
+    else:
+        # Genuine archived parsed buy proves accountKeys/instruction shape. Its
+        # added indexed ordinal is a development envelope, never chain coverage.
+        fixture_path = Path(__file__).resolve().parent / 'fixtures/mainnet-pumpswap-buy-exact-quote.json'
+        fixture = json.loads(fixture_path.read_bytes())
+        raw = deepcopy(fixture['raw'])
+        wallet = raw['transaction']['message']['accountKeys'][0]['pubkey']
+        raw['transactionIndex'] = 0
+        request = {'jsonrpc': '2.0', 'id': 'parsed-schema-control', 'method': 'getTransactionsForAddress', 'params': [wallet, {'transactionDetails': 'full', 'encoding': encoding, 'limit': 100, 'sortOrder': 'asc', 'commitment': 'finalized', 'maxSupportedTransactionVersion': 1, 'filters': {'status': 'any', 'tokenAccounts': 'all', 'blockTime': {'gte': 1783175556, 'lt': 1791072000}}}]}
+        response_bytes = json.dumps({'jsonrpc': '2.0', 'id': request['id'], 'result': {'data': [raw], 'paginationToken': None}}, indent=2).encode() + b'\n'
+    request_bytes = json.dumps(request, indent=2).encode() + b'\n'
+    manifest = {'version': VERSION, 'address': wallet, 'window': {'start': '2026-07-04T00:00:00Z', 'end': '2026-10-04T00:00:00Z'}, 'pages': [{'request_hash': digest(request_bytes), 'response_hash': digest(response_bytes)}], 'transactions': []}
+    content = pack_indexed_bytes(manifest, {digest(request_bytes): request_bytes, digest(response_bytes): response_bytes})
+    ordinary, payloads = unpack(convert_indexed_archive(content))
+    source = sources(ordinary, payloads)[0]
+    assert source_bytes(source['payload']) == {'request': request_bytes, 'response': response_bytes}
+    receipt = validate_page_envelope(source['payload'], wallet)
+    assert receipt['state'] == 'PASS' and receipt['request_scope']['encoding'] == encoding
+    resolver = IndexedResolver(lambda h, role: payloads.get(h), address=wallet)
+    pointer = payloads[ordinary['transactions'][0]['hash']]
+    selected = resolver.resolve(pointer)
+    assert selected['state'] == 'PASS' and selected['raw'] == json.loads(response_bytes)['result']['data'][pointer['ordinal']]
+    assert describe_pages([source], wallet, manifest['window'])['historical_population'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('encoding', ['base64', 'base58', None, False, {}])
+def test_unimplemented_binary_or_malformed_encoding_keeps_exact_bytes_and_negative_record_dependencies(encoding):
+    request, response = page(options={'encoding': encoding})
+    ordinary, payloads = unpack(convert_indexed_archive(upload([(request, response)])[2]))
+    source = sources(ordinary, payloads)[0]
+    rejected = validate_page_envelope(source['payload'], WALLET)
+    assert rejected['state'] == 'UNKNOWN' and 'encoding is unsupported' in rejected['reason']
+    assert source_bytes(source['payload']) == {'request': request, 'response': response}
+    assert resolve_all(ordinary, payloads)[0]['state'] == 'UNKNOWN'
+    assert describe_pages([source], WALLET, WINDOW)['state'] == 'UNKNOWN'
+
+
+def test_default_and_explicit_json_share_cursor_scope_but_parsed_encoding_remains_separate():
+    first = page(outgoing='1:0')
+    second = page([native('indexed-b', slot=2)], incoming='1:0', ident=2, options={'encoding': 'json'})
+    ordinary, payloads = unpack(convert_indexed_archive(upload([first, second])[2]))
+    described = describe_pages(sources(ordinary, payloads), WALLET, WINDOW)
+    assert described['state'] == 'PASS'
+    assert all(row['request_scope']['encoding'] == 'json' for row in described['pages'])
+    parsed_second = page([native('indexed-b', slot=2)], incoming='1:0', ident=2, options={'encoding': 'jsonParsed'})
+    ordinary, payloads = unpack(convert_indexed_archive(upload([first, parsed_second])[2]))
+    described = describe_pages(sources(ordinary, payloads), WALLET, WINDOW)
+    assert described['state'] == 'UNKNOWN' and described['historical_population'] == 'UNKNOWN'
+    assert all(record['state'] == 'PASS' for record in resolve_all(ordinary, payloads))
 
 
 def test_exact_request_response_and_uploaded_manifest_bytes_survive_normal_archive_import(tmp_path):

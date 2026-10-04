@@ -1,0 +1,95 @@
+{
+  "examples": [
+    {
+      "hex": "15",
+      "id": "classic-empty",
+      "info": {},
+      "program": "token"
+    },
+    {
+      "hex": "15ff00ab",
+      "id": "classic-ignored-trailing",
+      "info": {},
+      "program": "token"
+    },
+    {
+      "hex": "15",
+      "id": "token2022-empty",
+      "info": {},
+      "program": "token2022"
+    },
+    {
+      "hex": "1507000800",
+      "id": "token2022-two-query-extensions",
+      "info": {
+        "extensionTypes": [
+          "immutableOwner",
+          "memoTransfer"
+        ]
+      },
+      "program": "token2022"
+    },
+    {
+      "hex": "151400150016001700",
+      "id": "token2022-group-discriminants",
+      "info": {
+        "extensionTypes": [
+          "groupPointer",
+          "tokenGroup",
+          "groupMemberPointer",
+          "tokenGroupMember"
+        ]
+      },
+      "program": "token2022"
+    },
+    {
+      "hex": "151c00",
+      "id": "token2022-latest-query-descriptor",
+      "info": {
+        "extensionTypes": [
+          "permissionedBurn"
+        ]
+      },
+      "program": "token2022"
+    }
+  ],
+  "legacy_reference": {
+    "local_path": "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+    "primary_lines": [
+      431,
+      645
+    ],
+    "sha256": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc"
+  },
+  "parsed_reference": {
+    "local_path": "evidence/references/parse_token.rs",
+    "primary_lines": [
+      464,
+      485,
+      1771,
+      1817
+    ],
+    "sha256": "50370cf477d4d526960a226a945f712426c059f220fd4c84f63f493da64d88c0"
+  },
+  "references": [
+    {
+      "bytes": 102176,
+      "extracted_path": "src/instruction.rs",
+      "local_path": "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs",
+      "package_sha256": "821d96d034ea31c4965d182c742153c491ae0abee531331b55771086c5030d86",
+      "sha256": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+      "url": "https://static.crates.io/crates/spl-token-2022-interface/spl-token-2022-interface-3.1.1.crate",
+      "version": "3.1.1"
+    },
+    {
+      "bytes": 126230,
+      "extracted_path": "src/extension/mod.rs",
+      "local_path": "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs",
+      "package_sha256": "821d96d034ea31c4965d182c742153c491ae0abee531331b55771086c5030d86",
+      "sha256": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd",
+      "url": "https://static.crates.io/crates/spl-token-2022-interface/spl-token-2022-interface-3.1.1.crate",
+      "version": "3.1.1"
+    }
+  ],
+  "scope": "Pinned read-only opcode21 normalization only. Request extension descriptors are not account state, quantity, classification, write permissions or historical completion evidence. Classic Token ignores trailing bytes; Token2022 validates u16 ExtensionType list. Exact one mint-role account is the adapter contract."
+}

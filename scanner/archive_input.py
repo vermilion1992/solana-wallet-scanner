@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
 from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v5'
+METHOD = 'archive-ledger-v6'
 _CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
@@ -74,6 +74,8 @@ def validate_manifest(value):
     for ref in refs:
         if not isinstance(ref, dict) or not isinstance(ref.get('hash'), str) or not HASH.fullmatch(ref['hash']) or not isinstance(ref.get('kind'), str):
             raise ValueError('Evidence links need explicit kinds and SHA-256 hashes')
+        if ref['kind'] in ('query-affinity', 'archive-native-dependencies'):
+            raise ValueError('Frozen dependency roles are derived internally, not accepted as archive evidence declarations')
         if ref['kind'] in ('transaction', 'getTransaction') and (not isinstance(ref.get('signature'), str) or not 1 <= len(ref['signature']) <= 128):
             raise ValueError('Alternative transaction links require an explicit bounded signature')
     for key in ('world_hash', 'valuation_hash'):
@@ -175,18 +177,25 @@ def import_archive(store, content, *, reserve_bytes=0):
         except (EvidenceError, ValueError, OSError):
             source['payload'] = None
     dependencies = raw_native_dependencies(sources, (), {r['signature'] for r in manifest['transactions']})
+    from .real_coverage import query_source_dependencies
+    query_hashes = query_source_dependencies(sources)
     links = [{'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in dependencies
              if isinstance(r.get('evidence_hash'), str) and HASH.fullmatch(r['evidence_hash'])]
     previous = store.get('archive_dependency_inputs', digest, {})
     previous_hash = previous.get('hash') if isinstance(previous, dict) else None
     if previous_hash:
         try:
-            links += _dependency_links(store.evidence(previous_hash), digest)
+            previous_inventory = store.evidence(previous_hash)
+            links += _dependency_links(previous_inventory, digest)
+            if previous_inventory.get('version') == 'archive-native-dependencies-v2':
+                query_hashes += previous_inventory['query_source_hashes']
         except (EvidenceError, ValueError, OSError):
             links.append({'signature': None, 'hash': previous_hash})
+            query_hashes.append(previous_hash)
     links = list({(r['signature'], r['hash']): r for r in links}.values())
-    inputs = {'version': 'archive-native-dependencies-v1', 'manifest_hash': digest,
-              'links': sorted(links, key=lambda r: (r['signature'] or '', r['hash']))}
+    inputs = {'version': 'archive-native-dependencies-v2', 'manifest_hash': digest,
+              'links': sorted(links, key=lambda r: (r['signature'] or '', r['hash'])),
+              'query_source_hashes': sorted(set(query_hashes))}
     _dependency_links(inputs, digest)
     dependency_hash = store.archive(inputs)
     store.put('archive_dependency_inputs', digest, {'hash': dependency_hash})
@@ -195,10 +204,18 @@ def import_archive(store, content, *, reserve_bytes=0):
 
 def _dependency_links(value, manifest_hash):
     from .source_consistency import SOURCE_HASH_LIMIT
-    if (not isinstance(value, dict) or set(value) != {'version', 'manifest_hash', 'links'}
-        or value.get('version') != 'archive-native-dependencies-v1' or value.get('manifest_hash') != manifest_hash
+    version = value.get('version') if isinstance(value, dict) else None
+    fields = {'version', 'manifest_hash', 'links'} | ({'query_source_hashes'} if version == 'archive-native-dependencies-v2' else set())
+    if (not isinstance(value, dict) or set(value) != fields
+        or version not in ('archive-native-dependencies-v1', 'archive-native-dependencies-v2') or value.get('manifest_hash') != manifest_hash
         or not isinstance(value.get('links'), list) or len(value['links']) > SOURCE_HASH_LIMIT):
         raise ValueError('Frozen native dependency inventory disagrees with this manifest')
+    if version == 'archive-native-dependencies-v2':
+        hashes = value['query_source_hashes']
+        if (not isinstance(hashes, list) or len(hashes) > SOURCE_HASH_LIMIT
+            or any(not isinstance(h, str) or not HASH.fullmatch(h) for h in hashes)
+            or len(set(hashes)) != len(hashes)):
+            raise ValueError('Frozen query dependency inventory is malformed or exceeds its bound')
     for row in value['links']:
         if (not isinstance(row, dict) or set(row) != {'signature', 'hash'}
             or not isinstance(row.get('hash'), str) or not HASH.fullmatch(row['hash'])
@@ -228,7 +245,7 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
         for item in world['transactions']:
             if isinstance(item, dict) and isinstance(item.get('hash'), str) and HASH.fullmatch(item['hash']):
                 read(item['hash'], 'population-inventory')
-    dependency_input = None
+    dependency_input, query_affinities = None, []
     if dependency_input_hash is _CURRENT_IMPORT:
         index = store.get('archive_dependency_inputs', digest, {})
         dependency_input_hash = index.get('hash') if isinstance(index, dict) else None
@@ -236,12 +253,22 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
         dependency_input = read(dependency_input_hash, 'archive-native-dependencies')
         try:
             links += _dependency_links(dependency_input, digest)
+            if dependency_input.get('version') == 'archive-native-dependencies-v2':
+                query_affinities += dependency_input['query_source_hashes']
+                for query_hash in query_affinities:
+                    read(query_hash, 'query-affinity')
+            else:
+                # The old inventory froze native associations only.  Keep its
+                # absent query-role proof separate from independent fees.
+                query_affinities.append(dependency_input_hash)
         except (ValueError, TypeError):
             links.append({'signature': None, 'hash': dependency_input_hash})
+            query_affinities.append(dependency_input_hash)
     else:
         # A legacy parent has no frozen role-affinity proof. Never substitute
         # a later mutable import index for that parent's original references.
         links.append({'signature': None, 'hash': None})
+        query_affinities.append(digest)
     from .indexed_input import IndexedResolver, describe_pages
     indexed_resolver = IndexedResolver(read, address=manifest['address'])
     indexed_sources = {}
@@ -296,7 +323,8 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
                 + ([{'hash': manifest['valuation_hash'], 'kind': 'valuation',
                      'payload': valuation}] if manifest.get('valuation_hash') else [])
                 + ([{'hash': dependency_input_hash, 'kind': 'archive-native-dependencies',
-                     'payload': dependency_input}] if dependency_input_hash else []),
+                     'payload': dependency_input}] if dependency_input_hash else [])
+                + [{'hash': h, 'kind': 'query-affinity', 'payload': cache.get(h)} for h in query_affinities],
             'dependency_input_hash': dependency_input_hash,
             'dependency_input': dependency_input, 'input_hash': digest}
 
@@ -506,6 +534,8 @@ def _quantity_episodes(points, *, supported, world_hash):
 
 def _valuation_inputs(loaded, boundaries, scope):
     value, world = loaded['valuation'], loaded['world']
+    if loaded['manifest']['dataset'] != 'synthetic':
+        return {}, 'No accepted genuine boundary inventory, historical mark and valued-flow adapter is present.'
     if not scope or not isinstance(value, dict) or value.get('kind') != 'synthetic-valuation-v1':
         return {}, 'Boundary inventories, marks and valued external flows are not supported.'
     try:
@@ -552,12 +582,22 @@ def analyze_archive(loaded, events):
     from .wallet_evidence import derive_wallet_evidence
     from .metric_evidence import compose_metric_decisions, apply_metric_decisions
     manifest = loaded['manifest']
-    scope, points, boundaries, gaps = _world_scope(loaded)
+    scope, points, boundaries, gaps = _world_scope(loaded) if manifest['dataset'] == 'synthetic' else (False, [], {}, [])
     events = deepcopy(events)
     adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
         wallet=manifest['address'], window=manifest['window'], events=events,
         source_consistency=loaded['consistency'], chronology=loaded['chronology'],
         source_receipts=loaded['receipts'], raw_sources=loaded.get('raw_sources', []))
+    if manifest['dataset'] == 'real':
+        # Genuine inputs use the common raw adapter, not the finite-world
+        # witness.  Query termination is separate from wallet membership;
+        # neither an uploaded source decision nor a terminal page activates it.
+        scope = (adapter['components']['historical_population']['state'] == 'PASS'
+                 and adapter['intervals']['report_period']['state'] == 'PASS')
+        gaps = [adapter['components']['historical_population']['reason']]
+        if adapter['query_coverage']['intervals']['report_period']['state'] != 'PASS':
+            gaps += adapter['query_coverage']['intervals']['report_period']['gaps']
+        gaps = sorted(set(gaps))
     native_rows = loaded['consistency']['transactions'].values()
     financial_scope = scope and all(all(r['native'].get(k, {}).get('state') == 'PASS'
         for k in ('wallet_network_fees_sol', 'native_wallet_delta_sol')) for r in native_rows)
@@ -586,14 +626,20 @@ def analyze_archive(loaded, events):
     intervals = {}
     start, end = utc(manifest['window']['start']), utc(manifest['window']['end'])
     for name, begin in (('report_period', start), ('four_weeks', end - timedelta(days=28)), ('verification_90d', end - timedelta(days=90))):
-        interval_known = scope and utc(loaded['world']['start']) <= begin
+        interval_known = (scope and utc(loaded['world']['start']) <= begin) if manifest['dataset'] == 'synthetic' else adapter['intervals'][name]['state'] == 'PASS'
         intervals[name] = {'start': begin.isoformat(), 'end': end.isoformat(), 'status': 'complete' if interval_known else 'unknown',
-                           'evidence': [manifest['world_hash']] if scope else [],
-                           'reason': None if interval_known else '; '.join(gaps) or 'Finite-world evidence does not span this independent interval.'}
+                           'evidence': ([manifest['world_hash']] if scope else []) if manifest['dataset'] == 'synthetic' else adapter['intervals'][name]['evidence'],
+                           'reason': None if interval_known else ('; '.join(gaps) or 'Finite-world evidence does not span this independent interval.')
+                               if manifest['dataset'] == 'synthetic' else adapter['intervals'][name]['reason']}
     with localcontext() as ctx:
         ctx.prec = 192
         economic, economic_gap = _valuation_inputs(loaded, boundaries, financial_scope)
-        result = analyze(events, start.isoformat(), end.isoformat(), history_complete=financial_scope, interval_coverage=intervals, **economic)
+        # Acquisition/valuation loss is applied by per-metric dependencies.
+        # Complete physical history must not become incomplete solely because
+        # an unrelated monetary prerequisite is absent.
+        result = analyze(events, start.isoformat(), end.isoformat(),
+            history_complete=financial_scope if manifest['dataset'] == 'synthetic' else scope,
+            interval_coverage=intervals, **economic)
     if intervals['verification_90d']['status'] != 'complete':
         result['metrics']['completed_positions_90d'].update(value=None, status='unknown', reason=intervals['verification_90d']['reason'])
         result['metric_coverage']['completed_positions_90d']['metric_status'] = 'unknown'
@@ -684,7 +730,7 @@ def analyze_archive(loaded, events):
         if metric['status'] == 'unknown' and not scope and metric['population'] != result['metrics']['observed_network_fees_sol']['population']:
             metric['reason'] = '; '.join(gaps) + ' ' + (metric.get('reason') or '')
         if metric['status'] == 'known' and metric is not result['metrics']['observed_network_fees_sol']:
-            metric['evidence'] = sorted(set(metric.get('evidence', []) + ([manifest['world_hash']] if scope else [])
+            metric['evidence'] = sorted(set(metric.get('evidence', []) + ([manifest['world_hash']] if scope and manifest.get('world_hash') else [])
                 + ([manifest['valuation_hash']] if metric is result['metrics']['economic_pnl_sol'] and economic else [])))
     components = deepcopy(adapter['components'])
     interval_checks = deepcopy(adapter['intervals'])
@@ -723,7 +769,7 @@ def analyze_archive(loaded, events):
     requirements = compose_metric_decisions(components, interval_checks, metric_observations=result['metrics'])
     result = apply_metric_decisions(result, requirements)
     return result, events, {'version': METHOD, 'dataset': manifest['dataset'],
-        'scope': 'Synthetic enumerated finite world; development only' if manifest['dataset'] == 'synthetic' else 'Imported selected native records; historical wallet completeness unproved',
+        'scope': 'Synthetic enumerated finite world; development only' if manifest['dataset'] == 'synthetic' else 'Archived native records with independently derived query and historical-membership scopes',
         'real_acceptance': 'NOT_APPLICABLE_SYNTHETIC' if manifest['dataset'] == 'synthetic' else 'BLOCKED',
         'population_state': 'PASS' if financial_scope else 'UNKNOWN', 'quantity_population_state': 'PASS' if scope else 'UNKNOWN', 'gaps': gaps,
         'source_receipts': loaded['receipts'], 'source_consistency': loaded['consistency'], 'chronology': loaded['chronology'],
@@ -731,6 +777,7 @@ def analyze_archive(loaded, events):
         'account_quantity_points': points, 'quantity_episodes': _quantity_episodes(points, supported=scope, world_hash=manifest.get('world_hash')),
         'boundary_inventory': boundaries, 'metric_requirements': requirements,
         'wallet_evidence': adapter, 'component_checks': components, 'interval_checks': interval_checks,
+        'query_coverage': adapter['query_coverage'], 'query_accounting': adapter['query_accounting'],
         'input_hash': loaded['input_hash'], 'provider_requests': 0, 'credential_lookups': 0}
 
 

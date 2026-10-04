@@ -115,7 +115,9 @@ def test_unreviewed_opcodes_do_not_fall_back_to_balance_inference(program, hexad
     with pytest.raises(CompiledInstructionError) as caught:
         normalize_instruction({'programId': KEYS[program], 'accounts': [], 'data': binary_base58(hexadecimal)},
                               list(KEYS.values()), signers=set(KEYS.values()))
-    assert caught.value.code == 'unsupported-opcode'
+    # Opcode21 now has a pinned read-only getter adapter, but this original
+    # negative still supplies no required mint account and remains rejected.
+    assert caught.value.code == ('unsupported-account-arity' if program == 'token' and hexadecimal == '15' else 'unsupported-opcode')
 
 
 def test_standard_authority_discriminants_and_one_byte_option():

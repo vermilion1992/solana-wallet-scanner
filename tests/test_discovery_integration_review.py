@@ -65,10 +65,40 @@ def wait_record(client, collection, identifier, terminal=("completed", "partial"
 
 
 def save_cohort(store, candidates):
-    identifier = "a" * 32
-    store.put("discovery_cohorts", identifier, {"id": identifier, "created_at": "2026-10-02T00:00:00+00:00",
-              "status": "completed", "candidates": candidates, "counts": {}, "evidence": [], "limitations": []})
-    return identifier
+    # The former flags-only fixture cannot meet source-backed audit eligibility.
+    # Preserve each assertion's intent using archived primary schema examples;
+    # negative identity declarations also change the corresponding raw proof.
+    from tests.test_discovery_audit_plan import development_cohort
+    cohort = development_cohort(store, [row["address"] for row in candidates])
+    for supplied, row in zip(candidates, cohort["candidates"]):
+        validation = supplied["validation"]
+        if validation.get("identity_verified") is False:
+            digest = row["validation"]["transaction_evidence_hash"]
+            raw = store.evidence(digest)
+            raw["meta"]["err"] = {"InstructionError": [0, "InvalidAccountData"]}
+            replacement = store.archive(raw)
+            row["validation"]["transaction_evidence_hash"] = replacement
+        elif validation.get("account_type") != "system-owned signer":
+            digest = row["validation"]["account_evidence_hash"]
+            raw = store.evidence(digest)
+            raw["result"]["value"]["owner"] = OTHER_ADDRESS
+            replacement = store.archive(raw)
+            row["validation"]["account_evidence_hash"] = replacement
+        elif row["address"] not in validation.get("economic_signers", []):
+            digest = row["validation"]["transaction_evidence_hash"]
+            raw = store.evidence(digest)
+            for field in ("preTokenBalances", "postTokenBalances"):
+                raw["meta"][field][0]["owner"] = OTHER_ADDRESS
+            replacement = store.archive(raw)
+            row["validation"]["transaction_evidence_hash"] = replacement
+        else:
+            continue
+        row["evidence"] = [replacement if h == digest else h for h in row["evidence"]]
+        for link in cohort["evidence"]:
+            if link["hash"] == digest:
+                link["hash"] = replacement
+    store.put("discovery_cohorts", cohort["id"], cohort)
+    return cohort["id"]
 
 
 def candidate(address=ADDRESS, **validation):
@@ -457,8 +487,8 @@ def test_mint_risk_requires_finalized_anchor_and_archives_requested_mint_with_po
     assert client.post("/api/provider/key", json={"api_key": TEST_KEY}).status_code == 200
     identifier = save_cohort(app.state.store, [candidate(wallet)])
     cohort = app.state.store.get("discovery_cohorts", identifier)
-    cohort["universe"] = [{"selected": True, "base_token_address": mint, "quote_token_address": WSOL,
-                          "evidence_hash": pool_hash, "observed_at": now.isoformat(), "liquidity_usd": "123000"}]
+    cohort["universe"].append({"selected": True, "base_token_address": mint, "quote_token_address": WSOL,
+                              "evidence_hash": pool_hash, "observed_at": now.isoformat(), "liquidity_usd": "123000"})
     app.state.store.put("discovery_cohorts", identifier, cohort)
     response = client.post(f"/api/discovery/{identifier}/audit", json={})
     assert wait_record(client, "scans", response.json()["scan_id"])["status"] == "completed"

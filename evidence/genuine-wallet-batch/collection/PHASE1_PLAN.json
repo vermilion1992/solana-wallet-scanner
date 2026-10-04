@@ -1,0 +1,32 @@
+{
+  "kind": "bounded-native-collection-plan-v1",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "retries": 0,
+  "purpose": "Phase1: screen the existing supported PumpSwap public-wallet seed for bounded90day activity; provider-query terminal status is not historical-owner completeness.",
+  "requests": [
+    {
+      "id": "screen-4dr",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+        {
+          "transactionDetails": "signatures",
+          "limit": 1000,
+          "sortOrder": "desc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all",
+            "blockTime": {
+              "gte": 1783296000,
+              "lt": 1791072000
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

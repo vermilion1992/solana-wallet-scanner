@@ -191,7 +191,7 @@ def _request(payload, address):
         raise ValueError('Indexed request address disagrees with the report wallet')
     options = params[1]
     if (not isinstance(options, dict)
-        or set(options) - {'transactionDetails', 'limit', 'sortOrder', 'commitment', 'maxSupportedTransactionVersion', 'filters', 'paginationToken'}
+        or set(options) - {'transactionDetails', 'limit', 'sortOrder', 'commitment', 'maxSupportedTransactionVersion', 'filters', 'paginationToken', 'encoding'}
         or options.get('transactionDetails') != 'full' or options.get('commitment') != 'finalized'
         or type(options.get('limit')) is not int or not 1 <= options['limit'] <= MAX_PAGE_RECORDS
         or options.get('sortOrder') not in ('asc', 'desc')
@@ -199,6 +199,9 @@ def _request(payload, address):
         or not 0 <= options['maxSupportedTransactionVersion'] <= 1
         or 'paginationToken' in options and _cursor(options['paginationToken']) is None):
         raise ValueError('Indexed request options are outside the reviewed source contract')
+    encoding = options.get('encoding', 'json')
+    if encoding not in ('json', 'jsonParsed'):
+        raise ValueError('Indexed full transaction encoding is unsupported; only json and jsonParsed have reviewed native schemas')
     filters = options.get('filters')
     if (not isinstance(filters, dict) or set(filters) - {'status', 'tokenAccounts', 'blockTime'}
         or filters.get('status') not in ('any', 'succeeded', 'failed')
@@ -211,7 +214,8 @@ def _request(payload, address):
         raise ValueError('Indexed block-time bounds are malformed')
     scope = {'address': params[0], 'status': filters['status'], 'token_accounts': filters['tokenAccounts'],
              'block_time': deepcopy(block_time), 'sort_order': options['sortOrder'], 'limit': options['limit'],
-             'max_version': options['maxSupportedTransactionVersion'], 'commitment': options['commitment']}
+             'max_version': options['maxSupportedTransactionVersion'], 'commitment': options['commitment'],
+             'encoding': encoding}
     return request, response, scope
 
 

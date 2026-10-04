@@ -1,0 +1,20 @@
+{
+  "kind": "phase1-candidate-screen-decision",
+  "state": "REJECTED_AS_FIRST_B3_CANDIDATE",
+  "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+  "reason": "1000records span only about2.6days and cursor remains nonterminal; modest activity notdemonstrated. Do not expand this candidate to unbounded90day collection.",
+  "observed_records": 1000,
+  "min_block_time": 1790846048,
+  "max_block_time": 1791068856,
+  "cursor_terminal": false,
+  "failed_observed": 18,
+  "requests_used": 1,
+  "conservative_credits_used": 10,
+  "billing_actual_credits": null,
+  "runner_sha256": "5dca43adae5254c51b2b2dcd1df607d98d435e741366c5e13fd4e6cc0e9dea43",
+  "tests": "57 offlinecollectioncontrolsPASS beforedispatch",
+  "plan_sha256": "f6f949937792e33fcdd11749051d3e8bf7e092c614a5bfd1c0da2d107d13da73",
+  "zero_retries": true,
+  "genuine_wallet_acceptance": false,
+  "required_historical_source_gap": "Closed/reassigned/non-ATA historical membership across both tokenprograms remains unproved."
+}

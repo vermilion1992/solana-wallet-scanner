@@ -1,0 +1,15 @@
+{
+  "address": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+  "choice": "Firstdeterministicallyscreenedtwo-waypoollead withmodestobserved34-record90dayquery; noP&L selection.",
+  "screening_terminal": false,
+  "screening_count": 34,
+  "required_next_step": "Explicitfullpagechainterminal plusoldercosthistory; retainedqueryscope isnotwholewallet proof.",
+  "rejected_seed": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+  "other_screened_counts": [
+    38,
+    38,
+    39,
+    46
+  ],
+  "public_lead_identity": "Unverifieduntilnativeevent signer/owner facts andsystemaccountsource arechecked."
+}

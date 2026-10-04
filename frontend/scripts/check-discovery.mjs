@@ -36,6 +36,7 @@ try {
   const {
     DiscoveryView,
     auditableCandidates,
+    plannedAuditAddresses,
     qualifiedCandidates,
     strictFilterSummary,
   } = require(join(output, "Discovery.js"));
@@ -122,6 +123,12 @@ try {
   assert.ok(initial.includes("third-party sample is not 30-day accounting"));
 
   assert.deepEqual(auditableCandidates(cohort), []);
+  const plannedCohort = { ...cohort, candidates: [verified], audit_plan: { selected_addresses: [], deferred: [], excluded: [] } };
+  assert.deepEqual(plannedAuditAddresses(plannedCohort, 5), []);
+  assert.deepEqual(plannedAuditAddresses(plannedCohort, 5, [address]), []);
+  assert.deepEqual(plannedAuditAddresses({ ...plannedCohort, audit_plan: { ...plannedCohort.audit_plan, deferred: [{ address }] } }, 5, [address]), [address]);
+  assert.deepEqual(plannedAuditAddresses({ ...plannedCohort, audit_plan: { ...plannedCohort.audit_plan, selected_addresses: [address, address, "invalid"] } }, 5), [address]);
+  assert.deepEqual(plannedAuditAddresses({ ...cohort, candidates: [verified] }, 5), [address]);
   assert.deepEqual(auditableCandidates({ ...cohort, candidates: [verified] }), [
     verified,
   ]);

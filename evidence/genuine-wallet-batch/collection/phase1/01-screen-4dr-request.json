@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":1,"method":"getTransactionsForAddress","params":["4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",{"transactionDetails":"signatures","limit":1000,"sortOrder":"desc","commitment":"finalized","maxSupportedTransactionVersion":1,"filters":{"status":"any","tokenAccounts":"all","blockTime":{"gte":1783296000,"lt":1791072000}}}]}

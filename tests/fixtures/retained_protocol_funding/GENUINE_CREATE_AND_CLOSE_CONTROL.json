@@ -1,0 +1,123 @@
+{
+  "source": "evidence/genuine-wallet-batch/collection/phase5/02-lifetime-page-1-response.raw.gz",
+  "source_decompressed_sha256": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a",
+  "records": [
+    {
+      "source_path": "result.data.80",
+      "signature": "p6mphEpeQT7v1nibFhLyih5ium8XRiLfadKtCnAzmeaiGJanC3Yk1B2ghvHSt96XRX8KGcxiBkSz4MpvMyS9hzn",
+      "time": "2026-09-28T21:14:15+00:00",
+      "block_time": 1790630055,
+      "slot": 451436705,
+      "transaction_index": 372,
+      "execution_err": null,
+      "fee_lamports": 30000,
+      "payer": "Gtd9Dkgn2SAiPwvKNAp23eWontHjYEuYCbT52T2eMszD",
+      "balances": {
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY": {
+          "index": 1,
+          "pre_lamports": 11487781,
+          "post_lamports": 12833981
+        },
+        "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg": {
+          "index": 9,
+          "pre_lamports": 1346200,
+          "post_lamports": 0
+        }
+      },
+      "protocol_routes": [
+        {
+          "path": "result.data.80.transaction.message.instructions.4",
+          "data_hex": "561fc057a3574fee",
+          "account_addresses": [
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "C2aFPdENg4A2HQsmrd5rTw5TaYBX5Ku887cWjbFKtZpw",
+            "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg",
+            "GS4CU59F31iL7aR2Q8zVS8DRrcRnXX1yjQ66TqNVQnaR",
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ]
+        },
+        {
+          "path": "result.data.80.transaction.message.instructions.5",
+          "data_hex": "f945a4da9667548a",
+          "account_addresses": [
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg",
+            "GS4CU59F31iL7aR2Q8zVS8DRrcRnXX1yjQ66TqNVQnaR",
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ]
+        }
+      ],
+      "system_creates": []
+    },
+    {
+      "source_path": "result.data.83",
+      "signature": "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+      "time": "2026-10-04T02:08:20+00:00",
+      "block_time": 1791079700,
+      "slot": 453117276,
+      "transaction_index": 517,
+      "execution_err": null,
+      "fee_lamports": 58918,
+      "payer": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "balances": {
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY": {
+          "index": 0,
+          "pre_lamports": 692280810,
+          "post_lamports": 125740592
+        },
+        "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg": {
+          "index": 7,
+          "pre_lamports": 0,
+          "post_lamports": 1346200
+        }
+      },
+      "protocol_routes": [
+        {
+          "path": "result.data.83.transaction.message.instructions.3",
+          "data_hex": "66063d1201daebeaed87884878000000f0705e230000000001",
+          "account_addresses": [
+            "39e3inYn9tDu4GAeBJ4L1MZrRW8hMhu2yqJ59vhPeCai",
+            "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "ADyA8hdefvWN2dbGGWFotbzWxrAvLW83WG6QCVXvJKqw",
+            "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+            "So11111111111111111111111111111111111111112",
+            "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+            "FnSHTxNGXTA1f8EWKWKLKHeps8w8ArBQ3p7Emnr66jxV",
+            "5LTwGaTZgwAKNoTMyFhyxhdKBLygmeB7zEy85EWV2Mxe",
+            "5UYBcWeQiGkhifyq8VdcQexKbsnGPkxkGb9TYukABRT9",
+            "G5UZAVbAf46s7cKWoyKu8kYTip9DGTpbLZ2qa9Aq69dP",
+            "BWXT6RUhit9FfJQM3pBmqeFLPYmuxgmyhMGC5sGr8RbA",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "11111111111111111111111111111111",
+            "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+            "GS4CU59F31iL7aR2Q8zVS8DRrcRnXX1yjQ66TqNVQnaR",
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+            "k7hBJaidpgPPn6mw8M8Xqnm2nfopYuKeAGyjg3bLcC1",
+            "CftgJtw5B2D8FH1APuoY6eDGi3xayDPNYxmdMfNPNCST",
+            "C2aFPdENg4A2HQsmrd5rTw5TaYBX5Ku887cWjbFKtZpw",
+            "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg",
+            "5PHirr8joyTMp9JMm6nW7hNDVyEYdkzDqazxPD7RaTjx",
+            "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ",
+            "EWFo8yhwRMVhoqiSLKVUZCjTLdXSHBPuLxoXGqQoQ3nX",
+            "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+            "6rVkF4HSgy1jrnC3HogfRgPHrq4CtLg5f11URpsC4i9D"
+          ]
+        }
+      ],
+      "system_creates": [
+        {
+          "path": "result.data.83.meta.innerInstructions.1.instructions.0",
+          "outer_index": 3,
+          "stack_height": 2,
+          "data_hex": "00000000988a14000000000089000000000000000c14defc825ec67694250818bb654065f4298d3156d571b4d4f8090c18e9a863",
+          "source": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+          "new_account": "9DVALworRmwiFeFgqqRGYkrsQxCJsQ9u1VCQiG5Fk8kg",
+          "lamports": 1346200,
+          "space": 137,
+          "owner": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+        }
+      ]
+    }
+  ]
+}

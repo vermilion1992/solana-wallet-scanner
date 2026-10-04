@@ -41,8 +41,10 @@ def trade(address=WALLET, signature=SIGNATURE, kind="buy", stamp=STAMP):
 
 
 def transaction(address=WALLET, signature=SIGNATURE):
+    # Canonical jsonParsed signer/writable/source roles from the pinned native
+    # RPC schema; the partial fixture retains no claim of signed provenance.
     return {"slot": 10, "blockTime": STAMP, "version": 0,
-            "transaction": {"signatures": [signature], "message": {"accountKeys": [{"pubkey": address, "signer": True}, {"pubkey": TOKEN_ACCOUNT, "signer": False}], "instructions": []}},
+            "transaction": {"signatures": [signature], "message": {"accountKeys": [{"pubkey": address, "signer": True, "writable": True, "source": "transaction"}, {"pubkey": TOKEN_ACCOUNT, "signer": False, "writable": True, "source": "transaction"}], "instructions": []}},
             "meta": {"err": None, "preTokenBalances": [{"accountIndex": 1, "mint": MINT, "owner": address, "uiTokenAmount": {"amount": "10", "decimals": 6}}],
                      "postTokenBalances": [{"accountIndex": 1, "mint": MINT, "owner": address, "uiTokenAmount": {"amount": "20", "decimals": 6}}]}}
 
@@ -218,7 +220,10 @@ class DiscoveryTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_raw_keys_and_v0_loaded_addresses_identify_signer_but_malformed_header_does_not(self):
         raw = transaction()
-        raw["transaction"]["message"].update(accountKeys=[WALLET], header={"numRequiredSignatures": 1})
+        raw["transaction"]["message"].update(
+            accountKeys=[WALLET],
+            header={"numRequiredSignatures": 1, "numReadonlySignedAccounts": 0, "numReadonlyUnsignedAccounts": 0},
+            addressTableLookups=[{"accountKey": MINT, "writableIndexes": [0], "readonlyIndexes": []}])
         raw["meta"]["loadedAddresses"] = {"writable": [TOKEN_ACCOUNT], "readonly": []}
         result = await self.discover(FakeGateway(raws={SIGNATURE: raw}))
         self.assertEqual(result["candidates"][0]["status"], "candidate")

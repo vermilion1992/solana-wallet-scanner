@@ -1,0 +1,6 @@
+{"path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS.json", "bytes": 177283, "sha256": "ff9d08432e693bb91bac33a223adbe884b4c4bd5fc6365590edc269387f2b9a6", "report_fee_sol": "0.000158868", "selected_lot_loss_sol": "-0.013270924", "hold_seconds": 529, "all_wallet_fee_lamports": 464817, "provider_calls": 0, "production_imports": 0}
+
+PASS: original expectation bytes remain SHA-256 ff9d08432e693bb91bac33a223adbe884b4c4bd5fc6365590edc269387f2b9a6
+PASS: all fields identical except archive_sha256 and archive_binding_scope
+PASS: final archive SHA-256 eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4
+PASS: no production imports, provider calls or application acceptance execution

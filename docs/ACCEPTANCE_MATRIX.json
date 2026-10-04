@@ -283,7 +283,8 @@
       "axis": "Representation",
       "selectors": [
         "tests/test_compiled_instructions.py::*",
-        "tests/test_compiled_report_integration.py::*"
+        "tests/test_compiled_report_integration.py::*",
+        "tests/test_compiled_getter.py::*"
       ]
     },
     {
@@ -319,6 +320,37 @@
       "axis": "Report/rebuild",
       "selectors": [
         "tests/test_report_view.py::*"
+      ]
+    },
+    {
+      "id": "indexed-query-scope",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_real_coverage.py::*",
+        "tests/test_retained_protocol_funding.py::*"
+      ]
+    },
+    {
+      "id": "discovery-plan-evidence",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_discovery_audit_plan.py::*",
+        "tests/test_discovery_plan_views.py::*",
+        "tests/test_discovery_native_identity.py::*"
+      ]
+    },
+    {
+      "id": "bounded-acquisition-controls",
+      "axis": "Acquisition safety",
+      "selectors": [
+        "tests/test_bounded_collection.py::*"
+      ]
+    },
+    {
+      "id": "genuine-workflow-oracle",
+      "axis": "User path",
+      "selectors": [
+        "tests/test_genuine_collection_workflow.py::*"
       ]
     }
   ],

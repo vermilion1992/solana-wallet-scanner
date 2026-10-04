@@ -1,4 +1,37 @@
-# Active assignment — CAP-01 offline real-evidence adapter batch
+# Active assignment — genuine wallet product batch, 4 October 2026
+
+The user explicitly requested all four next items: finish the real evidence path,
+select a manageable existing public wallet, collect bounded genuine inputs, and
+independently verify the normal report/rebuild/export workflow before expanding
+discovery. Continue from private branch `codex/product-completion`, exact HEAD
+`00b70e6e2222c473a8d2b95be93bc6af260bfdcd`, which binds tested application
+`73c9eb5a6fb1cabf7eca8126f029da3aff20f774`. The 204-file source manifest was
+rechecked and matches
+`e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09`.
+
+This later authorization permits a new separately bounded read-only collection
+on the confirmed Free account: at most 30 requests and 1,000 conservative credits
+across all phases, no retries, purchases, upgrades or automatic spending. The
+confirmed cycle is 2 October–2 November 2026. Keep the previous 10-request probe
+and exhausted setup-pilot ledger unchanged; use a separate durable budget and
+record conservative bounds separately from unobserved vendor billing. Freeze
+and validate each exact phase plan before dispatch. Credentials remain session
+only and excluded from raw evidence, Git and validation. Phantom identifies the
+wallet software, not an address or a signing requirement.
+
+Keep query pagination completeness separate from historical owner-population
+completeness. Current primary documentation does not explicitly guarantee
+formerly closed/reassigned account membership for both token programs. Do not
+manufacture that guarantee with imported flags or selected real transactions.
+Implement every usable raw derivation and preserve independent supported facts;
+record a precise source blocker if complete genuine acceptance cannot be proved.
+Synthetic interface cases remain development evidence. Full product readiness
+still requires genuine B1/B2/B3 acceptance.
+
+The assignments below remain as history; their earlier limits on follow-on
+collection are superseded only by this explicit later authorization.
+
+# Prior assignment — CAP-01 offline real-evidence adapter batch
 
 Continue only from private `vermilion1992/solana-wallet-scanner`, branch
 `codex/product-completion`, reviewed HEAD

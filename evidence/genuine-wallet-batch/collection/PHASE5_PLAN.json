@@ -1,0 +1,75 @@
+{
+  "kind": "bounded-native-collection-plan-v1",
+  "budget_id": "genuine-wallet-2026-10-04",
+  "request_cap": 30,
+  "credit_cap": 1000,
+  "retries": 0,
+  "purpose": "Phase5: firstpubliclead has34observed90dayrecords; acquire up3full100row lifetimepages forraworigins plusfinalizedslot, stoppingatfirstterminalresponse. A completequery isnot a historicalowner witness.",
+  "requests": [
+    {
+      "id": "finalized-slot",
+      "method": "getSlot",
+      "params": [
+        {
+          "commitment": "finalized"
+        }
+      ]
+    },
+    {
+      "id": "lifetime-page-1",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        {
+          "transactionDetails": "full",
+          "limit": 100,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lifetime-page-2",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        {
+          "transactionDetails": "full",
+          "limit": 100,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all"
+          }
+        }
+      ],
+      "pagination_from": "lifetime-page-1"
+    },
+    {
+      "id": "lifetime-page-3",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+        {
+          "transactionDetails": "full",
+          "limit": 100,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all"
+          }
+        }
+      ],
+      "pagination_from": "lifetime-page-2"
+    }
+  ]
+}
