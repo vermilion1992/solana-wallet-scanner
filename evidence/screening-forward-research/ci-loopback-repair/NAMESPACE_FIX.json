@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-10-04T23:30:49.287013+00:00",
+  "confirmed_defect": "Fresh isolated Linux network namespace has loopback down, making real local transport tests fail with ENETUNREACH101.",
+  "reproduction": {
+    "scope": "Fresh isolated user/network namespace; no routes modified",
+    "bind": "127.0.0.1",
+    "outcome": "REPRODUCED",
+    "errno": 101,
+    "error": "[Errno 101] Network is unreachable"
+  },
+  "fix": "In each of three isolated hosted wrappers enable only dev lo, then exec existing privilege-dropping setpriv command; no routed interfaces/routes added.",
+  "changed_file": ".github/workflows/offline-focused.yml",
+  "parent_commit": "c321a332d66f64c61e0a4d2e7796890b39e76f3d",
+  "before_sha256": "d4f9942dbb2d02cc57e746486dc5d3da973baf18db588cecdb4a164219272fa0",
+  "after_sha256": "3b05e628458f6d707fbbf0034960d3060ec97596a484e0f77eb5e6a4ee27130b",
+  "affected_validation": {
+    "command": ".venv/bin/python -m pytest -q tests/test_validation_gates.py",
+    "result": "154 passed in3.56s",
+    "log": "namespace-validation-controls.log"
+  },
+  "not_performed_here": [
+    "No hosted rerun/cancellation.",
+    "No production application source changes.",
+    "No local full suite."
+  ],
+  "parent_owns": "Positive real WebSocket tests plus no-external-route check and final exact-candidate gate/publication."
+}

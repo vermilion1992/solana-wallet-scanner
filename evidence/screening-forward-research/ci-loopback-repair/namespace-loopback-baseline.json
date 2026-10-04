@@ -1,0 +1,1 @@
+{"scope": "Fresh isolated user/network namespace; no routes modified", "bind": "127.0.0.1", "outcome": "REPRODUCED", "errno": 101, "error": "[Errno 101] Network is unreachable"}

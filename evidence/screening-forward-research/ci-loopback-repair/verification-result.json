@@ -1,0 +1,1 @@
+{"state": "PASS", "interfaces": ["lo"], "default_routes": 0, "nonloopback_routes": 0, "local_transport_tests": 2, "source_sha256": "995a6d9ab8247a9bcb7ff8ce083a3e3f680d0d09818fa6723f052b019a45322f", "new_live_claim": false}
