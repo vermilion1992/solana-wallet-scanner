@@ -31,7 +31,8 @@ def _secret_equal(candidate, expected):
 
 def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
     """Read every linked raw alternative; do not trust cached interpreted rows."""
-    from .archive_input import _safe_decoder_container
+    from .archive_input import archived_record
+    from .indexed_input import IndexedResolver
     from .source_consistency import SOURCE_HASH_LIMIT, merge_source_manifests
     selected, refs = set(), []
     rows = collected.get('transactions', [])
@@ -62,6 +63,19 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
         # No arbitrary prefix may become a supported source set.
         return [], [], [], [{'state': 'UNKNOWN', 'reason': 'Raw adapter source set exceeds the fixed inspection budget.'}]
     cache, records, sources, receipts, seen = {}, [], [], [], set()
+    def read(digest, role):
+        if digest not in cache:
+            try:
+                cache[digest] = store.evidence(digest)
+            except (EvidenceError, ValueError, OSError):
+                cache[digest] = None
+            receipts.append({'hash': digest, 'role': role,
+                'state': 'PASS' if cache[digest] is not None else 'UNKNOWN',
+                'reason': 'Checksum-verified raw bytes; authenticity and population remain separate.'
+                    if cache[digest] is not None else 'Still-linked raw source is unavailable.'})
+        return cache[digest]
+    resolver = IndexedResolver(read, address=address)
+    indexed_sources = {}
     for ref in refs:
         if (not isinstance(ref, dict) or not isinstance(ref.get('hash'), str) or ref['hash'] not in hashes
                 or not isinstance(ref.get('kind'), str)
@@ -76,24 +90,15 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
             records.append({'signature': signature, 'evidence_hash': digest, 'raw': None})
             continue
         digest = ref['hash']
-        if digest not in cache:
-            try:
-                cache[digest] = store.evidence(digest)
-            except (EvidenceError, ValueError, OSError):
-                cache[digest] = None
-            receipts.append({'hash': digest, 'role': ref.get('kind'),
-                'state': 'PASS' if cache[digest] is not None else 'UNKNOWN',
-                'reason': 'Checksum-verified raw bytes; authenticity and population remain separate.'
-                    if cache[digest] is not None else 'Still-linked raw source is unavailable.'})
+        read(digest, ref.get('kind'))
         identity = (ref.get('kind'), ref.get('signature'), digest)
         if identity in seen:
             continue
         seen.add(identity)
         payload = cache[digest]
         if ref.get('kind') in ('transaction', 'getTransaction'):
-            raw = payload.get('result') if isinstance(payload, dict) and 'result' in payload else payload
-            records.append({'signature': ref.get('signature'), 'evidence_hash': digest,
-                            'raw': raw if _safe_decoder_container(raw) else None})
+            records.append(archived_record(payload, ref.get('signature'), digest, read,
+                                          address=address, resolver=resolver, source_cache=indexed_sources))
         else:
             sources.append({'hash': digest, 'kind': ref.get('kind'),
                             'signature': ref.get('signature'), 'payload': payload})
@@ -352,6 +357,11 @@ def create_app(data_dir, launch_token=None):
             report["evidence"] += witness_refs
             report["notes"][0] = "Imported archive checks establish byte integrity and selected raw observations; genuine chain authentication and historical wallet completeness require independent evidence."
             report["notes"].append(archive_accounting["scope"] + "; imported records do not establish native collector ancestry or complete real-wallet acceptance.")
+            if archive_loaded.get('indexed_pages') is not None:
+                report['coverage']['indexed_sources'] = archive_loaded['indexed_pages']
+                report['coverage']['indexed_record_sources'] = [
+                    {'signature': r['signature'], 'evidence_hash': r['evidence_hash'], **r['indexed_source']}
+                    for r in archive_loaded['all_records'] if 'indexed_source' in r]
         if rebuilt_from:
             report.update(rebuilt_from=rebuilt_from["id"], previous_methodology=rebuilt_from.get("methodology"),
                           previous_history_methodology=rebuilt_from.get("coverage", {}).get("history_evidence", {}).get("version"),
@@ -964,7 +974,11 @@ def create_app(data_dir, launch_token=None):
     @app.post("/api/archives/import")
     async def archive_import(request: Request):
         from .archive_input import import_archive, load_archive, collected_archive
-        digest = import_archive(store, await request.body(),
+        content = await request.body()
+        from .indexed_input import convert_indexed_archive, archive_version, VERSION as INDEXED_VERSION
+        if archive_version(content) == INDEXED_VERSION:
+            content = convert_indexed_archive(content)
+        digest = import_archive(store, content,
                                 reserve_bytes=settings()["limits"]["min_free_disk_mb"] * 1024 ** 2)
         loaded = load_archive(store, digest)
         manifest = loaded["manifest"]

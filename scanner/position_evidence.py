@@ -35,7 +35,7 @@ from .source_consistency import SOURCE_HASH_LIMIT
 from .transaction_format import supported_transaction_format
 from .instruction_scope import inspect_instruction, InstructionEvidenceError
 
-VERSION = 'account-position-evidence-v10'
+VERSION = 'account-position-evidence-v11'
 _HASH = re.compile(r'^[a-f0-9]{64}$')
 VENUES = {PUMP, PUMP_SWAP, JUPITER, RAYDIUM_AMM, RAYDIUM_CPMM, WHIRLPOOL}
 HOLD_NEEDS = ('collection', 'identity', 'source_consistency', 'opening_zero', 'chronology', 'placement', 'quantities',
@@ -125,6 +125,9 @@ def _balance(raw, keys, account, name):
 
 def _quantity_point(raw, wallet, account):
     """Validate account-level exchange quantities without SOL consideration/fees."""
+    from .transaction_format import instruction_view, original_instruction_paths
+    original = raw
+    raw = instruction_view(raw)
     if not supported_transaction_format(raw):
         raise ValueError('Transaction format is unsupported by this application')
     meta = raw.get('meta')
@@ -245,6 +248,7 @@ def _quantity_point(raw, wallet, account):
         raise ValueError('Primary account balance change does not reconcile to parsed route transfers')
     if inward and outward:
         raise ValueError('Opposing account movements require separate economic episodes; netting is insufficient')
+    point['paths'] = original_instruction_paths(original, point['paths'])
     if delta:
         if route is None:
             raise ValueError('A quantity change lacks a supported economic exchange instruction')
@@ -377,7 +381,9 @@ def derive_position_evidence(store, address, window, checkpoint=None, collected=
             except (ValueError, TypeError, KeyError, IndexError, OverflowError) as exc:
                 errors.append(str(exc))
                 if isinstance(exc, InstructionEvidenceError):
-                    paths.append({'signature': receipt['signature'], 'hash': digest, 'paths': exc.paths,
+                    from .transaction_format import original_instruction_paths
+                    paths.append({'signature': receipt['signature'], 'hash': digest,
+                                  'paths': original_instruction_paths(raw, exc.paths),
                                   'state': 'UNKNOWN', 'reason': str(exc)})
         shared_paths = shared.get('source_paths', [])
         for item in shared_paths if isinstance(shared_paths, list) else []:

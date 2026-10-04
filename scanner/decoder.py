@@ -11,6 +11,7 @@ from collections import Counter, defaultdict
 from decimal import Decimal
 
 from .accounting import raw_quantity, canonical
+from .transaction_format import instruction_view, supported_transaction_format
 
 TOKEN_PROGRAMS = {'spl-token', 'spl-token-2022'}
 TOKEN_IDS = {'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
@@ -45,6 +46,7 @@ def decode_transactions(transactions, address):
         raw = record.get('raw')
         if isinstance(raw, dict) and 'result' in raw:
             raw = raw['result']
+        raw = instruction_view(raw)
         prepared.append((record, raw, index))
     slots = Counter(raw.get('slot') for _, raw, _ in prepared if isinstance(raw, dict))
     for record, raw, record_index in prepared:
@@ -86,7 +88,7 @@ def decode_transactions(transactions, address):
         if timestamp is None or not isinstance(timestamp, int) or isinstance(timestamp, bool):
             unsupported('Missing block time; exact window inclusion is unresolved')
         version = raw.get('version', 'legacy')
-        if isinstance(version, bool) or version not in ('legacy', 0):
+        if not supported_transaction_format(raw):
             unsupported('Unsupported transaction version')
             continue
         meta = raw.get('meta')
@@ -184,11 +186,14 @@ def decode_transactions(transactions, address):
             program = instruction.get('program')
             program_id = instruction.get('programId')
             parsed = instruction.get('parsed')
+            if 'parsed' in instruction and any(key in instruction for key in ('accounts', 'data')):
+                unsupported('Parsed and opaque instruction representations conflict', path)
+                continue
             if (program is not None and not isinstance(program, str) or
                 program_id is not None and not isinstance(program_id, str)):
                 unsupported('Instruction program identity has an invalid container type', path)
                 continue
-            expected_ids = {'system': {SYSTEM_ID}, 'spl-token': {'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'},
+            expected_ids = {'system': {SYSTEM_ID}, 'spl-token': TOKEN_IDS,
                             'spl-token-2022': {'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'},
                             'spl-associated-token-account': {ASSOCIATED_ID}, 'compute-budget': {COMPUTE_ID}}
             if program in expected_ids and program_id not in expected_ids[program]:

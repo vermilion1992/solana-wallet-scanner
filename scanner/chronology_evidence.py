@@ -9,9 +9,11 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime, timezone
+import hashlib
 import json
+import re
 
-VERSION = "slot-chronology-evidence-v2"
+VERSION = "slot-chronology-evidence-v3"
 
 
 def _integer(value):
@@ -22,17 +24,145 @@ def _hash(value):
     return value if isinstance(value, str) and value else None
 
 
-def reconcile_placements(records, *, page_receipts=(), block_receipts=(), checkpoint_indices=None):
+def _indexed_claims(receipts, records):
+    """Validate byte envelopes and retain scoped rejecting placement claims.
+
+    Frozen pointer associations can only add negative dependencies. A page's
+    parsed native transactionIndex is order proof only after exact-byte/page
+    validation; standalone raw indices and caller PASS flags are never proof.
+    """
+    from .indexed_input import validate_page_envelope, MAX_PAGES, MAX_LINKS
+    associations, native_slots, signatures = defaultdict(set), defaultdict(set), set()
+    for record in records:
+        if not isinstance(record, dict) or not isinstance(record.get('signature'), str):
+            continue
+        signature = record['signature']
+        signatures.add(signature)
+        if isinstance(record.get('indexed_source_hash'), str):
+            associations[record['indexed_source_hash']].add(signature)
+        raw = record.get('raw')
+        if isinstance(raw, dict) and _integer(raw.get('slot')):
+            native_slots[signature].add(raw['slot'])
+    receipts, facts, audit, fact_keys = list(receipts), [], [], set()
+
+    def add(signature, digest, *, slot=None, timestamp=None, index=None, accepted=False,
+            bounded=False, path=None, reason=None):
+        if not isinstance(signature, str) or not signature:
+            return
+        fact = {'signature': signature, 'hash': _hash(digest), 'slot': slot if _integer(slot) else None,
+                'timestamp': timestamp, 'index': index, 'accepted': accepted,
+                'bounded': bounded, 'raw_path': path, 'reason': reason}
+        key = json.dumps(fact, sort_keys=True, ensure_ascii=False, separators=(',', ':'))
+        if key not in fact_keys:
+            fact_keys.add(key)
+            facts.append(fact)
+
+    if len(receipts) > MAX_PAGES:
+        for signature in signatures:
+            add(signature, None, reason='Indexed source inspection budget exceeded')
+        return facts, [{'hash': None, 'state': 'UNKNOWN', 'reason': 'Indexed source inspection budget exceeded'}]
+    seen, indexed_count = set(), 0
+    for receipt in receipts:
+        digest = _hash(receipt.get('hash')) if isinstance(receipt, dict) else None
+        payload = receipt.get('payload') if isinstance(receipt, dict) else None
+        # The same frozen source is one claim. A substituted payload does not
+        # win by arrival order: process its rejection as an additional claim.
+        try:
+            encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()
+            verified = (isinstance(digest, str) and re.fullmatch(r'[a-f0-9]{64}', digest)
+                        and hashlib.sha256(encoded).hexdigest() == digest)
+        except (ValueError, TypeError, UnicodeError):
+            encoded, verified = b'', False
+        key = digest, hashlib.sha256(encoded).hexdigest()
+        if key in seen:
+            continue
+        seen.add(key)
+        if not verified:
+            reason = 'Still-linked indexed source is missing, corrupt or checksum-mismatched.'
+            affected = associations[digest] or signatures
+            for signature in affected:
+                add(signature, digest, reason=reason)
+            audit.append({'hash': _hash(digest), 'state': 'UNKNOWN', 'reason': reason, 'signatures': sorted(affected)})
+            continue
+        page = validate_page_envelope(payload)
+        indexed_count += len(page['records'])
+        if indexed_count > MAX_LINKS:
+            facts, fact_keys = [], set()
+            for signature in signatures:
+                add(signature, None, reason='Indexed native record inspection budget exceeded')
+            return facts, [{'hash': None, 'state': 'UNKNOWN', 'reason': 'Indexed native record inspection budget exceeded'}]
+        reason = page['reason']
+        header = page.get('request_scope') is not None
+        bad_ordinals = set(page['unassignable_records']) | {row['ordinal'] for row in page['record_gaps']}
+
+        def accepted_row(ordinal, slot):
+            if page['state'] == 'PASS':
+                return True
+            # Only a known disjoint malformed sibling may be excluded. Bad
+            # header/cursor/global order metadata cannot become index proof.
+            if (not header or reason != 'Indexed page contains unassignable, duplicate or incomplete native entries'
+                or ordinal in bad_ordinals or None in bad_ordinals or not bad_ordinals or not _integer(slot)):
+                return False
+            for bad in bad_ordinals:
+                source = page['records'][bad]
+                bad_slot = source.get('slot') if isinstance(source, dict) else None
+                if not _integer(bad_slot) or bad_slot == slot:
+                    return False
+            return True
+        scoped, unassignable = set(), []
+        for ordinal, raw in enumerate(page['records']):
+            tx = raw.get('transaction') if isinstance(raw, dict) else None
+            identity = tx.get('signatures') if isinstance(tx, dict) else None
+            signature = identity[0] if (isinstance(identity, list) and identity and isinstance(identity[0], str)
+                and 1 <= len(identity[0]) <= 128) else None
+            slot = raw.get('slot') if isinstance(raw, dict) else None
+            timestamp = raw.get('blockTime') if isinstance(raw, dict) else None
+            index = raw.get('transactionIndex') if isinstance(raw, dict) else None
+            bounded = header and _integer(slot)
+            path = f'result.data.{ordinal}'
+            if signature is None:
+                unassignable.append((slot if bounded else None, timestamp, path))
+                continue
+            scoped.add(signature)
+            valid_clock = _integer(timestamp)
+            if valid_clock:
+                try:
+                    datetime.fromtimestamp(timestamp, timezone.utc)
+                except (ValueError, OverflowError, OSError):
+                    valid_clock = False
+            add(signature, digest, slot=slot, timestamp=timestamp if header and valid_clock else None, index=index,
+                accepted=accepted_row(ordinal, slot) and valid_clock, bounded=bounded, path=path, reason=reason)
+        # Every known pointer remains dependent on its page even if malformed
+        # contents lost the linked record entirely.
+        for signature in associations[digest] - scoped:
+            add(signature, digest, reason='Frozen indexed pointer signature is absent from its source page.')
+        for slot, timestamp, path in unassignable:
+            for signature in signatures:
+                if slot is not None and native_slots[signature] and slot not in native_slots[signature]:
+                    continue  # Exact readable raw placement proves this gap disjoint.
+                add(signature, digest, slot=slot, timestamp=timestamp if header else None,
+                    bounded=slot is not None, path=path, reason='An indexed entry has no assignable native signature.')
+        if not page['records'] and page['state'] != 'PASS':
+            for signature in associations[digest] or signatures:
+                add(signature, digest, reason=reason)
+        audit.append({'hash': _hash(digest), 'state': page['state'], 'reason': reason,
+                      'signatures': sorted(scoped), 'unassignable_record_count': len(unassignable)})
+    return facts, audit
+
+
+def reconcile_placements(records, *, page_receipts=(), block_receipts=(), indexed_receipts=(), checkpoint_indices=None):
     """Keep the envelope of every linked location claim, never a preferred slot.
 
     A coherent page can bound a missing native record, but cannot authenticate
     its quantities. Contradictory finite claims retain their entire slot/index
     envelope: an episode may exclude it only if that envelope is disjoint.
     """
+    records = list(records)
+    indexed_facts, _ = _indexed_claims(indexed_receipts, records)
     claims, block_sources = defaultdict(list), defaultdict(list)
     checkpoint_indices = checkpoint_indices if isinstance(checkpoint_indices, dict) else {}
 
-    def add(signature, kind, slot, digest, *, index=None, account=None, invalid=False, unbounded=False):
+    def add(signature, kind, slot, digest, *, index=None, account=None, invalid=False, unbounded=False, raw_path=None):
         if not isinstance(signature, str) or not signature:
             return
         fact = {"kind": kind, "slot": slot if _integer(slot) else None,
@@ -41,6 +171,8 @@ def reconcile_placements(records, *, page_receipts=(), block_receipts=(), checkp
             fact["index"] = index if _integer(index) else None
         if account is not None:
             fact["account"] = account
+        if raw_path is not None:
+            fact['raw_path'] = raw_path
         if invalid:
             fact["incomplete"] = True
         if unbounded:
@@ -73,6 +205,9 @@ def reconcile_placements(records, *, page_receipts=(), block_receipts=(), checkp
                 add(entry.get("signature"), "signature-page", entry.get("slot"), receipt.get("hash"),
                     account=payload.get("address"), invalid=not _integer(entry.get("slot")),
                     unbounded=not _integer(entry.get("slot")))
+    for fact in indexed_facts:
+        add(fact['signature'], 'indexed-page', fact['slot'], fact['hash'], index=fact['index'],
+            invalid=not fact['accepted'], unbounded=not fact['bounded'], raw_path=fact['raw_path'])
     for receipt in block_receipts:
         payload = receipt.get("payload") if isinstance(receipt, dict) else None
         result = payload.get("result") if isinstance(payload, dict) else None
@@ -113,19 +248,20 @@ def reconcile_placements(records, *, page_receipts=(), block_receipts=(), checkp
         indices = {}
         for slot in candidates:
             blocks = [fact for fact in facts if fact["kind"] == "block-order" and fact["slot"] == slot]
+            indexed = [fact for fact in facts if fact['kind'] == 'indexed-page' and fact['slot'] == slot]
             values = sorted({fact["index"] for fact in facts
-                             if fact["kind"] in ("saved-index", "checkpoint-index") or fact in blocks
+                             if fact["kind"] in ("saved-index", "checkpoint-index") or fact in blocks + indexed
                              if _integer(fact.get("index"))})
-            bounded = bool(blocks) and all(not fact.get("incomplete") for fact in blocks +
+            bounded = bool(blocks or indexed) and all(not fact.get("incomplete") for fact in blocks + indexed +
                                           [fact for fact in facts if fact["kind"] in ("saved-index", "checkpoint-index")])
             bounded = bounded and all(valid and signature in signatures for signatures, valid in block_sources[slot])
             if len(values) > 1:
-                issues.append(f"Linked block/saved order claims disagree for slot {slot}.")
+                issues.append(f"Linked block/indexed/saved order claims disagree for slot {slot}.")
             indices[str(slot)] = {"bounded": bounded, "min": min(values) if bounded else None,
                                   "max": max(values) if bounded else None, "possible_indices": values}
         slot_state = "PASS" if len(candidates) == 1 and not any(
             fact.get("incomplete") and fact["kind"] == "transaction" or
-            fact["kind"] in ("signature-page", "block-order") and fact["slot"] is None
+            fact["kind"] in ("signature-page", "block-order", "indexed-page") and fact["slot"] is None
             for fact in facts) else "UNKNOWN"
         state = "PASS" if candidates and not issues else "UNKNOWN"
         evidence = sorted({fact["hash"] for fact in facts if fact.get("hash")})
@@ -141,7 +277,7 @@ def reconcile_placements(records, *, page_receipts=(), block_receipts=(), checkp
     return result
 
 
-def assess_chronology(records, *, page_receipts=(), block_receipts=(),
+def assess_chronology(records, *, page_receipts=(), block_receipts=(), indexed_receipts=(),
                       checkpoint_indices=None, require_checkpoint_indices=False):
     """Assess native records and all linked page/block facts for their slots.
 
@@ -150,11 +286,12 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
     Explicit contradictions appear in conflicts. Missing proof is UNKNOWN.
     A contradictory time never invalidates independently checked quantities.
     """
-    records, page_receipts, block_receipts = list(records), list(page_receipts), list(block_receipts)
+    records, page_receipts, block_receipts, indexed_receipts = list(records), list(page_receipts), list(block_receipts), list(indexed_receipts)
+    indexed_facts, indexed_audit = _indexed_claims(indexed_receipts, records)
     placements = reconcile_placements(records, page_receipts=page_receipts, block_receipts=block_receipts,
-                                      checkpoint_indices=checkpoint_indices)
+                                      indexed_receipts=indexed_receipts, checkpoint_indices=checkpoint_indices)
     slots = defaultdict(lambda: {"records": {}, "times": [], "blocks": [], "evidence": set(),
-                                 "saved_indices": defaultdict(list)})
+                                 "saved_indices": defaultdict(list), 'indexed_indices': defaultdict(list)})
     transactions, conflicts, invalid_blocks = {}, [], False
     checkpoint_indices = checkpoint_indices if isinstance(checkpoint_indices, dict) else {}
 
@@ -197,6 +334,15 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
             group["times"].append((entry.get("blockTime"), digest, "signature-page", entry.get("signature")))
             if digest:
                 group["evidence"].add(digest)
+    for fact in indexed_facts:
+        slot = fact['slot']
+        if not _integer(slot):
+            continue
+        group = slots[slot]
+        group['times'].append((fact['timestamp'], fact['hash'], 'indexed-page', fact['signature']))
+        group['indexed_indices'][fact['signature']].append((fact['index'], fact['accepted']))
+        if fact['hash']:
+            group['evidence'].add(fact['hash'])
     for receipt in block_receipts:
         payload = receipt.get("payload") if isinstance(receipt, dict) else None
         digest = _hash(receipt.get("hash")) if isinstance(receipt, dict) else None
@@ -236,11 +382,14 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
         block_order = next(iter(orders)) if len(orders) == 1 else None
         claimed_indices = defaultdict(set)
         for signature, record in rows.items():
-            claims = [checkpoint_indices.get(signature)] + group["saved_indices"][signature]
+            indexed = group['indexed_indices'][signature]
+            claims = [checkpoint_indices.get(signature)] + group["saved_indices"][signature] + [value for value, _ in indexed]
             supplied = [value for value in claims if value is not None]
             if any(not _integer(value) for value in supplied):
                 conflict(slot, "order", "transaction_index", "Saved transaction/checkpoint index is invalid.", group["evidence"])
             known_claims = {value for value in supplied if _integer(value)}
+            if any(not accepted for _, accepted in indexed):
+                conflict(slot, 'order', 'indexed_page', 'A linked indexed order source is malformed or incomplete.', group['evidence'])
             if len(known_claims) > 1:
                 conflict(slot, "order", "transaction_index", "Saved transaction and checkpoint indices conflict.", group["evidence"])
             for index in known_claims:
@@ -253,16 +402,19 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
                     conflict(slot, "order", "signature_membership", "Archived block ordering omits a native transaction claiming this slot.", group["evidence"])
                     continue
                 index = block_order.index(signature)
-                claims = [checkpoint_indices.get(signature)] + group["saved_indices"][signature]
+                claims = [checkpoint_indices.get(signature)] + group["saved_indices"][signature] + [value for value, _ in group['indexed_indices'][signature]]
                 if any(value is not None and (not _integer(value) or value != index) for value in claims):
                     conflict(slot, "order", "transaction_index", "Saved transaction/checkpoint index conflicts with archived block ordering.", group["evidence"])
         # An unassignable malformed source remains an audit/interval issue. It
         # cannot silently invalidate a separate slot's independent chronology.
         slot_conflicts = [item for item in conflicts if item["slot"] == slot]
         time_state = "PASS" if len(known_times) == 1 and not missing_time and not any(item["kind"] == "time" for item in slot_conflicts) else "UNKNOWN"
+        indexed_complete = bool(rows) and all(group['indexed_indices'][signature]
+            and all(accepted and _integer(value) for value, accepted in group['indexed_indices'][signature])
+            for signature in rows)
         order_complete = (not any(item["kind"] == "order" for item in slot_conflicts)
-                          and (len(rows) < 2 or block_order is not None)
-                          and (not require_checkpoint_indices or len(rows) < 2 or all(_integer(checkpoint_indices.get(signature)) for signature in rows)))
+                          and (len(rows) < 2 or block_order is not None or indexed_complete)
+                          and (not require_checkpoint_indices or len(rows) < 2 or indexed_complete or all(_integer(checkpoint_indices.get(signature)) for signature in rows)))
         order_state = "PASS" if order_complete else "UNKNOWN"
         state = "PASS" if time_state == order_state == "PASS" else "UNKNOWN"
         reason = "; ".join(item["reason"] for item in slot_conflicts)
@@ -281,6 +433,10 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
                                     "evidence": evidence, "reason": reason, "conflicts": slot_conflicts}
         for signature in rows:
             index = block_order.index(signature) if order_state == "PASS" and block_order is not None and signature in block_order else None
+            if index is None and order_state == 'PASS' and group['indexed_indices'][signature]:
+                accepted_indices = {value for value, accepted in group['indexed_indices'][signature] if accepted and _integer(value)}
+                if len(accepted_indices) == 1:
+                    index = next(iter(accepted_indices))
             transactions[signature] = {"state": state, "time_state": time_state, "order_state": order_state,
                                        "slot": slot, "canonical_time": canonical_time, "transaction_index": index,
                                        "evidence": evidence, "reason": reason, "conflicts": slot_conflicts}
@@ -299,9 +455,9 @@ def assess_chronology(records, *, page_receipts=(), block_receipts=(),
                         "reason": reason, "evidence": placement["evidence"]}
                 conflicts.append(item)
                 row["conflicts"] = row["conflicts"] + [item]
-    return {"version": VERSION, "state": "PASS" if transactions and not conflicts and all(row["state"] == "PASS" for row in transactions.values()) else "UNKNOWN",
+    return {"version": VERSION, "state": "PASS" if transactions and not conflicts and all(row['state'] == 'PASS' for row in indexed_audit) and all(row["state"] == "PASS" for row in transactions.values()) else "UNKNOWN",
             "transactions": transactions, "slots": assessed_slots, "conflicts": conflicts,
-            "placements": placements, "invalid_block_receipts": invalid_blocks}
+            "placements": placements, "invalid_block_receipts": invalid_blocks, 'indexed_sources': indexed_audit}
 
 
 def assess_interval_membership(chronology, signature, start, end):

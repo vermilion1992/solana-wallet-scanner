@@ -277,6 +277,42 @@
       "selectors": [
         "tests/test_real_evidence_adapter.py::*"
       ]
+    },
+    {
+      "id": "compiled-primary-schema",
+      "axis": "Representation",
+      "selectors": [
+        "tests/test_compiled_instructions.py::*",
+        "tests/test_compiled_report_integration.py::*"
+      ]
+    },
+    {
+      "id": "indexed-immutable-input",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_indexed_input.py::*"
+      ]
+    },
+    {
+      "id": "indexed-shared-chronology",
+      "axis": "Relevance/chronology",
+      "selectors": [
+        "tests/test_indexed_chronology.py::*"
+      ]
+    },
+    {
+      "id": "indexed-source-dependencies",
+      "axis": "Availability",
+      "selectors": [
+        "tests/test_indexed_source_dependencies.py::*"
+      ]
+    },
+    {
+      "id": "indexed-normal-report",
+      "axis": "Report/rebuild",
+      "selectors": [
+        "tests/test_indexed_report_integration.py::*"
+      ]
     }
   ],
   "browser_required": [

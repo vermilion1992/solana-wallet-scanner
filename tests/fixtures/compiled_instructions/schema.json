@@ -1,0 +1,480 @@
+{
+  "scope": "Unsigned development conformance only. Public primary package bytes verified against Agave 9480479ff42af8a9db3da1649297dfcd9d27e5be Cargo.lock; no provider calls or credentials. Fixed-width little-endian System enum serialization; SPL Token pack/unpack branches. No Token-2022 extension or DEX route contract.",
+  "references": [
+    {
+      "name": "spl-token-interface",
+      "version": "3.0.0",
+      "url": "https://static.crates.io/crates/spl-token-interface/spl-token-interface-3.0.0.crate",
+      "package_sha256": "7143c4e676984047a400e2fbd7ac29a1659f2b1b52b897cfde19316b562e4589",
+      "extracted_path": "spl-token-interface-3.0.0/src/instruction.rs",
+      "local_path": "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+      "sha256": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc"
+    },
+    {
+      "name": "solana-system-interface",
+      "version": "2.0.0",
+      "url": "https://static.crates.io/crates/solana-system-interface/solana-system-interface-2.0.0.crate",
+      "package_sha256": "4e1790547bfc3061f1ee68ea9d8dc6c973c02a163697b24263a8e9f2e6d4afa2",
+      "extracted_path": "solana-system-interface-2.0.0/src/instruction.rs",
+      "local_path": "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs",
+      "sha256": "8468920b107104d4b8fc3ea40cd5e6204d3b2027fb2ba4cc4b4075855cb4af8b"
+    },
+    {
+      "name": "Agave parsed instruction schema",
+      "commit": "9480479ff42af8a9db3da1649297dfcd9d27e5be",
+      "local_path": "evidence/references/parse_token.rs",
+      "sha256": "50370cf477d4d526960a226a945f712426c059f220fd4c84f63f493da64d88c0"
+    },
+    {
+      "name": "Agave associated-account parsed schema",
+      "commit": "9480479ff42af8a9db3da1649297dfcd9d27e5be",
+      "local_path": "evidence/references/parse_associated_token.rs",
+      "sha256": "b5ca1e0932438e8fa08d67705504b30011b8c92d445dd516296a46ef28eef622"
+    }
+  ],
+  "examples": [
+    {
+      "id": "system-transfer",
+      "program": "system",
+      "hex": "020000001900000000000000",
+      "accounts": [
+        "source",
+        "destination"
+      ],
+      "kind": "transfer",
+      "info": {
+        "source": "source",
+        "destination": "destination",
+        "lamports": 25
+      },
+      "schema": "SystemInstruction Transfer variant2; lamports:u64 little-endian; constructor transfer()"
+    },
+    {
+      "id": "system-create",
+      "program": "system",
+      "hex": "000000001900000000000000a5000000000000000101010101010101010101010101010101010101010101010101010101010101",
+      "accounts": [
+        "source",
+        "destination"
+      ],
+      "kind": "createAccount",
+      "info": {
+        "source": "source",
+        "newAccount": "destination",
+        "lamports": 25,
+        "space": 165,
+        "owner": "source"
+      },
+      "schema": "SystemInstruction CreateAccount variant0, lamports/u64, space/u64, owner/[u8;32]"
+    },
+    {
+      "id": "system-assign",
+      "program": "system",
+      "hex": "010000000202020202020202020202020202020202020202020202020202020202020202",
+      "accounts": [
+        "source"
+      ],
+      "kind": "assign",
+      "info": {
+        "account": "source",
+        "owner": "destination"
+      },
+      "schema": "SystemInstruction Assign variant1; owner/[u8;32]"
+    },
+    {
+      "id": "system-allocate",
+      "program": "system",
+      "hex": "08000000a500000000000000",
+      "accounts": [
+        "source"
+      ],
+      "kind": "allocate",
+      "info": {
+        "account": "source",
+        "space": 165
+      },
+      "schema": "SystemInstruction Allocate variant8; space/u64"
+    },
+    {
+      "id": "system-advance-nonce",
+      "program": "system",
+      "hex": "04000000",
+      "accounts": [
+        "source",
+        "recent",
+        "authority"
+      ],
+      "kind": "advanceNonce",
+      "info": {
+        "nonceAccount": "source",
+        "recentBlockhashesSysvar": "recent",
+        "nonceAuthority": "authority"
+      },
+      "schema": "SystemInstruction AdvanceNonceAccount variant4; primary Agave field names"
+    },
+    {
+      "id": "system-withdraw-nonce",
+      "program": "system",
+      "hex": "050000001900000000000000",
+      "accounts": [
+        "source",
+        "destination",
+        "recent",
+        "rent",
+        "authority"
+      ],
+      "kind": "withdrawFromNonce",
+      "info": {
+        "nonceAccount": "source",
+        "destination": "destination",
+        "recentBlockhashesSysvar": "recent",
+        "rentSysvar": "rent",
+        "nonceAuthority": "authority",
+        "lamports": 25
+      },
+      "schema": "SystemInstruction WithdrawNonceAccount variant5; primary Agave field names"
+    },
+    {
+      "id": "system-initialize-nonce",
+      "program": "system",
+      "hex": "060000000101010101010101010101010101010101010101010101010101010101010101",
+      "accounts": [
+        "source",
+        "recent",
+        "rent"
+      ],
+      "kind": "initializeNonce",
+      "info": {
+        "nonceAccount": "source",
+        "recentBlockhashesSysvar": "recent",
+        "rentSysvar": "rent",
+        "nonceAuthority": "source"
+      },
+      "schema": "SystemInstruction InitializeNonceAccount variant6; authority/[u8;32]"
+    },
+    {
+      "id": "system-authorize-nonce",
+      "program": "system",
+      "hex": "070000000202020202020202020202020202020202020202020202020202020202020202",
+      "accounts": [
+        "source",
+        "authority"
+      ],
+      "kind": "authorizeNonce",
+      "info": {
+        "nonceAccount": "source",
+        "nonceAuthority": "authority",
+        "newAuthorized": "destination"
+      },
+      "schema": "SystemInstruction AuthorizeNonceAccount variant7; authority/[u8;32]"
+    },
+    {
+      "id": "token-transfer",
+      "program": "token",
+      "hex": "030100000000000000",
+      "accounts": [
+        "source",
+        "destination",
+        "authority"
+      ],
+      "kind": "transfer",
+      "info": {
+        "source": "source",
+        "destination": "destination",
+        "authority": "authority",
+        "amount": "1"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [3,1,0,0,0,0,0,0,0], line1713"
+    },
+    {
+      "id": "token-approve",
+      "program": "token",
+      "hex": "040100000000000000",
+      "accounts": [
+        "source",
+        "destination",
+        "authority"
+      ],
+      "kind": "approve",
+      "info": {
+        "source": "source",
+        "delegate": "destination",
+        "owner": "authority",
+        "amount": "1"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [4,1,0,0,0,0,0,0,0], line1720"
+    },
+    {
+      "id": "token-revoke",
+      "program": "token",
+      "hex": "05",
+      "accounts": [
+        "source",
+        "authority"
+      ],
+      "kind": "revoke",
+      "info": {
+        "source": "source",
+        "owner": "authority"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [5], line1727"
+    },
+    {
+      "id": "token-set-freeze",
+      "program": "token",
+      "hex": "0601010404040404040404040404040404040404040404040404040404040404040404",
+      "accounts": [
+        "mint",
+        "authority"
+      ],
+      "kind": "setAuthority",
+      "info": {
+        "mint": "mint",
+        "authorityType": "freezeAccount",
+        "newAuthority": "authority",
+        "authority": "authority"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [6,1,1]+[4;32], line1734"
+    },
+    {
+      "id": "token-set-owner-none",
+      "program": "token",
+      "hex": "060200",
+      "accounts": [
+        "source",
+        "authority"
+      ],
+      "kind": "setAuthority",
+      "info": {
+        "account": "source",
+        "authorityType": "accountOwner",
+        "newAuthority": null,
+        "authority": "authority"
+      },
+      "schema": "Pinned SPL standard authority discriminant2; COption one-byte None; not four-byte COption state layout"
+    },
+    {
+      "id": "token-close",
+      "program": "token",
+      "hex": "09",
+      "accounts": [
+        "source",
+        "destination",
+        "authority"
+      ],
+      "kind": "closeAccount",
+      "info": {
+        "account": "source",
+        "destination": "destination",
+        "owner": "authority"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [9], line1758"
+    },
+    {
+      "id": "token-checked",
+      "program": "token",
+      "hex": "0c010000000000000002",
+      "accounts": [
+        "source",
+        "mint",
+        "destination",
+        "authority"
+      ],
+      "kind": "transferChecked",
+      "info": {
+        "source": "source",
+        "mint": "mint",
+        "destination": "destination",
+        "authority": "authority",
+        "tokenAmount": {
+          "amount": "1",
+          "decimals": 2,
+          "uiAmountString": "0.01"
+        }
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [12,1,0,0,0,0,0,0,0,2], line1781"
+    },
+    {
+      "id": "token-approve-checked",
+      "program": "token",
+      "hex": "0d010000000000000002",
+      "accounts": [
+        "source",
+        "mint",
+        "destination",
+        "authority"
+      ],
+      "kind": "approveChecked",
+      "info": {
+        "source": "source",
+        "mint": "mint",
+        "delegate": "destination",
+        "owner": "authority",
+        "tokenAmount": {
+          "amount": "1",
+          "decimals": 2,
+          "uiAmountString": "0.01"
+        }
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [13,1,0,0,0,0,0,0,0,2], line1793"
+    },
+    {
+      "id": "token-init-account",
+      "program": "token",
+      "hex": "01",
+      "accounts": [
+        "source",
+        "mint",
+        "authority",
+        "rent"
+      ],
+      "kind": "initializeAccount",
+      "info": {
+        "account": "source",
+        "mint": "mint",
+        "owner": "authority",
+        "rentSysvar": "rent"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [1], line1697; Agave parse_token initializeAccount branch"
+    },
+    {
+      "id": "token-init2",
+      "program": "token",
+      "hex": "100202020202020202020202020202020202020202020202020202020202020202",
+      "accounts": [
+        "source",
+        "mint",
+        "rent"
+      ],
+      "kind": "initializeAccount2",
+      "info": {
+        "account": "source",
+        "mint": "mint",
+        "owner": "destination",
+        "rentSysvar": "rent"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [16]+[2;32], line1815"
+    },
+    {
+      "id": "token-init3",
+      "program": "token",
+      "hex": "120202020202020202020202020202020202020202020202020202020202020202",
+      "accounts": [
+        "source",
+        "mint"
+      ],
+      "kind": "initializeAccount3",
+      "info": {
+        "account": "source",
+        "mint": "mint",
+        "owner": "destination"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [18]+owner/[u8;32]"
+    },
+    {
+      "id": "token-sync",
+      "program": "token",
+      "hex": "11",
+      "accounts": [
+        "source"
+      ],
+      "kind": "syncNative",
+      "info": {
+        "account": "source"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [17], line1826"
+    },
+    {
+      "id": "token-immutable",
+      "program": "token",
+      "hex": "16",
+      "accounts": [
+        "source"
+      ],
+      "kind": "initializeImmutableOwner",
+      "info": {
+        "account": "source"
+      },
+      "schema": "Pinned SPL unpack/pack variant22, source line654"
+    },
+    {
+      "id": "token-init-mint",
+      "program": "token",
+      "hex": "0002010101010101010101010101010101010101010101010101010101010101010100",
+      "accounts": [
+        "mint",
+        "rent"
+      ],
+      "kind": "initializeMint",
+      "info": {
+        "mint": "mint",
+        "decimals": 2,
+        "mintAuthority": "source",
+        "rentSysvar": "rent"
+      },
+      "schema": "Pinned SPL Rust test_instruction_packing literal [0,2]+[1;32]+[0], line1673"
+    },
+    {
+      "id": "token-init-mint2",
+      "program": "token",
+      "hex": "14020101010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202",
+      "accounts": [
+        "mint"
+      ],
+      "kind": "initializeMint2",
+      "info": {
+        "mint": "mint",
+        "decimals": 2,
+        "mintAuthority": "source",
+        "freezeAuthority": "destination"
+      },
+      "schema": "Pinned SPL TokenInstruction unpack/pack variant20, decimals, mintauthority, one-byte freeze option"
+    },
+    {
+      "id": "ata-create",
+      "program": "associated",
+      "hex": "00",
+      "accounts": [
+        "source",
+        "destination",
+        "authority",
+        "mint",
+        "system",
+        "token"
+      ],
+      "kind": "create",
+      "info": {
+        "source": "source",
+        "account": "destination",
+        "wallet": "authority",
+        "mint": "mint",
+        "systemProgram": "system",
+        "tokenProgram": "token"
+      },
+      "schema": "Pinned Agave associated Create branch canonical tag0 and six-account roles"
+    },
+    {
+      "id": "ata-idempotent",
+      "program": "associated",
+      "hex": "01",
+      "accounts": [
+        "source",
+        "destination",
+        "authority",
+        "mint",
+        "system",
+        "token"
+      ],
+      "kind": "createIdempotent",
+      "info": {
+        "source": "source",
+        "account": "destination",
+        "wallet": "authority",
+        "mint": "mint",
+        "systemProgram": "system",
+        "tokenProgram": "token"
+      },
+      "schema": "Pinned Agave associated CreateIdempotent branch tag1 and six-account roles"
+    }
+  ]
+}

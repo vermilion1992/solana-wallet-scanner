@@ -14,13 +14,30 @@ import re
 from .providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
 from .transaction_format import supported_transaction_format
 
-VERSION = "source-consistency-v4"
+VERSION = "source-consistency-v5"
 SOURCE_HASH_LIMIT = 40_000
 _U64 = 2**64 - 1
 _TOKEN_IDS = {TOKEN_PROGRAM, TOKEN_2022_PROGRAM}
 _QUANTITY = re.compile(r"[0-9]+")
 _HASH = re.compile(r"[a-f0-9]{64}")
-_ROLES = {"transaction", "signature-page", "block-order", "snapshot-slot", "owned-accounts", "native-balance"}
+_ROLES = {"transaction", "signature-page", "block-order", "snapshot-slot", "owned-accounts", "native-balance",
+          "indexed-page", "indexed-native-source", "indexed-input-manifest"}
+
+
+def _indexed_payload(payload, digest):
+    """Typed indexed wrappers require their canonical archive and original bytes.
+
+    An annotated role, a cached producer receipt or a supplied PASS is never
+    sufficient. Byte decoding/response checks belong to indexed_input.
+    """
+    if not isinstance(payload, dict) or not isinstance(digest, str) or not _HASH.fullmatch(digest):
+        return False
+    try:
+        encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False, allow_nan=False,
+                             separators=(',', ':')).encode()
+        return hashlib.sha256(encoded).hexdigest() == digest
+    except (ValueError, TypeError, OverflowError):
+        return False
 
 
 def _link(reference):
@@ -146,6 +163,8 @@ def source_archive_receipts(index, payloads, read_outcomes, *, snapshot_slot=Non
     Monetary fields are deliberately not required for token quantity timing.
     """
     from .collector import _valid_account
+    from .indexed_input import IndexedResolver, RECORD_VERSION
+    indexed_resolver = IndexedResolver(lambda digest, _kind: payloads.get(digest), address=wallet)
     rows = []
     for link in index['links']:
         kind, digest = link['kind'], link['hash']
@@ -157,13 +176,45 @@ def source_archive_receipts(index, payloads, read_outcomes, *, snapshot_slot=Non
         valid, reason = False, 'Archive contents are unavailable; no semantic exclusion is established.'
         if outcome == 'readable' and isinstance(raw, dict):
             method, result = raw.get('method'), raw.get('result')
-            if kind == 'transaction':
-                transaction, meta = raw.get('transaction'), raw.get('meta')
+            if kind in ('indexed-page', 'indexed-native-source', 'indexed-input-manifest'):
+                from .indexed_input import (PAGE_VERSION, NATIVE_VERSION, manifest_bytes,
+                                            validate_page_envelope, source_records)
+                if _indexed_payload(raw, digest):
+                    try:
+                        if kind == 'indexed-page' and raw.get('version') == PAGE_VERSION:
+                            page = validate_page_envelope(raw, wallet)
+                            valid = page['state'] == 'PASS'
+                            scope['signatures'] = sorted(set(page['signatures'])) if not page['unassignable_records'] else None
+                            if isinstance(page['request_scope'], dict):
+                                scope['account'] = page['request_scope']['address']
+                            reason = page['reason'] or 'Exact indexed page bytes validate local response and cursor shape; historical population remains unproved.'
+                        elif kind == 'indexed-native-source' and raw.get('version') == NATIVE_VERSION:
+                            native = source_records(raw, address=wallet)
+                            valid = native['state'] == 'PASS'
+                            scope['signatures'] = native['signatures'] or None
+                            reason = '; '.join(native['gaps']) or 'Exact native request/response bytes validate their signature association.'
+                        elif kind == 'indexed-input-manifest':
+                            manifest = json.loads(manifest_bytes(raw))
+                            valid = wallet is None or manifest['address'] == wallet
+                            reason = 'Frozen original manifest bytes validate input links; they establish no native observation or historical completion.'
+                        else:
+                            reason = 'Indexed wrapper version disagrees with its declared source role.'
+                    except (ValueError, TypeError, KeyError, UnicodeError, OverflowError) as exc:
+                        reason = str(exc)
+                else:
+                    reason = 'Indexed source canonical archive checksum disagrees.'
+            elif kind == 'transaction':
+                native_raw = raw
+                if raw.get('version') == RECORD_VERSION:
+                    resolved = indexed_resolver.resolve(raw)
+                    native_raw = resolved['raw'] if resolved['state'] == 'PASS' and raw.get('signature') == link['signature'] else None
+                transaction = native_raw.get('transaction') if isinstance(native_raw, dict) else None
+                meta = native_raw.get('meta') if isinstance(native_raw, dict) else None
                 signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
                 valid = (isinstance(signatures, list) and bool(signatures) and signatures[0] == link['signature']
-                         and _keys(raw) is not None and isinstance(meta, dict) and 'err' in meta
-                         and _integer(raw.get('slot')) and _integer(raw.get('blockTime'))
-                         and supported_transaction_format(raw))
+                         and _keys(native_raw) is not None and isinstance(meta, dict) and 'err' in meta
+                         and _integer(native_raw.get('slot')) and _integer(native_raw.get('blockTime'))
+                         and supported_transaction_format(native_raw))
             elif kind == 'signature-page':
                 params = raw.get('params')
                 params = params if isinstance(params, dict) else {}
@@ -206,15 +257,16 @@ def source_archive_receipts(index, payloads, read_outcomes, *, snapshot_slot=Non
                 else:
                     valid = (header and method == 'getBalance' and _valid_account(raw.get('address'))
                              and (wallet is None or raw['address'] == wallet) and _integer(result.get('value')))
-            if valid:
+            if valid and kind not in ('indexed-page', 'indexed-native-source', 'indexed-input-manifest'):
                 reason = 'Checksum-checked contents have a supported declared source role; metric facts are assessed separately.'
-            elif kind != 'signature-page':
+            elif not valid and kind not in ('signature-page', 'indexed-page', 'indexed-native-source', 'indexed-input-manifest'):
                 reason = 'Checksum-checked contents do not validate the declared source role or its required identity/shape.'
-            if kind == 'transaction' and not supported_transaction_format(raw):
+            if kind == 'transaction' and raw.get('version') != RECORD_VERSION and not supported_transaction_format(raw):
                 reason = 'The declared transaction format is unsupported by this application; its parsed facts cannot certify dependent metrics.'
         validation = 'supported' if valid else 'malformed' if outcome == 'readable' else 'unavailable'
         recovery = 'Restore the checksum-matching archived source with its supported role, then rebuild the saved report.'
-        if kind == 'transaction' and outcome == 'readable' and isinstance(raw, dict) and not supported_transaction_format(raw):
+        if (kind == 'transaction' and outcome == 'readable' and isinstance(raw, dict)
+            and raw.get('version') != RECORD_VERSION and not supported_transaction_format(raw)):
             recovery = 'Resolve the linked format with a reviewed parser/schema contract, then rebuild. Restoring identical bytes alone cannot resolve format support.'
         rows.append({**link, 'state': 'PASS' if valid else 'UNKNOWN', 'read_state': outcome,
                      'validation_state': validation, 'scope': scope, 'reason': reason,
@@ -265,7 +317,8 @@ def unresolved_source_dependencies(receipts, signature, raws, *, purpose):
     not erase a network fee or endpoint observation. Unreadable pages cannot be
     excluded using a convenient surviving version or unvalidated address hint.
     """
-    roles = {'signature-page'} if purpose == 'execution' else {'signature-page', 'block-order', 'snapshot-slot'}
+    roles = ({'signature-page', 'indexed-page', 'indexed-native-source'} if purpose == 'execution' else
+             {'signature-page', 'block-order', 'snapshot-slot', 'indexed-page', 'indexed-native-source'})
     result = []
     for row in receipts:
         if row['state'] == 'PASS' or row['kind'] not in roles:
@@ -296,6 +349,10 @@ def apply_unresolved_chronology(chronology, records, archive_contents):
     for record in records:
         raw_versions[record['signature']].append(record['raw'])
     for signature, raws in raw_versions.items():
+        if signature not in chronology.get('transactions', {}):
+            # Unassignable negative sources revoke source-set certification;
+            # they are not invented transactions with a None identity.
+            continue
         dependencies = unresolved_source_dependencies(unresolved, signature, raws, purpose='chronology')
         if not dependencies:
             continue
@@ -380,6 +437,13 @@ def _group(checks, *, hashes, signature, account=None):
 
 def _program_facts(raw, keys, account, digest):
     """Missing balance annotations can use explicit relevant parsed SPL facts."""
+    from .transaction_format import _needs_instruction_view, original_instruction_paths
+    original = raw
+    normalized = None
+    if _needs_instruction_view(raw):
+        from .compiled_instructions import normalize_transaction
+        normalized = normalize_transaction(raw)
+        raw = normalized['raw']
     message = raw.get("transaction", {}).get("message", {})
     meta = raw.get("meta", {})
     instructions = message.get("instructions") if isinstance(message, dict) else None
@@ -397,7 +461,8 @@ def _program_facts(raw, keys, account, digest):
         parsed = instruction.get("parsed")
         info = parsed.get("info") if isinstance(parsed, dict) else None
         if isinstance(program, str) and program in _TOKEN_IDS and isinstance(info, dict) and account in (info.get("source"), info.get("destination"), info.get("account")):
-            result.append(_fact(digest, path + ".programId", program))
+            result.extend(_fact(digest, source_path, program) for source_path in
+                          original_instruction_paths(original, [path + ".programId"], normalized=normalized))
     return result
 
 
@@ -487,7 +552,8 @@ def _native_facts(raw, digest, wallet, identity):
     return fields
 
 
-def assess_source_consistency(records, *, accounts=(), wallet=None, source_index=None, inspected_hashes=None, page_receipts=(), archive_contents=None):
+def assess_source_consistency(records, *, accounts=(), wallet=None, source_index=None, inspected_hashes=None,
+                              page_receipts=(), indexed_receipts=(), archive_contents=None):
     """Compare all linked alternatives, never caller PASS flags or hash equality.
 
     Records are {signature, evidence_hash, raw}; unavailable links use raw=None.
@@ -513,6 +579,24 @@ def assess_source_consistency(records, *, accounts=(), wallet=None, source_index
             if isinstance(entry, dict) and isinstance(entry.get("signature"), str):
                 page_execution[entry["signature"]].append(_fact(receipt.get("hash"), f"result.{index}.err", entry.get("err"),
                                                                  "known" if "err" in entry else "missing"))
+    for receipt in indexed_receipts:
+        digest = receipt.get('hash') if isinstance(receipt, dict) else None
+        payload = receipt.get('payload') if isinstance(receipt, dict) else None
+        if not _indexed_payload(payload, digest):
+            continue
+        from .indexed_input import validate_page_envelope
+        page = validate_page_envelope(payload, wallet)
+        # Verified byte leads remain negative execution dependencies when a
+        # page's cursor/filter/placement metadata rejects it. They never supply
+        # a provider population certificate or a caller-supplied receipt state.
+        for index, raw in enumerate(page['records']):
+            transaction = raw.get('transaction') if isinstance(raw, dict) else None
+            signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+            signature = signatures[0] if isinstance(signatures, list) and signatures else None
+            meta = raw.get('meta') if isinstance(raw, dict) else None
+            if isinstance(signature, str) and signature and isinstance(meta, dict):
+                page_execution[signature].append(_fact(digest, f'result.data.{index}.meta.err', meta.get('err'),
+                    'known' if 'err' in meta else 'missing'))
     linked = defaultdict(dict)
     for record in records:
         if isinstance(record, dict) and isinstance(record.get("signature"), str):

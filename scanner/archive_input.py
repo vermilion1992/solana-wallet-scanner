@@ -29,9 +29,10 @@ from .position_evidence import _balance, _quantity_point
 from .source_consistency import assess_source_consistency, source_archive_receipts
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .storage import EvidenceError, now
+from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v4'
+METHOD = 'archive-ledger-v5'
 _CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
@@ -42,18 +43,11 @@ HASH = re.compile(r'[a-f0-9]{64}')
 
 
 def canonical_bytes(value):
-    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()
+    return _bounded_canonical(value)
 
 
 def _json(raw):
-    def unique(pairs):
-        result = {}
-        for key, value in pairs:
-            if key in result:
-                raise ValueError('Duplicate JSON keys are not accepted')
-            result[key] = value
-        return result
-    return json.loads(raw, object_pairs_hook=unique, parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite JSON')))
+    return parse_json(raw)
 
 
 def validate_manifest(value):
@@ -248,6 +242,9 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
         # A legacy parent has no frozen role-affinity proof. Never substitute
         # a later mutable import index for that parent's original references.
         links.append({'signature': None, 'hash': None})
+    from .indexed_input import IndexedResolver, describe_pages
+    indexed_resolver = IndexedResolver(read, address=manifest['address'])
+    indexed_sources = {}
     all_records, seen = [], set()
     for link in links:
         key = (link.get('signature'), link['hash'])
@@ -255,9 +252,10 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
             continue
         seen.add(key)
         payload = read(link['hash'], 'transaction')
-        raw = payload.get('result') if isinstance(payload, dict) and 'result' in payload else payload
-        raw = raw if _safe_decoder_container(raw) else None
-        all_records.append({'signature': key[0], 'evidence_hash': key[1], 'raw': raw})
+        record = archived_record(payload, key[0], key[1], read,
+                                 address=manifest['address'], resolver=indexed_resolver,
+                                 source_cache=indexed_sources)
+        all_records.append(record)
     selected = {(r['signature'], r['hash']) for r in manifest['transactions']}
     records = [r for r in all_records if (r['signature'], r['evidence_hash']) in selected]
     # A signature is decoded once; its full linked alternatives remain in consistency.
@@ -265,26 +263,30 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
     for record in records:
         unique.setdefault(record['signature'], record)
     records = list(unique.values())
-    clock_sources, pages, blocks = [], [], []
+    clock_sources, pages, blocks, indexed = [], [], [], []
     for ref in manifest.get('evidence', []):
         payload = read(ref['hash'], ref['kind'])
-        if ref['kind'] in ('signature-page', 'block-order'):
+        if ref['kind'] in ('signature-page', 'block-order', 'indexed-page'):
             params = payload.get('params') if isinstance(payload, dict) else None
             minimum = params.get('minContextSlot') if isinstance(params, dict) else None
             # This only validates the raw clock role/request. A page's own
             # context does not establish a historical population or snapshot.
             typed = source_archive_receipts({'links': [{'kind': ref['kind'], 'hash': ref['hash']}]},
                 {ref['hash']: payload}, {ref['hash']: 'readable' if payload is not None else 'unavailable'},
-                snapshot_slot=minimum)['receipts'][0]
+                snapshot_slot=minimum, wallet=manifest['address'])['receipts'][0]
             clock_sources.append(typed)
-            (pages if ref['kind'] == 'signature-page' else blocks).append({'hash': ref['hash'], 'payload': payload})
+            target = indexed if ref['kind'] == 'indexed-page' else pages if ref['kind'] == 'signature-page' else blocks
+            target.append({'hash': ref['hash'], 'payload': payload})
     classifications = [read(h, 'classification') for h in manifest.get('classification_hashes', [])]
     valuation = read(manifest['valuation_hash'], 'valuation') if manifest.get('valuation_hash') else None
-    consistency = assess_source_consistency(all_records, wallet=manifest['address'])
-    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks)
+    consistency = assess_source_consistency(all_records, wallet=manifest['address'],
+                                            indexed_receipts=indexed)
+    chronology = assess_chronology(all_records, page_receipts=pages, block_receipts=blocks,
+                                  indexed_receipts=indexed)
     return {'manifest': manifest, 'records': records, 'all_records': all_records, 'world': world,
             'classifications': classifications, 'valuation': valuation, 'receipts': receipts,
             'consistency': consistency, 'chronology': chronology, 'clock_sources': clock_sources,
+            'indexed_pages': describe_pages(indexed, manifest['address'], manifest['window']) if indexed else None,
             'clock_payloads': {row['hash']: cache[row['hash']] for row in clock_sources},
             'raw_sources': [{'hash': ref['hash'], 'kind': ref['kind'], 'signature': ref.get('signature'),
                             'payload': cache.get(ref['hash'])}
@@ -297,6 +299,59 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
                      'payload': dependency_input}] if dependency_input_hash else []),
             'dependency_input_hash': dependency_input_hash,
             'dependency_input': dependency_input, 'input_hash': digest}
+
+
+def archived_record(payload, signature, digest, read, *, address=None, resolver=None, source_cache=None):
+    """Resolve native bytes or frozen indexed pointers through the same loader.
+
+    The pointer is a source reference, never a trusted decoded event or order
+    declaration. Resolution receipts expose the original page and raw paths.
+    """
+    from .indexed_input import (IndexedResolver, RECORD_VERSION, PAGE_VERSION, NATIVE_VERSION,
+                                source_records, validate_page_envelope)
+    record = {'signature': signature, 'evidence_hash': digest, 'raw': None}
+    if isinstance(payload, dict) and payload.get('version') == RECORD_VERSION:
+        receipt = (resolver or IndexedResolver(read, address=address)).resolve(payload)
+        raw = receipt.get('raw')
+        record['indexed_source'] = {k: v for k, v in receipt.items() if k != 'raw'}
+        source_hash = payload.get('source_hash')
+        if isinstance(source_hash, str) and HASH.fullmatch(source_hash):
+            record['indexed_source_hash'] = source_hash
+        if receipt.get('state') != 'PASS' or payload.get('signature') != signature:
+            return record
+    elif isinstance(payload, dict) and payload.get('version') in (PAGE_VERSION, NATIVE_VERSION):
+        source_cache = {} if source_cache is None else source_cache
+        if digest not in source_cache:
+            receipt = source_records(payload, address=address)
+            by_signature = defaultdict(list)
+            candidates = receipt['records']
+            if payload.get('version') == PAGE_VERSION:
+                candidates = validate_page_envelope(payload, address)['records']
+            for ordinal, item in enumerate(candidates):
+                tx = item.get('transaction') if isinstance(item, dict) else None
+                signatures = tx.get('signatures') if isinstance(tx, dict) else None
+                identity = signatures[0] if isinstance(signatures, list) and signatures else None
+                if not isinstance(identity, str) or not identity:
+                    continue
+                # An unrelated malformed sibling cannot erase a native body.
+                # Reuse the pointer resolver to check request/response identity
+                # and exact bytes; chronology still rejects unsupported scope.
+                pointer = {'version': RECORD_VERSION, 'source_hash': digest, 'ordinal': ordinal,
+                           'signature': identity, 'native_hash': hashlib.sha256(canonical_bytes(item)).hexdigest()}
+                resolved = (resolver or IndexedResolver(read, address=address)).resolve(pointer)
+                if resolved['state'] == 'PASS':
+                    by_signature[identity].append(resolved['raw'])
+            source_cache[digest] = (receipt, by_signature)
+        receipt, by_signature = source_cache[digest]
+        matches = by_signature.get(signature, [])
+        raw = deepcopy(matches[0]) if len(matches) == 1 else None
+        record['indexed_source_hash'] = digest
+        record['indexed_source'] = {'state': receipt['state'], 'source_hash': digest,
+                                    'reason': '; '.join(receipt['gaps']), 'raw_paths': ['response']}
+    else:
+        raw = payload.get('result') if isinstance(payload, dict) and 'result' in payload else payload
+    record['raw'] = raw if _safe_decoder_container(raw) else None
+    return record
 
 
 def _safe_decoder_container(raw):
@@ -565,9 +620,17 @@ def analyze_archive(loaded, events):
                 # Supported role scope may prove unrelatedness even when a
                 # different page entry's timestamp is malformed.
                 payload = loaded['clock_payloads'].get(clock['hash'])
-                page_slots = {row.get('slot') for row in payload.get('result', [])
-                              if isinstance(row, dict) and type(row.get('slot')) is int} if payload else set()
-                unrelated = not bool(page_slots & slots)
+                if clock.get('role') == 'indexed-page' or isinstance(payload, dict) and payload.get('version') == 'indexed-page-source-v1':
+                    from .indexed_input import validate_page_envelope
+                    page = validate_page_envelope(payload, manifest['address'])
+                    page_slots = {row.get('slot') for row in page['records']
+                                  if isinstance(row, dict) and type(row.get('slot')) is int}
+                    unrelated = (not page['unassignable_records'] and not page['record_gaps']
+                                 and not bool(page_slots & slots))
+                else:
+                    page_slots = {row.get('slot') for row in payload.get('result', [])
+                                  if isinstance(row, dict) and type(row.get('slot')) is int} if payload else set()
+                    unrelated = not bool(page_slots & slots)
             if not unrelated:
                 receipt.update(state='UNKNOWN', member=None,
                                reason='A still-linked clock source is missing, malformed or unsupported; its relevance is unresolved.')

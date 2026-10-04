@@ -36,6 +36,11 @@ def run(args):
     corpus=args.real_corpus.absolute()
     if (corpus/'manifest.json.gz').is_file():
         subprocess.run([python,str(ROOT/'tools/archive_input.py'),'--partial-cache',str(corpus),'--output',str(out/'partial-real-input.zip')],cwd=ROOT,env=env,check=True)
+    indexed = getattr(args, 'indexed_archive', None)
+    if indexed is not None:
+        if not getattr(args, 'indexed_expected_fees', None):
+            raise ValueError('Indexed browser replay requires independently worked expected fees')
+        shutil.copyfile(indexed, out/'indexed-input.zip')
     with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
     server=subprocess.Popen([python,str(ROOT/'tools/guarded_launcher.py'),'--data',str(data),'--port',str(port),
                              '--guard',str(out/'guards.json')],cwd=ROOT,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
@@ -126,6 +131,34 @@ def run(args):
                 expect(page.locator('[data-archive-accounting="real"]')).to_contain_text('0.000240394')
                 capture('genuine-partial');(out/'genuine-partial-report.json').write_text(json.dumps(real,indent=2)+'\n')
                 result['cases'].append({'case':'genuine-23-record-partial-ui-import','state':'PASS','real_acceptance':'BLOCKED'})
+            if indexed is not None:
+                page.set_default_timeout(120000)
+                real=import_ui(out/'indexed-input.zip','real')
+                expect(page.locator('[data-archive-accounting="real"]')).to_have_attribute('data-archive-report-id',real['id'])
+                assert real['metrics']['observed_network_fees_sol']['value']==args.indexed_expected_fees
+                assert real['metrics']['profit_sol']['status']=='unknown'
+                assert real['coverage']['indexed_sources']['historical_population']=='UNKNOWN'
+                original_indexed=page.request.get(base+f"/api/export/reports/{real['id']}.json").body()
+                (out/'indexed-partial-parent.json').write_bytes(original_indexed)
+                capture('indexed-partial')
+                page.get_by_role('tab',name=re.compile('^Source evidence')).click()
+                page.get_by_role('button',name='Inspect record',exact=True).first.click()
+                expect(page.get_by_role('button',name='Close evidence',exact=True)).to_be_visible()
+                page.get_by_role('button',name='Close evidence',exact=True).click()
+                page.get_by_role('tab',name='Summary',exact=True).click()
+                with page.expect_response(lambda r:r.request.method=='POST' and '/reports/' in r.url and r.url.endswith('/rebuild')) as pending:
+                    page.get_by_role('button',name='Rebuild from saved records',exact=True).click()
+                assert pending.value.status==200,pending.value.text()
+                child_id=pending.value.json()['report_id']
+                expect(page.locator('[data-archive-accounting="real"]')).to_have_attribute('data-archive-report-id',child_id)
+                child=page.request.get(base+'/api/reports/'+child_id).json()
+                assert child['metrics']==real['metrics'] and child['rebuilt_from']==real['id']
+                assert page.request.get(base+f"/api/export/reports/{real['id']}.json").body()==original_indexed
+                (out/'indexed-partial-child.json').write_text(json.dumps(child,indent=2)+'\n')
+                capture('indexed-partial-rebuilt')
+                result['cases'].append({'case':'indexed-partial-ui-import-inspection-immutable-rebuild','state':'PASS',
+                    'source_archive_sha256':hashlib.sha256(indexed.read_bytes()).hexdigest(),
+                    'expected_selected_fees_sol':args.indexed_expected_fees,'parent_unchanged':True,'real_acceptance':'BLOCKED'})
             assert page.request.get(base+'/api/state').json()['usage']==usage
             assert not errors and not external,(errors,external)
             browser.close()
@@ -151,4 +184,5 @@ def run(args):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--python',required=True);p.add_argument('--chromium',default='/usr/bin/chromium')
     p.add_argument('--output',type=Path,required=True);p.add_argument('--real-corpus',type=Path,default=ROOT/'evidence/runs/real-cache')
+    p.add_argument('--indexed-archive',type=Path);p.add_argument('--indexed-expected-fees')
     raise SystemExit(run(p.parse_args()))

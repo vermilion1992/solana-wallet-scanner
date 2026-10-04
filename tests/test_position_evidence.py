@@ -170,7 +170,7 @@ class PositionEvidenceTests(unittest.TestCase):
 
     def test_multitransaction_account_strict_zero_branch_is_executable(self):
         result = self.derive()
-        self.assertEqual(result['version'], 'account-position-evidence-v10')
+        self.assertEqual(result['version'], 'account-position-evidence-v11')
         self.assertEqual(result['counts'], {'known_closed': 1, 'open': 0, 'unresolved': 0})
         self.assertEqual(result['account_scope']['candidate_account_count'], 1)
         self.assertEqual(result['account_scope']['inspected_account_count'], 1)

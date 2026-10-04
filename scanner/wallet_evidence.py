@@ -25,14 +25,17 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v1'
+VERSION = 'wallet-raw-evidence-v2'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
+MAX_INDEXED_RECORDS = 10_000
 OBSERVED_SCOPE = 'Selected archived records only; hidden accounts and intervening records are unproved'
 _NONTRANSACTION_ROLES = {'signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance',
                         'classification', 'valuation', 'boundary-inventory', 'historical-mark', 'capital-flow',
                         'synthetic-population', 'population-inventory', 'current-mint-controls', 'archive-native-dependencies'}
+_INDEXED_ROLES = {'indexed-page', 'indexed-native-source', 'indexed-input-manifest'}
+_NONTRANSACTION_ROLES |= _INDEXED_ROLES
 
 
 def with_derived_order(records, chronology):
@@ -131,8 +134,54 @@ def _amount(info, kind, identity):
 def _observe(record, wallet):
     """Derive one raw version; comparisons across versions happen afterwards."""
     signature, digest, raw = record.get('signature'), record.get('evidence_hash'), record.get('raw')
+    original_raw, normalization = raw, None
+    from .compiled_instructions import normalize_transaction
+    from .transaction_format import _needs_instruction_view, original_instruction_paths
+    if _needs_instruction_view(raw):
+        normalization = normalize_transaction(raw)
+        raw = normalization['raw']
+        normalization_receipt = {key: value for key, value in normalization.items() if key != 'raw'}
+    else:
+        # Parsed records and failed attempts need no copied instruction tree.
+        # Their existing semantic validators retain all rejection diagnostics.
+        normalization_receipt = {'state': 'NOT_REQUIRED', 'normalizations': [], 'gaps': []}
     result = {'signature': signature, 'hash': digest, 'boundaries': {}, 'lifecycle': [],
-              'transfers': [], 'gaps': [], 'failed': None, 'trades': [], 'disjoint_operations': []}
+              'transfers': [], 'gaps': [], 'failed': None, 'trades': [], 'disjoint_operations': [],
+              'instruction_normalization': normalization_receipt}
+
+    def source_paths(paths):
+        mapped = original_instruction_paths(original_raw, paths, normalized=normalization)
+        existing = set()
+        for path in mapped:
+            parts, value, present = path.split('.'), original_raw, []
+            for part in parts:
+                if isinstance(value, dict) and part in value:
+                    value = value[part]
+                elif isinstance(value, list) and part.isdigit() and int(part) < len(value):
+                    value = value[int(part)]
+                else:
+                    break
+                present.append(part)
+            if present:
+                existing.add('.'.join(present))
+        return sorted(existing)
+
+    def finish():
+        # Values remain the existing derived observations. Source coordinates
+        # cite immutable compiled bytes/account references instead of fields
+        # introduced only in the normalized semantic view. A missing field is
+        # witnessed by its nearest existing container, never an invented path.
+        for pair in result['boundaries'].values():
+            for check in pair['checks'].values():
+                check['raw_paths'] = source_paths(check['raw_paths'])
+        for name in ('lifecycle', 'transfers', 'disjoint_operations'):
+            for item in result[name]:
+                item['raw_paths'] = source_paths(item.get('paths', []) + [item['path']])
+                if 'paths' in item:
+                    item['paths'] = item['raw_paths']
+        if 'error_raw_paths' in result:
+            result['error_raw_paths'] = source_paths(result['error_raw_paths'])
+        return result
     try:
         if not _safe_raw(raw):
             raise ValueError('Missing, malformed or unsupported raw transaction')
@@ -321,10 +370,12 @@ def _observe(record, wallet):
             pair['program'] = next(iter(programs)) if len(programs) == 1 else None
             pair['flow_raw'] = str(flow)
             result['boundaries'][account] = pair
-        return result
+        return finish()
     except (ValueError, TypeError, KeyError, IndexError, OverflowError) as exc:
         result['gaps'].append(str(exc))
-        return result
+        if getattr(exc, 'paths', None):
+            result['error_raw_paths'] = list(exc.paths)
+        return finish()
 
 
 def _semantic(pair):
@@ -368,9 +419,17 @@ def _resolved_sources(raw_sources, source_receipts):
             source['invalid_body'] = True
         else:
             source['payload'] = payload
+    readable_hashes = {source['hash'] for source in resolved.values()
+                       if source['payload'] is not None and not source['invalid_body']}
     result = []
     for key in sorted(resolved, key=repr):
         source = resolved[key]
+        if source['payload'] is None and not source['invalid_body'] and source['hash'] in readable_hashes:
+            # A reader's role annotation is not another missing archive when
+            # the same checksum-checked bytes are already present. Preserve
+            # the original declared/body role; do not manufacture an absent
+            # native source from IndexedResolver's generic read label.
+            continue
         if source['invalid_body']:
             source['payload'] = None
         source['signature_hints'] = sorted(source['signature_hints'])
@@ -378,16 +437,57 @@ def _resolved_sources(raw_sources, source_receipts):
     return result
 
 
-def _native_claims(payload):
+def _indexed_native_rows(payload):
+    """Retain byte-verified native leads separately from page acceptance.
+
+    A malformed cursor does not destroy an independently usable raw fee. An
+    unreadable byte envelope cannot supply a convenient exclusion or record.
+    Caller role labels are deliberately absent from this interpretation.
+    """
+    from .indexed_input import (PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, MANIFEST_VERSION,
+                                source_bytes, validate_page_envelope, manifest_bytes, source_records)
+    version = payload.get('version') if isinstance(payload, dict) else None
+    if version not in (PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, MANIFEST_VERSION):
+        return [], set(), False, False
+    try:
+        if version == MANIFEST_VERSION:
+            manifest_bytes(payload)
+            return [], set(), False, True
+        if version == RECORD_VERSION:
+            # An unresolved pointer is a negative association, never a raw
+            # transaction or a trusted native content/ordering declaration.
+            signature = payload.get('signature')
+            valid = isinstance(signature, str) and 1 <= len(signature) <= 128
+            return [], {signature} if valid else set(), not valid, True
+        source_bytes(payload)  # Strict byte hashes/encoding before any leads.
+        if version == PAGE_VERSION:
+            page = validate_page_envelope(payload)
+            return page['records'], set(page['signatures']), bool(page['unassignable_records']), True
+        from .indexed_input import _json
+        response = _json(source_bytes(payload)['response'])
+        raw = response.get('result') if isinstance(response, dict) else None
+        native = source_records(payload)
+        transaction = raw.get('transaction') if isinstance(raw, dict) else None
+        signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+        unassignable = not (isinstance(signatures, list) and signatures and
+                            isinstance(signatures[0], str) and 1 <= len(signatures[0]) <= 128)
+        return [raw], set(native['signatures']), unassignable, True
+    except (ValueError, TypeError, KeyError, UnicodeError, OverflowError):
+        return [], set(), True, True
+
+
+def _native_claims(payload, *, indexed_facts=None):
     """Inspect response/account wrappers without trusting their role label."""
-    nodes, claims, ambiguous = [payload], set(), False
+    indexed, leads, ambiguous, is_indexed = indexed_facts if indexed_facts is not None else _indexed_native_rows(payload)
+    nodes, claims = [payload] + indexed, set(leads)
+    inspection_limit = MAX_RECORDS + 64 if is_indexed else 64
     inspected = 0
     while nodes:
         value = nodes.pop()
         if not isinstance(value, dict):
             continue
         inspected += 1
-        if inspected > 64:
+        if inspected > inspection_limit:
             ambiguous = True
             break
         if {'transaction', 'meta'} & value.keys():
@@ -435,15 +535,42 @@ def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
     original raw evidence so later loss cannot erase an observed contradiction.
     """
     selected = {s for s in selected_signatures if isinstance(s, str) and s}
-    negative = set()
-    for source in _resolved_sources(raw_sources, source_receipts):
+    negative, available = set(), {}
+    sources = _resolved_sources(raw_sources, source_receipts)
+    indexed_rows = {(source['kind'], source['hash']): _indexed_native_rows(source['payload']) for source in sources}
+    row_counts = {}
+    for (_kind, digest), facts in indexed_rows.items():
+        row_counts[digest] = max(row_counts.get(digest, 0), len(facts[0]))
+    indexed_budget_exceeded = sum(row_counts.values()) > MAX_INDEXED_RECORDS
+    for source in sources:
         kind, digest, payload = source['kind'], source['hash'], source['payload']
         if kind in ('transaction', 'getTransaction'):
             continue  # Explicit native links are checked by the normal loader.
-        claims, ambiguous = _native_claims(payload)
+        if source['invalid_body']:
+            negative.add((None, digest))
+            continue
+        indexed_facts = indexed_rows[(kind, digest)]
+        if indexed_budget_exceeded and indexed_facts[3]:
+            # Never certify a convenient page prefix after whole-input loss.
+            negative.add((None, digest))
+            continue
+        claims, ambiguous = _native_claims(payload, indexed_facts=indexed_facts)
         hints = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES else []
         affected = selected & (claims | set(hints))
         negative.update((signature, digest) for signature in affected)
+        native_rows, _, _, indexed = indexed_facts
+        if indexed:
+            for raw in native_rows:
+                transaction = raw.get('transaction') if isinstance(raw, dict) else None
+                signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+                signature = signatures[0] if isinstance(signatures, list) and signatures else None
+                if signature not in affected:
+                    continue
+                key = signature, digest
+                if key in available and available[key] != raw:
+                    available[key] = None  # Repeated/conflicting alternatives cannot win by arrival order.
+                else:
+                    available.setdefault(key, raw)
         if ambiguous or source['invalid_hints']:
             negative.add((None, digest))
         elif not affected and not claims:
@@ -451,7 +578,8 @@ def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
                 negative.add((None, digest))
             elif kind == 'current-mint-controls' and payload is not None and not _mint_metadata(payload):
                 negative.add((None, digest))
-    return [{'signature': signature, 'evidence_hash': digest, 'raw': None}
+    return [{'signature': signature, 'evidence_hash': digest, 'raw': available.get((signature, digest)),
+             **({'indexed_source_hash': digest} if (signature, digest) in available else {})}
             for signature, digest in sorted(negative, key=lambda key: (key[0] or '', key[1]))]
 
 
@@ -535,7 +663,7 @@ def _clock_inputs(raw_sources, source_receipts, wallet):
         kind = row.get('kind', row.get('role'))
         if kind not in ('transaction', 'getTransaction'):
             supplied.setdefault((kind, row['hash']), {'kind': kind, 'hash': row['hash'], 'payload': None})
-    pages, blocks, typed = [], [], []
+    pages, blocks, indexed, typed = [], [], [], []
     for (_, digest), row in sorted(supplied.items(), key=lambda item: repr(item[0])):
         kind, payload = row.get('kind'), row.get('payload')
         if payload is not None:
@@ -545,7 +673,10 @@ def _clock_inputs(raw_sources, source_receipts, wallet):
                     payload = None
             except (ValueError, TypeError):
                 payload = None
-        if kind not in ('signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance'):
+        from .indexed_input import PAGE_VERSION
+        if kind == 'indexed-page' or isinstance(payload, dict) and payload.get('version') == PAGE_VERSION:
+            indexed.append({'hash': digest, 'payload': payload})
+        if kind not in {'signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance'} | _INDEXED_ROLES:
             if kind not in ('transaction', 'getTransaction'):
                 typed.append({'kind': kind, 'hash': digest, 'state': 'UNKNOWN', 'read_state': 'readable' if payload is not None else 'unavailable',
                     'scope': {'signatures': None, 'account': None, 'slot': None}, 'evidence': [digest] if HASH.fullmatch(digest) else [],
@@ -563,7 +694,7 @@ def _clock_inputs(raw_sources, source_receipts, wallet):
             pages.append({'hash': digest, 'payload': payload})
         elif kind == 'block-order':
             blocks.append({'hash': digest, 'payload': payload})
-    return pages, blocks, {'state': 'PASS' if typed and all(r['state'] == 'PASS' for r in typed) else 'UNKNOWN', 'receipts': typed}
+    return pages, blocks, indexed, {'state': 'PASS' if typed and all(r['state'] == 'PASS' for r in typed) else 'UNKNOWN', 'receipts': typed}
 
 
 def derive_wallet_evidence(records, *, all_records, wallet, window, source_consistency, chronology,
@@ -602,12 +733,14 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         for name in ('preTokenBalances', 'postTokenBalances') if isinstance(raw['meta'].get(name), list))
     quantity_budget_exceeded = account_steps > MAX_ACCOUNT_STEPS
     selected = {key: selected[key] for key in sorted(selected, key=str) if isinstance(key, str) and key}
-    pages, blocks, contents = _clock_inputs(source_rows, (), wallet)
+    pages, blocks, indexed, contents = _clock_inputs(source_rows, (), wallet)
     # Unsafe container shapes remain explicit unavailable records to shared checks.
     safe_linked = [{key: value for key, value in row.items() if key != 'transaction_index'} |
                    {'raw': row.get('raw') if _safe_raw(row.get('raw')) else None} for row in linked]
-    consistency = assess_source_consistency(safe_linked, wallet=wallet, page_receipts=pages, archive_contents=contents)
-    clocks = apply_unresolved_chronology(assess_chronology(safe_linked, page_receipts=pages, block_receipts=blocks), safe_linked, contents)
+    consistency = assess_source_consistency(safe_linked, wallet=wallet, page_receipts=pages,
+        indexed_receipts=indexed, archive_contents=contents)
+    clocks = apply_unresolved_chronology(assess_chronology(safe_linked, page_receipts=pages,
+        block_receipts=blocks, indexed_receipts=indexed), safe_linked, contents)
     def derived_record(row):
         return with_derived_order([row], clocks)[0]
     versions, raw_versions = defaultdict(list), defaultdict(list)

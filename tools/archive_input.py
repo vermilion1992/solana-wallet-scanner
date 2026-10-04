@@ -40,18 +40,49 @@ def pack_cache(corpus, output):
     # Deliberately do not copy provider config/credentials/ledger or import a trusted checkpoint.
 
 
+def pack_indexed(manifest_path, raw_dir, output):
+    """Pack already archived provider bytes; never acquire or rewrite them."""
+    from scanner.indexed_input import validate_manifest as validate_indexed, pack_indexed_bytes, MAX_RAW, MAX_TOTAL
+    manifest = validate_indexed(json.loads(manifest_path.read_bytes()))
+    links = {row[key] for row in manifest['pages'] + manifest.get('transactions', [])
+             for key in ('request_hash', 'response_hash')}
+    payloads, total = {}, 0
+    root = raw_dir.resolve(strict=True)
+    for digest in sorted(links):
+        path = root / (digest + '.json')
+        if not path.exists():
+            continue  # Missing references remain explicit dependencies.
+        if path.resolve(strict=True).parent != root or not path.is_file():
+            raise ValueError('Raw input must remain a regular file in the supplied directory')
+        with path.open('rb') as stream:
+            raw = stream.read(MAX_RAW + 1)
+        total += len(raw)
+        if len(raw) > MAX_RAW or total > MAX_TOTAL:
+            raise ValueError('Raw indexed inputs exceed the expanded source bounds')
+        payloads[digest] = raw
+    content = pack_indexed_bytes(manifest, payloads)
+    with output.open('xb') as stream:
+        stream.write(content)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--bundle', type=Path)
     p.add_argument('--partial-cache', type=Path)
+    p.add_argument('--indexed-manifest', type=Path)
+    p.add_argument('--raw-dir', type=Path)
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
-    if bool(a.bundle) == bool(a.partial_cache):
-        p.error('Choose one supplied canonical bundle or authorised partial cache')
+    if sum(bool(v) for v in (a.bundle, a.partial_cache, a.indexed_manifest)) != 1:
+        p.error('Choose one canonical bundle, authorised partial cache or indexed manifest')
+    if bool(a.raw_dir) != bool(a.indexed_manifest):
+        p.error('--raw-dir and --indexed-manifest must be supplied together')
     if a.bundle:
         pack_bundle(json.loads(a.bundle.read_text()), a.output)
-    else:
+    elif a.partial_cache:
         pack_cache(a.partial_cache, a.output)
+    else:
+        pack_indexed(a.indexed_manifest, a.raw_dir, a.output)
     print(json.dumps({'output': str(a.output), 'sha256': hashlib.sha256(a.output.read_bytes()).hexdigest(),
                       'scope': 'Synthetic development' if a.bundle else 'Partial real sample; B3 remains blocked', 'provider_requests': 0}))
     return 0

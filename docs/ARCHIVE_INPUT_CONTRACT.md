@@ -1,6 +1,6 @@
 # Executable archived accounting contract
 
-This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v2` adds source-derived fee-window membership; existing FIFO v3 and account-position v10 interpretations remain unchanged. Older archived calculations require an offline child rebuild; their saved values remain immutable.
+This extends the existing collector, source-consistency, chronology, instruction-scope and FIFO contracts. It does not replace the PDF wallet-wide acceptance requirements. `archive-ledger-v5`, `slot-chronology-evidence-v3`, `spot-v5-compiled-instructions`, `account-position-evidence-v11`, `source-consistency-v5`, `history-evidence-v9` and `wallet-raw-evidence-v2` record the indexed/compiled interpretation changes. FIFO arithmetic remains v3. Older archived calculations require an offline child rebuild; their saved values remain immutable.
 
 Selected **in-window** fees require the linked raw/page/block clock possibilities to agree on half-open window membership. Exact timestamps or same-slot ordering may remain unresolved when every bounded possibility belongs to the same interval side. Boundary-crossing, missing or unsupported relevant clocks revoke the total. Known disjoint clock sources, absent optional block time and independently proved zero wallet-paid fee projections do not erase supported fees. Native unordered observed-record totals have a different population and retain their existing clock-independent requirements.
 
@@ -13,6 +13,24 @@ Upload: 20 MiB; manifest: 4 MiB; expanded individual source: 32 MiB; expanded bu
 Missing referenced files remain unresolved receipts. Restoring the exact bytes recovers dependent interpretations. Each signature is decoded once; every linked alternative is checked, including unsupported operations and contradictory fee/quantity facts. Unknown source roles remain coverage dependencies. The immutable manifest is archived and cited by the saved report and every rebuilt child. Imports do not create `collector_checkpoints` or declare imported collector ancestry trusted.
 
 ## Executable pipeline
+
+### Indexed original-byte inputs
+
+The same import endpoint also accepts `indexed-wallet-input-v1`: exact wallet/window, `pages: [{request_hash,response_hash}]`, optional native alternatives `transactions: [{signature,request_hash,response_hash}]`, and original byte files `raw/<sha256>.json`. There are no events, positions, canonical-order declarations or completion flags. Requests and responses retain their original serialization in checksum-verified byte envelopes, together with the exact uploaded manifest. Frozen per-record pointers identify the page, ordinal, signature and native-content hash. Every load/rebuild resolves those references again. Missing pages, malformed entries and linked alternatives remain dependencies, including their frozen negative signature associations.
+
+Supported indexed request/response schema and validated `transactionIndex` facts can establish order between selected records. They do not pretend to be `getBlock` signature populations. All linked positions and true block-order controls must agree. Standalone transaction indices are not accepted as ordering proof. Page shape and terminal cursor topology remain separate from provider authenticity, historical ownership and wallet completeness.
+
+`compiled-instructions-v1` derives reviewed System, SPL/Token-2022 base and ATA representations for the existing instruction, quantity and spot decoders. Static keys, message header and loaded address tables must agree. Inner CPI signer roles are distinct from message signatures. Unsupported extensions, binary layouts and outer trading wrappers retain explicit gaps; compiled normalization alone cannot classify an arbitrage wrapper as a supported buy/sell. Original evidence bytes are immutable, and derived instruction paths cite the original byte inputs.
+
+Use the existing offline packer with hash-named raw files:
+
+```sh
+.venv/bin/python tools/archive_input.py --indexed-manifest /path/manifest.json --raw-dir /path/raw --output /tmp/indexed-wallet.zip
+```
+
+This prepares already archived inputs without requests or credentials. It preserves missing links and refuses overwriting the output or following raw-file links outside the chosen directory. The resulting archive uses the existing Audit wallets import, saved reports, source inspection, JSON/CSV export and immutable offline rebuild workflow. This is a runtime evidence archive, not a new application release.
+
+The authorised July 2026 two-page sample contains 200 unique records (184 failed, 16 successful). Independently summing payer-matched original `meta.fee` gives 8,904,733 lamports (0.008904733 SOL). Its 78 seconds of nonterminal history and unreviewed successful outer wrappers remain partial: this observation does not certify profit, a complete population, or B3.
 
 The normal report builder materializes archives, checks source identity/alternatives and chronology with the existing shared components, derives supported raw economic swaps and generic movements, and calls the existing FIFO engine. Pre-window acquisitions, partial exits, re-entry, losses, breakeven and failed fees pass through the same engine. Transfers and unsupported or unknown origins remain unresolved; no zero-cost lot is invented. Network/priority fees use raw `meta.fee`; allocation to basis or exit is matched once by the existing fee-allocation checks.
 

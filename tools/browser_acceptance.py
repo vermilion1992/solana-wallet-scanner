@@ -77,7 +77,7 @@ Path(sys.argv[3]).write_text(json.dumps(cases,indent=2)+'\\n');store.close()
             page.goto(url);page.get_by_role('button',name='Find wallet candidates',exact=True).first.wait_for()
             state=page.request.get(base+'/api/state').json();usage=state['usage']
             assert not state['provider']['configured'] and state['settings']['refresh_minutes']==0
-            assert state['position_evidence_methodology']=='account-position-evidence-v10'
+            assert state['position_evidence_methodology']=='account-position-evidence-v11'
             def capture(name):
                 nonlocal captures
                 for width,height,label in ((1440,900,'desktop'),(390,844,'mobile')):

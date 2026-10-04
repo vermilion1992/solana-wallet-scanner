@@ -172,3 +172,7 @@ Realised P&L does not inherently need boundary marks; economic P&L does. Scoped 
 Deliver one candidate when the scoped stabilisation gates in ACCEPTANCE.md are satisfied, or a truthful bounded blocker report when they cannot be. Then continue the separate R1 milestone under its source contract; do not pretend that Gate A closes Gate B.
 
 The handoff should be short: baseline/candidate identity, issue IDs resolved with evidence, remaining blockers, gates executed, and source/test locations. Full raw logs live in an evidence folder. Export a ZIP only at an acceptance checkpoint or at explicit request. No cosmetic redesign, unrelated dashboard features, trading, paid source acquisition or threshold relaxation.
+
+## Active offline indexed/native batch
+
+Continue exclusively from `0f3a9d1e110ac948cab4d27fdc3377e37927a08b` on `codex/product-completion`, preserving all earlier history and accepted regressions. The completed 10-request probe is archived under `evidence/source-probe-2026-10-04/`; it does not authorise further collection. Current work implements immutable indexed input and reviewed base compiled instructions through the existing validators/FIFO/report/UI/rebuild. The single register/matrix/source decision remain authoritative. Exact final source, commands, raw evidence, distinct diff review and private Git publication are recorded under `evidence/indexed-native-batch/`. Complete real B2 and genuine B3 remain open; PRODUCT_READY=false. No live calls, credentials, purchases or release ZIPs are part of this batch.

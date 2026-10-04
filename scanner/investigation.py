@@ -39,7 +39,7 @@ RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v4-durable-nonce'
+DECODER_VERSION = 'spot-v5-compiled-instructions'
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -171,7 +171,7 @@ def _route(instruction, keys):
 
 
 def _verify_nonce_administration(message, info, keys, pre_lamports, post_lamports,
-                                 address, fee, outer, nested):
+                                 address, fee, outer, nested, *, raw=None):
     """Accept one narrow, non-economic System advanceNonce instruction.
 
     The caller has already checked the actual System Program identity. The
@@ -190,6 +190,12 @@ def _verify_nonce_administration(message, info, keys, pre_lamports, post_lamport
             or keys.count(RECENT_BLOCKHASHES_SYSVAR) != 1):
         raise ValueError('Nonce administration account, authority or recent-blockhashes sysvar identity is unresolved')
     entries = message.get('accountKeys')
+    if isinstance(entries, list) and all(isinstance(entry, str) for entry in entries):
+        from .compiled_instructions import key_roles
+        roles = key_roles(raw)['keys']
+        if [entry['pubkey'] for entry in roles] != keys:
+            raise ValueError('Compiled nonce account roles disagree with resolved primary keys')
+        entries = roles
     authority_entry = next((entry for entry in entries if isinstance(entry, dict) and entry.get('pubkey') == address), None)
     nonce_entry = next((entry for entry in entries if isinstance(entry, dict) and entry.get('pubkey') == nonce), None)
     sysvar_entry = next((entry for entry in entries if isinstance(entry, dict) and entry.get('pubkey') == RECENT_BLOCKHASHES_SYSVAR), None)
@@ -318,6 +324,8 @@ def decode_supported_swaps(transactions, address):
         raw = record.get('raw') if isinstance(record, dict) else None
         if isinstance(raw, dict) and 'result' in raw:
             raw = raw['result']
+        from .transaction_format import instruction_view
+        raw = instruction_view(raw)
         rows.append((record if isinstance(record, dict) else {}, raw))
     slots = Counter(raw['slot'] for _, raw in rows if isinstance(raw, dict)
                     and isinstance(raw.get('slot'), int) and not isinstance(raw['slot'], bool))
@@ -466,6 +474,8 @@ def decode_supported_swaps(transactions, address):
             outside_native_delta = 0
             nonce_administration = []
             for outer, path, instruction, nested in flat:
+                if 'parsed' in instruction and any(key in instruction for key in ('accounts', 'data')):
+                    raise ValueError('Parsed and opaque instruction representations conflict')
                 program = _program(instruction, keys)
                 parsed = instruction.get('parsed')
                 kind = parsed.get('type') if isinstance(parsed, dict) else None
@@ -486,7 +496,7 @@ def decode_supported_swaps(transactions, address):
                 if program == SYSTEM_ID:
                     if kind == 'advanceNonce':
                         nonce_administration.append({**_verify_nonce_administration(
-                            message, info, keys, pre_lamports, post_lamports, address, fee, outer, nested),
+                            message, info, keys, pre_lamports, post_lamports, address, fee, outer, nested, raw=raw),
                             'signature': signature, 'path': path, 'evidence': hashes})
                     elif kind == 'transfer':
                         source, destination = info.get('source'), info.get('destination')

@@ -23,7 +23,7 @@ from .transaction_format import supported_transaction_format
 from .source_consistency import (assess_source_consistency, index_source_links, merge_source_manifests,
                                  source_archive_receipts, apply_unresolved_chronology)
 
-VERSION = "history-evidence-v8"
+VERSION = "history-evidence-v9"
 MAX_ACCOUNTS = 1000
 MAX_RECORDS = 10_000
 MAX_REFERENCES = 40_000
