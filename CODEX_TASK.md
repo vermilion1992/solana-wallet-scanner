@@ -1,4 +1,36 @@
-# Active assignment — wallet accounting finalization, 4 October 2026
+# Active assignment — mixed refunds and retained phase prices, 4 October 2026
+
+Continue only from private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, published HEAD
+`bad28e11d7a281aa201eb08761e2a17161a9180a`. Its focused evidence binds application
+`3cb89255c43768a6dc8059c222b189a47fc31680`: 259 source files, literal-byte/POSIX
+manifest `1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366`.
+Preserve all 51 published commits and their original evidence.
+
+Finish the available-data accounting path for original System and canonical
+legacy WSOL movements followed by a wallet-authorized account refund. Replay
+bounded native cash in actual instruction order, preserve unsigned integer units,
+original paths, source alternatives and exact endpoint checks, then feed the
+existing ledger/FIFO. Closure proof may establish refund entitlement for an
+actual same-record top-up; a token-owner field or net equality cannot.
+
+Fix the reproduced retained-phase-price sibling: pinned PumpSwap sync/close user
+volume administration can be excluded only when its validated original references
+are disjoint from every accepted pool/mint/vault role. Do not suppress the mixed
+transaction's exports, foreign closures or unsupported whole-trade roles to claim
+a positive wallet buy or profit. Unknown wrappers remain unsupported.
+
+Use retained genuine inputs and small independently worked interface controls.
+No live calls, credentials, new source research, full suites, new ZIPs or trading.
+Version changed interpretations (wallet v11/archive v14/cost roles v2/economic
+observations v3/reserve marks v2), create immutable children, run necessary focused
+checks and a distinct read-only review, and publish coherent private commits.
+Current receipts belong in `evidence/mixed-refund-accounting-batch/`. The existing
+validation entry point already includes both affected test modules exactly once.
+B1 remains NO_GO_CURRENT_SOURCE, complete real B2 OPEN, genuine B3 BLOCKED and
+PRODUCT_READY=false. No threshold or source-contract substitution is authorized.
+
+# Prior assignment — wallet accounting finalization, 4 October 2026
 
 Continue private `vermilion1992/solana-wallet-scanner`, branch
 `codex/product-completion`, exact published starting HEAD

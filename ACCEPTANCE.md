@@ -170,3 +170,16 @@ partition. The existing coverage module tests the precollection decision; the
 small guarded API control tests immutable offline loss/restoration and exports.
 No new full Gate A, browser acceptance, live provider probe or B3 is claimed.
 Focused implementation tests cannot establish PRODUCT_READY.
+
+## Mixed-refund and genuine reserve-administration follow-up
+
+Use targeted existing cost-flow and reserve-mark modules plus necessary shared
+quantity/FIFO/offline report neighbours. Source-bound command success, explicitly
+passing receipts, unchanged source and distinct read-only review are recorded at
+`evidence/mixed-refund-accounting-batch/`. Existing locks/frontend assets remain
+bound by unchanged source bytes when this backend-only batch does not change
+frontend files; no new frontend installation/build/browser acceptance is claimed.
+The existing validation runner already includes both modules once. Independently
+worked mixed-refund interface controls and retained genuine phase-price originals
+remain separate from complete genuine B3. No live provider requests or credits
+are required. B1 NO_GO_CURRENT_SOURCE and PRODUCT_READY=false are unchanged.
