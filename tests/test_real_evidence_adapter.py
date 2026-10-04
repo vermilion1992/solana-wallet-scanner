@@ -11,6 +11,7 @@ import pytest
 
 import scanner.app as application
 from scanner.archive_input import pack_bytes
+from scanner.archive_input import import_archive, load_archive, decode_archive, analyze_archive, canonical_bytes
 from scanner.storage import Store
 from scanner.accounting import utc
 
@@ -112,6 +113,85 @@ def test_malformed_link_cannot_disappear_or_crash_native_adapter(tmp_path, malfo
         window=value['manifest']['window'], source_consistency={}, chronology={}, source_receipts=receipts, raw_sources=sources)
     assert derived['components']['native_fee']['state'] == 'UNKNOWN'
     assert derived['components']['selected_record_identity']['state'] == 'UNKNOWN'
+
+
+def test_proved_outside_window_unknown_fee_preserves_in_window_total(tmp_path):
+    value = development_inputs()
+    row = value['manifest']['transactions'][0]
+    raw = deepcopy(value['payloads'][row['hash']])
+    assert utc(raw['blockTime']) < utc(value['manifest']['window']['start'])
+    raw['meta']['fee'] = None
+    digest = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+    value['payloads'][digest] = raw
+    row['hash'] = digest
+    store = Store(tmp_path)
+    manifest_hash = import_archive(store, pack_bytes(value))
+    loaded = load_archive(store, manifest_hash)
+    events, _ = decode_archive(loaded)
+    result, _, coverage = analyze_archive(loaded, events)
+    assert coverage['fee_interval_membership'][row['signature']]['member'] is False
+    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000055'
+    assert coverage['metric_requirements']['observed_network_fees_sol']['state'] == 'PASS'
+    # A linked clock crossing the boundary removes the supported exclusion.
+    alternative = deepcopy(raw)
+    alternative['blockTime'] = int(utc(value['manifest']['window']['start']).timestamp()) + 60
+    other = hashlib.sha256(canonical_bytes(alternative)).hexdigest()
+    value['payloads'][other] = alternative
+    value['manifest'].setdefault('evidence', []).append({'kind': 'getTransaction', 'signature': row['signature'], 'hash': other})
+    changed_manifest = import_archive(store, pack_bytes(value))
+    changed = load_archive(store, changed_manifest)
+    events, _ = decode_archive(changed)
+    blocked, _, _ = analyze_archive(changed, events)
+    assert blocked['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+    # Returning to the exact original frozen reference universe recovers it.
+    restored = load_archive(store, manifest_hash)
+    events, _ = decode_archive(restored)
+    recovered, _, _ = analyze_archive(restored, events)
+    assert recovered['metrics'] == result['metrics']
+
+
+def test_physical_inspection_budget_loss_preserves_independent_native_fees(tmp_path, monkeypatch):
+    import scanner.wallet_evidence as adapter
+    value = development_inputs()
+    store = Store(tmp_path)
+    digest = import_archive(store, pack_bytes(value))
+    monkeypatch.setattr(adapter, 'MAX_ACCOUNT_STEPS', 1)
+    loaded = load_archive(store, digest)
+    events, _ = decode_archive(loaded)
+    result, _, coverage = analyze_archive(loaded, events)
+    raw_evidence = coverage['wallet_evidence']
+    assert raw_evidence['inspection_budget']['quantity_state'] == 'UNKNOWN'
+    assert raw_evidence['components']['observed_quantities']['state'] == 'UNKNOWN'
+    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000055'
+    assert result['metrics']['profit_sol']['status'] == 'unknown'
+
+
+def test_existing_archive_alternative_capacity_is_preserved(tmp_path):
+    # One engineering case, not 10,001 tests or a wallet population witness.
+    value = development_inputs()
+    address = value['manifest']['address']
+    at = int(utc(value['manifest']['window']['start']).timestamp())
+    template = {'version': 0, 'slot': 1000, 'blockTime': at,
+        'transaction': {'signatures': ['dev-bulk-fee'], 'message': {'accountKeys': [address], 'instructions': []}},
+        'meta': {'err': None, 'fee': 5000, 'preBalances': [1000000000], 'postBalances': [999995000],
+                 'preTokenBalances': [], 'postTokenBalances': [], 'innerInstructions': []}}
+    payloads, refs = {}, []
+    for variant in range(10_001):
+        raw = {**template, 'development_variant': variant}
+        digest = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+        payloads[digest] = raw
+        refs.append({'signature': 'dev-bulk-fee', 'hash': digest})
+    value = {'manifest': {'version': value['manifest']['version'], 'address': address,
+        'window': value['manifest']['window'], 'dataset': 'real', 'transactions': refs[:1],
+        'evidence': [{'kind': 'getTransaction', **row} for row in refs[1:]]}, 'payloads': payloads}
+    store = Store(tmp_path)
+    digest = import_archive(store, pack_bytes(value))
+    loaded = load_archive(store, digest)
+    events, _ = decode_archive(loaded)
+    result, _, coverage = analyze_archive(loaded, events)
+    assert coverage['wallet_evidence']['inspection_budget']['linked_records'] == 10_001
+    assert result['metrics']['observed_network_fees_sol']['value'] == '0.000005'
+    assert coverage['real_acceptance'] == 'BLOCKED'
 
 
 @pytest.mark.parametrize('loss', ['selected', 'classification', 'valuation'])

@@ -536,9 +536,18 @@ def analyze_archive(loaded, events):
             zero_exclusions.append(signature)
     zero_exclusions = sorted(set(zero_exclusions))
     window_known = all(row['state'] == 'PASS' or signature in zero_exclusions for signature, row in membership.items())
+    projected = [signature for signature, row in membership.items()
+                 if not (row['state'] == 'PASS' and row['member'] is False)]
+    native_projection = [adapter['transactions'].get(signature, {}).get('network_fee', {}).get('check', {})
+                         for signature in projected]
+    identity_projection = [adapter['transactions'].get(signature, {}).get('checks', {}).get('identity', {})
+                           for signature in projected]
+    # Empty projection means every selected record is independently proven
+    # outside this window; it is not an unproved empty history declaration.
+    projection_known = bool(membership) and all(row.get('state') == 'PASS' for row in native_projection)
     fee_ok = window_known and all(
         native_groups.get(r['signature'], {}).get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' for r in relevant)
-    fee_ok = fee_ok and adapter['components']['native_fee']['state'] == 'PASS' and all(e.get('amount_sol') is not None for e in fee_rows)
+    fee_ok = fee_ok and projection_known and all(e.get('amount_sol') is not None for e in fee_rows)
     fees = canonical(sum((decimal(e['amount_sol']) for e in fee_rows if e.get('amount_sol') is not None), Decimal(0)))
     result['metrics']['observed_network_fees_sol'] = {'value': fees if fee_ok else None, 'status': 'known' if fee_ok else 'unknown',
         'unit': 'SOL', 'population': 'Selected in-window records with an independently supported wallet fee payer; not all interval costs',
@@ -578,6 +587,11 @@ def analyze_archive(loaded, events):
             row['reason'] or 'Finite world independently spans this interval.', row['evidence'])
             for name, row in intervals.items()}
     fee_evidence = result['metrics']['observed_network_fees_sol']['evidence']
+    for name, checks in (('native_fee', native_projection), ('selected_record_identity', identity_projection)):
+        components[name] = {'state': 'PASS' if bool(membership) and all(row.get('state') == 'PASS' for row in checks) else 'UNKNOWN',
+            'evidence': sorted(set(fee_evidence + [h for row in checks for h in row.get('evidence', [])])),
+            'scope': 'Selected records that may contribute to this reporting window; proved exclusions remain excluded',
+            'reason': 'Native fee/identity prerequisites are projected using supported interval membership.'}
     components['fee_window'] = {'state': 'PASS' if window_known else 'UNKNOWN', 'evidence': sorted(set(fee_evidence)),
         'scope': 'selected in-window wallet-paid native fees',
         'reason': None if window_known else 'Shared linked-clock checks leave selected reporting-window membership unresolved.'}

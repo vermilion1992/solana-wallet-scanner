@@ -21,18 +21,18 @@ from .instruction_scope import inspect_instruction
 from .investigation import _keys, _route, decode_supported_swaps, WSOL
 from .position_evidence import _balance, _quantity_point, VENUES
 from .source_consistency import (assess_source_consistency, source_archive_receipts,
-                                 apply_unresolved_chronology)
+                                 apply_unresolved_chronology, SOURCE_HASH_LIMIT)
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
 VERSION = 'wallet-raw-evidence-v1'
 HASH = re.compile(r'^[a-f0-9]{64}$')
-MAX_RECORDS = 10_000
+MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
 OBSERVED_SCOPE = 'Selected archived records only; hidden accounts and intervening records are unproved'
 _NONTRANSACTION_ROLES = {'signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance',
                         'classification', 'valuation', 'boundary-inventory', 'historical-mark', 'capital-flow',
-                        'synthetic-population', 'population-inventory'}
+                        'synthetic-population', 'population-inventory', 'current-mint-controls'}
 
 
 def with_derived_order(records, chronology):
@@ -373,6 +373,25 @@ def _resolved_sources(raw_sources, source_receipts):
     return result
 
 
+def _mint_metadata(payload):
+    """Current account metadata cannot assert native transaction endpoints.
+
+    This is semantic disjointness only, not trusted collector ancestry, asset
+    classification, historical ownership or a historical inventory certificate.
+    Match the existing report-metadata body contract; no new provider fields.
+    """
+    if not isinstance(payload, dict):
+        return False
+    result = payload.get('result')
+    context = result.get('context') if isinstance(result, dict) else None
+    slot = context.get('slot') if isinstance(context, dict) else None
+    return (payload.get('method') == 'getAccountInfo' and _valid_account(payload.get('address'))
+            and payload.get('commitment') == 'finalized' and type(slot) is int and slot >= 0
+            and 'value' in result and (result['value'] is None or isinstance(result['value'], dict))
+            and not {'transaction', 'meta'}.intersection(payload)
+            and not {'transaction', 'meta'}.intersection(result))
+
+
 def _clock_inputs(raw_sources, source_receipts, wallet):
     """Role validation ignores caller state/optional scope annotations."""
     supplied = {}
@@ -462,6 +481,13 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
             # A raw native identity can prove disjointness. An arbitrary role or
             # missing body cannot supply an exclusion by caller annotations.
             if native_signature is None or native_signature in selected:
+                if not _mint_metadata(source.get('payload')):
+                    negative_links.append({'signature': None, 'evidence_hash': source.get('hash'), 'raw': None})
+        elif kind == 'current-mint-controls' and source.get('payload') is not None and native_signature is None:
+            # A current-mint label cannot exempt a malformed native-shaped or
+            # wrong-method body. Missing mint metadata remains its own narrower
+            # dependency, as do missing classification/current snapshots.
+            if not _mint_metadata(source['payload']):
                 negative_links.append({'signature': None, 'evidence_hash': source.get('hash'), 'raw': None})
     for row in list(all_records) + selected_rows + negative_links:
         if isinstance(row, dict):
@@ -476,8 +502,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     account_steps = sum(len(raw.get('meta', {}).get(name, [])) for row in linked
         if isinstance(raw := row.get('raw'), dict) and isinstance(raw.get('meta'), dict)
         for name in ('preTokenBalances', 'postTokenBalances') if isinstance(raw['meta'].get(name), list))
-    if account_steps > MAX_ACCOUNT_STEPS:
-        raise ValueError('Wallet account-version inspection budget exceeded')
+    quantity_budget_exceeded = account_steps > MAX_ACCOUNT_STEPS
     selected = {key: selected[key] for key in sorted(selected, key=str) if isinstance(key, str) and key}
     pages, blocks, contents = _clock_inputs(source_rows, (), wallet)
     # Unsafe container shapes remain explicit unavailable records to shared checks.
@@ -489,7 +514,17 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         return with_derived_order([row], clocks)[0]
     versions = defaultdict(list)
     for row in linked:
-        versions[row.get('signature')].append(_observe(derived_record(row), wallet))
+        if quantity_budget_exceeded:
+            # The archive's declared input capacity remains valid. Inspection
+            # budget loss revokes physical/ownership observations while native
+            # identity, clocks and wallet-paid fees keep their own checks.
+            observation = {'signature': row.get('signature'), 'hash': row.get('evidence_hash'),
+                'boundaries': {}, 'lifecycle': [], 'transfers': [], 'trades': [], 'failed': None,
+                'disjoint_operations': [],
+                'gaps': ['Physical account-version inspection budget exceeded; token observations are unsupported.']}
+        else:
+            observation = _observe(derived_record(row), wallet)
+        versions[row.get('signature')].append(observation)
     transactions, accounts, acquisitions, fee_checks, identity_checks = {}, defaultdict(list), [], [], []
     quantity_checks, owner_checks, lifecycle_checks, cost_checks = [], [], [], []
     for signature, primary in selected.items():
@@ -682,6 +717,9 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         'fee_window': _combine(fee_projection_checks, 'Each selected nonzero wallet-paid fee has supported window membership; proved zero projections remain usable.')}
     from .metric_evidence import compose_metric_decisions
     return {'version': VERSION, 'scope': OBSERVED_SCOPE, 'components': components,
+        'inspection_budget': {'max_records': MAX_RECORDS, 'linked_records': len(linked),
+            'max_account_steps': MAX_ACCOUNT_STEPS, 'account_steps': account_steps,
+            'quantity_state': 'UNKNOWN' if quantity_budget_exceeded else 'PASS'},
         'accounts': dict(sorted(accounts.items())), 'transactions': transactions, 'acquisitions': acquisitions,
         'observed_fifo_positions': fifo_positions,
         'interval_checks': intervals, 'intervals': intervals, 'metric_dependencies': compose_metric_decisions(components, intervals),

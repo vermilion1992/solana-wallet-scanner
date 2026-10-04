@@ -406,6 +406,59 @@ def test_mint_target_authority_changes_keep_account_owner_and_quantity_observati
     assert result['transactions']['buy']['disjoint_operations']
 
 
+def mint_metadata():
+    return {'method': 'getAccountInfo', 'address': MINT, 'commitment': 'finalized',
+            'result': {'context': {'slot': 1000}, 'value': {'owner': TOKEN_PROGRAM, 'data': {'parsed': {'type': 'mint', 'info': {}}}}}}
+
+
+@pytest.mark.parametrize('kind', ['current-mint-controls', 'other-report-metadata'])
+def test_supported_current_mint_metadata_is_semantically_disjoint_from_selected_native_fees(kind):
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    payload = mint_metadata()
+    source = {'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest(), 'kind': kind, 'payload': payload}
+    result = derive([raw], raw_sources=[source], source_receipts=[{'hash': source['hash'], 'role': kind, 'state': 'UNKNOWN'}])
+    assert result['components']['native_fee']['state'] == 'PASS'
+    assert result['components']['event_ownership']['state'] == 'PASS'
+    assert result['components']['classification']['state'] == 'UNKNOWN'
+    assert result['components']['historical_population']['state'] == 'UNKNOWN'
+    assert source['hash'] in result['source_dependencies'][0]['evidence']
+
+
+def test_missing_current_mint_metadata_is_its_own_dependency_without_erasing_fees():
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    receipt = {'hash': 'a' * 64, 'role': 'current-mint-controls', 'state': 'PASS'}
+    result = derive([raw], source_receipts=[receipt])
+    assert result['components']['native_fee']['state'] == 'PASS'
+    assert result['components']['event_ownership']['state'] == 'PASS'
+    assert result['components']['classification']['state'] == 'UNKNOWN'
+    assert result['source_dependencies'][0]['state'] == 'UNKNOWN'
+
+
+def test_current_mint_label_cannot_hide_selected_transaction_alternative():
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    alternative = deepcopy(raw); alternative['meta']['fee'] = 6000
+    source = {'hash': hashlib.sha256(canonical_bytes(alternative)).hexdigest(), 'kind': 'current-mint-controls', 'payload': alternative}
+    result = derive([raw], raw_sources=[source])
+    assert result['components']['native_fee']['state'] == 'UNKNOWN'
+    assert result['components']['observed_quantities']['state'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('variant', ['wrong-method', 'missing-context', 'nonfinalized', 'hidden-transaction'])
+def test_present_malformed_current_metadata_does_not_gain_exemption_from_label(variant):
+    raw = raw_exchange('buy', 100, START + 3600, 0, 100)
+    payload = mint_metadata()
+    if variant == 'wrong-method':
+        payload['method'] = 'getTransaction'
+    elif variant == 'missing-context':
+        payload['result']['context'] = None
+    elif variant == 'nonfinalized':
+        payload['commitment'] = 'processed'
+    else:
+        payload['result']['transaction'] = {'signatures': ['buy']}
+    source = {'hash': hashlib.sha256(canonical_bytes(payload)).hexdigest(), 'kind': 'current-mint-controls', 'payload': payload}
+    assert derive([raw], raw_sources=[source])['components']['native_fee']['state'] == 'UNKNOWN'
+
+
 def test_permutation_duplicate_sources_and_caller_pass_flags_do_not_change_results():
     raws = [raw_exchange('buy', 100, START + 3600, 0, 100), raw_exchange('sale', 101, START + 7200, 100, 0)]
     rows = [record(raw) for raw in raws]
