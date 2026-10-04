@@ -1,0 +1,10 @@
+{
+  "state": "PASS",
+  "controls": 3,
+  "synthetic_interface_only": true,
+  "new_real_acceptance": false,
+  "closure_exact_lamports": "2000100",
+  "preceding_transfer_expected_refund_lamports": "1002000100",
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

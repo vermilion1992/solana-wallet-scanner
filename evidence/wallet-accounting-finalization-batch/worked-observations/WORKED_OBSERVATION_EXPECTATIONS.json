@@ -1,0 +1,102 @@
+{
+  "kind": "independently-worked-genuine-phase-observations",
+  "scope": "Genuine selected observations only; no whole-wallet or B3 acceptance",
+  "engine_functions_called": false,
+  "PRODUCT_READY": false,
+  "cases": [
+    {
+      "input_path": "tests/fixtures/mainnet-pumpswap-buy-exact-quote.json",
+      "input_file_sha256": "8ba32c85a5dff609362f79ff2253285385cb5410421c9e5d296cf2323bf23d21",
+      "original_raw_evidence_hash": "9ffe9059c331907e4c8d9835e4c06fd1d258782da7b96c7bb639c00ded5001d0",
+      "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+      "slot": 452635473,
+      "wallet": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+      "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
+      "phases": [
+        {
+          "phase": "pre",
+          "transcribed_base_reserve_raw": "36405553047293",
+          "transcribed_quote_reserve_raw": "828473559360",
+          "wallet_quantity_raw": "44824210540",
+          "decimals": 6,
+          "price_formula": "quote_raw * 10^6 / (base_raw * 10^9)",
+          "holding_value_formula": "wallet_raw * quote_raw / (base_raw * 10^9)",
+          "price_exact_fraction": [
+            "20711838984",
+            "910138826182325"
+          ],
+          "holding_value_exact_fraction": [
+            "5802448945558723071",
+            "5688367663639531250"
+          ],
+          "holding_value_sol_decimal100": "1.020055187826273581300414349414208985457625501547868731874410589600534291733514712468366809404969854"
+        },
+        {
+          "phase": "post",
+          "transcribed_base_reserve_raw": "36394889435237",
+          "transcribed_quote_reserve_raw": "828721948055",
+          "wallet_quantity_raw": "55487822596",
+          "decimals": 6,
+          "price_formula": "quote_raw * 10^6 / (base_raw * 10^9)",
+          "holding_value_formula": "wallet_raw * quote_raw / (base_raw * 10^9)",
+          "price_exact_fraction": [
+            "165744389611",
+            "7278977887047400"
+          ],
+          "holding_value_exact_fraction": [
+            "2299198821754368362539",
+            "1819744471761850000000"
+          ],
+          "holding_value_sol_decimal100": "1.263473447746384781500136649797861039002711478734743884778059793529019683060719328027122210139434980"
+        }
+      ]
+    },
+    {
+      "input_path": "tests/fixtures/mainnet-pumpswap-sell-durable-nonce.json",
+      "input_file_sha256": "ba11dc687582a4fb80f6006b7bebc0fe4687ea048de849014b973a8e014fdf1b",
+      "original_raw_evidence_hash": "25271562a99c96879c6d5f347792340320a6f55c12497a0ba3602db86eca6b4a",
+      "signature": "24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs",
+      "slot": 452638051,
+      "wallet": "DY5qAVztKXXPMY9enjbgvJxn6wPPZ1Ek34Jp3xJm4Lct",
+      "mint": "HXxJdaQbrYRvwTAM8M8mUPyoRPvmyuUbPFBRkiAAMASS",
+      "phases": [
+        {
+          "phase": "pre",
+          "transcribed_base_reserve_raw": "104372559209647",
+          "transcribed_quote_reserve_raw": "211967949375",
+          "wallet_quantity_raw": "402359378326",
+          "decimals": 6,
+          "price_formula": "quote_raw * 10^6 / (base_raw * 10^9)",
+          "holding_value_formula": "wallet_raw * quote_raw / (base_raw * 10^9)",
+          "price_exact_fraction": [
+            "1695743595",
+            "834980473677176"
+          ],
+          "holding_value_exact_fraction": [
+            "68229833868449632197",
+            "83498047367717600000"
+          ],
+          "holding_value_sol_decimal100": "0.8171428676406265891592785174743558471825311833709460453090095686846393308606280143333643729004781737"
+        },
+        {
+          "phase": "post",
+          "transcribed_base_reserve_raw": "104377777837607",
+          "transcribed_quote_reserve_raw": "211956495282",
+          "wallet_quantity_raw": "397140750366",
+          "decimals": 6,
+          "price_formula": "quote_raw * 10^6 / (base_raw * 10^9)",
+          "holding_value_formula": "wallet_raw * quote_raw / (base_raw * 10^9)",
+          "price_exact_fraction": [
+            "105978247641",
+            "52188888918803500"
+          ],
+          "holding_value_exact_fraction": [
+            "21044140395310254693303",
+            "26094444459401750000000"
+          ],
+          "holding_value_sol_decimal100": "0.8064605639737279053650442313108603236913564163553131253779742692884818405749586998919374213115687676"
+        }
+      ]
+    }
+  ]
+}

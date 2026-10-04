@@ -1,0 +1,60 @@
+{
+  "state": "PASS",
+  "public_document_requests": 4,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "documents": [
+    {
+      "name": "indexed-guide",
+      "url": "https://www.helius.dev/docs/rpc/gettransactionsforaddress.md",
+      "status": 200,
+      "bytes": 40596,
+      "sha256": "ecb75c9566dfcda8e209ea1b5ed829373749d181a1c9326e363abe8eb346c54c",
+      "retrieved_at": "2026-10-04T21:03:56.493306+00:00",
+      "provider_requests": 0,
+      "credentials": false,
+      "retained_original_path": "evidence/references/product-milestone/helius-index-guide.txt",
+      "retained_original_sha256": "ecb75c9566dfcda8e209ea1b5ed829373749d181a1c9326e363abe8eb346c54c",
+      "exact_bytes_unchanged": true
+    },
+    {
+      "name": "indexed-reference",
+      "url": "https://www.helius.dev/docs/api-reference/rpc/http/gettransactionsforaddress.md",
+      "status": 200,
+      "bytes": 35807,
+      "sha256": "9dbb7415eb7389752ed7f0a0601983bd73bd0d32ff14f0d4e3b61a1e2aa6acec",
+      "retrieved_at": "2026-10-04T21:03:56.937115+00:00",
+      "provider_requests": 0,
+      "credentials": false,
+      "retained_original_path": "evidence/references/product-milestone/helius-index-markdown.txt",
+      "retained_original_sha256": "9dbb7415eb7389752ed7f0a0601983bd73bd0d32ff14f0d4e3b61a1e2aa6acec",
+      "exact_bytes_unchanged": true
+    },
+    {
+      "name": "historical-data",
+      "url": "https://www.helius.dev/docs/rpc/historical-data.md",
+      "status": 200,
+      "bytes": 6651,
+      "sha256": "ed2236a25accce0ab93f2c926a7c6d4508f78c02885e9bf41836963534411e9a",
+      "retrieved_at": "2026-10-04T21:03:57.275117+00:00",
+      "provider_requests": 0,
+      "credentials": false,
+      "retained_original_path": "evidence/references/product-milestone/helius-history-contract.txt",
+      "retained_original_sha256": "ed2236a25accce0ab93f2c926a7c6d4508f78c02885e9bf41836963534411e9a",
+      "exact_bytes_unchanged": true
+    },
+    {
+      "name": "public-nav",
+      "url": "https://www.helius.dev/docs/llms.txt",
+      "status": 200,
+      "bytes": 33641,
+      "sha256": "30ec90055271f8555da38262621bf2dea4f9d8c7269ccd3707c02330c81bab6e",
+      "retrieved_at": "2026-10-04T21:03:57.821896+00:00",
+      "provider_requests": 0,
+      "credentials": false,
+      "retained_original_path": "evidence/references/product-milestone/helius-public-nav.gz",
+      "retained_original_sha256": "30ec90055271f8555da38262621bf2dea4f9d8c7269ccd3707c02330c81bab6e",
+      "exact_bytes_unchanged": true
+    }
+  ]
+}

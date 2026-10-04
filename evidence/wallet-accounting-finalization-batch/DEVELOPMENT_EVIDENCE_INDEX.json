@@ -1,0 +1,52 @@
+{
+  "scope": "Development checks and public documentation refresh; repeated tests are not additional unique acceptance tests",
+  "artifacts": [
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/source-decision/DECISION.json",
+      "bytes": 4490,
+      "sha256": "9f5147c55cd3791108cf35777dd3cbe3c286ddb9803243de35d48385ef6fee12"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/source-decision/DOCUMENTS.json",
+      "bytes": 1362,
+      "sha256": "9578bfbb47647f30b3e138d360d4780640daef7cd370eec635c78b052b1f6bc9"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/source-decision/PUBLIC_REFRESH_BINDINGS.json",
+      "bytes": 2514,
+      "sha256": "76d9c471c95d18078cf34b4ad9e47c27e51210406d54428b299f3aa3739ea41d"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/source-decision/CHECKS.json",
+      "bytes": 1238,
+      "sha256": "fca7611051770d41f426c33a02bdd5980cbd16116f64ff88bee5f22f8ff194b3"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/source-decision/TARGETED_TESTS.log",
+      "bytes": 599,
+      "sha256": "fa4106727db40e9c72198bdf8662167f3c55c010ddb91b21cfca282df38ebf4c"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/WSOL_CLOSURE_REPRO.py",
+      "bytes": 1128,
+      "sha256": "f4433868ba47d8f080fe182c68023acc1e9c9ced1e9dc8b69ec3185ee4f3ed3b"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/WSOL_CLOSURE_BEFORE.log",
+      "bytes": 663,
+      "sha256": "3886de59f5dff857a9c713ba8d26d430ad38db4883574562c6bdcec5e4e02ab1"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/RESERVE_SHARED_CHECKS.log",
+      "bytes": 600,
+      "sha256": "85579bce4fd7c98a9162e042a0b578f1145997687403be996edb6a0342e2c1ce"
+    },
+    {
+      "path": "evidence/wallet-accounting-finalization-batch/worked-observations/WORKED_OBSERVATION_EXPECTATIONS.json",
+      "bytes": 4467,
+      "sha256": "2e34e1ad0d044f7af5993b9514189222937f2571e873fd68556ab0ae32a912c7"
+    }
+  ],
+  "new_full_application_acceptance": false,
+  "PRODUCT_READY": false
+}

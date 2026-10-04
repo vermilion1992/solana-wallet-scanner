@@ -1,0 +1,30 @@
+{
+  "state": "PASS",
+  "runtime": "/workspace/solana-wallet-scanner/.venv/bin/python",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_real_coverage.py::test_current_historical_source_decision_binds_primary_bytes_and_separates_capabilities",
+    "tests/test_real_coverage.py::test_returned_source_decision_mutation_cannot_promote_a_future_query_or_capability",
+    "tests/test_real_coverage.py::test_terminal_original_query_derives_coverage_without_promoting_wallet_population",
+    "tests/test_real_coverage.py::test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record",
+    "-q"
+  ],
+  "unique_nodes_passed": 4,
+  "elapsed_seconds": 2.93,
+  "raw_log": "TARGETED_TESTS.log",
+  "source_files": {
+    "scanner/real_coverage.py": "10cba9b972114bdfc807cd4f8ece9247bfca3b347903473eb184f589ec303bfb",
+    "tests/test_real_coverage.py": "4bab842b9d81c80a0437f65683585a58a3a3003e42dc2af918e5604f96b178f8"
+  },
+  "environment_attempt": {
+    "command_runtime": "system python",
+    "state": "NOT_EXECUTED_NO_PYTEST",
+    "output": "No module named pytest"
+  },
+  "full_suite_executed": false,
+  "genuine_acceptance_claimed": false,
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

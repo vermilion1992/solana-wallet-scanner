@@ -1,0 +1,96 @@
+{
+  "B1": "NO_GO_CURRENT_SOURCE for exhaustive PDF historical ownership; endpoint/schema/documented query supported separately",
+  "B2": "Development-functional shared accounting path; complete real accounting OPEN",
+  "B3": "BLOCKED: no complete genuine independently worked supported corpus",
+  "PRODUCT_READY": false,
+  "application_source_files": 259,
+  "backend_seconds": 11.123,
+  "baseline_head": "9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb",
+  "branch": "codex/product-completion",
+  "changed_source_paths": [
+    "ACCEPTANCE.md",
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "frontend/dist/assets/index-C8AhfBbc.js",
+    "frontend/dist/assets/index-DT2ipYAA.js",
+    "frontend/dist/index.html",
+    "frontend/scripts/check-discovery.mjs",
+    "frontend/src/App.tsx",
+    "frontend/src/HistoricalSourceNotice.tsx",
+    "frontend/src/report.tsx",
+    "frontend/src/types.ts",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/cost_flow_evidence.py",
+    "scanner/economic_evidence.py",
+    "scanner/historical_reserve_marks.py",
+    "scanner/real_coverage.py",
+    "scanner/report_view.py",
+    "scanner/wallet_evidence.py",
+    "tests/test_cost_flow_evidence.py",
+    "tests/test_historical_reserve_marks.py",
+    "tests/test_real_coverage.py",
+    "tools/validate.py"
+  ],
+  "classification": [
+    "scoped-valid-in-executed-scope",
+    "development-functional",
+    "real-acceptance-blocked"
+  ],
+  "completed": [
+    "Fresh precollection source capability decision and visible UI notice",
+    "Original wallet-owned funding and direct closure roles",
+    "Exact legacy WSOL funding/sync and nonzero wallet refund quantities through existing engine",
+    "Genuine PumpSwap phase reserve marks and owned-token phase valuation",
+    "Source-loss/restoration, monetary isolation and immutable offline normal report controls",
+    "Corrected mixed-refund receipt and unresolved WSOL sibling omission"
+  ],
+  "decision_required": "No paid plan requirement established. Full product acceptance needs an accepted exhaustive historical source and complete genuine records; current scope/thresholds remain unchanged.",
+  "historical_full_gate_application": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "kind": "wallet-accounting-finalization-batch-result",
+  "live_Helius_probe_executed": false,
+  "live_Helius_requests": 0,
+  "native_CI_status": "UNOBSERVED; no native status or full acceptance claimed",
+  "new_full_application_acceptance": false,
+  "new_scan_timing_claim": false,
+  "paid_actions": 0,
+  "public_document_refresh_requests": 4,
+  "publication": "PENDING_PRIVATE_EXACT_OBJECT_PUBLICATION; final remote proof remains separately bound outside source tree",
+  "raw_evidence": {
+    "checks": "evidence/wallet-accounting-finalization-batch/TARGETED_CHECKS.json",
+    "manifest": "evidence/wallet-accounting-finalization-batch/SOURCE_MANIFEST.json",
+    "review": "evidence/wallet-accounting-finalization-batch/READ_ONLY_REVIEW.json",
+    "worked_genuine_prices": "evidence/wallet-accounting-finalization-batch/worked-observations/WORKED_OBSERVATION_EXPECTATIONS.json"
+  },
+  "remaining_implementation": [
+    "Intermediate native-refund reconstruction and unsupported protocol/extension roles",
+    "Complete accepted historical ownership/origin/classification/boundary/flow admission"
+  ],
+  "remaining_source_inputs": [
+    "Exhaustive event-time closed/reassigned/non-ATA/both-program ownership contract and genuine controls",
+    "All relevant acquisition basis and economic roles",
+    "Time-relevant meme/nonspam eligibility",
+    "Exact all-account report boundary inventory and applicable marks/valued flows",
+    "Complete genuine acceptance records and separately worked whole-wallet expectations"
+  ],
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "review_diff_reconstruction": {
+    "argv": [
+      "git",
+      "diff",
+      "--binary",
+      "9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb",
+      "3cb89255c43768a6dc8059c222b189a47fc31680"
+    ],
+    "bytes": 749640,
+    "sha256": "1c2e0d40fa69a8a41bae947672a4269497cd9ec210f3fd87f242eb4c32ee8f17"
+  },
+  "runtime_credential_lookups": 0,
+  "source_sha256": "1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366",
+  "state": "FOCUSED_CHECKS_PASS",
+  "tested_application_commit": "3cb89255c43768a6dc8059c222b189a47fc31680",
+  "unique_pytest_nodes_this_final_execution": 46
+}

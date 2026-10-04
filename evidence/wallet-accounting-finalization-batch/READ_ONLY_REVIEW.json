@@ -1,0 +1,282 @@
+{
+  "PRODUCT_READY": false,
+  "application_commit": "3cb89255c43768a6dc8059c222b189a47fc31680",
+  "baseline_commit": "9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb",
+  "baseline_head": "9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb",
+  "checks_executed": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_historical_reserve_marks.py tests/test_economic_evidence.py tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period tests/test_archive_input.py::test_claimed_real_world_or_completion_boolean_cannot_certify_a_wallet",
+      "duration_seconds": 5.84,
+      "log": "RESERVE_SHARED_CHECKS.log",
+      "scope": "Earlier stable reserve/shared-neighbour snapshot before final WSOL edits; final candidate checks remain separately required",
+      "state": "PASS",
+      "unique_nodes_this_execution": 18
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_cost_flow_evidence.py",
+      "duration_seconds": 2.34,
+      "log": "FINAL_COST_MODULE.log",
+      "source_vector": "Final frozen code bytes; application committed unchanged after execution",
+      "state": "PASS",
+      "unique_nodes_this_execution": 12
+    },
+    {
+      "command": "Three WSOL sibling nodes plus test_report_view display preservation node",
+      "duration_seconds": 0.37,
+      "log": "FINAL_SIBLING_CHECKS.log",
+      "scope": "Overlap with final cost module execution, not additional unique test totals",
+      "state": "PASS",
+      "unique_nodes_this_execution": 4
+    },
+    {
+      "command": "Independent saved source replay assertion checks",
+      "controls": 3,
+      "receipt": "INDEPENDENT_REPLAY_ASSERTIONS.json",
+      "scope": "Synthetic interface reproductions, not genuine B3",
+      "state": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "state": "PASS"
+    }
+  ],
+  "confirmed_and_corrected": [
+    {
+      "finding": "Successful nonzero canonical WSOL close was not admitted by shared quantities/zero post reconstruction",
+      "reproduction": "WSOL_CLOSURE_REPRO.py",
+      "result": "Same input now admits exact internal refund once; no profit, no wallet population promotion"
+    },
+    {
+      "finding": "Supported sync could clear a missing/foreign-owned sibling WSOL phase aggregate wrap",
+      "reproduction": "UNRESOLVED_SIBLING_REPRO.py",
+      "result": "Missing sibling remains explicit UNKNOWN and meta.tokenBalances stays wrap"
+    },
+    {
+      "finding": "A prior native-token transfer changed actual close refund while receipt incorrectly used opening native endpoint",
+      "reproduction": "REFUND_QUANTITY_REPRO.py",
+      "result": "Intra-transaction refund quantity remains UNKNOWN; no incorrect exact refund receipt"
+    }
+  ],
+  "credential_lookups": 0,
+  "diff_binding": {
+    "bytes": 749640,
+    "sha256": "1c2e0d40fa69a8a41bae947672a4269497cd9ec210f3fd87f242eb4c32ee8f17"
+  },
+  "evidence": {
+    "FINAL_COST_MODULE.log": {
+      "bytes": 650,
+      "sha256": "3ac51b74dfdca89bbd3b65166baf739675efe38e1b768b69ac64820cef959c46"
+    },
+    "FINAL_SIBLING_CHECKS.log": {
+      "bytes": 599,
+      "sha256": "0c61acb906acd4339bf15d988e0b362bfff4d63c2345bd09d5c247ce34e534b9"
+    },
+    "INDEPENDENT_REPLAY_ASSERTIONS.json": {
+      "bytes": 262,
+      "sha256": "1ab6aebe13e7c3402aab9bf4ee0232c2fdbe21207edb9e3d7753fce3df9ae692"
+    },
+    "REFUND_QUANTITY_AFTER.log": {
+      "bytes": 678,
+      "sha256": "16f44a9255c9a24eb81168622b1dc0273ae6b098627a3b3db6edd39a33d5d43f"
+    },
+    "REFUND_QUANTITY_BEFORE.log": {
+      "bytes": 1898,
+      "sha256": "1a28cd67de99de96b937d7f081c7862af55beebae5d80cf753383d4b25b2c0a7"
+    },
+    "REFUND_QUANTITY_REPRO.py": {
+      "bytes": 1375,
+      "sha256": "f6231d395e23cabf0ff46479e5ce8705b82846f95a3bfa22d5a1058884e3ea74"
+    },
+    "RESERVE_SHARED_CHECKS.log": {
+      "bytes": 600,
+      "sha256": "85579bce4fd7c98a9162e042a0b578f1145997687403be996edb6a0342e2c1ce"
+    },
+    "REVIEWED_DIFF.patch": {
+      "bytes": 749640,
+      "sha256": "1c2e0d40fa69a8a41bae947672a4269497cd9ec210f3fd87f242eb4c32ee8f17"
+    },
+    "SOURCE_MANIFEST.json": {
+      "bytes": 39646,
+      "sha256": "ecc8ac0cbddb1ca11cb5b07d2e08a695fa0955dab0c070c1ad99e6571c041971"
+    },
+    "UNRESOLVED_SIBLING_AFTER.log": {
+      "bytes": 3199,
+      "sha256": "8f42d2a51854aaef355622dfacf27325e44a9bb6fca198752d782bbb6972cd0c"
+    },
+    "UNRESOLVED_SIBLING_BEFORE.log": {
+      "bytes": 3253,
+      "sha256": "1732c942db82cd00409f65d544778369e80fa9116b908126b03bfde0f3bd9b87"
+    },
+    "UNRESOLVED_SIBLING_REPRO.py": {
+      "bytes": 923,
+      "sha256": "2e4ef794f12fa4f8d13c59ad8290753c9d4580cb712c995013fe9ce92c36e135"
+    },
+    "WSOL_CLOSURE_AFTER.log": {
+      "bytes": 1879,
+      "sha256": "1263c2ab0f02458b94c57137dcdc93c97e88faf55533f92324be13aa6260903b"
+    },
+    "WSOL_CLOSURE_BEFORE.log": {
+      "bytes": 663,
+      "sha256": "3886de59f5dff857a9c713ba8d26d430ad38db4883574562c6bdcec5e4e02ab1"
+    },
+    "WSOL_CLOSURE_REPRO.py": {
+      "bytes": 1128,
+      "sha256": "f4433868ba47d8f080fe182c68023acc1e9c9ced1e9dc8b69ec3185ee4f3ed3b"
+    }
+  },
+  "hard_source_gaps": [
+    "Current historical address-query documentation does not establish exhaustive event-time closed/reassigned/transient/non-ATA ownership across both token programs",
+    "No complete genuine wallet population corpus with independently worked whole-wallet expectations",
+    "Time-relevant eligibility, complete origins and exact boundaries are not supplied by selected transactions or current balances"
+  ],
+  "interpretation": "Pass in the reviewed application diff scope only. Development-functional and real-acceptance-blocked; no claim of complete genuine wallet qualification or no remaining product gaps.",
+  "kind": "distinct-read-only-focused-diff-review",
+  "new_full_application_acceptance": false,
+  "no_open_confirmed_findings": true,
+  "not_executed": [
+    "Full backend acceptance",
+    "Full browser acceptance",
+    "Live Helius probe/collection",
+    "New scan benchmark",
+    "CI status acceptance"
+  ],
+  "original_review_receipt": {
+    "bytes": 8335,
+    "path": "evidence/wallet-accounting-finalization-batch/development-review/REVIEW.json",
+    "sha256": "78d5f70236f28686767dc297b89d70bbae05f98424f6b4ce176a6a7263fced8a"
+  },
+  "promoted_artifacts": [
+    {
+      "bytes": 650,
+      "original_name": "FINAL_COST_MODULE.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/FINAL_COST_MODULE.log",
+      "sha256": "3ac51b74dfdca89bbd3b65166baf739675efe38e1b768b69ac64820cef959c46"
+    },
+    {
+      "bytes": 599,
+      "original_name": "FINAL_SIBLING_CHECKS.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/FINAL_SIBLING_CHECKS.log",
+      "sha256": "0c61acb906acd4339bf15d988e0b362bfff4d63c2345bd09d5c247ce34e534b9"
+    },
+    {
+      "bytes": 262,
+      "original_name": "INDEPENDENT_REPLAY_ASSERTIONS.json",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/INDEPENDENT_REPLAY_ASSERTIONS.json",
+      "sha256": "1ab6aebe13e7c3402aab9bf4ee0232c2fdbe21207edb9e3d7753fce3df9ae692"
+    },
+    {
+      "bytes": 678,
+      "original_name": "REFUND_QUANTITY_AFTER.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/REFUND_QUANTITY_AFTER.log",
+      "sha256": "16f44a9255c9a24eb81168622b1dc0273ae6b098627a3b3db6edd39a33d5d43f"
+    },
+    {
+      "bytes": 1898,
+      "original_name": "REFUND_QUANTITY_BEFORE.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/REFUND_QUANTITY_BEFORE.log",
+      "sha256": "1a28cd67de99de96b937d7f081c7862af55beebae5d80cf753383d4b25b2c0a7"
+    },
+    {
+      "bytes": 1375,
+      "original_name": "REFUND_QUANTITY_REPRO.py",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/REFUND_QUANTITY_REPRO.py",
+      "sha256": "f6231d395e23cabf0ff46479e5ce8705b82846f95a3bfa22d5a1058884e3ea74"
+    },
+    {
+      "bytes": 600,
+      "original_name": "RESERVE_SHARED_CHECKS.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/RESERVE_SHARED_CHECKS.log",
+      "sha256": "85579bce4fd7c98a9162e042a0b578f1145997687403be996edb6a0342e2c1ce"
+    },
+    {
+      "bytes": 8335,
+      "original_name": "REVIEW.json",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/REVIEW.json",
+      "sha256": "78d5f70236f28686767dc297b89d70bbae05f98424f6b4ce176a6a7263fced8a"
+    },
+    {
+      "bytes": 3199,
+      "original_name": "UNRESOLVED_SIBLING_AFTER.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/UNRESOLVED_SIBLING_AFTER.log",
+      "sha256": "8f42d2a51854aaef355622dfacf27325e44a9bb6fca198752d782bbb6972cd0c"
+    },
+    {
+      "bytes": 3253,
+      "original_name": "UNRESOLVED_SIBLING_BEFORE.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/UNRESOLVED_SIBLING_BEFORE.log",
+      "sha256": "1732c942db82cd00409f65d544778369e80fa9116b908126b03bfde0f3bd9b87"
+    },
+    {
+      "bytes": 923,
+      "original_name": "UNRESOLVED_SIBLING_REPRO.py",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/UNRESOLVED_SIBLING_REPRO.py",
+      "sha256": "2e4ef794f12fa4f8d13c59ad8290753c9d4580cb712c995013fe9ce92c36e135"
+    },
+    {
+      "bytes": 1879,
+      "original_name": "WSOL_CLOSURE_AFTER.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/WSOL_CLOSURE_AFTER.log",
+      "sha256": "1263c2ab0f02458b94c57137dcdc93c97e88faf55533f92324be13aa6260903b"
+    },
+    {
+      "bytes": 663,
+      "original_name": "WSOL_CLOSURE_BEFORE.log",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/WSOL_CLOSURE_BEFORE.log",
+      "sha256": "3886de59f5dff857a9c713ba8d26d430ad38db4883574562c6bdcec5e4e02ab1"
+    },
+    {
+      "bytes": 1128,
+      "original_name": "WSOL_CLOSURE_REPRO.py",
+      "path": "evidence/wallet-accounting-finalization-batch/development-review/WSOL_CLOSURE_REPRO.py",
+      "sha256": "f4433868ba47d8f080fe182c68023acc1e9c9ced1e9dc8b69ec3185ee4f3ed3b"
+    }
+  ],
+  "promotion_metadata_change": "Added baseline_head alias for existing focused receipt validator; original reviewer receipt and all raw logs retained unchanged.",
+  "provider_requests": 0,
+  "read_only": true,
+  "remaining_implementation": [
+    "Unsupported exchange/routes and intermediate native refund quantity reconstruction; current guards deliberately retain UNKNOWN",
+    "Independent historical meme/nonspam classification path and complete cost/origin/population admission",
+    "Full exact wallet boundary inventory, all needed asset marks and complete valued external-flow roles"
+  ],
+  "reviewed_application_commit": "3cb89255c43768a6dc8059c222b189a47fc31680",
+  "reviewed_changed_paths": [
+    "ACCEPTANCE.md",
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "frontend/dist/assets/index-C8AhfBbc.js",
+    "frontend/dist/assets/index-DT2ipYAA.js",
+    "frontend/dist/index.html",
+    "frontend/scripts/check-discovery.mjs",
+    "frontend/src/App.tsx",
+    "frontend/src/HistoricalSourceNotice.tsx",
+    "frontend/src/report.tsx",
+    "frontend/src/types.ts",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/cost_flow_evidence.py",
+    "scanner/economic_evidence.py",
+    "scanner/historical_reserve_marks.py",
+    "scanner/real_coverage.py",
+    "scanner/report_view.py",
+    "scanner/wallet_evidence.py",
+    "tests/test_cost_flow_evidence.py",
+    "tests/test_historical_reserve_marks.py",
+    "tests/test_real_coverage.py",
+    "tools/validate.py"
+  ],
+  "scope": [
+    "Selected/alternative original role preservation; close and refund authority; exact native principal and fee accounting",
+    "Shared normal live/archive wallet-derived events and FIFO/report/rebuild/export integration",
+    "Exact transaction-phase PumpSwap vault identity, integer ratio, owned-unit valuation and independent fee isolation",
+    "Current source capability, schema/entitlement/query/population separation and frontend notice",
+    "Saved method freshness, immutable parent and transient display omission"
+  ],
+  "source_decision": "NO_GO_CURRENT_SOURCE for full-PDF historical ownership; usable endpoint, schemas and query records remain independent",
+  "source_files": 259,
+  "source_sha256": "1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366",
+  "state": "PASS_IN_REVIEW_SCOPE"
+}

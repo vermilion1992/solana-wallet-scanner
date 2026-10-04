@@ -1,0 +1,56 @@
+{
+  "candidate_head": "9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb",
+  "decision": "CURRENT_SOURCE_UNSUPPORTED_FOR_EXHAUSTIVE_HISTORICAL_OWNER_POPULATION",
+  "documented_query_decision": "ACCEPT_EXISTING_TERMINAL_QUERY_SCOPE_ONLY",
+  "fresh_primary_documents": "DOCUMENTS.json",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "public_document_requests": 4,
+  "facts": [
+    "Guide/reference/historical overview/navigation are byte-identical to the previously pinned primary bytes.",
+    "tokenAccounts=all documents address-or-any-owned-token-account predicate, but not the time semantics or exhaustive closed/reassigned/non-ATA coverage across both token programs.",
+    "Guide says owner-based filtering relies on token balance metadata introduced at slot 111491819; pre-cutoff token-account filtering unsupported.",
+    "The original genuine lifetime requests maxSupportedTransactionVersion=1. All returned originals/linked alternatives are supported legacy/v0, and supported_record_state already admits this query-specific fact. No returned v1 exists in the retained sample. Any future returned v1 remains an explicit unsupported dependency; wallet-wide format population remains separate.",
+    "Helius historical balance-at explicitly warns single-most-recent matching transaction can undercount multi-account same-mint wallets; it cannot repair population/aggregate boundary completeness.",
+    "Unlimited Mainnet historical retention is documented, but retention is separate from ownership-index predicate and current account entitlement."
+  ],
+  "implementation_missing": [
+    "An accepted original-evidence historical population admission path independent of terminal query, saved receipt or caller PASS flags.",
+    "Future returned v1 raw support is absent, but it is not an active retained-corpus blocker. Existing supported_record_state already proves supported returned-record coverage within the declared terminal query; do not add redundant query-format interfaces or relabel wallet-wide format_population_state.",
+    "Complete owner/lifecycle replay and account-union reconcile for every accepted population record, not sparse per-record observations."
+  ],
+  "accepted_population_contract_alternatives": [
+    {
+      "kind": "provider-historical-owner-index",
+      "required_primary_contract": [
+        "Event-time owner predicate, including incoming/outgoing reassignment, closed/transient/non-ATA accounts, both legacy and Token2022 programs",
+        "Defined retention/cutoff, finalization, no format/status/mint filtering, terminal paging semantics"
+      ],
+      "required_original_records": [
+        "Original request/response bytes for terminal indexed pages over independently declared report/28/90-day intervals and older acquisition recovery",
+        "Independent genuinely known hidden-wallet/owner-in-data, closed-account and incoming/outgoing owner-reassignment controls across both programs",
+        "All returned full raw transactions, selected/linked alternatives, unavailable/conflicting/unsupported dependencies"
+      ]
+    },
+    {
+      "kind": "complete-ledger-state-replay",
+      "required_original_records": [
+        "Complete initial account-state snapshot for both token programs plus native wallet/account lamports at a canonical root; or replay from genesis",
+        "Finalized complete block/transaction sequence and explicit skipped-slot evidence through endpoint root, preserving every supported/unsupported record",
+        "Replay System/SPL/Token2022 creation/initialization, authority assignment, closure, token/native changes; derive owner intervals and boundary account-union from original bytes",
+        "Older acquisition/basis proof for nonzero initial inventory; independently calculated genuine expected results"
+      ],
+      "current_authorized_dataset_available": false
+    }
+  ],
+  "not_sufficient": [
+    "Current owner lists or minContextSlot floors",
+    "Fixed-point account expansion",
+    "One known closed-account example",
+    "A handful of selected real transactions",
+    "A paid account or a successful RPC response",
+    "Caller/imported complete/population flags"
+  ],
+  "fastest_next_action": "Finalize a concrete unsupported-current-source B1 decision, finish supported accounting code using retained raw inputs, and expose exact missing population contract. Do not spend remaining collection allowance on more pages that cannot change the ownership predicate.",
+  "product_ready": false
+}
