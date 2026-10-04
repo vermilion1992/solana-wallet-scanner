@@ -1,0 +1,38 @@
+{
+  "kind": "screening-forward-research-acceptance",
+  "application_commit": "bd5d9a69d34b4e92a89753da5bc01b0e938542e1",
+  "source_sha256": "805e8171184e64ae4d5b36c73f49153de49f0866f0a0a98a666729c17e99e06b",
+  "SCREENING_FORWARD_SOFTWARE_READY": true,
+  "PRODUCT_READY": false,
+  "software_functionality": "PASS",
+  "genuine_live_evidence": "SELECTED_NATIVE_TRANSACTION_AND_QUOTE_CAPTURED",
+  "full_historical_acceptance": "BLOCKED",
+  "B1": "NO_GO_CURRENT_SOURCE",
+  "B2": "OPEN",
+  "B3": "BLOCKED",
+  "backend_unique_nodes_final_execution": 455,
+  "backend_subtests_final_execution": 49,
+  "backend_seconds": 19.23,
+  "browser": "Actual guarded launcher/API/Chromium, explicitly synthetic transport, desktop/mobile, stop/reopen/restart/export",
+  "review": "Distinct read-only review; ten grouped offline probes; no separate browser or full-suite run",
+  "provider_requests": {
+    "live_adapter_validation": 2,
+    "separate_public_quote_contract_probe": 1,
+    "offline_browser": 0
+  },
+  "paid_actions": 0,
+  "trades_built_signed_submitted": 0,
+  "receipts": {
+    "software": "release-checks/result.json",
+    "browser": "release-checks/browser/result.json",
+    "live": "live-adapters/RESULT.json",
+    "review": "read-only-review/result.json"
+  },
+  "limits": [
+    "Quote research is hypothetical, not actual copied fills",
+    "Selected live transaction retains unresolved outside-native monetary roles",
+    "No exhaustive historical ownership or profitable-wallet demonstration",
+    "Address subscriptions cannot certify complete wallet activity",
+    "Missing original settings source conservatively blocks export with409; inspection preserves source dependency"
+  ]
+}

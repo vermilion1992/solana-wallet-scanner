@@ -1,0 +1,64 @@
+{
+  "classification": "genuine captured adapter evidence; no full-wallet acceptance",
+  "PRODUCT_READY": false,
+  "native": {
+    "status": "captured",
+    "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+    "evidence_hash": "aead0b2736b815279af7ecb442898c3b9637be6d6a89fda017732856ddaf5e42",
+    "supported_events": [
+      "fee",
+      "buy",
+      "capital",
+      "capital"
+    ],
+    "findings": [
+      {
+        "severity": "warning",
+        "title": "Native monetary role unresolved",
+        "detail": "Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved",
+        "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+        "evidence": [
+          "aead0b2736b815279af7ecb442898c3b9637be6d6a89fda017732856ddaf5e42"
+        ]
+      },
+      {
+        "severity": "warning",
+        "title": "Native monetary role unresolved",
+        "detail": "Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved",
+        "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+        "evidence": [
+          "aead0b2736b815279af7ecb442898c3b9637be6d6a89fda017732856ddaf5e42"
+        ]
+      }
+    ]
+  },
+  "quote": {
+    "provider": "Jupiter Swap V2 (quote only)",
+    "evidence_hash": "b72f4f04a5fdd2740f2fa4a66742823ffea9a48564e78774e9827847ccf95101",
+    "request_started_at": "2026-10-04T22:45:26.884770+00:00",
+    "received_at": "2026-10-04T22:45:27.491082+00:00",
+    "input_mint": "So11111111111111111111111111111111111111112",
+    "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "status": "available",
+    "in_amount": "10000000",
+    "out_amount": "1218960",
+    "price_impact_pct": "-0.017769123211168462",
+    "quote_fees_included": true,
+    "observed_metadata": {
+      "feeBps": 2,
+      "feeMint": "So11111111111111111111111111111111111111112",
+      "platformFee": {
+        "feeBps": 2,
+        "feeMint": "So11111111111111111111111111111111111111112"
+      },
+      "signatureFeeLamports": 0,
+      "prioritizationFeeLamports": 0,
+      "rentFeeLamports": 0,
+      "slippageBps": 0,
+      "otherAmountThreshold": "1218960",
+      "router": "metis",
+      "expireAt": null,
+      "requestId": "01a10917-f48b-73a9-883a-30d901d8f563"
+    }
+  }
+}

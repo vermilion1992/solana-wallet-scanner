@@ -1,0 +1,695 @@
+{
+  "version": "wallet-screening-v1",
+  "report_id": "374638c100524dcf955630d3e704ff45",
+  "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+  "source": "live",
+  "result": "insufficient_evidence",
+  "label": "Insufficient evidence",
+  "reason": "Observed 0 evidenced matched sales; this screening preset requires at least 1.",
+  "reasons": [
+    {
+      "key": "identity",
+      "state": "PASS",
+      "evidence": [
+        "3cb8c9372d72b401994f56de82442ba61a27c85cdf3c08c69287868c0dfe003e",
+        "62af9a7a2e48f54c128c575a2363d11ebbbd6c4eb6e6422d98b7da647fc78f2a"
+      ],
+      "reason": "Saved native signer, token movement and system account sources agree.",
+      "actual": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+    },
+    {
+      "key": "supported_activity",
+      "state": "PASS",
+      "actual": 2,
+      "expected": 2,
+      "evidence": [
+        "45bd9c0e27d3142f6f1efcc5db47d7102a0c7ca2591f3baabaa190c73217a62f",
+        "3cb8c9372d72b401994f56de82442ba61a27c85cdf3c08c69287868c0dfe003e"
+      ],
+      "reason": "Supported buys and sales meet the sample minimum in this saved window."
+    },
+    {
+      "key": "matched_lots",
+      "state": "UNKNOWN",
+      "actual": 0,
+      "expected": 1,
+      "evidence": [],
+      "reason": "Observed 0 evidenced matched sales; this screening preset requires at least 1."
+    }
+  ],
+  "preset_snapshot": {
+    "name": "Sampled wallet screening",
+    "min_supported_swaps": 2,
+    "min_matched_sales": 1,
+    "max_rapid_sale_pct": "50",
+    "require_positive_conditional_profit": false,
+    "exclude_active_mint_authority": true,
+    "exclude_active_freeze_authority": true,
+    "exclude_restrictive_extensions": true,
+    "continuation_max_transactions": 20,
+    "continuation_max_credits": 100,
+    "continuation_max_accounts": 10
+  },
+  "identity": {
+    "state": "PASS",
+    "evidence": [
+      "3cb8c9372d72b401994f56de82442ba61a27c85cdf3c08c69287868c0dfe003e",
+      "62af9a7a2e48f54c128c575a2363d11ebbbd6c4eb6e6422d98b7da647fc78f2a"
+    ],
+    "reason": "Saved native signer, token movement and system account sources agree."
+  },
+  "strict_qualification": {
+    "report_id": "374638c100524dcf955630d3e704ff45",
+    "preset_version": "strict-v0.3",
+    "preset_snapshot": {
+      "name": "Strict research",
+      "version": "strict-v0.3",
+      "window_days": 30,
+      "verification_days": 90,
+      "min_profit_sol": "5",
+      "min_realised_roi_pct": "10",
+      "min_median_roi_pct": "5",
+      "min_win_rate_pct": "50",
+      "max_win_rate_pct": "85",
+      "min_hold_hours": "1",
+      "max_hold_hours": "72",
+      "min_positions": 50,
+      "min_positions_90d": 100,
+      "min_mints": 20,
+      "max_mints": 100,
+      "max_rapid_sale_pct": "10",
+      "min_avg_buys": "1",
+      "max_avg_buys": "2",
+      "min_avg_sells": "1",
+      "max_avg_sells": "3",
+      "min_positive_weeks": 3,
+      "max_contribution_pct": "25",
+      "require_positive_economic_pnl": true
+    },
+    "methodology": "fifo-v4",
+    "window": {
+      "start": "2026-09-04T22:53:48+00:00",
+      "end": "2026-10-04T22:53:48+00:00"
+    },
+    "financial_policy": "UNRESOLVED",
+    "evidence_status": "partial",
+    "profit_sol": null,
+    "qualified": false,
+    "failed_checks": [],
+    "unknown_checks": [
+      {
+        "key": "evidence_history",
+        "label": "History evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_identity",
+        "label": "Identity evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_basis",
+        "label": "Basis evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_positions",
+        "label": "Positions evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_fees",
+        "label": "Fees evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_classification",
+        "label": "Classification evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_valuation",
+        "label": "Valuation evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_findings",
+        "label": "Findings evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "profit_sol",
+        "label": "Net realised profit",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 5",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "realised_roi_pct",
+        "label": "Realised ROI",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 10",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "median_roi_pct",
+        "label": "Median episode ROI",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 5",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "win_rate_pct",
+        "label": "Position win rate",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "50 to 85",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "median_hold_hours",
+        "label": "Median completed hold",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "1 to 72",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "completed_positions",
+        "label": "Completed positions",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 50",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "completed_positions_90d",
+        "label": "Completed positions in 90 days",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 100",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "traded_mints",
+        "label": "Traded meme mints",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "20 to 100",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; metric_observation: Classification or scope unresolved Classification or scope unresolved"
+      },
+      {
+        "key": "rapid_sale_pct",
+        "label": "Rapid first-sale share",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "<= 10",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete eligible episode population or first positive sale consideration Incomplete eligible episode population or first positive sale consideration"
+      },
+      {
+        "key": "avg_buys",
+        "label": "Average buys per episode",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "1 to 2",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "avg_sells",
+        "label": "Average sells per episode",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "1 to 3",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "positive_weeks",
+        "label": "Positive weeks",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 3",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Independent four-week history, matched basis or costs remain unresolved Independent four-week history, matched basis or costs remain unresolved"
+      },
+      {
+        "key": "largest_contribution_pct",
+        "label": "Largest token contribution",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "<= 25",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "economic_pnl_sol",
+        "label": "Positive economic change",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "> 0",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; boundary_inventory: Current context slots have no admitted exact reporting-time boundary mapping or historical state/bridging contract; No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; The documented query must include the complete supported native format population, independently of endpoint/schema access.; historical_marks: Current context slots have no admitted exact reporting-time boundary mapping or historical state/bridging contract; No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; The documented query must include the complete supported native format population, independently of endpoint/schema access.; No accepted historical-mark adapter/source contract is established.; valued_external_flows: All selected economic cost roles in this independent interval are supported; valued external flows remain separate.; No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; The documented query must include the complete supported native format population, independently of endpoint/schema access.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Boundary equity and valued external flows must all be reconciled Boundary equity and valued external flows must all be reconciled"
+      },
+      {
+        "key": "strict_profit_value",
+        "label": "Strict profit value",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "A known strict profit metric is required; conditional research P&L cannot substitute."
+      }
+    ],
+    "checks": [
+      {
+        "key": "evidence_history",
+        "label": "History evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_identity",
+        "label": "Identity evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_basis",
+        "label": "Basis evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_positions",
+        "label": "Positions evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_fees",
+        "label": "Fees evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_classification",
+        "label": "Classification evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_valuation",
+        "label": "Valuation evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "evidence_findings",
+        "label": "Findings evidence",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "Verified",
+        "reason": "Independent coverage and review required"
+      },
+      {
+        "key": "profit_sol",
+        "label": "Net realised profit",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 5",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "realised_roi_pct",
+        "label": "Realised ROI",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 10",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "median_roi_pct",
+        "label": "Median episode ROI",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 5",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "win_rate_pct",
+        "label": "Position win rate",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "50 to 85",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "median_hold_hours",
+        "label": "Median completed hold",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "1 to 72",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "completed_positions",
+        "label": "Completed positions",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 50",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "completed_positions_90d",
+        "label": "Completed positions in 90 days",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 100",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "traded_mints",
+        "label": "Traded meme mints",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "20 to 100",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; metric_observation: Classification or scope unresolved Classification or scope unresolved"
+      },
+      {
+        "key": "rapid_sale_pct",
+        "label": "Rapid first-sale share",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "<= 10",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete eligible episode population or first positive sale consideration Incomplete eligible episode population or first positive sale consideration"
+      },
+      {
+        "key": "avg_buys",
+        "label": "Average buys per episode",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "1 to 2",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "avg_sells",
+        "label": "Average sells per episode",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "1 to 3",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; positions: Wallet positions require historical population plus supported mint-aggregate closed and open inventory.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "positive_weeks",
+        "label": "Positive weeks",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": ">= 3",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Independent four-week history, matched basis or costs remain unresolved Independent four-week history, matched basis or costs remain unresolved"
+      },
+      {
+        "key": "largest_contribution_pct",
+        "label": "Largest token contribution",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "<= 25",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; classification: Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.; acquisition_basis: Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode"
+      },
+      {
+        "key": "economic_pnl_sol",
+        "label": "Positive economic change",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "> 0",
+        "reason": "historical_population: Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; interval_records: No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; quantity_continuity: Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.; chronology: Shared raw/page/block clocks and ordering are consistent for selected records.; boundary_inventory: Current context slots have no admitted exact reporting-time boundary mapping or historical state/bridging contract; No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; The documented query must include the complete supported native format population, independently of endpoint/schema access.; historical_marks: Current context slots have no admitted exact reporting-time boundary mapping or historical state/bridging contract; No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; The documented query must include the complete supported native format population, independently of endpoint/schema access.; No accepted historical-mark adapter/source contract is established.; valued_external_flows: All selected economic cost roles in this independent interval are supported; valued external flows remain separate.; No complete unfiltered finalized indexed query spans this independent interval. Historical wallet membership remains unproved.; Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership.; The documented query must include the complete supported native format population, independently of endpoint/schema access.; economic_costs: Wallet interval costs require historical population and supported period charge roles.; metric_observation: Boundary equity and valued external flows must all be reconciled Boundary equity and valued external flows must all be reconciled"
+      },
+      {
+        "key": "strict_profit_value",
+        "label": "Strict profit value",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "A known strict profit metric is required; conditional research P&L cannot substitute."
+      }
+    ],
+    "reason": "Required financial or evidence checks remain unresolved.",
+    "notes": [
+      "Qualification applies to this saved preset and reporting window.",
+      "Financial qualification does not certify trader intent, copied fills, or future safety."
+    ]
+  },
+  "trading_evidence": {
+    "supported_swaps": 2,
+    "buy_signals": 1,
+    "sell_signals": 1,
+    "matched_sales": 0,
+    "unmatched_sales": 1,
+    "unresolved_basis_sales": 1,
+    "conditional_matched_lot_profit_sol": null,
+    "open_exposure": [],
+    "early_exits": {
+      "long_tail_holds": {
+        "state": "UNKNOWN",
+        "detail": "Completed episodes with evidenced final and 90% exit timings are needed.",
+        "actual": null,
+        "evidence": [],
+        "conditional": true
+      },
+      "rapid_first_sales": {
+        "state": "UNKNOWN",
+        "detail": "All eligible episode first-sale timings and chronology are needed for this subset comparison.",
+        "actual": null,
+        "evidence": [],
+        "conditional": true
+      }
+    },
+    "scope": "supported spot swaps in fetched subset",
+    "window": {
+      "start": "2026-09-04T22:53:48+00:00",
+      "end": "2026-10-04T22:53:48+00:00"
+    },
+    "conditional": true,
+    "wallet_profit_verified": false,
+    "evidence": [
+      "45bd9c0e27d3142f6f1efcc5db47d7102a0c7ca2591f3baabaa190c73217a62f",
+      "3cb8c9372d72b401994f56de82442ba61a27c85cdf3c08c69287868c0dfe003e"
+    ]
+  },
+  "risk_observations": [
+    {
+      "key": "mint_authority",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "freeze_authority",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "token_extensions",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "current_liquidity",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "liquidity_control",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "holder_concentration",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "historical_sellability",
+      "state": "UNKNOWN",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "actual": null,
+      "reason": "Linked primary evidence is missing or this observation is unresolved.",
+      "evidence": [],
+      "scope": "Current token observation",
+      "observed_at": "2026-10-04T22:53:50.514663+00:00",
+      "context_slot": 1000
+    },
+    {
+      "key": "long_tail_holds",
+      "state": "UNKNOWN",
+      "reason": "Completed episodes with evidenced final and 90% exit timings are needed.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "rapid_first_sales",
+      "state": "UNKNOWN",
+      "reason": "All eligible episode first-sale timings and chronology are needed for this subset comparison.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "follower_exploitation",
+      "state": "UNKNOWN",
+      "reason": "Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "creator_links",
+      "state": "UNKNOWN",
+      "reason": "Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "liquidity_withdrawal",
+      "state": "UNKNOWN",
+      "reason": "Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "direct_transfer_links",
+      "state": "UNKNOWN",
+      "reason": "No supported direct native transfer link in this selected scope; unseen relationships remain unknown.",
+      "actual": null,
+      "evidence": []
+    },
+    {
+      "key": "forward_copy_outcomes",
+      "state": "UNKNOWN",
+      "reason": "Start a separate forward quote-based paper observation to measure follower outcomes.",
+      "actual": null,
+      "evidence": []
+    }
+  ],
+  "collection": {
+    "stop_reason": "Public wallet-address query ended; historical owned-account population remains unknown.",
+    "scope": "Bounded finalized wallet-address signature sample; no exhaustive token-account history.",
+    "scan_id": "9c8995396bad451284d0e4d2f35cdff7",
+    "budget_mode": "public-sample",
+    "limits": {
+      "candidate_cap": 20,
+      "deep_audit_cap": 5,
+      "transaction_limit": 20,
+      "wallet_credit_limit": 50,
+      "helius_cap": 800000,
+      "discovery_pause": 600000,
+      "min_free_disk_mb": 2048
+    },
+    "transactions": 2,
+    "pages": 2,
+    "credits": 5,
+    "requested_range": {
+      "start": "2026-09-04T22:53:48+00:00",
+      "end": "2026-10-04T22:53:48+00:00"
+    },
+    "fetched_range": null,
+    "terminal_evidence": [],
+    "gaps": [],
+    "historical_ownership_verified": false
+  },
+  "continuation": {
+    "recommended": false,
+    "action": "inspect_scope",
+    "reason": "This wallet-address sample has ended or has no live checkpoint. Missing historical ownership needs different primary evidence; more of this query cannot establish it.",
+    "budget": {
+      "max_transactions": 20,
+      "max_credits": 100,
+      "max_accounts": 10
+    },
+    "checkpoint_required": true
+  },
+  "notes": [
+    "Worth observing is a sampled research decision, not verified profitability or a promise of safe copying.",
+    "Conditional matched-lot profit excludes unmatched sales; open exposure and missing valuations remain visible.",
+    "Risk observations describe evidence and token capabilities without alleging intent or common control.",
+    "Strict financial qualification and full historical acceptance remain separate."
+  ],
+  "id": "6718f6d6a16343eda10dfef97fac9ce5",
+  "created_at": "2026-10-04T22:53:53.012482+00:00",
+  "report_input_hash": "1b587a1ad0acb42798eee8acdad1afaaae9fc7426a8bebfc7f4c9389df050c34",
+  "source_availability": {
+    "state": "PASS",
+    "missing": []
+  }
+}

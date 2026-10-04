@@ -1,0 +1,301 @@
+{
+  "kind": "actual-launcher-offline-synthetic-screening-browser",
+  "state": "PASS",
+  "software_functionality": "PASS_IN_SYNTHETIC_BROWSER_SCOPE",
+  "genuine_live_evidence": "NOT_RUN_IN_OFFLINE_BROWSER",
+  "full_historical_acceptance": "BLOCKED",
+  "PRODUCT_READY": false,
+  "cases": [
+    {
+      "case": "import-address-is-not-identity",
+      "state": "PASS",
+      "cohort_id": "9212c4741b2847e8916ef01a39eeaf8e"
+    },
+    {
+      "case": "source-backed-native-identity-with-test-fixtures",
+      "state": "PASS"
+    },
+    {
+      "case": "bounded-native-sample-report",
+      "state": "PASS",
+      "report_id": "374638c100524dcf955630d3e704ff45",
+      "strict_qualified": false
+    },
+    {
+      "case": "saved-screening-inspect-shortlist-export",
+      "state": "PASS",
+      "screening_id": "6718f6d6a16343eda10dfef97fac9ce5",
+      "result": "insufficient_evidence"
+    },
+    {
+      "case": "delayed-quotes-open-loss-first-sale-exit-stop-reopen-export",
+      "state": "PASS",
+      "run_id": "82c557c93b494ef9a2b7fc6fa45c5e22",
+      "signal_count": 2,
+      "quote_count": 3,
+      "realised_pnl_sol": "-0.021612",
+      "frozen_settings": true,
+      "duplicate_events_deduped": true
+    },
+    {
+      "case": "actual-launcher-restart-persistence",
+      "state": "PASS",
+      "settings_frozen": true
+    }
+  ],
+  "limitations": [
+    "Synthetic provider fixtures validate software mechanics, not chain authenticity or actual copied fills."
+  ],
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "api_trace": [
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/import",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/9212c4741b2847e8916ef01a39eeaf8e/identity",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/9212c4741b2847e8916ef01a39eeaf8e/audit",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/screenings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/374638c100524dcf955630d3e704ff45?view=display",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/evidence/082beb8f2985c10a9c4401f359dbe05591df5a11f5ccdcd33a83f89cd79d9c91",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings/6718f6d6a16343eda10dfef97fac9ce5",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/watchlist",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations/82c557c93b494ef9a2b7fc6fa45c5e22/mark",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/82c557c93b494ef9a2b7fc6fa45c5e22",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations/82c557c93b494ef9a2b7fc6fa45c5e22/stop",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/82c557c93b494ef9a2b7fc6fa45c5e22",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings/6718f6d6a16343eda10dfef97fac9ce5",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings/6718f6d6a16343eda10dfef97fac9ce5",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/82c557c93b494ef9a2b7fc6fa45c5e22",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/82c557c93b494ef9a2b7fc6fa45c5e22",
+      "status": 200
+    }
+  ],
+  "actual_launcher": "/workspace/solana-wallet-scanner/run.sh",
+  "browser": "Chromium 151.0.7922.173",
+  "launcher_stopped": true,
+  "offline_guards": {
+    "synthetic_provider_requests": 13,
+    "external_provider_requests": 0,
+    "credential_lookups": 0,
+    "blocked_requests": 0,
+    "synthetic_subscriptions": 1,
+    "transport": "explicit offline synthetic test, no genuine provider collection",
+    "requests": [
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getSignaturesForAddress",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getAccountInfo",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getSignaturesForAddress",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getSignaturesForAddress",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getAccountInfo",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_subscriptions",
+        "method": "connect",
+        "path": "address-specific logsSubscribe"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "quote-only",
+        "path": "/swap/v2/order"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "quote-only",
+        "path": "/swap/v2/order"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "quote-only",
+        "path": "/swap/v2/order"
+      }
+    ]
+  }
+}

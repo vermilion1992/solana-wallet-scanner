@@ -1,0 +1,630 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://developers.jup.ag/docs/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Order & Execute
+
+> Best price across all routers with managed transaction landing
+
+The Meta-Aggregator is the recommended way to swap on Jupiter. All routing engines compete for the best price (Metis, JupiterZ RFQ, Dflow, OKX), and Jupiter handles transaction landing for you via `/order` + `/execute`.
+
+## Quick start
+
+Three steps: get an order, sign it, execute it.
+
+### Prerequisites
+
+<Accordion title="Loading a wallet for testing">
+  There are several ways to load a wallet for testing. All examples on this page use `BS58_PRIVATE_KEY` from your `.env` file.
+
+  <CodeGroup>
+    ```typescript title="From base58 secret key (.env)" theme={null}
+    // .env: BS58_PRIVATE_KEY=your_base58_secret_key
+
+    // @solana/kit
+    import { createKeyPairSignerFromBytes, getBase58Encoder } from "@solana/kit";
+    const signer = await createKeyPairSignerFromBytes(
+      getBase58Encoder().encode(process.env.BS58_PRIVATE_KEY!),
+    );
+
+    // @solana/web3.js
+    import { Keypair } from "@solana/web3.js";
+    import bs58 from "bs58";
+    const signer = Keypair.fromSecretKey(bs58.decode(process.env.BS58_PRIVATE_KEY!));
+    ```
+
+    ```typescript title="From Solana CLI keypair file" theme={null}
+    import fs from "fs";
+
+    // @solana/kit
+    import { createKeyPairSignerFromBytes } from "@solana/kit";
+    const keyfileBytes = JSON.parse(
+      fs.readFileSync("/path/to/.config/solana/id.json", "utf8"),
+    );
+    const signer = await createKeyPairSignerFromBytes(
+      new Uint8Array(keyfileBytes),
+    );
+
+    // @solana/web3.js
+    import { Keypair } from "@solana/web3.js";
+    const keyfileBytes = JSON.parse(
+      fs.readFileSync("/path/to/.config/solana/id.json", "utf8"),
+    );
+    const signer = Keypair.fromSecretKey(new Uint8Array(keyfileBytes));
+    ```
+
+    ```typescript title="From raw byte array" theme={null}
+    // @solana/kit
+    import { createKeyPairSignerFromBytes } from "@solana/kit";
+    const signer = await createKeyPairSignerFromBytes(
+      new Uint8Array([/* 64 bytes */]),
+    );
+
+    // @solana/web3.js
+    import { Keypair } from "@solana/web3.js";
+    const signer = Keypair.fromSecretKey(new Uint8Array([/* 64 bytes */]));
+    ```
+  </CodeGroup>
+
+  <Warning>
+    Never commit private keys to source control. Use environment variables or the Solana CLI keyfile for testing. In production, use a proper key management solution.
+  </Warning>
+</Accordion>
+
+<Accordion title="Imports, types, and constants">
+  <CodeGroup>
+    ```typescript title="@solana/kit" theme={null}
+    import {
+      createKeyPairSignerFromBytes,
+      getBase58Encoder,
+      getTransactionDecoder,
+      getTransactionEncoder,
+      partiallySignTransaction,
+    } from "@solana/kit";
+
+    type OrderResponse = {
+      transaction: string | null; // base64-encoded transaction, null if no taker, "" if quote-only
+      requestId: string;
+      outAmount: string;
+      router: string;            // "metis" | "jupiterz" | "dflow" | "okx"
+      mode: string;              // "ultra" | "manual"
+      feeBps: number;
+      feeMint: string;
+      errorCode?: number;        // present when transaction is ""
+      errorMessage?: string;     // present when transaction is ""
+    };
+
+    type ExecuteResponse = {
+      status: "Success" | "Failed";
+      signature: string;
+      code: number;
+      totalInputAmount: string;
+      totalOutputAmount: string;
+      inputAmountResult: string;
+      outputAmountResult: string;
+      error?: string;
+    };
+
+    const API_KEY = process.env.JUPITER_API_KEY;
+    if (!API_KEY) throw new Error("Missing JUPITER_API_KEY");
+    const BASE_URL = "https://api.jup.ag/swap/v2";
+
+    // Load wallet from base58 secret key in .env
+    const signer = await createKeyPairSignerFromBytes(
+      getBase58Encoder().encode(process.env.BS58_PRIVATE_KEY!),
+    );
+    ```
+
+    ```typescript title="@solana/web3.js" theme={null}
+    import { Keypair, VersionedTransaction } from "@solana/web3.js";
+    import bs58 from "bs58";
+
+    type OrderResponse = {
+      transaction: string | null; // base64-encoded transaction, null if no taker, "" if quote-only
+      requestId: string;
+      outAmount: string;
+      router: string;            // "metis" | "jupiterz" | "dflow" | "okx"
+      mode: string;              // "ultra" | "manual"
+      feeBps: number;
+      feeMint: string;
+      errorCode?: number;        // present when transaction is ""
+      errorMessage?: string;     // present when transaction is ""
+    };
+
+    type ExecuteResponse = {
+      status: "Success" | "Failed";
+      signature: string;
+      code: number;
+      totalInputAmount: string;
+      totalOutputAmount: string;
+      inputAmountResult: string;
+      outputAmountResult: string;
+      error?: string;
+    };
+
+    const API_KEY = process.env.JUPITER_API_KEY;
+    if (!API_KEY) throw new Error("Missing JUPITER_API_KEY");
+    const BASE_URL = "https://api.jup.ag/swap/v2";
+
+    // Load wallet from base58 secret key in .env
+    const signer = Keypair.fromSecretKey(
+      bs58.decode(process.env.BS58_PRIVATE_KEY!),
+    );
+    ```
+  </CodeGroup>
+</Accordion>
+
+### Code example
+
+<CodeGroup>
+  ```typescript expandable title="@solana/kit" theme={null}
+  // Step 1: Get an order
+  const orderResponse = await fetch(
+    `${BASE_URL}/order?` +
+      new URLSearchParams({
+        inputMint: "So11111111111111111111111111111111111111112", // SOL
+        outputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+        amount: "100000000",
+        taker: signer.address,
+      }),
+    { headers: { "x-api-key": API_KEY } },
+  );
+  if (!orderResponse.ok) {
+    console.error(`/order failed: ${orderResponse.status}`, await orderResponse.text());
+    process.exit(1);
+  }
+  const order: OrderResponse = await orderResponse.json();
+
+  if (!order.transaction) {
+    console.error("No transaction in response:", JSON.stringify(order, null, 2));
+    process.exit(1);
+  }
+
+  // Step 2: Sign the transaction
+  // Use partiallySignTransaction because JupiterZ quotes require an additional
+  // market maker signature, which is added during /execute
+  const transactionBytes = Buffer.from(order.transaction, "base64");
+  const transaction = getTransactionDecoder().decode(transactionBytes);
+  const signedTransaction = await partiallySignTransaction(
+    [signer.keyPair],
+    transaction,
+  );
+
+  // Step 3: Execute
+  const signedTxBytes = getTransactionEncoder().encode(signedTransaction);
+  const signedTxBase64 = Buffer.from(signedTxBytes).toString("base64");
+
+  const executeResponse = await fetch(`${BASE_URL}/execute`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify({
+      signedTransaction: signedTxBase64,
+      requestId: order.requestId,
+    }),
+  });
+  if (!executeResponse.ok) {
+    console.error(`/execute failed: ${executeResponse.status}`, await executeResponse.text());
+    process.exit(1);
+  }
+  const result: ExecuteResponse = await executeResponse.json();
+
+  console.log(`https://solscan.io/tx/${result.signature}`);
+  if (result.status === "Success") {
+    console.log("Swap successful:", JSON.stringify(result, null, 2));
+  } else {
+    console.error("Swap failed:", JSON.stringify(result, null, 2));
+  }
+  ```
+
+  ```typescript expandable title="@solana/web3.js" theme={null}
+  // Step 1: Get an order
+  const orderResponse = await fetch(
+    `${BASE_URL}/order?` +
+      new URLSearchParams({
+        inputMint: "So11111111111111111111111111111111111111112", // SOL
+        outputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+        amount: "100000000",
+        taker: signer.publicKey.toString(),
+      }),
+    { headers: { "x-api-key": API_KEY } },
+  );
+  if (!orderResponse.ok) {
+    console.error(`/order failed: ${orderResponse.status}`, await orderResponse.text());
+    process.exit(1);
+  }
+  const order: OrderResponse = await orderResponse.json();
+
+  if (!order.transaction) {
+    console.error("No transaction in response:", JSON.stringify(order, null, 2));
+    process.exit(1);
+  }
+
+  // Step 2: Sign the transaction
+  const transaction = VersionedTransaction.deserialize(
+    Buffer.from(order.transaction, "base64"),
+  );
+  transaction.sign([signer]);
+
+  // Step 3: Execute
+  const signedTransaction = Buffer.from(transaction.serialize()).toString("base64");
+
+  const executeResponse = await fetch(`${BASE_URL}/execute`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": API_KEY,
+    },
+    body: JSON.stringify({
+      signedTransaction,
+      requestId: order.requestId,
+    }),
+  });
+  if (!executeResponse.ok) {
+    console.error(`/execute failed: ${executeResponse.status}`, await executeResponse.text());
+    process.exit(1);
+  }
+  const result: ExecuteResponse = await executeResponse.json();
+
+  console.log(`https://solscan.io/tx/${result.signature}`);
+  if (result.status === "Success") {
+    console.log("Swap successful:", JSON.stringify(result, null, 2));
+  } else {
+    console.error("Swap failed:", JSON.stringify(result, null, 2));
+  }
+  ```
+</CodeGroup>
+
+## How it works
+
+### 1. Get an order
+
+`GET /order` returns a quote and an assembled transaction in a single call. All routers compete for the best price: Metis, JupiterZ, Dflow, and OKX.
+
+<Note>
+  Adding optional parameters to `/order` (such as fee or slippage overrides) may restrict routing. See the [routing impact matrix](#routing-impact-matrix) below for details.
+</Note>
+
+**Required parameters:**
+
+| Parameter | Description |
+| - | - |
+| `inputMint` | Mint address of the token you are selling |
+| `outputMint` | Mint address of the token you are buying |
+| `amount` | Amount in the smallest unit of the input token |
+| `taker` | Your wallet address. Required to receive an assembled transaction.<br />Without `taker`, you get a quote but no transaction. This is useful for price checks. |
+
+**Key response fields:**
+
+| Field | Description |
+| - | - |
+| `transaction` | Base64-encoded transaction to sign. Null if `taker` is not set. Empty string (`""`) if the router could quote a price but could not build a transaction (check `errorCode`). |
+| `requestId` | Pass this to `/execute`. |
+| `outAmount` | Expected output amount before slippage. |
+| `router` | Which router won the quote (`metis`, `jupiterz`, `dflow`, `okx`). |
+| `mode` | "ultra" (no optional params) or "manual" (optional params used). |
+| `errorCode` | Present when `transaction` is `""`. Match on `router` + `errorCode`. See [/order error codes](#order-error-codes). |
+| `errorMessage` | Present when `transaction` is `""`. Human-readable description. Do not match on this string, it may be parameterised. |
+
+When `transaction` is an empty string, the response still contains valid pricing (`inAmount`, `outAmount`) but the swap cannot proceed. Handle this in your integration:
+
+```typescript theme={null}
+if (!order.transaction) {
+  // Match on router + errorCode to identify the specific error
+  console.error(`[${order.router}] Error ${order.errorCode}: ${order.errorMessage}`);
+  // Show the quoted price to the user, but do not attempt to sign or execute
+}
+```
+
+For the full parameter reference, see the [API reference](/docs/api-reference/swap/order). For how each parameter affects routing, see the [routing impact matrix](#routing-impact-matrix) below.
+
+### Transaction validity
+
+Sign and submit the transaction as soon as you receive it. The longer you wait, the more the quote goes stale as onchain prices move.
+
+* **Aggregator routes** (Metis, Dflow, OKX): `lastValidBlockHeight` in the response is the hard expiry. The transaction becomes invalid after this block height.
+* **RFQ routes** (JupiterZ): `expireAt` is the quote expiry timestamp from the market maker. RFQ quotes are typically shorter-lived than aggregator quotes.
+
+These are guidelines, not guarantees of execution. Prices can move against you even within the validity window, causing the transaction to fail due to slippage. Sign and submit immediately after receiving the order.
+
+### 2. Sign the transaction
+
+* The transaction returned by `/order` is unsigned. Sign it with your wallet's private key. The example above uses `@solana/kit`. The transaction is a versioned transaction (v0).
+* Note: we use the `partiallySignTransaction` for partial signing because when JupiterZ routing is provided, there is an additional signer which is the MM that will be required after sending the transaction to `/execute` request.
+
+### 3. Execute the transaction
+
+`POST /execute` takes the signed transaction and the `requestId` from the order response.
+
+<Tip>
+  `/execute` has its own dedicated rate limit bucket (Keyless 20, Free 50, Paid 100 RPS), separate from your general API limit. See [Rate Limits](/docs/portal/rate-limits#dedicated-rate-limit-buckets).
+</Tip>
+
+Jupiter handles:
+
+* Optimised slippage via [RTSE](/docs/swap/advanced/slippage) (Real-Time Slippage Estimator), applied at order time to balance trade success and price protection
+* Optimised priority fee strategy for current network conditions
+* Jupiter Beam (our own proprietary transaction execution pipeline) for accelerated transaction sending and landing across multiple RPC providers
+* Confirmation polling
+* Parses both successful and failed transactions
+
+**Request body:**
+
+| Field | Required | Description |
+| - | - | - |
+| `signedTransaction` | Yes | Base64-encoded signed transaction |
+| `requestId` | Yes | The `requestId` from the `/order` response |
+| `lastValidBlockHeight` | No | Block height for nonce validation |
+
+**Response:**
+
+| Field | Description |
+| - | - |
+| `status` | "Success" or "Failed" |
+| `signature` | Transaction signature (present on both success and some failures) |
+| `code` | Error code. 0 = success. See [/execute error codes](#execute-error-codes). |
+| `totalInputAmount` | Total input token amount deducted from the user's wallet, including the fee if `feeMint` is the input mint |
+| `inputAmountResult` | Input amount that went into the swap route, after any fee collected in the input mint |
+| `outputAmountResult` | Output amount produced by the swap route, before any fee collected in the output mint |
+| `totalOutputAmount` | Final output token amount reflected in the user's wallet, after any fee collected in the output mint |
+
+Use `totalInputAmount` and `totalOutputAmount` for the swap token amounts reflected in the user's wallet. Use `inputAmountResult` and `outputAmountResult` for swap-route accounting.
+
+The swap fee is collected in one token, shown by `feeMint` in the `/order` response. If `feeMint` matches `inputMint`, compare `totalInputAmount` and `inputAmountResult`:
+
+```txt theme={null}
+fee collected in the input mint = totalInputAmount - inputAmountResult
+```
+
+If `feeMint` matches `outputMint`, compare `outputAmountResult` and `totalOutputAmount`:
+
+```txt theme={null}
+fee collected in the output mint = outputAmountResult - totalOutputAmount
+```
+
+For example, if `/execute` returns:
+
+```json theme={null}
+{
+  "outputAmountResult": "2103",
+  "totalOutputAmount": "2101"
+}
+```
+
+The swap route produced `2103` output units, and `2101` output units were reflected in the user's wallet. The difference is the fee collected in the output mint.
+
+## Error codes
+
+### /order error codes
+
+When `/order` returns `transaction: ""` (empty string), the response still contains valid pricing but the swap cannot proceed. The `errorCode` and `errorMessage` fields explain why.
+
+The same `errorCode` number has different meanings depending on the `router`. Match on both fields:
+
+**Aggregator routers** (`metis`, `dflow`, `okx`):
+
+| errorCode | Meaning |
+| - | - |
+| 1 | Insufficient funds (taker lacks input token balance) |
+| 2 | Insufficient SOL for gas |
+| 3 | Swap below minimum for gasless |
+
+**JupiterZ router** (`jupiterz`):
+
+| errorCode | Meaning |
+| - | - |
+| 1 | Insufficient balance to fund the swap |
+| 2 | Missing associated token account |
+| 3 | Quote could not be built into a transaction |
+
+### /execute error codes
+
+The `code` field in the `/execute` response indicates the result. `0` is success, negative values are errors grouped by router type:
+
+| Code | Category | Meaning |
+| - | - | - |
+| `0` | Success | Transaction confirmed |
+| `-1` | Execute | Missing cached order (requestId not found or expired) |
+| `-2` | Execute | Invalid signed transaction |
+| `-3` | Execute | Invalid message bytes |
+| `-1000` | Aggregator | Failed to land |
+| `-1001` | Aggregator | Unknown error |
+| `-1002` | Aggregator | Invalid transaction |
+| `-1003` | Aggregator | Transaction not fully signed |
+| `-1004` | Aggregator | Invalid block height |
+| `-2000` | RFQ | Failed to land |
+| `-2001` | RFQ | Unknown error |
+| `-2002` | RFQ | Invalid payload |
+| `-2003` | RFQ | Quote expired |
+| `-2004` | RFQ | Swap rejected |
+
+## Routing impact matrix
+
+Adding optional parameters to `/order` can restrict which routers are eligible:
+
+| Parameter | Metis | JupiterZ (RFQ) | Dflow | OKX |
+| - | - | - | - | - |
+| **(no optional params)** | Yes | Yes | Yes | Yes |
+| `receiver` | Yes | Yes | Yes | Yes |
+| `referralAccount` & `referralFee` | Yes | Yes | Yes | Yes |
+| `payer` (integrator gasless) | Yes | **No** | **No** | **No** |
+| `excludeRouters: jupiterz` | Yes | **No** | Yes | Yes |
+
+**Key takeaway:** setting `payer` to a wallet different from `taker` disables JupiterZ (RFQ) and restricts routing to Metis, which may result in worse pricing on major pairs where market makers often beat onchain routing by 5-20bps.
+
+For the full parameter reference, see the [API reference](/docs/api-reference/swap/order).
+
+## Order mode
+
+The `/order` response includes a `mode` field that indicates whether optional parameters were applied that may affect routing or swap behaviour:
+
+| Mode | Meaning |
+| - | - |
+| **ultra** | No optional params used. Default behaviour with all routers eligible. |
+| **manual** | Optional params detected (e.g. `slippageBps`, `referralAccount`, `payer`). These modifications may restrict routing or change swap behaviour. |
+
+`mode` does not indicate which router was used for the swap. It signals whether you adjusted parameters that could affect price or swap success. This is useful for debugging: if a swap fails in `manual` mode, the parameter modifications you applied may be the cause.
+
+<Note>
+  This is similar to how the jup.ag frontend behaves: when you use custom settings like slippage, priority fee strategy, or dex/router exclusions, the swap is handled differently. Since you opted into custom parameters, you take responsibility for the impact on swap outcomes.
+</Note>
+
+## Fees
+
+### Jupiter platform fee
+
+Jupiter charges a platform fee on `/order` swaps. This fee is included in the quote and deducted automatically. The `platformFee` field in the response shows the fee amount and rate:
+
+```json theme={null}
+{
+  "platformFee": {
+    "amount": "8529",
+    "feeBps": 5,
+    "feeMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  }
+}
+```
+
+#### Total fee vs platform fee
+
+The top-level `feeBps` field is the total fee rate charged for the swap. The `platformFee.feeBps` field is the Jupiter platform fee rate, which is the fee Jupiter intends to make from the swap.
+
+These values can differ when the swap includes additional charges, such as gasless support cost recoup. For example, if the platform fee for a swap pair is 5 bps and gasless support adds 7 bps, the response can show `feeBps: 12` and `platformFee.feeBps: 5`.
+
+#### Fee breakdown
+
+The platform fee varies by token pair:
+
+| Token Pair | Fee (bps) |
+| - | - |
+| Buying Jupiter tokens (SOL/Stable to JUP/JLP/jupSOL) | 0 |
+| Pegged assets (LST-LST, Stable-Stable) | 0 |
+| SOL-Stable | 2 |
+| LST-Stable | 5 |
+| Everything else | 10 |
+| New tokens (within 24 hours of token age) | 50 |
+
+#### Fee mint priority
+
+Jupiter determines which token to collect fees in based on a priority list:
+
+1. **SOL**
+2. **Stablecoins** (USDC, USDT, etc.)
+3. **Liquid staked tokens** (jupSOL, etc.)
+4. **Bluechips** (large market cap tokens)
+5. **Others**
+
+Check the `feeBps`, `platformFee.feeBps`, and `feeMint` fields in the `/order` response to see the total fee rate, Jupiter platform fee rate, and fee token for your swap.
+
+### Referral fees
+
+Use the [Jupiter Referral Program](/docs/tool-kits/referral-program) to earn fees on `/order` swaps. This requires setting up referral accounts before you can collect fees.
+
+#### How it works
+
+* Jupiter takes 20% of your integrator fee (no separate platform fee when referral is active)
+* Jupiter decides which token mint to collect fees in based on the [fee mint priority](#fee-mint-priority) list
+* You must create a `referralTokenAccount` for each mint you expect to receive fees in
+* If the `referralTokenAccount` for the `feeMint` is not initialised, the order still returns but executes without your fees (the user still gets their swap)
+* Fee range: 50 to 255 bps
+* Supports SPL and Token2022 tokens
+
+#### Setup
+
+Three one-time steps before you can collect fees:
+
+1. **Install the Referral SDK**
+
+```bash theme={null}
+npm install @jup-ag/referral-sdk
+```
+
+2. **Create a `referralAccount`** (once)
+
+```typescript expandable theme={null}
+import { ReferralProvider } from "@jup-ag/referral-sdk";
+import { Connection, Keypair, PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
+import bs58 from "bs58";
+
+const connection = new Connection("https://api.mainnet-beta.solana.com");
+const wallet = Keypair.fromSecretKey(bs58.decode(process.env.BS58_PRIVATE_KEY!));
+const provider = new ReferralProvider(connection);
+
+// Jupiter Ultra Referral Project
+const projectPubKey = new PublicKey("DkiqsTrw1u1bYFumumC7sCG2S8K25qc2vemJFHyW2wJc");
+
+const transaction = await provider.initializeReferralAccountWithName({
+  payerPubKey: wallet.publicKey,
+  partnerPubKey: wallet.publicKey,
+  projectPubKey: projectPubKey,
+  name: "your-app-name",
+});
+
+const signature = await sendAndConfirmTransaction(connection, transaction.tx, [wallet]);
+console.log("referralAccount:", transaction.referralAccountPubKey.toBase58());
+```
+
+3. **Create `referralTokenAccount` for each fee mint**
+
+Create a token account for each mint you expect to collect fees in. Start with SOL and USDC. You can add more later.
+
+```typescript expandable theme={null}
+const mint = new PublicKey("So11111111111111111111111111111111111111112"); // SOL
+
+const transaction = await provider.initializeReferralTokenAccountV2({
+  payerPubKey: wallet.publicKey,
+  referralAccountPubKey: new PublicKey("YOUR_REFERRAL_ACCOUNT"),
+  mint,
+});
+
+const signature = await sendAndConfirmTransaction(connection, transaction.tx, [wallet]);
+console.log("referralTokenAccount:", transaction.tokenAccount.toBase58());
+```
+
+You can also use the [Referral Dashboard](https://referral.jup.ag/) to create accounts via a web interface.
+
+#### Usage
+
+Pass `referralAccount` and `referralFee` to `/order`:
+
+```typescript theme={null}
+const params = new URLSearchParams({
+  inputMint: "So11111111111111111111111111111111111111112",
+  outputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  amount: "1000000000",
+  taker: walletAddress,
+  referralAccount: "YOUR_REFERRAL_ACCOUNT",
+  referralFee: "50", // 50 bps = 0.5%
+});
+
+const response = await fetch(
+  `https://api.jup.ag/swap/v2/order?${params}`,
+  { headers: { "x-api-key": API_KEY } }
+);
+```
+
+Verify your fees are applied by checking the response fee fields. Top-level `feeBps` is the total fee rate charged for the swap, while `platformFee.feeBps` is the Jupiter platform fee rate. If the response falls back to the default platform fee, the `referralTokenAccount` for that `feeMint` is likely not initialised.
+
+### Fee response fields
+
+The `/order` response includes these fee-related fields:
+
+| Field | Description |
+| - | - |
+| `feeBps` | Total fee rate charged for the swap, including platform fee and additional charges such as gasless support cost recoup |
+| `feeMint` | Token fees are collected in |
+| `platformFee.amount` | Jupiter platform fee amount |
+| `platformFee.feeBps` | Jupiter platform fee rate, excluding gasless support cost recoup |
+| `referralAccount` | Referral account used (if set) |
+
+## Related
+
+* [Jupiter Referral Program](/docs/tool-kits/referral-program) for the full referral program documentation
+* [Advanced Techniques](/docs/swap/advanced) for gasless swaps, priority fees, and CU optimisation
+* [API Reference: GET /order](/docs/api-reference/swap/order) for the full OpenAPI specification
+* [API Reference: POST /execute](/docs/api-reference/swap/execute) for the full OpenAPI specification
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.
