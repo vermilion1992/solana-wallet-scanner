@@ -1,0 +1,193 @@
+{
+  "control": "Exact target cashSystemtopup1000 thenclose, missing unrelated walletnetworkfee",
+  "row": {
+    "check": {
+      "state": "UNKNOWN",
+      "reason": "Reconstructed native cash disagrees with a required original closing account endpoint",
+      "evidence": [
+        "9ad7b9afd76e6c110d53eb40134d8362c84b5506f9db894c357e69fdf41300e9"
+      ],
+      "raw_paths": [],
+      "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+    },
+    "admitted_internal_roles": [],
+    "unresolved_economic_paths": [
+      "instructions.0",
+      "instructions.1",
+      "meta"
+    ],
+    "wallet_population_state": "UNKNOWN"
+  },
+  "native_fee": {
+    "state": "UNKNOWN",
+    "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+    "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+    "evidence": [
+      "9ad7b9afd76e6c110d53eb40134d8362c84b5506f9db894c357e69fdf41300e9"
+    ],
+    "raw_paths": [],
+    "dependencies": []
+  },
+  "economic_roles": {
+    "state": "UNKNOWN",
+    "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+    "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+    "evidence": [
+      "9ad7b9afd76e6c110d53eb40134d8362c84b5506f9db894c357e69fdf41300e9"
+    ],
+    "raw_paths": [
+      "instructions.0",
+      "instructions.1",
+      "meta",
+      "meta.fee"
+    ],
+    "dependencies": []
+  },
+  "input": {
+    "slot": 100,
+    "blockTime": 1790003600,
+    "version": 0,
+    "transaction": {
+      "signatures": [
+        "mixed-system-topup-close"
+      ],
+      "message": {
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+          "11111111111111111111111111111111",
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        ],
+        "instructions": [
+          {
+            "programId": "11111111111111111111111111111111",
+            "parsed": {
+              "type": "transfer",
+              "info": {
+                "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "lamports": 1000
+              }
+            }
+          },
+          {
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "parsed": {
+              "type": "closeAccount",
+              "info": {
+                "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+              }
+            }
+          }
+        ],
+        "header": {
+          "numRequiredSignatures": 1,
+          "numReadonlySignedAccounts": 0,
+          "numReadonlyUnsignedAccounts": 2
+        }
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": null,
+      "preBalances": [
+        10000000000,
+        2000000,
+        2000000,
+        2000000,
+        1002000000,
+        1,
+        1
+      ],
+      "postBalances": [
+        10001995000,
+        0,
+        2000000,
+        2000000,
+        1002000000,
+        1,
+        1
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "innerInstructions": []
+    }
+  }
+}

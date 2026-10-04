@@ -1,0 +1,1265 @@
+diff --git a/ACCEPTANCE.md b/ACCEPTANCE.md
+index d469e513abaf5b2643e10070153a32f4828537c3..3fae2e18243e41c547d3967c04095a1bab783411 100644
+--- a/ACCEPTANCE.md
++++ b/ACCEPTANCE.md
+@@ -170,3 +170,16 @@ partition. The existing coverage module tests the precollection decision; the
+ small guarded API control tests immutable offline loss/restoration and exports.
+ No new full Gate A, browser acceptance, live provider probe or B3 is claimed.
+ Focused implementation tests cannot establish PRODUCT_READY.
++
++## Mixed-refund and genuine reserve-administration follow-up
++
++Use targeted existing cost-flow and reserve-mark modules plus necessary shared
++quantity/FIFO/offline report neighbours. Source-bound command success, explicitly
++passing receipts, unchanged source and distinct read-only review are recorded at
++`evidence/mixed-refund-accounting-batch/`. Existing locks/frontend assets remain
++bound by unchanged source bytes when this backend-only batch does not change
++frontend files; no new frontend installation/build/browser acceptance is claimed.
++The existing validation runner already includes both modules once. Independently
++worked mixed-refund interface controls and retained genuine phase-price originals
++remain separate from complete genuine B3. No live provider requests or credits
++are required. B1 NO_GO_CURRENT_SOURCE and PRODUCT_READY=false are unchanged.
+diff --git a/CODEX_TASK.md b/CODEX_TASK.md
+index 1474f7a4bc92a76422035c92ade874eb6c030d18..8156b1f8113a904e85a3b5f3773cc551d75855d6 100644
+--- a/CODEX_TASK.md
++++ b/CODEX_TASK.md
+@@ -1,4 +1,36 @@
+-# Active assignment — wallet accounting finalization, 4 October 2026
++# Active assignment — mixed refunds and retained phase prices, 4 October 2026
++
++Continue only from private `vermilion1992/solana-wallet-scanner`, branch
++`codex/product-completion`, published HEAD
++`bad28e11d7a281aa201eb08761e2a17161a9180a`. Its focused evidence binds application
++`3cb89255c43768a6dc8059c222b189a47fc31680`: 259 source files, literal-byte/POSIX
++manifest `1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366`.
++Preserve all 51 published commits and their original evidence.
++
++Finish the available-data accounting path for original System and canonical
++legacy WSOL movements followed by a wallet-authorized account refund. Replay
++bounded native cash in actual instruction order, preserve unsigned integer units,
++original paths, source alternatives and exact endpoint checks, then feed the
++existing ledger/FIFO. Closure proof may establish refund entitlement for an
++actual same-record top-up; a token-owner field or net equality cannot.
++
++Fix the reproduced retained-phase-price sibling: pinned PumpSwap sync/close user
++volume administration can be excluded only when its validated original references
++are disjoint from every accepted pool/mint/vault role. Do not suppress the mixed
++transaction's exports, foreign closures or unsupported whole-trade roles to claim
++a positive wallet buy or profit. Unknown wrappers remain unsupported.
++
++Use retained genuine inputs and small independently worked interface controls.
++No live calls, credentials, new source research, full suites, new ZIPs or trading.
++Version changed interpretations (wallet v11/archive v14/cost roles v2/economic
++observations v3/reserve marks v2), create immutable children, run necessary focused
++checks and a distinct read-only review, and publish coherent private commits.
++Current receipts belong in `evidence/mixed-refund-accounting-batch/`. The existing
++validation entry point already includes both affected test modules exactly once.
++B1 remains NO_GO_CURRENT_SOURCE, complete real B2 OPEN, genuine B3 BLOCKED and
++PRODUCT_READY=false. No threshold or source-contract substitution is authorized.
++
++# Prior assignment — wallet accounting finalization, 4 October 2026
+ 
+ Continue private `vermilion1992/solana-wallet-scanner`, branch
+ `codex/product-completion`, exact published starting HEAD
+diff --git a/ISSUES.md b/ISSUES.md
+index 7c80cd777ffcf8c9ca8a774d5227001821c8858e..41b08a19d8bb9709f693f666c85c969e1f9f4516 100644
+--- a/ISSUES.md
++++ b/ISSUES.md
+@@ -1,25 +1,28 @@
+ # Single issue register — initialise from v0.3.11
+ 
+-## Current wallet accounting finalization — 4 October 2026
++## Current mixed refunds and retained phase prices — 4 October 2026
+ 
+ Continue private `vermilion1992/solana-wallet-scanner`, branch
+ `codex/product-completion`, published starting HEAD
+-`9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb`. Its tested application is
+-`93a370b40a58b28813810a217821a510630bb059`: 254 source files, SHA-256
+-`1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d`.
+-Current evidence prefix is `evidence/wallet-accounting-finalization-batch/`.
++`bad28e11d7a281aa201eb08761e2a17161a9180a`. Its focused tested application is
++`3cb89255c43768a6dc8059c222b189a47fc31680`: 259 source files, SHA-256
++`1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366`.
++Current evidence prefix is `evidence/mixed-refund-accounting-batch/`.
+ The current batch requires its own focused source-bound checks and distinct diff
+ review; this section claims no new full acceptance or published candidate.
+ 
+ | Item | Category | Current disposition | Remaining dependency |
+ | --- | --- | --- | --- |
+ | WSOL wrap/unwrap quantities | B: missing implementation addressed | The shared quantity path admits exact legacy WSOL System funding plus executed syncNative and successful wallet-authorized native closure. Parsed/compiled controls and required-source loss/restoration use the same engine. | Current-batch receipts bind the final correction; other native/token operations and programs remain independently unsupported. |
+-| CAP-REFUND-EXACT / CAP-WRAP-DEPENDENCY | A: confirmed receipt defects corrected in this batch | Read-only review reproduced an incorrect pre-balance refund amount after earlier movement and omission of a second unresolved native-account representation. The final roles must retain these dependencies rather than certify the incomplete receipt. | Final targeted checks and source-bound read-only review; the before-fix reproductions remain as development evidence. |
+-| CAP-ROUTES | B: implementation partly completed | `raw-cost-flow-roles-v1` rechecks selected and linked originals before the shared native endpoint reconciler. The genuine 1,513,840-lamport funding is a supported internal-role observation. | Mixed intratransaction refund reconstruction, unsupported routes, external payment/tip/capital roles and complete cost allocation remain unfinished where not evidenced. |
+-| CAP-VALUATION | B: implementation partly completed; C: source inputs missing | `historical-pumpswap-reserve-marks-v1` supplies original exact-phase reserve-ratio SOL marks to economic v2. | A spot phase is not a historical wallet boundary or liquidation quote. Exact all-account equity, relevant nonsettlement boundary marks and complete valued flows remain missing. |
++| CAP-REFUND-EXACT / CAP-WRAP-DEPENDENCY | A: prior confirmed corrections preserved | The preceding batch rejected pre-balance refund claims after earlier movement and retained second unresolved native representations. This batch derives the supported intermediate cash instead of reopening those accepted controls. | Prior reproductions and receipts remain unchanged; current mixed-refund controls cover the extended path. |
++| CAP-ROUTES | B: implementation partly completed | `raw-cost-flow-roles-v2` rechecks selected and linked originals and replays supported original System/native-token cash in instruction order before the shared endpoint reconciler. Direct and supported mixed refunds enter the same ledger. The genuine 1,513,840-lamport funding remains a supported observation. | Opaque relevant native effects, unsupported exchange/wrapper routes, unproved external payment/tip/capital roles and complete cost allocation remain gaps where not evidenced. |
++| CAP-MIXED-REFUND | B: implementation addressed | Supported original System transfers and canonical WSOL transfers/checked transfers supply exact ordered closure cash; same-record accepted wallet closure supplies top-up refund entitlement. | Final source-bound controls, linked loss/conflict/restoration, u64/order/relevant-opaque guards and immutable normal offline reports. |
++| PRICE-ADMIN-DISJOINT | A: reproduced current-source compatibility defect addressed | Known Pump sync/close user-volume instructions previously erased otherwise supported genuine phase marks. Only pinned schema-valid references disjoint from every pool/mint/vault role may be excluded for this metric. | Whole mixed buys still export tokens and close to foreign recipients; those economic roles remain unsupported. |
++| WSOL-COLLATERAL / PRICE-ADMIN-INNER | A: confirmed sibling defects corrected | Distinct review reproduced impossible native principal in owned holdings and pool quote reserves, and a disjoint outer admin with a relevant inner vault reference. The shared quantity/value and reserve paths now retain those contradictions. | Final source-bound independent reproductions, relevant-source rejection/restoration, unrelated-fee isolation and bounded payer-cash feasibility when a fee is missing; no full-wallet promotion. |
++| CAP-VALUATION | B: implementation partly completed; C: source inputs missing | `historical-pumpswap-reserve-marks-v2` supplies original exact-phase reserve-ratio SOL marks to economic v3, preserving genuine records with only schema-valid disjoint Pump administration. | A spot phase is not a historical wallet boundary or liquidation quote. Exact all-account equity, relevant nonsettlement boundary marks and complete valued flows remain missing. |
+ | CAP-ORIGIN-COMPLETE / CAP-CLASS | B: implementation and C: source inputs | Existing FIFO, consumed-unit basis and protocol settlement exclusion remain usable within their independent scopes. | All real acquisition origins and time-relevant meme/nonspam evidence; current controls or token suffixes cannot supply them. |
+ | DATA-01 / B1 | C: source capability decision finalized | **NO_GO_CURRENT_SOURCE** for full-PDF exhaustive historical ownership. Free endpoint access, retained record compatibility and genuine terminal documented-query coverage are observed separately. Coverage v3 exposes `UNSUPPORTED_CURRENT_SOURCE` before scans. | Accepted event-time closed/reassigned/transient/non-ATA ownership across both programs, defined retention/formats and independent genuine controls. More pages, another probe or a paid plan alone cannot supply the contract. |
+-| CAP-01 / B2 | B: complete real accounting | Development-functional normal import/report/source/export/immutable offline rebuild path; wallet v10/archive v13 retain metric-specific dependencies. Complete real B2 remains OPEN. | Accepted full population plus remaining origin/role/classification/boundary/flow implementation and source evidence. |
++| CAP-01 / B2 | B: complete real accounting | Development-functional normal import/report/source/export/immutable offline rebuild path; wallet v11/archive v14 retain metric-specific dependencies. Complete real B2 remains OPEN. | Accepted full population plus remaining origin/role/classification/boundary/flow implementation and source evidence. |
+ | R1-B3 | C: genuine acceptance dataset | BLOCKED. The 23/87/200-record genuine partial corpora and separately worked calculations remain unchanged. | One complete genuine supported corpus with independent whole-wallet expectations and selective removal/restoration. Synthetic tests cannot close it. |
+ | ENV / validation | D: environment and validation | Private repository access is resolved. Existing scoped/full records retain their original source identities; no new install, OS, provider or full-suite acceptance is inferred. | Targeted current-batch checks, exact source binding and distinct read-only diff review, recorded separately from application/source blockers. |
+ 
+diff --git a/docs/CONTRACT.md b/docs/CONTRACT.md
+index 91fee04157d1727e92c6aa8e9a4722a964ca6521..e296f793cd46ffa354d3dbba2dbfa633a923ef88 100644
+--- a/docs/CONTRACT.md
++++ b/docs/CONTRACT.md
+@@ -1,15 +1,41 @@
+ # Implementation contracts
+ 
+-## Current wallet accounting and source capability contract
+-
+-Current methods are wallet v10, archive v13, economic observations v2,
++## Current mixed accounting interpretation
++
++The follow-up extends existing instruction/quantity/source validation and FIFO;
++it adds no second financial engine. Cost roles v2 derive intermediate account
++cash for supported System and canonical legacy WSOL instructions before an
++actual wallet-authorized closure. Unknown relevant effects, conflicting or lost
++originals, overflow and failed execution cannot supply an exact refund. A
++supported same-record refund may establish a funded account's entitlement;
++owner-only persistent top-ups remain unresolved. Missing-fee payer cash retains
++a nonnegative bounded range: impossible prefix funding and closing cash are
++rejected without erasing an independently exact refund.
++
++Reserve marks v2 exclude only pinned, schema-valid PumpSwap administration whose
++actual references are disjoint from all accepted pool/mint/vault roles, including associated inner
++instructions. Original canonical WSOL quantities require phase-local account cash
++at least as large as their token principal in both owned holdings and quote
++vaults; contradictory units cannot support a value. A missing unrelated fee does
++not erase independently proved nonpayer account cash or reserve prices. These are
++exact-phase spot observations; the original mixed trade's exports and foreign
++closures remain unsupported economic dependencies. Wallet v11/archive v14/economic
++v3 give new reports their current interpretations without editing parents.
++Execution/source identities and raw evidence are recorded under
++`evidence/mixed-refund-accounting-batch/`; this is focused validation, not a new
++full Gate A or genuine B3 acceptance. The historical-source decision below remains
++unchanged: B1 NO_GO_CURRENT_SOURCE, complete real B2 OPEN and B3 BLOCKED.
++
++## Prior wallet accounting and source capability contract
++
++The preceding batch used wallet v10, archive v13, economic observations v2,
+ indexed-query coverage v3, raw cost/flow roles v1 and historical PumpSwap reserve
+ marks v1. Existing FIFO v4, research v5, selected-cohort v2 and metric-evidence v2
+ remain the shared accounting/report path. New interpretations create immutable
+ children; parents, original bytes and separately worked genuine expectations are
+-not rewritten. Current-batch evidence is
+-`evidence/wallet-accounting-finalization-batch/`; validation and publication must
+-be recorded against the actual final source, not inferred from this contract.
++not rewritten. Its retained evidence is
++`evidence/wallet-accounting-finalization-batch/`; these records bind their own
++source and do not constitute acceptance of later modifications.
+ 
+ `historical_source_decision()` exposes `UNSUPPORTED_CURRENT_SOURCE` independently
+ of authentication/entitlement, response compatibility, terminal query coverage
+@@ -45,7 +71,7 @@ Complete ownership, acquisition origins, time-relevant meme/nonspam eligibility,
+ exact all-account historical boundaries and valued external flows remain separate
+ requirements. Complete real B2 is OPEN, genuine B3 is BLOCKED and
+ PRODUCT_READY=false. Earlier method paragraphs below describe historical stages
+-where they differ from this current section.
++where they differ from the first current section.
+ 
+ The preceding inventory/speed batch added versioned original-byte observations
+ and invocation-scoped indexed-page parsing reuse. Known current native/token
+diff --git a/docs/R1_SOURCE_DECISION.md b/docs/R1_SOURCE_DECISION.md
+index 2c34804ba001f96dd5dbe0c98f049397a759e543..b8a91f4bd50497d29c7f341469c9fea1f370adc8 100644
+--- a/docs/R1_SOURCE_DECISION.md
++++ b/docs/R1_SOURCE_DECISION.md
+@@ -8,11 +8,11 @@ wallet history.** The application exposes this as
+ UNKNOWN when their population evidence is unavailable. This is a final decision
+ about the currently authorized source contract, not another open research plan.
+ 
+-Starting private HEAD is `9f5c18eb62de03c7d5eecf766ef427fe2d9f30fb`, binding
+-tested application `93a370b40a58b28813810a217821a510630bb059`: 254 application
++Starting private HEAD is `bad28e11d7a281aa201eb08761e2a17161a9180a`, binding
++focused tested application `3cb89255c43768a6dc8059c222b189a47fc31680`: 259 application
+ files, source SHA-256
+-`1e798dc8014c586a63398fdede2ec5a277946c806dba94610bcf94d11da7494d`.
+-Current-batch evidence belongs under `evidence/wallet-accounting-finalization-batch/`;
++`1e87b9482f1254818725f42f4e92f36029f7d51cd6e64f398a382e8e2a036366`.
++Current-batch evidence belongs under `evidence/mixed-refund-accounting-batch/`;
+ it must bind its own final candidate. No new acceptance or publication is claimed here.
+ 
+ | Question | Concrete decision |
+@@ -23,8 +23,8 @@ it must bind its own final candidate. No new acceptance or publication is claime
+ | Exhaustive historical ownership | NO_GO_CURRENT_SOURCE. The primary owner predicate does not establish event-time coverage for formerly closed, reassigned, transient and non-ATA accounts across both token programs. Terminal paging cannot supply the missing semantics. |
+ | Qualification | Unproved. Query completeness and selected observations cannot certify the PDF's wallet-wide filters or copying safety. |
+ 
+-Four fresh unauthenticated primary-document retrievals match the retained bytes
+-exactly. The guide documents ownership-metadata filtering only from slot
++Four unauthenticated primary-document retrievals archived in the preceding
++accounting-finalization batch match the retained bytes exactly. The guide documents ownership-metadata filtering only from slot
+ 111,491,819 and unlimited mainnet retention; neither statement supplies the
+ missing event-time owner contract. The historical-balance endpoint also warns
+ that one latest transaction can undercount a mint held across multiple accounts.
+@@ -39,14 +39,14 @@ dataset meets that contract; imported completion flags and fixed-point account
+ discovery are insufficient.
+ 
+ The offline implementation batch extends the existing accounting engine:
+-`raw-cost-flow-roles-v1` admits source-proved wallet-internal account funding and
+-closure movement rather than treating it automatically as income, fees or
++`raw-cost-flow-roles-v2` admits source-proved wallet-internal account funding and
++ordered supported System/native-token closure movement rather than treating it automatically as income, fees or
+ capital. The genuine 1,513,840-lamport account funding is such a narrow role
+-observation. `historical-pumpswap-reserve-marks-v1` derives contemporaneous
++observation. `historical-pumpswap-reserve-marks-v2` derives contemporaneous
+ pre/post pool reserve-ratio SOL spot marks from original vault quantities. These
+ marks are neither exact report-boundary equity nor executable liquidation prices.
+ 
+-Wallet v10/archive v13/economic v2/coverage v3 apply the changed interpretations
++Wallet v11/archive v14/economic v3/coverage v3 apply the changed interpretations
+ only to new reports and immutable child rebuilds. Complete acquisition origins,
+ unsupported trade/cost roles, time-relevant meme/nonspam eligibility, exact
+ all-account boundaries and complete valued external flows still require accepted
+diff --git a/scanner/archive_input.py b/scanner/archive_input.py
+index 90ff11efce445d39529dfca1096abc832c98720e..87fb1d218da59e71451c6d88e96324df2c0244c2 100644
+--- a/scanner/archive_input.py
++++ b/scanner/archive_input.py
+@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
+ from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
+ 
+ VERSION = 'archived-wallet-input-v1'
+-METHOD = 'archive-ledger-v13'
++METHOD = 'archive-ledger-v14'
+ _CURRENT_IMPORT = object()
+ MAX_UPLOAD = 20 * 1024 * 1024
+ MAX_ENTRY = 32 * 1024 * 1024
+diff --git a/scanner/cost_flow_evidence.py b/scanner/cost_flow_evidence.py
+index 74fa09a2061ce2916d0bc6cd41b94e483e91f20e..6f2c63680f323bdcb9e9d461db9f836621704f8f 100644
+--- a/scanner/cost_flow_evidence.py
++++ b/scanner/cost_flow_evidence.py
+@@ -14,14 +14,16 @@ from copy import deepcopy
+ import re
+ 
+ from .compiled_instructions import normalize_transaction, resolve_account_keys
++from .accounting import raw_quantity
+ from .decoder import ASSOCIATED_ID, SYSTEM_ID, TOKEN_IDS
+ from .instruction_scope import inspect_instruction
+ from .investigation import WSOL
+ from .native_cash_observations import _instructions
+ from .providers import TOKEN_PROGRAM
++from .position_evidence import _balance
+ from .transaction_format import _needs_instruction_view, original_instruction_paths
+ 
+-VERSION = 'raw-cost-flow-roles-v1'
++VERSION = 'raw-cost-flow-roles-v2'
+ HASH = re.compile(r'^[a-f0-9]{64}$')
+ U64_MAX = 2**64 - 1
+ MAX_EVENTS = 200_000
+@@ -56,29 +58,232 @@ def _event_path(path, raw):
+     return f"innerInstructions.{group['index']}.{parts[4]}"
+ 
+ 
+-def _prior_native_mutation(instructions, position, account, keys, *, native):
+-    """Do not present an opening lamport endpoint as an intratx refund.
++def _refund_cash_trace(raw, view, instructions, context, observed, wallet, normalized):
++    """Replay supported original account cash within this transaction, not P&L.
+ 
+-    The current role contract has no intermediate account-cash reconstructor.
+-    Earlier native-affecting operations therefore retain that dependency rather
+-    than misreporting an exact refund. Proven unrelated/token-only operations
+-    remain separately usable.
++    Every intermediate balance is u64, closed accounts cannot be reused, and
++    opaque relevant writes stay dependencies. Exact token units/owners/lifecycle
++    are still supplied by the shared interpreter. Ordered gross effects remain
++    in refund semantics so cancelling movements cannot masquerade as absence.
+     """
+-    for path, instruction in instructions[:position]:
+-        inspection = inspect_instruction(instruction, keys, path=path)
+-        if account not in inspection['references'] or inspection['non_economic']:
++    keys = context['keys']
++    cash = dict(zip(keys, raw['meta']['preBalances']))
++    units, native_accounts, closed, touched, native_post = {}, set(), set(), set(), {}
++    effects, paths, reasons = defaultdict(list), defaultdict(list), defaultdict(list)
++    denomination_paths = defaultdict(list)
++    refunds = {}
++    for account, pair in observed.get('boundaries', {}).items():
++        point = pair.get('pre') if isinstance(pair, dict) else None
++        if (isinstance(point, dict) and pair.get('program') == TOKEN_PROGRAM
++                and point.get('mint') == WSOL and point.get('decimals') == 9):
++            native_accounts.add(account)
++            units[account] = raw_quantity(point['quantity']) if _usable(pair.get('checks', {}).get('quantities')) else None
++            native_post[account] = raw_quantity(pair['post']['quantity']) if isinstance(pair.get('post'), dict) else None
++            denomination_paths[account] += [pair[phase]['path'] for phase in ('pre', 'post')
++                                           if isinstance(pair.get(phase), dict) and isinstance(pair[phase].get('path'), str)]
++    # Cash denomination is independent of economic ownership. Foreign peers
++    # can prove exact canonical WSOL cash effects from original boundaries,
++    # without making their external transfers acquisitions, income or basis.
++    candidates = {info.get(field) for _, instruction in instructions
++        if isinstance(instruction, dict) and instruction.get('programId') == TOKEN_PROGRAM
++        and isinstance(instruction.get('parsed'), dict)
++        and isinstance((info := instruction['parsed'].get('info')), dict)
++        for field in ('source', 'destination') if isinstance(info.get(field), str)}
++    for account in candidates - native_accounts:
++        try:
++            pre = _balance(raw, keys, account, 'preTokenBalances')
++            post = _balance(raw, keys, account, 'postTokenBalances')
++            if (all(point['program_id'] == TOKEN_PROGRAM and point['mint'] == WSOL and point['decimals'] == 9
++                    for point in (pre, post)) and pre['owner'] == post['owner']):
++                native_accounts.add(account)
++                units[account], native_post[account] = pre['quantity'], post['quantity']
++                denomination_paths[account] += [pre['path'], post['path']]
++        except (ValueError, TypeError, KeyError, IndexError):
+             continue
+-        parsed = instruction.get('parsed')
+-        kind = parsed.get('type') if isinstance(parsed, dict) else None
+-        if inspection['program'] == SYSTEM_ID:
+-            if kind not in ('allocate', 'allocateWithSeed', 'assign', 'assignWithSeed'):
+-                return True
+-        elif inspection['program'] in TOKEN_IDS:
+-            if kind == 'closeAccount' or native and kind in ('transfer', 'transferChecked', 'mintTo', 'mintToChecked', 'burn', 'burnChecked'):
+-                return True
+-        else:
+-            return True
+-    return False
++    for account in native_accounts:
++        if units[account] is None or cash[account] < units[account]:
++            cash[account], units[account] = None, None
++            reasons[account].append('Canonical native cash is smaller than its required token units or units are unsupported')
++    fee = raw['meta'].get('fee')
++    fee_missing = fee is None
++    if type(fee) is int and 0 <= fee <= U64_MAX and cash[keys[0]] is not None and cash[keys[0]] >= fee:
++        cash[keys[0]] -= fee
++    else:
++        cash[keys[0]] = None  # Missing fee does not invent a target cash balance.
++    possible_cash = {account: (value, value) if value is not None else None for account, value in cash.items()}
++    if fee_missing and not reasons[keys[0]]:
++        # The missing debit is nonnegative. Its exact value is unknown, but
++        # successful later operations still cannot spend above opening cash.
++        possible_cash[keys[0]] = (0, raw['meta']['preBalances'][0])
++
++    def reject(accounts, reason, source_paths):
++        for account in accounts:
++            if account in cash:
++                cash[account] = None
++                possible_cash[account] = None
++                units[account] = None
++                reasons[account].append(reason)
++                paths[account] += source_paths
++
++    def move(kind, source, destination, amount, source_paths, *, token=False):
++        if (source not in cash or destination not in cash or type(amount) is not int
++                or not 0 <= amount <= U64_MAX or source in closed or destination in closed):
++            raise ValueError('Native cash movement lacks unique live primary accounts or exact u64 quantity')
++        if cash[source] is not None and cash[source] < amount:
++            raise ValueError('Original native cash movement exceeds its intermediate source balance')
++        source_bounds, destination_bounds = possible_cash[source], possible_cash[destination]
++        if source_bounds is not None:
++            lower, upper = source_bounds
++            if upper < amount:
++                raise ValueError('Original native cash movement exceeds every possible intermediate source balance')
++            possible_cash[source] = ((max(lower, amount), upper) if source == destination else
++                                     (max(0, lower - amount), upper - amount))
++        if source != destination and destination_bounds is not None:
++            lower, upper = destination_bounds
++            if lower + amount > U64_MAX:
++                raise ValueError('Original native cash movement overflows every possible destination balance')
++            possible_cash[destination] = (lower + amount, min(U64_MAX, upper + amount))
++        if token:
++            if source not in native_accounts or destination not in native_accounts or units.get(source) is None or units.get(destination) is None:
++                raise ValueError('Native token cash movement requires supported canonical ownership/unit endpoints on both accounts')
++            if units[source] < amount:
++                raise ValueError('Native token movement exceeds its intermediate source units')
++            if source != destination:
++                units[source] -= amount
++                units[destination] += amount
++                if units[destination] > U64_MAX:
++                    raise ValueError('Native token movement exceeds its intermediate destination u64 units')
++            source_paths = source_paths + denomination_paths[source] + denomination_paths[destination]
++        if source != destination:
++            if cash[source] is not None:
++                cash[source] -= amount
++            if cash[destination] is not None:
++                cash[destination] += amount
++                if cash[destination] > U64_MAX:
++                    raise ValueError('Original native cash movement exceeds its intermediate destination u64 balance')
++        if token and any(cash[account] is not None and cash[account] < units[account] for account in (source, destination)):
++            raise ValueError('Canonical native cash is smaller than its intermediate token units')
++        effect = {'kind': kind, 'source': source, 'destination': destination, 'lamports': str(amount)}
++        for account in set((source, destination)):
++            touched.add(account)
++            effects[account].append(effect)
++            paths[account] += source_paths
++
++    zero_token = {'initializeAccount', 'initializeAccount2', 'initializeAccount3', 'syncNative',
++                  'approve', 'approveChecked', 'revoke', 'freezeAccount', 'thawAccount',
++                  'initializeImmutableOwner', 'getAccountDataSize', 'setAuthority'}
++    for position, (path, instruction) in enumerate(instructions):
++        references = set()
++        source_paths = [path]
++        try:
++            inspection = inspect_instruction(instruction, keys, path=path)
++            references = inspection['references'] & set(keys)
++            source_paths = original_instruction_paths(raw, inspection['paths'] + [path + '.parsed.info'], normalized=normalized)
++            if inspection['non_economic']:
++                continue
++            program = inspection['program']
++            parsed = instruction.get('parsed')
++            info = parsed.get('info') if isinstance(parsed, dict) else None
++            kind = parsed.get('type') if isinstance(parsed, dict) else None
++            if not isinstance(info, dict) or program not in keys:
++                raise ValueError('Opaque relevant instruction has no exact native cash contract')
++            if program == SYSTEM_ID and kind == 'transfer':
++                if set(info) != {'source', 'destination', 'lamports'}:
++                    raise ValueError('Native transfer fields differ from the reviewed RPC schema')
++                if path.startswith('transaction.') and info['source'] not in context['signers']:
++                    raise ValueError('Outer native cash source lacks primary signer evidence')
++                move('system_transfer', info['source'], info['destination'], info['lamports'], source_paths)
++            elif program == SYSTEM_ID and kind == 'createAccount':
++                if set(info) != {'source', 'newAccount', 'owner', 'lamports', 'space'} or info.get('newAccount') not in cash:
++                    raise ValueError('Native creation fields differ from the reviewed RPC schema')
++                if cash[info['newAccount']] != 0 or info['newAccount'] in closed:
++                    raise ValueError('Native creation/recreation lacks a supported zero lifecycle origin')
++                if path.startswith('transaction.') and info['source'] not in context['signers']:
++                    raise ValueError('Outer native creation lacks primary source signer')
++                move('system_creation', info['source'], info['newAccount'], info['lamports'], source_paths)
++            elif program == TOKEN_PROGRAM and kind in ('transfer', 'transferChecked'):
++                source, destination = info.get('source'), info.get('destination')
++                if source not in native_accounts and destination not in native_accounts:
++                    # Shared token interpretation independently decides these
++                    # units. They are cash-zero only for proved nonnative mints.
++                    peers = [observed.get('boundaries', {}).get(account) for account in (source, destination)]
++                    if not all(isinstance(pair, dict) and isinstance(pair.get('pre'), dict)
++                               and pair['pre'].get('mint') != WSOL for pair in peers):
++                        raise ValueError('Unclassified token movement has no native cash exclusion proof')
++                    continue
++                fields = {'source', 'destination', 'authority'} | ({'mint', 'tokenAmount'} if kind == 'transferChecked' else {'amount'})
++                if set(info) != fields or info.get('authority') not in keys:
++                    raise ValueError('Native token transfer lacks the reviewed single-authority schema')
++                if path.startswith('transaction.') and info['authority'] not in context['signers']:
++                    raise ValueError('Outer native token transfer lacks primary authority signer')
++                token = info.get('tokenAmount')
++                if kind == 'transferChecked' and (not isinstance(token, dict) or info['mint'] != WSOL
++                        or WSOL not in keys or type(token.get('decimals')) is not int or token['decimals'] != 9
++                        or set(token) - {'amount', 'decimals', 'uiAmount', 'uiAmountString'}):
++                    raise ValueError('Checked native cash transfer disagrees with canonical mint/decimals')
++                amount = raw_quantity(token.get('amount') if kind == 'transferChecked' else info.get('amount'))
++                move('native_token_transfer', source, destination, amount, source_paths, token=True)
++            elif program in TOKEN_IDS and kind == 'closeAccount':
++                account = info.get('account')
++                if (set(info) != {'account', 'destination', 'owner'} or account not in cash
++                        or info.get('destination') not in cash or info.get('owner') not in keys):
++                    raise ValueError('Native close lacks the reviewed single-authority primary account schema')
++                if path.startswith('transaction.') and info['owner'] not in context['signers']:
++                    raise ValueError('Outer native close lacks primary authority signer')
++                amount = cash[account]
++                if account in closed or info['destination'] in closed or account == info['destination']:
++                    raise ValueError('Closure needs distinct live source and refund destination accounts')
++                refund = {'lamports': str(amount) if amount is not None else None,
++                    'reason': '; '.join(sorted(set(reasons[account]))) if amount is None else None,
++                    'cash_effects': list(effects[account]), 'cash_accounts': {account, info['destination']},
++                    'raw_paths': paths[account] + source_paths + [f'meta.preBalances.{keys.index(account)}']}
++                for effect in refund['cash_effects']:
++                    refund['cash_accounts'].update((effect['source'], effect['destination']))
++                if amount is not None:
++                    move('account_refund', account, info['destination'], amount, source_paths)
++                else:
++                    reject({info['destination']}, 'Required source cash before closure is unavailable', source_paths)
++                cash[account] = 0
++                possible_cash[account] = (0, 0)
++                units[account] = 0
++                closed.add(account)
++                refunds[position] = refund
++            elif program in TOKEN_IDS and kind in zero_token:
++                # syncNative moves no cash. Unknown native/extension writes
++                # never share this zero-effect whitelist.
++                if kind == 'syncNative' and info.get('account') in native_accounts:
++                    pair = observed['boundaries'][info['account']]
++                    reserve = raw['meta']['preBalances'][keys.index(info['account'])] - int(pair['pre']['quantity'])
++                    if cash[info['account']] is None or reserve < 0 or cash[info['account']] < reserve:
++                        raise ValueError('Native sync lacks independently supported cash/reserve')
++                    units[info['account']] = cash[info['account']] - reserve
++            elif program == ASSOCIATED_ID and kind in ('create', 'createIdempotent'):
++                if (set(info) != {'source', 'account', 'wallet', 'mint', 'systemProgram', 'tokenProgram'}
++                        or info['systemProgram'] != SYSTEM_ID or info['tokenProgram'] not in TOKEN_IDS
++                        or not isinstance(raw['meta'].get('innerInstructions'), list)):
++                    raise ValueError('Associated wrapper lacks its exact reviewed CPI recording contract')
++                # This builtin funds through separately recorded System CPIs;
++                # it contributes no second direct native transfer.
++            else:
++                raise ValueError('Relevant instruction cash effect is unsupported')
++        except (ValueError, TypeError, KeyError, IndexError, OverflowError) as exc:
++            reject(references, str(exc), source_paths)
++    mismatches = {account for account in touched if cash[account] is not None
++                  and cash[account] != raw['meta']['postBalances'][keys.index(account)]}
++    mismatches.update(account for account in touched & native_accounts
++        if units[account] is not None and units[account] != native_post.get(account))
++    mismatches.update(account for account in touched if possible_cash[account] is not None
++        and not possible_cash[account][0] <= raw['meta']['postBalances'][keys.index(account)] <= possible_cash[account][1])
++    for refund in refunds.values():
++        refund['raw_paths'] += [f'meta.{phase}Balances.{keys.index(account)}'
++            for account in sorted(refund['cash_accounts']) for phase in ('pre', 'post')]
++        if keys[0] in refund['cash_accounts']:
++            refund['raw_paths'].append('meta.fee')
++        if (refund['cash_accounts'] & mismatches
++                or any(cash[account] is None and not (account == keys[0] and fee_missing and not reasons[account])
++                       for account in refund['cash_accounts'])):
++            refund.update(lamports=None, reason='Reconstructed native cash disagrees with a required original closing account endpoint')
++    return refunds
+ 
+ 
+ def _roles(record, observed, wallet):
+@@ -98,6 +303,7 @@ def _roles(record, observed, wallet):
+                 or len(after) != len(keys) or any(type(v) is not int or not 0 <= v <= U64_MAX for v in before + after)):
+             raise ValueError('Native internal roles need the complete exact u64 endpoint arrays')
+         instructions = _instructions(view)
++        refund_cash = _refund_cash_trace(raw, view, instructions, context, observed, wallet, normalized)
+         authority_overrides = set()
+         for _, instruction in instructions:
+             parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+@@ -106,6 +312,27 @@ def _roles(record, observed, wallet):
+                     and info.get('authorityType') in ('accountOwner', 'closeAccount')):
+                 authority_overrides.add(info.get('account'))
+         created = set()
++        proved_closures = {}
++        for position, (path, instruction) in enumerate(instructions):
++            parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
++            info = parsed.get('info') if isinstance(parsed, dict) else None
++            if (instruction.get('programId') not in TOKEN_IDS or not isinstance(info, dict)
++                    or parsed.get('type') != 'closeAccount' or set(info) != {'account', 'destination', 'owner'}
++                    or info.get('owner') != wallet or info.get('destination') != wallet
++                    or info.get('account') in authority_overrides
++                    or refund_cash.get(position, {}).get('lamports') is None
++                    or (path.startswith('transaction.') and wallet not in context['signers'])):
++                continue
++            try:
++                account = info['account']
++                pair = _pair(observed, account, wallet)
++                native = pair['program'] == TOKEN_PROGRAM and pair['pre'].get('mint') == WSOL and pair['pre'].get('decimals') == 9
++                if (pair['program'] == instruction['programId'] and after[keys.index(account)] == 0
++                        and pair['post'].get('quantity') == '0'
++                        and (native or pair['pre'].get('quantity') == '0')):
++                    proved_closures[account] = position
++            except (ValueError, TypeError, KeyError, IndexError):
++                continue
+         deferred = []
+         native_funding = Counter()
+         native_sync_paths = defaultdict(list)
+@@ -167,8 +394,8 @@ def _roles(record, observed, wallet):
+                     # A token owner field alone does not establish historical
+                     # close/refund authority. New initialized accounts have
+                     # protocol default authority only while no override is
+-                    # present in this record. Existing-account top-ups remain
+-                    # unresolved even when owned native endpoint sums net out.
++                    # present in this record. Existing funding needs an exact
++                    # later executed wallet refund or canonical native units.
+                     if account in authority_overrides:
+                         continue
+                     if account not in created:
+@@ -178,12 +405,12 @@ def _roles(record, observed, wallet):
+                             and any(sync > position for sync in native_sync_paths[account])
+                             and int(pair['post']['quantity']) - int(pair['pre']['quantity']) == native_funding[account]
+                             and after[keys.index(account)] - before[keys.index(account)] == native_funding[account])
+-                        if not native_principal:
++                        if not native_principal and proved_closures.get(account, -1) <= position:
+                             continue
+                     if (type(amount) is not int or not 0 <= amount <= U64_MAX or keys.count(account) != 1
+                             or (path.startswith('transaction.') and wallet not in context['signers'])):
+                         raise ValueError('Wallet-owned funding lacks the original source or exact u64 units')
+-                    role, lamports = ('wallet_owned_account_funding' if account in created else
++                    role, lamports = ('wallet_owned_account_funding' if account in created or account in proved_closures else
+                                      'wallet_owned_native_principal'), str(amount)
+                 elif program in TOKEN_IDS and kind == 'closeAccount':
+                     if set(info) != {'account', 'destination', 'owner'}:
+@@ -201,9 +428,10 @@ def _roles(record, observed, wallet):
+                             or pair['post'].get('quantity') != '0'
+                             or (path.startswith('transaction.') and wallet not in context['signers'])):
+                         raise ValueError('Internal closure needs wallet authority, an allowed quantity and zero native close endpoint')
+-                    if _prior_native_mutation(instructions, position, account, keys, native=native):
+-                        raise ValueError('Opening native balance is not an exact refund after a preceding native-affecting operation')
+-                    role, lamports = 'wallet_owned_account_refund', str(before[index])
++                    refund = refund_cash.get(position, {})
++                    if refund.get('lamports') is None:
++                        raise ValueError(refund.get('reason') or 'Exact refund requires supported original ordered native cash movements')
++                    role, lamports = 'wallet_owned_account_refund', refund['lamports']
+                 elif program in TOKEN_IDS and kind == 'syncNative':
+                     if set(info) != {'account'}:
+                         raise ValueError('Native synchronization fields differ from the reviewed RPC schema')
+@@ -224,6 +452,9 @@ def _roles(record, observed, wallet):
+                 paths = original_instruction_paths(raw, inspection['paths'], normalized=normalized)
+                 roles[_event_path(path, view)] = {'role': role, 'account': account, 'program': program,
+                     'lamports': lamports, 'raw_paths': paths}
++                if role == 'wallet_owned_account_refund':
++                    roles[_event_path(path, view)].update(cash_effects=refund['cash_effects'],
++                        raw_paths=sorted(set(paths + refund['raw_paths'])))
+             except (ValueError, TypeError, KeyError, IndexError, OverflowError) as exc:
+                 gaps.append(str(exc))
+         for path, info, inspection in deferred:
+@@ -244,7 +475,9 @@ def _roles(record, observed, wallet):
+ 
+ 
+ def _semantics(roles):
+-    return Counter((row['role'], row['account'], row['program'], row['lamports']) for row in roles.values())
++    return Counter((row['role'], row['account'], row['program'], row['lamports'],
++        tuple((effect['kind'], effect['source'], effect['destination'], effect['lamports'])
++              for effect in row.get('cash_effects', []))) for row in roles.values())
+ 
+ 
+ def project_cost_flow_evidence(*, selected, raw_versions, transactions, consistency, ledger_events, wallet):
+@@ -315,7 +548,12 @@ def project_cost_flow_evidence(*, selected, raw_versions, transactions, consiste
+                 if pair['pre']['quantity'] != pair['post']['quantity']:
+                     changing.append(account)
+             role_accounts = {row['account'] for row in admitted if row['role'] in
+-                             ('wallet_owned_native_principal', 'wallet_owned_account_refund')}
++                             ('wallet_owned_native_principal', 'wallet_owned_account_refund', 'wallet_owned_account_funding')}
++            for row in admitted:
++                if row['role'] == 'wallet_owned_account_refund':
++                    for effect in row.get('cash_effects', []):
++                        if effect['kind'] == 'native_token_transfer':
++                            role_accounts.update((effect['source'], effect['destination']))
+             observed_units_known = native_scope_complete and bool(changing) and all(account in role_accounts
+                 and observed['boundaries'][account]['program'] == TOKEN_PROGRAM
+                 and all(observed['boundaries'][account][phase].get('mint') == WSOL
+diff --git a/scanner/economic_evidence.py b/scanner/economic_evidence.py
+index 7efda434471854ff388a84b2e63ed00806b73418..dd0ec1153c969d5e75aa1e821e3f3e13be5e6b58 100644
+--- a/scanner/economic_evidence.py
++++ b/scanner/economic_evidence.py
+@@ -18,7 +18,7 @@ from .investigation import _keys, WSOL
+ from .providers import TOKEN_PROGRAM
+ from .transaction_format import supported_transaction_format
+ 
+-VERSION = 'economic-raw-observations-v2'
++VERSION = 'economic-raw-observations-v3'
+ MAX_RECORDS = 40_000
+ MAX_ACCOUNT_PHASES = 200_000
+ _HASH = re.compile(r'^[a-f0-9]{64}$')
+diff --git a/scanner/historical_reserve_marks.py b/scanner/historical_reserve_marks.py
+index 520a3baca6632dab4df1eeae7357e8d718b17679..f426ee3560795ab1bc49e57e2696ee6c377e98a0 100644
+--- a/scanner/historical_reserve_marks.py
++++ b/scanner/historical_reserve_marks.py
+@@ -14,11 +14,11 @@ import re
+ 
+ from .accounting import canonical, raw_quantity
+ from .collector import _valid_account
+-from .investigation import PUMP_SWAP, WSOL, _keys, _program, _route
++from .investigation import PUMP_SWAP, WSOL, _keys, _program, _route, _accounts, _data
+ from .providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
+ from .transaction_format import _needs_instruction_view, supported_transaction_format
+ 
+-VERSION = 'historical-pumpswap-reserve-marks-v1'
++VERSION = 'historical-pumpswap-reserve-marks-v2'
+ METHOD = 'pumpswap-exact-phase-quote-base-reserve-ratio-sol-v1'
+ MAX_LINKED_RECORDS = 40_000
+ MAX_BALANCES = 200_000
+@@ -27,6 +27,13 @@ IDL = {'commit': 'cb188ce08b5069196eef1f3e4a0c43b70099793b',
+        'path': 'tests/fixtures/retained_protocol_funding/pump_amm.json',
+        'sha256': '2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1'}
+ SCOPE = 'Original transaction phase pool-reserve spot mark; no report-boundary or executable liquidation assertion'
++# Exact no-argument layouts in the pinned primary IDL above. These references
++# may prove disjointness for reserve marks only; they supply no native cash,
++# refund, no-op or complete trade interpretation.
++_RESERVE_DISJOINT_ADMINISTRATION = {
++    bytes.fromhex('561fc057a3574fee'): 5,  # sync_user_volume_accumulator
++    bytes.fromhex('f945a4da9667548a'): 4,  # close_user_volume_accumulator
++}
+ 
+ 
+ def _check(known, reason, evidence=(), *, paths=()):
+@@ -75,7 +82,8 @@ def _points(raw):
+     if raw.get('meta', {}).get('err') is not None:
+         return []  # A failed call is not evidence of an executed pool state transition.
+     from .compiled_instructions import normalize_transaction
+-    semantic = normalize_transaction(raw)['raw'] if _needs_instruction_view(raw) else raw
++    normalization = normalize_transaction(raw) if _needs_instruction_view(raw) else None
++    semantic = normalization['raw'] if normalization is not None else raw
+     message, meta = semantic['transaction']['message'], semantic['meta']
+     keys = _keys(message, meta)
+     if len(keys) != len(set(keys)) or any(not _valid_account(key) for key in keys):
+@@ -83,7 +91,7 @@ def _points(raw):
+     instructions = message.get('instructions')
+     if not isinstance(instructions, list):
+         raise ValueError('Original outer instruction population is absent')
+-    routes = []
++    routes, administration = [], []
+     for index, instruction in enumerate(instructions):
+         if not isinstance(instruction, dict):
+             raise ValueError('Malformed outer instruction has unresolved pool relevance')
+@@ -95,7 +103,17 @@ def _points(raw):
+         if _program(instruction, keys) != PUMP_SWAP:
+             continue
+         from .instruction_scope import inspect_instruction
+-        inspect_instruction(instruction, keys, path=f'transaction.message.instructions.{index}')
++        path = f'transaction.message.instructions.{index}'
++        inspected = inspect_instruction(instruction, keys, path=path)
++        payload = _data(instruction.get('data'))
++        if payload[:8] in _RESERVE_DISJOINT_ADMINISTRATION:
++            accounts = _accounts(instruction, keys)
++            if (len(payload) != 8 or len(accounts) != _RESERVE_DISJOINT_ADMINISTRATION[payload[:8]]
++                or len(accounts) != len(set(accounts)) or accounts[-1] != PUMP_SWAP
++                or any(account not in keys for account in accounts)):
++                raise ValueError('PumpSwap administration lacks its exact pinned reference layout')
++            administration.append((index, set(inspected['references']), inspected['paths'] + [path + '.data']))
++            continue
+         route = _route(instruction, keys)
+         accounts = route['accounts']
+         if (route['instruction'] not in ('buy', 'buy_exact_quote_in', 'sell') or len(accounts) < 17
+@@ -107,6 +125,41 @@ def _points(raw):
+         routes.append((index, route))
+     if not routes:
+         return []
++    if administration:
++        # Executed inner references are also original evidence. Contradictory
++        # or malformed associations cannot be hidden behind disjoint outer
++        # accounts, even though this projection grants no CPI economic role.
++        by_index = {index: (references, paths) for index, references, paths in administration}
++        groups = meta.get('innerInstructions')
++        if groups is not None and not isinstance(groups, list):
++            raise ValueError('Recorded administration inner references are malformed')
++        seen = set()
++        for group_index, group in enumerate(groups or []):
++            if (not isinstance(group, dict) or type(group.get('index')) is not int
++                or not 0 <= group['index'] < len(instructions) or group['index'] in seen
++                or not isinstance(group.get('instructions'), list)):
++                raise ValueError('Recorded administration inner association is malformed or duplicated')
++            seen.add(group['index'])
++            if group['index'] not in by_index:
++                continue
++            references, paths = by_index[group['index']]
++            paths += [f'meta.innerInstructions.{group_index}.index']
++            for ordinal, nested in enumerate(group['instructions']):
++                path = f'meta.innerInstructions.{group_index}.instructions.{ordinal}'
++                inspected = inspect_instruction(nested, keys, path=path)
++                if (inspected['program'] not in keys
++                    or inspected['shape'] == 'opaque' and not inspected['references'] <= set(keys)):
++                    raise ValueError('Administration CPI references are absent from original primary keys')
++                references.update(inspected['references'])
++                references.add(inspected['program'])
++                paths += inspected['paths'] + ([path + '.data'] if 'data' in nested else [])
++    # Check every route, including later or repeated pool calls. A valid known
++    # layout does not excuse access to any actual reserve/identity role.
++    reserve_roles = {route['accounts'][position] for _, route in routes for position in (0, 3, 4, 7, 8)}
++    for _, references, _ in administration:
++        if references & reserve_roles:
++            raise ValueError('PumpSwap administration overlaps a pool/vault/mint reserve identity')
++    administration_paths = [path for _, _, paths in administration for path in paths]
+     phases = {phase: _phase_balances(semantic, keys, field) for phase, field in
+               (('pre', 'preTokenBalances'), ('post', 'postTokenBalances'))}
+     points = []
+@@ -118,6 +171,16 @@ def _points(raw):
+                 raise ValueError('Both exact pool vault reserves are required at each original transaction phase')
+             base, precision, base_paths = _reserve(balances[accounts[7]], mint=accounts[3], owner=accounts[0], program=accounts[11])
+             quote, _, quote_paths = _reserve(balances[accounts[8]], mint=WSOL, owner=accounts[0], program=TOKEN_PROGRAM, quote=True)
++            # Denominating a legacy native-mint reserve in SOL requires its
++            # native backing at this exact phase. Other wallet/account cash
++            # and fee uncertainty remains independent of this reserve mark.
++            cash_field = 'preBalances' if phase == 'pre' else 'postBalances'
++            cash = meta.get(cash_field)
++            quote_index = keys.index(accounts[8])
++            value = cash[quote_index] if isinstance(cash, list) and quote_index < len(cash) else None
++            if type(value) is not int or not 0 <= value <= 2**64 - 1 or value < quote:
++                raise ValueError('Legacy WSOL quote reserve lacks exact phase unsigned native backing')
++            quote_paths.append(f'meta.{cash_field}.{quote_index}')
+             if decimals is not None and precision != decimals:
+                 raise ValueError('Base precision changes across original pool phases')
+             decimals = precision
+@@ -132,7 +195,7 @@ def _points(raw):
+                 'quote_mint': WSOL, 'mark_sol_per_token': price,
+                 'price_ratio_numerator': str(numerator), 'price_ratio_denominator': str(denominator),
+                 'raw_paths': [f'transaction.message.instructions.{index}.accounts.{n}' for n in (0, 3, 4, 7, 8, 11, 12)]
+-                    + base_paths + quote_paths})
++                    + base_paths + quote_paths + administration_paths})
+     # Repeated calls to the same pool share the whole transaction phase; they
+     # must not become several independent observations or intermediate prices.
+     output = {}
+@@ -143,6 +206,9 @@ def _points(raw):
+             old['raw_paths'] = sorted(set(old['raw_paths'] + point['raw_paths']))
+         else:
+             output[key] = point
++    from .transaction_format import original_instruction_paths
++    for point in output.values():
++        point['raw_paths'] = original_instruction_paths(raw, point['raw_paths'], normalized=normalization)
+     return [output[key] for key in sorted(output)]
+ 
+ 
+@@ -210,5 +276,6 @@ def project_historical_reserve_marks(records, *, all_records, raw_sources, consi
+         'historical_boundary_completeness': 'UNKNOWN', 'qualification': False,
+         'provider_requests': 0, 'credential_lookups': 0,
+         'limitations': ['Observed reserve ratio is a spot marking method, not executable proceeds, liquidity depth or token eligibility.',
++            'Known disjoint administration references do not prove cash roles, refund amounts or a supported whole-transaction trade.',
+             'A mark cannot be carried to another signature, transaction phase, slot or report boundary.',
+             'All boundary assets and external flows still require their independent accepted evidence.']}
+diff --git a/scanner/wallet_evidence.py b/scanner/wallet_evidence.py
+index 8fccb1e61e0ebaac96b8a118e9b865df39d66993..abf51e715ff58a8dbfc8ea8f41ecfa1bf6ac6846 100644
+--- a/scanner/wallet_evidence.py
++++ b/scanner/wallet_evidence.py
+@@ -26,7 +26,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
+ from .chronology_evidence import assess_chronology, assess_interval_membership
+ from .transaction_format import supported_transaction_format
+ 
+-VERSION = 'wallet-raw-evidence-v10'
++VERSION = 'wallet-raw-evidence-v11'
+ HASH = re.compile(r'^[a-f0-9]{64}$')
+ MAX_RECORDS = SOURCE_HASH_LIMIT
+ MAX_ACCOUNT_STEPS = 100_000
+@@ -437,6 +437,20 @@ def _observe(record, wallet):
+                     quantity_known = quantity_known and running >= 0
+             if result['failed']:
+                 quantity_known = identity_known and before['quantity'] == after['quantity']
++            if identity_known and programs == {TOKEN_PROGRAM} and before['mint'] == WSOL and before['decimals'] == 9:
++                # Canonical native token units are collateralized by this
++                # exact account's lamports. This minimum invariant does not
++                # assume rent/refund ownership or a complete monetary ledger.
++                index = keys.index(account)
++                collateral_known = True
++                for phase, point in (('pre', before), ('post', after)):
++                    native = meta.get(phase + 'Balances')
++                    amount = native[index] if isinstance(native, list) and len(native) == len(keys) else None
++                    paths.append(f'meta.{phase}Balances.{index}')
++                    collateral_known = collateral_known and type(amount) is int and 0 <= amount <= 2**64 - 1 and amount >= point['quantity']
++                quantity_known = quantity_known and collateral_known
++                if not collateral_known:
++                    operation_errors.append('Canonical native token units exceed or lack their exact original account lamport collateral')
+             owner_known = identity_known
+             if before and after:
+                 expected_owner = before['owner']
+@@ -1450,9 +1464,12 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+             agreement = bool(primary_pair) and all(pair is not None and _semantic(pair) == _semantic(primary_pair) for pair in pairs)
+             checks = {}
+             for key in ('ownership', 'quantities', 'lifecycle'):
++                rejected_reasons = sorted({pair['checks'][key]['reason'] for pair in pairs
++                    if pair is not None and pair['checks'][key]['state'] != 'PASS'})
+                 checks[key] = _check(identity.get('state') == 'PASS' and agreement and all(
+                     pair is not None and pair['checks'][key]['state'] == 'PASS' for pair in pairs),
+-                    'Every linked raw version supports the same phase-specific account facts and executed operations.' if agreement else
++                    ('; '.join(rejected_reasons) if rejected_reasons else
++                     'Every linked raw version supports the same phase-specific account facts and executed operations.') if agreement else
+                     'A linked account boundary/operation is missing or disagrees; no selected version overrides it.', evidence,
+                     paths=(p for pair in pairs if pair for p in pair['checks'][key]['raw_paths']))
+             pair = primary_pair or next(pair for pair in pairs if pair)
+diff --git a/tests/test_cost_flow_evidence.py b/tests/test_cost_flow_evidence.py
+index ef28a7c6e8bd9564d363498a32b00815bfe751e3..bfba68e5d4cd499e0d875b11209bd1fb41a1fef9 100644
+--- a/tests/test_cost_flow_evidence.py
++++ b/tests/test_cost_flow_evidence.py
+@@ -27,6 +27,37 @@ def wrapped_funding():
+     return raw, account
+ 
+ 
++def mixed_refund(kind):
++    """Literal original cash/unit controls; neither is a genuine B3 dataset."""
++    if kind == 'system':
++        raw = primary(base('mixed-system-refund'))
++        account, index, amount = ACCOUNT, 1, 2_001_000
++        operations = [parsed('transfer', {'source': WALLET, 'destination': ACCOUNT, 'lamports': 1000}, SYSTEM_ID)]
++        raw['meta']['postBalances'][0] = raw['meta']['preBalances'][0] - 5000 - 1000 + amount
++    else:
++        raw, account = wrapped_funding()
++        raw['transaction']['signatures'] = ['mixed-native-refund']
++        index, amount = 2, 1_002_000_100
++        keys = raw['transaction']['message']['accountKeys']
++        keys.append(WSOL)
++        raw['meta']['preBalances'].append(1_461_600)
++        raw['meta']['postBalances'].append(1_461_600)
++        raw['transaction']['message']['header']['numReadonlyUnsignedAccounts'] += 1
++        for phase, quantity in (('preTokenBalances', '100'), ('postTokenBalances', '0')):
++            source = next(row for row in raw['meta'][phase] if row['accountIndex'] == 1)
++            source['mint'] = WSOL
++            source['uiTokenAmount'] = {'amount': quantity, 'decimals': 9}
++        raw['meta']['preBalances'][1], raw['meta']['postBalances'][1] = 2_000_100, 2_000_000
++        operations = [parsed('transferChecked', {'source': ACCOUNT, 'destination': account, 'mint': WSOL,
++            'authority': WALLET, 'tokenAmount': {'amount': '100', 'decimals': 9}})]
++        raw['meta']['postBalances'][0] = raw['meta']['preBalances'][0] - 5000 + amount
++    raw['meta']['postBalances'][index] = 0
++    raw['meta']['postTokenBalances'] = [row for row in raw['meta']['postTokenBalances'] if row['accountIndex'] != index]
++    raw['transaction']['message']['instructions'] = operations + [parsed('closeAccount', {
++        'account': account, 'destination': WALLET, 'owner': WALLET})]
++    return raw, account, amount
++
++
+ def encode(data):
+     """Independent test conversion; byte layouts below are pinned literals."""
+     value = int.from_bytes(data, 'big')
+@@ -199,7 +230,7 @@ def test_retained_genuine_compiled_account_creation_admits_exact_funding_without
+         assert result['provider_requests'] == result['credential_lookups'] == 0
+ 
+ 
+-def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(tmp_path, monkeypatch):
++def test_mixed_refund_normal_saved_report_offline_rebuild_and_source_loss(tmp_path, monkeypatch):
+     """Synthetic interface input exercises the ordinary real adapter, not B3."""
+     import hashlib
+     import json
+@@ -232,10 +263,11 @@ def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(t
+ 
+     monkeypatch.setattr(app_module, 'Credentials', EmptyCredentials)
+     monkeypatch.setattr(httpx.AsyncClient, 'post', denied)
+-    raw = primary(creation())
++    raw, _, refund = mixed_refund('system')
++    signature = raw['transaction']['signatures'][0]
+     digest = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+     manifest = {'version': INPUT_VERSION, 'address': WALLET, 'window': WINDOW, 'dataset': 'real',
+-                'transactions': [{'signature': 'synthetic-operation', 'hash': digest}], 'evidence': []}
++                'transactions': [{'signature': signature, 'hash': digest}], 'evidence': []}
+     content = pack_bytes({'manifest': manifest, 'payloads': {digest: raw}})
+     app = app_module.create_app(tmp_path, 'cost-flow-local-session')
+     with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+@@ -248,7 +280,9 @@ def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(t
+         original = client.get(f'/api/export/reports/{identifier}.json').content
+         parent = json.loads(original)
+         adapter = parent['coverage']['wallet_evidence']
+-        assert [event['kind'] for event in adapter['accounting_events']] == ['fee', 'internal_transfer']
++        assert [event['kind'] for event in adapter['accounting_events']] == ['fee', 'internal_transfer', 'internal_transfer']
++        receipt = adapter['cost_flow_evidence']['transactions'][signature]
++        assert receipt['admitted_internal_roles'][-1]['lamports'] == str(refund)
+         assert adapter['components']['observed_economic_roles']['state'] == 'PASS'
+         assert parent['metrics']['observed_network_fees_sol']['value'] == '0.000005'
+         assert parent['metrics']['profit_sol']['status'] == 'unknown'
+@@ -259,7 +293,7 @@ def test_internal_creation_normal_saved_report_offline_rebuild_and_source_loss(t
+         missing = client.post(f'/api/reports/{identifier}/rebuild')
+         assert missing.status_code == 200, missing.text
+         child = client.get('/api/reports/' + missing.json()['report_id']).json()
+-        assert child['coverage']['wallet_evidence']['cost_flow_evidence']['transactions']['synthetic-operation']['check']['state'] == 'UNKNOWN'
++        assert child['coverage']['wallet_evidence']['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'UNKNOWN'
+         source_path.write_bytes(retained)
+         restored = client.post(f'/api/reports/{identifier}/rebuild')
+         assert restored.status_code == 200, restored.text
+@@ -366,15 +400,161 @@ def test_nonzero_legacy_wsol_close_returns_principal_and_rent_once_with_loss_res
+         'account': account, 'authorityType': 'closeAccount', 'authority': WALLET,
+         'newAuthority': address(40)}))
+     assert derive([wrong])['components']['observed_economic_roles']['state'] == 'UNKNOWN'
+-    # Prior native-affecting instructions make the opening endpoint an
+-    # inexact refund. Retain that dependency instead of publishing its number.
++    # Exact original funding is now included in the executed refund, while
++    # generic token ownership alone still cannot prove refund entitlement.
+     preceded = deepcopy(raw)
+     preceded['transaction']['message']['instructions'].insert(0, parsed('transfer', {
+         'source': WALLET, 'destination': account, 'lamports': 1000}, SYSTEM_ID))
+     preceded['meta']['postBalances'][0] = raw['meta']['postBalances'][0]
+-    unsupported = derive([preceded])
+-    receipt = unsupported['cost_flow_evidence']['transactions']['wrapped-principal']
+-    assert receipt['check']['state'] == 'UNKNOWN'
+-    assert receipt['admitted_internal_roles'] == []
+-    assert 'exact refund' in receipt['check']['reason']
++    supported = derive([preceded])
++    receipt = supported['cost_flow_evidence']['transactions']['wrapped-principal']
++    assert receipt['check']['state'] == 'PASS'
++    assert receipt['admitted_internal_roles'][-1]['lamports'] == '1002001000'
++    assert supported['components']['observed_economic_roles']['state'] == 'PASS'
++    impossible = deepcopy(raw)
++    impossible['meta']['preBalances'][2] = 999_999_999
++    impossible['meta']['postBalances'][0] = impossible['meta']['preBalances'][0] - 5000 + 999_999_999
++    rejected = derive([impossible])
++    boundary = rejected['transactions']['wrapped-principal']['boundaries'][account]
++    assert boundary['checks']['quantities']['state'] == 'UNKNOWN'
++    assert 'collateral' in boundary['checks']['quantities']['reason']
++    assert rejected['components']['native_fee']['state'] == 'PASS'
++    assert derive([raw]) == parent
++
++
++def test_mixed_original_cash_reconstruction_parsed_compiled_and_checked_transfer_gross_roles():
++    for kind in ('system', 'native'):
++        raw, account, refund = mixed_refund(kind)
++        for representation in ('parsed', 'compiled', 'unchecked-native'):
++            if representation == 'unchecked-native' and kind != 'native':
++                continue
++            original = deepcopy(raw)
++            keys = original['transaction']['message']['accountKeys']
++            if representation == 'compiled':
++                operations = ([{'programIdIndex': keys.index(SYSTEM_ID), 'accounts': [0, 1],
++                    'data': encode(bytes.fromhex('02000000e803000000000000'))}] if kind == 'system' else
++                    [{'programIdIndex': keys.index(TOKEN_PROGRAM), 'accounts': [1, keys.index(WSOL), 2, 0],
++                    'data': encode(bytes.fromhex('0c640000000000000009'))}])
++                original['transaction']['message']['instructions'] = operations + [
++                    {'programIdIndex': keys.index(TOKEN_PROGRAM), 'accounts': [keys.index(account), 0, 0],
++                    'data': encode(bytes.fromhex('09'))}]
++            elif representation == 'unchecked-native':
++                original['transaction']['message']['instructions'][0] = parsed('transfer', {
++                    'source': ACCOUNT, 'destination': account, 'authority': WALLET, 'amount': '100'})
++            result = derive([original])
++            row = result['cost_flow_evidence']['transactions'][original['transaction']['signatures'][0]]
++            assert row['check']['state'] == result['components']['observed_economic_roles']['state'] == 'PASS'
++            role = row['admitted_internal_roles'][-1]
++            assert role['role'] == 'wallet_owned_account_refund' and role['lamports'] == str(refund)
++            assert role['cash_effects'][0]['lamports'] == ('1000' if kind == 'system' else '100')
++            assert all(event['kind'] in ('fee', 'internal_transfer') for event in result['accounting_events'])
++            assert _decoded_native_movement(result['accounting_events']) == -5000
++            assert _native_role_check(record(original), WALLET, -5000)['state'] == 'PASS'
++            assert result['components']['historical_population']['state'] == 'UNKNOWN'
++            assert 'meta.fee' in role['raw_paths']
++            if representation == 'compiled':
++                assert any(path.endswith('.data') for path in role['raw_paths'])
++
++
++def test_mixed_cash_required_loss_conflict_order_opaque_and_exact_restoration_isolate_fees():
++    raw, account, _ = mixed_refund('native')
++    signature = raw['transaction']['signatures'][0]
++    alternative = deepcopy(raw)
++    alternative['meta']['logMessages'] = ['Independent original optional field']
++    link = record(alternative)
++    parent = derive([raw], alternatives=[link])
++    frozen = deepcopy(parent)
++    lost = derive([raw], alternatives=[{**link, 'raw': None}])
++    assert lost['components']['observed_economic_roles']['state'] == 'UNKNOWN'
++    for case in ('endpoint', 'order', 'authority', 'u64', 'self-unfunded', 'opaque-relevant', 'opaque-inner'):
++        broken = deepcopy(raw)
++        instructions = broken['transaction']['message']['instructions']
++        if case == 'endpoint':
++            broken['meta']['postBalances'][1] += 1
++            broken['meta']['postBalances'][0] -= 1  # Preserve independent raw fee conservation.
++        elif case == 'order':
++            instructions.reverse()
++        elif case == 'authority':
++            instructions[0]['parsed']['info']['authority'] = ACCOUNT
++        elif case == 'u64':
++            instructions[0]['parsed']['info']['tokenAmount']['amount'] = str(2**64)
++        elif case == 'self-unfunded':
++            instructions.insert(0, parsed('transfer', {'source': ACCOUNT, 'destination': ACCOUNT,
++                'authority': WALLET, 'amount': '101'}))
++        else:
++            opaque = {'programId': raw['transaction']['message']['accountKeys'][3], 'accounts': [account], 'data': '2'}
++            if case == 'opaque-relevant':
++                instructions.insert(0, opaque)
++            else:
++                broken['meta']['innerInstructions'] = [{'index': 0, 'instructions': deepcopy(instructions)}]
++                broken['transaction']['message']['instructions'] = [opaque]
++        result = derive([broken])
++        row = result['cost_flow_evidence']['transactions'][signature]
++        assert row['check']['state'] == 'UNKNOWN', (case, row)
++        assert row['admitted_internal_roles'] == []
++        assert result['components']['observed_economic_roles']['state'] == 'UNKNOWN'
++        assert result['components']['native_fee']['state'] == 'PASS'
++    disjoint = deepcopy(raw)
++    disjoint['transaction']['message']['instructions'].insert(0, {
++        'programId': raw['transaction']['message']['accountKeys'][3], 'accounts': [], 'data': '2'})
++    assert derive([disjoint])['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'PASS'
++    conflict = derive([raw], alternatives=[record(broken)])
++    assert conflict['components']['observed_economic_roles']['state'] == 'UNKNOWN'
++    assert derive([raw], alternatives=[link]) == parent == frozen
++
++
++def test_foreign_canonical_native_peer_proves_refund_cash_without_acquisition_or_economic_role():
++    raw, _, refund = mixed_refund('native')
++    signature = raw['transaction']['signatures'][0]
++    for phase in ('preTokenBalances', 'postTokenBalances'):
++        next(row for row in raw['meta'][phase] if row['accountIndex'] == 1)['owner'] = address(40)
++    # Execution can use an already delegated wallet authority; checksum-bound
++    # source units prove cash denomination, never economic ownership or basis.
++    parent = derive([raw])
++    receipt = parent['cost_flow_evidence']['transactions'][signature]
++    assert receipt['check']['state'] == 'PASS'
++    assert receipt['admitted_internal_roles'][-1]['lamports'] == str(refund)
++    assert 'meta.preTokenBalances.0' in receipt['check']['raw_paths']
++    assert any(event['kind'] == 'transfer_in' for event in parent['accounting_events'])
++    assert parent['components']['observed_economic_roles']['state'] == 'UNKNOWN'
++    assert parent['components']['historical_population']['state'] == 'UNKNOWN'
++    for case in ('mint', 'program', 'missing-post', 'cash-less-than-native-units'):
++        broken = deepcopy(raw)
++        if case == 'missing-post':
++            broken['meta']['postTokenBalances'] = [row for row in broken['meta']['postTokenBalances'] if row['accountIndex'] != 1]
++        elif case == 'cash-less-than-native-units':
++            broken['meta']['preBalances'][1] = 99
++            broken['meta']['postBalances'][1] = 0
++            broken['meta']['postBalances'][0] -= 1  # Independent fee still conserves exactly.
++        else:
++            field = 'mint' if case == 'mint' else 'programId'
++            next(row for row in broken['meta']['preTokenBalances'] if row['accountIndex'] == 1)[field] = address(40)
++        result = derive([broken])
++        assert result['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'UNKNOWN'
++        assert not result['cost_flow_evidence']['transactions'][signature]['admitted_internal_roles']
++        assert result['components']['native_fee']['state'] == 'PASS'
++    lost = derive([raw], alternatives=[{'signature': signature, 'evidence_hash': 'a' * 64, 'raw': None}])
++    assert lost['cost_flow_evidence']['transactions'][signature]['check']['state'] == 'UNKNOWN'
++    independent, _, expected = mixed_refund('system')
++    independent['meta']['fee'] = None
++    missing_fee = derive([independent])
++    independent_row = missing_fee['cost_flow_evidence']['transactions'][independent['transaction']['signatures'][0]]
++    assert independent_row['check']['state'] == 'PASS'
++    assert independent_row['admitted_internal_roles'][-1]['lamports'] == str(expected)
++    assert missing_fee['components']['native_fee']['state'] == 'UNKNOWN'
++    assert missing_fee['components']['observed_economic_roles']['state'] == 'UNKNOWN'
++    for case in ('impossible-prefix', 'impossible-ending-cash', 'malformed-fee'):
++        impossible = deepcopy(independent)
++        if case == 'impossible-prefix':
++            impossible['meta']['preBalances'][0] = 0
++            impossible['meta']['postBalances'][0] = 1_995_000
++        elif case == 'impossible-ending-cash':
++            impossible['meta']['postBalances'][0] = impossible['meta']['preBalances'][0] + 2_001_000
++        else:
++            impossible['meta']['fee'] = -1
++        rejected = derive([impossible])
++        row = rejected['cost_flow_evidence']['transactions'][impossible['transaction']['signatures'][0]]
++        assert row['check']['state'] == 'UNKNOWN' and not row['admitted_internal_roles']
++        assert rejected['components']['native_fee']['state'] == 'UNKNOWN'
++    assert derive([independent]) == missing_fee
+     assert derive([raw]) == parent
+diff --git a/tests/test_historical_reserve_marks.py b/tests/test_historical_reserve_marks.py
+index 5bfafda9458837d5bda5ca225abd06b216f6e51e..1e66d01d734b8aea7f3bd23c40ff091b90506078 100644
+--- a/tests/test_historical_reserve_marks.py
++++ b/tests/test_historical_reserve_marks.py
+@@ -1,5 +1,6 @@
+ """Pinned raw genuine reserve observations; no complete-wallet/B3 claim."""
+ from copy import deepcopy
++from contextlib import closing
+ from decimal import Decimal, localcontext
+ import hashlib
+ import json
+@@ -10,6 +11,7 @@ import pytest
+ from scanner.historical_reserve_marks import project_historical_reserve_marks
+ from scanner.json_boundary import canonical_bytes
+ from scanner.wallet_evidence import derive_wallet_evidence
++from scanner.transaction_format import instruction_view
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ 
+@@ -23,25 +25,41 @@ def bind(raw):
+             'evidence_hash': hashlib.sha256(canonical_bytes(raw)).hexdigest()}
+ 
+ 
+-def project(row, *, alternatives=()):
++def project(row, *, alternatives=(), raw_sources=(), source_receipts=()):
+     original = deepcopy(row)
+     raw = row['raw']
+-    route = next(ix for ix in raw['transaction']['message']['instructions']
+-                 if ix.get('programId') == 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA')
+-    wallet = route['accounts'][1]
++    from scanner.investigation import _keys, _accounts, _program
++    semantic = instruction_view(raw)
++    keys = _keys(semantic['transaction']['message'], semantic['meta'])
++    route = next(ix for ix in semantic['transaction']['message']['instructions']
++                 if _program(ix, keys) == 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA')
++    wallet = _accounts(route, keys)[1]
+     from datetime import datetime, timezone, timedelta
+     clock = raw['blockTime'] if type(raw.get('blockTime')) is int else fixture()['raw']['blockTime']
+     end = datetime.fromtimestamp(clock, timezone.utc) + timedelta(days=1)
+     window = {'start': (end - timedelta(days=30)).isoformat(), 'end': end.isoformat()}
+     evidence = derive_wallet_evidence([row], all_records=[row, *alternatives], wallet=wallet,
+-        window=window, source_consistency={}, chronology={})
+-    result = project_historical_reserve_marks([row], all_records=[row, *alternatives], raw_sources=[],
++        window=window, source_consistency={}, chronology={}, raw_sources=raw_sources,
++        source_receipts=source_receipts)
++    result = project_historical_reserve_marks([row], all_records=[row, *alternatives], raw_sources=raw_sources,
+         consistency=evidence['source_consistency'], chronology=evidence['chronology'])
+     assert row == original and result['provider_requests'] == result['credential_lookups'] == 0
+     assert result['qualification'] is False and result['historical_boundary_completeness'] == 'UNKNOWN'
+     return result, evidence
+ 
+ 
++def genuine_mixed_buy(tmp_path):
++    """Load originals only; no large report, provider request or B3 acceptance."""
++    from scanner.archive_input import import_archive, load_archive
++    from scanner.storage import Store
++    source = ROOT / 'evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip'
++    signature = 'bJUHFDZ1vZ3hMYBN6CDquGvJe7VLst1WPq2VjrgAC8uaSRYPzuwTe22Yv6zMhMLsr2mmoFaxCYEoaDHyvM29QSH'
++    with closing(Store(tmp_path)) as store:
++        loaded = load_archive(store, import_archive(store, source.read_bytes()))
++        row = next(row for row in loaded['records'] if row['signature'] == signature)
++        return row, loaded['raw_sources'], loaded['receipts']
++
++
+ def test_pinned_primary_vault_contract_and_genuine_exact_phase_prices():
+     schema_path = ROOT / 'tests/fixtures/retained_protocol_funding/pump_amm.json'
+     assert hashlib.sha256(schema_path.read_bytes()).hexdigest() == '2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1'
+@@ -140,3 +158,112 @@ def test_network_fee_loss_is_independent_but_clock_or_original_byte_loss_is_requ
+     unbound['raw']['meta']['preTokenBalances'][0]['uiTokenAmount']['amount'] = '42'
+     result, _ = project(unbound)
+     assert result['marks'] == []
++
++
++def test_genuine_mixed_buy_retains_only_disjoint_reserve_marks_and_required_sources(tmp_path):
++    row, sources, receipts = genuine_mixed_buy(tmp_path)
++    frozen = deepcopy(row)
++    schema = json.loads((ROOT / 'tests/fixtures/retained_protocol_funding/pump_amm.json').read_text())
++    expected_layouts = {
++        'sync_user_volume_accumulator': ([86, 31, 192, 87, 163, 87, 79, 238],
++            ['user', 'global_volume_accumulator', 'user_volume_accumulator', 'event_authority', 'program']),
++        'close_user_volume_accumulator': ([249, 69, 164, 218, 150, 103, 84, 138],
++            ['user', 'user_volume_accumulator', 'event_authority', 'program'])}
++    for name, (discriminator, accounts) in expected_layouts.items():
++        contract = next(ix for ix in schema['instructions'] if ix['name'] == name)
++        assert contract['discriminator'] == discriminator
++        assert [account['name'] for account in contract['accounts']] == accounts
++        assert contract['args'] == []
++    result, evidence = project(row, raw_sources=sources, source_receipts=receipts)
++    assert result['version'] == 'historical-pumpswap-reserve-marks-v2'
++    assert len(result['marks']) == 2
++    # Independently transcribed original vault balances, not decoder tables or
++    # the marked output. The bought units subsequently leave this wallet.
++    for phase, base, quote in [('pre', 102735740968698, 189354435726),
++                               ('post', 102692365334928, 189434576012)]:
++        point = next(point for point in result['marks'] if point['phase'] == phase)
++        assert point['check']['state'] == 'PASS' and point['slot'] == 411087612
++        assert point['base_reserve_raw'] == str(base) and point['quote_reserve_raw'] == str(quote)
++        assert point['price_ratio_numerator'] == str(quote * 10**6)
++        assert point['price_ratio_denominator'] == str(base * 10**9)
++        for index in (1, 2):
++            assert f'transaction.message.instructions.{index}.data' in point['raw_paths']
++            assert f'transaction.message.instructions.{index}.programIdIndex' in point['raw_paths']
++    from scanner.investigation import decode_supported_swaps
++    wallet = '2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY'
++    assert not any(event['kind'] in ('buy', 'sell') for event in
++                   decode_supported_swaps([row], wallet)['events'])
++    assert evidence['economic_evidence']['economic_inputs'] == {} and row == frozen
++    alternative = deepcopy(row['raw'])
++    alternative['meta']['logMessages'] = ['Development duplicate control; original retained unchanged']
++    good = bind(alternative)
++    parent, _ = project(row, alternatives=[good], raw_sources=sources, source_receipts=receipts)
++    missing = {**good, 'raw': None}
++    lost, lost_evidence = project(row, alternatives=[missing], raw_sources=sources, source_receipts=receipts)
++    assert lost['marks'] == [] and lost['records'][row['signature']]['state'] == 'UNKNOWN'
++    assert lost_evidence['components']['native_fee']['state'] == 'UNKNOWN'
++    restored, _ = project(row, alternatives=[good], raw_sources=sources, source_receipts=receipts)
++    assert restored == parent and row == frozen
++
++
++def test_disjoint_admin_requires_exact_layout_and_all_pool_reference_roles(tmp_path):
++    from scanner.historical_reserve_marks import _points
++    row, _, _ = genuine_mixed_buy(tmp_path)
++    original = row['raw']
++    assert len(_points(original)) == 2
++    for control in ('trailing-bytes', 'wrong-arity', 'unknown-opcode', 'program-conflict',
++                    'mixed-representation', 'pool-overlap', 'later-route-overlap',
++                    'inner-pool-overlap', 'duplicate-inner-association', 'malformed-inner-association',
++                    'quote-underbacked', 'quote-cash-missing', 'quote-cash-bool'):
++        raw = deepcopy(original)
++        instructions = raw['transaction']['message']['instructions']
++        admin = instructions[1]
++        if control == 'trailing-bytes':
++            # This known fixed no-argument opcode cannot accept trailing data.
++            from test_investigation import encoded
++            admin['data'] = encoded('sync_user_volume_accumulator', b'\0')
++        elif control == 'wrong-arity':
++            admin['accounts'].append(admin['accounts'][0])
++        elif control == 'unknown-opcode':
++            from test_investigation import encoded
++            admin['data'] = encoded('unreviewed_admin', b'')
++        elif control == 'program-conflict':
++            admin['programId'] = '11111111111111111111111111111111'
++        elif control == 'mixed-representation':
++            admin['parsed'] = {'type': 'sync_user_volume_accumulator', 'info': {'account': 'ignored'}}
++        elif control == 'pool-overlap':
++            admin['accounts'][1] = instructions[0]['accounts'][7]
++        elif control == 'later-route-overlap':
++            # A guard against only the first pool would miss this later route.
++            later = deepcopy(instructions[0])
++            later['accounts'][7] = admin['accounts'][1]
++            instructions.append(later)
++        elif control == 'inner-pool-overlap':
++            group = next(group for group in raw['meta']['innerInstructions'] if group['index'] == 2)
++            group['instructions'][0]['accounts'].append(instructions[0]['accounts'][7])
++        elif control == 'duplicate-inner-association':
++            raw['meta']['innerInstructions'].append(deepcopy(raw['meta']['innerInstructions'][-1]))
++        elif control == 'malformed-inner-association':
++            raw['meta']['innerInstructions'][-1]['index'] = True
++        else:
++            quote_index = instructions[0]['accounts'][8]
++            if control == 'quote-underbacked':
++                raw['meta']['preBalances'][quote_index] = 189354435725
++            elif control == 'quote-cash-missing':
++                raw['meta']['preBalances'] = None
++            else:
++                raw['meta']['preBalances'][quote_index] = True
++        with pytest.raises(ValueError):
++            _points(raw)
++        rejected, _ = project(bind(raw))
++        assert rejected['marks'] == []
++    unrelated = deepcopy(original)
++    # Keep the original RPC schema/conservation valid while changing unrelated
++    # cash facts. A malformed unsigned wallet cash value would independently
++    # fail the shared native-record admission, beyond this price projection.
++    unrelated['meta']['preBalances'][0] += 1
++    unrelated['meta']['preBalances'][5] -= 1
++    unrelated['meta']['fee'] = None
++    retained, _ = project(bind(unrelated))
++    assert len(retained['marks']) == 2
++    assert len(_points(original)) == 2

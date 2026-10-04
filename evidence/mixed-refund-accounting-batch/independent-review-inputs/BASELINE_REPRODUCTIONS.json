@@ -1,0 +1,118 @@
+{
+  "native-incoming-close": {
+    "input_sha256": "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22",
+    "independently_worked": {
+      "opening_account_lamports": 1002000000,
+      "earlier_incoming_native_token_units": 100,
+      "refund_lamports": 1002000100,
+      "network_fee_lamports": 5000,
+      "wallet_native_delta_lamports": 1001995100,
+      "all_observed_wallet_owned_native_delta_lamports": -5000
+    },
+    "actual": {
+      "roles": [],
+      "check": {
+        "state": "UNKNOWN",
+        "reason": "Opening native balance is not an exact refund after a preceding native-affecting operation",
+        "evidence": [
+          "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+        ],
+        "raw_paths": [],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "unresolved_paths": [
+        "instructions.1",
+        "meta.tokenBalances"
+      ],
+      "observed_economic_roles": {
+        "state": "UNKNOWN",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+        "evidence": [
+          "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+        ],
+        "raw_paths": [
+          "instructions.0",
+          "instructions.1",
+          "meta.fee",
+          "meta.tokenBalances"
+        ],
+        "dependencies": []
+      },
+      "native_fee": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+        "evidence": [
+          "2fad7c1cfc2e9958ccf1fc783758380a817042b9cedbc2a542fe387cd9f4ab22"
+        ],
+        "raw_paths": [],
+        "dependencies": []
+      },
+      "ledger_kinds": [
+        "fee",
+        "internal_transfer",
+        "rent",
+        "wrap"
+      ],
+      "wallet_population": "UNKNOWN"
+    }
+  },
+  "system-topup-close": {
+    "input_sha256": "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2",
+    "independently_worked": {
+      "opening_account_lamports": 2000000,
+      "earlier_system_topup_lamports": 1000,
+      "refund_lamports": 2001000,
+      "network_fee_lamports": 5000,
+      "wallet_native_delta_lamports": 1995000,
+      "all_observed_wallet_owned_native_delta_lamports": -5000
+    },
+    "actual": {
+      "roles": [],
+      "check": {
+        "state": "UNKNOWN",
+        "reason": "Opening native balance is not an exact refund after a preceding native-affecting operation",
+        "evidence": [
+          "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+        ],
+        "raw_paths": [],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "unresolved_paths": [
+        "instructions.0",
+        "instructions.1"
+      ],
+      "observed_economic_roles": {
+        "state": "UNKNOWN",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+        "evidence": [
+          "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+        ],
+        "raw_paths": [
+          "instructions.0",
+          "instructions.1",
+          "meta.fee"
+        ],
+        "dependencies": []
+      },
+      "native_fee": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+        "evidence": [
+          "63c9ba6b0753ffa3688ede2bd8efb5fb2fdf3554130df2f43415cb36096835e2"
+        ],
+        "raw_paths": [],
+        "dependencies": []
+      },
+      "ledger_kinds": [
+        "fee",
+        "capital",
+        "rent"
+      ],
+      "wallet_population": "UNKNOWN"
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "B1": {
+    "decision": "docs/R1_SOURCE_DECISION.md",
+    "scope": "Original exhaustive historical ownership/lifecycle requirements; access, compatible records and terminal documented queries remain distinct supported observations",
+    "state": "NO_GO_CURRENT_SOURCE"
+  },
+  "B2": {
+    "completed": "Supported ordered System/canonical WSOL transfer-to-close cash, exact linked-source/endpoint/u64 and missing-fee cash feasibility guards; genuine disjoint Pump administration phase marks; owned and quote native collateral guards; existing immutable offline workflow",
+    "missing_data": [
+      "accepted exhaustive event-time historical ownership/lifecycle population across both token programs",
+      "all required original acquisition costs and external flow role evidence",
+      "exact all-account opening/closing inventory and relevant marks"
+    ],
+    "missing_implementation": [
+      "mixed acquisition then export and foreign-close route accounting",
+      "unsupported opaque exchange/wrapper and extension economic contracts",
+      "complete time-relevant classification and real population/origin/boundary integration"
+    ],
+    "state": "DEVELOPMENT_FUNCTIONAL_COMPLETE_REAL_OPEN"
+  },
+  "B3": {
+    "reason": "No complete genuine corpus with independent whole-wallet expectations and selective source loss/restoration; existing genuine 23/87/200 inputs remain partial",
+    "state": "BLOCKED"
+  },
+  "Helius_probe_executed": false,
+  "PRODUCT_READY": false,
+  "actual_checks": {
+    "raw_log": {
+      "bytes": 6279,
+      "path": "evidence/mixed-refund-accounting-batch/backend-targeted.log",
+      "sha256": "a3ac581c0e947aab36e7fa504297936d217fdfeba3af8bb3abc9a4e2ac78df40"
+    },
+    "receipt": "evidence/mixed-refund-accounting-batch/TARGETED_CHECKS.json",
+    "state": "PASS",
+    "unique_backend_nodes": 41,
+    "wall_seconds": 15.885
+  },
+  "application_commit": "94816f2aa23d633a0ea1f7328da40ea203deb882",
+  "archive_transport_schema": "archived-wallet-input-v1",
+  "baseline_head": "bad28e11d7a281aa201eb08761e2a17161a9180a",
+  "branch": "codex/product-completion",
+  "changed_application_files": [
+    "ACCEPTANCE.md",
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "scanner/archive_input.py",
+    "scanner/cost_flow_evidence.py",
+    "scanner/economic_evidence.py",
+    "scanner/historical_reserve_marks.py",
+    "scanner/wallet_evidence.py",
+    "tests/test_cost_flow_evidence.py",
+    "tests/test_historical_reserve_marks.py"
+  ],
+  "classification": "development-functional; real-acceptance-blocked",
+  "credential_lookup": false,
+  "credits_spent": 0,
+  "development_refund_oracles_are_genuine_B3": false,
+  "frontend_reason": "Frontend source, compiled assets and locks are byte-unchanged; prior checks retain their actual prior identities",
+  "full_Gate_A": "HISTORICAL_BASELINE_ONLY",
+  "genuine_phase_prices_are_boundary_inventory": false,
+  "kind": "mixed-refund-accounting-batch-result",
+  "methods": {
+    "archive": "archive-ledger-v14",
+    "cost_flow": "raw-cost-flow-roles-v2",
+    "economic": "economic-raw-observations-v3",
+    "phase_marks": "historical-pumpswap-reserve-marks-v2",
+    "wallet": "wallet-raw-evidence-v11"
+  },
+  "new_frontend_checks_executed": false,
+  "new_full_application_acceptance": false,
+  "new_full_scan_performance_claim": false,
+  "provider_requests": 0,
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "source_files": 259,
+  "source_sha256": "32a486f9f76db029d3583084dc28c63942ceed463ef66825f26969f0e6c6849b"
+}

@@ -1,0 +1,265 @@
+{
+  "control": "Canonical legacyWSOL units exceed account lamports; exact native conservation still holds",
+  "input": {
+    "slot": 100,
+    "blockTime": 1790003600,
+    "version": 0,
+    "transaction": {
+      "signatures": [
+        "mixed-native-incoming-close"
+      ],
+      "message": {
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+          "11111111111111111111111111111111",
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "So11111111111111111111111111111111111111112"
+        ],
+        "instructions": [
+          {
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "parsed": {
+              "type": "closeAccount",
+              "info": {
+                "account": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+              }
+            }
+          }
+        ],
+        "header": {
+          "numRequiredSignatures": 1,
+          "numReadonlySignedAccounts": 0,
+          "numReadonlyUnsignedAccounts": 3
+        }
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "preBalances": [
+        10000000000,
+        2000000,
+        999999999,
+        2000000,
+        1002000000,
+        1,
+        1,
+        1461600
+      ],
+      "postBalances": [
+        10999994999,
+        2000000,
+        0,
+        2000000,
+        1002000000,
+        1,
+        1,
+        1461600
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "innerInstructions": []
+    }
+  },
+  "expected": {
+    "dependent_quantities_or_roles": "UNKNOWN",
+    "independent_network_fee": "PASS"
+  },
+  "actual": {
+    "economic_roles": {
+      "state": "UNKNOWN",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+      "evidence": [
+        "f5fbd0cf53a65c03e708035a831502ff750b953c9ced1c75637fff62398b4100"
+      ],
+      "raw_paths": [
+        "instructions.0",
+        "meta.fee",
+        "meta.tokenBalances"
+      ],
+      "dependencies": []
+    },
+    "native_fee": {
+      "state": "PASS",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+      "evidence": [
+        "f5fbd0cf53a65c03e708035a831502ff750b953c9ced1c75637fff62398b4100"
+      ],
+      "raw_paths": [],
+      "dependencies": []
+    },
+    "pair": {
+      "pre": {
+        "quantity": "1000000000",
+        "mint": "So11111111111111111111111111111111111111112",
+        "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "decimals": 9,
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "path": "meta.preTokenBalances.1"
+      },
+      "post": {
+        "quantity": "0",
+        "mint": "So11111111111111111111111111111111111111112",
+        "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "decimals": 9,
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "path": "transaction.message.instructions.0"
+      },
+      "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "flow_raw": "-1000000000",
+      "checks": {
+        "ownership": {
+          "state": "PASS",
+          "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+          "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+          "evidence": [
+            "f5fbd0cf53a65c03e708035a831502ff750b953c9ced1c75637fff62398b4100"
+          ],
+          "raw_paths": [
+            "meta.postBalances.2",
+            "meta.preBalances.2",
+            "meta.preTokenBalances.1",
+            "transaction.message.instructions.0.parsed.info.account",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.owner",
+            "transaction.message.instructions.0.programId"
+          ],
+          "dependencies": []
+        },
+        "quantities": {
+          "state": "UNKNOWN",
+          "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+          "reason": "Canonical native token units exceed or lack their exact original account lamport collateral",
+          "evidence": [
+            "f5fbd0cf53a65c03e708035a831502ff750b953c9ced1c75637fff62398b4100"
+          ],
+          "raw_paths": [
+            "meta.postBalances.2",
+            "meta.preBalances.2",
+            "meta.preTokenBalances.1",
+            "transaction.message.instructions.0.parsed.info.account",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.owner",
+            "transaction.message.instructions.0.programId"
+          ],
+          "dependencies": []
+        },
+        "lifecycle": {
+          "state": "UNKNOWN",
+          "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+          "reason": "Canonical native token units exceed or lack their exact original account lamport collateral",
+          "evidence": [
+            "f5fbd0cf53a65c03e708035a831502ff750b953c9ced1c75637fff62398b4100"
+          ],
+          "raw_paths": [
+            "meta.postBalances.2",
+            "meta.preBalances.2",
+            "meta.preTokenBalances.1",
+            "transaction.message.instructions.0.parsed.info.account",
+            "transaction.message.instructions.0.parsed.info.destination",
+            "transaction.message.instructions.0.parsed.info.owner",
+            "transaction.message.instructions.0.programId"
+          ],
+          "dependencies": []
+        }
+      }
+    },
+    "roles": {
+      "check": {
+        "state": "UNKNOWN",
+        "reason": "Internal native role needs agreeing event-time wallet ownership, units and lifecycle",
+        "evidence": [
+          "f5fbd0cf53a65c03e708035a831502ff750b953c9ced1c75637fff62398b4100"
+        ],
+        "raw_paths": [],
+        "scope": "Original selected transaction roles; complete historical wallet population is independently required"
+      },
+      "admitted_internal_roles": [],
+      "unresolved_economic_paths": [
+        "instructions.0",
+        "meta.tokenBalances"
+      ],
+      "wallet_population_state": "UNKNOWN"
+    }
+  }
+}

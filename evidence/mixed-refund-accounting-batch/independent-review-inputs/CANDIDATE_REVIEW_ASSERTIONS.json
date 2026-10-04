@@ -1,0 +1,34 @@
+{
+  "scope": "Read-only current mixed refund diff; synthetic interface controls, no genuine B3",
+  "direct": {
+    "native-incoming-close": {
+      "state": "PASS",
+      "exact_refund_lamports": "1002000100",
+      "linked_loss_conflict_restoration": "PASS",
+      "endpoint_signer_opaque_controls": "PASS",
+      "independent_fee_isolation": "PASS",
+      "historical_population": "UNKNOWN"
+    },
+    "system-topup-close": {
+      "state": "PASS",
+      "exact_refund_lamports": "2001000",
+      "linked_loss_conflict_restoration": "PASS",
+      "endpoint_signer_opaque_controls": "PASS",
+      "independent_fee_isolation": "PASS",
+      "historical_population": "UNKNOWN"
+    }
+  },
+  "normal_offline_api": {
+    "state": "PASS",
+    "refund_lamports": "2001000",
+    "fee_sol": "0.000005",
+    "profit_state": "unknown",
+    "parent_immutable": true,
+    "alt_loss_restoration": true,
+    "json_csv_export": true,
+    "provider": 0,
+    "credential": 0
+  },
+  "state": "PASS",
+  "head": "bad28e11d7a281aa201eb08761e2a17161a9180a"
+}

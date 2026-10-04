@@ -1,0 +1,23 @@
+{
+  "state": "PASS",
+  "missing_unrelated_fee": {
+    "exact_target_refund_lamports": "2001000",
+    "refund_role": "PASS",
+    "fee": "UNKNOWN",
+    "economic_roles": "UNKNOWN"
+  },
+  "foreign_peer": {
+    "exact_target_refund_lamports": "1002000100",
+    "cash_role": "PASS",
+    "external_transfer_retained": true,
+    "economic_roles": "UNKNOWN",
+    "fees": "PASS",
+    "alt_loss_restore": true
+  },
+  "contradictory_owned_native_backing": {
+    "quantities": "UNKNOWN",
+    "phase_value": null,
+    "economic_roles": "UNKNOWN",
+    "fees": "PASS"
+  }
+}

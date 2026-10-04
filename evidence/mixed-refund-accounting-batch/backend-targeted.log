@@ -1,0 +1,57 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /workspace/solana-wallet-scanner/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/solana-wallet-scanner
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 41 items
+
+tests/test_cost_flow_evidence.py::test_wallet_owned_creation_enters_existing_ledger_as_internal_movement_and_fee_once PASSED [  2%]
+tests/test_cost_flow_evidence.py::test_wallet_owned_zero_token_closure_is_refund_not_income_or_fee PASSED [  4%]
+tests/test_cost_flow_evidence.py::test_existing_token_owner_alone_cannot_prove_refund_rights_for_top_up PASSED [  7%]
+tests/test_cost_flow_evidence.py::test_external_transfers_keep_unknown_role_even_when_gross_sides_cancel PASSED [  9%]
+tests/test_cost_flow_evidence.py::test_required_alternative_loss_conflict_and_exact_restoration_do_not_mutate_parent PASSED [ 12%]
+tests/test_cost_flow_evidence.py::test_foreign_owner_missing_signer_or_malformed_admin_preserves_independent_fee PASSED [ 14%]
+tests/test_cost_flow_evidence.py::test_failed_administration_adds_no_roles_and_keeps_only_actual_fee PASSED [ 17%]
+tests/test_cost_flow_evidence.py::test_retained_genuine_compiled_account_creation_admits_exact_funding_without_completeness PASSED [ 19%]
+tests/test_cost_flow_evidence.py::test_mixed_refund_normal_saved_report_offline_rebuild_and_source_loss PASSED [ 21%]
+tests/test_cost_flow_evidence.py::test_existing_legacy_wsol_funding_sync_reaches_shared_quantities_and_fee_roles_parsed_and_compiled PASSED [ 24%]
+tests/test_cost_flow_evidence.py::test_legacy_wsol_sync_dependency_loss_conflicts_wrong_reserve_and_authority_keep_fee_isolated PASSED [ 26%]
+tests/test_cost_flow_evidence.py::test_nonzero_legacy_wsol_close_returns_principal_and_rent_once_with_loss_restoration PASSED [ 29%]
+tests/test_cost_flow_evidence.py::test_mixed_original_cash_reconstruction_parsed_compiled_and_checked_transfer_gross_roles PASSED [ 31%]
+tests/test_cost_flow_evidence.py::test_mixed_cash_required_loss_conflict_order_opaque_and_exact_restoration_isolate_fees PASSED [ 34%]
+tests/test_cost_flow_evidence.py::test_foreign_canonical_native_peer_proves_refund_cash_without_acquisition_or_economic_role PASSED [ 36%]
+tests/test_historical_reserve_marks.py::test_pinned_primary_vault_contract_and_genuine_exact_phase_prices PASSED [ 39%]
+tests/test_historical_reserve_marks.py::test_required_alternative_loss_conflict_or_malformed_original_revokes_and_restores[missing] PASSED [ 41%]
+tests/test_historical_reserve_marks.py::test_required_alternative_loss_conflict_or_malformed_original_revokes_and_restores[reserve-conflict] PASSED [ 43%]
+tests/test_historical_reserve_marks.py::test_required_alternative_loss_conflict_or_malformed_original_revokes_and_restores[unsupported] PASSED [ 46%]
+tests/test_historical_reserve_marks.py::test_required_alternative_loss_conflict_or_malformed_original_revokes_and_restores[malformed-index] PASSED [ 48%]
+tests/test_historical_reserve_marks.py::test_required_alternative_loss_conflict_or_malformed_original_revokes_and_restores[wrong-vault-owner] PASSED [ 51%]
+tests/test_historical_reserve_marks.py::test_network_fee_loss_is_independent_but_clock_or_original_byte_loss_is_required PASSED [ 53%]
+tests/test_historical_reserve_marks.py::test_genuine_mixed_buy_retains_only_disjoint_reserve_marks_and_required_sources PASSED [ 56%]
+tests/test_historical_reserve_marks.py::test_disjoint_admin_requires_exact_layout_and_all_pool_reference_roles PASSED [ 58%]
+tests/test_economic_evidence.py::test_protocol_wrapped_sol_mark_and_native_phase_survive_missing_unrelated_fee PASSED [ 60%]
+tests/test_economic_evidence.py::test_absolute_native_conflict_does_not_erase_independent_protocol_unit_mark PASSED [ 63%]
+tests/test_economic_evidence.py::test_equivalent_native_phase_array_locations_are_not_conflicting_facts PASSED [ 65%]
+tests/test_economic_evidence.py::test_required_alternative_loss_revokes_dependent_observations_and_restoration_is_exact PASSED [ 68%]
+tests/test_economic_evidence.py::test_independent_windows_and_absent_native_address_never_manufacture_zero_inventory PASSED [ 70%]
+tests/test_economic_evidence.py::test_nonsettlement_units_are_not_valued_and_zero_units_need_no_price PASSED [ 73%]
+tests/test_economic_evidence.py::test_partial_internal_zero_flow_result_never_supplies_equity_or_complete_economic_inputs PASSED [ 75%]
+tests/test_economic_evidence.py::test_retained_genuine_original_native_phase_is_known_without_complete_wallet_profit PASSED [ 78%]
+tests/test_wallet_evidence.py::test_missing_fee_isolated_from_raw_physical_quantities_and_ownership PASSED [ 80%]
+tests/test_wallet_evidence.py::test_internal_transfer_preserves_mint_aggregate_and_does_not_create_a_purchase PASSED [ 82%]
+tests/test_wallet_evidence.py::test_unexplained_native_flow_revokes_economic_role_but_preserves_actual_fee PASSED [ 85%]
+tests/test_wallet_evidence.py::test_existing_fifo_retains_losing_and_breakeven_episodes_with_unresolved_real_population PASSED [ 87%]
+tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee PASSED [ 90%]
+tests/test_archive_input.py::test_claimed_real_world_or_completion_boolean_cannot_certify_a_wallet PASSED [ 92%]
+tests/test_selected_cohort_observations.py::test_missing_exit_fee_retains_quantity_timing_and_independent_remaining_basis[selected] PASSED [ 95%]
+tests/test_selected_cohort_observations.py::test_missing_exit_fee_retains_quantity_timing_and_independent_remaining_basis[alternative] PASSED [ 97%]
+tests/test_validation_gates.py::test_focused_batches_preserve_the_exact_existing_union PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 41 passed, 1 warning in 15.56s ========================

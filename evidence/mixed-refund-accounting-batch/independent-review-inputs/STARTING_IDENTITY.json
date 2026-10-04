@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only starting identity; no whole acceptance claim",
+  "baseline_head": "bad28e11d7a281aa201eb08761e2a17161a9180a",
+  "tested_application": "3cb89255c43768a6dc8059c222b189a47fc31680",
+  "files": {
+    "scanner/cost_flow_evidence.py": {
+      "baseline_sha256": "3a5ed23971e90512f295af855ba46cdb4474daba1cd80682f7d14eee163d5f18",
+      "unchanged_from_tested_application": true
+    },
+    "scanner/wallet_evidence.py": {
+      "baseline_sha256": "175b51c0feb5af0b90e930bd69abb85a81e378b240b2746aff73cc9c1449835a",
+      "unchanged_from_tested_application": true
+    },
+    "scanner/archive_input.py": {
+      "baseline_sha256": "359d5e9cbef6fe9012df93afdc7758a398f3bd1183c181bef9c3bb63700c1b7b",
+      "unchanged_from_tested_application": true
+    },
+    "scanner/historical_reserve_marks.py": {
+      "baseline_sha256": "ff451038a8c14df5fa233d46d5c86985b6a311230c269f992cd8bfedafd632d7",
+      "unchanged_from_tested_application": true
+    },
+    "scanner/economic_evidence.py": {
+      "baseline_sha256": "cb8ee7380121f7c160ee984119ac35557cb01460e92e73b7fa8a4010d5f90409",
+      "unchanged_from_tested_application": true
+    },
+    "tests/fixtures/compiled_instructions/schema.json": {
+      "baseline_sha256": "4f454bc2f6eeecb4c3b4a2438463f97e0d52deb35c0d627ec39c82f47bce0d0c",
+      "unchanged_from_tested_application": true
+    },
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": {
+      "baseline_sha256": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+      "unchanged_from_tested_application": true
+    },
+    "tests/fixtures/token_instruction_schema.json": {
+      "baseline_sha256": "b7375e698a62f513c3385164341663cb63e47f4d52af4ee79b9098985c0275fd",
+      "unchanged_from_tested_application": true
+    }
+  },
+  "changed_application_paths_between_refs": []
+}

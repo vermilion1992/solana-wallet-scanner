@@ -1,0 +1,105 @@
+{
+  "scope": "Read-only retained route inventory at published starting HEAD bad28e11d7a281aa201eb08761e2a17161a9180a, followed by narrowly authorised local reserve mark fix. No full wallet acceptance or independent test count from these inspections.",
+  "archives": [
+    {
+      "archive": "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+      "archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "summary": {
+        "unique_records": 87,
+        "alternatives": 5,
+        "successes": 86,
+        "supported_swaps": 16,
+        "unsupported_successes": 70,
+        "reason_counts": {
+          "Investigated wallet is absent from transaction account keys": 2,
+          "No reviewed outer spot swap; transfers and balances alone do not prove trading": 41,
+          "No reviewed spot swap instruction for this program and discriminator": 24,
+          "Recognized swap authority is not the investigated wallet": 2,
+          "Unrelated token transfer prevents swap quantity attribution": 1
+        },
+        "outer_program_counts": {
+          "ComputeBudget111111111111111111111111111111": 51,
+          "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb": 109,
+          "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2": 10,
+          "11111111111111111111111111111111": 280,
+          "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL": 103,
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": 60,
+          "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA": 94,
+          "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa": 6
+        }
+      }
+    },
+    {
+      "archive": "evidence/genuine-report-speed-batch/performance/inputs/genuine200-input.zip",
+      "archive_sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0",
+      "wallet": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+      "summary": {
+        "unique_records": 200,
+        "alternatives": 0,
+        "successes": 16,
+        "supported_swaps": 0,
+        "unsupported_successes": 16,
+        "reason_counts": {
+          "No reviewed outer spot swap; transfers and balances alone do not prove trading": 16
+        },
+        "outer_program_counts": {
+          "ComputeBudget111111111111111111111111111111": 48,
+          "sattCHvHkM4XHLyadnU4KQtuNWZbWVDKzuPhmJBXCkq": 16,
+          "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL": 1
+        }
+      }
+    }
+  ],
+  "accounting_route_findings": [
+    {
+      "category": "A: reproduced current interpretation defect, now corrected locally pending distinct review",
+      "file": "scanner/historical_reserve_marks.py::_points",
+      "trigger": "Pinned sync/close_user_volume_accumulator precedes/follows an otherwise supported PumpSwap route, while referencing no pool/vault/mint reserve roles.",
+      "prior_behavior": "No reviewed spot swap instruction... abort erased exact supported reserve-phase price observations.",
+      "current_fix": "v2 checks exact known administration layout and disjointness from union of all current routes; retains original raw-reference proof paths. Unknown/malformed or overlapping operations remain dependencies.",
+      "genuine_positive": "bJUHFDZ1vZ3hMYBN6CDquGvJe7VLst1WPq2VjrgAC8uaSRYPzuwTe22Yv6zMhMLsr2mmoFaxCYEoaDHyvM29QSH",
+      "scope_limits": "Pool reserve prices only. No trade, cost, refund, basis or wallet population promotion."
+    },
+    {
+      "category": "B: non-data-blocked missing instruction-level derivation; C: external role/basis data still absent",
+      "files": [
+        "scanner/investigation.py::decode_supported_swaps",
+        "scanner/position_evidence.py::_quantity_point"
+      ],
+      "trigger": "Seven genuine wallet-authorised buys include external base exports/foreign closures; six legacy WSOL quote, one USDC quote.",
+      "available_inputs": "Successful exact PumpSwap byte layouts, original transferChecked CPI/outer quantities, 6/9 decimals, event-time owners, fee and balances. Independent raw-byte quote/external-disposition transcription is in WORKED_ROUTE_OPPORTUNITIES.json.",
+      "remaining_implementation": "Instruction-by-instruction mixed acquisition plus external disposition accounting and shared cost allocation. Endpoint net-zero cannot supply this engine.",
+      "source_limits": "External transfer role and incoming acquisition basis are not supplied by direction or closure recipient; USDC needs independently accepted SOL conversion.",
+      "do_not_claim": "Skipping volume administration does not produce a valid whole-transaction buy; all seven acquire then export all base units."
+    },
+    {
+      "category": "C: unavailable wrapper schema/semantic contract and B: adapter not implemented",
+      "programs": [
+        "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa",
+        "sattCHvHkM4XHLyadnU4KQtuNWZbWVDKzuPhmJBXCkq"
+      ],
+      "retained_schema_search": "No wrapper ABI present in scanner/tests/fixtures/evidence/references/docs. Known underlying CPI schemas do not define wrapper economics.",
+      "genuine200": "16 successes and 184 failures. Each success has unreviewed outer sattCH wrapper. Underlying recognisable CPIs include PumpSwap buy/sell, one Whirlpool swap_v2 and one Raydium swap_base_in_v2.",
+      "available_independent_observations": "Raw wallet-paid network fees, successful explicit transfers/quantities and bounded individual spot reserve prices where supported.",
+      "unsupported_claims": "Do not replace wrapper with inner route, net aggregate token legs into a wallet trade, assign stable SOL conversion, omit failed records or assert complete history."
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "large_report_builds": 0,
+  "git_mutations": 0,
+  "source_changes_in_authorised_followup": [
+    "scanner/historical_reserve_marks.py",
+    "tests/test_historical_reserve_marks.py"
+  ],
+  "focused_verification": {
+    "command": ".venv/bin/python -m pytest tests/test_historical_reserve_marks.py -q",
+    "unique_pytest_nodes": 9,
+    "passed": 9,
+    "duration_seconds": 7.53,
+    "new_test_functions": 2,
+    "scope": "Focused module only; root performs final source binding/review."
+  }
+}
