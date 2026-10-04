@@ -204,3 +204,194 @@ def test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_se
     _, restored, restored_receipt = assess(store, digest, loaded['dependency_input_hash'])
     assert restored == parent
     assert restored_receipt == receipt
+
+
+def cash(source, destination, lamports):
+    return {'programId': '11111111111111111111111111111111', 'parsed': {'type': 'transfer',
+        'info': {'source': source, 'destination': destination, 'lamports': lamports}}}
+
+
+def foreign_cash_loop(raw):
+    """Unsigned schema mutation; shift every original numeric key reference."""
+    from test_compiled_instructions import KEYS
+    result = deepcopy(raw)
+    message = result['transaction']['message']
+    foreign = KEYS['source']
+    assert foreign not in message['accountKeys']
+    message['accountKeys'].insert(1, foreign)
+    message['header']['numRequiredSignatures'] += 1
+    result['transaction']['signatures'].append(result['transaction']['signatures'][0])
+    for field in ('preBalances', 'postBalances'):
+        result['meta'][field].insert(1, 1000)
+    for field in ('preTokenBalances', 'postTokenBalances'):
+        for row in result['meta'][field]:
+            row['accountIndex'] += int(row['accountIndex'] >= 1)
+    for operation in message['instructions'] + [item for group in result['meta']['innerInstructions'] for item in group['instructions']]:
+        if 'programIdIndex' in operation:
+            operation['programIdIndex'] += int(operation['programIdIndex'] >= 1)
+        if 'accounts' in operation:
+            operation['accounts'] = [index + int(index >= 1) for index in operation['accounts']]
+    group = next(group for group in result['meta']['innerInstructions'] if group['index'] == 3)
+    group['instructions'] += [cash(WALLET, foreign, 1), cash(foreign, WALLET, 1)]
+    return result
+
+
+@pytest.mark.parametrize('selection', ['mutated-selected', 'mutated-alternative'])
+def test_gross_cash_role_loss_preserves_named_quantity_timing_and_independent_fees(selection):
+    raws = originals()
+    clean_buy, sale = wrapped(raws[83]), wrapped(raws[85])
+    bad = wrapped(foreign_cash_loop(raws[83]))
+    selected = [bad, sale] if selection == 'mutated-selected' else [clean_buy, sale]
+    links = selected if selection == 'mutated-selected' else [*selected, bad]
+    result = derive_wallet_evidence(selected, all_records=links, wallet=WALLET, window=WINDOW,
+        source_consistency={}, chronology={})
+    target = result['query_accounting']['supported_selected_lots'][0]
+    assert target['monetary_state'] == 'UNKNOWN' and target['conditional_lot_profit_sol'] is None
+    assert target['quantity_state'] == target['timing_state'] == 'PASS'
+    assert result['components']['native_fee']['state'] == 'PASS'
+    permuted = derive_wallet_evidence(list(reversed(selected)), all_records=list(reversed(links)),
+        wallet=WALLET, window=WINDOW, source_consistency={}, chronology={})
+    assert permuted == result
+    missing = [{**row, 'raw': None} if row['evidence_hash'] == bad['evidence_hash'] else row for row in links]
+    if selection == 'mutated-selected':
+        selected_missing = [missing[0], sale]
+    else:
+        selected_missing = selected
+    lost = derive_wallet_evidence(selected_missing, all_records=missing, wallet=WALLET, window=WINDOW,
+        source_consistency={}, chronology={})
+    assert lost['query_accounting']['supported_selected_lots'][0]['monetary_state'] == 'UNKNOWN'
+    assert derive_wallet_evidence(selected, all_records=links, wallet=WALLET, window=WINDOW,
+        source_consistency={}, chronology={}) == result
+    restored = derive_wallet_evidence([clean_buy, sale], all_records=[clean_buy, sale], wallet=WALLET,
+        window=WINDOW, source_consistency={}, chronology={})
+    assert restored['query_accounting']['supported_selected_lots'][0]['conditional_lot_profit_sol'] == '-0.013270924'
+
+
+def native_pair():
+    """Independent unsigned ABI development input, with ordinary integer cash."""
+    from scanner.investigation import PUMP
+    import base64
+    key = lambda value: b58(bytes([value]) * 32)
+    wallet, own, curve, pool, fee, foreign, mint = (key(value) for value in range(1, 8))
+    token, system = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA', '11111111111111111111111111111111'
+    keys = [wallet, foreign, own, curve, pool, fee, mint, PUMP, token, system]
+    result = []
+    for sell in (False, True):
+        name = 'sell' if sell else 'buy'
+        quote = 900_000_000 if sell else 1_000_000_000
+        before = [10_000_000_000, 1000, 2_039_280, 2_000_000_000, 2_039_280, 1000, 0, 1, 1, 1]
+        after = list(before)
+        after[0] += quote - 5000 if sell else -quote - 5000
+        after[3] += -quote if sell else quote
+        def balance(index, units, owner):
+            return {'accountIndex': index, 'mint': mint, 'owner': owner, 'programId': token,
+                'uiTokenAmount': {'amount': str(units), 'decimals': 6}}
+        src, dst = (own, pool) if sell else (pool, own)
+        flow = {'programId': token, 'parsed': {'type': 'transferChecked', 'info': {
+            'source': src, 'destination': dst, 'mint': mint, 'tokenAmount': {'amount': '100', 'decimals': 6}}}}
+        data = hashlib.sha256(('global:' + name).encode()).digest()[:8] + bytes(16)
+        raw = {'version': 'legacy', 'slot': 10 + int(sell), 'blockTime': 1791079700 + 529 * int(sell),
+            'transaction': {'signatures': ['unsigned-native-' + name, 'unsigned-foreign-' + name], 'message': {
+                'header': {'numRequiredSignatures': 2, 'numReadonlySignedAccounts': 0, 'numReadonlyUnsignedAccounts': 4},
+                'accountKeys': keys, 'instructions': [{'programId': PUMP,
+                    'accounts': [fee, fee, mint, curve, pool, own, wallet, system, token],
+                    'data': [base64.b64encode(data).decode(), 'base64']}]}},
+            'meta': {'err': None, 'fee': 5000, 'preBalances': before, 'postBalances': after,
+                'preTokenBalances': [balance(2, 100 if sell else 0, wallet), balance(4, 0 if sell else 100, curve)],
+                'postTokenBalances': [balance(2, 0 if sell else 100, wallet), balance(4, 100 if sell else 0, curve)],
+                'innerInstructions': [{'index': 0, 'instructions': [
+                    cash(curve, wallet, quote) if sell else cash(wallet, curve, quote), flow]}]}}
+        result.append(raw)
+    return result, wallet, foreign
+
+
+def test_primary_native_idl_roles_are_pinned_independently_from_decoder_lookup():
+    fixture = ROOT / 'tests/fixtures/retained_protocol_funding/pump-native.json'
+    assert hashlib.sha256(fixture.read_bytes()).hexdigest() == 'ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b'
+    idl = json.loads(fixture.read_bytes())
+    by_name = {item['name']: item for item in idl['instructions']}
+    for name in ('buy', 'buy_exact_sol_in', 'sell'):
+        accounts = by_name[name]['accounts']
+        assert [accounts[i]['name'] for i in (1, 3, 5, 6)] == ['fee_recipient', 'bonding_curve', 'associated_user', 'user']
+        assert accounts[8 if name == 'sell' else 9]['name'] == 'creator_vault'
+    assert 'Fees are deducted from spendable_sol_in.' in by_name['buy_exact_sol_in']['docs']
+    assert any('rent' in line.lower() for line in by_name['buy_exact_sol_in']['docs'])
+
+
+@pytest.mark.parametrize('sale_mutation', [False, True], ids=['buy', 'sell'])
+def test_direct_native_positive_and_foreign_gross_cash_roles_use_same_named_fifo(sale_mutation):
+    raws, wallet, foreign = native_pair()
+    records = [wrapped(raw) for raw in raws]
+    def assess(rows):
+        return derive_wallet_evidence(rows, all_records=rows, wallet=wallet, window=WINDOW,
+            source_consistency={}, chronology={})
+    clean = assess(records)
+    target = clean['query_accounting']['supported_selected_lots'][0]
+    assert target['monetary_state'] == target['quantity_state'] == target['timing_state'] == 'PASS'
+    assert target['conditional_lot_profit_sol'] == '-0.10001'
+    raw = deepcopy(raws[int(sale_mutation)])
+    raw['meta']['innerInstructions'][0]['instructions'] += [cash(wallet, foreign, 1), cash(foreign, wallet, 1)]
+    mutated = list(records); mutated[int(sale_mutation)] = wrapped(raw)
+    result = assess(mutated)
+    target = result['query_accounting']['supported_selected_lots'][0]
+    assert target['monetary_state'] == 'UNKNOWN' and target['conditional_lot_profit_sol'] is None
+    assert target['quantity_state'] == target['timing_state'] == 'PASS'
+    assert result['components']['native_fee']['state'] == 'PASS'
+    decoded = decode_supported_swaps([wrapped(raw)], wallet)
+    assert len(decoded['unresolved']) == 2
+    assert next(e for e in decoded['events'] if e['kind'] in ('buy', 'sell'))['native_cash_role_state'] == 'UNKNOWN'
+    assert assess(list(reversed(mutated))) == result
+    assert assess(records) == clean
+
+
+@pytest.mark.parametrize('sale', [False, True], ids=['buy', 'sell'])
+def test_reverse_quote_counterparty_loop_does_not_inherit_a_protocol_cash_role(sale):
+    raws, wallet, _ = native_pair()
+    raw = deepcopy(raws[int(sale)])
+    curve = raw['transaction']['message']['accountKeys'][3]
+    raw['meta']['innerInstructions'][0]['instructions'] += [cash(wallet, curve, 1), cash(curve, wallet, 1)]
+    decoded = decode_supported_swaps([wrapped(raw)], wallet)
+    trade = next(event for event in decoded['events'] if event['kind'] in ('buy', 'sell'))
+    assert trade['native_cash_role_state'] == 'UNKNOWN'
+    assert decoded['events'][0]['allocation'] == 'unallocated'
+    assert decoded['unresolved']
+
+
+def test_absence_of_system_cpi_is_not_an_invented_native_sell_schema_requirement():
+    raws, wallet, _ = native_pair()
+    raw = raws[1]
+    raw['meta']['innerInstructions'][0]['instructions'].pop(0)
+    decoded = decode_supported_swaps([wrapped(raw)], wallet)
+    assert not decoded['unresolved']
+    trade = next(event for event in decoded['events'] if event['kind'] == 'sell')
+    assert trade['native_cash_role_state'] == 'PASS' and trade['amount_sol'] == '0.9'
+
+
+def test_native_buy_fee_and_creator_quote_legs_are_included_once_with_directional_primary_roles():
+    raws, wallet, _ = native_pair()
+    raw = raws[0]
+    message = raw['transaction']['message']
+    curve, fee = message['accountKeys'][3], message['accountKeys'][5]
+    creator = b58(bytes([8]) * 32)
+    message['accountKeys'].insert(7, creator)
+    message['header']['numReadonlyUnsignedAccounts'] = 3
+    for field in ('preBalances', 'postBalances'):
+        raw['meta'][field].insert(7, 1000)
+    raw['meta']['postBalances'][3] -= 10
+    raw['meta']['postBalances'][5] += 5
+    raw['meta']['postBalances'][7] += 5
+    message['instructions'][0]['accounts'].append(creator)
+    group = raw['meta']['innerInstructions'][0]['instructions']
+    group[0]['parsed']['info']['lamports'] -= 10
+    group += [cash(wallet, fee, 5), cash(wallet, creator, 5)]
+    decoded = decode_supported_swaps([wrapped(raw)], wallet)
+    assert not decoded['unresolved']
+    trade = next(event for event in decoded['events'] if event['kind'] == 'buy')
+    assert trade['native_cash_role_state'] == 'PASS' and trade['amount_sol'] == '1'
+    assert trade['fee_sol'] == '0.000005'
+    # Reverse creator return has no primary quote/capital-cost role, even when
+    # another debit preserves exactly the same endpoints and net consideration.
+    group += [cash(wallet, creator, 1), cash(creator, wallet, 1)]
+    mutated = decode_supported_swaps([wrapped(raw)], wallet)
+    assert next(event for event in mutated['events'] if event['kind'] == 'buy')['native_cash_role_state'] == 'UNKNOWN'
+    assert mutated['events'][0]['allocation'] == 'unallocated'

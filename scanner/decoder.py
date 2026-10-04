@@ -41,15 +41,17 @@ def decode_transactions(transactions, address):
     findings = []
     unresolved = []
     evidence = []
+    administration = []
     prepared = []
     for index, record in enumerate(transactions):
         raw = record.get('raw')
         if isinstance(raw, dict) and 'result' in raw:
             raw = raw['result']
+        source_raw = raw
         raw = instruction_view(raw)
-        prepared.append((record, raw, index))
-    slots = Counter(raw.get('slot') for _, raw, _ in prepared if isinstance(raw, dict))
-    for record, raw, record_index in prepared:
+        prepared.append((record, raw, index, source_raw))
+    slots = Counter(raw.get('slot') for _, raw, _, _ in prepared if isinstance(raw, dict))
+    for record, raw, record_index, source_raw in prepared:
         signature = record.get('signature')
         if not signature:
             signatures = raw.get('transaction', {}).get('signatures', []) if isinstance(raw, dict) else []
@@ -61,6 +63,10 @@ def decode_transactions(transactions, address):
         timestamp = raw.get('blockTime') if isinstance(raw, dict) else None
         slot = raw.get('slot') if isinstance(raw, dict) else None
         sequence = 0
+        normalization = None
+        normalization_receipts = None
+        administrative_context = None
+        administrative_context_error = None
 
         def emit(kind, path, **fields):
             nonlocal sequence
@@ -97,9 +103,11 @@ def decode_transactions(transactions, address):
             unsupported('Missing transaction metadata')
             continue
         keys = [entry.get('pubkey') if isinstance(entry, dict) else entry for entry in message.get('accountKeys', [])]
-        loaded = meta.get('loadedAddresses') or {}
-        if all(isinstance(entry, str) for entry in message.get('accountKeys', [])):
-            keys.extend(loaded.get('writable', []) + loaded.get('readonly', []))
+        loaded = meta.get('loadedAddresses')
+        malformed_loaded = loaded is not None and (not isinstance(loaded, dict) or
+            any(not isinstance(loaded.get(field), list) for field in ('writable', 'readonly')))
+        if loaded is not None and not malformed_loaded and all(isinstance(entry, str) for entry in message.get('accountKeys', [])):
+            keys.extend(loaded['writable'] + loaded['readonly'])
         payer = keys[0] if keys else None
         try:
             fee = _lamports(meta.get('fee'))
@@ -115,6 +123,9 @@ def decode_transactions(transactions, address):
             findings.append({'severity': 'info', 'title': 'Failed transaction retained',
                              'detail': 'Only the incurred wallet fee is retained; instructions did not execute successfully.',
                              'evidence': hashes})
+            continue
+        if malformed_loaded:
+            unsupported('Loaded account-key metadata is malformed; instruction identity remains unresolved', 'meta.loadedAddresses')
             continue
         if isinstance(slot, int) and slots[slot] > 1 and 'transaction_index' not in record:
             unsupported('Same-slot transaction ordering needs supported block evidence')
@@ -154,6 +165,7 @@ def decode_transactions(transactions, address):
         flow = defaultdict(int)
         ownership = {account: dict(identity) for account, identity in identities.items() if account not in conflicting}
         inner = defaultdict(list)
+        inner_group_positions = {}
         instructions = message.get('instructions')
         groups = meta.get('innerInstructions')
         if not isinstance(instructions, list) or groups is not None and not isinstance(groups, list):
@@ -168,6 +180,7 @@ def decode_transactions(transactions, address):
                 invalid_inner = True
                 break
             inner[group['index']].extend(group['instructions'])
+            inner_group_positions[group['index']] = group_index
         if invalid_inner:
             continue
         flattened = []
@@ -178,6 +191,69 @@ def decode_transactions(transactions, address):
 
         def token_identity(account):
             return ownership.get(account)
+
+        def observe_administration(path, instruction, kind, info):
+            """Validate the same parsed view for native and compiled evidence.
+
+            These facts describe the referenced instruction only. They do not
+            create ledger movement, acquisition basis, eligibility or history.
+            The existing compiled bridge supplies independently checked bytes;
+            parsed inputs still require the actual primary program/target keys.
+            """
+            nonlocal normalization, normalization_receipts, administrative_context, administrative_context_error
+            from .compiled_instructions import (CompiledInstructionError, _pubkey, _SIZE_EXTENSIONS,
+                                                normalize_transaction, resolve_account_keys)
+            from .instruction_scope import InstructionEvidenceError, inspect_instruction
+            parts = path.split('.')
+            if parts[0] == 'instructions':
+                source_path = 'transaction.message.' + path
+            else:
+                group_index = inner_group_positions[int(parts[1])]
+                source_path = f'meta.innerInstructions.{group_index}.instructions.{parts[2]}'
+            target_field = 'account' if kind == 'initializeImmutableOwner' else 'mint'
+            try:
+                if administrative_context is None and administrative_context_error is None:
+                    try:
+                        administrative_context = resolve_account_keys(source_raw)
+                    except CompiledInstructionError as exc:
+                        administrative_context_error = exc
+                if administrative_context_error is not None:
+                    raise administrative_context_error
+                if administrative_context['keys'] != keys:
+                    raise InstructionEvidenceError('Administrative account keys disagree with primary evidence',
+                                                   ['transaction.message.accountKeys'])
+                allowed = {'account'} if kind == 'initializeImmutableOwner' else {'mint', 'extensionTypes'}
+                if set(info) - allowed:
+                    raise InstructionEvidenceError('Administrative fields do not match the reviewed RPC schema', [source_path + '.parsed.info'])
+                inspected = inspect_instruction(instruction, keys, path=source_path)
+                if inspected['program'] not in TOKEN_IDS or inspected['program'] not in keys:
+                    raise InstructionEvidenceError('Administrative token program is absent from primary account keys', [source_path + '.programId'])
+                target = info.get(target_field)
+                _pubkey(target, source_path + '.parsed.info.' + target_field)
+                if keys.count(target) != 1:
+                    raise InstructionEvidenceError('Administrative target must appear once in primary account keys', [source_path + '.parsed.info.' + target_field])
+                if 'extensionTypes' in info and (not isinstance(info['extensionTypes'], list)
+                        or any(not isinstance(item, str) or item not in _SIZE_EXTENSIONS for item in info['extensionTypes'])):
+                    raise InstructionEvidenceError('Account-size query names an unsupported extension type', [source_path + '.parsed.info.extensionTypes'])
+            except (CompiledInstructionError, InstructionEvidenceError) as exc:
+                unsupported(str(exc), path)
+                return
+            if normalization is None:
+                normalization = normalize_transaction(source_raw)
+                # Each queried field belongs to this exact instruction. Index
+                # the shared normalizer receipts once rather than rescanning
+                # the whole transaction for every administrative observation.
+                normalization_receipts = {row['path']: row for row in normalization['normalizations']}
+            source_fields = [source_path + '.parsed.info.' + field for field in info]
+            source_fields.extend(inspected['paths'])
+            receipt = normalization_receipts.get(source_path)
+            raw_paths = sorted(set(receipt['raw_paths'] if receipt is not None else
+                                   source_fields + administrative_context['raw_paths']))
+            administration.append({'signature': signature, 'timestamp': timestamp, 'path': path,
+                'source_path': source_path, 'raw_paths': raw_paths, 'evidence': hashes,
+                'program_id': inspected['program'], 'instruction': kind, 'target': target,
+                'scope': 'Referenced administration only; no token movement, basis, classification or wallet population proof',
+                'representation': 'derived-compiled' if receipt is not None else 'parsed'})
 
         for path, instruction in flattened:
             if not isinstance(instruction, dict):
@@ -258,7 +334,10 @@ def decode_transactions(transactions, address):
                 else:
                     unsupported('Incomplete account initialization identity', path)
                 continue
-            if kind in ('initializeMint', 'initializeMint2', 'initializeMultisig', 'initializeMultisig2', 'getAccountDataSize'):
+            if kind in ('getAccountDataSize', 'initializeImmutableOwner'):
+                observe_administration(path, instruction, kind, info)
+                continue
+            if kind in ('initializeMint', 'initializeMint2', 'initializeMultisig', 'initializeMultisig2'):
                 continue
             if kind in ('approve', 'approveChecked', 'revoke'):
                 findings.append({'severity': 'info', 'title': 'Token permission instruction',
@@ -328,4 +407,5 @@ def decode_transactions(transactions, address):
     if transactions:
         findings.append({'severity': 'warning', 'title': 'Live exchange decoding is limited',
                          'detail': 'This build supports parsed transfers, account administration and fees. It has no reviewed DEX buy/sell adapters or historical meme classifier; live trading metrics remain unresolved.'})
-    return {'events': events, 'findings': findings, 'unresolved': unresolved, 'evidence': evidence}
+    return {'events': events, 'findings': findings, 'unresolved': unresolved, 'evidence': evidence,
+            'administration': administration}

@@ -4149,6 +4149,7 @@ pre {
   line-height: 1.8;
 }
 .metric-interval-detail p {
+  overflow-wrap: anywhere;
   color: #899975;
   font-size: 8px;
   line-height: 1.9;

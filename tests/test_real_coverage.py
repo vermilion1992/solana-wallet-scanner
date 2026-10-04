@@ -1,7 +1,9 @@
 """Raw query/ordinary accounting development controls; never genuine B3 proof."""
 from copy import deepcopy
 from datetime import timedelta
+import base64
 import hashlib
+import json
 
 import pytest
 
@@ -14,10 +16,111 @@ from scanner.wallet_evidence import derive_wallet_evidence, raw_native_dependenc
 from test_indexed_source_dependencies import native, source, derive
 from test_position_evidence import raw_exchange, WALLET, START, END, WINDOW
 from test_wallet_evidence import record
+from test_indexed_report_integration import (guarded, session, import_report as _import_report,
+                                            rebuild as _rebuild)
 
 
 def query(result, interval='report_period'):
     return result['query_coverage']['intervals'][interval]
+
+
+def unicode_source(raws, *, native_source=False, value='λ', ordinal=0):
+    """Exact escaped provider bytes; production canonicalization is not the oracle."""
+    wrapped = source(raws, native=native_source)
+    payload = wrapped['payload']
+    response = json.loads(base64.b64decode(payload['response_base64']))
+    raw = response['result'] if native_source else response['result']['data'][ordinal]
+    raw['unusedProviderNote'] = value
+    original = json.dumps(response, ensure_ascii=True, allow_nan=False, separators=(',', ':')).encode('ascii')
+    payload['response_hash'] = hashlib.sha256(original).hexdigest()
+    payload['response_base64'] = base64.b64encode(original).decode('ascii')
+    wrapped['hash'] = hashlib.sha256(canonical_bytes(payload)).hexdigest()
+    return wrapped, original
+
+
+@pytest.mark.parametrize('native_source', [False, True], ids=['page', 'native'])
+@pytest.mark.parametrize('value', ['λ', '\ud800'], ids=['valid-unicode', 'malformed-surrogate'])
+def test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies(tmp_path, native_source, value):
+    from scanner.indexed_input import source_bytes
+    from scanner.wallet_evidence import _selected_lot_observations
+    raw = native(slot=111_491_820)
+    edge, original = unicode_source([raw], native_source=native_source, value=value)
+    good = source([raw])
+    value_bundle = archived_query_bundle(raw, [good, edge] if native_source else [edge])
+    store = Store(tmp_path)
+    manifest_hash = import_archive(store, pack_bytes(value_bundle))
+    loaded, parent, receipt = archive_assessment(store, manifest_hash)
+    assert source_bytes(store.evidence(edge['hash']))['response'] == original
+    assert _selected_lot_observations([], {}, {}, {}, {}, [], [], [edge], WALLET) == []
+    fee = parent['metrics']['observed_network_fees_sol']
+    if value == 'λ':
+        assert fee['status'] == 'known' and fee['value'] == '0.000005'
+        assert receipt['query_coverage']['intervals']['report_period']['supported_record_state'] == 'PASS'
+    else:
+        assert fee['status'] == 'unknown' and fee['value'] is None
+        assert receipt['query_coverage']['intervals']['report_period']['supported_record_state'] == 'UNKNOWN'
+        negative = next(row for row in loaded['all_records'] if row['evidence_hash'] == edge['hash'])
+        assert negative['raw'] is None
+        assert 'canonical hash preimage' in negative['indexed_source']['reason']
+    frozen = loaded['dependency_input_hash']
+    path = store.path / 'evidence' / f'{edge["hash"]}.json.gz'
+    archived = path.read_bytes()
+    path.unlink()
+    _, missing, missing_receipt = archive_assessment(store, manifest_hash, dependency_input_hash=frozen)
+    assert missing['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+    assert missing_receipt['query_coverage']['intervals']['report_period']['supported_record_state'] == 'UNKNOWN'
+    path.write_bytes(archived)
+    _, restored, restored_receipt = archive_assessment(store, manifest_hash, dependency_input_hash=frozen)
+    assert restored == parent and restored_receipt == receipt
+    assert store.evidence(manifest_hash) == value_bundle['manifest']
+
+
+def test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence(tmp_path):
+    raw = native(slot=111_491_820)
+    bad = native('development-unicode-sibling', slot=111_491_821, at=START + 4000)
+    edge, _ = unicode_source([raw, bad], value='\ud800', ordinal=1)
+    store = Store(tmp_path)
+    manifest_hash = import_archive(store, pack_bytes(archived_query_bundle(raw, [edge])))
+    loaded, report, receipt = archive_assessment(store, manifest_hash)
+    linked = next(row for row in loaded['all_records'] if row['evidence_hash'] == edge['hash'])
+    assert linked['raw'] == raw
+    # Whole-page chronology is rejected, so report-window projection remains
+    # unknown. The valid sibling's independently supported native fee survives.
+    assert receipt['wallet_evidence']['components']['native_fee']['state'] == 'PASS'
+    assert receipt['wallet_evidence']['transactions']['indexed-dev-buy']['network_fee']['lamports'] == '5000'
+    assert receipt['query_coverage']['intervals']['report_period']['state'] == 'UNKNOWN'
+    first = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'], wallet=WALLET,
+        window=WINDOW, source_consistency={}, chronology={}, raw_sources=loaded['raw_sources'])
+    second = derive_wallet_evidence(list(reversed(loaded['records'])),
+        all_records=list(reversed(loaded['all_records'])), wallet=WALLET, window=WINDOW,
+        source_consistency={}, chronology={}, raw_sources=list(reversed(loaded['raw_sources'])))
+    assert first == second
+
+
+@pytest.mark.parametrize('native_source', [False, True], ids=['page', 'native'])
+def test_malformed_unicode_wrapper_normal_api_rebuild_export_and_restoration_remain_offline(guarded, native_source):
+    from scanner.indexed_input import source_bytes
+    client, app, _, _ = guarded
+    raw = native(slot=111_491_820)
+    edge, original = unicode_source([raw], native_source=native_source, value='\ud800')
+    report = _import_report(client, pack_bytes(archived_query_bundle(raw, [source([raw]), edge])))
+    parent = deepcopy(app.state.store.get('reports', report['id']))
+    assert report['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+    inspected = client.get('/api/evidence/' + edge['hash'])
+    assert inspected.status_code == 200 and source_bytes(inspected.json())['response'] == original
+    assert client.get('/api/export/reports/' + report['id'] + '.json').status_code == 200
+    assert client.get('/api/export/reports/' + report['id'] + '.csv').status_code == 200
+    child = _rebuild(client, report)
+    assert child['metrics'] == report['metrics']
+    path = app.state.store.path / 'evidence' / f'{edge["hash"]}.json.gz'
+    archived = path.read_bytes()
+    path.unlink()
+    missing = _rebuild(client, child)
+    assert missing['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+    path.write_bytes(archived)
+    restored = _rebuild(client, missing)
+    assert restored['metrics'] == report['metrics']
+    assert app.state.store.get('reports', report['id']) == parent
 
 
 def change_bounds(request, *, begin=START, end=END):
@@ -597,3 +700,21 @@ def test_direct_adapter_native_loss_replays_required_frozen_links_and_negative_s
     assert lost['query_accounting']['monetary_state'] == 'UNKNOWN'
     hinted = {**missing, 'signature': raws[1]['transaction']['signatures'][0]}
     assert derive(raws, [page, hinted])['components']['native_fee']['state'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('malformed_signature', [{'malformed': 'identity'}, ['not', 'a', 'signature'], '', 7])
+def test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection(malformed_signature):
+    from scanner.wallet_evidence import _selected_lot_observations
+    first = native(slot=111_491_820)
+    first['transaction']['signatures'][0] = malformed_signature
+    second = native('development-recovery-malformed-sibling', slot=111_491_821, at=START + 4000)
+    edge, _ = unicode_source([first, second], value='\ud800', ordinal=1)
+    # Early whole-page serialization rejection may preserve raw leads without
+    # an assignable-signature receipt. Never use a caller-shaped key as proof.
+    assert _selected_lot_observations([], {}, {}, {}, {}, [], [], [edge], WALLET) == []
+    selected_raw = native(slot=111_491_822)
+    baseline = derive([selected_raw], [source([selected_raw])])
+    malformed = derive([selected_raw], [source([selected_raw]), edge])
+    assert malformed['query_coverage']['intervals']['report_period']['state'] == 'UNKNOWN'
+    assert malformed['query_accounting']['monetary_state'] == 'UNKNOWN'
+    assert baseline['components']['native_fee']['state'] == 'PASS'

@@ -39,7 +39,7 @@ RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v6-real-query-instructions'
+DECODER_VERSION = 'spot-v7-native-flow-roles'
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -379,6 +379,80 @@ def _retained_user_volume_funding(flat, keys, before, after, address, route):
         'reason': 'Exact user-PDA funding remains located in its program-owned native endpoint; trade quote is separate. Refund entitlement and economic value are unproved.'}]
 
 
+def _unresolved_native_roles(flat, owned, wrapped, keys, before, address, route, retained, settlement):
+    """Inspect gross wallet cash roles even when native endpoints cancel.
+
+    Wrapped settlement proves the quote legs, not every other cash movement.
+    The primary Pump ABI names curve3/fee1/creator-vault9 buy recipients;
+    native sells pay the user from curve3. No other route account, mirrored
+    movement or net-zero cash loop inherits a quote/cost role from endpoints.
+    The pinned primary IDL is retained with the funding regression fixtures.
+    """
+    unresolved = []
+    wallet_assets = {address, *owned, *wrapped}
+    retained_paths = {item['path'] for item in retained}
+    initializers = defaultdict(set)
+    native_quote = not wrapped and route['program'] == PUMP
+    quote_total = 0
+    quote_recipients = set()
+    if native_quote and settlement < 0:
+        quote_recipients.update(route['accounts'][position] for position in (1, 3))
+        if len(route['accounts']) > 9:
+            quote_recipients.add(route['accounts'][9])
+    for _outer, _path, instruction, _nested in flat:
+        parsed = instruction.get('parsed')
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+        program = _program(instruction, keys)
+        if program in TOKEN_IDS and kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3'):
+            initializers[info.get('account')].add((program, info.get('mint'), info.get('owner')))
+    for outer, path, instruction, _nested in flat:
+        parsed = instruction.get('parsed')
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+        program = _program(instruction, keys)
+        reason = None
+        if program == SYSTEM_ID and kind == 'transfer' and outer == route['index']:
+            source, destination = info.get('source'), info.get('destination')
+            lamports = _integer(info.get('lamports'))
+            if not lamports or source == destination or not wallet_assets.intersection((source, destination)):
+                continue
+            if source == address and destination in wrapped:
+                continue  # Existing primary lifecycle/endpoint checks validate wrapping.
+            if native_quote and (
+                settlement < 0 and source == address and destination in quote_recipients
+                or settlement > 0 and source == route['accounts'][3] and destination == address
+            ):
+                quote_total += lamports
+                continue
+            reason = 'Same-route native transfer has no supported wallet wrapping, cost or capital role'
+        elif program == SYSTEM_ID and kind in ('createAccount', 'createAccountWithSeed') and info.get('source') == address:
+            lamports = _integer(info.get('lamports'))
+            account = info.get('newAccount')
+            if not lamports or path in retained_paths:
+                continue
+            owned_rent = (account in owned or account in wrapped) and info.get('owner') in TOKEN_IDS
+            owned_rent = owned_rent and account in keys and before[keys.index(account)] == 0
+            mint = owned.get(account, {}).get('mint', WSOL if account in wrapped else None)
+            owned_rent = owned_rent and (info.get('owner'), mint, address) in initializers[account]
+            if owned_rent:
+                continue  # Existing observed token reserve/lifecycle checks still apply.
+            reason = 'Wallet-funded native creation has no supported owned-token rent or retained-PDA role'
+        elif program in TOKEN_IDS and kind == 'closeAccount' and info.get('destination') == address:
+            if info.get('account') in owned or info.get('account') in wrapped:
+                continue
+            reason = 'Closure of an account outside proved wallet ownership has an unresolved refund role and amount'
+        if reason:
+            unresolved.append({'state': 'UNKNOWN', 'path': path, 'program': program, 'kind': kind,
+                               'facts': dict(info), 'reason': reason})
+    if native_quote and quote_total > abs(settlement):
+        unresolved.append({'state': 'UNKNOWN', 'path': route['path'], 'program': route['program'],
+            'kind': 'nativeQuote', 'facts': {'observed_primary_quote_lamports': quote_total,
+            'settlement_lamports': abs(settlement)},
+            'reason': 'Explicit primary native quote legs exceed the isolated consideration; a cancelling role is unresolved'})
+    return unresolved
+
+
 def decode_supported_swaps(transactions, address):
     """Decode record wrappers {signature,raw,evidence_hash,transaction_index?}.
 
@@ -441,6 +515,19 @@ def decode_supported_swaps(transactions, address):
             unresolved.append(issue)
             emit('unsupported', path, reason=reason, **({'mint': mint} if mint else {}))
             findings.append({'severity': 'warning', 'title': 'Swap reconstruction gap',
+                             'detail': reason, 'signature': signature, 'evidence': hashes})
+
+        def uncertain_cash(reason, path, *, amount=None, direction=None, facts=None):
+            # Cash-role uncertainty does not invalidate proved token operations
+            # or their chronology. It still blocks complete monetary support.
+            unresolved.append({'signature': signature, 'path': path, 'reason': reason,
+                               'scope': 'native monetary roles', 'evidence': hashes})
+            facts = facts or {}
+            emit('capital', path, amount_sol=amount, direction=direction,
+                 source=facts.get('source', facts.get('account')),
+                 destination=facts.get('destination', facts.get('newAccount')),
+                 economic_role='unknown', facts=facts, reason=reason)
+            findings.append({'severity': 'warning', 'title': 'Native monetary role unresolved',
                              'detail': reason, 'signature': signature, 'evidence': hashes})
 
         try:
@@ -574,6 +661,8 @@ def decode_supported_swaps(transactions, address):
                     elif kind == 'transfer':
                         source, destination = info.get('source'), info.get('destination')
                         lamports = _integer(info.get('lamports'))
+                        if not lamports:
+                            continue  # Transporting zero does not create a cash-role dependency.
                         if address not in (source, destination):
                             continue
                         if source == destination == address:
@@ -703,6 +792,15 @@ def decode_supported_swaps(transactions, address):
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
                 raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
+            native_roles = _unresolved_native_roles(flat, owned, wsol_accounts, keys,
+                pre_lamports, address, route, retained_funding, settlement)
+            for role in native_roles:
+                if role['path'].startswith('instructions.'):
+                    role['raw_paths'] = ['transaction.message.' + role['path']]
+                else:
+                    _, outer, ordinal = role['path'].split('.')
+                    group_index = next(index for index, group in enumerate(meta['innerInstructions']) if group['index'] == int(outer))
+                    role['raw_paths'] = [f'meta.innerInstructions.{group_index}.instructions.{ordinal}']
             assets = [(mint, delta) for mint, delta in deltas.items() if delta]
             if len(assets) != 1:
                 raise ValueError('Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved')
@@ -715,12 +813,14 @@ def decode_supported_swaps(transactions, address):
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            allocate_fee = paid and not outside_native
+            allocate_fee = paid and not outside_native and not native_roles
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
                  owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
                  settlement_mint=WSOL,
+                 native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
+                 unresolved_native_roles=native_roles,
                  retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
                  observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
@@ -732,12 +832,16 @@ def decode_supported_swaps(transactions, address):
                 fee_event['allocated_trade_path'] = route['path']
             supported += 1
             administration.extend(nonce_administration)
+            for role in native_roles:
+                info = role['facts']
+                lamports = info.get('lamports') if role['kind'] in ('transfer', 'createAccount', 'createAccountWithSeed') else None
+                amount = canonical(Decimal(lamports) / LAMPORTS) if type(lamports) is int else None
+                direction = 'withdrawal' if info.get('source') in {address, *owned, *wsol_accounts} else 'deposit'
+                uncertain_cash(role['reason'], role['path'], amount=amount, direction=direction, facts=info)
             for movement in outside_native:
-                emit('capital', movement['path'], amount_sol=canonical(Decimal(movement['lamports']) / LAMPORTS),
-                     direction=movement['direction'], source=movement['source'], destination=movement['destination'],
-                     economic_role='unknown',
-                     reason='Explicit outside native movement isolated from swap consideration; capital flow or trading cost role unresolved')
-                unknown('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved', movement['path'])
+                uncertain_cash('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved',
+                    movement['path'], amount=canonical(Decimal(movement['lamports']) / LAMPORTS),
+                    direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
         except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
             unknown(str(exc))
     coverage = {'decoder_version': DECODER_VERSION, 'transactions': len(rows), 'decoded_swaps': supported,

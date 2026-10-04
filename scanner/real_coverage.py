@@ -171,11 +171,14 @@ def derive_indexed_coverage(records, *, all_records, raw_sources, wallet, window
         signature = signatures[0] if isinstance(signatures, list) and signatures else None
         if not isinstance(signature, str):
             return
-        native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
-        pointer = {'version': RECORD_VERSION, 'source_hash': source_hash, 'ordinal': ordinal,
-                   'signature': signature, 'native_hash': native_hash}
-        bindings[signature, native_hash].update((native_hash, source_hash,
-            hashlib.sha256(canonical_bytes(pointer)).hexdigest()))
+        try:
+            native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+            pointer = {'version': RECORD_VERSION, 'source_hash': source_hash, 'ordinal': ordinal,
+                       'signature': signature, 'native_hash': native_hash}
+            pointer_hash = hashlib.sha256(canonical_bytes(pointer)).hexdigest()
+        except (ValueError, TypeError, UnicodeError, OverflowError, RecursionError):
+            return  # Rejected bytes cannot bind a native body or frozen pointer.
+        bindings[signature, native_hash].update((native_hash, source_hash, pointer_hash))
     for row in pages:
         # Invalid pages cannot certify query completion; readable bodies still
         # remain rejection/format dependencies in the ordinary source path.

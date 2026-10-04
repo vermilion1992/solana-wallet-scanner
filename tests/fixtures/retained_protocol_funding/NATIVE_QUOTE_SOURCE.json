@@ -1,0 +1,12 @@
+{
+  "version": "native-quote-primary-contract-v1",
+  "repository": "pump-fun/pump-public-docs",
+  "commit": "e0687ae9b7e064a0f54efc7297c65eecfbba3a8f",
+  "document": {
+    "path": "pump-native.json",
+    "url": "https://raw.githubusercontent.com/pump-fun/pump-public-docs/e0687ae9b7e064a0f54efc7297c65eecfbba3a8f/idl/pump.json",
+    "bytes": 268716,
+    "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b"
+  },
+  "scope": "Exact ordinary ABI named recipient/direction and observed gross quote legs. Buy user6 to bonding_curve3, fee_recipient1 and creator_vault9; sell bonding_curve3 to user6. Explicit quote legs must not exceed the observed isolated quote; absent System CPIs are not inferred to be missing trade activity because a program may change its own lamports directly. No fee whitelist/rate, direct program balance mutation, source authenticity, historical population, valuation or universal native route completeness is inferred. Test cases are unsigned development inputs."
+}

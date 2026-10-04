@@ -25,7 +25,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v4'
+VERSION = 'wallet-raw-evidence-v5'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -567,7 +567,7 @@ def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
                 transaction = raw.get('transaction') if isinstance(raw, dict) else None
                 signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
                 signature = signatures[0] if isinstance(signatures, list) and signatures else None
-                if signature not in affected:
+                if not isinstance(signature, str) or not 1 <= len(signature) <= 128 or signature not in affected:
                     continue
                 key = signature, digest
                 if key in available and available[key] != raw:
@@ -637,6 +637,8 @@ def _decoded_native_movement(events):
                 continue
             if kind not in ('buy', 'sell', 'fee'):
                 return None
+            if kind in ('buy', 'sell') and event.get('native_cash_role_state') == 'UNKNOWN':
+                return None  # Net endpoints cannot classify cancelling gross cash roles.
             if kind == 'fee' and event.get('paid_by_wallet') is not True:
                 continue
             amount = decimal(event.get('amount_sol')) * Decimal(10**9)
@@ -731,14 +733,19 @@ def _selected_lot_observations(positions, selected, raw_versions, transactions, 
             if not _safe_raw(raw):
                 continue
             signatures = raw['transaction'].get('signatures')
-            if not isinstance(signatures, list) or not signatures:
+            if (not isinstance(signatures, list) or not signatures or not isinstance(signatures[0], str)
+                or not 1 <= len(signatures[0]) <= 128):
                 continue
             signature = signatures[0]
-            native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+            try:
+                native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+                pointer = {'version': RECORD_VERSION, 'source_hash': source['hash'], 'ordinal': ordinal,
+                           'signature': signature, 'native_hash': native_hash}
+                pointer_hash = hashlib.sha256(canonical_bytes(pointer)).hexdigest()
+            except (ValueError, TypeError, UnicodeError, OverflowError, RecursionError):
+                continue  # No canonical preimage proves an absent link disjoint.
             recovered.setdefault((signature, native_hash), raw)
-            pointer = {'version': RECORD_VERSION, 'source_hash': source['hash'], 'ordinal': ordinal,
-                       'signature': signature, 'native_hash': native_hash}
-            recovered.setdefault((signature, hashlib.sha256(canonical_bytes(pointer)).hexdigest()), raw)
+            recovered.setdefault((signature, pointer_hash), raw)
     by_signature = defaultdict(list)
     for event in ledger_events:
         by_signature[event.get('signature')].append(event)
@@ -1008,7 +1015,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
                                    'check': fee_check, 'role': 'Actual selected wallet-paid network fee; economic allocation is separate'}
         native_trades = selected_observation['trades']
         trades_agree = all(len(r['trades']) == len(native_trades) and all(all(a.get(k) == b.get(k) for k in
-            ('kind', 'mint', 'quantity_raw', 'decimals', 'amount_sol', 'fee_sol', 'paid_by_wallet', 'venue'))
+            ('kind', 'mint', 'quantity_raw', 'decimals', 'amount_sol', 'fee_sol', 'paid_by_wallet', 'venue', 'native_cash_role_state'))
             for a, b in zip(r['trades'], native_trades)) for r in variants)
         decoded_events = decode_supported_swaps([derived_record(primary)], wallet)['events'] if _safe_raw(primary.get('raw')) else []
         try:
@@ -1018,7 +1025,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
             allocation_valid = False
         transaction_cost_checks = []
         for trade in native_trades:
-            known = identity.get('state') == 'PASS' and trades_agree and allocation_valid and fee_check['state'] == 'PASS' and trade.get('amount_sol') is not None and trade.get('fee_sol') is not None
+            known = identity.get('state') == 'PASS' and trades_agree and allocation_valid and fee_check['state'] == 'PASS' and trade.get('amount_sol') is not None and trade.get('fee_sol') is not None and trade.get('native_cash_role_state') == 'PASS'
             check = _check(known, 'Supported raw swap consideration and unique raw network fee allocation agree across every linked version.', evidence,
                            paths=[trade.get('path', 'transaction')], scope='Observed supported trade only; disposed-lot population is separate')
             cost_checks.append(check)

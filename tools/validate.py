@@ -21,7 +21,7 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_compiled_instructions.py', 'tests/test_compiled_getter.py', 'tests/test_compiled_report_integration.py',
            'tests/test_indexed_input.py', 'tests/test_indexed_chronology.py',
            'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py', 'tests/test_report_view.py',
-           'tests/test_real_coverage.py', 'tests/test_retained_protocol_funding.py', 'tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py', 'tests/test_discovery_native_identity.py',
+           'tests/test_real_coverage.py', 'tests/test_generic_administration.py', 'tests/test_retained_protocol_funding.py', 'tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py', 'tests/test_discovery_native_identity.py',
            'tests/test_bounded_collection.py', 'tests/test_genuine_collection_workflow.py']
 
 

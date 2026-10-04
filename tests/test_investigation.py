@@ -90,7 +90,7 @@ def test_verified_spot_route_collapses_exact_owned_exchange():
     assert result['events'][0]['allocation'] == 'buy_basis'
     assert result['events'][0]['allocated_trade_path'] == event['path']
     assert result['events'][0]['signature'] == event['signature']
-    assert result['coverage']['decoder_version'] == 'spot-v6-real-query-instructions'
+    assert result['coverage']['decoder_version'] == 'spot-v7-native-flow-roles'
     assert result['coverage']['complete'] is False
     assert result['coverage']['history_complete'] is False
 
@@ -547,3 +547,66 @@ def test_concentration_needs_owner_aggregation_and_complete_observation():
     assert result['gates']['liquidity_control']['state'] == 'UNKNOWN'
     observations['owners'] = [{'owner': 'impossible', 'amount_raw': '1001'}]
     assert inspect_token_risk(mint, observations)['gates']['holder_concentration']['state'] == 'UNKNOWN'
+
+
+def native_cash(source, destination, lamports):
+    return {'programId': SYSTEM_ID, 'parsed': {'type': 'transfer',
+        'info': {'source': source, 'destination': destination, 'lamports': lamports}}}
+
+
+@pytest.mark.parametrize('inside', [False, True], ids=['outer', 'same-route'])
+@pytest.mark.parametrize('kind', ['createAccount', 'createAccountWithSeed'])
+def test_gross_foreign_creation_and_refund_cannot_hide_as_net_zero_cost(inside, kind):
+    entry = record()
+    raw, rent = entry['raw'], 2_039_280
+    raw['transaction']['message']['accountKeys'] += ['fresh-foreign-system', 'foreign-closed-token', 'foreign-owner']
+    raw['meta']['preBalances'] += [0, rent, 0]
+    raw['meta']['postBalances'] += [rent, 0, 0]
+    for field in ('preTokenBalances', 'postTokenBalances'):
+        raw['meta'][field].append(balance(6, 0, owner='foreign-owner'))
+    creation = {'programId': SYSTEM_ID, 'parsed': {'type': kind,
+        'info': {'source': WALLET, 'newAccount': 'fresh-foreign-system', 'lamports': rent,
+                 'space': 0, 'owner': SYSTEM_ID}}}
+    if kind == 'createAccountWithSeed':
+        creation['parsed']['info'].update(base=WALLET, seed='gross-cash-control')
+    closure = {'programId': TOKEN_PROGRAM, 'parsed': {'type': 'closeAccount',
+        'info': {'account': 'foreign-closed-token', 'destination': WALLET, 'owner': 'foreign-owner'}}}
+    if inside:
+        raw['meta']['innerInstructions'][0]['instructions'] += [creation, closure]
+    else:
+        raw['transaction']['message']['instructions'] += [creation, closure]
+    result = decode(entry)
+    trade, fee = swaps(result)[0], result['events'][0]
+    assert trade['amount_sol'] == '1' and trade['quantity_raw'] == '100'
+    assert trade['native_cash_role_state'] == 'UNKNOWN'
+    assert trade['fee_sol'] == '0' and fee['allocation'] == 'unallocated'
+    assert {role['kind'] for role in trade['unresolved_native_roles']} == {kind, 'closeAccount'}
+    assert result['unresolved']
+    assert all(issue['scope'] == 'native monetary roles' for issue in result['unresolved'])
+    cash = [event for event in result['events'] if event['kind'] == 'capital']
+    assert {event['amount_sol'] for event in cash} == {'0.00203928', None}
+    for role in trade['unresolved_native_roles']:
+        for path in role['raw_paths']:
+            value = raw
+            for part in path.split('.'):
+                value = value[int(part)] if isinstance(value, list) else value[part]
+            assert value in (creation, closure)
+
+
+@pytest.mark.parametrize('inside', [False, True], ids=['outer', 'same-route'])
+@pytest.mark.parametrize('movement', ['zero', 'self', 'disjoint'])
+def test_irrelevant_gross_native_movements_preserve_known_wrapped_quote(inside, movement):
+    entry = record()
+    source, destination, lamports = {'zero': (WALLET, 'external', 0),
+        'self': (WALLET, WALLET, 1), 'disjoint': ('foreign-a', 'foreign-b', 1)}[movement]
+    operation = native_cash(source, destination, lamports)
+    raw = entry['raw']
+    if inside:
+        raw['meta']['innerInstructions'][0]['instructions'].append(operation)
+    else:
+        raw['transaction']['message']['instructions'].append(operation)
+    result = decode(entry)
+    assert not result['unresolved']
+    assert swaps(result)[0]['native_cash_role_state'] == 'PASS'
+    assert swaps(result)[0]['fee_sol'] == '0.000005'
+    assert result['events'][0]['allocation'] == 'buy_basis'

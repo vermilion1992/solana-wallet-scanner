@@ -101,6 +101,9 @@ def run(args):
                 for width,height,device in ((1440,900,'desktop'),(390,844,'mobile')):
                     page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(120)
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth&&scrollX===0')
+                    assert page.evaluate("""() => [...document.querySelectorAll('.report-metric > small, .all-metrics-grid > div > small, .metric-interval-detail p')]
+                        .filter(element => element.getClientRects().length)
+                        .every(element => element.scrollWidth <= element.clientWidth + 1 && element.scrollHeight <= element.clientHeight + 1)"""), 'Metric dependency text is clipped inside its field'
                     page.screenshot(path=str(out/f'{name}-{device}.png'),full_page=True);captures+=1
                 page.set_viewport_size({'width':1440,'height':900})
             def import_ui(file, dataset):

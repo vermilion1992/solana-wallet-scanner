@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
 from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v7'
+METHOD = 'archive-ledger-v8'
 _CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
@@ -364,8 +364,14 @@ def archived_record(payload, signature, digest, read, *, address=None, resolver=
                 # An unrelated malformed sibling cannot erase a native body.
                 # Reuse the pointer resolver to check request/response identity
                 # and exact bytes; chronology still rejects unsupported scope.
+                try:
+                    native_hash = hashlib.sha256(canonical_bytes(item)).hexdigest()
+                except (ValueError, TypeError, UnicodeError, OverflowError, RecursionError):
+                    receipt['state'] = 'UNKNOWN'
+                    receipt['gaps'].append(f'{identity}: native record cannot supply a canonical hash preimage')
+                    continue  # Its frozen source/signature remains unresolved.
                 pointer = {'version': RECORD_VERSION, 'source_hash': digest, 'ordinal': ordinal,
-                           'signature': identity, 'native_hash': hashlib.sha256(canonical_bytes(item)).hexdigest()}
+                           'signature': identity, 'native_hash': native_hash}
                 resolved = (resolver or IndexedResolver(read, address=address)).resolve(pointer)
                 if resolved['state'] == 'PASS':
                     by_signature[identity].append(resolved['raw'])

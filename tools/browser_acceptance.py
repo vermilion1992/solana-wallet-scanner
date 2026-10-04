@@ -77,12 +77,15 @@ Path(sys.argv[3]).write_text(json.dumps(cases,indent=2)+'\\n');store.close()
             page.goto(url);page.get_by_role('button',name='Find wallet candidates',exact=True).first.wait_for()
             state=page.request.get(base+'/api/state').json();usage=state['usage']
             assert not state['provider']['configured'] and state['settings']['refresh_minutes']==0
-            assert state['position_evidence_methodology']=='account-position-evidence-v11'
+            assert state['position_evidence_methodology']=='account-position-evidence-v13'
             def capture(name):
                 nonlocal captures
                 for width,height,label in ((1440,900,'desktop'),(390,844,'mobile')):
                     page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(150)
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth&&scrollX===0')
+                    assert page.evaluate("""() => [...document.querySelectorAll('.report-metric > small, .all-metrics-grid > div > small, .metric-interval-detail p')]
+                        .filter(element => element.getClientRects().length)
+                        .every(element => element.scrollWidth <= element.clientWidth + 1 && element.scrollHeight <= element.clientHeight + 1)"""), 'Metric dependency text is clipped inside its field'
                     page.screenshot(path=str(out/(name+'-'+label+'.png')),full_page=True);captures+=1
                 page.set_viewport_size({'width':1440,'height':900})
             # Settings are exercised through actual UI, with the original strict preset saved.

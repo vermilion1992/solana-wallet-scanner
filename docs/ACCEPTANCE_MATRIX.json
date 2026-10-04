@@ -352,6 +352,13 @@
       "selectors": [
         "tests/test_genuine_collection_workflow.py::*"
       ]
+    },
+    {
+      "id": "generic-native-administration",
+      "axis": "Representation and source dependency",
+      "selectors": [
+        "tests/test_generic_administration.py::*"
+      ]
     }
   ],
   "browser_required": [
