@@ -91,6 +91,129 @@ def test_returned_unselected_record_cannot_be_discarded_to_complete_the_query():
     assert restored['components']['historical_population']['state'] == 'UNKNOWN'
 
 
+def test_selected_native_variant_can_use_the_retained_original_linked_accounting_path():
+    raw = native(slot=111_491_820)
+    selected_raw = deepcopy(raw)
+    selected_raw['meta']['logMessages'] = ['Optional retained native representation metadata']
+    page = source([raw])
+    result = derive([selected_raw], [page], alternatives=[record(raw)])
+    assert query(result)['state'] == 'PASS'
+    assert query(result)['supported_record_state'] == 'PASS'
+    assert result['components']['native_fee']['state'] == 'PASS'
+    assert result['metric_dependencies']['profit_sol']['state'] == 'UNKNOWN'
+    assert result['components']['historical_population']['state'] == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('negative', ['missing', 'malformed', 'unsupported', 'fee-conflict', 'clock-conflict'])
+def test_alternative_selection_keeps_linked_negative_facts_and_exact_restoration(negative):
+    raw = native(slot=111_491_820)
+    alternative = deepcopy(raw)
+    alternative['meta']['logMessages'] = ['Optional native metadata']
+    page = source([raw])
+    original = record(raw)
+    parent = derive([alternative], [page], alternatives=[original])
+    bad = deepcopy(raw)
+    if negative == 'missing':
+        broken = {**original, 'raw': None}
+    elif negative == 'malformed':
+        bad['meta'] = []
+        broken = {**original, 'raw': bad}
+    elif negative == 'unsupported':
+        bad['version'] = 1
+        broken = record(bad)
+    elif negative == 'fee-conflict':
+        bad['meta']['fee'] += 1
+        bad['meta']['postBalances'][0] -= 1
+        broken = record(bad)
+    else:
+        bad['blockTime'] += 1
+        broken = record(bad)
+    child = derive([alternative], [page], alternatives=[original, broken])
+    if negative in ('missing', 'malformed', 'unsupported', 'clock-conflict'):
+        assert query(child)['supported_record_state'] == 'UNKNOWN'
+    if negative == 'fee-conflict':
+        assert child['components']['native_fee']['state'] == 'UNKNOWN'
+    assert child['metric_dependencies']['profit_sol']['state'] == 'UNKNOWN'
+    assert parent == derive([alternative], [page], alternatives=[original])
+    assert child == derive([alternative], [page], alternatives=[broken, original])
+
+
+@pytest.mark.parametrize('failure', ['original-absent', 'original-missing', 'original-hash',
+                                     'selected-unlinked', 'selected-hash', 'selected-missing', 'selected-wrong-signature'])
+def test_alternative_selection_needs_exact_original_and_selected_frozen_links(failure):
+    from scanner.chronology_evidence import assess_chronology
+    from scanner.source_consistency import assess_source_consistency
+    raw = native(slot=111_491_820)
+    alternative = deepcopy(raw)
+    alternative['meta']['logMessages'] = ['A native alternative, not a completion declaration']
+    selected = [record(alternative)]
+    original = record(raw)
+    linked = selected + [original]
+    if failure == 'original-absent':
+        linked = selected
+    elif failure == 'original-missing':
+        linked[-1] = {**original, 'raw': None}
+    elif failure == 'original-hash':
+        linked[-1] = {**original, 'evidence_hash': '0' * 64}
+    elif failure == 'selected-unlinked':
+        linked = [original]
+    elif failure == 'selected-hash':
+        selected = [{**selected[0], 'evidence_hash': '0' * 64}]
+        linked = selected + [original]
+    elif failure == 'selected-wrong-signature':
+        alternative['transaction']['signatures'] = ['another-development-query-signature']
+        chosen = record(alternative)
+        selected = [{**chosen, 'signature': raw['transaction']['signatures'][0]}]
+        linked = selected + [original]
+    else:
+        selected = [{**selected[0], 'raw': None}]
+        linked = selected + [original]
+    page = source([raw])
+    result = derive_indexed_coverage(selected, all_records=linked, raw_sources=[page],
+        wallet=WALLET, window=WINDOW,
+        source_consistency=assess_source_consistency(linked, wallet=WALLET, indexed_receipts=[page]),
+        chronology=assess_chronology(linked, indexed_receipts=[page]))
+    assert result['intervals']['report_period']['query_records_state'] == 'UNKNOWN'
+    assert result['historical_population']['state'] == 'UNKNOWN'
+
+
+def test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record(tmp_path):
+    from pathlib import Path
+    from scanner.indexed_input import convert_indexed_archive
+    content = (Path(__file__).resolve().parents[1] /
+        'evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip').read_bytes()
+    store = Store(tmp_path)
+    archive = import_archive(store, convert_indexed_archive(content))
+    loaded = load_archive(store, archive)
+    selected = loaded['records']
+    linked = loaded['all_records']
+    kwargs = dict(raw_sources=loaded['raw_sources'], wallet=loaded['manifest']['address'],
+        window=loaded['manifest']['window'], source_consistency=loaded['consistency'],
+        chronology=loaded['chronology'])
+    result = derive_indexed_coverage(selected, all_records=linked, **kwargs)
+    for receipt in result['intervals'].values():
+        assert receipt['state'] == receipt['query_records_state'] == 'PASS'
+        assert receipt['record_count'] == len(selected) == 87
+        assert receipt['historical_population_state'] == 'UNKNOWN'
+    assert result == derive_indexed_coverage(list(reversed(selected)),
+        all_records=list(reversed(linked)), **kwargs)
+    signatures = [
+        '4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U',
+        '4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7',
+    ]
+    for signature in signatures:
+        primary = next(row for row in selected if row['signature'] == signature)
+        originals = [row for row in linked if row['signature'] == signature and row['raw'] != primary['raw']]
+        assert originals and all(row['raw'] is not None for row in originals)
+        compiled_primary = [originals[0] if row is primary else row for row in selected]
+        assert result == derive_indexed_coverage(compiled_primary, all_records=linked, **kwargs)
+        missing = [{**row, 'raw': None} if row is primary else row for row in linked]
+        child = derive_indexed_coverage([{**row, 'raw': None} if row is primary else row for row in selected],
+            all_records=missing, **kwargs)
+        assert child['intervals']['report_period']['state'] == 'UNKNOWN'
+    assert result == derive_indexed_coverage(selected, all_records=linked, **kwargs)
+
+
 @pytest.mark.parametrize('loss', ['missing', 'checksum-mismatch', 'unassignable-record'])
 def test_linked_page_loss_or_malformed_record_revokes_query_and_exact_restoration_recovers(loss):
     raw = native(slot=111_491_820)

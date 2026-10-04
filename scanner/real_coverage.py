@@ -13,10 +13,12 @@ import hashlib
 import re
 
 from .accounting import utc
-from .indexed_input import PAGE_VERSION, MAX_PAGES, MAX_PAGE_RECORDS, _exact_bytes, _json, canonical_bytes, describe_pages, validate_page_envelope
+from .indexed_input import (PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, MAX_PAGES, MAX_PAGE_RECORDS,
+                            _exact_bytes, _json, canonical_bytes, describe_pages, source_records,
+                            validate_page_envelope)
 from .transaction_format import supported_transaction_format
 
-VERSION = 'indexed-query-coverage-v1'
+VERSION = 'indexed-query-coverage-v2'
 MAX_RECORDS = 10_000
 _HASH = re.compile(r'[a-f0-9]{64}')
 _SCOPE = 'Complete documented indexed address-query population only; historical wallet membership is separate'
@@ -106,9 +108,11 @@ def derive_indexed_coverage(records, *, all_records, raw_sources, wallet, window
                             source_consistency, chronology):
     """Recompute terminal query membership and independent interval receipts.
 
-    All returned native rows must enter the ordinary selected-record path.  A
-    retained page subset, unsupported record or caller receipt cannot certify
-    completion.  Alternative sources and clocks remain ordinary dependencies.
+    Every returned original must enter the ordinary linked-record path and have
+    a selected counterpart bound to that same checked source family. Native
+    parsed/compiled representations need not be byte-identical. A retained page
+    subset or caller receipt cannot certify completion. Alternative sources,
+    unsupported records and clocks remain ordinary dependencies.
     Neither terminal pages nor successful lifecycle observations supply the
     missing historical-owner predicate.
     """
@@ -156,6 +160,60 @@ def derive_indexed_coverage(records, *, all_records, raw_sources, wallet, window
         else:
             groups[canonical_bytes({k: v for k, v in scope.items() if k != 'limit'})].append(row)
     budget_exceeded = budget_exceeded or total > MAX_RECORDS
+    # Bind bodies to actual frozen preimages, not caller annotations. A direct
+    # raw archive uses its body hash; the existing indexed loader instead uses
+    # the exact pointer hash or a direct source-wrapper link. Either retains
+    # original bytes in the same linked-record assessment as the selected row.
+    bindings = defaultdict(set)
+    def bind(raw, source_hash, ordinal):
+        transaction = raw.get('transaction') if isinstance(raw, dict) else None
+        signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+        signature = signatures[0] if isinstance(signatures, list) and signatures else None
+        if not isinstance(signature, str):
+            return
+        native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+        pointer = {'version': RECORD_VERSION, 'source_hash': source_hash, 'ordinal': ordinal,
+                   'signature': signature, 'native_hash': native_hash}
+        bindings[signature, native_hash].update((native_hash, source_hash,
+            hashlib.sha256(canonical_bytes(pointer)).hexdigest()))
+    for row in pages:
+        # Invalid pages cannot certify query completion; readable bodies still
+        # remain rejection/format dependencies in the ordinary source path.
+        for ordinal, raw in enumerate(row['page']['records']):
+            bind(raw, row['hash'], ordinal)
+    native_sources = set()
+    for source in raw_sources:
+        payload = source.get('payload') if isinstance(source, dict) else None
+        digest = source.get('hash') if isinstance(source, dict) else None
+        if not isinstance(payload, dict) or payload.get('version') != NATIVE_VERSION:
+            continue
+        try:
+            body_hash = hashlib.sha256(canonical_bytes(payload)).hexdigest()
+            if digest != body_hash or body_hash in native_sources:
+                continue
+            native_sources.add(body_hash)
+            native = source_records(payload, address=wallet)
+            if native['state'] == 'PASS':
+                for ordinal, raw in enumerate(native['records']):
+                    bind(raw, digest, ordinal)
+        except (ValueError, TypeError, RecursionError):
+            continue  # Shared linked-record checks retain the rejecting input.
+    body_hashes = {}
+    def record_bound(row):
+        raw, digest = row.get('raw'), row.get('evidence_hash')
+        if not isinstance(raw, dict) or not isinstance(digest, str) or not _HASH.fullmatch(digest):
+            return False
+        transaction = raw.get('transaction')
+        signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+        if not isinstance(signatures, list) or not signatures or signatures[0] != row.get('signature'):
+            return False
+        try:
+            if id(raw) not in body_hashes:
+                body_hashes[id(raw)] = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+            native_hash = body_hashes[id(raw)]
+            return digest == native_hash or digest in bindings[row.get('signature'), native_hash]
+        except (ValueError, TypeError, RecursionError):
+            return False
     interval_results = {}
     for name, begin in (('report_period', start), ('four_weeks', end - timedelta(days=28)),
                         ('verification_90d', end - timedelta(days=90))):
@@ -194,11 +252,21 @@ def derive_indexed_coverage(records, *, all_records, raw_sources, wallet, window
             supported_gaps, selected_gaps, selected_hashes = [], [], set()
             for signature, raw in returned.items():
                 choices = selected.get(signature, [])
-                if not choices or any(chosen.get('raw') != raw for chosen in choices):
-                    selected_gaps.append(f'{signature}: returned original record is not selected for ordinary accounting')
+                alternatives = linked.get(signature, [])
+                original_retained = any(row.get('raw') == raw and record_bound(row) for row in alternatives)
+                if not original_retained:
+                    selected_gaps.append(f'{signature}: returned original bytes have no matching frozen linked accounting record')
+                chosen_linked = bool(choices) and all(record_bound(chosen) and any(
+                    row.get('evidence_hash') == chosen.get('evidence_hash') and row.get('raw') == chosen.get('raw')
+                    for row in alternatives) for chosen in choices)
+                if not chosen_linked:
+                    selected_gaps.append(f'{signature}: returned record is not selected through a matching frozen linked accounting record')
+                elif any(chosen.get('raw') != choices[0].get('raw') for chosen in choices):
+                    selected_gaps.append(f'{signature}: conflicting primary selections cannot choose the query representation')
                 else:
                     selected_hashes.update(chosen.get('evidence_hash') for chosen in choices)
-                alternatives = linked.get(signature, [])
+                selected_hashes.update(row.get('evidence_hash') for row in alternatives
+                    if isinstance(row.get('evidence_hash'), str) and _HASH.fullmatch(row['evidence_hash']))
                 if not alternatives or any(not isinstance(row.get('raw'), dict) or
                         not supported_transaction_format(row['raw']) for row in alternatives):
                     supported_gaps.append(f'{signature}: a linked record is unavailable or unsupported')
@@ -213,7 +281,7 @@ def derive_indexed_coverage(records, *, all_records, raw_sources, wallet, window
                 gaps.append('A still-linked indexed page has no independently assignable request scope')
             query_known = topology['state'] == 'PASS' and not gaps and not budget_exceeded
             supported_known = query_known and not supported_gaps
-            attempts.append(_receipt(query_known, '; '.join(sorted(set(gaps))) or 'Every terminal query record enters the ordinary raw accounting path.',
+            attempts.append(_receipt(query_known, '; '.join(sorted(set(gaps))) or 'Every terminal original and its selected counterpart enter the ordinary linked raw accounting path.',
                 evidence | selected_hashes, query_records_state='PASS' if query_known else 'UNKNOWN',
                 supported_record_state='PASS' if supported_known else 'UNKNOWN',
                 historical_population_state='UNKNOWN', format_population_state='UNKNOWN', signatures=sorted(returned),

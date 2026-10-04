@@ -25,7 +25,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v3'
+VERSION = 'wallet-raw-evidence-v4'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -1035,7 +1035,10 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         transactions[signature] = observed
     all_hashes = [row.get('evidence_hash') for row in linked]
     from .real_coverage import derive_indexed_coverage
-    query_coverage = derive_indexed_coverage(selected.values(), all_records=safe_linked,
+    # Coverage verifies retained original bytes separately from semantic format
+    # support. Do not replace an unsupported original with None for this check;
+    # shared accounting/chronology still use the rejecting safe_linked view.
+    query_coverage = derive_indexed_coverage(selected.values(), all_records=linked,
         raw_sources=source_rows, wallet=wallet, window=window,
         source_consistency=consistency, chronology=clocks)
     unresolved = _combine([query_coverage['historical_population']],

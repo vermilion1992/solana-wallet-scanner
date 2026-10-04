@@ -1752,6 +1752,7 @@ select:focus {
 }
 .report-metric > small {
   display: block;
+  overflow-wrap: anywhere;
   font-size: 8px;
   line-height: 1.8;
   color: #a3b295;
@@ -1967,6 +1968,7 @@ select:focus {
   color: #a8bd92;
 }
 .all-metrics-grid > div > small {
+  overflow-wrap: anywhere;
   font-size: 8px;
   line-height: 1.8;
   color: #b2c0a0;
