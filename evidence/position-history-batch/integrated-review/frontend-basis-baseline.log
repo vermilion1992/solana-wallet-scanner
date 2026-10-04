@@ -1,0 +1,23 @@
+REVIEW independent backend basis PASS / disposal money UNKNOWN rendering: [
+  'Matched acquisition basis</span><strong>Unknown</strong>',
+  'Matched acquisition basis</span><strong title="1.25">1.25<small> SOL</small></strong>',
+  'Matched acquisition basis</span><strong title="1.25">1.25<small> SOL</small></strong>'
+]
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Supported matched acquisition basis must remain visible when sale monetary evidence is missing
+
+2 !== 3
+
+    at file:///workspace/outputs/position-history-batch/review-ui-basis.mjs:1629:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 2,
+  expected: 3,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

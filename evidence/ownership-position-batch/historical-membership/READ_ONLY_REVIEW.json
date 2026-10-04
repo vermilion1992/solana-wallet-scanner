@@ -1,0 +1,50 @@
+{
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "review_kind": "distinct local read-only source review after focused contract validation; not independent product acceptance",
+  "files": {
+    "scanner/historical_membership.py": {
+      "sha256": "a28f3b245faf298cd6d762a16aeb09f138cec29ba24ad1b351651b0bf8753486",
+      "bytes": 21383
+    },
+    "tests/test_historical_membership.py": {
+      "sha256": "2a9c973f95672c2b5780b5e248bdd971fe09c0586f65488efc1379b2ec1d2caa",
+      "bytes": 22899
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "52397929e346750238d7da73dac48366a2c8d8a390c70197fbc3d0edfced6a1c",
+      "bytes": 119788
+    },
+    "scanner/source_consistency.py": {
+      "sha256": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+      "bytes": 50171
+    }
+  },
+  "checks": [
+    "Reuse of shared _observe, native/source consistency and raw chronology; no parallel decoder or FIFO",
+    "Canonical native hashes and original indexed page/pointer byte binding for public interface",
+    "Whole frozen negative-affinity alternatives retained; no caller PASS/completeness authority",
+    "Initialization absence, owner reassignment, delegate closure and failed attempted lifecycle separated",
+    "Exact operation interleaving across variants, including equivalent outer/inner and compiled binary schema cases",
+    "Raw owner/execution/program dependencies separated from independent fees and external chronology",
+    "Selected sparse checkpoint agreement never promotes continuous ownership or global population",
+    "Whole raw account and account-union/variant budgets reject all prefixes",
+    "Input/parent structures are never mutated; no provider or credential functions called"
+  ],
+  "confirmed_shared_cause_fixed_by_root": "_observe omitted outbound restoration in transient wallet ownership when neither endpoint belonged to wallet; initial-tests.log retains reproduction",
+  "retained_failed_attempts": [
+    "initial-tests.log",
+    "hash-bound-tests.log",
+    "instruction-order-tests.log",
+    "expanded-tests.log",
+    "expanded-owner-tests.log",
+    "pointer-budget-tests.log",
+    "shared-adapter-final.log"
+  ],
+  "fixture_correction": "Compiled positive fixtures initially omitted required primary program keys; corrected by adding readonly primary program keys and matching native balance vectors, preserving original positive assertion and supported binary schema. No production rule was weakened.",
+  "limitations": [
+    "Checksum integrity remains local collector/archive trust, not independent chain authentication",
+    "No exhaustive historical owner enumeration has been accepted",
+    "Intervening reassignment/restoration cannot be excluded from sparse endpoints",
+    "Development synthetic cases cannot close genuine B3"
+  ]
+}

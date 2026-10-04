@@ -1,0 +1,48 @@
+         2889080 function calls (2889072 primitive calls) in 0.785 seconds
+
+   Ordered by: cumulative time
+   List reduced from 73 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        2    0.001    0.001    0.785    0.392 indexed_input.py:222(validate_page_envelope)
+      406    0.282    0.001    0.662    0.002 json_boundary.py:9(bounded_value)
+        6    0.000    0.000    0.384    0.064 indexed_input.py:44(_json)
+        6    0.000    0.000    0.384    0.064 json_boundary.py:36(parse_json)
+      400    0.000    0.000    0.372    0.001 indexed_input.py:48(canonical_bytes)
+      400    0.001    0.000    0.372    0.001 json_boundary.py:55(canonical_bytes)
+        2    0.000    0.000    0.198    0.099 indexed_input.py:169(_request)
+    78874    0.059    0.000    0.126    0.000 {method 'extend' of 'list' objects}
+    56486    0.030    0.000    0.087    0.000 {built-in method builtins.any}
+   790667    0.072    0.000    0.072    0.000 {built-in method builtins.isinstance}
+   292527    0.043    0.000    0.057    0.000 json_boundary.py:29(<genexpr>)
+        6    0.000    0.000    0.052    0.009 __init__.py:299(loads)
+        6    0.000    0.000    0.052    0.009 decoder.py:333(decode)
+        6    0.036    0.006    0.052    0.009 decoder.py:344(raw_decode)
+   551743    0.048    0.000    0.048    0.000 {method 'pop' of 'list' objects}
+      400    0.001    0.000    0.041    0.000 __init__.py:183(dumps)
+      400    0.001    0.000    0.040    0.000 encoder.py:183(encode)
+      400    0.040    0.000    0.040    0.000 encoder.py:205(iterencode)
+   292527    0.037    0.000    0.037    0.000 json_boundary.py:31(<genexpr>)
+   258810    0.030    0.000    0.030    0.000 json_boundary.py:33(<genexpr>)
+        4    0.000    0.000    0.021    0.005 indexed_input.py:145(source_bytes)
+        8    0.001    0.000    0.021    0.003 indexed_input.py:132(_exact_bytes)
+   236638    0.021    0.000    0.021    0.000 {built-in method builtins.id}
+    28150    0.015    0.000    0.015    0.000 json_boundary.py:38(unique)
+    78874    0.013    0.000    0.013    0.000 {method 'remove' of 'set' objects}
+    79274    0.011    0.000    0.011    0.000 {method 'add' of 'set' objects}
+        8    0.000    0.000    0.010    0.001 base64.py:65(b64decode)
+        8    0.009    0.001    0.009    0.001 {built-in method binascii.a2b_base64}
+    79474    0.008    0.000    0.008    0.000 {method 'append' of 'list' objects}
+    56284    0.007    0.000    0.007    0.000 {method 'values' of 'dict' objects}
+        8    0.000    0.000    0.007    0.001 base64.py:51(b64encode)
+        8    0.007    0.001    0.007    0.001 {built-in method binascii.b2a_base64}
+      408    0.000    0.000    0.007    0.000 indexed_input.py:75(_digest)
+      408    0.006    0.000    0.006    0.000 {built-in method _hashlib.openssl_sha256}
+      408    0.001    0.000    0.001    0.000 {method 'encode' of 'str' objects}
+      400    0.000    0.000    0.001    0.000 indexed_input.py:345(_record_signature)
+       14    0.001    0.000    0.001    0.000 {method 'decode' of 'bytes' objects}
+        8    0.000    0.000    0.001    0.000 base64.py:34(_bytes_from_decode_data)
+     1688    0.001    0.000    0.001    0.000 {method 'get' of 'dict' objects}
+      408    0.000    0.000    0.000    0.000 {method 'hexdigest' of '_hashlib.HASH' objects}
+
+

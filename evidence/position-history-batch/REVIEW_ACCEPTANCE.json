@@ -1,0 +1,136 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "source_files": 241,
+  "application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "created_at": "2026-10-04T15:23:28.911345+00:00",
+  "matrix_review_complete": true,
+  "matrix_spec_requirements": 52,
+  "findings": [
+    {
+      "id": "ACC-LIFECYCLE-01",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Transient ownership uses all validated executed transitions."
+    },
+    {
+      "id": "ACC-FAILED-QTY-01",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Proved failed unchanged token quantities preserve supported remaining basis while fee gaps remain."
+    },
+    {
+      "id": "CAP-HIST",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Selected executed membership including unavailable/unassignable census dependencies; exhaustive population remains open."
+    },
+    {
+      "id": "CAP-POSITIONS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Mixed closed/open mint aggregate admission in existing single FIFO; hidden population remains open."
+    },
+    {
+      "id": "CAP-ORIGIN",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Consumed disposed basis and per-interval cost roles isolated from sale fees and unrelated unconsumed holdings."
+    },
+    {
+      "id": "IR-UI-BASIS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Current exact-interval basis renders separately from dependent disposal profit."
+    },
+    {
+      "id": "IR-MEMBERSHIP-CENSUS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "No-boundary unsupported selected/alternative observations retain required membership dependencies."
+    },
+    {
+      "id": "IR-SYNTHETIC-SCOPES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Validated finite-world development scopes explicitly satisfy their own interval overrides; real evidence remains separate."
+    },
+    {
+      "id": "PERF-FACTS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Invocation-local reuse preserves84 complete baseline outputs."
+    },
+    {
+      "id": "PERF-PARSER",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Checksum-bound reuse preserves177 complete baseline outputs and malformed raw leads."
+    },
+    {
+      "id": "CI-01",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Ten offline focused groups preserve39 exact selectors and bounded explicitly passing receipts; native execution separate."
+    }
+  ],
+  "review_evidence": [
+    {
+      "path": "evidence/position-history-batch/integrated-review/READ_ONLY_REVIEW.json",
+      "bytes": 9453,
+      "sha256": "d13a493d96719f3e23e8e01158b96ca8923329b0225a06436c0cb79b92b4177c"
+    },
+    {
+      "path": "evidence/position-history-batch/integrated-review/FINAL_SOURCE_BINDING.json",
+      "bytes": 3717,
+      "sha256": "eafd644d9d393d9549fe1c758fb974feb8989fb633bf4b6db9b36c92a877795f"
+    },
+    {
+      "path": "evidence/position-population-batch/distinct-review/READ_ONLY_REVIEW_FINAL.json",
+      "bytes": 5364,
+      "sha256": "29ca0b2418b160f535704db518fede24ff5e2514ef732151db70084e02258df8"
+    },
+    {
+      "path": "evidence/ci-completion-batch/review/CI_DIFF_READ_ONLY_FINAL.json",
+      "bytes": 7456,
+      "sha256": "f8642b7dc6525aa10c9b4964281fba9f743f6d180cf9751752d707b1c1a18f72"
+    },
+    {
+      "path": "evidence/position-history-batch/performance/SOURCE_FACT_REUSE_PROOF.json",
+      "bytes": 21850,
+      "sha256": "ea294a3ca5067c9bbd043465aa43b4af17f300df5258580eb2ca443750d9c214"
+    },
+    {
+      "path": "evidence/position-history-batch/performance/INDEXED_PARSER_REUSE_PROOF.json",
+      "bytes": 81090,
+      "sha256": "c5b88d8c999a7a4178baae3abe96a2096a68e322263a590e7181f84d1e7bf5bc"
+    },
+    {
+      "path": "evidence/ownership-position-batch/historical-membership/READ_ONLY_REVIEW.json",
+      "bytes": 2793,
+      "sha256": "94ebbc80a9a2876e666d69d3a25b27ba35197b19f4fefde8658eff717056335a"
+    },
+    {
+      "path": "evidence/position-history-batch/FRESH_SOURCE_EXTRACTION.json",
+      "bytes": 112701,
+      "sha256": "10c2938dce901ea75c43304c7c1df9d54a3ec004921d1750f141f761e563b743"
+    }
+  ],
+  "remaining_missing_implementation": [
+    "CAP-HIST-EXHAUSTIVE",
+    "CAP-ORIGIN-COMPLETE",
+    "CAP-ROUTES",
+    "CAP-CLASS",
+    "CAP-VALUATION"
+  ],
+  "product_readiness": {
+    "PRODUCT_READY": false,
+    "B1": "HISTORICAL_COVERAGE_UNRESOLVED",
+    "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+    "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED"
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "scope": "Distinct scoped reviewers, root full changed-path and retained matrix reconciliation plus final byte/AST binding. Full exact-candidate gates remain separate; no synthetic B3 completion."
+}

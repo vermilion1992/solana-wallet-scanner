@@ -1,0 +1,191 @@
+................................................FFFFFF.................. [ 52%]
+................................................................         [100%]
+=================================== FAILURES ===================================
+_ test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-unsupported-version] _
+
+bad = 'unsupported-version', linked = False
+
+    @pytest.mark.parametrize('bad', ['unsupported-version', 'missing-meta', 'malformed-authority'])
+    @pytest.mark.parametrize('linked', [False, True])
+    def test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts(bad, linked):
+        known = change()
+        neutral = base()
+        neutral['transaction']['signatures'] = ['second-source']
+        neutral['slot'], neutral['blockTime'] = 101, START + 3600
+        neutral['meta']['preTokenBalances'] = neutral['meta']['postTokenBalances'] = []
+        neutral['transaction']['message']['instructions'] = []
+        broken = deepcopy(neutral)
+        if bad == 'unsupported-version':
+            broken['version'] = 1
+        elif bad == 'missing-meta':
+            broken['meta'] = None
+        else:
+            broken['transaction']['message']['instructions'] = [parsed('setAuthority', {
+                'authority': WALLET, 'authorityType': 'accountOwner', 'newAuthority': address(20)})]
+        parent = run([known, neutral])
+        assert parent['observed_event_membership']['state'] == 'PASS'
+        result = run([known, neutral if linked else broken], alternatives=[record(broken)] if linked else [])
+        assert result['observed_event_membership']['state'] == 'UNKNOWN'
+>       assert 'complete_selected_operation_inspection' in result['observed_event_membership']['dependencies']
+E       AssertionError: assert 'complete_selected_operation_inspection' in ['executed_lifecycle_chain', 'linked_native_identity']
+
+tests/test_historical_membership.py:428: AssertionError
+_ test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-missing-meta] _
+
+bad = 'missing-meta', linked = False
+
+    @pytest.mark.parametrize('bad', ['unsupported-version', 'missing-meta', 'malformed-authority'])
+    @pytest.mark.parametrize('linked', [False, True])
+    def test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts(bad, linked):
+        known = change()
+        neutral = base()
+        neutral['transaction']['signatures'] = ['second-source']
+        neutral['slot'], neutral['blockTime'] = 101, START + 3600
+        neutral['meta']['preTokenBalances'] = neutral['meta']['postTokenBalances'] = []
+        neutral['transaction']['message']['instructions'] = []
+        broken = deepcopy(neutral)
+        if bad == 'unsupported-version':
+            broken['version'] = 1
+        elif bad == 'missing-meta':
+            broken['meta'] = None
+        else:
+            broken['transaction']['message']['instructions'] = [parsed('setAuthority', {
+                'authority': WALLET, 'authorityType': 'accountOwner', 'newAuthority': address(20)})]
+        parent = run([known, neutral])
+        assert parent['observed_event_membership']['state'] == 'PASS'
+        result = run([known, neutral if linked else broken], alternatives=[record(broken)] if linked else [])
+        assert result['observed_event_membership']['state'] == 'UNKNOWN'
+>       assert 'complete_selected_operation_inspection' in result['observed_event_membership']['dependencies']
+E       AssertionError: assert 'complete_selected_operation_inspection' in ['executed_lifecycle_chain', 'linked_native_identity']
+
+tests/test_historical_membership.py:428: AssertionError
+_ test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-malformed-authority] _
+
+bad = 'malformed-authority', linked = False
+
+    @pytest.mark.parametrize('bad', ['unsupported-version', 'missing-meta', 'malformed-authority'])
+    @pytest.mark.parametrize('linked', [False, True])
+    def test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts(bad, linked):
+        known = change()
+        neutral = base()
+        neutral['transaction']['signatures'] = ['second-source']
+        neutral['slot'], neutral['blockTime'] = 101, START + 3600
+        neutral['meta']['preTokenBalances'] = neutral['meta']['postTokenBalances'] = []
+        neutral['transaction']['message']['instructions'] = []
+        broken = deepcopy(neutral)
+        if bad == 'unsupported-version':
+            broken['version'] = 1
+        elif bad == 'missing-meta':
+            broken['meta'] = None
+        else:
+            broken['transaction']['message']['instructions'] = [parsed('setAuthority', {
+                'authority': WALLET, 'authorityType': 'accountOwner', 'newAuthority': address(20)})]
+        parent = run([known, neutral])
+        assert parent['observed_event_membership']['state'] == 'PASS'
+        result = run([known, neutral if linked else broken], alternatives=[record(broken)] if linked else [])
+        assert result['observed_event_membership']['state'] == 'UNKNOWN'
+>       assert 'complete_selected_operation_inspection' in result['observed_event_membership']['dependencies']
+E       AssertionError: assert 'complete_selected_operation_inspection' in ['executed_lifecycle_chain', 'linked_native_identity']
+
+tests/test_historical_membership.py:428: AssertionError
+_ test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-unsupported-version] _
+
+bad = 'unsupported-version', linked = True
+
+    @pytest.mark.parametrize('bad', ['unsupported-version', 'missing-meta', 'malformed-authority'])
+    @pytest.mark.parametrize('linked', [False, True])
+    def test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts(bad, linked):
+        known = change()
+        neutral = base()
+        neutral['transaction']['signatures'] = ['second-source']
+        neutral['slot'], neutral['blockTime'] = 101, START + 3600
+        neutral['meta']['preTokenBalances'] = neutral['meta']['postTokenBalances'] = []
+        neutral['transaction']['message']['instructions'] = []
+        broken = deepcopy(neutral)
+        if bad == 'unsupported-version':
+            broken['version'] = 1
+        elif bad == 'missing-meta':
+            broken['meta'] = None
+        else:
+            broken['transaction']['message']['instructions'] = [parsed('setAuthority', {
+                'authority': WALLET, 'authorityType': 'accountOwner', 'newAuthority': address(20)})]
+        parent = run([known, neutral])
+        assert parent['observed_event_membership']['state'] == 'PASS'
+        result = run([known, neutral if linked else broken], alternatives=[record(broken)] if linked else [])
+        assert result['observed_event_membership']['state'] == 'UNKNOWN'
+>       assert 'complete_selected_operation_inspection' in result['observed_event_membership']['dependencies']
+E       AssertionError: assert 'complete_selected_operation_inspection' in ['executed_lifecycle_chain', 'linked_native_identity']
+
+tests/test_historical_membership.py:428: AssertionError
+_ test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-missing-meta] _
+
+bad = 'missing-meta', linked = True
+
+    @pytest.mark.parametrize('bad', ['unsupported-version', 'missing-meta', 'malformed-authority'])
+    @pytest.mark.parametrize('linked', [False, True])
+    def test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts(bad, linked):
+        known = change()
+        neutral = base()
+        neutral['transaction']['signatures'] = ['second-source']
+        neutral['slot'], neutral['blockTime'] = 101, START + 3600
+        neutral['meta']['preTokenBalances'] = neutral['meta']['postTokenBalances'] = []
+        neutral['transaction']['message']['instructions'] = []
+        broken = deepcopy(neutral)
+        if bad == 'unsupported-version':
+            broken['version'] = 1
+        elif bad == 'missing-meta':
+            broken['meta'] = None
+        else:
+            broken['transaction']['message']['instructions'] = [parsed('setAuthority', {
+                'authority': WALLET, 'authorityType': 'accountOwner', 'newAuthority': address(20)})]
+        parent = run([known, neutral])
+        assert parent['observed_event_membership']['state'] == 'PASS'
+        result = run([known, neutral if linked else broken], alternatives=[record(broken)] if linked else [])
+        assert result['observed_event_membership']['state'] == 'UNKNOWN'
+>       assert 'complete_selected_operation_inspection' in result['observed_event_membership']['dependencies']
+E       AssertionError: assert 'complete_selected_operation_inspection' in ['executed_lifecycle_chain', 'linked_native_identity']
+
+tests/test_historical_membership.py:428: AssertionError
+_ test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-malformed-authority] _
+
+bad = 'malformed-authority', linked = True
+
+    @pytest.mark.parametrize('bad', ['unsupported-version', 'missing-meta', 'malformed-authority'])
+    @pytest.mark.parametrize('linked', [False, True])
+    def test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts(bad, linked):
+        known = change()
+        neutral = base()
+        neutral['transaction']['signatures'] = ['second-source']
+        neutral['slot'], neutral['blockTime'] = 101, START + 3600
+        neutral['meta']['preTokenBalances'] = neutral['meta']['postTokenBalances'] = []
+        neutral['transaction']['message']['instructions'] = []
+        broken = deepcopy(neutral)
+        if bad == 'unsupported-version':
+            broken['version'] = 1
+        elif bad == 'missing-meta':
+            broken['meta'] = None
+        else:
+            broken['transaction']['message']['instructions'] = [parsed('setAuthority', {
+                'authority': WALLET, 'authorityType': 'accountOwner', 'newAuthority': address(20)})]
+        parent = run([known, neutral])
+        assert parent['observed_event_membership']['state'] == 'PASS'
+        result = run([known, neutral if linked else broken], alternatives=[record(broken)] if linked else [])
+        assert result['observed_event_membership']['state'] == 'UNKNOWN'
+>       assert 'complete_selected_operation_inspection' in result['observed_event_membership']['dependencies']
+E       AssertionError: assert 'complete_selected_operation_inspection' in ['executed_lifecycle_chain', 'linked_native_identity']
+
+tests/test_historical_membership.py:428: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-unsupported-version]
+FAILED tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-missing-meta]
+FAILED tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-malformed-authority]
+FAILED tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-unsupported-version]
+FAILED tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-missing-meta]
+FAILED tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-malformed-authority]
+6 failed, 130 passed, 1 warning in 1.08s

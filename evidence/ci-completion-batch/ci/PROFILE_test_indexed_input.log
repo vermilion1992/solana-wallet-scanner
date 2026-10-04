@@ -1,0 +1,19 @@
+........................................................................ [ 94%]
+....                                                                     [100%]
+=============================== warnings summary ===============================
+tests/test_indexed_input.py::test_deep_manifest_normal_api_import_returns_422_without_evidence_or_report_mutation
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+1.14s call     tests/test_indexed_input.py::test_genuine_two_pages_preserved_and_200_selected_records_resolve_without_live_io
+0.64s call     tests/test_indexed_input.py::test_pinned_provider_json_encodings_accept_archived_compiled_and_parsed_shapes_exactly[json]
+0.22s call     tests/test_indexed_input.py::test_deep_manifest_normal_api_import_returns_422_without_evidence_or_report_mutation
+0.01s call     tests/test_indexed_input.py::test_pinned_provider_json_encodings_accept_archived_compiled_and_parsed_shapes_exactly[jsonParsed]
+0.01s call     tests/test_indexed_input.py::test_legacy_archive_deep_raw_payload_normal_api_returns_422_before_any_source_mutation[2000]
+0.01s call     tests/test_indexed_input.py::test_legacy_archive_deep_raw_payload_normal_api_returns_422_before_any_source_mutation[80]
+0.01s call     tests/test_indexed_input.py::test_exact_request_response_and_uploaded_manifest_bytes_survive_normal_archive_import
+
+(3 durations < 0.005s hidden.  Use -vv to show these durations.)
+76 passed, 1 warning in 2.34s

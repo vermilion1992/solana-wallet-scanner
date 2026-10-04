@@ -1,0 +1,212 @@
+{
+  "API_mutations": 0,
+  "CI_mutations": false,
+  "PRODUCT_READY": false,
+  "application_acceptance_changed": false,
+  "branch": "codex/product-completion",
+  "complete_native_CI_pass": false,
+  "exact_head": "1040215f498b1317b1b942838994127f43a822bd",
+  "final_run": {
+    "conclusion": "cancelled",
+    "status": "completed",
+    "updated_at": "2026-10-04T14:39:37Z"
+  },
+  "further_polling": false,
+  "helius_requests": 0,
+  "indexed": {
+    "conclusion": "cancelled",
+    "id": 111453989505,
+    "log_available": false,
+    "log_unavailability": "Supported finalized-job-log connector returned HTTP404 BlobNotFound. Test-step failure metadata is present, but no assertion, resource, timeout or cancellation cause is established.",
+    "status": "completed",
+    "steps": [
+      {
+        "completed_at": "2026-10-04T14:12:52Z",
+        "conclusion": "success",
+        "name": "Set up job",
+        "number": 1,
+        "started_at": "2026-10-04T14:12:51Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:14:28Z",
+        "conclusion": "success",
+        "name": "Check out the exact candidate",
+        "number": 2,
+        "started_at": "2026-10-04T14:12:52Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:14:28Z",
+        "conclusion": "success",
+        "name": "Set up Python",
+        "number": 3,
+        "started_at": "2026-10-04T14:14:28Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:14:29Z",
+        "conclusion": "success",
+        "name": "Set up Node for receipt binding",
+        "number": 4,
+        "started_at": "2026-10-04T14:14:28Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:14:39Z",
+        "conclusion": "success",
+        "name": "Install locked backend dependencies",
+        "number": 5,
+        "started_at": "2026-10-04T14:14:29Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "failure",
+        "name": "Run the exact focused group without network access",
+        "number": 6,
+        "started_at": "2026-10-04T14:14:39Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "skipped",
+        "name": "Preserve bounded diagnostics even after failure or interruption",
+        "number": 7,
+        "started_at": "2026-10-04T14:37:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "skipped",
+        "name": "Upload only focused receipts and text logs",
+        "number": 8,
+        "started_at": "2026-10-04T14:37:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "skipped",
+        "name": "Post Set up Node for receipt binding",
+        "number": 14,
+        "started_at": "2026-10-04T14:37:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "skipped",
+        "name": "Post Set up Python",
+        "number": 15,
+        "started_at": "2026-10-04T14:37:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "skipped",
+        "name": "Post Check out the exact candidate",
+        "number": 16,
+        "started_at": "2026-10-04T14:37:44Z",
+        "status": "completed"
+      },
+      {
+        "completed_at": "2026-10-04T14:37:44Z",
+        "conclusion": "success",
+        "name": "Complete job",
+        "number": 17,
+        "started_at": "2026-10-04T14:37:44Z",
+        "status": "completed"
+      }
+    ]
+  },
+  "kind": "bounded-read-only-native-CI-final-follow-up",
+  "limits": [
+    "No finalized indexed raw log available",
+    "Cancellation initiator/cause unknown",
+    "Hosted runtime/modes remain distinct from locally accepted full-gate runtime",
+    "No new complete-wallet or product acceptance claim"
+  ],
+  "provider_requests": 0,
+  "raw_evidence": {
+    "FINAL_INDEXED_JOB_111453989505_LOG_UNAVAILABLE.json": {
+      "bytes": 1093,
+      "sha256": "5f877c1744d06a4d606cbb970f5d9f4d5c7de6e7a47e8dd6a3aad3460a9b8411"
+    },
+    "FINAL_UNION_JOB_111458963339.log": {
+      "bytes": 39663,
+      "sha256": "36b94d32d7f9994d8f8f2e6938247a646b073c7013de61dee077f21ac989e4ce"
+    },
+    "FOLLOW_UP_CANCELLED_METADATA.json": {
+      "bytes": 52558,
+      "sha256": "4443bad0eacff98fbf1f440c029aa862aadca0e4c857c716a5ac4dfcb2791585"
+    },
+    "NATIVE_CI_FINAL_OBSERVATION.json": {
+      "bytes": 6962,
+      "sha256": "b31854b8a8183f38a01ca1562bc7fe7e2520c6424f6e385d2407f7333efbb093"
+    },
+    "SIX_RECEIPTS_IDENTITY.json": {
+      "bytes": 3734,
+      "sha256": "9658891ff3c2fb24e28e9f614a256305f795be47705d8fa60f2f0905320893d5"
+    }
+  },
+  "recorded_at": "2026-10-04T14:43:34.391790+00:00",
+  "run_attempt": 1,
+  "run_id": 37208279838,
+  "six_completed_successes": [
+    {
+      "conclusion": "success",
+      "id": 111453989329,
+      "name": "offline-development",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 111453989515,
+      "name": "focused-group (archives)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 111453989518,
+      "name": "focused-group (research)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 111453989546,
+      "name": "focused-group (discovery)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 111453989560,
+      "name": "focused-group (schemas)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 111453989618,
+      "name": "focused-group (historical)",
+      "status": "completed"
+    }
+  ],
+  "six_verified_receipts_retained": true,
+  "source_changes": false,
+  "state": "NATIVE_CI_CANCELLED_INCOMPLETE",
+  "supersedes_pending_observation": {
+    "file": "NATIVE_CI_FINAL_OBSERVATION.json",
+    "historical_pending_record_preserved_unchanged": true
+  },
+  "union": {
+    "classification": "Strict aggregate correctly withheld pass with no indexed-group receipt. This is incomplete native validation, not a demonstrated application assertion defect.",
+    "conclusion": "failure",
+    "id": 111458963339,
+    "log_available": true,
+    "raw_observations": [
+      "six artifacts downloaded",
+      "strict focused-summary ran",
+      "INCOMPLETE; Gate B remains OPEN",
+      "process exit code 2"
+    ],
+    "status": "completed"
+  }
+}

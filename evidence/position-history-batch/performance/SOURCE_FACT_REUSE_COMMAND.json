@@ -1,0 +1,18 @@
+{
+  "state": "PASS",
+  "command": [
+    ".venv/bin/python",
+    "evidence/position-history-batch/performance/verify_source_fact_reuse.py"
+  ],
+  "working_directory": "/workspace/solana-wallet-scanner",
+  "started_utc": "2026-10-04T15:03:50.720461+00:00",
+  "finished_utc": "2026-10-04T15:03:55.330179+00:00",
+  "elapsed_seconds": 4.60975448199315,
+  "exit_code": 0,
+  "script_sha256": "a43f64670ea1736106d6eb3b1920b7490f2639330289ff3c328f989a2c8a5598",
+  "script_unchanged": true,
+  "raw_log": "source-fact-reuse-proof-final.log",
+  "raw_log_sha256": "17eab831d891a30022edb1fb047af72e0fa8ba0193f89f6eb09b958f7b03b099",
+  "proof_receipt": "SOURCE_FACT_REUSE_PROOF.json",
+  "proof_receipt_sha256": "ea294a3ca5067c9bbd043465aa43b4af17f300df5258580eb2ca443750d9c214"
+}

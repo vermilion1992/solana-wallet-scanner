@@ -1,0 +1,81 @@
+{
+  "state": "PASS",
+  "kind": "Supplementary exact final-source binding of distinct read-only integrated review",
+  "final_application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "implementation_commit": "0a8b61a1d107db2894992c7416287332e610305f",
+  "diff_base_commit": "1040215f498b1317b1b942838994127f43a822bd",
+  "final_source_manifest_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "source_file_count": 241,
+  "parent_review": {
+    "path": "evidence/position-history-batch/integrated-review/READ_ONLY_REVIEW.json",
+    "sha256": "d13a493d96719f3e23e8e01158b96ca8923329b0225a06436c0cb79b92b4177c",
+    "reviewed_source_manifest_sha256": "8fde2d425ca7e031f28b07dff111bd8a6489c052defa47ebda7d22419843d86b"
+  },
+  "only_delta_since_review": {
+    "path": "tests/test_disposed_origin_scopes.py",
+    "reviewed_bytes_sha256": "6a9a3ef60319ad6fdf4fda72bcdf63a33be656303c2239a5a051856dc31e4660",
+    "current_bytes_sha256": "eec1ba1134d483cb0229bb12a2c96dfe69a25470e73ada7372d739f8c66ca514",
+    "removed_bytes": 1,
+    "exact_operation": "Remove one trailing LF after completed last assertion",
+    "ast_including_positions_equal": true,
+    "reconstructed_prior_global_manifest_matches": true,
+    "all_other_reviewed_files_identical": true
+  },
+  "matrix_binding": {
+    "path": "docs/ACCEPTANCE_MATRIX.json",
+    "sha256": "ca993f83c55de76cf3d2b2bf12945b0471576f5611ecb537c01e41bbf5f641a0",
+    "baseline_requirements_preserved_verbatim": true,
+    "baseline_browser_requirements_preserved": true,
+    "requirement_ids_unique": true,
+    "all_selector_modules_are_in_frozen_source": true,
+    "new_requirements": [
+      {
+        "id": "raw-historical-membership-admission",
+        "axis": "Historical ownership/lifecycle and source dependencies",
+        "selectors": [
+          "tests/test_historical_membership.py::*"
+        ]
+      },
+      {
+        "id": "aggregate-closed-open-position-admission",
+        "axis": "Execution/quantity and immutable offline report workflow",
+        "selectors": [
+          "tests/test_wallet_position_population.py::*"
+        ]
+      },
+      {
+        "id": "invocation-local-source-fact-equivalence",
+        "axis": "Source-set equivalence, conflicts and loss/restoration",
+        "selectors": [
+          "tests/test_source_fact_reuse.py::*"
+        ]
+      },
+      {
+        "id": "disposed-basis-and-period-cost-isolation",
+        "axis": "Metric-specific dependencies and independent interval scopes",
+        "selectors": [
+          "tests/test_disposed_origin_scopes.py::*"
+        ]
+      }
+    ],
+    "execution_claim": "Read-only mapping inspection only; full matrix execution is separate root gate"
+  },
+  "exact_baseline_diff": {
+    "path": "evidence/position-history-batch/integrated-review/FINAL_REVIEWED_BASELINE_DIFF.patch",
+    "sha256": "d7289761c30b1e83640f3372a29686cee0fe71d72bc35f67faa2567bafbfe4f0",
+    "bytes": 499345,
+    "diff_check_exit_code": 0
+  },
+  "final_source_unchanged_during_review": true,
+  "application_edits_by_reviewer": 0,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "checks_rerun": [],
+  "reason_no_test_rerun": "One exact trailing LF removed; Python AST including line/column attributes is identical and all other source bytes/modes reproduce the prior reviewed global manifest. Previous development checks remain historical; root is running exact final candidate gates.",
+  "confirmed_neighbouring_defects_remaining": [],
+  "read_only_review_decision": "PASS",
+  "PRODUCT_READY": false,
+  "B1": "Historical population coverage unresolved",
+  "B2": "Scoped implementation progressed; complete real accounting OPEN",
+  "B3": "Complete genuine acceptance BLOCKED"
+}

@@ -1,0 +1,661 @@
+{
+  "state": "PASS",
+  "purpose": "Performance reuse preserves exact existing semantic output; no new wallet acceptance claim.",
+  "baseline_commit": "1040215f498b1317b1b942838994127f43a822bd",
+  "baseline_source_sha256": "169ac98f775e16637e51106e331e40c68189fdd51515d4ee4b62e25258670b3a",
+  "candidate_sources": {
+    "scanner/source_consistency.py": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+    "tests/test_source_fact_reuse.py": "2c043d2a79155b893ed4ecb07994b45d7c16cbb7fb9f336460ef7fe9d15b6a8b"
+  },
+  "source_unchanged": true,
+  "complete_result_comparisons": [
+    {
+      "scenario": "compiled",
+      "operation": "selected",
+      "state": "PASS",
+      "result_sha256": "62e05059ec4e0ebd5d05a83b56951d2755c62aad5723e6fd121c6d26ca32ba0b",
+      "equality": true
+    },
+    {
+      "scenario": "compiled",
+      "operation": "alternatives",
+      "state": "PASS",
+      "result_sha256": "43463c1156ce08f24cbfb47c895cb09bb8473616d17e4c99d29f1f2a7aa2c39d",
+      "equality": true
+    },
+    {
+      "scenario": "compiled",
+      "operation": "permutation",
+      "state": "PASS",
+      "result_sha256": "43463c1156ce08f24cbfb47c895cb09bb8473616d17e4c99d29f1f2a7aa2c39d",
+      "equality": true
+    },
+    {
+      "scenario": "compiled",
+      "operation": "duplicate-links",
+      "state": "PASS",
+      "result_sha256": "43664941ef5fe0b1b37b3298c6d66aaf26946b5b94a420be5d782a6571d58e7d",
+      "equality": true
+    },
+    {
+      "scenario": "compiled",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "449d99a9f0a31091233d6e635315581cc3a464f85efc22f482cdd6b076678ff3",
+      "equality": true
+    },
+    {
+      "scenario": "compiled",
+      "operation": "restored",
+      "state": "PASS",
+      "result_sha256": "43463c1156ce08f24cbfb47c895cb09bb8473616d17e4c99d29f1f2a7aa2c39d",
+      "equality": true
+    },
+    {
+      "scenario": "parsed",
+      "operation": "selected",
+      "state": "PASS",
+      "result_sha256": "faa65ef0a74e726aebfc683a4a1cf12615ca4269a2ce31c799a742d3e643d117",
+      "equality": true
+    },
+    {
+      "scenario": "parsed",
+      "operation": "alternatives",
+      "state": "PASS",
+      "result_sha256": "2d04c645a36b9c8263c7e071b0b38457c8cd37697725f6877a6a1b2192006d0b",
+      "equality": true
+    },
+    {
+      "scenario": "parsed",
+      "operation": "permutation",
+      "state": "PASS",
+      "result_sha256": "2d04c645a36b9c8263c7e071b0b38457c8cd37697725f6877a6a1b2192006d0b",
+      "equality": true
+    },
+    {
+      "scenario": "parsed",
+      "operation": "duplicate-links",
+      "state": "PASS",
+      "result_sha256": "61f5e30054804584dd9515a3cdea9dd57c7fb587cb2ba1d7431a6703423ef82a",
+      "equality": true
+    },
+    {
+      "scenario": "parsed",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "c03265c010be4cca6ea35e5b15b2d1c578006bdd4bd8167b0e8af61c62332d54",
+      "equality": true
+    },
+    {
+      "scenario": "parsed",
+      "operation": "restored",
+      "state": "PASS",
+      "result_sha256": "2d04c645a36b9c8263c7e071b0b38457c8cd37697725f6877a6a1b2192006d0b",
+      "equality": true
+    },
+    {
+      "scenario": "unsupported-format",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "fd30c19d2b1568e9a87ebb9611ca7950897e47818114eda720cecb8904ded5d9",
+      "equality": true
+    },
+    {
+      "scenario": "unsupported-format",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "9bba977750e50c8ae51cc93dc0b6b477cc56e736c3b8756e5e97bbc2a81b6d25",
+      "equality": true
+    },
+    {
+      "scenario": "unsupported-format",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "9bba977750e50c8ae51cc93dc0b6b477cc56e736c3b8756e5e97bbc2a81b6d25",
+      "equality": true
+    },
+    {
+      "scenario": "unsupported-format",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "717264bbf6c2877700dcd941a661dacb9c2009a348e3294b1bd819845b2c3262",
+      "equality": true
+    },
+    {
+      "scenario": "unsupported-format",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "202f541fab4682d9664d64466754a0d301996842a79ff33cd6aa6991948bd434",
+      "equality": true
+    },
+    {
+      "scenario": "unsupported-format",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "9bba977750e50c8ae51cc93dc0b6b477cc56e736c3b8756e5e97bbc2a81b6d25",
+      "equality": true
+    },
+    {
+      "scenario": "failed-compiled",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "55a8530751c84b527af91e65aa3c36e6def005fde50702007baff6e6836be509",
+      "equality": true
+    },
+    {
+      "scenario": "failed-compiled",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "13f5c97608f5ddd2becdaa0b90b1da12195650f6c2b7c597624ba829f0c0e359",
+      "equality": true
+    },
+    {
+      "scenario": "failed-compiled",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "13f5c97608f5ddd2becdaa0b90b1da12195650f6c2b7c597624ba829f0c0e359",
+      "equality": true
+    },
+    {
+      "scenario": "failed-compiled",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "8437782744345530f33a6ae20a2b77898e4bcea7973259bc0568adbf88501d0c",
+      "equality": true
+    },
+    {
+      "scenario": "failed-compiled",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "654e168ed5c1d7b8c8b6ca9d895802dcb6ed68ca8d11a9d7633f178b20215e0e",
+      "equality": true
+    },
+    {
+      "scenario": "failed-compiled",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "13f5c97608f5ddd2becdaa0b90b1da12195650f6c2b7c597624ba829f0c0e359",
+      "equality": true
+    },
+    {
+      "scenario": "failed-parsed",
+      "operation": "selected",
+      "state": "PASS",
+      "result_sha256": "4b4e9d9c20443cad039af0e9c09edc27d58c4fd10e3c6afe5c86336b248898d5",
+      "equality": true
+    },
+    {
+      "scenario": "failed-parsed",
+      "operation": "alternatives",
+      "state": "PASS",
+      "result_sha256": "e42a57e8722785fd3f40cbb0d2eeffebd45999b907ba79546a94ba261832b0f2",
+      "equality": true
+    },
+    {
+      "scenario": "failed-parsed",
+      "operation": "permutation",
+      "state": "PASS",
+      "result_sha256": "e42a57e8722785fd3f40cbb0d2eeffebd45999b907ba79546a94ba261832b0f2",
+      "equality": true
+    },
+    {
+      "scenario": "failed-parsed",
+      "operation": "duplicate-links",
+      "state": "PASS",
+      "result_sha256": "b7ddd5589416c7b8359cec8c2083521500a68b65cff71f0690046f0783f35f0c",
+      "equality": true
+    },
+    {
+      "scenario": "failed-parsed",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "58f129246374e90ab2399bbc04fa47a7701618a83b96473b7180b2ad288005f2",
+      "equality": true
+    },
+    {
+      "scenario": "failed-parsed",
+      "operation": "restored",
+      "state": "PASS",
+      "result_sha256": "e42a57e8722785fd3f40cbb0d2eeffebd45999b907ba79546a94ba261832b0f2",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-instruction",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "d380bf4bf5f72ae9ebe13dfc87d77f1a01249cd737cdcb02f5ffc2ec42850196",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-instruction",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "726a17799306f4f2b2dc45523f4e47df7e4b849d651fc349a3eaef26c760515d",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-instruction",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "726a17799306f4f2b2dc45523f4e47df7e4b849d651fc349a3eaef26c760515d",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-instruction",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "15db6cccba99259abb23199c88121ae23396936aebabcf17d9089e6d1dc46779",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-instruction",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "b29dfff54889afc5451216c4004b698a82c1826861cf40a1a3ed84bc663e7712",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-instruction",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "726a17799306f4f2b2dc45523f4e47df7e4b849d651fc349a3eaef26c760515d",
+      "equality": true
+    },
+    {
+      "scenario": "conflicting-program-identity",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "1a54003c7cb18795a9f4364938b1c4b563673f8c85f06a69691e1a0166dcfa13",
+      "equality": true
+    },
+    {
+      "scenario": "conflicting-program-identity",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "2715a77b9f543ec2eeacd8eeecdb69b4ee885961dcb9662ca901afc2060ac243",
+      "equality": true
+    },
+    {
+      "scenario": "conflicting-program-identity",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "2715a77b9f543ec2eeacd8eeecdb69b4ee885961dcb9662ca901afc2060ac243",
+      "equality": true
+    },
+    {
+      "scenario": "conflicting-program-identity",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "b0334f8ac6964a4bff43a3552aeed8952eaaae6e1019afa6d4abfa9025cbd28a",
+      "equality": true
+    },
+    {
+      "scenario": "conflicting-program-identity",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "eedbfc22596738d1127121e912424d344e97aa2df7c1cb4694d109193563b2c9",
+      "equality": true
+    },
+    {
+      "scenario": "conflicting-program-identity",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "2715a77b9f543ec2eeacd8eeecdb69b4ee885961dcb9662ca901afc2060ac243",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-balance",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "696d84c0ecf28f924287eaacca10197fe25bcd409d9159e79db78696873126a0",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-balance",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "692f08318d8e1439ec3f980d50df44dcbb7e2349413f28ef023a46fa8148ff92",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-balance",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "692f08318d8e1439ec3f980d50df44dcbb7e2349413f28ef023a46fa8148ff92",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-balance",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "530489affc4fcd9bd0d6ca3fa5e51adeb0bcd1974659df3c838c4d4dc03ac0ce",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-balance",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "53302ab5e508cf9586c970056fc7ed96fb94cb76da94593c5ab1e49c14aef005",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-balance",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "692f08318d8e1439ec3f980d50df44dcbb7e2349413f28ef023a46fa8148ff92",
+      "equality": true
+    },
+    {
+      "scenario": "invalid-balance-index",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "20fda1a671969966e9890ea5eccfe23da088c0d15ece8ff54ee7eff9da0d8289",
+      "equality": true
+    },
+    {
+      "scenario": "invalid-balance-index",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "b1bdabae2993a379ae68c2670f66d1cc6b9ac07c7d02305baeec6e9be44879ea",
+      "equality": true
+    },
+    {
+      "scenario": "invalid-balance-index",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "b1bdabae2993a379ae68c2670f66d1cc6b9ac07c7d02305baeec6e9be44879ea",
+      "equality": true
+    },
+    {
+      "scenario": "invalid-balance-index",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "620cac9ffe94b9e2e363647f9c6f901ebb530d3d1efd4e73e1b19b7433108619",
+      "equality": true
+    },
+    {
+      "scenario": "invalid-balance-index",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "db773ad3cc163897cbd00e9a232150e52e6c99b616af9a614c783379d95e7f74",
+      "equality": true
+    },
+    {
+      "scenario": "invalid-balance-index",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "b1bdabae2993a379ae68c2670f66d1cc6b9ac07c7d02305baeec6e9be44879ea",
+      "equality": true
+    },
+    {
+      "scenario": "missing-quantity",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "75c89491f0e68c8e39040e31d62f168525ecf4214d2643be1e152d1db862d2c7",
+      "equality": true
+    },
+    {
+      "scenario": "missing-quantity",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "f6c5c25ebba335f880d682dcc3a878fa5d94656328ca19158f51470ea7ca3074",
+      "equality": true
+    },
+    {
+      "scenario": "missing-quantity",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "f6c5c25ebba335f880d682dcc3a878fa5d94656328ca19158f51470ea7ca3074",
+      "equality": true
+    },
+    {
+      "scenario": "missing-quantity",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "13a8ea5296be80a8474db46475fcee7641527c31b3aa9839ac144a8e776dc5aa",
+      "equality": true
+    },
+    {
+      "scenario": "missing-quantity",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "dc31a6eb654d7ff00207f311a79eb124490afe77decd99bac8b7bcb110f47c65",
+      "equality": true
+    },
+    {
+      "scenario": "missing-quantity",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "f6c5c25ebba335f880d682dcc3a878fa5d94656328ca19158f51470ea7ca3074",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-keys",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "6d9048f94566d8594357b7afce86a0f953dae7f82bbd5fda9e701e1e489745e3",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-keys",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "ecec858486f1d70bef4677e828dccd6d68cc4f26d4aeb80e1d2efb85ff6b347b",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-keys",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "ecec858486f1d70bef4677e828dccd6d68cc4f26d4aeb80e1d2efb85ff6b347b",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-keys",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "049afaabdabd05821d71f23ce0f89443719ab27e974b23156316264a6e265153",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-keys",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "d192463c778d4f3747af39f5b76de65da1f1236a99a24571b47460392b4e7cf9",
+      "equality": true
+    },
+    {
+      "scenario": "duplicate-keys",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "ecec858486f1d70bef4677e828dccd6d68cc4f26d4aeb80e1d2efb85ff6b347b",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-inner-association",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "82d911f15e08b6f3bfb25010ad07a71bda83080918c5a87b424609267f5dc8fb",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-inner-association",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "629df500cd5af811966e739f0be1c67b1d7cc6dc5f5374965edcf4317df3b310",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-inner-association",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "629df500cd5af811966e739f0be1c67b1d7cc6dc5f5374965edcf4317df3b310",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-inner-association",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "dc50b4cdf13fc1b0f71576657f4c8174f44f10fdc6f4792528202afa21f26080",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-inner-association",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "718f8ea7da46b45189b9a3945b437222793630dea65bc06490f60f5445a14bc1",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-inner-association",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "629df500cd5af811966e739f0be1c67b1d7cc6dc5f5374965edcf4317df3b310",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-participants",
+      "operation": "selected",
+      "state": "PASS",
+      "result_sha256": "41387cf5e94888f09069e0ea0744f7936676a1fcb6be6aac0d0f59e4a49e9c80",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-participants",
+      "operation": "alternatives",
+      "state": "PASS",
+      "result_sha256": "1750f3bf9b213f6e1d10219bc12c64c4bec003b97f29c77adcd959fa9a593c03",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-participants",
+      "operation": "permutation",
+      "state": "PASS",
+      "result_sha256": "1750f3bf9b213f6e1d10219bc12c64c4bec003b97f29c77adcd959fa9a593c03",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-participants",
+      "operation": "duplicate-links",
+      "state": "PASS",
+      "result_sha256": "81a957a2eeed55cc320fa9ef49e31450181a6cfcc1e8883447499c9cab9d6430",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-participants",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "8f1804739486ad2c44da6a8eb772393afb432f11d59b59bd32da99b48d180f35",
+      "equality": true
+    },
+    {
+      "scenario": "malformed-participants",
+      "operation": "restored",
+      "state": "PASS",
+      "result_sha256": "1750f3bf9b213f6e1d10219bc12c64c4bec003b97f29c77adcd959fa9a593c03",
+      "equality": true
+    },
+    {
+      "scenario": "instruction-budget",
+      "operation": "selected",
+      "state": "UNKNOWN",
+      "result_sha256": "7f7386a6ef303ad3a8881ba7f43c896b4ffa64ab561569f968f09b21d6a10151",
+      "equality": true
+    },
+    {
+      "scenario": "instruction-budget",
+      "operation": "alternatives",
+      "state": "UNKNOWN",
+      "result_sha256": "c8d0596e745740663cec012f94175288b825808247ca5d00e48ad0c6c375a699",
+      "equality": true
+    },
+    {
+      "scenario": "instruction-budget",
+      "operation": "permutation",
+      "state": "UNKNOWN",
+      "result_sha256": "c8d0596e745740663cec012f94175288b825808247ca5d00e48ad0c6c375a699",
+      "equality": true
+    },
+    {
+      "scenario": "instruction-budget",
+      "operation": "duplicate-links",
+      "state": "UNKNOWN",
+      "result_sha256": "b4dd60bf2bcbdd71c715d9dc13eb1eb859d55b6fdcbcb0f670785fee491cb8c2",
+      "equality": true
+    },
+    {
+      "scenario": "instruction-budget",
+      "operation": "source-loss",
+      "state": "UNKNOWN",
+      "result_sha256": "80868f6b226743f850219427a9abf15c3c385f04d38277747c87ac74c91ffe6a",
+      "equality": true
+    },
+    {
+      "scenario": "instruction-budget",
+      "operation": "restored",
+      "state": "UNKNOWN",
+      "result_sha256": "c8d0596e745740663cec012f94175288b825808247ca5d00e48ad0c6c375a699",
+      "equality": true
+    }
+  ],
+  "normalization_cost_controls": [
+    {
+      "accounts": 1,
+      "baseline": {
+        "normalizations": 1,
+        "seconds": 0.00041753900586627424,
+        "result_sha256": "248774c2435be439bc243784f1e2644c2f3cf267e53b21e012007d51ac3efb05"
+      },
+      "candidate": {
+        "normalizations": 1,
+        "seconds": 0.000331059010932222,
+        "result_sha256": "248774c2435be439bc243784f1e2644c2f3cf267e53b21e012007d51ac3efb05"
+      }
+    },
+    {
+      "accounts": 8,
+      "baseline": {
+        "normalizations": 8,
+        "seconds": 0.003935474989702925,
+        "result_sha256": "62e05059ec4e0ebd5d05a83b56951d2755c62aad5723e6fd121c6d26ca32ba0b"
+      },
+      "candidate": {
+        "normalizations": 1,
+        "seconds": 0.0010677780082914978,
+        "result_sha256": "62e05059ec4e0ebd5d05a83b56951d2755c62aad5723e6fd121c6d26ca32ba0b"
+      }
+    },
+    {
+      "accounts": 32,
+      "baseline": {
+        "normalizations": 32,
+        "seconds": 0.04436076999991201,
+        "result_sha256": "ff85ec9b136b69386cd106a8b3769e0438ff3d5b2310e6ebb509b176223bd282"
+      },
+      "candidate": {
+        "normalizations": 1,
+        "seconds": 0.0034684319980442524,
+        "result_sha256": "ff85ec9b136b69386cd106a8b3769e0438ff3d5b2310e6ebb509b176223bd282"
+      }
+    },
+    {
+      "accounts": 96,
+      "baseline": {
+        "normalizations": 96,
+        "seconds": 0.3673041560105048,
+        "result_sha256": "2f664ab0c41594d1824ceff406057dc4eeb8f430627e2cbbca28434a3baa7ba6"
+      },
+      "candidate": {
+        "normalizations": 1,
+        "seconds": 0.012707373010925949,
+        "result_sha256": "2f664ab0c41594d1824ceff406057dc4eeb8f430627e2cbbca28434a3baa7ba6"
+      }
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "scope": "Unsigned synthetic implementation controls only; PRODUCT_READY remains false.",
+  "initial_test_failure": "A duplicate-link equality assertion incorrectly expected source multiplicity counters to stay unchanged. Original log retained; corrected test explicitly checks counters and compares only semantic fact checks."
+}

@@ -1,0 +1,20 @@
+{
+  "calls": 10,
+  "records_per_call": 100,
+  "states": [
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS",
+    "PASS"
+  ],
+  "seconds": 3.776406377000967,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "scope": "Actual preserved genuine page envelope parse/hash profiling only; not whole-wallet acceptance"
+}

@@ -1,0 +1,75 @@
+{
+  "kind": "Distinct-read-only-CI-diff-review",
+  "state": "BLOCKED",
+  "created_utc": "2026-10-04T14:57:54.952180+00:00",
+  "scope": "Only the owned CI workflow, validation runner, validation control tests, and static CI checker. No application review or product acceptance.",
+  "reviewed_source_sha256": {
+    ".github/workflows/offline-focused.yml": "fc3938b3e420362463f820b8ea761b29f86ae895c71de5cd46ebe9edec25c5b5",
+    "tools/validate.py": "d30d0ff6bf354905b45f3dbcbdcfaa210e122c1b8d0b1f99b233a257926f0237",
+    "tests/test_validation_gates.py": "a0c02c5630a1b360657e5b49cd5e275d94c48f8020fe5716813aa244c8ace677",
+    "evidence/ci-completion-batch/ci/CHECK_WORKFLOW_STATIC.py": "394009f336ed794cfc73b8a52c7db3d8d198b82d3cf89c673b6697c47f659100"
+  },
+  "exact_files": [
+    ".github/workflows/offline-focused.yml",
+    "tools/validate.py",
+    "tests/test_validation_gates.py",
+    "evidence/ci-completion-batch/ci/CHECK_WORKFLOW_STATIC.py"
+  ],
+  "baseline": "1040215f498b1317b1b942838994127f43a822bd",
+  "confirmed_findings": [
+    {
+      "id": "CI-DEVELOPMENT-RECEIPT-TIMEOUT",
+      "severity": "scoped-validation-blocker",
+      "path": "tools/validate.py:offline_development_record",
+      "problem": "Development receipt does not reject an active running_gate or contradictory timed_out=True alongside PASS/exit0, unlike the newly strict focused-group validator.",
+      "reproduction": "Import retained tests/test_validation_gates.py fixture definitions only; development_receipt(tempdir), baseline PASS then independently mutate running_gate or gates[0].timed_out=True and call real offline_development_record with exact fixture source/locks/runtime/commit. No command stubs or production report calls involved in this pure validator reproduction.",
+      "before_fix_raw_results": [
+        {
+          "variant": "positive",
+          "state": "PASS"
+        },
+        {
+          "variant": "running_gate",
+          "state": "PASS"
+        },
+        {
+          "variant": "timed_out",
+          "state": "PASS"
+        }
+      ],
+      "expected": "Positive PASS; active or timed-out receipt INCOMPLETE.",
+      "required_correction": "Require absence of running_gate and all eight command gates to carry strict-int timeout_seconds=1800 and timed_out is False. Add positive fields and missing/wrong/bool/timeout/active-gate sibling controls.",
+      "classification": "Validation receipt defect; no application/source accounting finding or new wallet acceptance."
+    }
+  ],
+  "confirmed_design_checks": {
+    "partition": "Ten disjoint groups retain all35 focused selectors. Five indexed modules retain the prior204 collected unique nodes (76,26,21,15,66); no selectors or test bodies weakened.",
+    "focus_timeout": "600s per focused command, below 15min execution step and30min job caps. Other profiles retain1800s command limit.",
+    "union": "Requires all ten exact selected groups plus separately bound development receipt; exact source/Git/locks/runtime/current explicit PASS and sibling log bytes/SHA checked. Development timeout sibling blocked above.",
+    "timeout_cleanup": "POSIX private process session; TERM then KILL group even if direct process exits before descendant; nonpassing timeout marker/partial raw log/result persisted. Retained descendant ignored-TERM test initially lacks ready handshake; owner is strengthening proof rather than claiming readiness from sleep.",
+    "artifacts": "Fixed explicit text/JSON filenames, symlink exclusion, 4MiB per file cap,7day retention; no private-product JSON/archive/report/runtime state. Aggregate result/runtime logs now uploaded under always() including incomplete union.",
+    "network": "Hosted command paths use network namespace unshare and drop root; no supplied Helius/GH/GITHUB token variables; action SHA pins/contents-read/persist-credentials=false. Local unshare unavailability remains environment limitation; no executed hosted network isolation claim."
+  },
+  "stored_execution_inspected": [
+    {
+      "path": "evidence/ci-completion-batch/ci/VALIDATOR_CONTROLS_ACCEPTED.log",
+      "reported": "129 passed in3.10s",
+      "reviewer_reexecuted": false
+    },
+    {
+      "path": "evidence/ci-completion-batch/ci/WORKFLOW_STATIC_CONTRACT.json",
+      "reported": "10 Bash syntax blocks,3 embedded Python blocks PASS; exact owned current hashes matched",
+      "reviewer_reexecuted": false
+    }
+  ],
+  "reviewer_execution": "Pure development validator positive/negative reproduction only. Earlier collect-only204-node inspection retained. No test bodies/full suite/providers/Actions execution in this review.",
+  "actual_local_group_and_missing_union": "Owner execution ongoing at review boundary; not asserted passed by this record.",
+  "limits": {
+    "application_review": false,
+    "application_edits": 0,
+    "provider_calls": 0,
+    "github_mutations": 0,
+    "native_ci_pass_claimed": false,
+    "product_acceptance_claimed": false
+  }
+}

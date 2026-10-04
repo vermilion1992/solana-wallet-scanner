@@ -1,0 +1,862 @@
+{
+  "kind": "synthetic scoped current-source trace; not genuine B3",
+  "raws": [
+    {
+      "slot": 99,
+      "blockTime": 1789996400,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "scope-open-unknown-basis"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "4Ss5JMkXAD9Z7cktFEdrqeMuT6jGMF1pVozTyPHZ6zT4",
+            "4WnNSfDXkWSnFi1PgXxn8X8fhFwU2Jhe4Df82mL9rKmm",
+            "4ahfaxgYLok1PoFu7qHhRPuRwR9fhNPTcdKn69Nkbf6U",
+            "4ecxjG9Yw73EXtWQZ8cciGgCBaMsNS5HB2zS9XRMLzRB"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "YMN9Qj5jPNp7j14VPcML1B6xGgcPWVZUGLFU3Mnyfaf",
+                "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+                "So11111111111111111111111111111111111111112",
+                "4Ss5JMkXAD9Z7cktFEdrqeMuT6jGMF1pVozTyPHZ6zT4",
+                "4WnNSfDXkWSnFi1PgXxn8X8fhFwU2Jhe4Df82mL9rKmm",
+                "4ahfaxgYLok1PoFu7qHhRPuRwR9fhNPTcdKn69Nkbf6U",
+                "4ecxjG9Yw73EXtWQZ8cciGgCBaMsNS5HB2zS9XRMLzRB",
+                "cGfHiC6Kgg3FpFZvgwGcswsCRtp4aBP2fzuXRQPizuN",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": null,
+        "preBalances": [
+          10000000000,
+          2000000,
+          1002000000,
+          2000000,
+          2000000
+        ],
+        "postBalances": [
+          9999995000,
+          2000000,
+          2000000,
+          2000000,
+          1002000000
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "4ahfaxgYLok1PoFu7qHhRPuRwR9fhNPTcdKn69Nkbf6U",
+                    "destination": "4Ss5JMkXAD9Z7cktFEdrqeMuT6jGMF1pVozTyPHZ6zT4",
+                    "mint": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 6
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "4WnNSfDXkWSnFi1PgXxn8X8fhFwU2Jhe4Df82mL9rKmm",
+                    "destination": "4ecxjG9Yw73EXtWQZ8cciGgCBaMsNS5HB2zS9XRMLzRB",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slot": 100,
+      "blockTime": 1790003600,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "scope-known-buy"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+            "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+            "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "YMN9Qj5jPNp7j14VPcML1B6xGgcPWVZUGLFU3Mnyfaf",
+                "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                "So11111111111111111111111111111111111111112",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+                "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                "cGfHiC6Kgg3FpFZvgwGcswsCRtp4aBP2fzuXRQPizuN",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          10000000000,
+          2000000,
+          1002000000,
+          2000000,
+          2000000
+        ],
+        "postBalances": [
+          9999995000,
+          2000000,
+          2000000,
+          2000000,
+          1002000000
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 6
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                    "destination": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slot": 101,
+      "blockTime": 1790007200,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "scope-known-close"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+            "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+            "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "YMN9Qj5jPNp7j14VPcML1B6xGgcPWVZUGLFU3Mnyfaf",
+                "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                "So11111111111111111111111111111111111111112",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+                "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                "cGfHiC6Kgg3FpFZvgwGcswsCRtp4aBP2fzuXRQPizuN",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          10000000000,
+          2000000,
+          2000000,
+          2000000,
+          1102000000
+        ],
+        "postBalances": [
+          9999995000,
+          2000000,
+          1102000000,
+          2000000,
+          2000000
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1100000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1100000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "destination": "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+                    "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 6
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                    "destination": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1100000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "global_observed_disposed_basis": {
+    "state": "UNKNOWN",
+    "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+    "reason": "Observed FIFO basis requires agreeing raw chronology, selected account continuity and supported acquisition costs.",
+    "evidence": [
+      "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+      "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+      "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+    ],
+    "raw_paths": [
+      "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+      "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+      "meta.innerInstructions.0.instructions.0.parsed.info.source",
+      "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+      "meta.innerInstructions.0.instructions.0.programId",
+      "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+      "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+      "meta.innerInstructions.0.instructions.1.parsed.info.source",
+      "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+      "meta.innerInstructions.0.instructions.1.programId",
+      "meta.postTokenBalances.0",
+      "meta.postTokenBalances.1",
+      "meta.preTokenBalances.0",
+      "meta.preTokenBalances.1",
+      "transaction.message.instructions.0.accounts",
+      "transaction.message.instructions.0.accounts.0",
+      "transaction.message.instructions.0.accounts.1",
+      "transaction.message.instructions.0.accounts.10",
+      "transaction.message.instructions.0.accounts.11",
+      "transaction.message.instructions.0.accounts.12",
+      "transaction.message.instructions.0.accounts.13",
+      "transaction.message.instructions.0.accounts.2",
+      "transaction.message.instructions.0.accounts.3",
+      "transaction.message.instructions.0.accounts.4",
+      "transaction.message.instructions.0.accounts.5",
+      "transaction.message.instructions.0.accounts.6",
+      "transaction.message.instructions.0.accounts.7",
+      "transaction.message.instructions.0.accounts.8",
+      "transaction.message.instructions.0.accounts.9",
+      "transaction.message.instructions.0.programId"
+    ],
+    "dependencies": [
+      "observed_incoming_origins",
+      "observed_raw_trade_costs"
+    ]
+  },
+  "global_query_money": {
+    "monetary_state": "UNKNOWN",
+    "conditional_observed_lot_profit_sol": null,
+    "reason": "A selected acquisition, chronology, quantity, ownership or economic-role dependency is unresolved."
+  },
+  "report_disposed_units": {
+    "scope": "Selected named-account disposal units in this interval; excludes unallocated overhead, eligibility and wallet-wide profit",
+    "candidate_sale_count": 1,
+    "sales": [
+      {
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "signature": "scope-known-close",
+        "fifo_episode": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "ordinal": 1
+        },
+        "timestamp": "2026-09-21T16:13:20+00:00",
+        "quantity_raw": "100",
+        "conditional_matched_basis_sol": "1.000005",
+        "conditional_profit_sol": "0.09999",
+        "conditional_proceeds_sol": "1.1",
+        "conditional_exit_fees_sol": "0.000005",
+        "monetary_state": "PASS",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only",
+        "checks": {
+          "quantity": {
+            "state": "PASS",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "reason": "Selected disposal quantity must bind its exact raw sale and named-account physical proof.",
+            "evidence": [
+              "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+              "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+              "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+            ],
+            "raw_paths": [],
+            "dependencies": [
+              "disposal_interval_membership",
+              "disposal_source_binding",
+              "quantity_state"
+            ]
+          },
+          "monetary": {
+            "state": "PASS",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "reason": "Selected disposal profit must consume an exact supported FIFO origin, consideration, cost and raw clock dependency set.",
+            "evidence": [
+              "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+              "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+              "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+            ],
+            "raw_paths": [],
+            "dependencies": [
+              "clock_state",
+              "cost_basis_state",
+              "disposal_source_binding",
+              "monetary_state",
+              "origin_state"
+            ]
+          }
+        }
+      }
+    ],
+    "quantity_state": "PASS",
+    "monetary_state": "PASS",
+    "disposed_raw_by_mint": {
+      "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": "100"
+    },
+    "conditional_profit_sol": "0.09999",
+    "conditional_matched_basis_sol": "1.000005",
+    "conditional_proceeds_sol": "1.1",
+    "conditional_exit_fees_sol": "0.000005",
+    "checks": {
+      "quantity": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every declared selected disposal remains in its interval denominator; unmatched origins do not invent monetary basis.",
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "disposal_interval_membership",
+          "disposal_source_binding",
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "quantity_state",
+          "selected_native_activity"
+        ]
+      },
+      "monetary": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every declared selected disposal needs its own supported FIFO origin and cost proof; unresolved sales remain counted.",
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "clock_state",
+          "cost_basis_state",
+          "disposal_source_binding",
+          "linked_native_source_inventory",
+          "monetary_state",
+          "named_lot_inspection",
+          "origin_state",
+          "selected_native_activity"
+        ]
+      }
+    },
+    "evidence": [
+      "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+      "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+      "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+    ],
+    "wallet_population_state": "UNKNOWN",
+    "classification_state": "UNKNOWN",
+    "qualification": false
+  },
+  "four_weeks_disposed_units": {
+    "scope": "Selected named-account disposal units in this interval; excludes unallocated overhead, eligibility and wallet-wide profit",
+    "candidate_sale_count": 0,
+    "sales": [],
+    "quantity_state": "PASS",
+    "monetary_state": "UNKNOWN",
+    "disposed_raw_by_mint": {},
+    "conditional_profit_sol": null,
+    "conditional_matched_basis_sol": null,
+    "conditional_proceeds_sol": null,
+    "conditional_exit_fees_sol": null,
+    "checks": {
+      "quantity": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every declared selected disposal remains in its interval denominator; unmatched origins do not invent monetary basis.",
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "selected_native_activity"
+        ]
+      },
+      "monetary": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every declared selected disposal needs its own supported FIFO origin and cost proof; unresolved sales remain counted.",
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "selected_native_activity"
+        ]
+      }
+    },
+    "evidence": [
+      "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+      "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+      "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+    ],
+    "wallet_population_state": "UNKNOWN",
+    "classification_state": "UNKNOWN",
+    "qualification": false
+  },
+  "open_stock": {
+    "at": "2026-10-21T14:13:20+00:00",
+    "scope": "Selected named-account FIFO stock at report end",
+    "candidate_count": 1,
+    "candidate_lot_ids": [
+      "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M:1"
+    ],
+    "quantity_state": "PASS",
+    "cost_basis_state": "UNKNOWN",
+    "conditional_remaining_basis_sol": null,
+    "lots": [
+      {
+        "id": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M:1",
+        "mint": "4NwnA4HWZurKyXWNowJwYmb9CwX4gBKzwQKov1ExMf8M",
+        "remaining_raw": "100",
+        "quantity_state": "PASS",
+        "observed_physical_state": "PASS",
+        "cost_basis_state": "UNKNOWN",
+        "conditional_remaining_basis_sol": null,
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ]
+      }
+    ],
+    "checks": {
+      "quantity": {
+        "state": "PASS",
+        "scope": "Selected named-account FIFO stock at report end",
+        "reason": "Remaining quantities describe every declared selected open lot at the report end; hidden accounts remain unproved.",
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "chronology_state",
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "origin_state",
+          "quantity_state",
+          "selected_native_activity"
+        ]
+      },
+      "cost_basis": {
+        "state": "UNKNOWN",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Remaining cost is existing FIFO acquisition basis less its matched disposed basis; a historical valuation mark is separate.",
+        "evidence": [
+          "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+          "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+          "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "chronology_state",
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "origin_state",
+          "quantity_state",
+          "remaining_cost_basis_state",
+          "selected_native_activity"
+        ]
+      }
+    },
+    "evidence": [
+      "06bcd4651382be61781d26fca9ef73485ea46e309eadf39e75019ef7229954fd",
+      "437aac8964a344ad0830fac158373e5a2962428bee897fd3c01f9949de5655b4",
+      "bf9bce6646554ce2c35ae207133320f9b57c1510ad00c943f8b170cbc21f6a5e"
+    ],
+    "valuation_state": "UNKNOWN",
+    "closing_value_sol": null,
+    "wallet_population_state": "UNKNOWN",
+    "classification_state": "UNKNOWN",
+    "qualification": false
+  },
+  "decision": "Selected disposal path retains supported profit; global observedbasis receipt remains all-position/all-cost gated. This is unfinished wallet-wide per-interval dependency composition, not complete-wallet falseclaim/current production regression."
+}

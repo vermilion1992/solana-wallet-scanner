@@ -1,0 +1,41 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_mixed_closed_open_loss_and_breakeven_are_admitted_without_wallet_qualification _
+
+    def test_mixed_closed_open_loss_and_breakeven_are_admitted_without_wallet_qualification():
+        raws = mixed()
+        frozen = deepcopy(raws)
+        result = positions(raws)
+        aggregate = result['mints'][MINT]
+        assert result['version'] == VERSION
+        assert result['checks']['observed_population']['state'] == aggregate['position_state'] == 'PASS'
+        assert aggregate['quantity_state'] == 'PASS'
+        assert aggregate['selected_opening_raw'] == '0'
+        assert aggregate['selected_remaining_raw'] == aggregate['fifo_remaining_raw'] == '100'
+        assert aggregate['candidate_closed_count'] == 2 and aggregate['candidate_open_count'] == 1
+        closed = result['intervals']['report_period']['closed_cohort']
+        assert closed['candidate_count'] == 2 and closed['population_state'] == 'PASS'
+        assert closed['conditional_profit_sol'] == '-0.00001' and closed['conditional_win_rate_pct'] == '0'
+        assert [row['conditional_profit_sol'] for row in aggregate['episodes'][:2]] == ['-0.00001', '0']
+        assert aggregate['episodes'][-1]['remaining_cost_basis_state'] == 'PASS'
+        assert aggregate['episodes'][-1]['conditional_remaining_basis_sol'] == '1.000005'
+        assert result['wallet_population_state'] == result['classification_state'] == result['valuation_state'] == 'UNKNOWN'
+        assert result['checks']['historical_population']['state'] == 'UNKNOWN'
+        assert result['qualification'] is False and raws == frozen
+        query = derive(raws)['query_accounting']
+>       assert query['timing_state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_wallet_position_population.py:76: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_wallet_position_population.py::test_mixed_closed_open_loss_and_breakeven_are_admitted_without_wallet_qualification
+1 failed, 1 warning in 0.38s

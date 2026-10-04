@@ -1,0 +1,81 @@
+{
+  "state": "READ_ONLY_TRACE_COMPLETE",
+  "git_head_at_receipt": "1040215f498b1317b1b942838994127f43a822bd",
+  "scope": "Development trace and performance measurement on the shared working tree; not exact-source candidate acceptance. No application/test edits or provider/credential calls by this agent. Other agents may edit the shared tree during the batch.",
+  "source_hashes_at_receipt_only": {
+    "scanner/wallet_evidence.py": "22c303a38d2b484bd26f1033a218727f92888709d1e08a76791cf9b83dae9279",
+    "scanner/metric_evidence.py": "1760c72620442d7781786e1cd297210128cd8e3b8433cbfe6a9fb06cfb5fca65",
+    "scanner/archive_input.py": "2189087ac270d6b3b494da75e6394068fd4b66f4f317f752475e69a89bce3419",
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "scanner/source_consistency.py": "169ac98f775e16637e51106e331e40c68189fdd51515d4ee4b62e25258670b3a",
+    "scanner/indexed_input.py": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d"
+  },
+  "confirmed_new_application_defects": [],
+  "missing_implementation": {
+    "CAP_ORIGIN": "Global observed_disposed_basis checks every FIFO position/all cost gates; per-interval disposed-lot basis must use only needed origins without trusting caller basis. Existing selected-disposal observations already retain isolated supported profit.",
+    "CAP_ROUTES": "Unreviewed wrappers/consideration, gross native roles and cost/rent/tip allocations remain explicit. Exact native movement projection can be independent of unproved economic role, but must not promote raw matching net delta to complete role certainty.",
+    "CAP_CLASS": "Real time-relevant nonsettlement eligibility adapter is absent; current mint controls are not a meme/historical classification witness.",
+    "CAP_VALUATION": "Real exact boundary inventory, historical marks and valued external flow adapters are absent; current snapshots/minContextSlot and sampled transaction endpoints cannot replace them."
+  },
+  "offline_execution": {
+    "genuine200_api_case": {
+      "node": "tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim",
+      "state": "PASS",
+      "tests": 1,
+      "seconds": 176.76,
+      "raw_log": "indexed-genuine.log",
+      "cprofile": "indexed-genuine.profile",
+      "measurement_caveat": "cProfile overhead; not a runtime SLA or nativeCI failure attribution. Profile cumulative times overlap and cannot be summed."
+    },
+    "indexed_envelope_profile": {
+      "state": "PASS",
+      "validations": 10,
+      "records_per_validation": 100,
+      "seconds": 3.776406377000967,
+      "raw_profile": "indexed-envelope.profile",
+      "receipt": "indexed-envelope-result.json"
+    }
+  },
+  "measured_hotpaths": {
+    "validate_page_envelope": {
+      "calls": 96,
+      "cumulative_seconds": 41.093
+    },
+    "bounded_value": {
+      "calls": 25340,
+      "cumulative_seconds": 35.083
+    },
+    "parse_indexed_json": {
+      "calls": 307,
+      "cumulative_seconds": 24.733
+    },
+    "assess_source_consistency": {
+      "calls": 9,
+      "cumulative_seconds": 21.991
+    },
+    "account_facts": {
+      "calls": 24940,
+      "cumulative_seconds": 11.902
+    },
+    "program_facts": {
+      "calls": 24940,
+      "cumulative_seconds": 9.22
+    },
+    "summary_inputs": {
+      "calls": 2,
+      "cumulative_seconds": 0.517
+    }
+  },
+  "recommended_shared_optimizations": [
+    "Reuse checked response leads and native hash list inside each page validation; preserve malformed/missing/corrupt/duplicate/nonfinite inputs and address/RPC identity checks.",
+    "Reuse keys/balance indexes and compiled normalization once per retained native variant within one assess_source_consistency call; retain duplicate malformed global dependencies and exact original paths."
+  ],
+  "reproduction_records": [
+    "native-movement-baseline.json",
+    "scoped-basis-baseline.json"
+  ],
+  "source_limits": "B1 historical membership, B2 complete accounting/classification/valuation and B3 genuine population remain unresolved; no synthetic closing evidence.",
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

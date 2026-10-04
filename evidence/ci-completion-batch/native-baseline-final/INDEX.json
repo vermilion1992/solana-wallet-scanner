@@ -1,0 +1,30 @@
+{
+  "kind": "preserved-baseline-native-ci-final-observation",
+  "state": "INCOMPLETE",
+  "baseline_head": "1040215f498b1317b1b942838994127f43a822bd",
+  "run_id": 37208279838,
+  "run_attempt": 1,
+  "scope": "Historical native run cancelled with missing indexed receipt; strict union failed INCOMPLETE. Cause unproved. Copied exact final procedural evidence into current reviewable Git evidence; no historical accepted record altered. Current candidate native CI separate.",
+  "records": [
+    {
+      "name": "NATIVE_CI_FINAL_FOLLOW_UP.json",
+      "bytes": 6597,
+      "sha256": "4f0495bda4a5f14e15286764364ce8f37d33eef1004772b5ff5ada870e0535b0"
+    },
+    {
+      "name": "FINAL_UNION_JOB_111458963339.log",
+      "bytes": 39663,
+      "sha256": "36b94d32d7f9994d8f8f2e6938247a646b073c7013de61dee077f21ac989e4ce"
+    },
+    {
+      "name": "FINAL_INDEXED_JOB_111453989505_LOG_UNAVAILABLE.json",
+      "bytes": 1093,
+      "sha256": "5f877c1744d06a4d606cbb970f5d9f4d5c7de6e7a47e8dd6a3aad3460a9b8411"
+    },
+    {
+      "name": "RUN_37208279838_LATEST.json",
+      "bytes": 88700,
+      "sha256": "94524e0a73b6ee214ba20f4760275cab6641afe37f7ae0872fb7f32378694bea"
+    }
+  ]
+}

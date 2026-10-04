@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/outputs/position-history-publication/assemble_final_gates.py", line 336, in <module>
+    asserted(not target.exists(), 'Do not overwrite an existing final-gates record')
+  File "/workspace/outputs/position-history-publication/assemble_final_gates.py", line 56, in asserted
+    raise RuntimeError(message)
+RuntimeError: Do not overwrite an existing final-gates record

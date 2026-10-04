@@ -1,0 +1,239 @@
+{
+  "PRODUCT_READY": false,
+  "actual_command_review": [
+    {
+      "artifact_bytes": 847413690,
+      "artifact_files": 13,
+      "cases": 7,
+      "exit_code": 0,
+      "name": "genuine-development",
+      "receipt_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "state": "PASS"
+    },
+    {
+      "artifact_bytes": 847413690,
+      "artifact_files": 13,
+      "cases": 7,
+      "exit_code": 2,
+      "name": "genuine-real-acceptance",
+      "receipt_state": "BLOCKED",
+      "state": "PASS"
+    },
+    {
+      "artifact_bytes": 63591661,
+      "artifact_files": 6,
+      "cases": 4,
+      "exit_code": 0,
+      "name": "product-development",
+      "receipt_state": "DEVELOPMENT_PASS",
+      "state": "PASS"
+    },
+    {
+      "artifact_bytes": 63591661,
+      "artifact_files": 6,
+      "cases": 4,
+      "exit_code": 2,
+      "name": "product-real-acceptance",
+      "receipt_state": "BLOCKED",
+      "state": "PASS"
+    }
+  ],
+  "actual_wall_seconds": 242.959146,
+  "application_identity": {
+    "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+    "source_file_count": 241,
+    "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+  },
+  "application_workflows_not_rerun": true,
+  "current_original_input_files": 67,
+  "evidence_files": [
+    {
+      "bytes": 38886,
+      "name": "ACTUAL_FOUR_RECEIPTS_REVIEW.json",
+      "sha256": "6af5ea46ebfb3e670047058088837c255f7a4afa4cd1dddd9f93457490b236d0"
+    },
+    {
+      "bytes": 1163,
+      "name": "BOUNDARY_CONTROL_REVIEW.json",
+      "sha256": "370fbe0b54ebc3c959e0861066746819b01a2dba65a6ef77c87e335bcb5f7ce5"
+    },
+    {
+      "bytes": 4463,
+      "name": "BOUNDARY_CONTROL_REVIEW_FINAL.json",
+      "sha256": "8852d5b49ae6683d27439c86f4081879bd6dce64524f98dcfb4cce952005e842"
+    },
+    {
+      "bytes": 3333,
+      "name": "OFFLINE_CHILD_GUARD_REVIEW.json",
+      "sha256": "0e0cc0157124c9025041129902503c7184fb3f1a0d6193a9ee8f0e8b58ce785c"
+    },
+    {
+      "bytes": 3333,
+      "name": "OFFLINE_CHILD_GUARD_REVIEW_FINAL.json",
+      "sha256": "a9013460fcc0d6633383e47544615e9c1782e2a05153efbea4e9bf2c3b1ac6b0"
+    },
+    {
+      "bytes": 4117,
+      "name": "READ_ONLY_REVIEW_INITIAL.json",
+      "sha256": "db5fbda9d843ea02ed4b32b521725b00aa7d9d0de37aca6c1d8c572d3048ce9a"
+    },
+    {
+      "bytes": 48890,
+      "name": "RECEIPT_CONTROL_REVIEW.json",
+      "sha256": "5b0a4fbc5fe5bd2e0f89e118f997507d914bbc83c2bcb6f6c28998dd3979d370"
+    },
+    {
+      "bytes": 49644,
+      "name": "RECEIPT_CONTROL_REVIEW_FINAL.json",
+      "sha256": "8349fa0a5ea1fe646a4294dfa1dd0aa101a976d2b9eb21f56b747d6f40386077"
+    },
+    {
+      "bytes": 13929,
+      "name": "TIMECAP_PROVENANCE_REVIEW.json",
+      "sha256": "e9aa009a954da1370b84be78378348bafb8e63d6da016d1a19a1283df0393ad7"
+    },
+    {
+      "bytes": 13929,
+      "name": "TIMECAP_PROVENANCE_REVIEW_FINAL.json",
+      "sha256": "b26c5683f37b421ffc9b1f0dc3353566bb2d3f0dacf2f4532297c6aafd5c7c52"
+    },
+    {
+      "bytes": 2111,
+      "name": "actual-four-receipts-review.log",
+      "sha256": "e3353b106ddbc6400824041bffadd752b002b9654c46324e1d27252ac5d8e83b"
+    },
+    {
+      "bytes": 4819,
+      "name": "boundary-controls-final.log",
+      "sha256": "6f2b7aec975e4639595da8be0dd95ae68ade16eb74167a83f3cf5c96ea2bfdf5"
+    },
+    {
+      "bytes": 1163,
+      "name": "boundary-controls.log",
+      "sha256": "3081587918f2aad992398b1ecf88843da1c23351fdc99541cfa7f0a827d46f89"
+    },
+    {
+      "bytes": 5983,
+      "name": "check_actual_receipts.py",
+      "sha256": "349e37a856c9e260f61d63e7d8783d83b532f23f9ee4edca20deee2c78898e06"
+    },
+    {
+      "bytes": 2738,
+      "name": "check_offline_child_guards.py",
+      "sha256": "8304eb77fcdd5dbe1f236974c4e0dfcfbd5703a9e25f4e4c745e4f0f18663658"
+    },
+    {
+      "bytes": 2744,
+      "name": "check_offline_child_guards_final.py",
+      "sha256": "5c1a2295f4b4116c609836dee6293fd46a338d81991e9e128e43e592ae6a7246"
+    },
+    {
+      "bytes": 3469,
+      "name": "check_runner_boundaries.py",
+      "sha256": "deb3b5f92ba9b0bc9635435b4a844c4b03ec551c07d7ff1cf4d5df55f627f5b0"
+    },
+    {
+      "bytes": 7250,
+      "name": "check_runner_boundaries_final.py",
+      "sha256": "0e641e6fd83cb08944a567bcce8c00d2d84319ef050e324c891e40565e331bfd"
+    },
+    {
+      "bytes": 6832,
+      "name": "check_runner_receipts.py",
+      "sha256": "9ced3e30b1e9fea98d638b6299b75b26b69cd5a4f11b6357353ca62718bae013"
+    },
+    {
+      "bytes": 6794,
+      "name": "check_runner_receipts_initial.py",
+      "sha256": "32763359e5adeea5ab9cf587c0e4a77c7556e089970f6005f3f570dc1aaafe1b"
+    },
+    {
+      "bytes": 4258,
+      "name": "check_runner_timecaps.py",
+      "sha256": "f7289b330895d15e540aa85f9e854622548c61e9b3dcb2f84fe6d77b737df71c"
+    },
+    {
+      "bytes": 4264,
+      "name": "check_runner_timecaps_final.py",
+      "sha256": "bb46e233bd8fdb35ded54283cd8e4f3ab4bdf0c5da76ed3a7a472719575d1cd9"
+    },
+    {
+      "bytes": 3333,
+      "name": "offline-child-guard-controls-final.log",
+      "sha256": "3ce8d65885fa6461bab85cd750953dd17de767a52f94c190c4c2276949dad8f5"
+    },
+    {
+      "bytes": 3333,
+      "name": "offline-child-guard-controls.log",
+      "sha256": "8b260cd3484ad468bb07b57e5bee774117d1208c45e294d93129722d70fc90ed"
+    },
+    {
+      "bytes": 502,
+      "name": "receipt-controls-final.log",
+      "sha256": "e4795e01f86e2b74e2c88eaf07a71752f5b34175d40b38a83fa715c9a169fc15"
+    },
+    {
+      "bytes": 1544,
+      "name": "receipt-controls.log",
+      "sha256": "c4c8bd8f57b72060e493d505652be304de25f61e75e1bce66d269b155b6b6c6b"
+    },
+    {
+      "bytes": 645,
+      "name": "timecap-provenance-controls-final.log",
+      "sha256": "b3d3e3c04b5cf7b9e6f2cf452de1123dff3371ed680028799460ef38c0066f0c"
+    },
+    {
+      "bytes": 645,
+      "name": "timecap-provenance-controls.log",
+      "sha256": "b3d3e3c04b5cf7b9e6f2cf452de1123dff3371ed680028799460ef38c0066f0c"
+    }
+  ],
+  "executed_runner": {
+    "bytes": 21733,
+    "path": "/workspace/outputs/position-history-publication/RUN_FINAL_REPLAYS_EXECUTED.py",
+    "sha256": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068"
+  },
+  "initial_findings_preserved": true,
+  "initial_review": {
+    "bytes": 4117,
+    "sha256": "db5fbda9d843ea02ed4b32b521725b00aa7d9d0de37aca6c1d8c572d3048ce9a"
+  },
+  "kind": "distinct-read-only-offline-replay-runner-review",
+  "procedural_control_counts": {
+    "boundary": 17,
+    "note": "Procedural controls are not backend test nodes or new application acceptance.",
+    "offline_child": 5,
+    "receipt": 159,
+    "timecap_provenance": 3
+  },
+  "product_bytes": 7779999,
+  "product_file_count": 64,
+  "resolved_findings": [
+    {
+      "id": "REPLAY-PARENT-01",
+      "resolution": "Both product removal/restoration cases now require explicit per-case parent immutability. All four original negative controls reject; positives preserved."
+    },
+    {
+      "id": "REPLAY-INPUT-01",
+      "resolution": "All64 product raw files and file population are bound to pinned inventory. Original Git104 byte comparison and isolated loss/mutation/addition/symlink/restoration controls pass."
+    },
+    {
+      "id": "REPLAY-STORAGE-01",
+      "resolution": "RUNNING receipt records retained originals; all-file preflight precedes deletion; actual per-file removal states are persisted; failures become truthful BLOCKED; PASS appears only after completion. Protected oracle/receipt/guard files remain flat."
+    }
+  ],
+  "revised_runner": {
+    "bytes": 24903,
+    "path": "/workspace/outputs/position-history-publication/run_final_replays.py",
+    "sha256": "332ab09761caf1cc931fda53c4cf0c93438bbeb39a62b589c25b102ff23147d7"
+  },
+  "scope": "Reviewed procedural fixes and independently revalidated existing execution bytes and receipts. Does not claim new application workflow execution, full backend acceptance or product readiness. Original full execution used the preserved original runner; repaired strict helpers were applied afterward to unchanged receipts.",
+  "security": {
+    "application_files_changed": false,
+    "provider_requests": 0,
+    "real_credential_lookups": 0,
+    "real_network_calls": 0,
+    "secrets_read": false
+  },
+  "state": "PASS"
+}

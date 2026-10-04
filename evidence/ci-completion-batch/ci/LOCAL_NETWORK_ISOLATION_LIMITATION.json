@@ -1,0 +1,14 @@
+{
+  "kind": "local-environment-capability",
+  "command": [
+    "unshare",
+    "--net",
+    "--",
+    "true"
+  ],
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "unshare: unshare failed: Operation not permitted\n",
+  "state": "UNAVAILABLE",
+  "scope": "Hosted workflow guards remain required and unchanged. Local runtime smoke uses retained offline test fixtures; no local network-namespace claim. No provider or credential calls made."
+}

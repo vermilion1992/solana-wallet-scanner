@@ -1,0 +1,12 @@
+{
+  "application_command": [
+    "/workspace/solana-wallet-scanner/tools/check_product.py",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/product-development"
+  ],
+  "application_exit_code": 0,
+  "bootstrap_credential_attempts": 0,
+  "kind": "counted-offline-python-guards",
+  "socket_attempts": 0,
+  "state": "PASS"
+}

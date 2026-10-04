@@ -1,0 +1,228 @@
+{
+  "state": "PASS",
+  "review_type": "Distinct non-implementing agent read-only integrated boundary review; development evidence, not Gate A or genuine B3 acceptance",
+  "review_base_head": "1040215f498b1317b1b942838994127f43a822bd",
+  "reviewed_source_manifest": "8fde2d425ca7e031f28b07dff111bd8a6489c052defa47ebda7d22419843d86b",
+  "source_file_count": 241,
+  "review_start_manifest": "278a37f6a700b6323eb25861729216a7ad01eaa74a14b9ae0425a3164a78a451",
+  "intentional_root_repairs_during_review": [
+    "UI acquisition basis independent of sale profit/fee",
+    "Synthetic finite-world scoped financial override compatibility",
+    "Unsupported/unassignable selected activity in membership census"
+  ],
+  "final_source_unchanged": true,
+  "final_reviewed_file_changes": [],
+  "reviewed_files": {
+    "scanner/wallet_evidence.py": "2037f24c6d59c80599ddbdf8d2307333686bb1c59557ac62654ab01ae0b178f7",
+    "scanner/archive_input.py": "622639dadf426a72fdfe89876f81055c0fed3ccfcd1c66bac70a3fe12e00ce2b",
+    "scanner/indexed_input.py": "d4e2c67589e10b43de2396df17873c07bada4496fa530ac8f4aa848eb9864906",
+    "scanner/metric_evidence.py": "54e1d812bd3013cc4eccbe180307a862df12dc9706a3f81a7a0460d670faad66",
+    "scanner/research.py": "c35dc0c5f034a63439463a07c7023772130e8043b30ad2e695775ea6c9287b05",
+    "scanner/source_consistency.py": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+    "scanner/historical_membership.py": "04292e1b5b7e4e99725298c29931b30f2fe63d1dc89ca19fa1a81b0936f0cf27",
+    "scanner/wallet_positions.py": "52485ec7690ed486739e243719946bdacf92053298e14e987d9995314831cd27",
+    "frontend/src/SelectedCohorts.tsx": "014f27b672052701c79cd2f48690d649930ebd3d9a29ec27bc9076897a5ecbda",
+    "frontend/scripts/check-discovery.mjs": "2cae6644972c78836fe7fa2e01207082d022cdec08cdb0a095ce14078df856a1",
+    "tests/test_disposed_origin_scopes.py": "6a9a3ef60319ad6fdf4fda72bcdf63a33be656303c2239a5a051856dc31e4660",
+    "tests/test_selected_cohort_observations.py": "40277d778a5e58ea2503fa3706f1f5e3c365f1022456efe20d1aeaead7abe1d1",
+    "tests/test_wallet_position_population.py": "d07d9afed1c7a04c12cf728c73539345850de44c7f4c9d44c85ab67561c90465",
+    "tests/test_historical_membership.py": "2dcb9a656c626bcff34843f01ec054c75717a3ac77f7e76b298680e266c5da91",
+    "tests/test_source_fact_reuse.py": "2c043d2a79155b893ed4ecb07994b45d7c16cbb7fb9f336460ef7fe9d15b6a8b"
+  },
+  "final_diff_sha256": "502d7abf00ebd7b07ef871bb84d417a5450d9fc36fee269018a443f0e96732ff",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "confirmed_findings": [
+    {
+      "id": "IR-UI-BASIS",
+      "status": "FIXED_AND_REPRODUCTION_PASSES",
+      "location": "frontend/src/SelectedCohorts.tsx:114",
+      "before": "Supported acquisition basis was hidden by missing sale fee monetary_state UNKNOWN",
+      "after": "Exact interval/count/quantity/basis freshness gate is independent of monetary P&L",
+      "raw_before": "frontend-basis-baseline.log",
+      "raw_after": "frontend-basis-reviewed-after.log"
+    },
+    {
+      "id": "IR-MEMBERSHIP-CENSUS",
+      "status": "FIXED_AND_REPRODUCTION_PASSES",
+      "location": "scanner/historical_membership.py:110",
+      "before": "Unsupported/unassignable second selected observation had UNKNOWN transaction but aggregate membership PASS",
+      "after": "Aggregate keeps mandatory negative operation-inspection dependency while independently known account rows stay PASS",
+      "raw_before": "membership-census-baseline-reviewed.log",
+      "raw_after": "membership-census-reviewed-after.log"
+    }
+  ],
+  "scope_reviewed": [
+    "Selected/alternative raw-source loss, corruption, identity mismatch, unsupported formats and exact restoration",
+    "Historical endpoint and instruction-time owner admission, transient ownership and absent-endpoint identity",
+    "Single FIFO position closed/open admission and failed unchanged quantities independent of missing fees",
+    "Disposed acquisition basis separated from sale proceeds/fees and unconsumed other holdings; report/28/90 windows",
+    "Strict scoped component overrides and synthetic finite-world compatibility",
+    "Checksum-bound indexed parser reuse; malformed request/cursor lead dependencies preserved",
+    "Methodology/cohort freshness, independent matched-basis rendering and immutable saved/API rebuild/source/export route"
+  ],
+  "remaining_confirmed_application_defects": [],
+  "limitations": [
+    "Current real historical population/classification/valuation/complete external roles remain unresolved; this review cannot close B1/B2/B3",
+    "Synthetic contract tests and scoped observations cannot establish complete genuine wallet qualification",
+    "Full final candidate acceptance, native CI and browser gates are separate root workstreams; not claimed here"
+  ],
+  "checks": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "affected boundaries"
+      ],
+      "exit_code": 1,
+      "state": "NOT_RUN_ENVIRONMENT",
+      "reason": "Bare environment Python lacks pytest; corrected to existing .venv, original raw log preserved",
+      "log": "affected-boundaries.log"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_disposed_origin_scopes.py",
+        "tests/test_selected_cohort_observations.py",
+        "tests/test_wallet_position_population.py",
+        "tests/test_historical_membership.py",
+        "tests/test_metric_evidence.py",
+        "tests/test_indexed_input.py",
+        "tests/test_source_fact_reuse.py"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "unique_nodes": 260,
+      "subtests_separately": 21,
+      "seconds": 7.92,
+      "log": "affected-boundaries-reviewed.log",
+      "binding": "Pre-final membership/UI repairs; not current acceptance"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "affected boundaries",
+        "tests/test_archive_workflow.py"
+      ],
+      "exit_code": 4,
+      "state": "NOT_RUN_HARNESS",
+      "reason": "Nonexistent selector; no tests ran. Corrected selector set below, original raw log retained",
+      "log": "final-affected-boundaries.log"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_disposed_origin_scopes.py",
+        "tests/test_selected_cohort_observations.py",
+        "tests/test_wallet_position_population.py",
+        "tests/test_historical_membership.py",
+        "tests/test_metric_evidence.py",
+        "tests/test_indexed_input.py",
+        "tests/test_source_fact_reuse.py",
+        "tests/test_production_evidence_composition.py"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "unique_nodes": 311,
+      "subtests_separately": 21,
+      "seconds": 8.49,
+      "log": "final-affected-boundaries-reviewed.log"
+    },
+    {
+      "argv": [
+        "node",
+        "frontend/scripts/check-discovery.mjs"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "log": "frontend-current-controls.log"
+    },
+    {
+      "argv": [
+        "env",
+        "PYTHONPATH=.",
+        ".venv/bin/python",
+        "/workspace/outputs/position-history-batch/review-membership-census.py"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "controls": 3,
+      "log": "membership-census-reviewed-after.log"
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/outputs/position-history-batch/review-ui-basis-fixed.mjs"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "log": "frontend-basis-reviewed-after.log"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "state": "PASS"
+    }
+  ],
+  "raw_logs": {
+    "affected-boundaries.log": {
+      "sha256": "51f5550d86043279227c92b72199d4ee1f66d30623405f70c98442058ffe76c7",
+      "bytes": 97
+    },
+    "affected-boundaries-reviewed.log": {
+      "sha256": "9a7ab3523702a1ca68b5f2ccfac96b108bef865c86b4d852cd70447524f261f4",
+      "bytes": 832
+    },
+    "final-affected-boundaries.log": {
+      "sha256": "d849d947f53f64d33980fc440608a51d75274ffe511adf881f1fb85770f56957",
+      "bytes": 91
+    },
+    "final-affected-boundaries-reviewed.log": {
+      "sha256": "082e739427bebe2b8cba0deff5302f82bcf468b9fc73c0a88fbd835325852230",
+      "bytes": 920
+    },
+    "frontend-basis-baseline.log": {
+      "sha256": "f672ed8ef51af9eab834e7d3d70f9a31fab9e2861cf67f9cbecc4f9c5b15153e",
+      "bytes": 760
+    },
+    "frontend-basis-after.log": {
+      "sha256": "ac4040218eddd5cbb039d302f5237002ad64be5274ca91adb04ca0ebe8bc15ef",
+      "bytes": 731
+    },
+    "frontend-basis-reviewed-after.log": {
+      "sha256": "a0d54c7473b969dc53318f8221233c43aea76fa123fd10dcf510ee507b398605",
+      "bytes": 592
+    },
+    "frontend-current-controls.log": {
+      "sha256": "99062e282d879473cd9438f2e25a0bbcd1ca50f5979b9a0a5695c6c11546a90d",
+      "bytes": 242
+    },
+    "membership-census-baseline.log": {
+      "sha256": "7e33ffb83658582d605312dfd80eef93518efc3d403972c3ee771820798fa104",
+      "bytes": 645
+    },
+    "membership-census-baseline-reviewed.log": {
+      "sha256": "9ed41e7b79a2cb6d393a8a9e7361284428930452c68fc8390783448afd3931a3",
+      "bytes": 1994
+    },
+    "membership-census-reviewed-after.log": {
+      "sha256": "21a7315ac8fc2b5772e71b2dc9ee2b7da501900c6a6ae7842b2142c66c19f079",
+      "bytes": 1507
+    }
+  }
+}

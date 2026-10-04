@@ -1,0 +1,112 @@
+{
+  "kind": "lossless-completed-browser-export-storage",
+  "state": "PASS",
+  "created_at": "2026-10-04T15:34:15.591090+00:00",
+  "application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "scope": "Only completed own untracked public report JSON exports over2MiB; original acquisition archives, raw receipts/logs, screenshots and worked expectations unchanged.",
+  "records": [
+    {
+      "original": "evidence/position-history-batch/product-browser-final/genuine-partial-report.json",
+      "original_bytes": 6164759,
+      "original_sha256": "d3659ed7b31d8fad3b76ca869d8fd2f84f18a36d973ea31f4e5ae25e5731b8ec",
+      "stored": "evidence/position-history-batch/product-browser-final/genuine-partial-report.json.gz",
+      "stored_bytes": 274788,
+      "stored_sha256": "c37dd141a1909d13d2a25c439cb73735bd84a7daa9a7e2b1577718fafd1fb9b1",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/indexed-partial-child.json",
+      "original_bytes": 93012609,
+      "original_sha256": "bc7af35554120b220302019d1041703fc7c82ac0ad8030f8cbb279f544510f34",
+      "stored": "evidence/position-history-batch/product-browser-final/indexed-partial-child.json.gz",
+      "stored_bytes": 3692165,
+      "stored_sha256": "400f9b99f3b741e8bf675323721c0a11f9320e6e58f28d3cb362f17224f0bcb8",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/indexed-partial-parent.json",
+      "original_bytes": 93012056,
+      "original_sha256": "b2abfafe5b4e1c7e9cde89daf6d86b52d8896226b816c85a3b8c8107b53443f8",
+      "stored": "evidence/position-history-batch/product-browser-final/indexed-partial-parent.json.gz",
+      "stored_bytes": 3691929,
+      "stored_sha256": "289311253ceadc8c1e8b5cef1d8abf6e8acf14403d5adf092630eedf5d8368d9",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/synthetic-parent.json",
+      "original_bytes": 8446479,
+      "original_sha256": "233686c08d3aa3e881eb37cf19312578c1c4ef9cb299f1b1f30e340951b1100f",
+      "stored": "evidence/position-history-batch/product-browser-final/synthetic-parent.json.gz",
+      "stored_bytes": 260809,
+      "stored_sha256": "a95c7112f454b346a593ba60032fb4bdccbb62a9faf941495bdc679735ba2683",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/synthetic-ui-export.json",
+      "original_bytes": 8446479,
+      "original_sha256": "233686c08d3aa3e881eb37cf19312578c1c4ef9cb299f1b1f30e340951b1100f",
+      "stored": "evidence/position-history-batch/product-browser-final/synthetic-ui-export.json.gz",
+      "stored_bytes": 260809,
+      "stored_sha256": "a95c7112f454b346a593ba60032fb4bdccbb62a9faf941495bdc679735ba2683",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/valuation_hash-missing-report.json",
+      "original_bytes": 3195248,
+      "original_sha256": "34a3653609bd8c41591672b44ed9544027be57cc8e987ff94c782f3fa969d340",
+      "stored": "evidence/position-history-batch/product-browser-final/valuation_hash-missing-report.json.gz",
+      "stored_bytes": 109192,
+      "stored_sha256": "de680e7d934f6b30675a4f14853b68be81e7f8cfb71ccab0e13b0794d11c5fcf",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/valuation_hash-restored-report.json",
+      "original_bytes": 3187227,
+      "original_sha256": "162a507dd3e4a114f14d7627bd1e3296ec17a2b236c6959bdaecde605edfcb18",
+      "stored": "evidence/position-history-batch/product-browser-final/valuation_hash-restored-report.json.gz",
+      "stored_bytes": 108495,
+      "stored_sha256": "784e2372c4c228682ae6098c66c80011c7d36049ac4caab072efa3c26811b788",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/world_hash-missing-report.json",
+      "original_bytes": 3342816,
+      "original_sha256": "3a03357fe005be61af4d33c9f07e132ad8413ca3b332247647e32b36f3ac1f43",
+      "stored": "evidence/position-history-batch/product-browser-final/world_hash-missing-report.json.gz",
+      "stored_bytes": 112349,
+      "stored_sha256": "c65fff9149b33f4c1b122c0bea05293bfa372aaf952c8a9613b83fddb570857c",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    },
+    {
+      "original": "evidence/position-history-batch/product-browser-final/world_hash-restored-report.json",
+      "original_bytes": 3187227,
+      "original_sha256": "7fb6f4e5be9f6a8bca4a4f89442aa8d0c4595cfbb280a62a7b7a2355145d9719",
+      "stored": "evidence/position-history-batch/product-browser-final/world_hash-restored-report.json.gz",
+      "stored_bytes": 108499,
+      "stored_sha256": "eb0151c84ff50f12f7495c9f23ef7c3cb6e30ba877a24669e6d357ea04433d77",
+      "roundtrip_verified": true,
+      "reconstruction": "Decompress this individual gzip to recover the exact original bytes."
+    }
+  ],
+  "original_bytes": 221994900,
+  "stored_bytes": 8619035,
+  "removed_duplicates": [
+    "evidence/position-history-batch/product-browser-final/genuine-partial-report.json",
+    "evidence/position-history-batch/product-browser-final/indexed-partial-child.json",
+    "evidence/position-history-batch/product-browser-final/indexed-partial-parent.json",
+    "evidence/position-history-batch/product-browser-final/synthetic-parent.json",
+    "evidence/position-history-batch/product-browser-final/synthetic-ui-export.json",
+    "evidence/position-history-batch/product-browser-final/valuation_hash-missing-report.json",
+    "evidence/position-history-batch/product-browser-final/valuation_hash-restored-report.json",
+    "evidence/position-history-batch/product-browser-final/world_hash-missing-report.json",
+    "evidence/position-history-batch/product-browser-final/world_hash-restored-report.json"
+  ]
+}

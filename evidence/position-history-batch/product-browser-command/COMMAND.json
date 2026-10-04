@@ -1,0 +1,117 @@
+{
+  "kind": "actual-offline-product-browser-candidate-replay",
+  "state": "PASS",
+  "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "source_files": 241,
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/solana-wallet-scanner/tools/product_browser.py",
+    "--python",
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "--chromium",
+    "/usr/bin/chromium",
+    "--indexed-archive",
+    "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "--indexed-expected-fees",
+    "0.000158868",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/position-history-batch/product-browser-final"
+  ],
+  "started_utc": "2026-10-04T15:29:49.194759+00:00",
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "timeout_seconds": 300,
+  "scope": "Actual synthetic demonstration and partial genuine UI/export/rebuild controls; full genuine acceptance remains blocked.",
+  "exit_code": 0,
+  "seconds": 62.74167762999423,
+  "finished_utc": "2026-10-04T15:30:51.936714+00:00",
+  "source_unchanged": true,
+  "commit_unchanged": true,
+  "raw_log_sha256": "9954ce7b17636533d5dcbf05ad817fa375d14d0360eab5b1063a1283accf6a8c",
+  "raw_log_bytes": 4420,
+  "browser_receipt_sha256": "e3800ec1c2dacbd69e2487eda676c071e3d16ce41bc2b68d1e7396e544af1457",
+  "browser_state": "PASS",
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "parent_unchanged": true,
+  "captures": 16,
+  "case_count": 7,
+  "selected_cohort_ui_cases": [
+    {
+      "case": "import-synthetic-input",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-partial-real-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-indexed-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "indexed-partial-rebuilt",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    }
+  ]
+}

@@ -1,0 +1,2246 @@
+{
+  "kind": "read-only-exact-head-actions-observation",
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "branch": "codex/product-completion",
+  "head": "1040215f498b1317b1b942838994127f43a822bd",
+  "state": "EXACT_RUN_IN_PROGRESS",
+  "provider_requests": 0,
+  "helius_requests": 0,
+  "API_mutations": 0,
+  "application_changes": false,
+  "PRODUCT_READY": false,
+  "artifact_diagnostics": [
+    {
+      "name": "focused-archives",
+      "id": 11305990217,
+      "state": "DOWNLOADED_AND_BOUNDED",
+      "run_id": 37208279838,
+      "run_attempt": 1,
+      "head": "1040215f498b1317b1b942838994127f43a822bd",
+      "archive": {
+        "bytes": 14618,
+        "sha256": "3c88e0ac0153e2d1ef71a9ed3ff4cf566534252356c436641692f5ca239c1d92"
+      },
+      "files": [
+        {
+          "name": "result.json",
+          "bytes": 40248,
+          "sha256": "e71c2127c234efcce5fadc5b27daa07969fe260f44855d68f00d4319da6a1f9b"
+        },
+        {
+          "name": "node-runtime.log",
+          "bytes": 9,
+          "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+        },
+        {
+          "name": "backend.log",
+          "bytes": 1040,
+          "sha256": "7fb685260e866feff9939e7daa5a95bf0e3f781e53609ea920720aeafd23dc38"
+        },
+        {
+          "name": "runtime.log",
+          "bytes": 51,
+          "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+        },
+        {
+          "name": "DIAGNOSTIC_STATUS.json",
+          "bytes": 785,
+          "sha256": "2472f776b0dbc7773eeb4b905a7e800e2c99a61100d9379f27dca418632b1b3f"
+        }
+      ]
+    },
+    {
+      "name": "focused-research",
+      "id": 11305822789,
+      "state": "DOWNLOADED_AND_BOUNDED",
+      "run_id": 37208279838,
+      "run_attempt": 1,
+      "head": "1040215f498b1317b1b942838994127f43a822bd",
+      "archive": {
+        "bytes": 14551,
+        "sha256": "eb67209873897cd48024cf6b0e60280900d5360e4a391424a6df82587fcc0bdf"
+      },
+      "files": [
+        {
+          "name": "runtime.log",
+          "bytes": 51,
+          "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+        },
+        {
+          "name": "node-runtime.log",
+          "bytes": 9,
+          "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+        },
+        {
+          "name": "result.json",
+          "bytes": 39897,
+          "sha256": "30001399d9eaecb8b7d412085d6f399bce84a6496b472d2e843faef186c82651"
+        },
+        {
+          "name": "backend.log",
+          "bytes": 707,
+          "sha256": "ae36a8e685b65030e68e92eedede82aab00fdc8af0cf1e154e9df4bfd7230448"
+        },
+        {
+          "name": "DIAGNOSTIC_STATUS.json",
+          "bytes": 784,
+          "sha256": "83feea5a8753589d225d76b9321777b5539834f464ba191ad298ade332d0fea2"
+        }
+      ]
+    },
+    {
+      "name": "focused-historical",
+      "id": 11305822491,
+      "state": "DOWNLOADED_AND_BOUNDED",
+      "run_id": 37208279838,
+      "run_attempt": 1,
+      "head": "1040215f498b1317b1b942838994127f43a822bd",
+      "archive": {
+        "bytes": 14581,
+        "sha256": "f0ff091b79082d3069a207efbee7056784182d78a893a4e95191bf6ef5bdebf7"
+      },
+      "files": [
+        {
+          "name": "result.json",
+          "bytes": 39593,
+          "sha256": "fca5068ff0a17dc39567d289f8907bdbc6fe657965d3a6765a9f0acc74f8eb7b"
+        },
+        {
+          "name": "node-runtime.log",
+          "bytes": 9,
+          "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+        },
+        {
+          "name": "runtime.log",
+          "bytes": 51,
+          "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+        },
+        {
+          "name": "backend.log",
+          "bytes": 752,
+          "sha256": "a4a49ca1660e01b32e1bbadebbd743277b5627219e8e27c9acf9e1e3cbdf7a24"
+        },
+        {
+          "name": "DIAGNOSTIC_STATUS.json",
+          "bytes": 784,
+          "sha256": "35d7bfd561929c213090e26bc104fb4c97a1eacbc41569b0876bfdc2ed981fc3"
+        }
+      ]
+    },
+    {
+      "name": "focused-schemas",
+      "id": 11305802591,
+      "state": "DOWNLOADED_AND_BOUNDED",
+      "run_id": 37208279838,
+      "run_attempt": 1,
+      "head": "1040215f498b1317b1b942838994127f43a822bd",
+      "archive": {
+        "bytes": 14679,
+        "sha256": "18c42d54206c12de62f0d6fc0622c33a69a54895d9034df2be3805966770bafa"
+      },
+      "files": [
+        {
+          "name": "result.json",
+          "bytes": 40294,
+          "sha256": "129710c0d18047a136c18866f4c4188cc4de7cedd410b80f0b30391bce8ae175"
+        },
+        {
+          "name": "runtime.log",
+          "bytes": 51,
+          "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+        },
+        {
+          "name": "node-runtime.log",
+          "bytes": 9,
+          "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+        },
+        {
+          "name": "backend.log",
+          "bytes": 1406,
+          "sha256": "6faa9934522f9654a4da8b95edaa619fad4ccc9d56d3deb465dd9f225bad2ed0"
+        },
+        {
+          "name": "DIAGNOSTIC_STATUS.json",
+          "bytes": 785,
+          "sha256": "2d9373ee230b2c7ceeb8a367d9f0f6c6d6a11a8c185936cbb36b3807e614b323"
+        }
+      ]
+    },
+    {
+      "name": "offline-development-receipt",
+      "id": 11305472272,
+      "state": "DOWNLOADED_AND_BOUNDED",
+      "run_id": 37208279838,
+      "run_attempt": 1,
+      "head": "1040215f498b1317b1b942838994127f43a822bd",
+      "archive": {
+        "bytes": 16825,
+        "sha256": "73879ce5a065f4226127282c97e7f9d9624e3196c4ef7313a242e755ec93e9e2"
+      },
+      "files": [
+        {
+          "name": "result.json",
+          "bytes": 42411,
+          "sha256": "83e666371c64c70737ed339a507d5c9d240deed03a048190b6e51eca12e83f8e"
+        },
+        {
+          "name": "runtime.log",
+          "bytes": 51,
+          "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+        },
+        {
+          "name": "node-runtime.log",
+          "bytes": 9,
+          "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+        },
+        {
+          "name": "pip-check.log",
+          "bytes": 288,
+          "sha256": "fce5a111cd4717d57ac73dfb630b7cdb4d84a45e85e7a465a1c78a9176c70c4c"
+        },
+        {
+          "name": "shell-syntax.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "product.log",
+          "bytes": 700,
+          "sha256": "75bdf4105cde866bc04ec3afe3e4acbc7f8d9f8857083714c0e8059f1157039a"
+        },
+        {
+          "name": "frontend-check-format.log",
+          "bytes": 142,
+          "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+        },
+        {
+          "name": "frontend-check-discovery.log",
+          "bytes": 329,
+          "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9"
+        },
+        {
+          "name": "frontend-build.log",
+          "bytes": 415,
+          "sha256": "b28fa393ff4463fb90aaa833d9e8dda11a9aa68c21a4d996f47934f5c67baa0f"
+        },
+        {
+          "name": "DIAGNOSTIC_STATUS.json",
+          "bytes": 1690,
+          "sha256": "d74df49cb506edf0fbf7af4cde72b86e08f23d26e0a070a37de6dc4dd4c86f11"
+        }
+      ]
+    },
+    {
+      "name": "focused-discovery",
+      "id": 11305404013,
+      "state": "DOWNLOADED_AND_BOUNDED",
+      "run_id": 37208279838,
+      "run_attempt": 1,
+      "head": "1040215f498b1317b1b942838994127f43a822bd",
+      "archive": {
+        "bytes": 14554,
+        "sha256": "c77d1027519c06e164fa56f0f2779c94350ac504db1db17c1eab70a16d7f7616"
+      },
+      "files": [
+        {
+          "name": "result.json",
+          "bytes": 39939,
+          "sha256": "2c64f66ecdff91178f0d0e77bc76fdb217e024a19867b6d1cb359eba50facf54"
+        },
+        {
+          "name": "runtime.log",
+          "bytes": 51,
+          "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+        },
+        {
+          "name": "node-runtime.log",
+          "bytes": 9,
+          "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+        },
+        {
+          "name": "backend.log",
+          "bytes": 871,
+          "sha256": "1329d915d045a36d2991843205b6519583a573507e3de515ea18dadd8cc1d225"
+        },
+        {
+          "name": "DIAGNOSTIC_STATUS.json",
+          "bytes": 784,
+          "sha256": "709ad8091e067a107cc261c76abd9d578f857a6751ca8dbcd57a27601ab7e5c2"
+        }
+      ]
+    }
+  ],
+  "artifact_bytes_read": 0,
+  "artifact_expanded_bytes_examined": 0,
+  "observed_at": 1791124644.4708889,
+  "private_repository_confirmed": true,
+  "run_id": 37208279838,
+  "run_attempt": 1,
+  "url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+  "run_status": "in_progress",
+  "run_conclusion": null,
+  "jobs": [
+    {
+      "id": 111453989329,
+      "name": "offline-development",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-04T14:10:32Z",
+      "completed_at": "2026-10-04T14:13:17Z",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989329",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:10:33Z",
+          "completed_at": "2026-10-04T14:10:34Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:10:34Z",
+          "completed_at": "2026-10-04T14:12:09Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:12:09Z",
+          "completed_at": "2026-10-04T14:12:09Z"
+        },
+        {
+          "name": "Set up Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:12:09Z",
+          "completed_at": "2026-10-04T14:12:14Z"
+        },
+        {
+          "name": "Install locked dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:12:14Z",
+          "completed_at": "2026-10-04T14:12:31Z"
+        },
+        {
+          "name": "Run product and frontend checks without network access",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T14:12:31Z",
+          "completed_at": "2026-10-04T14:13:14Z"
+        },
+        {
+          "name": "Preserve bounded development diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T14:13:14Z",
+          "completed_at": "2026-10-04T14:13:14Z"
+        },
+        {
+          "name": "Upload only development receipt and text logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T14:13:14Z",
+          "completed_at": "2026-10-04T14:13:15Z"
+        },
+        {
+          "name": "Post Set up Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T14:13:15Z",
+          "completed_at": "2026-10-04T14:13:15Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T14:13:15Z",
+          "completed_at": "2026-10-04T14:13:16Z"
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-04T14:13:16Z",
+          "completed_at": "2026-10-04T14:13:16Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-04T14:13:16Z",
+          "completed_at": "2026-10-04T14:13:16Z"
+        }
+      ]
+    },
+    {
+      "id": 111453989505,
+      "name": "focused-group (indexed)",
+      "status": "in_progress",
+      "conclusion": null,
+      "started_at": "2026-10-04T14:12:50Z",
+      "completed_at": null,
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989505",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:12:51Z",
+          "completed_at": "2026-10-04T14:12:52Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:12:52Z",
+          "completed_at": "2026-10-04T14:14:28Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:14:28Z",
+          "completed_at": "2026-10-04T14:14:28Z"
+        },
+        {
+          "name": "Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:14:28Z",
+          "completed_at": "2026-10-04T14:14:29Z"
+        },
+        {
+          "name": "Install locked backend dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:14:29Z",
+          "completed_at": "2026-10-04T14:14:39Z"
+        },
+        {
+          "name": "Run the exact focused group without network access",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 6,
+          "started_at": "2026-10-04T14:14:39Z",
+          "completed_at": null
+        },
+        {
+          "name": "Preserve bounded diagnostics even after failure or interruption",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Upload only focused receipts and text logs",
+          "status": "pending",
+          "conclusion": null,
+          "number": 8,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Set up Node for receipt binding",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "pending",
+          "conclusion": null,
+          "number": 15,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "pending",
+          "conclusion": null,
+          "number": 16,
+          "started_at": null,
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "id": 111453989515,
+      "name": "focused-group (archives)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-04T14:10:32Z",
+      "completed_at": "2026-10-04T14:13:40Z",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989515",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:10:33Z",
+          "completed_at": "2026-10-04T14:10:34Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:10:34Z",
+          "completed_at": "2026-10-04T14:12:01Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:12:01Z",
+          "completed_at": "2026-10-04T14:12:01Z"
+        },
+        {
+          "name": "Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:12:01Z",
+          "completed_at": "2026-10-04T14:12:02Z"
+        },
+        {
+          "name": "Install locked backend dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:12:02Z",
+          "completed_at": "2026-10-04T14:12:13Z"
+        },
+        {
+          "name": "Run the exact focused group without network access",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T14:12:13Z",
+          "completed_at": "2026-10-04T14:13:37Z"
+        },
+        {
+          "name": "Preserve bounded diagnostics even after failure or interruption",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T14:13:37Z",
+          "completed_at": "2026-10-04T14:13:37Z"
+        },
+        {
+          "name": "Upload only focused receipts and text logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T14:13:37Z",
+          "completed_at": "2026-10-04T14:13:38Z"
+        },
+        {
+          "name": "Post Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T14:13:38Z",
+          "completed_at": "2026-10-04T14:13:39Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T14:13:39Z",
+          "completed_at": "2026-10-04T14:13:39Z"
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-04T14:13:39Z",
+          "completed_at": "2026-10-04T14:13:39Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-04T14:13:39Z",
+          "completed_at": "2026-10-04T14:13:39Z"
+        }
+      ]
+    },
+    {
+      "id": 111453989518,
+      "name": "focused-group (research)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-04T14:13:43Z",
+      "completed_at": "2026-10-04T14:15:44Z",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989518",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:13:44Z",
+          "completed_at": "2026-10-04T14:13:45Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:13:45Z",
+          "completed_at": "2026-10-04T14:15:11Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:15:11Z",
+          "completed_at": "2026-10-04T14:15:11Z"
+        },
+        {
+          "name": "Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:15:11Z",
+          "completed_at": "2026-10-04T14:15:12Z"
+        },
+        {
+          "name": "Install locked backend dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:15:12Z",
+          "completed_at": "2026-10-04T14:15:24Z"
+        },
+        {
+          "name": "Run the exact focused group without network access",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T14:15:24Z",
+          "completed_at": "2026-10-04T14:15:42Z"
+        },
+        {
+          "name": "Preserve bounded diagnostics even after failure or interruption",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T14:15:42Z",
+          "completed_at": "2026-10-04T14:15:42Z"
+        },
+        {
+          "name": "Upload only focused receipts and text logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T14:15:42Z",
+          "completed_at": "2026-10-04T14:15:43Z"
+        },
+        {
+          "name": "Post Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T14:15:43Z",
+          "completed_at": "2026-10-04T14:15:43Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T14:15:43Z",
+          "completed_at": "2026-10-04T14:15:43Z"
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-04T14:15:43Z",
+          "completed_at": "2026-10-04T14:15:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-04T14:15:44Z",
+          "completed_at": "2026-10-04T14:15:44Z"
+        }
+      ]
+    },
+    {
+      "id": 111453989546,
+      "name": "focused-group (discovery)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-04T14:13:50Z",
+      "completed_at": "2026-10-04T14:16:09Z",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989546",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:13:51Z",
+          "completed_at": "2026-10-04T14:13:52Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:13:52Z",
+          "completed_at": "2026-10-04T14:15:29Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:15:29Z",
+          "completed_at": "2026-10-04T14:15:29Z"
+        },
+        {
+          "name": "Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:15:29Z",
+          "completed_at": "2026-10-04T14:15:32Z"
+        },
+        {
+          "name": "Install locked backend dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:15:32Z",
+          "completed_at": "2026-10-04T14:15:45Z"
+        },
+        {
+          "name": "Run the exact focused group without network access",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T14:15:45Z",
+          "completed_at": "2026-10-04T14:16:04Z"
+        },
+        {
+          "name": "Preserve bounded diagnostics even after failure or interruption",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T14:16:04Z",
+          "completed_at": "2026-10-04T14:16:04Z"
+        },
+        {
+          "name": "Upload only focused receipts and text logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T14:16:04Z",
+          "completed_at": "2026-10-04T14:16:06Z"
+        },
+        {
+          "name": "Post Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T14:16:06Z",
+          "completed_at": "2026-10-04T14:16:06Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T14:16:06Z",
+          "completed_at": "2026-10-04T14:16:06Z"
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-04T14:16:06Z",
+          "completed_at": "2026-10-04T14:16:06Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-04T14:16:07Z",
+          "completed_at": "2026-10-04T14:16:07Z"
+        }
+      ]
+    },
+    {
+      "id": 111453989560,
+      "name": "focused-group (schemas)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-04T14:10:32Z",
+      "completed_at": "2026-10-04T14:13:45Z",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989560",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:10:33Z",
+          "completed_at": "2026-10-04T14:10:34Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:10:34Z",
+          "completed_at": "2026-10-04T14:12:01Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:12:01Z",
+          "completed_at": "2026-10-04T14:12:01Z"
+        },
+        {
+          "name": "Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:12:01Z",
+          "completed_at": "2026-10-04T14:12:02Z"
+        },
+        {
+          "name": "Install locked backend dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:12:02Z",
+          "completed_at": "2026-10-04T14:12:13Z"
+        },
+        {
+          "name": "Run the exact focused group without network access",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T14:12:13Z",
+          "completed_at": "2026-10-04T14:13:41Z"
+        },
+        {
+          "name": "Preserve bounded diagnostics even after failure or interruption",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T14:13:41Z",
+          "completed_at": "2026-10-04T14:13:41Z"
+        },
+        {
+          "name": "Upload only focused receipts and text logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T14:13:41Z",
+          "completed_at": "2026-10-04T14:13:42Z"
+        },
+        {
+          "name": "Post Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T14:13:42Z",
+          "completed_at": "2026-10-04T14:13:42Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T14:13:42Z",
+          "completed_at": "2026-10-04T14:13:43Z"
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-04T14:13:43Z",
+          "completed_at": "2026-10-04T14:13:43Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-04T14:13:43Z",
+          "completed_at": "2026-10-04T14:13:43Z"
+        }
+      ]
+    },
+    {
+      "id": 111453989618,
+      "name": "focused-group (historical)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-04T14:10:32Z",
+      "completed_at": "2026-10-04T14:12:48Z",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989618",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T14:10:33Z",
+          "completed_at": "2026-10-04T14:10:34Z"
+        },
+        {
+          "name": "Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T14:10:34Z",
+          "completed_at": "2026-10-04T14:12:11Z"
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T14:12:11Z",
+          "completed_at": "2026-10-04T14:12:11Z"
+        },
+        {
+          "name": "Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T14:12:11Z",
+          "completed_at": "2026-10-04T14:12:14Z"
+        },
+        {
+          "name": "Install locked backend dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T14:12:14Z",
+          "completed_at": "2026-10-04T14:12:26Z"
+        },
+        {
+          "name": "Run the exact focused group without network access",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T14:12:26Z",
+          "completed_at": "2026-10-04T14:12:44Z"
+        },
+        {
+          "name": "Preserve bounded diagnostics even after failure or interruption",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T14:12:44Z",
+          "completed_at": "2026-10-04T14:12:44Z"
+        },
+        {
+          "name": "Upload only focused receipts and text logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T14:12:44Z",
+          "completed_at": "2026-10-04T14:12:45Z"
+        },
+        {
+          "name": "Post Set up Node for receipt binding",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T14:12:45Z",
+          "completed_at": "2026-10-04T14:12:45Z"
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T14:12:45Z",
+          "completed_at": "2026-10-04T14:12:46Z"
+        },
+        {
+          "name": "Post Check out the exact candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-04T14:12:46Z",
+          "completed_at": "2026-10-04T14:12:46Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-04T14:12:46Z",
+          "completed_at": "2026-10-04T14:12:46Z"
+        }
+      ]
+    }
+  ],
+  "raw_metadata": {
+    "run": {
+      "id": 37208279838,
+      "name": "Offline focused correctness",
+      "node_id": "WFR_kwLOU6u3u88AAAAIqclLHg",
+      "head_branch": "codex/product-completion",
+      "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+      "path": ".github/workflows/offline-focused.yml",
+      "display_title": "Bind final metric accounting gates and preserve offline replay evidence",
+      "run_number": 5,
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "workflow_id": 374326299,
+      "check_suite_id": 100783733932,
+      "check_suite_node_id": "CS_kwDOU6u3u88AAAAXdy28rA",
+      "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+      "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+      "pull_requests": [],
+      "created_at": "2026-10-04T14:10:29Z",
+      "updated_at": "2026-10-04T14:13:50Z",
+      "actor": {
+        "login": "vermilion1992",
+        "id": 229542976,
+        "node_id": "U_kgDODa6MQA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/229542976?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/vermilion1992",
+        "html_url": "https://github.com/vermilion1992",
+        "followers_url": "https://api.github.com/users/vermilion1992/followers",
+        "following_url": "https://api.github.com/users/vermilion1992/following{/other_user}",
+        "gists_url": "https://api.github.com/users/vermilion1992/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/vermilion1992/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/vermilion1992/subscriptions",
+        "organizations_url": "https://api.github.com/users/vermilion1992/orgs",
+        "repos_url": "https://api.github.com/users/vermilion1992/repos",
+        "events_url": "https://api.github.com/users/vermilion1992/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/vermilion1992/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "run_attempt": 1,
+      "referenced_workflows": [],
+      "run_started_at": "2026-10-04T14:10:29Z",
+      "triggering_actor": {
+        "login": "vermilion1992",
+        "id": 229542976,
+        "node_id": "U_kgDODa6MQA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/229542976?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/vermilion1992",
+        "html_url": "https://github.com/vermilion1992",
+        "followers_url": "https://api.github.com/users/vermilion1992/followers",
+        "following_url": "https://api.github.com/users/vermilion1992/following{/other_user}",
+        "gists_url": "https://api.github.com/users/vermilion1992/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/vermilion1992/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/vermilion1992/subscriptions",
+        "organizations_url": "https://api.github.com/users/vermilion1992/orgs",
+        "repos_url": "https://api.github.com/users/vermilion1992/repos",
+        "events_url": "https://api.github.com/users/vermilion1992/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/vermilion1992/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "jobs_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/jobs",
+      "logs_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/logs",
+      "check_suite_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-suites/100783733932",
+      "artifacts_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/artifacts",
+      "cancel_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/cancel",
+      "rerun_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/rerun",
+      "previous_attempt_url": null,
+      "workflow_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/workflows/374326299",
+      "head_commit": {
+        "id": "1040215f498b1317b1b942838994127f43a822bd",
+        "tree_id": "c647979c6490171af6b0b4c0fcde9e6a72207080",
+        "message": "Bind final metric accounting gates and preserve offline replay evidence",
+        "timestamp": "2026-10-04T13:57:25Z",
+        "author": {
+          "name": "Mitchell Hoffman",
+          "email": "mitchxhoffman@gmail.com"
+        },
+        "committer": {
+          "name": "Mitchell Hoffman",
+          "email": "mitchxhoffman@gmail.com"
+        }
+      },
+      "repository": {
+        "id": 1403762619,
+        "node_id": "R_kgDOU6u3uw",
+        "name": "solana-wallet-scanner",
+        "full_name": "vermilion1992/solana-wallet-scanner",
+        "private": true,
+        "owner": {
+          "login": "vermilion1992",
+          "id": 229542976,
+          "node_id": "U_kgDODa6MQA",
+          "avatar_url": "https://avatars.githubusercontent.com/u/229542976?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/vermilion1992",
+          "html_url": "https://github.com/vermilion1992",
+          "followers_url": "https://api.github.com/users/vermilion1992/followers",
+          "following_url": "https://api.github.com/users/vermilion1992/following{/other_user}",
+          "gists_url": "https://api.github.com/users/vermilion1992/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/vermilion1992/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/vermilion1992/subscriptions",
+          "organizations_url": "https://api.github.com/users/vermilion1992/orgs",
+          "repos_url": "https://api.github.com/users/vermilion1992/repos",
+          "events_url": "https://api.github.com/users/vermilion1992/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/vermilion1992/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "html_url": "https://github.com/vermilion1992/solana-wallet-scanner",
+        "description": ".",
+        "fork": false,
+        "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner",
+        "forks_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/forks",
+        "keys_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/teams",
+        "hooks_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/hooks",
+        "issue_events_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/events",
+        "assignees_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/tags",
+        "blobs_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/languages",
+        "stargazers_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/stargazers",
+        "contributors_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/contributors",
+        "subscribers_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/subscribers",
+        "subscription_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/subscription",
+        "commits_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/issues/comments{/number}",
+        "contents_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/merges",
+        "archive_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/downloads",
+        "issues_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/labels{/name}",
+        "releases_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/releases{/id}",
+        "deployments_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/deployments"
+      },
+      "head_repository": {
+        "id": 1403762619,
+        "node_id": "R_kgDOU6u3uw",
+        "name": "solana-wallet-scanner",
+        "full_name": "vermilion1992/solana-wallet-scanner",
+        "private": true,
+        "owner": {
+          "login": "vermilion1992",
+          "id": 229542976,
+          "node_id": "U_kgDODa6MQA",
+          "avatar_url": "https://avatars.githubusercontent.com/u/229542976?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/vermilion1992",
+          "html_url": "https://github.com/vermilion1992",
+          "followers_url": "https://api.github.com/users/vermilion1992/followers",
+          "following_url": "https://api.github.com/users/vermilion1992/following{/other_user}",
+          "gists_url": "https://api.github.com/users/vermilion1992/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/vermilion1992/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/vermilion1992/subscriptions",
+          "organizations_url": "https://api.github.com/users/vermilion1992/orgs",
+          "repos_url": "https://api.github.com/users/vermilion1992/repos",
+          "events_url": "https://api.github.com/users/vermilion1992/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/vermilion1992/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "html_url": "https://github.com/vermilion1992/solana-wallet-scanner",
+        "description": ".",
+        "fork": false,
+        "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner",
+        "forks_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/forks",
+        "keys_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/teams",
+        "hooks_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/hooks",
+        "issue_events_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/events",
+        "assignees_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/tags",
+        "blobs_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/languages",
+        "stargazers_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/stargazers",
+        "contributors_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/contributors",
+        "subscribers_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/subscribers",
+        "subscription_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/subscription",
+        "commits_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/issues/comments{/number}",
+        "contents_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/merges",
+        "archive_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/downloads",
+        "issues_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/labels{/name}",
+        "releases_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/releases{/id}",
+        "deployments_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/deployments"
+      }
+    },
+    "jobs": {
+      "total_count": 7,
+      "jobs": [
+        {
+          "id": 111453989329,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzp0Q",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989329",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989329",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:10:32Z",
+          "completed_at": "2026-10-04T14:13:17Z",
+          "name": "offline-development",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:10:33Z",
+              "completed_at": "2026-10-04T14:10:34Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:10:34Z",
+              "completed_at": "2026-10-04T14:12:09Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:12:09Z",
+              "completed_at": "2026-10-04T14:12:09Z"
+            },
+            {
+              "name": "Set up Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:12:09Z",
+              "completed_at": "2026-10-04T14:12:14Z"
+            },
+            {
+              "name": "Install locked dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:12:14Z",
+              "completed_at": "2026-10-04T14:12:31Z"
+            },
+            {
+              "name": "Run product and frontend checks without network access",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-04T14:12:31Z",
+              "completed_at": "2026-10-04T14:13:14Z"
+            },
+            {
+              "name": "Preserve bounded development diagnostics",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-04T14:13:14Z",
+              "completed_at": "2026-10-04T14:13:14Z"
+            },
+            {
+              "name": "Upload only development receipt and text logs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-04T14:13:14Z",
+              "completed_at": "2026-10-04T14:13:15Z"
+            },
+            {
+              "name": "Post Set up Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-10-04T14:13:15Z",
+              "completed_at": "2026-10-04T14:13:15Z"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-10-04T14:13:15Z",
+              "completed_at": "2026-10-04T14:13:16Z"
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-10-04T14:13:16Z",
+              "completed_at": "2026-10-04T14:13:16Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-10-04T14:13:16Z",
+              "completed_at": "2026-10-04T14:13:16Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989329",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000110,
+          "runner_name": "GitHub Actions 1000000110",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        },
+        {
+          "id": 111453989505,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzqgQ",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989505",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989505",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:12:50Z",
+          "completed_at": null,
+          "name": "focused-group (indexed)",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:12:51Z",
+              "completed_at": "2026-10-04T14:12:52Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:12:52Z",
+              "completed_at": "2026-10-04T14:14:28Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:14:28Z",
+              "completed_at": "2026-10-04T14:14:28Z"
+            },
+            {
+              "name": "Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:14:28Z",
+              "completed_at": "2026-10-04T14:14:29Z"
+            },
+            {
+              "name": "Install locked backend dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:14:29Z",
+              "completed_at": "2026-10-04T14:14:39Z"
+            },
+            {
+              "name": "Run the exact focused group without network access",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 6,
+              "started_at": "2026-10-04T14:14:39Z",
+              "completed_at": null
+            },
+            {
+              "name": "Preserve bounded diagnostics even after failure or interruption",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Upload only focused receipts and text logs",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Set up Node for receipt binding",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15,
+              "started_at": null,
+              "completed_at": null
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16,
+              "started_at": null,
+              "completed_at": null
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989505",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000113,
+          "runner_name": "GitHub Actions 1000000113",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        },
+        {
+          "id": 111453989515,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzqiw",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989515",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989515",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:10:32Z",
+          "completed_at": "2026-10-04T14:13:40Z",
+          "name": "focused-group (archives)",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:10:33Z",
+              "completed_at": "2026-10-04T14:10:34Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:10:34Z",
+              "completed_at": "2026-10-04T14:12:01Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:12:01Z",
+              "completed_at": "2026-10-04T14:12:01Z"
+            },
+            {
+              "name": "Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:12:01Z",
+              "completed_at": "2026-10-04T14:12:02Z"
+            },
+            {
+              "name": "Install locked backend dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:12:02Z",
+              "completed_at": "2026-10-04T14:12:13Z"
+            },
+            {
+              "name": "Run the exact focused group without network access",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-04T14:12:13Z",
+              "completed_at": "2026-10-04T14:13:37Z"
+            },
+            {
+              "name": "Preserve bounded diagnostics even after failure or interruption",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-04T14:13:37Z",
+              "completed_at": "2026-10-04T14:13:37Z"
+            },
+            {
+              "name": "Upload only focused receipts and text logs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-04T14:13:37Z",
+              "completed_at": "2026-10-04T14:13:38Z"
+            },
+            {
+              "name": "Post Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-10-04T14:13:38Z",
+              "completed_at": "2026-10-04T14:13:39Z"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-10-04T14:13:39Z",
+              "completed_at": "2026-10-04T14:13:39Z"
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-10-04T14:13:39Z",
+              "completed_at": "2026-10-04T14:13:39Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-10-04T14:13:39Z",
+              "completed_at": "2026-10-04T14:13:39Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989515",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000109,
+          "runner_name": "GitHub Actions 1000000109",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        },
+        {
+          "id": 111453989518,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzqjg",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989518",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989518",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:13:43Z",
+          "completed_at": "2026-10-04T14:15:44Z",
+          "name": "focused-group (research)",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:13:44Z",
+              "completed_at": "2026-10-04T14:13:45Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:13:45Z",
+              "completed_at": "2026-10-04T14:15:11Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:15:11Z",
+              "completed_at": "2026-10-04T14:15:11Z"
+            },
+            {
+              "name": "Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:15:11Z",
+              "completed_at": "2026-10-04T14:15:12Z"
+            },
+            {
+              "name": "Install locked backend dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:15:12Z",
+              "completed_at": "2026-10-04T14:15:24Z"
+            },
+            {
+              "name": "Run the exact focused group without network access",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-04T14:15:24Z",
+              "completed_at": "2026-10-04T14:15:42Z"
+            },
+            {
+              "name": "Preserve bounded diagnostics even after failure or interruption",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-04T14:15:42Z",
+              "completed_at": "2026-10-04T14:15:42Z"
+            },
+            {
+              "name": "Upload only focused receipts and text logs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-04T14:15:42Z",
+              "completed_at": "2026-10-04T14:15:43Z"
+            },
+            {
+              "name": "Post Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-10-04T14:15:43Z",
+              "completed_at": "2026-10-04T14:15:43Z"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-10-04T14:15:43Z",
+              "completed_at": "2026-10-04T14:15:43Z"
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-10-04T14:15:43Z",
+              "completed_at": "2026-10-04T14:15:44Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-10-04T14:15:44Z",
+              "completed_at": "2026-10-04T14:15:44Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989518",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000114,
+          "runner_name": "GitHub Actions 1000000114",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        },
+        {
+          "id": 111453989546,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzqqg",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989546",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989546",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:13:50Z",
+          "completed_at": "2026-10-04T14:16:09Z",
+          "name": "focused-group (discovery)",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:13:51Z",
+              "completed_at": "2026-10-04T14:13:52Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:13:52Z",
+              "completed_at": "2026-10-04T14:15:29Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:15:29Z",
+              "completed_at": "2026-10-04T14:15:29Z"
+            },
+            {
+              "name": "Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:15:29Z",
+              "completed_at": "2026-10-04T14:15:32Z"
+            },
+            {
+              "name": "Install locked backend dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:15:32Z",
+              "completed_at": "2026-10-04T14:15:45Z"
+            },
+            {
+              "name": "Run the exact focused group without network access",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-04T14:15:45Z",
+              "completed_at": "2026-10-04T14:16:04Z"
+            },
+            {
+              "name": "Preserve bounded diagnostics even after failure or interruption",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-04T14:16:04Z",
+              "completed_at": "2026-10-04T14:16:04Z"
+            },
+            {
+              "name": "Upload only focused receipts and text logs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-04T14:16:04Z",
+              "completed_at": "2026-10-04T14:16:06Z"
+            },
+            {
+              "name": "Post Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-10-04T14:16:06Z",
+              "completed_at": "2026-10-04T14:16:06Z"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-10-04T14:16:06Z",
+              "completed_at": "2026-10-04T14:16:06Z"
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-10-04T14:16:06Z",
+              "completed_at": "2026-10-04T14:16:06Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-10-04T14:16:07Z",
+              "completed_at": "2026-10-04T14:16:07Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989546",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000115,
+          "runner_name": "GitHub Actions 1000000115",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        },
+        {
+          "id": 111453989560,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzquA",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989560",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989560",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:10:32Z",
+          "completed_at": "2026-10-04T14:13:45Z",
+          "name": "focused-group (schemas)",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:10:33Z",
+              "completed_at": "2026-10-04T14:10:34Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:10:34Z",
+              "completed_at": "2026-10-04T14:12:01Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:12:01Z",
+              "completed_at": "2026-10-04T14:12:01Z"
+            },
+            {
+              "name": "Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:12:01Z",
+              "completed_at": "2026-10-04T14:12:02Z"
+            },
+            {
+              "name": "Install locked backend dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:12:02Z",
+              "completed_at": "2026-10-04T14:12:13Z"
+            },
+            {
+              "name": "Run the exact focused group without network access",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-04T14:12:13Z",
+              "completed_at": "2026-10-04T14:13:41Z"
+            },
+            {
+              "name": "Preserve bounded diagnostics even after failure or interruption",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-04T14:13:41Z",
+              "completed_at": "2026-10-04T14:13:41Z"
+            },
+            {
+              "name": "Upload only focused receipts and text logs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-04T14:13:41Z",
+              "completed_at": "2026-10-04T14:13:42Z"
+            },
+            {
+              "name": "Post Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-10-04T14:13:42Z",
+              "completed_at": "2026-10-04T14:13:42Z"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-10-04T14:13:42Z",
+              "completed_at": "2026-10-04T14:13:43Z"
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-10-04T14:13:43Z",
+              "completed_at": "2026-10-04T14:13:43Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-10-04T14:13:43Z",
+              "completed_at": "2026-10-04T14:13:43Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989560",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000111,
+          "runner_name": "GitHub Actions 1000000111",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        },
+        {
+          "id": 111453989618,
+          "run_id": 37208279838,
+          "workflow_name": "Offline focused correctness",
+          "head_branch": "codex/product-completion",
+          "run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/runs/37208279838",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOU6u3u88AAAAZ8yzq8g",
+          "head_sha": "1040215f498b1317b1b942838994127f43a822bd",
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/jobs/111453989618",
+          "html_url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37208279838/job/111453989618",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-10-04T14:10:30Z",
+          "started_at": "2026-10-04T14:10:32Z",
+          "completed_at": "2026-10-04T14:12:48Z",
+          "name": "focused-group (historical)",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-04T14:10:33Z",
+              "completed_at": "2026-10-04T14:10:34Z"
+            },
+            {
+              "name": "Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-04T14:10:34Z",
+              "completed_at": "2026-10-04T14:12:11Z"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-04T14:12:11Z",
+              "completed_at": "2026-10-04T14:12:11Z"
+            },
+            {
+              "name": "Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-04T14:12:11Z",
+              "completed_at": "2026-10-04T14:12:14Z"
+            },
+            {
+              "name": "Install locked backend dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-04T14:12:14Z",
+              "completed_at": "2026-10-04T14:12:26Z"
+            },
+            {
+              "name": "Run the exact focused group without network access",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-04T14:12:26Z",
+              "completed_at": "2026-10-04T14:12:44Z"
+            },
+            {
+              "name": "Preserve bounded diagnostics even after failure or interruption",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-04T14:12:44Z",
+              "completed_at": "2026-10-04T14:12:44Z"
+            },
+            {
+              "name": "Upload only focused receipts and text logs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-04T14:12:44Z",
+              "completed_at": "2026-10-04T14:12:45Z"
+            },
+            {
+              "name": "Post Set up Node for receipt binding",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14,
+              "started_at": "2026-10-04T14:12:45Z",
+              "completed_at": "2026-10-04T14:12:45Z"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15,
+              "started_at": "2026-10-04T14:12:45Z",
+              "completed_at": "2026-10-04T14:12:46Z"
+            },
+            {
+              "name": "Post Check out the exact candidate",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-10-04T14:12:46Z",
+              "completed_at": "2026-10-04T14:12:46Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-10-04T14:12:46Z",
+              "completed_at": "2026-10-04T14:12:46Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/check-runs/111453989618",
+          "labels": [
+            "ubuntu-22.04"
+          ],
+          "runner_id": 1000000112,
+          "runner_name": "GitHub Actions 1000000112",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions"
+        }
+      ]
+    },
+    "artifacts": {
+      "total_count": 6,
+      "artifacts": [
+        {
+          "id": 11305990217,
+          "node_id": "MDg6QXJ0aWZhY3QxMTMwNTk5MDIxNw==",
+          "name": "focused-archives",
+          "size_in_bytes": 14618,
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305990217",
+          "archive_download_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305990217/zip",
+          "expired": false,
+          "digest": "sha256:3c88e0ac0153e2d1ef71a9ed3ff4cf566534252356c436641692f5ca239c1d92",
+          "created_at": "2026-10-04T14:13:38Z",
+          "updated_at": "2026-10-04T14:13:38Z",
+          "expires_at": "2026-10-11T14:13:38Z",
+          "workflow_run": {
+            "id": 37208279838,
+            "repository_id": 1403762619,
+            "head_repository_id": 1403762619,
+            "head_branch": "codex/product-completion",
+            "head_sha": "1040215f498b1317b1b942838994127f43a822bd"
+          }
+        },
+        {
+          "id": 11305822789,
+          "node_id": "MDg6QXJ0aWZhY3QxMTMwNTgyMjc4OQ==",
+          "name": "focused-research",
+          "size_in_bytes": 14551,
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305822789",
+          "archive_download_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305822789/zip",
+          "expired": false,
+          "digest": "sha256:eb67209873897cd48024cf6b0e60280900d5360e4a391424a6df82587fcc0bdf",
+          "created_at": "2026-10-04T14:15:43Z",
+          "updated_at": "2026-10-04T14:15:43Z",
+          "expires_at": "2026-10-11T14:15:42Z",
+          "workflow_run": {
+            "id": 37208279838,
+            "repository_id": 1403762619,
+            "head_repository_id": 1403762619,
+            "head_branch": "codex/product-completion",
+            "head_sha": "1040215f498b1317b1b942838994127f43a822bd"
+          }
+        },
+        {
+          "id": 11305822491,
+          "node_id": "MDg6QXJ0aWZhY3QxMTMwNTgyMjQ5MQ==",
+          "name": "focused-historical",
+          "size_in_bytes": 14581,
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305822491",
+          "archive_download_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305822491/zip",
+          "expired": false,
+          "digest": "sha256:f0ff091b79082d3069a207efbee7056784182d78a893a4e95191bf6ef5bdebf7",
+          "created_at": "2026-10-04T14:12:45Z",
+          "updated_at": "2026-10-04T14:12:45Z",
+          "expires_at": "2026-10-11T14:12:45Z",
+          "workflow_run": {
+            "id": 37208279838,
+            "repository_id": 1403762619,
+            "head_repository_id": 1403762619,
+            "head_branch": "codex/product-completion",
+            "head_sha": "1040215f498b1317b1b942838994127f43a822bd"
+          }
+        },
+        {
+          "id": 11305802591,
+          "node_id": "MDg6QXJ0aWZhY3QxMTMwNTgwMjU5MQ==",
+          "name": "focused-schemas",
+          "size_in_bytes": 14679,
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305802591",
+          "archive_download_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305802591/zip",
+          "expired": false,
+          "digest": "sha256:18c42d54206c12de62f0d6fc0622c33a69a54895d9034df2be3805966770bafa",
+          "created_at": "2026-10-04T14:13:42Z",
+          "updated_at": "2026-10-04T14:13:42Z",
+          "expires_at": "2026-10-11T14:13:42Z",
+          "workflow_run": {
+            "id": 37208279838,
+            "repository_id": 1403762619,
+            "head_repository_id": 1403762619,
+            "head_branch": "codex/product-completion",
+            "head_sha": "1040215f498b1317b1b942838994127f43a822bd"
+          }
+        },
+        {
+          "id": 11305472272,
+          "node_id": "MDg6QXJ0aWZhY3QxMTMwNTQ3MjI3Mg==",
+          "name": "offline-development-receipt",
+          "size_in_bytes": 16825,
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305472272",
+          "archive_download_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305472272/zip",
+          "expired": false,
+          "digest": "sha256:73879ce5a065f4226127282c97e7f9d9624e3196c4ef7313a242e755ec93e9e2",
+          "created_at": "2026-10-04T14:13:15Z",
+          "updated_at": "2026-10-04T14:13:15Z",
+          "expires_at": "2026-10-11T14:13:14Z",
+          "workflow_run": {
+            "id": 37208279838,
+            "repository_id": 1403762619,
+            "head_repository_id": 1403762619,
+            "head_branch": "codex/product-completion",
+            "head_sha": "1040215f498b1317b1b942838994127f43a822bd"
+          }
+        },
+        {
+          "id": 11305404013,
+          "node_id": "MDg6QXJ0aWZhY3QxMTMwNTQwNDAxMw==",
+          "name": "focused-discovery",
+          "size_in_bytes": 14554,
+          "url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305404013",
+          "archive_download_url": "https://api.github.com/repos/vermilion1992/solana-wallet-scanner/actions/artifacts/11305404013/zip",
+          "expired": false,
+          "digest": "sha256:c77d1027519c06e164fa56f0f2779c94350ac504db1db17c1eab70a16d7f7616",
+          "created_at": "2026-10-04T14:16:06Z",
+          "updated_at": "2026-10-04T14:16:06Z",
+          "expires_at": "2026-10-11T14:16:05Z",
+          "workflow_run": {
+            "id": 37208279838,
+            "repository_id": 1403762619,
+            "head_repository_id": 1403762619,
+            "head_branch": "codex/product-completion",
+            "head_sha": "1040215f498b1317b1b942838994127f43a822bd"
+          }
+        }
+      ]
+    }
+  },
+  "raw_receipt_review": {
+    "state": "PENDING_OR_UNAVAILABLE",
+    "reason": "Exactly seven successful current-run diagnostic artifacts are required."
+  },
+  "exact_eight_jobs": false
+}

@@ -1,0 +1,76 @@
+.......F..F.........                                                     [100%]
+=================================== FAILURES ===================================
+_ test_linked_required_source_loss_remains_dependency_and_restore_recovers[missing] _
+
+variant = 'missing'
+
+    @pytest.mark.parametrize('variant', ['missing', 'quantity-conflict', 'malformed', 'unsupported'])
+    def test_linked_required_source_loss_remains_dependency_and_restore_recovers(variant):
+        raws = mixed()
+        parent = positions(raws)
+        alternative = deepcopy(raws[-1])
+        if variant == 'missing':
+            link = {'signature': 'reentry-open', 'evidence_hash': 'a' * 64, 'raw': None}
+        else:
+            if variant == 'quantity-conflict':
+                alternative['meta']['postTokenBalances'][0]['uiTokenAmount']['amount'] = '101'
+            elif variant == 'malformed':
+                alternative['meta']['preTokenBalances'][0]['uiTokenAmount']['amount'] = []
+            else:
+                alternative['version'] = 1
+            link = record(alternative)
+        child = positions(raws, alternatives=[link])
+        aggregate = child['mints'][MINT]
+        assert aggregate['quantity_state'] == aggregate['position_state'] == child['checks']['observed_population']['state'] == 'UNKNOWN'
+        assert aggregate['selected_remaining_raw'] is None
+        assert link['evidence_hash'] in aggregate['checks']['quantity']['evidence']
+        # The earlier completed episodes retain their independently proved facts.
+>       assert aggregate['episodes'][0]['quantity_state'] == aggregate['episodes'][0]['monetary_state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_wallet_position_population.py:159: AssertionError
+_ test_linked_required_source_loss_remains_dependency_and_restore_recovers[unsupported] _
+
+variant = 'unsupported'
+
+    @pytest.mark.parametrize('variant', ['missing', 'quantity-conflict', 'malformed', 'unsupported'])
+    def test_linked_required_source_loss_remains_dependency_and_restore_recovers(variant):
+        raws = mixed()
+        parent = positions(raws)
+        alternative = deepcopy(raws[-1])
+        if variant == 'missing':
+            link = {'signature': 'reentry-open', 'evidence_hash': 'a' * 64, 'raw': None}
+        else:
+            if variant == 'quantity-conflict':
+                alternative['meta']['postTokenBalances'][0]['uiTokenAmount']['amount'] = '101'
+            elif variant == 'malformed':
+                alternative['meta']['preTokenBalances'][0]['uiTokenAmount']['amount'] = []
+            else:
+                alternative['version'] = 1
+            link = record(alternative)
+        child = positions(raws, alternatives=[link])
+        aggregate = child['mints'][MINT]
+        assert aggregate['quantity_state'] == aggregate['position_state'] == child['checks']['observed_population']['state'] == 'UNKNOWN'
+        assert aggregate['selected_remaining_raw'] is None
+        assert link['evidence_hash'] in aggregate['checks']['quantity']['evidence']
+        # The earlier completed episodes retain their independently proved facts.
+>       assert aggregate['episodes'][0]['quantity_state'] == aggregate['episodes'][0]['monetary_state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_wallet_position_population.py:159: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_wallet_position_population.py::test_linked_required_source_loss_remains_dependency_and_restore_recovers[missing]
+FAILED tests/test_wallet_position_population.py::test_linked_required_source_loss_remains_dependency_and_restore_recovers[unsupported]
+2 failed, 18 passed, 1 warning in 0.72s

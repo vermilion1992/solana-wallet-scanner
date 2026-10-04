@@ -1,0 +1,7 @@
+..........................                                               [100%]
+============================= slowest 10 durations =============================
+1.36s call     tests/test_indexed_chronology.py::test_genuine_sample_native_indices_reach_shared_chronology_without_claiming_history_population
+0.01s call     tests/test_indexed_chronology.py::test_every_alternative_index_survives_permutation_and_retains_finite_conflict_envelope
+
+(8 durations < 0.005s hidden.  Use -vv to show these durations.)
+26 passed in 1.49s

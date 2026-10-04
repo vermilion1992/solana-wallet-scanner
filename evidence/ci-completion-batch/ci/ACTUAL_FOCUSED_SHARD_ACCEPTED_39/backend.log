@@ -1,0 +1,41 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /workspace/solana-wallet-scanner/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/solana-wallet-scanner
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 26 items
+
+tests/test_indexed_chronology.py::test_typed_exact_page_proves_selected_same_slot_indices_without_fabricating_a_full_block PASSED [  3%]
+tests/test_indexed_chronology.py::test_standalone_transaction_index_and_caller_page_pass_flags_supply_no_order_proof PASSED [  7%]
+tests/test_indexed_chronology.py::test_real_full_block_order_cross_checks_indexed_indices_without_expanding_population PASSED [ 11%]
+tests/test_indexed_chronology.py::test_conflicting_real_block_order_revokes_order_but_keeps_independent_fee_window_membership PASSED [ 15%]
+tests/test_indexed_chronology.py::test_every_alternative_index_survives_permutation_and_retains_finite_conflict_envelope PASSED [ 19%]
+tests/test_indexed_chronology.py::test_half_open_fee_membership_uses_all_linked_indexed_clock_possibilities[1783175557-True-True] PASSED [ 23%]
+tests/test_indexed_chronology.py::test_half_open_fee_membership_uses_all_linked_indexed_clock_possibilities[1783175566-False-None] PASSED [ 26%]
+tests/test_indexed_chronology.py::test_half_open_fee_membership_uses_all_linked_indexed_clock_possibilities[1783175576-False-None] PASSED [ 30%]
+tests/test_indexed_chronology.py::test_missing_or_malformed_indexed_clock_never_preserves_window_certainty[None] PASSED [ 34%]
+tests/test_indexed_chronology.py::test_missing_or_malformed_indexed_clock_never_preserves_window_certainty[True] PASSED [ 38%]
+tests/test_indexed_chronology.py::test_missing_or_malformed_indexed_clock_never_preserves_window_certainty[1783175556] PASSED [ 42%]
+tests/test_indexed_chronology.py::test_missing_or_malformed_indexed_clock_never_preserves_window_certainty[1000000000000000000000000000000] PASSED [ 46%]
+tests/test_indexed_chronology.py::test_required_page_loss_does_not_strengthen_clock_and_exact_restore_recovers[missing] PASSED [ 50%]
+tests/test_indexed_chronology.py::test_required_page_loss_does_not_strengthen_clock_and_exact_restore_recovers[corrupt] PASSED [ 53%]
+tests/test_indexed_chronology.py::test_required_page_loss_does_not_strengthen_clock_and_exact_restore_recovers[wrong-hash] PASSED [ 57%]
+tests/test_indexed_chronology.py::test_missing_page_association_is_negative_scope_and_does_not_erase_an_independent_slot PASSED [ 61%]
+tests/test_indexed_chronology.py::test_readable_disjoint_malformed_sibling_keeps_selected_index_and_fee_clock[bad-named-record] PASSED [ 65%]
+tests/test_indexed_chronology.py::test_readable_disjoint_malformed_sibling_keeps_selected_index_and_fee_clock[unassignable-disjoint] PASSED [ 69%]
+tests/test_indexed_chronology.py::test_unassignable_same_slot_dependency_cannot_be_called_disjoint_or_order_complete PASSED [ 73%]
+tests/test_indexed_chronology.py::test_bad_cursor_metadata_cannot_prove_order_but_does_not_change_independently_bound_native_time PASSED [ 76%]
+tests/test_indexed_chronology.py::test_same_slot_collision_between_separate_valid_indexed_sources_is_a_conflict PASSED [ 80%]
+tests/test_indexed_chronology.py::test_indexed_source_budget_overflow_accepts_no_arbitrary_prefix PASSED [ 84%]
+tests/test_indexed_chronology.py::test_genuine_sample_native_indices_reach_shared_chronology_without_claiming_history_population PASSED [ 88%]
+tests/test_indexed_chronology.py::test_indexed_timestamp_outside_supported_utc_range_is_not_a_known_canonical_clock PASSED [ 92%]
+tests/test_indexed_chronology.py::test_oversized_signature_is_unassignable_and_cannot_prove_same_slot_disjointness PASSED [ 96%]
+tests/test_indexed_chronology.py::test_native_record_budget_overflow_does_not_certify_previously_inspected_prefix PASSED [100%]
+
+============================= slowest 10 durations =============================
+0.81s call     tests/test_indexed_chronology.py::test_genuine_sample_native_indices_reach_shared_chronology_without_claiming_history_population
+0.01s call     tests/test_indexed_chronology.py::test_every_alternative_index_survives_permutation_and_retains_finite_conflict_envelope
+
+(8 durations < 0.005s hidden.  Use -vv to show these durations.)
+============================== 26 passed in 0.92s ==============================

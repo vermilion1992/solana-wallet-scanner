@@ -1,0 +1,36 @@
+{
+  "actual_log": "evidence/position-history-batch/performance/indexed-parser-reuse.log",
+  "application_source_edited": false,
+  "artifacts": [
+    {
+      "bytes": 18400,
+      "path": "evidence/position-history-batch/performance/verify_indexed_parser_reuse.py",
+      "sha256": "e89c159796d7f4d1f290d87f5f6a4563058649968d76b251c44e639e58c6a475"
+    },
+    {
+      "bytes": 576,
+      "path": "evidence/position-history-batch/performance/indexed-parser-reuse.log",
+      "sha256": "eae2cc7cc0cb9e1043df52d4bbe5ea83007902c1d66650ae553bf16834534051"
+    },
+    {
+      "bytes": 81090,
+      "path": "evidence/position-history-batch/performance/INDEXED_PARSER_REUSE_PROOF.json",
+      "sha256": "c5b88d8c999a7a4178baae3abe96a2096a68e322263a590e7181f84d1e7bf5bc"
+    }
+  ],
+  "baseline_parser_sha256": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d",
+  "command": [
+    ".venv/bin/python",
+    "evidence/position-history-batch/performance/verify_indexed_parser_reuse.py"
+  ],
+  "command_observation": "Completed session82776, exit0; complete outcomes compared; not a pytest suite or product acceptance",
+  "complete_outputs_compared": 177,
+  "credential_lookups": 0,
+  "current_parser_sha256": "d4e2c67589e10b43de2396df17873c07bada4496fa530ac8f4aa848eb9864906",
+  "cwd": "/workspace/solana-wallet-scanner",
+  "exit_code": 0,
+  "network_calls": 0,
+  "parser_source_unchanged": true,
+  "provider_requests": 0,
+  "state": "PASS"
+}

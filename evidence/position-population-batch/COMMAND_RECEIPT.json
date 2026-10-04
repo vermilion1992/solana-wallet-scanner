@@ -1,0 +1,53 @@
+{
+  "schema": "position-population-development-validation-v1",
+  "scope": "Affected development/API regressions only, not candidate acceptance or genuine B3",
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_wallet_position_population.py",
+    "tests/test_selected_cohort_observations.py",
+    "tests/test_wallet_evidence.py",
+    "tests/test_accounting_metric_isolation.py",
+    "tests/test_research_disposal_scopes.py",
+    "tests/test_position_evidence.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 7.425,
+  "source_before": {
+    "scanner/wallet_positions.py": "9d9b951914feade4e32e3fcb144ff40e84ea4e290460b4a3950cd196d11aae26",
+    "tests/test_wallet_position_population.py": "54e621a87539acb1cf929fb663495ec059954d0dcae8efd729f06e7e19adc564",
+    "scanner/wallet_evidence.py": "4e2fc4712172bf7443be4bcb8caf61f8563f76cb28e8a8834b647497c250582e",
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/archive_input.py": "2189087ac270d6b3b494da75e6394068fd4b66f4f317f752475e69a89bce3419",
+    "scanner/historical_membership.py": "a28f3b245faf298cd6d762a16aeb09f138cec29ba24ad1b351651b0bf8753486",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/source_consistency.py": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+    "scanner/chronology_evidence.py": "36032f177db3638505026969039f5e69d64cd1d1d2b208f64e6e74153f4a0575",
+    "scanner/decoder.py": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877"
+  },
+  "source_after": {
+    "scanner/wallet_positions.py": "9d9b951914feade4e32e3fcb144ff40e84ea4e290460b4a3950cd196d11aae26",
+    "tests/test_wallet_position_population.py": "54e621a87539acb1cf929fb663495ec059954d0dcae8efd729f06e7e19adc564",
+    "scanner/wallet_evidence.py": "4e2fc4712172bf7443be4bcb8caf61f8563f76cb28e8a8834b647497c250582e",
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/archive_input.py": "2189087ac270d6b3b494da75e6394068fd4b66f4f317f752475e69a89bce3419",
+    "scanner/historical_membership.py": "a28f3b245faf298cd6d762a16aeb09f138cec29ba24ad1b351651b0bf8753486",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/source_consistency.py": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+    "scanner/chronology_evidence.py": "36032f177db3638505026969039f5e69d64cd1d1d2b208f64e6e74153f4a0575",
+    "scanner/decoder.py": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877"
+  },
+  "source_unchanged": true,
+  "own_source_unchanged": true,
+  "raw_log": "affected-matrix.log",
+  "raw_log_sha256": "2b458d79f7e528fd6a49b9cb6afd657d45262d203cf0617e309e39f71fd5ca6f",
+  "python": "3.12.14",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "PRODUCT_READY": false,
+  "state": "PASS_IN_EXECUTED_SCOPE"
+}

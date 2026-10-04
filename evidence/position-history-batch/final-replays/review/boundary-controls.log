@@ -1,0 +1,34 @@
+{
+  "kind": "distinct-read-only-replay-runner-boundary-controls",
+  "state": "FINDINGS",
+  "runner_unchanged": true,
+  "runner_sha256_before": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068",
+  "runner_sha256_after": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068",
+  "records": [
+    {
+      "control": "product-corpus-manifest-mutation-input-binding",
+      "fixture_only": true,
+      "application_inputs_unchanged": true,
+      "mutation_detected": false,
+      "genuine_three_file_inventory_unchanged": true,
+      "state": "FINDING"
+    },
+    {
+      "control": "tracked-flat-removal-refusal-receipt",
+      "fixture_only": true,
+      "application_inputs_unchanged": true,
+      "raises_error": "ValueError: Flat duplicate changed or became tracked; refusing removal",
+      "flat_preserved": true,
+      "gzip_verified": true,
+      "storage_state": "PASS",
+      "claimed_original_retained": false,
+      "actual_original_retained": true,
+      "state": "FINDING"
+    }
+  ],
+  "application_files_changed": false,
+  "workflows_executed": false,
+  "provider_calls": 0,
+  "credential_calls": 0,
+  "network_calls": 0
+}

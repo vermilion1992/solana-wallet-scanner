@@ -1,0 +1,133 @@
+...........................................FFFF......................... [ 59%]
+..................................................                       [100%]
+=================================== FAILURES ===================================
+_ test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[False-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] _
+
+program = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA', inner = False
+
+    @pytest.mark.parametrize('program', [TOKEN_PROGRAM, TOKEN_2022_PROGRAM])
+    @pytest.mark.parametrize('inner', [False, True])
+    def test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields(program, inner):
+        # Pinned SPL/Agave schema: SetAuthority=6, AccountOwner=2, Some=1,
+        # followed by the literal 32-byte [20;32] new owner. No production table
+        # produces this test payload or its expected owner/address.
+        raw = change(program=program)
+        compiled = {'programId': program, 'accounts': [ACCOUNT, WALLET],
+                    'data': binary_base58('060201' + '14' * 32)}
+        raw['transaction']['message']['header'] = {'numRequiredSignatures': 1,
+            'numReadonlySignedAccounts': 0, 'numReadonlyUnsignedAccounts': 0}
+        if inner:
+            raw['transaction']['message']['instructions'] = [{'programId': 'ComputeBudget111111111111111111111111111111',
+                                                             'accounts': [], 'data': ''}]
+            raw['meta']['innerInstructions'] = [{'index': 0, 'instructions': [compiled]}]
+            prefix = 'meta.innerInstructions.0.instructions.0'
+        else:
+            raw['transaction']['message']['instructions'] = [compiled]
+            prefix = 'transaction.message.instructions.0'
+        row = membership(run([raw]))
+>       assert row['event_time_check']['state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_historical_membership.py:381: AssertionError
+_ test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[False-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] _
+
+program = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb', inner = False
+
+    @pytest.mark.parametrize('program', [TOKEN_PROGRAM, TOKEN_2022_PROGRAM])
+    @pytest.mark.parametrize('inner', [False, True])
+    def test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields(program, inner):
+        # Pinned SPL/Agave schema: SetAuthority=6, AccountOwner=2, Some=1,
+        # followed by the literal 32-byte [20;32] new owner. No production table
+        # produces this test payload or its expected owner/address.
+        raw = change(program=program)
+        compiled = {'programId': program, 'accounts': [ACCOUNT, WALLET],
+                    'data': binary_base58('060201' + '14' * 32)}
+        raw['transaction']['message']['header'] = {'numRequiredSignatures': 1,
+            'numReadonlySignedAccounts': 0, 'numReadonlyUnsignedAccounts': 0}
+        if inner:
+            raw['transaction']['message']['instructions'] = [{'programId': 'ComputeBudget111111111111111111111111111111',
+                                                             'accounts': [], 'data': ''}]
+            raw['meta']['innerInstructions'] = [{'index': 0, 'instructions': [compiled]}]
+            prefix = 'meta.innerInstructions.0.instructions.0'
+        else:
+            raw['transaction']['message']['instructions'] = [compiled]
+            prefix = 'transaction.message.instructions.0'
+        row = membership(run([raw]))
+>       assert row['event_time_check']['state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_historical_membership.py:381: AssertionError
+_ test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[True-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] _
+
+program = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA', inner = True
+
+    @pytest.mark.parametrize('program', [TOKEN_PROGRAM, TOKEN_2022_PROGRAM])
+    @pytest.mark.parametrize('inner', [False, True])
+    def test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields(program, inner):
+        # Pinned SPL/Agave schema: SetAuthority=6, AccountOwner=2, Some=1,
+        # followed by the literal 32-byte [20;32] new owner. No production table
+        # produces this test payload or its expected owner/address.
+        raw = change(program=program)
+        compiled = {'programId': program, 'accounts': [ACCOUNT, WALLET],
+                    'data': binary_base58('060201' + '14' * 32)}
+        raw['transaction']['message']['header'] = {'numRequiredSignatures': 1,
+            'numReadonlySignedAccounts': 0, 'numReadonlyUnsignedAccounts': 0}
+        if inner:
+            raw['transaction']['message']['instructions'] = [{'programId': 'ComputeBudget111111111111111111111111111111',
+                                                             'accounts': [], 'data': ''}]
+            raw['meta']['innerInstructions'] = [{'index': 0, 'instructions': [compiled]}]
+            prefix = 'meta.innerInstructions.0.instructions.0'
+        else:
+            raw['transaction']['message']['instructions'] = [compiled]
+            prefix = 'transaction.message.instructions.0'
+        row = membership(run([raw]))
+>       assert row['event_time_check']['state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_historical_membership.py:381: AssertionError
+_ test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[True-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] _
+
+program = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb', inner = True
+
+    @pytest.mark.parametrize('program', [TOKEN_PROGRAM, TOKEN_2022_PROGRAM])
+    @pytest.mark.parametrize('inner', [False, True])
+    def test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields(program, inner):
+        # Pinned SPL/Agave schema: SetAuthority=6, AccountOwner=2, Some=1,
+        # followed by the literal 32-byte [20;32] new owner. No production table
+        # produces this test payload or its expected owner/address.
+        raw = change(program=program)
+        compiled = {'programId': program, 'accounts': [ACCOUNT, WALLET],
+                    'data': binary_base58('060201' + '14' * 32)}
+        raw['transaction']['message']['header'] = {'numRequiredSignatures': 1,
+            'numReadonlySignedAccounts': 0, 'numReadonlyUnsignedAccounts': 0}
+        if inner:
+            raw['transaction']['message']['instructions'] = [{'programId': 'ComputeBudget111111111111111111111111111111',
+                                                             'accounts': [], 'data': ''}]
+            raw['meta']['innerInstructions'] = [{'index': 0, 'instructions': [compiled]}]
+            prefix = 'meta.innerInstructions.0.instructions.0'
+        else:
+            raw['transaction']['message']['instructions'] = [compiled]
+            prefix = 'transaction.message.instructions.0'
+        row = membership(run([raw]))
+>       assert row['event_time_check']['state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_historical_membership.py:381: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[False-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA]
+FAILED tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[False-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb]
+FAILED tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[True-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA]
+FAILED tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[True-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb]
+4 failed, 118 passed in 0.67s

@@ -1,0 +1,59 @@
+{
+  "schema": "position-population-development-decisions-v1",
+  "PRODUCT_READY": false,
+  "genuine_B3_acceptance": false,
+  "source_scope": [
+    "scanner/wallet_positions.py",
+    "tests/test_wallet_position_population.py"
+  ],
+  "implemented": [
+    "Observed mint-account endpoint carry across selected records and wallet-owned internal transfers",
+    "Mixed closed/open FIFO episode admission using the existing raw-derived analyze result",
+    "Exact selected endpoint quantities independent of missing fees/cost/valuation",
+    "Independent report/28-day/90-day closed-cohort proof reuse",
+    "Public raw/pointer hash verification and rejection of caller calculation authority through rederivation",
+    "Immutable offline import/rebuild/source inspection/export dependency removal and restoration"
+  ],
+  "global_gaps": [
+    "Accepted exhaustive historical owner population",
+    "Eligible-asset classification",
+    "Exact all-wallet boundary inventory and valuation",
+    "Complete acquisition origins and unsupported economic routes"
+  ],
+  "retained_failed_attempts": [
+    {
+      "log": "initial-focused.log",
+      "decision": "Initial expectation incorrectly assumed a missing/unsupported later alternative had a supported clock. Its raw clock is unbounded; it cannot be excluded from the earlier lot solely using the selected preferred version. Readable bounded conflict cases retain supported earlier lot facts; required-source rejection/restoration assertions are unchanged."
+    },
+    {
+      "log": "transient-history-integration-failed.log",
+      "decision": "In-progress root integration expected a checks field before historical-module alias/schema integration completed. No candidate acceptance claimed."
+    },
+    {
+      "log": "compatibility-timing-reproduction.log",
+      "decision": "Confirmed neighboring compatibility consumer retained all-closed timing gating after mixed-position admission. Root now takes report closed-cohort typed timing; positive mixed-case assertion retained."
+    },
+    {
+      "log": "failed-attempt-focused.log",
+      "decision": "Confirmed shared quantity/money bleed: missing fee produced generic unsupported and revoked a physically unchanged failed record lot. Root now excludes only proved failed unchanged activity from physical scope rejection. Fee/money gates remain independent; selected/alternative and changed-endpoint controls retained."
+    },
+    {
+      "log": "integrated-focused-after-timing.log",
+      "decision": "Intermediate26PASS/1FAIL before failed-record sibling correction; superseded by actual source-stable affected matrix, not erased."
+    }
+  ],
+  "verification": {
+    "receipt": "COMMAND_RECEIPT.json",
+    "log": "affected-matrix.log",
+    "unique_pytest_nodes": 219,
+    "subtests_separately_reported": 220,
+    "new_position_module_unique_nodes": 27,
+    "overlap_with_other_suites": "Do not add these focused nodes/subtests/API children to full-suite unique totals",
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "own_source_hashes": {
+    "scanner/wallet_positions.py": "9d9b951914feade4e32e3fcb144ff40e84ea4e290460b4a3950cd196d11aae26",
+    "tests/test_wallet_position_population.py": "54e621a87539acb1cf929fb663495ec059954d0dcae8efd729f06e7e19adc564"
+  }
+}

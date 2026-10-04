@@ -1,0 +1,26 @@
+[
+  {
+    "case": "unsupported-new-selected",
+    "population": "UNKNOWN",
+    "quantity": "PASS",
+    "remaining": "0"
+  },
+  {
+    "case": "malformed-signature-list",
+    "population": "PASS",
+    "quantity": "PASS",
+    "remaining": "100"
+  },
+  {
+    "case": "missing-meta",
+    "population": "UNKNOWN",
+    "quantity": "PASS",
+    "remaining": "0"
+  },
+  {
+    "case": "normal-derivation-wrong-identity",
+    "population": "UNKNOWN",
+    "quantity": "PASS",
+    "remaining": "0"
+  }
+]

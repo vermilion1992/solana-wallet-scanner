@@ -1,0 +1,58 @@
+{
+  "state": "CONFIRMED_FINDING_PENDING_REPAIR",
+  "scope": "Distinct read-only review of observed selected position population; no full application acceptance or genuine B3 claim",
+  "reviewed_at": "2026-10-04T15:07:52.904256+00:00",
+  "reviewed_sources": {
+    "scanner/wallet_positions.py": "9d9b951914feade4e32e3fcb144ff40e84ea4e290460b4a3950cd196d11aae26",
+    "tests/test_wallet_position_population.py": "54e621a87539acb1cf929fb663495ec059954d0dcae8efd729f06e7e19adc564",
+    "scanner/wallet_evidence.py": "2037f24c6d59c80599ddbdf8d2307333686bb1c59557ac62654ab01ae0b178f7"
+  },
+  "confirmed_findings": [
+    {
+      "id": "POSITION-REVIEW-01",
+      "component": "scanner/wallet_positions.py:171",
+      "description": "Readable but unusable selected native observations can disappear from per-mint quantities when their boundary projection is empty. Global population fails closed, but the per-mint selected ending quantity remains PASS with an incorrect zero after a 100-unit reentry record is invalidated.",
+      "reproductions": [
+        "outer selected signature mismatch",
+        "selected transaction version=1",
+        "selected meta missing"
+      ],
+      "routes": [
+        "public raw wrapper",
+        "normal derive_wallet_evidence integration"
+      ],
+      "raw_assertions": "UNASSIGNED_QUANTITY_ASSERTIONS_INITIAL.json",
+      "reproducer": "probe_unassigned_quantity.py",
+      "required_behavior": "Per-mint quantity UNKNOWN and selected_remaining_raw null unless the rejected source is independently proven disjoint/outside end."
+    }
+  ],
+  "executed_checks": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_wallet_position_population.py",
+      "exit_code": 0,
+      "unique_passed": 27,
+      "raw_log": "POSITION_TESTS.log"
+    },
+    {
+      "command": ".venv/bin/python evidence/position-population-batch/distinct-review/probe_positions.py",
+      "exit_code": 0,
+      "development_controls": 9,
+      "raw_receipt": "PROBE_POSITIONS.json"
+    },
+    {
+      "command": ".venv/bin/python evidence/position-population-batch/distinct-review/probe_unassigned_quantity.py",
+      "exit_code": 1,
+      "raw_receipt": "UNASSIGNED_QUANTITY_ASSERTIONS_INITIAL.json"
+    }
+  ],
+  "not_claimed": [
+    "Full backend/frontend/browser acceptance",
+    "Complete historical owner population",
+    "Wallet classification/valuation",
+    "Genuine B3 or qualified wallet"
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "source_edits": false,
+  "test_edits": false
+}

@@ -1,0 +1,147 @@
+{
+  "kind": "Distinct-read-only-CI-diff-review",
+  "state": "PASS_IN_SCOPE",
+  "created_utc": "2026-10-04T15:09:34.750392+00:00",
+  "scope": "Only the owned CI workflow, validation runner, validation control tests, and static CI checker. Application accounting/source changes and product acceptance are outside this review.",
+  "reviewed_source_sha256": {
+    ".github/workflows/offline-focused.yml": "4db013ce2dd68b0d790e20af80548c8e2d42786c9adfa44cc88c234f06073795",
+    "tools/validate.py": "11a46d561039ecc6073e7b59aa6771f3411c98dc56d537ed3c1a45283a8e3b22",
+    "tests/test_validation_gates.py": "9c4a82860042b2c43cb995b888a2041261afa9d8c29257b983acd5b2d2bf18c8",
+    "evidence/ci-completion-batch/ci/CHECK_WORKFLOW_STATIC.py": "2bc8e2f108a5e11e3ad103bc24a6be384355424269d53c51c2b09f1c54982a7b"
+  },
+  "exact_files": [
+    ".github/workflows/offline-focused.yml",
+    "tools/validate.py",
+    "tests/test_validation_gates.py",
+    "evidence/ci-completion-batch/ci/CHECK_WORKFLOW_STATIC.py"
+  ],
+  "baseline": "1040215f498b1317b1b942838994127f43a822bd",
+  "prior_blocked_review": {
+    "path": "evidence/ci-completion-batch/review/CI_DIFF_READ_ONLY.json",
+    "sha256": "c8860069ba36e6a1eea4993c99396098a82d15c8c76dc603e07351eb704a0b4e",
+    "preserved_unchanged": true,
+    "resolved_id": "CI-DEVELOPMENT-RECEIPT-TIMEOUT"
+  },
+  "confirmed_findings": [],
+  "positive_and_negative_recheck": [
+    {
+      "variant": "positive",
+      "state": "PASS"
+    },
+    {
+      "variant": "running_gate",
+      "state": "INCOMPLETE"
+    },
+    {
+      "variant": "timed_out",
+      "state": "INCOMPLETE"
+    },
+    {
+      "variant": "missing_timeout",
+      "state": "INCOMPLETE"
+    },
+    {
+      "variant": "boolean_timeout",
+      "state": "INCOMPLETE"
+    },
+    {
+      "variant": "timeout_abort",
+      "state": "INCOMPLETE"
+    },
+    {
+      "variant": "wrong_product",
+      "state": "INCOMPLETE"
+    },
+    {
+      "variant": "wrong_cwd",
+      "state": "INCOMPLETE"
+    }
+  ],
+  "reviewer_executed": [
+    {
+      "check": "Pure real offline_development_record over retained passing fixture and independent contradictory mutations",
+      "scope": "No subprocess stubs needed; fixture logs and receipts use temporary directory only; all original production records preserved."
+    },
+    {
+      "check": ".venv/bin/python -B -m pytest --collect-only -q <five retained indexed modules>",
+      "exit_code": 0,
+      "unique_nodes": 204,
+      "module_nodes": {
+        "test_indexed_input.py": 76,
+        "test_indexed_chronology.py": 26,
+        "test_indexed_source_dependencies.py": 21,
+        "test_indexed_report_integration.py": 15,
+        "test_real_coverage.py": 66
+      }
+    },
+    {
+      "check": "git diff --check -- .github/workflows/offline-focused.yml tools/validate.py tests/test_validation_gates.py",
+      "exit_code": 0
+    }
+  ],
+  "confirmed_design_checks": {
+    "partition": {
+      "groups": 10,
+      "selectors": 39,
+      "unique_selectors": 39,
+      "baseline_selectors_retained_in_original_order": 35,
+      "new_selectors_once": [
+        "tests/test_historical_membership.py",
+        "tests/test_wallet_position_population.py",
+        "tests/test_source_fact_reuse.py",
+        "tests/test_disposed_origin_scopes.py"
+      ],
+      "original_indexed_nodes_retained_once": 204,
+      "count_policy": "Partitions and extended selectors are not overlapping new suites or inflated unique test counts."
+    },
+    "timeouts": "Focused and offline-development commands600s; hosted execution steps15min and jobs30min. First noncandidate command timeout sets timeout_abort and leaves all subsequent required commands BLOCKED, attempted=false, explicit NOT_EXECUTED logs, so repeated command waits cannot consume the diagnostic reserve. Summary commands60s. Candidate full-suite command cap1800s remains unchanged.",
+    "union": "All ten exact groups plus development required. Receipts bind current explicit passing state, absence of active/abort flags, exact source/Git/locks/runtime/selection, strict integer zero exits, correct600s limits, timed_out is False, exact command argv and cwd, and fixed sibling raw log hashes/byte sizes. Malformed absolute source/interpreter/output fields reject. No caller absolute path is used to read transferred logs.",
+    "development": "All eight gates bind the real producer commands/source_root/output/interpreter. Product path and private output, frontend scripts/cwd, strict booleans for offline assertions, and source unchanged required. The before-fix active/timed-out loophole is closed and negative controls expanded.",
+    "timeout_cleanup": "Private POSIX process session; TERM then KILL process group, including TERM-ignoring descendant even if direct child exits. Initial and after-KILL reap waits separately bounded5s; cleanup warning cannot createPASS. Explicit child-ready handshake proves SIGTERM-ignore installation before timeout in executed Linux control. Direct-child nonPOSIX scope only; no Windows descendant cleanup claim.",
+    "artifacts": "Explicit fixed validator JSON/text allowlists, regular-file/symlink checks,4MiB per-file transfer bound,7day retention. No private-product result/archive/report/session/database upload. Aggregate result/runtime logs and diagnostic status upload under always() for incomplete union.",
+    "network": "Hosted workload command paths use sudo unshare --net and setpriv drop root; Helius/GH/GITHUB env variables checked absent. Official action SHA pins, read-only contents permission, persist-credentials=false and full history retained. No local hosted isolation execution is claimed."
+  },
+  "owner_execution_evidence_inspected": [
+    {
+      "path": "evidence/ci-completion-batch/ci/VALIDATOR_CONTROLS_ACCEPTED_39.log",
+      "sha256": "c4925fc48cc492e8052e552694fa76f9dc44e3b7ec87e169d387e01a456309ca",
+      "reported": "152 controls passed in3.54s",
+      "reviewer_reexecuted_test_bodies": false,
+      "count_policy": "Only final152; earlier129/149 runs not added."
+    },
+    {
+      "path": "evidence/ci-completion-batch/ci/WORKFLOW_STATIC_CONTRACT.json",
+      "sha256": "2fa742441efb5316765dc210bfc71a5c0e3da054c57f5e4b8d676dfe7ce70cf0",
+      "state": "PASS",
+      "bash_syntax_blocks": 10,
+      "embedded_python_blocks": 3,
+      "source_hashes_match_final_owned_bytes": true,
+      "reviewer_reexecuted_checker": false
+    },
+    {
+      "path": "evidence/ci-completion-batch/ci/actual-development-source-changed/result.json",
+      "original_state": "INCOMPLETE",
+      "source_unchanged": false,
+      "eight_commands_reported_PASS": true,
+      "all_eight600s_non_timeout_log_hashes_independently_verified": true,
+      "fields_present": [
+        "interpreter",
+        "source_root",
+        "output"
+      ],
+      "acceptance_claim": "No complete development or candidate acceptance; source changed during application work."
+    }
+  ],
+  "limits": {
+    "application_review": false,
+    "application_edits": 0,
+    "test_source_edits": 0,
+    "provider_calls": 0,
+    "github_mutations": 0,
+    "full_suite_runs_by_reviewer": 0,
+    "native_ci_pass_claimed": false,
+    "product_acceptance_claimed": false,
+    "local_unshare": "Unavailable limitation; hosted command design statically inspected only"
+  },
+  "publication_condition": "Keep this exact four-file identity or rebind review if owned bytes change; final source and complete applicable acceptance remain root-owned obligations."
+}

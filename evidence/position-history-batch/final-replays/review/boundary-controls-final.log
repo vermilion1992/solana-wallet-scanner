@@ -1,0 +1,188 @@
+{"compressed_files": 2, "original_bytes": 4194307, "originals_retained": true, "state": "PASS", "stored_bytes": 4140}
+{"compressed_files": 2, "original_bytes": 4194307, "originals_retained": false, "state": "PASS", "stored_bytes": 4140}
+{"compressed_files": 2, "original_bytes": 4194307, "originals_retained": false, "state": "PASS", "stored_bytes": 4140}
+{
+  "kind": "distinct-read-only-repaired-runner-boundary-controls",
+  "state": "PASS",
+  "runner_sha256_before": "332ab09761caf1cc931fda53c4cf0c93438bbeb39a62b589c25b102ff23147d7",
+  "runner_sha256_after": "332ab09761caf1cc931fda53c4cf0c93438bbeb39a62b589c25b102ff23147d7",
+  "runner_unchanged": true,
+  "controls": 17,
+  "records": [
+    {
+      "control": "isolated-corpus-positive",
+      "state": "PASS",
+      "fixture_only": true,
+      "bound_files": 4
+    },
+    {
+      "control": "product-manifest-mutation-rejected",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "product-manifest-exact-restoration",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "product-file-loss-rejected",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "product-file-addition-rejected",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "product-required-symlink-rejected",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "pinned-inventory-byte-mutation-rejected",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "pinned-inventory-exact-restoration",
+      "state": "PASS",
+      "fixture_only": true
+    },
+    {
+      "control": "storage-retained-positive",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": null,
+      "storage_state": "PASS",
+      "actual_flats_retained": [
+        true,
+        true
+      ],
+      "receipt_flats_retained": [
+        true,
+        true
+      ]
+    },
+    {
+      "control": "storage-removed-positive",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": null,
+      "storage_state": "PASS",
+      "actual_flats_retained": [
+        false,
+        false
+      ],
+      "receipt_flats_retained": [
+        false,
+        false
+      ]
+    },
+    {
+      "control": "storage-tracked-preflight",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": "ValueError: Flat duplicate changed or became tracked; refusing removal",
+      "storage_state": "BLOCKED",
+      "actual_flats_retained": [
+        true,
+        true
+      ],
+      "receipt_flats_retained": [
+        true,
+        true
+      ]
+    },
+    {
+      "control": "storage-changed-preflight",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": "ValueError: Flat duplicate changed or became tracked; refusing removal",
+      "storage_state": "BLOCKED",
+      "actual_flats_retained": [
+        true,
+        true
+      ],
+      "receipt_flats_retained": [
+        true,
+        true
+      ]
+    },
+    {
+      "control": "storage-changed-before-remove",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": "ValueError: Flat duplicate changed after removal preflight",
+      "storage_state": "BLOCKED",
+      "actual_flats_retained": [
+        true,
+        true
+      ],
+      "receipt_flats_retained": [
+        true,
+        true
+      ]
+    },
+    {
+      "control": "storage-second-unlink-failure",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": "OSError: isolated fixture unlink refusal",
+      "storage_state": "BLOCKED",
+      "actual_flats_retained": [
+        false,
+        true
+      ],
+      "receipt_flats_retained": [
+        false,
+        true
+      ]
+    },
+    {
+      "control": "storage-protected-files",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": null,
+      "storage_state": "PASS",
+      "actual_flats_retained": [
+        false,
+        false
+      ],
+      "receipt_flats_retained": [
+        false,
+        false
+      ]
+    },
+    {
+      "control": "storage-overwrite-refusal",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": "ValueError: Refusing to overwrite an existing stored export",
+      "storage_state": null,
+      "actual_flats_retained": [
+        true,
+        true
+      ],
+      "receipt_flats_retained": null
+    },
+    {
+      "control": "storage-output-confinement",
+      "state": "PASS",
+      "fixture_only": true,
+      "error": "ValueError: Output must be a confined nonsymlink path under this batch evidence directory",
+      "storage_state": null,
+      "actual_flats_retained": [
+        true,
+        true
+      ],
+      "receipt_flats_retained": null
+    }
+  ],
+  "application_files_changed": false,
+  "workflows_executed": false,
+  "provider_calls": 0,
+  "credential_calls": 0,
+  "network_calls": 0
+}

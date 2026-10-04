@@ -1,0 +1,15 @@
+{
+  "kind": "distinct-read-only-replay-runner-receipt-controls",
+  "state": "PASS",
+  "runner_sha256_before": "332ab09761caf1cc931fda53c4cf0c93438bbeb39a62b589c25b102ff23147d7",
+  "runner_sha256_after": "332ab09761caf1cc931fda53c4cf0c93438bbeb39a62b589c25b102ff23147d7",
+  "runner_unchanged": true,
+  "controls": 159,
+  "passed_controls": 159,
+  "findings": [],
+  "application_files_changed": false,
+  "workflows_executed": false,
+  "provider_calls": 0,
+  "credential_calls": 0,
+  "network_calls": 0
+}

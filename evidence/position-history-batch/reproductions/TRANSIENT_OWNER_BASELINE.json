@@ -1,0 +1,160 @@
+{
+  "issue": "CAP-HIST transient-owner lifecycle omission",
+  "expected_applied_lifecycle_count": 2,
+  "actual_applied_lifecycle_count": 1,
+  "lifecycle": [
+    {
+      "kind": "setAuthority",
+      "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+      "applied": true,
+      "path": "transaction.message.instructions.0",
+      "facts": {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "authorityType": "accountOwner",
+        "authority": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+        "newAuthority": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+      },
+      "raw_paths": [
+        "transaction.message.instructions.0"
+      ]
+    }
+  ],
+  "disjoint": [
+    {
+      "path": "transaction.message.instructions.1",
+      "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+      "reason": "Validated operation target is disjoint from the observed wallet-owned token accounts.",
+      "paths": [
+        "transaction.message.instructions.1",
+        "transaction.message.instructions.1.parsed.info.account",
+        "transaction.message.instructions.1.parsed.info.authority",
+        "transaction.message.instructions.1.parsed.info.authorityType",
+        "transaction.message.instructions.1.parsed.info.newAuthority",
+        "transaction.message.instructions.1.programId"
+      ],
+      "raw_paths": [
+        "transaction.message.instructions.1",
+        "transaction.message.instructions.1.parsed.info.account",
+        "transaction.message.instructions.1.parsed.info.authority",
+        "transaction.message.instructions.1.parsed.info.authorityType",
+        "transaction.message.instructions.1.parsed.info.newAuthority",
+        "transaction.message.instructions.1.programId"
+      ]
+    }
+  ],
+  "checks": {
+    "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR": {
+      "ownership": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Raw owner endpoints reconcile with executed lifecycle only.",
+        "evidence": [
+          "e0df05aa92708005f0aee0c517431a34c7df7196a029298cb0a2040e758fb271"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.0",
+          "meta.preTokenBalances.0",
+          "transaction.message.instructions.0.parsed.info.account",
+          "transaction.message.instructions.0.parsed.info.authority",
+          "transaction.message.instructions.0.parsed.info.authorityType",
+          "transaction.message.instructions.0.parsed.info.newAuthority",
+          "transaction.message.instructions.0.programId",
+          "transaction.message.instructions.1.parsed.info.account",
+          "transaction.message.instructions.1.parsed.info.authority",
+          "transaction.message.instructions.1.parsed.info.authorityType",
+          "transaction.message.instructions.1.parsed.info.newAuthority",
+          "transaction.message.instructions.1.programId"
+        ],
+        "dependencies": []
+      },
+      "quantities": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Raw endpoint quantities reconcile to executed token operations.",
+        "evidence": [
+          "e0df05aa92708005f0aee0c517431a34c7df7196a029298cb0a2040e758fb271"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.0",
+          "meta.preTokenBalances.0",
+          "transaction.message.instructions.0.parsed.info.account",
+          "transaction.message.instructions.0.parsed.info.authority",
+          "transaction.message.instructions.0.parsed.info.authorityType",
+          "transaction.message.instructions.0.parsed.info.newAuthority",
+          "transaction.message.instructions.0.programId",
+          "transaction.message.instructions.1.parsed.info.account",
+          "transaction.message.instructions.1.parsed.info.authority",
+          "transaction.message.instructions.1.parsed.info.authorityType",
+          "transaction.message.instructions.1.parsed.info.newAuthority",
+          "transaction.message.instructions.1.programId"
+        ],
+        "dependencies": []
+      },
+      "lifecycle": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Executed owner/lifecycle operations reconcile with native boundaries.",
+        "evidence": [
+          "e0df05aa92708005f0aee0c517431a34c7df7196a029298cb0a2040e758fb271"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.0",
+          "meta.preTokenBalances.0",
+          "transaction.message.instructions.0.parsed.info.account",
+          "transaction.message.instructions.0.parsed.info.authority",
+          "transaction.message.instructions.0.parsed.info.authorityType",
+          "transaction.message.instructions.0.parsed.info.newAuthority",
+          "transaction.message.instructions.0.programId",
+          "transaction.message.instructions.1.parsed.info.account",
+          "transaction.message.instructions.1.parsed.info.authority",
+          "transaction.message.instructions.1.parsed.info.authorityType",
+          "transaction.message.instructions.1.parsed.info.newAuthority",
+          "transaction.message.instructions.1.programId"
+        ],
+        "dependencies": []
+      }
+    },
+    "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq": {
+      "ownership": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Raw owner endpoints reconcile with executed lifecycle only.",
+        "evidence": [
+          "e0df05aa92708005f0aee0c517431a34c7df7196a029298cb0a2040e758fb271"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.1",
+          "meta.preTokenBalances.1"
+        ],
+        "dependencies": []
+      },
+      "quantities": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Raw endpoint quantities reconcile to executed token operations.",
+        "evidence": [
+          "e0df05aa92708005f0aee0c517431a34c7df7196a029298cb0a2040e758fb271"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.1",
+          "meta.preTokenBalances.1"
+        ],
+        "dependencies": []
+      },
+      "lifecycle": {
+        "state": "PASS",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Executed owner/lifecycle operations reconcile with native boundaries.",
+        "evidence": [
+          "e0df05aa92708005f0aee0c517431a34c7df7196a029298cb0a2040e758fb271"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.1",
+          "meta.preTokenBalances.1"
+        ],
+        "dependencies": []
+      }
+    }
+  },
+  "gaps": []
+}

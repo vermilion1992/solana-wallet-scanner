@@ -1,0 +1,136 @@
+{
+  "kind": "synthetic implementation trace; not genuine acceptance",
+  "raw": {
+    "transaction": {
+      "signatures": [
+        "development-sol-withdrawal"
+      ],
+      "message": {
+        "accountKeys": [
+          "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+          "11111111111111111111111111111112"
+        ],
+        "instructions": [
+          {
+            "program": "system",
+            "programId": "11111111111111111111111111111111",
+            "parsed": {
+              "type": "transfer",
+              "info": {
+                "source": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+                "destination": "11111111111111111111111111111112",
+                "lamports": 100000000
+              }
+            }
+          }
+        ]
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "preBalances": [
+        1000000000,
+        0
+      ],
+      "postBalances": [
+        899995000,
+        100000000
+      ],
+      "preTokenBalances": [],
+      "postTokenBalances": [],
+      "innerInstructions": []
+    },
+    "version": "legacy",
+    "slot": 1,
+    "blockTime": 1783200000
+  },
+  "raw_sha256": "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5",
+  "events": [
+    {
+      "kind": "fee",
+      "timestamp": 1783200000,
+      "signature": "development-sol-withdrawal",
+      "path": "meta.fee",
+      "evidence": [
+        "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5"
+      ],
+      "amount_sol": "0.000005",
+      "paid_by_wallet": true,
+      "fee_payer": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+      "failed": false,
+      "reason": "Network fee includes priority fees; no separate priority subtraction",
+      "order": 1000000
+    },
+    {
+      "kind": "capital",
+      "timestamp": 1783200000,
+      "signature": "development-sol-withdrawal",
+      "path": "instructions.0",
+      "evidence": [
+        "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5"
+      ],
+      "direction": "withdrawal",
+      "amount_sol": "0.1",
+      "reason": "External native movement; not trading profit",
+      "order": 1000001
+    }
+  ],
+  "decoded_native_movement": null,
+  "actual_wallet_delta_lamports": "-100005000",
+  "components": {
+    "native_fee": {
+      "state": "PASS",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+      "evidence": [
+        "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5"
+      ],
+      "raw_paths": [],
+      "dependencies": []
+    },
+    "observed_economic_roles": {
+      "state": "UNKNOWN",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+      "evidence": [
+        "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5"
+      ],
+      "raw_paths": [
+        "instructions.0",
+        "meta.fee"
+      ],
+      "dependencies": []
+    },
+    "economic_costs": {
+      "state": "UNKNOWN",
+      "scope": "Wallet-wide economic cost roles",
+      "reason": "Wallet costs require historical population and all decoded native/trade/external movement roles.",
+      "evidence": [
+        "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5"
+      ],
+      "raw_paths": [
+        "instructions.0",
+        "meta.fee"
+      ],
+      "dependencies": [
+        "accepted_historical_owner_source_contract",
+        "independent_closed_reassigned_lifecycle_controls"
+      ]
+    },
+    "valued_external_flows": {
+      "state": "UNKNOWN",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "reason": "External flow roles/valuations cannot be defaulted to zero from selected trades.",
+      "evidence": [
+        "fa3be95dda25b2e89bc8d11decfeeec6b52e32c70ac843323ca1426ba9521ed5"
+      ],
+      "raw_paths": [],
+      "dependencies": [
+        "complete_external_flow_roles",
+        "historical_flow_marks"
+      ]
+    }
+  },
+  "decision": "Missing independent native movement projection, not confirmed application defect: economic transfer role remains unproved and cannot be promoted to external cash/cost completeness. Native fee remains PASS."
+}

@@ -1,0 +1,1 @@
+{"state": "SCOPED_PASS_REAL_ACCEPTANCE_BLOCKED", "application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf", "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96", "source_files": 241, "full_backend_unique_nodes": 3167, "subtests_separately_reported": 440, "PRODUCT_READY": false}

@@ -1,0 +1,45 @@
+Sun Oct  4 14:54:27 2026    evidence/position-history-batch/trace/indexed-genuine.profile
+
+         516515923 function calls (477670851 primitive calls) in 177.061 seconds
+
+   Ordered by: cumulative time
+   List reduced from 6019 to 35 due to restriction <35>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      7/4    0.000    0.000  313.510   78.378 runner.py:340(from_call)
+        3    0.000    0.000  313.079  104.360 runner.py:236(call_and_report)
+        3    0.000    0.000  313.078  104.359 runner.py:250(<lambda>)
+      131    0.413    0.003  274.476    2.095 base_events.py:1922(_run_once)
+91163/91101    0.018    0.000  216.111    0.002 {built-in method builtins.next}
+     11/6    0.000    0.000  215.866   35.978 fixtures.py:1146(finish)
+        4    0.000    0.000  215.865   53.966 fixtures.py:1009(_teardown_yield_fixture)
+   1087/1    0.041    0.000  177.114  177.114 {built-in method builtins.exec}
+        1    0.000    0.000  177.114  177.114 <string>:1(<module>)
+        1    0.000    0.000  177.114  177.114 <frozen runpy>:201(run_module)
+        1    0.000    0.000  177.009  177.009 <frozen runpy>:65(_run_code)
+        1    0.000    0.000  177.009  177.009 __main__.py:1(<module>)
+        1    0.000    0.000  177.009  177.009 __init__.py:246(_console_main)
+        1    0.000    0.000  177.009  177.009 __init__.py:204(_main)
+   536/70    0.000    0.000  176.964    2.528 _manager.py:111(_hookexec)
+   536/70    0.002    0.000  176.964    2.528 _callers.py:76(_multicall)
+    369/2    0.001    0.000  176.961   88.480 _hooks.py:497(__call__)
+        1    0.000    0.000  176.872  176.872 main.py:376(pytest_cmdline_main)
+        1    0.000    0.000  176.872  176.872 main.py:317(wrap_session)
+        1    0.000    0.000  176.756  176.756 main.py:380(_main)
+        2    0.000    0.000  176.328   88.164 test_discovery_integration_review.py:50(session)
+        1    0.000    0.000  176.323  176.323 main.py:397(pytest_runtestloop)
+        1    0.000    0.000  176.322  176.322 runner.py:115(pytest_runtest_protocol)
+        1    0.000    0.000  176.322  176.322 runner.py:123(runtestprotocol)
+        1    0.000    0.000  176.321  176.321 runner.py:197(pytest_runtest_teardown)
+        2    0.000    0.000  176.321   88.161 runner.py:551(teardown_exact)
+      187    0.000    0.000  143.342    0.767 events.py:86(_run)
+      187    0.001    0.000  143.340    0.767 {method 'run' of '_contextvars.Context' objects}
+        7    0.000    0.000  142.675   20.382 testclient.py:438(request)
+        7    0.000    0.000  142.673   20.382 _client.py:771(request)
+        7    0.000    0.000  142.670   20.381 _client.py:879(send)
+        7    0.000    0.000  142.669   20.381 _client.py:930(_send_handling_auth)
+        7    0.000    0.000  142.669   20.381 _client.py:964(_send_handling_redirects)
+        7    0.000    0.000  142.669   20.381 _client.py:1001(_send_single_request)
+        7    0.023    0.003  142.666   20.381 testclient.py:223(handle_request)
+
+

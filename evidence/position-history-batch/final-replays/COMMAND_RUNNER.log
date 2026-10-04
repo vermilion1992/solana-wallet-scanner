@@ -1,0 +1,4 @@
+{"exit_code": 0, "name": "genuine-development", "receipt_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED", "seconds": 102.7419782570214, "state": "PASS"}
+{"exit_code": 2, "name": "genuine-real-acceptance", "receipt_state": "BLOCKED", "seconds": 103.32668551398092, "state": "PASS_EXPECTED_REAL_BLOCK"}
+{"exit_code": 0, "name": "product-development", "receipt_state": "DEVELOPMENT_PASS", "seconds": 17.922576982993633, "state": "PASS"}
+{"exit_code": 2, "name": "product-real-acceptance", "receipt_state": "BLOCKED", "seconds": 18.617440536996583, "state": "PASS_EXPECTED_REAL_BLOCK"}

@@ -1,0 +1,22 @@
+
+> solana-wallet-scanner-ui@0.3.11 check:discovery
+> node scripts/check-discovery.mjs
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Missing sale fees still revoke only the dependent disposal profit
+
+0 !== 2
+
+    at file:///workspace/solana-wallet-scanner/frontend/scripts/check-discovery.mjs:1631:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 2,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

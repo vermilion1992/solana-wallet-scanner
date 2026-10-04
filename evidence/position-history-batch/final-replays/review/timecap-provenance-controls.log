@@ -1,0 +1,14 @@
+{"exit_code": 0, "name": "one", "receipt_state": "FIXTURE_PASS", "seconds": 1, "state": "PASS"}
+{"exit_code": 0, "name": "two", "receipt_state": "FIXTURE_PASS", "seconds": 1, "state": "PASS"}
+{"exit_code": 0, "name": "one", "receipt_state": "FIXTURE_PASS", "seconds": 1, "state": "PASS"}
+{"exit_code": -15, "name": "one", "receipt_state": "FIXTURE_PASS", "seconds": 1, "state": "FAILED"}
+{
+  "kind": "independent-timecap-and-command-provenance-controls",
+  "state": "PASS",
+  "controls": 3,
+  "application_entrypoints_executed": false,
+  "real_subprocesses_spawned": false,
+  "network_calls": 0,
+  "credential_calls": 0,
+  "provider_calls": 0
+}

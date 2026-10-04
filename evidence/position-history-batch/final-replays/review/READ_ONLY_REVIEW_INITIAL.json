@@ -1,0 +1,114 @@
+{
+  "application_identity_observed": {
+    "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+    "source_file_count": 241,
+    "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+  },
+  "confirmed_findings": [
+    {
+      "component": "receipt_checks product sibling cases",
+      "finding": "False per-case parent_unchanged is accepted for valuation and world loss/restoration while top-level says true. Four reproduced controls.",
+      "id": "REPLAY-PARENT-01"
+    },
+    {
+      "component": "inputs/check_identity product corpus",
+      "finding": "Default genuine23 product corpus is not included in original-input inventory. Isolated manifest mutation leaves current three-file inventory identical.",
+      "id": "REPLAY-INPUT-01"
+    },
+    {
+      "component": "store_exports cleanup receipt",
+      "finding": "Tracked-flat refusal preserves original safely but leaves STORAGE_INDEX PASS and original_retained=false before deletion completed.",
+      "id": "REPLAY-STORAGE-01"
+    }
+  ],
+  "evidence_files": [
+    {
+      "bytes": 1163,
+      "name": "BOUNDARY_CONTROL_REVIEW.json",
+      "sha256": "370fbe0b54ebc3c959e0861066746819b01a2dba65a6ef77c87e335bcb5f7ce5"
+    },
+    {
+      "bytes": 3333,
+      "name": "OFFLINE_CHILD_GUARD_REVIEW.json",
+      "sha256": "0e0cc0157124c9025041129902503c7184fb3f1a0d6193a9ee8f0e8b58ce785c"
+    },
+    {
+      "bytes": 48890,
+      "name": "RECEIPT_CONTROL_REVIEW.json",
+      "sha256": "5b0a4fbc5fe5bd2e0f89e118f997507d914bbc83c2bcb6f6c28998dd3979d370"
+    },
+    {
+      "bytes": 13929,
+      "name": "TIMECAP_PROVENANCE_REVIEW.json",
+      "sha256": "e9aa009a954da1370b84be78378348bafb8e63d6da016d1a19a1283df0393ad7"
+    },
+    {
+      "bytes": 1163,
+      "name": "boundary-controls.log",
+      "sha256": "3081587918f2aad992398b1ecf88843da1c23351fdc99541cfa7f0a827d46f89"
+    },
+    {
+      "bytes": 2738,
+      "name": "check_offline_child_guards.py",
+      "sha256": "8304eb77fcdd5dbe1f236974c4e0dfcfbd5703a9e25f4e4c745e4f0f18663658"
+    },
+    {
+      "bytes": 3469,
+      "name": "check_runner_boundaries.py",
+      "sha256": "deb3b5f92ba9b0bc9635435b4a844c4b03ec551c07d7ff1cf4d5df55f627f5b0"
+    },
+    {
+      "bytes": 6794,
+      "name": "check_runner_receipts.py",
+      "sha256": "32763359e5adeea5ab9cf587c0e4a77c7556e089970f6005f3f570dc1aaafe1b"
+    },
+    {
+      "bytes": 4258,
+      "name": "check_runner_timecaps.py",
+      "sha256": "f7289b330895d15e540aa85f9e854622548c61e9b3dcb2f84fe6d77b737df71c"
+    },
+    {
+      "bytes": 3333,
+      "name": "offline-child-guard-controls.log",
+      "sha256": "8b260cd3484ad468bb07b57e5bee774117d1208c45e294d93129722d70fc90ed"
+    },
+    {
+      "bytes": 1544,
+      "name": "receipt-controls.log",
+      "sha256": "c4c8bd8f57b72060e493d505652be304de25f61e75e1bce66d269b155b6b6c6b"
+    },
+    {
+      "bytes": 645,
+      "name": "timecap-provenance-controls.log",
+      "sha256": "b3d3e3c04b5cf7b9e6f2cf452de1123dff3371ed680028799460ef38c0066f0c"
+    }
+  ],
+  "guards_limit": "Counted Python socket and keyring plus application-level offline provider/credential guards. This is not an OS network sandbox.",
+  "kind": "distinct-read-only-offline-replay-runner-review",
+  "original_three_inputs_match": true,
+  "passing_evidence": {
+    "boundary_controls": 2,
+    "mocked_timecap_provenance_controls": 3,
+    "offline_child_denial_controls": 5,
+    "receipt_controls_initial": {
+      "expected": 151,
+      "findings": 4,
+      "total": 155
+    }
+  },
+  "reviewed_runner": {
+    "bytes": 21733,
+    "path": "/workspace/outputs/position-history-publication/run_final_replays.py",
+    "sha256": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068"
+  },
+  "scope": "Procedural runner and small pure receipt/timecap/guard controls only. No full workflows or application acceptance were executed by this reviewer.",
+  "security": {
+    "application_files_modified": false,
+    "credential_calls": 0,
+    "full_workflows_executed": false,
+    "provider_calls": 0,
+    "real_network_calls": 0,
+    "secrets_read": false
+  },
+  "state": "FINDINGS_REPAIR_PENDING"
+}

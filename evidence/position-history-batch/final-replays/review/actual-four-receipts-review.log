@@ -1,0 +1,50 @@
+{
+  "kind": "distinct-read-only-actual-four-receipt-revalidation",
+  "state": "PASS",
+  "reviewed_at": "2026-10-04T15:30:14.420956+00:00",
+  "checks": {
+    "four_expected_names_and_no_extra": true,
+    "recorded_index_passing": true,
+    "actual_receipts_passing_revised_strict_guard": true,
+    "current_exact_source_identity": true,
+    "current_source_and_commit_unchanged": true,
+    "recorded_original_runner_preserved": true,
+    "revised_runner_unchanged_during_review": true,
+    "original_product_git_bytes_match": true,
+    "all_current_67_input_files_unchanged": true,
+    "product_inventory_pinned": true,
+    "independent_total_cap_observed": true,
+    "independent_command_cap_observed": true,
+    "no_product_readiness_claim": true
+  },
+  "exact_application_identity": {
+    "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+    "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+    "source_file_count": 241
+  },
+  "index": {
+    "path": "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/INDEX.json",
+    "bytes": 16496,
+    "sha256": "a4b4e8cf04cfb1bcb3e50f23c6ae01ec205bb82b67d4557950b009d42b3a6428"
+  },
+  "executed_runner": {
+    "path": "/workspace/outputs/position-history-publication/RUN_FINAL_REPLAYS_EXECUTED.py",
+    "bytes": 21733,
+    "sha256": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068"
+  },
+  "revised_guard_runner": {
+    "path": "/workspace/outputs/position-history-publication/run_final_replays.py",
+    "bytes": 24903,
+    "sha256": "332ab09761caf1cc931fda53c4cf0c93438bbeb39a62b589c25b102ff23147d7"
+  },
+  "actual_wall_seconds": 242.959146,
+  "input_files": 67,
+  "product_files": 64,
+  "product_bytes": 7779999,
+  "application_workflows_executed_by_reviewer": false,
+  "application_files_changed": false,
+  "provider_calls_by_reviewer": 0,
+  "credential_calls_by_reviewer": 0,
+  "network_calls_by_reviewer": 0,
+  "scope": "Independent read of already completed commands and current strict receipt helpers; revalidation is not a new workflow execution or full product acceptance."
+}

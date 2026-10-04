@@ -1,0 +1,1728 @@
+{
+  "application_files_changed": false,
+  "controls": 155,
+  "credential_calls": 0,
+  "findings": [
+    {
+      "actual_acceptance": true,
+      "control": "product-development:valuation_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-development:world_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-real-acceptance:valuation_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-real-acceptance:world_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    }
+  ],
+  "kind": "distinct-read-only-replay-runner-receipt-controls",
+  "network_calls": 0,
+  "passed_controls": 151,
+  "provider_calls": 0,
+  "records": [
+    {
+      "actual_acceptance": true,
+      "control": "genuine-development:retained-known-positive",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:nonobject-None",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "usage_unchanged",
+        "product_ready_false",
+        "oracle_frozen_before_application",
+        "original_archive_identity",
+        "exact_raw_oracle",
+        "exact_worked_oracle",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:nonobject-[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "usage_unchanged",
+        "product_ready_false",
+        "oracle_frozen_before_application",
+        "original_archive_identity",
+        "exact_raw_oracle",
+        "exact_worked_oracle",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:nonobject-'PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "usage_unchanged",
+        "product_ready_false",
+        "oracle_frozen_before_application",
+        "original_archive_identity",
+        "exact_raw_oracle",
+        "exact_worked_oracle",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "kind"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:state='PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "state"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:provider_requests=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:provider_requests=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:credential_lookups=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:credential_lookups=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:parent_unchanged=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "parent_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:collector_ancestry_created=True",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "no_collector_ancestry"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:cases-missing",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:cases-duplicate",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:cases-sibling-replaced",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:cases-empty",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:failed-case",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:real-acceptance-promoted",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "real_acceptance_blocked"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-state='FAILED'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-socket_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-socket_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-bootstrap_credential_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-bootstrap_credential_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-application_command=[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:guard-application_exit_code=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:PRODUCT_READY-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "product_ready_false"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:usage_unchanged-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "usage_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:oracle_frozen_before_application-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "oracle_frozen_before_application"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:archive_sha256-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "original_archive_identity"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:oracle_sha256-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_raw_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:worked_expectations_sha256-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_worked_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:lot-buy-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:lot-buy-restoration-failed",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:lot-sell-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:lot-sell-restoration-failed",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:input.zip-missing",
+      "error": "ValueError: Expected regular local file: /workspace/outputs/position-history-publication/replay-review/receipt-controls-rh11lty7/genuine-development/input.zip",
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:input.zip-corrupt",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "original_archive_identity"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-development:input.zip-restored",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:EXPECTED_RAW.json-missing",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/outputs/position-history-publication/replay-review/receipt-controls-rh11lty7/genuine-development/EXPECTED_RAW.json'",
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:EXPECTED_RAW.json-corrupt",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_raw_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-development:EXPECTED_RAW.json-restored",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:EXPECTED_WORKED.json-missing",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/outputs/position-history-publication/replay-review/receipt-controls-rh11lty7/genuine-development/EXPECTED_WORKED.json'",
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-development:EXPECTED_WORKED.json-corrupt",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_worked_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-development:EXPECTED_WORKED.json-restored",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-real-acceptance:retained-known-positive",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:nonobject-None",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "usage_unchanged",
+        "product_ready_false",
+        "oracle_frozen_before_application",
+        "original_archive_identity",
+        "exact_raw_oracle",
+        "exact_worked_oracle",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:nonobject-[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "usage_unchanged",
+        "product_ready_false",
+        "oracle_frozen_before_application",
+        "original_archive_identity",
+        "exact_raw_oracle",
+        "exact_worked_oracle",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:nonobject-'PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "usage_unchanged",
+        "product_ready_false",
+        "oracle_frozen_before_application",
+        "original_archive_identity",
+        "exact_raw_oracle",
+        "exact_worked_oracle",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "kind"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:state='PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "state"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:provider_requests=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:provider_requests=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:credential_lookups=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:credential_lookups=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:parent_unchanged=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "parent_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:collector_ancestry_created=True",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "no_collector_ancestry"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:cases-missing",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:cases-duplicate",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:cases-sibling-replaced",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:cases-empty",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:failed-case",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:real-acceptance-promoted",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "real_acceptance_blocked"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-state='FAILED'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-socket_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-socket_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-bootstrap_credential_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-bootstrap_credential_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-application_command=[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:guard-application_exit_code=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:PRODUCT_READY-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "product_ready_false"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:usage_unchanged-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "usage_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:oracle_frozen_before_application-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "oracle_frozen_before_application"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:archive_sha256-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "original_archive_identity"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:oracle_sha256-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_raw_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:worked_expectations_sha256-broken",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_worked_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:lot-buy-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:lot-buy-restoration-failed",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:lot-sell-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:lot-sell-restoration-failed",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_restored_lot_expectations_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:input.zip-missing",
+      "error": "ValueError: Expected regular local file: /workspace/outputs/position-history-publication/replay-review/receipt-controls-rh11lty7/genuine-real-acceptance/input.zip",
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:input.zip-corrupt",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "original_archive_identity"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-real-acceptance:input.zip-restored",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:EXPECTED_RAW.json-missing",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/outputs/position-history-publication/replay-review/receipt-controls-rh11lty7/genuine-real-acceptance/EXPECTED_RAW.json'",
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:EXPECTED_RAW.json-corrupt",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_raw_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-real-acceptance:EXPECTED_RAW.json-restored",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:EXPECTED_WORKED.json-missing",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/outputs/position-history-publication/replay-review/receipt-controls-rh11lty7/genuine-real-acceptance/EXPECTED_WORKED.json'",
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "genuine-real-acceptance:EXPECTED_WORKED.json-corrupt",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "exact_worked_oracle"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "genuine-real-acceptance:EXPECTED_WORKED.json-restored",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-development:retained-known-positive",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:nonobject-None",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "development_passing",
+        "usage_unchanged",
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:nonobject-[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "development_passing",
+        "usage_unchanged",
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:nonobject-'PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "development_passing",
+        "usage_unchanged",
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "kind"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:state='PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "state"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:provider_requests=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:provider_requests=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:credential_lookups=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:credential_lookups=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:parent_unchanged=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "parent_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:collector_ancestry_created=True",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "no_collector_ancestry"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:cases-missing",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:cases-duplicate",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:cases-sibling-replaced",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:cases-empty",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:failed-case",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:real-acceptance-promoted",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "real_acceptance_blocked"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-state='FAILED'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-socket_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-socket_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-bootstrap_credential_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-bootstrap_credential_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-application_command=[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:guard-application_exit_code=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:development-unknown",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "development_passing"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:usage-changed",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "usage_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-development:mode-wrong",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-development:valuation_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-development:world_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-real-acceptance:retained-known-positive",
+      "error": null,
+      "expected_acceptance": true,
+      "failed_checks": [],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:nonobject-None",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "development_passing",
+        "usage_unchanged",
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:nonobject-[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "development_passing",
+        "usage_unchanged",
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:nonobject-'PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "receipt_object",
+        "kind",
+        "state",
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once",
+        "provider_requests_zero",
+        "credential_lookups_zero",
+        "parent_unchanged",
+        "real_acceptance_blocked",
+        "no_collector_ancestry",
+        "development_passing",
+        "usage_unchanged",
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "kind"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:state='PASS'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "state"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:provider_requests=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:provider_requests=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "provider_requests_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:credential_lookups=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:credential_lookups=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "credential_lookups_zero"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:parent_unchanged=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "parent_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:collector_ancestry_created=True",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "no_collector_ancestry"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:cases-missing",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:cases-duplicate",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:cases-sibling-replaced",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:cases-empty",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:failed-case",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "cases_explicitly_passing",
+        "all_original_cases_preserved_once"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:real-acceptance-promoted",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "real_acceptance_blocked"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-kind='wrong'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-state='FAILED'",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-socket_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-socket_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-bootstrap_credential_attempts=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-bootstrap_credential_attempts=False",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-application_command=[]",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:guard-application_exit_code=1",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "counted_offline_guard_pass"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:development-unknown",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "development_passing"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:usage-changed",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "usage_unchanged"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "product-real-acceptance:mode-wrong",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [
+        "real_acceptance_mode"
+      ],
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-real-acceptance:valuation_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": true,
+      "control": "product-real-acceptance:world_hash-loss-and-exact-restoration-parent-mutated",
+      "error": null,
+      "expected_acceptance": false,
+      "failed_checks": [],
+      "matched_expected": false
+    },
+    {
+      "actual_acceptance": false,
+      "control": "strict-json-syntax",
+      "expected_acceptance": false,
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "strict-json-duplicate",
+      "expected_acceptance": false,
+      "matched_expected": true
+    },
+    {
+      "actual_acceptance": false,
+      "control": "strict-json-nonfinite",
+      "expected_acceptance": false,
+      "matched_expected": true
+    }
+  ],
+  "runner_sha256_after": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068",
+  "runner_sha256_before": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068",
+  "runner_unchanged": true,
+  "state": "FINDINGS",
+  "workflows_executed": false
+}

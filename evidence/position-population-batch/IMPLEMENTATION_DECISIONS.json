@@ -1,0 +1,70 @@
+{
+  "schema": "position-population-development-decisions-v1",
+  "PRODUCT_READY": false,
+  "genuine_B3_acceptance": false,
+  "source_scope": [
+    "scanner/wallet_positions.py",
+    "tests/test_wallet_position_population.py"
+  ],
+  "implemented": [
+    "Observed mint-account endpoint carry across selected records and wallet-owned internal transfers",
+    "Mixed closed/open FIFO episode admission using the existing raw-derived analyze result",
+    "Exact selected endpoint quantities independent of missing fees/cost/valuation",
+    "Independent report/28-day/90-day closed-cohort proof reuse",
+    "Public raw/pointer hash verification and rejection of caller calculation authority through rederivation",
+    "Immutable offline import/rebuild/source inspection/export dependency removal and restoration"
+  ],
+  "global_gaps": [
+    "Accepted exhaustive historical owner population",
+    "Eligible-asset classification",
+    "Exact all-wallet boundary inventory and valuation",
+    "Complete acquisition origins and unsupported economic routes"
+  ],
+  "retained_failed_attempts": [
+    {
+      "log": "initial-focused.log",
+      "decision": "Initial expectation incorrectly assumed a missing/unsupported later alternative had a supported clock. Its raw clock is unbounded; it cannot be excluded from the earlier lot solely using the selected preferred version. Readable bounded conflict cases retain supported earlier lot facts; required-source rejection/restoration assertions are unchanged."
+    },
+    {
+      "log": "transient-history-integration-failed.log",
+      "decision": "In-progress root integration expected a checks field before historical-module alias/schema integration completed. No candidate acceptance claimed."
+    },
+    {
+      "log": "compatibility-timing-reproduction.log",
+      "decision": "Confirmed neighboring compatibility consumer retained all-closed timing gating after mixed-position admission. Root now takes report closed-cohort typed timing; positive mixed-case assertion retained."
+    },
+    {
+      "log": "failed-attempt-focused.log",
+      "decision": "Confirmed shared quantity/money bleed: missing fee produced generic unsupported and revoked a physically unchanged failed record lot. Root now excludes only proved failed unchanged activity from physical scope rejection. Fee/money gates remain independent; selected/alternative and changed-endpoint controls retained."
+    },
+    {
+      "log": "integrated-focused-after-timing.log",
+      "decision": "Intermediate26PASS/1FAIL before failed-record sibling correction; superseded by actual source-stable affected matrix, not erased."
+    },
+    {
+      "log": "distinct-review/UNASSIGNED_QUANTITY_ASSERTIONS_INITIAL.json",
+      "decision": "Distinct review reproduced readable identity-invalid, unsupported or malformed selected records disappearing from per-mint quantity and leaving a known zero. Internal projection now retains native identity/format/inspection-gap dependencies; the public wrapper also requires its outer signature to bind the original raw body. Six direct/normal-path controls and wrong-identity alternatives are retained; all repaired controls passed."
+    }
+  ],
+  "verification": {
+    "receipt": "COMMAND_RECEIPT_REVIEWED_FINAL.json",
+    "log": "affected-matrix-reviewed-final.log",
+    "unique_pytest_nodes": 226,
+    "subtests_separately_reported": 220,
+    "new_position_module_unique_nodes": 34,
+    "overlap_with_other_suites": "Do not add these focused nodes/subtests/API children to full-suite unique totals",
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "own_source_hashes": {
+    "scanner/wallet_positions.py": "52485ec7690ed486739e243719946bdacf92053298e14e987d9995314831cd27",
+    "tests/test_wallet_position_population.py": "d07d9afed1c7a04c12cf728c73539345850de44c7f4c9d44c85ab67561c90465"
+  },
+  "distinct_review": {
+    "receipt": "distinct-review/READ_ONLY_REVIEW_FINAL.json",
+    "state": "PASS_IN_REVIEWED_SCOPE",
+    "independent_sibling_controls": 9,
+    "original_quantity_failure_assertions_repaired": 6,
+    "full_candidate_acceptance": false
+  }
+}

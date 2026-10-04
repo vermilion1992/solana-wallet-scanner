@@ -1,0 +1,5 @@
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+INCOMPLETE; Gate B remains OPEN. Evidence: /workspace/solana-wallet-scanner/evidence/ci-completion-batch/ci/ACTUAL_MISSING_UNION

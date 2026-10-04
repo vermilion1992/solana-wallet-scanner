@@ -1,0 +1,101 @@
+{
+  "kind": "offline-child-denied-guard-controls",
+  "state": "PASS",
+  "controls": 5,
+  "application_entrypoints_executed": false,
+  "actual_socket_connections": 0,
+  "actual_name_lookups": 0,
+  "actual_keyring_calls": 0,
+  "records": [
+    {
+      "control": "empty-entrypoint",
+      "state": "PASS",
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "offline_guard": {
+        "application_command": [
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/outputs/position-history-publication/replay-review/denied-guard-controls-ajml0d8q/empty-entrypoint"
+        ],
+        "application_exit_code": 0,
+        "bootstrap_credential_attempts": 0,
+        "kind": "counted-offline-python-guards",
+        "socket_attempts": 0,
+        "state": "PASS"
+      }
+    },
+    {
+      "control": "denied-socket-swallowed",
+      "state": "PASS",
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "offline_guard": {
+        "application_command": [
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/outputs/position-history-publication/replay-review/denied-guard-controls-ajml0d8q/denied-socket-swallowed"
+        ],
+        "application_exit_code": 0,
+        "bootstrap_credential_attempts": 0,
+        "kind": "counted-offline-python-guards",
+        "socket_attempts": 1,
+        "state": "FAILED"
+      }
+    },
+    {
+      "control": "denied-name-lookup-swallowed",
+      "state": "PASS",
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "offline_guard": {
+        "application_command": [
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/outputs/position-history-publication/replay-review/denied-guard-controls-ajml0d8q/denied-name-lookup-swallowed"
+        ],
+        "application_exit_code": 0,
+        "bootstrap_credential_attempts": 0,
+        "kind": "counted-offline-python-guards",
+        "socket_attempts": 1,
+        "state": "FAILED"
+      }
+    },
+    {
+      "control": "denied-bootstrap-credential-swallowed",
+      "state": "PASS",
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "offline_guard": {
+        "application_command": [
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/outputs/position-history-publication/replay-review/denied-guard-controls-ajml0d8q/denied-bootstrap-credential-swallowed"
+        ],
+        "application_exit_code": 0,
+        "bootstrap_credential_attempts": 1,
+        "kind": "counted-offline-python-guards",
+        "socket_attempts": 0,
+        "state": "FAILED"
+      }
+    },
+    {
+      "control": "explicit-expected-real-block",
+      "state": "PASS",
+      "actual_exit": 2,
+      "expected_exit": 2,
+      "offline_guard": {
+        "application_command": [
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/outputs/position-history-publication/replay-review/denied-guard-controls-ajml0d8q/explicit-expected-real-block"
+        ],
+        "application_exit_code": 2,
+        "bootstrap_credential_attempts": 0,
+        "kind": "counted-offline-python-guards",
+        "socket_attempts": 0,
+        "state": "PASS"
+      }
+    }
+  ]
+}

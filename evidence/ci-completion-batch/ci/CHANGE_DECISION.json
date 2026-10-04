@@ -1,0 +1,53 @@
+{
+  "kind": "bounded-CI-completion-repair-decision",
+  "created_at": "2026-10-04T14:56:54.938087+00:00",
+  "baseline_head": "1040215f498b1317b1b942838994127f43a822bd",
+  "actual_native_observation": "run37208279838 cancelled; indexed cancelled and aggregate INCOMPLETE exit2; indexed raw log404; cancellation cause unknown",
+  "confirmed_guard_mismatch": "Previous1800s subprocess deadline exceeded20min hosted job deadline; final receipt/diagnostics could be prevented by job cancellation. This is a guard design mismatch, not proof of why the native run was cancelled.",
+  "local_observations": "All204 indexed testnodes PASS when run as five modules. Genuine200-record API case dominates at61.28s call+24.36s teardown; integration process maxRSS2245668KiB. Local measurements do not prove hosted resource failure.",
+  "change": [
+    "ten disjoint focused groups retain all35 selectors unchanged",
+    "five indexed modules run as independent groups without skip or xfail",
+    "focused command limit600s, hosted step15min and job30min",
+    "unbuffered per-node progress and30s command liveness",
+    "timed-out commands/descendants stop and retain nonpassing bound receipts/logs",
+    "strict ten-group/development union source/Git/locks/runtime/commands/PASS/log bindings",
+    "fixed bounded aggregate diagnostics artifact even on incomplete union"
+  ],
+  "not_changed": [
+    "application accounting/evidence logic",
+    "candidate full-suite command limit1800s",
+    "provider method allowlist",
+    "offline unshare/setpriv/secret checks",
+    "immutable genuine bytes and regression fixtures",
+    "PRODUCT_READY=false; genuine B1/B2/B3 unresolved"
+  ],
+  "source_files": [
+    ".github/workflows/offline-focused.yml",
+    "tools/validate.py",
+    "tests/test_validation_gates.py"
+  ],
+  "previous_native_evidence": {
+    "FOLLOW_UP_CANCELLED_METADATA.json": {
+      "bytes": 52558,
+      "sha256": "4443bad0eacff98fbf1f440c029aa862aadca0e4c857c716a5ac4dfcb2791585"
+    },
+    "NATIVE_CI_FINAL_FOLLOW_UP.json": {
+      "bytes": 6597,
+      "sha256": "4f0495bda4a5f14e15286764364ce8f37d33eef1004772b5ff5ada870e0535b0"
+    },
+    "FINAL_UNION_JOB_111458963339.log": {
+      "bytes": 39663,
+      "sha256": "36b94d32d7f9994d8f8f2e6938247a646b073c7013de61dee077f21ac989e4ce"
+    },
+    "FINAL_INDEXED_JOB_111453989505_LOG_UNAVAILABLE.json": {
+      "bytes": 1093,
+      "sha256": "5f877c1744d06a4d606cbb970f5d9f4d5c7de6e7a47e8dd6a3aad3460a9b8411"
+    }
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "CI_mutations": 0,
+  "Git_commits": 0,
+  "native_rerun": false
+}

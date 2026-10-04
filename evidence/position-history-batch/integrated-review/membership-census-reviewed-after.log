@@ -1,0 +1,43 @@
+/workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+[
+  {
+    "variant": "unsupported",
+    "observed_membership_state": "UNKNOWN",
+    "bad_transaction_state": "UNKNOWN",
+    "independent_buy_accounts": {
+      "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR": "PASS",
+      "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq": "PASS"
+    },
+    "wallet_population": "UNKNOWN",
+    "reasons": [
+      "Missing, malformed or unsupported raw transaction"
+    ]
+  },
+  {
+    "variant": "missing-meta",
+    "observed_membership_state": "UNKNOWN",
+    "bad_transaction_state": "UNKNOWN",
+    "independent_buy_accounts": {
+      "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR": "PASS",
+      "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq": "PASS"
+    },
+    "wallet_population": "UNKNOWN",
+    "reasons": [
+      "Missing, malformed or unsupported raw transaction"
+    ]
+  },
+  {
+    "variant": "malformed-account-operation",
+    "observed_membership_state": "UNKNOWN",
+    "bad_transaction_state": "UNKNOWN",
+    "independent_buy_accounts": {
+      "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR": "PASS",
+      "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq": "PASS"
+    },
+    "wallet_population": "UNKNOWN",
+    "reasons": [
+      "Parsed operation lacks a valid required account reference"
+    ]
+  }
+]

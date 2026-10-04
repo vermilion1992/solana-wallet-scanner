@@ -1,0 +1,46 @@
+{
+  "kind": "local-module-profile",
+  "scope": "Local timing only; hosted cancellation cause unknown",
+  "results": [
+    {
+      "module": "test_indexed_chronology.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "seconds": 1.77,
+      "log": "evidence/ci-completion-batch/ci/PROFILE_test_indexed_chronology.log",
+      "children_maxrss": 71648
+    },
+    {
+      "module": "test_indexed_input.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "seconds": 2.67,
+      "log": "evidence/ci-completion-batch/ci/PROFILE_test_indexed_input.log",
+      "children_maxrss": 71648
+    },
+    {
+      "module": "test_indexed_source_dependencies.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "seconds": 0.57,
+      "log": "evidence/ci-completion-batch/ci/PROFILE_test_indexed_source_dependencies.log",
+      "children_maxrss": 71648
+    },
+    {
+      "module": "test_indexed_report_integration.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "seconds": 89.29,
+      "log": "evidence/ci-completion-batch/ci/PROFILE_test_indexed_report_integration.log",
+      "children_maxrss": 2245668
+    },
+    {
+      "module": "test_real_coverage.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "seconds": 9.51,
+      "log": "evidence/ci-completion-batch/ci/PROFILE_test_real_coverage.log",
+      "children_maxrss": 2245668
+    }
+  ]
+}

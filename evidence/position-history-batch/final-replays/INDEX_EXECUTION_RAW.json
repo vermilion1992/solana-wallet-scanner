@@ -1,0 +1,365 @@
+{
+  "PRODUCT_READY": false,
+  "application_commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "command_timeout_seconds": 300,
+  "commands": [
+    {
+      "application_command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/genuine-development",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json"
+      ],
+      "checks": {
+        "all_original_cases_preserved_once": true,
+        "all_restored_lot_expectations_pass": true,
+        "cases_explicitly_passing": true,
+        "counted_offline_guard_pass": true,
+        "credential_lookups_zero": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_raw_oracle": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "exact_worked_oracle": true,
+        "expected_exit": true,
+        "kind": true,
+        "no_collector_ancestry": true,
+        "not_timed_out": true,
+        "oracle_frozen_before_application": true,
+        "original_archive_identity": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "product_ready_false": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/outputs/position-history-publication/run_final_replays.py",
+        "--offline-child",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/genuine-development",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "finished_at": "2026-10-04T15:24:33.708903+00:00",
+      "log": "evidence/position-history-batch/final-replays/genuine-development.log",
+      "log_bytes": 273,
+      "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "name": "genuine-development",
+      "offline_guard": "evidence/position-history-batch/final-replays/genuine-development/OFFLINE_GUARD.json",
+      "offline_guard_sha256": "4f2a26de957cc5c80fecaff2f68f3f973d1c30c363e8dfa3a1bd594a76619bb2",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/position-history-batch/final-replays/genuine-development/result.json",
+      "receipt_bytes": 6632243,
+      "receipt_sha256": "2f3a1aec4313fc58ad217d9bef3292c5cdd5d5c5f9e902216c86f84008400bd4",
+      "receipt_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "seconds": 102.7419782570214,
+      "source_after": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "source_before": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "started_at": "2026-10-04T15:22:50.965888+00:00",
+      "state": "PASS",
+      "timed_out": false,
+      "timeout_seconds": 300
+    },
+    {
+      "application_command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/genuine-real-acceptance",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+        "--require-real-acceptance"
+      ],
+      "checks": {
+        "all_original_cases_preserved_once": true,
+        "all_restored_lot_expectations_pass": true,
+        "cases_explicitly_passing": true,
+        "counted_offline_guard_pass": true,
+        "credential_lookups_zero": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_raw_oracle": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "exact_worked_oracle": true,
+        "expected_exit": true,
+        "kind": true,
+        "no_collector_ancestry": true,
+        "not_timed_out": true,
+        "oracle_frozen_before_application": true,
+        "original_archive_identity": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "product_ready_false": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/outputs/position-history-publication/run_final_replays.py",
+        "--offline-child",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/genuine-real-acceptance",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+        "--require-real-acceptance"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "finished_at": "2026-10-04T15:26:17.128860+00:00",
+      "log": "evidence/position-history-batch/final-replays/genuine-real-acceptance.log",
+      "log_bytes": 273,
+      "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "name": "genuine-real-acceptance",
+      "offline_guard": "evidence/position-history-batch/final-replays/genuine-real-acceptance/OFFLINE_GUARD.json",
+      "offline_guard_sha256": "e2a276122bc6aed1b820a616a5d0c5c47e8b3e88d10544b558932fb811a9c8b4",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/position-history-batch/final-replays/genuine-real-acceptance/result.json",
+      "receipt_bytes": 6632213,
+      "receipt_sha256": "6bfcb00a2f350eb285638437bd26c1b8a3e9bef3f92a84d90909cc69337ae4f9",
+      "receipt_state": "BLOCKED",
+      "seconds": 103.32668551398092,
+      "source_after": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "source_before": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "started_at": "2026-10-04T15:24:33.800835+00:00",
+      "state": "PASS_EXPECTED_REAL_BLOCK",
+      "timed_out": false,
+      "timeout_seconds": 300
+    },
+    {
+      "application_command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_product.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/product-development"
+      ],
+      "checks": {
+        "all_original_cases_preserved_once": true,
+        "cases_explicitly_passing": true,
+        "counted_offline_guard_pass": true,
+        "credential_lookups_zero": true,
+        "development_passing": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "no_collector_ancestry": true,
+        "not_timed_out": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "real_acceptance_mode": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/outputs/position-history-publication/run_final_replays.py",
+        "--offline-child",
+        "/workspace/solana-wallet-scanner/tools/check_product.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/product-development"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "finished_at": "2026-10-04T15:26:35.159372+00:00",
+      "log": "evidence/position-history-batch/final-replays/product-development.log",
+      "log_bytes": 671,
+      "log_sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4",
+      "name": "product-development",
+      "offline_guard": "evidence/position-history-batch/final-replays/product-development/OFFLINE_GUARD.json",
+      "offline_guard_sha256": "9337987b362a28711cb4f1b589f7fa6bfb6fe2f355fce874e9691fefc15d8e6a",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/position-history-batch/final-replays/product-development/result.json",
+      "receipt_bytes": 3279,
+      "receipt_sha256": "2689336828314bf561c2a93d00e5ce4b9e87aa45afa88d1713295935b1dfa98c",
+      "receipt_state": "DEVELOPMENT_PASS",
+      "seconds": 17.922576982993633,
+      "source_after": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "source_before": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "started_at": "2026-10-04T15:26:17.235555+00:00",
+      "state": "PASS",
+      "timed_out": false,
+      "timeout_seconds": 300
+    },
+    {
+      "application_command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_product.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/product-real-acceptance",
+        "--require-real-acceptance"
+      ],
+      "checks": {
+        "all_original_cases_preserved_once": true,
+        "cases_explicitly_passing": true,
+        "counted_offline_guard_pass": true,
+        "credential_lookups_zero": true,
+        "development_passing": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "no_collector_ancestry": true,
+        "not_timed_out": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "real_acceptance_mode": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/outputs/position-history-publication/run_final_replays.py",
+        "--offline-child",
+        "/workspace/solana-wallet-scanner/tools/check_product.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/position-history-batch/final-replays/product-real-acceptance",
+        "--require-real-acceptance"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "finished_at": "2026-10-04T15:26:53.840379+00:00",
+      "log": "evidence/position-history-batch/final-replays/product-real-acceptance.log",
+      "log_bytes": 662,
+      "log_sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7",
+      "name": "product-real-acceptance",
+      "offline_guard": "evidence/position-history-batch/final-replays/product-real-acceptance/OFFLINE_GUARD.json",
+      "offline_guard_sha256": "60acb33d55344d51b25e25267ab00f08154f0f9869663fe8ae269de669c17ec2",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/position-history-batch/final-replays/product-real-acceptance/result.json",
+      "receipt_bytes": 3269,
+      "receipt_sha256": "878ee24e329c7ff8b3ef12596ace10ac187060f12eb9c2509bd43037a773d89f",
+      "receipt_state": "BLOCKED",
+      "seconds": 18.617440536996583,
+      "source_after": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "source_before": {
+        "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+        "source_file_count": 241,
+        "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+      },
+      "started_at": "2026-10-04T15:26:35.221769+00:00",
+      "state": "PASS_EXPECTED_REAL_BLOCK",
+      "timed_out": false,
+      "timeout_seconds": 300
+    }
+  ],
+  "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "commit_unchanged": true,
+  "finished_at": "2026-10-04T15:26:53.894264+00:00",
+  "inputs_after": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "bytes": 2783,
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    }
+  },
+  "inputs_before": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "bytes": 2783,
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    }
+  },
+  "kind": "four-frozen-offline-entrypoints",
+  "original_inputs_unchanged": true,
+  "runner": {
+    "bytes": 21733,
+    "path": "/workspace/outputs/position-history-publication/run_final_replays.py",
+    "sha256": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068"
+  },
+  "scope": "Development workflow validation and explicit real-acceptance blockage; no full product-readiness claim.",
+  "source_after": {
+    "commit": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+    "source_file_count": 241,
+    "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96"
+  },
+  "source_file_count": 241,
+  "source_sha256": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "source_unchanged": true,
+  "started_at": "2026-10-04T15:22:50.935118+00:00",
+  "state": "PASS",
+  "total_timeout_seconds": 600
+}

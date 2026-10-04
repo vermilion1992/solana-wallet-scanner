@@ -1,0 +1,233 @@
+{
+  "scope": "read-only development source controls; not Gate A or genuine B3 acceptance",
+  "cases": [
+    {
+      "case": "empty-selected-domain",
+      "state": "PASS",
+      "observed": {
+        "population": "UNKNOWN",
+        "mints": {}
+      }
+    },
+    {
+      "case": "same-mint-two-accounts-open",
+      "state": "PASS",
+      "observed": {
+        "population": "PASS",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "PASS",
+            "positions": "PASS",
+            "remaining": "140",
+            "episodes": [
+              [
+                "PASS",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "same-mint-two-accounts-close-one",
+      "state": "PASS",
+      "observed": {
+        "population": "PASS",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "PASS",
+            "positions": "PASS",
+            "remaining": "40",
+            "episodes": [
+              [
+                "PASS",
+                "PASS"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "caller-selected-signature-mismatch",
+      "state": "PASS",
+      "observed": {
+        "population": "UNKNOWN",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "PASS",
+            "positions": "UNKNOWN",
+            "remaining": "0",
+            "episodes": [
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ],
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ],
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "alternative-crosses-exact-end",
+      "state": "PASS",
+      "observed": {
+        "population": "UNKNOWN",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "UNKNOWN",
+            "positions": "UNKNOWN",
+            "remaining": null,
+            "episodes": [
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "post-end-account-quantity-gap-excluded",
+      "state": "PASS",
+      "observed": {
+        "population": "PASS",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "PASS",
+            "positions": "PASS",
+            "remaining": "100",
+            "episodes": [
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "zero-physical-inspection-budget",
+      "state": "PASS",
+      "observed": {
+        "population": "UNKNOWN",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "UNKNOWN",
+            "positions": "UNKNOWN",
+            "remaining": null,
+            "episodes": [
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ],
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ],
+              [
+                "UNKNOWN",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "linked-missing-fee-retains-physical-population",
+      "state": "PASS",
+      "observed": {
+        "population": "PASS",
+        "mints": {
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "PASS",
+            "positions": "PASS",
+            "remaining": "100",
+            "episodes": [
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "readable-disjoint-mint-fee-gap-isolated",
+      "state": "PASS",
+      "observed": {
+        "population": "PASS",
+        "mints": {
+          "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9": {
+            "quantity": "PASS",
+            "positions": "PASS",
+            "remaining": "40",
+            "episodes": [
+              [
+                "PASS",
+                "UNKNOWN"
+              ]
+            ]
+          },
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8": {
+            "quantity": "PASS",
+            "positions": "PASS",
+            "remaining": "100",
+            "episodes": [
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "PASS"
+              ],
+              [
+                "PASS",
+                "UNKNOWN"
+              ]
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "state": "PASS"
+}

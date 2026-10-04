@@ -1,0 +1,17 @@
+{
+  "isError": true,
+  "structuredContent": {
+    "error": "GitHub API error 404: ﻿<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobNotFound</Code><Message>The specified blob does not exist.\nRequestId:91b12272-501e-005b-270e-540843000000\nTime:2026-10-04T14:42:54.0355758Z</Message></Error>",
+    "error_code": "NOT_FOUND",
+    "error_data": {
+      "error_str": "GitHub API error 404: ﻿<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobNotFound</Code><Message>The specified blob does not exist.\nRequestId:91b12272-501e-005b-270e-540843000000\nTime:2026-10-04T14:42:54.0355758Z</Message></Error>"
+    }
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "GitHub API error 404: ﻿<?xml version=\"1.0\" encoding=\"utf-8\"?><Error><Code>BlobNotFound</Code><Message>The specified blob does not exist.\nRequestId:91b12272-501e-005b-270e-540843000000\nTime:2026-10-04T14:42:54.0355758Z</Message></Error>"
+    }
+  ],
+  "classification": "Finalized indexed log unavailable; HTTP404 BlobNotFound does not prove test assertion failure, timeout or resource cause."
+}

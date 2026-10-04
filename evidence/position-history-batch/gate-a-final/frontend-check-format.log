@@ -1,0 +1,5 @@
+
+> solana-wallet-scanner-ui@0.3.11 check:format
+> node scripts/check-format.mjs
+
+16 exact formatting, ordering, and import assertions passed.

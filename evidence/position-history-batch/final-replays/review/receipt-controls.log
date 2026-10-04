@@ -1,0 +1,48 @@
+{
+  "kind": "distinct-read-only-replay-runner-receipt-controls",
+  "state": "FINDINGS",
+  "runner_sha256_before": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068",
+  "runner_sha256_after": "b2dbe8bffa87f53935e81ad84b36586dfa97b5210724cd44721d28295fa35068",
+  "runner_unchanged": true,
+  "controls": 155,
+  "passed_controls": 151,
+  "findings": [
+    {
+      "control": "product-development:valuation_hash-loss-and-exact-restoration-parent-mutated",
+      "expected_acceptance": false,
+      "actual_acceptance": true,
+      "matched_expected": false,
+      "failed_checks": [],
+      "error": null
+    },
+    {
+      "control": "product-development:world_hash-loss-and-exact-restoration-parent-mutated",
+      "expected_acceptance": false,
+      "actual_acceptance": true,
+      "matched_expected": false,
+      "failed_checks": [],
+      "error": null
+    },
+    {
+      "control": "product-real-acceptance:valuation_hash-loss-and-exact-restoration-parent-mutated",
+      "expected_acceptance": false,
+      "actual_acceptance": true,
+      "matched_expected": false,
+      "failed_checks": [],
+      "error": null
+    },
+    {
+      "control": "product-real-acceptance:world_hash-loss-and-exact-restoration-parent-mutated",
+      "expected_acceptance": false,
+      "actual_acceptance": true,
+      "matched_expected": false,
+      "failed_checks": [],
+      "error": null
+    }
+  ],
+  "application_files_changed": false,
+  "workflows_executed": false,
+  "provider_calls": 0,
+  "credential_calls": 0,
+  "network_calls": 0
+}

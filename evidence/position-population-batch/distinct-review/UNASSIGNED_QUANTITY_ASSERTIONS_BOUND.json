@@ -1,0 +1,96 @@
+{
+  "state": "PASS",
+  "scope": "selected raw-invalid dependencies must not disappear from mint quantities; no historical population claim",
+  "cases": [
+    {
+      "case": "outer-signature-mismatch",
+      "route": "public-wrapper",
+      "state": "PASS",
+      "expectation": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      },
+      "actual": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      }
+    },
+    {
+      "case": "outer-signature-mismatch",
+      "route": "normal-raw-adapter",
+      "state": "PASS",
+      "expectation": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      },
+      "actual": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      }
+    },
+    {
+      "case": "unsupported-version",
+      "route": "public-wrapper",
+      "state": "PASS",
+      "expectation": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      },
+      "actual": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      }
+    },
+    {
+      "case": "unsupported-version",
+      "route": "normal-raw-adapter",
+      "state": "PASS",
+      "expectation": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      },
+      "actual": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      }
+    },
+    {
+      "case": "missing-meta",
+      "route": "public-wrapper",
+      "state": "PASS",
+      "expectation": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      },
+      "actual": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      }
+    },
+    {
+      "case": "missing-meta",
+      "route": "normal-raw-adapter",
+      "state": "PASS",
+      "expectation": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      },
+      "actual": {
+        "population": "UNKNOWN",
+        "quantity": "UNKNOWN",
+        "remaining": null
+      }
+    }
+  ]
+}

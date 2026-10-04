@@ -1,0 +1,28 @@
+..................F......                                                [100%]
+=================================== FAILURES ===================================
+_ test_selected_and_alternative_variants_are_separate_and_permutation_invariant _
+
+    def test_selected_and_alternative_variants_are_separate_and_permutation_invariant():
+        raw, accounts = development_record(32)
+        alternative = deepcopy(raw)
+        alternative['meta']['optionalProviderField'] = {'not-a-semantic-fact': True}
+        records = [linked(raw), linked(alternative)]
+        with patch.object(compiled, 'normalize_transaction', wraps=compiled.normalize_transaction) as normalize:
+            result = assess(records, accounts)
+        assert normalize.call_count == 2
+        assert result['state'] == 'PASS'
+        assert result == assess(records[::-1], accounts[::-1])
+>       assert result == assess(records + records, accounts)
+E       AssertionError: assert {'version': '...ts': []}, ...} == {'version': '...ts': []}, ...}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'source_set': {'state': 'PASS', 'complete': True, 'raw_reference_count': 2, 'authenticated_reference_count': 2, ...}} != {'source_set': {'state': 'PASS', 'complete': True, 'raw_reference_count': 4, 'authenticated_reference_count': 4, ...}}
+E         {'transactions': {'unsigned-source-reuse-development-case': {'state': 'PASS', 'native_hashes': ['8b858c9d5b112e916a367... 'checks': {'account_membership': {...}, 'decimals': {...}, 'execution': {...}, 'mint': {...}, ...}, ...}, ...}, ...}}} != {'transactions': {'unsigned-sourc...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/test_source_fact_reuse.py:170: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_source_fact_reuse.py::test_selected_and_alternative_variants_are_separate_and_permutation_invariant
+1 failed, 24 passed in 0.69s

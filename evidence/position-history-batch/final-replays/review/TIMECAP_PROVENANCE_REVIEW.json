@@ -1,0 +1,341 @@
+{
+  "application_entrypoints_executed": false,
+  "controls": 3,
+  "credential_calls": 0,
+  "kind": "independent-timecap-and-command-provenance-controls",
+  "network_calls": 0,
+  "provider_calls": 0,
+  "real_subprocesses_spawned": false,
+  "records": [
+    {
+      "calls": [
+        {
+          "argv": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo/evidence/position-history-batch/replays/one"
+          ],
+          "cwd": "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo",
+          "start_new_session": true,
+          "wait_timeouts": [
+            300
+          ]
+        },
+        {
+          "argv": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo/evidence/position-history-batch/replays/two"
+          ],
+          "cwd": "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo",
+          "start_new_session": true,
+          "wait_timeouts": [
+            250
+          ]
+        }
+      ],
+      "command_records": [
+        {
+          "application_command": [
+            "fixture-python",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo/evidence/position-history-batch/replays/one"
+          ],
+          "checks": {
+            "exact_commit_after": true,
+            "exact_commit_before": true,
+            "exact_source_after": true,
+            "exact_source_before": true,
+            "expected_exit": true,
+            "fixture_only_receipt_guard": true,
+            "not_timed_out": true,
+            "original_inputs_unchanged": true
+          },
+          "command": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo/evidence/position-history-batch/replays/one"
+          ],
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "finished_at": "2026-10-04T15:26:23.069643+00:00",
+          "log": "evidence/position-history-batch/replays/one.log",
+          "log_bytes": 24,
+          "log_sha256": "fc00aeadbbc20f3e11be36e9056d53d397a7d18823c498ba8b95e9b06b7e3c7a",
+          "name": "one",
+          "offline_guard": "evidence/position-history-batch/replays/one/OFFLINE_GUARD.json",
+          "offline_guard_sha256": "7717520110454c6532689344cdf5a63dddf8235f8d968feec83d1f1c6019600b",
+          "real_acceptance_state": "BLOCKED",
+          "receipt": "evidence/position-history-batch/replays/one/result.json",
+          "receipt_bytes": 81,
+          "receipt_sha256": "48bb64d4692ccb9a19d5cd3ace24edf1605a368f1949e53bd6ce236da210add5",
+          "receipt_state": "FIXTURE_PASS",
+          "seconds": 1,
+          "source_after": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "source_before": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "started_at": "2026-10-04T15:26:23.067916+00:00",
+          "state": "PASS",
+          "timed_out": false,
+          "timeout_seconds": 300
+        },
+        {
+          "application_command": [
+            "fixture-python",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo/evidence/position-history-batch/replays/two"
+          ],
+          "checks": {
+            "exact_commit_after": true,
+            "exact_commit_before": true,
+            "exact_source_after": true,
+            "exact_source_before": true,
+            "expected_exit": true,
+            "fixture_only_receipt_guard": true,
+            "not_timed_out": true,
+            "original_inputs_unchanged": true
+          },
+          "command": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-jocvus1c/repo/evidence/position-history-batch/replays/two"
+          ],
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "finished_at": "2026-10-04T15:26:23.072573+00:00",
+          "log": "evidence/position-history-batch/replays/two.log",
+          "log_bytes": 24,
+          "log_sha256": "fc00aeadbbc20f3e11be36e9056d53d397a7d18823c498ba8b95e9b06b7e3c7a",
+          "name": "two",
+          "offline_guard": "evidence/position-history-batch/replays/two/OFFLINE_GUARD.json",
+          "offline_guard_sha256": "7717520110454c6532689344cdf5a63dddf8235f8d968feec83d1f1c6019600b",
+          "real_acceptance_state": "BLOCKED",
+          "receipt": "evidence/position-history-batch/replays/two/result.json",
+          "receipt_bytes": 81,
+          "receipt_sha256": "48bb64d4692ccb9a19d5cd3ace24edf1605a368f1949e53bd6ce236da210add5",
+          "receipt_state": "FIXTURE_PASS",
+          "seconds": 1,
+          "source_after": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "source_before": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "started_at": "2026-10-04T15:26:23.070821+00:00",
+          "state": "PASS",
+          "timed_out": false,
+          "timeout_seconds": 250
+        }
+      ],
+      "commands_not_run": [],
+      "control": "successful-command-provenance",
+      "error": null,
+      "fixture_subprocess_only": true,
+      "index_state": "PASS",
+      "signals": [],
+      "state": "PASS"
+    },
+    {
+      "calls": [
+        {
+          "argv": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-kqxylh03/repo/evidence/position-history-batch/replays/one"
+          ],
+          "cwd": "/workspace/outputs/position-history-publication/replay-review/timecap-controls-kqxylh03/repo",
+          "start_new_session": true,
+          "wait_timeouts": [
+            300
+          ]
+        }
+      ],
+      "command_records": [
+        {
+          "application_command": [
+            "fixture-python",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-kqxylh03/repo/evidence/position-history-batch/replays/one"
+          ],
+          "checks": {
+            "exact_commit_after": true,
+            "exact_commit_before": true,
+            "exact_source_after": true,
+            "exact_source_before": true,
+            "expected_exit": true,
+            "fixture_only_receipt_guard": true,
+            "not_timed_out": true,
+            "original_inputs_unchanged": true
+          },
+          "command": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-kqxylh03/repo/evidence/position-history-batch/replays/one"
+          ],
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "finished_at": "2026-10-04T15:26:23.077114+00:00",
+          "log": "evidence/position-history-batch/replays/one.log",
+          "log_bytes": 24,
+          "log_sha256": "fc00aeadbbc20f3e11be36e9056d53d397a7d18823c498ba8b95e9b06b7e3c7a",
+          "name": "one",
+          "offline_guard": "evidence/position-history-batch/replays/one/OFFLINE_GUARD.json",
+          "offline_guard_sha256": "7717520110454c6532689344cdf5a63dddf8235f8d968feec83d1f1c6019600b",
+          "real_acceptance_state": "BLOCKED",
+          "receipt": "evidence/position-history-batch/replays/one/result.json",
+          "receipt_bytes": 81,
+          "receipt_sha256": "48bb64d4692ccb9a19d5cd3ace24edf1605a368f1949e53bd6ce236da210add5",
+          "receipt_state": "FIXTURE_PASS",
+          "seconds": 1,
+          "source_after": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "source_before": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "started_at": "2026-10-04T15:26:23.075857+00:00",
+          "state": "PASS",
+          "timed_out": false,
+          "timeout_seconds": 300
+        }
+      ],
+      "commands_not_run": [
+        "two"
+      ],
+      "control": "total-budget-exhausted",
+      "error": "TimeoutError: Independent total replay budget exhausted",
+      "fixture_subprocess_only": true,
+      "index_state": "BLOCKED",
+      "signals": [],
+      "state": "PASS"
+    },
+    {
+      "calls": [
+        {
+          "argv": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-lbfpsokz/repo/evidence/position-history-batch/replays/one"
+          ],
+          "cwd": "/workspace/outputs/position-history-publication/replay-review/timecap-controls-lbfpsokz/repo",
+          "start_new_session": true,
+          "wait_timeouts": [
+            300,
+            5
+          ]
+        }
+      ],
+      "command_records": [
+        {
+          "application_command": [
+            "fixture-python",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-lbfpsokz/repo/evidence/position-history-batch/replays/one"
+          ],
+          "checks": {
+            "exact_commit_after": true,
+            "exact_commit_before": true,
+            "exact_source_after": true,
+            "exact_source_before": true,
+            "expected_exit": false,
+            "fixture_only_receipt_guard": true,
+            "not_timed_out": false,
+            "original_inputs_unchanged": true
+          },
+          "command": [
+            "fixture-python",
+            "/workspace/outputs/position-history-publication/run_final_replays.py",
+            "--offline-child",
+            "fixture-tool.py",
+            "--output",
+            "/workspace/outputs/position-history-publication/replay-review/timecap-controls-lbfpsokz/repo/evidence/position-history-batch/replays/one"
+          ],
+          "exit_code": -15,
+          "expected_exit_code": 0,
+          "finished_at": "2026-10-04T15:26:23.081054+00:00",
+          "log": "evidence/position-history-batch/replays/one.log",
+          "log_bytes": 24,
+          "log_sha256": "fc00aeadbbc20f3e11be36e9056d53d397a7d18823c498ba8b95e9b06b7e3c7a",
+          "name": "one",
+          "offline_guard": "evidence/position-history-batch/replays/one/OFFLINE_GUARD.json",
+          "offline_guard_sha256": "7717520110454c6532689344cdf5a63dddf8235f8d968feec83d1f1c6019600b",
+          "real_acceptance_state": "BLOCKED",
+          "receipt": "evidence/position-history-batch/replays/one/result.json",
+          "receipt_bytes": 81,
+          "receipt_sha256": "48bb64d4692ccb9a19d5cd3ace24edf1605a368f1949e53bd6ce236da210add5",
+          "receipt_state": "FIXTURE_PASS",
+          "seconds": 1,
+          "source_after": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "source_before": {
+            "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_file_count": 1,
+            "source_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "started_at": "2026-10-04T15:26:23.079550+00:00",
+          "state": "FAILED",
+          "timed_out": true,
+          "timeout_seconds": 300
+        }
+      ],
+      "commands_not_run": [
+        "two"
+      ],
+      "control": "command-timeout",
+      "error": "ValueError: Executed workflow failed strict command/receipt checks: one",
+      "fixture_subprocess_only": true,
+      "index_state": "FAILED",
+      "signals": [
+        [
+          424242,
+          15
+        ]
+      ],
+      "state": "PASS"
+    }
+  ],
+  "state": "PASS"
+}

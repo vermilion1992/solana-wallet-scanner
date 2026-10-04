@@ -1,0 +1,30 @@
+         14445396 function calls (14445356 primitive calls) in 3.757 seconds
+
+   Ordered by: cumulative time
+   List reduced from 73 to 22 due to restriction <22>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       10    0.006    0.001    3.757    0.376 indexed_input.py:222(validate_page_envelope)
+     2030    1.355    0.001    3.167    0.002 json_boundary.py:9(bounded_value)
+       30    0.000    0.000    1.840    0.061 indexed_input.py:44(_json)
+       30    0.000    0.000    1.840    0.061 json_boundary.py:36(parse_json)
+     2000    0.001    0.000    1.786    0.001 indexed_input.py:48(canonical_bytes)
+     2000    0.003    0.000    1.785    0.001 json_boundary.py:55(canonical_bytes)
+       10    0.000    0.000    0.939    0.094 indexed_input.py:169(_request)
+   394370    0.282    0.000    0.586    0.000 {method 'extend' of 'list' objects}
+   282430    0.146    0.000    0.419    0.000 {built-in method builtins.any}
+  3953335    0.360    0.000    0.360    0.000 {built-in method builtins.isinstance}
+       30    0.000    0.000    0.274    0.009 __init__.py:299(loads)
+  1462635    0.204    0.000    0.273    0.000 json_boundary.py:29(<genexpr>)
+       30    0.000    0.000    0.272    0.009 decoder.py:333(decode)
+       30    0.147    0.005    0.271    0.009 decoder.py:344(raw_decode)
+  2758715    0.230    0.000    0.230    0.000 {method 'pop' of 'list' objects}
+     2000    0.004    0.000    0.178    0.000 __init__.py:183(dumps)
+  1462635    0.175    0.000    0.175    0.000 json_boundary.py:31(<genexpr>)
+     2000    0.003    0.000    0.174    0.000 encoder.py:183(encode)
+     2000    0.170    0.000    0.170    0.000 encoder.py:205(iterencode)
+  1294050    0.129    0.000    0.129    0.000 json_boundary.py:33(<genexpr>)
+   140750    0.125    0.000    0.125    0.000 json_boundary.py:38(unique)
+  1183190    0.101    0.000    0.101    0.000 {built-in method builtins.id}
+
+

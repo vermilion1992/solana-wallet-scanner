@@ -1,0 +1,44 @@
+{
+  "state": "PASS_SCOPED_DEVELOPMENT",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_historical_membership.py",
+    "tests/test_wallet_evidence.py",
+    "-q"
+  ],
+  "exit_code": 0,
+  "unique_tests": 123,
+  "new_historical_membership_nodes": 48,
+  "retained_wallet_evidence_nodes": 75,
+  "subtests": 0,
+  "raw_log": "evidence/ownership-position-batch/historical-membership/shared-adapter-reviewed-final.log",
+  "raw_log_sha256": "2643ee0b20c892c0ce4da2bd6572ad2d21a7316bfbc7de76609c2f32a6243a09",
+  "files_at_review": {
+    "scanner/historical_membership.py": {
+      "sha256": "a28f3b245faf298cd6d762a16aeb09f138cec29ba24ad1b351651b0bf8753486",
+      "bytes": 21383
+    },
+    "tests/test_historical_membership.py": {
+      "sha256": "2a9c973f95672c2b5780b5e248bdd971fe09c0586f65488efc1379b2ec1d2caa",
+      "bytes": 22899
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "52397929e346750238d7da73dac48366a2c8d8a390c70197fbc3d0edfced6a1c",
+      "bytes": 119788
+    },
+    "scanner/source_consistency.py": {
+      "sha256": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+      "bytes": 50171
+    }
+  },
+  "git_head": "1040215f498b1317b1b942838994127f43a822bd",
+  "tested_source_is_uncommitted": true,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "product_ready": false,
+  "B1": "historical population coverage unresolved",
+  "B2": "observed membership admission implemented; complete wallet accounting OPEN",
+  "B3": "BLOCKED: synthetic tests do not constitute genuine acceptance"
+}

@@ -1,0 +1,56 @@
+{
+  "kind": "actual-offline-development-preliminary-smoke",
+  "state": "INCOMPLETE_SOURCE_CHANGED",
+  "actual_exit_code": 2,
+  "all_eight_commands_passed": true,
+  "source_unchanged": false,
+  "changes_during_run": [
+    "scanner/historical_membership.py",
+    "tests/test_historical_membership.py",
+    "tests/test_source_fact_reuse.py",
+    "tests/test_wallet_position_population.py"
+  ],
+  "private_product_output_excluded": true,
+  "safe_files": {
+    "result.json": {
+      "bytes": 43517,
+      "sha256": "1e9cdf62fc41c25e1747b42b3129dd086211f2ba57d49c447729c37d9c037cb0"
+    },
+    "runtime.log": {
+      "bytes": 54,
+      "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b"
+    },
+    "node-runtime.log": {
+      "bytes": 9,
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+    },
+    "pip-check.log": {
+      "bytes": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    "shell-syntax.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "product.log": {
+      "bytes": 671,
+      "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+    },
+    "frontend-check-format.log": {
+      "bytes": 142,
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+    },
+    "frontend-check-discovery.log": {
+      "bytes": 329,
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9"
+    },
+    "frontend-build.log": {
+      "bytes": 415,
+      "sha256": "6a65c8a7bcffba062079ad561eb0b19fc0cfbf13ca6e010f50c54495f3c8dfa7"
+    }
+  },
+  "scope": "Actual runtime/backend-product/frontend commands only. The aggregate did not pass, because application work continued concurrently. Final frozen candidate acceptance remains separate.",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "namespace_isolation": "Unavailable in local container; retained fixture guards enforce no providers/credentials. Hosted workflow retains unshare/setpriv."
+}

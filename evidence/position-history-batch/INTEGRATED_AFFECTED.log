@@ -1,0 +1,117 @@
+........................................................................ [ 11%]
+........................................................................ [ 22%]
+........................................................................ [ 33%]
+..................................................... [ 42%]
+...................FF.....F.......................F........ [ 51%]
+........................................................................ [ 62%]
+........................................................................ [ 74%]
+........................................................................ [ 85%]
+........................................................................ [ 96%]
+....................                                                     [100%]
+=================================== FAILURES ===================================
+_ test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-452/test_raw_inputs_reach_fifo_wit0')
+
+    def test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee(tmp_path):
+        result, coverage, _ = derive(Store(tmp_path), bundle())
+        assert coverage['population_state'] == 'PASS'
+        assert coverage['real_acceptance'] == 'NOT_APPLICABLE_SYNTHETIC'
+        # Independent pencil ledger: A1 3 - 1 - 3*0.000005; A2/B each 1-2-2*0.000005;
+        # C 1.000010-1-2*0.000005; D 1.5-1-2*0.000005; failed fee 0.000005.
+        expected = {'profit_sol': '0.49995', 'median_roi_pct': '0', 'win_rate_pct': '40',
+                    'median_hold_hours': '24', 'completed_positions': '5', 'completed_positions_90d': '5',
+                    'traded_mints': '4', 'rapid_sale_pct': '0', 'avg_buys': '1', 'avg_sells': '1.2',
+                    'positive_weeks': '2', 'economic_pnl_sol': '0.499955', 'observed_network_fees_sol': '0.000055'}
+>       assert {k: result['metrics'][k]['value'] for k in expected} == expected
+E       AssertionError: assert {'profit_sol'...s': '24', ...} == {'profit_sol'...s': '24', ...}
+E         
+E         Omitting 8 identical items, use -vv to show
+E         Differing items:
+E         {'median_roi_pct': None} != {'median_roi_pct': '0'}
+E         {'positive_weeks': None} != {'positive_weeks': '2'}
+E         {'profit_sol': None} != {'profit_sol': '0.49995'}
+E         {'win_rate_pct': None} != {'win_rate_pct': '40'}
+E         {'economic_pnl_sol': None} != {'economic_pnl_sol': '0.499955'}
+E         Use -v to get more diff
+
+tests/test_archive_input.py:53: AssertionError
+_ test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[valuation] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-452/test_required_source_loss_revo0')
+loss = 'valuation'
+
+    @pytest.mark.parametrize('loss', ['valuation', 'classification', 'ownership', 'transaction', 'coherent_omission'])
+    def test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers(tmp_path, loss):
+        store = Store(tmp_path); value = bundle(); result, coverage, digest = derive(store, value)
+        manifest = value['manifest']
+        selected = manifest['transactions'][2]['hash']
+        lost = {'valuation': manifest['valuation_hash'], 'classification': manifest['classification_hashes'][0],
+                'ownership': manifest['world_hash'], 'transaction': selected, 'coherent_omission': selected}[loss]
+        path = store.path/'evidence'/f'{lost}.json.gz'; before = path.read_bytes(); path.unlink()
+        if loss == 'coherent_omission':
+            altered = deepcopy(value); altered['manifest']['transactions'] = [r for r in altered['manifest']['transactions'] if r['hash'] != selected]
+            del altered['payloads'][selected]
+            _, _, altered_digest = derive(store, altered)
+            loaded = load_archive(store, altered_digest)
+        else:
+            loaded = load_archive(store, digest)
+        events, _ = decode_archive(loaded); changed, _, changed_coverage = analyze_archive(loaded, events)
+        if loss == 'valuation':
+            assert changed['metrics']['economic_pnl_sol']['status'] == 'unknown'
+>           assert changed['metrics']['profit_sol']['value'] == '0.49995'
+E           AssertionError: assert None == '0.49995'
+
+tests/test_archive_input.py:80: AssertionError
+___ test_shorter_verification_history_does_not_erase_proved_reporting_period ___
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-452/test_shorter_verification_hist0')
+
+    def test_shorter_verification_history_does_not_erase_proved_reporting_period(tmp_path):
+        value = bundle(); world_hash = value['manifest']['world_hash']
+        world = deepcopy(value['payloads'][world_hash]); world['start'] = '2026-05-20T00:00:00+00:00'
+        value['manifest']['world_hash'] = replace_payload(value, world_hash, world)
+        result, coverage, _ = derive(Store(tmp_path), value)
+>       assert result['metrics']['profit_sol']['value'] == '0.49995'
+E       AssertionError: assert None == '0.49995'
+
+tests/test_archive_input.py:112: AssertionError
+_ test_normal_app_import_rebuild_sources_and_exports_preserve_parent_and_use_no_provider _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-452/test_normal_app_import_rebuild0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa690ae54c0>
+
+    def test_normal_app_import_rebuild_sources_and_exports_preserve_parent_and_use_no_provider(tmp_path, monkeypatch):
+        import httpx
+        from types import SimpleNamespace
+        import scanner.app as app_module
+        async def denied(*args, **kwargs): raise AssertionError('Offline import cannot dispatch a provider request')
+        monkeypatch.setattr(httpx.AsyncClient,'post',denied)
+        monkeypatch.setattr(app_module,'Credentials',lambda *_: SimpleNamespace(key=None,storage='none',backend=None))
+        app=create_app(tmp_path,'private-test-token')
+        with TestClient(app,base_url='http://127.0.0.1:8765') as client:
+            assert client.post('/api/archives/import',content=packed(bundle())).status_code == 401
+            csrf=client.get('/api/bootstrap',headers={'X-Launch-Token':'private-test-token'}).json()['csrf']
+            assert client.post('/api/archives/import',content=packed(bundle())).status_code == 403
+            client.headers['X-CSRF-Token']=csrf
+            response=client.post('/api/archives/import',content=packed(bundle()),headers={'content-type':'application/zip'})
+            assert response.status_code == 200,response.text
+            identifier=response.json()['report_id']; original=client.get(f'/api/export/reports/{identifier}.json').content
+            report=json.loads(original)
+            assert report['source']=='demo' and report['qualification']['qualified'] is False
+>           assert report['metrics']['profit_sol']['value']=='0.49995'
+E           AssertionError: assert None == '0.49995'
+
+tests/test_archive_input.py:270: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee
+FAILED tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers[valuation]
+FAILED tests/test_archive_input.py::test_shorter_verification_history_does_not_erase_proved_reporting_period
+FAILED tests/test_archive_input.py::test_normal_app_import_rebuild_sources_and_exports_preserve_parent_and_use_no_provider
+4 failed, 632 passed, 1 warning, 176 subtests passed in 27.29s

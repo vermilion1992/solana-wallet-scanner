@@ -1,0 +1,104 @@
+{
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "scope": "Distinct read-only current observed-position population review; development proof only, not full application acceptance",
+  "reviewed_at": "2026-10-04T15:09:53.046066+00:00",
+  "reviewed_sources": {
+    "scanner/wallet_positions.py": "52485ec7690ed486739e243719946bdacf92053298e14e987d9995314831cd27",
+    "tests/test_wallet_position_population.py": "d07d9afed1c7a04c12cf728c73539345850de44c7f4c9d44c85ab67561c90465",
+    "scanner/wallet_evidence.py": "2037f24c6d59c80599ddbdf8d2307333686bb1c59557ac62654ab01ae0b178f7",
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/source_consistency.py": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+    "scanner/chronology_evidence.py": "36032f177db3638505026969039f5e69d64cd1d1d2b208f64e6e74153f4a0575",
+    "scanner/historical_membership.py": "a28f3b245faf298cd6d762a16aeb09f138cec29ba24ad1b351651b0bf8753486"
+  },
+  "source_unchanged_during_checks": true,
+  "confirmed_findings": [
+    {
+      "id": "POSITION-REVIEW-01",
+      "state": "REPAIRED_IN_REVIEWED_SCOPE",
+      "initial_assertions": "UNASSIGNED_QUANTITY_ASSERTIONS_INITIAL.json",
+      "final_assertions": "UNASSIGNED_QUANTITY_ASSERTIONS_BOUND.json",
+      "reproducer": "probe_unassigned_quantity.py",
+      "repair": "Per-mint quantity retains readable but identity-invalid/unsupported/incomplete selected source dependencies. Public wrapper also requires outer/native signature binding. Original initial failure retained unchanged."
+    }
+  ],
+  "current_checks": [
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_wallet_position_population.py"
+      ],
+      "exit_code": 0,
+      "stdout": "POSITION_TESTS_BOUND.log",
+      "stderr": null
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "evidence/position-population-batch/distinct-review/probe_positions.py"
+      ],
+      "exit_code": 0,
+      "stdout": "PROBE_POSITIONS_BOUND.json",
+      "stderr": "PROBE_POSITIONS_BOUND.stderr.log"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "evidence/position-population-batch/distinct-review/probe_unassigned_quantity.py"
+      ],
+      "exit_code": 0,
+      "stdout": "UNASSIGNED_QUANTITY_ASSERTIONS_BOUND.json",
+      "stderr": "UNASSIGNED_QUANTITY_ASSERTIONS_BOUND.stderr.log"
+    }
+  ],
+  "counts": {
+    "focused_module_unique_passed": 34,
+    "read_only_sibling_controls": 9,
+    "original_defect_assertions": 6,
+    "counts_not_added_to_full_suite": true
+  },
+  "reviewed_invariants": [
+    "closed/open mixed populations with losses and breakeven",
+    "same-mint quantities across multiple owned accounts and internal transfers",
+    "selected/alternative/hash/frozen-pointer binding",
+    "identity-invalid/missing/corrupt/unsupported dependency loss and restoration",
+    "metric-specific quantity versus monetary dependencies",
+    "half-open report end and linked cross-boundary chronology",
+    "independent report/28-day/90-day cohorts",
+    "empty-domain does not fabricate completion",
+    "physical and named-lot inspection budgets fail closed",
+    "public caller flags do not certify trusted positions/history",
+    "normal archive/API source inspection/rebuild/export preserve parents and stay offline"
+  ],
+  "not_claimed": [
+    "Complete historical ownership population",
+    "Wallet-wide qualification",
+    "Classification or valuation completeness",
+    "Full backend/frontend/browser candidate gates",
+    "Genuine B3 acceptance"
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "source_edits_by_reviewer": false,
+  "test_edits_by_reviewer": false,
+  "raw_record_hashes": {
+    "UNASSIGNED_QUANTITY_REPRO.json": "4631250a86f7240d82e2ed14c10f57d90137dc7b2308b7b13594bb67029dbb37",
+    "UNASSIGNED_QUANTITY_ASSERTIONS_INITIAL.json": "c8cc7637993f7ac059c54c9579f2cb7015af06ff9c031156bb7846e8fcbd22a3",
+    "PROBE_POSITIONS_BOUND.stderr.log": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+    "UNASSIGNED_QUANTITY_ASSERTIONS_BOUND.json": "1bb16f58757bf4e6d88e199011b5f0e8cb58048d76915eb03d8548d0a936b8f4",
+    "UNASSIGNED_QUANTITY_ASSERTIONS_REPAIRED.json": "1bb16f58757bf4e6d88e199011b5f0e8cb58048d76915eb03d8548d0a936b8f4",
+    "PROBE_POSITIONS.json": "07b3ce89723ab18d60bf99c02feecf1eff51311e1228b609b5b58099a5609797",
+    "POSITION_TESTS.log": "d0e22745751e3f780e78187005d72c4205b05ccde7f6159db1174b39a31bfff3",
+    "UNASSIGNED_QUANTITY_ASSERTIONS_BOUND.stderr.log": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+    "PROBE_POSITIONS_BOUND.json": "d2f3d98628f98b60614179c62704dc098a29dcf3456bcad271964eb6e8d4d1a2",
+    "READ_ONLY_REVIEW_INITIAL.json": "04800bb24b9fa29791e771f5c423f26766f84fd1b6897eba09a85c1a7b0e077c",
+    "probe_positions.py": "5abfecffb5b3ba8f0b2724644c843e8765baecee3ae47991e1e36a81a3797f45",
+    "POSITION_TESTS_REPAIRED.log": "98aec08516cbb38bb2be7b11d0aee2928efd34f379fd0ba823b4f4f1d0ce98a5",
+    "PROBE_POSITIONS_REPAIRED.json": "d2f3d98628f98b60614179c62704dc098a29dcf3456bcad271964eb6e8d4d1a2",
+    "probe_unassigned_quantity.py": "978fa9592e8be84d69da6448890b26df187bed5e0e22ac9e55d94703428d50cd",
+    "POSITION_TESTS_BOUND.log": "39766da5f984703c9a223acad67d218c2f2cfc588ec8bcbdc76e04f6aba59f37"
+  }
+}
