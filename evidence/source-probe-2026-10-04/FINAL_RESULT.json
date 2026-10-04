@@ -1,0 +1,73 @@
+{
+  "kind": "bounded-source-feasibility-milestone",
+  "state": "OBSERVED_IN_SCOPE",
+  "starting_head": "0674fe8fcb1776944866a4cd12accdf4175d667f",
+  "validated_application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "probe_started_utc": "2026-10-04T04:14:15.556143+00:00",
+  "probe_finished_utc": "2026-10-04T04:14:23.969328+00:00",
+  "request_cap": 10,
+  "requests_executed": 10,
+  "request_allowance_remaining": 0,
+  "credit_cap": 100,
+  "conservative_reserved_and_settled_credits": 73,
+  "conservative_credit_allowance_remaining": 27,
+  "actual_provider_billed_credits": null,
+  "retries": 0,
+  "purchases": false,
+  "upgrades": false,
+  "additional_provider_requests_authorised": false,
+  "authentication_entitlement": "OBSERVED for exact calls on user-reported Free account",
+  "endpoint_support": "OBSERVED for ten planned indexed/native/control requests",
+  "response_compatibility": "OBSERVED v0 envelope, order, cursor and control facts; financial decoder support NOT established",
+  "history_depth_coverage": "PARTIAL: 200 unique indexed records across78seconds, nonterminal; four archived controls near interval end match",
+  "failed_transaction_coverage": "OBSERVED184failed among200unique indexed records; exhaustive failed population NOT established",
+  "historical_ownership_lifecycle": "INCONCLUSIVE:84964currentaccount observations, no independently known closed/reassigned control",
+  "missing_implementation": "Immutable indexed page ingestion, compiled instruction and reviewed outer-route/economic flow normalization; existing decoders retain unsupported dependencies",
+  "B1": "ACCESS_AND_SCOPED_SCHEMA_OBSERVED; historical sufficiency unresolved",
+  "B2": "OPEN; existing offline adapter development-functional, complete real accounting unfinished",
+  "B3": "BLOCKED; sample is partial and unsuitable as first bounded complete corpus",
+  "PRODUCT_READY": false,
+  "application_files_changed": [],
+  "new_application_acceptance": false,
+  "full_acceptance_suite_rerun": false,
+  "offline_control_tests": 28,
+  "evidence": {
+    "AUTHORISATION.json": {
+      "sha256": "1d4a534d5aabf832f8e0afb7b9513fc4d87ef05ee812233cfb315bd3dc0b43ca",
+      "bytes": 1480
+    },
+    "DASHBOARD_CONFIRMATION.json": {
+      "sha256": "49406c4cbd821c01fd43cfcab63e8f430c3c4b394ca9deeb39e84530ff66771e",
+      "bytes": 172
+    },
+    "OFFLINE_CONTROLS.json": {
+      "sha256": "fc34aa443b93c669b0bf7df363ad8ebe6dd6627788e33015febde776cb58dcf9",
+      "bytes": 481
+    },
+    "OFFLINE_CONTROLS.log": {
+      "sha256": "21c537bab289b2ce7d4b1ff762ff8117f3d6999692d53410e250756bbf103e80",
+      "bytes": 99
+    },
+    "QUOTA_REPLAY.json": {
+      "sha256": "1ce05c30afc77dd506b7cdb188c2390555c931680e5b1166e0be03cef7f9bb41",
+      "bytes": 1885
+    },
+    "APPLICATION_BINDING.json": {
+      "sha256": "7c4f9b7040bd8610708ed1fda2a5abeee71bcc6c45e8dcda2cebe54e4f20cdd2",
+      "bytes": 58700
+    },
+    "REVIEW.json": {
+      "sha256": "efd170effac11bf9ef1d8ce3f9cba17f56d4dcd7e3bbc64fb3b2513353958b37",
+      "bytes": 10717
+    },
+    "review_outputs.py": {
+      "sha256": "7538199eab1525561c9345ff7ab3e313bbaeb79e3d9f5e7099914d95a9ab45d4",
+      "bytes": 18495
+    },
+    "live/result.json": {
+      "sha256": "8406d1bfccd9c2dc76b51a7b4ee5fc11b9d46c2f529b3f5ea5f979a213a833a1",
+      "bytes": 78370
+    }
+  },
+  "next_work": "Use archived genuine indexed bytes for offline ingestion/normalization development; establish real historical membership controls and choose a bounded genuine acceptance wallet; any later collection requires a separately approved concrete cap."
+}

@@ -1,0 +1,80 @@
+{
+  "kind": "distinct-read-only-probe-documentation-publication-review",
+  "state": "PASS_IN_SCOPE",
+  "reviewed_utc": "2026-10-04T04:20:56.924853+00:00",
+  "reviewed_repository_head": "0674fe8fcb1776944866a4cd12accdf4175d667f",
+  "starting_head": "0674fe8fcb1776944866a4cd12accdf4175d667f",
+  "validated_application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "validated_source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "current_documented_source_sha256": "6854e6d62f04bd9d523d034ac133ff29516fd35f015aad43e6c3a0d47bed7f05",
+  "source_files": 190,
+  "baseline_tracked_files_compared": 711,
+  "changed_baseline_tracked_files": [
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/R1_SOURCE_DECISION.md"
+  ],
+  "reviewed_diff_sha256": "a3fc5c4603e8c45c950e7cf3feace9331e4866909c8d22a5d760027ffba61be6",
+  "changed_document_hashes": {
+    "CODEX_TASK.md": "4a90c1042a5b5428a4e764ed02c1459f74d71c5f1927a8ca184a4d8986d2d16c",
+    "ISSUES.md": "c43bf4bb5ab3676710be9edcb71d8cf34cbdbaa60e44a813508d00980212173f",
+    "docs/R1_SOURCE_DECISION.md": "d77d82336cb1ae5933fbbd30265db800bb4e844e730281d61cfa7d3fb75142b6"
+  },
+  "unchanged_components": {
+    "scanner": {
+      "files": 29,
+      "bytes_unchanged": true
+    },
+    "tests": {
+      "files": 89,
+      "bytes_unchanged": true
+    },
+    "tools": {
+      "files": 12,
+      "bytes_unchanged": true
+    },
+    "frontend": {
+      "files": 22,
+      "bytes_unchanged": true
+    },
+    "locks": {
+      "files": 4,
+      "bytes_unchanged": true
+    }
+  },
+  "historical_baseline_tracked_evidence_unchanged": true,
+  "approved_plan_unchanged": true,
+  "reviewed_probe_receipt_sha256": "efd170effac11bf9ef1d8ce3f9cba17f56d4dcd7e3bbc64fb3b2513353958b37",
+  "privacy_checks": {
+    "files_scanned": 30,
+    "gzip_bodies_decompressed_for_scan": 10,
+    "patterns": "Credential-bearing endpoint queries; GitHub tokens; PEM private keys; named credential JSON values; Authorization values. This is a targeted secret scan, not proof of arbitrary secret absence.",
+    "findings": [],
+    "credential_lookups": 0
+  },
+  "findings": [],
+  "conclusion_checks": {
+    "current_access_separate_from_plan_guarantee": true,
+    "envelope_compatibility_separate_from_financial_decoder_support": true,
+    "nonterminal_78_second_sample_not_complete_90_day_history": true,
+    "failed_records_not_all_failed_record_population": true,
+    "current_inventory_not_historical_lifecycle_or_hidden_population": true,
+    "unsupported_economic_roles_are_missing_B2_implementation": true,
+    "73_credit_reservation_bound_not_asserted_actual_invoice_delta": true,
+    "no_profit_scamming_or_copy_safety_labels": true,
+    "no_new_application_acceptance_claim": true,
+    "completed_probe_does_not_authorise_follow_on_requests": true,
+    "current_manifest_difference_explained": true
+  },
+  "network_calls": 0,
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "application_modified": false,
+  "full_application_suite_rerun": false,
+  "new_application_acceptance": false,
+  "B1": "Access and scoped schema observed; historical coverage/lifecycle inconclusive",
+  "B2": "OPEN",
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "review_scope": "Read-only review of the three current documents and retained non-secret probe evidence against0674fe8. Existing producer request/reservation receipts and independent offline raw replay were inspected; this reviewer made no private billing/ledger queries or new live calls. Only this evidence receipt is written."
+}

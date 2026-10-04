@@ -13,10 +13,13 @@ rebuild paths. It does not authenticate imported source declarations or promote
 a selected/synthetic dataset to complete real-wallet evidence. One issue register,
 source decision, acceptance matrix and validation entry point remain authoritative.
 
-B1 remains blocked on actual plan, billing-cycle start/end, at least 100 remaining
-credits, disabled automatic spending and explicit execution approval. No Helius
-probe, Helius credential use, credits, retries, purchases or upgrades are authorised by
-this implementation batch. B2 complete real accounting remains OPEN; synthetic
+B1's dashboard/permission prerequisites were subsequently resolved: Free, cycle
+2 October–2 November 2026, 999,801 remaining credits, no automatic spending and
+explicit approval. The prepared probe executed once on 4 October: exactly 10
+requests, all accepted, within a 73-credit conservative reservation bound. Historical
+population/terminal coverage remains INCONCLUSIVE. See `evidence/source-probe-2026-10-04/`
+and the existing `docs/R1_SOURCE_DECISION.md`. No further live provider calls, retries,
+purchases or upgrades are authorized by that completed probe. B2 complete real accounting remains OPEN; synthetic
 interface tests cannot close genuine B3. PRODUCT_READY remains false. Finish a
 distinct read-only full diff review and applicable exact-source gates; use coherent
 Git commits and no new release ZIP.

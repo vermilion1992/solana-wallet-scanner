@@ -1,0 +1,25 @@
+{
+  "kind": "user-authorised-bounded-source-feasibility-probe",
+  "recorded_utc": "2026-10-04T04:13:25Z",
+  "starting_head": "0674fe8fcb1776944866a4cd12accdf4175d667f",
+  "validated_application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "plan_path": "evidence/product-milestone/SOURCE_PROBE_PLAN.json",
+  "plan_sha256": "c3b78e505e9052da901af9e29c6556a993ff147affad4b735083954182ee432f",
+  "dashboard_confirmation_path": "DASHBOARD_CONFIRMATION.json",
+  "user_statements": [
+    "Credit usage\nFree\n199/ 1,000,000",
+    "Next reset is 29 days and no automatic spending",
+    "Oct 2 - nov 2 please proceed professionally"
+  ],
+  "year_basis": "Current session date is 4 October 2026; user supplied month/day cycle boundaries.",
+  "remaining_credit_basis": "1,000,000 displayed allowance minus 199 displayed used credits; user dashboard report, not an authenticated billing observation.",
+  "request_cap": 10,
+  "credit_cap": 100,
+  "planned_conservative_credit_bound": 73,
+  "retries": 0,
+  "purchases": false,
+  "upgrades": false,
+  "scope": "Execute the already prepared plan only; stop on first denial/unsupported response; no follow-on collection authorised.",
+  "credential_handling": "Previously user-supplied key through echo-disabled terminal input only; excluded from source, request-body receipts, response receipts and Git.",
+  "application_acceptance": "Unchanged; probe observations cannot establish wallet qualification or new application acceptance."
+}

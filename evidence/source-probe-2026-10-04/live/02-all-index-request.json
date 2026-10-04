@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":2,"method":"getTransactionsForAddress","params":["2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",{"transactionDetails":"full","limit":100,"sortOrder":"asc","commitment":"finalized","maxSupportedTransactionVersion":1,"filters":{"status":"any","tokenAccounts":"all","blockTime":{"gte":1783175556,"lt":1790951556}}}]}

@@ -1,0 +1,12 @@
+{
+  "kind": "probe-preparation-control-replay",
+  "state": "PASS",
+  "command": ".venv/bin/python -m pytest -q evidence/product-milestone/source-probe-2026-10-03/test_execute_probe.py",
+  "exit_code": 0,
+  "ordinary_tests_passed": 28,
+  "subtests": 0,
+  "raw_log": "OFFLINE_CONTROLS.log",
+  "raw_log_sha256": "21c537bab289b2ce7d4b1ff762ff8117f3d6999692d53410e250756bbf103e80",
+  "no_live_transport": "httpx.MockTransport in every execution test",
+  "financial_acceptance": false
+}

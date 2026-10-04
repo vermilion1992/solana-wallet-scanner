@@ -1,0 +1,84 @@
+{
+  "kind": "durable-probe-quota-replay",
+  "state": "PASS",
+  "dispatches": 10,
+  "conservative_settled_credits": 73,
+  "request_cap": 10,
+  "credit_cap": 100,
+  "cycle_start": "2026-10-02",
+  "reservations": [
+    {
+      "method": "getTransactionsForAddress",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTransactionsForAddress",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTransactionsForAddress",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTransaction",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTransaction",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTransaction",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTransaction",
+      "conservative_cost": 10,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTokenAccountsByOwner",
+      "conservative_cost": 1,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getTokenAccountsByOwner",
+      "conservative_cost": 1,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    },
+    {
+      "method": "getSlot",
+      "conservative_cost": 1,
+      "state": "settled",
+      "charged": 1,
+      "cycle": "2026-10-02"
+    }
+  ],
+  "runtime_database_tracked": false,
+  "provider_actual_invoice_delta": null,
+  "no_reset_or_retry": true
+}

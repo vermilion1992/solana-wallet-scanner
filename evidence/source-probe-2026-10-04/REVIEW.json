@@ -1,0 +1,277 @@
+{
+  "kind": "distinct-read-only-bounded-source-probe-review",
+  "state": "PASS_IN_SCOPE",
+  "reviewed_utc": "2026-10-04T04:19:12.045772+00:00",
+  "reviewed_repository_head": "0674fe8fcb1776944866a4cd12accdf4175d667f",
+  "approved_plan_sha256": "c3b78e505e9052da901af9e29c6556a993ff147affad4b735083954182ee432f",
+  "live_result_sha256": "8406d1bfccd9c2dc76b51a7b4ee5fc11b9d46c2f529b3f5ea5f979a213a833a1",
+  "replay_script_sha256": "7538199eab1525561c9345ff7ab3e313bbaeb79e3d9f5e7099914d95a9ab45d4",
+  "network_calls": 0,
+  "credential_lookups": 0,
+  "application_source_modified": false,
+  "checks": {
+    "artifact_files_verified": 20,
+    "gzip_responses_decompressed_and_verified": 10,
+    "request_bodies_exactly_matched": 10,
+    "independent_schema_replays": 10,
+    "primary_archive_controls_matched": 4,
+    "distinct_reservation_receipts": 10,
+    "producer_reservations_sum": 73,
+    "actual_billing_delta_verified": false
+  },
+  "budget": {
+    "requests": 10,
+    "approved_request_cap": 10,
+    "conservative_credits": 73,
+    "approved_credit_cap": 100,
+    "actual_provider_billed_credits": null,
+    "retries": 0,
+    "purchases": false,
+    "quota_before": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 100,
+      "remaining": 100,
+      "cycle_start": "2026-10-02"
+    },
+    "quota_after": {
+      "used": 73,
+      "reserved": 0,
+      "cap": 100,
+      "remaining": 27,
+      "cycle_start": "2026-10-02"
+    }
+  },
+  "indexed_observations": {
+    "direct-index": {
+      "rows": 100,
+      "failed_transactions": 93,
+      "versions_observed": [
+        0
+      ],
+      "first_position": [
+        430753424,
+        356
+      ],
+      "last_position": [
+        430753480,
+        1519
+      ],
+      "first_time_utc": "2026-07-04T14:32:36+00:00",
+      "last_time_utc": "2026-07-04T14:33:00+00:00",
+      "cursor": "430753480:1519",
+      "terminal": false
+    },
+    "all-index": {
+      "rows": 100,
+      "failed_transactions": 93,
+      "versions_observed": [
+        0
+      ],
+      "first_position": [
+        430753424,
+        356
+      ],
+      "last_position": [
+        430753480,
+        1519
+      ],
+      "first_time_utc": "2026-07-04T14:32:36+00:00",
+      "last_time_utc": "2026-07-04T14:33:00+00:00",
+      "cursor": "430753480:1519",
+      "terminal": false
+    },
+    "all-continuation": {
+      "rows": 100,
+      "failed_transactions": 91,
+      "versions_observed": [
+        0
+      ],
+      "first_position": [
+        430753483,
+        1667
+      ],
+      "last_position": [
+        430753617,
+        633
+      ],
+      "first_time_utc": "2026-07-04T14:33:01+00:00",
+      "last_time_utc": "2026-07-04T14:33:54+00:00",
+      "cursor": "430753617:633",
+      "terminal": false
+    }
+  },
+  "primary_controls": {
+    "primary-1": {
+      "slot": 452638137,
+      "time_utc": "2026-10-02T14:32:28+00:00",
+      "failed": true,
+      "fee_lamports": 8266,
+      "matched_control_fields": [
+        "signature",
+        "slot",
+        "blockTime",
+        "meta.err",
+        "meta.fee",
+        "meta.preBalances",
+        "meta.postBalances"
+      ],
+      "control_hash": "7ac041bce47e27de7a8e3f7bd61c4b7c3a9e2902798f1a05b6b0091822dadade"
+    },
+    "primary-2": {
+      "slot": 452638137,
+      "time_utc": "2026-10-02T14:32:28+00:00",
+      "failed": true,
+      "fee_lamports": 11919,
+      "matched_control_fields": [
+        "signature",
+        "slot",
+        "blockTime",
+        "meta.err",
+        "meta.fee",
+        "meta.preBalances",
+        "meta.postBalances"
+      ],
+      "control_hash": "43fc29a8bc85d94c3e333d09bf8c54a6ca1ec2812ad3dbb7a88cb21e648c1f60"
+    },
+    "primary-3": {
+      "slot": 452638137,
+      "time_utc": "2026-10-02T14:32:28+00:00",
+      "failed": true,
+      "fee_lamports": 12649,
+      "matched_control_fields": [
+        "signature",
+        "slot",
+        "blockTime",
+        "meta.err",
+        "meta.fee",
+        "meta.preBalances",
+        "meta.postBalances"
+      ],
+      "control_hash": "dd29ce8e99470f030ae42edf147cce94e59fe766e8a2f162ae6e4508b14c78f6"
+    },
+    "primary-4": {
+      "slot": 452638144,
+      "time_utc": "2026-10-02T14:32:30+00:00",
+      "failed": true,
+      "fee_lamports": 5513,
+      "matched_control_fields": [
+        "signature",
+        "slot",
+        "blockTime",
+        "meta.err",
+        "meta.fee",
+        "meta.preBalances",
+        "meta.postBalances"
+      ],
+      "control_hash": "329e3b730938b8fff40147806a380dde4f448e4aae9f5d299b27d50d5798ab38"
+    }
+  },
+  "current_inventory_observations": {
+    "current-owned-legacy": {
+      "accounts": 56041,
+      "distinct_mints": 56041,
+      "context_slot": 453145507,
+      "scope": "Current owner/program snapshot; no historical lifecycle or hidden-account proof."
+    },
+    "current-owned-2022": {
+      "accounts": 28923,
+      "distinct_mints": 28923,
+      "context_slot": 453145516,
+      "scope": "Current owner/program snapshot; no historical lifecycle or hidden-account proof."
+    }
+  },
+  "unique_all_page_sample": {
+    "transactions": 200,
+    "failed": 184,
+    "successful": 16,
+    "first_time_utc": "2026-07-04T14:32:36+00:00",
+    "last_time_utc": "2026-07-04T14:33:54+00:00",
+    "elapsed_seconds": 78,
+    "direct_first_page_equals_all_first_page": true,
+    "terminal_history_page_reached": false
+  },
+  "indexed_instruction_shape": {
+    "account_key_container_counts": {
+      "str": 200
+    },
+    "outer_instruction_shapes": {
+      "accounts,data,programIdIndex,stackHeight": 850
+    },
+    "inner_instruction_shapes": {
+      "accounts,data,programIdIndex,stackHeight": 347
+    },
+    "successful_outer_program_occurrences": {
+      "ComputeBudget111111111111111111111111111111": 48,
+      "sattCHvHkM4XHLyadnU4KQtuNWZbWVDKzuPhmJBXCkq": 16,
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL": 1
+    },
+    "scope": "Raw compiled instructions, not jsonParsed token/system operation semantics."
+  },
+  "financial_decoder_development_replays": {
+    "ordinary": {
+      "event_counts": {
+        "fee": 200,
+        "unsupported": 319,
+        "wrap": 15
+      },
+      "unresolved_reasons": {
+        "No reviewed decoder for this instruction/program; balance deltas do not prove a swap": 314,
+        "Observed token balance changes do not reconcile to supported parsed movements": 5
+      }
+    },
+    "spot": {
+      "event_counts": {
+        "fee": 200,
+        "unsupported": 16
+      },
+      "unresolved_reasons": {
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading": 16
+      }
+    }
+  },
+  "separate_conclusions": {
+    "authentication_entitlement": "OBSERVED: the supplied account/key successfully served all ten exact approved requests despite retained documentation describing indexed history as Developer+; this is empirical access for this account/time, not a future Free entitlement guarantee.",
+    "endpoint_support": "OBSERVED: getTransactionsForAddress full finalized status:any tokenAccounts:none/all, one pagination continuation, four getTransaction controls, both current token-program inventories and getSlot returned HTTP200/RPC results.",
+    "schema_compatibility": "OBSERVED envelope/version/time/order/indexed compiled-instruction/current-inventory compatibility for these retained v0 responses only; no observed legacy/v1 compatibility conclusion. Financial decoder compatibility is not established: the200indexed records use compiled instructions, and all16successful records use an unreviewed outer route, so current spot decoding keeps them unsupported.",
+    "history_depth_coverage": "PARTIAL: indexed records exist at July4 interval start and exact archived controls near Oct2 match; only 200 unique ascending indexed records spanning78seconds retained, both all-page cursors nonterminal. Complete90day/28day history is unproved.",
+    "failed_transaction_coverage": "OBSERVED184failed indexed records among200unique plus four matched failed primary controls; status:any includes failures in the observed sample. Complete failed population is unproved.",
+    "historical_token_ownership_lifecycle": "INCONCLUSIVE: current84964account observations are not a historical population witness. Direct/all first page equality does not establish closed/reassigned-account inclusion; no independent historical lifecycle control exists.",
+    "wallet_qualification": "NOT_ASSESSED; no complete acquisition/basis/classification/valuation corpus, no complete financial ledger or B3 acceptance.",
+    "remaining_unknowns": [
+      "Terminal historical population across full report/28day/90day scopes",
+      "Closed/reassigned account historical inclusion and lifecycle ownership",
+      "All acquisition origins/cost basis and economic flows",
+      "Historical eligible-asset classifications and boundary valuations",
+      "Actual billed usage delta and lasting Free entitlement"
+    ]
+  },
+  "acceptance_corpus_suitability": {
+    "recommendation": "Do not use this wallet as the first bounded complete B3 acceptance corpus. Keep as partial source-feasibility evidence and select a genuinely low-activity research wallet under an explicit separately approved collection scope.",
+    "observed_reasons": [
+      "84964current token accounts",
+      "200unique indexed records span only78seconds",
+      "Nonterminal continuation after200records",
+      "Missing independently known lifecycle controls"
+    ],
+    "no_total_history_or_cost_extrapolation": true,
+    "no_scamming_or_profitability_label_inferred": true
+  },
+  "source_decision": {
+    "bounded_source_development": "EMPIRICAL_GO for exact observed methods/account now; no more live calls are authorised by this exhausted10requestprobe.",
+    "full_wallet_acceptance": "NO_GO until lifecycle/population controls, terminal intervals and basis/cost/classification/valuation evidence meet explicit metric dependencies.",
+    "missing_B2_implementation": [
+      "Accepted indexed page/raw record ingestion with original-byte/provenance/cursor/chronology binding",
+      "Reviewed compiled system/token instruction normalization, or separately budgeted jsonParsed inputs",
+      "Reviewed supported outer-route and economic-flow roles; the observed custom route cannot be inferred solely from inner DEX calls"
+    ]
+  },
+  "B1": "LIVE_ACCESS_AND_SAMPLE_SCHEMA_OBSERVED; historical coverage/lifecycle feasibility remains unresolved",
+  "B2": "OPEN",
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "review_limitations": [
+    "Sanitized receipts reconcile recorded reservations, not provider invoice usage or direct private ledger database inspection.",
+    "No provider calls, credentials, live follow-ups or acceptance calculations performed by this replay."
+  ]
+}
