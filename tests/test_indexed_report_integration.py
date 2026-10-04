@@ -43,10 +43,10 @@ def guarded(session, monkeypatch):
     monkeypatch.setattr('scanner.providers.Gateway.rpc', no_provider)
     monkeypatch.setattr(httpx.AsyncHTTPTransport, 'handle_async_request', no_transport)
     monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=no_credential))
-    usage = deepcopy(client.get('/api/state').json()['usage'])
+    usage = deepcopy(client.get('/api/usage').json())
     yield client, app, directory, calls
     assert calls == {'provider': 0, 'credential': 0, 'transport': 0}
-    assert client.get('/api/state').json()['usage'] == usage
+    assert client.get('/api/usage').json() == usage
 
 
 def import_report(client, content):
