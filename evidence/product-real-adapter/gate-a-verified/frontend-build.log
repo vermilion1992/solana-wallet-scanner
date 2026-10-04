@@ -1,0 +1,14 @@
+
+> solana-wallet-scanner-ui@0.3.11 build
+> tsc -b && vite build
+
+vite v8.3.2 building client environment for production...
+transforming...
+✓ 1573 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.57 kB │ gzip:  0.34 kB
+dist/assets/index-Brz2fDKJ.css   67.30 kB │ gzip: 14.38 kB
+dist/assets/index-DCOfel89.js   288.91 kB │ gzip: 84.71 kB
+
+✓ built in 181ms

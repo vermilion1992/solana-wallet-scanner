@@ -1,0 +1,269 @@
+{
+  "kind": "lossless-evidence-storage-index",
+  "application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "scope": "Original large outputs remain unchanged locally. Git stores exact lossless gzip copies; producer receipts retain original path/byte hashes. Decompress stored_path to original_path to reconstruct the raw output.",
+  "baseline_runtime_trees": "Excluded; regenerate from preserved Git history with the unchanged browser runner. Private data directories are ignored.",
+  "compressed_outputs": [
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/genuine-partial-report.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/genuine-partial-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 25735915,
+      "original_sha256": "f551f820c7c8bf2791a5236fc1e67a95532824181039a0710a9012d654ecb3a2",
+      "stored_bytes": 1358363,
+      "stored_sha256": "38194e7feb687db601d737847b80fffcafc92e5e4c5218b3df32de8598c48ab3",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/synthetic-parent.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/synthetic-parent.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4980525,
+      "original_sha256": "54ec8a9be3ec9f0e604cf549bc5139c3b599fdbb335b665825722c04026262a9",
+      "stored_bytes": 159383,
+      "stored_sha256": "0e21b1c1fd8222faa26c04ae9406f3a121e49f462b05e58730b524fd25e3cfa1",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/synthetic-ui-export.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/synthetic-ui-export.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4980525,
+      "original_sha256": "54ec8a9be3ec9f0e604cf549bc5139c3b599fdbb335b665825722c04026262a9",
+      "stored_bytes": 159383,
+      "stored_sha256": "0e21b1c1fd8222faa26c04ae9406f3a121e49f462b05e58730b524fd25e3cfa1",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/valuation_hash-missing-report.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/valuation_hash-missing-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4984624,
+      "original_sha256": "3df93ab0e2cb56581e853cf9567ff5c93f233f21e32a7025406aeeb9f1296e63",
+      "stored_bytes": 160012,
+      "stored_sha256": "0df7be8a3918c3d0864a92d02ab9d12ff1f982d6c31d66d09d1312c1e175a6d7",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/valuation_hash-restored-report.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/valuation_hash-restored-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4981078,
+      "original_sha256": "e0a239a60cb3c50a3c34ba437c6f60c7f407ce89330c932d8788a4a24b866f34",
+      "stored_bytes": 159645,
+      "stored_sha256": "bd83a1f2f53c555ef855ebff35f9dee2a0ecdaf6206d4178ad3424c1eb50ce59",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/world_hash-missing-report.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/world_hash-missing-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 5008617,
+      "original_sha256": "d8b392d9c5242899a586078a143bd663bcc60629e5d2e963e6ec883383d38cd3",
+      "stored_bytes": 160274,
+      "stored_sha256": "bfaa2826301d04895494b87b36c9de081188fbdc5b6823544634e6fd5972fd40",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-browser-verified/world_hash-restored-report.json",
+      "stored_path": "evidence/product-real-adapter/product-browser-verified/world_hash-restored-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4981078,
+      "original_sha256": "b8c0af85c1d53477a6c2be7de387cc7ec4ab072239ba3456a72cd9c6dbff91e7",
+      "stored_bytes": 159646,
+      "stored_sha256": "b67c6673c693f3e40141b5e6a8f21c702fae15e3aa5cb328e29836028487b4f1",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development-final/partial-real-report.json",
+      "stored_path": "evidence/product-real-adapter/product-development-final/partial-real-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 25696833,
+      "original_sha256": "9939d9f7a17b45f044d10f1d9d61cbc16285e176f234096edc42f370d2f4259b",
+      "stored_bytes": 1356790,
+      "stored_sha256": "fa62358bc325f0c2e36ba5d7b0ad9d6a7420d53d664866822e706e8498cc97d8",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development-final/synthetic-parent.json",
+      "stored_path": "evidence/product-real-adapter/product-development-final/synthetic-parent.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4958287,
+      "original_sha256": "c4861c70d972f7173223cc406f5acf6765cd10296e555a48c3c7243b53454d13",
+      "stored_bytes": 157880,
+      "stored_sha256": "7ea5d5570be7dae9649e51c8e9d61a4ce9c3600bc36743fa3b77745a719a92ec",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development-final/valuation_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-development-final/valuation_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4962386,
+      "original_sha256": "ce0792ea4401932e885539e28319e69ed9cbd8475957f2cc2fc9fde7834a1e57",
+      "stored_bytes": 158521,
+      "stored_sha256": "a5cd84952fcf9dea61e1a6099325e4b5b5c4bfeab97645838ea56ca006ff37e5",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development-final/world_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-development-final/world_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4986379,
+      "original_sha256": "fbc3ef5d54740f18fdc33f3a95e04a056eb0a2559071451dff1b03e6a340f55d",
+      "stored_bytes": 158856,
+      "stored_sha256": "e0b97d30a115960259886befe2deff671acc599fa6a84f4ecdaf621a922cef6a",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development/synthetic-parent.json",
+      "stored_path": "evidence/product-real-adapter/product-development/synthetic-parent.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4957831,
+      "original_sha256": "9f84cae6f9dded1eccf18fbe624bc2173c1c8dd19d51b0f2c24f0c235416095b",
+      "stored_bytes": 157730,
+      "stored_sha256": "b4ca305dbdcb11a09a407c18b8cad1ed1ee3cf9be421694f317d639b80c2d7ab",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development/valuation_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-development/valuation_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4961930,
+      "original_sha256": "3c5f93f87a3833d7a743ca2dce9dee113c0412d051c7188bd477eeebe4d9333e",
+      "stored_bytes": 158399,
+      "stored_sha256": "2b2f09dbe7100a0159e9c103b5c49ebf395f1183530682814ddf71fe0aa44e92",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-development/world_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-development/world_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4985923,
+      "original_sha256": "5d73b617048f5eb7dc61e7a0d7a7815bfb56785b0ee67f7bd1ab4199590b1416",
+      "stored_bytes": 158723,
+      "stored_sha256": "bfaa9700beae71b2b804ecf27e463975f650acae528c6f11be009e8c8e9bd21c",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-real-required-final/partial-real-report.json",
+      "stored_path": "evidence/product-real-adapter/product-real-required-final/partial-real-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 25696833,
+      "original_sha256": "45c40f8d91d7c88a31c3cc84b3258083b1963b7b10f9ebeb61162ea6eb44d3fc",
+      "stored_bytes": 1356788,
+      "stored_sha256": "abdf46f41ec10660b5b673040e3c8aad170f94ea3aa1104a59839deec1eac71a",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-real-required-final/synthetic-parent.json",
+      "stored_path": "evidence/product-real-adapter/product-real-required-final/synthetic-parent.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4958287,
+      "original_sha256": "715e71521ba5036088f504af819ada1e80ef146a108938247ae6a85e5f4b7f61",
+      "stored_bytes": 157878,
+      "stored_sha256": "0c54feed652706cad9e6a2d634cfbe5e5ed8b9fb457f6731cfd06c1037fe309d",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-real-required-final/valuation_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-real-required-final/valuation_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4962386,
+      "original_sha256": "b932686f87d6c85a4b0615ead35c1dfc259c0770eaa6da859b4b46ecc91adc8f",
+      "stored_bytes": 158525,
+      "stored_sha256": "88c6ebb06ac752e024828491b57e815647abaccd3bbe4a660acae3e4f36d4c07",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-real-required-final/world_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-real-required-final/world_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4986379,
+      "original_sha256": "e361b2c27614e6889cde9dc86ad6957556ac4a7b0a8bdea4e238dcea32b781cd",
+      "stored_bytes": 158856,
+      "stored_sha256": "f7258cdef2ef46f1db0e91ac9fdef68ae03d8cf6914b63cc7eed12cd8f22b645",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-final/partial-real-report.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-final/partial-real-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 25735915,
+      "original_sha256": "e01b91e533f65f5d769d9254138da6420c8dc8d65da6f785abe5e85fccd3043a",
+      "stored_bytes": 1358361,
+      "stored_sha256": "e862c7217840f52a5ae66a589c81cd305d410ca3161d06f806c6d0c40cbabd2c",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-final/synthetic-parent.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-final/synthetic-parent.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4980525,
+      "original_sha256": "e8166a9713f56d68f6f407b5bd642b2d38867d06036e31144f833f45f6c6bfcd",
+      "stored_bytes": 159379,
+      "stored_sha256": "c76ae2c0f13f61f84b6e3d8990bbd80ff5d32075147d279153e72c5bbefc1e08",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-final/valuation_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-final/valuation_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4984624,
+      "original_sha256": "b92c1e75bbdacd70d8d97ccc56bce7c90698a6bcac23aa3ed2d3fbab94bc148f",
+      "stored_bytes": 160008,
+      "stored_sha256": "62adce05a392001b8d97a8e352d6f6ab81aa1cccc089dfbae935bc542134b938",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-final/world_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-final/world_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 5008617,
+      "original_sha256": "c09edb5a1cecd9dfc8d8fe3b54906ffd8b0eadf57d6889569eaa45850664e7f6",
+      "stored_bytes": 160269,
+      "stored_sha256": "bf39ef7c564de6082967910859ea44f7111370e5c6f0c30fb160b60d697431d9",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-real-required/partial-real-report.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-real-required/partial-real-report.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 25735915,
+      "original_sha256": "15b0d67cef82397766b3a7fe556c2d03f2d2f35b98f7b3ca8963251204188d72",
+      "stored_bytes": 1358361,
+      "stored_sha256": "249a723a43de13a3e9b81962e8cc11e56b8b3a0b393b52d4bd06d20fce3b38ba",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-real-required/synthetic-parent.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-real-required/synthetic-parent.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4980525,
+      "original_sha256": "c789e76af5670de366d5182417057609bb0ebfd0f77bcb42e2ac381a5f62dd48",
+      "stored_bytes": 159379,
+      "stored_sha256": "6174eb99cbe1049552a65bcdfe9577c0b35434b5f922471c9b3740e1265363d2",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-real-required/valuation_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-real-required/valuation_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 4984624,
+      "original_sha256": "91c9b19825491d72b1fb46d9ab567dad2dca386d44c710ea01be56b7deebb503",
+      "stored_bytes": 160010,
+      "stored_sha256": "740408dc7b47b93a1fd0e09e483851fbfa6160794c2e86a9accc6fe007f38925",
+      "fresh_decompression_hash_verified": true
+    },
+    {
+      "original_path": "evidence/product-real-adapter/product-v4-real-required/world_hash-missing-child.json",
+      "stored_path": "evidence/product-real-adapter/product-v4-real-required/world_hash-missing-child.json.gz",
+      "encoding": "gzip",
+      "original_bytes": 5008617,
+      "original_sha256": "ce0d0d65d19482af3a65ffda735b3b24b2a563c9d790b7ac2b022ebde40454d2",
+      "stored_bytes": 160272,
+      "stored_sha256": "e69708a5eb46afafda8898e934335839f4a1112a7d529ee24341d73b89e98331",
+      "fresh_decompression_hash_verified": true
+    }
+  ]
+}

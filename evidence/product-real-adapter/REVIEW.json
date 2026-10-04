@@ -1,0 +1,360 @@
+{
+  "PRODUCT_READY": false,
+  "application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "application_edits_by_reviewer": 0,
+  "changed_files": [
+    ".github/workflows/offline-focused.yml",
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/R1_SOURCE_DECISION.md",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/metric_evidence.py",
+    "scanner/wallet_evidence.py",
+    "tests/test_metric_evidence.py",
+    "tests/test_real_evidence_adapter.py",
+    "tests/test_wallet_evidence.py",
+    "tools/validate.py"
+  ],
+  "checks_actually_executed": {
+    "evidence/product-real-adapter/REVIEW_REPLAY_FINAL.log": {
+      "command": ".venv/bin/python /workspace/outputs/scanner_review_final.py",
+      "distinct_unique_tests_claimed": 0,
+      "engineering_raw_controls": 20,
+      "exit_code": 0,
+      "sha256": "603cf619bd9d27e57b3a991b3fcb1a1855a528337cf7561d708dcc656a638fd1"
+    },
+    "evidence/product-real-adapter/REVIEW_TARGETED_FINAL.log": {
+      "command": ".venv/bin/python -m pytest -q tests/test_wallet_evidence.py tests/test_metric_evidence.py tests/test_real_evidence_adapter.py",
+      "exit_code": 0,
+      "ordinary_cases": 117,
+      "scope": "Focused iteration verification; overlaps parent gates and is not added to their unique test count.",
+      "sha256": "1acbab39e3fa175234f54e726b6e8a5c2198669e927ffb258fd3aa18953f79af",
+      "subtests_separately_reported": 21
+    }
+  },
+  "commits_by_reviewer": 0,
+  "credential_lookups": 0,
+  "diff_check": {
+    "command": "git diff --check 4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+    "exit_code": 0,
+    "output": ""
+  },
+  "findings": [
+    {
+      "blocking": true,
+      "detail": "Valid linked alternative account union exceeds account-version Cartesian-product budget below global raw account-step budget and raises instead of narrower UNKNOWN",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "ACCOUNT_UNION_BUDGET",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_ACCOUNT_UNION_BUDGET.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "2e1ab784987b7f5d41a8beb21f6ef888469bf252bcd0ee96aa6747529b8e5706",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Inspection budget loss drops alternative cost/flow-role checks and promotes observed economic roles",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "BUDGET_COST_ROLE",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_BUDGET_COST_ROLE.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "746c00f9f4bd71a3bdb615db58d84afa35bf18ca16353cd531f0a966e698510f",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Native raw helper omitted checkpoint-linked alternatives",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "CHECKPOINT_SOURCE_SET",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_CHECKPOINT_SOURCE_SET.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "bf7512fd664049918e3262f1208443c2f6ceb050ca2f58a4fa7d42c7184097ab",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Selected-account continuity sorts equal-time records by signature instead of proved block index",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "CONTINUITY_ORDER",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_CONTINUITY_ORDER.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "e7740c113fce6a58003ea4fac0b0cf2a4be3c465435799d4c43c122b6973f085",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Native receipt missing payload erased raw disjoint transaction identity proof",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "DISJOINT_ROLE_RECEIPT",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_DISJOINT_ROLE_RECEIPT.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "7916391c99517c8a77b057021d9e80fdd996fcf7e127021bf0e57ed15a4b2114",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Chronology-conflicting acquisition alternative still supports disposed basis/position precursor",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "FIFO_CHRONOLOGY",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_FIFO_CHRONOLOGY.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "af568aa1042a8285002b2f3fe40478afe501b9f9df1c71adbf5fce7516dc88f5",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Frozen native adapter links expanded from later mutable persisted checkpoint",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "FROZEN_INPUTS",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_FROZEN_INPUTS.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "d9069d4b71db1833c429f02fc57296989e2319efdcd0e367320dd33302430762",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": false,
+      "detail": "Checksum-invalid unsupported payload cannot supply native-signature disjointness",
+      "historical_reproduction_state": "NONDEFECT_CHECKSUM_INVALID_DISJOINTNESS_REJECTED",
+      "id": "HASH_DISJOINTNESS",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_HASH_DISJOINTNESS.json",
+      "resolution": "Read-only reproduction rejected the suspected defect; no correction required.",
+      "sha256": "2247c9b5c43f7f1968eacc32ae528e156cedced726a294ff927b008cc9b8b69c",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Malformed linked transaction dropped before raw shared source-set validation",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "MALFORMED_TRANSACTION_LINK",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_MALFORMED_TRANSACTION_LINK.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "48966ff7f9781f26131e2b19ad9377795914db99107e7448e2a8128e1b40c512",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "getAccountInfo metadata exemption accepts full native transaction under result.value",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "METADATA_VALUE_TRANSACTION",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_METADATA_VALUE_TRANSACTION.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "d3de98c4bba21209c2ac77835064d9cfa574c6d1258b2a36131be6efbc9d0628",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Canonical mint-target setAuthority withnewAuthoritywallet treated as token-account lifecycle missingaccount",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "MINT_AUTHORITY_TARGET",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_MINT_AUTHORITY_TARGET.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "1200fa35abbeaedd806d76c8b766509eca66e851643e3d95c848f5d2471acb5b",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Outside-report fee uncertainty erased independent supported in-window selected fee total",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "OUTSIDE_FEE",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_OUTSIDE_FEE.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "92264f5b32ea492b88b0f0ccbd46e05489cfa112abf4de85a9139d47afb53686",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Wallet-owned mint aggregate certainty omitted ownership prerequisites",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "OWNERSHIP_AGGREGATE",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_OWNERSHIP_AGGREGATE.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "9ce25997a9c95af55287516192565df680d33d8b471ce4741d7edb8e8e35138c",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "New adaptertotalversionbudgetsmallerthanexistingarchivevalidationcontract",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "RECORD_BUDGET",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_RECORD_BUDGET.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "839ddef545c809e24779f83c5719f1ade07ae3fac55eaf7c816676c349b175d9",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Derived same-slot indices did not reach shared raw decoder/FIFO",
+      "historical_reproduction_state": "RESOLVED_CURRENT_REPLAY",
+      "id": "SAME_SLOT",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_SAME_SLOT.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "7b156a51380befb2a56d6a7ab5641ef7fec592acd26044e59d218e592ff8be95",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": false,
+      "detail": "Unassignable missing native transaction source already revokes selected fee support through shared validator",
+      "historical_reproduction_state": "NONDEFECT_FEE_REVOKED",
+      "id": "UNASSIGNED_TRANSACTION",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_UNASSIGNED_TRANSACTION.json",
+      "resolution": "Read-only reproduction rejected the suspected defect; no correction required.",
+      "sha256": "49e62b37f4bfaed71c23882abc7c93171aaa4d12729c20edef0e0777467e5c6c",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Observed economic roles PASS despite unexplained selected native balance outflow beyond the independently paid network fee",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "UNEXPLAINED_NATIVE_FLOW",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_UNEXPLAINED_NATIVE_FLOW.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "9f4388f3c0241a3a560c2f17e87397a5d889d1f5d007189dd4e3d64ee7fdf017",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Unsupported declared role hides raw selected-signature alternative from fee comparison",
+      "historical_reproduction_state": "CONFIRMED_PROVISIONAL",
+      "id": "UNSUPPORTED_TRANSACTION_ROLE",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_UNSUPPORTED_TRANSACTION_ROLE.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "ce06e0a21600b94eb096e27ebc3cc4623fe630d88e33bceee4e7f9f4b513b2cd",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": true,
+      "detail": "Losing wrong-label transaction source promoted dependent selected fee result",
+      "historical_reproduction_state": "CONFIRMED_CURRENT",
+      "id": "WRONG_ROLE_REMOVAL",
+      "reproduction": "evidence/product-real-adapter/REVIEW_REPRO_WRONG_ROLE_REMOVAL.json",
+      "resolution": "Current raw replay and sibling controls passed; retained reproduction preserves initial observation.",
+      "sha256": "b3f974e527c712d6f79867f3c358be7dd45f1002bc188cdccda956a97774805b",
+      "status": "VERIFIED_IN_SCOPE"
+    }
+  ],
+  "kind": "consolidated-review",
+  "matrix_review_complete": true,
+  "provider_requests": 0,
+  "raw_replay_receipt": {
+    "path": "evidence/product-real-adapter/REVIEW_REPLAY_FINAL.json",
+    "sha256": "f371ffe22e9e362584407f6ce3745bd5046b6a2dfdb248564e41011757d6e10d"
+  },
+  "raw_replay_runner": {
+    "note": "Exact executed review helper preserved. ROOT currently names the recorded execution checkout; use the project tests/validation runner for portable acceptance.",
+    "path": "evidence/product-real-adapter/review_raw_replay.py",
+    "sha256": "6276d2a922e5c931d3e399b2be8d9bcba0a5494012331f692efc04048a209a88"
+  },
+  "remaining_blockers": [
+    {
+      "category": "Missing source capability / authorisation facts",
+      "detail": "Actual plan, cycle start/end, >=100 remaining credits, disabled automatic spending and explicit execution approval remain absent. Probe not executed.",
+      "id": "B1",
+      "state": "BLOCKED"
+    },
+    {
+      "category": "Missing implementation / accepted source contracts",
+      "detail": "Observed raw adapter is functional; complete historical wallet population, full origins/roles, accepted classification, independent historical intervals and exact inventory/valuation adapters remain unproved/unfinished. No hardcoded UNKNOWN was promoted.",
+      "id": "B2/CAP-01",
+      "state": "OPEN"
+    },
+    {
+      "category": "Missing genuine acceptance dataset",
+      "detail": "Synthetic/dev controls do not establish a complete genuine wallet corpus with independently worked expected calculations.23-record sample remains partial.",
+      "id": "B3",
+      "state": "BLOCKED"
+    },
+    {
+      "category": "Environment/validation",
+      "detail": "GitHub Actions permissions and native job status remain separate from static workflow checks. Full candidate suite/browser/install/product gates are parent-run and not claimed by this receipt.",
+      "id": "ENV-CI",
+      "state": "NOT_EXECUTED_BY_REVIEWER"
+    }
+  ],
+  "reviewed_axes": [
+    {
+      "component": "Source loading and dependencies",
+      "evidence": [
+        "tests/test_real_evidence_adapter.py",
+        "REVIEW_REPLAY_FINAL.json"
+      ],
+      "paths": [
+        "scanner/app.py",
+        "scanner/archive_input.py",
+        "scanner/wallet_evidence.py"
+      ],
+      "reviewed": [
+        "Every selected and linked alternative raw hash; missing/corrupt/malformed/unsupported bodies and links; wrong role root/result/value native identities; byte-derived negative freezing; unrelated verified metadata; checkpoint and frozen reference boundaries; legacy missing inventory; negative inventory loss/restoration"
+      ]
+    },
+    {
+      "component": "Ownership, lifecycle and quantities",
+      "evidence": [
+        "tests/test_wallet_evidence.py",
+        "REVIEW_REPLAY_FINAL.json"
+      ],
+      "paths": [
+        "scanner/wallet_evidence.py"
+      ],
+      "reviewed": [
+        "Phase-specific owners; create/init/close/authority transitions; executed versus failed operations; outer/inner schema scope; mint permission disjointness; absolute integer quantities and observed mint aggregates; conservation and independently ordered selected continuity; account union and physical inspection budgets"
+      ]
+    },
+    {
+      "component": "FIFO, basis, fees and economic roles",
+      "evidence": [
+        "tests/test_wallet_evidence.py",
+        "tests/test_real_evidence_adapter.py",
+        "REVIEW_REPLAY_FINAL.json"
+      ],
+      "paths": [
+        "scanner/wallet_evidence.py",
+        "scanner/archive_input.py"
+      ],
+      "reviewed": [
+        "Shared decoder/FIFO reuse; derived raw block order and rejected caller indices; missing origins and conflicting alternative costs; valid losing/breakeven development cases; native fee independence; exact selected fee window projection; zero/outside-window exclusions; unexplained native movement; budget loss cannot remove negative cost-role checks"
+      ]
+    },
+    {
+      "component": "Metric gates and saved workflow",
+      "evidence": [
+        "tests/test_metric_evidence.py",
+        "tests/test_real_evidence_adapter.py",
+        "REVIEW_REPLAY_FINAL.json"
+      ],
+      "paths": [
+        "scanner/metric_evidence.py",
+        "scanner/app.py",
+        "scanner/archive_input.py"
+      ],
+      "reviewed": [
+        "One authoritative metric dependency map; separate report/28-day/90-day requirements; economic inventory/marks versus realised basis; no numeric UNKNOWN promotion; no caller completion declaration; immutable report/export/rebuild parents; source inspection; zero offline provider/credential activity; genuine partial records remain unqualified"
+      ]
+    },
+    {
+      "component": "Workflow, source decision and regressions",
+      "evidence": [
+        "git diff from exact starting HEAD",
+        "static workflow review; native GitHub execution not claimed"
+      ],
+      "paths": [
+        ".github/workflows/offline-focused.yml",
+        "CODEX_TASK.md",
+        "ISSUES.md",
+        "docs/ACCEPTANCE_MATRIX.json",
+        "docs/R1_SOURCE_DECISION.md",
+        "tools/validate.py"
+      ],
+      "reviewed": [
+        "Private repository blocker status updated without rewriting failed historical evidence; single register/matrix/source decision/validation entry; retained old tests unchanged; new focused suites execute once in CI; pinned actions and dropped-root network isolation; no repository/application credentials or provider calls; CI remains unexecuted until actual native status; B1/B2/B3 and readiness limitations remain explicit"
+      ]
+    }
+  ],
+  "reviewer": "Distinct read-only review agent in the same engineering session; not independent third-party acceptance.",
+  "scope": "Changed application paths and interface development controls only; this review is not new full application acceptance or genuine product readiness.",
+  "source_files": 190,
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "source_unchanged": true,
+  "starting_head": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+  "state": "PASS"
+}

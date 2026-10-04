@@ -1,0 +1,23 @@
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /workspace/solana-wallet-scanner/evidence/product-real-adapter/gate-a-verified

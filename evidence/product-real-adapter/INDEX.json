@@ -1,0 +1,32 @@
+{
+  "kind": "current-git-product-completion-evidence",
+  "application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "branch": "codex/product-completion",
+  "authoritative_current_outcome": "FINAL_GATES.json",
+  "source_manifest": "SOURCE_IDENTITY.json",
+  "passing_candidate_gates": "gate-a-verified/result.json",
+  "raw_backend_log": "gate-a-verified/backend.log",
+  "acceptance_matrix": "gate-a-verified/matrix.json",
+  "passing_scoped_browser": "gate-a-verified/browser/result.json",
+  "passing_product_workflow": "product-v4-final/result.json",
+  "correctly_blocked_real_acceptance": "product-v4-real-required/result.json",
+  "passing_product_browser": "product-browser-verified/result.json",
+  "distinct_read_only_review": "REVIEW.json",
+  "review_raw_replays": "REVIEW_REPLAY_FINAL.json",
+  "secret_audit": "PRE_PUSH_AUDIT.json",
+  "independent_local_publication_review": "LOCAL_REVIEW.json",
+  "large_raw_output_storage": "EVIDENCE_STORAGE.json",
+  "raw_input_dependencies": [
+    "../../scanner/examples/archive-wallet-synthetic.json",
+    "../runs/real-cache/manifest.json.gz",
+    "../runs/real-cache/archives/",
+    "../../tools/check_product.py",
+    "../../tools/product_browser.py",
+    "review_raw_replay.py"
+  ],
+  "scope": "Genuine23sample is partial, synthetic development is not B3, and PRODUCT_READY=false. Final branch HEAD may be an evidence-only commit on the validated application commit. Gates did not execute on later evidence bytes.",
+  "historical_attempts": "Interrupted/failed/blocked attempts remain in their original folders and iterations; they are not candidate acceptance.",
+  "new_release_zip": false
+}

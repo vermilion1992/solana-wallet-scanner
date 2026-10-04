@@ -1,0 +1,835 @@
+{
+  "kind": "independent-local-prepublication-review",
+  "state": "VERIFIED_IN_SCOPE",
+  "recorded_at": "2026-10-04T02:51:42.441722+00:00",
+  "started_at": "2026-10-04T02:50:59.050647+00:00",
+  "scope": "Identity, retained history/tests/locks/frontend, tracked/history credential-pattern exclusion and a snapshot of prospective nonignored evidence files. This is not application acceptance.",
+  "application_candidate_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "branch": "codex/product-completion",
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "source_file_count": 190,
+  "source_unchanged_during_review": true,
+  "original_tests": {
+    "baseline": "a811e81aa2d46807d50915f47193a99f890eb854",
+    "file_count": 83,
+    "changed": [],
+    "unchanged": true
+  },
+  "prior_candidate_tests": {
+    "baseline": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+    "file_count": 86,
+    "changed": [],
+    "unchanged": true
+  },
+  "frontend": {
+    "baseline": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+    "file_count": 22,
+    "changed": [],
+    "unchanged": true
+  },
+  "locks": {
+    "requirements.txt": {
+      "sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+      "native_object_unchanged": true
+    },
+    "requirements-build.in": {
+      "sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+      "native_object_unchanged": true
+    },
+    "pyproject.toml": {
+      "sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+      "native_object_unchanged": true
+    },
+    "frontend/package-lock.json": {
+      "sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+      "native_object_unchanged": true
+    }
+  },
+  "reachable_commit_count": 23,
+  "native_commit_hash_failures": [],
+  "preserved_commit_identities": {
+    "a811e81": "a811e81aa2d46807d50915f47193a99f890eb854",
+    "b1296c1": "b1296c1952f94ac67dcd63792eb845129cb48b1b",
+    "4daa778": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a"
+  },
+  "additional_local_history_outside_HEAD": [],
+  "tracked_diff": [],
+  "tracked_history_security_audit": {
+    "state": "PASS",
+    "counts": {
+      "current_files": 551,
+      "history_blobs": 555,
+      "text_payloads": 742
+    },
+    "findings": [],
+    "runtime_ignore_guards": {
+      ".env": true,
+      ".env.local": true,
+      "credentials/helius.json": true,
+      "keyring/provider.key": true,
+      "local-data/wallets.sqlite3": true,
+      "private.sqlite3": true,
+      "private.db-wal": true,
+      ".solana/id.json": true
+    },
+    "replay_corpus_archives": 63,
+    "scope": "Tracked files and reachable history, nested ZIP/gzip credential patterns, runtime ignore protections and retained replay corpus. Not an exhaustive secret guarantee.",
+    "network_requests": 0,
+    "credential_lookups": 0
+  },
+  "prospective_evidence_snapshot": {
+    "prefix": "evidence/product-real-adapter/",
+    "selection": "git ls-files --others --exclude-standard; excludes any data/ or baseline/ tree",
+    "files": [
+      {
+        "path": "evidence/product-real-adapter/REVIEW.json",
+        "bytes": 18777,
+        "sha256": "011fdb9fc7c8a9454e3682db17563b9e6c3d86e32724f2b7c874ff0cbe5722ac"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPLAY.json",
+        "bytes": 2922,
+        "sha256": "61e18aca98dff9d84c234e772982a8c37e74101a554c401af87904a9ee4e5d30"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPLAY_FINAL.json",
+        "bytes": 7835,
+        "sha256": "f371ffe22e9e362584407f6ce3745bd5046b6a2dfdb248564e41011757d6e10d"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPLAY_FINAL.log",
+        "bytes": 1254,
+        "sha256": "603cf619bd9d27e57b3a991b3fcb1a1855a528337cf7561d708dcc656a638fd1"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_ACCOUNT_UNION_BUDGET.json",
+        "bytes": 4673,
+        "sha256": "2e1ab784987b7f5d41a8beb21f6ef888469bf252bcd0ee96aa6747529b8e5706"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_BUDGET_COST_ROLE.json",
+        "bytes": 14643,
+        "sha256": "746c00f9f4bd71a3bdb615db58d84afa35bf18ca16353cd531f0a966e698510f"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_CHECKPOINT_SOURCE_SET.json",
+        "bytes": 14432,
+        "sha256": "bf7512fd664049918e3262f1208443c2f6ceb050ca2f58a4fa7d42c7184097ab"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_CONTINUITY_ORDER.json",
+        "bytes": 46676,
+        "sha256": "e7740c113fce6a58003ea4fac0b0cf2a4be3c465435799d4c43c122b6973f085"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_DISJOINT_ROLE_RECEIPT.json",
+        "bytes": 16068,
+        "sha256": "7916391c99517c8a77b057021d9e80fdd996fcf7e127021bf0e57ed15a4b2114"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_FIFO_CHRONOLOGY.json",
+        "bytes": 24466,
+        "sha256": "af568aa1042a8285002b2f3fe40478afe501b9f9df1c71adbf5fce7516dc88f5"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_FROZEN_INPUTS.json",
+        "bytes": 8412,
+        "sha256": "d9069d4b71db1833c429f02fc57296989e2319efdcd0e367320dd33302430762"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_HASH_DISJOINTNESS.json",
+        "bytes": 14273,
+        "sha256": "2247c9b5c43f7f1968eacc32ae528e156cedced726a294ff927b008cc9b8b69c"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_MALFORMED_TRANSACTION_LINK.json",
+        "bytes": 13735,
+        "sha256": "48966ff7f9781f26131e2b19ad9377795914db99107e7448e2a8128e1b40c512"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_METADATA_VALUE_TRANSACTION.json",
+        "bytes": 14406,
+        "sha256": "d3de98c4bba21209c2ac77835064d9cfa574c6d1258b2a36131be6efbc9d0628"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_MINT_AUTHORITY_TARGET.json",
+        "bytes": 8204,
+        "sha256": "1200fa35abbeaedd806d76c8b766509eca66e851643e3d95c848f5d2471acb5b"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_OUTSIDE_FEE.json",
+        "bytes": 18544,
+        "sha256": "92264f5b32ea492b88b0f0ccbd46e05489cfa112abf4de85a9139d47afb53686"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_OWNERSHIP_AGGREGATE.json",
+        "bytes": 5166,
+        "sha256": "9ce25997a9c95af55287516192565df680d33d8b471ce4741d7edb8e8e35138c"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_RECORD_BUDGET.json",
+        "bytes": 1384,
+        "sha256": "839ddef545c809e24779f83c5719f1ade07ae3fac55eaf7c816676c349b175d9"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_SAME_SLOT.json",
+        "bytes": 24991,
+        "sha256": "7b156a51380befb2a56d6a7ab5641ef7fec592acd26044e59d218e592ff8be95"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_UNASSIGNED_TRANSACTION.json",
+        "bytes": 9091,
+        "sha256": "49e62b37f4bfaed71c23882abc7c93171aaa4d12729c20edef0e0777467e5c6c"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_UNEXPLAINED_NATIVE_FLOW.json",
+        "bytes": 10787,
+        "sha256": "9f4388f3c0241a3a560c2f17e87397a5d889d1f5d007189dd4e3d64ee7fdf017"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_UNSUPPORTED_TRANSACTION_ROLE.json",
+        "bytes": 14792,
+        "sha256": "ce06e0a21600b94eb096e27ebc3cc4623fe630d88e33bceee4e7f9f4b513b2cd"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_REPRO_WRONG_ROLE_REMOVAL.json",
+        "bytes": 23449,
+        "sha256": "b3f974e527c712d6f79867f3c358be7dd45f1002bc188cdccda956a97774805b"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_TARGETED.log",
+        "bytes": 671,
+        "sha256": "a2c32295aa464412084cbdca147c4baceb7158785cbbd8d23ae39b29fc86db43"
+      },
+      {
+        "path": "evidence/product-real-adapter/REVIEW_TARGETED_FINAL.log",
+        "bytes": 681,
+        "sha256": "1acbab39e3fa175234f54e726b6e8a5c2198669e927ffb258fd3aa18953f79af"
+      },
+      {
+        "path": "evidence/product-real-adapter/SOURCE_IDENTITY.json",
+        "bytes": 29187,
+        "sha256": "25cb4febcd823fd7fd93d6d17a214ca66752ae375c386f8a2910a4c820548ff8"
+      },
+      {
+        "path": "evidence/product-real-adapter/SOURCE_IDENTITY_INITIAL.json",
+        "bytes": 29137,
+        "sha256": "a6662709e29d1dae87b39f017947afcee6dd1ca63ad42f15220a95ca1c04d3fe"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-final/backend.log",
+        "bytes": 1349,
+        "sha256": "8763a4003c62cedf30f011d80fe41550095fbc4a42ba679589779cfa703eeed6"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-final/node-runtime.log",
+        "bytes": 9,
+        "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-final/result.json",
+        "bytes": 30567,
+        "sha256": "220ef55ab3fe7bcbba5958378bf0f7780311b30328925e7b18c9708e2700d14c"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-final/runtime.log",
+        "bytes": 54,
+        "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/backend.log",
+        "bytes": 2878,
+        "sha256": "73437b50fd2485af875659829a34d037af6614b7f1d6c66c4f0104ea9f4b2d81"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/browser/candidate-import-desktop.png",
+        "bytes": 289945,
+        "sha256": "f23272a98389fdffbb84bfc58a0e0330487b9e10370a43a869047d813fe839d1"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/browser/candidate-import-mobile.png",
+        "bytes": 234730,
+        "sha256": "caed497421880628e10e33f8edf9266d7215f16da0ee82f021d9ea76ff86eef8"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/browser/cases.json",
+        "bytes": 919,
+        "sha256": "85da487d32006118d7a430f302d50e6d979cb0f3029f939d48a1693315e8d2e1"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/browser/guards.json",
+        "bytes": 50,
+        "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/browser/settings-desktop.png",
+        "bytes": 218940,
+        "sha256": "83f077052623feb7db8e223aa01ced00940c64ac5c38cad291a007e63acbb3c7"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/browser/settings-mobile.png",
+        "bytes": 152874,
+        "sha256": "38079c7df0d1870864ba23e78fb40aa456ba1d92c72b67177041488172fb77cc"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/frontend-build.log",
+        "bytes": 415,
+        "sha256": "57afe65caea9197c9ac278b8b4ed1512932b6dd0097191f1785950d2291387f3"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/frontend-check-discovery.log",
+        "bytes": 289,
+        "sha256": "ce048d64d0d447b11e1daca0dbc6e07175e325652736bb5b10888a4869a3afde"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/frontend-check-format.log",
+        "bytes": 142,
+        "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/frontend-locked-install.log",
+        "bytes": 25,
+        "sha256": "53982b9708472b1e744d6378385bffc025600b7a814d00fd25607378b952b043"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/launcher-browser-rebuild.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/matrix.json",
+        "bytes": 111356,
+        "sha256": "694e568aba591613c161b3b3b86dd8e0c31853ab4c298ef2900ffe549d22a5ac"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/matrix.log",
+        "bytes": 168,
+        "sha256": "d0f7ebe70ee0464e494d533a8c81b97fa1ade85a7ff3115cc9e5c415d5aef1d2"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/node-runtime.log",
+        "bytes": 9,
+        "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/pip-check.log",
+        "bytes": 30,
+        "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/result.json",
+        "bytes": 157749,
+        "sha256": "b9b939f67ec5feefa6091f1489efff1dfb53de50006852b29f7835b609b8ee0b"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/runtime.log",
+        "bytes": 54,
+        "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a-verified/shell-syntax.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a/backend.log",
+        "bytes": 1724,
+        "sha256": "48d8dee983262bb26c88ebfabe7b1c51f3f5eb5271780920c791129700b9adab"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a/node-runtime.log",
+        "bytes": 9,
+        "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a/result.json",
+        "bytes": 30555,
+        "sha256": "fda4c3e160e8f29f4e5e58a82984a68a86bd112f510199b9a2f5d53db7043351"
+      },
+      {
+        "path": "evidence/product-real-adapter/gate-a/runtime.log",
+        "bytes": 54,
+        "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/COMMANDS.json",
+        "bytes": 9743,
+        "sha256": "7d752215b2c102dd9a7a36ecb46238ef0f649314cafe7bd58e7d2ce3a1b309f4"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/FOLLOWUP_ITERATIONS.json",
+        "bytes": 730,
+        "sha256": "40043777f62abe55772f4ddecd7603010526761c01839da97559d3aa41845679"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-adapter-focused-1.log",
+        "bytes": 11826,
+        "sha256": "f46308ee488a7e3b239e0f492e028a45d2fcab9c0f0da51fd9823834ab8055e4"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-adapter-focused-2.log",
+        "bytes": 761,
+        "sha256": "97beed4a477aa5f8f0e1e4243dee8afdc0ef2e4679738b3eb4133b1968ee8d4f"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-adapter-focused-3.log",
+        "bytes": 761,
+        "sha256": "b6184a01a940b6b346ae62f90583f1dfe2a86a2d09661070922350039f37a466"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-adapter-focused-final.log",
+        "bytes": 753,
+        "sha256": "3cc2aa387d97a150174b0993f6def2f4b64fa9900703acaf279d112391a45c80"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-adapter-projection-budget-fixed.log",
+        "bytes": 601,
+        "sha256": "1e5e1fdca90962cadc38be3f4287799f9895d6908297b43c84e0beac0fbfe9a6"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-adapter-projection-budget.log",
+        "bytes": 11737,
+        "sha256": "f4e307047b61e1ab58980d5e14b6153cc4b85b7a4c6f220ef7acecbecbda7e80"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-candidate-validation-final.log",
+        "bytes": 89,
+        "sha256": "4952e07052f4a20eb894c64f094b5a39a4cf5e45c78545ae80da46961461ed30"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-candidate-validation.log",
+        "bytes": 89,
+        "sha256": "4952e07052f4a20eb894c64f094b5a39a4cf5e45c78545ae80da46961461ed30"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-negative-dependency-integration.log",
+        "bytes": 682,
+        "sha256": "c134368d1cbf28c042bb104fa21a1ce678ba9bdbbc07b86b138ffe08b9b307f7"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/b2-product-development.log",
+        "bytes": 906,
+        "sha256": "9cf2ea17274edf3440ba85a858fd9ff1f8d9763b430781789aeffcced9b5d9c3"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/candidate-interrupted-result.json",
+        "bytes": 30555,
+        "sha256": "fda4c3e160e8f29f4e5e58a82984a68a86bd112f510199b9a2f5d53db7043351"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/product-development-failed-result.json",
+        "bytes": 1055,
+        "sha256": "ccf126b4a4550ab4cf4dd1cb7601637080ae6d1ee6a807400ac7b2ccc2d10b78"
+      },
+      {
+        "path": "evidence/product-real-adapter/iterations/scanner-b2-wallet-evidence-focused.log",
+        "bytes": 752,
+        "sha256": "530a791d82e69112311191cf85f78824d90e90513f619e9e7d5538b487a322be"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/ADAPTER_FINAL_CHECK.json",
+        "bytes": 783,
+        "sha256": "dab14a465ae4173152ebab7a68279a42143aeb1e804eaa4eebfcd356703dee1b"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/INDEX.json",
+        "bytes": 1202,
+        "sha256": "a6ac4ce1dde864dc14f27e6b9af56c5cf4a8228d14358cf7c3dc526d39643c00"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/PRODUCT_COMMANDS.json",
+        "bytes": 1300,
+        "sha256": "3c797757bad8fc3828fe39abc8a3ca41a3aa13d6c0aa5d74fdbd38e78e10137b"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/b2-adapter-focused-corrected.log",
+        "bytes": 753,
+        "sha256": "c7f78c33661df5e6a0651a80c499c5eceeaced5576c546189ac6f79a7dc83f94"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/b2-product-development-final.log",
+        "bytes": 671,
+        "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/b2-product-v4-final.log",
+        "bytes": 671,
+        "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/b2-product-v4-real-required.log",
+        "bytes": 662,
+        "sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/scanner-b2-genuine-metadata-control.json",
+        "bytes": 971,
+        "sha256": "ba42489c88a59037b4af2e9e96175e7e376bc40b1f9a77cae04d258ee247ffa6"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/scanner-b2-wallet-metadata-focused.log",
+        "bytes": 99,
+        "sha256": "b9b3c686512a25d483d0d22ce72f79defa18897ec286efce9356b19fe828cd7b"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/scanner-b2-wallet-shared-final.log",
+        "bytes": 761,
+        "sha256": "72f4e8bce2301d8ad6b04ee6c3d92a98629960b3410197b2b1d39c40027c396d"
+      },
+      {
+        "path": "evidence/product-real-adapter/preparation/verification.json",
+        "bytes": 1715,
+        "sha256": "b4a75a6cdaff44b5efb5f8f4323872a56ae256964b1d109b46098cd078323d49"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/partial-real-input.zip",
+        "bytes": 6941608,
+        "sha256": "6b0b8085065816d1f4e008467bd0069449c2d1a3a9ef1506d39ecf77053aea71"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/partial-real-report.json",
+        "bytes": 25696833,
+        "sha256": "9939d9f7a17b45f044d10f1d9d61cbc16285e176f234096edc42f370d2f4259b"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/result.json",
+        "bytes": 3279,
+        "sha256": "ef6945a8f50d53c690793f3dab77b8f754a944678400e23170b98d97d1516468"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/synthetic-export.csv",
+        "bytes": 1990,
+        "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/synthetic-parent.json",
+        "bytes": 4958287,
+        "sha256": "c4861c70d972f7173223cc406f5acf6765cd10296e555a48c3c7243b53454d13"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/valuation_hash-missing-child.json",
+        "bytes": 4962386,
+        "sha256": "ce0792ea4401932e885539e28319e69ed9cbd8475957f2cc2fc9fde7834a1e57"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development-final/world_hash-missing-child.json",
+        "bytes": 4986379,
+        "sha256": "fbc3ef5d54740f18fdc33f3a95e04a056eb0a2559071451dff1b03e6a340f55d"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development/partial-real-input.zip",
+        "bytes": 6941608,
+        "sha256": "e284411a8d9116007a1cc060130cf12341d2c80de05f6ea78a5141beb565c5fa"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development/result.json",
+        "bytes": 1055,
+        "sha256": "ccf126b4a4550ab4cf4dd1cb7601637080ae6d1ee6a807400ac7b2ccc2d10b78"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development/synthetic-export.csv",
+        "bytes": 1990,
+        "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development/synthetic-parent.json",
+        "bytes": 4957831,
+        "sha256": "9f84cae6f9dded1eccf18fbe624bc2173c1c8dd19d51b0f2c24f0c235416095b"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development/valuation_hash-missing-child.json",
+        "bytes": 4961930,
+        "sha256": "3c5f93f87a3833d7a743ca2dce9dee113c0412d051c7188bd477eeebe4d9333e"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-development/world_hash-missing-child.json",
+        "bytes": 4985923,
+        "sha256": "5d73b617048f5eb7dc61e7a0d7a7815bfb56785b0ee67f7bd1ab4199590b1416"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/partial-real-input.zip",
+        "bytes": 6941608,
+        "sha256": "c701ce7627459489445e62f2db0484acd67e5e4e43fe9bebd9aabdbcd8e6a256"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/partial-real-report.json",
+        "bytes": 25696833,
+        "sha256": "45c40f8d91d7c88a31c3cc84b3258083b1963b7b10f9ebeb61162ea6eb44d3fc"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/result.json",
+        "bytes": 3269,
+        "sha256": "c0be54adeb30d71819f06652d48c98711c968c36606381dcc0329cfa2cf4e3b4"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/synthetic-export.csv",
+        "bytes": 1990,
+        "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/synthetic-parent.json",
+        "bytes": 4958287,
+        "sha256": "715e71521ba5036088f504af819ada1e80ef146a108938247ae6a85e5f4b7f61"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/valuation_hash-missing-child.json",
+        "bytes": 4962386,
+        "sha256": "b932686f87d6c85a4b0615ead35c1dfc259c0770eaa6da859b4b46ecc91adc8f"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-real-required-final/world_hash-missing-child.json",
+        "bytes": 4986379,
+        "sha256": "e361b2c27614e6889cde9dc86ad6957556ac4a7b0a8bdea4e238dcea32b781cd"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/partial-real-input.zip",
+        "bytes": 6941608,
+        "sha256": "dc494b889685e22d5b3f4c0a91306534fee134687f8dfe7718f19591a4cdee41"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/partial-real-report.json",
+        "bytes": 25735915,
+        "sha256": "e01b91e533f65f5d769d9254138da6420c8dc8d65da6f785abe5e85fccd3043a"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/result.json",
+        "bytes": 3279,
+        "sha256": "97363b803b0eddab19438cc45abcd212cb7fc208b73843993b0542f5e4abf350"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/synthetic-export.csv",
+        "bytes": 1990,
+        "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/synthetic-parent.json",
+        "bytes": 4980525,
+        "sha256": "e8166a9713f56d68f6f407b5bd642b2d38867d06036e31144f833f45f6c6bfcd"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/valuation_hash-missing-child.json",
+        "bytes": 4984624,
+        "sha256": "b92c1e75bbdacd70d8d97ccc56bce7c90698a6bcac23aa3ed2d3fbab94bc148f"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-final/world_hash-missing-child.json",
+        "bytes": 5008617,
+        "sha256": "c09edb5a1cecd9dfc8d8fe3b54906ffd8b0eadf57d6889569eaa45850664e7f6"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/partial-real-input.zip",
+        "bytes": 6941608,
+        "sha256": "dc494b889685e22d5b3f4c0a91306534fee134687f8dfe7718f19591a4cdee41"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/partial-real-report.json",
+        "bytes": 25735915,
+        "sha256": "15b0d67cef82397766b3a7fe556c2d03f2d2f35b98f7b3ca8963251204188d72"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/result.json",
+        "bytes": 3269,
+        "sha256": "b210be20759bbd75ce34beebacf1cd145bf4bc7d848e35d5193e071f178b5206"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/synthetic-export.csv",
+        "bytes": 1990,
+        "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/synthetic-parent.json",
+        "bytes": 4980525,
+        "sha256": "c789e76af5670de366d5182417057609bb0ebfd0f77bcb42e2ac381a5f62dd48"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/valuation_hash-missing-child.json",
+        "bytes": 4984624,
+        "sha256": "91c9b19825491d72b1fb46d9ab567dad2dca386d44c710ea01be56b7deebb503"
+      },
+      {
+        "path": "evidence/product-real-adapter/product-v4-real-required/world_hash-missing-child.json",
+        "bytes": 5008617,
+        "sha256": "ce0d0d65d19482af3a65ffda735b3b24b2a563c9d790b7ac2b022ebde40454d2"
+      },
+      {
+        "path": "evidence/product-real-adapter/review_raw_replay.py",
+        "bytes": 12093,
+        "sha256": "6276d2a922e5c931d3e399b2be8d9bcba0a5494012331f692efc04048a209a88"
+      }
+    ],
+    "file_count": 115,
+    "bytes": 213971228,
+    "unique_content_hashes": 101,
+    "text_payloads_scanned": 349,
+    "findings": [],
+    "excluded_entries": [
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/.gitignore",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/README.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/BLUEPRINT_ALIGNMENT.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_1.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_10.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_2.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_3.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_4.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_5.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_6.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_7.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_8.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CODE_REVIEW_RESPONSE_v0_3_9.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/CONTRACT.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/DEPENDENCIES.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/VALIDATION.md",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/capability/delivery_review_2026-10-02.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/capability/dependency_review_2026-10-02.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/capability/discovery_2026-10-02.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/docs/capability/helius_basic_2026-10-02.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/dist/assets/index-B-AqKu-Q.js",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/dist/assets/index-Brz2fDKJ.css",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/dist/index.html",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/index.html",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/package-lock.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/package.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/scripts/check-discovery.mjs",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/scripts/check-format.mjs",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/App.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/Discovery.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/EvidenceAudit.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/api.ts",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/components.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/format.ts",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/main.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/report.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/settings.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/styles.css",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/types.ts",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/src/workspace.tsx",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/tsconfig.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/frontend/vite.config.ts",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/pyproject.toml",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/requirements-build.in",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/requirements.txt",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/run.ps1",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/run.sh",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/__main__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/accounting.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/app.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/candidate_import.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/chronology_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/collector.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/config.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/copy_review.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/decoder.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/demo.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/discovery.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/evidence_audit.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/examples/real-transaction-audit-mainnet.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/history_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/instruction_scope.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/investigation.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/position_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/providers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/report_rebuild.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/research.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/restore.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/source_consistency.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/storage.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/scanner/transaction_format.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/setup.ps1",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/setup.sh",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-pumpswap-buy-exact-quote.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-pumpswap-sell-durable-nonce-sources.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-pumpswap-sell-durable-nonce.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-wrapper-0.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-wrapper-1.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-wrapper-2.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/mainnet-wrapper-3.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/real-transaction-audit-expected.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/real-transaction-audit-mainnet.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/fixtures/token_instruction_schema.json",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v0310/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v0310/review_helpers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v0310/schema_helpers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v0310/test_v0310_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v0310/test_v0310_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v033/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v033/review_helpers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v033/test_v033_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v033/test_v033_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v034/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v034/test_v034_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v034/test_v034_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v035/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v035/test_v035_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v035/test_v035_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v036/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v036/review_helpers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v036/test_v036_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v036/test_v036_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v037/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v037/review_helpers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v037/test_v037_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v037/test_v037_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v038/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v038/review_helpers_v038.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v038/test_v038_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v038/test_v038_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v039/__init__.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v039/review_helpers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v039/test_v039_controls.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/review_v039/test_v039_regressions.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_accounting.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_app.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_candidate_import.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_chronology_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_collector.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_copy_review.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_copy_review_api.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_decoder.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_discovery.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_discovery_integration_review.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_evidence_audit.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_history_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_independent_review.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_investigation.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_launcher.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_local_edges.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_nonce_swap_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_pdf_alignment.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_period_regression.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_position_evidence.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_providers.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_report_rebuild.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_research.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_restore.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_api.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v032_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v033_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v034_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v035_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v036_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v037_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v038_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_review_v039_independent.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_source_consistency.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_storage.py",
+      "evidence/product-real-adapter/gate-a-verified/browser/baseline/tests/test_token_instruction_schema.py"
+    ],
+    "changed_while_auditing": [],
+    "gates_still_running_at_start": true,
+    "final_staged_snapshot_requires_root_reaudit": true
+  },
+  "provider_requests": 0,
+  "credential_values_read_or_printed": false,
+  "application_suites_executed": false,
+  "github_api_writes": 0,
+  "application_edits": false,
+  "limitations": [
+    "The prospective files are a point-in-time snapshot while candidate gates finish. Root must audit final staged evidence/current Git history before publication.",
+    "POSIX-mode source hash binds 0600/0700 masks; Git stores executable flags only. Fresh checkout comparison requires umask077 or restoration of manifest modes.",
+    "This review does not certify product readiness or independently rerun application gates."
+  ],
+  "product_ready": false,
+  "full_candidate_gate_claimed": false
+}

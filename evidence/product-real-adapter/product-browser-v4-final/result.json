@@ -1,0 +1,7 @@
+{
+  "kind": "offline-product-browser",
+  "state": "BLOCKED",
+  "cases": [],
+  "real_acceptance": "BLOCKED",
+  "reason": "Configured browser interpreter lacks Playwright."
+}

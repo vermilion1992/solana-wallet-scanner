@@ -1,0 +1,695 @@
+{
+  "actual": {
+    "chronology": {
+      "development-7": {
+        "canonical_time": 1780876800,
+        "conflicts": [],
+        "evidence": [
+          "167929a8de1c193678953f49b8ee3a11aae8415b9d2edf33af2f24ddd016439b",
+          "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+          "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+        ],
+        "order_state": "PASS",
+        "placement": {
+          "conflicts": [],
+          "evidence": [
+            "167929a8de1c193678953f49b8ee3a11aae8415b9d2edf33af2f24ddd016439b",
+            "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078"
+          ],
+          "facts": [
+            {
+              "hash": "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+              "kind": "transaction",
+              "slot": 4000
+            },
+            {
+              "hash": "167929a8de1c193678953f49b8ee3a11aae8415b9d2edf33af2f24ddd016439b",
+              "index": 0,
+              "kind": "block-order",
+              "slot": 4000
+            }
+          ],
+          "indices_by_slot": {
+            "4000": {
+              "bounded": true,
+              "max": 0,
+              "min": 0,
+              "possible_indices": [
+                0
+              ]
+            }
+          },
+          "possible_slots": [
+            4000
+          ],
+          "reason": "All linked slot placement claims agree; absent block order spans the entire slot.",
+          "slot": 4000,
+          "slot_bounds": {
+            "bounded": true,
+            "max": 4000,
+            "min": 4000
+          },
+          "slot_state": "PASS",
+          "state": "PASS",
+          "unbounded": false
+        },
+        "reason": "Native/page slot timestamps and all supplied block/index receipts agree.",
+        "slot": 4000,
+        "state": "PASS",
+        "time_state": "PASS",
+        "transaction_index": 0
+      },
+      "development-8": {
+        "canonical_time": 1780876800,
+        "conflicts": [],
+        "evidence": [
+          "167929a8de1c193678953f49b8ee3a11aae8415b9d2edf33af2f24ddd016439b",
+          "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+          "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+        ],
+        "order_state": "PASS",
+        "placement": {
+          "conflicts": [],
+          "evidence": [
+            "167929a8de1c193678953f49b8ee3a11aae8415b9d2edf33af2f24ddd016439b",
+            "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+          ],
+          "facts": [
+            {
+              "hash": "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a",
+              "kind": "transaction",
+              "slot": 4000
+            },
+            {
+              "hash": "167929a8de1c193678953f49b8ee3a11aae8415b9d2edf33af2f24ddd016439b",
+              "index": 1,
+              "kind": "block-order",
+              "slot": 4000
+            }
+          ],
+          "indices_by_slot": {
+            "4000": {
+              "bounded": true,
+              "max": 1,
+              "min": 1,
+              "possible_indices": [
+                1
+              ]
+            }
+          },
+          "possible_slots": [
+            4000
+          ],
+          "reason": "All linked slot placement claims agree; absent block order spans the entire slot.",
+          "slot": 4000,
+          "slot_bounds": {
+            "bounded": true,
+            "max": 4000,
+            "min": 4000
+          },
+          "slot_state": "PASS",
+          "state": "PASS",
+          "unbounded": false
+        },
+        "reason": "Native/page slot timestamps and all supplied block/index receipts agree.",
+        "slot": 4000,
+        "state": "PASS",
+        "time_state": "PASS",
+        "transaction_index": 1
+      }
+    },
+    "observed_disposed_basis": {
+      "dependencies": [
+        "observed_incoming_origins",
+        "observed_raw_trade_costs"
+      ],
+      "evidence": [
+        "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+        "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+      ],
+      "raw_paths": [],
+      "reason": "The existing FIFO engine resolves basis for selected observed units; unobserved inventory remains separately unproved.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "PASS"
+    },
+    "observed_fifo_positions": [
+      {
+        "acquired_raw": "100",
+        "basis_sol": "2.000005",
+        "buy_count": 1,
+        "classification": "unknown",
+        "decimals": 0,
+        "end": "2026-06-08T00:00:00+00:00",
+        "evidence": [
+          "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+          "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+        ],
+        "exit_fees_sol": "0.000005",
+        "first_sale_hours": "0",
+        "hold_hours": "0",
+        "id": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn:1",
+        "in_window": true,
+        "matched_basis_sol": "2.000005",
+        "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+        "pnl_sol": "-1.00001",
+        "proceeds_sol": "1",
+        "quantity_raw": "0",
+        "roi_pct": "-50.0003749990625023437441406396484008789978025054937362656593358516603708490728773178067054832362919092702268244329389176527058682353294116764708088229779425551436121409696475758810602973492566",
+        "sell_count": 1,
+        "sold_50_pct_hours": "0",
+        "sold_90_pct_hours": "0",
+        "sold_raw": "100",
+        "start": "2026-06-08T00:00:00+00:00",
+        "status": "unresolved"
+      }
+    ]
+  },
+  "block_order": {
+    "method": "getBlock",
+    "result": {
+      "blockTime": 1780876800,
+      "signatures": [
+        "development-7",
+        "development-8"
+      ]
+    },
+    "slot": 4000
+  },
+  "credential_lookups": 0,
+  "development_only": true,
+  "initial_reproduction": {
+    "chronology": "PASS",
+    "derived_indices": [
+      0,
+      1
+    ],
+    "note": "Initial read-only tool reproduction preceded the implementation agent same-slot correction; current actual below reflects the corrected replay.",
+    "observed_disposed_basis": "UNKNOWN",
+    "observed_fifo_status": "interrupted"
+  },
+  "inputs": [
+    {
+      "evidence_hash": "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+      "raw": {
+        "blockTime": 1780876800,
+        "meta": {
+          "err": null,
+          "fee": 5000,
+          "innerInstructions": [
+            {
+              "index": 0,
+              "instructions": [
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                      "mint": "So11111111111111111111111111111111111111112",
+                      "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                      "tokenAmount": {
+                        "amount": "2000000000",
+                        "decimals": 9
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                },
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                      "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                      "source": "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                      "tokenAmount": {
+                        "amount": "100",
+                        "decimals": 0
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                }
+              ]
+            }
+          ],
+          "postBalances": [
+            99999965000,
+            2039280,
+            48002039280,
+            2039280,
+            102002039280
+          ],
+          "postTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "48000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "999900",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "102000000000",
+                "decimals": 9
+              }
+            }
+          ],
+          "preBalances": [
+            99999970000,
+            2039280,
+            50002039280,
+            2039280,
+            100002039280
+          ],
+          "preTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "0",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "50000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "1000000",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100000000000",
+                "decimals": 9
+              }
+            }
+          ]
+        },
+        "slot": 4000,
+        "transaction": {
+          "message": {
+            "accountKeys": [
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+              "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+            ],
+            "instructions": [
+              {
+                "accounts": [
+                  "pool",
+                  "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "global",
+                  "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                  "So11111111111111111111111111111111111111112",
+                  "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                  "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                  "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                  "recipient",
+                  "fee-account",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "11111111111111111111111111111111"
+                ],
+                "data": [
+                  "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                  "base64"
+                ],
+                "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+              }
+            ]
+          },
+          "signatures": [
+            "development-7"
+          ]
+        },
+        "version": 0
+      },
+      "signature": "development-7"
+    },
+    {
+      "evidence_hash": "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a",
+      "raw": {
+        "blockTime": 1780876800,
+        "meta": {
+          "err": null,
+          "fee": 5000,
+          "innerInstructions": [
+            {
+              "index": 0,
+              "instructions": [
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                      "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                      "source": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                      "tokenAmount": {
+                        "amount": "100",
+                        "decimals": 0
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                },
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                      "mint": "So11111111111111111111111111111111111111112",
+                      "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                      "tokenAmount": {
+                        "amount": "1000000000",
+                        "decimals": 9
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                }
+              ]
+            }
+          ],
+          "postBalances": [
+            99999960000,
+            2039280,
+            49002039280,
+            2039280,
+            99002039280
+          ],
+          "postTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "0",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "49000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "1000100",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "99000000000",
+                "decimals": 9
+              }
+            }
+          ],
+          "preBalances": [
+            99999965000,
+            2039280,
+            48002039280,
+            2039280,
+            100002039280
+          ],
+          "preTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "48000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "1000000",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100000000000",
+                "decimals": 9
+              }
+            }
+          ]
+        },
+        "slot": 4000,
+        "transaction": {
+          "message": {
+            "accountKeys": [
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+              "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+            ],
+            "instructions": [
+              {
+                "accounts": [
+                  "pool",
+                  "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "global",
+                  "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+                  "So11111111111111111111111111111111111111112",
+                  "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr",
+                  "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "3mg7sM6RFEBHiiFotFNfvteH1WdFcc9cujKuPaqZdfDz",
+                  "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                  "recipient",
+                  "fee-account",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "11111111111111111111111111111111"
+                ],
+                "data": [
+                  "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                  "base64"
+                ],
+                "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+              }
+            ]
+          },
+          "signatures": [
+            "development-8"
+          ]
+        },
+        "version": 0
+      },
+      "signature": "development-8"
+    }
+  ],
+  "issue": "Derived same-slot indices did not reach shared raw decoder/FIFO",
+  "kind": "read-only-review-reproduction",
+  "provider_requests": 0,
+  "shared_decoder_positive_control": {
+    "positions": [
+      {
+        "acquired_raw": "100",
+        "basis_sol": "2.000005",
+        "buy_count": 1,
+        "classification": "unknown",
+        "decimals": 0,
+        "end": "2026-06-08T00:00:00+00:00",
+        "evidence": [
+          "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078",
+          "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+        ],
+        "exit_fees_sol": "0.000005",
+        "first_sale_hours": "0",
+        "hold_hours": "0",
+        "id": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn:1",
+        "in_window": true,
+        "matched_basis_sol": "2.000005",
+        "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+        "pnl_sol": "-1.00001",
+        "proceeds_sol": "1",
+        "quantity_raw": "0",
+        "roi_pct": "-50.0003749990625023437441406396484008789978025054937362656593358516603708490728773178067054832362919092702268244329389176527058682353294116764708088229779425551436121409696475758810602973492566",
+        "sell_count": 1,
+        "sold_50_pct_hours": "0",
+        "sold_90_pct_hours": "0",
+        "sold_raw": "100",
+        "start": "2026-06-08T00:00:00+00:00",
+        "status": "unresolved"
+      }
+    ],
+    "stamped_events": [
+      {
+        "allocated_trade_path": "instructions.0",
+        "allocation": "buy_basis",
+        "amount_sol": "0.000005",
+        "evidence": [
+          "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078"
+        ],
+        "failed": false,
+        "fee_payer": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "kind": "fee",
+        "order": 4000000000,
+        "paid_by_wallet": true,
+        "path": "meta.fee",
+        "reason": "meta.fee includes network and priority fees; do not subtract a second priority charge",
+        "signature": "development-7",
+        "timestamp": 1780876800
+      },
+      {
+        "amount_sol": "2",
+        "classification": "unknown",
+        "decimals": 0,
+        "evidence": [
+          "72b037abb9e70ce808d123ea15ffb9903b6b2e64cff0a7e48e6cdfb61e46c078"
+        ],
+        "fee_sol": "0.000005",
+        "instruction": "buy",
+        "kind": "buy",
+        "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+        "observation_scope": "Transaction account keys only; no proof of wallet-wide zero inventory",
+        "observed_post_quantity_raw": "100",
+        "observed_pre_quantity_raw": "0",
+        "order": 4000000001,
+        "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "paid_by_wallet": true,
+        "path": "instructions.0",
+        "quantity_raw": "100",
+        "reason": "Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence",
+        "settlement_mint": "So11111111111111111111111111111111111111112",
+        "signature": "development-7",
+        "source": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "timestamp": 1780876800,
+        "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+      },
+      {
+        "allocated_trade_path": "instructions.0",
+        "allocation": "sell_exit",
+        "amount_sol": "0.000005",
+        "evidence": [
+          "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+        ],
+        "failed": false,
+        "fee_payer": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "kind": "fee",
+        "order": 4000001000,
+        "paid_by_wallet": true,
+        "path": "meta.fee",
+        "reason": "meta.fee includes network and priority fees; do not subtract a second priority charge",
+        "signature": "development-8",
+        "timestamp": 1780876800
+      },
+      {
+        "amount_sol": "1",
+        "classification": "unknown",
+        "decimals": 0,
+        "evidence": [
+          "df8bf8ac3d821d8303e03efaa78335f8f7d76aaae39083a9ab9618fd5e58850a"
+        ],
+        "fee_sol": "0.000005",
+        "instruction": "sell",
+        "kind": "sell",
+        "mint": "k7FaK87WHGVXzkaoHb7CdVPgkKDQhZ29VLDeBVbDfYn",
+        "observation_scope": "Transaction account keys only; no proof of wallet-wide zero inventory",
+        "observed_post_quantity_raw": "0",
+        "observed_pre_quantity_raw": "100",
+        "order": 4000001001,
+        "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "paid_by_wallet": true,
+        "path": "instructions.0",
+        "quantity_raw": "100",
+        "reason": "Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence",
+        "settlement_mint": "So11111111111111111111111111111111111111112",
+        "signature": "development-8",
+        "source": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "timestamp": 1780876800,
+        "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+      }
+    ]
+  },
+  "state": "RESOLVED_CURRENT_REPLAY"
+}

@@ -1,0 +1,158 @@
+{
+  "actual": {
+    "aggregates": {
+      "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC": {
+        "accounts": [
+          "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG"
+        ],
+        "check": {
+          "dependencies": [],
+          "evidence": [
+            "7935e4f132bca98a73abce928a436f1b52c21cdcab6752aa5a5d8870b8d6426c"
+          ],
+          "raw_paths": [],
+          "reason": "Exact sum over observed transaction balance accounts; absent wallet accounts are outside this population.",
+          "scope": "Token accounts evidenced in this selected transaction only",
+          "state": "PASS"
+        },
+        "decimals": 0,
+        "delta_raw": "-100",
+        "post_raw": "0",
+        "pre_raw": "100",
+        "wallet_population": "UNKNOWN"
+      }
+    },
+    "boundary_checks": {
+      "lifecycle": {
+        "dependencies": [],
+        "evidence": [
+          "7935e4f132bca98a73abce928a436f1b52c21cdcab6752aa5a5d8870b8d6426c"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.0",
+          "meta.preTokenBalances.0"
+        ],
+        "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "state": "UNKNOWN"
+      },
+      "ownership": {
+        "dependencies": [],
+        "evidence": [
+          "7935e4f132bca98a73abce928a436f1b52c21cdcab6752aa5a5d8870b8d6426c"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.0",
+          "meta.preTokenBalances.0"
+        ],
+        "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "state": "UNKNOWN"
+      },
+      "quantities": {
+        "dependencies": [],
+        "evidence": [
+          "7935e4f132bca98a73abce928a436f1b52c21cdcab6752aa5a5d8870b8d6426c"
+        ],
+        "raw_paths": [
+          "meta.postTokenBalances.0",
+          "meta.preTokenBalances.0"
+        ],
+        "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "state": "PASS"
+      }
+    },
+    "event_ownership": {
+      "dependencies": [],
+      "evidence": [
+        "7935e4f132bca98a73abce928a436f1b52c21cdcab6752aa5a5d8870b8d6426c"
+      ],
+      "raw_paths": [
+        "meta.postTokenBalances.0",
+        "meta.preTokenBalances.0"
+      ],
+      "reason": "Observed phase-specific owners/lifecycle, compared across all linked raw versions.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "UNKNOWN"
+    }
+  },
+  "credential_lookups": 0,
+  "development_only": true,
+  "expected": {
+    "aggregate_state": "UNKNOWN",
+    "ownership_state": "UNKNOWN",
+    "quantity_state": "PASS"
+  },
+  "input": {
+    "evidence_hash": "7935e4f132bca98a73abce928a436f1b52c21cdcab6752aa5a5d8870b8d6426c",
+    "raw": {
+      "blockTime": 1780099200,
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "innerInstructions": [],
+        "postBalances": [
+          99999995000,
+          2039280,
+          50002039280,
+          2039280,
+          100002039280
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          }
+        ],
+        "preBalances": [
+          100000000000,
+          2039280,
+          50002039280,
+          2039280,
+          100002039280
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 0
+            }
+          }
+        ]
+      },
+      "slot": 1000,
+      "transaction": {
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+            "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+          ],
+          "instructions": []
+        },
+        "signatures": [
+          "development-1"
+        ]
+      },
+      "version": 0
+    },
+    "signature": "development-1"
+  },
+  "issue": "Wallet-owned mint aggregate certainty omitted ownership prerequisites",
+  "kind": "read-only-review-reproduction",
+  "provider_requests": 0,
+  "state": "CONFIRMED_PROVISIONAL"
+}

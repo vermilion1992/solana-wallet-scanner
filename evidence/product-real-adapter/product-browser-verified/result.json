@@ -1,0 +1,129 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "ce6ee57c8728494386503b55f075b7e4"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 12,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "dcbce3f4c432332335a0a2f785a1e8c0846197e7c3cb0b10fae0794d9b0ad8c6",
+    "world_hash-missing-report.json": "d8b392d9c5242899a586078a143bd663bcc60629e5d2e963e6ec883383d38cd3",
+    "world_hash-missing-desktop.png": "a75625b4d43f83fdc68454e8b9520304b0e64adcd47ab8688538f360d3567044",
+    "synthetic-parent.json": "54ec8a9be3ec9f0e604cf549bc5139c3b599fdbb335b665825722c04026262a9",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "502dc9052e0af786d72be50606a0eb9ba5504f23eb7741c7bbc0ecabb4ade185",
+    "world_hash-restored-report.json": "b8c0af85c1d53477a6c2be7de387cc7ec4ab072239ba3456a72cd9c6dbff91e7",
+    "synthetic-positive-desktop.png": "5606abcb5ff0cac323f72dfa67aff4f4e32ae506d17cbbc4e559a070008bd775",
+    "world_hash-restored-desktop.png": "7abb764475de1cf42b7a073559db792ad9cb91ba095492966915dab84bfbc3d8",
+    "synthetic-input.zip": "f67a63b04d7b678d7fd7fd0bc0d41dc75b3d641efb53f54e6694c0f48fdb268c",
+    "valuation_hash-missing-mobile.png": "1e662624ba4b8dabf2fe67b023017b83a005e3503f400e758b58be801b26e244",
+    "world_hash-restored-mobile.png": "46ed86281989af125343a47ec4701681fe3ec78c289d3948b0af4532662c8ec8",
+    "valuation_hash-missing-desktop.png": "f85014be3aa73419c7b5718439c35adf0e8ffac6e8c24bc7baca564244ca2ce3",
+    "valuation_hash-restored-mobile.png": "0cf16f718482a63000c5005d9f04946d9f3e0ed6c080b8b09044cfbb15d6de5d",
+    "synthetic-positive-mobile.png": "7916d53fe1ac720cafc3f147a20ccc15665ef567af7301dac4a32bb63c72b30e",
+    "valuation_hash-restored-desktop.png": "851a938740bf1a0fa829aeeab084494014b37d8e27b885387825c9b214987e22",
+    "valuation_hash-missing-report.json": "3df93ab0e2cb56581e853cf9567ff5c93f233f21e32a7025406aeeb9f1296e63",
+    "synthetic-ui-export.json": "54ec8a9be3ec9f0e604cf549bc5139c3b599fdbb335b665825722c04026262a9",
+    "world_hash-missing-mobile.png": "288e4781110a3d88d6387e4969b818b690b6f95eb828589e8b61b749efc28d49",
+    "valuation_hash-restored-report.json": "e0a239a60cb3c50a3c34ba437c6f60c7f407ce89330c932d8788a4a24b866f34",
+    "genuine-partial-desktop.png": "3e21f2ab5ef7b907cfa0d8157a0edb242b0ee778bdee33412fa7d92a6cee4d09",
+    "genuine-partial-report.json": "f551f820c7c8bf2791a5236fc1e67a95532824181039a0710a9012d654ecb3a2"
+  }
+}

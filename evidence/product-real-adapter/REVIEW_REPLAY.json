@@ -1,0 +1,140 @@
+{
+  "cases": [
+    {
+      "actual": [
+        "PASS",
+        "2.000005"
+      ],
+      "case": "raw-block-indices-reach-FIFO",
+      "expected": [
+        "PASS",
+        "2.000005"
+      ],
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN",
+        "PASS",
+        "UNKNOWN"
+      ],
+      "case": "ownership-required-for-wallet-owned-aggregate",
+      "expected": [
+        "UNKNOWN",
+        "PASS",
+        "UNKNOWN"
+      ],
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "PASS"
+      ],
+      "case": "alternative-order-conflict-revokes-FIFO-basis-episodes",
+      "expected": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "PASS"
+      ],
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "case": "proved-block-order-controls-partial-sale-continuity",
+      "expected": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "CHECKPOINT_SOURCE_SET",
+      "expected": "UNKNOWN",
+      "state": "PASS"
+    },
+    {
+      "actual": 2,
+      "case": "frozen-checkpoint-alternative-retained",
+      "expected": 2,
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "MALFORMED_TRANSACTION_LINK",
+      "expected": "UNKNOWN",
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "UNASSIGNED_TRANSACTION",
+      "expected": "UNKNOWN",
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "UNSUPPORTED_TRANSACTION_ROLE",
+      "expected": "UNKNOWN",
+      "state": "PASS"
+    },
+    {
+      "actual": "PASS",
+      "case": "DISJOINT_ROLE_RECEIPT",
+      "expected": "PASS",
+      "state": "PASS"
+    },
+    {
+      "actual": 1,
+      "case": "frozen-references-ignore-later-mutable-checkpoint",
+      "expected": 1,
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "case": "canonical-mint-authority-permission-target-isolates-token-account-facts",
+      "expected": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "checksum-invalid-body-cannot-prove-irrelevance",
+      "expected": "UNKNOWN",
+      "state": "PASS"
+    },
+    {
+      "actual": {
+        "credentials": 0,
+        "provider": 0
+      },
+      "case": "no-provider-or-credential-attempts",
+      "expected": {
+        "credentials": 0,
+        "provider": 0
+      },
+      "state": "PASS"
+    }
+  ],
+  "credential_lookups": 0,
+  "kind": "distinct-read-only-review-replay",
+  "provider_requests": 0,
+  "scope": "Development raw contract controls only; not B1/B3 or full application acceptance",
+  "starting_head": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+  "state": "PASS"
+}

@@ -1,0 +1,212 @@
+{
+  "kind": "preserved-offline-real-adapter-iterations",
+  "purpose": "Historical iteration evidence only; no new tests or application acceptance executed by this bookkeeping task.",
+  "PRODUCT_READY": false,
+  "source_identity_initial": {
+    "path": "evidence/product-real-adapter/SOURCE_IDENTITY_INITIAL.json",
+    "sha256": "a6662709e29d1dae87b39f017947afcee6dd1ca63ad42f15220a95ca1c04d3fe",
+    "application_source_sha256": "18288db0111ec6dc91e6359c8b3d6eaf0f42d4aacfdb79e6372109702c596e09",
+    "status": "Initial stale source binding; retained as historical evidence, not current candidate identity."
+  },
+  "counting_policy": "Per-run ordinary pass/fail counts and separately reported subtests; iterations overlap and must not be summed as unique tests.",
+  "candidate_acceptance": "NOT_CLAIMED; initial run interrupted SIGTERM / exit 143. Final candidate gates will be run separately.",
+  "logs": [
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-adapter-focused-1.log",
+      "original_log": "/workspace/outputs/b2-adapter-focused-1.log",
+      "bytes": 11826,
+      "sha256": "f46308ee488a7e3b239e0f492e028a45d2fcab9c0f0da51fd9823834ab8055e4",
+      "copy_hash_verified": true,
+      "state": "FAILED",
+      "completion": "finished-summary-present",
+      "summary": "5 failed, 121 passed, 1 warning, 21 subtests passed in 9.19s",
+      "counts": {
+        "failed": 5,
+        "passed": 121,
+        "subtests": {
+          "passed": 21
+        }
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-adapter-focused-2.log",
+      "original_log": "/workspace/outputs/b2-adapter-focused-2.log",
+      "bytes": 761,
+      "sha256": "97beed4a477aa5f8f0e1e4243dee8afdc0ef2e4679738b3eb4133b1968ee8d4f",
+      "copy_hash_verified": true,
+      "state": "PASS",
+      "completion": "finished-summary-present",
+      "summary": "126 passed, 1 warning, 21 subtests passed in 12.76s",
+      "counts": {
+        "passed": 126,
+        "subtests": {
+          "passed": 21
+        }
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-adapter-focused-3.log",
+      "original_log": "/workspace/outputs/b2-adapter-focused-3.log",
+      "bytes": 761,
+      "sha256": "b6184a01a940b6b346ae62f90583f1dfe2a86a2d09661070922350039f37a466",
+      "copy_hash_verified": true,
+      "state": "PASS",
+      "completion": "finished-summary-present",
+      "summary": "141 passed, 1 warning, 21 subtests passed in 12.83s",
+      "counts": {
+        "passed": 141,
+        "subtests": {
+          "passed": 21
+        }
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-adapter-focused-final.log",
+      "original_log": "/workspace/outputs/b2-adapter-focused-final.log",
+      "bytes": 753,
+      "sha256": "3cc2aa387d97a150174b0993f6def2f4b64fa9900703acaf279d112391a45c80",
+      "copy_hash_verified": true,
+      "state": "PASS",
+      "completion": "finished-summary-present",
+      "summary": "180 passed, 1 warning, 21 subtests passed in 13.20s",
+      "counts": {
+        "passed": 180,
+        "subtests": {
+          "passed": 21
+        }
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-adapter-projection-budget-fixed.log",
+      "original_log": "/workspace/outputs/b2-adapter-projection-budget-fixed.log",
+      "bytes": 601,
+      "sha256": "1e5e1fdca90962cadc38be3f4287799f9895d6908297b43c84e0beac0fbfe9a6",
+      "copy_hash_verified": true,
+      "state": "PASS",
+      "completion": "finished-summary-present",
+      "summary": "13 passed, 1 warning in 15.79s",
+      "counts": {
+        "passed": 13,
+        "subtests": {}
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-adapter-projection-budget.log",
+      "original_log": "/workspace/outputs/b2-adapter-projection-budget.log",
+      "bytes": 11737,
+      "sha256": "f4e307047b61e1ab58980d5e14b6153cc4b85b7a4c6f220ef7acecbecbda7e80",
+      "copy_hash_verified": true,
+      "state": "FAILED",
+      "completion": "finished-summary-present",
+      "summary": "1 failed, 182 passed, 1 warning, 21 subtests passed in 25.38s",
+      "counts": {
+        "failed": 1,
+        "passed": 182,
+        "subtests": {
+          "passed": 21
+        }
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-candidate-validation.log",
+      "original_log": "/workspace/outputs/b2-candidate-validation.log",
+      "bytes": 89,
+      "sha256": "4952e07052f4a20eb894c64f094b5a39a4cf5e45c78545ae80da46961461ed30",
+      "copy_hash_verified": true,
+      "state": "INTERRUPTED",
+      "completion": "partial-interrupted-output",
+      "summary": "backend: running",
+      "counts": {},
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": 143,
+      "exit_code_source": "Executing root agent recorded SIGTERM / exit 143.",
+      "interpretation": "Initial candidate run stopped by SIGTERM; exit 143 as recorded by the executing root agent. Only runtime/node-runtime PASS are present; backend started but no candidate acceptance exists."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-product-development.log",
+      "original_log": "/workspace/outputs/b2-product-development.log",
+      "bytes": 906,
+      "sha256": "9cf2ea17274edf3440ba85a858fd9ff1f8d9763b430781789aeffcced9b5d9c3",
+      "copy_hash_verified": true,
+      "state": "FAILED",
+      "completion": "exception-traceback-present",
+      "summary": "AssertionError",
+      "counts": {},
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Initial product development check failed the genuine selected-fee expectation; preserved traceback shows AssertionError at tools/check_product.py line 94. This is not PASS or genuine acceptance."
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/scanner-b2-wallet-evidence-focused.log",
+      "original_log": "/workspace/outputs/scanner-b2-wallet-evidence-focused.log",
+      "bytes": 752,
+      "sha256": "530a791d82e69112311191cf85f78824d90e90513f619e9e7d5538b487a322be",
+      "copy_hash_verified": true,
+      "state": "PASS",
+      "completion": "finished-summary-present",
+      "summary": "143 passed, 1 warning, 21 subtests passed in 8.84s",
+      "counts": {
+        "passed": 143,
+        "subtests": {
+          "passed": 21
+        }
+      },
+      "exact_command_argv": null,
+      "command_argv_status": "Not embedded in the supplied raw log; not reconstructed from filenames.",
+      "exit_code": null,
+      "exit_code_source": "Not recorded in this raw log.",
+      "interpretation": "Focused implementation replay; not candidate acceptance; overlaps other iterations."
+    }
+  ],
+  "structured_receipt_copies": [
+    {
+      "original": "evidence/product-real-adapter/gate-a/result.json",
+      "copy": "evidence/product-real-adapter/iterations/candidate-interrupted-result.json",
+      "bytes": 30555,
+      "sha256": "fda4c3e160e8f29f4e5e58a82984a68a86bd112f510199b9a2f5d53db7043351",
+      "copy_hash_verified": true
+    },
+    {
+      "original": "evidence/product-real-adapter/product-development/result.json",
+      "copy": "evidence/product-real-adapter/iterations/product-development-failed-result.json",
+      "bytes": 1055,
+      "sha256": "ccf126b4a4550ab4cf4dd1cb7601637080ae6d1ee6a807400ac7b2ccc2d10b78",
+      "copy_hash_verified": true
+    }
+  ],
+  "provider_requests_executed_by_bookkeeping": 0,
+  "credential_lookups_executed_by_bookkeeping": 0
+}

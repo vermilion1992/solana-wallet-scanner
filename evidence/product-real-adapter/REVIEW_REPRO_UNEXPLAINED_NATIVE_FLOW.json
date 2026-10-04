@@ -1,0 +1,321 @@
+{
+  "actual": {
+    "dependencies": [],
+    "evidence": [
+      "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+    ],
+    "raw_paths": [
+      "meta.fee"
+    ],
+    "reason": "Every selected decoded economic movement has a supported trade/network-fee/internal role; unsupported/external roles remain gaps.",
+    "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+    "state": "PASS"
+  },
+  "credential_lookups": 0,
+  "development_only": true,
+  "expected": "Observed selected economic roles UNKNOWN when decoded movements do not reconcile raw native wallet delta",
+  "input": {
+    "blockTime": 1790003600,
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "postBalances": [
+        8999995000,
+        2000000,
+        2000000,
+        1002000000,
+        1002000000
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "preBalances": [
+        10000000000,
+        2000000,
+        2000000,
+        2000000,
+        1002000000
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000000",
+            "decimals": 9
+          }
+        }
+      ]
+    },
+    "slot": 100,
+    "transaction": {
+      "message": {
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF"
+        ],
+        "instructions": []
+      },
+      "signatures": [
+        "synthetic-operation"
+      ]
+    },
+    "version": 0
+  },
+  "issue": "Observed economic roles PASS despite unexplained selected native balance outflow beyond the independently paid network fee",
+  "kind": "read-only-review-reproduction",
+  "native_delta": {
+    "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "checks": {
+      "execution": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [
+          {
+            "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+            "path": "meta.err",
+            "status": "known",
+            "value": null
+          }
+        ],
+        "field": "execution",
+        "reason": "All linked sources agree on execution.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      },
+      "native_identity": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [
+          {
+            "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+            "path": "transaction.signatures.0",
+            "status": "known",
+            "value": "synthetic-operation"
+          }
+        ],
+        "field": "native_identity",
+        "reason": "All linked sources agree on native_identity.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      },
+      "native_validation": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [
+          {
+            "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+            "path": "meta.{err,fee,preBalances,postBalances}",
+            "status": "known",
+            "value": true
+          }
+        ],
+        "field": "native_validation",
+        "reason": "All linked sources agree on native_validation.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      },
+      "source_set": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [],
+        "field": "source_set",
+        "reason": "The authenticated link set is fully enumerated and every distinct archive had an inspection attempt within the fixed budget. Usable contents and metric dependencies are assessed separately.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      },
+      "transaction_format": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [
+          {
+            "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+            "path": "version",
+            "status": "known",
+            "value": true
+          }
+        ],
+        "field": "transaction_format",
+        "reason": "All linked sources agree on transaction_format.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      },
+      "wallet_post": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [
+          {
+            "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+            "path": "meta.postBalances.0",
+            "status": "known",
+            "value": "8999995000"
+          }
+        ],
+        "field": "wallet_post",
+        "reason": "All linked sources agree on wallet_post.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      },
+      "wallet_pre": {
+        "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "evidence": [
+          "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+        ],
+        "facts": [
+          {
+            "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+            "path": "meta.preBalances.0",
+            "status": "known",
+            "value": "10000000000"
+          }
+        ],
+        "field": "wallet_pre",
+        "reason": "All linked sources agree on wallet_pre.",
+        "signature": "synthetic-operation",
+        "state": "PASS",
+        "status": "consistent"
+      }
+    },
+    "conflicts": [],
+    "evidence": [
+      "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+    ],
+    "missing": [],
+    "native_hashes": [
+      "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+    ],
+    "reason": "Every linked archive agrees on the metric's normalized native facts.",
+    "signature": "synthetic-operation",
+    "source_paths": [
+      {
+        "hash": "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25",
+        "paths": [
+          "meta.err",
+          "meta.postBalances.0",
+          "meta.preBalances.0",
+          "meta.{err,fee,preBalances,postBalances}",
+          "transaction.signatures.0",
+          "version"
+        ]
+      }
+    ],
+    "source_set": {
+      "authenticated_reference_count": 1,
+      "budget": {
+        "max_unique_hashes": 40000
+      },
+      "complete": true,
+      "evidence": [
+        "e7dba351f49dd18264252507ca845b8aded17816dd50b163f895d9b2b0719d25"
+      ],
+      "inspected_hash_count": 1,
+      "invalid_authenticated_link_count": 0,
+      "invalid_link_count": 0,
+      "omitted_hash_count": 0,
+      "omitted_link_count": 0,
+      "omitted_scope": null,
+      "raw_reference_count": 1,
+      "reason": "The authenticated link set is fully enumerated and every distinct archive had an inspection attempt within the fixed budget. Usable contents and metric dependencies are assessed separately.",
+      "state": "PASS",
+      "unauthenticated_link_count": 0,
+      "unique_hash_count": 1,
+      "unique_link_count": 1
+    },
+    "state": "PASS"
+  },
+  "provider_requests": 0,
+  "state": "CONFIRMED_CURRENT"
+}

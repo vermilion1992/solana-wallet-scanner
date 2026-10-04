@@ -1,0 +1,1014 @@
+{
+  "accounts": {
+    "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9": [
+      {
+        "checks": {
+          "lifecycle": {
+            "dependencies": [],
+            "evidence": [
+              "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.0.parsed.info.source",
+              "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.0.programId",
+              "meta.postTokenBalances.0",
+              "meta.preTokenBalances.0",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "ownership": {
+            "dependencies": [],
+            "evidence": [
+              "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.0.parsed.info.source",
+              "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.0.programId",
+              "meta.postTokenBalances.0",
+              "meta.preTokenBalances.0",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "quantities": {
+            "dependencies": [],
+            "evidence": [
+              "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.0.parsed.info.source",
+              "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.0.programId",
+              "meta.postTokenBalances.0",
+              "meta.preTokenBalances.0",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          }
+        },
+        "flow_raw": "-40",
+        "post": {
+          "decimals": 0,
+          "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.postTokenBalances.0",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "60"
+        },
+        "pre": {
+          "decimals": 0,
+          "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.preTokenBalances.0",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "100"
+        },
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "signature": "a-partial-sale"
+      },
+      {
+        "checks": {
+          "lifecycle": {
+            "dependencies": [],
+            "evidence": [
+              "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.1.parsed.info.source",
+              "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.1.programId",
+              "meta.postTokenBalances.0",
+              "meta.preTokenBalances.0",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "ownership": {
+            "dependencies": [],
+            "evidence": [
+              "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.1.parsed.info.source",
+              "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.1.programId",
+              "meta.postTokenBalances.0",
+              "meta.preTokenBalances.0",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "quantities": {
+            "dependencies": [],
+            "evidence": [
+              "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.1.parsed.info.source",
+              "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.1.programId",
+              "meta.postTokenBalances.0",
+              "meta.preTokenBalances.0",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          }
+        },
+        "flow_raw": "100",
+        "post": {
+          "decimals": 0,
+          "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.postTokenBalances.0",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "100"
+        },
+        "pre": {
+          "decimals": 0,
+          "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.preTokenBalances.0",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "0"
+        },
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "signature": "z-purchase"
+      }
+    ],
+    "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR": [
+      {
+        "checks": {
+          "lifecycle": {
+            "dependencies": [],
+            "evidence": [
+              "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.1.parsed.info.source",
+              "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.1.programId",
+              "meta.postTokenBalances.1",
+              "meta.preTokenBalances.1",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "ownership": {
+            "dependencies": [],
+            "evidence": [
+              "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.1.parsed.info.source",
+              "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.1.programId",
+              "meta.postTokenBalances.1",
+              "meta.preTokenBalances.1",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "quantities": {
+            "dependencies": [],
+            "evidence": [
+              "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.1.parsed.info.source",
+              "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.1.programId",
+              "meta.postTokenBalances.1",
+              "meta.preTokenBalances.1",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          }
+        },
+        "flow_raw": "1200000000",
+        "post": {
+          "decimals": 9,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.postTokenBalances.1",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "49200000000"
+        },
+        "pre": {
+          "decimals": 9,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.preTokenBalances.1",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "48000000000"
+        },
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "signature": "a-partial-sale"
+      },
+      {
+        "checks": {
+          "lifecycle": {
+            "dependencies": [],
+            "evidence": [
+              "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.0.parsed.info.source",
+              "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.0.programId",
+              "meta.postTokenBalances.1",
+              "meta.preTokenBalances.1",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "ownership": {
+            "dependencies": [],
+            "evidence": [
+              "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.0.parsed.info.source",
+              "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.0.programId",
+              "meta.postTokenBalances.1",
+              "meta.preTokenBalances.1",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          },
+          "quantities": {
+            "dependencies": [],
+            "evidence": [
+              "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398"
+            ],
+            "raw_paths": [
+              "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+              "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+              "meta.innerInstructions.0.instructions.0.parsed.info.source",
+              "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+              "meta.innerInstructions.0.instructions.0.programId",
+              "meta.postTokenBalances.1",
+              "meta.preTokenBalances.1",
+              "transaction.message.instructions.0.accounts",
+              "transaction.message.instructions.0.accounts.0",
+              "transaction.message.instructions.0.accounts.1",
+              "transaction.message.instructions.0.accounts.10",
+              "transaction.message.instructions.0.accounts.11",
+              "transaction.message.instructions.0.accounts.12",
+              "transaction.message.instructions.0.accounts.13",
+              "transaction.message.instructions.0.accounts.2",
+              "transaction.message.instructions.0.accounts.3",
+              "transaction.message.instructions.0.accounts.4",
+              "transaction.message.instructions.0.accounts.5",
+              "transaction.message.instructions.0.accounts.6",
+              "transaction.message.instructions.0.accounts.7",
+              "transaction.message.instructions.0.accounts.8",
+              "transaction.message.instructions.0.accounts.9",
+              "transaction.message.instructions.0.programId"
+            ],
+            "reason": "Every linked raw version supports the same phase-specific account facts and executed operations.",
+            "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+            "state": "PASS"
+          }
+        },
+        "flow_raw": "-1000000000",
+        "post": {
+          "decimals": 9,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.postTokenBalances.1",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "48000000000"
+        },
+        "pre": {
+          "decimals": 9,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "path": "meta.preTokenBalances.1",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "quantity": "49000000000"
+        },
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "signature": "z-purchase"
+      }
+    ]
+  },
+  "actual": {
+    "chronology": {
+      "dependencies": [],
+      "evidence": [
+        "0641baa40b9d1ab47cf8854a2605b914974df381086569734dbe2055cfdd6cd8",
+        "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398",
+        "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+      ],
+      "raw_paths": [],
+      "reason": "Shared raw/page/block clocks and ordering are consistent for selected records.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "PASS"
+    },
+    "observed_quantities": {
+      "dependencies": [],
+      "evidence": [
+        "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398",
+        "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+      ],
+      "raw_paths": [
+        "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+        "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+        "meta.innerInstructions.0.instructions.0.parsed.info.source",
+        "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+        "meta.innerInstructions.0.instructions.0.programId",
+        "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+        "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+        "meta.innerInstructions.0.instructions.1.parsed.info.source",
+        "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+        "meta.innerInstructions.0.instructions.1.programId",
+        "meta.postTokenBalances.0",
+        "meta.postTokenBalances.1",
+        "meta.preTokenBalances.0",
+        "meta.preTokenBalances.1",
+        "transaction.message.instructions.0.accounts",
+        "transaction.message.instructions.0.accounts.0",
+        "transaction.message.instructions.0.accounts.1",
+        "transaction.message.instructions.0.accounts.10",
+        "transaction.message.instructions.0.accounts.11",
+        "transaction.message.instructions.0.accounts.12",
+        "transaction.message.instructions.0.accounts.13",
+        "transaction.message.instructions.0.accounts.2",
+        "transaction.message.instructions.0.accounts.3",
+        "transaction.message.instructions.0.accounts.4",
+        "transaction.message.instructions.0.accounts.5",
+        "transaction.message.instructions.0.accounts.6",
+        "transaction.message.instructions.0.accounts.7",
+        "transaction.message.instructions.0.accounts.8",
+        "transaction.message.instructions.0.accounts.9",
+        "transaction.message.instructions.0.programId"
+      ],
+      "reason": "Exact native integer quantities for observed accounts only.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "PASS"
+    },
+    "quantity_continuity": {
+      "dependencies": [],
+      "evidence": [
+        "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398",
+        "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca"
+      ],
+      "raw_paths": [
+        "meta.innerInstructions.0.instructions.0.parsed.info.destination",
+        "meta.innerInstructions.0.instructions.0.parsed.info.mint",
+        "meta.innerInstructions.0.instructions.0.parsed.info.source",
+        "meta.innerInstructions.0.instructions.0.parsed.info.tokenAmount.amount",
+        "meta.innerInstructions.0.instructions.0.programId",
+        "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+        "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+        "meta.innerInstructions.0.instructions.1.parsed.info.source",
+        "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+        "meta.innerInstructions.0.instructions.1.programId",
+        "meta.postTokenBalances.0",
+        "meta.postTokenBalances.1",
+        "meta.preTokenBalances.0",
+        "meta.preTokenBalances.1",
+        "transaction.message.instructions.0.accounts",
+        "transaction.message.instructions.0.accounts.0",
+        "transaction.message.instructions.0.accounts.1",
+        "transaction.message.instructions.0.accounts.10",
+        "transaction.message.instructions.0.accounts.11",
+        "transaction.message.instructions.0.accounts.12",
+        "transaction.message.instructions.0.accounts.13",
+        "transaction.message.instructions.0.accounts.2",
+        "transaction.message.instructions.0.accounts.3",
+        "transaction.message.instructions.0.accounts.4",
+        "transaction.message.instructions.0.accounts.5",
+        "transaction.message.instructions.0.accounts.6",
+        "transaction.message.instructions.0.accounts.7",
+        "transaction.message.instructions.0.accounts.8",
+        "transaction.message.instructions.0.accounts.9",
+        "transaction.message.instructions.0.programId"
+      ],
+      "reason": "Observed absolute quantities/selected continuity and operation conservation; hidden history remains separately unproved.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "UNKNOWN"
+    }
+  },
+  "credential_lookups": 0,
+  "development_only": true,
+  "expected": {
+    "chronology": "PASS",
+    "observed_quantities": "PASS",
+    "quantity_continuity": "PASS"
+  },
+  "inputs": [
+    {
+      "evidence_hash": "38d74a76f0e991ae2fd9c6bce917d387a23258a21dec103a5d05bcd44863c398",
+      "raw": {
+        "blockTime": 1780876800,
+        "meta": {
+          "err": null,
+          "fee": 5000,
+          "innerInstructions": [
+            {
+              "index": 0,
+              "instructions": [
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                      "mint": "So11111111111111111111111111111111111111112",
+                      "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                      "tokenAmount": {
+                        "amount": "1000000000",
+                        "decimals": 9
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                },
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                      "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                      "source": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                      "tokenAmount": {
+                        "amount": "100",
+                        "decimals": 0
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                }
+              ]
+            }
+          ],
+          "postBalances": [
+            99999990000,
+            2039280,
+            48002039280,
+            2039280,
+            101002039280
+          ],
+          "postTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "48000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "999900",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "101000000000",
+                "decimals": 9
+              }
+            }
+          ],
+          "preBalances": [
+            99999995000,
+            2039280,
+            49002039280,
+            2039280,
+            100002039280
+          ],
+          "preTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "0",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "49000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "1000000",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100000000000",
+                "decimals": 9
+              }
+            }
+          ]
+        },
+        "slot": 4000,
+        "transaction": {
+          "message": {
+            "accountKeys": [
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+              "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+            ],
+            "instructions": [
+              {
+                "accounts": [
+                  "pool",
+                  "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "global",
+                  "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                  "So11111111111111111111111111111111111111112",
+                  "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                  "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                  "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                  "recipient",
+                  "fee-account",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "11111111111111111111111111111111"
+                ],
+                "data": [
+                  "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                  "base64"
+                ],
+                "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+              }
+            ]
+          },
+          "signatures": [
+            "z-purchase"
+          ]
+        },
+        "version": 0
+      },
+      "signature": "z-purchase"
+    },
+    {
+      "evidence_hash": "f4067aeca7c79e7a42edfdce9d70e7e34016a1e29e6976beaa672f085d3c6fca",
+      "raw": {
+        "blockTime": 1780876800,
+        "meta": {
+          "err": null,
+          "fee": 5000,
+          "innerInstructions": [
+            {
+              "index": 0,
+              "instructions": [
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                      "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                      "source": "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                      "tokenAmount": {
+                        "amount": "40",
+                        "decimals": 0
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                },
+                {
+                  "parsed": {
+                    "info": {
+                      "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                      "mint": "So11111111111111111111111111111111111111112",
+                      "source": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                      "tokenAmount": {
+                        "amount": "1200000000",
+                        "decimals": 9
+                      }
+                    },
+                    "type": "transferChecked"
+                  },
+                  "program": "spl-token",
+                  "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                }
+              ]
+            }
+          ],
+          "postBalances": [
+            99999985000,
+            2039280,
+            49202039280,
+            2039280,
+            98802039280
+          ],
+          "postTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "60",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "49200000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "1000040",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "98800000000",
+                "decimals": 9
+              }
+            }
+          ],
+          "preBalances": [
+            99999990000,
+            2039280,
+            48002039280,
+            2039280,
+            100002039280
+          ],
+          "preTokenBalances": [
+            {
+              "accountIndex": 1,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 2,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "48000000000",
+                "decimals": 9
+              }
+            },
+            {
+              "accountIndex": 3,
+              "mint": "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "1000000",
+                "decimals": 0
+              }
+            },
+            {
+              "accountIndex": 4,
+              "mint": "So11111111111111111111111111111111111111112",
+              "owner": "pool",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "uiTokenAmount": {
+                "amount": "100000000000",
+                "decimals": 9
+              }
+            }
+          ]
+        },
+        "slot": 4000,
+        "transaction": {
+          "message": {
+            "accountKeys": [
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+              "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+            ],
+            "instructions": [
+              {
+                "accounts": [
+                  "pool",
+                  "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "global",
+                  "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                  "So11111111111111111111111111111111111111112",
+                  "2MNus2KCpxwXnp19iyXNpWSFtBD2UGjQBAL8AbtywfT9",
+                  "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "3hkpj3dQevt4ad1JSx3ke1sWmMR3wYToMKfFLCnxtKuH",
+                  "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                  "recipient",
+                  "fee-account",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "11111111111111111111111111111111"
+                ],
+                "data": [
+                  "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+                  "base64"
+                ],
+                "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+              }
+            ]
+          },
+          "signatures": [
+            "a-partial-sale"
+          ]
+        },
+        "version": 0
+      },
+      "signature": "a-partial-sale"
+    }
+  ],
+  "issue": "Selected-account continuity sorts equal-time records by signature instead of proved block index",
+  "kind": "read-only-review-reproduction",
+  "provider_requests": 0,
+  "raw_sources": [
+    {
+      "hash": "0641baa40b9d1ab47cf8854a2605b914974df381086569734dbe2055cfdd6cd8",
+      "kind": "block-order",
+      "payload": {
+        "method": "getBlock",
+        "result": {
+          "blockTime": 1780876800,
+          "signatures": [
+            "z-purchase",
+            "a-partial-sale"
+          ]
+        },
+        "slot": 4000
+      }
+    }
+  ],
+  "state": "CONFIRMED_PROVISIONAL"
+}

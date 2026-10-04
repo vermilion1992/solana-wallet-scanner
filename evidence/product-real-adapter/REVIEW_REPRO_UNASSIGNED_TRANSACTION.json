@@ -1,0 +1,248 @@
+{
+  "actual": {
+    "identity": {
+      "dependencies": [],
+      "evidence": [
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb"
+      ],
+      "raw_paths": [],
+      "reason": "Every selected identity agrees across linked alternatives.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "PASS"
+    },
+    "native_fee": {
+      "dependencies": [],
+      "evidence": [
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb"
+      ],
+      "raw_paths": [],
+      "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+      "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+      "state": "UNKNOWN"
+    },
+    "source_dependencies": [],
+    "unknown_signature_retained": false
+  },
+  "collected": {
+    "evidence": [
+      {
+        "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "kind": "transaction"
+      }
+    ],
+    "transactions": [
+      {
+        "evidence_hash": "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "raw": {
+          "blockTime": 1780099200,
+          "meta": {
+            "err": null,
+            "fee": 5000,
+            "innerInstructions": [
+              {
+                "index": 0,
+                "instructions": [
+                  {
+                    "parsed": {
+                      "info": {
+                        "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                        "mint": "So11111111111111111111111111111111111111112",
+                        "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                        "tokenAmount": {
+                          "amount": "1000000000",
+                          "decimals": 9
+                        }
+                      },
+                      "type": "transferChecked"
+                    },
+                    "program": "spl-token",
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  },
+                  {
+                    "parsed": {
+                      "info": {
+                        "destination": "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                        "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                        "source": "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                        "tokenAmount": {
+                          "amount": "100",
+                          "decimals": 0
+                        }
+                      },
+                      "type": "transferChecked"
+                    },
+                    "program": "spl-token",
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  }
+                ]
+              }
+            ],
+            "postBalances": [
+              99999995000,
+              2039280,
+              49002039280,
+              2039280,
+              101002039280
+            ],
+            "postTokenBalances": [
+              {
+                "accountIndex": 1,
+                "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "100",
+                  "decimals": 0
+                }
+              },
+              {
+                "accountIndex": 2,
+                "mint": "So11111111111111111111111111111111111111112",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "49000000000",
+                  "decimals": 9
+                }
+              },
+              {
+                "accountIndex": 3,
+                "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                "owner": "pool",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "999900",
+                  "decimals": 0
+                }
+              },
+              {
+                "accountIndex": 4,
+                "mint": "So11111111111111111111111111111111111111112",
+                "owner": "pool",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "101000000000",
+                  "decimals": 9
+                }
+              }
+            ],
+            "preBalances": [
+              100000000000,
+              2039280,
+              50002039280,
+              2039280,
+              100002039280
+            ],
+            "preTokenBalances": [
+              {
+                "accountIndex": 1,
+                "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "0",
+                  "decimals": 0
+                }
+              },
+              {
+                "accountIndex": 2,
+                "mint": "So11111111111111111111111111111111111111112",
+                "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "50000000000",
+                  "decimals": 9
+                }
+              },
+              {
+                "accountIndex": 3,
+                "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                "owner": "pool",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "1000000",
+                  "decimals": 0
+                }
+              },
+              {
+                "accountIndex": 4,
+                "mint": "So11111111111111111111111111111111111111112",
+                "owner": "pool",
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "uiTokenAmount": {
+                  "amount": "100000000000",
+                  "decimals": 9
+                }
+              }
+            ]
+          },
+          "slot": 1000,
+          "transaction": {
+            "message": {
+              "accountKeys": [
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+              ],
+              "instructions": [
+                {
+                  "accounts": [
+                    "pool",
+                    "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                    "global",
+                    "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                    "So11111111111111111111111111111111111111112",
+                    "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                    "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                    "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                    "recipient",
+                    "fee-account",
+                    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                    "11111111111111111111111111111111"
+                  ],
+                  "data": [
+                    "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                    "base64"
+                  ],
+                  "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+                }
+              ]
+            },
+            "signatures": [
+              "development-1"
+            ]
+          },
+          "version": 0
+        },
+        "signature": "development-1"
+      }
+    ]
+  },
+  "credential_lookups": 0,
+  "development_only": true,
+  "expected": {
+    "native_fee": "UNKNOWN"
+  },
+  "helper_receipts": [
+    {
+      "hash": "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+      "reason": "Checksum-verified raw bytes; authenticity and population remain separate.",
+      "role": "transaction",
+      "state": "PASS"
+    },
+    {
+      "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "reason": "Still-linked raw source is unavailable.",
+      "role": "transaction",
+      "state": "UNKNOWN"
+    }
+  ],
+  "issue": "Unassignable missing native transaction source already revokes selected fee support through shared validator",
+  "kind": "read-only-review-reproduction",
+  "provider_requests": 0,
+  "state": "NONDEFECT_FEE_REVOKED"
+}

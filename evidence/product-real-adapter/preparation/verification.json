@@ -1,0 +1,53 @@
+{
+  "starting_head": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+  "branch": "codex/product-completion",
+  "files": {
+    "ISSUES.md": "7e10fa64ac3568c4b181420adf2251d574bbfc16ecebdd9f195076c090a12120",
+    ".github/workflows/offline-focused.yml": "801b69bbc38b1f4d8f1ae35f1e8706123e5e00a76d6e4bda963740fe0d3fd3ff"
+  },
+  "checks": [
+    {
+      "name": "PyYAML BaseLoader parse + exact branch/minimal permissions/no secret or artifact contexts/pinned actions/persist-credentials=false assertions",
+      "state": "PASS"
+    },
+    {
+      "name": "bash -n on all three workflow run steps",
+      "state": "PASS"
+    },
+    {
+      "name": "ast.parse on embedded receipt validation Python",
+      "state": "PASS"
+    },
+    {
+      "name": "git diff --check",
+      "state": "PASS"
+    },
+    {
+      "name": "Pinned GitHub action commit existence (read-only GitHub metadata)",
+      "state": "PASS"
+    },
+    {
+      "name": "Repository private/push metadata read",
+      "state": "PASS"
+    },
+    {
+      "name": "GitHub Actions administration permissions read",
+      "state": "BLOCKED",
+      "reason": "403 Resource not accessible by integration"
+    },
+    {
+      "name": "Local isolated network namespace availability (unshare --net -- true)",
+      "state": "BLOCKED",
+      "reason": "Operation not permitted in current container"
+    },
+    {
+      "name": "Native GitHub Actions execution",
+      "state": "NOT_RUN"
+    },
+    {
+      "name": "Application suites or live provider/probe calls by workflow agent",
+      "state": "NOT_RUN"
+    }
+  ],
+  "scope": "Workflow preparation and current issue housekeeping only; historical evidence unchanged; no commit/publication or application acceptance."
+}

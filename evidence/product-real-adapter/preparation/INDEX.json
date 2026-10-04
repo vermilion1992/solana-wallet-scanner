@@ -1,0 +1,28 @@
+{
+  "kind": "pre-final-iteration-evidence",
+  "artifacts": [
+    {
+      "file": "evidence/product-real-adapter/preparation/verification.json",
+      "sha256": "b4a75a6cdaff44b5efb5f8f4323872a56ae256964b1d109b46098cd078323d49"
+    },
+    {
+      "file": "evidence/product-real-adapter/preparation/scanner-b2-genuine-metadata-control.json",
+      "sha256": "ba42489c88a59037b4af2e9e96175e7e376bc40b1f9a77cae04d258ee247ffa6"
+    },
+    {
+      "file": "evidence/product-real-adapter/preparation/scanner-b2-wallet-metadata-focused.log",
+      "sha256": "b9b3c686512a25d483d0d22ce72f79defa18897ec286efce9356b19fe828cd7b"
+    },
+    {
+      "file": "evidence/product-real-adapter/preparation/b2-adapter-focused-corrected.log",
+      "sha256": "c7f78c33661df5e6a0651a80c499c5eceeaced5576c546189ac6f79a7dc83f94"
+    },
+    {
+      "file": "evidence/product-real-adapter/preparation/b2-product-development-final.log",
+      "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+    }
+  ],
+  "scope": "Workflow preparation and affected/offline implementation checks. The candidate suite is separate; genuine sample remains partial.",
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

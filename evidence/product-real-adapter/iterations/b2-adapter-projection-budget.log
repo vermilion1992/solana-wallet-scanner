@@ -1,0 +1,145 @@
+........F........................................................... [ 37%]
+....................................................... [ 67%]
+............................................................             [100%]
+=================================== FAILURES ===================================
+____ test_physical_inspection_budget_loss_preserves_independent_native_fees ____
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-251/test_physical_inspection_budge0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7feaec1de150>
+
+    def test_physical_inspection_budget_loss_preserves_independent_native_fees(tmp_path, monkeypatch):
+        import scanner.wallet_evidence as adapter
+        value = development_inputs()
+        store = Store(tmp_path)
+        digest = import_archive(store, pack_bytes(value))
+        monkeypatch.setattr(adapter, 'MAX_ACCOUNT_STEPS', 1)
+        loaded = load_archive(store, digest)
+        events, _ = decode_archive(loaded)
+>       result, _, coverage = analyze_archive(loaded, events)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_real_evidence_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/archive_input.py:440: in analyze_archive
+    adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+records = [{'signature': 'development-1', 'evidence_hash': '8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb', '...43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp'], 'instructions': [{...}]}, 'signatures': ['development-6']}, ...}}, ...]
+all_records = [{'signature': 'development-1', 'evidence_hash': '8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb', '...43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp'], 'instructions': [{...}]}, 'signatures': ['development-6']}, ...}}, ...]
+wallet = '4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi'
+window = {'end': '2026-07-01T00:00:00+00:00', 'start': '2026-06-01T00:00:00+00:00'}
+source_consistency = {'version': 'source-consistency-v4', 'transactions': {'development-1': {'state': 'PASS', 'native_hashes': ['8df2e48ebb...ence_count': 12, 'authenticated_reference_count': 12, ...}, 'archive_contents': {'state': 'PASS', 'receipts': []}, ...}
+chronology = {'version': 'slot-chronology-evidence-v2', 'state': 'PASS', 'transactions': {'development-1': {'state': 'PASS', 'time_..., '1003': {'state': 'PASS', 'time_state': 'PASS', 'order_state': 'PASS', 'canonical_time': 1780617600, ...}, ...}, ...}
+source_receipts = [{'hash': 'e3ce0490b22b24b603ec8a8f9b8cd41154118bc6e99f85176956c96b057c1c92', 'state': 'PASS', 'reason': 'Exact checks...son': 'Exact checksum-checked archived bytes; network authenticity is separate.', 'role': 'population-inventory'}, ...]
+history_evidence = None, positions = None
+events = [{'kind': 'fee', 'timestamp': 1782691200, 'signature': 'development-12', 'path': 'meta.fee', ...}, {'kind': 'fee', 'ti...uctions.0', ...}, {'kind': 'fee', 'timestamp': 1780444800, 'signature': 'development-3', 'path': 'meta.fee', ...}, ...]
+raw_sources = [{'hash': 'd82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03', 'kind': 'classification', 'payload': {'a...7-01T00:00:00+00:00', 'native_lamports': '99999940000'}, 'external_flows': [], 'kind': 'synthetic-valuation-v1', ...}}]
+
+    def derive_wallet_evidence(records, *, all_records, wallet, window, source_consistency, chronology,
+                               source_receipts=(), history_evidence=None, positions=None, events=(), raw_sources=()):
+        """Return source-derived observed facts and honest wallet metric dependencies.
+    
+        Input assessments/positions/events are advisory only: raw linked records are
+        replayed with shared validators and decoder. Current source types cannot prove
+        historical population, even when all supplied flags claim PASS/completeness.
+        """
+        if not _valid_account(wallet):
+            raise ValueError('A valid public wallet is required')
+        start, end = utc(window['start']), utc(window['end'])
+        if end <= start:
+            raise ValueError('A positive report window is required')
+        selected, linked = {}, {}
+        selected_rows = list(records)
+        for row in sorted(selected_rows, key=lambda row: str(row.get('evidence_hash')) if isinstance(row, dict) else ''):
+            if not isinstance(row, dict) or not isinstance(row.get('signature'), str) or not row['signature']:
+                raise ValueError('Selected raw records require explicit signature identities')
+            selected.setdefault(row['signature'], row)
+        source_rows = _resolved_sources(raw_sources, source_receipts)
+        negative_links = []
+        for source in source_rows:
+            if not isinstance(source, dict):
+                continue
+            kind = source.get('kind', source.get('role'))
+            if kind in ('transaction', 'getTransaction'):
+                continue  # These are explicitly represented by all_records.
+            payload = source.get('payload')
+            payload = payload.get('result') if isinstance(payload, dict) and isinstance(payload.get('result'), dict) and 'transaction' in payload['result'] else payload
+            transaction = payload.get('transaction') if isinstance(payload, dict) else None
+            signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+            native_signature = signatures[0] if isinstance(signatures, list) and signatures and isinstance(signatures[0], str) else None
+            claims = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES else []
+            affected = {s for s in [native_signature] + claims if isinstance(s, str) and s in selected}
+            if affected:
+                # An unsupported role cannot hide a selected transaction version.
+                # Its original body remains retained in the source dependency receipt.
+                negative_links += [{'signature': s, 'evidence_hash': source.get('hash'), 'raw': None} for s in sorted(affected)]
+            elif kind not in _NONTRANSACTION_ROLES:
+                # A raw native identity can prove disjointness. An arbitrary role or
+                # missing body cannot supply an exclusion by caller annotations.
+                if native_signature is None or native_signature in selected:
+                    negative_links.append({'signature': None, 'evidence_hash': source.get('hash'), 'raw': None})
+        for row in list(all_records) + selected_rows + negative_links:
+            if isinstance(row, dict):
+                key = (row.get('signature'), row.get('evidence_hash'))
+                if key in linked and linked[key].get('raw') != row.get('raw'):
+                    linked[key] = {**linked[key], 'raw': None}
+                else:
+                    linked.setdefault(key, row)
+        if len(linked) > MAX_RECORDS:
+            raise ValueError('Raw wallet evidence exceeds the fixed record inspection limit')
+        linked = [linked[key] for key in sorted(linked, key=repr)]
+        account_steps = sum(len(raw.get('meta', {}).get(name, [])) for row in linked
+            if isinstance(raw := row.get('raw'), dict) and isinstance(raw.get('meta'), dict)
+            for name in ('preTokenBalances', 'postTokenBalances') if isinstance(raw['meta'].get(name), list))
+        quantity_budget_exceeded = account_steps > MAX_ACCOUNT_STEPS
+        selected = {key: selected[key] for key in sorted(selected, key=str) if isinstance(key, str) and key}
+        pages, blocks, contents = _clock_inputs(source_rows, (), wallet)
+        # Unsafe container shapes remain explicit unavailable records to shared checks.
+        safe_linked = [{key: value for key, value in row.items() if key != 'transaction_index'} |
+                       {'raw': row.get('raw') if _safe_raw(row.get('raw')) else None} for row in linked]
+        consistency = assess_source_consistency(safe_linked, wallet=wallet, page_receipts=pages, archive_contents=contents)
+        clocks = apply_unresolved_chronology(assess_chronology(safe_linked, page_receipts=pages, block_receipts=blocks), safe_linked, contents)
+        def derived_record(row):
+            return with_derived_order([row], clocks)[0]
+        versions = defaultdict(list)
+        for row in linked:
+            if quantity_budget_exceeded:
+                # The archive's declared input capacity remains valid. Inspection
+                # budget loss revokes physical/ownership observations while native
+                # identity, clocks and wallet-paid fees keep their own checks.
+                observation = {'signature': row.get('signature'), 'hash': row.get('evidence_hash'),
+                    'boundaries': {}, 'lifecycle': [], 'transfers': [], 'trades': [], 'failed': None,
+                    'gaps': ['Physical account-version inspection budget exceeded; token observations are unsupported.']}
+            else:
+                observation = _observe(derived_record(row), wallet)
+            versions[row.get('signature')].append(observation)
+        transactions, accounts, acquisitions, fee_checks, identity_checks = {}, defaultdict(list), [], [], []
+        quantity_checks, owner_checks, lifecycle_checks, cost_checks = [], [], [], []
+        for signature, primary in selected.items():
+            variants = versions[signature]
+            evidence = [row['hash'] for row in variants]
+            group = consistency['transactions'].get(signature, {})
+            identity_fact = group.get('identity', _check(False, 'Native identity unavailable', evidence))
+            source_set = consistency.get('source_set', {})
+            identity = {**identity_fact, **_check(identity_fact.get('state') == 'PASS' and source_set.get('state') == 'PASS',
+                identity_fact.get('reason', 'Native identity unavailable') if source_set.get('state') == 'PASS' else source_set.get('reason', 'Linked native source inventory unresolved'),
+                identity_fact.get('evidence', evidence) + source_set.get('evidence', []), dependencies=['linked_native_source_inventory'])}
+            identity_checks.append(identity)
+            selected_observation = next((r for r in variants if r['hash'] == primary.get('evidence_hash')), variants[0])
+            observed = {'signature': signature, 'evidence': sorted({h for h in evidence if isinstance(h, str) and HASH.fullmatch(h)}), 'boundaries': {},
+                        'lifecycle': [], 'internal_transfers': [], 'mint_aggregates': {}, 'checks': {},
+>                       'disjoint_operations': selected_observation['disjoint_operations'],
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        'gaps': sorted({gap for row in variants for gap in row['gaps']})}
+E           KeyError: 'disjoint_operations'
+
+scanner/wallet_evidence.py:516: KeyError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_real_evidence_adapter.py::test_physical_inspection_budget_loss_preserves_independent_native_fees
+1 failed, 182 passed, 1 warning, 21 subtests passed in 25.38s

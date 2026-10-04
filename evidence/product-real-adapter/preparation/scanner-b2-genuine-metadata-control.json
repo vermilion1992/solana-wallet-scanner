@@ -1,0 +1,30 @@
+{
+  "scope": "Genuine archived 23-record partial sample only; B3 remains blocked",
+  "selected_records": 23,
+  "wallet_paid_fee_lamports": 240394,
+  "component_states": {
+    "historical_population": "UNKNOWN",
+    "event_ownership": "PASS",
+    "quantity_continuity": "UNKNOWN",
+    "chronology": "UNKNOWN",
+    "lifecycle": "UNKNOWN",
+    "observed_quantities": "UNKNOWN",
+    "observed_cost_roles": "UNKNOWN",
+    "observed_acquisition_basis": "UNKNOWN",
+    "observed_disposed_basis": "UNKNOWN",
+    "observed_economic_roles": "UNKNOWN",
+    "observed_positions": "UNKNOWN",
+    "acquisition_basis": "UNKNOWN",
+    "economic_costs": "UNKNOWN",
+    "classification": "UNKNOWN",
+    "positions": "UNKNOWN",
+    "boundary_inventory": "UNKNOWN",
+    "historical_marks": "UNKNOWN",
+    "valued_external_flows": "UNKNOWN",
+    "selected_record_identity": "PASS",
+    "native_fee": "PASS",
+    "fee_window": "PASS"
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

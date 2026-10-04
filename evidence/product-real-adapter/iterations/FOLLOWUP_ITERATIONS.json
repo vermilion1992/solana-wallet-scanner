@@ -1,0 +1,18 @@
+{
+  "records": [
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-candidate-validation-final.log",
+      "sha256": "4952e07052f4a20eb894c64f094b5a39a4cf5e45c78545ae80da46961461ed30",
+      "exit_code": 143,
+      "scope": "Interrupted final attempt after newly confirmed raw role/dependency regressions; no acceptance"
+    },
+    {
+      "log": "evidence/product-real-adapter/iterations/b2-negative-dependency-integration.log",
+      "sha256": "c134368d1cbf28c042bb104fa21a1ce678ba9bdbbc07b86b138ffe08b9b307f7",
+      "exit_code": 0,
+      "scope": "120 overlapping affected tests passed; source under review, not full candidate acceptance"
+    }
+  ],
+  "full_acceptance_claimed": false,
+  "PRODUCT_READY": false
+}

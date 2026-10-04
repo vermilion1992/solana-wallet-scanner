@@ -1,0 +1,427 @@
+{
+  "adapter_native_fee": {
+    "dependencies": [],
+    "evidence": [
+      "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+      "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+      "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+      "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+      "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+      "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+      "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+      "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+      "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+      "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+      "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+      "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+    ],
+    "raw_paths": [],
+    "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+    "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+    "state": "UNKNOWN"
+  },
+  "changed_input": {
+    "blockTime": 1780099200,
+    "meta": {
+      "err": null,
+      "fee": null,
+      "innerInstructions": [
+        {
+          "index": 0,
+          "instructions": [
+            {
+              "parsed": {
+                "info": {
+                  "destination": "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+                  "mint": "So11111111111111111111111111111111111111112",
+                  "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "tokenAmount": {
+                    "amount": "1000000000",
+                    "decimals": 9
+                  }
+                },
+                "type": "transferChecked"
+              },
+              "program": "spl-token",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            },
+            {
+              "parsed": {
+                "info": {
+                  "destination": "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+                  "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+                  "source": "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+                  "tokenAmount": {
+                    "amount": "100",
+                    "decimals": 0
+                  }
+                },
+                "type": "transferChecked"
+              },
+              "program": "spl-token",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            }
+          ]
+        }
+      ],
+      "postBalances": [
+        99999995000,
+        2039280,
+        49002039280,
+        2039280,
+        101002039280
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 0
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "49000000000",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+          "owner": "pool",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "999900",
+            "decimals": 0
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "pool",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "101000000000",
+            "decimals": 9
+          }
+        }
+      ],
+      "preBalances": [
+        100000000000,
+        2039280,
+        50002039280,
+        2039280,
+        100002039280
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 1,
+          "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 0
+          }
+        },
+        {
+          "accountIndex": 2,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "50000000000",
+            "decimals": 9
+          }
+        },
+        {
+          "accountIndex": 3,
+          "mint": "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+          "owner": "pool",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "1000000",
+            "decimals": 0
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "pool",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100000000000",
+            "decimals": 9
+          }
+        }
+      ]
+    },
+    "slot": 1000,
+    "transaction": {
+      "message": {
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+          "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp"
+        ],
+        "instructions": [
+          {
+            "accounts": [
+              "pool",
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "global",
+              "swqrv48gsrwpBFbftEwnP2vB4jckpvfGJfXkwaniLCC",
+              "So11111111111111111111111111111111111111112",
+              "2Z8oHviEbrqDD5kg2sW8h8kYceqdVTnrrPL6Lk2nBfRG",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "3uWi9x2SRpmjztkpkr2WWeBoVq3exjXG2YfDWLvm8KsQ",
+              "43MJSYxTcRNCH5FqdSgM6PjKz9U4Jrtu9MzXd71xczWp",
+              "recipient",
+              "fee-account",
+              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "11111111111111111111111111111111"
+            ],
+            "data": [
+              "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+              "base64"
+            ],
+            "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          }
+        ]
+      },
+      "signatures": [
+        "development-1"
+      ]
+    },
+    "version": 0
+  },
+  "credential_lookups": 0,
+  "current_metric": {
+    "evidence": [
+      "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+      "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+      "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+      "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+      "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+      "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+      "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+      "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+      "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+      "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+      "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+      "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+    ],
+    "evidence_decision": {
+      "checks": {
+        "fee_window": {
+          "evidence": [
+            "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+            "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+            "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+            "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+            "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+            "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+            "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+            "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+            "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+            "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+            "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+            "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+          ],
+          "reason": null,
+          "scope": "selected in-window wallet-paid native fees",
+          "state": "PASS"
+        },
+        "native_fee": {
+          "evidence": [
+            "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+            "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+            "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+            "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+            "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+            "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+            "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+            "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+            "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+            "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+            "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+            "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+          ],
+          "reason": "Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.",
+          "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+          "state": "UNKNOWN"
+        },
+        "selected_record_identity": {
+          "evidence": [
+            "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+            "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+            "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+            "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+            "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+            "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+            "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+            "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+            "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+            "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+            "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+            "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+          ],
+          "reason": "Every selected identity agrees across linked alternatives.",
+          "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+          "state": "PASS"
+        }
+      },
+      "component_scopes": {
+        "fee_window": "selected in-window wallet-paid native fees",
+        "native_fee": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "selected_record_identity": "Selected archived records only; hidden accounts and intervening records are unproved"
+      },
+      "dependencies": [
+        "selected_record_identity",
+        "native_fee",
+        "fee_window"
+      ],
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+        "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+      ],
+      "interval": "report_period",
+      "reason": "native_fee: Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.; metric_observation: A linked selected fee/payer or reporting-window membership observation remains unavailable or conflicts.",
+      "scope": "report_period",
+      "state": "UNKNOWN",
+      "unresolved_dependencies": [
+        "native_fee",
+        "metric_observation"
+      ],
+      "version": "metric-evidence-v1"
+    },
+    "population": "Selected in-window records with an independently supported wallet fee payer; not all interval costs",
+    "reason": "native_fee: Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.; metric_observation: A linked selected fee/payer or reporting-window membership observation remains unavailable or conflicts. A linked selected fee/payer or reporting-window membership observation remains unavailable or conflicts.",
+    "status": "unknown",
+    "unit": "SOL",
+    "value": null
+  },
+  "development_only": true,
+  "expected": "Known0.000055SOLselected inwindowfees; unrelated prewindow fee not required.",
+  "issue": "Outside-report fee uncertainty erased independent supported in-window selected fee total",
+  "kind": "read-only-review-reproduction",
+  "manifest": {
+    "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "classification_hashes": [
+      "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+      "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+      "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+      "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035"
+    ],
+    "dataset": "real",
+    "evidence": [],
+    "transactions": [
+      {
+        "hash": "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+        "signature": "development-1"
+      },
+      {
+        "hash": "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff",
+        "signature": "development-2"
+      },
+      {
+        "hash": "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "signature": "development-3"
+      },
+      {
+        "hash": "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "signature": "development-4"
+      },
+      {
+        "hash": "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "signature": "development-5"
+      },
+      {
+        "hash": "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "signature": "development-6"
+      },
+      {
+        "hash": "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "signature": "development-7"
+      },
+      {
+        "hash": "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "signature": "development-8"
+      },
+      {
+        "hash": "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+        "signature": "development-9"
+      },
+      {
+        "hash": "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "signature": "development-10"
+      },
+      {
+        "hash": "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "signature": "development-11"
+      },
+      {
+        "hash": "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "signature": "development-12"
+      }
+    ],
+    "valuation_hash": "6fb6e22e7c167c43b12652e1cd772132d9819d68c3986701f067b59737e52031",
+    "version": "archived-wallet-input-v1",
+    "window": {
+      "end": "2026-07-01T00:00:00+00:00",
+      "start": "2026-06-01T00:00:00+00:00"
+    },
+    "world_hash": "e3ce0490b22b24b603ec8a8f9b8cd41154118bc6e99f85176956c96b057c1c92"
+  },
+  "provider_requests": 0,
+  "reviewed_baseline_metric": {
+    "evidence": [
+      "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+      "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+      "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+      "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22",
+      "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+      "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+      "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+      "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+      "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+      "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+      "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+      "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+    ],
+    "population": "Selected in-window records with an independently supported wallet fee payer; not all interval costs",
+    "reason": null,
+    "status": "known",
+    "unit": "SOL",
+    "value": "0.000055"
+  },
+  "selected_membership": {
+    "evidence": [
+      "22db1a1e603c1cd7769cc545a1f7aeee026427d4889e060c2913372900641b22"
+    ],
+    "member": false,
+    "reason": "All bounded clock possibilities agree on this half-open interval; exact time/order is a separate fact.",
+    "state": "PASS"
+  },
+  "state": "CONFIRMED_CURRENT"
+}

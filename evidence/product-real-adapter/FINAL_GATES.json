@@ -1,0 +1,95 @@
+{
+  "kind": "product-completion-final-gates",
+  "application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "starting_head": "4daa77816fc98908ae1b0663a2a5bfd6fa7c409a",
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "application_source_files": 190,
+  "application_changed_files": [
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/metric_evidence.py",
+    "scanner/wallet_evidence.py"
+  ],
+  "other_changed_files": [
+    ".github/workflows/offline-focused.yml",
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/R1_SOURCE_DECISION.md",
+    "tests/test_metric_evidence.py",
+    "tests/test_real_evidence_adapter.py",
+    "tests/test_wallet_evidence.py",
+    "tools/validate.py"
+  ],
+  "gate_A": {
+    "state": "ACCEPTED_IN_SCOPE",
+    "receipt": "gate-a-verified/result.json",
+    "backend_ordinary_passed": 2044,
+    "backend_separate_subtests_passed": 285,
+    "matrix_requirements": 70,
+    "scoped_browser_children": 6,
+    "scoped_browser_captures": 16,
+    "source_unchanged": true
+  },
+  "development_product": {
+    "state": "DEVELOPMENT_PASS",
+    "receipt": "product-v4-final/result.json",
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "product_browser": {
+    "state": "PASS",
+    "receipt": "product-browser-verified/result.json",
+    "cases": 6,
+    "captures": 12,
+    "guards": {
+      "provider_requests": 0,
+      "credential_lookups": 0
+    }
+  },
+  "distinct_read_only_review": {
+    "state": "PASS",
+    "receipt": "REVIEW.json"
+  },
+  "real_required": {
+    "state": "BLOCKED",
+    "exit_code": 2,
+    "receipt": "product-v4-real-required/result.json"
+  },
+  "B1": {
+    "state": "BLOCKED_UNTESTED",
+    "missing": [
+      "actual plan",
+      "billing-cycle start/end",
+      "at least 100 remaining credits",
+      "autoscaling/automatic spending disabled",
+      "explicit live probe execution approval"
+    ]
+  },
+  "B2": {
+    "state": "OPEN_COMPLETE_REAL",
+    "scope": "Offline raw adapter/dependency/FIFO/saved report/import/rebuild development-functional. Accepted historical population, complete origins/cost/flow/classification/valuation contracts remain missing or source-blocked."
+  },
+  "B3": {
+    "state": "BLOCKED",
+    "scope": "No genuine complete-wallet corpus and independent expected ledger. Genuine 23-record sample remains partial: supported fees 240394 lamports; wallet profit UNKNOWN."
+  },
+  "PRODUCT_READY": false,
+  "classification": "scoped-valid; development-functional; real-acceptance-blocked",
+  "test_counting": "Ordinary pytest nodes and separate subtests are reported once from the full backend run. Focused/review/product/browser executions overlap and are not added as unique tests. Matrix mapping is not another execution.",
+  "native_CI": {
+    "state": "PREPARED_NOT_EXECUTED_LOCALLY",
+    "scope": "Secret-free isolated offline workflow; native status requires publication. Local network namespace permission unavailable."
+  },
+  "failed_or_interrupted_attempts_preserved": [
+    "gate-a/",
+    "gate-a-final/",
+    "product-development/",
+    "product-browser-v4-final/",
+    "iterations/"
+  ],
+  "locks_frontend_previous_tests_unchanged": true,
+  "helius_probe_executed": false,
+  "provider_credits_spent": 0,
+  "new_release_zip": false
+}

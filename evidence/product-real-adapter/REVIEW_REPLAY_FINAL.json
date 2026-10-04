@@ -1,0 +1,260 @@
+{
+  "PRODUCT_READY": false,
+  "cases": [
+    {
+      "actual": [
+        "PASS",
+        "2.000005"
+      ],
+      "case": "raw-block-indices-reach-FIFO",
+      "expected": [
+        "PASS",
+        "2.000005"
+      ],
+      "reproduction": "REVIEW_REPRO_SAME_SLOT.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN",
+        "PASS",
+        "UNKNOWN"
+      ],
+      "case": "ownership-required-for-wallet-owned-aggregate",
+      "expected": [
+        "UNKNOWN",
+        "PASS",
+        "UNKNOWN"
+      ],
+      "reproduction": "REVIEW_REPRO_OWNERSHIP_AGGREGATE.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "PASS"
+      ],
+      "case": "alternative-order-conflict-revokes-FIFO-basis-episodes",
+      "expected": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "PASS"
+      ],
+      "reproduction": "REVIEW_REPRO_FIFO_CHRONOLOGY.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "case": "proved-block-order-controls-partial-sale-continuity",
+      "expected": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "reproduction": "REVIEW_REPRO_CONTINUITY_ORDER.json",
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "checkpoint-source-set",
+      "expected": "UNKNOWN",
+      "reproduction": "REVIEW_REPRO_CHECKPOINT_SOURCE_SET.json",
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "malformed-transaction-link",
+      "expected": "UNKNOWN",
+      "reproduction": "REVIEW_REPRO_MALFORMED_TRANSACTION_LINK.json",
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "unassigned-transaction",
+      "expected": "UNKNOWN",
+      "reproduction": "REVIEW_REPRO_UNASSIGNED_TRANSACTION.json",
+      "state": "PASS"
+    },
+    {
+      "actual": "UNKNOWN",
+      "case": "unsupported-transaction-role",
+      "expected": "UNKNOWN",
+      "reproduction": "REVIEW_REPRO_UNSUPPORTED_TRANSACTION_ROLE.json",
+      "state": "PASS"
+    },
+    {
+      "actual": "PASS",
+      "case": "disjoint-role-receipt",
+      "expected": "PASS",
+      "reproduction": "REVIEW_REPRO_DISJOINT_ROLE_RECEIPT.json",
+      "state": "PASS"
+    },
+    {
+      "actual": 1,
+      "case": "later-checkpoint-does-not-expand-frozen-universe",
+      "expected": 1,
+      "reproduction": "REVIEW_REPRO_FROZEN_INPUTS.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "case": "mint-authority-target",
+      "expected": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ],
+      "reproduction": "REVIEW_REPRO_MINT_AUTHORITY_TARGET.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN"
+      ],
+      "case": "hash-disjointness",
+      "expected": [
+        "UNKNOWN"
+      ],
+      "reproduction": "REVIEW_REPRO_HASH_DISJOINTNESS.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN"
+      ],
+      "case": "metadata-value-transaction",
+      "expected": [
+        "UNKNOWN"
+      ],
+      "reproduction": "REVIEW_REPRO_METADATA_VALUE_TRANSACTION.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "known",
+        "0.000055"
+      ],
+      "case": "proved-outside-window-unknown-fee-preserves-total",
+      "expected": [
+        "known",
+        "0.000055"
+      ],
+      "reproduction": "REVIEW_REPRO_OUTSIDE_FEE.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        10001,
+        "0.000005"
+      ],
+      "case": "valid-10001-alternative-capacity-preserves-native-fee",
+      "expected": [
+        10001,
+        "0.000005"
+      ],
+      "reproduction": "REVIEW_REPRO_RECORD_BUDGET.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "PASS",
+        "UNKNOWN"
+      ],
+      "case": "account-union-budget-narrows-facts-without-report-failure",
+      "expected": [
+        "PASS",
+        "UNKNOWN"
+      ],
+      "reproduction": "REVIEW_REPRO_ACCOUNT_UNION_BUDGET.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN",
+        "PASS"
+      ],
+      "case": "unexplained-native-flow-revokes-roles-retains-fee",
+      "expected": [
+        "UNKNOWN",
+        "PASS"
+      ],
+      "reproduction": "REVIEW_REPRO_UNEXPLAINED_NATIVE_FLOW.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "UNKNOWN",
+        "PASS"
+      ],
+      "case": "budget-loss-does-not-promote-cost-flow-role",
+      "expected": [
+        "UNKNOWN",
+        "PASS"
+      ],
+      "reproduction": "REVIEW_REPRO_BUDGET_COST_ROLE.json",
+      "state": "PASS"
+    },
+    {
+      "actual": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "case": "wrong-role-negative-native-association-survives-loss-restoration",
+      "expected": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "reproduction": "REVIEW_REPRO_WRONG_ROLE_REMOVAL.json",
+      "state": "PASS"
+    },
+    {
+      "actual": "unknown",
+      "case": "frozen-negative-native-inventory-survives-later-index-change",
+      "expected": "unknown",
+      "reproduction": "REVIEW_REPRO_WRONG_ROLE_REMOVAL.json",
+      "state": "PASS"
+    }
+  ],
+  "credential_lookups": 0,
+  "input_receipts": {
+    "REVIEW_REPRO_ACCOUNT_UNION_BUDGET.json": "2e1ab784987b7f5d41a8beb21f6ef888469bf252bcd0ee96aa6747529b8e5706",
+    "REVIEW_REPRO_BUDGET_COST_ROLE.json": "746c00f9f4bd71a3bdb615db58d84afa35bf18ca16353cd531f0a966e698510f",
+    "REVIEW_REPRO_CHECKPOINT_SOURCE_SET.json": "bf7512fd664049918e3262f1208443c2f6ceb050ca2f58a4fa7d42c7184097ab",
+    "REVIEW_REPRO_CONTINUITY_ORDER.json": "e7740c113fce6a58003ea4fac0b0cf2a4be3c465435799d4c43c122b6973f085",
+    "REVIEW_REPRO_DISJOINT_ROLE_RECEIPT.json": "7916391c99517c8a77b057021d9e80fdd996fcf7e127021bf0e57ed15a4b2114",
+    "REVIEW_REPRO_FIFO_CHRONOLOGY.json": "af568aa1042a8285002b2f3fe40478afe501b9f9df1c71adbf5fce7516dc88f5",
+    "REVIEW_REPRO_FROZEN_INPUTS.json": "d9069d4b71db1833c429f02fc57296989e2319efdcd0e367320dd33302430762",
+    "REVIEW_REPRO_HASH_DISJOINTNESS.json": "2247c9b5c43f7f1968eacc32ae528e156cedced726a294ff927b008cc9b8b69c",
+    "REVIEW_REPRO_MALFORMED_TRANSACTION_LINK.json": "48966ff7f9781f26131e2b19ad9377795914db99107e7448e2a8128e1b40c512",
+    "REVIEW_REPRO_METADATA_VALUE_TRANSACTION.json": "d3de98c4bba21209c2ac77835064d9cfa574c6d1258b2a36131be6efbc9d0628",
+    "REVIEW_REPRO_MINT_AUTHORITY_TARGET.json": "1200fa35abbeaedd806d76c8b766509eca66e851643e3d95c848f5d2471acb5b",
+    "REVIEW_REPRO_OUTSIDE_FEE.json": "92264f5b32ea492b88b0f0ccbd46e05489cfa112abf4de85a9139d47afb53686",
+    "REVIEW_REPRO_OWNERSHIP_AGGREGATE.json": "9ce25997a9c95af55287516192565df680d33d8b471ce4741d7edb8e8e35138c",
+    "REVIEW_REPRO_RECORD_BUDGET.json": "839ddef545c809e24779f83c5719f1ade07ae3fac55eaf7c816676c349b175d9",
+    "REVIEW_REPRO_SAME_SLOT.json": "7b156a51380befb2a56d6a7ab5641ef7fec592acd26044e59d218e592ff8be95",
+    "REVIEW_REPRO_UNASSIGNED_TRANSACTION.json": "49e62b37f4bfaed71c23882abc7c93171aaa4d12729c20edef0e0777467e5c6c",
+    "REVIEW_REPRO_UNEXPLAINED_NATIVE_FLOW.json": "9f4388f3c0241a3a560c2f17e87397a5d889d1f5d007189dd4e3d64ee7fdf017",
+    "REVIEW_REPRO_UNSUPPORTED_TRANSACTION_ROLE.json": "ce06e0a21600b94eb096e27ebc3cc4623fe630d88e33bceee4e7f9f4b513b2cd",
+    "REVIEW_REPRO_WRONG_ROLE_REMOVAL.json": "b3f974e527c712d6f79867f3c358be7dd45f1002bc188cdccda956a97774805b"
+  },
+  "kind": "read-only-review-raw-replay",
+  "provider_requests": 0,
+  "scope": "Development raw records and current shared offline paths only. No genuine wallet acceptance or full Gate A acceptance claimed.",
+  "source_files": 190,
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "source_unchanged": true,
+  "state": "PASS"
+}

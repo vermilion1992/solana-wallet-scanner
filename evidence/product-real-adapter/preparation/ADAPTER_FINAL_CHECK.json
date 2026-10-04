@@ -1,0 +1,21 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_wallet_evidence.py",
+    "tests/test_metric_evidence.py",
+    "tests/test_archive_input.py",
+    "tests/test_archive_fee_window.py",
+    "tests/test_real_evidence_adapter.py"
+  ],
+  "exit_code": 0,
+  "ordinary_passed": 190,
+  "separate_subtests_passed": 21,
+  "scope": "Affected checks only; overlaps final candidate backend suite, not additive test counts",
+  "application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "raw_log": "evidence/product-real-adapter/preparation/scanner-b2-wallet-shared-final.log",
+  "raw_sha256": "72f4e8bce2301d8ad6b04ee6c3d92a98629960b3410197b2b1d39c40027c396d"
+}

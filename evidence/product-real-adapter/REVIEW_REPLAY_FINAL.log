@@ -1,0 +1,20 @@
+raw-block-indices-reach-FIFO PASS ['PASS', '2.000005']
+ownership-required-for-wallet-owned-aggregate PASS ['UNKNOWN', 'PASS', 'UNKNOWN']
+alternative-order-conflict-revokes-FIFO-basis-episodes PASS ['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'PASS']
+proved-block-order-controls-partial-sale-continuity PASS ['PASS', 'PASS', 'PASS']
+checkpoint-source-set PASS UNKNOWN
+malformed-transaction-link PASS UNKNOWN
+unassigned-transaction PASS UNKNOWN
+unsupported-transaction-role PASS UNKNOWN
+disjoint-role-receipt PASS PASS
+later-checkpoint-does-not-expand-frozen-universe PASS 1
+mint-authority-target PASS ['PASS', 'PASS', 'PASS']
+hash-disjointness PASS ['UNKNOWN']
+metadata-value-transaction PASS ['UNKNOWN']
+proved-outside-window-unknown-fee-preserves-total PASS ['known', '0.000055']
+valid-10001-alternative-capacity-preserves-native-fee PASS [10001, '0.000005']
+account-union-budget-narrows-facts-without-report-failure PASS ['PASS', 'UNKNOWN']
+unexplained-native-flow-revokes-roles-retains-fee PASS ['UNKNOWN', 'PASS']
+budget-loss-does-not-promote-cost-flow-role PASS ['UNKNOWN', 'PASS']
+wrong-role-negative-native-association-survives-loss-restoration PASS ['unknown', 'unknown', 'unknown']
+frozen-negative-native-inventory-survives-later-index-change PASS unknown

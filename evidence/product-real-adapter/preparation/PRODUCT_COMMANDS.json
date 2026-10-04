@@ -1,0 +1,40 @@
+{
+  "application_commit": "6f923ae29da6b277d09aaf68ff0e1ee0a1bb08ae",
+  "source_sha256": "417e0a9b15c7c4c82bef84e3e084c18cd7eb7d99dc2fe587c3a5bcf05b6eebda",
+  "commands": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "tools/check_product.py",
+        "--output",
+        "evidence/product-real-adapter/product-v4-final"
+      ],
+      "exit_code": 0,
+      "state": "DEVELOPMENT_PASS"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "tools/check_product.py",
+        "--require-real-acceptance",
+        "--output",
+        "evidence/product-real-adapter/product-v4-real-required"
+      ],
+      "exit_code": 2,
+      "state": "BLOCKED"
+    }
+  ],
+  "logs": [
+    {
+      "file": "evidence/product-real-adapter/preparation/b2-product-v4-final.log",
+      "exit_code": 0,
+      "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+    },
+    {
+      "file": "evidence/product-real-adapter/preparation/b2-product-v4-real-required.log",
+      "exit_code": 2,
+      "sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7"
+    }
+  ],
+  "scope": "Synthetic implementation and separately labelled genuine23partial sample. No complete real acceptance or provider dispatch. Overlapping case executions are not unique test counts."
+}
