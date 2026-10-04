@@ -214,3 +214,25 @@ population and relevant event/quantity scope; observed endpoint reconciliation
 cannot exclude unseen accounts or episodes. That remaining production admission
 and source contract keeps full B2 OPEN without requiring every observed position
 to close.
+
+## Current genuine report and speed batch — 4 October 2026
+
+Baseline private HEAD: `ab62858dca7eccbdb18b3365a83dedd9b2e8f413`, 43 commits,
+241 source files, workspace manifest
+`0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365`.
+Application acceptance and the later fixture-only/native checks remain separate.
+Current edits require their own source-bound gates; prior pending wording is
+historical and superseded by the corresponding frozen FINAL_GATES records.
+
+| ID | Category | Current batch scope | Remaining condition |
+| --- | --- | --- | --- |
+| CAP-INVENTORY | Missing implementation | Implemented pending validation: original-byte current native/token account observations, independent program receipts, same-slot aggregate and frozen negative request affinity. | Current snapshots cannot establish exact historical boundaries, hidden account population, token marks or flow roles. |
+| INV-01 | Confirmed development interface defect | Fixed pending validation: invalid enclosing checksums could supply a foreign-wallet exclusion. Containing integrity is now required before exclusion. | Distinct negative/valid-disjoint controls and final integrated review. This is not a demonstrated Store/API exploit. |
+| PERF-02 | Performance implementation | Direct strict JSON responses avoid the repeated full-tree presentation conversion; per-invocation indexed-page reuse retains checked content/wallet keys and private snapshots. | Exact byte/interpretation equivalence, mutation/loss/restoration and final source-bound timing measurements; full responses still contain large repeated proofs. |
+| OBS-01 | Environment / measurement | Bounded offline phase benchmark, private output exclusion and network/credential fences. | Timings apply to archived inputs and declared instrumentation; they are not full-history throughput or application acceptance. |
+| DATA-01 / B1 | Missing source capability | Current primary documents and retained examples still do not establish the complete historical owner population. | Accepted exhaustive lifecycle/format coverage; no paid-account necessity established. |
+| CAP-01 / B2 | Missing implementation | Complete real accounting remains OPEN. This batch adds usable inventory evidence and improves the existing report path. | Full origins/cost roles, classification, boundary/mark/flow admission and complete population remain separate obligations. |
+| R1-B3 | Genuine acceptance | BLOCKED. Original 23/87/200-record partial cases and independent expected arithmetic remain unchanged. | One complete genuine supported wallet corpus with independently worked results and selective source removal/restoration. |
+
+PRODUCT_READY=false. No new provider calls, key reads, purchases or funded wallet.
+The existing source decision contains the concrete genuine-case dependency list.

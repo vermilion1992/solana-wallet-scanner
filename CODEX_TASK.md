@@ -1,4 +1,38 @@
-# Active assignment — historical membership and position integration, 4 October 2026
+# Active assignment — genuine wallet report and scanning times, 4 October 2026
+
+Continue the private `codex/product-completion` branch from
+`ab62858dca7eccbdb18b3365a83dedd9b2e8f413`, with 43 preserved commits and
+241 source files: workspace manifest
+`0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365`.
+The accepted application remains `8aee62e50297d6773f347b77cecc3e8794f233cf`;
+the later test-only usage correction and its full backend execution are bound by
+`evidence/native-ci-usage-validation/`. Native run `37218468031` passed on the
+exact starting HEAD. Preserve those historical records and all genuine inputs.
+
+The user requested a complete wallet report and measured scanning times. Admit
+the already archived genuine current-account observations through the normal
+raw-evidence path, preserving individual context slots, original bytes and frozen
+negative dependencies. Same-slot inventory is separate from exact historical
+report boundaries, eligibility, marks, flows and historical account population.
+Do not merge different slots or turn a parser into a completion certificate.
+
+Remove redundant report transport conversion and repeated indexed-page parsing
+only with unchanged interpretation and equivalence evidence. Cache scope must
+be one invocation, keyed by rechecked original content and wallet; source loss,
+mutation, unsupported records and independent rebuilds remain fresh dependencies.
+Measure archived import, retrieval, export and rebuild separately, with profiling
+overhead identified and zero network/credential operations. The timing command
+is observability, not another acceptance entry point or a full-history scan SLA.
+
+Complete the affected matrices, distinct read-only review and exact-candidate
+gates before private publication. No ZIP or historical stabilisation restart.
+Current source and complete genuine acceptance remain separate: B1 historical
+sufficiency unresolved, complete real B2 OPEN, B3 BLOCKED, PRODUCT_READY=false.
+The present archives do not contain an exhaustive historical owner witness;
+additional paging or a paid account does not itself resolve that requirement.
+This batch uses retained data only, without provider calls or credential reads.
+
+# Prior assignment — historical membership and position integration, 4 October 2026
 
 Continue only from private `vermilion1992/solana-wallet-scanner`, branch
 `codex/product-completion`, preserved evidence HEAD

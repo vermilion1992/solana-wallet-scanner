@@ -1,5 +1,20 @@
 # Implementation contracts
 
+Current development batch adds versioned original-byte inventory observations
+and invocation-scoped indexed-page parsing reuse. Known current native/token
+observations remain distinct from same-slot all-program inventory and exact
+historical opening/closing inventory. Frozen request affinity routes negative
+dependencies only; it cannot supply response facts, marks, capital-flow roles or
+wallet completeness. Existing accounting/policy methods and strict thresholds
+remain unchanged. This batch requires its own source-bound acceptance records.
+
+Report/state/preview/enrichment presentation returns the same strict JSON-native
+payload directly, avoiding a redundant recursive transport conversion. Default
+full views and immutable JSON/CSV export contracts remain available. The local
+`tools/benchmark_report.py` command measures offline phases; it cannot certify
+source coverage, wallet qualification or product readiness. Timings from a
+partial archived sample exclude live acquisition and complete-wallet workload.
+
 Single-user local research app, loopback only. Python FastAPI serves built React assets. No signing, wallet connection, blockchain submission, simulations, paid endpoints, or arbitrary URL proxy.
 
 Current integration methods are wallet v8, archive v11, research v5,

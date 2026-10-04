@@ -41,6 +41,7 @@ import { count, date, dateTime, decimal, label, shorten } from "./format";
 import { samePresetSnapshot } from "./Discovery";
 import { reportDisplay } from "./api";
 import { SelectedCohortSection } from "./SelectedCohorts";
+import { InventoryObservations } from "./InventoryObservations";
 
 export function currentHistoryState(
   report: Report,
@@ -1382,6 +1383,12 @@ export function ReportView({
               report={report}
               currentWalletMethod={state.wallet_evidence_methodology}
               currentAccountingMethod={state.methodology}
+              historyCurrent={historyCurrent}
+              showEvidence={showEvidence}
+            />
+            <InventoryObservations
+              report={report}
+              currentWalletMethod={state.wallet_evidence_methodology}
               historyCurrent={historyCurrent}
               showEvidence={showEvidence}
             />

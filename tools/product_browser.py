@@ -37,6 +37,8 @@ def run(args):
     if (corpus/'manifest.json.gz').is_file():
         subprocess.run([python,str(ROOT/'tools/archive_input.py'),'--partial-cache',str(corpus),'--output',str(out/'partial-real-input.zip')],cwd=ROOT,env=env,check=True)
     indexed = getattr(args, 'indexed_archive', None)
+    if getattr(args, 'inventory_snapshots', False) and indexed is None:
+        raise ValueError('Inventory snapshot checks require the genuine indexed archive')
     if indexed is not None:
         if not getattr(args, 'indexed_expected_fees', None):
             raise ValueError('Indexed browser replay requires independently worked expected fees')
@@ -181,6 +183,41 @@ def run(args):
                 assert report['qualification']['qualified'] is False
                 selected_cohort_ui(report,'import-'+file.stem)
                 return report
+            def inventory_ui(report, label):
+                # Expectations were worked from three retained RPC responses,
+                # not from the application's component implementation. Different
+                # context slots cannot establish one aggregate/boundary balance.
+                inventory=report['coverage']['wallet_evidence']['inventory_observations']
+                components=inventory['components']
+                legacy=components['token_programs']['TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA']
+                token2022=components['token_programs']['TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb']
+                assert inventory['version']=='current-inventory-evidence-v1'
+                assert inventory['historical_population_state']=='UNKNOWN' and inventory['qualification'] is False
+                assert components['same_slot_inventory']['state']=='UNKNOWN'
+                assert components['report_boundaries']['state']=='UNKNOWN'
+                native=components['native_lamports']
+                assert native['state']=='PASS' and legacy['state']=='PASS' and token2022['state']=='PASS'
+                assert [(p['slot'],p['lamports']) for p in native['observations']]==[(453173211,'650240')]
+                assert [(p['slot'],p['account_count']) for p in legacy['observations']]==[(453173213,0)]
+                assert [(p['slot'],p['account_count']) for p in token2022['observations']]==[(453173215,1)]
+                panel=page.locator('[data-inventory-observations]')
+                expect(panel).to_have_attribute('data-inventory-observations','current')
+                expect(panel).to_contain_text('These observations do not establish one combined wallet balance')
+                for name,amount,slot in (('Native SOL','0.00065024 SOL','453,173,211'),
+                                        ('Legacy token accounts','0 accounts','453,173,213'),
+                                        ('Token2022 accounts','1 account','453,173,215')):
+                    row=panel.locator('[data-inventory-component="'+name+'"]')
+                    expect(row).to_contain_text(amount)
+                    expect(row).to_contain_text('Slot '+slot)
+                    expect(row).to_contain_text('Observed')
+                panel.locator('[data-inventory-component="Native SOL"]').get_by_role('button').first.click()
+                expect(page.get_by_role('button',name='Close evidence',exact=True)).to_be_visible()
+                page.get_by_role('button',name='Close evidence',exact=True).click()
+                result.setdefault('inventory_ui_assertions',[]).append({'case':label,'state':'PASS',
+                    'native_lamports':'650240','legacy_accounts':0,'token2022_accounts':1,
+                    'context_slots':[453173211,453173213,453173215],
+                    'source_inspection':True,'combined_inventory':'UNKNOWN',
+                    'report_boundaries':'UNKNOWN','wallet_qualification':False})
             parent=import_ui(out/'synthetic-input.zip','synthetic');pid=parent['id']
             assert parent['metrics']['profit_sol']['value']=='0.49995' and parent['metrics']['completed_positions']['value']=='5'
             original=page.request.get(base+f'/api/export/reports/{pid}.json').body()
@@ -235,6 +272,8 @@ def run(args):
                 assert real['metrics']['observed_network_fees_sol']['value']==args.indexed_expected_fees
                 assert real['metrics']['profit_sol']['status']=='unknown'
                 assert real['coverage']['indexed_sources']['historical_population']=='UNKNOWN'
+                if getattr(args, 'inventory_snapshots', False):
+                    inventory_ui(real,'indexed-inventory-import')
                 export_download(real['id'], out/'indexed-partial-parent.json')
                 original_indexed_hash=hashlib.sha256((out/'indexed-partial-parent.json').read_bytes()).hexdigest()
                 full_indexed=json.loads((out/'indexed-partial-parent.json').read_bytes())
@@ -255,6 +294,8 @@ def run(args):
                 child=page.request.get(base+'/api/reports/'+child_id+'?view=display').json()
                 assert child['metrics']==real['metrics'] and child['rebuilt_from']==real['id']
                 selected_cohort_ui(child,'indexed-partial-rebuilt')
+                if getattr(args, 'inventory_snapshots', False):
+                    inventory_ui(child,'indexed-inventory-rebuilt')
                 assert export_hash(real['id'])==original_indexed_hash
                 export_download(child_id, out/'indexed-partial-child.json')
                 capture('indexed-partial-rebuilt')
@@ -291,4 +332,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--python',required=True);p.add_argument('--chromium',default='/usr/bin/chromium')
     p.add_argument('--output',type=Path,required=True);p.add_argument('--real-corpus',type=Path,default=ROOT/'evidence/runs/real-cache')
     p.add_argument('--indexed-archive',type=Path);p.add_argument('--indexed-expected-fees')
+    p.add_argument('--inventory-snapshots',action='store_true',
+                   help='Check the three genuine archived inventory snapshots separately from historical completeness')
     raise SystemExit(run(p.parse_args()))

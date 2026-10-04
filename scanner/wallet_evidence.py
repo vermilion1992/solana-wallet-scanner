@@ -34,7 +34,8 @@ OBSERVED_SCOPE = 'Selected archived records only; hidden accounts and intervenin
 _NONTRANSACTION_ROLES = {'signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance',
                         'classification', 'valuation', 'boundary-inventory', 'historical-mark', 'capital-flow',
                         'synthetic-population', 'population-inventory', 'current-mint-controls', 'archive-native-dependencies',
-                        'query-affinity', 'wallet-account-info', 'wallet-account-source', 'wallet-identity-affinity'}
+                        'query-affinity', 'wallet-account-info', 'wallet-account-source', 'wallet-identity-affinity',
+                        'inventory-source', 'inventory-affinity'}
 _INDEXED_ROLES = {'indexed-page', 'indexed-native-source', 'indexed-input-manifest'}
 _NONTRANSACTION_ROLES |= _INDEXED_ROLES
 
@@ -468,15 +469,16 @@ def _indexed_native_rows(payload):
     from .indexed_input import (PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, MANIFEST_VERSION,
                                 source_bytes, validate_page_envelope, manifest_bytes, source_records)
     version = payload.get('version') if isinstance(payload, dict) else None
-    from .wallet_identity import ACCOUNT_SOURCE_VERSION, account_source_bytes
-    if version == ACCOUNT_SOURCE_VERSION:
+    from .wallet_identity import ACCOUNT_SOURCE_VERSION
+    from .inventory_evidence import SOURCE_VERSION as INVENTORY_SOURCE_VERSION, inventory_source_bytes
+    if version in (ACCOUNT_SOURCE_VERSION, INVENTORY_SOURCE_VERSION):
         # An account-role label cannot hide an original native transaction
         # response. Decode only checksum-verified retained bytes for negative
         # association; this does not admit an account envelope as a historical
         # source or replace its independent identity validator.
         from .json_boundary import parse_json
         try:
-            original = account_source_bytes(payload)
+            original = inventory_source_bytes(payload)
             request = parse_json(original['request'], max_nodes=1_000_000)
             response = parse_json(original['response'], max_nodes=1_000_000)
             claims, native, ambiguous, nodes, inspected = set(), [], False, [response], 0
@@ -1708,6 +1710,11 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     from .wallet_identity import derive_wallet_identity
     wallet_identity = derive_wallet_identity(list(selected.values()), all_records=linked, raw_sources=source_rows, wallet=wallet)
     components['wallet_identity'] = wallet_identity
+    from .inventory_evidence import derive_inventory_evidence
+    # Read actual retained source declarations. Generic transaction read
+    # receipts are already consumed by the transaction adapter and are not
+    # manufactured missing inventory versions.
+    inventory_observations = derive_inventory_evidence(raw_sources, wallet=wallet, window=window)
     from .metric_evidence import compose_metric_decisions
     return {'version': VERSION, 'scope': OBSERVED_SCOPE, 'components': components,
         'inspection_budget': {'max_records': MAX_RECORDS, 'linked_records': len(linked),
@@ -1722,5 +1729,6 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         'native_role_checks': native_role_checks,
         'source_dependencies': contents['receipts'], 'source_consistency': consistency, 'chronology': clocks,
         'query_coverage': query_coverage, 'query_accounting': query_accounting, 'wallet_identity': wallet_identity,
+        'inventory_observations': inventory_observations,
         'gaps': sorted({gap for row in transactions.values() for gap in row['gaps']} | {unresolved['reason']}),
         'provider_requests': 0, 'credential_lookups': 0}

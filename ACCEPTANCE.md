@@ -84,13 +84,28 @@ Record source commit/manifest and lockfile hashes; runtime versions; command, ex
 
 `python tools/check_product.py --output <new-directory>` executes the normal offline archive/report/rebuild/export application workflow independently of pytest. `python tools/product_browser.py --python <configured-app-python> --output <new-directory>` drives archive import, normal reports, source inspection, loss/restoration and downloads through the guarded real launcher at desktop/mobile widths. Run the browser command with the configured Playwright interpreter. Synthetic development and partial genuine inputs are distinct cases. `check_product.py --require-real-acceptance` must return BLOCKED/nonzero until an independently supported complete genuine corpus exists; a development PASS or Gate A acceptance does not close B1/B2/B3. Preserve historical `evidence/FINAL_GATES.json`; current checkpoint records live under `evidence/product-milestone/` with actual linked logs/captures.
 
+For the retained three genuine inventory snapshots, use the augmented ordinary
+archive with `product_browser.py --indexed-archive <archive>
+--indexed-expected-fees 0.000158868 --inventory-snapshots`. Its two inventory UI
+assertions accompany the existing import/rebuild cases; they are not additional
+unique backend tests or evidence of complete historical inventory.
+
+`python tools/benchmark_report.py --archive <archive> --output <fresh-directory-outside-git>
+--timeout 300 --full-details` measures actual offline import, display, full JSON,
+export and immutable rebuild phases with provider and credential guards. Run
+`--profile` separately when investigating CPU costs: profiled and unprofiled
+times are different measurements. Preserve input/source/lock/runtime bindings,
+raw logs, incomplete/time-out receipts and parent hashes. A timing PASS certifies
+the measured offline operation, never historical completeness or B3 acceptance.
+
 ## Current offline CI and accounting batch
 
 `tools/validate.py` remains the only gate entry point. Ten disjoint focused groups
 retain all 35 baseline selectors (the original 30 plus five metric regressions)
-and add four current modules exactly once: historical membership, aggregate
-position population, invocation-local source-fact reuse and disposed-origin
-scopes. These are partitions of one focused suite, not additional test suites.
+and add six current modules exactly once: historical membership, aggregate
+position population, invocation-local source/page reuse, disposed-origin scopes
+original-byte inventory admission and offline benchmark controls. These are partitions of one focused
+suite, not additional test suites.
 Focused summary requires all group receipts plus a separate offline-development
 receipt, exact Git/source/locks/runtime, successful commands and explicit PASS
 assertions; interrupted or absent execution cannot pass. CI artifacts use fixed

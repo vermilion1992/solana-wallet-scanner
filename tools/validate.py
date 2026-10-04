@@ -28,10 +28,12 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py',
            'tests/test_research_disposal_scopes.py',
            'tests/test_historical_membership.py', 'tests/test_wallet_position_population.py',
-           'tests/test_source_fact_reuse.py', 'tests/test_disposed_origin_scopes.py']
+           'tests/test_source_fact_reuse.py', 'tests/test_disposed_origin_scopes.py',
+           'tests/test_inventory_evidence.py', 'tests/test_report_benchmark.py']
 
 # Retain all 35 baseline selectors (original 30 plus five metric regressions) and
-# add this batch's four development-contract/performance regression modules.
+# include the retained development-contract/performance modules, inventory admission
+# and offline benchmark controls.
 # Every selector appears exactly once. These are execution batches of one
 # focused suite, not additional suites or additional acceptance counts.
 FOCUSED_GROUPS = {
@@ -51,10 +53,11 @@ FOCUSED_GROUPS = {
     'indexed-chronology': ['tests/test_indexed_chronology.py'],
     'indexed-dependencies': ['tests/test_indexed_source_dependencies.py', 'tests/test_source_fact_reuse.py'],
     'indexed-integration': ['tests/test_indexed_report_integration.py'],
-    'indexed-coverage': ['tests/test_real_coverage.py', 'tests/test_historical_membership.py'],
+    'indexed-coverage': ['tests/test_real_coverage.py', 'tests/test_historical_membership.py',
+                         'tests/test_inventory_evidence.py'],
     'research': ['tests/test_report_view.py', 'tests/test_research.py', 'tests/test_research_source_roles.py',
                  'tests/test_accounting_metric_isolation.py', 'tests/test_research_disposal_scopes.py',
-                 'tests/test_disposed_origin_scopes.py'],
+                 'tests/test_disposed_origin_scopes.py', 'tests/test_report_benchmark.py'],
     'discovery': ['tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py',
                   'tests/test_discovery_native_identity.py', 'tests/test_bounded_collection.py',
                   'tests/test_genuine_collection_workflow.py'],

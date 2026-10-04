@@ -9,10 +9,15 @@ from __future__ import annotations
 
 import base64
 import binascii
+import asyncio
+from contextlib import contextmanager
+from contextvars import ContextVar
 from copy import deepcopy
 import hashlib
 import io
 import re
+import sys
+import threading
 import zipfile
 
 from .accounting import utc
@@ -34,6 +39,100 @@ MAX_JSON_NODES = 1_000_000
 HASH = re.compile(r'[a-f0-9]{64}')
 _BYTES_FIELDS = {'version', 'request_hash', 'response_hash', 'request_base64', 'response_base64'}
 _POINTER_FIELDS = {'version', 'source_hash', 'ordinal', 'signature', 'native_hash'}
+MAX_CACHED_PAGE_ENTRIES = MAX_PAGES
+MAX_CACHED_PAGE_BYTES = MAX_TOTAL
+
+
+def _invocation_owner():
+    try:
+        task = asyncio.current_task()
+    except RuntimeError:
+        task = None
+    return threading.get_ident(), task
+
+
+def _snapshot_bytes(value):
+    """Bound retained Python memory, counting shared children once per entry."""
+    pending, seen, size = [value], set(), 0
+    while pending:
+        item = pending.pop()
+        if id(item) in seen:
+            continue
+        seen.add(id(item))
+        size += sys.getsizeof(item)
+        if isinstance(item, dict):
+            pending.extend(item.keys())
+            pending.extend(item.values())
+        elif isinstance(item, (list, tuple)):
+            pending.extend(item)
+    return size
+
+
+class _ValidatedPageCache:
+    def __init__(self):
+        self.owner = _invocation_owner()
+        self.pages = {}
+        self.retained_bytes = 0
+        self.hits = self.misses = self.admissions = self.overflows = self.guard_bypasses = 0
+
+    def admit(self, key, page):
+        # Cache limits change only performance: the ordinary interpreter has
+        # already produced this exact result, including rejecting dependencies.
+        remaining = MAX_CACHED_PAGE_BYTES - self.retained_bytes
+        if len(self.pages) >= MAX_CACHED_PAGE_ENTRIES or _snapshot_bytes((key, page)) > remaining:
+            self.overflows += 1
+            return
+        snapshot = deepcopy(page)
+        retained = _snapshot_bytes((key, snapshot))
+        if retained > remaining:
+            self.overflows += 1
+            return
+        self.pages[key] = snapshot
+        self.retained_bytes += retained
+        self.admissions += 1
+
+
+_PAGE_CONTEXT = ContextVar('scanner_validated_page_invocation', default=None)
+
+
+def _active_page_cache():
+    cache = _PAGE_CONTEXT.get()
+    # A newly created asyncio task inherits ContextVars, but it is a separate
+    # invocation unless it explicitly opens its own context. Never share a
+    # mutable page cache between request/worker tasks.
+    return cache if cache is not None and cache.owner == _invocation_owner() else None
+
+
+@contextmanager
+def validated_page_context():
+    """Reuse checksum-derived page facts within one task's offline invocation.
+
+    Nested calls retain the outer cache; leaving the outermost context clears
+    its private snapshots and resets the ContextVar, including cancellation.
+    No caller receipt, object identity or persisted assessment is admitted.
+    """
+    if _active_page_cache() is not None:
+        yield
+        return
+    cache = _ValidatedPageCache()
+    token = _PAGE_CONTEXT.set(cache)
+    try:
+        yield
+    finally:
+        _PAGE_CONTEXT.reset(token)
+        cache.pages.clear()
+        cache.retained_bytes = 0
+
+
+def validated_page_cache_stats():
+    """Return bounded observation counters without exposing cached proof data."""
+    cache = _active_page_cache()
+    return {'active': cache is not None, 'entries': len(cache.pages) if cache else 0,
+            'retained_bytes': cache.retained_bytes if cache else 0,
+            'hits': cache.hits if cache else 0, 'misses': cache.misses if cache else 0,
+            'admissions': cache.admissions if cache else 0, 'overflows': cache.overflows if cache else 0,
+            'guard_bypasses': cache.guard_bypasses if cache else 0,
+            'max_entries': MAX_CACHED_PAGE_ENTRIES, 'max_retained_bytes': MAX_CACHED_PAGE_BYTES}
 
 
 def _bounded_json_value(value):
@@ -228,6 +327,36 @@ def _request_values(payload, address, request, response):
 
 
 def validate_page_envelope(payload, address=None):
+    """Keep the public interpretation unchanged while reusing private facts.
+
+    Every lookup freshly bounds and hashes the entire envelope and checks both
+    original byte hashes. Only identical byte content and wallet scope can hit;
+    changed/missing/corrupt sources and invalid JSON retain the ordinary result.
+    """
+    cache = _active_page_cache()
+    if cache is None or type(address) not in (str, type(None)):
+        return _validate_page_envelope(payload, address)
+    try:
+        encoded = canonical_bytes(payload)
+        preserved = source_bytes(payload)
+        if payload['version'] != PAGE_VERSION:
+            raise ValueError('Expected indexed page source')
+        key = (_digest(encoded), address)
+    except (ValueError, TypeError, KeyError, UnicodeError, OverflowError):
+        cache.guard_bypasses += 1
+        # Do not replace the established rejecting reason or erase bounded
+        # raw signature leads merely because cache admission is impossible.
+        return _validate_page_envelope(payload, address)
+    if key in cache.pages:
+        cache.hits += 1
+        return deepcopy(cache.pages[key])
+    cache.misses += 1
+    result = _validate_page_envelope(payload, address, _preserved=preserved)
+    cache.admit(key, result)
+    return result
+
+
+def _validate_page_envelope(payload, address=None, *, _preserved=None):
     """Describe facts from bytes, keeping malformed entries and paging gaps.
 
     ``state`` concerns the indexed page schema only. Even PASS cannot prove a
@@ -242,7 +371,7 @@ def validate_page_envelope(payload, address=None):
         # Retain bounded record leads even when request/cursor metadata is
         # malformed. Their pointers then remain rejecting dependencies rather
         # than disappearing from the alternative-source comparison.
-        preserved = source_bytes(payload)
+        preserved = source_bytes(payload) if _preserved is None else _preserved
         response_lead = _json(preserved['response'])
         page_lead = response_lead.get('result') if isinstance(response_lead, dict) else None
         data_lead = page_lead.get('data') if isinstance(page_lead, dict) else None

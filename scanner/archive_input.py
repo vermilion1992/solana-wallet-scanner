@@ -74,7 +74,7 @@ def validate_manifest(value):
     for ref in refs:
         if not isinstance(ref, dict) or not isinstance(ref.get('hash'), str) or not HASH.fullmatch(ref['hash']) or not isinstance(ref.get('kind'), str):
             raise ValueError('Evidence links need explicit kinds and SHA-256 hashes')
-        if ref['kind'] in ('query-affinity', 'wallet-identity-affinity', 'archive-native-dependencies'):
+        if ref['kind'] in ('query-affinity', 'wallet-identity-affinity', 'inventory-affinity', 'archive-native-dependencies'):
             raise ValueError('Frozen dependency roles are derived internally, not accepted as archive evidence declarations')
         if ref['kind'] in ('transaction', 'getTransaction') and (not isinstance(ref.get('signature'), str) or not 1 <= len(ref['signature']) <= 128):
             raise ValueError('Alternative transaction links require an explicit bounded signature')
@@ -135,6 +135,9 @@ def import_archive(store, content, *, reserve_bytes=0):
             payload = _json(decoded)
             if canonical_bytes(payload) != decoded:
                 raise ValueError('Archive JSON must use the scanner canonical serialization; retain original provider bytes separately')
+            from .inventory_evidence import AFFINITY_VERSION
+            if isinstance(payload, dict) and payload.get('version') == AFFINITY_VERSION:
+                raise ValueError('Inventory request affinity is derived internally, never imported as trusted evidence')
             payloads[digest] = (raw, decoded)
         if total > MAX_TOTAL:
             raise ValueError('Expanded archive limit exceeded')
@@ -179,8 +182,10 @@ def import_archive(store, content, *, reserve_bytes=0):
     dependencies = raw_native_dependencies(sources, (), {r['signature'] for r in manifest['transactions']})
     from .real_coverage import query_source_dependencies
     from .wallet_identity import wallet_identity_dependencies
+    from .inventory_evidence import inventory_request_affinities
     query_hashes = query_source_dependencies(sources)
     identity_hashes = wallet_identity_dependencies(sources, wallet=manifest['address'])
+    inventory_hashes = [store.archive(value) for value in inventory_request_affinities(sources, wallet=manifest['address'])]
     links = [{'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in dependencies
              if isinstance(r.get('evidence_hash'), str) and HASH.fullmatch(r['evidence_hash'])]
     previous = store.get('archive_dependency_inputs', digest, {})
@@ -189,20 +194,26 @@ def import_archive(store, content, *, reserve_bytes=0):
         try:
             previous_inventory = store.evidence(previous_hash)
             links += _dependency_links(previous_inventory, digest)
-            if previous_inventory.get('version') in ('archive-native-dependencies-v2', 'archive-native-dependencies-v3'):
+            if previous_inventory.get('version') in ('archive-native-dependencies-v2', 'archive-native-dependencies-v3', 'archive-native-dependencies-v4'):
                 query_hashes += previous_inventory['query_source_hashes']
-            if previous_inventory.get('version') == 'archive-native-dependencies-v3':
+            if previous_inventory.get('version') in ('archive-native-dependencies-v3', 'archive-native-dependencies-v4'):
                 identity_hashes += previous_inventory['identity_source_hashes']
+            if previous_inventory.get('version') == 'archive-native-dependencies-v4':
+                inventory_hashes += previous_inventory['inventory_affinity_hashes']
         except (EvidenceError, ValueError, OSError):
             links.append({'signature': None, 'hash': previous_hash})
             query_hashes.append(previous_hash)
             identity_hashes.append(previous_hash)
+            inventory_hashes.append(previous_hash)
     links = list({(r['signature'], r['hash']): r for r in links}.values())
     inputs = {'version': 'archive-native-dependencies-v2', 'manifest_hash': digest,
               'links': sorted(links, key=lambda r: (r['signature'] or '', r['hash'])),
               'query_source_hashes': sorted(set(query_hashes))}
     if identity_hashes:
         inputs.update(version='archive-native-dependencies-v3', identity_source_hashes=sorted(set(identity_hashes)))
+    if inventory_hashes:
+        inputs.update(version='archive-native-dependencies-v4', identity_source_hashes=sorted(set(identity_hashes)),
+                      inventory_affinity_hashes=sorted(set(inventory_hashes)))
     _dependency_links(inputs, digest)
     dependency_hash = store.archive(inputs)
     store.put('archive_dependency_inputs', digest, {'hash': dependency_hash})
@@ -212,19 +223,21 @@ def import_archive(store, content, *, reserve_bytes=0):
 def _dependency_links(value, manifest_hash):
     from .source_consistency import SOURCE_HASH_LIMIT
     version = value.get('version') if isinstance(value, dict) else None
-    fields = {'version', 'manifest_hash', 'links'} | ({'query_source_hashes'} if version in ('archive-native-dependencies-v2', 'archive-native-dependencies-v3') else set())
-    if version == 'archive-native-dependencies-v3':
+    fields = {'version', 'manifest_hash', 'links'} | ({'query_source_hashes'} if version in ('archive-native-dependencies-v2', 'archive-native-dependencies-v3', 'archive-native-dependencies-v4') else set())
+    if version in ('archive-native-dependencies-v3', 'archive-native-dependencies-v4'):
         fields.add('identity_source_hashes')
+    if version == 'archive-native-dependencies-v4':
+        fields.add('inventory_affinity_hashes')
     if (not isinstance(value, dict) or set(value) != fields
-        or version not in ('archive-native-dependencies-v1', 'archive-native-dependencies-v2', 'archive-native-dependencies-v3') or value.get('manifest_hash') != manifest_hash
+        or version not in ('archive-native-dependencies-v1', 'archive-native-dependencies-v2', 'archive-native-dependencies-v3', 'archive-native-dependencies-v4') or value.get('manifest_hash') != manifest_hash
         or not isinstance(value.get('links'), list) or len(value['links']) > SOURCE_HASH_LIMIT):
         raise ValueError('Frozen native dependency inventory disagrees with this manifest')
-    for key in (('query_source_hashes', 'identity_source_hashes') if version == 'archive-native-dependencies-v3' else ('query_source_hashes',) if version == 'archive-native-dependencies-v2' else ()):
+    for key in (fields - {'version', 'manifest_hash', 'links'}):
         hashes = value[key]
         if (not isinstance(hashes, list) or len(hashes) > SOURCE_HASH_LIMIT
             or any(not isinstance(h, str) or not HASH.fullmatch(h) for h in hashes)
             or len(set(hashes)) != len(hashes)):
-            role = 'query' if key == 'query_source_hashes' else 'identity'
+            role = 'query' if key == 'query_source_hashes' else 'identity' if key == 'identity_source_hashes' else 'inventory'
             raise ValueError(f'Frozen {role} dependency inventory is malformed or exceeds its bound')
     for row in value['links']:
         if (not isinstance(row, dict) or set(row) != {'signature', 'hash'}
@@ -255,7 +268,7 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
         for item in world['transactions']:
             if isinstance(item, dict) and isinstance(item.get('hash'), str) and HASH.fullmatch(item['hash']):
                 read(item['hash'], 'population-inventory')
-    dependency_input, query_affinities, identity_affinities = None, [], []
+    dependency_input, query_affinities, identity_affinities, inventory_affinities = None, [], [], []
     if dependency_input_hash is _CURRENT_IMPORT:
         index = store.get('archive_dependency_inputs', digest, {})
         dependency_input_hash = index.get('hash') if isinstance(index, dict) else None
@@ -263,14 +276,18 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
         dependency_input = read(dependency_input_hash, 'archive-native-dependencies')
         try:
             links += _dependency_links(dependency_input, digest)
-            if dependency_input.get('version') in ('archive-native-dependencies-v2', 'archive-native-dependencies-v3'):
+            if dependency_input.get('version') in ('archive-native-dependencies-v2', 'archive-native-dependencies-v3', 'archive-native-dependencies-v4'):
                 query_affinities += dependency_input['query_source_hashes']
                 for query_hash in query_affinities:
                     read(query_hash, 'query-affinity')
-                if dependency_input.get('version') == 'archive-native-dependencies-v3':
+                if dependency_input.get('version') in ('archive-native-dependencies-v3', 'archive-native-dependencies-v4'):
                     identity_affinities += dependency_input['identity_source_hashes']
                     for identity_hash in identity_affinities:
                         read(identity_hash, 'wallet-identity-affinity')
+                if dependency_input.get('version') == 'archive-native-dependencies-v4':
+                    inventory_affinities += dependency_input['inventory_affinity_hashes']
+                    for inventory_hash in inventory_affinities:
+                        read(inventory_hash, 'inventory-affinity')
             else:
                 # The old inventory froze native associations only.  Keep its
                 # absent query-role proof separate from independent fees.
@@ -279,6 +296,7 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
             links.append({'signature': None, 'hash': dependency_input_hash})
             query_affinities.append(dependency_input_hash)
             identity_affinities.append(dependency_input_hash)
+            inventory_affinities.append(dependency_input_hash)
     else:
         # A legacy parent has no frozen role-affinity proof. Never substitute
         # a later mutable import index for that parent's original references.
@@ -340,7 +358,8 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
                 + ([{'hash': dependency_input_hash, 'kind': 'archive-native-dependencies',
                      'payload': dependency_input}] if dependency_input_hash else [])
                 + [{'hash': h, 'kind': 'query-affinity', 'payload': cache.get(h)} for h in query_affinities]
-                + [{'hash': h, 'kind': 'wallet-identity-affinity', 'payload': cache.get(h)} for h in identity_affinities],
+                + [{'hash': h, 'kind': 'wallet-identity-affinity', 'payload': cache.get(h)} for h in identity_affinities]
+                + [{'hash': h, 'kind': 'inventory-affinity', 'payload': cache.get(h)} for h in inventory_affinities],
             'dependency_input_hash': dependency_input_hash,
             'dependency_input': dependency_input, 'input_hash': digest}
 

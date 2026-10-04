@@ -110,6 +110,7 @@ def _freeze_native_dependencies(store, collected, *, address, window):
     from .wallet_evidence import raw_native_dependencies
     from .real_coverage import query_source_dependencies
     from .wallet_identity import wallet_identity_dependencies
+    from .inventory_evidence import inventory_request_affinities
     primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
     negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
     # These are negative associations, not completion or position certificates.
@@ -121,6 +122,8 @@ def _freeze_native_dependencies(store, collected, *, address, window):
                           for digest in query_source_dependencies(raw_sources)]
     frozen['evidence'] += [{'kind': 'wallet-identity-affinity', 'hash': digest}
                           for digest in wallet_identity_dependencies(raw_sources, wallet=address)]
+    frozen['evidence'] += [{'kind': 'inventory-affinity', 'hash': store.archive(affinity)}
+                          for affinity in inventory_request_affinities(raw_sources, wallet=address)]
     return frozen, primary, linked, raw_sources, raw_receipts
 
 
@@ -282,6 +285,12 @@ def create_app(data_dir, launch_token=None):
         return Gateway(store, credentials.key, info["cycle_start"], settings()["limits"]["helius_cap"])
 
     async def build_report(scan, address, collected, *, rebuilt_from=None, archive_loaded=None):
+        from .indexed_input import validated_page_context
+        with validated_page_context():
+            return await _build_report(scan, address, collected, rebuilt_from=rebuilt_from,
+                                       archive_loaded=archive_loaded)
+
+    async def _build_report(scan, address, collected, *, rebuilt_from=None, archive_loaded=None):
         from .accounting import analyze, evaluate_policy, METHODOLOGY
         from .decoder import decode_transactions
         from .investigation import decode_supported_swaps, inspect_token_risk
@@ -780,7 +789,9 @@ def create_app(data_dir, launch_token=None):
             disk["warnings"].append("Low free disk space; ingestion pauses before further requests or evidence writes.")
         saved_reports = reports(report_view)
         cohorts = discovery_cohorts(saved_reports)
-        return {"version": __version__, "methodology": METHODOLOGY, "evidence_audit_methodology": EVIDENCE_AUDIT_METHODOLOGY,
+        # Saved rows and their derived projections are JSON-native already.
+        # Avoid FastAPI's second recursive copy of large archived proof trees.
+        return JSONResponse({"version": __version__, "methodology": METHODOLOGY, "evidence_audit_methodology": EVIDENCE_AUDIT_METHODOLOGY,
                 "history_evidence_methodology": HISTORY_METHODOLOGY,
                 "position_evidence_methodology": POSITION_METHODOLOGY,
                 "source_consistency_methodology": SOURCE_CONSISTENCY_METHODOLOGY,
@@ -788,7 +799,7 @@ def create_app(data_dir, launch_token=None):
                 "settings": settings(), "preset": preset(), "provider": provider(), "usage": usage(),
                 "scans": store.list("scans"), "discovery_cohorts": cohorts, "reports": saved_reports,
                 "candidate_universe": aggregate_candidate_universe(cohorts, saved_reports, candidate_cap=settings()["limits"]["candidate_cap"]),
-                "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk}
+                "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk})
 
     @app.get("/api/usage")
     async def get_usage():
@@ -846,7 +857,7 @@ def create_app(data_dir, launch_token=None):
             projected = decorate_report({**report, "preview": True, "preview_reason": reason, "metrics": metrics,
                             **evaluate_policy(metrics, new_preset, evidence_verified=report["evidence_status"] == "verified" and same_period and same_history)})
             results.append(summary_view(projected) if view == 'summary' else projected)
-        return {"reports": results}
+        return JSONResponse({"reports": results})
 
     @app.post("/api/provider")
     async def configure_provider(request: Request):
@@ -1054,6 +1065,11 @@ def create_app(data_dir, launch_token=None):
 
     @app.post("/api/archives/import")
     async def archive_import(request: Request):
+        from .indexed_input import validated_page_context
+        with validated_page_context():
+            return await _archive_import(request)
+
+    async def _archive_import(request: Request):
         from .archive_input import import_archive, load_archive, collected_archive
         content = await request.body()
         from .indexed_input import convert_indexed_archive, archive_version, VERSION as INDEXED_VERSION
@@ -1078,10 +1094,15 @@ def create_app(data_dir, launch_token=None):
         if not result:
             raise HTTPException(404, "Report not found")
         decorated = decorate_report(result)
-        return display_view(decorated) if view == 'display' else decorated
+        return JSONResponse(display_view(decorated) if view == 'display' else decorated)
 
     @app.post("/api/reports/{identifier}/rebuild")
     async def rebuild_report(identifier):
+        from .indexed_input import validated_page_context
+        with validated_page_context():
+            return await _rebuild_report(identifier)
+
+    async def _rebuild_report(identifier):
         from .report_rebuild import load_report_inputs
         import shutil
         previous = store.get("reports", identifier)
@@ -1157,7 +1178,7 @@ def create_app(data_dir, launch_token=None):
         report["market_observations"] = observations
         report["market_observation_scope"] = "Up to five current token observations. Indicative only; no historical ledger or screening metric is changed."
         store.put("reports", identifier, report)
-        return display_view(decorate_report(report)) if view == 'display' else report
+        return JSONResponse(display_view(decorate_report(report)) if view == 'display' else report)
 
     @app.get("/api/export/reports/{filename}")
     async def export(filename):

@@ -424,6 +424,20 @@
       "selectors": [
         "tests/test_disposed_origin_scopes.py::*"
       ]
+    },
+    {
+      "id": "current-inventory-original-byte-admission",
+      "axis": "Original evidence, independent current snapshots, same-slot population and immutable offline dependencies",
+      "selectors": [
+        "tests/test_inventory_evidence.py::*"
+      ]
+    },
+    {
+      "id": "offline-report-benchmark-controls",
+      "axis": "Offline operation isolation, bounded worker lifecycle and private output exclusion",
+      "selectors": [
+        "tests/test_report_benchmark.py::*"
+      ]
     }
   ],
   "browser_required": [

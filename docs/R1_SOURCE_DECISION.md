@@ -1,5 +1,40 @@
 # R1 source and delivery decision
 
+## Current genuine-report decision — 4 October 2026
+
+Starting private HEAD: `ab62858dca7eccbdb18b3365a83dedd9b2e8f413`.
+Fresh unauthenticated retrieval of the indexed guide/reference matches the
+already archived primary bytes. Their owner predicate still does not explicitly
+establish closed/reassigned/non-ATA, event-time coverage across both programs.
+This specific coverage gap does not establish a paid-account requirement.
+
+The original 87-record corpus includes a genuine incoming Token2022 AccountOwner
+assignment with the wallet absent from message keys. Its selected fees, trades
+and named-lot loss remain supported within their recorded scope; this positive
+example does not certify every historical owner interval. Neither that corpus
+nor the 200-record timing sample establishes complete-wallet qualification.
+
+Three retained finalized snapshots can improve the report: 650,240 native account
+lamports at slot 453,173,211, an empty legacy owner query at 453,173,213, and one
+zero-token Token2022 account at 453,173,215 holding 1,513,840 account lamports.
+Preserve original bytes, slots and quantities. Different slots cannot form one
+exact inventory or either historical report boundary. Account lamports are not
+a token price or an automatically classified rent/capital flow. Current inventory
+admission is separate from historical population, boundary inventory and marks.
+
+The smallest useful complete genuine case remains an existing low-activity wallet
+with at least one closed position; a loss or policy miss is valid. Retain the
+original 30-day report and independent 28/90-day scopes. Required inputs remain
+the exhaustive historical owner/lifecycle population, all relevant successful
+and failed records/formats, consumed acquisition costs, economic roles,
+eligibility, exact native/token boundary inventory and valued external flows.
+Independently proved zero nonsettlement boundary holdings would avoid unused
+token marks, but cannot be assumed. A genuine ledger/state export or an explicitly
+equivalent indexed coverage contract could supply the population witness; none
+is currently available. More pages alone will not close it. Continue the
+non-data-blocked implementation and offline timing work; B1/B3 stay unresolved
+and PRODUCT_READY=false. The earlier decision/evidence is preserved below.
+
 Decision updated: 4 October 2026. Original wallet-wide scope remains the product goal. **B1 authenticated endpoint access and bounded response compatibility are now OBSERVED on the user's Free account; complete historical coverage remains INCONCLUSIVE. B2 has an executable archived-input development slice; complete real B2/B3 acceptance remains OPEN.** The initial 3 October source research used no provider key or credits. The separately authorised 4 October probe executed exactly 10 requests with a 73-credit conservative reservation bound; its partial observations do not certify wallet-wide results. Exact raw receipts and independent replay are in `evidence/source-probe-2026-10-04/`.
 
 ## Required evidence by metric
