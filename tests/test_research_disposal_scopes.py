@@ -86,4 +86,3 @@ def test_zero_and_losing_disposals_are_retained_in_selected_census():
     assert [r['conditional_profit_sol'] for r in result['historical_sales_detail']] == ['0', '-0.1']
     assert result['observed_matched_sales'] == 2
     assert result['conditional_observed_lot_profit_sol'] == '-0.1'
-
