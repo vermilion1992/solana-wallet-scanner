@@ -1,0 +1,70 @@
+{
+  "kind": "offline-read-only-review-findings-replay",
+  "state": "CURRENT_REPRODUCTIONS",
+  "checks": [
+    {
+      "id": "IDX-REVIEW-DUPLICATE-missing",
+      "expected": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "observed": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "passing": true,
+      "scope": "Typed source topology interface; no complete population/qualification claim"
+    },
+    {
+      "id": "IDX-REVIEW-DUPLICATE-checksum-mismatch",
+      "expected": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "observed": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "passing": true,
+      "scope": "Typed source topology interface; no complete population/qualification claim"
+    },
+    {
+      "id": "IDX-REVIEW-DUPLICATE-POSITIVE",
+      "expected": "PASS",
+      "observed": "PASS",
+      "passing": true
+    },
+    {
+      "id": "IDX-REVIEW-COMPILED-OBSERVATION-RAW-PATHS",
+      "expected": {
+        "quantity_state": "PASS",
+        "derived_only_raw_paths": []
+      },
+      "observed": {
+        "quantity_state": "PASS",
+        "derived_only_raw_paths": [
+          "meta.innerInstructions.0.instructions.1.parsed.info.authority",
+          "meta.innerInstructions.0.instructions.1.parsed.info.destination",
+          "meta.innerInstructions.0.instructions.1.parsed.info.mint",
+          "meta.innerInstructions.0.instructions.1.parsed.info.source",
+          "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.amount",
+          "meta.innerInstructions.0.instructions.1.parsed.info.tokenAmount.uiAmountString"
+        ]
+      },
+      "passing": false,
+      "scope": "Original compiled data/account paths must support derived observation citations"
+    },
+    {
+      "id": "IDX-REVIEW-COMPILED-SOURCE-IMMUTABILITY",
+      "passing": true,
+      "normalizations": 9,
+      "scope": "Unsigned pinned-layout conversion, not a genuine compiled transaction"
+    }
+  ],
+  "script_sha256": "eb7c26e3fbe433613aa11b7d0774234b8e6cb0e481d2ad82a9dceef30eab5571",
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "new_application_acceptance": false,
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false
+}

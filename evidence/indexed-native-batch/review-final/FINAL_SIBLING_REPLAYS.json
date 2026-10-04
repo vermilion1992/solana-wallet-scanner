@@ -1,0 +1,64 @@
+{
+  "kind": "read-only-final-previous-sibling-findings-replay",
+  "state": "PASS_IN_SCOPE",
+  "engineering_controls": 8,
+  "checks": [
+    {
+      "id": "float-v0-rejection",
+      "passing": true
+    },
+    {
+      "id": "cross-role-lookup-position-rejection",
+      "passing": true
+    },
+    {
+      "id": "opaque-absent-account-rejection",
+      "passing": true
+    },
+    {
+      "id": "opaque-absent-program-rejection",
+      "passing": true
+    },
+    {
+      "id": "one-normalization-per-projection-8",
+      "passing": true,
+      "whole_transaction_normalizations": 1,
+      "source_unchanged": true,
+      "facts": 40
+    },
+    {
+      "id": "one-normalization-per-projection-32",
+      "passing": true,
+      "whole_transaction_normalizations": 1,
+      "source_unchanged": true,
+      "facts": 160
+    },
+    {
+      "id": "loaded-length-before-expensive-decode",
+      "passing": true,
+      "pubkey_decodes": 5
+    },
+    {
+      "id": "generic-mixed-representation-retains-fee",
+      "passing": true,
+      "event_kinds": [
+        "fee",
+        "unsupported"
+      ],
+      "unresolved": [
+        {
+          "signature": "fixture-not-a-signed-transaction",
+          "path": "instructions.0",
+          "reason": "Parsed and opaque instruction representations conflict",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        }
+      ]
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "new_application_acceptance": false,
+  "scope": "Unsigned development controls; not unique acceptance tests or B3 proof."
+}

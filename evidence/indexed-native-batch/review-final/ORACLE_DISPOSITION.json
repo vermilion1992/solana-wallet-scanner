@@ -1,0 +1,10 @@
+{
+  "kind": "review-oracle-correction",
+  "id": "ND-REVIEW-01",
+  "application_defect": false,
+  "original": "Expected only a fee event when the mixed representation is rejected.",
+  "observed": "One independently supported fee plus an explicit unsupported diagnostic, with no capital/buy/sell observation.",
+  "corrected": "Require one supported fee, an explicit unresolved diagnostic, and no economic event; retaining the unsupported event is correct.",
+  "preserved_original_log": "SIBLING_REPLAYS_INITIAL_ORACLE.log",
+  "preserved_original_receipt": "SIBLING_REPLAYS_INITIAL_ORACLE.json"
+}

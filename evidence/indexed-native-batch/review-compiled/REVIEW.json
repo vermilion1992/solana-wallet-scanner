@@ -1,0 +1,151 @@
+{
+  "kind": "distinct-read-only-compiled-subset-review",
+  "state": "FINDINGS_REPRODUCED",
+  "recorded_at": "2026-10-04T04:55:13.144002+00:00",
+  "reviewed_subset_start": {
+    "scanner/compiled_instructions.py": "6f12ef64564157c2d48f0ebf5717656f42f1796cfa32276c71359e03fa6e4628",
+    "scanner/decoder.py": "6d47f4054af0d939e9e4d1b05eeb7b4a950aeaba072da098ffb32c498c292886",
+    "scanner/instruction_scope.py": "a76ad83272603f4145bebbb57a649e9ae1aa94fb9aaed338595b37908b882406",
+    "scanner/investigation.py": "c74eca144be05c1278f562fbe07597639a387d14ca8dc7ba39aadf8176926799",
+    "scanner/position_evidence.py": "b101a3785b1c3145384fef021d6fad39543a2ba47f444664832139c802dbc769",
+    "scanner/source_consistency.py": "9eb0b44a9b3834e083a9f1ac30cd37fa39aea33c41d705f9881f62029b170505",
+    "scanner/transaction_format.py": "6b9f35e29e5f924009999c48ff7bd6f38ef7c6d87cd9dbba24edabdd81abe098",
+    "tests/fixtures/compiled_instructions/schema.json": "4f454bc2f6eeecb4c3b4a2438463f97e0d52deb35c0d627ec39c82f47bce0d0c",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs": "8468920b107104d4b8fc3ea40cd5e6204d3b2027fb2ba4cc4b4075855cb4af8b",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+    "tests/test_compiled_instructions.py": "211cab48d82aacfca14fbb6e937e94a846f2ee0ebec9f06b1f8b7ea0ae5c99b4",
+    "tests/test_compiled_report_integration.py": "8378528bc5bcc65742bf86b6474ba3f229f84f63b358367e2467aa6d52816c94"
+  },
+  "reviewed_subset_end": {
+    "scanner/compiled_instructions.py": "8d2a4cc5b0311d6fd6bf3f8cfc55d0e6b899bee76784a98be992023567daca1c",
+    "scanner/decoder.py": "ed4f56b07011ac0a3b52e1757c221546ea358353e2744a3807436cede8ef876b",
+    "scanner/instruction_scope.py": "a76ad83272603f4145bebbb57a649e9ae1aa94fb9aaed338595b37908b882406",
+    "scanner/investigation.py": "1de1586cd9a41d3b3860215c221bfe93be4022519bfe516ee4452bf74f20028c",
+    "scanner/position_evidence.py": "b101a3785b1c3145384fef021d6fad39543a2ba47f444664832139c802dbc769",
+    "scanner/source_consistency.py": "ea52f62b4f990caf1ee20d3ccd410b2705f84b098424a84991f46be2839cbf7c",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+    "tests/fixtures/compiled_instructions/schema.json": "4f454bc2f6eeecb4c3b4a2438463f97e0d52deb35c0d627ec39c82f47bce0d0c",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs": "8468920b107104d4b8fc3ea40cd5e6204d3b2027fb2ba4cc4b4075855cb4af8b",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+    "tests/test_compiled_instructions.py": "10fc3cfcdf10af8382f21861ed3041e5dfd5b7ef8857582c25e1f441910263e4",
+    "tests/test_compiled_report_integration.py": "0af95699a953eef5e9027c39b214dad026f6a9fda2a60195db3f718be03be9a1"
+  },
+  "subset_changed_during_review": [
+    "scanner/compiled_instructions.py",
+    "scanner/decoder.py",
+    "scanner/investigation.py",
+    "scanner/source_consistency.py",
+    "scanner/transaction_format.py",
+    "tests/test_compiled_instructions.py",
+    "tests/test_compiled_report_integration.py"
+  ],
+  "not_a_final_candidate_binding": true,
+  "findings": [
+    {
+      "id": "CMP-KEY-01",
+      "status": "REPRODUCED_PENDING_ROOT_FIX",
+      "category": "A confirmed adapter schema defect",
+      "scope": "Typed compiled/partial key-resolution interface; downstream strict metric guards are separate",
+      "reason": "Float version0.0 is normalized despite the established strict version contract, and overlapping writable/readonly lookup indices with distinct loaded keys are accepted.",
+      "evidence": [
+        "reproductions.log"
+      ],
+      "requested_fix": "Use the shared strict version contract and reject cross-group table-index collisions without trusting caller flags."
+    },
+    {
+      "id": "CMP-KEY-02",
+      "status": "REPRODUCED_PENDING_ROOT_FIX",
+      "category": "A confirmed representation-consistency defect",
+      "scope": "Opaque partial address form versus compiled index form",
+      "reason": "An opaque account string and an explicit opaque programId can introduce keys absent from the resolved primary account table, while index-form equivalents are bounded by that table. Both controls return successful transfer normalizations without issues.",
+      "evidence": [
+        "partial-key-membership.log"
+      ],
+      "requested_fix": "Validate opaque program/account membership in the resolved key table; keep fully parsed historical support unchanged."
+    },
+    {
+      "id": "CMP-PERF-01",
+      "status": "REPRODUCED_PENDING_ROOT_FIX",
+      "category": "A confirmed bounded-processing defect",
+      "scope": "Program provenance projection and malformed loaded-address input",
+      "reason": "_program_facts renormalizes the entire transaction N+1 times; counts8/32/128 require9/33/129 complete passes and timings grow approximately quadratically. A loaded-array/count mismatch performs2054 public-key decodes before rejecting2048 entries.",
+      "evidence": [
+        "reproductions.log",
+        "loaded-key-bound.log"
+      ],
+      "requested_fix": "Normalize once per source projection and batch original-path mapping; reject impossible loaded lengths/counts before decoding individual keys."
+    },
+    {
+      "id": "CMP-DEC-01",
+      "status": "REPRODUCED_PENDING_ROOT_SCOPE_DECISION",
+      "category": "A current neighbouring decoder defect",
+      "scope": "Generic decoder observation; no wallet qualification or profitability asserted",
+      "reason": "Mixed parsed+accounts/data System input is explicitly rejected by the adapter, but instruction_view skips it and generic decode_transactions emits a capital observation with no unresolved entry. This current preexisting neighbour was reproduced; it is not labelled a regression in historically accepted R5-R15 scopes.",
+      "evidence": [
+        "reproductions.log"
+      ],
+      "requested_fix": "Reject ambiguous instruction representation in the generic decoder while retaining independently proved fees and disjoint observations."
+    }
+  ],
+  "executed_checks": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_compiled_instructions.py tests/test_compiled_report_integration.py",
+      "exit_code": 0,
+      "ordinary_cases": 114,
+      "raw_log": "targeted-tests.log"
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_nonce_swap_evidence.py tests/test_position_evidence.py tests/test_investigation.py tests/test_instruction_contract_matrix.py tests/test_token_instruction_schema.py",
+      "exit_code": 0,
+      "ordinary_cases": 382,
+      "separate_subtests": 65,
+      "raw_log": "retained-sibling-tests.log"
+    }
+  ],
+  "nondefects_or_verified_scopes": [
+    {
+      "scope": "Pinned layouts and parser field names",
+      "result": "Primary source hashes and unsigned literal System/SPL layouts pass their existing controls; sampled primary parse_token/parse_associated/schema fields agree."
+    },
+    {
+      "scope": "Failed fee atomicity",
+      "result": "Failed payload corruption is skipped; independently supported network fees remain observed in the focused controls."
+    },
+    {
+      "scope": "CPI signer authority",
+      "result": "Inner normalization reports runtime-CPI roles and does not claim transaction-signers or a multisig threshold."
+    },
+    {
+      "scope": "Preservation/provenance",
+      "result": "Focused conversion tests retain original inputs and raw byte-coordinate mappings; recognized representations do not overwrite source records."
+    },
+    {
+      "scope": "Malformed disjoint and unsupported operations",
+      "result": "Named-account quantities remain useful for proved disjoint instructions; unsupported economic operation/classification is not promoted to complete wallet accounting."
+    },
+    {
+      "scope": "Genuine versus development controls",
+      "result": "Unsigned conversions of golden fixtures are labelled development-only. Existing genuine indexed pages are replayed unchanged and remain partial; no new genuine acceptance asserted."
+    }
+  ],
+  "artifact_sha256": {
+    "reproductions.log": "0a3f9f4562dda62e1bc1069bc40a94dcbadb0151e69da25c94ecc96bc7e3dbe1",
+    "reproduce.py": "b9512003e6b0eb2d98aa21a6d0231cda33020d295e0cc399583cc4dbd30c6dbf",
+    "SUBSET_START.json": "25fca5106caf47a59abcdfdd83ebd7eb4ec024efa548649e2971510e85ed6738",
+    "targeted-tests.log": "b54fb579ba959d4d7d49e68fb67ddab9847c5bc3f600dc9dd6d08858ab4acc79",
+    "retained-sibling-tests.log": "dee884f45c357551e94e206673e87eeb73f94a556b00cdc6f3e9b9a915a3653b",
+    "loaded-key-bound.log": "7d22d694771b89ba0a93cd220835244c0bf3ada5dcf016fb60275fd72b36d9b6",
+    "partial-key-membership.log": "8a8d5b9183ced0cf80b99820c0d7eaaadc8dc86631f14f7558eca85d69d83b46"
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "application_edits": false,
+  "commits_created": false,
+  "full_gates_executed": false,
+  "product_ready_claimed": false,
+  "limitations": [
+    "Other indexed-batch source is being edited concurrently. This record binds the inspected subset, not a release or current full-tree acceptance.",
+    "Root must fix or disposition reproduced findings, then perform the frozen full-batch review and applicable acceptance gates.",
+    "Cases and subtests are recorded as execution evidence only and are not added to a final release test count."
+  ]
+}

@@ -1,0 +1,9 @@
+{"id": "float-v0-rejection", "passing": true}
+{"id": "cross-role-lookup-position-rejection", "passing": true}
+{"id": "opaque-absent-account-rejection", "passing": true}
+{"id": "opaque-absent-program-rejection", "passing": true}
+{"facts": 40, "id": "one-normalization-per-projection-8", "passing": true, "source_unchanged": true, "whole_transaction_normalizations": 1}
+{"facts": 160, "id": "one-normalization-per-projection-32", "passing": true, "source_unchanged": true, "whole_transaction_normalizations": 1}
+{"id": "loaded-length-before-expensive-decode", "passing": true, "pubkey_decodes": 5}
+{"event_kinds": ["fee", "unsupported"], "id": "generic-mixed-representation-retains-fee", "passing": true, "unresolved": [{"evidence": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "path": "instructions.0", "reason": "Parsed and opaque instruction representations conflict", "signature": "fixture-not-a-signed-transaction"}]}
+{"state": "PASS_IN_SCOPE", "engineering_controls": 8}

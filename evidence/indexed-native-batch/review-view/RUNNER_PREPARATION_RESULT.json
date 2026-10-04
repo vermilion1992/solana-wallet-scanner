@@ -1,0 +1,30 @@
+{
+  "kind": "read-only-browser-preparation-replay",
+  "state": "PASS_IN_SCOPE",
+  "engineering_controls": 2,
+  "checks": [
+    {
+      "id": "absent-optional-real-corpus-synthetic-only",
+      "passing": true,
+      "pack_preparation_commands_mocked": 1,
+      "actual_processes_launched": 0,
+      "socket_bind_mocked": true,
+      "indexed_bytes_copied": false,
+      "producer_receipt_remains_INCOMPLETE": true
+    },
+    {
+      "id": "absent-optional-real-corpus-indexed",
+      "passing": true,
+      "pack_preparation_commands_mocked": 1,
+      "actual_processes_launched": 0,
+      "socket_bind_mocked": true,
+      "indexed_bytes_copied": true,
+      "producer_receipt_remains_INCOMPLETE": true
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "browser_executed": false,
+  "network_requests": 0,
+  "scope": "Preparation branch regression control only; not application or browser acceptance."
+}

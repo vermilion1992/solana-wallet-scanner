@@ -1,0 +1,232 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "979045917aec4127b747329d25065839"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    },
+    {
+      "case": "indexed-partial-ui-import-inspection-immutable-rebuild",
+      "state": "PASS",
+      "source_archive_sha256": "d910bbf9fdbfb1663520866a4bb3fa1f3b775a1f60dc1741c60888dbe1f63209",
+      "expected_selected_fees_sol": "0.008904733",
+      "parent_unchanged": true,
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "assertion_timeout_ms": 120000,
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "browser_report_transfers": [
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 2824
+    },
+    {
+      "path": "/api/reports/979045917aec4127b747329d25065839?view=display",
+      "status": 200,
+      "bytes": 624570
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 37947
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 74465
+    },
+    {
+      "path": "/api/reports/2b2bbe1e554e4d4384bde9037448b78e?view=display",
+      "status": 200,
+      "bytes": 628368
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 109168
+    },
+    {
+      "path": "/api/reports/b7fb7372a9ff466390635450f75eb833?view=display",
+      "status": 200,
+      "bytes": 625064
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 190521
+    },
+    {
+      "path": "/api/reports/3cdb4024843e410f9498360d99b83474?view=display",
+      "status": 200,
+      "bytes": 680357
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 225224
+    },
+    {
+      "path": "/api/reports/cf94b100277842ca9d20841d03d7261e?view=display",
+      "status": 200,
+      "bytes": 625064
+    },
+    {
+      "path": "/api/reports/b8b74fa8ca2f4ac6be90d98d875ddd98?view=display",
+      "status": 200,
+      "bytes": 1790810
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 336905
+    },
+    {
+      "path": "/api/reports/a049b90d94244b5a9d5d08eb34b1a768?view=display",
+      "status": 200,
+      "bytes": 11247252
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 580212
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 823099
+    },
+    {
+      "path": "/api/reports/3d8e56acb9dc4394959b3faf1b7e143e?view=display",
+      "status": 200,
+      "bytes": 11247746
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "cfdde27ca433e3350c033dedf3036923751f9e50e9b7d3f03b8cc90510fc4e62",
+    "indexed-partial-parent.json": "9ab6bd7087179d7a073cf560a6f3e139edfc180c59d3cb360ab29c0c3c68ea85",
+    "indexed-partial-rebuilt-mobile.png": "c77f324f957da3af020d411d7e9b4d85f12a38086ba7cb9627c84689a7879768",
+    "world_hash-missing-report.json": "8ccf66e3af96ca3d47288378ccfd6696dee3c1b33e25818a118c6f9f2173a34d",
+    "indexed-partial-rebuilt-desktop.png": "79a4b3dd806ff7d7b4e06f571ab209f80594a5ac442442708909e42adb57996a",
+    "world_hash-missing-desktop.png": "9301de786b494a01b77062870345c6f6ec153205f4053c3d28880eb352d5c8fa",
+    "synthetic-parent.json": "a85c650fbe1d5ae1b24291df937ad588b7f880978c7a2ad92165d256ebf40116",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "c7f097fafaa4cb1ca50c6b591ab81053e686f6871ce15e3d578d0161af424990",
+    "world_hash-restored-report.json": "7b1bfca8d5995aef5a10974bc1044ea3f51eb6592176ca786ad76df3a21904b4",
+    "synthetic-positive-desktop.png": "53a7a38ff172a1efada8ae744d309b587c8df24300ce87a0a7b6a2872d8ccfbe",
+    "world_hash-restored-desktop.png": "80f2a0e085e1f5baff9e846bb47601dd5a50b378742154ddacb432fcbc53284c",
+    "synthetic-input.zip": "e4fb498ff76ba71195fcbb158a7a77d888bcd7185017346fa22da77ceba4d796",
+    "valuation_hash-missing-mobile.png": "75841315c8f45c08db3ab9950bef18d507a7cadd5e03292da6f9c5125bb364eb",
+    "indexed-partial-desktop.png": "12f66af3c5f4356491cf4d39a30ac7097a358e06438f2166a275a4c763013d06",
+    "world_hash-restored-mobile.png": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+    "valuation_hash-missing-desktop.png": "3aabc96e7eb2c37bf1659de72ff22ef356178adf8fd324abdd7c546f51aa1499",
+    "valuation_hash-restored-mobile.png": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+    "synthetic-positive-mobile.png": "c8b5614e75daf532fc4968e0886c07d28566595837b128f0618bb0b1f56f8f13",
+    "valuation_hash-restored-desktop.png": "d9611b3a5c36995ee15e9bbeb34f18ab55f58eced90d2083151f5d09c350692b",
+    "valuation_hash-missing-report.json": "556fdec998e49c94ef219900fc6f7bb1e968f047441aaa7a6224a5966c92c46e",
+    "synthetic-ui-export.json": "a85c650fbe1d5ae1b24291df937ad588b7f880978c7a2ad92165d256ebf40116",
+    "world_hash-missing-mobile.png": "e09c9899dab554c7adad075d7c295704855e72f0671873b10262e77381456613",
+    "valuation_hash-restored-report.json": "679f4ca31338200d3967c4e7cf1a2b2c326544a7d3c2bccb2a34668577fd88c3",
+    "indexed-input.zip": "d910bbf9fdbfb1663520866a4bb3fa1f3b775a1f60dc1741c60888dbe1f63209",
+    "genuine-partial-desktop.png": "54888be2fd74b6e4bfeffcd622f65b03643eae9d1cb2a9cfe80463713f89ac58",
+    "indexed-partial-mobile.png": "9a4f2b75f400fac0ecac69a26ca6262cb793d051909b37be825086e984adac5d",
+    "indexed-partial-child.json": "7a8495702087de6d76d79abb54cb4a266cd37ed878f0ce8b9128575f95daa7b1",
+    "genuine-partial-report.json": "da56e577828205b5f7dae53ba969a625b3e3456350f83c750ee74c5bb6739621"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "all_summary_bytes": 385269,
+  "credential_lookups": 0,
+  "database_sha256_after": "fc8c43ad36be8ebe17ab0d35819897a2b41a1fcdfa36ce76ade171dcfafbe652",
+  "database_sha256_before": "fc8c43ad36be8ebe17ab0d35819897a2b41a1fcdfa36ce76ade171dcfafbe652",
+  "display_bytes": 11247252,
+  "display_preservation_checks": {
+    "archive_metric_requirements": true,
+    "checks": true,
+    "events": true,
+    "evidence": true,
+    "findings": true,
+    "history_evidence": true,
+    "metrics": true,
+    "notes": true,
+    "position_evidence": true,
+    "positions": true,
+    "research": true
+  },
+  "display_projection_seconds": 6.721098907291889e-05,
+  "full_bytes": 145004863,
+  "full_parse_seconds": 0.7008403189829551,
+  "mode": "read-only measurement of existing saved report; no import, provider, credentials, mutation or acceptance claim",
+  "note": "Sizes use saved reports before transient decoration; focused API equivalence independently verifies decoration.",
+  "provider_requests": 0,
+  "report_count": 7,
+  "report_id": "3b7309e986474e60ab4ad625f79fd866",
+  "summary_bytes": 189986,
+  "summary_sql_seconds": 0.29336887499084696
+}

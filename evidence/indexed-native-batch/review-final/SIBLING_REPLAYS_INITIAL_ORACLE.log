@@ -1,0 +1,11 @@
+{"id": "float-v0-rejection", "issues": [{"code": "unsupported-version", "path": "transaction.message.accountKeys", "raw_paths": ["version"], "reason": "Transaction version has no reviewed compiled key contract"}], "passing": true}
+{"id": "cross-role-lookup-position-rejection", "issues": [{"code": "conflicting-lookups", "path": "transaction.message.accountKeys", "raw_paths": ["transaction.message.addressTableLookups.0.readonlyIndexes"], "reason": "One address-table position is claimed by multiple compiled key roles"}], "passing": true}
+{"id": "opaque-absent-account-rejection", "issues": [{"code": "invalid-account-membership", "path": "transaction.message.instructions.0", "raw_paths": ["transaction.message.accountKeys", "transaction.message.instructions.0.accounts.0"], "reason": "Opaque instruction account is absent from the primary key table"}], "passing": true}
+{"id": "opaque-absent-program-rejection", "issues": [{"code": "invalid-program-membership", "path": "transaction.message.instructions.0", "raw_paths": ["transaction.message.accountKeys", "transaction.message.instructions.0.programId"], "reason": "Opaque instruction program is absent from the primary key table"}], "passing": true}
+{"facts": 40, "id": "one-normalization-per-projection-8", "passing": true, "source_unchanged": true, "whole_transaction_normalizations": 1}
+{"facts": 160, "id": "one-normalization-per-projection-32", "passing": true, "source_unchanged": true, "whole_transaction_normalizations": 1}
+{"id": "loaded-length-before-expensive-decode", "issues": [{"code": "invalid-account-keys", "path": "transaction.message.accountKeys", "raw_paths": ["meta.loadedAddresses", "transaction.message.accountKeys"], "reason": "Loaded key count exceeds the compiled u8 account-key bound"}], "passing": true, "pubkey_decodes": 5}
+{"event_kinds": ["fee", "unsupported"], "id": "generic-mixed-representation-retains-fee", "passing": false, "unresolved": [{"evidence": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "path": "instructions.0", "reason": "Parsed and opaque instruction representations conflict", "signature": "fixture-not-a-signed-transaction"}]}
+Traceback (most recent call last):
+  File "<stdin>", line 34, in <module>
+AssertionError

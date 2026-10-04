@@ -1,0 +1,334 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "reviewed_utc": "2026-10-04T05:03:02.756957+00:00",
+  "review_type": "Distinct internal read-only review by a separately assigned framework agent; not third-party acceptance",
+  "source_sha256": "259368df819c0d04915d2ed2b96acc7eaf4433fcad8f26b18a9f6f0616b7488d",
+  "source_files": 202,
+  "source_unchanged": true,
+  "starting_head": "0f3a9d1e110ac948cab4d27fdc3377e37927a08b",
+  "application_candidate": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+  "matrix_review_complete": true,
+  "reviewed_changed_paths": [
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/ARCHIVE_INPUT_CONTRACT.md",
+    "docs/BLUEPRINT_ALIGNMENT.md",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/chronology_evidence.py",
+    "scanner/compiled_instructions.py",
+    "scanner/decoder.py",
+    "scanner/history_evidence.py",
+    "scanner/indexed_input.py",
+    "scanner/investigation.py",
+    "scanner/json_boundary.py",
+    "scanner/position_evidence.py",
+    "scanner/source_consistency.py",
+    "scanner/transaction_format.py",
+    "scanner/wallet_evidence.py",
+    "tests/fixtures/compiled_instructions/schema.json",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+    "tests/test_compiled_instructions.py",
+    "tests/test_compiled_report_integration.py",
+    "tests/test_indexed_chronology.py",
+    "tests/test_indexed_input.py",
+    "tests/test_indexed_report_integration.py",
+    "tests/test_indexed_source_dependencies.py",
+    "tests/test_investigation.py",
+    "tests/test_nonce_swap_evidence.py",
+    "tests/test_position_evidence.py",
+    "tools/archive_input.py",
+    "tools/browser_acceptance.py",
+    "tools/product_browser.py",
+    "tools/validate.py"
+  ],
+  "reviewed_changed_path_hashes": {
+    "CODEX_TASK.md": "e0217404d1cd8ad4f375ddce829a8fec3800a6478c7936aada4d562f4750d805",
+    "ISSUES.md": "6818769ef81462d0a4db9444d26a691f38e6655c537ebd853af645c9ec6de948",
+    "docs/ACCEPTANCE_MATRIX.json": "13e091cfc5ea497feced31efdb55b5f1cb0e1dd35822734fc9f24be953671983",
+    "docs/ARCHIVE_INPUT_CONTRACT.md": "585bb570e29d7e7e1bd7d3f3b8e836294dbe60e5686ef41cfd65c5f7f03d10b0",
+    "docs/BLUEPRINT_ALIGNMENT.md": "1f336009e48e0b80bccdb76dbb687d6637bbdaae990d32218d16bd9c17a72363",
+    "docs/CONTRACT.md": "647963597af99cf95be3fa0f96c6e39a321cb16c06c819967f9117f4313816d8",
+    "docs/R1_SOURCE_DECISION.md": "db3c4fe0cdad6e6042121429919f9fbb98179af9aa92e4c8761687ac2dab1968",
+    "scanner/app.py": "add771325e43b069d63380d1e2fabd2eebce0386df127ddd8a5b7fbe2a564f92",
+    "scanner/archive_input.py": "c4b69e81eb32b315641472b970ad5e4235e9c0e7c280dd60a1ea0e568c16382f",
+    "scanner/chronology_evidence.py": "36032f177db3638505026969039f5e69d64cd1d1d2b208f64e6e74153f4a0575",
+    "scanner/compiled_instructions.py": "928e3d538a141e953a2dc4e7a8a155ba32a5e8157a42111e006d5f23e710a62b",
+    "scanner/decoder.py": "ed4f56b07011ac0a3b52e1757c221546ea358353e2744a3807436cede8ef876b",
+    "scanner/history_evidence.py": "2a66a1ce9df798598176bdaa200666a1184ca99bce3c2b0dff40e6adc9a97de7",
+    "scanner/indexed_input.py": "92badd18d1d0e7a6f2352bf5ea87889053fe69da6d2badaf61b90986bc05c210",
+    "scanner/investigation.py": "1de1586cd9a41d3b3860215c221bfe93be4022519bfe516ee4452bf74f20028c",
+    "scanner/json_boundary.py": "c270c2adb1a3fc35f6791ceb037f3777352636b995f0c04395489d566cb7396d",
+    "scanner/position_evidence.py": "b101a3785b1c3145384fef021d6fad39543a2ba47f444664832139c802dbc769",
+    "scanner/source_consistency.py": "ea52f62b4f990caf1ee20d3ccd410b2705f84b098424a84991f46be2839cbf7c",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+    "scanner/wallet_evidence.py": "16f7b8772cc2a65c5c74c02014bb811ab788f4fa160b2f5d7e596f5b6c8c2187",
+    "tests/fixtures/compiled_instructions/schema.json": "4f454bc2f6eeecb4c3b4a2438463f97e0d52deb35c0d627ec39c82f47bce0d0c",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs": "8468920b107104d4b8fc3ea40cd5e6204d3b2027fb2ba4cc4b4075855cb4af8b",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+    "tests/test_compiled_instructions.py": "ed351589237bc5ee31597db151561fa8a7e6fc00d003284b8b7a8ae64a9f0cf7",
+    "tests/test_compiled_report_integration.py": "0af95699a953eef5e9027c39b214dad026f6a9fda2a60195db3f718be03be9a1",
+    "tests/test_indexed_chronology.py": "40266b026080042ef9246cadd13c9d7564f6f5889dbe00c6679000a15dc07dde",
+    "tests/test_indexed_input.py": "43a0e7cb3a7af1868b57dff2342c1199d8f2f6135f87de47e20e8db1a18de032",
+    "tests/test_indexed_report_integration.py": "396313d4f3cf33dde4599e0900ea23c9f014a7af7aa2d601f22c9a5e627f14f2",
+    "tests/test_indexed_source_dependencies.py": "71009e6940a850ff4d1b1449d816785e059644da418c8a57511ec7f1cbc2f8a9",
+    "tests/test_investigation.py": "e3610bab6c4077998cdd46e626f0db7a28b8e4e379d13d81af567d0662b6b125",
+    "tests/test_nonce_swap_evidence.py": "aa73a235f274d00fc0e7ab9529dcaaffbfb1aae6e134e2df4c13a6d086cabe5c",
+    "tests/test_position_evidence.py": "d473d33c8543f52d61305ec439c1087d7a966485b966d568b39bee92261eba9c",
+    "tools/archive_input.py": "e45e6b51bcad930ce97937f8fbacc49e2415d46a82bc80bde0e2d57453d4ca4d",
+    "tools/browser_acceptance.py": "7b23b0977fa4bb70af48d2291e36688330d46c7c6ddcb0ffbd904649f06da537",
+    "tools/product_browser.py": "308890daf9094e297aafc8a218e6fd0c96b5c0489a71c608f7db606f719f0030",
+    "tools/validate.py": "18f7cfa8362d4645c145b3beabf24db86cc78335b45cfeed42ef65b312e192fa"
+  },
+  "full_batch_diff_sha256": "e93250616e1e6239f4d9edd0c62bcbfb26d127692e932d84af36b22f7fd77eaa",
+  "findings": [
+    {
+      "id": "B2-IDX-02",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Unassignable missing-source rebuild handling",
+      "result": "Missing source remains an unresolved source-set dependency without indexing a nonexistent signature; normal API loss/restoration retains immutable parents.",
+      "validation": [
+        "tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers",
+        "tests/test_indexed_source_dependencies.py::test_unassignable_record_remains_unscoped_negative_dependency"
+      ]
+    },
+    {
+      "id": "B2-KEY-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Compiled key table and format contract",
+      "result": "Float0, cross-role lookup index reuse, absent partial-address memberships, and excessive loaded arrays reject before creating supported operations. Positive keys and CPI scope preserved.",
+      "validation": [
+        "review-final/FINAL_SIBLING_REPLAYS.json",
+        "tests/test_compiled_instructions.py"
+      ]
+    },
+    {
+      "id": "B2-REP-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Selected/alternative instruction representation and RPC alias",
+      "result": "Mixed parsed/opaque economic interpretations reject while fees and explicit unsupported diagnostics remain. Genuine Token-2022 spl-token alias is admitted; contradictory aliases reject.",
+      "validation": [
+        "review-final/FINAL_SIBLING_REPLAYS.json",
+        "tests/test_compiled_report_integration.py"
+      ]
+    },
+    {
+      "id": "B2-PROC-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Bounded normalization and original source-path citations",
+      "result": "One normalization per program projection replaces repeated whole-record passes. Supported wallet boundary/lifecycle/transfer/disjoint/error coordinates refer to existing immutable compiled data/account/key nodes; numerical observations remain useful.",
+      "validation": [
+        "review-final/FINDINGS_INITIAL.json",
+        "review-final/FINDINGS_FINAL.json",
+        "review-final/FINAL_SIBLING_REPLAYS.json",
+        "tests/test_indexed_source_dependencies.py"
+      ]
+    },
+    {
+      "id": "B2-JSON-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Bounded JSON and duplicate page-hash variants",
+      "result": "Deep/cyclic input becomes controlled rejection; independently constructed legacy/indexed deep API archives reject before mutation. Good/missing/corrupt variants remain UNKNOWN under permutation and exact duplicates stay idempotent.",
+      "validation": [
+        "review-final/FINDINGS_FINAL.json",
+        "tests/test_indexed_input.py"
+      ]
+    },
+    {
+      "id": "B1-COVERAGE",
+      "blocking": false,
+      "status": "BLOCKED",
+      "category": "C missing data/source contract",
+      "reason": "Observed indexed access/sample schema does not establish terminal historical population or closed/reassigned lifecycle coverage; no new collection performed."
+    },
+    {
+      "id": "CAP-01",
+      "blocking": false,
+      "status": "OPEN",
+      "category": "B missing implementation and accepted evidence",
+      "reason": "Immutable indexed ingestion and reviewed base compiled operations execute, but all16successful genuine sampled wrappers remain unsupported; complete origins/roles/classification/valuation and independent wallet populations still absent."
+    },
+    {
+      "id": "R1-B3",
+      "blocking": false,
+      "status": "BLOCKED",
+      "category": "C genuine acceptance corpus",
+      "reason": "Real200selected transactions and known scoped0.008904733SOL fees are partial evidence, with profit UNKNOWN and no qualification. Unsigned converted goldens are development controls only."
+    }
+  ],
+  "coverage_review": {
+    "retained_declared_requirement_groups": 32,
+    "current_declared_requirement_groups": 37,
+    "retained_pinned_schema_requirements": 38,
+    "current_expanded_requirements": 75,
+    "retained_matrix_rows_unchanged": true,
+    "new_requirement_groups": [
+      "compiled-primary-schema",
+      "indexed-immutable-input",
+      "indexed-normal-report",
+      "indexed-shared-chronology",
+      "indexed-source-dependencies"
+    ],
+    "schema_material_review": "Checksum-pinned primary Rust enum layouts and independently encoded examples; no compiled-chain provenance claimed for converted goldens."
+  },
+  "executed_checks": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_compiled_instructions.py tests/test_compiled_report_integration.py tests/test_indexed_input.py tests/test_indexed_chronology.py tests/test_indexed_source_dependencies.py tests/test_indexed_report_integration.py",
+      "exit_code": 0,
+      "ordinary_tests_passed": 252,
+      "subtests": 0,
+      "raw_log": "review-final/FINAL_SUBSET.log",
+      "receipt": "review-final/FINAL_SUBSET.json",
+      "before_source_sha256": "259368df819c0d04915d2ed2b96acc7eaf4433fcad8f26b18a9f6f0616b7488d",
+      "after_source_sha256": "259368df819c0d04915d2ed2b96acc7eaf4433fcad8f26b18a9f6f0616b7488d",
+      "source_unchanged": true
+    },
+    {
+      "command": ".venv/bin/python evidence/indexed-native-batch/review-final/replay_review_findings.py evidence/indexed-native-batch/review-final/FINDINGS_FINAL.json",
+      "exit_code": 0,
+      "engineering_controls": 5,
+      "not_unique_tests": true,
+      "raw_log": "review-final/FINDINGS_FINAL.log",
+      "receipt": "review-final/FINDINGS_FINAL.json"
+    },
+    {
+      "command": ".venv/bin/python evidence/indexed-native-batch/review-final/replay_sibling_findings.py evidence/indexed-native-batch/review-final/FINAL_SIBLING_REPLAYS.json",
+      "exit_code": 0,
+      "engineering_controls": 8,
+      "not_unique_tests": true,
+      "raw_log": "review-final/FINAL_SIBLING_REPLAYS.log",
+      "receipt": "review-final/FINAL_SIBLING_REPLAYS.json"
+    },
+    {
+      "command": "git diff --check 0f3a9d1e110ac948cab4d27fdc3377e37927a08b 4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+      "exit_code": 0
+    }
+  ],
+  "preserved_iteration_evidence": {
+    "initial_affected_subset": "review-final/ITERATION_INITIAL_SUBSET.json",
+    "initial_affected_result": "237PASS; source changed during execution so not final-bound",
+    "initial_own_findings": "review-final/FINDINGS_INITIAL.json",
+    "earlier_compiled_review": "review-compiled/REVIEW.json",
+    "review_oracle_correction": "review-final/ORACLE_DISPOSITION.json",
+    "oracle_reason": "Explicit unsupported diagnostic accompanies the retained fee; expecting only a fee was too narrow. Original failed log/receipt preserved; no application defect inferred."
+  },
+  "offline_boundary": {
+    "provider_requests": 0,
+    "credential_lookups": 0,
+    "external_http_transport_requests": 0,
+    "basis": "Pure reviewer replay plus guarded API fixtures explicitly forbid provider/credential/external transport calls; immutable parent, usage and zero-call assertions pass."
+  },
+  "historical_tracked_evidence_unchanged": true,
+  "unchanged_boundaries": [
+    "Fixed live provider allowlist",
+    "FIFO arithmetic engine",
+    "Metric evidence composer",
+    "Native saved-report rebuild mechanism",
+    "Frontend source and compiled assets",
+    "All four dependency locks",
+    "Strict policy thresholds, session/CSRF/origin protections and quotas"
+  ],
+  "source_final_before": "review-final/FINAL_SOURCE_BEFORE.json",
+  "source_final_after": "review-final/FINAL_SUBSET.json",
+  "raw_artifact_bindings": {
+    "evidence/indexed-native-batch/review-final/FINAL_MATRIX_DIFF.json": {
+      "sha256": "82edc6f4db103103b9f69e69fd5f39c9987acf2b26f3348a954dc3be45ef3173",
+      "bytes": 2874
+    },
+    "evidence/indexed-native-batch/review-final/FINAL_SIBLING_REPLAYS.json": {
+      "sha256": "5f21281e40610c1ea4d8f7f91abee9f7ed5a1d7770efd005409f941c2b1212c9",
+      "bytes": 1616
+    },
+    "evidence/indexed-native-batch/review-final/FINAL_SIBLING_REPLAYS.log": {
+      "sha256": "5b65775ef1579b72cc709615635ae54a6a95b4de138eb0ed9737ebb3f3afbac3",
+      "bytes": 1000
+    },
+    "evidence/indexed-native-batch/review-final/FINAL_SOURCE_BEFORE.json": {
+      "sha256": "077285aa0eb777367f064695717cefe80a7782184066371c7f66ca21b71b6dfa",
+      "bytes": 30179
+    },
+    "evidence/indexed-native-batch/review-final/FINAL_SUBSET.json": {
+      "sha256": "e02c5d07bc68a7913efb36797bd74f6413e42fc3fd9e4f93437894402c082e6e",
+      "bytes": 31838
+    },
+    "evidence/indexed-native-batch/review-final/FINAL_SUBSET.log": {
+      "sha256": "3d924d79c312d060efa7a7927c2ca3fd0d5c8774ddb5be59d63273d828cd19e1",
+      "bytes": 852
+    },
+    "evidence/indexed-native-batch/review-final/FINDINGS_AFTER_CORRECTIONS.json": {
+      "sha256": "00ca583bdbda89350c8edcbd13730fa4935303eb5214cdd174c7e1ad720b7b0c",
+      "bytes": 1671
+    },
+    "evidence/indexed-native-batch/review-final/FINDINGS_AFTER_CORRECTIONS.log": {
+      "sha256": "e4a323adda345859132a7dda602cbe716997f0a1ac9ba34e20891ace1acd17d2",
+      "bytes": 1066
+    },
+    "evidence/indexed-native-batch/review-final/FINDINGS_FINAL.json": {
+      "sha256": "00ca583bdbda89350c8edcbd13730fa4935303eb5214cdd174c7e1ad720b7b0c",
+      "bytes": 1671
+    },
+    "evidence/indexed-native-batch/review-final/FINDINGS_FINAL.log": {
+      "sha256": "e4a323adda345859132a7dda602cbe716997f0a1ac9ba34e20891ace1acd17d2",
+      "bytes": 1066
+    },
+    "evidence/indexed-native-batch/review-final/FINDINGS_INITIAL.json": {
+      "sha256": "9c0f8f0a7f0ae09c6133b51d52996a842c1b1d6d38d5a2faece0d611b18a6dde",
+      "bytes": 2158
+    },
+    "evidence/indexed-native-batch/review-final/FINDINGS_INITIAL.log": {
+      "sha256": "ef7bac74142c4f3c3e20722d913379a2de2c2ac3fc092d8730d8a719f7ad25a9",
+      "bytes": 1483
+    },
+    "evidence/indexed-native-batch/review-final/ITERATION_INITIAL_SOURCE.json": {
+      "sha256": "1e84f75c33098d5b6306cfb47d5dcda3841a44c04885c7653bbd3ea72af499a2",
+      "bytes": 30042
+    },
+    "evidence/indexed-native-batch/review-final/ITERATION_INITIAL_SUBSET.json": {
+      "sha256": "6e9c9597eed71f2d380749158afcbdd74b197b4b33138b2a3f9466fd4dbf1dcb",
+      "bytes": 31722
+    },
+    "evidence/indexed-native-batch/review-final/ITERATION_INITIAL_SUBSET.log": {
+      "sha256": "791093f445bbace85fc5be2752eb1a5fcb765f10b25deae32d7bf6670d6e7dea",
+      "bytes": 852
+    },
+    "evidence/indexed-native-batch/review-final/ORACLE_DISPOSITION.json": {
+      "sha256": "d27d462b4ee17d34f80475657cde9617532a8ddff62f856793317d4008cf886b",
+      "bytes": 594
+    },
+    "evidence/indexed-native-batch/review-final/SIBLING_REPLAYS_INITIAL_ORACLE.json": {
+      "sha256": "71a2c4e7e917e61e54caedcc7286a260eb0dcacf1aebdac6714e0dc384b4c6f3",
+      "bytes": 3339
+    },
+    "evidence/indexed-native-batch/review-final/SIBLING_REPLAYS_INITIAL_ORACLE.log": {
+      "sha256": "5b9d1fd5e6d8a2efb86cc28b7ee2fea83c70fe09f9d93a6345d481cf1b28627e",
+      "bytes": 2249
+    },
+    "evidence/indexed-native-batch/review-final/replay_review_findings.py": {
+      "sha256": "eb7c26e3fbe433613aa11b7d0774234b8e6cb0e481d2ad82a9dceef30eab5571",
+      "bytes": 3854
+    },
+    "evidence/indexed-native-batch/review-final/replay_sibling_findings.py": {
+      "sha256": "3cd875c1a1e4513dbbd4303b6cc314f419e0a2f9e77bc476ee8e770a43de66e7",
+      "bytes": 5463
+    }
+  },
+  "full_candidate_gates_executed_by_this_reviewer": false,
+  "browser_executed_by_this_reviewer": false,
+  "application_edits": false,
+  "commits_created": false,
+  "review_conclusion": "No unresolved confirmed in-scope software blocker in the full batch after reproduced sibling corrections. Candidate review PASS is separate from root full gates, B1 sufficiency, B2 complete implementation and genuine B3. Losing evidence does not promote supported conclusions; narrow supported observations remain usable.",
+  "B1": "Access/schema observed; historical coverage blocked",
+  "B2": "Offline indexed/compiled slice development-functional; complete real accounting OPEN",
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false
+}

@@ -1,0 +1,6 @@
+{"expected": ["UNKNOWN", "UNKNOWN"], "id": "IDX-REVIEW-DUPLICATE-missing", "observed": ["UNKNOWN", "UNKNOWN"], "passing": true, "scope": "Typed source topology interface; no complete population/qualification claim"}
+{"expected": ["UNKNOWN", "UNKNOWN"], "id": "IDX-REVIEW-DUPLICATE-checksum-mismatch", "observed": ["UNKNOWN", "UNKNOWN"], "passing": true, "scope": "Typed source topology interface; no complete population/qualification claim"}
+{"expected": "PASS", "id": "IDX-REVIEW-DUPLICATE-POSITIVE", "observed": "PASS", "passing": true}
+{"expected": {"derived_only_raw_paths": [], "quantity_state": "PASS"}, "id": "IDX-REVIEW-COMPILED-OBSERVATION-RAW-PATHS", "observed": {"derived_only_raw_paths": [], "quantity_state": "PASS"}, "passing": true, "scope": "Original compiled data/account paths must support derived observation citations"}
+{"id": "IDX-REVIEW-COMPILED-SOURCE-IMMUTABILITY", "normalizations": 9, "passing": true, "scope": "Unsigned pinned-layout conversion, not a genuine compiled transaction"}
+{"summary": "PASS_IN_SCOPE", "engineering_controls": 5}

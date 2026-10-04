@@ -1,0 +1,76 @@
+F......F....F..                                                          [100%]
+=================================== FAILURES ===================================
+_ test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild _
+
+guarded = (<starlette.testclient.TestClient object at 0x7f5b48a61220>, <fastapi.applications.FastAPI object at 0x7f5b48a60c20>, ...mp/pytest-of-agent/pytest-273/test_normal_indexed_import_sou0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild(guarded):
+        client, app, _, _ = guarded
+        request, response = page()
+        _, _, content = upload([(request, response)])
+        report = import_report(client, content)
+        parent = deepcopy(app.state.store.get('reports', report['id']))
+        assert_partial(report)
+>       assert fee(report)['status'] == 'known' and fee(report)['value'] == '0.000005'
+E       AssertionError: assert ('unknown' == 'known'
+E         
+E         - known
+E         + unknown
+E         ? ++)
+
+tests/test_indexed_report_integration.py:106: AssertionError
+_ test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results _
+
+guarded = (<starlette.testclient.TestClient object at 0x7f5b479d3fb0>, <fastapi.applications.FastAPI object at 0x7f5b479d1490>, ...mp/pytest-of-agent/pytest-273/test_manifest_page_permutation0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results(guarded):
+        client, _, _, _ = guarded
+        pages = [page(outgoing='1:0'), page([native('indexed-b', slot=2)], incoming='1:0', ident=2)]
+        _, _, first = upload(pages)
+        _, _, reversed_content = upload(list(reversed(pages)))
+        _, _, duplicate = upload(pages + [pages[0]])
+        reports = [import_report(client, content) for content in (first, reversed_content, duplicate)]
+>       assert all(fee(report)['value'] == '0.00001' and fee(report)['status'] == 'known' for report in reports)
+E       assert False
+E        +  where False = all(<generator object test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results.<locals>.<genexpr> at 0x7f5b47e40ad0>)
+
+tests/test_indexed_report_integration.py:177: AssertionError
+_ test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim _
+
+guarded = (<starlette.testclient.TestClient object at 0x7f5b47cb82c0>, <fastapi.applications.FastAPI object at 0x7f5b47ab0ec0>, ...mp/pytest-of-agent/pytest-273/test_genuine_authorized_two_pa0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim(guarded):
+        client, app, _, _ = guarded
+        pages = [(PROBE.joinpath(stem + '-request.json').read_bytes(),
+                  gzip.decompress(PROBE.joinpath(stem + '-response.raw.gz').read_bytes()))
+                 for stem in ('02-all-index', '03-all-continuation')]
+        byte_hashes = [(hashlib.sha256(request).hexdigest(), hashlib.sha256(response).hexdigest()) for request, response in pages]
+        # Independently worked from original raw inputs, before production import.
+        raw_records = [raw for _, response in pages for raw in json.loads(response)['result']['data']]
+        assert len(raw_records) == len({raw['transaction']['signatures'][0] for raw in raw_records}) == 200
+        assert sum(raw['meta']['err'] is not None for raw in raw_records) == 184
+        direct_fee_sum = sum(raw['meta']['fee'] for raw in raw_records
+                             if raw['transaction']['message']['accountKeys'][0] == WALLET)
+        assert direct_fee_sum == 8_904_733
+        _, _, content = upload(pages)
+        report = import_report(client, content)
+        assert_partial(report)
+>       assert fee(report)['status'] == 'known' and fee(report)['value'] == '0.008904733'
+E       AssertionError: assert ('unknown' == 'known'
+E         
+E         - known
+E         + unknown
+E         ? ++)
+
+tests/test_indexed_report_integration.py:214: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild
+FAILED tests/test_indexed_report_integration.py::test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results
+FAILED tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim
+3 failed, 12 passed, 1 warning in 31.76s

@@ -1,0 +1,30 @@
+COMMAND: npm run check:format
+
+> solana-wallet-scanner-ui@0.3.11 check:format
+> node scripts/check-format.mjs
+
+16 exact formatting, ordering, and import assertions passed.
+EXIT: 0
+COMMAND: npm run check:discovery
+
+> solana-wallet-scanner-ui@0.3.11 check:discovery
+> node scripts/check-discovery.mjs
+
+Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).
+EXIT: 0
+COMMAND: npm run build
+
+> solana-wallet-scanner-ui@0.3.11 build
+> tsc -b && vite build
+
+vite v8.3.2 building client environment for production...
+transforming...
+✓ 1573 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.57 kB │ gzip:  0.34 kB
+dist/assets/index-Brz2fDKJ.css   67.30 kB │ gzip: 14.38 kB
+dist/assets/index-BLd8QPnh.js   290.62 kB │ gzip: 85.26 kB
+
+✓ built in 159ms
+EXIT: 0

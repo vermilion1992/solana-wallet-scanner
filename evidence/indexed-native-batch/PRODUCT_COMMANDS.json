@@ -1,0 +1,25 @@
+[
+  {
+    "command": [
+      ".venv/bin/python",
+      "tools/check_product.py",
+      "--output",
+      "evidence/indexed-native-batch/product"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "evidence/indexed-native-batch/product-command.log"
+  },
+  {
+    "command": [
+      ".venv/bin/python",
+      "tools/check_product.py",
+      "--output",
+      "evidence/indexed-native-batch/product-real-required",
+      "--require-real-acceptance"
+    ],
+    "exit_code": 2,
+    "expected_exit": 2,
+    "log": "evidence/indexed-native-batch/product-real-required-command.log"
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "kind": "offline-product-browser",
+  "state": "FAILED",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "9ce8a56f447447218abcc183f32dbd23"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "AssertionError: Locator expected to be visible\nActual value: None\nError: element(s) not found \nCall log:\n  - Expect \"to_be_visible\" with timeout 5000ms\n  - waiting for locator(\"[data-archive-accounting=\\\"real\\\"]\")\n\nAria snapshot:\n- complementary:\n  - button \"Wallet Atlas. SOLANA RESEARCH\":\n    - img\n    - strong: Wallet Atlas.\n    - text: SOLANA RESEARCH\n  - text: LOCAL WORKSPACE\n  - navigation \"Main navigation\":\n    - button \"Discover\":\n      - img\n      - text: Discover\n    - button \"Overview\":\n      - img\n      - text: Overview\n    - button \"Results 6\":\n      - img\n      - text: Results 6\n    - button \"Compare\":\n      - img\n      - text: Compare\n    - button \"Watchlist\":\n      - img\n      - text: Watchlist\n    - button \"Settings\":\n      - img\n      - text: Settings\n  - text: Setup pilot allowance\n  - img\n  - text: Not connected Configure in Settings\n  - button \"Manage data access\":\n    - text: Manage data access\n    - img\n  - img\n  - text: Saved on this computer FREE LOCAL EDITION \u00b7 V0.3.11\n- main:\n  - text: Workspace\n  - img\n  - strong: Advanced manual scan\n  - text: Local & private\n  - img\n  - text: Read-only WA ADVANCED MANUAL SCAN\n  - heading \"Audit a wallet you already know\" [level=1]\n  - paragraph: Start with public wallet addresses. Keep the scope small and the standards high.\n  - button \"Back to wallet discovery\":\n    - img\n    - text: Back to wallet discovery\n  - button \"Review saved transaction records\":\n    - img\n    - text: Review saved transaction records\n  - heading \"Account from saved records\" [level=2]\n  - paragraph: Import a scanner evidence ZIP to create a report locally. No provider credits are used.\n  - paragraph: Incomplete history keeps wallet profit and qualification unresolved. The offline example uses synthetic records to demonstrate accounting.\n  - text: Wallet evidence ZIP (up to 20 MiB)\n  - button \"Wallet evidence ZIP (up to 20 MiB)\" [disabled]\n  - status: Accounting from saved records\u2026\n  - paragraph:\n    - link \"Download offline accounting example\":\n      - /url: /api/archives/example.zip\n  - heading \"Choose the wallets\" [level=2]\n  - paragraph: Paste one address per line, or import a CSV / JSON file.\n  - text: Public Solana addresses\n  - button \"Import file\":\n    - img\n    - text: Import file\n  - button \"Choose File\"\n  - textbox \"Public Solana addresses\":\n    - /placeholder: \"Paste public wallet addresses here\u2026\\n\\nCSV: address,label\\nJSON: [\\\"address\\\", \\\"address\\\"]\"\n  - img\n  - text: 0 valid, unique addresses Up to 20 per batch Reporting window\n  - combobox \"Reporting window\":\n    - option \"Last 7 days\"\n    - option \"Last 30 days\" [selected]\n    - option \"Last 90 days\"\n  - text: Active preset\n  - img\n  - text: Strict research\n  - button \"Edit\"\n  - img\n  - text: Sep 4, 2026 \u2192 Oct 4, 2026 \u00b7 UTC \u00b7 exact timestamps frozen when queued\n  - img\n  - text: Policy fit and evidence completeness are evaluated separately. Unknown costs stay unknown. Manual research \u00b7 5 deep-audit cap\n  - button \"Start scan\" [disabled]:\n    - img\n    - text: Start scan\n  - heading \"Scan queue\" [level=2]\n  - paragraph: One local worker. Pause and resume without losing the collected evidence.\n  - img\n  - strong: Offline Archived Accounting\n  - text: Completed\n  - paragraph: 1 / 0 wallets reviewed \u00b7 0 pages \u00b7 23 transactions\n  - text: Oct 4, 2026 0 credits 0 unresolved items\n  - img\n  - strong: Offline Archived Accounting\n  - text: Completed\n  - paragraph: 1 / 0 wallets reviewed \u00b7 0 pages \u00b7 12 transactions\n  - text: Oct 4, 2026 0 credits 0 unresolved items\n  - img\n  - heading \"Bounded by design\" [level=3]\n  - paragraph: Your free allowance is a hard guardrail for every read.\n  - term: Candidate limit\n  - definition: 20 wallets\n  - term: Deep audits\n  - definition: 5 wallets\n  - term: Transactions per wallet\n  - definition: 10,000\n  - term: Wallet credit ceiling\n  - definition: 20,000\n  - term: Credits available\n  - definition: Configure provider\n  - paragraph: History length is unknown until collected. A safe estimate is bounded by your wallet credit ceiling; actual use appears as the scan progresses.\n  - heading \"Connect your free data source\" [level=3]\n  - paragraph: Configure a manually obtained Helius Free key, confirm your billing cycle, and run the read-only capability test.\n  - button \"Open Settings\":\n    - img\n    - text: Open Settings\n  - img\n  - strong: Just exploring?\n  - paragraph: The offline demo uses synthetic records and no provider credits.\n  - button \"Load offline demo\":\n    - text: Load offline demo\n    - img\n  - img\n  - text: Built for investigation. Every conclusion needs a source. Wallet Atlas \u00b7 V0.3.11",
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "74e354227326dfefb435a02a674966c7fd6cb7ad48d3662b0f8d5251a709cc49",
+    "world_hash-missing-report.json": "42ae8d1a95b644574ca631c5be0c21c17e4dda4bf1af86d6e6dc2545db98bffd",
+    "world_hash-missing-desktop.png": "a75625b4d43f83fdc68454e8b9520304b0e64adcd47ab8688538f360d3567044",
+    "synthetic-parent.json": "75acd3c7c1a0e2fcb2478c79c370dd23ef9e39f34b9332912fb62d7b3d396420",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "cecbd16ae3b514e48d52a0305c74ad9bce23db5665c9ca01293fcdbada0d449c",
+    "world_hash-restored-report.json": "167da7a2b81d66762905f93e049bcfa26518f8025dd2cd0087b7d7003d89e0bc",
+    "synthetic-positive-desktop.png": "5606abcb5ff0cac323f72dfa67aff4f4e32ae506d17cbbc4e559a070008bd775",
+    "world_hash-restored-desktop.png": "7abb764475de1cf42b7a073559db792ad9cb91ba095492966915dab84bfbc3d8",
+    "synthetic-input.zip": "6c35a5644bfb9cffee77d1a5cf9a981bf67ca4c7c001299c64b96e58c29e2ec1",
+    "valuation_hash-missing-mobile.png": "1e662624ba4b8dabf2fe67b023017b83a005e3503f400e758b58be801b26e244",
+    "world_hash-restored-mobile.png": "46ed86281989af125343a47ec4701681fe3ec78c289d3948b0af4532662c8ec8",
+    "valuation_hash-missing-desktop.png": "f85014be3aa73419c7b5718439c35adf0e8ffac6e8c24bc7baca564244ca2ce3",
+    "valuation_hash-restored-mobile.png": "34f13bc7802fb4abfde48e0474547fb1d73993ed106b29a7bed9b489e3b6cd83",
+    "synthetic-positive-mobile.png": "fb3593a7d08e026fcdeab22f63170c24322596fd4c82129172389f989a660931",
+    "valuation_hash-restored-desktop.png": "851a938740bf1a0fa829aeeab084494014b37d8e27b885387825c9b214987e22",
+    "valuation_hash-missing-report.json": "41804e3f5334a0819cb987254959de89988313c1a172d37188f8da9431cad045",
+    "synthetic-ui-export.json": "75acd3c7c1a0e2fcb2478c79c370dd23ef9e39f34b9332912fb62d7b3d396420",
+    "world_hash-missing-mobile.png": "412c187728b80bf265e5391fe65c816e9aac28d80bb45f71c00775e11afe14d2",
+    "valuation_hash-restored-report.json": "b5ac6698be88ac8b5c6872064deae8f1ff18a8bc1bc53211ea4e9c60eca29166",
+    "indexed-input.zip": "d910bbf9fdbfb1663520866a4bb3fa1f3b775a1f60dc1741c60888dbe1f63209",
+    "genuine-partial-desktop.png": "4f98367ba2cf3e8b6c3c43af6730e6f7ed8c139430ffb6feddd596bf01cea29d",
+    "genuine-partial-report.json": "0808b7cd33ebcc676ccee0b362fd4d55003b52e207ee09b20d765def8c383800"
+  }
+}

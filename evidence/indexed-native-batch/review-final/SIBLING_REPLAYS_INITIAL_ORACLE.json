@@ -1,0 +1,117 @@
+{
+  "kind": "read-only-final-previous-sibling-findings-replay",
+  "state": "FAILED",
+  "engineering_controls": 8,
+  "checks": [
+    {
+      "id": "float-v0-rejection",
+      "passing": true,
+      "issues": [
+        {
+          "path": "transaction.message.accountKeys",
+          "code": "unsupported-version",
+          "reason": "Transaction version has no reviewed compiled key contract",
+          "raw_paths": [
+            "version"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cross-role-lookup-position-rejection",
+      "passing": true,
+      "issues": [
+        {
+          "path": "transaction.message.accountKeys",
+          "code": "conflicting-lookups",
+          "reason": "One address-table position is claimed by multiple compiled key roles",
+          "raw_paths": [
+            "transaction.message.addressTableLookups.0.readonlyIndexes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "opaque-absent-account-rejection",
+      "passing": true,
+      "issues": [
+        {
+          "path": "transaction.message.instructions.0",
+          "code": "invalid-account-membership",
+          "reason": "Opaque instruction account is absent from the primary key table",
+          "raw_paths": [
+            "transaction.message.accountKeys",
+            "transaction.message.instructions.0.accounts.0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "opaque-absent-program-rejection",
+      "passing": true,
+      "issues": [
+        {
+          "path": "transaction.message.instructions.0",
+          "code": "invalid-program-membership",
+          "reason": "Opaque instruction program is absent from the primary key table",
+          "raw_paths": [
+            "transaction.message.accountKeys",
+            "transaction.message.instructions.0.programId"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "one-normalization-per-projection-8",
+      "passing": true,
+      "whole_transaction_normalizations": 1,
+      "source_unchanged": true,
+      "facts": 40
+    },
+    {
+      "id": "one-normalization-per-projection-32",
+      "passing": true,
+      "whole_transaction_normalizations": 1,
+      "source_unchanged": true,
+      "facts": 160
+    },
+    {
+      "id": "loaded-length-before-expensive-decode",
+      "passing": true,
+      "pubkey_decodes": 5,
+      "issues": [
+        {
+          "path": "transaction.message.accountKeys",
+          "code": "invalid-account-keys",
+          "reason": "Loaded key count exceeds the compiled u8 account-key bound",
+          "raw_paths": [
+            "meta.loadedAddresses",
+            "transaction.message.accountKeys"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "generic-mixed-representation-retains-fee",
+      "passing": false,
+      "event_kinds": [
+        "fee",
+        "unsupported"
+      ],
+      "unresolved": [
+        {
+          "signature": "fixture-not-a-signed-transaction",
+          "path": "instructions.0",
+          "reason": "Parsed and opaque instruction representations conflict",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        }
+      ]
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "new_application_acceptance": false,
+  "scope": "Unsigned development controls; not unique acceptance tests or B3 proof."
+}

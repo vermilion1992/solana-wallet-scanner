@@ -1,0 +1,283 @@
+{
+  "kind": "indexed-native-product-candidate",
+  "state": "SCOPED_PASS_REAL_ACCEPTANCE_BLOCKED",
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "private": true,
+  "branch": "codex/product-completion",
+  "starting_head": "0f3a9d1e110ac948cab4d27fdc3377e37927a08b",
+  "application_commit": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+  "initial_application_commit": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+  "source_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "application_source_files": 204,
+  "source_unchanged_after_all_validation": true,
+  "PRODUCT_READY": false,
+  "candidate_classification": [
+    "scoped-valid",
+    "development-functional",
+    "real-acceptance-blocked"
+  ],
+  "backend": {
+    "ordinary_unique_tests_passed": 2311,
+    "subtests_separately_passed": 285,
+    "elapsed_seconds": 337.31,
+    "overlapping_review_and_focused_runs_not_added": true,
+    "raw_log": {
+      "path": "evidence/indexed-native-batch/gate-a-views/backend.log",
+      "bytes": 3222,
+      "sha256": "686705754131b8e8d705583e281b4fe132e6e2baac9a51ce0ffd12cd10e08492"
+    }
+  },
+  "gate_A": {
+    "state": "ACCEPTED_IN_SCOPE",
+    "exit_code": 0,
+    "receipt": {
+      "path": "evidence/indexed-native-batch/gate-a-views/result.json",
+      "bytes": 235217,
+      "sha256": "f4800cadad87e2b9a924f12212222d8c2a888036eac357465ee9d275f6e7b924"
+    },
+    "command": ".venv/bin/python tools/validate.py --profile candidate --install-record evidence/product-milestone/CLEAN_INSTALL_FINAL.json --review-record evidence/indexed-native-batch/REVIEW_VIEW.json --browser-python python3 --chromium /usr/bin/chromium --output evidence/indexed-native-batch/gate-a-views",
+    "all_required_gates": [
+      {
+        "name": "runtime",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "node-runtime",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "backend",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "pip-check",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "shell-syntax",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "matrix",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "frontend-locked-install",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "frontend-check-format",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "frontend-check-discovery",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "frontend-build",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "clean-locked-install",
+        "state": "PASS"
+      },
+      {
+        "name": "launcher-browser-rebuild",
+        "state": "PASS",
+        "exit_code": 0
+      },
+      {
+        "name": "consolidated-review",
+        "state": "PASS"
+      }
+    ],
+    "clean_install_reused_only_with_exact_unchanged_locks_and_runtime": true
+  },
+  "development_product": {
+    "state": "DEVELOPMENT_PASS",
+    "commands": [
+      {
+        "command": [
+          ".venv/bin/python",
+          "tools/check_product.py",
+          "--output",
+          "evidence/indexed-native-batch/product-final"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "raw_log": "evidence/indexed-native-batch/product-final-command.log"
+      },
+      {
+        "command": [
+          ".venv/bin/python",
+          "tools/check_product.py",
+          "--output",
+          "evidence/indexed-native-batch/product-real-required-final",
+          "--require-real-acceptance"
+        ],
+        "exit_code": 2,
+        "expected_exit_code": 2,
+        "raw_log": "evidence/indexed-native-batch/product-real-required-final-command.log"
+      }
+    ],
+    "receipt": {
+      "path": "evidence/indexed-native-batch/product-final/result.json",
+      "bytes": 3279,
+      "sha256": "46be84bcb0325d36974a24d51ff43f0e5df8974ab95dfac710c5caf9a659a87b"
+    }
+  },
+  "real_acceptance_required": {
+    "state": "BLOCKED",
+    "exit_code": 2,
+    "receipt": {
+      "path": "evidence/indexed-native-batch/product-real-required-final/result.json",
+      "bytes": 3269,
+      "sha256": "5eb42744d0eaf0ff053f9ed24cde6f8699dc3bd4877cef09f92b33926c0cfe35"
+    }
+  },
+  "genuine_and_synthetic_product_browser": {
+    "state": "PASS",
+    "exit_code": 0,
+    "cases": 7,
+    "captures": 16,
+    "receipt": {
+      "path": "evidence/indexed-native-batch/product-browser-final/result.json",
+      "bytes": 7957,
+      "sha256": "663d8c59202a1c93e694602ada855f041837365c7c6bfdc68b6bc37484041fa0"
+    },
+    "command": "python3 tools/product_browser.py --python /workspace/solana-wallet-scanner/.venv/bin/python --chromium /usr/bin/chromium --output evidence/indexed-native-batch/product-browser-final --indexed-archive /workspace/outputs/indexed-native-review/genuine-indexed-partial.zip --indexed-expected-fees 0.008904733",
+    "portable_replay_input": "evidence/indexed-native-batch/product-browser-final/indexed-input.zip",
+    "offline_guards": {
+      "provider_requests": 0,
+      "credential_lookups": 0
+    },
+    "no_javascript_errors": true,
+    "no_external_browser_requests": true,
+    "immutable_parent_exports": true,
+    "actual_full_UI_JSON_exports": true,
+    "browser_response_sizes": {
+      "largest_display_bytes": 11247746,
+      "largest_state_summary_bytes": 823099
+    }
+  },
+  "distinct_read_only_review": {
+    "state": "PASS",
+    "receipt": {
+      "path": "evidence/indexed-native-batch/REVIEW_VIEW.json",
+      "bytes": 25406,
+      "sha256": "9ef10a2636bda30b9b62c729d5b755a3aee224c24c2dc9723543f82890b20af1"
+    },
+    "kind": "Separate same-session Codex read-only pass; not third-party independent acceptance",
+    "prior_review_preserved": {
+      "path": "evidence/indexed-native-batch/REVIEW.json",
+      "bytes": 18002,
+      "sha256": "272949d35a823e805cc4526286ce2da054a8aae99aa299a56448e6210adaeed9"
+    }
+  },
+  "genuine_selected_observation": {
+    "unique_records": 200,
+    "failed_records": 184,
+    "successful_records": 16,
+    "selected_network_fees_lamports": 8904733,
+    "selected_network_fees_sol": "0.008904733",
+    "independently_worked_expectations": {
+      "path": "evidence/indexed-native-batch/RAW_EXPECTATIONS.json",
+      "bytes": 54478,
+      "sha256": "67f00651a1e9e82f015b2e36f5d9c7058eb636f9cb07b4348a41c31ead4e41ed"
+    },
+    "wallet_profit": "UNKNOWN",
+    "historical_population": "UNKNOWN",
+    "qualified": false,
+    "B3": "BLOCKED"
+  },
+  "source_and_blockers": {
+    "B1": "Authentication/access/schema observed by the previously completed probe; sufficient historical coverage BLOCKED.",
+    "B2": "Immutable indexed/compiled normal report workflow and efficient UI development-functional; complete real accounting OPEN.",
+    "B3": "BLOCKED: no genuine complete supported wallet corpus with independent full calculations.",
+    "unsupported_real_routes": "All16 successful records still use unreviewed economic wrappers.",
+    "implementation_remaining": [
+      "Historical population witness adapter",
+      "Complete supported economic/acquisition/cost roles",
+      "Proven asset classification and required economic boundary evidence"
+    ],
+    "data_remaining": [
+      "Terminal justified scope, historical ownership/lifecycle, acquisitions/costs/classification, metric-specific inventories/valuation/flows"
+    ],
+    "environment_limits": [
+      "Linux verified; Windows/macOS and third-party acceptance not demonstrated"
+    ]
+  },
+  "scope_boundaries": {
+    "new_helius_requests": 0,
+    "credential_lookups": 0,
+    "credits_consumed_this_batch": 0,
+    "purchases": 0,
+    "new_live_probe_executed": false,
+    "live_provider_allowlist_unchanged": true,
+    "signing_custody_transaction_submission_trading": false,
+    "new_release_ZIP": false,
+    "historical_git_and_evidence_preserved": true,
+    "private_publication_only": true
+  },
+  "preserved_prior_attempts": [
+    {
+      "path": "evidence/indexed-native-batch/gate-a/result.json",
+      "bytes": 224465,
+      "sha256": "635509d65fd954a31c7b7964ce986384a65bf5ae5d79ac9a1ea792b4d4389a54"
+    },
+    {
+      "path": "evidence/indexed-native-batch/product-browser/result.json",
+      "bytes": 8241,
+      "sha256": "f8763cc5299b5131a403b232bb46a7c8523fb60c954cbd4a4ff031508fefd901"
+    },
+    {
+      "path": "evidence/indexed-native-batch/product-browser-verified/result.json",
+      "bytes": 3430,
+      "sha256": "e04b9b78868477f390d54145de66bce3c9a1c57968681c5db4651bf1444201a0"
+    },
+    {
+      "path": "evidence/indexed-native-batch/BROWSER_TRANSPORT_DIAGNOSIS.json",
+      "bytes": 4552,
+      "sha256": "5d756bbe5511ab2eddfb732c65141b1907dc5a8788bade3bfa6eb5ca11d8c60f"
+    }
+  ],
+  "publication": "An evidence-only descendant may be HEAD; application identity above is the exact tested source. Private Git publication/native CI are verified separately after this record is committed.",
+  "compressed_raw_outputs": "INDEX.json maps lossless gzip files to the original producer paths, sizes and SHA-256 values.",
+  "pre_push_secret_history_audit": {
+    "state": "PASS",
+    "receipt": {
+      "path": "evidence/indexed-native-batch/SECURITY_AUDIT_FINAL.json",
+      "sha256": "b19677104c85ef6e3c1092dff1b43223c1852df73e7a7bcd7a60b7aee4328285",
+      "bytes": 139517
+    },
+    "counts": {
+      "current_files": 1013,
+      "history_blobs": 775,
+      "text_payloads": 1910
+    },
+    "findings": [],
+    "runtime_ignore_guards": {
+      ".env": true,
+      ".env.local": true,
+      "credentials/helius.json": true,
+      "keyring/provider.key": true,
+      "local-data/wallets.sqlite3": true,
+      "private.sqlite3": true,
+      "private.db-wal": true,
+      ".solana/id.json": true
+    },
+    "private_runtime_and_credentials_excluded": true,
+    "credential_lookups": 0,
+    "network_requests": 0
+  }
+}

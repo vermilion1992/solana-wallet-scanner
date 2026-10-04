@@ -1,0 +1,28 @@
+{
+  "kind": "distinct-read-only-followup-review-command",
+  "state": "PASS_IN_SCOPE",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_report_view.py",
+    "tests/test_copy_review_api.py",
+    "tests/test_candidate_import.py",
+    "tests/test_report_rebuild.py"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "exit_code": 0,
+  "seconds": 3.498313802003395,
+  "source_before_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "source_after_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "source_unchanged": true,
+  "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+  "raw_log": "evidence/indexed-native-batch/review-view/AFFECTED_SUBSET.log",
+  "raw_log_sha256": "428b2d7a557e131fa6b06d725edf4cbda0e7810529c6623b991bff3f02de4c57",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "scope": "Affected offline review only; root candidate gates and genuine B3 are separate.",
+  "ordinary_tests_passed": 59,
+  "subtests_passed": 20
+}

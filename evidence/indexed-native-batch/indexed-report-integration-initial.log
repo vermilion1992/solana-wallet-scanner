@@ -1,0 +1,310 @@
+F.....FFFFFFF                                                            [100%]
+=================================== FAILURES ===================================
+_ test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb32217c5f0>, <fastapi.applications.FastAPI object at 0x7fb3222248c0>, ...mp/pytest-of-agent/pytest-267/test_normal_indexed_import_sou0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild(guarded):
+        client, app, _, _ = guarded
+        request, response = page()
+        _, _, content = upload([(request, response)])
+        report = import_report(client, content)
+        parent = deepcopy(app.state.store.get('reports', report['id']))
+        assert_partial(report)
+>       assert fee(report)['status'] == 'known' and fee(report)['value'] == '0.000005'
+E       AssertionError: assert ('unknown' == 'known'
+E         
+E         - known
+E         + unknown
+E         ? ++)
+
+tests/test_indexed_report_integration.py:106: AssertionError
+_ test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[missing-native-bytes] _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb321521d60>, <fastapi.applications.FastAPI object at 0x7fb321520320>, ...mp/pytest-of-agent/pytest-267/test_linked_native_alternative2/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+variant = 'missing-native-bytes'
+
+    @pytest.mark.parametrize('variant', ['fee-conflict', 'malformed-native', 'missing-native-bytes'])
+    def test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies(guarded, variant):
+        client, app, _, _ = guarded
+        signature = native()['transaction']['signatures'][0]
+        alternative = alternate(signature, fee_value=6000 if variant == 'fee-conflict' else 5000,
+                                malformed=variant == 'malformed-native')
+        omitted = [digest(alternative[2])] if variant == 'missing-native-bytes' else []
+        _, _, content = upload([page()], alternatives=[alternative], omit=omitted)
+>       report = import_report(client, content)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_indexed_report_integration.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_indexed_report_integration.py:53: in import_report
+    response = client.post('/api/archives/import', content=content, headers={'Content-Type': 'application/zip'})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+.venv/lib/python3.12/site-packages/starlette/testclient.py:463: in request
+    return super().request(
+.venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/testclient.py:360: in handle_request
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.venv/lib/python3.12/site-packages/anyio/from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+.venv/lib/python3.12/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/fastapi/applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv/lib/python3.12/site-packages/fastapi/telemetry/_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/app.py:638: in local_boundary
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:2786: in app
+    await route.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/routing.py:282: in handle
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/fastapi/routing.py:727: in app
+    raw_response = await run_endpoint_function(
+.venv/lib/python3.12/site-packages/fastapi/routing.py:360: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/app.py:989: in archive_import
+    result = await build_report(scan, manifest["address"], collected_archive(loaded), archive_loaded=loaded)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/app.py:282: in build_report
+    result, events, archive_accounting = analyze_archive(archive_loaded, events)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/archive_input.py:546: in analyze_archive
+    adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+scanner/wallet_evidence.py:677: in derive_wallet_evidence
+    clocks = apply_unresolved_chronology(assess_chronology(safe_linked, page_receipts=pages, block_receipts=blocks), safe_linked, contents)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+chronology = {'version': 'slot-chronology-evidence-v3', 'state': 'UNKNOWN', 'transactions': {'indexed-a': {'state': 'UNKNOWN', 'tim...'slots': {'1': {'state': 'PASS', 'time_state': 'PASS', 'order_state': 'PASS', 'canonical_time': 1783175556, ...}}, ...}
+records = [{'signature': 'indexed-a', 'evidence_hash': '56c3f0e5ef517abf0f2586872da412b6431fd5eca96fddd02e907c5a86e17dd3', 'raw'...4abce41', 'raw': None, 'indexed_source_hash': '8eaf107b0491659b8a6abfaf7e4e09ae391415049725ff58d66c3700f4abce41', ...}]
+archive_contents = {'state': 'UNKNOWN', 'receipts': [{'kind': 'archive-native-dependencies', 'hash': 'e63d3ac34feaa5082c48819038cb2565fa3...94db79f9f9b2c10781872bb2928b030278aa28f579aa8a2e104219c8dcb9d068', 'state': 'UNKNOWN', 'read_state': 'readable', ...}]}
+
+    def apply_unresolved_chronology(chronology, records, archive_contents):
+        """Apply the same availability rule in direct history and frozen loading."""
+        unresolved = [row for row in archive_contents['receipts'] if row['state'] != 'PASS']
+        raw_versions = defaultdict(list)
+        for record in records:
+            raw_versions[record['signature']].append(record['raw'])
+        for signature, raws in raw_versions.items():
+            dependencies = unresolved_source_dependencies(unresolved, signature, raws, purpose='chronology')
+            if not dependencies:
+                continue
+            hashes = sorted({row['hash'] for row in dependencies})
+            reason = 'A linked source remains unreadable or role-invalid; its chronology/population relevance is not excluded.'
+>           row = chronology['transactions'][signature]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: None
+
+scanner/source_consistency.py:349: KeyError
+_ test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb320e89e80>, <fastapi.applications.FastAPI object at 0x7fb3218884d0>, ...mp/pytest-of-agent/pytest-267/test_manifest_page_permutation0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results(guarded):
+        client, _, _, _ = guarded
+        pages = [page(outgoing='1:0'), page([native('indexed-b', slot=2)], incoming='1:0', ident=2)]
+        _, _, first = upload(pages)
+        _, _, reversed_content = upload(list(reversed(pages)))
+        _, _, duplicate = upload(pages + [pages[0]])
+        reports = [import_report(client, content) for content in (first, reversed_content, duplicate)]
+>       assert all(fee(report)['value'] == '0.00001' and fee(report)['status'] == 'known' for report in reports)
+E       assert False
+E        +  where False = all(<generator object test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results.<locals>.<genexpr> at 0x7fb3200ecad0>)
+
+tests/test_indexed_report_integration.py:175: AssertionError
+_ test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[history_complete] _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb3214cc560>, <fastapi.applications.FastAPI object at 0x7fb3214cc110>, ...mp/pytest-of-agent/pytest-267/test_caller_completion_and_can0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+field = 'history_complete'
+
+    @pytest.mark.parametrize('field', ['history_complete', 'positions', 'events', 'transaction_index'])
+    def test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api(guarded, field):
+        client, app, _, _ = guarded
+        manifest, inputs, _ = upload([page()])
+        manifest[field] = True
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, 'w') as archive:
+            archive.writestr('manifest.json', canonical_bytes(manifest))
+            for identifier, raw in inputs.items():
+                archive.writestr(f'raw/{identifier}.json', raw)
+        before = deepcopy(app.state.store.list('reports'))
+        response = client.post('/api/archives/import', content=stream.getvalue(), headers={'Content-Type': 'application/zip'})
+>       assert response.status_code == 400, response.text
+E       AssertionError: {"detail":"Expected strict indexed-wallet-input-v1 manifest without completion declarations"}
+E       assert 422 == 400
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_indexed_report_integration.py:192: AssertionError
+_ test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[positions] _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb3214cf650>, <fastapi.applications.FastAPI object at 0x7fb32138e750>, ...mp/pytest-of-agent/pytest-267/test_caller_completion_and_can1/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+field = 'positions'
+
+    @pytest.mark.parametrize('field', ['history_complete', 'positions', 'events', 'transaction_index'])
+    def test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api(guarded, field):
+        client, app, _, _ = guarded
+        manifest, inputs, _ = upload([page()])
+        manifest[field] = True
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, 'w') as archive:
+            archive.writestr('manifest.json', canonical_bytes(manifest))
+            for identifier, raw in inputs.items():
+                archive.writestr(f'raw/{identifier}.json', raw)
+        before = deepcopy(app.state.store.list('reports'))
+        response = client.post('/api/archives/import', content=stream.getvalue(), headers={'Content-Type': 'application/zip'})
+>       assert response.status_code == 400, response.text
+E       AssertionError: {"detail":"Expected strict indexed-wallet-input-v1 manifest without completion declarations"}
+E       assert 422 == 400
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_indexed_report_integration.py:192: AssertionError
+_ test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[events] _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb32217f4a0>, <fastapi.applications.FastAPI object at 0x7fb3211c7200>, ...mp/pytest-of-agent/pytest-267/test_caller_completion_and_can2/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+field = 'events'
+
+    @pytest.mark.parametrize('field', ['history_complete', 'positions', 'events', 'transaction_index'])
+    def test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api(guarded, field):
+        client, app, _, _ = guarded
+        manifest, inputs, _ = upload([page()])
+        manifest[field] = True
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, 'w') as archive:
+            archive.writestr('manifest.json', canonical_bytes(manifest))
+            for identifier, raw in inputs.items():
+                archive.writestr(f'raw/{identifier}.json', raw)
+        before = deepcopy(app.state.store.list('reports'))
+        response = client.post('/api/archives/import', content=stream.getvalue(), headers={'Content-Type': 'application/zip'})
+>       assert response.status_code == 400, response.text
+E       AssertionError: {"detail":"Expected strict indexed-wallet-input-v1 manifest without completion declarations"}
+E       assert 422 == 400
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_indexed_report_integration.py:192: AssertionError
+_ test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[transaction_index] _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb32109f8c0>, <fastapi.applications.FastAPI object at 0x7fb321367a10>, ...mp/pytest-of-agent/pytest-267/test_caller_completion_and_can3/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+field = 'transaction_index'
+
+    @pytest.mark.parametrize('field', ['history_complete', 'positions', 'events', 'transaction_index'])
+    def test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api(guarded, field):
+        client, app, _, _ = guarded
+        manifest, inputs, _ = upload([page()])
+        manifest[field] = True
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, 'w') as archive:
+            archive.writestr('manifest.json', canonical_bytes(manifest))
+            for identifier, raw in inputs.items():
+                archive.writestr(f'raw/{identifier}.json', raw)
+        before = deepcopy(app.state.store.list('reports'))
+        response = client.post('/api/archives/import', content=stream.getvalue(), headers={'Content-Type': 'application/zip'})
+>       assert response.status_code == 400, response.text
+E       AssertionError: {"detail":"Expected strict indexed-wallet-input-v1 manifest without completion declarations"}
+E       assert 422 == 400
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_indexed_report_integration.py:192: AssertionError
+_ test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fb3213aa7e0>, <fastapi.applications.FastAPI object at 0x7fb3213a8bc0>, ...mp/pytest-of-agent/pytest-267/test_genuine_authorized_two_pa0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim(guarded):
+        client, app, _, _ = guarded
+        pages = [(PROBE.joinpath(stem + '-request.json').read_bytes(),
+                  gzip.decompress(PROBE.joinpath(stem + '-response.raw.gz').read_bytes()))
+                 for stem in ('02-all-index', '03-all-continuation')]
+        byte_hashes = [(hashlib.sha256(request).hexdigest(), hashlib.sha256(response).hexdigest()) for request, response in pages]
+        # Independently worked from original raw inputs, before production import.
+        raw_records = [raw for _, response in pages for raw in json.loads(response)['result']['data']]
+        assert len(raw_records) == len({raw['transaction']['signatures'][0] for raw in raw_records}) == 200
+        assert sum(raw['meta']['err'] is not None for raw in raw_records) == 184
+        direct_fee_sum = sum(raw['meta']['fee'] for raw in raw_records
+                             if raw['transaction']['message']['accountKeys'][0] == WALLET)
+        assert direct_fee_sum == 8_904_733
+        _, _, content = upload(pages)
+        report = import_report(client, content)
+        assert_partial(report)
+>       assert fee(report)['status'] == 'known' and fee(report)['value'] == '0.008904733'
+E       AssertionError: assert ('unknown' == 'known'
+E         
+E         - known
+E         + unknown
+E         ? ++)
+
+tests/test_indexed_report_integration.py:212: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild
+FAILED tests/test_indexed_report_integration.py::test_linked_native_alternative_cannot_disappear_from_required_fee_dependencies[missing-native-bytes]
+FAILED tests/test_indexed_report_integration.py::test_manifest_page_permutation_duplicate_links_and_independent_source_bytes_do_not_change_narrow_results
+FAILED tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[history_complete]
+FAILED tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[positions]
+FAILED tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[events]
+FAILED tests/test_indexed_report_integration.py::test_caller_completion_and_canonical_index_declarations_are_rejected_at_normal_api[transaction_index]
+FAILED tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim
+8 failed, 5 passed, 1 warning in 31.38s

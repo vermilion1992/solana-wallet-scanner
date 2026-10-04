@@ -1,0 +1,92 @@
+{
+  "kind": "read-only-browser-transport-diagnosis",
+  "state": "SCOPED_DIAGNOSIS_ONLY",
+  "created_utc": "2026-10-04T05:12:47.306652+00:00",
+  "application_candidate_commit": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+  "application_candidate_binding": "Application used by the two attempted genuine200 browser runs; subsequent source edits are not acceptance bound by this diagnosis.",
+  "first_run": {
+    "receipt_path": "evidence/indexed-native-batch/product-browser/result.json",
+    "receipt_sha256": "f8763cc5299b5131a403b232bb46a7c8523fb60c954cbd4a4ff031508fefd901",
+    "state": "FAILED",
+    "assertion_timeout_ms": 5000,
+    "failure": "Locator expected to be visible after successful indexed archive POST; manual import UI still loading.",
+    "accepted": false
+  },
+  "second_run": {
+    "receipt_path": "evidence/indexed-native-batch/product-browser-verified/result.json",
+    "receipt_sha256_before_external_stop": "923d622b5189e891a24f94d55fc22b5156e828409c449f6851a43a96d5ce9cc9",
+    "state_before_external_stop": "INCOMPLETE",
+    "assertion_timeout_ms": 120000,
+    "accepted": false,
+    "visibility": "Inferred past expect(panel).to_be_visible() from subsequent giant protocol-body transfer. This inference is not a completed browser assertion receipt.",
+    "receipt_sha256_after_external_stop": "e04b9b78868477f390d54145de66bce3c9a1c57968681c5db4651bf1444201a0",
+    "state_after_external_stop": "INCOMPLETE",
+    "server_stopped": true,
+    "offline_guards": {
+      "provider_requests": 0,
+      "credential_lookups": 0
+    }
+  },
+  "observations": {
+    "indexed_saved_report_payload_bytes": 145004863,
+    "dictionary_containers": 504592,
+    "list_containers": 350199,
+    "total_containers": 854791,
+    "dictionary_fields": 2532554,
+    "stdlib_json_parse_seconds": 1.6978063540009316,
+    "playwright_mapping_seconds": 3.9780809720105026,
+    "main_runner_cpu_ticks_over_two_seconds": 200,
+    "backend_cpu_ticks_over_two_seconds": 0,
+    "driver_cpu_ticks_over_two_seconds": 0,
+    "renderer_cpu_ticks_over_two_seconds": 0,
+    "earlier_memory_rss_kib": {
+      "main_runner": 407024,
+      "backend": 358920,
+      "driver": 581492,
+      "renderer": 707584
+    },
+    "latest_memory_rss_kib": {
+      "main_runner": 958760,
+      "backend": 360100,
+      "driver": 940604,
+      "renderer": 706860
+    },
+    "backend_peak_rss_kib": 1274432,
+    "memory_limit_bytes": 17179869184,
+    "cgroup_oom_events": 0,
+    "cgroup_oom_kill_events": 0,
+    "indexed_parent_export_or_indexed_captures_present": false
+  },
+  "installed_transport_algorithm": {
+    "class": "playwright._impl._transport.PipeTransport",
+    "method": "run",
+    "read_chunk_upper_bound_bytes": 32768,
+    "accumulator": "buffer = buffer + data",
+    "effect": "Repeated immutable byte concatenation copies prior chunks; large APIResponse.body/json base64 protocol messages produce quadratic copying.",
+    "method_source_sha256": "366cfa477e221e17116cc9d2da7eb24620e7bcbd5f59a081c91fcaab67126d4d"
+  },
+  "stage_assessment": "Strong evidence for giant APIResponse.json/body transport after indexed visibility, not OOM. Exact Python stack was not collected; do not treat this diagnosis as successful final UI acceptance.",
+  "application_scaling_observation": "Archive import fetches complete selected detail then awaits full /api/state containing all complete reports before opening the report.",
+  "compatible_remedies": [
+    "Optional compact state summaries and selected display details",
+    "Stream immutable full export bytes outside Playwright JSON protocol for hash/immutability checks",
+    "Derived proof references may compact duplicates while retaining complete source facts"
+  ],
+  "provider_requests_during_diagnosis": 0,
+  "credential_lookups_during_diagnosis": 0,
+  "application_source_edits_by_reviewer": false,
+  "full_acceptance": false,
+  "PRODUCT_READY": false,
+  "external_stop": {
+    "authorised_by": "root requested interrupt of main browser runner only; preserve runner finally cleanup",
+    "signal": "SIGINT",
+    "state": "INTERRUPTED_AND_CLEANED_UP",
+    "expected_script": "evidence/indexed-native-batch/browser_assertion_budget.py",
+    "reason": "Stop CPU-bound oversized Playwright protocol transfer; run must remain incomplete/unaccepted.",
+    "sent_utc": "2026-10-04T05:12:47.307522+00:00",
+    "cleanup_observed_utc": "2026-10-04T05:13:06.726283+00:00",
+    "all_observed_runner_backend_driver_renderer_processes_exited": true,
+    "final_receipt_incomplete": true,
+    "additional_signals_sent": false
+  }
+}

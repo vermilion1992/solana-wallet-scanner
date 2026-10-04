@@ -1,0 +1,51 @@
+{"output": "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/product-browser-verified/synthetic-input.zip", "sha256": "5ab9c1ab191fbcdc50ed8b7119683a9e49ae04db13f26b8cf7a1319059a8af3f", "scope": "Synthetic development", "provider_requests": 0}
+{"output": "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/product-browser-verified/partial-real-input.zip", "sha256": "5948ceba725638c6768bdb7f28834af338c89d1e9eb2c36f1e1218dacd3345ec", "scope": "Partial real sample; B3 remains blocked", "provider_requests": 0}
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/browser_assertion_budget.py", line 17, in <module>
+    runpy.run_path(str(root/'tools/product_browser.py'), run_name='__main__')
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 188, in <module>
+    browser.close()
+             ^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 141, in run
+    (out/(label+'-report.json')).write_text(json.dumps(child,indent=2)+'\n')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 20794, in body
+    return mapping.from_maybe_impl(self._sync(self._impl_obj.body()))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 113, in _sync
+    self._dispatcher_fiber.switch()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/sync_api/_context_manager.py", line 56, in greenlet_main
+    self._loop.run_until_complete(self._connection.run_as_sync())
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1999, in _run_once
+    handle._run()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 337, in run_as_sync
+    await self.run()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 348, in run
+    await self._transport.run()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_transport.py", line 148, in run
+    while length:
+          ^^^^^^
+KeyboardInterrupt
+Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+Task was destroyed but it is pending!
+task: <Task cancelling name='Task-148' coro=<APIResponse.body() done, defined at /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_fetch.py:553> wait_for=<Future finished result=None> cb=[SyncBase._sync.<locals>.<lambda>() at /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_sync_base.py:111]>
+Exception ignored in: <function BaseSubprocessTransport.__del__ at 0x7fcb797223e0>
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_subprocess.py", line 126, in __del__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_subprocess.py", line 104, in close
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/unix_events.py", line 568, in close
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/unix_events.py", line 592, in _close
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 799, in call_soon
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 545, in _check_closed
+RuntimeError: Event loop is closed

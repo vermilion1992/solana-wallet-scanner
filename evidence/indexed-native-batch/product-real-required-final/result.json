@@ -1,0 +1,108 @@
+{
+  "kind": "offline-product-check",
+  "development": {
+    "state": "PASS",
+    "scope": "Executed normal offline app workflow with synthetic development and separately labelled partial real input"
+  },
+  "real_acceptance": {
+    "state": "BLOCKED",
+    "reason": "No independently supported genuine complete-wallet population/basis/classification/valuation corpus is present."
+  },
+  "cases": [
+    {
+      "case": "synthetic-positive-normal-report",
+      "state": "PASS",
+      "expected": {
+        "profit_sol": "0.49995",
+        "economic_pnl_sol": "0.499955",
+        "completed_positions": "5",
+        "median_roi_pct": "0",
+        "win_rate_pct": "40",
+        "positive_weeks": "2",
+        "observed_network_fees_sol": "0.000055"
+      },
+      "report_id": "a45acec649ae42b9b850702fdc40bc0c"
+    },
+    {
+      "case": "valuation_hash-loss-and-exact-restoration",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-loss-and-exact-restoration",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-selected-23-records",
+      "state": "PASS",
+      "scope": "Partial sample only; no B3 proof",
+      "expected_fee_sol": "0.000240394",
+      "oracle": "Direct integer payer-matched meta.fee addition without production metric functions"
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "parent_unchanged": true,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "collector_ancestry_created": false,
+  "state": "BLOCKED",
+  "real_acceptance_required": true,
+  "artifacts": {
+    "partial-real-input.zip": "d274b2e36dad6c13c1a75ed1224b0fe2a672e54d36b680ca3d28ca2a6c14e100",
+    "valuation_hash-missing-child.json": "d3d9e08d736a88d157652bc3827018def4aeb4e708ee777d4f6c46bd1512708a",
+    "partial-real-report.json": "3a9afcabc7824526c1ee0e75521be8c2ecd138ce19b58ccff6ec7f2044841b82",
+    "synthetic-parent.json": "b19235c4b3d807676291301bca868fdd1e11329c1bf5edd57aa8922a9d66290c",
+    "synthetic-export.csv": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843",
+    "world_hash-missing-child.json": "65c97c7deb95740a7e0547d4bf6083fcb0ee083045c11e3e34a4fd04b88a7cb1"
+  }
+}

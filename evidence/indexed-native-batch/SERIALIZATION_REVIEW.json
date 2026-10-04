@@ -1,0 +1,26 @@
+{
+  "raw_rows": 200,
+  "size_json_bytes": 27040883,
+  "accounts_total": 2494,
+  "accounts_count_distribution": {
+    "16": 44,
+    "14": 22,
+    "10": 67,
+    "13": 40,
+    "12": 11,
+    "9": 13,
+    "6": 1,
+    "17": 1,
+    "20": 1
+  },
+  "candidate_scope": "Existing code already derives candidate union per signature, not globally.",
+  "kind": "read-only-large-report-serialization-review",
+  "application_commit": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+  "scope": "Isolated genuine 200-record browser dataset; no user runtime database examined",
+  "measured_saved_report_bytes": 145004863,
+  "diagnosis": "Legitimate per-transaction assessments are repeatedly serialized in archive_accounting and coverage. A global cross-signature account union is not present.",
+  "decision": "Retain all evidence in this candidate. Report/list compaction requires a separate representation contract and compatibility controls; no unsupported quantities are removed.",
+  "candidate_source_edits": 0,
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

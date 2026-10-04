@@ -1,0 +1,81 @@
+{
+  "kind": "read-only-final-diff-and-matrix-evidence-review",
+  "state": "PASS_IN_SCOPE",
+  "starting_head": "0f3a9d1e110ac948cab4d27fdc3377e37927a08b",
+  "application_candidate": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+  "changed_source_paths": [
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/ARCHIVE_INPUT_CONTRACT.md",
+    "docs/BLUEPRINT_ALIGNMENT.md",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/chronology_evidence.py",
+    "scanner/compiled_instructions.py",
+    "scanner/decoder.py",
+    "scanner/history_evidence.py",
+    "scanner/indexed_input.py",
+    "scanner/investigation.py",
+    "scanner/json_boundary.py",
+    "scanner/position_evidence.py",
+    "scanner/source_consistency.py",
+    "scanner/transaction_format.py",
+    "scanner/wallet_evidence.py",
+    "tests/fixtures/compiled_instructions/schema.json",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+    "tests/test_compiled_instructions.py",
+    "tests/test_compiled_report_integration.py",
+    "tests/test_indexed_chronology.py",
+    "tests/test_indexed_input.py",
+    "tests/test_indexed_report_integration.py",
+    "tests/test_indexed_source_dependencies.py",
+    "tests/test_investigation.py",
+    "tests/test_nonce_swap_evidence.py",
+    "tests/test_position_evidence.py",
+    "tools/archive_input.py",
+    "tools/browser_acceptance.py",
+    "tools/product_browser.py",
+    "tools/validate.py"
+  ],
+  "retained_requirement_rows": 32,
+  "new_requirement_rows": [
+    "compiled-primary-schema",
+    "indexed-immutable-input",
+    "indexed-normal-report",
+    "indexed-shared-chronology",
+    "indexed-source-dependencies"
+  ],
+  "unchanged_existing_matrix_rows": true,
+  "duplicate_requirement_ids": false,
+  "independently_worked_genuine_selected_fees": {
+    "pages": [
+      {
+        "path": "02-all-index-response.raw.gz",
+        "original_raw_sha256": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+        "records": 100,
+        "fee_lamports": 4841430
+      },
+      {
+        "path": "03-all-continuation-response.raw.gz",
+        "original_raw_sha256": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+        "records": 100,
+        "fee_lamports": 4063303
+      }
+    ],
+    "unique_records": 200,
+    "failed_records": 184,
+    "successful_records": 16,
+    "lamports": 8904733,
+    "SOL": "0.008904733",
+    "scope": "Selected preserved raw pages; not wallet-wide profit, complete fees or B3 acceptance"
+  },
+  "provider_allowlist_FIFO_metric_composer_rebuild_frontend_locks_unchanged": true,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "application_modified": false,
+  "PRODUCT_READY": false
+}

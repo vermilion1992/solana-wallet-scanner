@@ -1,0 +1,443 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "reviewed_utc": "2026-10-04T05:21:46.171961+00:00",
+  "review_type": "Distinct internal read-only framework review; not third-party or product acceptance",
+  "source_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "source_files": 204,
+  "source_unchanged": true,
+  "starting_head": "0f3a9d1e110ac948cab4d27fdc3377e37927a08b",
+  "previous_application_candidate": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+  "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+  "matrix_review_complete": true,
+  "reviewed_changed_paths": [
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/ARCHIVE_INPUT_CONTRACT.md",
+    "docs/BLUEPRINT_ALIGNMENT.md",
+    "docs/CONTRACT.md",
+    "docs/R1_SOURCE_DECISION.md",
+    "frontend/dist/assets/index-BLd8QPnh.js",
+    "frontend/dist/assets/index-DCOfel89.js",
+    "frontend/dist/index.html",
+    "frontend/scripts/check-discovery.mjs",
+    "frontend/src/App.tsx",
+    "frontend/src/api.ts",
+    "frontend/src/report.tsx",
+    "frontend/src/settings.tsx",
+    "frontend/src/types.ts",
+    "frontend/src/workspace.tsx",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "scanner/chronology_evidence.py",
+    "scanner/compiled_instructions.py",
+    "scanner/decoder.py",
+    "scanner/history_evidence.py",
+    "scanner/indexed_input.py",
+    "scanner/investigation.py",
+    "scanner/json_boundary.py",
+    "scanner/position_evidence.py",
+    "scanner/report_view.py",
+    "scanner/source_consistency.py",
+    "scanner/transaction_format.py",
+    "scanner/wallet_evidence.py",
+    "tests/fixtures/compiled_instructions/schema.json",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+    "tests/test_compiled_instructions.py",
+    "tests/test_compiled_report_integration.py",
+    "tests/test_indexed_chronology.py",
+    "tests/test_indexed_input.py",
+    "tests/test_indexed_report_integration.py",
+    "tests/test_indexed_source_dependencies.py",
+    "tests/test_investigation.py",
+    "tests/test_nonce_swap_evidence.py",
+    "tests/test_position_evidence.py",
+    "tests/test_report_view.py",
+    "tools/archive_input.py",
+    "tools/browser_acceptance.py",
+    "tools/product_browser.py",
+    "tools/validate.py"
+  ],
+  "reviewed_followup_paths": [
+    "CODEX_TASK.md",
+    "ISSUES.md",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/CONTRACT.md",
+    "frontend/dist/assets/index-BLd8QPnh.js",
+    "frontend/dist/assets/index-DCOfel89.js",
+    "frontend/dist/index.html",
+    "frontend/scripts/check-discovery.mjs",
+    "frontend/src/App.tsx",
+    "frontend/src/api.ts",
+    "frontend/src/report.tsx",
+    "frontend/src/settings.tsx",
+    "frontend/src/types.ts",
+    "frontend/src/workspace.tsx",
+    "scanner/app.py",
+    "scanner/report_view.py",
+    "tests/test_report_view.py",
+    "tools/product_browser.py",
+    "tools/validate.py"
+  ],
+  "followup_path_hashes": {
+    "CODEX_TASK.md": "0a79ec2f2c792b85768a4ba6a0171e753d8b4e7b98e8f292412d06a304dec643",
+    "ISSUES.md": "42d63f7657d5d93428d5d5a09446a5b260119d2dd8e90c9f995e20bfdf5894ce",
+    "docs/ACCEPTANCE_MATRIX.json": "7412195f57726cb5b7327e708249b9bd0f35ba95db515003354dcb22f38a9ba7",
+    "docs/CONTRACT.md": "586622b0ccef633f6f37f12646e214545d3ccdedf211524008467871e185f33f",
+    "frontend/dist/assets/index-BLd8QPnh.js": "4ae6d07d418c77c915e95c16cb967442cf2033f1ab6c853cb4d148d9086021f1",
+    "frontend/dist/assets/index-DCOfel89.js": null,
+    "frontend/dist/index.html": "05dbf48bce78dd362db700f91781fb1722ef064ac0008ae98a5a1aaf82b7378f",
+    "frontend/scripts/check-discovery.mjs": "7ff94e19ddf700bfeeab55c5173f6b940d2a4666e6ab7ddec6bec8e5c19b7c19",
+    "frontend/src/App.tsx": "bc8740e22eb94aa8e52e9e2fd7a866c298adb077de5fd9889575c18a3056d0e5",
+    "frontend/src/api.ts": "5c92b727c4b00beb0121eab976fd1bc9b9b73bc12746d7c27f70699e491f18d1",
+    "frontend/src/report.tsx": "d100bf8618d4d60a7fa4a2aaeb641e7f1860b531a1afa31773f6bf53013e7b41",
+    "frontend/src/settings.tsx": "5988a6af7c2bd6eb4948393b4a113e0d66646478af1cfd775c32d0a7d118bf50",
+    "frontend/src/types.ts": "5b384bf44a3226d69ab15ca59ddf0463ef2a28040dfca0e01b1cae43bf03e2ca",
+    "frontend/src/workspace.tsx": "423b0f733d2df23e67b0160f6700a3d9ff3583115fde40dada27d6f106de044b",
+    "scanner/app.py": "0b35665435af026efffe4e30947b221be368ebd8323e65534c641966bc11a336",
+    "scanner/report_view.py": "4039ad9a0b2c5ab02f142f180efbe70d64e6055e7d1fce846f20dcbcd74d2782",
+    "tests/test_report_view.py": "a33e0b459d5863ead0353ee6bb6ec09aefa5ea9767b801880730d591ec764773",
+    "tools/product_browser.py": "c7d9249585ab104042a99dc2b136d8f0c71d5280ff652eb4c8a1810e48de7bb6",
+    "tools/validate.py": "97761f218c50473a97bd0c67719aff514eaee3d11f41b758074291e8e232588f"
+  },
+  "followup_diff_sha256": "6d8eda43c77447853fbcd773997c9482c8d1587fbfc2c2cb679d013481d3d469",
+  "full_batch_diff_sha256": "2b469ff8925d1d48ea32d77274c10fcdfbb2508344e54c6f438071f00977bfe6",
+  "prior_review": {
+    "path": "evidence/indexed-native-batch/REVIEW.json",
+    "sha256": "272949d35a823e805cc4526286ce2da054a8aae99aa299a56448e6210adaeed9",
+    "source_sha256": "259368df819c0d04915d2ed2b96acc7eaf4433fcad8f26b18a9f6f0616b7488d",
+    "application_candidate": "4d577b990f87b2b25a06db94eef96d349c2c8d3d",
+    "byte_unchanged": true,
+    "unchanged_reviewed_component_paths": {
+      "docs/ARCHIVE_INPUT_CONTRACT.md": "585bb570e29d7e7e1bd7d3f3b8e836294dbe60e5686ef41cfd65c5f7f03d10b0",
+      "docs/BLUEPRINT_ALIGNMENT.md": "1f336009e48e0b80bccdb76dbb687d6637bbdaae990d32218d16bd9c17a72363",
+      "docs/R1_SOURCE_DECISION.md": "db3c4fe0cdad6e6042121429919f9fbb98179af9aa92e4c8761687ac2dab1968",
+      "scanner/archive_input.py": "c4b69e81eb32b315641472b970ad5e4235e9c0e7c280dd60a1ea0e568c16382f",
+      "scanner/chronology_evidence.py": "36032f177db3638505026969039f5e69d64cd1d1d2b208f64e6e74153f4a0575",
+      "scanner/compiled_instructions.py": "928e3d538a141e953a2dc4e7a8a155ba32a5e8157a42111e006d5f23e710a62b",
+      "scanner/decoder.py": "ed4f56b07011ac0a3b52e1757c221546ea358353e2744a3807436cede8ef876b",
+      "scanner/history_evidence.py": "2a66a1ce9df798598176bdaa200666a1184ca99bce3c2b0dff40e6adc9a97de7",
+      "scanner/indexed_input.py": "92badd18d1d0e7a6f2352bf5ea87889053fe69da6d2badaf61b90986bc05c210",
+      "scanner/investigation.py": "1de1586cd9a41d3b3860215c221bfe93be4022519bfe516ee4452bf74f20028c",
+      "scanner/json_boundary.py": "c270c2adb1a3fc35f6791ceb037f3777352636b995f0c04395489d566cb7396d",
+      "scanner/position_evidence.py": "b101a3785b1c3145384fef021d6fad39543a2ba47f444664832139c802dbc769",
+      "scanner/source_consistency.py": "ea52f62b4f990caf1ee20d3ccd410b2705f84b098424a84991f46be2839cbf7c",
+      "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+      "scanner/wallet_evidence.py": "16f7b8772cc2a65c5c74c02014bb811ab788f4fa160b2f5d7e596f5b6c8c2187",
+      "tests/fixtures/compiled_instructions/schema.json": "4f454bc2f6eeecb4c3b4a2438463f97e0d52deb35c0d627ec39c82f47bce0d0c",
+      "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs": "8468920b107104d4b8fc3ea40cd5e6204d3b2027fb2ba4cc4b4075855cb4af8b",
+      "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+      "tests/test_compiled_instructions.py": "ed351589237bc5ee31597db151561fa8a7e6fc00d003284b8b7a8ae64a9f0cf7",
+      "tests/test_compiled_report_integration.py": "0af95699a953eef5e9027c39b214dad026f6a9fda2a60195db3f718be03be9a1",
+      "tests/test_indexed_chronology.py": "40266b026080042ef9246cadd13c9d7564f6f5889dbe00c6679000a15dc07dde",
+      "tests/test_indexed_input.py": "43a0e7cb3a7af1868b57dff2342c1199d8f2f6135f87de47e20e8db1a18de032",
+      "tests/test_indexed_report_integration.py": "396313d4f3cf33dde4599e0900ea23c9f014a7af7aa2d601f22c9a5e627f14f2",
+      "tests/test_indexed_source_dependencies.py": "71009e6940a850ff4d1b1449d816785e059644da418c8a57511ec7f1cbc2f8a9",
+      "tests/test_investigation.py": "e3610bab6c4077998cdd46e626f0db7a28b8e4e379d13d81af567d0662b6b125",
+      "tests/test_nonce_swap_evidence.py": "aa73a235f274d00fc0e7ab9529dcaaffbfb1aae6e134e2df4c13a6d086cabe5c",
+      "tests/test_position_evidence.py": "d473d33c8543f52d61305ec439c1087d7a966485b966d568b39bee92261eba9c",
+      "tools/archive_input.py": "e45e6b51bcad930ce97937f8fbacc49e2415d46a82bc80bde0e2d57453d4ca4d",
+      "tools/browser_acceptance.py": "7b23b0977fa4bb70af48d2291e36688330d46c7c6ddcb0ffbd904649f06da537"
+    },
+    "execution_scope": "Prior252ordinaryPASS and13engineering replays remain evidence bound to4d577. They are not recounted as new executions or new acceptance on73c9. Root final full gates bind current candidate."
+  },
+  "findings": [
+    {
+      "id": "B2-IDX-02",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Unassignable missing-source rebuild handling",
+      "result": "Missing source remains an unresolved source-set dependency without indexing a nonexistent signature; normal API loss/restoration retains immutable parents.",
+      "validation": [
+        "tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers",
+        "tests/test_indexed_source_dependencies.py::test_unassignable_record_remains_unscoped_negative_dependency"
+      ],
+      "carry_forward": "Underlying reviewed indexed/compiled/JSON/source modules and their tests are byte-identical to prior candidate; optional HTTP projection bridge reviewed separately below."
+    },
+    {
+      "id": "B2-KEY-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Compiled key table and format contract",
+      "result": "Float0, cross-role lookup index reuse, absent partial-address memberships, and excessive loaded arrays reject before creating supported operations. Positive keys and CPI scope preserved.",
+      "validation": [
+        "review-final/FINAL_SIBLING_REPLAYS.json",
+        "tests/test_compiled_instructions.py"
+      ],
+      "carry_forward": "Underlying reviewed indexed/compiled/JSON/source modules and their tests are byte-identical to prior candidate; optional HTTP projection bridge reviewed separately below."
+    },
+    {
+      "id": "B2-REP-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Selected/alternative instruction representation and RPC alias",
+      "result": "Mixed parsed/opaque economic interpretations reject while fees and explicit unsupported diagnostics remain. Genuine Token-2022 spl-token alias is admitted; contradictory aliases reject.",
+      "validation": [
+        "review-final/FINAL_SIBLING_REPLAYS.json",
+        "tests/test_compiled_report_integration.py"
+      ],
+      "carry_forward": "Underlying reviewed indexed/compiled/JSON/source modules and their tests are byte-identical to prior candidate; optional HTTP projection bridge reviewed separately below."
+    },
+    {
+      "id": "B2-PROC-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Bounded normalization and original source-path citations",
+      "result": "One normalization per program projection replaces repeated whole-record passes. Supported wallet boundary/lifecycle/transfer/disjoint/error coordinates refer to existing immutable compiled data/account/key nodes; numerical observations remain useful.",
+      "validation": [
+        "review-final/FINDINGS_INITIAL.json",
+        "review-final/FINDINGS_FINAL.json",
+        "review-final/FINAL_SIBLING_REPLAYS.json",
+        "tests/test_indexed_source_dependencies.py"
+      ],
+      "carry_forward": "Underlying reviewed indexed/compiled/JSON/source modules and their tests are byte-identical to prior candidate; optional HTTP projection bridge reviewed separately below."
+    },
+    {
+      "id": "B2-JSON-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Bounded JSON and duplicate page-hash variants",
+      "result": "Deep/cyclic input becomes controlled rejection; independently constructed legacy/indexed deep API archives reject before mutation. Good/missing/corrupt variants remain UNKNOWN under permutation and exact duplicates stay idempotent.",
+      "validation": [
+        "review-final/FINDINGS_FINAL.json",
+        "tests/test_indexed_input.py"
+      ],
+      "carry_forward": "Underlying reviewed indexed/compiled/JSON/source modules and their tests are byte-identical to prior candidate; optional HTTP projection bridge reviewed separately below."
+    },
+    {
+      "id": "B2-UI-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Immutable summary/display report transport",
+      "result": "Full/default reports/state and exports preserve complete data. Fixed SQL summary inputs preserve missing/null/boolean types, all qualification/copy-review reads and candidate progress before projection. Display retains exact metrics, requirements, warnings, source index and dedicated history/position proof. No projection is saved or passed to accounting/rebuild.",
+      "validation": [
+        "review-view/AFFECTED_SUBSET.json",
+        "review-view/FRONTEND_VIEW.json"
+      ]
+    },
+    {
+      "id": "VIEW-PREVIEW-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Neighbouring preset-preview default contract",
+      "initial_finding": "Initial follow-up used raw report inputs before preview and would omit baseline archive/history/position freshness annotations because decoration skips preview annotations.",
+      "result": "Current source decorates raw inputs before setting preview=True, matching baseline behavior; full/summary preview preserves banners, unsaved checks and conditional semantics without rewriting saved reports.",
+      "validation": [
+        "tests/test_report_view.py::test_preview_full_and_summary_preserve_existing_banners_and_conditional_semantics",
+        "review-view/AFFECTED_SUBSET.json"
+      ]
+    },
+    {
+      "id": "VIEW-ENRICH-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Selected report ownership and enrichment",
+      "initial_finding": "Initial follow-up kept active detail while enrichment ignored its returned report, leaving current observations stale after a successful action.",
+      "result": "Current enrichment requests display output and updates selected detail only for the matching active ID. Summary polling never replaces detail; opening tokens reject late previous opens, transient pending display requests deduplicate, later opens refetch, failures remain visible. Preview detail retains its unsaved decisions.",
+      "validation": [
+        "tests/test_report_view.py::test_enrich_optional_display_projects_only_response_after_same_saved_observation",
+        "review-view/FRONTEND_VIEW.json"
+      ],
+      "scope": "Offline mocked transport/helper and read-only control-flow review. No genuine market provider or full interactive concurrency acceptance executed by reviewer."
+    },
+    {
+      "id": "VIEW-RUNNER-01",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "family": "Missing optional real corpus runner preparation",
+      "initial_finding": "An intermediate patch nested indexed assignment under the optional real-corpus guard, risking UnboundLocalError when that corpus is absent.",
+      "result": "Final source initializes indexed independently of optional corpus existence. Both synthetic-only and indexed-present preparation branches execute to a deliberately disabled launcher with processes/socket mocked; producer result remains INCOMPLETE and no browser acceptance is inferred.",
+      "validation": [
+        "review-view/RUNNER_PREPARATION_RESULT.json"
+      ]
+    },
+    {
+      "id": "ENV-BR-01",
+      "blocking": false,
+      "status": "REMEDIATION_REVIEWED_PENDING_ROOT_BROWSER",
+      "category": "D environment/validation",
+      "result": "Browser code streams actual UI full JSON downloads and independently hashes only loopback exports; parent full bytes remain hash-checked. Actual page response receipts require summary/display routes and record transport byte lengths. Genuine200 metrics are checked against full exported bytes and stay partial. Root final browser/gates are separate and not claimed here."
+    },
+    {
+      "id": "B1-COVERAGE",
+      "blocking": false,
+      "status": "BLOCKED",
+      "category": "C missing data/source contract",
+      "reason": "Observed authenticated indexed access and compatible samples do not demonstrate terminal historical population or closed/reassigned account lifecycle. No further collection or new entitlement claim."
+    },
+    {
+      "id": "CAP-01",
+      "blocking": false,
+      "status": "OPEN",
+      "category": "B missing implementation and accepted evidence",
+      "reason": "Reviewed offline indexed/base-compiled slice and presentation transport work in development scope. Complete successful wrapper decoding, origins/roles/classification/valuation and independent report/28/90-day population remain unfinished/unproved."
+    },
+    {
+      "id": "R1-B3",
+      "blocking": false,
+      "status": "BLOCKED",
+      "category": "C genuine acceptance corpus",
+      "reason": "Genuine200 and genuine23 datasets remain partial. Known selected200 fees0.008904733SOL do not establish wallet P&L, complete history or qualification. No synthetic control closes B3."
+    }
+  ],
+  "executed_checks": [
+    {
+      "kind": "distinct-read-only-followup-review-command",
+      "state": "PASS_IN_SCOPE",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_report_view.py",
+        "tests/test_copy_review_api.py",
+        "tests/test_candidate_import.py",
+        "tests/test_report_rebuild.py"
+      ],
+      "cwd": "/workspace/solana-wallet-scanner",
+      "exit_code": 0,
+      "seconds": 3.498313802003395,
+      "source_before_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+      "source_after_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+      "source_unchanged": true,
+      "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+      "raw_log": "evidence/indexed-native-batch/review-view/AFFECTED_SUBSET.log",
+      "raw_log_sha256": "428b2d7a557e131fa6b06d725edf4cbda0e7810529c6623b991bff3f02de4c57",
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "scope": "Affected offline review only; root candidate gates and genuine B3 are separate.",
+      "ordinary_tests_passed": 59,
+      "subtests_passed": 20
+    },
+    {
+      "kind": "distinct-read-only-followup-review-command",
+      "state": "PASS_IN_SCOPE",
+      "command": [
+        "node",
+        "scripts/check-discovery.mjs"
+      ],
+      "cwd": "/workspace/solana-wallet-scanner/frontend",
+      "exit_code": 0,
+      "seconds": 4.404742162005277,
+      "source_before_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+      "source_after_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+      "source_unchanged": true,
+      "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+      "raw_log": "evidence/indexed-native-batch/review-view/FRONTEND_VIEW.log",
+      "raw_log_sha256": "f3b825e80aa5fb0f533c841959ce68aa780abf5147b3e8f5c2449878eaf3c2a5",
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "scope": "Affected offline review only; root candidate gates and genuine B3 are separate.",
+      "not_unique_tests": true
+    },
+    {
+      "kind": "distinct-read-only-followup-review-command",
+      "state": "PASS_IN_SCOPE",
+      "command": [
+        "python3",
+        "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/review-view/replay_browser_preparation.py",
+        "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/review-view/RUNNER_PREPARATION_RESULT.json"
+      ],
+      "cwd": "/workspace/solana-wallet-scanner",
+      "exit_code": 0,
+      "seconds": 0.2027986650064122,
+      "source_before_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+      "source_after_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+      "source_unchanged": true,
+      "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+      "raw_log": "evidence/indexed-native-batch/review-view/RUNNER_PREPARATION.log",
+      "raw_log_sha256": "db8a6cd84e4e316a19e8bec1cd25900eb48dc2f27a9cc1f0f0ac5a6d104923af",
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "scope": "Affected offline review only; root candidate gates and genuine B3 are separate.",
+      "not_unique_tests": true
+    }
+  ],
+  "coverage_review": {
+    "retained_declared_requirement_groups": 37,
+    "current_declared_requirement_groups": 38,
+    "retained_matrix_rows_unchanged": true,
+    "new_requirement_groups": [
+      "immutable-report-display-views"
+    ],
+    "existing_browser_required_unchanged": true,
+    "pinned_schema_groups_retained": 38,
+    "current_expanded_requirements": 76,
+    "test_count_scope": "59ordinary test nodes and20separately reported subtests from affected subset. Frontend runner, two preparation controls and earlier evidence are not added as unique backend tests."
+  },
+  "offline_boundary": {
+    "provider_requests": 0,
+    "credential_lookups": 0,
+    "external_http_transport_requests": 0,
+    "basis": "Affected API tests isolate credentials/forbid external transports; enrichment uses an offline fake. Frontend fetch is mocked. Runner processes and sockets are mocked. Reviewer invoked no provider/network/credential commands."
+  },
+  "historical_tracked_evidence_unchanged": true,
+  "historical_prior_review_unchanged": true,
+  "unchanged_dependencies": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "frontend/package.json": "2779a8dfbfb8ef214c308795bcd363e1789fbaf2173f946d595a287bdb1e5490"
+  },
+  "raw_artifact_bindings": {
+    "evidence/indexed-native-batch/review-view/AFFECTED_SUBSET.json": {
+      "sha256": "c5bff037f97e715f582b646b0b1fb44a5394561aab4641962651758b26808ded",
+      "bytes": 1058
+    },
+    "evidence/indexed-native-batch/review-view/AFFECTED_SUBSET.log": {
+      "sha256": "428b2d7a557e131fa6b06d725edf4cbda0e7810529c6623b991bff3f02de4c57",
+      "bytes": 680
+    },
+    "evidence/indexed-native-batch/review-view/FRONTEND_VIEW.json": {
+      "sha256": "53a4cf89d598c50e7cd9b9744cfea6c26502d013350c62e397a0910ce1a027fe",
+      "bytes": 882
+    },
+    "evidence/indexed-native-batch/review-view/FRONTEND_VIEW.log": {
+      "sha256": "f3b825e80aa5fb0f533c841959ce68aa780abf5147b3e8f5c2449878eaf3c2a5",
+      "bytes": 207
+    },
+    "evidence/indexed-native-batch/review-view/RUNNER_PREPARATION.json": {
+      "sha256": "5cab20b66e3251261ea7f9491f942422a4cc5491f0a94358307c8ba5a815c4e6",
+      "bytes": 1072
+    },
+    "evidence/indexed-native-batch/review-view/RUNNER_PREPARATION.log": {
+      "sha256": "db8a6cd84e4e316a19e8bec1cd25900eb48dc2f27a9cc1f0f0ac5a6d104923af",
+      "bytes": 792
+    },
+    "evidence/indexed-native-batch/review-view/RUNNER_PREPARATION_RESULT.json": {
+      "sha256": "fac7ef40f4bf1fc416a99b8dea35be4d1cb38986216272627732672201579046",
+      "bytes": 920
+    },
+    "evidence/indexed-native-batch/review-view/SOURCE_AFTER.json": {
+      "sha256": "3661152ab180d0aa7ac7e37fe891a8bbd7c3c734212d3496772af274e3a417da",
+      "bytes": 30451
+    },
+    "evidence/indexed-native-batch/review-view/SOURCE_BEFORE.json": {
+      "sha256": "3661152ab180d0aa7ac7e37fe891a8bbd7c3c734212d3496772af274e3a417da",
+      "bytes": 30451
+    },
+    "evidence/indexed-native-batch/review-view/execute_review.py": {
+      "sha256": "472238c9a332b246c0a505228736b803442559d078d4d418d4cb0827b10b95e3",
+      "bytes": 2705
+    },
+    "evidence/indexed-native-batch/review-view/finalize_review.py": {
+      "sha256": "4ebaa81b5e61370dbe9e1e44762dc927a71acdd17ee1c02a5d9feae3676fc13b",
+      "bytes": 11304
+    },
+    "evidence/indexed-native-batch/review-view/replay_browser_preparation.py": {
+      "sha256": "e9e76c32ff4a9af47c33a66a82cb7ab537f9a843d55ac7f02ed3e2443c87f68b",
+      "bytes": 3359
+    }
+  },
+  "full_candidate_gates_executed_by_this_reviewer": false,
+  "browser_executed_by_this_reviewer": false,
+  "application_edits": false,
+  "commits_created": false,
+  "review_conclusion": "No unresolved confirmed in-scope software blocker in the combined batch after preview/enrichment/preparation sibling corrections. This PASS covers the read-only review and affected offline checks; final root gates, final browser acceptance and private publication remain independently recorded. B1/B2/B3 readiness remains separate.",
+  "B1": "Access/schema observed; historical coverage blocked",
+  "B2": "Development-functional indexed/base-compiled accounting and immutable views; complete real accounting OPEN",
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false
+}

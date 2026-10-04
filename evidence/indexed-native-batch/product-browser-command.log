@@ -1,0 +1,152 @@
+{"output": "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/product-browser/synthetic-input.zip", "sha256": "6c35a5644bfb9cffee77d1a5cf9a981bf67ca4c7c001299c64b96e58c29e2ec1", "scope": "Synthetic development", "provider_requests": 0}
+{"output": "/workspace/solana-wallet-scanner/evidence/indexed-native-batch/product-browser/partial-real-input.zip", "sha256": "74e354227326dfefb435a02a674966c7fd6cb7ad48d3662b0f8d5251a709cc49", "scope": "Partial real sample; B3 remains blocked", "provider_requests": 0}
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 188, in <module>
+    raise SystemExit(run(p.parse_args()))
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 136, in run
+    real=import_ui(out/'indexed-input.zip','real')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 83, in import_ui
+    expect(panel).to_be_visible()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 23332, in to_be_visible
+    self._sync(
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_assertions.py", line 852, in to_be_visible
+    await self._expect_impl(
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to be visible
+Actual value: None
+Error: element(s) not found 
+Call log:
+  - Expect "to_be_visible" with timeout 5000ms
+  - waiting for locator("[data-archive-accounting=\"real\"]")
+
+Aria snapshot:
+- complementary:
+  - button "Wallet Atlas. SOLANA RESEARCH":
+    - img
+    - strong: Wallet Atlas.
+    - text: SOLANA RESEARCH
+  - text: LOCAL WORKSPACE
+  - navigation "Main navigation":
+    - button "Discover":
+      - img
+      - text: Discover
+    - button "Overview":
+      - img
+      - text: Overview
+    - button "Results 6":
+      - img
+      - text: Results 6
+    - button "Compare":
+      - img
+      - text: Compare
+    - button "Watchlist":
+      - img
+      - text: Watchlist
+    - button "Settings":
+      - img
+      - text: Settings
+  - text: Setup pilot allowance
+  - img
+  - text: Not connected Configure in Settings
+  - button "Manage data access":
+    - text: Manage data access
+    - img
+  - img
+  - text: Saved on this computer FREE LOCAL EDITION · V0.3.11
+- main:
+  - text: Workspace
+  - img
+  - strong: Advanced manual scan
+  - text: Local & private
+  - img
+  - text: Read-only WA ADVANCED MANUAL SCAN
+  - heading "Audit a wallet you already know" [level=1]
+  - paragraph: Start with public wallet addresses. Keep the scope small and the standards high.
+  - button "Back to wallet discovery":
+    - img
+    - text: Back to wallet discovery
+  - button "Review saved transaction records":
+    - img
+    - text: Review saved transaction records
+  - heading "Account from saved records" [level=2]
+  - paragraph: Import a scanner evidence ZIP to create a report locally. No provider credits are used.
+  - paragraph: Incomplete history keeps wallet profit and qualification unresolved. The offline example uses synthetic records to demonstrate accounting.
+  - text: Wallet evidence ZIP (up to 20 MiB)
+  - button "Wallet evidence ZIP (up to 20 MiB)" [disabled]
+  - status: Accounting from saved records…
+  - paragraph:
+    - link "Download offline accounting example":
+      - /url: /api/archives/example.zip
+  - heading "Choose the wallets" [level=2]
+  - paragraph: Paste one address per line, or import a CSV / JSON file.
+  - text: Public Solana addresses
+  - button "Import file":
+    - img
+    - text: Import file
+  - button "Choose File"
+  - textbox "Public Solana addresses":
+    - /placeholder: "Paste public wallet addresses here…\n\nCSV: address,label\nJSON: [\"address\", \"address\"]"
+  - img
+  - text: 0 valid, unique addresses Up to 20 per batch Reporting window
+  - combobox "Reporting window":
+    - option "Last 7 days"
+    - option "Last 30 days" [selected]
+    - option "Last 90 days"
+  - text: Active preset
+  - img
+  - text: Strict research
+  - button "Edit"
+  - img
+  - text: Sep 4, 2026 → Oct 4, 2026 · UTC · exact timestamps frozen when queued
+  - img
+  - text: Policy fit and evidence completeness are evaluated separately. Unknown costs stay unknown. Manual research · 5 deep-audit cap
+  - button "Start scan" [disabled]:
+    - img
+    - text: Start scan
+  - heading "Scan queue" [level=2]
+  - paragraph: One local worker. Pause and resume without losing the collected evidence.
+  - img
+  - strong: Offline Archived Accounting
+  - text: Completed
+  - paragraph: 1 / 0 wallets reviewed · 0 pages · 23 transactions
+  - text: Oct 4, 2026 0 credits 0 unresolved items
+  - img
+  - strong: Offline Archived Accounting
+  - text: Completed
+  - paragraph: 1 / 0 wallets reviewed · 0 pages · 12 transactions
+  - text: Oct 4, 2026 0 credits 0 unresolved items
+  - img
+  - heading "Bounded by design" [level=3]
+  - paragraph: Your free allowance is a hard guardrail for every read.
+  - term: Candidate limit
+  - definition: 20 wallets
+  - term: Deep audits
+  - definition: 5 wallets
+  - term: Transactions per wallet
+  - definition: 10,000
+  - term: Wallet credit ceiling
+  - definition: 20,000
+  - term: Credits available
+  - definition: Configure provider
+  - paragraph: History length is unknown until collected. A safe estimate is bounded by your wallet credit ceiling; actual use appears as the scan progresses.
+  - heading "Connect your free data source" [level=3]
+  - paragraph: Configure a manually obtained Helius Free key, confirm your billing cycle, and run the read-only capability test.
+  - button "Open Settings":
+    - img
+    - text: Open Settings
+  - img
+  - strong: Just exploring?
+  - paragraph: The offline demo uses synthetic records and no provider credits.
+  - button "Load offline demo":
+    - text: Load offline demo
+    - img
+  - img
+  - text: Built for investigation. Every conclusion needs a source. Wallet Atlas · V0.3.11

@@ -1,0 +1,137 @@
+{
+  "kind": "read-only-stored-browser-receipt-review",
+  "state": "PASS_IN_SCOPE",
+  "reviewed_utc": "2026-10-04T05:22:32.209517+00:00",
+  "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+  "current_source_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "producer_receipt": "evidence/indexed-native-batch/product-browser-final/result.json",
+  "producer_receipt_sha256": "663d8c59202a1c93e694602ada855f041837365c7c6bfdc68b6bc37484041fa0",
+  "cases": 7,
+  "actual_captures": 16,
+  "checked_artifacts": {
+    "partial-real-input.zip": {
+      "sha256": "cfdde27ca433e3350c033dedf3036923751f9e50e9b7d3f03b8cc90510fc4e62",
+      "bytes": 6941608
+    },
+    "indexed-partial-parent.json": {
+      "sha256": "9ab6bd7087179d7a073cf560a6f3e139edfc180c59d3cb360ab29c0c3c68ea85",
+      "bytes": 241383123
+    },
+    "indexed-partial-rebuilt-mobile.png": {
+      "sha256": "c77f324f957da3af020d411d7e9b4d85f12a38086ba7cb9627c84689a7879768",
+      "bytes": 3938712
+    },
+    "world_hash-missing-report.json": {
+      "sha256": "8ccf66e3af96ca3d47288378ccfd6696dee3c1b33e25818a118c6f9f2173a34d",
+      "bytes": 880063
+    },
+    "indexed-partial-rebuilt-desktop.png": {
+      "sha256": "79a4b3dd806ff7d7b4e06f571ab209f80594a5ac442442708909e42adb57996a",
+      "bytes": 4261350
+    },
+    "world_hash-missing-desktop.png": {
+      "sha256": "9301de786b494a01b77062870345c6f6ec153205f4053c3d28880eb352d5c8fa",
+      "bytes": 959918
+    },
+    "synthetic-parent.json": {
+      "sha256": "a85c650fbe1d5ae1b24291df937ad588b7f880978c7a2ad92165d256ebf40116",
+      "bytes": 4980657
+    },
+    "guards.json": {
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+      "bytes": 50
+    },
+    "genuine-partial-mobile.png": {
+      "sha256": "c7f097fafaa4cb1ca50c6b591ab81053e686f6871ce15e3d578d0161af424990",
+      "bytes": 1268948
+    },
+    "world_hash-restored-report.json": {
+      "sha256": "7b1bfca8d5995aef5a10974bc1044ea3f51eb6592176ca786ad76df3a21904b4",
+      "bytes": 830600
+    },
+    "synthetic-positive-desktop.png": {
+      "sha256": "53a7a38ff172a1efada8ae744d309b587c8df24300ce87a0a7b6a2872d8ccfbe",
+      "bytes": 358895
+    },
+    "world_hash-restored-desktop.png": {
+      "sha256": "80f2a0e085e1f5baff9e846bb47601dd5a50b378742154ddacb432fcbc53284c",
+      "bytes": 370670
+    },
+    "synthetic-input.zip": {
+      "sha256": "e4fb498ff76ba71195fcbb158a7a77d888bcd7185017346fa22da77ceba4d796",
+      "bytes": 18211
+    },
+    "valuation_hash-missing-mobile.png": {
+      "sha256": "75841315c8f45c08db3ab9950bef18d507a7cadd5e03292da6f9c5125bb364eb",
+      "bytes": 305076
+    },
+    "indexed-partial-desktop.png": {
+      "sha256": "12f66af3c5f4356491cf4d39a30ac7097a358e06438f2166a275a4c763013d06",
+      "bytes": 4255746
+    },
+    "world_hash-restored-mobile.png": {
+      "sha256": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+      "bytes": 283115
+    },
+    "valuation_hash-missing-desktop.png": {
+      "sha256": "3aabc96e7eb2c37bf1659de72ff22ef356178adf8fd324abdd7c546f51aa1499",
+      "bytes": 404521
+    },
+    "valuation_hash-restored-mobile.png": {
+      "sha256": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+      "bytes": 283115
+    },
+    "synthetic-positive-mobile.png": {
+      "sha256": "c8b5614e75daf532fc4968e0886c07d28566595837b128f0618bb0b1f56f8f13",
+      "bytes": 281085
+    },
+    "valuation_hash-restored-desktop.png": {
+      "sha256": "d9611b3a5c36995ee15e9bbeb34f18ab55f58eced90d2083151f5d09c350692b",
+      "bytes": 370675
+    },
+    "valuation_hash-missing-report.json": {
+      "sha256": "556fdec998e49c94ef219900fc6f7bb1e968f047441aaa7a6224a5966c92c46e",
+      "bytes": 834137
+    },
+    "synthetic-ui-export.json": {
+      "sha256": "a85c650fbe1d5ae1b24291df937ad588b7f880978c7a2ad92165d256ebf40116",
+      "bytes": 4980657
+    },
+    "world_hash-missing-mobile.png": {
+      "sha256": "e09c9899dab554c7adad075d7c295704855e72f0671873b10262e77381456613",
+      "bytes": 694872
+    },
+    "valuation_hash-restored-report.json": {
+      "sha256": "679f4ca31338200d3967c4e7cf1a2b2c326544a7d3c2bccb2a34668577fd88c3",
+      "bytes": 830600
+    },
+    "indexed-input.zip": {
+      "sha256": "d910bbf9fdbfb1663520866a4bb3fa1f3b775a1f60dc1741c60888dbe1f63209",
+      "bytes": 228699
+    },
+    "genuine-partial-desktop.png": {
+      "sha256": "54888be2fd74b6e4bfeffcd622f65b03643eae9d1cb2a9cfe80463713f89ac58",
+      "bytes": 1551905
+    },
+    "indexed-partial-mobile.png": {
+      "sha256": "9a4f2b75f400fac0ecac69a26ca6262cb793d051909b37be825086e984adac5d",
+      "bytes": 3894003
+    },
+    "indexed-partial-child.json": {
+      "sha256": "7a8495702087de6d76d79abb54cb4a266cd37ed878f0ce8b9128575f95daa7b1",
+      "bytes": 241383675
+    },
+    "genuine-partial-report.json": {
+      "sha256": "da56e577828205b5f7dae53ba969a625b3e3456350f83c750ee74c5bb6739621",
+      "bytes": 2218462
+    }
+  },
+  "browser_transfer_rows": 17,
+  "max_browser_state_bytes": 823099,
+  "max_browser_display_bytes": 11247746,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "browser_executed_by_reviewer": false,
+  "real_acceptance": "BLOCKED",
+  "scope": "Inspected root-produced passing structured browser receipt, preserved artifact hashes and actual transfer receipts; no personal browser re-execution, new wallet completeness or B3 acceptance claimed."
+}

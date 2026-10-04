@@ -1,0 +1,39 @@
+........................................................................ [ 61%]
+............................................FF                           [100%]
+=================================== FAILURES ===================================
+_ test_mixed_parsed_opaque_economic_instruction_retains_fee_without_accepting_trades[accounts] _
+
+extra = 'accounts'
+
+    @pytest.mark.parametrize('extra', ['accounts', 'data'])
+    def test_mixed_parsed_opaque_economic_instruction_retains_fee_without_accepting_trades(extra):
+        record = golden(SELL)
+        target = record['raw']['meta']['innerInstructions'][0]['instructions'][1]
+        target[extra] = [] if extra == 'accounts' else '3'
+        original = deepcopy(record)
+        output = spot(record)
+>       assert not trades(output)
+E       AssertionError: assert not [{'kind': 'sell', 'timestamp': 1790951525, 'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs', 'path': 'instructions.4', ...}]
+E        +  where [{'kind': 'sell', 'timestamp': 1790951525, 'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs', 'path': 'instructions.4', ...}] = trades({'events': [{'kind': 'fee', 'timestamp': 1790951525, 'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRo...ompiled-instructions', 'transactions': 1, 'decoded_swaps': 1, 'supported_transactions': 1, ...}, 'unresolved': [], ...})
+
+tests/test_compiled_report_integration.py:334: AssertionError
+_ test_mixed_parsed_opaque_economic_instruction_retains_fee_without_accepting_trades[data] _
+
+extra = 'data'
+
+    @pytest.mark.parametrize('extra', ['accounts', 'data'])
+    def test_mixed_parsed_opaque_economic_instruction_retains_fee_without_accepting_trades(extra):
+        record = golden(SELL)
+        target = record['raw']['meta']['innerInstructions'][0]['instructions'][1]
+        target[extra] = [] if extra == 'accounts' else '3'
+        original = deepcopy(record)
+        output = spot(record)
+>       assert not trades(output)
+E       AssertionError: assert not [{'kind': 'sell', 'timestamp': 1790951525, 'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs', 'path': 'instructions.4', ...}]
+E        +  where [{'kind': 'sell', 'timestamp': 1790951525, 'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs', 'path': 'instructions.4', ...}] = trades({'events': [{'kind': 'fee', 'timestamp': 1790951525, 'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRo...ompiled-instructions', 'transactions': 1, 'decoded_swaps': 1, 'supported_transactions': 1, ...}, 'unresolved': [], ...})
+
+tests/test_compiled_report_integration.py:334: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_compiled_report_integration.py::test_mixed_parsed_opaque_economic_instruction_retains_fee_without_accepting_trades[accounts]
+FAILED tests/test_compiled_report_integration.py::test_mixed_parsed_opaque_economic_instruction_retains_fee_without_accepting_trades[data]
+2 failed, 116 passed in 0.46s

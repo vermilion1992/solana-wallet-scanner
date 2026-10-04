@@ -1,0 +1,21 @@
+{
+  "kind": "distinct-read-only-followup-review-command",
+  "state": "PASS_IN_SCOPE",
+  "command": [
+    "node",
+    "scripts/check-discovery.mjs"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner/frontend",
+  "exit_code": 0,
+  "seconds": 4.404742162005277,
+  "source_before_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "source_after_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "source_unchanged": true,
+  "application_candidate": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+  "raw_log": "evidence/indexed-native-batch/review-view/FRONTEND_VIEW.log",
+  "raw_log_sha256": "f3b825e80aa5fb0f533c841959ce68aa780abf5147b3e8f5c2449878eaf3c2a5",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "scope": "Affected offline review only; root candidate gates and genuine B3 are separate.",
+  "not_unique_tests": true
+}

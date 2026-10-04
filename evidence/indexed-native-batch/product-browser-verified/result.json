@@ -1,0 +1,68 @@
+{
+  "kind": "offline-product-browser",
+  "state": "INCOMPLETE",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "0c79e83be4334cc88e287df65a5c37af"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "5948ceba725638c6768bdb7f28834af338c89d1e9eb2c36f1e1218dacd3345ec",
+    "world_hash-missing-report.json": "590b496fb9e3974eb3339155357c4359b6b4a08acd199add1fe56c1d6ec1548e",
+    "world_hash-missing-desktop.png": "a75625b4d43f83fdc68454e8b9520304b0e64adcd47ab8688538f360d3567044",
+    "synthetic-parent.json": "3e15a509ee80d575ebda6ddf5989a5ed4ea3c1853afe89735efba4978b73a880",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "cecbd16ae3b514e48d52a0305c74ad9bce23db5665c9ca01293fcdbada0d449c",
+    "world_hash-restored-report.json": "dd975940baeb714499fd3fad82cbb3e81afd95b87fe3c5ad0ce260414ca9211a",
+    "synthetic-positive-desktop.png": "5606abcb5ff0cac323f72dfa67aff4f4e32ae506d17cbbc4e559a070008bd775",
+    "world_hash-restored-desktop.png": "7abb764475de1cf42b7a073559db792ad9cb91ba095492966915dab84bfbc3d8",
+    "synthetic-input.zip": "5ab9c1ab191fbcdc50ed8b7119683a9e49ae04db13f26b8cf7a1319059a8af3f",
+    "valuation_hash-missing-mobile.png": "1e662624ba4b8dabf2fe67b023017b83a005e3503f400e758b58be801b26e244",
+    "world_hash-restored-mobile.png": "46ed86281989af125343a47ec4701681fe3ec78c289d3948b0af4532662c8ec8",
+    "valuation_hash-missing-desktop.png": "f85014be3aa73419c7b5718439c35adf0e8ffac6e8c24bc7baca564244ca2ce3",
+    "valuation_hash-restored-mobile.png": "46ed86281989af125343a47ec4701681fe3ec78c289d3948b0af4532662c8ec8",
+    "synthetic-positive-mobile.png": "7916d53fe1ac720cafc3f147a20ccc15665ef567af7301dac4a32bb63c72b30e",
+    "valuation_hash-restored-desktop.png": "851a938740bf1a0fa829aeeab084494014b37d8e27b885387825c9b214987e22",
+    "valuation_hash-missing-report.json": "9e8d6ee59768e1737e6bda8f0794eea7b6f1e334ef9fa8c22dfd277d0bf68a81",
+    "synthetic-ui-export.json": "3e15a509ee80d575ebda6ddf5989a5ed4ea3c1853afe89735efba4978b73a880",
+    "world_hash-missing-mobile.png": "412c187728b80bf265e5391fe65c816e9aac28d80bb45f71c00775e11afe14d2",
+    "valuation_hash-restored-report.json": "5ab577a2f779adcb5829a60b3af1d24fc7315a6215546fbabb1ccc18b0e6a81a",
+    "indexed-input.zip": "d910bbf9fdbfb1663520866a4bb3fa1f3b775a1f60dc1741c60888dbe1f63209",
+    "genuine-partial-desktop.png": "4f98367ba2cf3e8b6c3c43af6730e6f7ed8c139430ffb6feddd596bf01cea29d",
+    "genuine-partial-report.json": "8597816b066b550e45d636e6b5202081eab0539385a2289bcf9bafd68be31ab8"
+  }
+}

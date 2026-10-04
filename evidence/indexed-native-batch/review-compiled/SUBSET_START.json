@@ -1,0 +1,17 @@
+{
+  "kind": "compiled-review-subset-start",
+  "files": {
+    "scanner/compiled_instructions.py": "6f12ef64564157c2d48f0ebf5717656f42f1796cfa32276c71359e03fa6e4628",
+    "scanner/decoder.py": "6d47f4054af0d939e9e4d1b05eeb7b4a950aeaba072da098ffb32c498c292886",
+    "scanner/instruction_scope.py": "a76ad83272603f4145bebbb57a649e9ae1aa94fb9aaed338595b37908b882406",
+    "scanner/investigation.py": "c74eca144be05c1278f562fbe07597639a387d14ca8dc7ba39aadf8176926799",
+    "scanner/position_evidence.py": "b101a3785b1c3145384fef021d6fad39543a2ba47f444664832139c802dbc769",
+    "scanner/source_consistency.py": "9eb0b44a9b3834e083a9f1ac30cd37fa39aea33c41d705f9881f62029b170505",
+    "scanner/transaction_format.py": "6b9f35e29e5f924009999c48ff7bd6f38ef7c6d87cd9dbba24edabdd81abe098",
+    "tests/fixtures/compiled_instructions/schema.json": "4f454bc2f6eeecb4c3b4a2438463f97e0d52deb35c0d627ec39c82f47bce0d0c",
+    "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs": "8468920b107104d4b8fc3ea40cd5e6204d3b2027fb2ba4cc4b4075855cb4af8b",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+    "tests/test_compiled_instructions.py": "211cab48d82aacfca14fbb6e937e94a846f2ee0ebec9f06b1f8b7ea0ae5c99b4",
+    "tests/test_compiled_report_integration.py": "8378528bc5bcc65742bf86b6474ba3f229f84f63b358367e2467aa6d52816c94"
+  }
+}
