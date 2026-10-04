@@ -1,0 +1,126 @@
+{
+  "state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+  "case_count": 7,
+  "cases": [
+    {
+      "case": "separately-worked-supported-results",
+      "state": "PASS",
+      "report_role": "parent",
+      "role": null,
+      "missing_monetary_state": null
+    },
+    {
+      "case": "raw-input-normal-report-source-inspection-json-csv",
+      "state": "PASS",
+      "report_role": null,
+      "role": null,
+      "missing_monetary_state": null
+    },
+    {
+      "case": "separately-worked-supported-results",
+      "state": "PASS",
+      "report_role": "baseline-child",
+      "role": null,
+      "missing_monetary_state": null
+    },
+    {
+      "case": "separately-worked-supported-results",
+      "state": "PASS",
+      "report_role": "fee-source-restored-child",
+      "role": null,
+      "missing_monetary_state": null
+    },
+    {
+      "case": "selected-lot-required-source-loss-exact-restoration",
+      "state": "PASS",
+      "report_role": null,
+      "role": "buy",
+      "missing_monetary_state": "UNKNOWN"
+    },
+    {
+      "case": "selected-lot-required-source-loss-exact-restoration",
+      "state": "PASS",
+      "report_role": null,
+      "role": "sell",
+      "missing_monetary_state": "UNKNOWN"
+    },
+    {
+      "case": "primary-source-loss-exact-restoration-immutable-parent",
+      "state": "PASS",
+      "report_role": null,
+      "role": null,
+      "missing_monetary_state": null
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "parent_unchanged": true,
+  "usage_unchanged": true,
+  "collector_ancestry_created": false,
+  "PRODUCT_READY": false,
+  "query_records": {
+    "report_period": {
+      "state": "UNKNOWN",
+      "query_records_state": "UNKNOWN",
+      "supported_record_state": "UNKNOWN",
+      "historical_population_state": "UNKNOWN"
+    },
+    "four_weeks": {
+      "state": "UNKNOWN",
+      "query_records_state": "UNKNOWN",
+      "supported_record_state": "UNKNOWN",
+      "historical_population_state": "UNKNOWN"
+    },
+    "verification_90d": {
+      "state": "UNKNOWN",
+      "query_records_state": "UNKNOWN",
+      "supported_record_state": "UNKNOWN",
+      "historical_population_state": "UNKNOWN"
+    }
+  },
+  "query_accounting": {
+    "monetary_state": "UNKNOWN",
+    "conditional_observed_lot_profit_sol": null,
+    "wallet_population_state": "UNKNOWN",
+    "qualification": false
+  },
+  "genuine_selected_loss_lots": [
+    {
+      "monetary_state": "PASS",
+      "timing_state": "PASS",
+      "quantity_state": "PASS",
+      "conditional_basis_sol": "0.565194018",
+      "conditional_matched_basis_sol": "0.565194018",
+      "conditional_proceeds_sol": "0.551929943",
+      "conditional_exit_fees_sol": "0.000006849",
+      "conditional_lot_profit_sol": "-0.013270924",
+      "conditional_hold_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "classification_state": "UNKNOWN",
+      "wallet_population_state": "UNKNOWN",
+      "qualification": false
+    }
+  ],
+  "real_acceptance": {
+    "state": "BLOCKED",
+    "missing": [
+      "Accepted historical owned-account/population proof is unresolved.",
+      "A supported realised wallet calculation is not yet known; selected arithmetic is insufficient.",
+      "profit_sol: required source dependencies remain unresolved.",
+      "realised_roi_pct: required source dependencies remain unresolved.",
+      "median_roi_pct: required source dependencies remain unresolved.",
+      "win_rate_pct: required source dependencies remain unresolved.",
+      "median_hold_hours: required source dependencies remain unresolved.",
+      "completed_positions: required source dependencies remain unresolved.",
+      "completed_positions_90d: required source dependencies remain unresolved.",
+      "traded_mints: required source dependencies remain unresolved.",
+      "rapid_sale_pct: required source dependencies remain unresolved.",
+      "avg_buys: required source dependencies remain unresolved.",
+      "avg_sells: required source dependencies remain unresolved.",
+      "positive_weeks: required source dependencies remain unresolved.",
+      "largest_contribution_pct: required source dependencies remain unresolved.",
+      "economic_pnl_sol: required source dependencies remain unresolved."
+    ],
+    "mathematically_inapplicable": [],
+    "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+  }
+}

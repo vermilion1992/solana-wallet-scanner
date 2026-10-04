@@ -1,0 +1,1 @@
+{"state": "PASS", "totals": {"requests": 19, "credits": 170, "public_requests": 2}, "artifact_files": 38, "receipt": "evidence/genuine-wallet-batch/read-only-controls-review/RAW_RECONCILIATION.json", "receipt_sha256": "4dcc7971488293c7b21f6f5899adaaec48cc7c416cffd18cb2412d79b736fb33"}

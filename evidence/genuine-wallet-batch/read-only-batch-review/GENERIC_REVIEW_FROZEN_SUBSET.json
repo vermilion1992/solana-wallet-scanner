@@ -1,0 +1,97 @@
+{
+  "kind": "distinct-generic-consumer-source-review",
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "time_utc": "2026-10-04T07:17:17.704105+00:00",
+  "source_hashes": {
+    "scanner/decoder.py": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+    "scanner/app.py": "95c2c5631b2159753337937faf26da9111ba55d2c970691b38ea3062cad018c7",
+    "scanner/archive_input.py": "46cb27346562244b6c1db4cea7e0fab7d6c4e2156802428bbd4691a6271ce8aa",
+    "scanner/wallet_evidence.py": "a3f7e766a5f790fb72d1fdecc3580d43e40cfad9a370496daf69df0c98d4d8cb",
+    "tests/test_generic_administration.py": "c391dfe88ae988952d95a7b6adee5fc8e33b62f4d85169d0175eaff737d43338",
+    "tests/test_decoder.py": "a887a33498c4553aaa6bfa93b1266096bfc7d5e1a6a51f6bd84a25efb441559a",
+    "tests/test_compiled_getter.py": "411a0b9db86c7ab2c466607455acbb3b5219893a51789e486c0929c1160e29c0"
+  },
+  "source_unchanged_before_after": true,
+  "scope": [
+    "Shared parsed/compiled instruction normalization consumer, original source coordinates and inner-group position binding",
+    "Malformed/conflicting instruction/key/loaded metadata and independently retained static-payer fee",
+    "Failed instruction atomicity, unreviewed sibling isolation, existing native/token transfer/rent semantics",
+    "Whole-signature generic/spot replacement in app, archive and wallet paths; no double fees or capital/wrap interpretation",
+    "Per-record receipt/group indexes with bounded timing diagnostics"
+  ],
+  "resolved_findings": [
+    {
+      "id": "GENERIC-LOADED-SHAPE",
+      "classification": "Confirmed current application defect; unchecked loader boundary predates this batch",
+      "before": "null/scalar loaded fields raised before fee emission",
+      "after": "Successful malformed inputs retain independent static-payer fee plus rejecting dependency; failed inputs stay fee-only; exact original traces preserved"
+    },
+    {
+      "id": "GENERIC-ADMIN-PERFORMANCE",
+      "classification": "Confirmed new-family performance concern",
+      "before": "Normalization receipts and inner-group positions linearly rescanned for every observation",
+      "after": "Per-record indexes preserve raw paths; outer 1600 getter time .064s vs .412s; reversed 1600-group paths correct; timing diagnostics are not distinct acceptance tests"
+    }
+  ],
+  "verified_controls": [
+    "Primary Agave parsed mint/account fields match both program-specific getter layouts and immutable-owner opcode22",
+    "Standalone raw base58 count finds109 original compiled inner immutable-owner instructions:53 Token2022 and56 legacy; original page remains unchanged",
+    "Administration is scoped diagnostic output only; no ledger movement, acquisition basis, ownership/classification/history/population/metric flag is manufactured. Existing report projection does not save these additive rows; raw-source inspection retains original instructions.",
+    "16 independent malformed/positive/loaded/header/failed/envelope/mixed controls pass; source unchanged",
+    "Unsupported outer routes and unsupported write opcodes remain explicit gaps, even with valid inner administrative observations"
+  ],
+  "validation": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_generic_administration.py tests/test_decoder.py tests/test_compiled_getter.py",
+      "exit_code": 0,
+      "ordinary_tests": 117,
+      "subtests_separately": 2,
+      "raw_log": {
+        "path": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_GENERIC_FOCUSED.log",
+        "bytes": 197,
+        "sha256": "fd5f4c3ef8d7f070f7489a20c87d456888687bd717e5466be53253a866f77d0c"
+      }
+    }
+  ],
+  "artifacts": {
+    "GENERIC_ADMIN_PERFORMANCE_PRE_FREEZE.json": {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_ADMIN_PERFORMANCE_PRE_FREEZE.json",
+      "bytes": 1384,
+      "sha256": "32c642a736c2bcfed17c0a0d2e5769eec5a08cfef8a714f27125a10c1212ab17"
+    },
+    "GENERIC_LOADED_SHAPE_REPRO_PRE_FREEZE.json": {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_LOADED_SHAPE_REPRO_PRE_FREEZE.json",
+      "bytes": 3152,
+      "sha256": "17fb122fb99309d1533573f9d13b62551cadc5e29bc614c10ffa2e16cbc4362b"
+    },
+    "GENERIC_GUARDED_FINAL_REPLAY.json": {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_GUARDED_FINAL_REPLAY.json",
+      "bytes": 9804,
+      "sha256": "af43c59353390cd6f46b856bfbac20f41d55680e4cb9caee024e126ff76bd227"
+    },
+    "INDEPENDENT_GENERIC_FOCUSED.log": {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_GENERIC_FOCUSED.log",
+      "bytes": 197,
+      "sha256": "fd5f4c3ef8d7f070f7489a20c87d456888687bd717e5466be53253a866f77d0c"
+    },
+    "RAW_IMMUTABLE_OWNER_COUNT_ORACLE.json": {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/RAW_IMMUTABLE_OWNER_COUNT_ORACLE.json",
+      "bytes": 22182,
+      "sha256": "f639a270cb8c0f5411cfee9c7308bcd938afe0c173cee1256dd648a3302e2bc8"
+    },
+    "GENERIC_FOCUSED_BEFORE.json": {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_FOCUSED_BEFORE.json",
+      "bytes": 898,
+      "sha256": "34411b994969b620ac2d422a0954f5759192729931d36f9f26c9cef12c7ed23f"
+    }
+  },
+  "limitations": [
+    "Same engineering session distinct read-only reviewer; not third-party execution.",
+    "No provider calls, credential access, application edits, commits, full acceptance suite or new product-ready claim.",
+    "Final full-source commit/manifest rebind and full candidate gates remain parent-owned and pending.",
+    "Financial gross-role/per-lot internals have a separate reviewer and are excluded from this receipt.",
+    "Historical complete-wallet population/classification/valuation remains unproved; B1/B2 OPEN, B3 BLOCKED, PRODUCT_READY=false."
+  ]
+}

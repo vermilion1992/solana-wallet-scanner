@@ -1,0 +1,11 @@
+COMMAND: .venv/bin/python -m pytest -q tests/test_discovery_audit_plan.py tests/test_discovery.py tests/test_discovery_integration_review.py tests/test_discovery_plan_views.py
+..........................................................................................................                    [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+106 passed, 1 warning, 19 subtests passed in 2.40s
+
+EXIT: 0

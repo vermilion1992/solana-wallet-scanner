@@ -1,0 +1,23 @@
+{
+  "kind": "checker-focused-development-validation",
+  "state": "PASS",
+  "command": ".venv/bin/python -m pytest -q tests/test_genuine_collection_workflow.py",
+  "exit_code": 0,
+  "reported_pytest_nodes": 57,
+  "log": "genuine-workflow-final-checker-basis-types.log",
+  "log_sha256": "c3e5cb2819b608261089d1af9e0163a20e0020277632b3b9638c65ca4c0fd95b",
+  "log_bytes": 660,
+  "source_files": {
+    "tools/check_genuine_collection.py": {
+      "sha256": "1b20f7c0bd335ec24d63aa6f1c1c4398c25533b9c29ffec5429da9c676e97583",
+      "bytes": 52625
+    },
+    "tests/test_genuine_collection_workflow.py": {
+      "sha256": "7be0cabea4b9c5784d887668418822c404ac6648e540b9d006840e8ea36b44b1",
+      "bytes": 32419
+    }
+  },
+  "scope": "Development checker/predicate contracts only; runs overlap and counts are not additive. No genuine B3/application acceptance.",
+  "genuine_replay_executed": false,
+  "review_correction": "ZERO_BASIS_TYPES_REPRO canonical finite strings; no scalar/list coercion; structured BLOCKED."
+}

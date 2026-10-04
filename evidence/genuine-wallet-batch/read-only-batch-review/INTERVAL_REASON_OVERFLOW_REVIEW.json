@@ -1,0 +1,43 @@
+{
+  "kind": "read-only-neighboring-layout-receipt-review",
+  "state": "CONFIRMED_SCOPE_GAP_REPORTED_TO_ROOT",
+  "scope": "Inspect existing raw browser receipt only; no new browser/provider/credential activity. Main small reason guards passed, while interval reason siblings still overflow internally.",
+  "receipt": "evidence/genuine-wallet-batch/overflow-diagnostic/fixed/result.json",
+  "receipt_sha256": "35bf741ed5fbad81d1092db664312771abbb5e81df7d108ceb4980016647f0a7",
+  "source_styles_sha256": "af7b6a9fb75884794da89200dfab3ce38321e9e7f432bfe21265b746f847d478",
+  "root_receipt_state": "PASS",
+  "document_width_guards": [
+    {
+      "viewport": 1440,
+      "passed": true
+    },
+    {
+      "viewport": 390,
+      "passed": true
+    }
+  ],
+  "interval_reason_rows": [
+    {
+      "viewport": 1440,
+      "path": "main.main-content > div.page-content > section.panel > div.all-metrics-grid > div > div.metric-interval-detail > p",
+      "scrollWidth": 420,
+      "clientWidth": 259,
+      "overflowX": "visible",
+      "overflowWrap": "normal",
+      "text": "4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U: returned original record is not selected for ordinary accounting; 4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7: returned original record is not selected for ordinary accounting Historical wallet membership remains un",
+      "ancestor_panel_overflowX": "hidden"
+    },
+    {
+      "viewport": 390,
+      "path": "main.main-content > div.page-content > section.panel > div.all-metrics-grid > div > div.metric-interval-detail > p",
+      "scrollWidth": 420,
+      "clientWidth": 143,
+      "overflowX": "visible",
+      "overflowWrap": "normal",
+      "text": "4MWN4RLXRkyN2b4rkmPPxUMzuMjCdVKzGax5gDFa7AWjudXZKUfxus5f9LLMXzfxHWtQk1CzGCrBdMtaPrMojd4U: returned original record is not selected for ordinary accounting; 4q9Q7YB8A1ebBcyEigY4g5vPHY7B5X4qYs83epqrYsVtfZLUABxaenJYNogb69ZVPz5QGLFKQsCudg3HDep67UV7: returned original record is not selected for ordinary accounting Historical wallet membership remains un",
+      "ancestor_panel_overflowX": "hidden"
+    }
+  ],
+  "reason": "Document width can pass while a clipped metric panel hides an overflowing descendant. The interval paragraph is a real source-dependency reason and needs the same wrapping family as the two small nodes.",
+  "PRODUCT_READY": false
+}

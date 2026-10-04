@@ -1,0 +1,51 @@
+{
+  "kind": "independent-read-only-pre-freeze-performance",
+  "source_hashes": {
+    "scanner/decoder.py": "d499f17a2df9c1721f69c05464cb49946eb0674bb598e81d809b8cba71b97ad6",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad"
+  },
+  "rows": [
+    {
+      "instruction_count": 200,
+      "raw_bytes": 9935,
+      "elapsed_seconds": 0.015373,
+      "administration_count": 200,
+      "events": [
+        "fee"
+      ],
+      "raw_unchanged": true
+    },
+    {
+      "instruction_count": 400,
+      "raw_bytes": 19335,
+      "elapsed_seconds": 0.039016,
+      "administration_count": 400,
+      "events": [
+        "fee"
+      ],
+      "raw_unchanged": true
+    },
+    {
+      "instruction_count": 800,
+      "raw_bytes": 38135,
+      "elapsed_seconds": 0.11884,
+      "administration_count": 800,
+      "events": [
+        "fee"
+      ],
+      "raw_unchanged": true
+    },
+    {
+      "instruction_count": 1600,
+      "raw_bytes": 75735,
+      "elapsed_seconds": 0.411894,
+      "administration_count": 1600,
+      "events": [
+        "fee"
+      ],
+      "raw_unchanged": true
+    }
+  ],
+  "scope": "Diagnostic synthetic readonly-getter controls; no application suite, provider or credential access; candidate not frozen"
+}

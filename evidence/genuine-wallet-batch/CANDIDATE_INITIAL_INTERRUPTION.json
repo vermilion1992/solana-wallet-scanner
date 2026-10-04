@@ -1,0 +1,14 @@
+{
+  "kind": "candidate-attempt-interruption",
+  "application_commit": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+  "source_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+  "state": "INTERRUPTED_NOT_ACCEPTANCE",
+  "reason": "Distinct read-only review reproduced malformed Unicode native-record hashing exception in loader/query binding. Runner and backend terminated before source correction. Existing raw partial gate evidence preserved.",
+  "termination_exit_code": 143,
+  "raw_runner": "CANDIDATE_COMMAND.log",
+  "raw_backend": "gate-a-final/backend.log",
+  "raw_receipt": "gate-a-final/result.json",
+  "product_browser_completed": true,
+  "product_api_checks_completed": true,
+  "PRODUCT_READY": false
+}

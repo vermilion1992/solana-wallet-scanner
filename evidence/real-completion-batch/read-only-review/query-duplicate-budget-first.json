@@ -1,0 +1,70 @@
+{
+  "scope": "Read-only synthetic query interface reproduction; duplicate original byte bodies should be idempotent",
+  "source_sha256": "28e59ccd5ad5e0470f52aa0d302413515172e83fcaf350faa12b37c65aae163c",
+  "max_pages": 256,
+  "unique_pages": 1,
+  "declarations": 257,
+  "positive": {
+    "state": "PASS",
+    "scope": "Complete documented indexed address-query population only; historical wallet membership is separate",
+    "reason": "Every terminal query record enters the ordinary raw accounting path.",
+    "evidence": [
+      "307371fc3ee89a42e510cbaeefbaac06c9d7bade4d20162d223706cc318f2a3b",
+      "b9f6ff8e9ac2d3e7151146705ef81e647a2442aedee68ff6e4b3bdab45532b31"
+    ],
+    "query_records_state": "PASS",
+    "supported_record_state": "PASS",
+    "historical_population_state": "UNKNOWN",
+    "format_population_state": "UNKNOWN",
+    "signatures": [
+      "indexed-dev-buy"
+    ],
+    "record_count": 1,
+    "gaps": [],
+    "request_scope": {
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "status": "any",
+      "token_accounts": "all",
+      "block_time": {
+        "gte": 1790000000,
+        "lt": 1792592000
+      },
+      "sort_order": "asc",
+      "limit": 100,
+      "max_version": 0,
+      "commitment": "finalized",
+      "encoding": "json"
+    },
+    "source_hashes": [
+      "b9f6ff8e9ac2d3e7151146705ef81e647a2442aedee68ff6e4b3bdab45532b31"
+    ],
+    "interval": "report_period",
+    "start": "2026-09-21T14:13:20+00:00",
+    "end": "2026-10-21T14:13:20+00:00"
+  },
+  "repeated": {
+    "state": "UNKNOWN",
+    "scope": "Complete documented indexed address-query population only; historical wallet membership is separate",
+    "reason": "Indexed coverage inspection budget exceeded; no inspected prefix certifies the query.",
+    "evidence": [],
+    "query_records_state": "UNKNOWN",
+    "supported_record_state": "UNKNOWN",
+    "historical_population_state": "UNKNOWN",
+    "format_population_state": "UNKNOWN",
+    "signatures": [],
+    "record_count": 0,
+    "gaps": [
+      "Indexed coverage inspection budget exceeded",
+      "No admissible terminal query for this interval"
+    ],
+    "interval": "report_period",
+    "start": "2026-09-21T14:13:20+00:00",
+    "end": "2026-10-21T14:13:20+00:00"
+  },
+  "repeated_budget": {
+    "max_pages": 256,
+    "max_records": 10000,
+    "records": 0,
+    "exceeded": true
+  }
+}

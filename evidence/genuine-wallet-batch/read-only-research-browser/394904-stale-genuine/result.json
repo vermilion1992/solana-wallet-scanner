@@ -1,0 +1,18 @@
+{
+  "kind": "distinct-stale-genuine-research-browser-review",
+  "state": "INCOMPLETE",
+  "candidate_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "source_files": 228,
+  "preserved_parent_id": "05c48b44afc54d5e8026aefe04c38f8b",
+  "preserved_parent_method": "supported-subset-research-v2",
+  "original_database_sha256_before": "f354731b91c85c3097b40fa834cd5bd1e5654ec40aa2a2272b3cd76fbc4cf1d8",
+  "original_export_sha256_before": "ac71f6a66ed1b6ed4c98560a092106154f65b77a5d0f6740bc802d1bc7358db9",
+  "parent_payload_sha256_before": "827b72e69e53fa3e5a5336d194b236fbb7172254b3c14188c6852935cd42a54d",
+  "private_qa_outside_repository": true,
+  "private_qa_path": "/workspace/qa-private/research-stale-394904460c04-a008603783ea40a7ac666170728a1f7e",
+  "cases": [],
+  "captures": 0,
+  "PRODUCT_READY": false,
+  "real_acceptance": "BLOCKED"
+}

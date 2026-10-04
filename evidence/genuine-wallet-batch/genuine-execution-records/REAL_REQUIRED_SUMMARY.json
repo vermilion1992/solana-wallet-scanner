@@ -1,0 +1,36 @@
+{
+  "state": "BLOCKED",
+  "real_acceptance": {
+    "state": "BLOCKED",
+    "missing": [
+      "Accepted historical owned-account/population proof is unresolved.",
+      "A supported realised wallet calculation is not yet known; selected arithmetic is insufficient.",
+      "profit_sol: required source dependencies remain unresolved.",
+      "realised_roi_pct: required source dependencies remain unresolved.",
+      "median_roi_pct: required source dependencies remain unresolved.",
+      "win_rate_pct: required source dependencies remain unresolved.",
+      "median_hold_hours: required source dependencies remain unresolved.",
+      "completed_positions: required source dependencies remain unresolved.",
+      "completed_positions_90d: required source dependencies remain unresolved.",
+      "traded_mints: required source dependencies remain unresolved.",
+      "rapid_sale_pct: required source dependencies remain unresolved.",
+      "avg_buys: required source dependencies remain unresolved.",
+      "avg_sells: required source dependencies remain unresolved.",
+      "positive_weeks: required source dependencies remain unresolved.",
+      "largest_contribution_pct: required source dependencies remain unresolved.",
+      "economic_pnl_sol: required source dependencies remain unresolved."
+    ],
+    "mathematically_inapplicable": [],
+    "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+  },
+  "case_count": 7,
+  "all_scoped_workflow_cases_pass": true,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "parent_unchanged": true,
+  "usage_unchanged": true,
+  "PRODUCT_READY": false,
+  "parent_raw_sha256": "b29109ccb3d3949a6a1a52df9e3c4a3b7159a76698b31b407523b7a03872947c",
+  "parent_raw_bytes": 69490611,
+  "note": "Second execution repeats the same genuine cases; counts are not additional unique tests."
+}

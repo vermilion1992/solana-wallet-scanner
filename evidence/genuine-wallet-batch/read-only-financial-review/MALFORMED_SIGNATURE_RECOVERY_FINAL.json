@@ -1,0 +1,57 @@
+{
+  "scope": "Distinct malformed-signature/surrogate sibling replay; no genuine or complete-wallet acceptance",
+  "source_sha256": "b23f918831fd14d11a0fcad68f0abff81831f8ec925f883552af812776f01606",
+  "original_reproduction_sha256": "2119f5d6b7d949198de5cf316791a81e37ea67f09e0b968a74548d147aeb511f",
+  "outcome": {
+    "status": "PASS",
+    "whole_wallet_profit_state": "UNKNOWN",
+    "supported_selected_lots": [
+      {
+        "id": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:1",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "accounts": [
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR"
+        ],
+        "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+        "monetary_state": "UNKNOWN",
+        "timing_state": "UNKNOWN",
+        "quantity_state": "UNKNOWN",
+        "classification_state": "UNKNOWN",
+        "wallet_population_state": "UNKNOWN",
+        "qualification": false,
+        "acquired_raw": "100",
+        "disposed_raw": "100",
+        "remaining_raw": "0",
+        "buy_count": 1,
+        "sell_count": 1,
+        "conditional_basis_sol": null,
+        "conditional_matched_basis_sol": null,
+        "conditional_proceeds_sol": null,
+        "conditional_exit_fees_sol": null,
+        "conditional_lot_profit_sol": null,
+        "conditional_lot_roi_pct": null,
+        "observed_start": null,
+        "observed_end": null,
+        "conditional_hold_hours": null,
+        "required_signatures": [
+          "development-query-buy",
+          "development-query-sell"
+        ],
+        "disjoint_signatures": [],
+        "evidence": [
+          "1da3ebcf374f7eeb6b9c85aae2a3c292a5f16a7a9d35d3e08b5898c4acfca659",
+          "b7b44ccc180fc9f9560f44e5b9f8fed9305f401fbd2156c92d3a42670fdfc320"
+        ],
+        "retained_account_funding": [],
+        "gaps": [
+          "None: linked source cannot be independently excluded from this named-account population"
+        ],
+        "assumptions": [
+          "No hidden earlier same-mint holdings or unobserved intervening changes are established.",
+          "Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN."
+        ]
+      }
+    ],
+    "raw_input_unchanged": true
+  }
+}

@@ -1,0 +1,410 @@
+{
+  "scope": "Moving-source independent sibling diagnostic, not candidate PASS. Development events only.",
+  "source_sha256": {
+    "scanner/research.py": "c059b8c447bd82964c0307ffd60784a50742767f8567c0c1796f438d5f3f7bee"
+  },
+  "cases": {
+    "amount_sol": {
+      "events": [
+        {
+          "kind": "buy",
+          "timestamp": "2026-01-05T00:00:00Z",
+          "order": 1,
+          "mint": "development-mint",
+          "quantity_raw": "100",
+          "decimals": 6,
+          "amount_sol": null,
+          "fee_sol": "0.000005",
+          "classification": "unknown",
+          "signature": "buy",
+          "path": "development-only",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        },
+        {
+          "kind": "sell",
+          "timestamp": "2026-01-05T06:00:00Z",
+          "order": 1,
+          "mint": "development-mint",
+          "quantity_raw": "100",
+          "decimals": 6,
+          "amount_sol": "1.2",
+          "fee_sol": "0.000005",
+          "classification": "unknown",
+          "signature": "sell",
+          "path": "development-only",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        }
+      ],
+      "research": {
+        "version": "supported-subset-research-v3-native-roles",
+        "scope": "supported spot swaps in fetched subset",
+        "history_complete": false,
+        "wallet_profit_verified": false,
+        "opening_inventory_verified_mints": [],
+        "observed_profit_sol": null,
+        "known_matched_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "conditional_profit_population": "In-window sales fully matched to fetched purchase lots, less supplied wallet-paid overhead; unresolved sales excluded",
+        "supported_swaps": 2,
+        "sales": 1,
+        "matched_sales": 0,
+        "observed_matched_sales": 0,
+        "unresolved_basis_sales": 1,
+        "observed_unmatched_sales": 1,
+        "closed_episodes": 0,
+        "verified_closed_episodes": 0,
+        "strategy_population": "Observed strict-zero episodes closing in the selected window; boundaries remain conditional on undiscovered inventory",
+        "conditional_median_hold_hours": null,
+        "conditional_first_sale_hours": null,
+        "conditional_exit_50_hours": null,
+        "conditional_exit_90_hours": null,
+        "conditional_rapid_sale_pct": null,
+        "wallet_fees_paid_sol": "0.00001",
+        "unallocated_fees_sol": "0",
+        "unresolved_transactions": 1,
+        "chronology_unknown": false,
+        "scoped_chronology_unknown": false,
+        "episodes": [
+          {
+            "id": "development-mint:1",
+            "mint": "development-mint",
+            "status": "unresolved",
+            "in_window": true,
+            "quantity_raw": "0",
+            "acquired_raw": "100",
+            "sold_raw": "100",
+            "decimals": 6,
+            "buy_count": 1,
+            "sell_count": 1,
+            "basis_sol": null,
+            "matched_basis_sol": null,
+            "proceeds_sol": "1.2",
+            "exit_fees_sol": "0.000005",
+            "pnl_sol": null,
+            "roi_pct": null,
+            "hold_hours": "6",
+            "first_sale_hours": "6",
+            "sold_50_pct_hours": "6",
+            "sold_90_pct_hours": "6",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+            "attributable": false,
+            "conditional": true,
+            "monetary_state": "UNKNOWN",
+            "timing_state": "PASS",
+            "observed_start": "2026-01-05T00:00:00+00:00",
+            "observed_end": "2026-01-05T06:00:00+00:00"
+          }
+        ],
+        "sales_detail": [
+          {
+            "mint": "development-mint",
+            "timestamp": "2026-01-05T06:00:00+00:00",
+            "quantity_raw": "100",
+            "conditional_matched_basis_sol": null,
+            "conditional_profit_sol": null,
+            "attributable": false,
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+          }
+        ],
+        "evidence": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "risk_findings": [
+          {
+            "severity": "warning",
+            "title": "Opening inventory is not inferred from fetched buys",
+            "detail": "A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          },
+          {
+            "severity": "warning",
+            "title": "Native monetary roles remain unresolved",
+            "detail": "Unknown cash movements or linked cost/identity/clock dependencies revoke affected monetary results. Independently supported quantities, timings and network fees remain separate.",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ],
+        "limitations": [
+          "Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.",
+          "Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.",
+          "Episode duration, first sale and 50%/90% exits describe fetched observed quantities; undiscovered acquisitions or transfers may change those boundaries.",
+          "Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.",
+          "Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns."
+        ]
+      }
+    },
+    "fee_sol": {
+      "events": [
+        {
+          "kind": "buy",
+          "timestamp": "2026-01-05T00:00:00Z",
+          "order": 1,
+          "mint": "development-mint",
+          "quantity_raw": "100",
+          "decimals": 6,
+          "amount_sol": "1",
+          "fee_sol": null,
+          "classification": "unknown",
+          "signature": "buy",
+          "path": "development-only",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        },
+        {
+          "kind": "sell",
+          "timestamp": "2026-01-05T06:00:00Z",
+          "order": 1,
+          "mint": "development-mint",
+          "quantity_raw": "100",
+          "decimals": 6,
+          "amount_sol": "1.2",
+          "fee_sol": "0.000005",
+          "classification": "unknown",
+          "signature": "sell",
+          "path": "development-only",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        }
+      ],
+      "research": {
+        "version": "supported-subset-research-v3-native-roles",
+        "scope": "supported spot swaps in fetched subset",
+        "history_complete": false,
+        "wallet_profit_verified": false,
+        "opening_inventory_verified_mints": [],
+        "observed_profit_sol": null,
+        "known_matched_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "conditional_profit_population": "In-window sales fully matched to fetched purchase lots, less supplied wallet-paid overhead; unresolved sales excluded",
+        "supported_swaps": 2,
+        "sales": 1,
+        "matched_sales": 0,
+        "observed_matched_sales": 0,
+        "unresolved_basis_sales": 1,
+        "observed_unmatched_sales": 1,
+        "closed_episodes": 0,
+        "verified_closed_episodes": 0,
+        "strategy_population": "Observed strict-zero episodes closing in the selected window; boundaries remain conditional on undiscovered inventory",
+        "conditional_median_hold_hours": null,
+        "conditional_first_sale_hours": null,
+        "conditional_exit_50_hours": null,
+        "conditional_exit_90_hours": null,
+        "conditional_rapid_sale_pct": null,
+        "wallet_fees_paid_sol": null,
+        "unallocated_fees_sol": null,
+        "unresolved_transactions": 1,
+        "chronology_unknown": false,
+        "scoped_chronology_unknown": false,
+        "episodes": [
+          {
+            "id": "development-mint:1",
+            "mint": "development-mint",
+            "status": "unresolved",
+            "in_window": true,
+            "quantity_raw": "0",
+            "acquired_raw": "100",
+            "sold_raw": "100",
+            "decimals": 6,
+            "buy_count": 1,
+            "sell_count": 1,
+            "basis_sol": null,
+            "matched_basis_sol": null,
+            "proceeds_sol": "1.2",
+            "exit_fees_sol": "0.000005",
+            "pnl_sol": null,
+            "roi_pct": null,
+            "hold_hours": "6",
+            "first_sale_hours": "6",
+            "sold_50_pct_hours": "6",
+            "sold_90_pct_hours": "6",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+            "attributable": false,
+            "conditional": true,
+            "monetary_state": "UNKNOWN",
+            "timing_state": "PASS",
+            "observed_start": "2026-01-05T00:00:00+00:00",
+            "observed_end": "2026-01-05T06:00:00+00:00"
+          }
+        ],
+        "sales_detail": [
+          {
+            "mint": "development-mint",
+            "timestamp": "2026-01-05T06:00:00+00:00",
+            "quantity_raw": "100",
+            "conditional_matched_basis_sol": null,
+            "conditional_profit_sol": null,
+            "attributable": false,
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+          }
+        ],
+        "evidence": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "risk_findings": [
+          {
+            "severity": "warning",
+            "title": "Opening inventory is not inferred from fetched buys",
+            "detail": "A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          },
+          {
+            "severity": "warning",
+            "title": "Native monetary roles remain unresolved",
+            "detail": "Unknown cash movements or linked cost/identity/clock dependencies revoke affected monetary results. Independently supported quantities, timings and network fees remain separate.",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ],
+        "limitations": [
+          "Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.",
+          "Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.",
+          "Episode duration, first sale and 50%/90% exits describe fetched observed quantities; undiscovered acquisitions or transfers may change those boundaries.",
+          "Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.",
+          "Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns."
+        ]
+      }
+    },
+    "sale-only-opening-gap": {
+      "events": [
+        {
+          "kind": "sell",
+          "timestamp": "2026-01-05T06:00:00Z",
+          "order": 1,
+          "mint": "development-mint",
+          "quantity_raw": "100",
+          "decimals": 6,
+          "amount_sol": "1.2",
+          "fee_sol": "0.000005",
+          "classification": "unknown",
+          "signature": "sell",
+          "path": "development-only",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        }
+      ],
+      "research": {
+        "version": "supported-subset-research-v3-native-roles",
+        "scope": "supported spot swaps in fetched subset",
+        "history_complete": false,
+        "wallet_profit_verified": false,
+        "opening_inventory_verified_mints": [],
+        "observed_profit_sol": null,
+        "known_matched_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "conditional_profit_population": "In-window sales fully matched to fetched purchase lots, less supplied wallet-paid overhead; unresolved sales excluded",
+        "supported_swaps": 1,
+        "sales": 1,
+        "matched_sales": 0,
+        "observed_matched_sales": 0,
+        "unresolved_basis_sales": 1,
+        "observed_unmatched_sales": 1,
+        "closed_episodes": 0,
+        "verified_closed_episodes": 0,
+        "strategy_population": "Observed strict-zero episodes closing in the selected window; boundaries remain conditional on undiscovered inventory",
+        "conditional_median_hold_hours": null,
+        "conditional_first_sale_hours": null,
+        "conditional_exit_50_hours": null,
+        "conditional_exit_90_hours": null,
+        "conditional_rapid_sale_pct": null,
+        "wallet_fees_paid_sol": "0.000005",
+        "unallocated_fees_sol": "0",
+        "unresolved_transactions": 0,
+        "chronology_unknown": false,
+        "scoped_chronology_unknown": false,
+        "episodes": [
+          {
+            "id": "development-mint:1",
+            "mint": "development-mint",
+            "status": "unresolved",
+            "in_window": true,
+            "quantity_raw": "0",
+            "acquired_raw": "100",
+            "sold_raw": "100",
+            "decimals": 6,
+            "buy_count": 0,
+            "sell_count": 1,
+            "basis_sol": null,
+            "matched_basis_sol": null,
+            "proceeds_sol": "1.2",
+            "exit_fees_sol": "0.000005",
+            "pnl_sol": null,
+            "roi_pct": null,
+            "hold_hours": "0",
+            "first_sale_hours": "0",
+            "sold_50_pct_hours": "0",
+            "sold_90_pct_hours": "0",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+            "attributable": false,
+            "conditional": true,
+            "monetary_state": "UNKNOWN",
+            "timing_state": "PASS",
+            "observed_start": "2026-01-05T06:00:00+00:00",
+            "observed_end": "2026-01-05T06:00:00+00:00"
+          }
+        ],
+        "sales_detail": [
+          {
+            "mint": "development-mint",
+            "timestamp": "2026-01-05T06:00:00+00:00",
+            "quantity_raw": "100",
+            "conditional_matched_basis_sol": null,
+            "conditional_profit_sol": null,
+            "attributable": false,
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+          }
+        ],
+        "evidence": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "risk_findings": [
+          {
+            "severity": "warning",
+            "title": "Opening inventory is not inferred from fetched buys",
+            "detail": "A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.",
+            "evidence": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        ],
+        "limitations": [
+          "Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.",
+          "Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.",
+          "Episode duration, first sale and 50%/90% exits describe fetched observed quantities; undiscovered acquisitions or transfers may change those boundaries.",
+          "Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.",
+          "Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns."
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "version": "gross-native-role-owner-record-v1",
+  "scope": "Affected-module developer regression evidence only; independent review and candidate gates are separate. Unsigned mutated ABI inputs are not genuine chain or whole-wallet acceptance evidence.",
+  "source_before": {
+    "scanner/archive_input.py": "46cb27346562244b6c1db4cea7e0fab7d6c4e2156802428bbd4691a6271ce8aa",
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/wallet_evidence.py": "b23f918831fd14d11a0fcad68f0abff81831f8ec925f883552af812776f01606",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "tests/test_real_coverage.py": "249d5afc70309b4243472427dc0bbc7026de32c4a6f2f48650088672c6364b5f",
+    "tests/test_retained_protocol_funding.py": "2bbe90f0bb0c5e3a7a775095d7ea5be560ab8f1b13f0e605285ec40f3c583727",
+    "tests/test_investigation.py": "dd0c05af2bf52b9651fcec4f4b10c140c092705030450912878da7da62130441",
+    "tests/test_nonce_swap_evidence.py": "0dd488b797400972ec649031de621fb51b24a85b5ddc5bce18fa947a3338c4cd",
+    "tests/fixtures/retained_protocol_funding/pump-native.json": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b",
+    "tests/fixtures/retained_protocol_funding/NATIVE_QUOTE_SOURCE.json": "972282b221c219023886ea73a9393b83b864b01e41ff60e180901c5b0192bcf7"
+  },
+  "source_after": {
+    "scanner/archive_input.py": "46cb27346562244b6c1db4cea7e0fab7d6c4e2156802428bbd4691a6271ce8aa",
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/wallet_evidence.py": "b23f918831fd14d11a0fcad68f0abff81831f8ec925f883552af812776f01606",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "tests/test_real_coverage.py": "249d5afc70309b4243472427dc0bbc7026de32c4a6f2f48650088672c6364b5f",
+    "tests/test_retained_protocol_funding.py": "2bbe90f0bb0c5e3a7a775095d7ea5be560ab8f1b13f0e605285ec40f3c583727",
+    "tests/test_investigation.py": "dd0c05af2bf52b9651fcec4f4b10c140c092705030450912878da7da62130441",
+    "tests/test_nonce_swap_evidence.py": "0dd488b797400972ec649031de621fb51b24a85b5ddc5bce18fa947a3338c4cd",
+    "tests/fixtures/retained_protocol_funding/pump-native.json": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b",
+    "tests/fixtures/retained_protocol_funding/NATIVE_QUOTE_SOURCE.json": "972282b221c219023886ea73a9393b83b864b01e41ff60e180901c5b0192bcf7"
+  },
+  "source_unchanged": true,
+  "candidate_application_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "identity_note": "Candidate commit was created during the final owner run without changing these already-frozen source/test/fixture bytes. Full candidate validation is performed separately by the parent.",
+  "methods": {
+    "wallet": "wallet-raw-evidence-v5",
+    "archive": "archive-ledger-v8",
+    "query": "indexed-query-coverage-v2",
+    "spot": "spot-v7-native-flow-roles"
+  },
+  "execution": {
+    "command": ".venv/bin/python -m pytest tests/test_real_coverage.py tests/test_retained_protocol_funding.py tests/test_investigation.py tests/test_nonce_swap_evidence.py tests/test_wallet_evidence.py -q",
+    "exit_code": 0,
+    "ordinary_nodes": 245,
+    "subtests": 0,
+    "seconds": 59.4,
+    "log": "GROSS_ROLES_FROZEN_FINAL.log"
+  },
+  "historical_execution_notes": [
+    "Initial new controls:2 failed (confirmed adjacent nonhashable native dependency signature),20 passed; original raw log retained.",
+    "After bounded signature dependency guard:22 passed,123 deselected/0.82s.",
+    "Shared initial collection:244 passed/58.24s; final primary fee/creator control was added after its collection, executed separately1passed, and included in final frozen245-node run."
+  ],
+  "raw_logs": {
+    "GROSS_ROLES_INITIAL.log": {
+      "bytes": 11464,
+      "sha256": "161e4904951af84e21ec7bc94944b4bdeeb4f5c5a014476f3c9a7631e21fc157"
+    },
+    "GROSS_ROLES_FOCUSED.log": {
+      "bytes": 616,
+      "sha256": "5c89660d7c408e38ad2b145e03b6d51758f5a9aa9db98b1177129430eb035752"
+    },
+    "GROSS_ROLES_SHARED_FINAL.log": {
+      "bytes": 842,
+      "sha256": "bfc7253a34637ff2478cd9df31529c8fd658c245ee677c6d74e3a8f7509a2795"
+    },
+    "NATIVE_FEE_CREATOR_FINAL.log": {
+      "bytes": 113,
+      "sha256": "7fd70eff85a033e329c039ea0a1d48d6937e5e567e2687e99fb0b19e54de7f67"
+    },
+    "GROSS_ROLES_FROZEN_FINAL.log": {
+      "bytes": 842,
+      "sha256": "890c5a07e51b05abc521e6000daeb4b70163b9da3a52a56d84b2ad40acf79f7b"
+    }
+  },
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "PRODUCT_READY": false
+}

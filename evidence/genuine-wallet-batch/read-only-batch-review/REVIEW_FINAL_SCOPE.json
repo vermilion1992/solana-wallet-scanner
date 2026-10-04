@@ -1,0 +1,326 @@
+{
+  "kind": "distinct-read-only-batch-review",
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "review_time": "2026-10-04T06:42:12Z",
+  "baseline_commit": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "candidate": "Frozen committed application source; final acceptance receipts reviewed separately by root",
+  "scope": [
+    "Discovery source replay and shared parsed/compiled/header/loaded key identity boundaries",
+    "Backend default/explicit audit planning using saved semantic inputs before presentation projection",
+    "Frontend stale manual selections, default deferral and compiled asset inclusion",
+    "One current issue register, acceptance matrix, source decision and validation runner",
+    "Bounded collection/archive/read-only checker interfaces and metric-specific genuine engineering acceptance conditions"
+  ],
+  "findings": [
+    {
+      "id": "DISC-HEADER-REVIEW",
+      "category": "Confirmed application defect",
+      "description": "Parsed account flags previously overrode contradictory optional signature headers, allowing header0/2 identity PASS.",
+      "status": "RESOLVED_IN_REVIEWED_SOURCE",
+      "first_reproduction": "DISCOVERY_HEADER_REPRO.json",
+      "verification": [
+        "DISCOVERY_HEADER_FIXED_REPLAY.json",
+        "INDEPENDENT_FOCUSED.log"
+      ],
+      "preserved_first_reproduction": true
+    },
+    {
+      "id": "CHECK-LOSING-REVIEW",
+      "category": "Confirmed validation predicate defect",
+      "description": "Supported nonpositive net wallet profit was blocked solely by the intentionally undefined largest-contribution ratio.",
+      "status": "RESOLVED_IN_REVIEWED_SOURCE",
+      "first_reproduction": "LOSING_ACCEPTANCE_REPRO.json",
+      "verification": "INDEPENDENT_CHECKER_AFTER_FIX.log",
+      "scope_limit": "The strict exception requires every source dependency PASS and only metric_observation unresolved; saved UNKNOWN metrics, policy and genuine B3 status stay unchanged."
+    },
+    {
+      "id": "CHECK-ZERO-TYPE-REVIEW",
+      "category": "Confirmed validation input-boundary defect",
+      "description": "Boolean/numeric rendered matched-basis values could satisfy an undefined zero-cost ratio; list values raised an exception.",
+      "status": "RESOLVED_IN_REVIEWED_SOURCE",
+      "first_reproduction": "ZERO_BASIS_TYPES_REPRO.json",
+      "verification": [
+        "ZERO_BASIS_TYPES_FIXED_REPLAY.json",
+        "INDEPENDENT_CHECKER_AFTER_FIX.log"
+      ]
+    }
+  ],
+  "nondefects_and_verified_controls": [
+    "Canonical headerless genuine jsonParsed signer flags remain supported, as do compiled full header and verified loaded-address forms.",
+    "Failed transactions cannot manufacture successful discovery movement.",
+    "Required primary or wrong-role alternative loss prevents eligible audit selection; restoration replays offline without mutating parent/cohort, quota or scan queues.",
+    "Full, summary and direct cohort plans use identical semantic report inputs rather than display summaries.",
+    "Explicit selection is rechecked against current source-backed eligibility; default selection does not repeatedly audit current partial saved reports.",
+    "The frontend computes eligible selected addresses from the current plan on each render and filters retained manual choices after source loss.",
+    "No new generic source document replaces docs/R1_SOURCE_DECISION.md; documented access/schema/lifecycle observations remain distinct from exhaustive owner/format population proof.",
+    "One validation runner includes the new coherent shared-component tests; no full acceptance runner was executed by this reviewer.",
+    "The committed compiled bundle index-jsg7SLRM.js matches reviewed bytes and frontend/dist/index.html public asset reference; prior bundle deletion is committed.",
+    "Raw primary Pump cashback README bytes match the pinned SHA-256 fa0f8703b406b872309131754e33ddcd15f0a36426733e0d26f329293b3c48f6; its sole trailing space is preserved. Source diff --check passes when excluding exactly this original primary fixture."
+  ],
+  "product_status": {
+    "B1": "Historical sufficiency OPEN; genuine endpoint/schema/lifecycle controls observed, no exhaustive historical ownership/population guarantee.",
+    "B2": "Scoped terminal-query/observed-account arithmetic implemented; complete wallet accounting OPEN, unreviewed routes and data dependencies remain.",
+    "B3": "BLOCKED; genuine independent selected-lot arithmetic does not supply complete wallet coverage.",
+    "PRODUCT_READY": false
+  },
+  "independent_expectations_unchanged": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS.json": {
+      "sha256": "ff9d08432e693bb91bac33a223adbe884b4c4bd5fc6365590edc269387f2b9a6",
+      "bytes": 177283
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "bytes": 177454
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_CALCULATOR.py": {
+      "sha256": "a40be76060e0f743ffc4c62e91387050c975e7a89db5b69b7562e3d0254e8772",
+      "bytes": 17849
+    }
+  },
+  "validation": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_discovery_native_identity.py tests/test_discovery_plan_views.py tests/test_genuine_collection_workflow.py",
+      "ordinary_tests": 74,
+      "state": "PASS",
+      "raw_log": "INDEPENDENT_FOCUSED.log",
+      "scope": "Intermediate reviewed source; not full backend suite."
+    },
+    {
+      "command": "npm run check:discovery",
+      "cwd": "frontend",
+      "state": "PASS",
+      "raw_log": "INDEPENDENT_FRONTEND_DISCOVERY.log",
+      "scope": "Temporary compile/render/helper checks; no production source/assets modified."
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_genuine_collection_workflow.py",
+      "state": "PASS",
+      "raw_log": "INDEPENDENT_CHECKER_AFTER_FIX.log",
+      "ordinary_tests": 57,
+      "scope": "Exact frozen checker source 1b20f7c0bd335ec24d63aa6f1c1c4398c25533b9c29ffec5429da9c676e97583; overlaps initial run, not summed."
+    }
+  ],
+  "artifacts": {
+    "SOURCE_SUBSET_BEFORE.json": {
+      "sha256": "db9feba5bf84cd11463b17112310b2a469b556849dca43d58f6f3fa6574edef7",
+      "bytes": 4130
+    },
+    "SOURCE_SUBSET_AFTER.json": {
+      "sha256": "05a4939ff1124075fd69948faa4357efe56a762333a088eed16276a27ef4c52c",
+      "bytes": 4354
+    },
+    "DISCOVERY_HEADER_REPRO.json": {
+      "sha256": "daaf133a246309d604aba6dbe59ca6af396a971672e713ca87abe28accdc19a5",
+      "bytes": 1113
+    },
+    "DISCOVERY_HEADER_FIXED_REPLAY.json": {
+      "sha256": "e1ad0ce95ea8361e0a98aa4617ecdd44deadafe65fd76cb0b64929442c7fb515",
+      "bytes": 979
+    },
+    "LOSING_ACCEPTANCE_REPRO.json": {
+      "sha256": "cb42420bb09009199ea6f9719d55baeb03208c1c25ecbfd80ac2c8c0d70faa3c",
+      "bytes": 657
+    },
+    "ZERO_BASIS_TYPES_REPRO.json": {
+      "sha256": "a6fcd083077a69bb33a58a751acaabaa6ce30ca9351868ce12221f5eef5250be",
+      "bytes": 6141
+    },
+    "ZERO_BASIS_TYPES_FIXED_REPLAY.json": {
+      "sha256": "661551bee877f6ef3792c3fca372bb21e9f82f5251d62eb3e8e7f759059351ed",
+      "bytes": 5018
+    },
+    "INDEPENDENT_FOCUSED.log": {
+      "sha256": "7da3a57c243877857cbcfb42b1e366eee68b4fab85962226c5ade60d5881100a",
+      "bytes": 887
+    },
+    "INDEPENDENT_CHECKER_AFTER_FIX.log": {
+      "sha256": "fbef5098c4595db36661bde0e74290ca0f262d905cc6161758685c1473168635",
+      "bytes": 786
+    },
+    "INDEPENDENT_FRONTEND_DISCOVERY.log": {
+      "sha256": "b61186270a21aa3b6c02f99e914851f9ff85e2771cbaee70d7b1b3aba3c0b0ef",
+      "bytes": 366
+    },
+    "FINAL_SCOPE_REBIND.log": {
+      "sha256": "e07bfca333b3c22a33030b751916eef126ec52439d59d10fe8376e1177c6983e",
+      "bytes": 1018
+    }
+  },
+  "limitations": [
+    "Accounting rent/per-lot internals reviewed by a separate reviewer; this receipt excludes their final signoff.",
+    "No provider calls, credential access, private runtime database reads, commits, application edits, full gates, private publication or third-party execution performed.",
+    "This is a distinct read-only review by another agent in the same engineering session; it is not independent third-party execution.",
+    "This final scoped rebind verifies the current source equals the reviewed subset byte-for-byte without repeating unrelated suites. It does not claim full candidate Gate A/B3 acceptance.",
+    "Accounting retained-funding/per-lot internal final review, full gate receipts, actual genuine saved-report replay, security/history audit and exact private Git publication remain separate root-owned controls."
+  ],
+  "candidate_commit": "ec2ea97bb69c683447ce76ca05d5d9512fb4608a",
+  "source_manifest": {
+    "sha256": "8d1a503f7f396a4abfb7710a3b4d05665c27f9559912ffb6a23686c9787b1432",
+    "files": 224
+  },
+  "source_subset_commit_bindings": [
+    {
+      "path": "scanner/discovery.py",
+      "sha256": "046966de310af6a9009b8f94789a5736fe34d65325eecbe293a1b5f6b54b4df1",
+      "bytes": 55854,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "scanner/app.py",
+      "sha256": "95c2c5631b2159753337937faf26da9111ba55d2c970691b38ea3062cad018c7",
+      "bytes": 73566,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "scanner/compiled_instructions.py",
+      "sha256": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+      "bytes": 36534,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "scanner/real_coverage.py",
+      "sha256": "724473c038e7e7b898bfbb5ba37bbc40cb03f354c50f27474d659ca24b2ed622",
+      "bytes": 13845,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "scanner/archive_input.py",
+      "sha256": "3b0484eefcb8eae486e09839ee7ad189166c4021121380a7e2d43fbe7376e99d",
+      "bytes": 52787,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "scanner/indexed_input.py",
+      "sha256": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d",
+      "bytes": 37108,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "scanner/investigation.py",
+      "sha256": "e31e015e2d8bb2397ce77ac74db5915d0961b2aa1a56ae503806d2d749a55bd1",
+      "bytes": 58384,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "frontend/src/Discovery.tsx",
+      "sha256": "b9911feaa4e5a8305c07a02f34b9eaf6fa2c19b9203ec4d47751cdd29c8cb12b",
+      "bytes": 39015,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "sha256": "7155061670c3e91ee73a9c2d80bde4cb7e4e8d4ab3d162ea0dcd32d3171ede18",
+      "bytes": 13407,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "frontend/scripts/check-discovery.mjs",
+      "sha256": "1adf50029b128d35a874ceb423c0c5e855a633ae25a25cfea440c3bacdba241c",
+      "bytes": 62620,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "sha256": "72500a25670399c2ec1eee43449ab6dab6f86195e2bdd75a6548a587d1e10255",
+      "bytes": 577,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "frontend/dist/assets/index-jsg7SLRM.js",
+      "sha256": "6d45ae56a67f0e3196f558557816a2150e2ae28b66e6cceade345a40f8e26f24",
+      "bytes": 291243,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tools/validate.py",
+      "sha256": "d40afedcb7f21ce463c1514f270ad379d727953bb8d5748665c6e15a3e119dc0",
+      "bytes": 14554,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tools/bounded_collection.py",
+      "sha256": "1b7a054653170061010be72f0b46fefa59ea817d18a00a6ec507ea77ff3de8d0",
+      "bytes": 36623,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tools/check_genuine_collection.py",
+      "sha256": "1b20f7c0bd335ec24d63aa6f1c1c4398c25533b9c29ffec5429da9c676e97583",
+      "bytes": 52625,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tools/discovery_plan.py",
+      "sha256": "d455b742dd8806ca67c5e20a79a9781d0c57110fbebe5af94dd52f9efca100ac",
+      "bytes": 2857,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tests/test_discovery_native_identity.py",
+      "sha256": "83109ff2a907fef46d59eb7f327f72b1091735721f0895f2cb3fe39b451f5c40",
+      "bytes": 7204,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tests/test_discovery_plan_views.py",
+      "sha256": "151f1cd6855f6e97776dedc1ef9eb6dc0f3170b6b9af1270f7a3069a3d3792b7",
+      "bytes": 9581,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tests/test_discovery_audit_plan.py",
+      "sha256": "16f187ba5b0006204c7975359c793864160f198ed5010376ec60a5393746398c",
+      "bytes": 22608,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "tests/test_genuine_collection_workflow.py",
+      "sha256": "7be0cabea4b9c5784d887668418822c404ac6648e540b9d006840e8ea36b44b1",
+      "bytes": 32419,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "docs/ACCEPTANCE_MATRIX.json",
+      "sha256": "3181a015231a08cf563165c738c282e12d9b3f71ddf9daa4d1d3e70d149ccfb8",
+      "bytes": 15718,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "docs/R1_SOURCE_DECISION.md",
+      "sha256": "a13e430beb73bdca0f785e7383788981e127ab22b8c750a17a1b454148c477ff",
+      "bytes": 39963,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "docs/ARCHIVE_INPUT_CONTRACT.md",
+      "sha256": "8d14ff45f3642140ce93374dcc210bfbf53932de9539ba1f64d59446c4d3c5d0",
+      "bytes": 12712,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "docs/CONTRACT.md",
+      "sha256": "912be3308a845809b37b30ea005992bac81d8ce7e45d8b97bb1ac0d3959f8e4b",
+      "bytes": 67838,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "ISSUES.md",
+      "sha256": "1c5417f698bc0c34148e23aed26914022c7b88d9853ec07dedf3cc93c0c35758",
+      "bytes": 32858,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "CODEX_TASK.md",
+      "sha256": "606d5c15e64fc60bc84aba996d1deb4fac210635c75612b01423710c1e3bc191",
+      "bytes": 25807,
+      "commit_bytes_equal": true
+    },
+    {
+      "path": "README.md",
+      "sha256": "515d40c9d914b5ac020e922ea1605aa29c3c888e57670afb21b19b70e86011f9",
+      "bytes": 32176,
+      "commit_bytes_equal": true
+    }
+  ],
+  "source_unchanged_before_after_review": true
+}

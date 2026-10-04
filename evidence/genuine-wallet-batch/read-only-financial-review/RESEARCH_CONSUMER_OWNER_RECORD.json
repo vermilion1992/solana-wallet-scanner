@@ -1,0 +1,155 @@
+{
+  "scope": "Affected source-owner controls only; not full candidate acceptance or genuine B3. No provider requests, credentials or oracle edits.",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_research.py",
+    "tests/test_research_source_roles.py",
+    "tests/test_discovery_integration_review.py",
+    "tests/test_copy_review.py",
+    "tests/test_discovery_audit_plan.py",
+    "tests/test_real_coverage.py",
+    "-q"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 16.60023583698785,
+  "before": {
+    "scanner/app.py": {
+      "sha256": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+      "mode": "0o600",
+      "bytes": 74376
+    },
+    "scanner/archive_input.py": {
+      "sha256": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+      "mode": "0o600",
+      "bytes": 53189
+    },
+    "scanner/copy_review.py": {
+      "sha256": "d96f7cca8cf9c5d51f9c60721171d049e1785fe32177fb45878a3c05fb6242b1",
+      "mode": "0o600",
+      "bytes": 24516
+    },
+    "scanner/research.py": {
+      "sha256": "8bad4cee4c93a3e5086486522b2526a65dc46d7b5c336966143e956524ab3c87",
+      "mode": "0o600",
+      "bytes": 26258
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "262e0351d771378475276818db4545dd998937736ded4caa3e4e2e3d9bbd30c3",
+      "mode": "0o600",
+      "bytes": 85862
+    },
+    "tests/test_copy_review.py": {
+      "sha256": "e5bd9545a2fc1621ecf2c19bbc4f1ffca1ae7032c269bfdcdf78ed720f26302b",
+      "mode": "0o600",
+      "bytes": 21909
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "55bb031564540089e2019d0b32dc5a28e5e3d39e6198f829f0ba29f8a22cfb35",
+      "mode": "0o600",
+      "bytes": 22720
+    },
+    "tests/test_discovery_integration_review.py": {
+      "sha256": "59c43b9f0a9d1c0c0fc53cf72f1c1578b8a4debf82fff137ca121ae812850eb9",
+      "mode": "0o600",
+      "bytes": 32039
+    },
+    "tests/test_research_source_roles.py": {
+      "sha256": "17971febb0a42997aa10be51604cecd03a9c981fbec7ca22f598bf7a4016dcd5",
+      "mode": "0o600",
+      "bytes": 17611
+    },
+    "tools/validate.py": {
+      "sha256": "6da6629080df4a72eaf0a311585202a8d13751280597b3d9d31154966119dda1",
+      "mode": "0o700",
+      "bytes": 14659
+    }
+  },
+  "after": {
+    "scanner/app.py": {
+      "sha256": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+      "mode": "0o600",
+      "bytes": 74376
+    },
+    "scanner/archive_input.py": {
+      "sha256": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+      "mode": "0o600",
+      "bytes": 53189
+    },
+    "scanner/copy_review.py": {
+      "sha256": "d96f7cca8cf9c5d51f9c60721171d049e1785fe32177fb45878a3c05fb6242b1",
+      "mode": "0o600",
+      "bytes": 24516
+    },
+    "scanner/research.py": {
+      "sha256": "8bad4cee4c93a3e5086486522b2526a65dc46d7b5c336966143e956524ab3c87",
+      "mode": "0o600",
+      "bytes": 26258
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "262e0351d771378475276818db4545dd998937736ded4caa3e4e2e3d9bbd30c3",
+      "mode": "0o600",
+      "bytes": 85862
+    },
+    "tests/test_copy_review.py": {
+      "sha256": "e5bd9545a2fc1621ecf2c19bbc4f1ffca1ae7032c269bfdcdf78ed720f26302b",
+      "mode": "0o600",
+      "bytes": 21909
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "55bb031564540089e2019d0b32dc5a28e5e3d39e6198f829f0ba29f8a22cfb35",
+      "mode": "0o600",
+      "bytes": 22720
+    },
+    "tests/test_discovery_integration_review.py": {
+      "sha256": "59c43b9f0a9d1c0c0fc53cf72f1c1578b8a4debf82fff137ca121ae812850eb9",
+      "mode": "0o600",
+      "bytes": 32039
+    },
+    "tests/test_research_source_roles.py": {
+      "sha256": "17971febb0a42997aa10be51604cecd03a9c981fbec7ca22f598bf7a4016dcd5",
+      "mode": "0o600",
+      "bytes": 17611
+    },
+    "tools/validate.py": {
+      "sha256": "6da6629080df4a72eaf0a311585202a8d13751280597b3d9d31154966119dda1",
+      "mode": "0o700",
+      "bytes": 14659
+    }
+  },
+  "owned_source_unchanged": true,
+  "raw_log": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_CONSUMER_OWNER_FINAL.log",
+  "first_failures_preserved": [
+    "RESEARCH_CONSUMER_INITIAL.log",
+    "RESEARCH_CONSUMER_SECOND.log",
+    "RESEARCH_CONSUMER_THIRD.log"
+  ],
+  "methodologies": {
+    "research": "supported-subset-research-v3-native-roles",
+    "wallet": "wallet-raw-evidence-v6",
+    "archive": "archive-ledger-v9"
+  },
+  "state": "PASS",
+  "implementation_choices": [
+    "Consume freshly raw-derived identity/cost/clock/physical mint/fee and fee-window receipts in normal and archive research callers; no stored completion declarations.",
+    "Retain the existing FIFO/private event arithmetic; project unsupported monetary/timing fields by per-mint episode ordinal and current scoped dependencies.",
+    "Cash-only uncertainty does not delete independently supported observed quantities/timing/network fees; missing or conflicting physical sources remain dependencies.",
+    "Research v3, wallet v6 and archive ledger v9 require child rebuild of old interpretations; strict qualification and verified strict position observations remain independent of research-only staleness.",
+    "Global missing chronology remains UNKNOWN; fresh scoped episode source checks preserve unrelated individually supported observations, not aggregate population medians."
+  ],
+  "fixture_corrections": [
+    {
+      "test": "test_positive_observed_lot_model_never_certifies_wallet_profit_or_safe_copying",
+      "change": "Mock collector evidence now includes each transaction signature. Previously its malformed frozen links made source identity and fees UNKNOWN; the positive conditional-lot intent and all strict-UNKNOWN/safety assertions are preserved."
+    },
+    {
+      "test": "test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees[sell-wrapped]",
+      "change": "Unsigned development sell mutation now uses the original retained sell outer route index 1 rather than borrowing the buy outer route index 3."
+    },
+    {
+      "test": "test_current_partial_report_defers_repeated_collection_without_conditional_profit_upgrade",
+      "change": "Keep the current research version when modifying the conditional number, so this still tests current partial reports rather than unintentionally testing stale snapshots."
+    }
+  ]
+}

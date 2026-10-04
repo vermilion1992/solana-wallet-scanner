@@ -1,0 +1,97 @@
+{
+  "scope": "Current-source synthetic escaped-provider-byte shared hash-boundary diagnostic; no genuine expectation changes, providers or credentials.",
+  "source_hashes": {
+    "scanner/archive_input.py": "60cb2c45cf7129a096ccede72479268972e873ac3fcee9ee379040f7740ad960",
+    "scanner/real_coverage.py": "b99a3c07dd7a5581e93a05a51577eba439a67298c6dac94dcc582ef7246e745e",
+    "scanner/wallet_evidence.py": "84ae31659162bffa3daa03a933879dde1f0b44edb8831bf1ad40470c18d84bba"
+  },
+  "matrix": [
+    {
+      "wrapper": "page",
+      "value_condition": "valid-unicode",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION",
+          "query_state": "PASS",
+          "wallet_profit_status": "unknown"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION",
+          "observed_lots": 0
+        }
+      }
+    },
+    {
+      "wrapper": "page",
+      "value_condition": "invalid-surrogate",
+      "operations": {
+        "archive-load": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "traceback": "Traceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 59, in canonical_bytes\n    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 3905: surrogates not allowed\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RAW_HASH_FAMILY_REPLAY.py\", line 49, in replay\n    _, result, assessment = archive_assessment(store, manifest)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/tests/test_real_coverage.py\", line 414, in archive_assessment\n    loaded = load_archive(store, manifest_hash, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 282, in load_archive\n    record = archived_record(payload, key[0], key[1], read,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 368, in archived_record\n    'signature': identity, 'native_hash': hashlib.sha256(canonical_bytes(item)).hexdigest()}\n                                                         ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 46, in canonical_bytes\n    return _bounded_canonical(value)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes\n    raise ValueError('Input cannot be canonically serialized') from exc\nValueError: Input cannot be canonically serialized\n"
+        },
+        "query-bind": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "traceback": "Traceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 59, in canonical_bytes\n    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 3905: surrogates not allowed\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RAW_HASH_FAMILY_REPLAY.py\", line 53, in replay\n    result = derive_indexed_coverage([record(raw)], all_records=[record(raw)], raw_sources=[row],\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/real_coverage.py\", line 183, in derive_indexed_coverage\n    bind(raw, row['hash'], ordinal)\n  File \"/workspace/solana-wallet-scanner/scanner/real_coverage.py\", line 174, in bind\n    native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/indexed_input.py\", line 50, in canonical_bytes\n    return _shared_canonical_bytes(value, max_depth=MAX_JSON_DEPTH, max_nodes=MAX_JSON_NODES, string_keys=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes\n    raise ValueError('Input cannot be canonically serialized') from exc\nValueError: Input cannot be canonically serialized\n"
+        },
+        "lot-recovery": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "traceback": "Traceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 59, in canonical_bytes\n    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 3905: surrogates not allowed\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RAW_HASH_FAMILY_REPLAY.py\", line 58, in replay\n    result = _selected_lot_observations([], {}, {}, {}, {}, {}, [], [row], WALLET)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/wallet_evidence.py\", line 737, in _selected_lot_observations\n    native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/indexed_input.py\", line 50, in canonical_bytes\n    return _shared_canonical_bytes(value, max_depth=MAX_JSON_DEPTH, max_nodes=MAX_JSON_NODES, string_keys=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes\n    raise ValueError('Input cannot be canonically serialized') from exc\nValueError: Input cannot be canonically serialized\n"
+        }
+      }
+    },
+    {
+      "wrapper": "native",
+      "value_condition": "valid-unicode",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "wallet_profit_status": "unknown"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION",
+          "observed_lots": 0
+        }
+      }
+    },
+    {
+      "wrapper": "native",
+      "value_condition": "invalid-surrogate",
+      "operations": {
+        "archive-load": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "traceback": "Traceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 59, in canonical_bytes\n    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 3905: surrogates not allowed\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RAW_HASH_FAMILY_REPLAY.py\", line 49, in replay\n    _, result, assessment = archive_assessment(store, manifest)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/tests/test_real_coverage.py\", line 414, in archive_assessment\n    loaded = load_archive(store, manifest_hash, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 282, in load_archive\n    record = archived_record(payload, key[0], key[1], read,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 368, in archived_record\n    'signature': identity, 'native_hash': hashlib.sha256(canonical_bytes(item)).hexdigest()}\n                                                         ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 46, in canonical_bytes\n    return _bounded_canonical(value)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes\n    raise ValueError('Input cannot be canonically serialized') from exc\nValueError: Input cannot be canonically serialized\n"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "traceback": "Traceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 59, in canonical_bytes\n    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 3905: surrogates not allowed\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RAW_HASH_FAMILY_REPLAY.py\", line 58, in replay\n    result = _selected_lot_observations([], {}, {}, {}, {}, {}, [], [row], WALLET)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/wallet_evidence.py\", line 737, in _selected_lot_observations\n    native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/indexed_input.py\", line 50, in canonical_bytes\n    return _shared_canonical_bytes(value, max_depth=MAX_JSON_DEPTH, max_nodes=MAX_JSON_NODES, string_keys=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes\n    raise ValueError('Input cannot be canonically serialized') from exc\nValueError: Input cannot be canonically serialized\n"
+        }
+      }
+    }
+  ]
+}

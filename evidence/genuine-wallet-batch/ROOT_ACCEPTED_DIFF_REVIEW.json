@@ -1,0 +1,64 @@
+{
+  "kind": "root-read-only-final-diff-review",
+  "created_at": "2026-10-04T08:06:05.389110+00:00",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "baseline_commit": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "source_files": 228,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "scope": "Read-only full batch continuity plus changed research consumers and adjacent saved-report proofs. This receipt is not full application acceptance or third-party review. Exact gates are required separately.",
+  "paths_read": [
+    "scanner/research.py",
+    "scanner/wallet_evidence.py",
+    "scanner/copy_review.py",
+    "scanner/app.py",
+    "scanner/archive_input.py",
+    "frontend/src/report.tsx",
+    "frontend/src/types.ts",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/R1_SOURCE_DECISION.md",
+    "ISSUES.md",
+    "tools/validate.py"
+  ],
+  "raw_diff_path": "evidence/genuine-wallet-batch/ROOT_ACCEPTED_RESEARCH_DIFF.txt",
+  "raw_diff_sha256": "c5cbd0c53bd533611a389370bcd13a8c94fafdad2856fd268c16dcd532ab5784",
+  "diff_check": {
+    "whole_exit_code": 2,
+    "whole_output": "tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md:25: trailing whitespace.\n+go to the creator as it normally would. \n",
+    "excluding_one_source_exact_primary_document_exit_code": 0,
+    "exception": "Retained source-exact upstream primary README whitespace is preserved, SHAfa0f8703b406b872309131754e33ddcd15f0a36426733e0d26f329293b3c48f6"
+  },
+  "reviewed_invariants": [
+    "Fresh in-process raw receipt, no imported trusted completion or event declarations",
+    "Exact FIFO bounds/counts/quantity/source/signature binding for named-lot origin and chronology",
+    "Required-source loss revokes dependent money/timing; disjoint source does not erase individually supported observation",
+    "Pre-window acquisition fee basis and report-period fee membership remain distinct",
+    "Auxiliary stale research cannot supply fallback copy observations; independent strict qualification remains separate",
+    "Saved snapshots remain immutable and are warned for offline child rebuild",
+    "Independent report/28-day/90-day query receipts do not certify historical wallet population"
+  ],
+  "findings": [
+    {
+      "id": "RESEARCH-CONSUMERS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "finding": "Reproduced cash roles, physical conflict, origin/earlier-stock, disjoint timing and variable-shadow crash corrections have source-bound owner and distinct controls; final full candidate gates pending."
+    },
+    {
+      "id": "CAP-01",
+      "status": "OPEN",
+      "blocking": false,
+      "blocking_to_product": true,
+      "finding": "Historical full-wallet witness adapters, unsupported economic routes, complete origins/classification/boundary valuations still require implementation and accepted genuine data."
+    }
+  ],
+  "prior_review_correction": "ROOT_FINAL_DIFF_REVIEW.json was scoped to the earlier7f paths and omitted the later discovered research consumer defect. Its no-new-defect judgment is superseded; failed7f suite and repros are preserved.",
+  "PRODUCT_READY": false,
+  "source_unchanged": true,
+  "state": "PASS_READ_ONLY_SCOPE"
+}

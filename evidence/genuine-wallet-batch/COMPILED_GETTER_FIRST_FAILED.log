@@ -1,0 +1,601 @@
+..FFFFFFFFFFFFFFFFFFFFF.....FF.......................................... [ 54%]
+.....................F.......................................            [100%]
+=================================== FAILURES ===================================
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-classic-empty] _
+
+case = {'hex': '15', 'id': 'classic-empty', 'info': {}, 'program': 'token'}
+inner = False
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-classic-ignored-trailing] _
+
+case = {'hex': '15ff00ab', 'id': 'classic-ignored-trailing', 'info': {}, 'program': 'token'}
+inner = False
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-empty] _
+
+case = {'hex': '15', 'id': 'token2022-empty', 'info': {}, 'program': 'token2022'}
+inner = False
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-two-query-extensions] _
+
+case = {'hex': '1507000800', 'id': 'token2022-two-query-extensions', 'info': {'extensionTypes': ['immutableOwner', 'memoTransfer']}, 'program': 'token2022'}
+inner = False
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-group-discriminants] _
+
+case = {'hex': '151400150016001700', 'id': 'token2022-group-discriminants', 'info': {'extensionTypes': ['groupPointer', 'tokenGroup', 'groupMemberPointer', 'tokenGroupMember']}, 'program': 'token2022'}
+inner = False
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-latest-query-descriptor] _
+
+case = {'hex': '151c00', 'id': 'token2022-latest-query-descriptor', 'info': {'extensionTypes': ['permissionedBurn']}, 'program': 'token2022'}
+inner = False
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-classic-empty] _
+
+case = {'hex': '15', 'id': 'classic-empty', 'info': {}, 'program': 'token'}
+inner = True
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-classic-ignored-trailing] _
+
+case = {'hex': '15ff00ab', 'id': 'classic-ignored-trailing', 'info': {}, 'program': 'token'}
+inner = True
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-empty] _
+
+case = {'hex': '15', 'id': 'token2022-empty', 'info': {}, 'program': 'token2022'}
+inner = True
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-two-query-extensions] _
+
+case = {'hex': '1507000800', 'id': 'token2022-two-query-extensions', 'info': {'extensionTypes': ['immutableOwner', 'memoTransfer']}, 'program': 'token2022'}
+inner = True
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-group-discriminants] _
+
+case = {'hex': '151400150016001700', 'id': 'token2022-group-discriminants', 'info': {'extensionTypes': ['groupPointer', 'tokenGroup', 'groupMemberPointer', 'tokenGroupMember']}, 'program': 'token2022'}
+inner = True
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-latest-query-descriptor] _
+
+case = {'hex': '151c00', 'id': 'token2022-latest-query-descriptor', 'info': {'extensionTypes': ['permissionedBurn']}, 'program': 'token2022'}
+inner = True
+
+    @pytest.mark.parametrize('case', SCHEMA['examples'], ids=lambda c: c['id'])
+    @pytest.mark.parametrize('inner', [False, True], ids=['outer', 'inner'])
+    def test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles(case, inner):
+        instruction = {'programId': KEYS[case['program']], 'accounts': [KEYS['mint']], 'data': binary_base58(case['hex'])}
+        original = deepcopy(instruction)
+>       result = normalize_instruction(instruction, list(KEYS.values()), signers=set(), inner=inner, path='retained.ix')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_compiled_getter.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scanner/compiled_instructions.py:522: in normalize_instruction
+    _token(data, resolved, signers or set(), inner, path, program))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/compiled_instructions.py:433: in _token
+    _reject('unsupported-opcode', 'Token opcode/extension has no reviewed binary normalization contract', path + '.data')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 'unsupported-opcode'
+reason = 'Token opcode/extension has no reviewed binary normalization contract'
+paths = ('retained.ix.data',)
+
+    def _reject(code, reason, *paths):
+>       raise CompiledInstructionError(code, reason, paths)
+E       scanner.compiled_instructions.CompiledInstructionError: Token opcode/extension has no reviewed binary normalization contract
+
+scanner/compiled_instructions.py:55: CompiledInstructionError
+_ test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[1500] _
+
+hexadecimal = '1500'
+
+    @pytest.mark.parametrize('hexadecimal', ['1500', '15070008', '15ffff', '151d00', '15fdff'])
+    def test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies(hexadecimal):
+        instruction = {'programId':KEYS['token2022'], 'accounts':[KEYS['mint']], 'data':binary_base58(hexadecimal)}
+        original = deepcopy(instruction)
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction(instruction,list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-layout','unsupported-extension-type')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-layout', 'unsupported-extension-type')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:45: AssertionError
+_ test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[15070008] _
+
+hexadecimal = '15070008'
+
+    @pytest.mark.parametrize('hexadecimal', ['1500', '15070008', '15ffff', '151d00', '15fdff'])
+    def test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies(hexadecimal):
+        instruction = {'programId':KEYS['token2022'], 'accounts':[KEYS['mint']], 'data':binary_base58(hexadecimal)}
+        original = deepcopy(instruction)
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction(instruction,list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-layout','unsupported-extension-type')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-layout', 'unsupported-extension-type')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:45: AssertionError
+_ test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[15ffff] _
+
+hexadecimal = '15ffff'
+
+    @pytest.mark.parametrize('hexadecimal', ['1500', '15070008', '15ffff', '151d00', '15fdff'])
+    def test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies(hexadecimal):
+        instruction = {'programId':KEYS['token2022'], 'accounts':[KEYS['mint']], 'data':binary_base58(hexadecimal)}
+        original = deepcopy(instruction)
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction(instruction,list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-layout','unsupported-extension-type')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-layout', 'unsupported-extension-type')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:45: AssertionError
+_ test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[151d00] _
+
+hexadecimal = '151d00'
+
+    @pytest.mark.parametrize('hexadecimal', ['1500', '15070008', '15ffff', '151d00', '15fdff'])
+    def test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies(hexadecimal):
+        instruction = {'programId':KEYS['token2022'], 'accounts':[KEYS['mint']], 'data':binary_base58(hexadecimal)}
+        original = deepcopy(instruction)
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction(instruction,list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-layout','unsupported-extension-type')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-layout', 'unsupported-extension-type')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:45: AssertionError
+_ test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[15fdff] _
+
+hexadecimal = '15fdff'
+
+    @pytest.mark.parametrize('hexadecimal', ['1500', '15070008', '15ffff', '151d00', '15fdff'])
+    def test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies(hexadecimal):
+        instruction = {'programId':KEYS['token2022'], 'accounts':[KEYS['mint']], 'data':binary_base58(hexadecimal)}
+        original = deepcopy(instruction)
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction(instruction,list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-layout','unsupported-extension-type')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-layout', 'unsupported-extension-type')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:45: AssertionError
+___ test_getter_account_roles_are_exact_and_cannot_be_forged[missing-token] ____
+
+program = 'token', accounts = []
+
+    @pytest.mark.parametrize('program', ['token','token2022'])
+    @pytest.mark.parametrize('accounts', [[], [KEYS['mint'],KEYS['source']], [KEYS['mint'],1], [True]], ids=['missing','extra','mixed','boolean'])
+    def test_getter_account_roles_are_exact_and_cannot_be_forged(program, accounts):
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction({'programId':KEYS[program],'accounts':accounts,'data':binary_base58('15')},
+                                  list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-account-arity','mixed-account-list')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-account-arity', 'mixed-account-list')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:56: AssertionError
+_ test_getter_account_roles_are_exact_and_cannot_be_forged[missing-token2022] __
+
+program = 'token2022', accounts = []
+
+    @pytest.mark.parametrize('program', ['token','token2022'])
+    @pytest.mark.parametrize('accounts', [[], [KEYS['mint'],KEYS['source']], [KEYS['mint'],1], [True]], ids=['missing','extra','mixed','boolean'])
+    def test_getter_account_roles_are_exact_and_cannot_be_forged(program, accounts):
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction({'programId':KEYS[program],'accounts':accounts,'data':binary_base58('15')},
+                                  list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-account-arity','mixed-account-list')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-account-arity', 'mixed-account-list')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:56: AssertionError
+____ test_getter_account_roles_are_exact_and_cannot_be_forged[extra-token] _____
+
+program = 'token'
+accounts = ['CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8', '4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi']
+
+    @pytest.mark.parametrize('program', ['token','token2022'])
+    @pytest.mark.parametrize('accounts', [[], [KEYS['mint'],KEYS['source']], [KEYS['mint'],1], [True]], ids=['missing','extra','mixed','boolean'])
+    def test_getter_account_roles_are_exact_and_cannot_be_forged(program, accounts):
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction({'programId':KEYS[program],'accounts':accounts,'data':binary_base58('15')},
+                                  list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-account-arity','mixed-account-list')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-account-arity', 'mixed-account-list')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:56: AssertionError
+__ test_getter_account_roles_are_exact_and_cannot_be_forged[extra-token2022] ___
+
+program = 'token2022'
+accounts = ['CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8', '4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi']
+
+    @pytest.mark.parametrize('program', ['token','token2022'])
+    @pytest.mark.parametrize('accounts', [[], [KEYS['mint'],KEYS['source']], [KEYS['mint'],1], [True]], ids=['missing','extra','mixed','boolean'])
+    def test_getter_account_roles_are_exact_and_cannot_be_forged(program, accounts):
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction({'programId':KEYS[program],'accounts':accounts,'data':binary_base58('15')},
+                                  list(KEYS.values()),signers=set(),inner=True,path='retained.ix')
+>       assert caught.value.code in ('unsupported-account-arity','mixed-account-list')
+E       AssertionError: assert 'unsupported-opcode' in ('unsupported-account-arity', 'mixed-account-list')
+E        +  where 'unsupported-opcode' = CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract').code
+E        +    where CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') = <ExceptionInfo CompiledInstructionError('Token opcode/extension has no reviewed binary normalization contract') tblen=4>.value
+
+tests/test_compiled_getter.py:56: AssertionError
+_ test_readonly_getter_does_not_create_token_movements_basis_or_history_certificate _
+
+    def test_readonly_getter_does_not_create_token_movements_basis_or_history_certificate():
+        raw = {'version':'legacy','slot':3,'blockTime':1700000000,
+               'transaction':{'signatures':['unsigned-development-control'],'message':{
+                   'accountKeys':[KEYS['authority'],KEYS['mint'],KEYS['token2022']],
+                   'header':{'numRequiredSignatures':1,'numReadonlySignedAccounts':0,'numReadonlyUnsignedAccounts':2},
+                   'instructions':[{'programIdIndex':2,'accounts':[1],'data':binary_base58('1507000800')}] }},
+               'meta':{'err':None,'fee':5000,'preBalances':[100,0,0],'postBalances':[100,0,0],
+                       'preTokenBalances':[],'postTokenBalances':[],'innerInstructions':[]}}
+        original = deepcopy(raw)
+        normalized = normalize_transaction(raw)
+>       assert normalized['issues'] == []
+E       AssertionError: assert [{'path': 'tr...ons.0.data']}] == []
+E         
+E         Left contains one more item: {'path': 'transaction.message.instructions.0', 'code': 'unsupported-opcode', 'reason': 'Token opcode/extension has no reviewed binary normalization contract', 'raw_paths': ['transaction.message.instructions.0.data']}
+E         Use -v to get more diff
+
+tests/test_compiled_getter.py:77: AssertionError
+____ test_genuine_getter_paths_normalize_without_mutating_frozen_page_bytes ____
+
+    def test_genuine_getter_paths_normalize_without_mutating_frozen_page_bytes():
+        compressed = ROOT / 'evidence/genuine-wallet-batch/collection/phase5/02-lifetime-page-1-response.raw.gz'
+        raw_bytes = gzip.decompress(compressed.read_bytes())
+        assert hashlib.sha256(raw_bytes).hexdigest() == '7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a'
+        records = json.loads(raw_bytes)['result']['data']
+        for index in (83,85):
+            original = deepcopy(records[index])
+            normalized = normalize_transaction(records[index])
+            getter = next(group for group in normalized['raw']['meta']['innerInstructions'] if group['index']==0)['instructions'][0]
+>           assert getter['parsed']['type'] == 'getAccountDataSize'
+                   ^^^^^^^^^^^^^^^^
+E           KeyError: 'parsed'
+
+tests/test_compiled_getter.py:95: KeyError
+___ test_unreviewed_opcodes_do_not_fall_back_to_balance_inference[token-15] ____
+
+program = 'token', hexadecimal = '15'
+
+    @pytest.mark.parametrize('program,hexadecimal', [('token', 'ff'), ('token', '1a'), ('token', '07' + '00' * 8),
+                                                   ('token', '15'), ('system', '03000000'), ('system', 'ffffffff')])
+    def test_unreviewed_opcodes_do_not_fall_back_to_balance_inference(program, hexadecimal):
+        with pytest.raises(CompiledInstructionError) as caught:
+            normalize_instruction({'programId': KEYS[program], 'accounts': [], 'data': binary_base58(hexadecimal)},
+                                  list(KEYS.values()), signers=set(KEYS.values()))
+        # Opcode21 now has a pinned read-only getter adapter, but this original
+        # negative still supplies no required mint account and remains rejected.
+>       assert caught.value.code == ('unsupported-account-arity' if program == 'token' and hexadecimal == '15' else 'unsupported-opcode')
+E       AssertionError: assert 'unsupported-opcode' == 'unsupported-account-arity'
+E         
+E         - unsupported-account-arity
+E         + unsupported-opcode
+
+tests/test_compiled_instructions.py:120: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-classic-empty]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-classic-ignored-trailing]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-empty]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-two-query-extensions]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-group-discriminants]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[outer-token2022-latest-query-descriptor]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-classic-empty]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-classic-ignored-trailing]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-empty]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-two-query-extensions]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-group-discriminants]
+FAILED tests/test_compiled_getter.py::test_primary_getter_examples_preserve_original_bytes_paths_and_readonly_roles[inner-token2022-latest-query-descriptor]
+FAILED tests/test_compiled_getter.py::test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[1500]
+FAILED tests/test_compiled_getter.py::test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[15070008]
+FAILED tests/test_compiled_getter.py::test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[15ffff]
+FAILED tests/test_compiled_getter.py::test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[151d00]
+FAILED tests/test_compiled_getter.py::test_token2022_odd_truncated_unknown_and_test_only_extension_values_are_dependencies[15fdff]
+FAILED tests/test_compiled_getter.py::test_getter_account_roles_are_exact_and_cannot_be_forged[missing-token]
+FAILED tests/test_compiled_getter.py::test_getter_account_roles_are_exact_and_cannot_be_forged[missing-token2022]
+FAILED tests/test_compiled_getter.py::test_getter_account_roles_are_exact_and_cannot_be_forged[extra-token]
+FAILED tests/test_compiled_getter.py::test_getter_account_roles_are_exact_and_cannot_be_forged[extra-token2022]
+FAILED tests/test_compiled_getter.py::test_readonly_getter_does_not_create_token_movements_basis_or_history_certificate
+FAILED tests/test_compiled_getter.py::test_genuine_getter_paths_normalize_without_mutating_frozen_page_bytes
+FAILED tests/test_compiled_instructions.py::test_unreviewed_opcodes_do_not_fall_back_to_balance_inference[token-15]
+24 failed, 109 passed in 0.45s

@@ -1,0 +1,81 @@
+{
+  "version": "scoped-read-only-review-v1",
+  "scope": "Current query/accounting diff from 00b70e6 only; distinct same-engineer source review, not full application or product acceptance",
+  "created_at": "2026-10-04T06:21:31.824365+00:00",
+  "baseline": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "decision": "PASS_IN_SCOPE",
+  "source_frozen": true,
+  "files_sha256": {
+    "scanner/real_coverage.py": "724473c038e7e7b898bfbb5ba37bbc40cb03f354c50f27474d659ca24b2ed622",
+    "scanner/archive_input.py": "3b0484eefcb8eae486e09839ee7ad189166c4021121380a7e2d43fbe7376e99d",
+    "scanner/wallet_evidence.py": "176145cfa6792dfb3231e40336164aecbe27e653ad868b80d8b58f3a50e46aa2",
+    "scanner/source_consistency.py": "169ac98f775e16637e51106e331e40c68189fdd51515d4ee4b62e25258670b3a",
+    "scanner/indexed_input.py": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d",
+    "scanner/app.py": "95c2c5631b2159753337937faf26da9111ba55d2c970691b38ea3062cad018c7",
+    "tests/test_real_coverage.py": "a74ae5ec6870a66fcdbe26cfaf47e0959e43a09e6b1f54487e79115275d538dd",
+    "tests/test_indexed_report_integration.py": "396313d4f3cf33dde4599e0900ea23c9f014a7af7aa2d601f22c9a5e627f14f2",
+    "tests/test_archive_input.py": "578f7345a2215b7d50398209c17a71ff7e9de0b0bd71cb52e81021c340e50ab9"
+  },
+  "tests": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_real_coverage.py",
+      "tests/test_indexed_report_integration.py::test_normal_indexed_import_source_inspection_exports_and_immutable_offline_rebuild",
+      "tests/test_indexed_report_integration.py::test_required_byte_source_or_selected_pointer_loss_revokes_fee_then_exact_restore_recovers",
+      "tests/test_indexed_report_integration.py::test_genuine_authorized_two_pages_reach_normal_report_with_exact_independent_fee_sum_and_no_profit_claim",
+      "tests/test_archive_input.py::test_raw_inputs_reach_fifo_with_partial_sales_loss_breakeven_reentry_and_failed_fee",
+      "tests/test_archive_input.py::test_unknown_trade_fee_keeps_quantity_only_timing_but_not_profit",
+      "tests/test_archive_input.py::test_required_source_loss_revokes_only_supported_dependencies_and_exact_restore_recovers"
+    ],
+    "exit_code": 0,
+    "ordinary_nodes_passed": 53,
+    "subtests_added_to_count": false,
+    "log": "evidence/real-completion-batch/read-only-review/focused-replay.log",
+    "log_sha256": "34e5e7edbd48119924956061fe83178ebeb668eedb83d8667e0bc57d8f147429",
+    "source_unchanged_during_replay": true
+  },
+  "confirmed_findings": [
+    {
+      "family": "Readable native alternative hidden by query-affinity pre-partition",
+      "state": "CORRECTED_IN_SCOPE",
+      "reproduction": "evidence/real-completion-batch/read-only-review/query-affinity-native-role-first.json",
+      "correction": "Readable source bytes undergo native association regardless role; externally declared internal dependency roles are rejected; frozen native links/signature hints remain negative across loss and restoration."
+    },
+    {
+      "family": "Role mirrors counted against distinct indexed-page budget",
+      "state": "CORRECTED_IN_SCOPE",
+      "reproduction": "evidence/real-completion-batch/read-only-review/query-duplicate-budget-first.json",
+      "correction": "Deduplicate original hash/body variants before counting pages; checksum-invalid distinct variants remain dependencies and capacity exhaustion revokes query certainty."
+    }
+  ],
+  "retained_boundary_observation": {
+    "reproduction": "evidence/real-completion-batch/read-only-review/query-affinity-loss-first.json",
+    "scope": "Cold direct helper input with erased bodies and no frozen native negative links cannot recover prior relevance. Actual production loader supplies immutable links; retained production and direct frozen-link controls keep conflict UNKNOWN through loss/restoration."
+  },
+  "reviewed_invariants": [
+    "Raw bytes, source hashes, original manifests, v1 parent inventory references and saved parents remain immutable.",
+    "Selected and misleading-role native alternatives feed ordinary source/chronology/decoder/FIFO paths; no caller completion or position declaration is admitted.",
+    "Integer-second blockTime query bounds use exact ceiling for fractional half-open intervals; report/28-day/90-day query scopes remain independent.",
+    "Terminal address-query membership and supported native records remain distinct from historical closed/reassigned owner population and all-format coverage.",
+    "Conditional selected-lot money/timing is explicitly scoped and qualification remains false; missing cost/role dependencies revoke conditional money.",
+    "Real classification, historical marks, boundary inventory and valued external-flow prerequisites remain UNKNOWN; synthetic witnesses cannot satisfy genuine acceptance.",
+    "Independently supported fee observations survive unrelated token/classification/valuation uncertainty.",
+    "Offline import, source inspection, exports and immutable rebuild controls recorded zero provider, credential and external transport calls."
+  ],
+  "remaining_product_status": {
+    "B1": "Historical ownership/lifecycle source guarantee unproved under pinned current query contract.",
+    "B2": "Real query/conditional accounting path development-functional; full wallet historical population, classification/valuation acceptance remains open.",
+    "B3": "Complete genuine wallet acceptance blocked; existing genuine200 control proves selected fee arithmetic only.",
+    "PRODUCT_READY": false
+  },
+  "not_run": [
+    "Full backend suite",
+    "Frontend/browser acceptance",
+    "Live provider probe/collection",
+    "Credentials",
+    "Genuine87 expected-calculation work"
+  ]
+}

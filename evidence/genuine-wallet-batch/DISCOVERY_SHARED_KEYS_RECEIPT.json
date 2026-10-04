@@ -1,0 +1,64 @@
+{
+  "PRODUCT_READY": false,
+  "controls": [
+    "Genuine headerless jsonParsed remains supported.",
+    "Canonical parsed/compiled/header/lookup positives retain exact observed token flow.",
+    "Contradictory required-signature0/2, malformed read-only counts, signer/writable/mixed/loader memberships revoke identity.",
+    "Signature count agrees with the shared resolved signer set.",
+    "Primary and wrongly labelled linked alternatives are UNKNOWN across full/summary/direct GET plans.",
+    "Missing conflicting source never makes selection certain; exact restoration preserves the same negative result.",
+    "No scans, provider calls, credential lookups, usage or saved cohort/report mutations during offline API controls."
+  ],
+  "executed": {
+    "command": ".venv/bin/python -m pytest -q tests/test_discovery_native_identity.py tests/test_discovery.py tests/test_discovery_audit_plan.py tests/test_discovery_plan_views.py tests/test_discovery_integration_review.py",
+    "elapsed_seconds": 2.51,
+    "exit_code": 0,
+    "ordinary_nodes": 131,
+    "raw_log": "evidence/genuine-wallet-batch/DISCOVERY_SHARED_KEYS_FOCUSED.log",
+    "raw_log_sha256": "c6f1d6eef798538fb73295506b9419f93964a520eb30aaf6e912784cabaf5316",
+    "subtests_separately_reported": 19
+  },
+  "fixture_corrections": [
+    {
+      "file": "tests/test_discovery.py",
+      "independent_basis": "Retained genuine jsonParsed golden with immutable raw hash9ffe9059c331907e4c8d9835e4c06fd1d258782da7b96c7bb639c00ded5001d0 and existing pinned shared key/header/lookup source contract.",
+      "reason": "Partial synthetic parsed keys omitted required upstream signer/writable roles; positive compiled form omitted header read-only counts and lookup descriptor. Added schema facts while preserving original positive/negative assertion intent."
+    }
+  ],
+  "issue": "DISCOVERY_HEADER",
+  "limitations": [
+    "Focused developer receipt only; distinct reviewer and full candidate gates remain separate.",
+    "No wallet qualification/historical completeness or B3 acceptance."
+  ],
+  "methodology": {
+    "audit_plan": "evidence-linked-audit-plan-v2",
+    "discovery": "public-pool-discovery-v2"
+  },
+  "original_reproduction": "evidence/genuine-wallet-batch/read-only-batch-review/DISCOVERY_HEADER_REPRO.json",
+  "scope": "Current native signer/key interpretation for discovery and its offline research planner; selected and linked alternatives share the existing compiled/parsed key normalizer. No trading/economic scope expansion.",
+  "source_binding": {
+    "scanner/compiled_instructions.py": {
+      "bytes": 36534,
+      "sha256": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad"
+    },
+    "scanner/discovery.py": {
+      "bytes": 55854,
+      "sha256": "046966de310af6a9009b8f94789a5736fe34d65325eecbe293a1b5f6b54b4df1"
+    },
+    "tests/fixtures/mainnet-pumpswap-buy-exact-quote.json": {
+      "bytes": 22769,
+      "sha256": "8ba32c85a5dff609362f79ff2253285385cb5410421c9e5d296cf2323bf23d21"
+    },
+    "tests/test_discovery.py": {
+      "bytes": 24973,
+      "sha256": "2470cde62930e95befee9561f82823dbdf9a8e37a08eb805aa0da7a894df093e"
+    },
+    "tests/test_discovery_native_identity.py": {
+      "bytes": 7204,
+      "sha256": "83109ff2a907fef46d59eb7f327f72b1091735721f0895f2cb3fe39b451f5c40"
+    }
+  },
+  "state": "PASS",
+  "timestamp_utc": "2026-10-04T06:33:21.703993+00:00",
+  "version": "discovery-shared-key-receipt-v1"
+}

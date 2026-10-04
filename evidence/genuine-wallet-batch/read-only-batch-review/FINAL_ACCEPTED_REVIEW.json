@@ -1,0 +1,409 @@
+{
+  "kind": "distinct-read-only-final-batch-review",
+  "state": "PASS_IN_READ_ONLY_SCOPE",
+  "status": "PASS",
+  "decision": "Distinct internal read-only batch review passes in the stated scope. Full candidate gates, publication and B3 remain separate.",
+  "time_utc": "2026-10-04T08:10:17.966866+00:00",
+  "candidate_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "baseline_commit": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "application_file_count": 228,
+  "matrix_review_complete": true,
+  "matrix_static_counts": {
+    "requirement_records": 43,
+    "selector_entries": 103,
+    "unique_selector_strings": 102,
+    "all_module_paths_present": true,
+    "runtime_matrix_check": "Root validator separately; these static counts are not test counts"
+  },
+  "methods": {
+    "history": "history-evidence-v11",
+    "positions": "account-position-evidence-v13",
+    "spot": "spot-v7-native-flow-roles",
+    "wallet": "wallet-raw-evidence-v6",
+    "archive": "archive-ledger-v9",
+    "compiled": "compiled-instructions-v2",
+    "query": "indexed-query-coverage-v2",
+    "fifo": "fifo-v3",
+    "research": "supported-subset-research-v3-native-roles",
+    "discovery": "public-pool-discovery-v2",
+    "audit_plan": "evidence-linked-audit-plan-v2"
+  },
+  "source_identity": {
+    "all_application_bytes_equal_native_commit": true,
+    "native_git_executable_bits_match": true,
+    "manifest_mode_umask_limitation": "Manifest binds local 0600/0700; native Git stores 0644/0755. Exact bytes+modes hash replay requires recorded modes/umask restoration. No chmod performed.",
+    "literal_mode_difference_count": 228,
+    "source_unchanged_before_after": true,
+    "locks_unchanged_from_baseline": {
+      "requirements.txt": {
+        "candidate_sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+        "baseline_sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+      },
+      "requirements-build.in": {
+        "candidate_sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+        "baseline_sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e"
+      },
+      "pyproject.toml": {
+        "candidate_sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+        "baseline_sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598"
+      },
+      "frontend/package-lock.json": {
+        "candidate_sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+        "baseline_sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+      }
+    },
+    "financial_final_source_bindings_match": true,
+    "generic_subset_rebind_changes": "Generic decoder/compiled paths remain unchanged. Wallet v6/archive v9 freshly bind the corrected research receipt generation; those changed modules are independently rebound by the final financial review and current API controls."
+  },
+  "scope": [
+    "Read-only consolidated diff review from00b baseline through current frozen source, preserving prior accepted historical regressions",
+    "Discovery/import/source binding, chronology/source consistency, generic decoding/ownership, source-backed audit planning, saved report/UI/export/rebuild boundaries",
+    "Metric-specific raw dependencies, report/28/90 scopes, checker/normal API parent immutability and zero-offline-provider boundaries",
+    "Current issue register, acceptance matrix, one repeatable validator, source decision, compiled frontend assets and interpretation-generation consistency",
+    "Final financial source generations and checksum-pinned native ABI receipt reviewed with separate distinct financial internal review",
+    "Research cash-role, physical/origin/source/clock dependencies; current-generation strict/fallback isolation, full/display/summary/preview/API/export and actual stale7f immutable-parent offline-child UI"
+  ],
+  "findings": [
+    {
+      "id": "DISCOVERY-SHARED-KEYS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application defect",
+      "result": "Parsed signer/header conflicts rejected via shared key resolver; genuine headerless parsed positives and compiled/loading controls remain usable."
+    },
+    {
+      "id": "QUERY-SELECTED-REPRESENTATION",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application defect",
+      "result": "Original and selected counterpart byte/hash/pointer binding independently retained; selected native parsed alternatives do not erase original indexed dependencies. Loss/conflict/restoration stays metric-specific."
+    },
+    {
+      "id": "RAW-HASH-AND-RECOVERY",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application defects",
+      "result": "Escaped lone-surrogate native/page hashing and malformed linked signatures cannot crash recovery or manufacture native hash proof. Valid Unicode and valid sibling sources remain supported; frozen negatives remain dependencies."
+    },
+    {
+      "id": "GENERIC-ADMIN-LOADER",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A/B: corrected malformed boundary and missing administration consumer",
+      "result": "Pinned getter/immutable-owner facts preserve original coordinates without ledger/policy/population promotion. Malformed loaded metadata retains independent static payer fee; failed execution stays fee-only."
+    },
+    {
+      "id": "GENERIC-ADMIN-PERFORMANCE",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: new implementation performance correction",
+      "result": "Normalization receipt and inner group position maps eliminate observed quadratic scans while retaining exact original paths."
+    },
+    {
+      "id": "METRIC-REASON-LAYOUT",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application/UI defect",
+      "result": "Main, all-metric and interval reason text wraps completely in the reviewed compiled CSS; initial clipped sibling evidence is retained."
+    },
+    {
+      "id": "CHECKER-LOSING-NA-TYPES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected engineering-acceptance interface defects",
+      "result": "Source-proved mathematically undefined losing/empty-cohort/zero-basis ratios can be N/A for engineering acceptance only. Canonical finite typed number strings reject malformed zero-basis inputs; saved metrics/policy/B3 remain unchanged."
+    },
+    {
+      "id": "FINANCIAL-GROSS-ROLES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected monetary-role defect; distinct financial reviewer owns internal signoff",
+      "result": "Final separate financial receipt exactly matches its retained module/file bindings; net-zero gross cash roles revoke dependent money while supported quantities/timing/fees remain separate. Native primary IDL recipient/direction contract is checksum bound."
+    },
+    {
+      "id": "RESEARCH-NATIVE-CASH-ROLE-CONSUMER",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: confirmed current application regression at new event representation consumer",
+      "source_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "result": "Typed unknown cash roles remain counted and revoke dependent research basis/proceeds/profit and copied episode money. Independently proved quantities/timing/fees are retained. Positive buy/sell loop replays and linked cost/clock/fee/physical source controls pass on frozen source.",
+      "raw_reproduction": "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CASH_ROLE_7F_REPRO.json",
+      "reproduction_sha256": "ccdbe01ff5e302354a3925eadd2bcf6ccdbeb8a37783baeee9771d6efdacf2d5",
+      "root_full_suite_node": "tests/test_discovery_integration_review.py::test_successful_swap_replacement_keeps_sibling_unresolved_native_flows",
+      "separate_nondefect": "The old assertion demanding2 unsupported events is obsolete after typed cash-only representation; the real defect is lost uncertainty/cash-role propagation in research, not absence of those token-unsupported events.",
+      "resolved_at": "394904460c0473f07a25ed6324736421e0db1544"
+    },
+    {
+      "id": "RESEARCH-CURRENT-GENERATION-ISOLATION",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected neighboring research consumer",
+      "result": "Stale v2 fallback episodes and unmatched-basis counts are UNKNOWN. Independently current strict qualification and positions survive research-only staleness. Full/display/summary/preview/JSON expose the same transient assessment without mutating the saved payload."
+    },
+    {
+      "id": "RESEARCH-ORIGIN-PHYSICAL-SOURCE-MATCHING",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected neighboring research dependency",
+      "result": "Fresh transaction identity/cost/clock alone do not supply missing opening origin or resolve contradictory earlier stock/token-program facts. Exact raw-derived typed source/episode matching revokes sale-only zero-hold and contradicted money; source-required loss/restoration and genuinely disjoint72 observations retain metric-specific results."
+    },
+    {
+      "id": "STALE-GENUINE-UI-IMMUTABILITY",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected saved-report presentation consumer",
+      "result": "Actual desktop/mobile UI displays the old genuine v2 warning before immutable offline rebuild and current assessment afterward. Source inspection, actual JSON downloads, unchanged parent payload/export, CSV schema and zero-provider/credential/JS/external controls pass; four captures represent one workflow."
+    },
+    {
+      "id": "PREVIEW-RESEARCH-FRESHNESS",
+      "status": "NONDEFECT_VERIFIED",
+      "blocking": false,
+      "classification": "D: suspected sibling checked without application change",
+      "result": "Preview decorates saved reports before setting preview=True and retains the inherited research assessment; all six preset/view API diagnostics pass. No preview defect was reproduced."
+    }
+  ],
+  "remaining_product_work": {
+    "A_confirmed_application_defects": "No unresolved confirmed defect in this reviewed batch scope. Historical7f and intermediate current-source failures remain preserved; this review cannot exclude future defects outside its controls.",
+    "B_missing_implementation": [
+      "CAP-01 remains OPEN: unsupported outer/mixed economic routes, token operations/extensions, transfer interruptions and complete real acquisition/cost/position reconstruction remain incomplete where no reviewed adapter exists.",
+      "Normal real-wallet classification, exact boundary inventory, historical marks and valued external flow adapters are not implemented under an accepted source contract; those components explicitly remain UNKNOWN even if caller labels or payloads are supplied.",
+      "Real wallet-wide basis, costs and positions still depend on historical_population; finite named-account observations are separately calculated and never activate strict wallet metrics."
+    ],
+    "C_missing_data_source_capability": [
+      "B1 exhaustive event-time historical ownership/membership for formerly closed/reassigned/non-ATA accounts and both token programs remains unproved by pinned provider promises plus the observed controls. Endpoint/schema/query terminality is separate.",
+      "A genuine supported whole-wallet acquisition/position/classification/boundary valuation/flow dataset with independently calculated expectations is absent. Current87-signature corpus proves selected scoped observations, not complete-wallet qualification.",
+      "Historical format population and independent all-account boundary/mark/flow sources remain unproved."
+    ],
+    "D_environment_validation": [
+      "Root-owned full Linux candidate gates and current genuine workflows are separate and were pending at review issuance; no full acceptance is inferred from this scope receipt.",
+      "Manifest binds local 0600/0700; native Git stores 0644/0755. Exact bytes+modes hash replay requires recorded modes/umask restoration. No chmod performed.",
+      "Windows/macOS and third-party execution are not claimed.",
+      "The first evidence UI helper used backend .venv without Playwright and masked that import failure during cleanup. Existing system browser Python passes; no installation or app change. Initial failure artifacts are preserved."
+    ]
+  },
+  "product_status": {
+    "B1": "Historical sufficiency OPEN; entitlement/schema/query/lifecycle observations retained separately",
+    "B2": "Development-functional for supported real sources and finite observations; complete-wallet CAP-01 OPEN",
+    "B3": "BLOCKED: genuine whole-wallet coverage and independent complete expected results absent",
+    "PRODUCT_READY": false,
+    "candidate_classification": "Read-only scoped-valid; development-functional for supported sources and finite observations; full candidate gates separate, real acceptance blocked."
+  },
+  "independent_expectations": {
+    "worked_document": "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+    "worked_sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+    "genuine_archive": "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "unchanged": true,
+    "scope": "158868 lamports selected report fees and named-account losing lot basis565194018/loss-13270924/529seconds are independent finite expectations, not wallet-wide qualification."
+  },
+  "validation": {
+    "new_review_execution": {
+      "command": ".venv/bin/python -m pytest -q tests/test_research_source_roles.py tests/test_copy_review.py tests/test_report_view.py",
+      "ordinary_tests": 79,
+      "subtests_separately": 29,
+      "warning_count": 1,
+      "state": "PASS",
+      "elapsed_seconds": 8.18,
+      "raw_log": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_RESEARCH_FINAL_FOCUSED.log",
+      "source_binding": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+      "count_note": "Overlaps root/owner/earlier controls; never summed as unique candidate tests."
+    },
+    "retained_scope_runs": [
+      {
+        "ordinary_tests": 74,
+        "raw_log": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_FOCUSED.log",
+        "scope": "Earlier source-bound discovery/checker family; not a final full suite"
+      },
+      {
+        "ordinary_tests": 57,
+        "raw_log": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_CHECKER_AFTER_FIX.log",
+        "scope": "Overlapping earlier checker matrix; not summed as unique tests"
+      },
+      {
+        "ordinary_tests": 62,
+        "raw_log": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_QUERY_UNICODE_FOCUSED.log",
+        "scope": "Earlier guarded Unicode/query family; final source bindings/read-only diff and final financial family are separate"
+      }
+    ],
+    "diagnostics": "16 generic matrix cells and timing controls are diagnostics, not unique acceptance tests. Browser node/capture counts are not unique tests.",
+    "full_suite_rerun_by_this_reviewer": false,
+    "full_gates_or_product_acceptance_claimed": false,
+    "cash_role_script": {
+      "state": "PASS",
+      "diagnostics": 3,
+      "generation_isolation_diagnostic": 1,
+      "raw_receipt": "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CASH_ROLE_FINAL_REPLAY.json",
+      "count_note": "Development script diagnostics, not additional unique backend nodes or a genuine financial oracle."
+    },
+    "financial_supplemental": {
+      "command": ".venv/bin/python evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_REPLAY.py",
+      "exit_code": 0,
+      "elapsed_seconds": 33.982,
+      "ordinary_control_cases": 31,
+      "failed": 0,
+      "unique_candidate_test_count": null,
+      "count_note": "31 supplemental script controls; not pytest nodes or added unique test counts.",
+      "api_spies": {
+        "provider": 0,
+        "credential": 0,
+        "transport": 0
+      },
+      "raw_output": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_FINAL.json",
+      "execution_record": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_EXECUTION_FINAL.json",
+      "receipt": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_FINANCIAL_SCOPED_REVIEW.json"
+    },
+    "actual_stale_browser": {
+      "state": "PASS",
+      "command": "python evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_STALE_BROWSER_REPLAY.py --commit 394904460c0473f07a25ed6324736421e0db1544 --source-sha256 519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186 --output evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay",
+      "case_count": 1,
+      "captures": 4,
+      "receipt": "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay/result.json",
+      "offline_guards": {
+        "provider_requests": 0,
+        "credential_lookups": 0
+      },
+      "source_unchanged": true,
+      "original_database_and_export_unchanged": true,
+      "parent_payload_unchanged": true,
+      "count_note": "One separately counted browser workflow/four captures; not backend tests or whole-wallet acceptance."
+    }
+  },
+  "diff_check": {
+    "unmodified_full_exit": 2,
+    "raw_output": "tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md:25: trailing whitespace.\n+go to the creator as it normally would. \n",
+    "exact_primary_fixture_exception": "tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md:25",
+    "exception_original_sha256": "fa0f8703b406b872309131754e33ddcd15f0a36426733e0d26f329293b3c48f6",
+    "exception_original_bytes": 5566,
+    "all_other_source_diff_exit": 0
+  },
+  "artifacts": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/ALL_REASON_LAYOUT_FIXED_REVIEW.json": {
+      "bytes": 1784,
+      "sha256": "6efb30e9dbe7af59bcc147f70d9c3f5345134b256c242cfb41f15fe89d025834"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_ACCEPTED_SOURCE_BINDING.json": {
+      "bytes": 38609,
+      "sha256": "bca331aee19a7f43696426f44030f4cc721eb26ac470e4979ab7267ae482f9e2"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_BINDING_HELPER_FIRST_FAILURE.log": {
+      "bytes": 523,
+      "sha256": "6d8e94690a55bed16f70a9bffb53e3c515f393e3d30e04e43eab4a2ac55f8151"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_CANDIDATE_REVIEW.json": {
+      "bytes": 18042,
+      "sha256": "a0a8584943bec25eafc4852862758b00355626a829c98913f01976a10502a6f5"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_CANDIDATE_REVIEW_7F_BEFORE_FULL_TRACE.json": {
+      "bytes": 15704,
+      "sha256": "f5eaebe2bf92d8e3c4ae07cd79cd238889e0cb5b27c175b9bcce3182075e647a"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_SOURCE_BINDING.json": {
+      "bytes": 32430,
+      "sha256": "c20849db9bee0678f27a1b21be08a1c0cfbc9885ee3a8a78eca66993e94a987c"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/FIRST_STALE_BROWSER_HELPER_FAILURE.json": {
+      "bytes": 898,
+      "sha256": "a9c84d81618291223fc9e5c340758e460fd915ed4d70f13bfb530474866ee92f"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_GUARDED_FINAL_REPLAY.json": {
+      "bytes": 9804,
+      "sha256": "af43c59353390cd6f46b856bfbac20f41d55680e4cb9caee024e126ff76bd227"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_REVIEW_FROZEN_SUBSET.json": {
+      "bytes": 6028,
+      "sha256": "819548bc8180e48a986f8572d02984139df091799abb5eb82976d37bf51aa040"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_RESEARCH_FINAL_FOCUSED.log": {
+      "bytes": 671,
+      "sha256": "7e52a73bf6ab0f71ddff284ae794f31a43abd93ebdd51a0a68dedfc5a9bf33ed"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/PREVIEW_RESEARCH_FRESHNESS_REPLAY.json": {
+      "bytes": 3178,
+      "sha256": "f2ebea124206aa18831bccb5dcb348097393b0acac145f09fe51a80f6774bc5a"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/QUERY_UNICODE_FOCUSED_BINDING.json": {
+      "bytes": 1428,
+      "sha256": "8fbd7222801d3253b951efca4d1b7d368d7e2d337ace2530b4be88b73f979b53"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RAW_HASH_FAMILY_GUARDED_REPLAY.json": {
+      "bytes": 2585,
+      "sha256": "c45ddbb1808ea7538a54ac2cf76726e879e7f05ac8bee6f2865b505022ebe186"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RAW_IMMUTABLE_OWNER_COUNT_ORACLE.json": {
+      "bytes": 22182,
+      "sha256": "f639a270cb8c0f5411cfee9c7308bcd938afe0c173cee1256dd648a3302e2bc8"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CASH_ROLE_7F_REPRO.json": {
+      "bytes": 3187,
+      "sha256": "ccdbe01ff5e302354a3925eadd2bcf6ccdbeb8a37783baeee9771d6efdacf2d5"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CASH_ROLE_FINAL_REPLAY.json": {
+      "bytes": 4831,
+      "sha256": "da17c0bb5d432b3757e5d4bb4341484b2f9d38af82e069187ad969bdcc78a70b"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_REVIEW_HELPER_FIRST_FAILURE.log": {
+      "bytes": 931,
+      "sha256": "6e508de9b758b9a4ae1189bab1518e74f9f933c90392fbfae815c2c837be57c2"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_STALE_BROWSER_394904_COMMAND.log": {
+      "bytes": 1207,
+      "sha256": "662f5c8f2e6e7bfece2f5fa396414d312e9af524e795a5fee751651c1236a5ab"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_STALE_BROWSER_394904_REPLAY_COMMAND.log": {
+      "bytes": 338,
+      "sha256": "bb60bb159e78d3af9e6dd899f1e059dbd495885a5de70313fdfd13816dd2305c"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/REVIEW_FINAL_SCOPE.json": {
+      "bytes": 14147,
+      "sha256": "064987b7352bbc8d166e06a72e0ab22db92611daca3a0eb874e69575a828e46f"
+    },
+    "evidence/genuine-wallet-batch/read-only-batch-review/STALE_RESEARCH_BASIS_CONSUMER_REPRO.json": {
+      "bytes": 978,
+      "sha256": "62092cee884585d70ffe0e2ceea99a2f8836ac128a68ccd8794a3686a277927d"
+    },
+    "evidence/genuine-wallet-batch/read-only-financial-review/FINANCIAL_SCOPED_REVIEW.json": {
+      "bytes": 18417,
+      "sha256": "68d3073a975097f776261ef048720933df0d2c1fb71406ff25ebf7673c1c2529"
+    },
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_FINANCIAL_SCOPED_REVIEW.json": {
+      "bytes": 13276,
+      "sha256": "97d86865735f0b0f5df2d154e76ee082c236b4650a99d7b4e4bc5d37c43a9a88"
+    },
+    "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay/current-offline-child-desktop.png": {
+      "bytes": 5205234,
+      "sha256": "0076770fabbc50cf5d3f2e4255102f39f6b10a383e6fb28242d8b19e95219067"
+    },
+    "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay/current-offline-child-mobile.png": {
+      "bytes": 4752219,
+      "sha256": "3f146cad926cd5fae334e217cae89ec07ca6ab10f3df6ed82a9d9023734c7839"
+    },
+    "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay/result.json": {
+      "bytes": 4409,
+      "sha256": "97482cbacfde373fdea5f135fa0639ab6623facfd53cdd3498f9cfc7c201af24"
+    },
+    "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay/stale-7f-parent-desktop.png": {
+      "bytes": 5211069,
+      "sha256": "592fee5055cceffa219b6aa919d255c35572ce22722cb42643681e392a8c1ba9"
+    },
+    "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine-replay/stale-7f-parent-mobile.png": {
+      "bytes": 4763191,
+      "sha256": "847be15fb86f10bf1be494d7a609aa7153151b73d8530443b53d75d110938c9e"
+    }
+  },
+  "limitations": [
+    "Distinct internal read-only review; independent raw integer/Fraction expectations are separate from production accounting, but no third-party product acceptance is claimed.",
+    "Manifest binds local 0600/0700; native Git stores 0644/0755. Exact bytes+modes hash replay requires recorded modes/umask restoration. No chmod performed.",
+    "B1 historical sufficiency, complete real B2/CAP-01 and B3 remain OPEN/BLOCKED. Finite named-account losing observations and terminal declared query coverage do not qualify a wallet.",
+    "No provider call, credential retrieval, funded wallet, trading, signing, subscription or publication mutation occurred in this review. Private QA database/server/session material stays outside Git.",
+    "Two evidence-only helper implementation mistakes (fixture-name shadowing and method constant import) and the initial browser interpreter/cleanup failure were preserved and corrected without changing application source."
+  ]
+}

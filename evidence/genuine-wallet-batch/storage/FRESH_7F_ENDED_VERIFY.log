@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/storage/verify_storage.py", line 120, in <module>
+    main()
+  File "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/storage/verify_storage.py", line 108, in main
+    if str(args.staging_plan.relative_to(ROOT)) not in paths:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 682, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: 'evidence/genuine-wallet-batch/storage/STAGING_7F_ENDED.json' is not in the subpath of '/workspace/solana-wallet-scanner'

@@ -1,0 +1,232 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "2dee82b538704c47a1d2cf0fb3906450"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    },
+    {
+      "case": "indexed-partial-ui-import-inspection-immutable-rebuild",
+      "state": "PASS",
+      "source_archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "expected_selected_fees_sol": "0.000158868",
+      "parent_unchanged": true,
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "assertion_timeout_ms": 120000,
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "browser_report_transfers": [
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 2828
+    },
+    {
+      "path": "/api/reports/2dee82b538704c47a1d2cf0fb3906450?view=display",
+      "status": 200,
+      "bytes": 660594
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 35874
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 70316
+    },
+    {
+      "path": "/api/reports/4d6b3cc73f6a4c61b6d3521b24012e49?view=display",
+      "status": 200,
+      "bytes": 664393
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 102943
+    },
+    {
+      "path": "/api/reports/47314d6d6d31468d806142d752dae1c7?view=display",
+      "status": 200,
+      "bytes": 661089
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 182220
+    },
+    {
+      "path": "/api/reports/521508e80dee49f796460226fe9ec5d9?view=display",
+      "status": 200,
+      "bytes": 716382
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 214847
+    },
+    {
+      "path": "/api/reports/79d7d9411703404d8a3f927a9795f811?view=display",
+      "status": 200,
+      "bytes": 661089
+    },
+    {
+      "path": "/api/reports/60156ed15558487ba69b4d75998193dd?view=display",
+      "status": 200,
+      "bytes": 1871775
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 369683
+    },
+    {
+      "path": "/api/reports/889799e9427c48d4a7495bdb99f388ba?view=display",
+      "status": 200,
+      "bytes": 6083698
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 737762
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 1105423
+    },
+    {
+      "path": "/api/reports/3287aa598f4f4ae0864930705fe6766d?view=display",
+      "status": 200,
+      "bytes": 6084193
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "975817ea9b83fd3d33f132cf010b15bcf0dd43b6638c1038edf12e59669aea1c",
+    "indexed-partial-parent.json": "cca90b17ec97412124cf1f3da728e3be1b1430507a7c36fedc2629668c9835d2",
+    "indexed-partial-rebuilt-mobile.png": "b8707c2f62b64c93143152f5f3d7287a2920ffa688ab96d80a5fe0e1aafbba08",
+    "world_hash-missing-report.json": "33405acb8af5ac9eef5a617c5d642f895b893f35d265dca035f4d81bab970c57",
+    "indexed-partial-rebuilt-desktop.png": "229af3625dc51f151241d0614cb2fca8b0bde14d3812253a2c546aedd1de5269",
+    "world_hash-missing-desktop.png": "9301de786b494a01b77062870345c6f6ec153205f4053c3d28880eb352d5c8fa",
+    "synthetic-parent.json": "285b0ebe66d77f4cd1e17f8b5f1f6808a9de9a62a5a4651a8386b11ac50e3970",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "4dcc2de60f056b84f3d96d4adcf5c0c703a2326235e87a874d2ca571fc4f30a2",
+    "world_hash-restored-report.json": "589aea654ef21d1300145e7f669394049820d28419b6adea729fb4c473b6d483",
+    "synthetic-positive-desktop.png": "53a7a38ff172a1efada8ae744d309b587c8df24300ce87a0a7b6a2872d8ccfbe",
+    "world_hash-restored-desktop.png": "80f2a0e085e1f5baff9e846bb47601dd5a50b378742154ddacb432fcbc53284c",
+    "synthetic-input.zip": "1d29be48f1fb198ae67624c902b669a47a7c24201069485a0369146ca66deabc",
+    "valuation_hash-missing-mobile.png": "75841315c8f45c08db3ab9950bef18d507a7cadd5e03292da6f9c5125bb364eb",
+    "indexed-partial-desktop.png": "c4da19fd38740e573c8cd4ad38aba4d92a219fec11f0338aa0e73f8ba08fa190",
+    "world_hash-restored-mobile.png": "6dff3c3ac87adf11802b69b7a357455932bd7a250fc6f1b6cff438dec8e2b888",
+    "valuation_hash-missing-desktop.png": "3aabc96e7eb2c37bf1659de72ff22ef356178adf8fd324abdd7c546f51aa1499",
+    "valuation_hash-restored-mobile.png": "f1c637531f937412a2cb3daa5d55e58347a0ebf5e18185bda9ca8a38fc0f2fdc",
+    "synthetic-positive-mobile.png": "a760d1611bccd4129ad80329054c55cc053d9099de91f220d5ccbd32dbcdf94a",
+    "valuation_hash-restored-desktop.png": "d9611b3a5c36995ee15e9bbeb34f18ab55f58eced90d2083151f5d09c350692b",
+    "valuation_hash-missing-report.json": "ca7b89e31de58c8316afdb7586d3bb67199492d37b973df16bfa9ddf95ea1d87",
+    "synthetic-ui-export.json": "285b0ebe66d77f4cd1e17f8b5f1f6808a9de9a62a5a4651a8386b11ac50e3970",
+    "world_hash-missing-mobile.png": "e0e0b542026585a06fced6d88ddfa7deff15c4f0f80b7465deeea42591d7f875",
+    "valuation_hash-restored-report.json": "ef314fcf450040897dfd9db34f5d740ad673ad1fe9917eba7059b00554303ead",
+    "indexed-input.zip": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "genuine-partial-desktop.png": "a480128f952031942514d3888581fb101b574560adc17046023d58819c60542d",
+    "indexed-partial-mobile.png": "e0782dbe821849ebe33d97be4036de3a27c63729a6e2a633cf189b28913bfc3c",
+    "indexed-partial-child.json": "09cb4387653e779c41b3d5647e568377fb9ea52ada33d9147b354bda2f2c36ef",
+    "genuine-partial-report.json": "319f1387807d7e7af54efd0c0f4451dc818416f1e036f425c144ae3b5ff7fe94"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "baseline": {
+    "identity_state": "PASS",
+    "selected_addresses": [
+      "11111111111111111111111111111115"
+    ]
+  },
+  "candidate_hash_only_conflict": {
+    "identity_state": "PASS",
+    "selected_addresses": [
+      "11111111111111111111111111111115"
+    ]
+  },
+  "wronglabel_signature_link_conflict": {
+    "identity_state": "PASS",
+    "selected_addresses": [
+      "11111111111111111111111111111115"
+    ]
+  },
+  "correctlabel_signature_link_conflict": {
+    "identity_state": "UNKNOWN",
+    "selected_addresses": []
+  }
+}

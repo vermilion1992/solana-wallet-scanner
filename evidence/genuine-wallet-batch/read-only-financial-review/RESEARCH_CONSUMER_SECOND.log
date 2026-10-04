@@ -1,0 +1,48 @@
+.....................F.................................... [ 44%]
+........................................... [ 77%]
+..............................                                           [100%]
+=================================== FAILURES ===================================
+_ test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees[sell-wrapped] _
+
+native_quote = False, ordinal = 1
+
+    @pytest.mark.parametrize('native_quote', [False, True], ids=['wrapped', 'native'])
+    @pytest.mark.parametrize('ordinal', [0, 1], ids=['buy', 'sell'])
+    def test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees(native_quote, ordinal):
+        if native_quote:
+            raws, wallet, foreign = native_pair()
+            expected, fees = '-0.10001', '0.00001'
+        else:
+            rows = originals(); raws, wallet = [rows[83], rows[85]], REAL_WALLET
+            expected, fees = '-0.013270924', '0.000065767'
+        events, receipt = facts(raws, wallet)
+        clean = summarize_research(events, **{'start': REAL_WINDOW['start'], 'end': REAL_WINDOW['end']}, wallet_evidence=receipt)
+        assert clean['conditional_observed_lot_profit_sol'] == expected
+        assert clean['wallet_fees_paid_sol'] == fees
+        damaged = deepcopy(raws)
+        if native_quote:
+            damaged[ordinal]['meta']['innerInstructions'][0]['instructions'] += [cash(wallet, foreign, 1), cash(foreign, wallet, 1)]
+        else:
+            if ordinal == 0:
+                damaged[ordinal] = foreign_cash_loop(damaged[ordinal])
+            else:
+                # A same-route foreign loop needs no key-index shift on the parsed
+                # sell control: use the normalization view and distinct named keys.
+                from scanner.transaction_format import instruction_view
+                damaged[ordinal] = deepcopy(instruction_view(damaged[ordinal]))
+                foreign = 'development-foreign-native-role'
+                from scanner.investigation import PUMP_SWAP
+>               route_index = next(i for i, inst in enumerate(damaged[ordinal]['transaction']['message']['instructions']) if inst.get('programId') == PUMP_SWAP)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               StopIteration
+
+tests/test_research_source_roles.py:53: StopIteration
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_research_source_roles.py::test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees[sell-wrapped]
+1 failed, 130 passed, 1 warning, 43 subtests passed in 7.22s

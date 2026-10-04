@@ -1,0 +1,23 @@
+.......................................................F                 [100%]
+=================================== FAILURES ===================================
+_ test_genuine_raw_admin_references_preserve_frozen_bytes_and_other_unknown_routes _
+
+    def test_genuine_raw_admin_references_preserve_frozen_bytes_and_other_unknown_routes():
+        compressed = ROOT / 'evidence/genuine-wallet-batch/collection/phase5/02-lifetime-page-1-response.raw.gz'
+        original_bytes = gzip.decompress(compressed.read_bytes())
+        assert hashlib.sha256(original_bytes).hexdigest() == '7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a'
+        originals = json.loads(original_bytes)['result']['data']
+        records = [{'signature': row['transaction']['signatures'][0], 'raw': row,
+                    'evidence_hash': hashlib.sha256(json.dumps(row, sort_keys=True).encode()).hexdigest()}
+                   for row in originals]
+        before = deepcopy(records)
+        result = decode_transactions(records, '2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY')
+        immutable = [item for item in result['administration'] if item['instruction'] == 'initializeImmutableOwner']
+>       assert len(immutable) == 90
+E       AssertionError: assert 109 == 90
+E        +  where 109 = len([{'signature': '8KfCCiCGBAWukz4wC5fbpf2jR6gRBeDqDK2MvvaQ6HEc2JwXkUXYME8Vs2NVwLEDsjC6x4mb63T2VYnRW9pjk6M', 'timestamp':...mp': 1773985218, 'path': 'innerInstructions.11.2', 'source_path': 'meta.innerInstructions.4.instructions.2', ...}, ...])
+
+tests/test_generic_administration.py:268: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_generic_administration.py::test_genuine_raw_admin_references_preserve_frozen_bytes_and_other_unknown_routes
+1 failed, 55 passed in 0.27s

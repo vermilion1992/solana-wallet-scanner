@@ -1,0 +1,179 @@
+{
+  "kind": "final-genuine-batch-scoped-gates",
+  "state": "SCOPED_PASS_REAL_ACCEPTANCE_BLOCKED",
+  "created_at": "2026-10-04T08:14:39.274732+00:00",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "starting_head": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "source_files": 228,
+  "source_identity_contract": "Workspace bytes and POSIX modes under recorded0077umask; normal fresh Git checkout matches. No universal cross-OS mode claim.",
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "node": "24.19.0"
+  },
+  "gate_A": "ACCEPTED_IN_SCOPE",
+  "candidate_gate_count": 13,
+  "backend": {
+    "unique_ordinary_nodes_passed": 2779,
+    "separately_reported_subtests_passed": 285,
+    "seconds": 441.02,
+    "count_policy": "Overlapping focused runs, API children, supplemental controls, workflow builds and browser captures are not additional unique backend tests."
+  },
+  "acceptance_matrix": {
+    "required_items": 81,
+    "unique_nodes": 2779,
+    "state": "PASS"
+  },
+  "browser": {
+    "frozen_acceptance": {
+      "captures": 16,
+      "offline_children": 6
+    },
+    "product": {
+      "captures": 16,
+      "state": "PASS",
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "parent_unchanged": true
+    },
+    "stale_parent": "Separate actual desktop/mobile workflow; see FINAL_ACCEPTED_REVIEW.json, not a unique backend test."
+  },
+  "genuine_observations": {
+    "wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+    "query_records": 87,
+    "report_selected_wallet_fees_sol": "0.000158868",
+    "conditional_supported_named_lot_loss_sol": "-0.013270924",
+    "named_lot_hold_seconds": 529,
+    "scope": "Selected query/named-account observations only; no full-wallet profitability, policy qualification or copying recommendation."
+  },
+  "B1": {
+    "state": "OPEN",
+    "access_entitlement": "OBSERVED_FREE_ACCOUNT",
+    "schema": "OBSERVED_SUPPORTED_LEGACY_V0",
+    "indexed_query_terminal": "OBSERVED_87_RECORDS_EMPTY_CONTINUATION",
+    "historical_population": "UNKNOWN: exhaustive formerly owned/closed/reassigned/non-ATA lifecycle across both token programs and unrequested formats is not established."
+  },
+  "B2": {
+    "state": "OPEN_COMPLETE_WALLET",
+    "development": "FUNCTIONAL_SUPPORTED_REAL_RECORDS",
+    "remaining_implementation": "Accepted real historical-population witness adapter, unsupported economic routes, complete acquisition/cost/flow and historical classification/valuation/boundary derivation. Existing native/archive completion proof gates remain unsatisfied."
+  },
+  "B3": {
+    "state": "BLOCKED",
+    "reason": "No complete genuine wallet dataset with all accepted metric dependencies and independently worked full-wallet expectations. Synthetic controls and selected real lots do not close B3."
+  },
+  "environment": {
+    "tested": "Linux/Python3.12.14/Node24.19.0/Chromium",
+    "windows_macos": "NOT_EXECUTED",
+    "review": "Distinct same-session Codex read-only review; no external independent acceptance claim."
+  },
+  "collection": {
+    "new_requests": 19,
+    "helius_requests": 17,
+    "public_requests": 2,
+    "conservative_credits": 170,
+    "billing_delta": "NOT_OBSERVED",
+    "old_probe": "Separate unchanged10request/73conservative-credit ledger",
+    "retries": 0,
+    "purchases": 0,
+    "automatic_spend": false,
+    "stopped": true
+  },
+  "candidate_classification": [
+    "scoped-valid",
+    "development-functional",
+    "real-acceptance-blocked"
+  ],
+  "evidence": [
+    {
+      "path": "evidence/genuine-wallet-batch/gate-a-accepted/result.json",
+      "bytes": 290944,
+      "sha256": "b282f2d64eaba4ac5c7adf7f11d9d51e91f6ee402834c6195f33e9760735ed2e"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/gate-a-accepted/backend.log",
+      "bytes": 3662,
+      "sha256": "3b19c3fbd3cecfcde46871583833d8c5ddb5e69b62b9127e86d423e013f27040"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/gate-a-accepted/matrix.json",
+      "bytes": 215701,
+      "sha256": "e9e4422fdc6010cdfd363cc52466a50eeb477c0a73e39aee155689718f6c4d50"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/gate-a-accepted/browser/result.json",
+      "bytes": 3029,
+      "sha256": "6909ea4f52d05ba9e9695ec00b0361813b06264598a00132ac9457ba0ba0fa28"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/product-browser-accepted/result.json",
+      "bytes": 7956,
+      "sha256": "7351608ee164e633b846282e8afe576ad04328b1523daa8ed71f9f2db802a264"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/PRODUCT_BROWSER_ACCEPTED_EXECUTION.json",
+      "bytes": 80628,
+      "sha256": "2ba0b7739a7295d20f46908ee1d570470da38a8a1406fd81dd8c9ae023430600"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/REVIEW_ACCEPTANCE.json",
+      "bytes": 8972,
+      "sha256": "0b31a538fc6a513f9b9238edea25ec1451645191f6d1a3b7f4808c08cfc2bf7f"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/ROOT_ACCEPTED_DIFF_REVIEW.json",
+      "bytes": 3634,
+      "sha256": "3a2a3bc32a6100e063c41bcf0a3d0eaadba11af25a76e329b969267b90db93ce"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_FINANCIAL_SCOPED_REVIEW.json",
+      "bytes": 13276,
+      "sha256": "97d86865735f0b0f5df2d154e76ee082c236b4650a99d7b4e4bc5d37c43a9a88"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_ACCEPTED_REVIEW.json",
+      "bytes": 25748,
+      "sha256": "91831d8179d3ef6b0b10206263da7ef662ca294492a224a5c61c40897f0ef561"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/FRESH_GIT_CHECKOUT_ACCEPTED.json",
+      "bytes": 37106,
+      "sha256": "baf9b733e9abb4658e6f080bd9cd0d853a3e12b8d758ec00385591cd24f17a86"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/genuine-execution-records-accepted/INDEX.json",
+      "bytes": 6861,
+      "sha256": "ebfb18c1874815cf2412b5b2163002ead721592ab3a4dd0d976a643157bbf1c9"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/CURRENT_ACCEPTED_GAP_INVENTORY.json",
+      "bytes": 15466,
+      "sha256": "0186d51c96f66fda439a76c4c6d8be1c4089f5aba68a4ff6c0782063b8030c8e"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/collection/FINAL_BUDGET.json",
+      "bytes": 1929,
+      "sha256": "270444d0c0921ebe719f96f6345758c832a01eb19cb08d6bd20f9c4b7b28f86a"
+    }
+  ],
+  "source_unchanged_after_validation": true,
+  "PRODUCT_READY": false,
+  "publication": "Pending exact private Git publication; evidence-only HEAD must not change application bytes."
+}

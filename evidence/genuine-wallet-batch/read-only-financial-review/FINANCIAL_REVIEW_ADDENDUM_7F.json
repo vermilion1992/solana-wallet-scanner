@@ -1,0 +1,23 @@
+{
+  "version": "scoped-read-only-review-addendum-v1",
+  "created_at": "2026-10-04T07:34:10.747119+00:00",
+  "candidate_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "prior_receipt": "evidence/genuine-wallet-batch/read-only-financial-review/FINANCIAL_SCOPED_REVIEW.json",
+  "status": "REQUIRES_CORRECTION_IN_RESEARCH_CONSUMER",
+  "source_sha256": {
+    "scanner/research.py": "54c08e0bfcdac88bb9b54960bf5758d2f3619b63d8b11723eb81af25ce3e14e3",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "scanner/wallet_evidence.py": "b23f918831fd14d11a0fcad68f0abff81831f8ec925f883552af812776f01606",
+    "scanner/app.py": "95c2c5631b2159753337937faf26da9111ba55d2c970691b38ea3062cad018c7"
+  },
+  "finding": "Cash-only uncertainty survives decoder and typed monetary dependencies but summarize_research ignores explicit native_cash_role_state UNKNOWN and capital economic_role unknown. It reports zero unresolved observations and nonnull attributed monetary results. Its conditional earlier-inventory assumptions do not cover an already-known unresolved economic role.",
+  "review_correction": "Prior consumer trace confirmed separation from strict qualification but incorrectly treated the selected-event conditional label as sufficient for explicit unresolved native costs. Full-suite sibling test exposed this missing research monetary projection. Historical receipt is preserved; its no-unresolved-findings assertion is superseded for this consumer scope.",
+  "reproduction": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_CASH_ROLE_FIRST.json",
+  "reproduction_sha256": "b23a29e9c3abb60a4bd62e98fd7701ad033bfe513f0b4f71d871dff7e40f84bd",
+  "regression_test": "tests/test_discovery_integration_review.py::test_successful_swap_replacement_keeps_sibling_unresolved_native_flows",
+  "expected_scope": "Revoke dependent research profit/basis/ROI projections and retain unresolved cash observations while preserving independent quantity/timing/raw network-fee observations, clean positive monetary controls and zero/self/disjoint scope.",
+  "source_edits": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "PRODUCT_READY": false
+}

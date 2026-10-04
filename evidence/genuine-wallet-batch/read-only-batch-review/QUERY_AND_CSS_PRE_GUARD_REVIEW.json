@@ -1,0 +1,49 @@
+{
+  "kind": "query-selection-and-css-read-only-pre-fix-review",
+  "scope": "Final f975 candidate reviewed before new malformed-source guard; no full gate or provider execution",
+  "commit": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+  "source": {
+    "sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+    "files": 224
+  },
+  "files": {
+    "scanner/real_coverage.py": "b99a3c07dd7a5581e93a05a51577eba439a67298c6dac94dcc582ef7246e745e",
+    "scanner/wallet_evidence.py": "84ae31659162bffa3daa03a933879dde1f0b44edb8831bf1ad40470c18d84bba",
+    "scanner/archive_input.py": "60cb2c45cf7129a096ccede72479268972e873ac3fcee9ee379040f7740ad960",
+    "tests/test_real_coverage.py": "0757fc6f0dd1d5de75d7ef010c05b7dcd47062a34ee6dc0a12cebb071ebc8876",
+    "frontend/src/styles.css": "2d35dd95e66c05a18edfd1a091b970d43e3ab113942fd1829f0b669e2809303f",
+    "frontend/dist/index.html": "5434003de1f732b93abe985f280f1fe112911f3db9fdcf02d73b4fcccf7eab89",
+    "ISSUES.md": "34dfd41b615153ee5a8cd3e48d603818711f0e2f58ac363e4b8132c4eb817200"
+  },
+  "CSS": {
+    "selectors": [
+      ".report-metric > small",
+      ".all-metrics-grid > div > small"
+    ],
+    "declaration": "overflow-wrap:anywhere",
+    "neighbors": "Both exact direct-child reason nodes exist in report.tsx; later mobile and palette selectors do not override overflow-wrap. Raw reason text remains intact.",
+    "browser_receipt": "evidence/genuine-wallet-batch/overflow-diagnostic/fixed/result.json"
+  },
+  "query_selection_review": [
+    "Original returned raw bytes must have an exact hash/pointer/wrapper-bound linked record; every selected representation must independently bind to a linked checked native body.",
+    "Readable parsed/compiled alternatives need not equal original bytes; shared signature/identity, chronology and semantic format dependencies remain separate.",
+    "Absent original, missing/checksum-mismatched/unlinked selected records, wrong signature, conflicting primary choices and linked unsupported siblings remain unresolved.",
+    "Global historical/format populations remain UNKNOWN; query presence does not manufacture B1/B3 proof."
+  ],
+  "confirmed_finding": {
+    "id": "QUERY-MALFORMED-UNICODE",
+    "category": "Current application source defect at archived malformed native lead boundary",
+    "state": "OPEN_REPORTED_TO_ROOT_AND_OWNER",
+    "raw_repro": "QUERY_UNICODE_BIND_REPRO.json",
+    "sites": [
+      "scanner/archive_input.py:368",
+      "scanner/real_coverage.py:174"
+    ],
+    "scope": "Exact encoded provider raw bytes containing a lone escaped Unicode surrogate retain a native record lead after page validation rejects canonical interpretation; loader hashes that lead without a local rejecting guard. The new query bind has the same neighboring unsafe hash."
+  },
+  "historical_reviews_preserved": [
+    "REVIEW_WORKING_TREE.json",
+    "REVIEW_FINAL_SCOPE.json"
+  ],
+  "PRODUCT_READY": false
+}

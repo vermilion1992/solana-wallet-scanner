@@ -1,0 +1,80 @@
+{
+  "kind": "completed-failed-candidate-7f",
+  "state": "FAILED",
+  "application_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "source_sha256": "eeb6f51777dda142376b8220896ccd768fe2c08e693873fa6630e09ed063cced",
+  "source_unchanged": true,
+  "backend_ordinary_passed": 2739,
+  "backend_ordinary_failed": 1,
+  "backend_separate_subtests_passed": 285,
+  "gates": [
+    {
+      "name": "runtime",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "node-runtime",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "backend",
+      "state": "FAILED",
+      "exit_code": 1
+    },
+    {
+      "name": "pip-check",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "shell-syntax",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "matrix",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "frontend-locked-install",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "frontend-check-format",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "frontend-check-discovery",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "frontend-build",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "clean-locked-install",
+      "state": "PASS",
+      "exit_code": null
+    },
+    {
+      "name": "launcher-browser-rebuild",
+      "state": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "consolidated-review",
+      "state": "INCOMPLETE",
+      "exit_code": null
+    }
+  ],
+  "review_record": "evidence/genuine-wallet-batch/REVIEW.json",
+  "reason": "Confirmed research cash-role consumer defect and obsolete unsupported-event representation assertion; preserved full completed failure. No source correction occurred during this candidate.",
+  "PRODUCT_READY": false
+}

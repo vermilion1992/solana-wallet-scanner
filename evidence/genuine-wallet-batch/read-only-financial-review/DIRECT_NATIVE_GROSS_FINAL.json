@@ -1,0 +1,773 @@
+{
+  "scope": "Unsigned development native-Pump accepted ABI control; no signed/authentic/genuine-history assertion",
+  "source_sha256": {
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "scanner/wallet_evidence.py": "b23f918831fd14d11a0fcad68f0abff81831f8ec925f883552af812776f01606"
+  },
+  "positive_input": {
+    "version": "legacy",
+    "slot": 10,
+    "blockTime": 1791079700,
+    "transaction": {
+      "signatures": [
+        "unsigned-native-development-buy",
+        "unsigned-foreign-development-buy"
+      ],
+      "message": {
+        "header": {
+          "numRequiredSignatures": 2,
+          "numReadonlySignedAccounts": 0,
+          "numReadonlyUnsignedAccounts": 4
+        },
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "11111111111111111111111111111111"
+        ],
+        "instructions": [
+          {
+            "programId": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "accounts": [
+              "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+              "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+              "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+              "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+              "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "11111111111111111111111111111111",
+              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            ],
+            "data": [
+              "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+              "base64"
+            ]
+          }
+        ]
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "preBalances": [
+        10000000000,
+        1000,
+        2039280,
+        2000000000,
+        2039280,
+        1000,
+        0,
+        1,
+        1,
+        1
+      ],
+      "postBalances": [
+        8999995000,
+        1000,
+        2039280,
+        3000000000,
+        2039280,
+        1000,
+        0,
+        1,
+        1,
+        1
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 6
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        }
+      ],
+      "innerInstructions": [
+        {
+          "index": 0,
+          "instructions": [
+            {
+              "programId": "11111111111111111111111111111111",
+              "parsed": {
+                "type": "transfer",
+                "info": {
+                  "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "destination": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000
+                }
+              }
+            },
+            {
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "parsed": {
+                "type": "transferChecked",
+                "info": {
+                  "source": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                  "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                  "tokenAmount": {
+                    "amount": "100",
+                    "decimals": 6
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mutated_input": {
+    "version": "legacy",
+    "slot": 10,
+    "blockTime": 1791079700,
+    "transaction": {
+      "signatures": [
+        "unsigned-native-development-buy",
+        "unsigned-foreign-development-buy"
+      ],
+      "message": {
+        "header": {
+          "numRequiredSignatures": 2,
+          "numReadonlySignedAccounts": 0,
+          "numReadonlyUnsignedAccounts": 4
+        },
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "11111111111111111111111111111111"
+        ],
+        "instructions": [
+          {
+            "programId": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "accounts": [
+              "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+              "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+              "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+              "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+              "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "11111111111111111111111111111111",
+              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            ],
+            "data": [
+              "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+              "base64"
+            ]
+          }
+        ]
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "preBalances": [
+        10000000000,
+        1000,
+        2039280,
+        2000000000,
+        2039280,
+        1000,
+        0,
+        1,
+        1,
+        1
+      ],
+      "postBalances": [
+        8999995000,
+        1000,
+        2039280,
+        3000000000,
+        2039280,
+        1000,
+        0,
+        1,
+        1,
+        1
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 6
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        }
+      ],
+      "innerInstructions": [
+        {
+          "index": 0,
+          "instructions": [
+            {
+              "programId": "11111111111111111111111111111111",
+              "parsed": {
+                "type": "transfer",
+                "info": {
+                  "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "destination": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000
+                }
+              }
+            },
+            {
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "parsed": {
+                "type": "transferChecked",
+                "info": {
+                  "source": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                  "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                  "tokenAmount": {
+                    "amount": "100",
+                    "decimals": 6
+                  }
+                }
+              }
+            },
+            {
+              "programId": "11111111111111111111111111111111",
+              "parsed": {
+                "type": "transfer",
+                "info": {
+                  "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "destination": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                  "lamports": 1
+                }
+              }
+            },
+            {
+              "programId": "11111111111111111111111111111111",
+              "parsed": {
+                "type": "transfer",
+                "info": {
+                  "source": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                  "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "lamports": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "selected_sell": {
+    "version": "legacy",
+    "slot": 11,
+    "blockTime": 1791080229,
+    "transaction": {
+      "signatures": [
+        "unsigned-native-development-sell",
+        "unsigned-foreign-development-sell"
+      ],
+      "message": {
+        "header": {
+          "numRequiredSignatures": 2,
+          "numReadonlySignedAccounts": 0,
+          "numReadonlyUnsignedAccounts": 4
+        },
+        "accountKeys": [
+          "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+          "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+          "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+          "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "11111111111111111111111111111111"
+        ],
+        "instructions": [
+          {
+            "programId": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "accounts": [
+              "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+              "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+              "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+              "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+              "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+              "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+              "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+              "11111111111111111111111111111111",
+              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            ],
+            "data": [
+              "M+aFpAF/g60AAAAAAAAAAAAAAAAAAAAA",
+              "base64"
+            ]
+          }
+        ]
+      }
+    },
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "preBalances": [
+        10000000000,
+        1000,
+        2039280,
+        2000000000,
+        2039280,
+        1000,
+        0,
+        1,
+        1,
+        1
+      ],
+      "postBalances": [
+        10899995000,
+        1000,
+        2039280,
+        1100000000,
+        2039280,
+        1000,
+        0,
+        1,
+        1,
+        1
+      ],
+      "preTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 2,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "0",
+            "decimals": 6
+          }
+        },
+        {
+          "accountIndex": 4,
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "uiTokenAmount": {
+            "amount": "100",
+            "decimals": 6
+          }
+        }
+      ],
+      "innerInstructions": [
+        {
+          "index": 0,
+          "instructions": [
+            {
+              "programId": "11111111111111111111111111111111",
+              "parsed": {
+                "type": "transfer",
+                "info": {
+                  "source": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                  "lamports": 900000000
+                }
+              }
+            },
+            {
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "parsed": {
+                "type": "transferChecked",
+                "info": {
+                  "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                  "destination": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                  "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                  "tokenAmount": {
+                    "amount": "100",
+                    "decimals": 6
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "positive_events": [
+    {
+      "kind": "fee",
+      "timestamp": 1791079700,
+      "signature": "unsigned-native-development-buy",
+      "path": "meta.fee",
+      "evidence": [
+        "ad728ab460f06b4aaa826f32e388d428f55ef1086dde18fce8e6b664c52c130c"
+      ],
+      "amount_sol": "0.000005",
+      "paid_by_wallet": true,
+      "fee_payer": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "failed": false,
+      "allocation": "buy_basis",
+      "reason": "meta.fee includes network and priority fees; do not subtract a second priority charge",
+      "order": 10000000,
+      "allocated_trade_path": "instructions.0"
+    },
+    {
+      "kind": "buy",
+      "timestamp": 1791079700,
+      "signature": "unsigned-native-development-buy",
+      "path": "instructions.0",
+      "evidence": [
+        "ad728ab460f06b4aaa826f32e388d428f55ef1086dde18fce8e6b664c52c130c"
+      ],
+      "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+      "quantity_raw": "100",
+      "decimals": 6,
+      "amount_sol": "1",
+      "classification": "unknown",
+      "source": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "venue": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "instruction": "buy",
+      "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "fee_sol": "0.000005",
+      "paid_by_wallet": true,
+      "settlement_mint": "So11111111111111111111111111111111111111112",
+      "native_cash_role_state": "PASS",
+      "unresolved_native_roles": [],
+      "retained_account_funding": [],
+      "observed_pre_quantity_raw": "0",
+      "observed_post_quantity_raw": "100",
+      "observation_scope": "Transaction account keys only; no proof of wallet-wide zero inventory",
+      "reason": "Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence",
+      "order": 10000001
+    }
+  ],
+  "positive_lots": [
+    {
+      "id": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx:1",
+      "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+      "accounts": [
+        "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR"
+      ],
+      "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+      "monetary_state": "PASS",
+      "timing_state": "PASS",
+      "quantity_state": "PASS",
+      "classification_state": "UNKNOWN",
+      "wallet_population_state": "UNKNOWN",
+      "qualification": false,
+      "acquired_raw": "100",
+      "disposed_raw": "100",
+      "remaining_raw": "0",
+      "buy_count": 1,
+      "sell_count": 1,
+      "conditional_basis_sol": "1.000005",
+      "conditional_matched_basis_sol": "1.000005",
+      "conditional_proceeds_sol": "0.9",
+      "conditional_exit_fees_sol": "0.000005",
+      "conditional_lot_profit_sol": "-0.10001",
+      "conditional_lot_roi_pct": "-10.0009499952500237498812505937470312648436757816210918945405272973635131824340878295608521957390213048934755326223368883155584222078889605551972240138799306003469982650086749566252168739156304",
+      "observed_start": "2026-10-04T02:08:20+00:00",
+      "observed_end": "2026-10-04T02:17:09+00:00",
+      "conditional_hold_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "required_signatures": [
+        "unsigned-native-development-buy",
+        "unsigned-native-development-sell"
+      ],
+      "disjoint_signatures": [],
+      "evidence": [
+        "9c0b2f033bd4b48424353f29dae3106d01db59ca654fde4b7e285eaa853bd563",
+        "ad728ab460f06b4aaa826f32e388d428f55ef1086dde18fce8e6b664c52c130c"
+      ],
+      "retained_account_funding": [],
+      "gaps": [],
+      "assumptions": [
+        "No hidden earlier same-mint holdings or unobserved intervening changes are established.",
+        "Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN."
+      ]
+    }
+  ],
+  "mutated_events": [
+    {
+      "kind": "fee",
+      "timestamp": 1791079700,
+      "signature": "unsigned-native-development-buy",
+      "path": "meta.fee",
+      "evidence": [
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ],
+      "amount_sol": "0.000005",
+      "paid_by_wallet": true,
+      "fee_payer": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "failed": false,
+      "allocation": "unallocated",
+      "reason": "meta.fee includes network and priority fees; do not subtract a second priority charge",
+      "order": 10000000
+    },
+    {
+      "kind": "buy",
+      "timestamp": 1791079700,
+      "signature": "unsigned-native-development-buy",
+      "path": "instructions.0",
+      "evidence": [
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ],
+      "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+      "quantity_raw": "100",
+      "decimals": 6,
+      "amount_sol": "1",
+      "classification": "unknown",
+      "source": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "venue": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "instruction": "buy",
+      "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "fee_sol": "0",
+      "paid_by_wallet": true,
+      "settlement_mint": "So11111111111111111111111111111111111111112",
+      "native_cash_role_state": "UNKNOWN",
+      "unresolved_native_roles": [
+        {
+          "state": "UNKNOWN",
+          "path": "innerInstructions.0.2",
+          "program": "11111111111111111111111111111111",
+          "kind": "transfer",
+          "facts": {
+            "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "destination": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+            "lamports": 1
+          },
+          "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+          "raw_paths": [
+            "meta.innerInstructions.0.instructions.2"
+          ]
+        },
+        {
+          "state": "UNKNOWN",
+          "path": "innerInstructions.0.3",
+          "program": "11111111111111111111111111111111",
+          "kind": "transfer",
+          "facts": {
+            "source": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+            "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "lamports": 1
+          },
+          "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+          "raw_paths": [
+            "meta.innerInstructions.0.instructions.3"
+          ]
+        }
+      ],
+      "retained_account_funding": [],
+      "observed_pre_quantity_raw": "0",
+      "observed_post_quantity_raw": "100",
+      "observation_scope": "Transaction account keys only; no proof of wallet-wide zero inventory",
+      "reason": "Verified spot instruction and reconciled transaction-level owned net exchange; network fee remains unallocated",
+      "order": 10000001
+    },
+    {
+      "kind": "capital",
+      "timestamp": 1791079700,
+      "signature": "unsigned-native-development-buy",
+      "path": "innerInstructions.0.2",
+      "evidence": [
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ],
+      "amount_sol": "0.000000001",
+      "direction": "withdrawal",
+      "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "destination": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+      "economic_role": "unknown",
+      "facts": {
+        "source": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "destination": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+        "lamports": 1
+      },
+      "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+      "order": 10000002
+    },
+    {
+      "kind": "capital",
+      "timestamp": 1791079700,
+      "signature": "unsigned-native-development-buy",
+      "path": "innerInstructions.0.3",
+      "evidence": [
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ],
+      "amount_sol": "0.000000001",
+      "direction": "deposit",
+      "source": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+      "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "economic_role": "unknown",
+      "facts": {
+        "source": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+        "destination": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "lamports": 1
+      },
+      "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+      "order": 10000003
+    }
+  ],
+  "mutated_unresolved": [
+    {
+      "signature": "unsigned-native-development-buy",
+      "path": "innerInstructions.0.2",
+      "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+      "scope": "native monetary roles",
+      "evidence": [
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ]
+    },
+    {
+      "signature": "unsigned-native-development-buy",
+      "path": "innerInstructions.0.3",
+      "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+      "scope": "native monetary roles",
+      "evidence": [
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ]
+    }
+  ],
+  "mutated_lots": [
+    {
+      "id": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx:1",
+      "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+      "accounts": [
+        "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR"
+      ],
+      "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+      "monetary_state": "UNKNOWN",
+      "timing_state": "PASS",
+      "quantity_state": "PASS",
+      "classification_state": "UNKNOWN",
+      "wallet_population_state": "UNKNOWN",
+      "qualification": false,
+      "acquired_raw": "100",
+      "disposed_raw": "100",
+      "remaining_raw": "0",
+      "buy_count": 1,
+      "sell_count": 1,
+      "conditional_basis_sol": null,
+      "conditional_matched_basis_sol": null,
+      "conditional_proceeds_sol": null,
+      "conditional_exit_fees_sol": null,
+      "conditional_lot_profit_sol": null,
+      "conditional_lot_roi_pct": null,
+      "observed_start": "2026-10-04T02:08:20+00:00",
+      "observed_end": "2026-10-04T02:17:09+00:00",
+      "conditional_hold_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "required_signatures": [
+        "unsigned-native-development-buy",
+        "unsigned-native-development-sell"
+      ],
+      "disjoint_signatures": [],
+      "evidence": [
+        "9c0b2f033bd4b48424353f29dae3106d01db59ca654fde4b7e285eaa853bd563",
+        "c06a95042cb8188706b84723a3015f2952ac9d9e46062fdd4f34d7ef2d3c6959"
+      ],
+      "retained_account_funding": [],
+      "gaps": [],
+      "assumptions": [
+        "No hidden earlier same-mint holdings or unobserved intervening changes are established.",
+        "Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN."
+      ]
+    }
+  ],
+  "whole_wallet_profit_state": "UNKNOWN"
+}

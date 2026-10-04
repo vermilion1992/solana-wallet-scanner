@@ -1,0 +1,22 @@
+{
+  "kind": "consolidated-review",
+  "state": "FAILED",
+  "source_sha256": "eeb6f51777dda142376b8220896ccd768fe2c08e693873fa6630e09ed063cced",
+  "application_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "matrix_review_complete": true,
+  "findings": [
+    {
+      "id": "B2-RESEARCH-CASH",
+      "blocking": true,
+      "status": "OPEN_REPRODUCED",
+      "reason": "Research counts ignore unknown capital and research FIFO/episode monetary projections ignore native_cash_role_state UNKNOWN; accounting proof gates revoke money but adjacent research views remain numeric.",
+      "reproductions": [
+        "FINAL_DISCOVERY_SIBLING_REPRO.log",
+        "read-only-batch-review/RESEARCH_CASH_ROLE_7F_REPRO.json"
+      ]
+    }
+  ],
+  "PRODUCT_READY": false,
+  "candidate_acceptance": "FAILED_PENDING_SHARED_RESEARCH_CORRECTION",
+  "scope_note": "Browser/genuine selected-lot gates may pass independently; this does not accept current source."
+}

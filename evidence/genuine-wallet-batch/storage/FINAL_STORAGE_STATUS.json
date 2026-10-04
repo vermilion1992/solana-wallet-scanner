@@ -1,0 +1,31 @@
+{
+  "kind": "final-lossless-git-evidence-packaging-status-v1",
+  "state": "VERIFIED",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "application_source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "gzip_entries": 110,
+  "original_bytes": 5696332389,
+  "compressed_bytes": 372808942,
+  "all_originals_unchanged_and_retained": true,
+  "fresh_decompression_hash_size_verified": true,
+  "index_sha256": "f2adb118e2df61fbc89e0abdf2e428e88199ac8b7b9f0cbdff1c185d540d86ff",
+  "index_path": "evidence/genuine-wallet-batch/EVIDENCE_STORAGE_INDEX.json",
+  "stage_plan_path": "evidence/genuine-wallet-batch/storage/STAGING_FINAL.json",
+  "stage_plan_sha256": "e26a47c556dfd31beda9a3f602cd83325d46ef25a6a4b392bb00de8634ff9f2b",
+  "stage_paths": 793,
+  "stage_existing_file_bytes": 684100227,
+  "maximum_staged_file": {
+    "path": "evidence/genuine-wallet-batch/genuine-real-required-accepted/inspected-selected-sources.json.gz",
+    "bytes": 21258766
+  },
+  "private_omission_paths": 2670,
+  "late_root_receipts_deferred": [],
+  "null_delimited_stage_paths": "evidence/genuine-wallet-batch/storage/STAGING_FINAL.nul",
+  "original_plus_gzip_twins_in_stage_plan": false,
+  "tracked_oracles_and_zip_inputs_changed": false,
+  "application_source_changed": false,
+  "git_staging_or_push_performed": false,
+  "external_calls": 0,
+  "credential_reads": 0,
+  "acceptance_claim": "Storage-only; accepted application/genuine acceptance status remains root-owned."
+}

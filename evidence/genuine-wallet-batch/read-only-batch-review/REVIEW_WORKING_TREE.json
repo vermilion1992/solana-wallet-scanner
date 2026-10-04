@@ -1,0 +1,151 @@
+{
+  "kind": "distinct-read-only-batch-review",
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "review_time": "2026-10-04T06:38:09Z",
+  "baseline_commit": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "candidate": "Working tree, application candidate not yet frozen; subset source hashes only",
+  "scope": [
+    "Discovery source replay and shared parsed/compiled/header/loaded key identity boundaries",
+    "Backend default/explicit audit planning using saved semantic inputs before presentation projection",
+    "Frontend stale manual selections, default deferral and compiled asset inclusion",
+    "One current issue register, acceptance matrix, source decision and validation runner",
+    "Bounded collection/archive/read-only checker interfaces and metric-specific genuine engineering acceptance conditions"
+  ],
+  "findings": [
+    {
+      "id": "DISC-HEADER-REVIEW",
+      "category": "Confirmed application defect",
+      "description": "Parsed account flags previously overrode contradictory optional signature headers, allowing header0/2 identity PASS.",
+      "status": "RESOLVED_IN_REVIEWED_SOURCE",
+      "first_reproduction": "DISCOVERY_HEADER_REPRO.json",
+      "verification": [
+        "DISCOVERY_HEADER_FIXED_REPLAY.json",
+        "INDEPENDENT_FOCUSED.log"
+      ],
+      "preserved_first_reproduction": true
+    },
+    {
+      "id": "CHECK-LOSING-REVIEW",
+      "category": "Confirmed validation predicate defect",
+      "description": "Supported nonpositive net wallet profit was blocked solely by the intentionally undefined largest-contribution ratio.",
+      "status": "RESOLVED_IN_REVIEWED_SOURCE",
+      "first_reproduction": "LOSING_ACCEPTANCE_REPRO.json",
+      "verification": "INDEPENDENT_CHECKER_AFTER_FIX.log",
+      "scope_limit": "The strict exception requires every source dependency PASS and only metric_observation unresolved; saved UNKNOWN metrics, policy and genuine B3 status stay unchanged."
+    },
+    {
+      "id": "CHECK-ZERO-TYPE-REVIEW",
+      "category": "Confirmed validation input-boundary defect",
+      "description": "Boolean/numeric rendered matched-basis values could satisfy an undefined zero-cost ratio; list values raised an exception.",
+      "status": "RESOLVED_IN_REVIEWED_SOURCE",
+      "first_reproduction": "ZERO_BASIS_TYPES_REPRO.json",
+      "verification": [
+        "ZERO_BASIS_TYPES_FIXED_REPLAY.json",
+        "INDEPENDENT_CHECKER_AFTER_FIX.log"
+      ]
+    }
+  ],
+  "nondefects_and_verified_controls": [
+    "Canonical headerless genuine jsonParsed signer flags remain supported, as do compiled full header and verified loaded-address forms.",
+    "Failed transactions cannot manufacture successful discovery movement.",
+    "Required primary or wrong-role alternative loss prevents eligible audit selection; restoration replays offline without mutating parent/cohort, quota or scan queues.",
+    "Full, summary and direct cohort plans use identical semantic report inputs rather than display summaries.",
+    "Explicit selection is rechecked against current source-backed eligibility; default selection does not repeatedly audit current partial saved reports.",
+    "The frontend computes eligible selected addresses from the current plan on each render and filters retained manual choices after source loss.",
+    "No new generic source document replaces docs/R1_SOURCE_DECISION.md; documented access/schema/lifecycle observations remain distinct from exhaustive owner/format population proof.",
+    "One validation runner includes the new coherent shared-component tests; no full acceptance runner was executed by this reviewer.",
+    "The new frontend compiled JS asset exists and the index references it; root must stage it together with the prior tracked bundle deletion."
+  ],
+  "product_status": {
+    "B1": "Historical sufficiency OPEN; genuine endpoint/schema/lifecycle controls observed, no exhaustive historical ownership/population guarantee.",
+    "B2": "Scoped terminal-query/observed-account arithmetic implemented; complete wallet accounting OPEN, unreviewed routes and data dependencies remain.",
+    "B3": "BLOCKED; genuine independent selected-lot arithmetic does not supply complete wallet coverage.",
+    "PRODUCT_READY": false
+  },
+  "independent_expectations_unchanged": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS.json": {
+      "sha256": "ff9d08432e693bb91bac33a223adbe884b4c4bd5fc6365590edc269387f2b9a6",
+      "bytes": 177283
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "bytes": 177454
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_CALCULATOR.py": {
+      "sha256": "a40be76060e0f743ffc4c62e91387050c975e7a89db5b69b7562e3d0254e8772",
+      "bytes": 17849
+    }
+  },
+  "validation": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_discovery_native_identity.py tests/test_discovery_plan_views.py tests/test_genuine_collection_workflow.py",
+      "ordinary_tests": 74,
+      "state": "PASS",
+      "raw_log": "INDEPENDENT_FOCUSED.log",
+      "scope": "Intermediate reviewed source; not full backend suite."
+    },
+    {
+      "command": "npm run check:discovery",
+      "cwd": "frontend",
+      "state": "PASS",
+      "raw_log": "INDEPENDENT_FRONTEND_DISCOVERY.log",
+      "scope": "Temporary compile/render/helper checks; no production source/assets modified."
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_genuine_collection_workflow.py",
+      "state": "PASS",
+      "raw_log": "INDEPENDENT_CHECKER_AFTER_FIX.log",
+      "ordinary_tests": 57,
+      "scope": "After the malformed-basis guard correction; overlaps the initial 74-node run and is not added to a distinct full-suite count."
+    }
+  ],
+  "artifacts": {
+    "SOURCE_SUBSET_BEFORE.json": {
+      "sha256": "db9feba5bf84cd11463b17112310b2a469b556849dca43d58f6f3fa6574edef7",
+      "bytes": 4130
+    },
+    "SOURCE_SUBSET_AFTER.json": {
+      "sha256": "05a4939ff1124075fd69948faa4357efe56a762333a088eed16276a27ef4c52c",
+      "bytes": 4354
+    },
+    "DISCOVERY_HEADER_REPRO.json": {
+      "sha256": "daaf133a246309d604aba6dbe59ca6af396a971672e713ca87abe28accdc19a5",
+      "bytes": 1113
+    },
+    "DISCOVERY_HEADER_FIXED_REPLAY.json": {
+      "sha256": "e1ad0ce95ea8361e0a98aa4617ecdd44deadafe65fd76cb0b64929442c7fb515",
+      "bytes": 979
+    },
+    "LOSING_ACCEPTANCE_REPRO.json": {
+      "sha256": "cb42420bb09009199ea6f9719d55baeb03208c1c25ecbfd80ac2c8c0d70faa3c",
+      "bytes": 657
+    },
+    "ZERO_BASIS_TYPES_REPRO.json": {
+      "sha256": "a6fcd083077a69bb33a58a751acaabaa6ce30ca9351868ce12221f5eef5250be",
+      "bytes": 6141
+    },
+    "ZERO_BASIS_TYPES_FIXED_REPLAY.json": {
+      "sha256": "661551bee877f6ef3792c3fca372bb21e9f82f5251d62eb3e8e7f759059351ed",
+      "bytes": 5018
+    },
+    "INDEPENDENT_FOCUSED.log": {
+      "sha256": "7da3a57c243877857cbcfb42b1e366eee68b4fab85962226c5ade60d5881100a",
+      "bytes": 887
+    },
+    "INDEPENDENT_CHECKER_AFTER_FIX.log": {
+      "sha256": "fbef5098c4595db36661bde0e74290ca0f262d905cc6161758685c1473168635",
+      "bytes": 786
+    },
+    "INDEPENDENT_FRONTEND_DISCOVERY.log": {
+      "sha256": "b61186270a21aa3b6c02f99e914851f9ff85e2771cbaee70d7b1b3aba3c0b0ef",
+      "bytes": 366
+    }
+  },
+  "limitations": [
+    "Accounting rent/per-lot internals reviewed by a separate reviewer; this receipt excludes their final signoff.",
+    "Concurrent code changes prevent final candidate acceptance; source subset before/after hashes retain the exact reviewed boundary. Rebind after root freezes code.",
+    "No provider calls, credential access, private runtime database reads, commits, application edits, full gates, private publication or third-party execution performed.",
+    "This is a distinct read-only review by another agent in the same engineering session; it is not independent third-party execution.",
+    "Final application/source manifest, compiled bundle staging, full gate receipts, security audit and remote exact Git publication remain root-owned."
+  ]
+}

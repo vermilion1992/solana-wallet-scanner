@@ -1,0 +1,316 @@
+{
+  "kind": "read-only-collection-integrity-reconciliation-v1",
+  "state": "PASS",
+  "reviewed_utc": "2026-10-04T06:25:36.263816+00:00",
+  "dispatches_in_review": 0,
+  "credential_accesses_in_review": 0,
+  "runtime_open_mode": "SQLite read-only",
+  "source_files": {
+    "tools/bounded_collection.py": "1b7a054653170061010be72f0b46fefa59ea817d18a00a6ec507ea77ff3de8d0",
+    "tools/check_genuine_collection.py": "24378ba651e059231573db07f96b042997a45e290f8717c4d1be8baf1975f68d",
+    "tests/test_bounded_collection.py": "e34fb94104cc14be2a52c9cc875c2f1f7e750df09ae62061bd36de51f54aeb9e",
+    "tests/test_genuine_collection_workflow.py": "a300eb02f7be551c2ab0bbbf23a823b5f3802328f08850b8aa782ce593a39629"
+  },
+  "executed_snapshots": {
+    "EXECUTED_NATIVE_COLLECTOR.py": "5dca43adae5254c51b2b2dcd1df607d98d435e741366c5e13fd4e6cc0e9dea43",
+    "EXECUTED_PUBLIC_COLLECTOR.py": "8e49b9f65372555d2add46ff7f42234fbaffebd98a6457be061f2851a53acf42",
+    "EXECUTED_FINAL_COLLECTOR.py": "1b7a054653170061010be72f0b46fefa59ea817d18a00a6ec507ea77ff3de8d0"
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "plan_sha256": "f6f949937792e33fcdd11749051d3e8bf7e092c614a5bfd1c0da2d107d13da73",
+      "receipt_sha256": "7cd824cb5a3bfcd820fb9fe1b08f970d258d206d0925aeac739b4d614e2aa8f4",
+      "actual_requests": 1,
+      "native_requests": 1,
+      "public_requests": 0,
+      "conservative_credits": 10
+    },
+    {
+      "phase": 2,
+      "plan_sha256": "a1dbf4baf85299da66aca9c98ae5b140705d481563b73a18980cf247ddce00e8",
+      "receipt_sha256": "765ceac0911e1ed5eef49cc74b34e932de58d00b35dafb4c440a62ad993dbdd7",
+      "actual_requests": 1,
+      "native_requests": 0,
+      "public_requests": 1,
+      "conservative_credits": 0
+    },
+    {
+      "phase": 3,
+      "plan_sha256": "2dce45527fc80e5ff5769e6effb4cf046721c2a8cd7111c793653dddd7844501",
+      "receipt_sha256": "cc6c283071aa5386aafd1dd641d78f16216bc118b2c4e80e90a1b59e9929876b",
+      "actual_requests": 1,
+      "native_requests": 0,
+      "public_requests": 1,
+      "conservative_credits": 0
+    },
+    {
+      "phase": 4,
+      "plan_sha256": "b02056db64bb07f3cef1be07cdf83f29d3c6312e10f2655d6b05cb0daf5b69dc",
+      "receipt_sha256": "0d2c1b21ca1e19d65c8820f26a62b19383b2399fade92d865534931407a3ba93",
+      "actual_requests": 5,
+      "native_requests": 5,
+      "public_requests": 0,
+      "conservative_credits": 50
+    },
+    {
+      "phase": 5,
+      "plan_sha256": "b97617552df403897080c97ea45f292daa8cc08b7b2cd4d9871e6e49bc32f447",
+      "receipt_sha256": "dd17302050f1693289c435bf7c0633255faa15ab96a7625299a7ffb2437dc280",
+      "actual_requests": 3,
+      "native_requests": 3,
+      "public_requests": 0,
+      "conservative_credits": 30
+    },
+    {
+      "phase": 6,
+      "plan_sha256": "09cf07de775f6180be5616d11979f47ff6d108ec24b0d1b76a313c4cb80d7c83",
+      "receipt_sha256": "0524aaa8966381285c1501b5cded4fb9054b8fa309cc1233f05d0e6554809705",
+      "actual_requests": 8,
+      "native_requests": 8,
+      "public_requests": 0,
+      "conservative_credits": 80
+    }
+  ],
+  "totals": {
+    "requests": 19,
+    "credits": 170,
+    "public_requests": 2
+  },
+  "caps": {
+    "requests": 30,
+    "credits": 1000,
+    "public_requests": 4
+  },
+  "ledger": [
+    {
+      "namespace": "helius-collection-requests/genuine-wallet-2026-10-04",
+      "settled_reservations": 19,
+      "charged_units": 19,
+      "pending_reservations": 0
+    },
+    {
+      "namespace": "helius-collection-credits/genuine-wallet-2026-10-04",
+      "settled_reservations": 17,
+      "charged_units": 170,
+      "pending_reservations": 0
+    },
+    {
+      "namespace": "geckoterminal-collection-public/genuine-wallet-2026-10-04",
+      "settled_reservations": 2,
+      "charged_units": 2,
+      "pending_reservations": 0
+    }
+  ],
+  "phase_claims": 6,
+  "artifact_files": 38,
+  "raw_request_response_bytes": 1569606,
+  "artifact_bindings": [
+    {
+      "path": "phase1/01-screen-4dr-request.json",
+      "sha256": "f4532c94a6a7442321cea84faa1ddc887f72fd505a4e05f1b34367c6502f7b20",
+      "bytes": 343
+    },
+    {
+      "path": "phase1/01-screen-4dr-response.raw.gz",
+      "sha256": "5b821fd1dff8f8bbb2998d54bfc6d0eb30862f49fb470d177c5c9cffef7b6676",
+      "bytes": 80577
+    },
+    {
+      "path": "phase2/01-trending-pools-request.json",
+      "sha256": "a122322233d4c35eeece64f6f620f4ba161e84ff71dd23009c910ea12f19cb1c",
+      "bytes": 111
+    },
+    {
+      "path": "phase2/01-trending-pools-response.raw.gz",
+      "sha256": "ba11cbf1f4ec426c1798981a0fd14fa4ac73ee22f7d2c906329cbd2881eb37bf",
+      "bytes": 8396
+    },
+    {
+      "path": "phase3/01-pool-trades-cackle-request.json",
+      "sha256": "5af989cc35702c8b37e36dcbac3fe5f0473017a03f0ec30bfdf18b8c94ddc2c5",
+      "bytes": 146
+    },
+    {
+      "path": "phase3/01-pool-trades-cackle-response.raw.gz",
+      "sha256": "f2d523c9e13f6a12515ca86d32cd81cd04919035107377c7e675ef5753dd8eef",
+      "bytes": 76790
+    },
+    {
+      "path": "phase4/01-screen-pool-lead-1-request.json",
+      "sha256": "549a73bc85c8875cb89257cff6e272d761adb5dc41cf1bda8e68a9cc5fd736eb",
+      "bytes": 343
+    },
+    {
+      "path": "phase4/01-screen-pool-lead-1-response.raw.gz",
+      "sha256": "0aa8191769a17ee96a9dc519d41c6f34abe152d32531c0c2c9cec8656148a415",
+      "bytes": 2939
+    },
+    {
+      "path": "phase4/02-screen-pool-lead-2-request.json",
+      "sha256": "48b6c82c7ff05146a491bcbb0d0de36578bcac1bd1e9439c61079b4e89cb43d1",
+      "bytes": 343
+    },
+    {
+      "path": "phase4/02-screen-pool-lead-2-response.raw.gz",
+      "sha256": "4f999b7b02a576835c27c16e639b53298946d9d9277614e6ea167db07a496b83",
+      "bytes": 3290
+    },
+    {
+      "path": "phase4/03-screen-pool-lead-3-request.json",
+      "sha256": "747ba1b0baf875029820db99f1a98cceb4b702377dc5b18059ecc9c057361f47",
+      "bytes": 343
+    },
+    {
+      "path": "phase4/03-screen-pool-lead-3-response.raw.gz",
+      "sha256": "f9fd56bc9fc72adc07950c5790bb8a75ad7dafbe7a59b4f49d4f44651fd26f62",
+      "bytes": 3284
+    },
+    {
+      "path": "phase4/04-screen-pool-lead-4-request.json",
+      "sha256": "f9e45b17fb9e2ef6544fadbac721ba3c23266d298cebe9c825503eb825ac079c",
+      "bytes": 343
+    },
+    {
+      "path": "phase4/04-screen-pool-lead-4-response.raw.gz",
+      "sha256": "ab81b21191f4cd1afde98a68b081d9e2c27da3fa6f71dd67d7e42254b5207bc1",
+      "bytes": 3353
+    },
+    {
+      "path": "phase4/05-screen-pool-lead-5-request.json",
+      "sha256": "958f824f1e2b7b6dcc06e42b99c303663aac1e2562e654fabf9300867722b202",
+      "bytes": 343
+    },
+    {
+      "path": "phase4/05-screen-pool-lead-5-response.raw.gz",
+      "sha256": "45f338e238340d95ea74ce26a1c5aa8cf90536372b1ad6279705caa8b09d5062",
+      "bytes": 3920
+    },
+    {
+      "path": "phase5/01-finalized-slot-request.json",
+      "sha256": "f6fd9231fc3a7bb314b4ece3d00ac97697d208bdf0e718583cdafd7ce4be736f",
+      "bytes": 81
+    },
+    {
+      "path": "phase5/01-finalized-slot-response.raw.gz",
+      "sha256": "8244904e582dbef422fd323b5a16b6639a6b7fd5f8994516ad3ec4b71bcde852",
+      "bytes": 63
+    },
+    {
+      "path": "phase5/02-lifetime-page-1-request.json",
+      "sha256": "53ebcc07235c05da043f5067660d435af9d10b99257811115a09c434e4f0a9a8",
+      "bytes": 288
+    },
+    {
+      "path": "phase5/02-lifetime-page-1-response.raw.gz",
+      "sha256": "66a03373d48477aefe65810b393d96d01242f9fc8703e9ebd88ae413ace3c3a8",
+      "bytes": 133140
+    },
+    {
+      "path": "phase5/03-lifetime-page-2-request.json",
+      "sha256": "9d0a345bd5799f82788b1e4c58b81a5ea337e958d5665fb62cecf0754b60a0eb",
+      "bytes": 322
+    },
+    {
+      "path": "phase5/03-lifetime-page-2-response.raw.gz",
+      "sha256": "a4d6d5d7fe2b385f3f141cdd0e552302a790aa1afc8b356e7bf39e11a4178fef",
+      "bytes": 87
+    },
+    {
+      "path": "phase6/01-current-wallet-account-request.json",
+      "sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+      "bytes": 159
+    },
+    {
+      "path": "phase6/01-current-wallet-account-response.raw.gz",
+      "sha256": "b43a4e1e155fb5c2c872f328fccf1809a7063ba00c3e67daf91a1d52d24a5108",
+      "bytes": 195
+    },
+    {
+      "path": "phase6/02-current-legacy-accounts-request.json",
+      "sha256": "ed44f19d919499ac45424e0f40d47ace46bb373d278983e766119b994f341704",
+      "bytes": 228
+    },
+    {
+      "path": "phase6/02-current-legacy-accounts-response.raw.gz",
+      "sha256": "e77588eb113107477809599d54fbe8cf72a288b1c4b357ae642429d9979d7afd",
+      "bytes": 112
+    },
+    {
+      "path": "phase6/03-current-token2022-accounts-request.json",
+      "sha256": "91a6efe9c3137ca8a8d1f805d3ecafe4447ef1bb16ec7ad9c5f968940780ab90",
+      "bytes": 228
+    },
+    {
+      "path": "phase6/03-current-token2022-accounts-response.raw.gz",
+      "sha256": "fc124e03a6d9366a356a7fe8412a04f2af2325a89127ec11a6715201d1971113",
+      "bytes": 488
+    },
+    {
+      "path": "phase6/04-selected-buy-request.json",
+      "sha256": "128273ef36d883c5fc341acbf74c59ae7c6ec43a613b8530f77ff009ef74daee",
+      "bytes": 238
+    },
+    {
+      "path": "phase6/04-selected-buy-response.raw.gz",
+      "sha256": "ca0a81a0bb7d1f374c41c0776cdd9ce1f2d461844bce36f173a5c4cdc036232c",
+      "bytes": 4163
+    },
+    {
+      "path": "phase6/05-selected-sell-request.json",
+      "sha256": "35cf84b6d2537f4875edf8517fd23ec96db55ec730ddcf3fcd647619b2deebbc",
+      "bytes": 238
+    },
+    {
+      "path": "phase6/05-selected-sell-response.raw.gz",
+      "sha256": "08628e5695017fa3f7a0133aef0567cfc80b281fe92245d78d877038281fa647",
+      "bytes": 3904
+    },
+    {
+      "path": "phase6/06-legacy-transfer-close-request.json",
+      "sha256": "20f1213965746dd4f2109c4584f6062294b411f0c666fb920a4176ba3663fe31",
+      "bytes": 238
+    },
+    {
+      "path": "phase6/06-legacy-transfer-close-response.raw.gz",
+      "sha256": "acb1bcb6e818c03a065f2764a756ba3de4313aec514095add3d12b6d74214d24",
+      "bytes": 1326
+    },
+    {
+      "path": "phase6/07-owner-in-data-token2022-request.json",
+      "sha256": "af3bd1c43f13eff8a0128becf05b98853218a60c4478bc04101322e48781f172",
+      "bytes": 238
+    },
+    {
+      "path": "phase6/07-owner-in-data-token2022-response.raw.gz",
+      "sha256": "a2d7a7a7cc3a5976baea71033f1a5108c09c64fd19c36990933582435fe1be92",
+      "bytes": 1795
+    },
+    {
+      "path": "phase6/08-token2022-burn-close-request.json",
+      "sha256": "53f97a2f3a156255aefc006dc1d7611582b11b2b1e8ef1eda1d0684765b6d3a3",
+      "bytes": 237
+    },
+    {
+      "path": "phase6/08-token2022-burn-close-response.raw.gz",
+      "sha256": "64bb9c3c755c5de903f7880c16056294ecb1344d5a601e8c8efcdb184bcd1d09",
+      "bytes": 2628
+    }
+  ],
+  "billing_actual_credits": null,
+  "execution_source_binding": {
+    "phase1": "EXECUTED_NATIVE_COLLECTOR.py",
+    "phase2": "EXECUTED_PUBLIC_COLLECTOR.py",
+    "phase3": "EXECUTED_PUBLIC_COLLECTOR.py",
+    "phase4": "NOT_BOUND: exact dispatch-source snapshot was not captured",
+    "phase5": "EXECUTED_FINAL_COLLECTOR.py",
+    "phase6": "EXECUTED_FINAL_COLLECTOR.py"
+  },
+  "limitations": [
+    "Same-engineer read-only review; collector author is reviewer.",
+    "Phase4 exact executed source hash remains unbound; plans/raw bytes/ledger reconcile independently.",
+    "Phase2/3 retain legacy top-level Helius endpoint field; exact GET descriptors and row source_url identify Gecko.",
+    "Provider billing delta, exhaustive historical owner population and genuine wallet acceptance are not established."
+  ],
+  "PRODUCT_READY": false
+}

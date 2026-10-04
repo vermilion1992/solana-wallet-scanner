@@ -1,0 +1,72 @@
+{
+  "state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+  "case_count": 7,
+  "all_scoped_cases_pass": true,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "parent_unchanged": true,
+  "usage_unchanged": true,
+  "PRODUCT_READY": false,
+  "query_records": {
+    "report_period": {
+      "state": "PASS",
+      "query_records_state": "PASS",
+      "supported_record_state": "PASS",
+      "historical_population_state": "UNKNOWN",
+      "format_population_state": "UNKNOWN",
+      "record_count": 87
+    },
+    "four_weeks": {
+      "state": "PASS",
+      "query_records_state": "PASS",
+      "supported_record_state": "PASS",
+      "historical_population_state": "UNKNOWN",
+      "format_population_state": "UNKNOWN",
+      "record_count": 87
+    },
+    "verification_90d": {
+      "state": "PASS",
+      "query_records_state": "PASS",
+      "supported_record_state": "PASS",
+      "historical_population_state": "UNKNOWN",
+      "format_population_state": "UNKNOWN",
+      "record_count": 87
+    }
+  },
+  "selected_lot": {
+    "monetary_state": "PASS",
+    "timing_state": "PASS",
+    "quantity_state": "PASS",
+    "conditional_basis_sol": "0.565194018",
+    "conditional_lot_profit_sol": "-0.013270924",
+    "conditional_hold_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+    "wallet_population_state": "UNKNOWN",
+    "qualification": false
+  },
+  "real_acceptance": {
+    "state": "BLOCKED",
+    "missing": [
+      "Accepted historical owned-account/population proof is unresolved.",
+      "A supported realised wallet calculation is not yet known; selected arithmetic is insufficient.",
+      "profit_sol: required source dependencies remain unresolved.",
+      "realised_roi_pct: required source dependencies remain unresolved.",
+      "median_roi_pct: required source dependencies remain unresolved.",
+      "win_rate_pct: required source dependencies remain unresolved.",
+      "median_hold_hours: required source dependencies remain unresolved.",
+      "completed_positions: required source dependencies remain unresolved.",
+      "completed_positions_90d: required source dependencies remain unresolved.",
+      "traded_mints: required source dependencies remain unresolved.",
+      "rapid_sale_pct: required source dependencies remain unresolved.",
+      "avg_buys: required source dependencies remain unresolved.",
+      "avg_sells: required source dependencies remain unresolved.",
+      "positive_weeks: required source dependencies remain unresolved.",
+      "largest_contribution_pct: required source dependencies remain unresolved.",
+      "economic_pnl_sol: required source dependencies remain unresolved."
+    ],
+    "mathematically_inapplicable": [],
+    "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+  },
+  "parent_raw_sha256": "1239d7d10076c87551e17a81cba7db8c606da77274b9907d2bbf2f41722656c8",
+  "parent_raw_bytes": 69381326,
+  "note": "Repeated workflow cases are not additional unique tests or complete genuine wallet acceptance."
+}

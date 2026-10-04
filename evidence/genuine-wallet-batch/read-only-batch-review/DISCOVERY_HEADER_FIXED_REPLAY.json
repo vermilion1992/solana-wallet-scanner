@@ -1,0 +1,29 @@
+{
+  "scope": "Read-only current-source replay of preserved first failing repro; no provider calls, synthetic diagnostic only",
+  "source_hashes": {
+    "scanner/discovery.py": "046966de310af6a9009b8f94789a5736fe34d65325eecbe293a1b5f6b54b4df1",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad"
+  },
+  "results": [
+    {
+      "header_required": 0,
+      "signatures": 1,
+      "native_flow_addresses": [],
+      "reason": "Native signer account evidence is unresolved: Parsed header signer/read-only counts are malformed"
+    },
+    {
+      "header_required": 1,
+      "signatures": 1,
+      "native_flow_addresses": [
+        "11111111111111111111111111111115"
+      ],
+      "reason": null
+    },
+    {
+      "header_required": 2,
+      "signatures": 1,
+      "native_flow_addresses": [],
+      "reason": "Native signer account evidence is unresolved: Parsed signer/writable roles contradict message header"
+    }
+  ]
+}

@@ -1,0 +1,275 @@
+{
+  "kind": "current-accepted-candidate-product-gap-inventory",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "application_source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "application_source_files": 228,
+  "scope": "Read-only inspection of current frozen source and the executed genuine normal parent. No new application/test/doc edits or suite. Historical inventories/failed executions are retained unchanged. Accepted suffix identifies the scoped candidate; it does not claim product readiness.",
+  "source_files": {
+    "scanner/app.py": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+    "scanner/archive_input.py": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+    "scanner/wallet_evidence.py": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22",
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/metric_evidence.py": "744b2b011a7e625fc111cc7608709a3815742bfbb44b450095ab04198797ceea",
+    "scanner/history_evidence.py": "5a9f2e531deb36e7c38f3722512f30bd7b53c76404201e27311b8d0315f1680c",
+    "scanner/position_evidence.py": "894f5a6301d0dafb42a47d852514582d1007f3260a7e8dceb9a981c8ba0b9ab3",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "scanner/decoder.py": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "tools/check_genuine_collection.py": "1b20f7c0bd335ec24d63aa6f1c1c4398c25533b9c29ffec5429da9c676e97583"
+  },
+  "current_consumer_methods": {
+    "wallet": "wallet-raw-evidence-v6",
+    "archive_accounting": "archive-ledger-v9",
+    "query_coverage": "indexed-query-coverage-v2",
+    "history": "history-evidence-v11",
+    "positions": "account-position-evidence-v13",
+    "spot_decoder": "spot-v7-native-flow-roles",
+    "compiled_normalizer": "compiled-instructions-v2"
+  },
+  "input_and_oracle_identity": {
+    "archive": {
+      "path": "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    },
+    "independent_expectations": {
+      "path": "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "calculation_scope": "Raw inputs/calculations were frozen before original production replay and remain byte-exact. They were not recalculated from current accounting output. The newer consumer changes interpretation and uncertainty, not the independent expected arithmetic.",
+    "normal_workflow_receipt": {
+      "path": "evidence/genuine-wallet-batch/genuine-workflow-accepted/result.json",
+      "sha256": "d677ed3f51b95e66f3fd59c86a1f3b5d31c484a61390455a61cb797836336696"
+    },
+    "normal_parent": {
+      "path": "evidence/genuine-wallet-batch/genuine-workflow-accepted/parent-report.json",
+      "sha256": "e943674df6376c42d318f52b8de93f4c977dc6d961b60616feea1bf4d6c7f1c2",
+      "bytes": 69288847
+    }
+  },
+  "literal_dimensions": {
+    "selected_query_transactions": 87,
+    "retained_lifetime_event_kinds": {
+      "fee": 87,
+      "capital": 78,
+      "unsupported": 224,
+      "rent": 288,
+      "transfer_out": 42,
+      "transfer_in": 17,
+      "wrap": 39,
+      "buy": 13,
+      "sell": 3
+    },
+    "in_report_window_event_kinds": {
+      "fee": 17,
+      "capital": 12,
+      "unsupported": 20,
+      "rent": 18,
+      "transfer_out": 2,
+      "buy": 3,
+      "sell": 2
+    },
+    "native_role_check_instances": {
+      "UNKNOWN": 174,
+      "PASS": 10
+    },
+    "transaction_cost_role_checks": {
+      "UNKNOWN": 85,
+      "PASS": 2
+    },
+    "empty_cost_role_checks_are_not_proven_trades": "The UNKNOWN bucket includes no-trade/unsupported cases; it is not a count of definitely missing purchases.",
+    "observed_fifo_candidates": {
+      "interrupted": 16,
+      "unresolved": 1
+    },
+    "typed_lot_candidates": 17,
+    "typed_lot_monetary_states": {
+      "UNKNOWN": 16,
+      "PASS": 1
+    },
+    "typed_lots_money_quantity_timing_all_pass": 1,
+    "financial_metric_states": {
+      "unknown": 14,
+      "known": 1
+    },
+    "count_warning": "These are corpus/check-instance dimensions and can overlap. Seven genuine case entries/eight builds are workflow scenarios, not additional unique test nodes. No total test count is asserted here."
+  },
+  "supported_results": {
+    "selected_in_window_wallet_paid_network_fees_sol": "0.000158868",
+    "fee_scope": "Selected in-window records with an independently supported wallet fee payer; not all interval costs",
+    "named_account_lot": {
+      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+      "accounts": [
+        "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw"
+      ],
+      "acquired_and_disposed_quantity_raw": "516612982765",
+      "basis_lamports": "565194018",
+      "net_exit_lamports": "551923094",
+      "conditional_profit_sol": "-0.013270924",
+      "hold_seconds": 529,
+      "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+      "wallet_population_state": "UNKNOWN",
+      "classification_state": "UNKNOWN",
+      "qualification": false
+    },
+    "removal_restoration": "Executed selected-fee plus buy/sell-required-source loss and exact restoration; parent unchanged, zero provider/credential calls. Named lot proof cannot certify wallet-wide profit."
+  },
+  "four_separate_source_conclusions": {
+    "access_and_entitlement": "Previously acquired authorized bounded source inputs demonstrate the queried endpoint/account response. No live source check was performed in this replay.",
+    "schema_and_selected_response_compatibility": "All87 terminal query originals and selected counterparts enter the current ordinary source-consistency/chronology/accounting path.",
+    "query_scope": "Complete documented indexed address-query population only; historical wallet membership is separate",
+    "query_intervals": {
+      "report_period": {
+        "state": "PASS",
+        "query_records_state": "PASS",
+        "supported_record_state": "PASS",
+        "records": 87,
+        "gaps": []
+      },
+      "four_weeks": {
+        "state": "PASS",
+        "query_records_state": "PASS",
+        "supported_record_state": "PASS",
+        "records": 87,
+        "gaps": []
+      },
+      "verification_90d": {
+        "state": "PASS",
+        "query_records_state": "PASS",
+        "supported_record_state": "PASS",
+        "records": 87,
+        "gaps": []
+      }
+    },
+    "historical_completeness": {
+      "state": "UNKNOWN",
+      "format_population_state": "UNKNOWN",
+      "reason": "Pinned wording does not explicitly guarantee closed, reassigned or both-program event-time historical membership."
+    },
+    "wallet_qualification": {
+      "qualified": false,
+      "policy": "UNRESOLVED",
+      "reason": "Supported selected observations do not establish complete historical ownership, eligible population, origin/cost roles or report-boundary valuation."
+    }
+  },
+  "current_component_states": {
+    "historical_population": "UNKNOWN",
+    "event_ownership": "UNKNOWN",
+    "quantity_continuity": "UNKNOWN",
+    "chronology": "PASS",
+    "lifecycle": "UNKNOWN",
+    "observed_quantities": "UNKNOWN",
+    "observed_cost_roles": "UNKNOWN",
+    "observed_acquisition_basis": "UNKNOWN",
+    "observed_disposed_basis": "UNKNOWN",
+    "observed_economic_roles": "UNKNOWN",
+    "observed_positions": "UNKNOWN",
+    "acquisition_basis": "UNKNOWN",
+    "economic_costs": "UNKNOWN",
+    "classification": "UNKNOWN",
+    "positions": "UNKNOWN",
+    "boundary_inventory": "UNKNOWN",
+    "historical_marks": "UNKNOWN",
+    "valued_external_flows": "UNKNOWN",
+    "selected_record_identity": "PASS",
+    "native_fee": "PASS",
+    "fee_window": "PASS"
+  },
+  "A_confirmed_current_application_defects": {
+    "new_reproduced_defects_in_this_inventory": [],
+    "scope": "No additional correctness defect is asserted from a read-only inventory. Missing future proof-admission paths are listed separately; focused/gate review scope is not a claim of no remaining defects."
+  },
+  "B_missing_implementation": [
+    {
+      "id": "CAP-HIST",
+      "area": "Real historical wallet population admission and per-interval proof composition",
+      "refs": [
+        "scanner/real_coverage.py:311",
+        "scanner/wallet_evidence.py:1062"
+      ],
+      "current_production_gate": "Historical source receipt and report/28/90 wallet interval checks are always UNKNOWN for real inputs; validated terminal query pages do not have an accepted historical-wallet-owner contract/admission path.",
+      "required_work": "Validate a genuine supported event-time historical ownership/format population witness, preserving closed/reassigned/both-program identities and independent report/28/90 boundaries. Compose it with existing query/linked-source checks; do not trust caller completion flags."
+    },
+    {
+      "id": "CAP-ORIGIN",
+      "area": "Complete acquisition/position population and aggregate cost-role derivation",
+      "refs": [
+        "scanner/wallet_evidence.py:1102",
+        "scanner/wallet_evidence.py:1108",
+        "scanner/wallet_evidence.py:1113"
+      ],
+      "current_production_gate": "Selected FIFO reuses the existing engine, but aggregate basis/roles remain incomplete. Aggregate economic-role acceptance still requires only buy/sell/fee/internal_transfer event kinds, even while scoped native conservation handles reviewed rent/wrap/funding. Aggregate observed positions require every candidate zero-closed; complete open inventory vs closed holding cohort is not independently admitted.",
+      "required_work": "Admit source-backed transfer/mint/boundary acquisition origins and supported nontrading native flow roles, then derive metric-specific closed cohort vs complete stock positions. Preserve unknown external/tip/unsupported routes and all source-removal dependencies."
+    },
+    {
+      "id": "CAP-ROUTES",
+      "area": "Remaining current opaque exchange/fee/wrapper/extension semantics",
+      "refs": [
+        "scanner/decoder.py:337",
+        "scanner/investigation.py:42"
+      ],
+      "current_production_gate": "Compiled instruction_view bridge already exists. Valid immutable-owner/getter administration is supported diagnostically and does not create ledger/basis/classification facts. Other unsupported exchange, fee-program, wrapper and extension effects remain unresolved.",
+      "required_work": "Review actual retained raw route families and pinned primary layouts in coherent batches before attributing quantity/cost/economic effects; keep legitimate unknown routes and current raw-source linkage."
+    },
+    {
+      "id": "CAP-CLASS",
+      "area": "Accepted real historical eligible-asset classification",
+      "refs": [
+        "scanner/wallet_evidence.py:1156"
+      ],
+      "current_production_gate": "Nonsettlement classification is constructed UNKNOWN despite retained classification receipt bytes; no validated real time-relevant eligibility/classification source adapter exists.",
+      "required_work": "Derive classification from accepted raw evidence and historical scope, rather than accepting caller labels or current token controls as historical eligibility."
+    },
+    {
+      "id": "CAP-VALUATION",
+      "area": "Real exact boundary inventory, historical marks and valued external flow adapters",
+      "refs": [
+        "scanner/wallet_evidence.py:1159",
+        "scanner/wallet_evidence.py:1162",
+        "scanner/wallet_evidence.py:1164",
+        "scanner/archive_input.py:541"
+      ],
+      "current_production_gate": "These real gates are unconditionally UNKNOWN. Archive valuation inputs are currently populated only by synthetic finite-world proof; raw real receipt retention alone cannot reach economic P&L.",
+      "required_work": "Admit exact historical all-account endpoints and time-specific price/flow witnesses through the existing FIFO/economic accounting path. Missing valuation must remain isolated from supported realised observations."
+    },
+    {
+      "id": "CAP-FINAL",
+      "area": "Final accepted real evidence-status/policy/qualification and readiness wiring",
+      "refs": [
+        "scanner/archive_input.py:779",
+        "scanner/app.py:378"
+      ],
+      "current_production_gate": "Real archive metadata remains real_acceptance BLOCKED and archive reports partial; there is no final accepted real complete-wallet proof branch wired to verified evidence/qualification. Current data appropriately remains blocked.",
+      "required_work": "After independent genuine source-proof adapters are accepted, derive final state from metric/source dependencies and current methods. Do not switch flags or reuse synthetic world declarations."
+    }
+  ],
+  "C_missing_data_or_source_capability": [
+    {
+      "id": "B1-HIST",
+      "missing": "An accepted documented and empirical historical membership/format contract covering formerly closed/reassigned accounts across legacy Token and Token2022, plus exhaustive all relevant records at independent boundaries. Current unfiltered address query completeness is narrower."
+    },
+    {
+      "id": "B2-COST",
+      "missing": "Raw required opening/incoming origins, costs and roles for interrupted/unresolved candidate positions. Selected swaps or token balance deltas cannot invent earlier basis or assign unknown capital/tip/program flows."
+    },
+    {
+      "id": "B2-CLASS",
+      "missing": "Time-relevant eligibility/classification and required risk/control evidence for the full observed/relevant asset population; current snapshots or WSOL settlement identity do not provide this."
+    },
+    {
+      "id": "B2-ECON",
+      "missing": "Exact opening/closing wallet inventory, historical valuation marks and valued external-flow evidence needed by economic P&L. This does not erase independently supported selected realised/fee/timing observations."
+    }
+  ],
+  "D_environment_validation_limitations": {
+    "offline_replay": "Normal genuine workflow completed on this source with seven PASS scoped entries/eight builds; require-real and development commands have separate authoritative records.",
+    "full_backend_frontend_browser": "Root runs the full exact-source gate/browser suite concurrently. This inventory does not rerun or inflate that unique suite count.",
+    "live_provider": "No provider/credential calls during current offline replay. Current live endpoint/entitlement/price facts cannot be revalidated without separate approved bounded acquisition."
+  },
+  "gate_status": {
+    "B1": "Address-query endpoint/schema demonstrated from retained authorized inputs; historical membership/format completeness unresolved.",
+    "B2": "Archive import/source inspection/export/immutable offline rebuild and conditional named-account accounting functional; complete real wallet proof-admission/accounting path remains OPEN for both implementation and source reasons.",
+    "B3": "BLOCKED: the genuine87 corpus proves a supported query and selected observations, not original wallet-wide acceptance.",
+    "candidate": "scoped-valid/development-functional/real-acceptance-blocked",
+    "PRODUCT_READY": false
+  }
+}

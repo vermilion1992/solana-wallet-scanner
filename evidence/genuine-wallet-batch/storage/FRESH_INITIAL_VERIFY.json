@@ -1,0 +1,13 @@
+{
+  "kind": "fresh-process-lossless-storage-verification-v1",
+  "state": "PASS",
+  "index": "evidence/genuine-wallet-batch/storage/INITIAL_EVIDENCE_STORAGE_INDEX.json",
+  "index_sha256": "59197e534aea1971342d284ada96efedc63ad1fac84dd7b3bf8515ab3efc6946",
+  "compressed_entries_checked": 22,
+  "separate_process_from_compressor": true,
+  "verification": "Read compressed SHA-256, freshly decompressed size and SHA-256, and reread retained original size and SHA-256 against index for every entry.",
+  "originals_preserved": true,
+  "provider_requests": 0,
+  "credential_reads": 0,
+  "application_acceptance_claimed": false
+}

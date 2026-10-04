@@ -1,0 +1,8 @@
+{
+  "state": "CANCELLED_NOT_ACCEPTED",
+  "reason": "Audit began while Git add still held the index lock, so its current-file list could predate the final staged tree. Terminated only that audit process and retained its partial log; final exact staged audit runs separately.",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "staged_paths": 720,
+  "provider_requests": 0,
+  "credential_reads": 0
+}

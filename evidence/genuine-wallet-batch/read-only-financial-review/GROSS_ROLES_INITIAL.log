@@ -1,0 +1,166 @@
+FF....................                                                   [100%]
+=================================== FAILURES ===================================
+_ test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[malformed_signature0] _
+
+malformed_signature = {'malformed': 'identity'}
+
+    @pytest.mark.parametrize('malformed_signature', [{'malformed': 'identity'}, ['not', 'a', 'signature'], '', 7])
+    def test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection(malformed_signature):
+        from scanner.wallet_evidence import _selected_lot_observations
+        first = native(slot=111_491_820)
+        first['transaction']['signatures'][0] = malformed_signature
+        second = native('development-recovery-malformed-sibling', slot=111_491_821, at=START + 4000)
+        edge, _ = unicode_source([first, second], value='\ud800', ordinal=1)
+        # Early whole-page serialization rejection may preserve raw leads without
+        # an assignable-signature receipt. Never use a caller-shaped key as proof.
+        assert _selected_lot_observations([], {}, {}, {}, {}, [], [], [edge], WALLET) == []
+        selected_raw = native(slot=111_491_822)
+        baseline = derive([selected_raw], [source([selected_raw])])
+>       malformed = derive([selected_raw], [source([selected_raw]), edge])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_real_coverage.py:717: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_indexed_source_dependencies.py:55: in derive
+    return derive_wallet_evidence(selected, all_records=selected + list(alternatives), wallet=WALLET,
+scanner/wallet_evidence.py:897: in derive_wallet_evidence
+    negative_links = raw_native_dependencies(source_rows, (), selected)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw_sources = [{'kind': 'indexed-page', 'hash': '59898f809cb7f37f288a8dc55ded0861ab612f44f06152ecdb4d2231d510d04e', 'payload': {'ver...'response_hash': '58eacec1bdffe4a91db14ed05ac1c4b42f28700d82ae91da87607cfbb3f3f3e0', ...}, 'signature_hints': [], ...}]
+source_receipts = ()
+selected_signatures = {'indexed-dev-buy': {'signature': 'indexed-dev-buy', 'raw': {'slot': 111491822, 'blockTime': 1790003600, 'version': 0,... 'instructions': [{...}]}}, ...}, 'evidence_hash': 'ddbd7340ef7262a5ab9928a86972c6d0a8f3e00f8ad22b494afdd585ec149565'}}
+
+    def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
+        """Return negative native associations to freeze before raw source loss.
+    
+        The helper only derives dependencies from checksum-verified native-shaped
+        content, malformed/unassignable source scope or negative selectors. It never
+        authenticates completeness. Import/report callers freeze these links beside
+        original raw evidence so later loss cannot erase an observed contradiction.
+        """
+        selected = {s for s in selected_signatures if isinstance(s, str) and s}
+        negative, available = set(), {}
+        sources = _resolved_sources(raw_sources, source_receipts)
+        indexed_rows = {(source['kind'], source['hash']): _indexed_native_rows(source['payload']) for source in sources}
+        row_counts = {}
+        for (_kind, digest), facts in indexed_rows.items():
+            row_counts[digest] = max(row_counts.get(digest, 0), len(facts[0]))
+        indexed_budget_exceeded = sum(row_counts.values()) > MAX_INDEXED_RECORDS
+        for source in sources:
+            kind, digest, payload = source['kind'], source['hash'], source['payload']
+            if kind in ('transaction', 'getTransaction'):
+                continue  # Explicit native links are checked by the normal loader.
+            if source['invalid_body']:
+                negative.add((None, digest))
+                continue
+            indexed_facts = indexed_rows[(kind, digest)]
+            if indexed_budget_exceeded and indexed_facts[3]:
+                # Never certify a convenient page prefix after whole-input loss.
+                negative.add((None, digest))
+                continue
+            claims, ambiguous = _native_claims(payload, indexed_facts=indexed_facts)
+            # Query-role affinity is negative-only. Explicit signature selectors
+            # cannot be discarded merely because a caller chose that role label.
+            hints = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES or kind == 'query-affinity' else []
+            affected = selected & (claims | set(hints))
+            negative.update((signature, digest) for signature in affected)
+            native_rows, _, _, indexed = indexed_facts
+            if indexed:
+                for raw in native_rows:
+                    transaction = raw.get('transaction') if isinstance(raw, dict) else None
+                    signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+                    signature = signatures[0] if isinstance(signatures, list) and signatures else None
+>                   if signature not in affected:
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   TypeError: unhashable type: 'dict'
+
+scanner/wallet_evidence.py:570: TypeError
+_ test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[malformed_signature1] _
+
+malformed_signature = ['not', 'a', 'signature']
+
+    @pytest.mark.parametrize('malformed_signature', [{'malformed': 'identity'}, ['not', 'a', 'signature'], '', 7])
+    def test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection(malformed_signature):
+        from scanner.wallet_evidence import _selected_lot_observations
+        first = native(slot=111_491_820)
+        first['transaction']['signatures'][0] = malformed_signature
+        second = native('development-recovery-malformed-sibling', slot=111_491_821, at=START + 4000)
+        edge, _ = unicode_source([first, second], value='\ud800', ordinal=1)
+        # Early whole-page serialization rejection may preserve raw leads without
+        # an assignable-signature receipt. Never use a caller-shaped key as proof.
+        assert _selected_lot_observations([], {}, {}, {}, {}, [], [], [edge], WALLET) == []
+        selected_raw = native(slot=111_491_822)
+        baseline = derive([selected_raw], [source([selected_raw])])
+>       malformed = derive([selected_raw], [source([selected_raw]), edge])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_real_coverage.py:717: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_indexed_source_dependencies.py:55: in derive
+    return derive_wallet_evidence(selected, all_records=selected + list(alternatives), wallet=WALLET,
+scanner/wallet_evidence.py:897: in derive_wallet_evidence
+    negative_links = raw_native_dependencies(source_rows, (), selected)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw_sources = [{'kind': 'indexed-page', 'hash': '0872d49ffe05ad07e8f42b774549175089c236182245a5124d2028d1804cffac', 'payload': {'ver...'response_hash': 'ba9edcbaeeb8b5ecb7df92174f1942de960c0ed335f383891e1d04c6b60868e5', ...}, 'signature_hints': [], ...}]
+source_receipts = ()
+selected_signatures = {'indexed-dev-buy': {'signature': 'indexed-dev-buy', 'raw': {'slot': 111491822, 'blockTime': 1790003600, 'version': 0,... 'instructions': [{...}]}}, ...}, 'evidence_hash': 'ddbd7340ef7262a5ab9928a86972c6d0a8f3e00f8ad22b494afdd585ec149565'}}
+
+    def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
+        """Return negative native associations to freeze before raw source loss.
+    
+        The helper only derives dependencies from checksum-verified native-shaped
+        content, malformed/unassignable source scope or negative selectors. It never
+        authenticates completeness. Import/report callers freeze these links beside
+        original raw evidence so later loss cannot erase an observed contradiction.
+        """
+        selected = {s for s in selected_signatures if isinstance(s, str) and s}
+        negative, available = set(), {}
+        sources = _resolved_sources(raw_sources, source_receipts)
+        indexed_rows = {(source['kind'], source['hash']): _indexed_native_rows(source['payload']) for source in sources}
+        row_counts = {}
+        for (_kind, digest), facts in indexed_rows.items():
+            row_counts[digest] = max(row_counts.get(digest, 0), len(facts[0]))
+        indexed_budget_exceeded = sum(row_counts.values()) > MAX_INDEXED_RECORDS
+        for source in sources:
+            kind, digest, payload = source['kind'], source['hash'], source['payload']
+            if kind in ('transaction', 'getTransaction'):
+                continue  # Explicit native links are checked by the normal loader.
+            if source['invalid_body']:
+                negative.add((None, digest))
+                continue
+            indexed_facts = indexed_rows[(kind, digest)]
+            if indexed_budget_exceeded and indexed_facts[3]:
+                # Never certify a convenient page prefix after whole-input loss.
+                negative.add((None, digest))
+                continue
+            claims, ambiguous = _native_claims(payload, indexed_facts=indexed_facts)
+            # Query-role affinity is negative-only. Explicit signature selectors
+            # cannot be discarded merely because a caller chose that role label.
+            hints = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES or kind == 'query-affinity' else []
+            affected = selected & (claims | set(hints))
+            negative.update((signature, digest) for signature in affected)
+            native_rows, _, _, indexed = indexed_facts
+            if indexed:
+                for raw in native_rows:
+                    transaction = raw.get('transaction') if isinstance(raw, dict) else None
+                    signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+                    signature = signatures[0] if isinstance(signatures, list) and signatures else None
+>                   if signature not in affected:
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   TypeError: unhashable type: 'list'
+
+scanner/wallet_evidence.py:570: TypeError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_real_coverage.py::test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[malformed_signature0]
+FAILED tests/test_real_coverage.py::test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[malformed_signature1]
+2 failed, 20 passed, 123 deselected, 1 warning in 1.03s

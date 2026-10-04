@@ -1,0 +1,20 @@
+{
+  "state": "REAL_REQUIRED_INTERRUPTED",
+  "child": {
+    "pid": 91323,
+    "argv": [
+      "/workspace/solana-wallet-scanner/.venv/bin/python",
+      "tools/check_genuine_collection.py",
+      "--input",
+      "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+      "--input-freeze",
+      "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+      "--worked-expectations",
+      "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+      "--output",
+      "evidence/genuine-wallet-batch/genuine-real-required-final",
+      "--require-real-acceptance"
+    ]
+  },
+  "reason": "Root stop instruction arrived as the sequential wrapper had already advanced from completed normal execution; terminate real-required child immediately. Partial artifacts are preserved and no acceptance is claimed."
+}

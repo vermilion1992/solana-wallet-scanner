@@ -1,0 +1,14 @@
+{
+  "candidate_application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "source_files": 228,
+  "completed_executions": 4,
+  "genuine_scoped_scenarios": 7,
+  "genuine_report_builds_per_execution": 8,
+  "development_cases": 4,
+  "count_scope": "No sum of overlapping replays; scenarios/captures are not unique test nodes.",
+  "offline_guards_zero": true,
+  "parent_immutability": true,
+  "real_acceptance": "BLOCKED",
+  "PRODUCT_READY": false
+}

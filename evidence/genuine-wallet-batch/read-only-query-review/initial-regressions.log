@@ -1,0 +1,47 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_selected_native_variant_can_use_the_retained_original_linked_accounting_path _
+
+    def test_selected_native_variant_can_use_the_retained_original_linked_accounting_path():
+        raw = native(slot=111_491_820)
+        selected_raw = deepcopy(raw)
+        selected_raw['meta']['logMessages'] = ['Optional retained native representation metadata']
+        page = source([raw])
+        result = derive([selected_raw], [page], alternatives=[record(raw)])
+>       assert query(result)['state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_real_coverage.py:100: AssertionError
+_ test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-344/test_genuine_compiled_and_nati0')
+
+    def test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record(tmp_path):
+        from pathlib import Path
+        from scanner.indexed_input import convert_indexed_archive
+        content = (Path(__file__).resolve().parents[1] /
+            'evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip').read_bytes()
+        store = Store(tmp_path)
+        archive = import_archive(store, convert_indexed_archive(content))
+        loaded = load_archive(store, archive)
+        selected = loaded['records']
+        linked = loaded['all_records']
+        kwargs = dict(raw_sources=loaded['raw_sources'], wallet=loaded['manifest']['address'],
+            window=loaded['manifest']['window'], source_consistency=loaded['consistency'],
+            chronology=loaded['chronology'])
+        result = derive_indexed_coverage(selected, all_records=linked, **kwargs)
+        for receipt in result['intervals'].values():
+>           assert receipt['state'] == receipt['query_records_state'] == 'PASS'
+E           AssertionError: assert 'UNKNOWN' == 'PASS'
+E             
+E             - PASS
+E             + UNKNOWN
+
+tests/test_real_coverage.py:153: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_real_coverage.py::test_selected_native_variant_can_use_the_retained_original_linked_accounting_path
+FAILED tests/test_real_coverage.py::test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record
+2 failed in 2.41s

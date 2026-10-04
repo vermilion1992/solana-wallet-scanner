@@ -1,0 +1,541 @@
+{
+  "scope": "One manual schema conformance matrix; 29 rows are not 29 additional unique tests. Uses checksum-pinned public primary enum, not the production extension table. No provider or credential activity.",
+  "state": "PASS",
+  "source_sha256": {
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+    "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs": "4f26ecac09a04fd307adb52024061996fff3b660c12693bb050313eedeed2fcc",
+    "evidence/references/parse_token.rs": "50370cf477d4d526960a226a945f712426c059f220fd4c84f63f493da64d88c0",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad"
+  },
+  "primary_variant_rows": [
+    {
+      "binary_extension_u16": 0,
+      "primary_variant": "Uninitialized",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "uninitialized"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 1,
+      "primary_variant": "TransferFeeConfig",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "transferFeeConfig"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 2,
+      "primary_variant": "TransferFeeAmount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "transferFeeAmount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 3,
+      "primary_variant": "MintCloseAuthority",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "mintCloseAuthority"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 4,
+      "primary_variant": "ConfidentialTransferMint",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "confidentialTransferMint"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 5,
+      "primary_variant": "ConfidentialTransferAccount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "confidentialTransferAccount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 6,
+      "primary_variant": "DefaultAccountState",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "defaultAccountState"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 7,
+      "primary_variant": "ImmutableOwner",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "immutableOwner"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 8,
+      "primary_variant": "MemoTransfer",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "memoTransfer"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 9,
+      "primary_variant": "NonTransferable",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "nonTransferable"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 10,
+      "primary_variant": "InterestBearingConfig",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "interestBearingConfig"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 11,
+      "primary_variant": "CpiGuard",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "cpiGuard"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 12,
+      "primary_variant": "PermanentDelegate",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "permanentDelegate"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 13,
+      "primary_variant": "NonTransferableAccount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "nonTransferableAccount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 14,
+      "primary_variant": "TransferHook",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "transferHook"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 15,
+      "primary_variant": "TransferHookAccount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "transferHookAccount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 16,
+      "primary_variant": "ConfidentialTransferFeeConfig",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "confidentialTransferFeeConfig"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 17,
+      "primary_variant": "ConfidentialTransferFeeAmount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "confidentialTransferFeeAmount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 18,
+      "primary_variant": "MetadataPointer",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "metadataPointer"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 19,
+      "primary_variant": "TokenMetadata",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "tokenMetadata"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 20,
+      "primary_variant": "GroupPointer",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "groupPointer"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 21,
+      "primary_variant": "TokenGroup",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "tokenGroup"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 22,
+      "primary_variant": "GroupMemberPointer",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "groupMemberPointer"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 23,
+      "primary_variant": "TokenGroupMember",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "tokenGroupMember"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 24,
+      "primary_variant": "ConfidentialMintBurn",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "confidentialMintBurn"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 25,
+      "primary_variant": "ScaledUiAmount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "scaledUiAmount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 26,
+      "primary_variant": "Pausable",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "pausable"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 27,
+      "primary_variant": "PausableAccount",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "pausableAccount"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    },
+    {
+      "binary_extension_u16": 28,
+      "primary_variant": "PermissionedBurn",
+      "parsed": {
+        "type": "getAccountDataSize",
+        "info": {
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "extensionTypes": [
+            "permissionedBurn"
+          ]
+        }
+      },
+      "raw_paths": [
+        "manual.original.accounts",
+        "manual.original.data",
+        "manual.original.programId"
+      ]
+    }
+  ],
+  "legacy_trailing_bytes": "Ignored as documented; original bytes retained; no extension state certified",
+  "token2022_invalid_payloads": [
+    "1501",
+    "15ffff",
+    "151d00"
+  ]
+}

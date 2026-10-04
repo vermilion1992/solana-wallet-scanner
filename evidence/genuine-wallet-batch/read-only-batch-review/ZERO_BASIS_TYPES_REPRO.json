@@ -1,0 +1,163 @@
+{
+  "scope": "Read-only current-source synthetic acceptance-interface diagnostic. No genuine expectations changed; no provider or application acceptance.",
+  "checker_sha256": "dd78bf03bf73abeb26a35866620b8919b634e060ee49a3ea3e5d15a3bda80f2a",
+  "results": [
+    {
+      "matched_basis_type": "bool",
+      "matched_basis_value": false,
+      "result": {
+        "state": "PASS",
+        "missing": [],
+        "mathematically_inapplicable": [
+          {
+            "metric": "realised_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported disposed acquisition costs are zero; the realised ROI denominator is zero.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          },
+          {
+            "metric": "median_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported completed cohort contains a zero-cost episode; its required whole-episode ROI is undefined.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          }
+        ],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "int",
+      "matched_basis_value": 0,
+      "result": {
+        "state": "PASS",
+        "missing": [],
+        "mathematically_inapplicable": [
+          {
+            "metric": "realised_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported disposed acquisition costs are zero; the realised ROI denominator is zero.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          },
+          {
+            "metric": "median_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported completed cohort contains a zero-cost episode; its required whole-episode ROI is undefined.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          }
+        ],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "float",
+      "matched_basis_value": 0.0,
+      "result": {
+        "state": "PASS",
+        "missing": [],
+        "mathematically_inapplicable": [
+          {
+            "metric": "realised_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported disposed acquisition costs are zero; the realised ROI denominator is zero.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          },
+          {
+            "metric": "median_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported completed cohort contains a zero-cost episode; its required whole-episode ROI is undefined.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          }
+        ],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "str",
+      "matched_basis_value": "0",
+      "result": {
+        "state": "PASS",
+        "missing": [],
+        "mathematically_inapplicable": [
+          {
+            "metric": "realised_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported disposed acquisition costs are zero; the realised ROI denominator is zero.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          },
+          {
+            "metric": "median_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported completed cohort contains a zero-cost episode; its required whole-episode ROI is undefined.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          }
+        ],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "str",
+      "matched_basis_value": "NaN",
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "str",
+      "matched_basis_value": "Infinity",
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "NoneType",
+      "matched_basis_value": null,
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "list",
+      "matched_basis_value": [],
+      "exception": "ValueError: argument must be a sequence of length 3"
+    },
+    {
+      "matched_basis_type": "dict",
+      "matched_basis_value": {},
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    }
+  ]
+}

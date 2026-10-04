@@ -1,0 +1,39 @@
+[
+  {
+    "argv": [
+      ".venv/bin/python",
+      "tools/check_product.py",
+      "--output",
+      "evidence/genuine-wallet-batch/product-development-final"
+    ],
+    "start": "2026-10-04T06:54:15.432383+00:00",
+    "end": "2026-10-04T06:54:30.026693+00:00",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "source_before_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+    "source_after_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+    "source_unchanged": true,
+    "application_commit": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+    "log": "evidence/genuine-wallet-batch/product-development-final.log",
+    "log_sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+  },
+  {
+    "argv": [
+      ".venv/bin/python",
+      "tools/check_product.py",
+      "--output",
+      "evidence/genuine-wallet-batch/product-real-required-final",
+      "--require-real-acceptance"
+    ],
+    "start": "2026-10-04T06:54:30.058895+00:00",
+    "end": "2026-10-04T06:54:49.572195+00:00",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "source_before_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+    "source_after_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+    "source_unchanged": true,
+    "application_commit": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+    "log": "evidence/genuine-wallet-batch/product-real-required-final.log",
+    "log_sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7"
+  }
+]

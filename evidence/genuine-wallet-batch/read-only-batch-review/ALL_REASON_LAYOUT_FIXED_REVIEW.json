@@ -1,0 +1,51 @@
+{
+  "scope": "Read-only verification of root browser receipt; no browser rerun or provider/credential access by reviewer",
+  "state": "PASS_IN_SCOPED_LAYOUT_REPLAY",
+  "receipt": "evidence/genuine-wallet-batch/overflow-diagnostic/all-reasons/result.json",
+  "receipt_sha256": "3f7cab5f1947fafbc58d29638db4c2557993e48974c64c60ec4d8b2bb063fd93",
+  "cases": [
+    {
+      "viewport": 1440,
+      "reason_nodes": 23,
+      "selectors": {
+        ".report-metric > small": 6,
+        ".all-metrics-grid > div > small": 14,
+        ".metric-interval-detail > p": 3
+      },
+      "all_text_verbatim_unclamped_fits": true,
+      "document_width_pass": true
+    },
+    {
+      "viewport": 390,
+      "reason_nodes": 23,
+      "selectors": {
+        ".report-metric > small": 6,
+        ".all-metrics-grid > div > small": 14,
+        ".metric-interval-detail > p": 3
+      },
+      "all_text_verbatim_unclamped_fits": true,
+      "document_width_pass": true
+    }
+  ],
+  "source_files": {
+    "frontend/src/styles.css": "af7b6a9fb75884794da89200dfab3ce38321e9e7f432bfe21265b746f847d478",
+    "frontend/dist/index.html": "83dfc6da63c28a805c1287c3bc8be46e14a125d2b8a955d3b4de37f66fa70cb7",
+    "frontend/src/report.tsx": "d100bf8618d4d60a7fa4a2aaeb641e7f1860b531a1afa31773f6bf53013e7b41"
+  },
+  "compiled_assets": {
+    "/assets/index-CvKuHKbK.js": {
+      "sha256": "6d45ae56a67f0e3196f558557816a2150e2ae28b66e6cceade345a40f8e26f24",
+      "bytes": 291243
+    },
+    "/assets/index-J2-LWOXg.css": {
+      "sha256": "e8f98ce8f3ba162427deffaa71f9b50c7e71363d84cdfd55effa2fa9bac62121",
+      "bytes": 67370
+    }
+  },
+  "zero_provider_and_credential_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "parent_and_database_hashes_unchanged": true,
+  "PRODUCT_READY": false
+}

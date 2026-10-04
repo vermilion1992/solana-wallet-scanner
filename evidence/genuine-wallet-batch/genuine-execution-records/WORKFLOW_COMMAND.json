@@ -1,0 +1,27 @@
+{
+  "kind": "genuine-offline-normal-workflow-execution",
+  "argv": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "tools/check_genuine_collection.py",
+    "--input",
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "--input-freeze",
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+    "--worked-expectations",
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+    "--output",
+    "evidence/genuine-wallet-batch/genuine-workflow"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "start": "2026-10-04T06:40:32.318957+00:00",
+  "end": "2026-10-04T06:42:12.073719+00:00",
+  "exit_code": 0,
+  "source_before_sha256": "8d1a503f7f396a4abfb7710a3b4d05665c27f9559912ffb6a23686c9787b1432",
+  "source_after_sha256": "8d1a503f7f396a4abfb7710a3b4d05665c27f9559912ffb6a23686c9787b1432",
+  "source_unchanged": true,
+  "log": "genuine-full-workflow.log",
+  "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+  "log_bytes": 273,
+  "head_after": "ec2ea97bb69c683447ce76ca05d5d9512fb4608a",
+  "scope": "Actual genuine frozen indexed input to normal saved report. Complete wallet acceptance is evaluated separately."
+}

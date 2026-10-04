@@ -1,0 +1,1356 @@
+diff --git a/ISSUES.md b/ISSUES.md
+index 5d13197..4aa4943 100644
+--- a/ISSUES.md
++++ b/ISSUES.md
+@@ -98,3 +98,29 @@ Starting HEAD: `0f3a9d1e110ac948cab4d27fdc3377e37927a08b`; baseline manifest ver
+ | ENV-CI / Environment/validation | Exact final local gates and native GitHub status have separate evidence scopes. | Linux candidate/browser gates require exact final records; Windows/macOS and independent third-party browser acceptance are not claimed. |
+ 
+ The final outcome and exact commands are recorded in `evidence/indexed-native-batch/FINAL_GATES.json`, raw logs and the consolidated read-only `REVIEW.json`. Historical gate/probe records remain unchanged. No new application ZIP is produced.
++
++## Current genuine-wallet completion batch
++
++Starting HEAD `00b70e6e2222c473a8d2b95be93bc6af260bfdcd`; previously tested application `73c9eb5a6fb1cabf7eca8126f029da3aff20f774`; verified 204-file source hash `e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09`. Earlier tables/receipts remain historical. The latest explicit user instruction authorises the four implementation, public-wallet selection, bounded collection and genuine replay tasks; earlier statements that no further collection was authorised no longer describe this batch.
++
++| ID / category | Finding and work | Current status |
++| --- | --- | --- |
++| B2-QRY / B: missing implementation | Raw terminal indexed-query receipts and separate report/28/90-day dependency composition were absent. Added byte-derived query affinity, immutable native links, source/chronology checks and existing FIFO integration. Complete historical and format populations remain separate UNKNOWN decisions. | Implemented; final gates and genuine replay determine scoped acceptance. |
++| B2-AFF / A: confirmed defects | Review reproduced caller-role hiding of readable conflicting native bytes, counting mirrored hash roles against distinct-page bounds, loss of mislabelled query dependencies and fractional reporting-end truncation. Byte association, frozen inventory v2, pre-budget dedup and exact integer-clock bounds correct the shared paths. | Implemented; scoped acceptance is determined by `evidence/genuine-wallet-batch/FINAL_GATES.json`; first reproductions and sibling controls retained. |
++| B2-SEL / A: confirmed defect | Genuine replay selected compatible parsed alternatives while retaining original indexed bytes, but query coverage required the original representation to be selected. Query v2 now verifies original and selected byte/hash bindings in the ordinary linked path; format/identity/chronology rejection remains independent. | Implemented; scoped acceptance is determined by the current final gate record; original failure and missing/conflicting/restored/permutation controls retained. |
++| B2-UI-02 / A: confirmed defect | Genuine dependency reasons containing transaction signatures overflowed desktop/mobile metric panels; a sibling interval paragraph was clipped within its panel. All three metric reason selectors now wrap complete text. | Implemented; failed browser receipt and measured overflow/clipping are retained; current final browser/gate records determine scoped acceptance. |
++| B2-RAW-01 / A: confirmed defect | Distinct current-source review reproduced a loader/query-binding crash when preserved native JSON had an escaped lone Unicode surrogate or a malformed signature key in readable siblings. Rejected raw records must remain unresolved dependencies instead of reaching unguarded canonical hashing. | Implemented; current final gate record determines scoped acceptance; original reproduction and malformed page/native-source import/rebuild/restoration controls retained. |
++| DISC-01 / B: missing implementation | Source-backed research order and bounded audit planning were absent. Shared planning now verifies original discovery sources/current semantic reports; selected/deferred/excluded reasons feed normal API and UI. No report profitability/qualification is inferred from the lead. | Implemented; source loss and immutable report/API controls retained. |
++| DISC-02 / A: confirmed defects | Distinct review reproduced malformed linked hashes/report keys, stale manual selections after source loss and contradictory parsed signer headers. Boundary validation, current plan rechecks and the shared compiled/parsed key resolver now cover source loss and full/display/summary/API paths. Discovery and audit-plan interpretation v2. | VERIFIED_IN_SCOPE by affected controls and distinct review; full candidate gates recorded separately. |
++| B2-FLOW-01 / A: confirmed defect | Same-route foreign System transfers could cancel to zero and evade individual cash-role gates in a supported swap. Gross movement roles must remain dependencies while known fees/timing remain separate. | Current final gate record governs scoped acceptance; first reproduction and outer/inner/zero/self/disjoint controls retained. |
++| B2-KEY-01 / A: confirmed defects | Malformed v0 loaded-address containers raised before independent fee observation; administration source-path scans repeated across instructions. Guarded loader shapes preserve static-payer fees and unresolved instruction identity; per-record indexes bound receipt/inner-group lookup work. | Current final gate record governs scoped acceptance; original crashes, positive/failed controls and source-path scaling receipts retained. |
++| B2-GEN-01 / B: missing implementation | Generic decoding already uses the shared compiled normalizer, but valid immutable-owner token administration fell through its unsupported branch. The shared generic path now retains validated non-ledger administration with original source coordinates while unsupported routes remain explicit dependencies. | Current final gate record governs scoped acceptance; no historical/population/valuation flag is promoted. |
++| B2-RESEARCH-01 / A: confirmed shared consumer defects | Current 7f source retained unknown native cash/physical/clock dependencies in typed proofs but the adjacent research summary still emitted numeric monetary projections and omitted cash uncertainty. Saved v2 research also fed stale copy observations. | Corrected scoped per-sale/episode money, fee-window and physical dependencies in research v3; native wallet v6/archive v9 use freshly derived receipts. Supported quantities, timing, fees and disjoint completed lots remain independent. Strict financial qualification stays independent of auxiliary research staleness; stale fallback research requires an immutable offline child. Final gate evidence governs acceptance; original full failure and sibling reproductions remain retained. |
++| CAP-01 / B: missing implementation | Unreviewed outer routes, complete acquisition/cost/allocation/classification and wallet-wide accounting still require implementation and accepted source inputs. Genuine 87-record corpus reveals mixed routes and transfer interruptions. | OPEN. Preserve individually supported fees/timing/lot facts; do not solve by making all metrics UNKNOWN or trusting declarations. |
++| DATA-01 / C: source capability | Genuine complete declared indexed query is now collected, including owner-in-data Token-2022 create/burn/closure controls. Primary documentation still lacks the independent exhaustive historical owner/population guarantee required by the PDF. Boundary inventories/marks/flow values and historical classification are unproved. | B1 historical sufficiency OPEN; endpoint access/schema OBSERVED. |
++| R1-B3 / C and B: acceptance | Genuine 87 records, explicit frozen intervals and independent raw calculations are available. Report fees and a losing named-account lot are reproducible; complete-wallet proof remains absent. | BLOCKED; no synthetic closure. PRODUCT_READY=false. |
++| ENV-CI / D: environment | Private Git access and previous native CI are resolved. Current batch requires source-bound full Linux/backend/frontend/browser receipts and exact new commit status. Windows/macOS and third-party execution are not claimed. | Current Linux checks and native CI status are recorded in the final gate/publication evidence; no Windows/macOS execution claim. |
++
++The prior indexed/native B2-UI-01 candidate is VERIFIED_IN_SCOPE by `evidence/indexed-native-batch/FINAL_GATES.json`; its historical pending row is preserved above. No accepted R5–R15, PROC-03 or ARC-02 scope is reopened without a current reproduction. No paid subscription, transaction submission or signing is introduced.
++
++The genuine first replay additionally reproduced missing compiled read-only GetAccountDataSize support, retained PumpSwap user-PDA funding being mixed into purchase consideration, wallet-wide uncertainty erasing independent lot observations, and nullable-clock sorting in the new scoped projection. Pinned program-specific getters, exact PDA/owner/payer/CPI/endpoint checks and metric-specific selected-lot dependencies now correct these shared paths. Funding recovery and valuation remain UNKNOWN. Current methods are compiled v2, spot v7, history v11 and position v13; older snapshots require child rebuilds. The checker also rejects swallowed offline provider/credential attempts and distinguishes source-proved mathematically undefined losing/empty-cohort ratios from missing evidence for engineering acceptance only. Its N/A receipt never changes financial policy or current B3 status. First reproductions, frozen raw expectations and final scoped validation are retained under `evidence/genuine-wallet-batch/`.
+diff --git a/docs/ACCEPTANCE_MATRIX.json b/docs/ACCEPTANCE_MATRIX.json
+index 5894c41..f2e42c1 100644
+--- a/docs/ACCEPTANCE_MATRIX.json
++++ b/docs/ACCEPTANCE_MATRIX.json
+@@ -259,9 +259,11 @@
+     },
+     {
+       "id": "real-raw-evidence-adapter",
+-      "axis": "Ownership/quantity/cost source contract; development controls only",
++      "axis": "Ownership/quantity/cost source contract and scoped research consumers; development controls only",
+       "selectors": [
+-        "tests/test_wallet_evidence.py::*"
++        "tests/test_wallet_evidence.py::*",
++        "tests/test_research.py::*",
++        "tests/test_research_source_roles.py::*"
+       ]
+     },
+     {
+@@ -283,7 +285,8 @@
+       "axis": "Representation",
+       "selectors": [
+         "tests/test_compiled_instructions.py::*",
+-        "tests/test_compiled_report_integration.py::*"
++        "tests/test_compiled_report_integration.py::*",
++        "tests/test_compiled_getter.py::*"
+       ]
+     },
+     {
+@@ -320,6 +323,44 @@
+       "selectors": [
+         "tests/test_report_view.py::*"
+       ]
++    },
++    {
++      "id": "indexed-query-scope",
++      "axis": "Source role",
++      "selectors": [
++        "tests/test_real_coverage.py::*",
++        "tests/test_retained_protocol_funding.py::*"
++      ]
++    },
++    {
++      "id": "discovery-plan-evidence",
++      "axis": "Source role",
++      "selectors": [
++        "tests/test_discovery_audit_plan.py::*",
++        "tests/test_discovery_plan_views.py::*",
++        "tests/test_discovery_native_identity.py::*"
++      ]
++    },
++    {
++      "id": "bounded-acquisition-controls",
++      "axis": "Acquisition safety",
++      "selectors": [
++        "tests/test_bounded_collection.py::*"
++      ]
++    },
++    {
++      "id": "genuine-workflow-oracle",
++      "axis": "User path",
++      "selectors": [
++        "tests/test_genuine_collection_workflow.py::*"
++      ]
++    },
++    {
++      "id": "generic-native-administration",
++      "axis": "Representation and source dependency",
++      "selectors": [
++        "tests/test_generic_administration.py::*"
++      ]
+     }
+   ],
+   "browser_required": [
+diff --git a/docs/R1_SOURCE_DECISION.md b/docs/R1_SOURCE_DECISION.md
+index 32196b5..4e3e43f 100644
+--- a/docs/R1_SOURCE_DECISION.md
++++ b/docs/R1_SOURCE_DECISION.md
+@@ -142,3 +142,28 @@ The offline adapter implementation batch introduced no live method, provider fie
+ The previously missing local indexed-byte adapter now converts frozen request/response bytes into the normal archive workflow without collector ancestry or trusted caller declarations. Selected and linked alternative records retain exact page references; indexed chronology is separately validated, and reviewed compiled System/SPL/Token-2022 base/ATA operations feed the existing decoders and accounting. `docs/ARCHIVE_INPUT_CONTRACT.md` specifies the input and scope. Final review/gates are `evidence/indexed-native-batch/`.
+ 
+ This addresses response ingestion and base instruction representation, not upstream historical sufficiency. The 200-record sample remains nonterminal and all 16 successful outer wrappers remain unsupported economic routes. Its selected raw fee expectation is independently calculated as 8,904,733 lamports. Historical closed/reassigned ownership, complete origin/cost roles, classification, independent interval populations and boundary inventory/valuation still require accepted evidence. B1 coverage remains blocked, complete real B2 OPEN and B3 BLOCKED. No additional Helius call or spend is authorised or performed by this batch.
++
++## Genuine-wallet completion batch — 4 October 2026
++
++This section supersedes the earlier additional-collection stopping point. The user explicitly authorised all four completion tasks, bounded read-only collection and testing, without a paid account, trading or signing. The original ten-request feasibility probe and its 73-credit conservative ledger remain unchanged. A distinct durable budget `genuine-wallet-2026-10-04` permits at most 30 requests and 1,000 conservative credits, no retries. Collection stopped after **19 requests**, including two anonymous public discovery requests, and **170 conservative Helius credits**. Actual provider billing delta was not observed. Phase plans, exact raw bytes, dispatch receipts, original executed tool versions and the final budget record are under `evidence/genuine-wallet-batch/collection/`.
++
++The public lead is `2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY`, selected for manageable activity rather than apparent profit. It is an existing public address; wallet software, including Phantom, is irrelevant to the read-only archive contract. No wallet connection, secret key, funding or permission to sign is required. Public pool observations are candidate leads, not eligible-asset classification or a copying recommendation.
++
++| Concept | New demonstrated evidence | Remaining limit |
++| --- | --- | --- |
++| Access / entitlement | Free-account full indexed history and eight native transaction/account controls returned usable RPC results. | No purchase or enduring entitlement promise; balance snapshot and bounded conservative dispatch accounting are separate from billed credit usage. |
++| Response compatibility | 87 genuine legacy/v0 records, raw compiled instructions, terminal empty continuation; native parsed alternatives for five selected records. | Supported layouts are explicitly decoded. Other routes and economic roles remain unsupported dependencies. |
++| Query coverage | An unfiltered ascending `tokenAccounts=all`, status-any lifetime query returned 87 records followed by an explicit empty terminal page. Report end is frozen at 2026-10-04T06:00:00Z; report/28-day/90-day receipts are derived independently. | Terminal coverage proves the declared indexed query, not all possible historically owned accounts or unrequested transaction versions. Full historical population remains UNKNOWN. |
++| Failed records | One genuine sponsored failed record is retained; its fee payer is another account, so its wallet-paid fee is zero. | Presence of one failed record is not a universal index completeness guarantee. |
++| Historical lifecycle | A genuine Token-2022 account is created/minted/frozen with this wallet present only in instruction data/balance owner metadata, then burned and closed; native alternatives retain these facts. Legacy transfer/closure controls and both current-program lists are retained. | This is a valuable positive owner-in-data/lifecycle control. Documentation still does not promise exhaustive formerly closed/reassigned/non-ATA event-time ownership across both programs. Current owner snapshots cannot fill that contract. |
++| Qualification | Independent integer arithmetic gives selected report fees of 158,868 lamports and a named-account supported losing lot of −13,270,924 lamports held 529 seconds. | Neither amount establishes wallet-wide financial metrics, eligibility or copy safety. Whole-wallet qualification remains UNKNOWN. |
++
++The raw expectations were frozen before application replay, using a standalone calculator with no production financial imports. It separates actual quote transfers, network fees, refundable storage funding, transfer interruptions and sponsored fees. Final input packaging adds native alternatives without changing the previously frozen raw-page arithmetic. Reproduction input identity, worked calculations and loss/restoration receipts belong in the same evidence directory; these are acceptance inputs, not a new release ZIP.
++
++The implementation now derives raw indexed query receipts, supported-record dependency sets, acquisition/cost/timing observations and conditional accounting through the existing FIFO/report path. Query affinity is frozen from original bytes rather than imported labels; missing/conflicting query evidence revokes dependent query decisions while preserving independently supported fees. Real `historical_population`, transaction-format population, complete asset classification and economic boundary/flow valuation are separate unproved inputs. No caller-supplied completion or position flag activates them.
++
++**Current source decision:** Free access and tested schema/lifecycle examples are observed; the required exhaustive historical ownership contract is not established. B1 historical sufficiency remains OPEN. B2 is development-functional for supported real records, with complete-wallet implementation and unsupported economic routes still OPEN. B3 remains BLOCKED until genuine whole-wallet evidence and independently worked expectations satisfy the explicit coverage contract. PRODUCT_READY=false. A paid plan alone would not resolve these evidentiary or implementation gaps.
++
++### Current research consumer correction
++
++The genuine batch exposed a shared adjacent consumer defect: explicit unknown cash roles were retained by raw/typed accounting proofs but conditional research still calculated dependent money. Research v3 now consumes the freshly derived native wallet v6 or archive v9 transaction, scoped physical, clock and fee-window dependencies. Unknown acquisition basis, consideration, required fees or conflicting physical records revoke only dependent monetary projections. Independently supported quantities, timing, selected network fees and proven disjoint lot observations remain usable; aggregate historical populations and unsupported chronology remain unknown. Immutable saved v2 research is labelled for an offline child rebuild and cannot supply current fallback copy observations. Independently proven strict financial qualification and strict positions remain separate from auxiliary research freshness. This correction changes no original genuine arithmetic or historical ownership contract. B1 historical sufficiency is OPEN, complete real B2 is OPEN, B3 is BLOCKED and PRODUCT_READY=false.
+diff --git a/frontend/src/report.tsx b/frontend/src/report.tsx
+index efeea14..aca68d5 100644
+--- a/frontend/src/report.tsx
++++ b/frontend/src/report.tsx
+@@ -1297,6 +1297,10 @@ export function ReportView({
+                 subtitle={`${report.research.scope} · ${count(report.research.supported_swaps)} supported swaps · ${count(report.research.closed_episodes)} observed closed episodes`}
+                 action={<Badge value="partial">Fetched subset</Badge>}
+               />
++              {report.research_assessment &&
++                report.research_assessment.state !== "current" && (
++                  <p role="status">{report.research_assessment.reason}</p>
++                )}
+               <div className="observed-research-note">
+                 These conditional calculations assume no earlier undiscovered
+                 holdings. Sales without fetched cost basis are excluded. They do
+diff --git a/frontend/src/types.ts b/frontend/src/types.ts
+index d888609..4e44b6d 100644
+--- a/frontend/src/types.ts
++++ b/frontend/src/types.ts
+@@ -258,6 +258,7 @@ export type Report = {
+   preview?: boolean;
+   history_assessment?: HistoryAssessment;
+   position_assessment?: PositionAssessment;
++  research_assessment?: HistoryAssessment;
+   qualification?: Qualification;
+   copy_review?: CopyReview;
+   metrics: Record<string, Metric>;
+@@ -466,6 +467,11 @@ export type DiscoveryCohort = {
+   universe?: Record<string, unknown>[];
+   sample?: Record<string, unknown>;
+   audit_scan_ids?: string[];
++  audit_plan?: {
++    selected_addresses: string[];
++    deferred: { address: string; reason?: string }[];
++    excluded: { address?: string; reason?: string }[];
++  };
+   reason?: string;
+   [key: string]: unknown;
+ };
+diff --git a/scanner/app.py b/scanner/app.py
+index 0580f67..05b0b09 100644
+--- a/scanner/app.py
++++ b/scanner/app.py
+@@ -108,6 +108,7 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
+ 
+ def _freeze_native_dependencies(store, collected, *, address, window):
+     from .wallet_evidence import raw_native_dependencies
++    from .real_coverage import query_source_dependencies
+     primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
+     negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
+     # These are negative associations, not completion or position certificates.
+@@ -115,6 +116,8 @@ def _freeze_native_dependencies(store, collected, *, address, window):
+         {'kind': 'transaction' if r.get('signature') else 'unresolved-native-source',
+          'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in negatives
+         if isinstance(r.get('evidence_hash'), str) and re.fullmatch(r'[a-f0-9]{64}', r['evidence_hash'])]}
++    frozen['evidence'] += [{'kind': 'query-affinity', 'hash': digest}
++                          for digest in query_source_dependencies(raw_sources)]
+     return frozen, primary, linked, raw_sources, raw_receipts
+ 
+ 
+@@ -167,7 +170,15 @@ def create_app(data_dir, launch_token=None):
+         from .copy_review import qualify_report, review_copy_behavior
+         from .history_evidence import VERSION as HISTORY_METHODOLOGY
+         from .position_evidence import VERSION as POSITION_METHODOLOGY
++        from .research import VERSION as RESEARCH_METHODOLOGY
+         result = {**report, "qualification": qualify_report(report), "copy_review": review_copy_behavior(report)}
++        if not report.get('preview'):
++            research = report.get('research')
++            saved = research.get('version') if isinstance(research, dict) else None
++            state = 'current' if saved == RESEARCH_METHODOLOGY else 'rebuild_required' if saved else 'missing'
++            result['research_assessment'] = {'saved_methodology': saved, 'current_methodology': RESEARCH_METHODOLOGY,
++                'state': state, 'reason': 'Current scoped research interpretation; inspect each monetary/timing dependency.' if state == 'current' else
++                'Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.'}
+         if report.get('archive_input_hash') and not report.get('preview'):
+             from .archive_input import METHOD as ARCHIVE_METHODOLOGY
+             archive = report.get('archive_accounting')
+@@ -191,7 +202,9 @@ def create_app(data_dir, launch_token=None):
+ 
+     def discovery_cohorts(saved_reports=None):
+         from .candidate_import import derive_candidate_progress
++        from .discovery import plan_candidate_audits
+         saved_reports = reports() if saved_reports is None else saved_reports
++        planner_reports = report_inputs('summary')
+         saved = {report["id"]: report for report in saved_reports}
+         result = store.list("discovery_cohorts")
+         for cohort in result:
+@@ -204,6 +217,9 @@ def create_app(data_dir, launch_token=None):
+                                                   "preset_version": None, "evidence_status": "unknown", "failed_checks": [], "unknown_checks": [],
+                                                   "reason": "A native identity check is a research lead. Historical accounting and all PDF evidence gates must be audited."}
+                 candidate.update(derive_candidate_progress(candidate, cohort, saved_reports))
++            cohort['audit_plan'] = plan_candidate_audits(
++                store, cohort, reports=planner_reports, preset=preset(),
++                audit_cap=settings()['limits']['deep_audit_cap'])
+         return result
+ 
+     def checkpoint_reference(checkpoint):
+@@ -306,7 +322,8 @@ def create_app(data_dir, launch_token=None):
+                              interval_coverage={name: history_evidence["intervals"][name]
+                                                 for name in ("report_period", "four_weeks", "verification_90d")})
+             result = apply_metric_decisions(result, derived_decisions)
+-        research = summarize_research(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete)
++        research = summarize_research(events, scan["window"]["start"], scan["window"]["end"],
++                                      history_complete=history_complete, wallet_evidence=wallet_evidence)
+         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
+         mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
+         risk_evidence = []
+@@ -873,6 +890,7 @@ def create_app(data_dir, launch_token=None):
+ 
+     @app.post("/api/discovery/{identifier}/audit")
+     async def audit_discovery(identifier, request: Request):
++        from .discovery import plan_candidate_audits
+         data = await body(request)
+         if set(data) - {"addresses"}:
+             raise ValueError("Unknown discovery audit setting")
+@@ -885,7 +903,13 @@ def create_app(data_dir, launch_token=None):
+                     and candidate.get("validation", {}).get("identity_verified") is True
+                     and candidate.get("validation", {}).get("account_type") == "system-owned signer"
+                     and candidate["address"] in candidate.get("validation", {}).get("economic_signers", [])]
+-        addresses = data.get("addresses", eligible[:settings()["limits"]["deep_audit_cap"]])
++        audit_plan = plan_candidate_audits(
++            store, cohort, reports=report_inputs('summary'), preset=preset(),
++            audit_cap=settings()['limits']['deep_audit_cap'])
++        planned_eligible = set(audit_plan['selected_addresses']) | {
++            row['address'] for row in audit_plan['deferred']}
++        eligible = [address for address in eligible if address in planned_eligible]
++        addresses = data.get("addresses", audit_plan['selected_addresses'])
+         if not isinstance(addresses, list) or not addresses or len(addresses) > settings()["limits"]["deep_audit_cap"]:
+             raise ValueError("Select 1–5 verified candidate wallets within the configured audit cap")
+         addresses = list(dict.fromkeys(validate_address(address) for address in addresses))
+@@ -898,6 +922,9 @@ def create_app(data_dir, launch_token=None):
+             raise HTTPException(409, "The research credit cap has been reached; saved evidence remains available")
+         scan_id = queue_scan(addresses, preset()["window_days"], "automatic-discovery", mode, identifier)
+         cohort.setdefault("audit_scan_ids", []).append(scan_id)
++        cohort['last_queued_audit_plan'] = {**audit_plan, 'queued_addresses': addresses,
++                                          'explicit_selection': 'addresses' in data,
++                                          'scan_id': scan_id}
+         store.put("discovery_cohorts", identifier, cohort)
+         return {"scan_id": scan_id, "budget_mode": mode}
+ 
+diff --git a/scanner/archive_input.py b/scanner/archive_input.py
+index f97f006..19261e4 100644
+--- a/scanner/archive_input.py
++++ b/scanner/archive_input.py
+@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
+ from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
+ 
+ VERSION = 'archived-wallet-input-v1'
+-METHOD = 'archive-ledger-v5'
++METHOD = 'archive-ledger-v9'
+ _CURRENT_IMPORT = object()
+ MAX_UPLOAD = 20 * 1024 * 1024
+ MAX_ENTRY = 32 * 1024 * 1024
+@@ -74,6 +74,8 @@ def validate_manifest(value):
+     for ref in refs:
+         if not isinstance(ref, dict) or not isinstance(ref.get('hash'), str) or not HASH.fullmatch(ref['hash']) or not isinstance(ref.get('kind'), str):
+             raise ValueError('Evidence links need explicit kinds and SHA-256 hashes')
++        if ref['kind'] in ('query-affinity', 'archive-native-dependencies'):
++            raise ValueError('Frozen dependency roles are derived internally, not accepted as archive evidence declarations')
+         if ref['kind'] in ('transaction', 'getTransaction') and (not isinstance(ref.get('signature'), str) or not 1 <= len(ref['signature']) <= 128):
+             raise ValueError('Alternative transaction links require an explicit bounded signature')
+     for key in ('world_hash', 'valuation_hash'):
+@@ -175,18 +177,25 @@ def import_archive(store, content, *, reserve_bytes=0):
+         except (EvidenceError, ValueError, OSError):
+             source['payload'] = None
+     dependencies = raw_native_dependencies(sources, (), {r['signature'] for r in manifest['transactions']})
++    from .real_coverage import query_source_dependencies
++    query_hashes = query_source_dependencies(sources)
+     links = [{'signature': r.get('signature'), 'hash': r['evidence_hash']} for r in dependencies
+              if isinstance(r.get('evidence_hash'), str) and HASH.fullmatch(r['evidence_hash'])]
+     previous = store.get('archive_dependency_inputs', digest, {})
+     previous_hash = previous.get('hash') if isinstance(previous, dict) else None
+     if previous_hash:
+         try:
+-            links += _dependency_links(store.evidence(previous_hash), digest)
++            previous_inventory = store.evidence(previous_hash)
++            links += _dependency_links(previous_inventory, digest)
++            if previous_inventory.get('version') == 'archive-native-dependencies-v2':
++                query_hashes += previous_inventory['query_source_hashes']
+         except (EvidenceError, ValueError, OSError):
+             links.append({'signature': None, 'hash': previous_hash})
++            query_hashes.append(previous_hash)
+     links = list({(r['signature'], r['hash']): r for r in links}.values())
+-    inputs = {'version': 'archive-native-dependencies-v1', 'manifest_hash': digest,
+-              'links': sorted(links, key=lambda r: (r['signature'] or '', r['hash']))}
++    inputs = {'version': 'archive-native-dependencies-v2', 'manifest_hash': digest,
++              'links': sorted(links, key=lambda r: (r['signature'] or '', r['hash'])),
++              'query_source_hashes': sorted(set(query_hashes))}
+     _dependency_links(inputs, digest)
+     dependency_hash = store.archive(inputs)
+     store.put('archive_dependency_inputs', digest, {'hash': dependency_hash})
+@@ -195,10 +204,18 @@ def import_archive(store, content, *, reserve_bytes=0):
+ 
+ def _dependency_links(value, manifest_hash):
+     from .source_consistency import SOURCE_HASH_LIMIT
+-    if (not isinstance(value, dict) or set(value) != {'version', 'manifest_hash', 'links'}
+-        or value.get('version') != 'archive-native-dependencies-v1' or value.get('manifest_hash') != manifest_hash
++    version = value.get('version') if isinstance(value, dict) else None
++    fields = {'version', 'manifest_hash', 'links'} | ({'query_source_hashes'} if version == 'archive-native-dependencies-v2' else set())
++    if (not isinstance(value, dict) or set(value) != fields
++        or version not in ('archive-native-dependencies-v1', 'archive-native-dependencies-v2') or value.get('manifest_hash') != manifest_hash
+         or not isinstance(value.get('links'), list) or len(value['links']) > SOURCE_HASH_LIMIT):
+         raise ValueError('Frozen native dependency inventory disagrees with this manifest')
++    if version == 'archive-native-dependencies-v2':
++        hashes = value['query_source_hashes']
++        if (not isinstance(hashes, list) or len(hashes) > SOURCE_HASH_LIMIT
++            or any(not isinstance(h, str) or not HASH.fullmatch(h) for h in hashes)
++            or len(set(hashes)) != len(hashes)):
++            raise ValueError('Frozen query dependency inventory is malformed or exceeds its bound')
+     for row in value['links']:
+         if (not isinstance(row, dict) or set(row) != {'signature', 'hash'}
+             or not isinstance(row.get('hash'), str) or not HASH.fullmatch(row['hash'])
+@@ -228,7 +245,7 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
+         for item in world['transactions']:
+             if isinstance(item, dict) and isinstance(item.get('hash'), str) and HASH.fullmatch(item['hash']):
+                 read(item['hash'], 'population-inventory')
+-    dependency_input = None
++    dependency_input, query_affinities = None, []
+     if dependency_input_hash is _CURRENT_IMPORT:
+         index = store.get('archive_dependency_inputs', digest, {})
+         dependency_input_hash = index.get('hash') if isinstance(index, dict) else None
+@@ -236,12 +253,22 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
+         dependency_input = read(dependency_input_hash, 'archive-native-dependencies')
+         try:
+             links += _dependency_links(dependency_input, digest)
++            if dependency_input.get('version') == 'archive-native-dependencies-v2':
++                query_affinities += dependency_input['query_source_hashes']
++                for query_hash in query_affinities:
++                    read(query_hash, 'query-affinity')
++            else:
++                # The old inventory froze native associations only.  Keep its
++                # absent query-role proof separate from independent fees.
++                query_affinities.append(dependency_input_hash)
+         except (ValueError, TypeError):
+             links.append({'signature': None, 'hash': dependency_input_hash})
++            query_affinities.append(dependency_input_hash)
+     else:
+         # A legacy parent has no frozen role-affinity proof. Never substitute
+         # a later mutable import index for that parent's original references.
+         links.append({'signature': None, 'hash': None})
++        query_affinities.append(digest)
+     from .indexed_input import IndexedResolver, describe_pages
+     indexed_resolver = IndexedResolver(read, address=manifest['address'])
+     indexed_sources = {}
+@@ -296,7 +323,8 @@ def load_archive(store, digest, *, dependency_input_hash=_CURRENT_IMPORT):
+                 + ([{'hash': manifest['valuation_hash'], 'kind': 'valuation',
+                      'payload': valuation}] if manifest.get('valuation_hash') else [])
+                 + ([{'hash': dependency_input_hash, 'kind': 'archive-native-dependencies',
+-                     'payload': dependency_input}] if dependency_input_hash else []),
++                     'payload': dependency_input}] if dependency_input_hash else [])
++                + [{'hash': h, 'kind': 'query-affinity', 'payload': cache.get(h)} for h in query_affinities],
+             'dependency_input_hash': dependency_input_hash,
+             'dependency_input': dependency_input, 'input_hash': digest}
+ 
+@@ -336,8 +364,14 @@ def archived_record(payload, signature, digest, read, *, address=None, resolver=
+                 # An unrelated malformed sibling cannot erase a native body.
+                 # Reuse the pointer resolver to check request/response identity
+                 # and exact bytes; chronology still rejects unsupported scope.
++                try:
++                    native_hash = hashlib.sha256(canonical_bytes(item)).hexdigest()
++                except (ValueError, TypeError, UnicodeError, OverflowError, RecursionError):
++                    receipt['state'] = 'UNKNOWN'
++                    receipt['gaps'].append(f'{identity}: native record cannot supply a canonical hash preimage')
++                    continue  # Its frozen source/signature remains unresolved.
+                 pointer = {'version': RECORD_VERSION, 'source_hash': digest, 'ordinal': ordinal,
+-                           'signature': identity, 'native_hash': hashlib.sha256(canonical_bytes(item)).hexdigest()}
++                           'signature': identity, 'native_hash': native_hash}
+                 resolved = (resolver or IndexedResolver(read, address=address)).resolve(pointer)
+                 if resolved['state'] == 'PASS':
+                     by_signature[identity].append(resolved['raw'])
+@@ -506,6 +540,8 @@ def _quantity_episodes(points, *, supported, world_hash):
+ 
+ def _valuation_inputs(loaded, boundaries, scope):
+     value, world = loaded['valuation'], loaded['world']
++    if loaded['manifest']['dataset'] != 'synthetic':
++        return {}, 'No accepted genuine boundary inventory, historical mark and valued-flow adapter is present.'
+     if not scope or not isinstance(value, dict) or value.get('kind') != 'synthetic-valuation-v1':
+         return {}, 'Boundary inventories, marks and valued external flows are not supported.'
+     try:
+@@ -552,12 +588,22 @@ def analyze_archive(loaded, events):
+     from .wallet_evidence import derive_wallet_evidence
+     from .metric_evidence import compose_metric_decisions, apply_metric_decisions
+     manifest = loaded['manifest']
+-    scope, points, boundaries, gaps = _world_scope(loaded)
++    scope, points, boundaries, gaps = _world_scope(loaded) if manifest['dataset'] == 'synthetic' else (False, [], {}, [])
+     events = deepcopy(events)
+     adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+         wallet=manifest['address'], window=manifest['window'], events=events,
+         source_consistency=loaded['consistency'], chronology=loaded['chronology'],
+         source_receipts=loaded['receipts'], raw_sources=loaded.get('raw_sources', []))
++    if manifest['dataset'] == 'real':
++        # Genuine inputs use the common raw adapter, not the finite-world
++        # witness.  Query termination is separate from wallet membership;
++        # neither an uploaded source decision nor a terminal page activates it.
++        scope = (adapter['components']['historical_population']['state'] == 'PASS'
++                 and adapter['intervals']['report_period']['state'] == 'PASS')
++        gaps = [adapter['components']['historical_population']['reason']]
++        if adapter['query_coverage']['intervals']['report_period']['state'] != 'PASS':
++            gaps += adapter['query_coverage']['intervals']['report_period']['gaps']
++        gaps = sorted(set(gaps))
+     native_rows = loaded['consistency']['transactions'].values()
+     financial_scope = scope and all(all(r['native'].get(k, {}).get('state') == 'PASS'
+         for k in ('wallet_network_fees_sol', 'native_wallet_delta_sol')) for r in native_rows)
+@@ -586,14 +632,20 @@ def analyze_archive(loaded, events):
+     intervals = {}
+     start, end = utc(manifest['window']['start']), utc(manifest['window']['end'])
+     for name, begin in (('report_period', start), ('four_weeks', end - timedelta(days=28)), ('verification_90d', end - timedelta(days=90))):
+-        interval_known = scope and utc(loaded['world']['start']) <= begin
++        interval_known = (scope and utc(loaded['world']['start']) <= begin) if manifest['dataset'] == 'synthetic' else adapter['intervals'][name]['state'] == 'PASS'
+         intervals[name] = {'start': begin.isoformat(), 'end': end.isoformat(), 'status': 'complete' if interval_known else 'unknown',
+-                           'evidence': [manifest['world_hash']] if scope else [],
+-                           'reason': None if interval_known else '; '.join(gaps) or 'Finite-world evidence does not span this independent interval.'}
++                           'evidence': ([manifest['world_hash']] if scope else []) if manifest['dataset'] == 'synthetic' else adapter['intervals'][name]['evidence'],
++                           'reason': None if interval_known else ('; '.join(gaps) or 'Finite-world evidence does not span this independent interval.')
++                               if manifest['dataset'] == 'synthetic' else adapter['intervals'][name]['reason']}
+     with localcontext() as ctx:
+         ctx.prec = 192
+         economic, economic_gap = _valuation_inputs(loaded, boundaries, financial_scope)
+-        result = analyze(events, start.isoformat(), end.isoformat(), history_complete=financial_scope, interval_coverage=intervals, **economic)
++        # Acquisition/valuation loss is applied by per-metric dependencies.
++        # Complete physical history must not become incomplete solely because
++        # an unrelated monetary prerequisite is absent.
++        result = analyze(events, start.isoformat(), end.isoformat(),
++            history_complete=financial_scope if manifest['dataset'] == 'synthetic' else scope,
++            interval_coverage=intervals, **economic)
+     if intervals['verification_90d']['status'] != 'complete':
+         result['metrics']['completed_positions_90d'].update(value=None, status='unknown', reason=intervals['verification_90d']['reason'])
+         result['metric_coverage']['completed_positions_90d']['metric_status'] = 'unknown'
+@@ -684,7 +736,7 @@ def analyze_archive(loaded, events):
+         if metric['status'] == 'unknown' and not scope and metric['population'] != result['metrics']['observed_network_fees_sol']['population']:
+             metric['reason'] = '; '.join(gaps) + ' ' + (metric.get('reason') or '')
+         if metric['status'] == 'known' and metric is not result['metrics']['observed_network_fees_sol']:
+-            metric['evidence'] = sorted(set(metric.get('evidence', []) + ([manifest['world_hash']] if scope else [])
++            metric['evidence'] = sorted(set(metric.get('evidence', []) + ([manifest['world_hash']] if scope and manifest.get('world_hash') else [])
+                 + ([manifest['valuation_hash']] if metric is result['metrics']['economic_pnl_sol'] and economic else [])))
+     components = deepcopy(adapter['components'])
+     interval_checks = deepcopy(adapter['intervals'])
+@@ -723,7 +775,7 @@ def analyze_archive(loaded, events):
+     requirements = compose_metric_decisions(components, interval_checks, metric_observations=result['metrics'])
+     result = apply_metric_decisions(result, requirements)
+     return result, events, {'version': METHOD, 'dataset': manifest['dataset'],
+-        'scope': 'Synthetic enumerated finite world; development only' if manifest['dataset'] == 'synthetic' else 'Imported selected native records; historical wallet completeness unproved',
++        'scope': 'Synthetic enumerated finite world; development only' if manifest['dataset'] == 'synthetic' else 'Archived native records with independently derived query and historical-membership scopes',
+         'real_acceptance': 'NOT_APPLICABLE_SYNTHETIC' if manifest['dataset'] == 'synthetic' else 'BLOCKED',
+         'population_state': 'PASS' if financial_scope else 'UNKNOWN', 'quantity_population_state': 'PASS' if scope else 'UNKNOWN', 'gaps': gaps,
+         'source_receipts': loaded['receipts'], 'source_consistency': loaded['consistency'], 'chronology': loaded['chronology'],
+@@ -731,6 +783,7 @@ def analyze_archive(loaded, events):
+         'account_quantity_points': points, 'quantity_episodes': _quantity_episodes(points, supported=scope, world_hash=manifest.get('world_hash')),
+         'boundary_inventory': boundaries, 'metric_requirements': requirements,
+         'wallet_evidence': adapter, 'component_checks': components, 'interval_checks': interval_checks,
++        'query_coverage': adapter['query_coverage'], 'query_accounting': adapter['query_accounting'],
+         'input_hash': loaded['input_hash'], 'provider_requests': 0, 'credential_lookups': 0}
+ 
+ 
+diff --git a/scanner/copy_review.py b/scanner/copy_review.py
+index 29d2754..d02aa96 100644
+--- a/scanner/copy_review.py
++++ b/scanner/copy_review.py
+@@ -13,6 +13,7 @@ import re
+ from .accounting import METHODOLOGY, canonical, decimal
+ from .history_evidence import VERSION as HISTORY_METHODOLOGY
+ from .position_evidence import VERSION as POSITION_METHODOLOGY
++from .research import VERSION as RESEARCH_METHODOLOGY
+ 
+ 
+ EVIDENCE_KEYS = tuple("evidence_" + name for name in
+@@ -140,6 +141,7 @@ def review_copy_behavior(report):
+         raise ValueError("Copy review requires a report object.")
+     preset = report.get("preset") if isinstance(report.get("preset"), dict) else {}
+     research = report.get("research") if isinstance(report.get("research"), dict) else {}
++    current_research = research.get('version') == RESEARCH_METHODOLOGY
+     source_checks = report.get("checks") if isinstance(report.get("checks"), list) else []
+     position_checks = [check for check in source_checks if isinstance(check, dict) and check.get("key") == "evidence_positions"]
+     coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}
+@@ -149,12 +151,12 @@ def review_copy_behavior(report):
+                           position.get("version") == POSITION_METHODOLOGY and
+                           report.get("methodology") == METHODOLOGY and report.get("preview", False) is False and
+                           len(position_checks) == 1 and position_checks[0].get("state") == "PASS")
+-    rows = report.get("positions", []) if verified_positions else research.get("episodes", [])
++    rows = report.get("positions", []) if verified_positions else research.get("episodes", []) if current_research else []
+     rows = [row for row in rows if isinstance(row, dict) and row.get("status") == "closed" and row.get("in_window", True) is True] if isinstance(rows, list) else []
+     conditional = not verified_positions
+     scope = ("Verified strict completed positions in the saved reporting window" if verified_positions else
+              "Observed supported spot episodes in the fetched subset; timing remains conditional on earlier inventory and intervening flows")
+-    chronology_known = research.get("chronology_unknown") is not True or verified_positions
++    chronology_known = research.get("chronology_unknown") is not True or verified_positions or current_research
+     findings, checks = [], {}
+     min_hold = _number(preset.get("min_hold_hours", "1"))
+     max_rapid = _number(preset.get("max_rapid_sale_pct", "10"))
+@@ -170,8 +172,21 @@ def review_copy_behavior(report):
+     def unknown(key, detail):
+         checks[key] = {"state": "UNKNOWN", "detail": detail, "actual": None, "evidence": [], "conditional": conditional}
+ 
++    if not current_research and not verified_positions:
++        unknown('research_methodology', 'Saved scoped research is stale or missing; create an immutable offline child before using its observations.')
++
++    def timing_supported(row):
++        # Global uncertainty may coexist with an independently supported v3
++        # episode. A roleless legacy row cannot declare that disjointness.
++        state = row.get('timing_state')
++        if not verified_positions and research.get('chronology_unknown') is True:
++            return current_research and state == 'PASS'
++        return row.get('timing_state', 'PASS') == 'PASS'
++
+     timing_rows = []
+     for row in rows if chronology_known else []:
++        if not timing_supported(row):
++            continue
+         hold, exit90, first = (_number(row.get(key)) for key in ("hold_hours", "sold_90_pct_hours", "first_sale_hours"))
+         evidence = _hashes(row.get("evidence"))
+         if hold is not None and exit90 is not None and exit90 <= hold:
+@@ -189,7 +204,8 @@ def review_copy_behavior(report):
+                 [digest for _, _, _, _, hashes in timing_rows for digest in hashes])
+     else:
+         unknown("long_tail_holds", "Completed episodes with evidenced final and 90% exit timings are needed.")
+-    first_values = [(row, _number(row.get("first_sale_hours"))) for row in rows] if chronology_known else []
++    first_values = [(row, _number(row.get("first_sale_hours")) if timing_supported(row) else None)
++                    for row in rows] if chronology_known else []
+     if first_values and all(value is not None for _, value in first_values):
+         with localcontext() as context:
+             context.prec = 192
+@@ -208,8 +224,8 @@ def review_copy_behavior(report):
+ 
+     def count(value):
+         return value if type(value) is int and value >= 0 else None
+-    unresolved_basis = count(research.get("unresolved_basis_sales"))
+-    unmatched = count(research.get("observed_unmatched_sales"))
++    unresolved_basis = count(research.get("unresolved_basis_sales")) if current_research else None
++    unmatched = count(research.get("observed_unmatched_sales")) if current_research else None
+     if unresolved_basis is not None or unmatched is not None:
+         observe("unmatched_basis", "Sales with unresolved earlier inventory or unmatched fetched purchase cost remain counted; they cannot be treated as zero-cost profit.",
+                 {"unresolved_basis_sales": unresolved_basis, "observed_unmatched_sales": unmatched}, research.get("evidence"))
+diff --git a/scanner/research.py b/scanner/research.py
+index fa1d7aa..88b540b 100644
+--- a/scanner/research.py
++++ b/scanner/research.py
+@@ -26,20 +26,21 @@ from .accounting import analyze, canonical, decimal, raw_quantity, utc, median,
+ 
+ D = Decimal
+ ZERO = D('0')
++VERSION = 'supported-subset-research-v3-native-roles'
+ 
+ 
+ def summarize_research(events, start, end, *, history_complete=False,
+-                       opening_inventory=None, findings=None):
++                       opening_inventory=None, findings=None, wallet_evidence=None):
+     """Return evidence-linked observations; never certify copy execution or safety."""
+     if not isinstance(history_complete, bool):
+         raise ValueError('history_complete must be boolean')
+     with localcontext() as context:
+         context.prec = 192
+         return _summarize(events, utc(start), utc(end), history_complete,
+-                          opening_inventory or {}, findings or [])
++                          opening_inventory or {}, findings or [], wallet_evidence)
+ 
+ 
+-def _summarize(events, start, end, history_complete, anchors, supplied_findings):
++def _summarize(events, start, end, history_complete, anchors, supplied_findings, wallet_evidence):
+     if end <= start:
+         raise ValueError('Reporting window must have positive duration')
+     if not isinstance(anchors, dict):
+@@ -77,6 +78,110 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+             else:
+                 global_gap = True
+     ordered.sort(key=lambda row: row[:3])
++    # A missing role remains compatible with legacy event-only models. An
++    # explicit unsupported or malformed role is never a proved capital role.
++    cash_gaps = [row for row in ordered if row[3].get('kind') == 'capital'
++                 and 'economic_role' in row[3]
++                 and row[3]['economic_role'] != 'administration']
++    cash_keys = {(row[3]['signature'], row[0]) for row in cash_gaps
++                 if isinstance(row[3].get('signature'), str)}
++    period_cash_gap = any(when >= start for when, _, _, _ in cash_gaps)
++    from .wallet_evidence import VERSION as WALLET_VERSION
++    receipt_valid = (isinstance(wallet_evidence, dict) and wallet_evidence.get('version') == WALLET_VERSION
++                     and isinstance(wallet_evidence.get('transactions'), dict))
++    # A fresh raw-derived scoped receipt can prove one episode independent of
++    # an unrelated missing timestamp. The global population and aggregate
++    # chronology remain unresolved. Legacy event-only models cannot prove that
++    # separation and retain their existing global conservatism.
++
++    def source_check(event, key):
++        if wallet_evidence is None:
++            return True  # Legacy event-only development models remain supported.
++        signature = event.get('signature')
++        row = wallet_evidence['transactions'].get(signature) if receipt_valid and isinstance(signature, str) else None
++        checks = row.get('checks') if isinstance(row, dict) else None
++        receipt = checks.get(key) if isinstance(checks, dict) else None
++        return isinstance(receipt, dict) and receipt.get('state') == 'PASS'
++
++    def physical_known(event):
++        if wallet_evidence is None:
++            return True
++        signature, mint = event.get('signature'), event.get('mint')
++        row = wallet_evidence['transactions'].get(signature) if receipt_valid and isinstance(signature, str) else None
++        aggregates = row.get('mint_aggregates') if isinstance(row, dict) else None
++        aggregate = aggregates.get(mint) if isinstance(aggregates, dict) and isinstance(mint, str) else None
++        receipt = aggregate.get('check') if isinstance(aggregate, dict) else None
++        return isinstance(receipt, dict) and receipt.get('state') == 'PASS'
++
++    def money_known(event, when):
++        state = event.get('native_cash_role_state', 'PASS')
++        signature = event.get('signature')
++        no_cash_gap = not isinstance(signature, str) or (signature, when) not in cash_keys
++        return (isinstance(state, str) and state == 'PASS' and no_cash_gap
++                and event.get('amount_sol') is not None
++                and (event.get('paid_by_wallet', True) is False or event.get('fee_sol', '0') is not None)
++                and source_check(event, 'identity') and source_check(event, 'cost_roles')
++                and source_check(event, 'clock') and fee_known(event) and physical_known(event))
++
++    def fee_known(event):
++        if wallet_evidence is None:
++            return True
++        signature = event.get('signature')
++        row = wallet_evidence['transactions'].get(signature) if receipt_valid and isinstance(signature, str) else None
++        fee = row.get('network_fee') if isinstance(row, dict) else None
++        receipt = fee.get('check') if isinstance(fee, dict) else None
++        try:
++            raw_quantity(fee.get('lamports'))
++        except (ValueError, TypeError, AttributeError):
++            return False
++        return isinstance(receipt, dict) and receipt.get('state') == 'PASS'
++
++    # The producer appends one projection receipt in transaction insertion
++    # order. Consume those existing interval proofs, including transactions
++    # whose selected timestamp is outside the period but has an in-period
++    # linked possibility. Exact time is not required for a known fee sum.
++    period_fee_total, period_fee_unknown = ZERO, False
++    period_memberships = {}
++    if wallet_evidence is not None:
++        intervals = wallet_evidence.get('intervals') if receipt_valid else None
++        period = intervals.get('report_period') if isinstance(intervals, dict) else None
++        period_memberships = period.get('selected_record_membership') if isinstance(period, dict) else None
++        projections = wallet_evidence.get('fee_projection_checks') if receipt_valid else None
++        if not (isinstance(period_memberships, dict) and isinstance(projections, list)
++                and len(projections) == len(wallet_evidence['transactions'])):
++            period_fee_unknown = True
++            period_memberships = {}
++        else:
++            for (signature, row), projection in zip(wallet_evidence['transactions'].items(), projections):
++                fee = row.get('network_fee') if isinstance(row, dict) else None
++                check = fee.get('check') if isinstance(fee, dict) else None
++                try:
++                    lamports = raw_quantity(fee.get('lamports'))
++                    native_known = isinstance(check, dict) and check.get('state') == 'PASS'
++                except (ValueError, TypeError, AttributeError):
++                    lamports, native_known = None, False
++                if native_known and lamports == 0:
++                    continue  # Independently proved zero survives every placement.
++                membership = period_memberships.get(signature)
++                if not (isinstance(projection, dict) and projection.get('state') == 'PASS'
++                        and isinstance(membership, dict) and membership.get('state') == 'PASS'
++                        and isinstance(membership.get('member'), bool)):
++                    period_fee_unknown = True
++                elif membership['member']:
++                    if native_known:
++                        period_fee_total += D(lamports) / D(1_000_000_000)
++                    else:
++                        period_fee_unknown = True
++
++    def fee_in_period(event, selected_membership):
++        if wallet_evidence is None:
++            return selected_membership
++        membership = period_memberships.get(event.get('signature'))
++        return isinstance(membership, dict) and membership.get('state') == 'PASS' and membership.get('member') is True
++
++    # Episode references are attached to the existing lot-consumption loop.
++    # No timestamp-only matching or separate quantity/accounting engine is used.
++    episode_ordinals, active_episodes, episode_roles = defaultdict(int), {}, {}
+     ties = defaultdict(list)
+     for row in ordered:
+         if row[3].get('kind') in ('buy', 'sell', 'transfer_in', 'transfer_out'):
+@@ -84,6 +189,59 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+     if any(len(rows) > 1 and (any('order' not in row[3] for row in rows) or
+                               len({row[1] for row in rows}) != len(rows)) for rows in ties.values()):
+         chronology_unknown = True
++    scoped_chronology_available = not chronology_unknown or receipt_valid
++
++    # Reuse the one existing private FIFO analysis, then bind its episode to
++    # the fresh named-account proof by raw dependencies and exact episode
++    # quantities/bounds. Global position IDs differ between decoder views.
++    generic_events = []
++    for event in source_events:
++        copied = dict(event)
++        if copied.get('kind') in ('buy', 'sell', 'transfer_in', 'transfer_out'):
++            copied['classification'] = 'meme'  # Private generic population only.
++        generic_events.append(copied)
++    accounting = analyze(generic_events, start.isoformat(), end.isoformat(), history_complete=False)
++    query = wallet_evidence.get('query_accounting') if receipt_valid else None
++    inspection = query.get('selected_lot_inspection') if isinstance(query, dict) else None
++    supported_lots = query.get('supported_selected_lots') if isinstance(query, dict) else None
++    proofs = supported_lots if (isinstance(inspection, dict) and inspection.get('state') == 'PASS'
++                               and isinstance(supported_lots, list)) else []
++    proof_index = defaultdict(list)
++    for proof in proofs:
++        if not isinstance(proof, dict):
++            continue
++        bounds = proof.get('fifo_bounds')
++        if not (isinstance(bounds, dict) and all(isinstance(proof.get(k), str) for k in ('mint', 'acquired_raw', 'disposed_raw', 'remaining_raw'))
++                and isinstance(bounds.get('start'), str) and (bounds.get('end') is None or isinstance(bounds.get('end'), str))
++                and type(proof.get('buy_count')) is int and type(proof.get('sell_count')) is int):
++            continue
++        key = (proof['mint'], bounds['start'], bounds.get('end'), proof['acquired_raw'], proof['disposed_raw'],
++               proof['remaining_raw'], proof['buy_count'], proof['sell_count'])
++        proof_index[key].append(proof)
++    position_support, position_ordinals = {}, defaultdict(int)
++    for position in accounting['positions']:
++        mint = position['mint']; position_ordinals[mint] += 1
++        evidence = set(position.get('evidence', []))
++        matches = []
++        key = (mint, position['start'], position['end'], position['acquired_raw'], position['sold_raw'],
++               position['quantity_raw'], position['buy_count'], position['sell_count'])
++        for proof in proof_index.get(key, []):
++            proof_hashes = proof.get('evidence')
++            signatures = proof.get('required_signatures')
++            if not (isinstance(proof_hashes, list) and all(isinstance(h, str) for h in proof_hashes)
++                    and evidence and evidence <= set(proof_hashes)
++                    and isinstance(signatures, list) and all(isinstance(s, str) and s for s in signatures)):
++                continue
++            matches.append(proof)
++        position_support[(mint, position_ordinals[mint])] = matches[0] if len(matches) == 1 else None
++
++    def episode_support(key, field, event):
++        if wallet_evidence is None:
++            return True
++        proof = position_support.get(key)
++        signature = event.get('signature')
++        return (isinstance(proof, dict) and proof.get(field) == 'PASS' and isinstance(signature, str)
++                and signature in proof.get('required_signatures', []))
+ 
+     trusted_mints = set()
+     for mint, anchor in anchors.items():
+@@ -114,8 +272,12 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+     conditional_matches = verified_matches = sales = 0
+     overhead = ZERO
+     wallet_fees = ZERO
+-    missing_fee = False
+-    unknown_transactions = sum(event.get('kind') == 'unsupported' for _, _, _, event in ordered)
++    missing_fee = period_fee_unknown
++    asset_gaps = sum(event.get('kind') == 'unsupported' for _, _, _, event in ordered)
++    trade_gaps = sum(event.get('kind') in ('buy', 'sell') and not money_known(event, when)
++                    and (not isinstance(event.get('signature'), str) or (event['signature'], when) not in cash_keys)
++                    for when, _, _, event in ordered)
++    unknown_transactions = asset_gaps + len(cash_gaps) + trade_gaps
+     sale_details = []
+     for when, _, event_index, event in ordered:
+         kind = event.get('kind')
+@@ -124,12 +286,15 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+             raise ValueError('paid_by_wallet must be boolean')
+         in_window = start <= when
+         if kind == 'fee':
++            projected_in_window = fee_in_period(event, in_window)
++            if projected_in_window and not fee_known(event):
++                missing_fee = True
+             amount = decimal(event['amount_sol']) if event.get('amount_sol') is not None else None
+             if event_index in fee_allocations:
+                 # Keep the original fee observation visible. Its validated trade
+                 # already carries this exact cost into FIFO basis or sale costs.
+                 continue
+-            if paid and in_window:
++            if paid and projected_in_window:
+                 if amount is None:
+                     missing_fee = True
+                 else:
+@@ -144,11 +309,25 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+         quantity = raw_quantity(event.get('quantity_raw'))
+         if not quantity:
+             raise ValueError('Swap quantities must be positive')
++        if mint not in active_episodes:
++            episode_ordinals[mint] += 1
++            active_episodes[mint] = (mint, episode_ordinals[mint])
++            episode_roles[active_episodes[mint]] = {'buy_unknown': False, 'sell_unknown': False, 'timing_unknown': False, 'quantity_unknown': False}
++        role = episode_roles[active_episodes[mint]]
++        if not physical_known(event) or not source_check(event, 'identity') or not episode_support(active_episodes[mint], 'quantity_state', event):
++            role['quantity_unknown'] = True
++        scoped_origin = episode_support(active_episodes[mint], 'origin_state', event)
++        scoped_clocks = episode_support(active_episodes[mint], 'chronology_state', event)
++        if not source_check(event, 'clock') or role['quantity_unknown'] or not scoped_origin or not scoped_clocks:
++            role['timing_unknown'] = True
++        price_supported = money_known(event, when) and scoped_origin and scoped_clocks and not role['quantity_unknown']
++        if kind in ('buy', 'sell') and not price_supported:
++            role[kind + '_unknown'] = True
+         fee = decimal(event['fee_sol']) if event.get('fee_sol') is not None else (ZERO if 'fee_sol' not in event else None)
+         if not paid:
+             fee = ZERO
+-        if in_window and kind in ('buy', 'sell'):
+-            if fee is None:
++        if fee_in_period(event, in_window) and kind in ('buy', 'sell'):
++            if fee is None or not fee_known(event):
+                 missing_fee = True
+             else:
+                 wallet_fees += fee
+@@ -157,7 +336,7 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+             for lot in lots[mint]:
+                 lot['verified'] = False
+         if kind in ('buy', 'transfer_in'):
+-            amount = decimal(event['amount_sol']) if kind == 'buy' and event.get('amount_sol') is not None else None
++            amount = decimal(event['amount_sol']) if kind == 'buy' and event.get('amount_sol') is not None and price_supported else None
+             basis = amount + fee if amount is not None and fee is not None else None
+             lots[mint].append({'quantity': quantity, 'basis': basis,
+                                'verified': mint in trusted_mints and basis is not None})
+@@ -187,15 +366,17 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+             lot['quantity'] -= take
+             if lot['quantity'] == 0:
+                 lots[mint].pop(0)
++        if not lots[mint]:
++            active_episodes.pop(mint, None)
+         if kind == 'transfer_out':
+             continue
+-        proceeds = decimal(event['amount_sol']) if event.get('amount_sol') is not None else None
++        proceeds = decimal(event['amount_sol']) if event.get('amount_sol') is not None and price_supported else None
+         net = proceeds - basis - fee if matched and proceeds is not None and fee is not None else None
+         if not in_window:
+             continue
+         sales += 1
+-        attributable = net is not None and verified and not chronology_unknown
+-        if net is not None and not chronology_unknown:
++        attributable = net is not None and verified and scoped_chronology_available
++        if net is not None and scoped_chronology_available:
+             conditional_matches += 1
+             conditional_net += net
+         if attributable:
+@@ -203,37 +384,52 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+             verified_net += net
+         sale_details.append({'mint': mint, 'timestamp': when.isoformat(), 'quantity_raw': str(quantity),
+                              'conditional_matched_basis_sol': canonical(basis) if matched else None,
+-                             'conditional_profit_sol': canonical(net) if not chronology_unknown else None,
++                             'conditional_profit_sol': canonical(net) if scoped_chronology_available else None,
+                              'attributable': attributable, 'evidence': event.get('evidence', []),
+                              'reason': 'Independent opening inventory and intervening flows verified' if attributable else
+                                        'Earlier inventory or unmatched cost remains unresolved; observed-lot model only'})
+-    conditional_profit = conditional_net - overhead if conditional_matches and not missing_fee and not chronology_unknown else None
++    if wallet_evidence is not None:
++        wallet_fees = period_fee_total
++    conditional_profit = conditional_net - overhead if conditional_matches and not missing_fee and not chronology_unknown and not period_cash_gap else None
+     known_matched = verified_net if verified_matches else None
+-    observed_profit = verified_net - overhead if sales and verified_matches == sales and not missing_fee and not global_gap and not gap_mints and not chronology_unknown else None
++    observed_profit = verified_net - overhead if sales and verified_matches == sales and not missing_fee and not global_gap and not gap_mints and not chronology_unknown and not period_cash_gap else None
+ 
+-    # The accounting engine supplies observed episode quantities, not classification.
+-    generic_events = []
+-    for event in source_events:
+-        copied = dict(event)
+-        if copied.get('kind') in ('buy', 'sell', 'transfer_in', 'transfer_out'):
+-            copied['classification'] = 'meme'  # Private generic population only.
+-        generic_events.append(copied)
+-    accounting = analyze(generic_events, start.isoformat(), end.isoformat(), history_complete=False)
++    # The already-computed accounting engine supplies observed episode quantities.
+     episodes = []
++    rendered_ordinals = defaultdict(int)
+     for position in accounting['positions']:
++        rendered_ordinals[position['mint']] += 1
++        role = episode_roles.get((position['mint'], rendered_ordinals[position['mint']]))
++        if role is None:
++            role = {'buy_unknown': True, 'sell_unknown': True, 'timing_unknown': True, 'quantity_unknown': True}
+         if not position['in_window']:
+             continue
+-        attributable = position['mint'] in trusted_mints and position['status'] == 'closed' and not chronology_unknown
++        money_supported = (not (role['buy_unknown'] or role['sell_unknown'] or role['timing_unknown'])
++                           and position['status'] == 'closed'
++                           and all(position.get(key) is not None for key in ('basis_sol', 'matched_basis_sol', 'proceeds_sol', 'pnl_sol')))
++        attributable = position['mint'] in trusted_mints and position['status'] == 'closed' and scoped_chronology_available and money_supported
+         observation = dict(position)
+         observation.pop('classification', None)
+         observation['scope'] = 'Observed supported swaps; episode boundaries conditional on zero undiscovered inventory'
+         observation['attributable'] = attributable
+         observation['conditional'] = not attributable
++        observation['monetary_state'] = 'PASS' if money_supported else 'UNKNOWN'
++        observation['quantity_state'] = 'UNKNOWN' if role['quantity_unknown'] else 'PASS'
++        observation['timing_state'] = 'PASS' if scoped_chronology_available and not role['timing_unknown'] else 'UNKNOWN'
++        if role['buy_unknown'] or role['timing_unknown']:
++            observation.update(basis_sol=None, matched_basis_sol=None)
++        if role['sell_unknown'] or role['timing_unknown']:
++            observation['proceeds_sol'] = None
++        if not money_supported:
++            observation.update(pnl_sol=None, roi_pct=None)
++        if observation['timing_state'] == 'UNKNOWN':
++            for key in ('hold_hours', 'first_sale_hours', 'sold_50_pct_hours', 'sold_90_pct_hours'):
++                observation[key] = None
+         observation['observed_start'] = observation.pop('start')
+         observation['observed_end'] = observation.pop('end')
+         episodes.append(observation)
+     closed = [p for p in episodes if p['status'] == 'closed']
+-    usable = closed if not chronology_unknown else []
++    usable = closed if not chronology_unknown and all(p['timing_state'] == 'PASS' for p in closed) else []
+ 
+     def typical(key):
+         values = [decimal(p[key], signed=True, max_length=512) for p in usable if p.get(key) is not None]
+@@ -245,10 +441,14 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+     risk_findings.append({'severity': 'warning', 'title': 'Opening inventory is not inferred from fetched buys',
+                           'detail': 'A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.',
+                           'evidence': sorted(hashes)})
+-    if unknown_transactions or chronology_unknown:
++    if asset_gaps or chronology_unknown:
+         risk_findings.append({'severity': 'warning', 'title': 'Unresolved activity can interrupt observed episodes',
+                               'detail': 'Unsupported routes, missing chronology or transfers may change FIFO basis and episode boundaries.',
+                               'evidence': sorted(hashes)})
++    if cash_gaps or trade_gaps:
++        risk_findings.append({'severity': 'warning', 'title': 'Native monetary roles remain unresolved',
++            'detail': 'Unknown cash movements or linked cost/identity/clock dependencies revoke affected monetary results. Independently supported quantities, timings and network fees remain separate.',
++            'evidence': sorted(hashes)})
+     limits = [
+         'Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.',
+         'Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.',
+@@ -256,7 +456,7 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+         'Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.',
+         'Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns.',
+     ]
+-    return {'version': 'supported-subset-research-v2', 'scope': 'supported spot swaps in fetched subset',
++    return {'version': VERSION, 'scope': 'supported spot swaps in fetched subset',
+             'history_complete': history_complete, 'wallet_profit_verified': False,
+             'opening_inventory_verified_mints': sorted(trusted_mints),
+             'observed_profit_sol': canonical(observed_profit), 'known_matched_profit_sol': canonical(known_matched),
+@@ -275,5 +475,6 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings)
+             'wallet_fees_paid_sol': None if missing_fee else canonical(wallet_fees),
+             'unallocated_fees_sol': None if missing_fee else canonical(overhead),
+             'unresolved_transactions': unknown_transactions, 'chronology_unknown': chronology_unknown,
++            'scoped_chronology_unknown': any(role['timing_unknown'] for role in episode_roles.values()),
+             'episodes': episodes, 'sales_detail': sale_details, 'evidence': sorted(hashes),
+             'risk_findings': risk_findings, 'limitations': limits}
+diff --git a/scanner/wallet_evidence.py b/scanner/wallet_evidence.py
+index 86e42cd..34d22a9 100644
+--- a/scanner/wallet_evidence.py
++++ b/scanner/wallet_evidence.py
+@@ -25,7 +25,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
+ from .chronology_evidence import assess_chronology, assess_interval_membership
+ from .transaction_format import supported_transaction_format
+ 
+-VERSION = 'wallet-raw-evidence-v2'
++VERSION = 'wallet-raw-evidence-v6'
+ HASH = re.compile(r'^[a-f0-9]{64}$')
+ MAX_RECORDS = SOURCE_HASH_LIMIT
+ MAX_ACCOUNT_STEPS = 100_000
+@@ -33,7 +33,8 @@ MAX_INDEXED_RECORDS = 10_000
+ OBSERVED_SCOPE = 'Selected archived records only; hidden accounts and intervening records are unproved'
+ _NONTRANSACTION_ROLES = {'signature-page', 'block-order', 'snapshot-slot', 'owned-accounts', 'native-balance',
+                         'classification', 'valuation', 'boundary-inventory', 'historical-mark', 'capital-flow',
+-                        'synthetic-population', 'population-inventory', 'current-mint-controls', 'archive-native-dependencies'}
++                        'synthetic-population', 'population-inventory', 'current-mint-controls', 'archive-native-dependencies',
++                        'query-affinity'}
+ _INDEXED_ROLES = {'indexed-page', 'indexed-native-source', 'indexed-input-manifest'}
+ _NONTRANSACTION_ROLES |= _INDEXED_ROLES
+ 
+@@ -555,7 +556,9 @@ def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
+             negative.add((None, digest))
+             continue
+         claims, ambiguous = _native_claims(payload, indexed_facts=indexed_facts)
+-        hints = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES else []
++        # Query-role affinity is negative-only. Explicit signature selectors
++        # cannot be discarded merely because a caller chose that role label.
++        hints = source['signature_hints'] if kind not in _NONTRANSACTION_ROLES or kind == 'query-affinity' else []
+         affected = selected & (claims | set(hints))
+         negative.update((signature, digest) for signature in affected)
+         native_rows, _, _, indexed = indexed_facts
+@@ -564,7 +567,7 @@ def raw_native_dependencies(raw_sources, source_receipts, selected_signatures):
+                 transaction = raw.get('transaction') if isinstance(raw, dict) else None
+                 signatures = transaction.get('signatures') if isinstance(transaction, dict) else None
+                 signature = signatures[0] if isinstance(signatures, list) and signatures else None
+-                if signature not in affected:
++                if not isinstance(signature, str) or not 1 <= len(signature) <= 128 or signature not in affected:
+                     continue
+                 key = signature, digest
+                 if key in available and available[key] != raw:
+@@ -634,6 +637,8 @@ def _decoded_native_movement(events):
+                 continue
+             if kind not in ('buy', 'sell', 'fee'):
+                 return None
++            if kind in ('buy', 'sell') and event.get('native_cash_role_state') == 'UNKNOWN':
++                return None  # Net endpoints cannot classify cancelling gross cash roles.
+             if kind == 'fee' and event.get('paid_by_wallet') is not True:
+                 continue
+             amount = decimal(event.get('amount_sol')) * Decimal(10**9)
+@@ -642,6 +647,14 @@ def _decoded_native_movement(events):
+             # The display fee is counted exactly once; fee_sol embedded in a
+             # trade is basis/allocation information, not another native debit.
+             expected += int(amount) * (1 if kind == 'sell' else -1)
++            for funding in event.get('retained_account_funding', []) if kind in ('buy', 'sell') else []:
++                if (not isinstance(funding, dict) or funding.get('role') != 'retained-user-volume-account-funding'
++                    or funding.get('payer') != event.get('owner') or type(funding.get('lamports')) is not int
++                    or funding['lamports'] <= 0):
++                    return None
++                # This is a located native outflow, separate from trade quote;
++                # refund entitlement and economic valuation remain UNKNOWN.
++                expected -= funding['lamports']
+         return expected
+     except (ValueError, TypeError, KeyError):
+         return None
+@@ -697,6 +710,169 @@ def _clock_inputs(raw_sources, source_receipts, wallet):
+     return pages, blocks, indexed, {'state': 'PASS' if typed and all(r['state'] == 'PASS' for r in typed) else 'UNKNOWN', 'receipts': typed}
+ 
+ 
++def _selected_lot_observations(positions, selected, raw_versions, transactions, clocks,
++                               role_checks, ledger_events, source_rows, wallet):
++    """Project existing FIFO by named-account dependencies, never wallet scope.
++
++    Unrelated routes cannot erase a supported named lot. A missing source is
++    disjoint only when independently present original bytes reproduce its exact
++    frozen pointer/body hash. That reconstruction supplies exclusion only; a
++    missing required purchase or sale still revokes the lot's result.
++    """
++    from .indexed_input import PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, canonical_bytes
++    recovered = {}
++    for source in source_rows:
++        payload = source.get('payload')
++        version = payload.get('version') if isinstance(payload, dict) else None
++        if version not in (PAGE_VERSION, NATIVE_VERSION):
++            continue
++        raws, _, ambiguous, _ = _indexed_native_rows(payload)
++        if ambiguous:
++            continue
++        for ordinal, raw in enumerate(raws):
++            if not _safe_raw(raw):
++                continue
++            signatures = raw['transaction'].get('signatures')
++            if (not isinstance(signatures, list) or not signatures or not isinstance(signatures[0], str)
++                or not 1 <= len(signatures[0]) <= 128):
++                continue
++            signature = signatures[0]
++            try:
++                native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
++                pointer = {'version': RECORD_VERSION, 'source_hash': source['hash'], 'ordinal': ordinal,
++                           'signature': signature, 'native_hash': native_hash}
++                pointer_hash = hashlib.sha256(canonical_bytes(pointer)).hexdigest()
++            except (ValueError, TypeError, UnicodeError, OverflowError, RecursionError):
++                continue  # No canonical preimage proves an absent link disjoint.
++            recovered.setdefault((signature, native_hash), raw)
++            recovered.setdefault((signature, pointer_hash), raw)
++    by_signature = defaultdict(list)
++    for event in ledger_events:
++        by_signature[event.get('signature')].append(event)
++    roles = defaultdict(list)
++    for check in role_checks:
++        roles[check['signature']].append(check)
++    results = []
++    for position in positions:
++        mint = position['mint']
++        if mint == WSOL:
++            continue
++        named = {account for observed in transactions.values() for account, pair in observed['boundaries'].items()
++                 if any(pair.get(phase) and pair[phase]['owner'] == wallet and pair[phase]['mint'] == mint
++                        for phase in ('pre', 'post'))}
++        scope_gaps, required, disjoint, physical, money, timing, evidence, retained = [], [], [], [], [], [], set(), []
++        for signature, versions in raw_versions.items():
++            if position['end'] is not None:
++                future = assess_interval_membership(clocks, signature, utc(0), utc(position['end']) + timedelta(seconds=1))
++                if future['state'] == 'PASS' and future.get('member') is False:
++                    disjoint.append(signature)
++                    continue
++            relevant, scope_known = False, bool(versions)
++            for row in versions:
++                raw = row.get('raw')
++                if not _safe_raw(raw):
++                    raw = recovered.get((signature, row.get('evidence_hash')))
++                if not _safe_raw(raw):
++                    scope_known = False
++                    continue
++                try:
++                    keys = _keys(raw['transaction']['message'], raw['meta'])
++                    if len(set(keys)) != len(keys):
++                        raise ValueError('Duplicate native account keys')
++                    touching = named.intersection(keys) or mint in keys
++                    for field in ('preTokenBalances', 'postTokenBalances'):
++                        for balance in raw['meta'][field]:
++                            if balance.get('owner') == wallet and balance.get('mint') == mint:
++                                touching = True
++                    relevant = relevant or bool(touching)
++                except (ValueError, TypeError, KeyError, IndexError):
++                    scope_known = False
++            relevant = relevant or any(e.get('mint') == mint for e in by_signature[signature])
++            if not scope_known:
++                scope_gaps.append(f'{signature}: linked source cannot be independently excluded from this named-account population')
++            if not relevant:
++                if scope_known:
++                    disjoint.append(signature)
++                continue
++            required.append(signature)
++            observed = transactions.get(signature)
++            if observed is None:
++                scope_gaps.append(f'{signature}: required observed transaction is unavailable')
++                continue
++            identity = observed['checks']['identity']
++            clock = clocks['transactions'].get(signature, {})
++            timing.append(_check(clock.get('state') == 'PASS' and clock.get('time_state') == 'PASS',
++                clock.get('reason', 'Required named-account clock unavailable'), clock.get('evidence', [])))
++            for account, pair in observed['boundaries'].items():
++                if account in named:
++                    physical.extend(pair['checks'][field] for field in ('ownership', 'quantities', 'lifecycle'))
++            signature_events = by_signature[signature]
++            lot_trades = [event for event in signature_events if event.get('mint') == mint and event['kind'] in ('buy', 'sell')]
++            if lot_trades:
++                money.extend([identity, observed['checks']['cost_roles'], observed['network_fee']['check']] + roles[signature])
++                retained.extend(item for event in lot_trades for item in event.get('retained_account_funding', []))
++            target_pairs = [pair for account, pair in observed['boundaries'].items() if account in named]
++            zero_administration = bool(target_pairs) and all(
++                pair['pre'] and pair['post'] and pair['pre']['quantity'] == pair['post']['quantity'] == '0'
++                and all(pair['checks'][field]['state'] == 'PASS' for field in ('ownership', 'quantities', 'lifecycle'))
++                for pair in target_pairs)
++            if any(event['kind'] in ('transfer_in', 'transfer_out') and event.get('mint') == mint
++                   or event['kind'] == 'unsupported' and not zero_administration for event in signature_events):
++                scope_gaps.append(f'{signature}: required record contains unsupported or transfer-interrupted named-account activity')
++            evidence.update(observed['evidence'])
++        # Account-continuity checks use only this lot's observed named accounts.
++        for account in named:
++            boundaries = [(sig, transactions[sig]['boundaries'][account]) for sig in required
++                          if account in transactions.get(sig, {}).get('boundaries', {})]
++            def boundary_order(row):
++                clock = clocks['transactions'].get(row[0], {})
++                values = [clock.get(field) for field in ('canonical_time', 'slot', 'transaction_index')]
++                return *(value if type(value) is int else -1 for value in values), row[0]
++            boundaries.sort(key=boundary_order)
++            for (before_sig, before), (after_sig, after) in zip(boundaries, boundaries[1:]):
++                a, b = before['post'], after['pre']
++                matching = bool(a and b) and all(a[key] == b[key] for key in ('quantity', 'owner', 'mint', 'decimals'))
++                physical.append(_check(matching, 'Named-account selected endpoints must agree across required observations.',
++                    before['checks']['quantities']['evidence'] + after['checks']['quantities']['evidence']))
++        physical_known = bool(named) and bool(physical) and all(check['state'] == 'PASS' for check in physical)
++        chronology_known = physical_known and not scope_gaps and bool(timing) and all(check['state'] == 'PASS' for check in timing)
++        buys = [event for signature in required for event in by_signature[signature]
++                if event['kind'] == 'buy' and event.get('mint') == mint
++                and utc(position['start']) <= utc(event['timestamp'])
++                and (position['end'] is None or utc(event['timestamp']) <= utc(position['end']))]
++        origin_known = bool(buys) and sum(int(event['quantity_raw']) for event in buys) == int(position['acquired_raw'])
++        origin_known = origin_known and all(event.get('observed_pre_quantity_raw') == '0'
++            for event in buys if utc(event['timestamp']) == utc(position['start']))
++        timing_known = chronology_known and origin_known and position['end'] is not None and position['quantity_raw'] == '0' and position['status'] != 'interrupted'
++        money_known = chronology_known and origin_known and bool(money) and all(check['state'] == 'PASS' for check in money)
++        money_known = money_known and position['sell_count'] > 0 and position['pnl_sol'] is not None and position['basis_sol'] is not None and position['status'] != 'interrupted'
++        evidence.update(h for check in physical + money + timing for h in check.get('evidence', []))
++        results.append({'id': position['id'], 'mint': mint, 'accounts': sorted(named),
++            'scope': 'Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved',
++            'fifo_bounds': {'start': position['start'], 'end': position['end']},
++            'monetary_state': 'PASS' if money_known else 'UNKNOWN', 'timing_state': 'PASS' if timing_known else 'UNKNOWN',
++            'quantity_state': 'PASS' if physical_known and not scope_gaps else 'UNKNOWN',
++            'origin_state': 'PASS' if origin_known and physical_known and not scope_gaps else 'UNKNOWN',
++            'chronology_state': 'PASS' if chronology_known else 'UNKNOWN',
++            'classification_state': 'UNKNOWN', 'wallet_population_state': 'UNKNOWN', 'qualification': False,
++            'acquired_raw': position['acquired_raw'], 'disposed_raw': position['sold_raw'], 'remaining_raw': position['quantity_raw'],
++            'buy_count': position['buy_count'], 'sell_count': position['sell_count'],
++            'conditional_basis_sol': position['basis_sol'] if money_known else None,
++            'conditional_matched_basis_sol': position['matched_basis_sol'] if money_known else None,
++            'conditional_proceeds_sol': position['proceeds_sol'] if money_known else None,
++            'conditional_exit_fees_sol': position['exit_fees_sol'] if money_known else None,
++            'conditional_lot_profit_sol': position['pnl_sol'] if money_known else None,
++            'conditional_lot_roi_pct': position['roi_pct'] if money_known else None,
++            'observed_start': position['start'] if timing_known else None, 'observed_end': position['end'] if timing_known else None,
++            'conditional_hold_hours': position['hold_hours'] if timing_known else None,
++            'required_signatures': sorted(required), 'disjoint_signatures': sorted(disjoint),
++            'evidence': sorted(h for h in evidence if isinstance(h, str) and HASH.fullmatch(h)),
++            'retained_account_funding': retained, 'gaps': sorted(set(scope_gaps)),
++            'assumptions': ['No hidden earlier same-mint holdings or unobserved intervening changes are established.',
++                'Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN.']})
++    return results
++
++
+ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consistency, chronology,
+                            source_receipts=(), history_evidence=None, positions=None, events=(), raw_sources=()):
+     """Return source-derived observed facts and honest wallet metric dependencies.
+@@ -710,12 +886,16 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+     start, end = utc(window['start']), utc(window['end'])
+     if end <= start:
+         raise ValueError('A positive report window is required')
++    raw_sources, source_receipts = list(raw_sources), list(source_receipts)
+     selected, linked = {}, {}
+     selected_rows = list(records)
+     for row in sorted(selected_rows, key=lambda row: str(row.get('evidence_hash')) if isinstance(row, dict) else ''):
+         if not isinstance(row, dict) or not isinstance(row.get('signature'), str) or not row['signature']:
+             raise ValueError('Selected raw records require explicit signature identities')
+         selected.setdefault(row['signature'], row)
++    # A frozen query-role index is negative-only, but its readable bytes must
++    # still undergo native association.  A caller label cannot hide a raw
++    # alternative; missing query-only bytes do not invent native relevance.
+     source_rows = _resolved_sources(raw_sources, source_receipts)
+     negative_links = raw_native_dependencies(source_rows, (), selected)
+     for row in list(all_records) + selected_rows + negative_links:
+@@ -838,7 +1018,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+                                    'check': fee_check, 'role': 'Actual selected wallet-paid network fee; economic allocation is separate'}
+         native_trades = selected_observation['trades']
+         trades_agree = all(len(r['trades']) == len(native_trades) and all(all(a.get(k) == b.get(k) for k in
+-            ('kind', 'mint', 'quantity_raw', 'decimals', 'amount_sol', 'fee_sol', 'paid_by_wallet', 'venue'))
++            ('kind', 'mint', 'quantity_raw', 'decimals', 'amount_sol', 'fee_sol', 'paid_by_wallet', 'venue', 'native_cash_role_state'))
+             for a, b in zip(r['trades'], native_trades)) for r in variants)
+         decoded_events = decode_supported_swaps([derived_record(primary)], wallet)['events'] if _safe_raw(primary.get('raw')) else []
+         try:
+@@ -846,22 +1026,36 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+             allocation_valid = True
+         except (ValueError, TypeError, KeyError):
+             allocation_valid = False
++        transaction_cost_checks = []
+         for trade in native_trades:
+-            known = identity.get('state') == 'PASS' and trades_agree and allocation_valid and fee_check['state'] == 'PASS' and trade.get('amount_sol') is not None and trade.get('fee_sol') is not None
++            known = identity.get('state') == 'PASS' and trades_agree and allocation_valid and fee_check['state'] == 'PASS' and trade.get('amount_sol') is not None and trade.get('fee_sol') is not None and trade.get('native_cash_role_state') == 'PASS'
+             check = _check(known, 'Supported raw swap consideration and unique raw network fee allocation agree across every linked version.', evidence,
+                            paths=[trade.get('path', 'transaction')], scope='Observed supported trade only; disposed-lot population is separate')
+             cost_checks.append(check)
++            transaction_cost_checks.append(check)
+             if trade['kind'] == 'buy':
+                 paid_fee = decimal(trade['fee_sol']) if trade.get('paid_by_wallet') is True else Decimal(0)
+                 acquisitions.append({'signature': signature, 'mint': trade['mint'], 'quantity_raw': trade['quantity_raw'],
+                     'basis_sol': canonical(decimal(trade['amount_sol']) + paid_fee) if known else None,
+                     'classification': 'settlement' if trade['mint'] == WSOL else 'unknown', 'check': check})
+         observed['checks']['identity'] = identity
++        observed['checks']['cost_roles'] = _combine(transaction_cost_checks,
++            'Observed supported consideration and one network-fee allocation; retained protocol funding is separate.')
+         observed['checks']['clock'] = clocks['transactions'].get(signature, _check(False, 'Clock unavailable', evidence))
+         transactions[signature] = observed
+     all_hashes = [row.get('evidence_hash') for row in linked]
+-    unresolved = _check(False, 'Current raw/address/page/snapshot source types do not prove hidden or formerly owned account population.', all_hashes,
+-                        scope='Wallet-wide historical population', dependencies=['accepted_historical_owner_source_contract'])
++    from .real_coverage import derive_indexed_coverage
++    # Coverage verifies retained original bytes separately from semantic format
++    # support. Do not replace an unsupported original with None for this check;
++    # shared accounting/chronology still use the rejecting safe_linked view.
++    query_coverage = derive_indexed_coverage(selected.values(), all_records=linked,
++        raw_sources=source_rows, wallet=wallet, window=window,
++        source_consistency=consistency, chronology=clocks)
++    unresolved = _combine([query_coverage['historical_population']],
++        query_coverage['historical_population']['reason'], scope='Wallet-wide historical population')
++    # Preserve selected raw dependencies even when no indexed query exists.
++    unresolved['evidence'] = sorted(set(unresolved['evidence'] +
++        [h for h in all_hashes if isinstance(h, str) and HASH.fullmatch(h)]))
+     intervals, memberships = {}, {}
+     for name, begin in (('report_period', start), ('four_weeks', end - timedelta(days=28)), ('verification_90d', end - timedelta(days=90))):
+         memberships[name] = {signature: assess_interval_membership(clocks, signature, begin, end) for signature in selected}
+@@ -869,6 +1063,12 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+             (h for row in memberships[name].values() for h in row['evidence']), scope=f'Wallet-wide [{begin.isoformat()},{end.isoformat()})',
+             dependencies=['historical_population', f'{name}_terminal_paging'])
+         intervals[name].update(start=begin.isoformat(), end=end.isoformat(), selected_record_membership=memberships[name])
++        query = query_coverage['intervals'][name]
++        intervals[name].update(query_records_state=query['query_records_state'],
++            supported_record_state=query['supported_record_state'],
++            query_scope=query['scope'], query_source_hashes=query.get('source_hashes', []))
++        intervals[name]['reason'] = ('Terminal documented query membership is supported; historical wallet membership remains unproved.'
++            if query['query_records_state'] == 'PASS' else query['reason'] + ' Historical wallet membership remains unproved.')
+     fee_projection_checks = []
+     for signature, receipt in memberships['report_period'].items():
+         network_fee = transactions[signature]['network_fee']
+@@ -890,6 +1090,7 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+         expected = _decoded_native_movement([e for e in ledger_events if e.get('signature') == signature])
+         for row in raw_versions[signature]:
+             check = _native_role_check(row, wallet, expected)
++            check['signature'] = signature
+             if native_delta.get('state') != 'PASS' or quantity_budget_exceeded or cartesian_budget_exceeded:
+                 check.update(state='UNKNOWN', reason='Linked native endpoint or account/role inspection is unresolved; no role certainty survives its loss.')
+             native_role_checks.append(check)
+@@ -966,6 +1167,42 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+         'selected_record_identity': _combine(identity_checks, 'Every selected identity agrees across linked alternatives.'),
+         'native_fee': _combine(fee_checks, 'Actual selected wallet-paid native fees remain independent of token/class/valuation completeness.'),
+         'fee_window': _combine(fee_projection_checks, 'Each selected nonzero wallet-paid fee has supported window membership; proved zero projections remain usable.')}
++    # Reuse the existing private-copy FIFO research path, not a second monetary
++    # engine.  These are conditional selected-lot observations and never feed
++    # strict wallet metrics.  Loss of a required raw origin/role revokes the
++    # monetary observation while independent timing/fees retain their checks.
++    lot_steps = len(fifo_positions) * len(raw_versions)
++    lot_inspection = {'state': 'PASS' if lot_steps <= MAX_ACCOUNT_STEPS else 'UNKNOWN',
++        'steps': lot_steps, 'max_steps': MAX_ACCOUNT_STEPS,
++        'reason': 'Every named-account candidate is inspected.' if lot_steps <= MAX_ACCOUNT_STEPS else
++            'Named-account dependency inspection budget exceeded; no prefix certifies supported lots.'}
++    supported_lots = _selected_lot_observations(fifo_positions, selected, raw_versions,
++        transactions, clocks, native_role_checks, ledger_events, source_rows, wallet) if lot_steps <= MAX_ACCOUNT_STEPS else []
++    from .research import summarize_research
++    research = summarize_research(ledger_events, start.isoformat(), end.isoformat(), history_complete=False,
++        wallet_evidence={'version': VERSION, 'transactions': transactions, 'intervals': intervals,
++                         'fee_projection_checks': fee_projection_checks,
++                         'query_accounting': {'selected_lot_inspection': lot_inspection, 'supported_selected_lots': supported_lots}})
++    conditional_profit = research.get('conditional_observed_lot_profit_sol')
++    monetary_supported = observed_disposed_basis['state'] == 'PASS' and raw_roles['state'] == 'PASS'
++    timing_supported = observed_positions['state'] == 'PASS'
++    query_accounting = {'scope': 'Conditional FIFO over selected raw records; earlier inventory, historical population and eligibility remain separate',
++        'conditional_observed_lot_profit_sol': conditional_profit if monetary_supported else None,
++        'monetary_state': 'PASS' if monetary_supported and conditional_profit is not None else 'UNKNOWN',
++        'reason': 'Existing FIFO matches supported selected purchase/disposal consideration and cost roles; missing historical inventory remains an explicit assumption.'
++            if monetary_supported else 'A selected acquisition, chronology, quantity, ownership or economic-role dependency is unresolved.',
++        'supported_swaps': research.get('supported_swaps'), 'closed_episodes': research.get('closed_episodes'),
++        'unresolved_basis_sales': research.get('unresolved_basis_sales'),
++        'timing_state': 'PASS' if timing_supported else 'UNKNOWN',
++        'conditional_median_hold_hours': research.get('conditional_median_hold_hours') if timing_supported else None,
++        'conditional_first_sale_hours': research.get('conditional_first_sale_hours') if timing_supported else None,
++        'conditional_exit_50_hours': research.get('conditional_exit_50_hours') if timing_supported else None,
++        'conditional_exit_90_hours': research.get('conditional_exit_90_hours') if timing_supported else None,
++        'evidence': sorted({h for row in (observed_disposed_basis, raw_roles) for h in row['evidence']}),
++        'query_records_state': query_coverage['intervals']['report_period']['query_records_state'],
++        'wallet_population_state': unresolved['state'], 'qualification': False}
++    query_accounting['selected_lot_inspection'] = lot_inspection
++    query_accounting['supported_selected_lots'] = supported_lots
+     from .metric_evidence import compose_metric_decisions
+     return {'version': VERSION, 'scope': OBSERVED_SCOPE, 'components': components,
+         'inspection_budget': {'max_records': MAX_RECORDS, 'linked_records': len(linked),
+@@ -974,9 +1211,11 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
+             'quantity_state': 'UNKNOWN' if quantity_budget_exceeded or cartesian_budget_exceeded else 'PASS'},
+         'accounts': dict(sorted(accounts.items())), 'transactions': transactions, 'acquisitions': acquisitions,
+         'observed_fifo_positions': fifo_positions,
++        'observed_fifo_scope': 'Raw selected-event FIFO observations before linked-source proof gates; financial authority is the typed query_accounting and metric dependencies.',
+         'interval_checks': intervals, 'intervals': intervals, 'metric_dependencies': compose_metric_decisions(components, intervals),
+         'fee_projection_checks': fee_projection_checks,
+         'native_role_checks': native_role_checks,
+         'source_dependencies': contents['receipts'], 'source_consistency': consistency, 'chronology': clocks,
++        'query_coverage': query_coverage, 'query_accounting': query_accounting,
+         'gaps': sorted({gap for row in transactions.values() for gap in row['gaps']} | {unresolved['reason']}),
+         'provider_requests': 0, 'credential_lookups': 0}
+diff --git a/tools/validate.py b/tools/validate.py
+index 5b29642..de3dfec 100755
+--- a/tools/validate.py
++++ b/tools/validate.py
+@@ -18,9 +18,11 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
+            'tests/test_instruction_contract_matrix.py', 'tests/test_source_role_matrix.py', 'tests/test_validation_gates.py',
+            'tests/test_archive_input.py', 'tests/test_archive_fee_window.py', 'tests/test_report_rebuild.py',
+            'tests/test_wallet_evidence.py', 'tests/test_metric_evidence.py', 'tests/test_real_evidence_adapter.py',
+-           'tests/test_compiled_instructions.py', 'tests/test_compiled_report_integration.py',
++           'tests/test_compiled_instructions.py', 'tests/test_compiled_getter.py', 'tests/test_compiled_report_integration.py',
+            'tests/test_indexed_input.py', 'tests/test_indexed_chronology.py',
+-           'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py', 'tests/test_report_view.py']
++           'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py', 'tests/test_report_view.py',
++           'tests/test_real_coverage.py', 'tests/test_research.py', 'tests/test_research_source_roles.py', 'tests/test_generic_administration.py', 'tests/test_retained_protocol_funding.py', 'tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py', 'tests/test_discovery_native_identity.py',
++           'tests/test_bounded_collection.py', 'tests/test_genuine_collection_workflow.py']
+ 
+ 
+ def lock_hashes(root=ROOT):

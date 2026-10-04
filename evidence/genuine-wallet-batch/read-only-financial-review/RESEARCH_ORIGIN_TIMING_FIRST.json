@@ -1,0 +1,149 @@
+{
+  "scope": "Distinct genuine-sale-only consumer review, not complete-wallet acceptance. Missing origin cannot establish a zero-hour named holding episode.",
+  "source_sha256": {
+    "scanner/research.py": "8bad4cee4c93a3e5086486522b2526a65dc46d7b5c336966143e956524ab3c87",
+    "scanner/wallet_evidence.py": "262e0351d771378475276818db4545dd998937736ded4caa3e4e2e3d9bbd30c3"
+  },
+  "research": {
+    "version": "supported-subset-research-v3-native-roles",
+    "scope": "supported spot swaps in fetched subset",
+    "history_complete": false,
+    "wallet_profit_verified": false,
+    "opening_inventory_verified_mints": [],
+    "observed_profit_sol": null,
+    "known_matched_profit_sol": null,
+    "conditional_observed_lot_profit_sol": null,
+    "conditional_profit_population": "In-window sales fully matched to fetched purchase lots, less supplied wallet-paid overhead; unresolved sales excluded",
+    "supported_swaps": 1,
+    "sales": 1,
+    "matched_sales": 0,
+    "observed_matched_sales": 0,
+    "unresolved_basis_sales": 1,
+    "observed_unmatched_sales": 1,
+    "closed_episodes": 0,
+    "verified_closed_episodes": 0,
+    "strategy_population": "Observed strict-zero episodes closing in the selected window; boundaries remain conditional on undiscovered inventory",
+    "conditional_median_hold_hours": null,
+    "conditional_first_sale_hours": null,
+    "conditional_exit_50_hours": null,
+    "conditional_exit_90_hours": null,
+    "conditional_rapid_sale_pct": null,
+    "wallet_fees_paid_sol": "0.000006849",
+    "unallocated_fees_sol": "0",
+    "unresolved_transactions": 0,
+    "chronology_unknown": false,
+    "scoped_chronology_unknown": false,
+    "episodes": [
+      {
+        "id": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump:1",
+        "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+        "status": "unresolved",
+        "in_window": true,
+        "quantity_raw": "0",
+        "acquired_raw": "516612982765",
+        "sold_raw": "516612982765",
+        "decimals": 6,
+        "buy_count": 0,
+        "sell_count": 1,
+        "basis_sol": null,
+        "matched_basis_sol": null,
+        "proceeds_sol": "0.551929943",
+        "exit_fees_sol": "0.000006849",
+        "pnl_sol": null,
+        "roi_pct": null,
+        "hold_hours": "0",
+        "first_sale_hours": "0",
+        "sold_50_pct_hours": "0",
+        "sold_90_pct_hours": "0",
+        "evidence": [
+          "52cac85963c90d28232e1a966596f0d575797e0c6ef07de8f29b4524310233a2"
+        ],
+        "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+        "attributable": false,
+        "conditional": true,
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "timing_state": "PASS",
+        "observed_start": "2026-10-04T02:17:09+00:00",
+        "observed_end": "2026-10-04T02:17:09+00:00"
+      }
+    ],
+    "sales_detail": [
+      {
+        "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+        "timestamp": "2026-10-04T02:17:09+00:00",
+        "quantity_raw": "516612982765",
+        "conditional_matched_basis_sol": null,
+        "conditional_profit_sol": null,
+        "attributable": false,
+        "evidence": [
+          "52cac85963c90d28232e1a966596f0d575797e0c6ef07de8f29b4524310233a2"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      }
+    ],
+    "evidence": [
+      "52cac85963c90d28232e1a966596f0d575797e0c6ef07de8f29b4524310233a2"
+    ],
+    "risk_findings": [
+      {
+        "severity": "warning",
+        "title": "Opening inventory is not inferred from fetched buys",
+        "detail": "A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.",
+        "evidence": [
+          "52cac85963c90d28232e1a966596f0d575797e0c6ef07de8f29b4524310233a2"
+        ]
+      }
+    ],
+    "limitations": [
+      "Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.",
+      "Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.",
+      "Episode duration, first sale and 50%/90% exits describe fetched observed quantities; undiscovered acquisitions or transfers may change those boundaries.",
+      "Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.",
+      "Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns."
+    ]
+  },
+  "typed_lots": [
+    {
+      "id": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump:1",
+      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+      "accounts": [
+        "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw"
+      ],
+      "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+      "monetary_state": "UNKNOWN",
+      "timing_state": "UNKNOWN",
+      "quantity_state": "PASS",
+      "classification_state": "UNKNOWN",
+      "wallet_population_state": "UNKNOWN",
+      "qualification": false,
+      "acquired_raw": "516612982765",
+      "disposed_raw": "516612982765",
+      "remaining_raw": "0",
+      "buy_count": 0,
+      "sell_count": 1,
+      "conditional_basis_sol": null,
+      "conditional_matched_basis_sol": null,
+      "conditional_proceeds_sol": null,
+      "conditional_exit_fees_sol": null,
+      "conditional_lot_profit_sol": null,
+      "conditional_lot_roi_pct": null,
+      "observed_start": null,
+      "observed_end": null,
+      "conditional_hold_hours": null,
+      "required_signatures": [
+        "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn"
+      ],
+      "disjoint_signatures": [],
+      "evidence": [
+        "52cac85963c90d28232e1a966596f0d575797e0c6ef07de8f29b4524310233a2"
+      ],
+      "retained_account_funding": [],
+      "gaps": [],
+      "assumptions": [
+        "No hidden earlier same-mint holdings or unobserved intervening changes are established.",
+        "Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN."
+      ]
+    }
+  ]
+}

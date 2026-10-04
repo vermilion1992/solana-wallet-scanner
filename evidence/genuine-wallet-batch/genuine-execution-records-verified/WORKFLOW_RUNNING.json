@@ -1,0 +1,36 @@
+{
+  "kind": "WORKFLOW",
+  "argv": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "tools/check_genuine_collection.py",
+    "--input",
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "--input-freeze",
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+    "--worked-expectations",
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+    "--output",
+    "evidence/genuine-wallet-batch/genuine-workflow-verified"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "start": "2026-10-04T07:29:08.553389+00:00",
+  "scope": "genuine",
+  "source_before_sha256": "eeb6f51777dda142376b8220896ccd768fe2c08e693873fa6630e09ed063cced",
+  "head_before": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "input_identities": {
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "bytes": 156832
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7",
+      "bytes": 2783
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "bytes": 177454
+    }
+  },
+  "expected_exit_code": 0,
+  "expected_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED"
+}

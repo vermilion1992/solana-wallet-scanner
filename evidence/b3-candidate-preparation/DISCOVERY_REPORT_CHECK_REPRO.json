@@ -1,0 +1,5 @@
+{
+  "field": "saved_report.checks[].key",
+  "malformed": {},
+  "result": "AttributeError: 'dict' object has no attribute 'endswith'"
+}

@@ -1,0 +1,138 @@
+{
+  "scope": "Affected source-owner research/receipt controls only; no full candidate acceptance, no genuine B3 claim, no provider or credential calls.",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_research.py",
+    "tests/test_research_source_roles.py",
+    "tests/test_discovery_integration_review.py",
+    "tests/test_copy_review.py",
+    "tests/test_discovery_audit_plan.py",
+    "tests/test_real_coverage.py",
+    "-q"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 18.205767122999532,
+  "before": {
+    "scanner/app.py": {
+      "sha256": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+      "mode": "0o600",
+      "bytes": 74376
+    },
+    "scanner/archive_input.py": {
+      "sha256": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+      "mode": "0o600",
+      "bytes": 53189
+    },
+    "scanner/copy_review.py": {
+      "sha256": "d96f7cca8cf9c5d51f9c60721171d049e1785fe32177fb45878a3c05fb6242b1",
+      "mode": "0o600",
+      "bytes": 24516
+    },
+    "scanner/research.py": {
+      "sha256": "46b540eefbe3f8ddb5c5e870e40012f31976bddf892aec700b1cf8e9cbc8c575",
+      "mode": "0o600",
+      "bytes": 29462
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22",
+      "mode": "0o600",
+      "bytes": 86328
+    },
+    "tests/test_copy_review.py": {
+      "sha256": "e5bd9545a2fc1621ecf2c19bbc4f1ffca1ae7032c269bfdcdf78ed720f26302b",
+      "mode": "0o600",
+      "bytes": 21909
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "55bb031564540089e2019d0b32dc5a28e5e3d39e6198f829f0ba29f8a22cfb35",
+      "mode": "0o600",
+      "bytes": 22720
+    },
+    "tests/test_discovery_integration_review.py": {
+      "sha256": "59c43b9f0a9d1c0c0fc53cf72f1c1578b8a4debf82fff137ca121ae812850eb9",
+      "mode": "0o600",
+      "bytes": 32039
+    },
+    "tests/test_research_source_roles.py": {
+      "sha256": "edba093191f17a67ffb561894f7ada3280d99306d3f3bcb86ee7641a6b3be723",
+      "mode": "0o600",
+      "bytes": 20234
+    },
+    "tools/validate.py": {
+      "sha256": "6da6629080df4a72eaf0a311585202a8d13751280597b3d9d31154966119dda1",
+      "mode": "0o700",
+      "bytes": 14659
+    }
+  },
+  "after": {
+    "scanner/app.py": {
+      "sha256": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+      "mode": "0o600",
+      "bytes": 74376
+    },
+    "scanner/archive_input.py": {
+      "sha256": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+      "mode": "0o600",
+      "bytes": 53189
+    },
+    "scanner/copy_review.py": {
+      "sha256": "d96f7cca8cf9c5d51f9c60721171d049e1785fe32177fb45878a3c05fb6242b1",
+      "mode": "0o600",
+      "bytes": 24516
+    },
+    "scanner/research.py": {
+      "sha256": "46b540eefbe3f8ddb5c5e870e40012f31976bddf892aec700b1cf8e9cbc8c575",
+      "mode": "0o600",
+      "bytes": 29462
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22",
+      "mode": "0o600",
+      "bytes": 86328
+    },
+    "tests/test_copy_review.py": {
+      "sha256": "e5bd9545a2fc1621ecf2c19bbc4f1ffca1ae7032c269bfdcdf78ed720f26302b",
+      "mode": "0o600",
+      "bytes": 21909
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "55bb031564540089e2019d0b32dc5a28e5e3d39e6198f829f0ba29f8a22cfb35",
+      "mode": "0o600",
+      "bytes": 22720
+    },
+    "tests/test_discovery_integration_review.py": {
+      "sha256": "59c43b9f0a9d1c0c0fc53cf72f1c1578b8a4debf82fff137ca121ae812850eb9",
+      "mode": "0o600",
+      "bytes": 32039
+    },
+    "tests/test_research_source_roles.py": {
+      "sha256": "edba093191f17a67ffb561894f7ada3280d99306d3f3bcb86ee7641a6b3be723",
+      "mode": "0o600",
+      "bytes": 20234
+    },
+    "tools/validate.py": {
+      "sha256": "6da6629080df4a72eaf0a311585202a8d13751280597b3d9d31154966119dda1",
+      "mode": "0o700",
+      "bytes": 14659
+    }
+  },
+  "owned_source_unchanged": true,
+  "raw_log": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_SCOPED_OWNER_FINAL.log",
+  "methodologies": {
+    "research": "supported-subset-research-v3-native-roles",
+    "wallet": "wallet-raw-evidence-v6",
+    "archive": "archive-ledger-v9"
+  },
+  "state": "PASS",
+  "implementation_scope": "Existing FIFO plus fresh per-transaction cost/identity/fee/physical/clock proof and exact typed named-lot origin/scope binding; source loss stays a dependency; independent observations and immutable parents retained.",
+  "first_findings_preserved": [
+    "RESEARCH_CASH_ROLE_FIRST.json",
+    "RESEARCH_PROGRAM_CONFLICT_FIRST.json",
+    "RESEARCH_ORIGIN_TIMING_FIRST.json",
+    "RESEARCH_PREEXISTING_STOCK_FIRST.json",
+    "RESEARCH_DISJOINT_POINTER_FIRST.json"
+  ],
+  "previous_owner_attempt": "RESEARCH_CONSUMER_OWNER_RECORD.json"
+}

@@ -1,0 +1,178 @@
+{
+  "version": "scoped-read-only-review-v2",
+  "created_at": "2026-10-04T08:06:07.056136+00:00",
+  "status": "PASS",
+  "decision": "PASS_IN_MODULE_SCOPE",
+  "scope": "Distinct read-only financial research-consumer and fresh source-dependency review; does not certify full candidate, wallet qualification or B3. Existing PumpSwap funding/PDA/gross-flow source is unchanged from preserved earlier module review.",
+  "read_only": true,
+  "distinct_from_implementation": true,
+  "candidate_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "execution_head_before": "d96bc360a2990a8969b289f967b69972fad83b65",
+  "execution_head_after": "d96bc360a2990a8969b289f967b69972fad83b65",
+  "commit_binding_note": "The replay executed on the final frozen bytes while HEAD remained d96bc360. Commit394904460 records those identical application/source bytes; all228file hashes/modes and full manifest match before/after execution and current commit. No execution-on-different-bytes claim.",
+  "source_manifest_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "application_file_count": 228,
+  "source_frozen": true,
+  "source_unchanged_after_replay": true,
+  "files_sha256": {
+    "scanner/research.py": "24e0d928b46da9aed1ed171473c48a2e46b9007d3d69da91b513d34e6f42ea75",
+    "scanner/accounting.py": "9c5fb7fd1b1d63d2382caeb3eb98ce9c97862d081231022d62631ce5dc253708",
+    "scanner/wallet_evidence.py": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "scanner/app.py": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+    "scanner/archive_input.py": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/source_consistency.py": "169ac98f775e16637e51106e331e40c68189fdd51515d4ee4b62e25258670b3a",
+    "scanner/chronology_evidence.py": "36032f177db3638505026969039f5e69d64cd1d1d2b208f64e6e74153f4a0575",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f",
+    "scanner/indexed_input.py": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d",
+    "scanner/position_evidence.py": "894f5a6301d0dafb42a47d852514582d1007f3260a7e8dceb9a981c8ba0b9ab3",
+    "scanner/metric_evidence.py": "744b2b011a7e625fc111cc7608709a3815742bfbb44b450095ab04198797ceea",
+    "tests/test_research.py": "b26c42df9358b2ae1f38dddcbcf8fceb9e4ca57264d96534b11630b0b4b5c8e0",
+    "tests/test_research_source_roles.py": "0b2f5cf46b9b382f6ac7e3e210d7d7bc49d20b35b53495fa321b13bd51eefeb7",
+    "tests/test_retained_protocol_funding.py": "2bbe90f0bb0c5e3a7a775095d7ea5be560ab8f1b13f0e605285ec40f3c583727",
+    "tests/fixtures/retained_protocol_funding/SOURCE_DOCUMENTS.json": "efcc73dc4bf2f6bcf8da6b139a32f219ff67edc8fed2cfea5c26af80dfa187ae",
+    "tests/fixtures/retained_protocol_funding/NATIVE_QUOTE_SOURCE.json": "972282b221c219023886ea73a9393b83b864b01e41ff60e180901c5b0192bcf7",
+    "tests/fixtures/retained_protocol_funding/pump-native.json": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b",
+    "tests/fixtures/retained_protocol_funding/pump_amm.json": "2091433899b07d003d98118ae6cd3c628960fd393b40710b6e15bce6d0e7f2d1",
+    "tests/fixtures/retained_protocol_funding/solana_pubkey.rs": "d2d3e31f542c7e662c0e36f3eabfb73c2146e485fd0ba10738f2e748d8ab2c26"
+  },
+  "replay": {
+    "command": ".venv/bin/python evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_REPLAY.py",
+    "exit_code": 0,
+    "elapsed_seconds": 33.982,
+    "ordinary_control_cases": 31,
+    "failed": 0,
+    "unique_candidate_test_count": null,
+    "count_note": "31 supplemental script controls, not pytest nodes or additional unique tests. Earlier67-node financial replay, owner runs, initial29case run and this31case run overlap and are never summed as unique candidate acceptance.",
+    "api_spies": {
+      "provider": 0,
+      "credential": 0,
+      "transport": 0
+    },
+    "raw_output": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_FINAL.json",
+    "execution_record": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_EXECUTION_FINAL.json"
+  },
+  "corrected_findings": [
+    {
+      "family": "Known cash-role uncertainty lost in supported trade research",
+      "first_reproduction": "RESEARCH_CASH_ROLE_FIRST.json",
+      "closure": "Explicit UNKNOWN/malformed cash roles and unknown capital observations remain diagnostics and revoke affected basis/proceeds/profit/ROI and attribution. Proven quantities, clocks and payer fees remain distinct; later clean same-mint reentry stays usable."
+    },
+    {
+      "family": "Fresh cost/identity receipts omitted physical token proof",
+      "first_reproduction": "RESEARCH_PROGRAM_CONFLICT_FIRST.json",
+      "closure": "A linked Token2022/legacy program contradiction revokes per-mint quantity/lifecycle dependencies even when quote/clock/native fees agree. Selected/alternative loss and restoration are replayed; actual fresh wallet proof feeds both normal and archive reports."
+    },
+    {
+      "family": "Global unresolved source erased independently proved observation",
+      "first_reproduction": "RESEARCH_DISJOINT_POINTER_FIRST.json",
+      "closure": "Genuine87 disjoint selected-pointer72 loss preserves the supported target loss and529second per-episode/per-sale observations; aggregate chronology/median/population stay UNKNOWN. Required purchase-pointer83 loss revokes affected money/timing and exact restoration recovers prior output."
+    },
+    {
+      "family": "Version-correct receipt incorrectly invented acquisition-origin support",
+      "first_reproductions": [
+        "RESEARCH_ORIGIN_TIMING_FIRST.json",
+        "RESEARCH_PREEXISTING_STOCK_FIRST.json"
+      ],
+      "closure": "Named-lot proof is matched through mint, raw FIFO bounds, exact quantities/counts, original event evidence containment and required signatures. Sale-only evidence cannot establish a zero-hour holding episode; positively observed earlier stock with unresolved basis cannot establish the matched profit. Clock/origin/quantity and current per-trade cost remain separate."
+    },
+    {
+      "family": "New proof-local hash variable overwrote evidence union",
+      "first_reproduction": "RESEARCH_ADJACENT_FAILED_SHADOW.json",
+      "closure": "Proof-local hashes are separate from the complete event-evidence set. Fresh positive receipt plus independently declared development opening anchor no longer crashes; positive and required-source controls pass."
+    }
+  ],
+  "reviewed_controls": [
+    "clean-positive-allocated-fees",
+    "cash-only-money-loss",
+    "separate-unknown-capital-role",
+    "prewindow-required-acquisition",
+    "same-mint-clean-later-reentry",
+    "malformed-money-state-0",
+    "malformed-money-state-1",
+    "malformed-money-state-2",
+    "malformed-money-state-3",
+    "malformed-money-state-4",
+    "malformed-capital-role-0",
+    "malformed-capital-role-1",
+    "malformed-capital-role-2",
+    "malformed-capital-role-3",
+    "malformed-capital-role-4",
+    "missing-required-financial-amount_sol",
+    "missing-required-financial-fee_sol",
+    "episode-identity-full-transfer-out",
+    "episode-identity-partial-transfer-out",
+    "episode-identity-held-transfer-in",
+    "episode-identity-inferred-earlier-lot",
+    "episode-identity-sale-only-opening-gap",
+    "episode-identity-ordered-same-time-reentry",
+    "raw-selected-linked-cash-loss-restoration",
+    "raw-selected-linked-identity-loss-restoration",
+    "raw-selected-linked-program-physical-conflict",
+    "out-of-window-selected-fee-linked-boundary",
+    "genuine-sale-only-required-origin-timing",
+    "positively-observed-earlier-stock-cost-origin",
+    "genuine-proved-disjoint-and-required-pointer",
+    "ordinary-and-archive-offline-consumers"
+  ],
+  "reviewed_invariants": [
+    "Missing/conflicting/unsupported required source never makes dependent money more certain; exact original restoration restores results without editing parents.",
+    "Independent fee sum uses current interval projection receipts, including selected out-of-window records whose linked possibility crosses the boundary.",
+    "Earlier unknown purchase cost affects in-window sale basis; no hardcoded PASS, caller completion flag or global mint monetary wipe.",
+    "Existing single private FIFO supplies positions; transfer-in/out, inferred opening units, ordered same-time reentry and source-linked per-mint episode mapping are replayed.",
+    "Fresh source/clock/mint proof and named-lot origin dependencies gate research fields; raw nullable/speculative values are not treated as proof merely because numerical.",
+    "Normal and archive import/report/rebuild consumers remain offline and retain immutable saved parent/loss child exports.",
+    "Known broad token research and narrow named-account arithmetic cannot certify historical wallet population, meme classification, economic boundary valuation, safety or qualification."
+  ],
+  "independent_worked_values": {
+    "basis_lamports": 565194018,
+    "net_exit_lamports": 551923094,
+    "loss_lamports": -13270924,
+    "holding_seconds": 529,
+    "retained_program_account_funding_lamports": 1346200,
+    "retained_funding_not_added_to_quote": true
+  },
+  "historical_preservation": {
+    "supersedes_only_consumer_no_defect_judgment": "FINANCIAL_REVIEW_ADDENDUM_7F.json",
+    "original67node_and_primary_financial_receipt_unchanged": "FINANCIAL_SCOPED_REVIEW.json",
+    "failed7f_parent_gate": "evidence/genuine-wallet-batch/FINAL_DISCOVERY_SIBLING_REPRO.log",
+    "intermediate_commit_preserved": "d96bc360a2990a8969b289f967b69972fad83b65"
+  },
+  "evidence_sha256": {
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_REPLAY.py": "d3a2dad08cfcc854e66cd09d9d1a163ec87e829320d6f48c16a449c879032a88",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_FINAL.json": "efe6a9da5c20d8ef36746a9230e4cd8319f6ce9d4d871f975a49554ca28c0eb4",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_FINAL.log": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_EXECUTION_FINAL.json": "aeb3482b3d16812a7deee2263a5ebb4c40c62e037a5230ebae656decc40d194b",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_FIRST_FROZEN_ATTEMPT.json": "34651f95dededbd2010098eb9f4bd9ef86e116797b9a7bd6dd10ddc6ecbc22e5",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_EXECUTION_FIRST_FROZEN_ATTEMPT.json": "004575cc066aef8bdc7fe749b36c227685f88c06d48c797fa5f20cde687e0287",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_FAILED_SHADOW.json": "7b20cb179753c17f7e90516d582cf7989ffb68d3a8d7548ed0c568c2ac7c4d0d",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ADJACENT_EXECUTION_FAILED_SHADOW.json": "c6338882f9934d1425c2a9714b9ff6098eab07388977c5ced4046ab7885907b2",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_CASH_ROLE_FIRST.json": "b23a29e9c3abb60a4bd62e98fd7701ad033bfe513f0b4f71d871dff7e40f84bd",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_PROGRAM_CONFLICT_FIRST.json": "6141d676d2fb5e8c78fa1f79317e0e2d2c89bac84bd6115a02c49fd08ca7cf58",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_DISJOINT_POINTER_FIRST.json": "56b8a18123bf80213059057cb13ace5450bfd4cd8b6357ef1a1745edac6b4ead",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ORIGIN_TIMING_FIRST.json": "20cc0e493c1a2e6217edeac15df8578c5add28dffd8847c98829f9afaf27247e",
+    "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_PREEXISTING_STOCK_FIRST.json": "f3140c6cfba70c60cf758b6bf183e88e0a01f1e11332a9bbf79e4dbb45d8a56c",
+    "evidence/genuine-wallet-batch/read-only-financial-review/FINANCIAL_SCOPED_REVIEW.json": "68d3073a975097f776261ef048720933df0d2c1fb71406ff25ebf7673c1c2529",
+    "evidence/genuine-wallet-batch/read-only-financial-review/FINANCIAL_REVIEW_ADDENDUM_7F.json": "a6ec33b37bad76ca8360281663e97473982587527469a050d41845dab514cbc8"
+  },
+  "unresolved_scoped_findings": [],
+  "limitations": [
+    "Genuine83/85 supported named-account financial observations remain conditional, with historical population and classification UNKNOWN.",
+    "Unsigned mutated raw records, synthetic anchors and development event controls test implementation only; none close B3.",
+    "Global aggregate research chronology/populations stay unresolved when completeness is missing even if a narrower observation remains supported.",
+    "Broader current-generation/UI freshness has a separate reviewer; this receipt is not browser acceptance or full-suite acceptance."
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "not_run": [
+    "Full backend candidate suite",
+    "Frontend build/check",
+    "Browser acceptance",
+    "Live providers",
+    "Credentials",
+    "Signing/trading"
+  ]
+}

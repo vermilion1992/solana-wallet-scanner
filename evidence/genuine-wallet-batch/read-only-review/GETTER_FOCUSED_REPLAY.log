@@ -1,0 +1,6 @@
+$ .venv/bin/python -m pytest -q tests/test_compiled_getter.py tests/test_compiled_instructions.py
+........................................................................ [ 54%]
+.............................................................            [100%]
+133 passed in 0.09s
+
+exit_code=0

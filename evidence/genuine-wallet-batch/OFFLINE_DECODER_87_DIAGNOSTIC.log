@@ -1,0 +1,48 @@
+{
+  "diagnostic": "evidence/genuine-wallet-batch/OFFLINE_DECODER_87_DIAGNOSTIC.json",
+  "bytes": 307633,
+  "sha256": "3961d0d4894f4fbb3047326a51ec2b09d894e5cc30e774a0136d5238dc4ac8f9",
+  "records": 87,
+  "decoded_swaps": 10,
+  "pair_gaps": [
+    {
+      "signature": "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY",
+      "path": "meta",
+      "reason": "Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers",
+      "evidence": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ]
+    }
+  ],
+  "pair_positions": [
+    {
+      "id": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump:1",
+      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+      "classification": "unknown",
+      "status": "interrupted",
+      "in_window": true,
+      "start": "2026-10-04T02:08:20+00:00",
+      "end": "2026-10-04T02:17:09+00:00",
+      "quantity_raw": "0",
+      "acquired_raw": "516612982765",
+      "sold_raw": "516612982765",
+      "decimals": 6,
+      "buy_count": 0,
+      "sell_count": 1,
+      "basis_sol": null,
+      "matched_basis_sol": null,
+      "proceeds_sol": "0.551929943",
+      "exit_fees_sol": "0.000006849",
+      "pnl_sol": null,
+      "roi_pct": null,
+      "hold_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "first_sale_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "sold_50_pct_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "sold_90_pct_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "evidence": [
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+      ]
+    }
+  ],
+  "selected_window_fee_lamports": 158868
+}

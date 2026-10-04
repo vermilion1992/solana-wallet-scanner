@@ -1,0 +1,2 @@
+{"state": "VERIFIED", "entries": 110, "original_bytes": 5696332389, "compressed_bytes": 372808942, "deferred": 0, "private_artifact_omissions": 2670, "index": "evidence/genuine-wallet-batch/EVIDENCE_STORAGE_INDEX.json", "index_bytes": 723861, "index_sha256": "f2adb118e2df61fbc89e0abdf2e428e88199ac8b7b9f0cbdff1c185d540d86ff"}
+{"frozen_safe_paths": 863, "private_omissions": 2670, "snapshot_sha256": "1cfb46b3760f1b68442ef2bf873e6c08a8765ff70a14c7cbb141be6ac33acc6e", "final_index_sha256": "f2adb118e2df61fbc89e0abdf2e428e88199ac8b7b9f0cbdff1c185d540d86ff"}

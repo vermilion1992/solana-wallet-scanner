@@ -1,0 +1,475 @@
+.........FFF                                                             [100%]
+=================================== FAILURES ===================================
+_ test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source[72] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-336/test_complete_original_page_pr0')
+missing_index = 72
+
+    @pytest.mark.parametrize('missing_index', [72, 83, 85])
+    def test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source(tmp_path, missing_index):
+        store = Store(tmp_path)
+        archive = ROOT / 'evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip'
+        digest = import_archive(store, convert_indexed_archive(archive.read_bytes()))
+        loaded, parent, receipt = assess(store, digest)
+        target = lot(receipt)
+        assert receipt['query_accounting']['monetary_state'] == 'UNKNOWN'
+        assert target['monetary_state'] == target['timing_state'] == 'PASS'
+        assert target['conditional_lot_profit_sol'] == '-0.013270924'
+        signature = originals()[missing_index]['transaction']['signatures'][0]
+        pointer = next(row['hash'] for row in loaded['manifest']['transactions'] if row['signature'] == signature)
+        path = store.path / 'evidence' / f'{pointer}.json.gz'
+        original = path.read_bytes(); path.unlink()
+>       _, child, child_receipt = assess(store, digest, loaded['dependency_input_hash'])
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_retained_protocol_funding.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_retained_protocol_funding.py:67: in assess
+    result, _, receipt = analyze_archive(loaded, events)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/archive_input.py:587: in analyze_archive
+    adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+scanner/wallet_evidence.py:1169: in derive_wallet_evidence
+    query_accounting['supported_selected_lots'] = _selected_lot_observations(fifo_positions, selected, raw_versions,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+positions = [{'id': 'GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump:1', 'mint': 'GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump', 'cla...mint': 'Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump', 'classification': 'unknown', 'status': 'interrupted', ...}, ...]
+selected = {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6': {'signature': '1K8o6wdkahj...'Native record rederived from exact frozen provider response bytes.', 'raw_paths': ['result.data.32'], ...}, ...}, ...}
+raw_versions = defaultdict(<class 'list'>, {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6'...hash': 'c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5', 'reason': '', 'raw_paths': ['response']}}]})
+transactions = {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6': {'signature': '1K8o6wdkahj...cgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9', 'applied': True, 'path': 'transaction.message.instructions.1', ...}], ...}, ...}
+clocks = {'version': 'slot-chronology-evidence-v3', 'state': 'UNKNOWN', 'transactions': {'4ME1U6UxSAJgFnhUit3otZdGqFsXnRUNvAX9q...1488707': {'state': 'PASS', 'time_state': 'PASS', 'order_state': 'PASS', 'canonical_time': 1779480986, ...}, ...}, ...}
+role_checks = [{'state': 'UNKNOWN', 'scope': 'Selected archived records only; hidden accounts and intervening records are unproved',... endpoint is unavailable', 'evidence': ['c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5'], ...}, ...]
+ledger_events = [{'kind': 'fee', 'timestamp': 1791079700, 'signature': '1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6x...tqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A', 'path': 'instructions.3', ...}, ...]
+source_rows = [{'kind': 'archive-native-dependencies', 'hash': '8021c112b566b5d2dcaf3a8d28fdebf6f52b25fec0902dd05f1611b04780b9a9', '...onse_hash': 'be9ed43c64087da645edfa1e37931b6aa04e479ecb305470fbd07c73d1b9c9f0', ...}, 'signature_hints': [], ...}, ...]
+wallet = '2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY'
+
+    def _selected_lot_observations(positions, selected, raw_versions, transactions, clocks,
+                                   role_checks, ledger_events, source_rows, wallet):
+        """Project existing FIFO by named-account dependencies, never wallet scope.
+    
+        Unrelated routes cannot erase a supported named lot. A missing source is
+        disjoint only when independently present original bytes reproduce its exact
+        frozen pointer/body hash. That reconstruction supplies exclusion only; a
+        missing required purchase or sale still revokes the lot's result.
+        """
+        from .indexed_input import PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, canonical_bytes
+        recovered = {}
+        for source in source_rows:
+            payload = source.get('payload')
+            version = payload.get('version') if isinstance(payload, dict) else None
+            if version not in (PAGE_VERSION, NATIVE_VERSION):
+                continue
+            raws, _, ambiguous, _ = _indexed_native_rows(payload)
+            if ambiguous:
+                continue
+            for ordinal, raw in enumerate(raws):
+                if not _safe_raw(raw):
+                    continue
+                signatures = raw['transaction'].get('signatures')
+                if not isinstance(signatures, list) or not signatures:
+                    continue
+                signature = signatures[0]
+                native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+                recovered.setdefault((signature, native_hash), raw)
+                pointer = {'version': RECORD_VERSION, 'source_hash': source['hash'], 'ordinal': ordinal,
+                           'signature': signature, 'native_hash': native_hash}
+                recovered.setdefault((signature, hashlib.sha256(canonical_bytes(pointer)).hexdigest()), raw)
+        by_signature = defaultdict(list)
+        for event in ledger_events:
+            by_signature[event.get('signature')].append(event)
+        roles = defaultdict(list)
+        for check in role_checks:
+            roles[check['signature']].append(check)
+        results = []
+        for position in positions:
+            mint = position['mint']
+            if mint == WSOL:
+                continue
+            named = {account for observed in transactions.values() for account, pair in observed['boundaries'].items()
+                     if any(pair.get(phase) and pair[phase]['owner'] == wallet and pair[phase]['mint'] == mint
+                            for phase in ('pre', 'post'))}
+            scope_gaps, required, disjoint, physical, money, timing, evidence, retained = [], [], [], [], [], [], set(), []
+            for signature, versions in raw_versions.items():
+                if position['end'] is not None:
+                    future = assess_interval_membership(clocks, signature, utc(0), utc(position['end']) + timedelta(seconds=1))
+                    if future['state'] == 'PASS' and future.get('member') is False:
+                        disjoint.append(signature)
+                        continue
+                relevant, scope_known = False, bool(versions)
+                for row in versions:
+                    raw = row.get('raw')
+                    if not _safe_raw(raw):
+                        raw = recovered.get((signature, row.get('evidence_hash')))
+                    if not _safe_raw(raw):
+                        scope_known = False
+                        continue
+                    try:
+                        keys = _keys(raw['transaction']['message'], raw['meta'])
+                        if len(set(keys)) != len(keys):
+                            raise ValueError('Duplicate native account keys')
+                        touching = named.intersection(keys) or mint in keys
+                        for field in ('preTokenBalances', 'postTokenBalances'):
+                            for balance in raw['meta'][field]:
+                                if balance.get('owner') == wallet and balance.get('mint') == mint:
+                                    touching = True
+                        relevant = relevant or bool(touching)
+                    except (ValueError, TypeError, KeyError, IndexError):
+                        scope_known = False
+                relevant = relevant or any(e.get('mint') == mint for e in by_signature[signature])
+                if not scope_known:
+                    scope_gaps.append(f'{signature}: linked source cannot be independently excluded from this named-account population')
+                if not relevant:
+                    if scope_known:
+                        disjoint.append(signature)
+                    continue
+                required.append(signature)
+                observed = transactions.get(signature)
+                if observed is None:
+                    scope_gaps.append(f'{signature}: required observed transaction is unavailable')
+                    continue
+                identity = observed['checks']['identity']
+                clock = clocks['transactions'].get(signature, {})
+                timing.append(_check(clock.get('state') == 'PASS' and clock.get('time_state') == 'PASS',
+                    clock.get('reason', 'Required named-account clock unavailable'), clock.get('evidence', [])))
+                for account, pair in observed['boundaries'].items():
+                    if account in named:
+                        physical.extend(pair['checks'][field] for field in ('ownership', 'quantities', 'lifecycle'))
+                signature_events = by_signature[signature]
+                lot_trades = [event for event in signature_events if event.get('mint') == mint and event['kind'] in ('buy', 'sell')]
+                if lot_trades:
+                    money.extend([identity, observed['checks']['cost_roles'], observed['network_fee']['check']] + roles[signature])
+                    retained.extend(item for event in lot_trades for item in event.get('retained_account_funding', []))
+                target_pairs = [pair for account, pair in observed['boundaries'].items() if account in named]
+                zero_administration = bool(target_pairs) and all(
+                    pair['pre'] and pair['post'] and pair['pre']['quantity'] == pair['post']['quantity'] == '0'
+                    and all(pair['checks'][field]['state'] == 'PASS' for field in ('ownership', 'quantities', 'lifecycle'))
+                    for pair in target_pairs)
+                if any(event['kind'] in ('transfer_in', 'transfer_out') and event.get('mint') == mint
+                       or event['kind'] == 'unsupported' and not zero_administration for event in signature_events):
+                    scope_gaps.append(f'{signature}: required record contains unsupported or transfer-interrupted named-account activity')
+                evidence.update(observed['evidence'])
+            # Account-continuity checks use only this lot's observed named accounts.
+            for account in named:
+                boundaries = [(sig, transactions[sig]['boundaries'][account]) for sig in required
+                              if account in transactions.get(sig, {}).get('boundaries', {})]
+>               boundaries.sort(key=lambda row: (clocks['transactions'].get(row[0], {}).get('canonical_time', -1), row[0]))
+E               TypeError: '<' not supported between instances of 'int' and 'NoneType'
+
+scanner/wallet_evidence.py:820: TypeError
+_ test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source[83] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-336/test_complete_original_page_pr1')
+missing_index = 83
+
+    @pytest.mark.parametrize('missing_index', [72, 83, 85])
+    def test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source(tmp_path, missing_index):
+        store = Store(tmp_path)
+        archive = ROOT / 'evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip'
+        digest = import_archive(store, convert_indexed_archive(archive.read_bytes()))
+        loaded, parent, receipt = assess(store, digest)
+        target = lot(receipt)
+        assert receipt['query_accounting']['monetary_state'] == 'UNKNOWN'
+        assert target['monetary_state'] == target['timing_state'] == 'PASS'
+        assert target['conditional_lot_profit_sol'] == '-0.013270924'
+        signature = originals()[missing_index]['transaction']['signatures'][0]
+        pointer = next(row['hash'] for row in loaded['manifest']['transactions'] if row['signature'] == signature)
+        path = store.path / 'evidence' / f'{pointer}.json.gz'
+        original = path.read_bytes(); path.unlink()
+>       _, child, child_receipt = assess(store, digest, loaded['dependency_input_hash'])
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_retained_protocol_funding.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_retained_protocol_funding.py:67: in assess
+    result, _, receipt = analyze_archive(loaded, events)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/archive_input.py:587: in analyze_archive
+    adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+scanner/wallet_evidence.py:1169: in derive_wallet_evidence
+    query_accounting['supported_selected_lots'] = _selected_lot_observations(fifo_positions, selected, raw_versions,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+positions = [{'id': 'GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump:1', 'mint': 'GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump', 'cla...mint': 'Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump', 'classification': 'unknown', 'status': 'interrupted', ...}, ...]
+selected = {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6': {'signature': '1K8o6wdkahj...'Native record rederived from exact frozen provider response bytes.', 'raw_paths': ['result.data.32'], ...}, ...}, ...}
+raw_versions = defaultdict(<class 'list'>, {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6'...hash': 'c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5', 'reason': '', 'raw_paths': ['response']}}]})
+transactions = {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6': {'signature': '1K8o6wdkahj...cgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9', 'applied': True, 'path': 'transaction.message.instructions.1', ...}], ...}, ...}
+clocks = {'version': 'slot-chronology-evidence-v3', 'state': 'UNKNOWN', 'transactions': {'2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7W...1488707': {'state': 'PASS', 'time_state': 'PASS', 'order_state': 'PASS', 'canonical_time': 1779480986, ...}, ...}, ...}
+role_checks = [{'state': 'UNKNOWN', 'scope': 'Selected archived records only; hidden accounts and intervening records are unproved',... endpoint is unavailable', 'evidence': ['c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5'], ...}, ...]
+ledger_events = [{'kind': 'fee', 'timestamp': 1791079700, 'signature': '1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6x...tqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A', 'path': 'instructions.3', ...}, ...]
+source_rows = [{'kind': 'archive-native-dependencies', 'hash': '8021c112b566b5d2dcaf3a8d28fdebf6f52b25fec0902dd05f1611b04780b9a9', '...onse_hash': 'be9ed43c64087da645edfa1e37931b6aa04e479ecb305470fbd07c73d1b9c9f0', ...}, 'signature_hints': [], ...}, ...]
+wallet = '2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY'
+
+    def _selected_lot_observations(positions, selected, raw_versions, transactions, clocks,
+                                   role_checks, ledger_events, source_rows, wallet):
+        """Project existing FIFO by named-account dependencies, never wallet scope.
+    
+        Unrelated routes cannot erase a supported named lot. A missing source is
+        disjoint only when independently present original bytes reproduce its exact
+        frozen pointer/body hash. That reconstruction supplies exclusion only; a
+        missing required purchase or sale still revokes the lot's result.
+        """
+        from .indexed_input import PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, canonical_bytes
+        recovered = {}
+        for source in source_rows:
+            payload = source.get('payload')
+            version = payload.get('version') if isinstance(payload, dict) else None
+            if version not in (PAGE_VERSION, NATIVE_VERSION):
+                continue
+            raws, _, ambiguous, _ = _indexed_native_rows(payload)
+            if ambiguous:
+                continue
+            for ordinal, raw in enumerate(raws):
+                if not _safe_raw(raw):
+                    continue
+                signatures = raw['transaction'].get('signatures')
+                if not isinstance(signatures, list) or not signatures:
+                    continue
+                signature = signatures[0]
+                native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+                recovered.setdefault((signature, native_hash), raw)
+                pointer = {'version': RECORD_VERSION, 'source_hash': source['hash'], 'ordinal': ordinal,
+                           'signature': signature, 'native_hash': native_hash}
+                recovered.setdefault((signature, hashlib.sha256(canonical_bytes(pointer)).hexdigest()), raw)
+        by_signature = defaultdict(list)
+        for event in ledger_events:
+            by_signature[event.get('signature')].append(event)
+        roles = defaultdict(list)
+        for check in role_checks:
+            roles[check['signature']].append(check)
+        results = []
+        for position in positions:
+            mint = position['mint']
+            if mint == WSOL:
+                continue
+            named = {account for observed in transactions.values() for account, pair in observed['boundaries'].items()
+                     if any(pair.get(phase) and pair[phase]['owner'] == wallet and pair[phase]['mint'] == mint
+                            for phase in ('pre', 'post'))}
+            scope_gaps, required, disjoint, physical, money, timing, evidence, retained = [], [], [], [], [], [], set(), []
+            for signature, versions in raw_versions.items():
+                if position['end'] is not None:
+                    future = assess_interval_membership(clocks, signature, utc(0), utc(position['end']) + timedelta(seconds=1))
+                    if future['state'] == 'PASS' and future.get('member') is False:
+                        disjoint.append(signature)
+                        continue
+                relevant, scope_known = False, bool(versions)
+                for row in versions:
+                    raw = row.get('raw')
+                    if not _safe_raw(raw):
+                        raw = recovered.get((signature, row.get('evidence_hash')))
+                    if not _safe_raw(raw):
+                        scope_known = False
+                        continue
+                    try:
+                        keys = _keys(raw['transaction']['message'], raw['meta'])
+                        if len(set(keys)) != len(keys):
+                            raise ValueError('Duplicate native account keys')
+                        touching = named.intersection(keys) or mint in keys
+                        for field in ('preTokenBalances', 'postTokenBalances'):
+                            for balance in raw['meta'][field]:
+                                if balance.get('owner') == wallet and balance.get('mint') == mint:
+                                    touching = True
+                        relevant = relevant or bool(touching)
+                    except (ValueError, TypeError, KeyError, IndexError):
+                        scope_known = False
+                relevant = relevant or any(e.get('mint') == mint for e in by_signature[signature])
+                if not scope_known:
+                    scope_gaps.append(f'{signature}: linked source cannot be independently excluded from this named-account population')
+                if not relevant:
+                    if scope_known:
+                        disjoint.append(signature)
+                    continue
+                required.append(signature)
+                observed = transactions.get(signature)
+                if observed is None:
+                    scope_gaps.append(f'{signature}: required observed transaction is unavailable')
+                    continue
+                identity = observed['checks']['identity']
+                clock = clocks['transactions'].get(signature, {})
+                timing.append(_check(clock.get('state') == 'PASS' and clock.get('time_state') == 'PASS',
+                    clock.get('reason', 'Required named-account clock unavailable'), clock.get('evidence', [])))
+                for account, pair in observed['boundaries'].items():
+                    if account in named:
+                        physical.extend(pair['checks'][field] for field in ('ownership', 'quantities', 'lifecycle'))
+                signature_events = by_signature[signature]
+                lot_trades = [event for event in signature_events if event.get('mint') == mint and event['kind'] in ('buy', 'sell')]
+                if lot_trades:
+                    money.extend([identity, observed['checks']['cost_roles'], observed['network_fee']['check']] + roles[signature])
+                    retained.extend(item for event in lot_trades for item in event.get('retained_account_funding', []))
+                target_pairs = [pair for account, pair in observed['boundaries'].items() if account in named]
+                zero_administration = bool(target_pairs) and all(
+                    pair['pre'] and pair['post'] and pair['pre']['quantity'] == pair['post']['quantity'] == '0'
+                    and all(pair['checks'][field]['state'] == 'PASS' for field in ('ownership', 'quantities', 'lifecycle'))
+                    for pair in target_pairs)
+                if any(event['kind'] in ('transfer_in', 'transfer_out') and event.get('mint') == mint
+                       or event['kind'] == 'unsupported' and not zero_administration for event in signature_events):
+                    scope_gaps.append(f'{signature}: required record contains unsupported or transfer-interrupted named-account activity')
+                evidence.update(observed['evidence'])
+            # Account-continuity checks use only this lot's observed named accounts.
+            for account in named:
+                boundaries = [(sig, transactions[sig]['boundaries'][account]) for sig in required
+                              if account in transactions.get(sig, {}).get('boundaries', {})]
+>               boundaries.sort(key=lambda row: (clocks['transactions'].get(row[0], {}).get('canonical_time', -1), row[0]))
+E               TypeError: '<' not supported between instances of 'int' and 'NoneType'
+
+scanner/wallet_evidence.py:820: TypeError
+_ test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source[85] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-336/test_complete_original_page_pr2')
+missing_index = 85
+
+    @pytest.mark.parametrize('missing_index', [72, 83, 85])
+    def test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source(tmp_path, missing_index):
+        store = Store(tmp_path)
+        archive = ROOT / 'evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip'
+        digest = import_archive(store, convert_indexed_archive(archive.read_bytes()))
+        loaded, parent, receipt = assess(store, digest)
+        target = lot(receipt)
+        assert receipt['query_accounting']['monetary_state'] == 'UNKNOWN'
+        assert target['monetary_state'] == target['timing_state'] == 'PASS'
+        assert target['conditional_lot_profit_sol'] == '-0.013270924'
+        signature = originals()[missing_index]['transaction']['signatures'][0]
+        pointer = next(row['hash'] for row in loaded['manifest']['transactions'] if row['signature'] == signature)
+        path = store.path / 'evidence' / f'{pointer}.json.gz'
+        original = path.read_bytes(); path.unlink()
+>       _, child, child_receipt = assess(store, digest, loaded['dependency_input_hash'])
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_retained_protocol_funding.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_retained_protocol_funding.py:67: in assess
+    result, _, receipt = analyze_archive(loaded, events)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/archive_input.py:587: in analyze_archive
+    adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+scanner/wallet_evidence.py:1169: in derive_wallet_evidence
+    query_accounting['supported_selected_lots'] = _selected_lot_observations(fifo_positions, selected, raw_versions,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+positions = [{'id': 'GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump:1', 'mint': 'GaREwVYcNnvi55vPXtQFQYgspmzv3wypZfLSWWgJpump', 'cla...mint': 'Hkpi2SkNWm5LogyY1Bz4zYTq5REVvco2aYWd1tYppump', 'classification': 'unknown', 'status': 'interrupted', ...}, ...]
+selected = {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6': {'signature': '1K8o6wdkahj...'Native record rederived from exact frozen provider response bytes.', 'raw_paths': ['result.data.32'], ...}, ...}, ...}
+raw_versions = defaultdict(<class 'list'>, {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6'...hash': 'c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5', 'reason': '', 'raw_paths': ['response']}}]})
+transactions = {'1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6xLdSALDmoUKRZdA6RAhE4zBLU6': {'signature': '1K8o6wdkahj...cgCDoWBmK8pUHmiBZytyK6P3y6sWVQqsnYn9', 'applied': True, 'path': 'transaction.message.instructions.1', ...}], ...}, ...}
+clocks = {'version': 'slot-chronology-evidence-v3', 'state': 'UNKNOWN', 'transactions': {'3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWef...1488707': {'state': 'PASS', 'time_state': 'PASS', 'order_state': 'PASS', 'canonical_time': 1779480986, ...}, ...}, ...}
+role_checks = [{'state': 'UNKNOWN', 'scope': 'Selected archived records only; hidden accounts and intervening records are unproved',... endpoint is unavailable', 'evidence': ['c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5'], ...}, ...]
+ledger_events = [{'kind': 'fee', 'timestamp': 1791079700, 'signature': '1K8o6wdkahjF4rThLdpcUDpLytVVEa8hYtCDf56YQZVxiFVMu9PZE3FVJzHQ6x...tqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A', 'path': 'instructions.3', ...}, ...]
+source_rows = [{'kind': 'archive-native-dependencies', 'hash': '8021c112b566b5d2dcaf3a8d28fdebf6f52b25fec0902dd05f1611b04780b9a9', '...onse_hash': 'be9ed43c64087da645edfa1e37931b6aa04e479ecb305470fbd07c73d1b9c9f0', ...}, 'signature_hints': [], ...}, ...]
+wallet = '2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY'
+
+    def _selected_lot_observations(positions, selected, raw_versions, transactions, clocks,
+                                   role_checks, ledger_events, source_rows, wallet):
+        """Project existing FIFO by named-account dependencies, never wallet scope.
+    
+        Unrelated routes cannot erase a supported named lot. A missing source is
+        disjoint only when independently present original bytes reproduce its exact
+        frozen pointer/body hash. That reconstruction supplies exclusion only; a
+        missing required purchase or sale still revokes the lot's result.
+        """
+        from .indexed_input import PAGE_VERSION, NATIVE_VERSION, RECORD_VERSION, canonical_bytes
+        recovered = {}
+        for source in source_rows:
+            payload = source.get('payload')
+            version = payload.get('version') if isinstance(payload, dict) else None
+            if version not in (PAGE_VERSION, NATIVE_VERSION):
+                continue
+            raws, _, ambiguous, _ = _indexed_native_rows(payload)
+            if ambiguous:
+                continue
+            for ordinal, raw in enumerate(raws):
+                if not _safe_raw(raw):
+                    continue
+                signatures = raw['transaction'].get('signatures')
+                if not isinstance(signatures, list) or not signatures:
+                    continue
+                signature = signatures[0]
+                native_hash = hashlib.sha256(canonical_bytes(raw)).hexdigest()
+                recovered.setdefault((signature, native_hash), raw)
+                pointer = {'version': RECORD_VERSION, 'source_hash': source['hash'], 'ordinal': ordinal,
+                           'signature': signature, 'native_hash': native_hash}
+                recovered.setdefault((signature, hashlib.sha256(canonical_bytes(pointer)).hexdigest()), raw)
+        by_signature = defaultdict(list)
+        for event in ledger_events:
+            by_signature[event.get('signature')].append(event)
+        roles = defaultdict(list)
+        for check in role_checks:
+            roles[check['signature']].append(check)
+        results = []
+        for position in positions:
+            mint = position['mint']
+            if mint == WSOL:
+                continue
+            named = {account for observed in transactions.values() for account, pair in observed['boundaries'].items()
+                     if any(pair.get(phase) and pair[phase]['owner'] == wallet and pair[phase]['mint'] == mint
+                            for phase in ('pre', 'post'))}
+            scope_gaps, required, disjoint, physical, money, timing, evidence, retained = [], [], [], [], [], [], set(), []
+            for signature, versions in raw_versions.items():
+                if position['end'] is not None:
+                    future = assess_interval_membership(clocks, signature, utc(0), utc(position['end']) + timedelta(seconds=1))
+                    if future['state'] == 'PASS' and future.get('member') is False:
+                        disjoint.append(signature)
+                        continue
+                relevant, scope_known = False, bool(versions)
+                for row in versions:
+                    raw = row.get('raw')
+                    if not _safe_raw(raw):
+                        raw = recovered.get((signature, row.get('evidence_hash')))
+                    if not _safe_raw(raw):
+                        scope_known = False
+                        continue
+                    try:
+                        keys = _keys(raw['transaction']['message'], raw['meta'])
+                        if len(set(keys)) != len(keys):
+                            raise ValueError('Duplicate native account keys')
+                        touching = named.intersection(keys) or mint in keys
+                        for field in ('preTokenBalances', 'postTokenBalances'):
+                            for balance in raw['meta'][field]:
+                                if balance.get('owner') == wallet and balance.get('mint') == mint:
+                                    touching = True
+                        relevant = relevant or bool(touching)
+                    except (ValueError, TypeError, KeyError, IndexError):
+                        scope_known = False
+                relevant = relevant or any(e.get('mint') == mint for e in by_signature[signature])
+                if not scope_known:
+                    scope_gaps.append(f'{signature}: linked source cannot be independently excluded from this named-account population')
+                if not relevant:
+                    if scope_known:
+                        disjoint.append(signature)
+                    continue
+                required.append(signature)
+                observed = transactions.get(signature)
+                if observed is None:
+                    scope_gaps.append(f'{signature}: required observed transaction is unavailable')
+                    continue
+                identity = observed['checks']['identity']
+                clock = clocks['transactions'].get(signature, {})
+                timing.append(_check(clock.get('state') == 'PASS' and clock.get('time_state') == 'PASS',
+                    clock.get('reason', 'Required named-account clock unavailable'), clock.get('evidence', [])))
+                for account, pair in observed['boundaries'].items():
+                    if account in named:
+                        physical.extend(pair['checks'][field] for field in ('ownership', 'quantities', 'lifecycle'))
+                signature_events = by_signature[signature]
+                lot_trades = [event for event in signature_events if event.get('mint') == mint and event['kind'] in ('buy', 'sell')]
+                if lot_trades:
+                    money.extend([identity, observed['checks']['cost_roles'], observed['network_fee']['check']] + roles[signature])
+                    retained.extend(item for event in lot_trades for item in event.get('retained_account_funding', []))
+                target_pairs = [pair for account, pair in observed['boundaries'].items() if account in named]
+                zero_administration = bool(target_pairs) and all(
+                    pair['pre'] and pair['post'] and pair['pre']['quantity'] == pair['post']['quantity'] == '0'
+                    and all(pair['checks'][field]['state'] == 'PASS' for field in ('ownership', 'quantities', 'lifecycle'))
+                    for pair in target_pairs)
+                if any(event['kind'] in ('transfer_in', 'transfer_out') and event.get('mint') == mint
+                       or event['kind'] == 'unsupported' and not zero_administration for event in signature_events):
+                    scope_gaps.append(f'{signature}: required record contains unsupported or transfer-interrupted named-account activity')
+                evidence.update(observed['evidence'])
+            # Account-continuity checks use only this lot's observed named accounts.
+            for account in named:
+                boundaries = [(sig, transactions[sig]['boundaries'][account]) for sig in required
+                              if account in transactions.get(sig, {}).get('boundaries', {})]
+>               boundaries.sort(key=lambda row: (clocks['transactions'].get(row[0], {}).get('canonical_time', -1), row[0]))
+E               TypeError: '<' not supported between instances of 'NoneType' and 'int'
+
+scanner/wallet_evidence.py:820: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_retained_protocol_funding.py::test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source[72]
+FAILED tests/test_retained_protocol_funding.py::test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source[83]
+FAILED tests/test_retained_protocol_funding.py::test_complete_original_page_preserves_scoped_lot_but_revokes_its_required_selected_source[85]
+3 failed, 9 passed in 32.85s

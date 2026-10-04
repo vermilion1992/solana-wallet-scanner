@@ -1,0 +1,132 @@
+.....................F................................F... [ 44%]
+........................F.................. [ 77%]
+....F.........................                                           [100%]
+=================================== FAILURES ===================================
+_ test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees[sell-wrapped] _
+
+native_quote = False, ordinal = 1
+
+    @pytest.mark.parametrize('native_quote', [False, True], ids=['wrapped', 'native'])
+    @pytest.mark.parametrize('ordinal', [0, 1], ids=['buy', 'sell'])
+    def test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees(native_quote, ordinal):
+        if native_quote:
+            raws, wallet, foreign = native_pair()
+            expected, fees = '-0.10001', '0.00001'
+        else:
+            rows = originals(); raws, wallet = [rows[83], rows[85]], REAL_WALLET
+            expected, fees = '-0.013270924', '0.000065767'
+        events, receipt = facts(raws, wallet)
+        clean = summarize_research(events, **{'start': REAL_WINDOW['start'], 'end': REAL_WINDOW['end']}, wallet_evidence=receipt)
+        assert clean['conditional_observed_lot_profit_sol'] == expected
+        assert clean['wallet_fees_paid_sol'] == fees
+        damaged = deepcopy(raws)
+        if native_quote:
+            damaged[ordinal]['meta']['innerInstructions'][0]['instructions'] += [cash(wallet, foreign, 1), cash(foreign, wallet, 1)]
+        else:
+            if ordinal == 0:
+                damaged[ordinal] = foreign_cash_loop(damaged[ordinal])
+            else:
+                # A same-route foreign loop needs no key-index shift on the parsed
+                # sell control: use the normalization view and distinct named keys.
+                from scanner.transaction_format import instruction_view
+                damaged[ordinal] = deepcopy(instruction_view(damaged[ordinal]))
+                foreign = 'development-foreign-native-role'
+>               group = next(g for g in damaged[ordinal]['meta']['innerInstructions'] if g['index'] == 3)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               StopIteration
+
+tests/test_research_source_roles.py:52: StopIteration
+_ test_positive_observed_lot_model_never_certifies_wallet_profit_or_safe_copying _
+
+session = (<starlette.testclient.TestClient object at 0x7f9805a32510>, <fastapi.applications.FastAPI object at 0x7f9805a33920>, PosixPath('/tmp/pytest-of-agent/pytest-360/test_positive_observed_lot_mod0/data'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9805a304a0>
+
+    def test_positive_observed_lot_model_never_certifies_wallet_profit_or_safe_copying(session, monkeypatch):
+        import scanner.collector as collector
+        from scanner.decoder import TOKEN_IDS
+        from tests.test_investigation import record, WALLET, TOKEN
+        from tests.test_discovery import MINT
+        client, app, _ = session
+    
+        def replace_identity(value):
+            if isinstance(value, dict):
+                return {key: replace_identity(item) for key, item in value.items() if key != "uiAmount"}
+            if isinstance(value, list):
+                return [replace_identity(item) for item in value]
+            return ADDRESS if value == WALLET else MINT if value == TOKEN else value
+    
+        buy, sale = replace_identity(record()), replace_identity(record(sell=True))
+        now = datetime.now(timezone.utc)
+        for entry, signature, slot, age in ((buy, "review-buy", 100, 3), (sale, "review-sale", 101, 2)):
+            entry["signature"] = entry["raw"]["transaction"]["signatures"][0] = signature
+            entry["raw"]["slot"] = slot
+            entry["raw"]["blockTime"] = int((now - timedelta(days=age)).timestamp())
+        # A fetched 1 SOL purchase followed by a 2 SOL sale; route token transfers,
+        # wrapped/native balances and quote amounts agree with each other.
+        sale["raw"]["meta"]["preTokenBalances"][3]["uiTokenAmount"]["amount"] = "2000000000"
+        sale["raw"]["meta"]["postTokenBalances"][1]["uiTokenAmount"]["amount"] = "2000000000"
+        sale["raw"]["meta"]["preBalances"][4] = 2_039_280 + 2_000_000_000
+        sale["raw"]["meta"]["postBalances"][2] = 2_039_280 + 2_000_000_000
+        sale["raw"]["meta"]["innerInstructions"][0]["instructions"][1]["parsed"]["info"]["tokenAmount"]["amount"] = "2000000000"
+        for entry in (buy, sale):
+            entry["evidence_hash"] = app.state.store.archive(entry["raw"])
+        mint_result = {"context": {"slot": 110}, "value": {"owner": sorted(TOKEN_IDS)[0],
+                       "data": {"parsed": {"type": "mint", "info": {"mintAuthority": None,
+                                "freezeAuthority": None, "supply": "1000", "decimals": 6}}}}}
+        cache_mint(app.state.store, MINT, mint_result, now.isoformat())
+    
+        async def observed_pair(gateway, store, address, start, end, limits, **options):
+            return {"transactions": deepcopy([buy, sale]), "coverage": {"status": "partial", "history_scope_complete": False},
+                    "evidence": [{"hash": entry["evidence_hash"], "kind": "transaction"} for entry in (buy, sale)]}
+        monkeypatch.setattr(collector, "collect_wallet", observed_pair)
+        assert client.post("/api/provider/key", json={"api_key": TEST_KEY}).status_code == 200
+        cohort_id = save_cohort(app.state.store, [candidate()])
+        response = client.post(f"/api/discovery/{cohort_id}/audit", json={})
+        assert response.status_code == 200
+        assert wait_record(client, "scans", response.json()["scan_id"])["status"] == "completed"
+        state = client.get("/api/state").json()
+        report = state["reports"][0]
+>       assert Decimal(report["research"]["conditional_observed_lot_profit_sol"]) > 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: conversion from NoneType to Decimal is not supported
+
+tests/test_discovery_integration_review.py:319: TypeError
+_________ CopyBehaviorTests.test_legacy_missing_fields_remain_unknown __________
+
+self = <test_copy_review.CopyBehaviorTests testMethod=test_legacy_missing_fields_remain_unknown>
+
+    def test_legacy_missing_fields_remain_unknown(self):
+        result = review_copy_behavior({})
+        self.assertTrue(result["conditional"])
+        self.assertEqual(result["findings"], [])
+>       self.assertEqual(len(result["unknown_checks"]), 9)
+E       AssertionError: 10 != 9
+
+tests/test_copy_review.py:315: AssertionError
+_ test_current_partial_report_defers_repeated_collection_without_conditional_profit_upgrade _
+
+store = <scanner.storage.Store object at 0x7f9806ca3a40>
+
+    def test_current_partial_report_defers_repeated_collection_without_conditional_profit_upgrade(store):
+        cohort = development_cohort(store); report = financial_snapshot(cohort['candidates'][0], partial=True)
+        report['research'] = {'conditional_observed_lot_profit_sol': '9999999'}; original = deepcopy(report)
+        plan = plan_candidate_audits(store, cohort, reports=[report], preset=STRICT); row = plan['deferred'][0]
+>       assert not plan['selected_addresses'] and row['action'] == 'resolve_report_dependencies'
+E       AssertionError: assert (not [] and 'offline_rebuild' == 'resolve_report_dependencies'
+E         
+E         - resolve_report_dependencies
+E         + offline_rebuild)
+
+tests/test_discovery_audit_plan.py:199: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_research_source_roles.py::test_raw_cash_roles_revoke_research_money_and_preserve_quantity_time_fees[sell-wrapped]
+FAILED tests/test_discovery_integration_review.py::test_positive_observed_lot_model_never_certifies_wallet_profit_or_safe_copying
+FAILED tests/test_copy_review.py::CopyBehaviorTests::test_legacy_missing_fields_remain_unknown
+FAILED tests/test_discovery_audit_plan.py::test_current_partial_report_defers_repeated_collection_without_conditional_profit_upgrade
+4 failed, 127 passed, 1 warning, 43 subtests passed in 6.96s

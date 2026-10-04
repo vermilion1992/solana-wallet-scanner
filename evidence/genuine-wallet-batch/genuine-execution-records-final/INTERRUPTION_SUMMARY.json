@@ -1,0 +1,41 @@
+{
+  "state": "INTERRUPTED",
+  "application_acceptance_claimed": false,
+  "child_returncode": -15,
+  "shell_equivalent_status": 143,
+  "wrapper_returncode": 1,
+  "reason": "Root requested cancellation for a newly confirmed malformed-Unicode source defect. Normal run had completed; sequential required child was terminated immediately upon instruction processing.",
+  "partial_result_state": "INCOMPLETE",
+  "partial_artifacts": {
+    "EXPECTED_WORKED.json": {
+      "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad",
+      "bytes": 177469
+    },
+    "parent-report.csv": {
+      "sha256": "fc7a7313848d72e58a4b19535c8cd9b72e00f51572c46bf4ea17c8e2a0a3f384",
+      "bytes": 18471
+    },
+    "result.json": {
+      "sha256": "7e57376a7c55f25157264e93bc53f00b89ee8fb7ebe9f552dbac948dbcc78bd4",
+      "bytes": 2818
+    },
+    "inspected-selected-sources.json": {
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "bytes": 101541522
+    },
+    "input.zip": {
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "bytes": 156832
+    },
+    "EXPECTED_RAW.json": {
+      "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+      "bytes": 343825
+    },
+    "parent-report.json": {
+      "sha256": "885860e2170a764af6e0c1c67efdf8b896436f8d3042f7453e79b4c71acf0c26",
+      "bytes": 69381326
+    }
+  },
+  "final_guard_counters_verified": false,
+  "note": "Initial zero counters in an incomplete receipt do not establish a completed zero-attempt acceptance check. Original input/oracle and normal successful source-bound receipt remain preserved."
+}

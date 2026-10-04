@@ -1,0 +1,18 @@
+{
+  "scope": "Current-source synthetic malformed escaped-Unicode archived-source reproduction; no provider/credential calls, no genuine oracle changes",
+  "source_hashes": {
+    "scanner/real_coverage.py": "b99a3c07dd7a5581e93a05a51577eba439a67298c6dac94dcc582ef7246e745e",
+    "scanner/wallet_evidence.py": "84ae31659162bffa3daa03a933879dde1f0b44edb8831bf1ad40470c18d84bba",
+    "scanner/archive_input.py": "60cb2c45cf7129a096ccede72479268972e873ac3fcee9ee379040f7740ad960"
+  },
+  "page_validator": {
+    "state": "UNKNOWN",
+    "reason": "Input cannot be canonically serialized"
+  },
+  "result": {
+    "state": "EXCEPTION",
+    "type": "ValueError",
+    "reason": "Input cannot be canonically serialized",
+    "traceback": "Traceback (most recent call last):\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 59, in canonical_bytes\n    return json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(',', ':')).encode()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 3905: surrogates not allowed\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"<stdin>\", line 15, in <module>\n  File \"/workspace/solana-wallet-scanner/tests/test_real_coverage.py\", line 414, in archive_assessment\n    loaded = load_archive(store, manifest_hash, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 282, in load_archive\n    record = archived_record(payload, key[0], key[1], read,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 368, in archived_record\n    'signature': identity, 'native_hash': hashlib.sha256(canonical_bytes(item)).hexdigest()}\n                                                         ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 46, in canonical_bytes\n    return _bounded_canonical(value)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes\n    raise ValueError('Input cannot be canonically serialized') from exc\nValueError: Input cannot be canonically serialized\n"
+  }
+}

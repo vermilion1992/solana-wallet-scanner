@@ -1,0 +1,135 @@
+{
+  "scope": "Read-only exact sibling replay of original malformed-basis diagnostic; only canonical supported string remains positive; genuine oracle unchanged",
+  "checker_sha256": "1b20f7c0bd335ec24d63aa6f1c1c4398c25533b9c29ffec5429da9c676e97583",
+  "results": [
+    {
+      "matched_basis_type": "bool",
+      "matched_basis_value": false,
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "int",
+      "matched_basis_value": 0,
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "float",
+      "matched_basis_value": 0.0,
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "str",
+      "matched_basis_value": "0",
+      "result": {
+        "state": "PASS",
+        "missing": [],
+        "mathematically_inapplicable": [
+          {
+            "metric": "realised_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported disposed acquisition costs are zero; the realised ROI denominator is zero.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          },
+          {
+            "metric": "median_roi_pct",
+            "state": "NOT_APPLICABLE",
+            "reason": "Complete supported completed cohort contains a zero-cost episode; its required whole-episode ROI is undefined.",
+            "source_dependencies": "PASS",
+            "saved_metric_status": "unknown"
+          }
+        ],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "str",
+      "matched_basis_value": "NaN",
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "str",
+      "matched_basis_value": "Infinity",
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "NoneType",
+      "matched_basis_value": null,
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "list",
+      "matched_basis_value": [],
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    },
+    {
+      "matched_basis_type": "dict",
+      "matched_basis_value": {},
+      "result": {
+        "state": "BLOCKED",
+        "missing": [
+          "realised_roi_pct: required source dependencies remain unresolved.",
+          "median_roi_pct: required source dependencies remain unresolved."
+        ],
+        "mathematically_inapplicable": [],
+        "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+      }
+    }
+  ]
+}

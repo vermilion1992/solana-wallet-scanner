@@ -1,0 +1,123 @@
+{
+  "scope": "Final narrow hash-shadow correction bound on owner source; not full candidate acceptance or new B3 proof. The accompanying six-module execution already passed 215 ordinary controls plus43 separately reported subtests. No provider/credential/oracle changes.",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_research_source_roles.py::test_development_opening_anchor_and_fresh_receipt_preserve_original_evidence_union",
+    "-q"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.6765942380006891,
+  "before": {
+    "scanner/app.py": {
+      "sha256": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+      "mode": "0o600",
+      "bytes": 74376
+    },
+    "scanner/archive_input.py": {
+      "sha256": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+      "mode": "0o600",
+      "bytes": 53189
+    },
+    "scanner/copy_review.py": {
+      "sha256": "d96f7cca8cf9c5d51f9c60721171d049e1785fe32177fb45878a3c05fb6242b1",
+      "mode": "0o600",
+      "bytes": 24516
+    },
+    "scanner/research.py": {
+      "sha256": "24e0d928b46da9aed1ed171473c48a2e46b9007d3d69da91b513d34e6f42ea75",
+      "mode": "0o600",
+      "bytes": 29486
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22",
+      "mode": "0o600",
+      "bytes": 86328
+    },
+    "tests/test_copy_review.py": {
+      "sha256": "e5bd9545a2fc1621ecf2c19bbc4f1ffca1ae7032c269bfdcdf78ed720f26302b",
+      "mode": "0o600",
+      "bytes": 21909
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "55bb031564540089e2019d0b32dc5a28e5e3d39e6198f829f0ba29f8a22cfb35",
+      "mode": "0o600",
+      "bytes": 22720
+    },
+    "tests/test_discovery_integration_review.py": {
+      "sha256": "59c43b9f0a9d1c0c0fc53cf72f1c1578b8a4debf82fff137ca121ae812850eb9",
+      "mode": "0o600",
+      "bytes": 32039
+    },
+    "tests/test_research_source_roles.py": {
+      "sha256": "0b2f5cf46b9b382f6ac7e3e210d7d7bc49d20b35b53495fa321b13bd51eefeb7",
+      "mode": "0o600",
+      "bytes": 21163
+    },
+    "tools/validate.py": {
+      "sha256": "6da6629080df4a72eaf0a311585202a8d13751280597b3d9d31154966119dda1",
+      "mode": "0o700",
+      "bytes": 14659
+    }
+  },
+  "after": {
+    "scanner/app.py": {
+      "sha256": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a",
+      "mode": "0o600",
+      "bytes": 74376
+    },
+    "scanner/archive_input.py": {
+      "sha256": "40797b6eeff91e3597bde30e225d98898a64f948a72caa78ccb67898878effcd",
+      "mode": "0o600",
+      "bytes": 53189
+    },
+    "scanner/copy_review.py": {
+      "sha256": "d96f7cca8cf9c5d51f9c60721171d049e1785fe32177fb45878a3c05fb6242b1",
+      "mode": "0o600",
+      "bytes": 24516
+    },
+    "scanner/research.py": {
+      "sha256": "24e0d928b46da9aed1ed171473c48a2e46b9007d3d69da91b513d34e6f42ea75",
+      "mode": "0o600",
+      "bytes": 29486
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22",
+      "mode": "0o600",
+      "bytes": 86328
+    },
+    "tests/test_copy_review.py": {
+      "sha256": "e5bd9545a2fc1621ecf2c19bbc4f1ffca1ae7032c269bfdcdf78ed720f26302b",
+      "mode": "0o600",
+      "bytes": 21909
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "55bb031564540089e2019d0b32dc5a28e5e3d39e6198f829f0ba29f8a22cfb35",
+      "mode": "0o600",
+      "bytes": 22720
+    },
+    "tests/test_discovery_integration_review.py": {
+      "sha256": "59c43b9f0a9d1c0c0fc53cf72f1c1578b8a4debf82fff137ca121ae812850eb9",
+      "mode": "0o600",
+      "bytes": 32039
+    },
+    "tests/test_research_source_roles.py": {
+      "sha256": "0b2f5cf46b9b382f6ac7e3e210d7d7bc49d20b35b53495fa321b13bd51eefeb7",
+      "mode": "0o600",
+      "bytes": 21163
+    },
+    "tools/validate.py": {
+      "sha256": "6da6629080df4a72eaf0a311585202a8d13751280597b3d9d31154966119dda1",
+      "mode": "0o700",
+      "bytes": 14659
+    }
+  },
+  "owned_source_unchanged": true,
+  "raw_log": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_ANCHOR_BOUND_FINAL.log",
+  "affected_matrix_log": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_SCOPED_HASH_FINAL.log",
+  "previous_scoped_owner_record": "RESEARCH_SCOPED_OWNER_RECORD.json",
+  "first_failed_identity": "d96bc360a2990a8969b289f967b69972fad83b65",
+  "review_first_failure": "RESEARCH_ADJACENT_FINAL.json",
+  "state": "PASS"
+}

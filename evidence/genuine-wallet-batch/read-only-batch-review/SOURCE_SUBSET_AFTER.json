@@ -1,0 +1,122 @@
+{
+  "scope": "Read-only working-tree subset, no final candidate signoff",
+  "created_at": "2026-10-04T06:38:09Z",
+  "files": {
+    "scanner/discovery.py": {
+      "sha256": "046966de310af6a9009b8f94789a5736fe34d65325eecbe293a1b5f6b54b4df1",
+      "bytes": 55854
+    },
+    "scanner/app.py": {
+      "sha256": "95c2c5631b2159753337937faf26da9111ba55d2c970691b38ea3062cad018c7",
+      "bytes": 73566
+    },
+    "scanner/compiled_instructions.py": {
+      "sha256": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+      "bytes": 36534
+    },
+    "scanner/real_coverage.py": {
+      "sha256": "724473c038e7e7b898bfbb5ba37bbc40cb03f354c50f27474d659ca24b2ed622",
+      "bytes": 13845
+    },
+    "scanner/archive_input.py": {
+      "sha256": "3b0484eefcb8eae486e09839ee7ad189166c4021121380a7e2d43fbe7376e99d",
+      "bytes": 52787
+    },
+    "scanner/indexed_input.py": {
+      "sha256": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d",
+      "bytes": 37108
+    },
+    "scanner/investigation.py": {
+      "sha256": "e31e015e2d8bb2397ce77ac74db5915d0961b2aa1a56ae503806d2d749a55bd1",
+      "bytes": 58384
+    },
+    "frontend/src/Discovery.tsx": {
+      "sha256": "b9911feaa4e5a8305c07a02f34b9eaf6fa2c19b9203ec4d47751cdd29c8cb12b",
+      "bytes": 39015
+    },
+    "frontend/src/types.ts": {
+      "sha256": "7155061670c3e91ee73a9c2d80bde4cb7e4e8d4ab3d162ea0dcd32d3171ede18",
+      "bytes": 13407
+    },
+    "frontend/scripts/check-discovery.mjs": {
+      "sha256": "1adf50029b128d35a874ceb423c0c5e855a633ae25a25cfea440c3bacdba241c",
+      "bytes": 62620
+    },
+    "frontend/dist/index.html": {
+      "sha256": "72500a25670399c2ec1eee43449ab6dab6f86195e2bdd75a6548a587d1e10255",
+      "bytes": 577
+    },
+    "frontend/dist/assets/index-jsg7SLRM.js": {
+      "sha256": "6d45ae56a67f0e3196f558557816a2150e2ae28b66e6cceade345a40f8e26f24",
+      "bytes": 291243
+    },
+    "tools/validate.py": {
+      "sha256": "d40afedcb7f21ce463c1514f270ad379d727953bb8d5748665c6e15a3e119dc0",
+      "bytes": 14554
+    },
+    "tools/bounded_collection.py": {
+      "sha256": "1b7a054653170061010be72f0b46fefa59ea817d18a00a6ec507ea77ff3de8d0",
+      "bytes": 36623
+    },
+    "tools/check_genuine_collection.py": {
+      "sha256": "1b20f7c0bd335ec24d63aa6f1c1c4398c25533b9c29ffec5429da9c676e97583",
+      "bytes": 52625
+    },
+    "tools/discovery_plan.py": {
+      "sha256": "d455b742dd8806ca67c5e20a79a9781d0c57110fbebe5af94dd52f9efca100ac",
+      "bytes": 2857
+    },
+    "tests/test_discovery_native_identity.py": {
+      "sha256": "83109ff2a907fef46d59eb7f327f72b1091735721f0895f2cb3fe39b451f5c40",
+      "bytes": 7204
+    },
+    "tests/test_discovery_plan_views.py": {
+      "sha256": "151f1cd6855f6e97776dedc1ef9eb6dc0f3170b6b9af1270f7a3069a3d3792b7",
+      "bytes": 9581
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "sha256": "16f187ba5b0006204c7975359c793864160f198ed5010376ec60a5393746398c",
+      "bytes": 22608
+    },
+    "tests/test_genuine_collection_workflow.py": {
+      "sha256": "7be0cabea4b9c5784d887668418822c404ac6648e540b9d006840e8ea36b44b1",
+      "bytes": 32419
+    },
+    "docs/ACCEPTANCE_MATRIX.json": {
+      "sha256": "3181a015231a08cf563165c738c282e12d9b3f71ddf9daa4d1d3e70d149ccfb8",
+      "bytes": 15718
+    },
+    "docs/R1_SOURCE_DECISION.md": {
+      "sha256": "a13e430beb73bdca0f785e7383788981e127ab22b8c750a17a1b454148c477ff",
+      "bytes": 39963
+    },
+    "docs/ARCHIVE_INPUT_CONTRACT.md": {
+      "sha256": "8d14ff45f3642140ce93374dcc210bfbf53932de9539ba1f64d59446c4d3c5d0",
+      "bytes": 12712
+    },
+    "docs/CONTRACT.md": {
+      "sha256": "912be3308a845809b37b30ea005992bac81d8ce7e45d8b97bb1ac0d3959f8e4b",
+      "bytes": 67838
+    },
+    "ISSUES.md": {
+      "sha256": "1c5417f698bc0c34148e23aed26914022c7b88d9853ec07dedf3cc93c0c35758",
+      "bytes": 32858
+    },
+    "CODEX_TASK.md": {
+      "sha256": "606d5c15e64fc60bc84aba996d1deb4fac210635c75612b01423710c1e3bc191",
+      "bytes": 25807
+    },
+    "README.md": {
+      "sha256": "515d40c9d914b5ac020e922ea1605aa29c3c888e57670afb21b19b70e86011f9",
+      "bytes": 32176
+    }
+  },
+  "changed_since_initial_snapshot": [
+    "tools/validate.py",
+    "tools/check_genuine_collection.py",
+    "tests/test_genuine_collection_workflow.py",
+    "docs/ACCEPTANCE_MATRIX.json",
+    "docs/ARCHIVE_INPUT_CONTRACT.md",
+    "ISSUES.md"
+  ]
+}

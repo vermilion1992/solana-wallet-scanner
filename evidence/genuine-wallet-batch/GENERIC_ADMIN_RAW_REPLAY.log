@@ -1,0 +1,31 @@
+{
+  "records": 87,
+  "before_events": {
+    "fee": 87,
+    "rent": 351,
+    "unsupported": 402,
+    "capital": 78,
+    "wrap": 65,
+    "transfer_in": 33,
+    "transfer_out": 97
+  },
+  "after_events": {
+    "fee": 87,
+    "rent": 351,
+    "capital": 78,
+    "wrap": 65,
+    "unsupported": 293,
+    "transfer_in": 33,
+    "transfer_out": 97
+  },
+  "administration": {
+    "getAccountDataSize": 109,
+    "initializeImmutableOwner": 109
+  },
+  "offline": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "source": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb",
+  "output_sha256": "e037574ac7b1ef62b25e6ee3dbd01a2a5764e5b15cf475794ae3739a55425465"
+}

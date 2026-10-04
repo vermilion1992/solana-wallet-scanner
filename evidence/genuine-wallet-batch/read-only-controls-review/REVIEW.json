@@ -1,0 +1,138 @@
+{
+  "kind": "same-engineer-read-only-bounded-controls-review-v1",
+  "state": "PASS_WITH_RECORDED_LIMITATIONS",
+  "authorship": "Collector author performed a distinct read-only control review. Checker corrections were made by its separate owner after verified defect reports. This is not an independent-authorship review.",
+  "source_identity": {
+    "tools/bounded_collection.py": "1b7a054653170061010be72f0b46fefa59ea817d18a00a6ec507ea77ff3de8d0",
+    "tools/check_genuine_collection.py": "24378ba651e059231573db07f96b042997a45e290f8717c4d1be8baf1975f68d",
+    "tests/test_bounded_collection.py": "e34fb94104cc14be2a52c9cc875c2f1f7e750df09ae62061bd36de51f54aeb9e",
+    "tests/test_genuine_collection_workflow.py": "a300eb02f7be551c2ab0bbbf23a823b5f3802328f08850b8aa782ce593a39629"
+  },
+  "actual_acquisition": {
+    "phases": 6,
+    "requests": 19,
+    "native_requests": 17,
+    "public_requests": 2,
+    "conservative_credits": 170,
+    "raw_artifact_files": 38,
+    "raw_request_response_bytes": 1569606,
+    "budget_id": "genuine-wallet-2026-10-04",
+    "cap_requests": 30,
+    "cap_credits": 1000,
+    "cap_public_requests": 4,
+    "pending_reservations": 0,
+    "claimed_phases": 6,
+    "billing_actual_credits": null
+  },
+  "control_findings": [
+    {
+      "id": "CHECKER-MIXED-PUBLIC",
+      "before_source_sha256": "07191087796086770de8765b40ba218ac9c96a035a4a5f70822008777fd7b1f0",
+      "state": "CORRECTED_AND_REPLAYED",
+      "reproduction": "Valid phase2+phase5 acquisition rejected because HTTP GET descriptor method differed from logical publicTrendingPools.",
+      "correction": "Validate fixed public descriptor separately, retain auxiliary original source hash references, exclude public observations from financial evidence."
+    },
+    {
+      "id": "CHECKER-SWALLOWED-GUARD",
+      "before_source_sha256": "07191087796086770de8765b40ba218ac9c96a035a4a5f70822008777fd7b1f0",
+      "state": "CORRECTED_AND_REPLAYED",
+      "reproduction": {
+        "workflow_exit": 0,
+        "workflow_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+        "guard_denied_provider_attempts": 1,
+        "guard_denied_credential_attempts": 1,
+        "actual_external_requests": 0,
+        "actual_credential_reads": 0
+      },
+      "correction": "Explicit final zero provider/credential counters required before a passing workflow receipt; separately swallowed attempts now produce FAILED."
+    }
+  ],
+  "reviewed_controls": [
+    "Fixed collection budget identity, cycle and caps bound durably; request and credit reservations independent; public subset shares overall cap.",
+    "Atomic paired dispatch; settled dispatched failures; exact phase claim prevents automatic restart; no retries or redirect following.",
+    "Plans/options validated before getpass; native key session-only; public-only path forbids a key and never prompts; production provider allowlist unchanged.",
+    "Safe response headers/errors; reflected credentials omit original secret bytes and stop; raw requests contain no API key.",
+    "All six plans, request descriptors, compressed artifacts, uncompressed response hashes, RPC identities and exact ledger aggregates reconcile.",
+    "Checker uses confined regular artifact filenames, checksum guards, original response bytes and normal offline application route; offline HTTP/keyring guards checked.",
+    "No reviewed control creates historical owner-population proof, free acquisition basis, complete-wallet accounting or genuine acceptance from endpoint success."
+  ],
+  "checks_executed": [
+    {
+      "command": "python evidence/genuine-wallet-batch/read-only-controls-review/replay.py",
+      "exit": 0,
+      "scope": "Independent standard-library raw/ledger reconciliation; no app/provider execution",
+      "receipt": "RAW_RECONCILIATION.json"
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_bounded_collection.py tests/test_genuine_collection_workflow.py",
+      "exit": 0,
+      "ordinary_pytest_nodes": 107,
+      "scope": "83 collector +24 checker controls; not full application acceptance",
+      "raw_log": "FOCUSED_CONTROLS.log"
+    },
+    {
+      "command": ".venv/bin/python evidence/genuine-wallet-batch/read-only-controls-review/check_corrections.py",
+      "exit": 0,
+      "scope": "Actual public/native packaging only, plus synthetic denied-call controls; no live provider/credential reads",
+      "receipt": "CORRECTION_REPLAY.json"
+    },
+    {
+      "command": "git ls-files -z; git check-ignore --stdin for .env/credentials/keyring/local-data placeholders",
+      "exit": 0,
+      "scope": "Name/ignore exclusion check; private collection runtime is outside repository; not a complete historic secret scan"
+    }
+  ],
+  "secret_exclusions": {
+    "collection_runtime_inside_repository": false,
+    "tracked_private_secret_directory_paths": 0,
+    "credential_values_read_by_review": false,
+    "review_artifacts_contain_credentials": false,
+    "repository_secret_history_scan": "Separate root/publication review; not claimed by this scoped review"
+  },
+  "preparation_notes": [
+    "First reproduction using system python could not import pytest; rerun in existing .venv, without installing anything.",
+    "Initial reviewer ledger assertion interpreted charged as numeric cost; Store charged is a boolean. Corrected review-only assertion after checking schema/settled values; application unchanged."
+  ],
+  "limitations": [
+    "Same-engineer read-only review; collector author is reviewer.",
+    "Phase4 exact executed source hash remains unbound; plans/raw bytes/ledger reconcile independently.",
+    "Phase2/3 retain legacy top-level Helius endpoint field; exact GET descriptors and row source_url identify Gecko.",
+    "Provider billing delta, exhaustive historical owner population and genuine wallet acceptance are not established.",
+    "Offline checker guards current httpx/keyring paths; this scoped review does not claim a general socket sandbox."
+  ],
+  "full_acceptance_suite_rerun_by_review": false,
+  "live_requests_by_review": 0,
+  "credential_reads_by_review": 0,
+  "new_genuine_application_acceptance_claimed": false,
+  "PRODUCT_READY": false,
+  "evidence": {
+    "CORRECTION_REPLAY.json": {
+      "sha256": "4b238498ec0b8f823fe80bb920656191bdc841c3ed8f0f08d8a9ec96724a36ad",
+      "bytes": 1243
+    },
+    "CORRECTION_REPLAY.log": {
+      "sha256": "d0bd4ccc780ef6320eb33c15aa2d8dba2f9c11f2e496a86ebddb905dd89eea50",
+      "bytes": 474
+    },
+    "FOCUSED_CONTROLS.log": {
+      "sha256": "b68c2bf1b00971390626af2fbce505f9f2e87acf92bd34ba97e7601d973c8995",
+      "bytes": 741
+    },
+    "RAW_RECONCILIATION.json": {
+      "sha256": "4dcc7971488293c7b21f6f5899adaaec48cc7c416cffd18cb2412d79b736fb33",
+      "bytes": 11435
+    },
+    "RAW_RECONCILIATION.log": {
+      "sha256": "e4823c622ceee264fad837505d30aac7ee8ebbdb47185a9811cd6b9562693571",
+      "bytes": 286
+    },
+    "check_corrections.py": {
+      "sha256": "d0e24341f2ab50b54a22350089cb4b3d04c07e705d8075fef8ce6d82f9b62188",
+      "bytes": 4880
+    },
+    "replay.py": {
+      "sha256": "b86d652aa7c3c9e8e9a14a9d27a2ff1791f8a8ad698ba28173608c8fdbcd7ee4",
+      "bytes": 15279
+    }
+  }
+}

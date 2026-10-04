@@ -1,0 +1,53 @@
+{
+  "kind": "final-evidence-storage-preparation-v1",
+  "state": "READY_WAITING_FOR_END_SIGNAL",
+  "required_root_signal": "ALL_FINAL_RUNTIMES_ENDED",
+  "active_outputs_compressed": false,
+  "final_index_regenerated": false,
+  "application_source_modified": false,
+  "external_calls": 0,
+  "credential_reads": 0,
+  "preserved_files": {
+    "evidence/genuine-wallet-batch/EVIDENCE_STORAGE_INDEX.json": {
+      "sha256": "0e04384e132793bc350d4cf56a6949810a697f5a421256decd02884456a141a0",
+      "bytes": 499831
+    },
+    "evidence/genuine-wallet-batch/storage/7F_ENDED_EVIDENCE_STORAGE_INDEX.json": {
+      "sha256": "0e04384e132793bc350d4cf56a6949810a697f5a421256decd02884456a141a0",
+      "bytes": 499831
+    },
+    "evidence/genuine-wallet-batch/storage/STAGING_7F_ENDED.json": {
+      "sha256": "dd60aaa426f66e987bd0529d9ce37d2c77e6196722978af6356910637eb0c75b",
+      "bytes": 500034
+    },
+    "evidence/genuine-wallet-batch/storage/reconcile_storage.py": {
+      "sha256": "2bdf22be653575136ef8abe4fad7f597cdd45e70b6aeae36b53a25e61cd59c41",
+      "bytes": 8782
+    },
+    "evidence/genuine-wallet-batch/storage/verify_storage.py": {
+      "sha256": "526277b9d73ce01ef9b60f2720b54941722c91cb52047e7cbd68aefd77005082",
+      "bytes": 6375
+    }
+  },
+  "extra_private_component_filter": [
+    ".playwright",
+    ".runtime",
+    "browser-profile",
+    "browser-profiles",
+    "private-runtime",
+    "private-state",
+    "profiles",
+    "runtime"
+  ],
+  "observed_extra_private_subtrees_names_only": [],
+  "steps": [
+    "After explicit all-ended signal, freeze eligible paths under exactly the three authorized evidence prefixes.",
+    "Exclude private data/baseline/server/session/SQLite and runtime/profile aliases before choosing any compression input; abort if helper eligibility exceeds the safe frozen snapshot.",
+    "Run deterministic mtime0/filename-free gzip for ended untracked large text artifacts only; preserve every original, tracked oracle and ZIP.",
+    "Save final storage-index snapshot separately while retaining every earlier index and failed/prior receipt.",
+    "Freshly verify gzip hash plus decompressed original hash/size and retained original hash/size in a separate process.",
+    "Generate staging plan using ABSOLUTE --staging-plan path, then filter it to safe ended snapshot plus new indexed gzip/storage metadata; omit compressed original twins and all newly appeared future outputs.",
+    "Confirm no unexpected >Git-file-limit raw artifact appears in exact plan; perform no Git staging/push or external upload."
+  ],
+  "scope": "Packaging verification only; no new application or genuine-wallet acceptance."
+}

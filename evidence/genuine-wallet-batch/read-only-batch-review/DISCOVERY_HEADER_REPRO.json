@@ -1,0 +1,45 @@
+{
+  "scope": "Current-source synthetic negative reproduction only; no provider calls or private runtime inputs",
+  "results": [
+    {
+      "header": {
+        "numRequiredSignatures": 0,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 0
+      },
+      "signature_count": 1,
+      "parsed_signer_flags": [
+        true,
+        false
+      ],
+      "native_signers_reason": null,
+      "native_flow_addresses": [
+        "11111111111111111111111111111112k"
+      ],
+      "selected_addresses": [
+        "11111111111111111111111111111112k"
+      ],
+      "identity_state": "PASS"
+    },
+    {
+      "header": {
+        "numRequiredSignatures": 2,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 0
+      },
+      "signature_count": 1,
+      "parsed_signer_flags": [
+        true,
+        false
+      ],
+      "native_signers_reason": null,
+      "native_flow_addresses": [
+        "11111111111111111111111111111112k"
+      ],
+      "selected_addresses": [
+        "11111111111111111111111111111112k"
+      ],
+      "identity_state": "PASS"
+    }
+  ]
+}

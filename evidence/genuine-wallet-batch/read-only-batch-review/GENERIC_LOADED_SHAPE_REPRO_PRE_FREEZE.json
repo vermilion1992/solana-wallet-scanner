@@ -1,0 +1,60 @@
+{
+  "scope": "Exact current-source generic administration sibling; no provider or credential calls; source ongoing",
+  "source_hashes": {
+    "scanner/decoder.py": "4b0cfc608b6624e2cdf8c2fac01c96032e9aeebb4810f4fc77e5dc95e7dad68f",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "scanner/transaction_format.py": "e94814c699c516bb4061f9b858f75048c59377add8b403d495ce251af9a04a0f"
+  },
+  "rows": [
+    {
+      "case": "missing-writable",
+      "exception": null,
+      "fee_events": [
+        {
+          "kind": "fee",
+          "timestamp": 1700000000,
+          "signature": "unsigned-administration-control",
+          "path": "meta.fee",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "amount_sol": "0.000005",
+          "paid_by_wallet": true,
+          "fee_payer": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+          "failed": false,
+          "reason": "Network fee includes priority fees; no separate priority subtraction",
+          "order": 30000000
+        }
+      ],
+      "unresolved": [
+        {
+          "signature": "unsigned-administration-control",
+          "path": "instructions.0",
+          "reason": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+          "evidence": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        }
+      ],
+      "administration_count": 0
+    },
+    {
+      "case": "null-writable",
+      "exception": "TypeError",
+      "message": "unsupported operand type(s) for +: 'NoneType' and 'list'",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 10, in <module>\n  File \"/workspace/solana-wallet-scanner/scanner/decoder.py\", line 108, in decode_transactions\n    keys.extend(loaded.get('writable', []) + loaded.get('readonly', []))\n                ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~\nTypeError: unsupported operand type(s) for +: 'NoneType' and 'list'\n"
+    },
+    {
+      "case": "scalar-loaded",
+      "exception": "AttributeError",
+      "message": "'bool' object has no attribute 'get'",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 10, in <module>\n  File \"/workspace/solana-wallet-scanner/scanner/decoder.py\", line 108, in decode_transactions\n    keys.extend(loaded.get('writable', []) + loaded.get('readonly', []))\n                ^^^^^^^^^^\nAttributeError: 'bool' object has no attribute 'get'\n"
+    },
+    {
+      "case": "scalar-readonly",
+      "exception": "TypeError",
+      "message": "can only concatenate list (not \"bool\") to list",
+      "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 10, in <module>\n  File \"/workspace/solana-wallet-scanner/scanner/decoder.py\", line 108, in decode_transactions\n    keys.extend(loaded.get('writable', []) + loaded.get('readonly', []))\n                ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~\nTypeError: can only concatenate list (not \"bool\") to list\n"
+    }
+  ]
+}

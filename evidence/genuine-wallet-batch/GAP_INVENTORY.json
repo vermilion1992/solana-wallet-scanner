@@ -1,0 +1,670 @@
+{
+  "kind": "baseline-gap-inventory-with-current-scoped-development-addendum",
+  "evaluated_application_commit": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+  "evaluated_application_source_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+  "scope": "Successful f975 genuine normal workflow and exact commit source; later malformed-Unicode guard work is pending and is not claimed validated here. No source/oracle edits, providers or new acceptance. Original f975 inventory is preserved byte-exact in INITIAL_GAP_INVENTORY.json. Counts below continue to describe that immutable saved-report projection; current addendum distinguishes the full87 raw generic replay.",
+  "file_binding": {
+    "evidence/genuine-wallet-batch/genuine-workflow-final/parent-report.json": {
+      "sha256": "1239d7d10076c87551e17a81cba7db8c606da77274b9907d2bbf2f41722656c8",
+      "bytes": 69381326
+    },
+    "evidence/genuine-wallet-batch/genuine-workflow-final/EXPECTED_RAW.json": {
+      "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+      "bytes": 343825
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "bytes": 156832
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7",
+      "bytes": 2783
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "bytes": 177454
+    },
+    "evidence/genuine-wallet-batch/genuine-execution-records-final/WORKFLOW_COMMAND.json": {
+      "sha256": "54e03d1fc12175c150403621a6216bb01f6e6dc9af2c7d61fd6fa87f87c8c7e3",
+      "bytes": 1838
+    }
+  },
+  "source_blob_sha256_at_evaluated_commit": {
+    "scanner/app.py": "95c2c5631b2159753337937faf26da9111ba55d2c970691b38ea3062cad018c7",
+    "scanner/archive_input.py": "60cb2c45cf7129a096ccede72479268972e873ac3fcee9ee379040f7740ad960",
+    "scanner/wallet_evidence.py": "84ae31659162bffa3daa03a933879dde1f0b44edb8831bf1ad40470c18d84bba",
+    "scanner/real_coverage.py": "b99a3c07dd7a5581e93a05a51577eba439a67298c6dac94dcc582ef7246e745e",
+    "scanner/metric_evidence.py": "744b2b011a7e625fc111cc7608709a3815742bfbb44b450095ab04198797ceea",
+    "scanner/investigation.py": "e31e015e2d8bb2397ce77ac74db5915d0961b2aa1a56ae503806d2d749a55bd1",
+    "scanner/decoder.py": "ed4f56b07011ac0a3b52e1757c221546ea358353e2744a3807436cede8ef876b",
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "scanner/history_evidence.py": "c8bee73f574113b66cd60066184a4f34ddf2614f6d9a8c3bff46c071ba313978",
+    "scanner/copy_review.py": "6ba7220656796155ceb63fcbdbf1047d0b8886d6d822dd2074cf41f1af401dda",
+    "docs/R1_SOURCE_DECISION.md": "a13e430beb73bdca0f785e7383788981e127ab22b8c750a17a1b454148c477ff"
+  },
+  "wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+  "window": {
+    "end": "2026-10-04T06:00:00+00:00",
+    "start": "2026-09-04T06:00:00+00:00"
+  },
+  "literal_counts": {
+    "unique_raw_query_records": 87,
+    "native_alternative_records": 5,
+    "total_raw_record_instances": 92,
+    "selected_transactions": 87,
+    "selected_native_identities_PASS": 87,
+    "selected_clocks_PASS": 87,
+    "selected_native_fee_checks_PASS": 87,
+    "report_in_window_event_records": 17,
+    "wallet_paid_nonzero_fee_signatures_in_report": 7,
+    "known_wallet_headline_metrics": 1,
+    "unknown_wallet_headline_metrics": 14,
+    "observed_FIFO_candidates": 17,
+    "interrupted_FIFO_candidates": 16,
+    "supported_named_lots": 1,
+    "unsupported_event_occurrences": 328,
+    "event_count_semantics": "Events/instructions/alternative checks may share transactions; these are corpus dimensions, never unique tests or wallet qualification counts."
+  },
+  "actual_observations": {
+    "known_fee_sol": "0.000158868",
+    "query_interval_receipts": {
+      "report_period": {
+        "state": "PASS",
+        "query_records_state": "PASS",
+        "supported_record_state": "PASS",
+        "historical_population_state": "UNKNOWN",
+        "format_population_state": "UNKNOWN",
+        "record_count": 87
+      },
+      "four_weeks": {
+        "state": "PASS",
+        "query_records_state": "PASS",
+        "supported_record_state": "PASS",
+        "historical_population_state": "UNKNOWN",
+        "format_population_state": "UNKNOWN",
+        "record_count": 87
+      },
+      "verification_90d": {
+        "state": "PASS",
+        "query_records_state": "PASS",
+        "supported_record_state": "PASS",
+        "historical_population_state": "UNKNOWN",
+        "format_population_state": "UNKNOWN",
+        "record_count": 87
+      }
+    },
+    "transaction_check_counts": {
+      "identity": {
+        "PASS": 87
+      },
+      "cost_roles": {
+        "UNKNOWN": 71,
+        "PASS": 16
+      },
+      "clock": {
+        "PASS": 87
+      },
+      "network_fee": {
+        "PASS": 87
+      }
+    },
+    "token_boundary_check_counts": {
+      "ownership": {
+        "PASS": 63,
+        "UNKNOWN": 25
+      },
+      "quantities": {
+        "PASS": 45,
+        "UNKNOWN": 43
+      },
+      "lifecycle": {
+        "PASS": 45,
+        "UNKNOWN": 43
+      }
+    },
+    "native_role_check_counts": {
+      "UNKNOWN": 174,
+      "PASS": 10
+    },
+    "all_event_kind_counts": {
+      "fee": 87,
+      "capital": 78,
+      "unsupported": 328,
+      "rent": 288,
+      "transfer_out": 42,
+      "transfer_in": 17,
+      "wrap": 39,
+      "buy": 13,
+      "sell": 3
+    },
+    "report_event_kind_counts": {
+      "fee": 17,
+      "capital": 12,
+      "unsupported": 27,
+      "rent": 18,
+      "transfer_out": 2,
+      "buy": 3,
+      "sell": 2
+    },
+    "query_supported_swaps_in_report": 5,
+    "query_closed_episodes": 1,
+    "query_unresolved_basis_sales": 2
+  },
+  "route_inventory": {
+    "outer_program_occurrences": [
+      {
+        "program": "11111111111111111111111111111111",
+        "transaction_count": 69,
+        "instruction_count": 327
+      },
+      {
+        "program": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "transaction_count": 40,
+        "instruction_count": 125
+      },
+      {
+        "program": "ComputeBudget111111111111111111111111111111",
+        "transaction_count": 55,
+        "instruction_count": 85
+      },
+      {
+        "program": "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa",
+        "transaction_count": 6,
+        "instruction_count": 6
+      },
+      {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "transaction_count": 47,
+        "instruction_count": 89
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "transaction_count": 31,
+        "instruction_count": 109
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "transaction_count": 43,
+        "instruction_count": 110
+      },
+      {
+        "program": "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "transaction_count": 1,
+        "instruction_count": 10
+      }
+    ],
+    "unsupported_program_reasons": [
+      {
+        "program": "11111111111111111111111111111111",
+        "reason": "Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved",
+        "event_occurrences": 14,
+        "examples": [
+          {
+            "signature": "2HJHWV9is2H2iXxpZYNXDhVQe63Ze6mjsA4RaTZxCZxE3w1dt2ti7atvVwwJxjpACU8U43fH4g8zwhSaZ7BMTB7q",
+            "path": "instructions.5",
+            "pointer_hash": "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f"
+          },
+          {
+            "signature": "2NWtBmk33d83Vy7wo25s8tBEbfx5yMmjn6j5ywSaTZip1gwCEGRcKNBRU9PGFrfRZ1Tkcwa7fm9YUY9LTd28c5Nm",
+            "path": "instructions.7",
+            "pointer_hash": "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4"
+          }
+        ]
+      },
+      {
+        "program": "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa",
+        "reason": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+        "event_occurrences": 6,
+        "examples": [
+          {
+            "signature": "23gQnMFztqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A",
+            "path": "instructions.2",
+            "pointer_hash": "86b918f8a588e86af1438f19e51a957f48cdc4b88321d650a0fa0da758ef978e"
+          },
+          {
+            "signature": "2NyFDhjyHGbUDHF7wus9MT3cBfhi3i2HrsLLPUSxzNNKaKNuU85v8eENMcS9Aj3cSYjDGQ68GBJFFAWE4a2VDrYZ",
+            "path": "instructions.3",
+            "pointer_hash": "4eea40c63e2e443a9bf6472693cf4301cf751d5b70d663880f3e5481a407759f"
+          }
+        ]
+      },
+      {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "reason": "Unsupported token operation, extension, mint/burn or ownership change",
+        "event_occurrences": 40,
+        "examples": [
+          {
+            "signature": "2cMQFyr511G5Fij1RL3Czj5wYZxUJ8E3vo8sCwmyPEBbfYTQ4YhhhnmVdsAaGdC1S9v4gCQay9mrvf8LFxip7t8D",
+            "path": "innerInstructions.1.2",
+            "pointer_hash": "2e057d3e247ea313b289f3e5ee66a5a5351f6ac6c6795cc81a1f88e621505849"
+          },
+          {
+            "signature": "2cMQFyr511G5Fij1RL3Czj5wYZxUJ8E3vo8sCwmyPEBbfYTQ4YhhhnmVdsAaGdC1S9v4gCQay9mrvf8LFxip7t8D",
+            "path": "innerInstructions.5.2",
+            "pointer_hash": "2e057d3e247ea313b289f3e5ee66a5a5351f6ac6c6795cc81a1f88e621505849"
+          }
+        ]
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "reason": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+        "event_occurrences": 20,
+        "examples": [
+          {
+            "signature": "23gQnMFztqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A",
+            "path": "innerInstructions.3.2",
+            "pointer_hash": "86b918f8a588e86af1438f19e51a957f48cdc4b88321d650a0fa0da758ef978e"
+          },
+          {
+            "signature": "2NyFDhjyHGbUDHF7wus9MT3cBfhi3i2HrsLLPUSxzNNKaKNuU85v8eENMcS9Aj3cSYjDGQ68GBJFFAWE4a2VDrYZ",
+            "path": "innerInstructions.2.2",
+            "pointer_hash": "4eea40c63e2e443a9bf6472693cf4301cf751d5b70d663880f3e5481a407759f"
+          }
+        ]
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "reason": "Unsupported token operation, extension, mint/burn or ownership change",
+        "event_occurrences": 62,
+        "examples": [
+          {
+            "signature": "23gQnMFztqSfTkj1KYUEJPUhq9yHVBwfrSi4BtExxmCZ6P2oRbhdpBSbJQVG5eTc6CoirmnSMrEFw4kJQwPvKc2A",
+            "path": "innerInstructions.3.2",
+            "pointer_hash": "86b918f8a588e86af1438f19e51a957f48cdc4b88321d650a0fa0da758ef978e"
+          },
+          {
+            "signature": "2NyFDhjyHGbUDHF7wus9MT3cBfhi3i2HrsLLPUSxzNNKaKNuU85v8eENMcS9Aj3cSYjDGQ68GBJFFAWE4a2VDrYZ",
+            "path": "innerInstructions.2.2",
+            "pointer_hash": "4eea40c63e2e443a9bf6472693cf4301cf751d5b70d663880f3e5481a407759f"
+          }
+        ]
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "reason": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+        "event_occurrences": 152,
+        "examples": [
+          {
+            "signature": "26q1P9YKXrhQQeZ4FAqtT82jm8xWQwTx2mKK6qNKtuWZKajPs5K82h2L3Ndw22KJXYpa7rjNV8PVDAv1RPuSMjeM",
+            "path": "instructions.0",
+            "pointer_hash": "774cda2d0636b2cee9804fad0949dcc7eb1df67a26a5ca7ca0cd639bec2280ec"
+          },
+          {
+            "signature": "26q1P9YKXrhQQeZ4FAqtT82jm8xWQwTx2mKK6qNKtuWZKajPs5K82h2L3Ndw22KJXYpa7rjNV8PVDAv1RPuSMjeM",
+            "path": "instructions.1",
+            "pointer_hash": "774cda2d0636b2cee9804fad0949dcc7eb1df67a26a5ca7ca0cd639bec2280ec"
+          }
+        ]
+      },
+      {
+        "program": "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ",
+        "reason": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+        "event_occurrences": 22,
+        "examples": [
+          {
+            "signature": "2LY5JcH2kfmfzxMkjqq3B5hqjh26pKiK5MHskBSC6tzN7GodFDSAfRsKCLHrRLucDq1hBquaQzx87c1FtMSiaqik",
+            "path": "innerInstructions.0.1",
+            "pointer_hash": "86cb227079da551e69526ad7c468919c62df1a95ec56e38dc9b6cce51fa0dad6"
+          },
+          {
+            "signature": "2ampQuHvc9Si49Pz1qL7rT1gG8gB9pgyGhWkbW2RgbCuALFX4Mi3qz5R4upqhP8uW2FPy8Jfjb7aGbGiG2fuo6sH",
+            "path": "innerInstructions.0.1",
+            "pointer_hash": "93deb052cbee771c36f221c1a5e75c864f50a70a8f44224963a6c180998679d9"
+          }
+        ]
+      },
+      {
+        "program": "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "reason": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+        "event_occurrences": 10,
+        "examples": [
+          {
+            "signature": "wsjwGqMmfsEW1PVGsmJ4xWzzdWGwfSvRnqjJkZV9mtdwmQmVMYyQGmAoMVi1QiPtXx6wrza7ts788gcRuCcBoJH",
+            "path": "instructions.3",
+            "pointer_hash": "4d41e43950f6323abc0b9f382d0852a107f9ce7f8286c73734bf9cdbc3cb2f0d"
+          },
+          {
+            "signature": "wsjwGqMmfsEW1PVGsmJ4xWzzdWGwfSvRnqjJkZV9mtdwmQmVMYyQGmAoMVi1QiPtXx6wrza7ts788gcRuCcBoJH",
+            "path": "instructions.5",
+            "pointer_hash": "4d41e43950f6323abc0b9f382d0852a107f9ce7f8286c73734bf9cdbc3cb2f0d"
+          }
+        ]
+      },
+      {
+        "program": "unassigned-meta-path",
+        "reason": "Observed token balance changes do not reconcile to supported parsed movements",
+        "event_occurrences": 2,
+        "examples": []
+      }
+    ],
+    "unsupported_raw_discriminators": [
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000043b4300",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:020000001f813300",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:0200000020bb0900",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:0200000020c90400",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:020000002c790000",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:0200000040780900",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:020000005caa0000",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000975e0600",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000ae600300",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000b00d0200",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000c2b20600",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000caa43e00",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000df3c0b00",
+        "event_occurrences": 1
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "discriminator": "anchor-prefix:02000000e9470800",
+        "event_occurrences": 1
+      },
+      {
+        "program": "GKtyK68R4jAVDu9pZrZAdvHq8vo7R51WTRjU5SHt2fMa",
+        "discriminator": "anchor-prefix:2da5c974cee1f112",
+        "event_occurrences": 6
+      },
+      {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "discriminator": "opcode:22",
+        "event_occurrences": 40
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "discriminator": "opcode:10",
+        "event_occurrences": 3
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "discriminator": "opcode:11",
+        "event_occurrences": 10
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "discriminator": "opcode:22",
+        "event_occurrences": 50
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "discriminator": "opcode:6",
+        "event_occurrences": 6
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "discriminator": "opcode:7",
+        "event_occurrences": 3
+      },
+      {
+        "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "discriminator": "opcode:8",
+        "event_occurrences": 10
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "discriminator": "anchor-prefix:33e685a4017f83ad",
+        "event_occurrences": 3
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "discriminator": "anchor-prefix:561fc057a3574fee",
+        "event_occurrences": 36
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "discriminator": "anchor-prefix:66063d1201daebea",
+        "event_occurrences": 19
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "discriminator": "anchor-prefix:e445a52e51cb9a1d",
+        "event_occurrences": 58
+      },
+      {
+        "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+        "discriminator": "anchor-prefix:f945a4da9667548a",
+        "event_occurrences": 36
+      },
+      {
+        "program": "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ",
+        "discriminator": "anchor-prefix:e7257e55cf5b3f34",
+        "event_occurrences": 22
+      },
+      {
+        "program": "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+        "discriminator": "anchor-prefix:2da5c974cee1f112",
+        "event_occurrences": 10
+      }
+    ],
+    "warning": "Unsupported generic instruction occurrences do not uniquely identify unsupported transactions. Supported swap plus outside native role gaps can coexist; decoder supported/unrecognized/unresolved counts are not an exclusive partition."
+  },
+  "missing_implementation": [
+    {
+      "id": "I1",
+      "area": "Accepted historical population and independent wallet interval proof interface",
+      "source_refs": [
+        "scanner/real_coverage.py:30",
+        "scanner/real_coverage.py:254",
+        "scanner/wallet_evidence.py:1051",
+        "scanner/archive_input.py:595"
+      ],
+      "current_behavior": "Historical receipt is constructed with _receipt(False), and all wallet interval records with _check(False). Complete query receipts are attached but cannot satisfy historical membership. No accepted real historical-owner source validator/admission path exists.",
+      "data_dependency": "Requires a supported exhaustive event-time ownership/format contract and independently retained lifecycle controls; adding an interface cannot create that proof."
+    },
+    {
+      "id": "I2",
+      "area": "Shared instruction semantics, supported route families and economic movement roles",
+      "source_refs": [
+        "scanner/compiled_instructions.py:356",
+        "scanner/decoder.py:261",
+        "scanner/decoder.py:275",
+        "scanner/investigation.py:617",
+        "scanner/wallet_evidence.py:630",
+        "scanner/wallet_evidence.py:1098"
+      ],
+      "current_behavior": "The generic interpreter still treats valid normalized initializeImmutableOwner as unsupported: 90 opcode22 occurrences (40 legacy,50 Token-2022). PumpSwap non-reviewed routes/admin calls, fee-program CPIs and two wrapper programs remain unimplemented economic interpretations. Rent, wrapping, capital and transferred tokens are outside the native-role projector whitelist.",
+      "non_data_blocked_work": "Batch shared semantic handling for already normalized administration and exact owned wrap/rent/creation conservation. Then review existing raw PumpSwap/fee-program instruction families using pinned primary layouts before attributing financial effects. Preserve unknown external/tip and opaque wrapper roles.",
+      "warning": "Unsupported handling is conservative missing support, not a finding that all these operations are neutral or that current arithmetic is wrong.",
+      "current_scoped_status": "Generic administration sub-scope implemented and focused-tested. Original baseline counts remain below for review; other route/role sub-scopes remain independently open or accountant-owned."
+    },
+    {
+      "id": "I3",
+      "area": "Complete aggregate positions, acquisition origins and metric-specific cohorts",
+      "source_refs": [
+        "scanner/wallet_evidence.py:1087",
+        "scanner/wallet_evidence.py:1093",
+        "scanner/wallet_evidence.py:1103",
+        "scanner/wallet_evidence.py:1144"
+      ],
+      "current_behavior": "Observed basis requires all candidates non-interrupted with known cost, and observed positions require every candidate closed at strict zero. Incoming/transferred/minted inventory has no accepted origin/basis adapter. An open position or proven empty completed cohort has no genuine complete-population path distinct from incomplete reconstruction.",
+      "non_data_blocked_work": "Derive complete physical stock separately from completed report/90-day cohorts; retain known open inventory and known zero completed counts under positive population proof. Connect supported incoming origins/cost allocation through the existing FIFO, without invented zero basis or excluding losing/breakeven episodes.",
+      "data_dependency": "Actual unseen transferred-unit acquisition basis or earlier inventory remains unavailable without origin records/contracts."
+    },
+    {
+      "id": "I4",
+      "area": "Real classification adapter",
+      "source_refs": [
+        "scanner/wallet_evidence.py:1030",
+        "scanner/wallet_evidence.py:1146",
+        "scanner/archive_input.py:615"
+      ],
+      "current_behavior": "Nonsettlement acquisitions are labelled unknown; real classification component is _check(False). Archive class interpretation is synthetic-only. Raw route/pump suffix/public discovery pool cannot authenticate eligible historical asset classification.",
+      "non_data_blocked_work": "Define and implement checksum/time/source-bound accepted class evidence consumption, including settlement exclusions and loss/restoration, after an actual eligible classification contract is chosen.",
+      "data_dependency": "No accepted complete time-relevant genuine class corpus is present."
+    },
+    {
+      "id": "I5",
+      "area": "Genuine economic boundary, mark and flow adapters",
+      "source_refs": [
+        "scanner/wallet_evidence.py:1149",
+        "scanner/wallet_evidence.py:1152",
+        "scanner/wallet_evidence.py:1154",
+        "scanner/archive_input.py:537"
+      ],
+      "current_behavior": "All three real components are _check(False); _valuation_inputs immediately returns {} for every real dataset. Current inventories/native transaction endpoints cannot enter an accepted real boundary/valuation branch.",
+      "non_data_blocked_work": "Implement exact integer per-account boundary aggregation, typed independently timed marks and reconciled external native/token flow roles through the existing accounting economic inputs. Keep economic uncertainty isolated from supported realised observations.",
+      "data_dependency": "Exact all-account boundary quantities, historical marks and flow valuations are currently absent; current prices or undercounting beta balance-at cannot substitute."
+    },
+    {
+      "id": "I6",
+      "area": "Final normal-report evidence/policy/qualification wiring",
+      "source_refs": [
+        "scanner/history_evidence.py:659",
+        "scanner/app.py:280",
+        "scanner/app.py:368",
+        "scanner/archive_input.py:773",
+        "scanner/copy_review.py:104"
+      ],
+      "current_behavior": "Legacy wallet evidence gates initialize UNKNOWN. evidence_verified is computed before the common adapter; all imported archive reports force evidence_status partial and archive real_acceptance BLOCKED. A future supported real dependency set therefore needs final gate/qualification integration as well as numerical derivation.",
+      "non_data_blocked_work": "Map actual accepted derived dependencies into the existing evidence gates and saved report status; derive archive acceptance metadata instead of fixed values. Retain immutable parent reports and strict policy MISS/UNRESOLVED for losing/undefined or unsupported metrics. Do not force verification or qualification flags."
+    }
+  ],
+  "missing_data_or_source_capability": [
+    {
+      "id": "S1",
+      "area": "Historical owned-account and format population",
+      "current_evidence": "All87 terminal address-query records are supported in independent report/28/90-day receipts; genuine owner-in-data Token-2022 lifecycle and legacy closure controls exist.",
+      "missing": "Pinned provider wording does not promise exhaustive formerly closed/reassigned/non-ATA event-time ownership across both token programs. It does not prove unrequested transaction-format population. Actual query access/compatible bytes are not this guarantee."
+    },
+    {
+      "id": "S2",
+      "area": "Acquisition and complete cost/flow provenance",
+      "current_evidence": "Supported purchase consideration and network fees derive known basis locally; named BQJ lot has exact acquisition and disposal.",
+      "missing": "Two selected query sales still lack usable basis; transferred/minted units and unexplained native movements cannot default to zero cost, trading expense or capital. Additional origin/role records or an accepted evidence contract may be needed beyond missing decoders."
+    },
+    {
+      "id": "S3",
+      "area": "Historical eligibility and copying-risk evidence",
+      "current_evidence": "Observed spot routes, public pool leads, current owner/account snapshots and raw permissions are research facts.",
+      "missing": "Complete time-relevant asset classification and creator/follower/liquidity/concentration evidence are absent. No intent, copying safety or no-scam conclusion follows from a losing/profitable lot."
+    },
+    {
+      "id": "S4",
+      "area": "Economic inventory and valuation",
+      "missing": "No exact all-account opening/closing witness, time-relevant complete mark population or valued external-flow population. Current snapshots and refundable program-account funding locations do not prove historical economic value."
+    }
+  ],
+  "environment_or_validation": {
+    "f975_normal_workflow": "PASS within scope, exit0; source unchanged;7 receipt cases/8 builds;guards0; not full B3 or final Unicode-patched acceptance.",
+    "f975_real_required": "Interrupted at root request after the normal run because of a separately reproduced malformed-Unicode defect; partial INCOMPLETE, child -15 / shell143; no acceptance.",
+    "unicode_boundary_defect": "Confirmed separately by the distinct reviewer and assigned to accounting owner; this inventory is read-only and does not reproduce/fix or validate it.",
+    "historical_collection_identity": "Phase4 executed collector hash was not captured; controls review retains that process limitation, distinct from actual raw-data checksums."
+  },
+  "why_named_lot_known_and_wallet_unknown": {
+    "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+    "basis_sol": "0.565194018",
+    "net_loss_sol": "-0.013270924",
+    "hold_seconds": 529,
+    "proof": "Exact selected buy/sell native/alternative identity, owned named-account quantity continuity, quote/fee/native-role reconciliation and source clocks. Unrelated records are excluded only by independently reproducible raw disjointness. Required buy/sell removal revokes its money and exact restoration reproduces it.",
+    "limits": "This does not discover all wallet accounts, classify every asset, resolve16 interrupted candidates, establish all cost/flow origins or value boundaries. Both the typed lot and global query explicitly retain unknown wallet population and qualification false."
+  },
+  "next_coherent_offline_route_batch": "Review normalized token administration + native wrap/rent/creation + the existing PumpSwap/fee-program route families together, with exact raw endpoint conservation and sibling paths, feeding the common decoder/FIFO and dependency map. In parallel implement genuine proof/selection interfaces rather than static UNKNOWN; activate only genuinely accepted sources. This cannot close source-population/classification/valuation/B3 by itself.",
+  "product_status": {
+    "B1": "Free access/schema and documented query/lifecycle examples observed; exhaustive historical owner/format sufficiency OPEN.",
+    "B2": "Development-functional genuine archive path and source-derived fees/named lot; complete-wallet implementation OPEN in the six explicit areas above.",
+    "B3": "BLOCKED; genuine complete-wallet source population and independently worked complete expectations absent.",
+    "PRODUCT_READY": false
+  },
+  "initial_inventory": {
+    "path": "evidence/genuine-wallet-batch/INITIAL_GAP_INVENTORY.json",
+    "sha256": "a9c57df9125a70290819043fef9ceba0519ba493b7bcb83b34d3e96ab996f768",
+    "bytes": 29430
+  },
+  "current_scoped_addendum": {
+    "status": "focused-development-checks-pass; distinct-read-only-review-pass; final candidate gates not claimed",
+    "existing_bridge": "scanner.decoder.decode_transactions already calls scanner.transaction_format.instruction_view, which uses scanner.compiled_instructions.normalize_transaction for reviewed opaque instructions. The current fix preserves that bridge; no missing bridge is claimed.",
+    "confirmed_generic_defect": "Valid initializeImmutableOwner fell through the generic Unsupported token operation branch. Full87 original indexed raw contains109 such compiled inner operations; immutable f975 saved-report fallback events contained90 (40legacy/50Token2022), a different event population.",
+    "scope_repaired": "Use reviewed compiled/parsed schema and shared native-key/reference validators to treat only valid initializeImmutableOwner/getAccountDataSize as diagnostic administration, with original field paths. No ledger movement or basis/population/classification proof is introduced.",
+    "malformed_key_neighbor": "Malformed loadedAddresses container previously raised before generic fee emission. It now leaves successful instruction identity unresolved while retaining independently identified static payer/meta.fee; failed records stay fee-only.",
+    "receipt_performance": "Normalizer receipts and inner raw group positions are indexed once per transaction rather than rescanned for every observation.",
+    "direct_raw_replay": {
+      "path": "evidence/genuine-wallet-batch/GENERIC_ADMIN_RAW_REPLAY.json",
+      "sha256": "e037574ac7b1ef62b25e6ee3dbd01a2a5764e5b15cf475794ae3739a55425465",
+      "all_original_query_records": 87,
+      "fees_retained": 87,
+      "unsupported_before": 402,
+      "unsupported_after": 293,
+      "immutable_owner_receipts": 109,
+      "getter_receipts": 109,
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "raw_bytes_unchanged": true
+    },
+    "implementation_source": {
+      "path": "scanner/decoder.py",
+      "sha256": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb"
+    },
+    "development_controls": {
+      "path": "tests/test_generic_administration.py",
+      "sha256": "c391dfe88ae988952d95a7b6adee5fc8e33b62f4d85169d0175eaff737d43338",
+      "collected_unique_nodes": 72
+    },
+    "focused_run": {
+      "path": "evidence/genuine-wallet-batch/GENERIC_ADMIN_FOCUSED_FINAL.log",
+      "sha256": "b4a5e2a351a83bd4ee68dfbbc468847ed4ac23bae91dcb3a33ed577ce8bcb730",
+      "passed_unique_nodes": 515,
+      "separately_reported_subtests": 2,
+      "warnings": 1
+    },
+    "still_open": "Opaque exchange/fee/wrapper operations, unsupported extension semantics, complete historical wallet ownership/format population, real classification, accepted origin/cost/flow and boundary valuation adapters, full real evidence/policy wiring remain separate from this administration correction. Accountant-owned native movement-role changes require their own final evidence.",
+    "distinct_review": {
+      "record": "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_GUARDED_FINAL_REPLAY.json",
+      "sha256": "af43c59353390cd6f46b856bfbac20f41d55680e4cb9caee024e126ff76bd227",
+      "raw_log": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_GENERIC_FOCUSED.log",
+      "raw_log_sha256": "fd5f4c3ef8d7f070f7489a20c87d456888687bd717e5466be53253a866f77d0c",
+      "passed_unique_nodes": 117,
+      "separately_reported_subtests": 2,
+      "independent_sibling_cells": 16,
+      "ordinary_review_nodes_overlap_owner_run": true,
+      "new_application_acceptance": false
+    }
+  }
+}

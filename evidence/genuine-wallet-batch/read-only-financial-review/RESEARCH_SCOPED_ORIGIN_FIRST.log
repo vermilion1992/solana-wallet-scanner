@@ -1,0 +1,93 @@
+................................................FFF....... [ 27%]
+................................................................................................................... [ 81%]
+.......................................                                  [100%]
+=================================== FAILURES ===================================
+_ test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero[boundary-loss] _
+
+placement = 'crosses'
+
+    @pytest.mark.parametrize('placement', ['crosses', 'outside', 'zero'], ids=['boundary-loss', 'disjoint-clock', 'proved-zero'])
+    def test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero(placement):
+        from test_position_evidence import START
+        raws = closing_raws()
+        failed = deepcopy(raws[0])
+        failed['transaction']['signatures'] = ['development-failed-outside']
+        failed['slot'] += 5; failed['blockTime'] = START - 1
+        failed['meta']['err'] = {'InstructionError': [0, {'Custom': 1}]}
+        failed['meta']['postBalances'] = list(failed['meta']['preBalances'])
+        failed['meta']['postBalances'][0] -= failed['meta']['fee']
+        failed['meta']['postTokenBalances'] = deepcopy(failed['meta']['preTokenBalances'])
+        alternate = deepcopy(failed); alternate['blockTime'] = START + 1 if placement != 'outside' else START - 2
+        if placement == 'zero':
+            for row in (failed, alternate):
+                row['meta']['fee'] = 0
+                row['meta']['postBalances'] = list(row['meta']['preBalances'])
+        events, receipt = facts(raws + [failed], WALLET, WINDOW, alternatives=[wrapped(alternate)])
+        result = summarize_research(events, WINDOW['start'], WINDOW['end'], wallet_evidence=receipt)
+>       assert result['sales_detail'][0]['conditional_profit_sol'] == '-0.00001'
+E       AssertionError: assert None == '-0.00001'
+
+tests/test_research_source_roles.py:257: AssertionError
+_ test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero[disjoint-clock] _
+
+placement = 'outside'
+
+    @pytest.mark.parametrize('placement', ['crosses', 'outside', 'zero'], ids=['boundary-loss', 'disjoint-clock', 'proved-zero'])
+    def test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero(placement):
+        from test_position_evidence import START
+        raws = closing_raws()
+        failed = deepcopy(raws[0])
+        failed['transaction']['signatures'] = ['development-failed-outside']
+        failed['slot'] += 5; failed['blockTime'] = START - 1
+        failed['meta']['err'] = {'InstructionError': [0, {'Custom': 1}]}
+        failed['meta']['postBalances'] = list(failed['meta']['preBalances'])
+        failed['meta']['postBalances'][0] -= failed['meta']['fee']
+        failed['meta']['postTokenBalances'] = deepcopy(failed['meta']['preTokenBalances'])
+        alternate = deepcopy(failed); alternate['blockTime'] = START + 1 if placement != 'outside' else START - 2
+        if placement == 'zero':
+            for row in (failed, alternate):
+                row['meta']['fee'] = 0
+                row['meta']['postBalances'] = list(row['meta']['preBalances'])
+        events, receipt = facts(raws + [failed], WALLET, WINDOW, alternatives=[wrapped(alternate)])
+        result = summarize_research(events, WINDOW['start'], WINDOW['end'], wallet_evidence=receipt)
+>       assert result['sales_detail'][0]['conditional_profit_sol'] == '-0.00001'
+E       AssertionError: assert None == '-0.00001'
+
+tests/test_research_source_roles.py:257: AssertionError
+_ test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero[proved-zero] _
+
+placement = 'zero'
+
+    @pytest.mark.parametrize('placement', ['crosses', 'outside', 'zero'], ids=['boundary-loss', 'disjoint-clock', 'proved-zero'])
+    def test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero(placement):
+        from test_position_evidence import START
+        raws = closing_raws()
+        failed = deepcopy(raws[0])
+        failed['transaction']['signatures'] = ['development-failed-outside']
+        failed['slot'] += 5; failed['blockTime'] = START - 1
+        failed['meta']['err'] = {'InstructionError': [0, {'Custom': 1}]}
+        failed['meta']['postBalances'] = list(failed['meta']['preBalances'])
+        failed['meta']['postBalances'][0] -= failed['meta']['fee']
+        failed['meta']['postTokenBalances'] = deepcopy(failed['meta']['preTokenBalances'])
+        alternate = deepcopy(failed); alternate['blockTime'] = START + 1 if placement != 'outside' else START - 2
+        if placement == 'zero':
+            for row in (failed, alternate):
+                row['meta']['fee'] = 0
+                row['meta']['postBalances'] = list(row['meta']['preBalances'])
+        events, receipt = facts(raws + [failed], WALLET, WINDOW, alternatives=[wrapped(alternate)])
+        result = summarize_research(events, WINDOW['start'], WINDOW['end'], wallet_evidence=receipt)
+>       assert result['sales_detail'][0]['conditional_profit_sol'] == '-0.00001'
+E       AssertionError: assert None == '-0.00001'
+
+tests/test_research_source_roles.py:257: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_research_source_roles.py::test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero[boundary-loss]
+FAILED tests/test_research_source_roles.py::test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero[disjoint-clock]
+FAILED tests/test_research_source_roles.py::test_period_fee_projection_reuses_all_linked_clocks_and_independent_zero[proved-zero]
+3 failed, 209 passed, 1 warning, 43 subtests passed in 16.19s

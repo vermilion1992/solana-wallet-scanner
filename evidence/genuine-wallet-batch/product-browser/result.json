@@ -1,0 +1,70 @@
+{
+  "kind": "offline-product-browser",
+  "state": "FAILED",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "97ca5f31cab74863b1cc81e318e1efe0"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "AssertionError: ",
+  "assertion_timeout_ms": 120000,
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "e6cec157d0e97fcd2a24ad5723ffac8a92ea710791355fcf5b113c7a7aa1b0e3",
+    "indexed-partial-parent.json": "551459e64bc4c6882b9b6567dc5424d9359215b5a8343be11f2d0dae3c1e10a1",
+    "world_hash-missing-report.json": "3a5b69fb66ce03d4a763e7bd29fc43d0c732a223cbd03026e8ec47e1ce06fcad",
+    "world_hash-missing-desktop.png": "9301de786b494a01b77062870345c6f6ec153205f4053c3d28880eb352d5c8fa",
+    "synthetic-parent.json": "67334f425ccea45fb20ba3ab0014699ebcb54a9684b7b9dee8d9c8110d96350b",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "26c8a22e98a289e5d45720c7c4118e39cf5e914a88c800decca2b1bd62c92310",
+    "world_hash-restored-report.json": "3c3afcd0641930dd3c5c5b5db1569ca6fac5c7690f44f0b9b0dbdbcacda5afdb",
+    "synthetic-positive-desktop.png": "53a7a38ff172a1efada8ae744d309b587c8df24300ce87a0a7b6a2872d8ccfbe",
+    "world_hash-restored-desktop.png": "80f2a0e085e1f5baff9e846bb47601dd5a50b378742154ddacb432fcbc53284c",
+    "synthetic-input.zip": "e6a8defb715e8ac4ff040596d19b9a1b4a335a716f8b701f3de02a95705c40d4",
+    "valuation_hash-missing-mobile.png": "75841315c8f45c08db3ab9950bef18d507a7cadd5e03292da6f9c5125bb364eb",
+    "world_hash-restored-mobile.png": "f1c637531f937412a2cb3daa5d55e58347a0ebf5e18185bda9ca8a38fc0f2fdc",
+    "valuation_hash-missing-desktop.png": "3aabc96e7eb2c37bf1659de72ff22ef356178adf8fd324abdd7c546f51aa1499",
+    "valuation_hash-restored-mobile.png": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+    "synthetic-positive-mobile.png": "c8b5614e75daf532fc4968e0886c07d28566595837b128f0618bb0b1f56f8f13",
+    "valuation_hash-restored-desktop.png": "d9611b3a5c36995ee15e9bbeb34f18ab55f58eced90d2083151f5d09c350692b",
+    "valuation_hash-missing-report.json": "43365bcea5faaff1edcaffd442ccf7a58c9ce24fd6439ad30c4f49ca1c267f57",
+    "synthetic-ui-export.json": "67334f425ccea45fb20ba3ab0014699ebcb54a9684b7b9dee8d9c8110d96350b",
+    "world_hash-missing-mobile.png": "274140a112c490368b0565f0dc46048cff64551d1fba3a0eabcfd32ec954911f",
+    "valuation_hash-restored-report.json": "ec96647a62d65fde46155d05b215ae98934a6075262ecb7216ad01c815c1a297",
+    "indexed-input.zip": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "genuine-partial-desktop.png": "cad0ff36589f60cfa1b3fdb27f1f125d277d2c10af723836b88199464377eeb0",
+    "genuine-partial-report.json": "b91edf741281b68cac34f2ea142dbb59716ca0b42b825ef5d66fb1b1630edb6e"
+  }
+}

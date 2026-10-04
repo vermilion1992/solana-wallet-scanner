@@ -1,0 +1,9 @@
+{
+  "starting_head": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "tested_application": "73c9eb5a6fb1cabf7eca8126f029da3aff20f774",
+  "source_sha256": "e9380f167804e860d05fd4e3293dc51d5609910ddfbe4c1a8644a08b6151bd09",
+  "source_files": 204,
+  "prior_source_manifest_matches": true,
+  "PRODUCT_READY": false,
+  "authorization": "User requested all four product items, test/fix, no further permission; includes bounded read-only Free-account collection. No purchases/upgrades/trading/signing/custody/public publication."
+}

@@ -1,0 +1,61 @@
+{
+  "kind": "offline-genuine-collection-workflow",
+  "state": "INCOMPLETE",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "oracle_frozen_before_application": true,
+  "oracle_sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+  "archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+  "acquisition": [
+    {
+      "receipt_sha256": "dd17302050f1693289c435bf7c0633255faa15ab96a7625299a7ffb2437dc280",
+      "kind": "authorised-bounded-native-collection",
+      "state": "COLLECTED_IN_SCOPE",
+      "plan_sha256": "b97617552df403897080c97ea45f292daa8cc08b7b2cd4d9871e6e49bc32f447",
+      "provider_requests": 3,
+      "included_raw_sources": [
+        {
+          "request_hash": "53ebcc07235c05da043f5067660d435af9d10b99257811115a09c434e4f0a9a8",
+          "response_hash": "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+        },
+        {
+          "request_hash": "9d0a345bd5799f82788b1e4c58b81a5ea337e958d5665fb62cecf0754b60a0eb",
+          "response_hash": "c3c2ac505c1c3f076f7cda9abf698a68e657bf5de308db4316de94e22226673c"
+        }
+      ],
+      "scope": "Acquisition provenance; does not prove historical population."
+    },
+    {
+      "receipt_sha256": "0524aaa8966381285c1501b5cded4fb9054b8fa309cc1233f05d0e6554809705",
+      "kind": "authorised-bounded-native-collection",
+      "state": "COLLECTED_IN_SCOPE",
+      "plan_sha256": "09cf07de775f6180be5616d11979f47ff6d108ec24b0d1b76a313c4cb80d7c83",
+      "provider_requests": 8,
+      "included_raw_sources": [
+        {
+          "request_hash": "128273ef36d883c5fc341acbf74c59ae7c6ec43a613b8530f77ff009ef74daee",
+          "response_hash": "d8d947c50371ad25a707172d323b055ca95c3dddebdaae20feae6ea683984a5a"
+        },
+        {
+          "request_hash": "35cf84b6d2537f4875edf8517fd23ec96db55ec730ddcf3fcd647619b2deebbc",
+          "response_hash": "be9ed43c64087da645edfa1e37931b6aa04e479ecb305470fbd07c73d1b9c9f0"
+        },
+        {
+          "request_hash": "20f1213965746dd4f2109c4584f6062294b411f0c666fb920a4176ba3663fe31",
+          "response_hash": "9e9b07779105ceeb697d4441684e04c70923c47ce57c0b63a5f4ecc84f0b416b"
+        },
+        {
+          "request_hash": "af3bd1c43f13eff8a0128becf05b98853218a60c4478bc04101322e48781f172",
+          "response_hash": "6aa959d4d6a715d03446730fbf3a82266b1d74f039b5fbe4338e271108aaf0ac"
+        },
+        {
+          "request_hash": "53f97a2f3a156255aefc006dc1d7611582b11b2b1e8ef1eda1d0684765b6d3a3",
+          "response_hash": "4c765521f438630a5e426fe0f5748f41093f2e001963cd4c583848562e693303"
+        }
+      ],
+      "scope": "Acquisition provenance; does not prove historical population."
+    }
+  ],
+  "cases": [],
+  "worked_expectations_sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad"
+}

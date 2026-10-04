@@ -1,0 +1,102 @@
+{
+  "kind": "name-only-private-artifact-exclusion-planning-v1",
+  "scope": "Active/new verified directory names only; no private contents read, no index mutation, no completion inference.",
+  "directories": [
+    {
+      "directory": "evidence/genuine-wallet-batch/genuine-real-required-final",
+      "observed_regular_or_symlink_paths": 117,
+      "excluded_private_paths_count": 108,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/genuine-real-required-final/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/product-development-final",
+      "observed_regular_or_symlink_paths": 101,
+      "excluded_private_paths_count": 90,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/product-development-final/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/product-browser-verified",
+      "observed_regular_or_symlink_paths": 225,
+      "excluded_private_paths_count": 195,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/product-browser-verified/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/genuine-workflow-verified",
+      "observed_regular_or_symlink_paths": 114,
+      "excluded_private_paths_count": 108,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/genuine-workflow-verified/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/genuine-execution-records-verified",
+      "observed_regular_or_symlink_paths": 5,
+      "excluded_private_paths_count": 0,
+      "omitted_subtrees_or_names": [],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/gate-a-verified",
+      "observed_regular_or_symlink_paths": 4,
+      "excluded_private_paths_count": 0,
+      "omitted_subtrees_or_names": [],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/genuine-workflow-final",
+      "observed_regular_or_symlink_paths": 129,
+      "excluded_private_paths_count": 106,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/genuine-workflow-final/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/product-real-required-final",
+      "observed_regular_or_symlink_paths": 101,
+      "excluded_private_paths_count": 90,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/product-real-required-final/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/gate-a-final",
+      "observed_regular_or_symlink_paths": 4,
+      "excluded_private_paths_count": 0,
+      "omitted_subtrees_or_names": [],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/product-browser-final",
+      "observed_regular_or_symlink_paths": 230,
+      "excluded_private_paths_count": 195,
+      "omitted_subtrees_or_names": [
+        "evidence/genuine-wallet-batch/product-browser-final/data/"
+      ],
+      "active_outputs_compressed": false
+    },
+    {
+      "directory": "evidence/genuine-wallet-batch/genuine-execution-records-final",
+      "observed_regular_or_symlink_paths": 12,
+      "excluded_private_paths_count": 0,
+      "omitted_subtrees_or_names": [],
+      "active_outputs_compressed": false
+    }
+  ],
+  "source_modified": false,
+  "provider_calls": 0,
+  "credential_reads": 0,
+  "index_sha256": "685cfeae6d5e0e7536d92b2d5bc5fd125b925e68eeaa1c0ea72a0898d6003afd",
+  "stage_plan_generation": "Pending explicit all-final-runs-ended root signal"
+}

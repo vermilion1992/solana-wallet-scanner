@@ -1,0 +1,11 @@
+Read-only commands; no provider calls or full acceptance suite.
+SUBSET_COMMIT_BYTE_CHECK: PASS 27 files
+BUNDLE_REFERENCE_AND_REPLACEMENT: PASS
+RAW_DIFF_CHECK_COMMAND: ['git', 'diff', '00b70e6e2222c473a8d2b95be93bc6af260bfdcd', 'ec2ea97bb69c683447ce76ca05d5d9512fb4608a', '--check', '--', '.', ':!evidence']
+RAW_DIFF_CHECK_EXIT: 2
+tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md:25: trailing whitespace.
++go to the creator as it normally would. 
+PRIMARY_FIXTURE_ORIGINAL_SHA256: fa0f8703b406b872309131754e33ddcd15f0a36426733e0d26f329293b3c48f6
+EXACT_FIXTURE_EXCLUSION_COMMAND: ['git', 'diff', '00b70e6e2222c473a8d2b95be93bc6af260bfdcd', 'ec2ea97bb69c683447ce76ca05d5d9512fb4608a', '--check', '--', '.', ':!evidence', ':!tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md']
+EXCLUDED_DIFF_CHECK_EXIT: 0
+NOTE: Initial review helper compared the full filesystem bundle path against the public /assets URL. Corrected helper checks the asset basename; no application change or product finding.

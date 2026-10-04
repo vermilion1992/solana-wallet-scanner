@@ -1,0 +1,13 @@
+{
+  "assets": {
+    "/assets/index-Brz2fDKJ.css": {
+      "bytes": 67301,
+      "sha256": "b6e71c82ce22c32545f92db240cf17b20605dd6e5d494ff383314600abdf3977"
+    },
+    "/assets/index-jsg7SLRM.js": {
+      "bytes": 291243,
+      "sha256": "6d45ae56a67f0e3196f558557816a2150e2ae28b66e6cceade345a40f8e26f24"
+    }
+  },
+  "note": "Actual compiled assets referenced by saved diagnostic index; source CSS may subsequently change during root layout repair. Immutable original browser failures remain under product-browser."
+}

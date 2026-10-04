@@ -1,0 +1,33 @@
+{
+  "scope": "Distinct read-only getter review, no full-suite or complete genuine-wallet acceptance",
+  "baseline": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_compiled_getter.py",
+    "tests/test_compiled_instructions.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.326,
+  "files_sha256_before": {
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "tests/test_compiled_getter.py": "411a0b9db86c7ab2c466607455acbb3b5219893a51789e486c0929c1160e29c0",
+    "tests/test_compiled_instructions.py": "5d4fa06cfb17657440344aad4ce70c04fdb24fadf856b1e8e8cd84738c54efc4",
+    "tests/fixtures/compiled_instructions/getter-schema.json": "c855ac671274ef1ffa381dddf0a913dabe8deec2aef384aaf03dea58437010ba",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd"
+  },
+  "files_sha256_after": {
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "tests/test_compiled_getter.py": "411a0b9db86c7ab2c466607455acbb3b5219893a51789e486c0929c1160e29c0",
+    "tests/test_compiled_instructions.py": "5d4fa06cfb17657440344aad4ce70c04fdb24fadf856b1e8e8cd84738c54efc4",
+    "tests/fixtures/compiled_instructions/getter-schema.json": "c855ac671274ef1ffa381dddf0a913dabe8deec2aef384aaf03dea58437010ba",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd"
+  },
+  "source_unchanged": true,
+  "log": "evidence/genuine-wallet-batch/read-only-review/GETTER_FOCUSED_REPLAY.log",
+  "log_sha256": "f422805ad7ffd127587ca51dcc4d794c397aedab9fee88e0f7d3e0bf46cf2a63"
+}

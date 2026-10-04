@@ -1,0 +1,28 @@
+{
+  "scope": "Distinct read-only affected query/Unicode/component controls; not a full suite or genuine B3 acceptance",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_real_coverage.py"
+  ],
+  "exit_code": 0,
+  "source_subset_before": {
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/wallet_evidence.py": "0f6f7f5e1e02ae94107c8da5e8f00aa67ad59c471d04ea196c1bd0e5d111a8c7",
+    "scanner/archive_input.py": "bba4adbc38f458b4e5e32c87fd1e683393c9ef4400aa992ebbb807cc05336396",
+    "tests/test_real_coverage.py": "bb47deb1ee94a1bbf01134fd4e7fa935d290c317654cfdeee80a40e899bd203c"
+  },
+  "source_subset_after": {
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/wallet_evidence.py": "0f6f7f5e1e02ae94107c8da5e8f00aa67ad59c471d04ea196c1bd0e5d111a8c7",
+    "scanner/archive_input.py": "bba4adbc38f458b4e5e32c87fd1e683393c9ef4400aa992ebbb807cc05336396",
+    "tests/test_real_coverage.py": "bb47deb1ee94a1bbf01134fd4e7fa935d290c317654cfdeee80a40e899bd203c"
+  },
+  "subset_unchanged": true,
+  "global_source_before": "c9d7e3e0267ff37bc83e5b6d02fdf5da35166c8f8178ab20245281755fc4daee",
+  "global_source_after": "c9d7e3e0267ff37bc83e5b6d02fdf5da35166c8f8178ab20245281755fc4daee",
+  "global_source_unchanged": true,
+  "raw_log": "INDEPENDENT_QUERY_UNICODE_FOCUSED.log"
+}

@@ -1,0 +1,12 @@
+{"output": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/product-browser/synthetic-input.zip", "sha256": "e6a8defb715e8ac4ff040596d19b9a1b4a335a716f8b701f3de02a95705c40d4", "scope": "Synthetic development", "provider_requests": 0}
+{"output": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/product-browser/partial-real-input.zip", "sha256": "e6cec157d0e97fcd2a24ad5723ffac8a92ea710791355fcf5b113c7a7aa1b0e3", "scope": "Partial real sample; B3 remains blocked", "provider_requests": 0}
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 226, in <module>
+    raise SystemExit(run(p.parse_args()))
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 177, in run
+    capture('indexed-partial')
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 103, in capture
+    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth&&scrollX===0')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

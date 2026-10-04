@@ -1,0 +1,90 @@
+{
+  "scope": "Current-source synthetic escaped-provider-byte shared hash-boundary diagnostic; no genuine expectation changes, providers or credentials.",
+  "source_hashes": {
+    "scanner/archive_input.py": "bba4adbc38f458b4e5e32c87fd1e683393c9ef4400aa992ebbb807cc05336396",
+    "scanner/real_coverage.py": "6ea97f71a720e072660aa40b6537e74637b30c96c7f8648ecadf5d340365e0ba",
+    "scanner/wallet_evidence.py": "0f6f7f5e1e02ae94107c8da5e8f00aa67ad59c471d04ea196c1bd0e5d111a8c7"
+  },
+  "matrix": [
+    {
+      "wrapper": "page",
+      "value_condition": "valid-unicode",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION",
+          "query_state": "PASS",
+          "wallet_profit_status": "unknown"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION",
+          "observed_lots": 0
+        }
+      }
+    },
+    {
+      "wrapper": "page",
+      "value_condition": "invalid-surrogate",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "wallet_profit_status": "unknown"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION",
+          "observed_lots": 0
+        }
+      }
+    },
+    {
+      "wrapper": "native",
+      "value_condition": "valid-unicode",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "wallet_profit_status": "unknown"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION",
+          "observed_lots": 0
+        }
+      }
+    },
+    {
+      "wrapper": "native",
+      "value_condition": "invalid-surrogate",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "wallet_profit_status": "unknown"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION",
+          "query_state": "UNKNOWN",
+          "historical_population_state": "UNKNOWN"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION",
+          "observed_lots": 0
+        }
+      }
+    }
+  ]
+}

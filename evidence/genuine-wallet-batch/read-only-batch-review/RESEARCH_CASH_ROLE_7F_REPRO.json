@@ -1,0 +1,86 @@
+{
+  "kind": "distinct-read-only-current-cash-role-consumer-reproduction",
+  "application_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "source_hashes": {
+    "scanner/research.py": "54c08e0bfcdac88bb9b54960bf5758d2f3619b63d8b11723eb81af25ce3e14e3",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877"
+  },
+  "rows": [
+    {
+      "case": "positive-clean",
+      "trade_cash_role_states": [
+        "PASS",
+        "PASS"
+      ],
+      "unknown_capital_events": 0,
+      "reported_research_unresolved_transactions": 0,
+      "reported_research_conditional_profit": "-0.10001",
+      "reported_research_sale_details": [
+        {
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "timestamp": "2026-10-04T02:17:09+00:00",
+          "quantity_raw": "100",
+          "conditional_matched_basis_sol": "1.000005",
+          "conditional_profit_sol": "-0.10001",
+          "attributable": false,
+          "evidence": [
+            "f2adc819f23f34e3754aa2e57f3b499dfd8f16dc9206830e68f27b2f7d96960c"
+          ],
+          "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+        }
+      ],
+      "input_unchanged": true
+    },
+    {
+      "case": "buy-net-zero-foreign-loop",
+      "trade_cash_role_states": [
+        "UNKNOWN",
+        "PASS"
+      ],
+      "unknown_capital_events": 2,
+      "reported_research_unresolved_transactions": 0,
+      "reported_research_conditional_profit": "-0.10001",
+      "reported_research_sale_details": [
+        {
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "timestamp": "2026-10-04T02:17:09+00:00",
+          "quantity_raw": "100",
+          "conditional_matched_basis_sol": "1",
+          "conditional_profit_sol": "-0.100005",
+          "attributable": false,
+          "evidence": [
+            "f2adc819f23f34e3754aa2e57f3b499dfd8f16dc9206830e68f27b2f7d96960c"
+          ],
+          "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+        }
+      ],
+      "input_unchanged": true
+    },
+    {
+      "case": "sell-net-zero-foreign-loop",
+      "trade_cash_role_states": [
+        "PASS",
+        "UNKNOWN"
+      ],
+      "unknown_capital_events": 2,
+      "reported_research_unresolved_transactions": 0,
+      "reported_research_conditional_profit": "-0.10001",
+      "reported_research_sale_details": [
+        {
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "timestamp": "2026-10-04T02:17:09+00:00",
+          "quantity_raw": "100",
+          "conditional_matched_basis_sol": "1.000005",
+          "conditional_profit_sol": "-0.100005",
+          "attributable": false,
+          "evidence": [
+            "0e4780bee9b4682eab0e6088467fab3c027b74b5d6af9dcb73c9e3a5f764003b"
+          ],
+          "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+        }
+      ],
+      "input_unchanged": true
+    }
+  ],
+  "scope": "Unsigned development native pair; not the independently frozen genuine oracle and not complete-wallet acceptance. No provider/credential calls or app edits."
+}

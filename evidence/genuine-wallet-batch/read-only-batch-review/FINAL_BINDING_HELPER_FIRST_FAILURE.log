@@ -1,0 +1,6 @@
+Read-only binding helper exited 1 before writing a receipt, after native byte/mode, lock, matrix-path and diff checks passed.
+The helper imported the investigation identifier as VERSION instead of its actual name DECODER_VERSION.
+Application source was unchanged; only the evidence helper import names were corrected.
+Traceback (most recent call last):
+  File "<stdin>", line 33, in <module>
+ImportError: cannot import name 'VERSION' from 'scanner.investigation' (/workspace/solana-wallet-scanner/scanner/investigation.py)

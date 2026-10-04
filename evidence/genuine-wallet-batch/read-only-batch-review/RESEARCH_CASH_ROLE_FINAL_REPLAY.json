@@ -1,0 +1,133 @@
+{
+  "kind": "distinct-read-only-current-cash-role-consumer-replay",
+  "state": "PASS",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "source_files": 228,
+  "source_unchanged_before_after": true,
+  "rows": [
+    {
+      "case": "positive-clean",
+      "state": "PASS",
+      "cash_role_states": [
+        "PASS",
+        "PASS"
+      ],
+      "unresolved_transactions": 0,
+      "conditional_profit_sol": "-0.10001",
+      "sales_detail": [
+        {
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "timestamp": "2026-10-04T02:17:09+00:00",
+          "quantity_raw": "100",
+          "conditional_matched_basis_sol": "1.000005",
+          "conditional_profit_sol": "-0.10001",
+          "attributable": false,
+          "evidence": [
+            "f2adc819f23f34e3754aa2e57f3b499dfd8f16dc9206830e68f27b2f7d96960c"
+          ],
+          "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+        }
+      ],
+      "episode_money": {
+        "basis_sol": "1.000005",
+        "matched_basis_sol": "1.000005",
+        "proceeds_sol": "0.9",
+        "pnl_sol": "-0.10001",
+        "roi_pct": "-10.0009499952500237498812505937470312648436757816210918945405272973635131824340878295608521957390213048934755326223368883155584222078889605551972240138799306003469982650086749566252168739156304",
+        "monetary_state": "PASS",
+        "quantity_state": "PASS",
+        "timing_state": "PASS"
+      },
+      "wallet_fees_paid_sol": "0.00001",
+      "raw_input_unchanged": true
+    },
+    {
+      "case": "buy-net-zero-foreign-loop",
+      "state": "PASS",
+      "cash_role_states": [
+        "UNKNOWN",
+        "PASS"
+      ],
+      "unresolved_transactions": 2,
+      "conditional_profit_sol": null,
+      "sales_detail": [
+        {
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "timestamp": "2026-10-04T02:17:09+00:00",
+          "quantity_raw": "100",
+          "conditional_matched_basis_sol": null,
+          "conditional_profit_sol": null,
+          "attributable": false,
+          "evidence": [
+            "f2adc819f23f34e3754aa2e57f3b499dfd8f16dc9206830e68f27b2f7d96960c"
+          ],
+          "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+        }
+      ],
+      "episode_money": {
+        "basis_sol": null,
+        "matched_basis_sol": null,
+        "proceeds_sol": "0.9",
+        "pnl_sol": null,
+        "roi_pct": null,
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "timing_state": "PASS"
+      },
+      "wallet_fees_paid_sol": "0.00001",
+      "raw_input_unchanged": true
+    },
+    {
+      "case": "sell-net-zero-foreign-loop",
+      "state": "PASS",
+      "cash_role_states": [
+        "PASS",
+        "UNKNOWN"
+      ],
+      "unresolved_transactions": 2,
+      "conditional_profit_sol": null,
+      "sales_detail": [
+        {
+          "mint": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+          "timestamp": "2026-10-04T02:17:09+00:00",
+          "quantity_raw": "100",
+          "conditional_matched_basis_sol": "1.000005",
+          "conditional_profit_sol": null,
+          "attributable": false,
+          "evidence": [
+            "0e4780bee9b4682eab0e6088467fab3c027b74b5d6af9dcb73c9e3a5f764003b"
+          ],
+          "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+        }
+      ],
+      "episode_money": {
+        "basis_sol": "1.000005",
+        "matched_basis_sol": "1.000005",
+        "proceeds_sol": null,
+        "pnl_sol": null,
+        "roi_pct": null,
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "timing_state": "PASS"
+      },
+      "wallet_fees_paid_sol": "0.00001",
+      "raw_input_unchanged": true
+    }
+  ],
+  "generation_isolation": {
+    "case": "current-strict-and-stale-fallback-research-generation-isolation",
+    "state": "PASS",
+    "strict_current_qualification_preserved": true,
+    "strict_current_positions_used": true,
+    "stale_fallback_timing_unknown": true,
+    "inputs_unchanged": true,
+    "scope": "Development saved-report predicate controls; not fabricated genuine qualification or B3."
+  },
+  "scope": "Three unsigned development diagnostics; not a genuine independent oracle, complete wallet, full acceptance or unique backend nodes. No provider/credential calls.",
+  "source_subset_sha256": {
+    "scanner/research.py": "24e0d928b46da9aed1ed171473c48a2e46b9007d3d69da91b513d34e6f42ea75",
+    "scanner/investigation.py": "a1ed06b4a017e1d1d4a1a43f208b49dc5bc6cc382b9b04c14383effc15e16877",
+    "scanner/wallet_evidence.py": "ee63cc81a1c8c311451a69074d2d796b294387e68b01cceb45418bf844a5ba22"
+  }
+}

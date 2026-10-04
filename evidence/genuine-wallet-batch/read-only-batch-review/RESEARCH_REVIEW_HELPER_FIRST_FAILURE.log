@@ -1,0 +1,12 @@
+Standalone review helper exited 1 on frozen application 394904460c0473f07a25ed6324736421e0db1544.
+Application manifest remained 519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186.
+The helper assigned a dict to local name episode before calling its imported episode fixture function.
+This failure is in the evidence-only review script; no application source was changed.
+
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CURRENT_SOURCE_REPLAY.py", line 108, in <module>
+    main(parser.parse_args())
+  File "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CURRENT_SOURCE_REPLAY.py", line 67, in main
+    strict['positions'] = [episode(hold='2', exit90='0.05', first='0.01')]
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'dict' object is not callable

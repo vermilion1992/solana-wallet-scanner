@@ -1,0 +1,232 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "12b557e2d9834fc2b4150ca69ef54564"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    },
+    {
+      "case": "indexed-partial-ui-import-inspection-immutable-rebuild",
+      "state": "PASS",
+      "source_archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "expected_selected_fees_sol": "0.000158868",
+      "parent_unchanged": true,
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "assertion_timeout_ms": 120000,
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "browser_report_transfers": [
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 2828
+    },
+    {
+      "path": "/api/reports/12b557e2d9834fc2b4150ca69ef54564?view=display",
+      "status": 200,
+      "bytes": 661643
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 37952
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 74472
+    },
+    {
+      "path": "/api/reports/b1b0f903486c4acd824ddcb2c1af955c?view=display",
+      "status": 200,
+      "bytes": 665442
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 109177
+    },
+    {
+      "path": "/api/reports/ff3a55db74e8416482b3c94e4a0cf696?view=display",
+      "status": 200,
+      "bytes": 662138
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 190532
+    },
+    {
+      "path": "/api/reports/8cdac3c42b4e48ffaec14d84bef4f0eb?view=display",
+      "status": 200,
+      "bytes": 717431
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 225237
+    },
+    {
+      "path": "/api/reports/46faf5fcf6a74d2f85fe16f8ae59f9fc?view=display",
+      "status": 200,
+      "bytes": 662138
+    },
+    {
+      "path": "/api/reports/8baf7f1bacac4f449e8d984358577c32?view=display",
+      "status": 200,
+      "bytes": 1870530
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 379809
+    },
+    {
+      "path": "/api/reports/9e29da8a526342c0a6c4ed22491e77b5?view=display",
+      "status": 200,
+      "bytes": 6073243
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 747624
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 1115021
+    },
+    {
+      "path": "/api/reports/a573600cb16e462f9c4d8e1f8d4b3441?view=display",
+      "status": 200,
+      "bytes": 6073738
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "8b5e0cc84e7c984999d3b9a59709fd0600197b748e4918e2a69863fbb540f4ec",
+    "indexed-partial-parent.json": "390533b03dbc675c7695f37e4e1ee69cbc5d0d98b964162ab4407e32792f4fc7",
+    "indexed-partial-rebuilt-mobile.png": "69829a11cd6d6c31d4c38d90ce782e759d80d335ca45fe1332e8d7dfe85453ac",
+    "world_hash-missing-report.json": "1745218b690576fa427f7e773b0204d70727ab18be871cbba3464447d34869f4",
+    "indexed-partial-rebuilt-desktop.png": "bd316c313bb5c15858477e66fb22b7fae8c44cb9a4cdd6879e75e6c63a668ec2",
+    "world_hash-missing-desktop.png": "9301de786b494a01b77062870345c6f6ec153205f4053c3d28880eb352d5c8fa",
+    "synthetic-parent.json": "5b792c100f5bd152dc01e0bc64b4176a13a634d06d351f0fe525eda66c351f97",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "4dcc2de60f056b84f3d96d4adcf5c0c703a2326235e87a874d2ca571fc4f30a2",
+    "world_hash-restored-report.json": "c5e246f842b990a4054d1970fe3dd20e7ba4a99fef9b232cf05aad3aed62135d",
+    "synthetic-positive-desktop.png": "53a7a38ff172a1efada8ae744d309b587c8df24300ce87a0a7b6a2872d8ccfbe",
+    "world_hash-restored-desktop.png": "80f2a0e085e1f5baff9e846bb47601dd5a50b378742154ddacb432fcbc53284c",
+    "synthetic-input.zip": "2a654a05d235ce375c59b50423faaa683ef97883cd5d1765b11e4937ae3533da",
+    "valuation_hash-missing-mobile.png": "75841315c8f45c08db3ab9950bef18d507a7cadd5e03292da6f9c5125bb364eb",
+    "indexed-partial-desktop.png": "369000f662236e67cc70812259dd0efc58b276cc7ee939278028de2b0acee4fe",
+    "world_hash-restored-mobile.png": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+    "valuation_hash-missing-desktop.png": "3aabc96e7eb2c37bf1659de72ff22ef356178adf8fd324abdd7c546f51aa1499",
+    "valuation_hash-restored-mobile.png": "f1c637531f937412a2cb3daa5d55e58347a0ebf5e18185bda9ca8a38fc0f2fdc",
+    "synthetic-positive-mobile.png": "c8b5614e75daf532fc4968e0886c07d28566595837b128f0618bb0b1f56f8f13",
+    "valuation_hash-restored-desktop.png": "d9611b3a5c36995ee15e9bbeb34f18ab55f58eced90d2083151f5d09c350692b",
+    "valuation_hash-missing-report.json": "c1d8753ccd658c6e8caafea6fa38838ef677fd83c76f0a76fdbadafce04edff7",
+    "synthetic-ui-export.json": "5b792c100f5bd152dc01e0bc64b4176a13a634d06d351f0fe525eda66c351f97",
+    "world_hash-missing-mobile.png": "e0e0b542026585a06fced6d88ddfa7deff15c4f0f80b7465deeea42591d7f875",
+    "valuation_hash-restored-report.json": "b9d4f3a489eb154eade0e8ab52dfc969768b2dfad66431cc7fbf9cf46ed9b551",
+    "indexed-input.zip": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "genuine-partial-desktop.png": "a480128f952031942514d3888581fb101b574560adc17046023d58819c60542d",
+    "indexed-partial-mobile.png": "12ffc19e91c34113fbf40c058f02a33b491d27159f633bff5ada11b50b928525",
+    "indexed-partial-child.json": "b58b7d377bbdce5747b70047e2ddd03104943080640a4ee705bcca1ceb2b8e55",
+    "genuine-partial-report.json": "3db0ffc4f23c6c4bb2a73228ff24c6416d8e4f20d4e074eeab30fabff7d4ff18"
+  }
+}

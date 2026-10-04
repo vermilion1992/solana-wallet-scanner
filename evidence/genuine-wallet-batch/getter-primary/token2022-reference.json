@@ -1,0 +1,24 @@
+{
+  "credential_lookups": 0,
+  "provider_calls": 0,
+  "references": [
+    {
+      "bytes": 102176,
+      "extracted_path": "src/instruction.rs",
+      "local_path": "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs",
+      "package_sha256": "821d96d034ea31c4965d182c742153c491ae0abee531331b55771086c5030d86",
+      "sha256": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+      "url": "https://static.crates.io/crates/spl-token-2022-interface/spl-token-2022-interface-3.1.1.crate",
+      "version": "3.1.1"
+    },
+    {
+      "bytes": 126230,
+      "extracted_path": "src/extension/mod.rs",
+      "local_path": "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs",
+      "package_sha256": "821d96d034ea31c4965d182c742153c491ae0abee531331b55771086c5030d86",
+      "sha256": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd",
+      "url": "https://static.crates.io/crates/spl-token-2022-interface/spl-token-2022-interface-3.1.1.crate",
+      "version": "3.1.1"
+    }
+  ]
+}

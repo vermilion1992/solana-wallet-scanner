@@ -1,0 +1,27 @@
+{
+  "kind": "offline-genuine-layout-diagnostic",
+  "report_id": "2e0b944a37af4bddb58d3ef15cb25389",
+  "parent_hash_before": "551459e64bc4c6882b9b6567dc5424d9359215b5a8343be11f2d0dae3c1e10a1",
+  "database_hash_before": "d834e6d499618322c6a8ad1c91596a56b0bb910b457690b2c1b92e941a86261f",
+  "state": "PASS",
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "database_hash_after": "d834e6d499618322c6a8ad1c91596a56b0bb910b457690b2c1b92e941a86261f",
+  "parent_hash_after": "551459e64bc4c6882b9b6567dc5424d9359215b5a8343be11f2d0dae3c1e10a1",
+  "preserved_original_database_and_parent": true,
+  "compiled_assets": {
+    "/assets/index-CvKuHKbK.js": {
+      "sha256": "6d45ae56a67f0e3196f558557816a2150e2ae28b66e6cceade345a40f8e26f24",
+      "bytes": 291243
+    },
+    "/assets/index-J2-LWOXg.css": {
+      "sha256": "e8f98ce8f3ba162427deffaa71f9b50c7e71363d84cdfd55effa2fa9bac62121",
+      "bytes": 67370
+    }
+  },
+  "scope": "Scoped genuine report text wrapping replay only; no new application acceptance or B3 claim."
+}

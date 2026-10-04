@@ -1,0 +1,37 @@
+{
+  "bytes": 322675,
+  "credential_lookups": 0,
+  "package": {
+    "checksum": "821d96d034ea31c4965d182c742153c491ae0abee531331b55771086c5030d86",
+    "dependencies": [
+      "arrayref",
+      "bytemuck",
+      "getrandom 0.2.15",
+      "num-derive",
+      "num-traits",
+      "num_enum",
+      "solana-account-info",
+      "solana-address 2.6.1",
+      "solana-instruction",
+      "solana-nullable",
+      "solana-program-error",
+      "solana-program-option",
+      "solana-program-pack",
+      "solana-sdk-ids",
+      "solana-zero-copy",
+      "solana-zk-elgamal-proof-interface",
+      "solana-zk-sdk-pod",
+      "spl-token-confidential-transfer-proof-extraction",
+      "spl-token-group-interface",
+      "spl-token-metadata-interface",
+      "spl-type-length-value",
+      "thiserror 2.0.18"
+    ],
+    "name": "spl-token-2022-interface",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "version": "3.1.1"
+  },
+  "provider_calls": 0,
+  "sha256": "7e0ee39685bb6bfc0dfa629ff5d1b9e6d619063f2c4429993ae7afaf4c19f1ee",
+  "url": "https://raw.githubusercontent.com/anza-xyz/agave/9480479ff42af8a9db3da1649297dfcd9d27e5be/Cargo.lock"
+}

@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_STALE_BROWSER_REPLAY.py", line 274, in <module>
+    raise SystemExit(run(parser.parse_args()))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_STALE_BROWSER_REPLAY.py", line 252, in run
+    receipt['offline_guards'] = json.loads((out / 'guards.json').read_bytes())
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine/guards.json'

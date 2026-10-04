@@ -1,0 +1,1222 @@
+{
+  "kind": "final-read-only-source-identity-binding",
+  "state": "PASS",
+  "time_utc": "2026-10-04T07:30:37.382518+00:00",
+  "candidate_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "baseline_commit": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "source_manifest_sha256": "eeb6f51777dda142376b8220896ccd768fe2c08e693873fa6630e09ed063cced",
+  "application_file_count": 227,
+  "all_227_source_file_bytes_match_commit": true,
+  "native_git_executable_bits_match": true,
+  "literal_unix_modes_match_native_git": false,
+  "mode_differences": [
+    {
+      "path": ".github/workflows/offline-focused.yml",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": ".gitignore",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "AGENTS.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "CODEX_TASK.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "ISSUES.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "README.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "REVIEWER_TASK.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/ACCEPTANCE_MATRIX.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/ARCHIVE_INPUT_CONTRACT.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/BLUEPRINT_ALIGNMENT.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_1.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_10.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_2.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_3.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_4.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_5.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_6.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_7.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_8.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CODE_REVIEW_RESPONSE_v0_3_9.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/CONTRACT.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/DEPENDENCIES.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/R1_SOURCE_DECISION.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/STABILISATION.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/VALIDATION.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/capability/delivery_review_2026-10-02.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/capability/dependency_review_2026-10-02.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/capability/discovery_2026-10-02.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "docs/capability/helius_basic_2026-10-02.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/dist/assets/index-CvKuHKbK.js",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/dist/assets/index-J2-LWOXg.css",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/index.html",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/package.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/scripts/check-discovery.mjs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/scripts/check-format.mjs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/Discovery.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/EvidenceAudit.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/api.ts",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/components.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/format.ts",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/report.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/settings.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/src/workspace.tsx",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "pyproject.toml",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "requirements-build.in",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "requirements.txt",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "run.ps1",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "run.sh",
+      "local_mode": "0o700",
+      "native_git_mode": "0o755"
+    },
+    {
+      "path": "scanner/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/__main__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/accounting.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/app.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/archive_input.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/candidate_import.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/chronology_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/collector.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/compiled_instructions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/config.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/copy_review.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/decoder.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/demo.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/discovery.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/evidence_audit.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/examples/archive-wallet-synthetic.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/examples/real-transaction-audit-mainnet.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/history_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/indexed_input.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/instruction_scope.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/investigation.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/json_boundary.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/metric_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/position_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/providers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/real_coverage.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/report_rebuild.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/report_view.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/research.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/restore.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/source_consistency.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/storage.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/transaction_format.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "scanner/wallet_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "setup.ps1",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "setup.sh",
+      "local_mode": "0o700",
+      "native_git_mode": "0o755"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/getter-schema.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/schema.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/solana-system-interface-instruction.rs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/compiled_instructions/spl-token-interface-instruction.rs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/instruction_family_schema.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-pumpswap-buy-exact-quote.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-pumpswap-sell-durable-nonce-sources.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-pumpswap-sell-durable-nonce.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-wrapper-0.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-wrapper-1.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-wrapper-2.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/mainnet-wrapper-3.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/real-transaction-audit-expected.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/real-transaction-audit-mainnet.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/GENUINE_CREATE_AND_CLOSE_CONTROL.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/NATIVE_QUOTE_SOURCE.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/SOURCE_DOCUMENTS.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/pump-native.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/pump_amm.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/retained_protocol_funding/solana_pubkey.rs",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/token_instruction_schema.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/fixtures/validation_receipts.json",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v0310/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v0310/review_helpers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v0310/schema_helpers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v0310/test_v0310_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v0310/test_v0310_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v033/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v033/review_helpers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v033/test_v033_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v033/test_v033_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v034/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v034/test_v034_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v034/test_v034_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v035/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v035/test_v035_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v035/test_v035_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v036/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v036/review_helpers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v036/test_v036_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v036/test_v036_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v037/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v037/review_helpers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v037/test_v037_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v037/test_v037_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v038/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v038/review_helpers_v038.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v038/test_v038_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v038/test_v038_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v039/__init__.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v039/review_helpers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v039/test_v039_controls.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/review_v039/test_v039_regressions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_accounting.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_app.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_archive_fee_window.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_archive_input.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_bounded_collection.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_candidate_import.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_chronology_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_collector.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_compiled_getter.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_compiled_instructions.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_compiled_report_integration.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_copy_review.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_copy_review_api.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_decoder.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_discovery.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_discovery_audit_plan.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_discovery_integration_review.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_discovery_native_identity.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_discovery_plan_views.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_evidence_audit.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_generic_administration.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_genuine_collection_workflow.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_history_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_independent_review.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_indexed_chronology.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_indexed_input.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_indexed_report_integration.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_indexed_source_dependencies.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_instruction_contract_matrix.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_investigation.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_launcher.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_local_edges.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_metric_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_nonce_swap_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_pdf_alignment.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_period_regression.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_position_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_private_publication.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_providers.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_real_coverage.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_real_evidence_adapter.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_report_rebuild.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_report_view.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_repository_audit.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_research.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_restore.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_retained_protocol_funding.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_api.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v032_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v033_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v034_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v035_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v036_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v037_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v038_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_review_v039_independent.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_source_consistency.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_source_role_matrix.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_storage.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_token_instruction_schema.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_validation_gates.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tests/test_wallet_evidence.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/archive_input.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/bounded_collection.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/browser_acceptance.py",
+      "local_mode": "0o700",
+      "native_git_mode": "0o755"
+    },
+    {
+      "path": "tools/browser_seed.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/check_genuine_collection.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/check_matrix.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/check_product.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/checkpoint_export.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/discovery_plan.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/guarded_launcher.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/product_browser.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/publish_private.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/repository_audit.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/source_probe_plan.py",
+      "local_mode": "0o600",
+      "native_git_mode": "0o644"
+    },
+    {
+      "path": "tools/validate.py",
+      "local_mode": "0o700",
+      "native_git_mode": "0o755"
+    }
+  ],
+  "mode_limitation": "Local manifest binds0600/0700 under restrictive umask; native Git stores0644/0755. Exact manifest hash replay needs recorded modes/umask restoration. Byte identity and Git executable identity are independently verified. No chmod or source change performed.",
+  "source_unchanged_before_after": true,
+  "lock_bindings": {
+    "requirements.txt": {
+      "candidate_sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+      "baseline_sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+    },
+    "requirements-build.in": {
+      "candidate_sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+      "baseline_sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e"
+    },
+    "pyproject.toml": {
+      "candidate_sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+      "baseline_sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598"
+    },
+    "frontend/package-lock.json": {
+      "candidate_sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+      "baseline_sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+    }
+  },
+  "matrix_requirements": 43,
+  "matrix_selectors": 101,
+  "all_selector_module_paths_present": true,
+  "focused_runner_includes_new_shared_modules": true,
+  "generic_subset_changes_since_review": {
+    "scanner/wallet_evidence.py": {
+      "review_sha256": "a3f7e766a5f790fb72d1fdecc3580d43e40cfad9a370496daf69df0c98d4d8cb",
+      "current_sha256": "b23f918831fd14d11a0fcad68f0abff81831f8ec925f883552af812776f01606"
+    }
+  },
+  "primary_native_idl": {
+    "path": "tests/fixtures/retained_protocol_funding/pump-native.json",
+    "bytes": 268716,
+    "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b",
+    "roles": {
+      "buy": {
+        "1": "fee_recipient",
+        "3": "bonding_curve",
+        "5": "associated_user",
+        "6": "user",
+        "9": "creator_vault"
+      },
+      "buy_exact_sol_in": {
+        "1": "fee_recipient",
+        "3": "bonding_curve",
+        "5": "associated_user",
+        "6": "user",
+        "9": "creator_vault"
+      },
+      "sell": {
+        "1": "fee_recipient",
+        "3": "bonding_curve",
+        "5": "associated_user",
+        "6": "user",
+        "8": "creator_vault"
+      }
+    },
+    "scope": "Pinned ABI recipient/direction only; unsigned controls do not authenticate chain records, prove event completeness or classify every native route"
+  },
+  "diff_check": {
+    "unmodified_full_exit": 2,
+    "raw_output": "tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md:25: trailing whitespace.\n+go to the creator as it normally would. \n",
+    "exact_primary_fixture_exception": "tests/fixtures/retained_protocol_funding/PUMP_CASHBACK_README.md:25",
+    "exception_original_bytes": 5566,
+    "exception_original_sha256": "fa0f8703b406b872309131754e33ddcd15f0a36426733e0d26f329293b3c48f6",
+    "all_other_source_diff_exit": 0
+  },
+  "review_helper_correction": "Initial helper wrongly asserted literal native-Git Unix mode equality and81 requirement objects; corrected to measured modes/executable parity and43 requirement objects/101 selector entries. Runtime matrix acceptance is separate. No application change; no initial failed assertion is treated as passing.",
+  "limitations": [
+    "Static exact source/Git/locks/selector/primary-fixture verification; not a full test suite or full Gate A/B3 acceptance."
+  ],
+  "matrix_selector_entries": 101,
+  "matrix_unique_selectors": 100
+}

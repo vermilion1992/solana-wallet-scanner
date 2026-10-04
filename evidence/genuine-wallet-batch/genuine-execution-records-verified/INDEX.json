@@ -1,0 +1,131 @@
+{
+  "kind": "final-offline-verified-index",
+  "application_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "application_source_sha256": "eeb6f51777dda142376b8220896ccd768fe2c08e693873fa6630e09ed063cced",
+  "source_files": 227,
+  "commands": [
+    {
+      "execution": "WORKFLOW",
+      "exit_code": 0,
+      "state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "source_unchanged": true,
+      "head_before": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "head_after": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "scoped_case_entries": 7,
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "parent_unchanged": true,
+      "command_record": "evidence/genuine-wallet-batch/genuine-execution-records-verified/WORKFLOW_COMMAND.json",
+      "command_record_sha256": "32552dc450aae85bdcb51c51a42eeccc79d70e5054f92d44d774007686b81756",
+      "summary": "evidence/genuine-wallet-batch/genuine-execution-records-verified/WORKFLOW_SUMMARY.json",
+      "summary_sha256": "89c36a1a73328fa4d8175d31773eb29710b76b29ff25928f50c7b92c780873d9",
+      "result": "evidence/genuine-wallet-batch/genuine-workflow-verified/result.json",
+      "result_sha256": "415b6734d5bf9a346e228604e3e55e6cdc21f98565208b14ddbea8432d0ed1d6"
+    },
+    {
+      "execution": "REAL_REQUIRED",
+      "exit_code": 2,
+      "state": "BLOCKED",
+      "source_unchanged": true,
+      "head_before": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "head_after": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "scoped_case_entries": 7,
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "parent_unchanged": true,
+      "command_record": "evidence/genuine-wallet-batch/genuine-execution-records-verified/REAL_REQUIRED_COMMAND.json",
+      "command_record_sha256": "a6221f1da95fe128cafb0b14aadc21eb94af26a43bfddcf651970aaea6cf3338",
+      "summary": "evidence/genuine-wallet-batch/genuine-execution-records-verified/REAL_REQUIRED_SUMMARY.json",
+      "summary_sha256": "419a4d495201e933003840050a71688bb49273ce94671d68aeedd5dcb069932d",
+      "result": "evidence/genuine-wallet-batch/genuine-real-required-verified/result.json",
+      "result_sha256": "8847951b8396a415e44446a62a2f5ceb2161bf5b11e356954224352c83849b01"
+    },
+    {
+      "execution": "PRODUCT_DEVELOPMENT",
+      "exit_code": 0,
+      "state": "DEVELOPMENT_PASS",
+      "source_unchanged": true,
+      "head_before": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "head_after": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "scoped_case_entries": 4,
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "parent_unchanged": true,
+      "command_record": "evidence/genuine-wallet-batch/genuine-execution-records-verified/PRODUCT_DEVELOPMENT_COMMAND.json",
+      "command_record_sha256": "be7a7bd63b1b29277645c299a554d07b009f81630c63c407a3bc30ab271bc99d",
+      "summary": "evidence/genuine-wallet-batch/genuine-execution-records-verified/PRODUCT_DEVELOPMENT_SUMMARY.json",
+      "summary_sha256": "63484b56413b7397520296b4556853db6b541bcfdb8379a9b87133e443ecabca",
+      "result": "evidence/genuine-wallet-batch/product-development-verified/result.json",
+      "result_sha256": "79ac26c0a10f2d2771e532113b5d6bc604c95db390b274292ad079287f4ebf0f"
+    },
+    {
+      "execution": "PRODUCT_REAL_REQUIRED",
+      "exit_code": 2,
+      "state": "BLOCKED",
+      "source_unchanged": true,
+      "head_before": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "head_after": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "scoped_case_entries": 4,
+      "provider_requests": 0,
+      "credential_lookups": 0,
+      "parent_unchanged": true,
+      "command_record": "evidence/genuine-wallet-batch/genuine-execution-records-verified/PRODUCT_REAL_REQUIRED_COMMAND.json",
+      "command_record_sha256": "412193d97de0836fc993dc082d6d481585c209234ba2d62be1efb2feb54ab2ff",
+      "summary": "evidence/genuine-wallet-batch/genuine-execution-records-verified/PRODUCT_REAL_REQUIRED_SUMMARY.json",
+      "summary_sha256": "1139bc4742b01ba124643e00801c9654018a7065fe41e5596c8f96fca0c924ad",
+      "result": "evidence/genuine-wallet-batch/product-real-required-verified/result.json",
+      "result_sha256": "5dd2bef5ff67c95d27dd2af862b3d457a8398b50839954ac4958adff387f6ddf"
+    }
+  ],
+  "input_identities": {
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "bytes": 156832
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7",
+      "bytes": 2783
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "bytes": 177454
+    }
+  },
+  "genuine_arithmetic": {
+    "selected_in_window_wallet_paid_fee_sol": "0.000158868",
+    "supported_named_lot": {
+      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+      "quantity_acquired_and_disposed_raw": "516612982765",
+      "basis_lamports": "565194018",
+      "net_exit_lamports": "551923094",
+      "profit_sol": "-0.013270924",
+      "hold_seconds": 529
+    }
+  },
+  "genuine_query_coverage": {
+    "records": 87,
+    "report_period": "PASS",
+    "four_weeks": "PASS",
+    "verification_90d": "PASS",
+    "historical_population": "UNKNOWN",
+    "format_population": "UNKNOWN"
+  },
+  "scope": "Seven genuine scenario entries/eight report builds per replay, and four development scenario entries per replay. Repeated executions overlap, and these scenarios are not unique pytest nodes.",
+  "oracle_scope": "Independently frozen raw calculations, retained unmodified; named-account lot remains conditional and cannot qualify wallet-wide profit.",
+  "source_required_removal_restoration": "PASS; selected fee and independently frozen buy/sell source controls",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "parent_immutability": "PASS",
+  "source_unchanged": "PASS",
+  "source_edits_in_execution_batch": false,
+  "real_acceptance": "BLOCKED",
+  "PRODUCT_READY": false,
+  "controller_log": {
+    "path": "evidence/genuine-wallet-batch/genuine-execution-records-verified/CONTROLLER.log",
+    "sha256": "e82c9e140427e062cecaec8f7c4ba3817b9ae09151fb693459adb0f034258a2e"
+  },
+  "runner": {
+    "path": "evidence/genuine-wallet-batch/VERIFY_FINAL_OFFLINE.py",
+    "sha256": "8037747714091dd19728db66f0dc6400568ab3aed9672507003ce8010c82503d"
+  }
+}

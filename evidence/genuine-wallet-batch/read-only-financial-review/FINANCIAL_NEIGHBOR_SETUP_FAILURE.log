@@ -1,0 +1,2 @@
+Review script setup failure before any application replay: the independent oracle stores lamports as Fraction numerator/denominator objects. The first review assertion incorrectly compared that object with a string; corrected the review script to use the frozen Fraction representation. This is a review-tool setup failure, not an application defect.
+AssertionError at FINANCIAL_NEIGHBOR_REPLAY.py line28: oracle[conditional_lot_profit_lamports] == -13270924 string

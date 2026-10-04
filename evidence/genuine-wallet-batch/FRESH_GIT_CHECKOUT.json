@@ -1,0 +1,13 @@
+{
+  "kind": "fresh-git-checkout-source-verification",
+  "application_commit": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+  "file_count": 224,
+  "source_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+  "expected_source_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+  "byte_hashes_equal": true,
+  "modes_equal": true,
+  "state": "PASS",
+  "genuine_input_available": true,
+  "initial_tar_limitation": "Git tar archive default permissions differ from normal checkout. Original failed mode comparison retained separately; byte hashes were identical. No application/source change.",
+  "no_acceptance_rerun": true
+}

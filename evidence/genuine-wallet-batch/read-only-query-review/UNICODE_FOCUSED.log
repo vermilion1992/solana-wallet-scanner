@@ -1,0 +1,31 @@
+....F..                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-351/test_malformed_unicode_page_ke0')
+
+    def test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence(tmp_path):
+        raw = native(slot=111_491_820)
+        bad = native('development-unicode-sibling', slot=111_491_821, at=START + 4000)
+        edge, _ = unicode_source([raw, bad], value='\ud800', ordinal=1)
+        store = Store(tmp_path)
+        manifest_hash = import_archive(store, pack_bytes(archived_query_bundle(raw, [edge])))
+        loaded, report, receipt = archive_assessment(store, manifest_hash)
+        linked = next(row for row in loaded['all_records'] if row['evidence_hash'] == edge['hash'])
+        assert linked['raw'] == raw
+        # Whole-page chronology is rejected, so report-window projection remains
+        # unknown. The valid sibling's independently supported native fee survives.
+>       assert receipt['components']['native_fee']['state'] == 'PASS'
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'components'
+
+tests/test_real_coverage.py:89: KeyError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_real_coverage.py::test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence
+1 failed, 6 passed, 55 deselected, 1 warning in 1.88s

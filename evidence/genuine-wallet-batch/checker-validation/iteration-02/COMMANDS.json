@@ -1,0 +1,40 @@
+{
+  "kind": "checker-focused-development-validation",
+  "state": "PASS",
+  "commands": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_genuine_collection_workflow.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "reported_pytest_nodes": 31,
+      "log": "genuine-workflow-selected-lot-controls.log",
+      "log_sha256": "4b082dcb394c1ebdf263f09aac7c0a757d5e494a1c66043ef797dea5ff014b84",
+      "bytes": 660,
+      "scope": "Development checker contracts only; runs overlap and counts are not additive; not genuine B3 or application acceptance."
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_genuine_collection_workflow.py",
+      "exit_code": 0,
+      "state": "PASS",
+      "reported_pytest_nodes": 36,
+      "log": "genuine-workflow-mathematical-acceptance.log",
+      "log_sha256": "d50e3a4283d48389090622373575a288d7fe7ceb3b3056f28b49e8a3767b34cf",
+      "bytes": 660,
+      "scope": "Development checker contracts only; runs overlap and counts are not additive; not genuine B3 or application acceptance."
+    }
+  ],
+  "source_files": {
+    "tools/check_genuine_collection.py": {
+      "sha256": "14ff5d40e4ff52b14b4295a6cc3ad7187608e1c248921530da4d0c9e2f1e0543",
+      "bytes": 52423
+    },
+    "tests/test_genuine_collection_workflow.py": {
+      "sha256": "2e0f2f0010c1a6886b9a0a10c1c27a2c5fc911a77d8e26fc19bdf3da2922bfab",
+      "bytes": 30253
+    }
+  },
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "genuine_replay_executed": false,
+  "source_scope": "Checker-owned source only; no claim about whole-candidate source freeze."
+}

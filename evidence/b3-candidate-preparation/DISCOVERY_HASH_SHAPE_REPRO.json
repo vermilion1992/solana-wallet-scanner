@@ -1,0 +1,22 @@
+[
+  {
+    "field": "transaction_evidence_hash",
+    "malformed": [],
+    "result": "TypeError: unhashable type: 'list'"
+  },
+  {
+    "field": "transaction_evidence_hash",
+    "malformed": {},
+    "result": "TypeError: unhashable type: 'dict'"
+  },
+  {
+    "field": "account_evidence_hash",
+    "malformed": [],
+    "result": "TypeError: unhashable type: 'list'"
+  },
+  {
+    "field": "account_evidence_hash",
+    "malformed": {},
+    "result": "TypeError: unhashable type: 'dict'"
+  }
+]

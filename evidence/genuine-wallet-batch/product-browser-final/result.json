@@ -1,0 +1,232 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "3d4ee0e8915948fd8381b89f568327f1"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    },
+    {
+      "case": "indexed-partial-ui-import-inspection-immutable-rebuild",
+      "state": "PASS",
+      "source_archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "expected_selected_fees_sol": "0.000158868",
+      "parent_unchanged": true,
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "assertion_timeout_ms": 120000,
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "browser_report_transfers": [
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 2825
+    },
+    {
+      "path": "/api/reports/3d4ee0e8915948fd8381b89f568327f1?view=display",
+      "status": 200,
+      "bytes": 660978
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 37949
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 74469
+    },
+    {
+      "path": "/api/reports/92be3e7a39344ae6936812a7da1fdf2f?view=display",
+      "status": 200,
+      "bytes": 664777
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 109174
+    },
+    {
+      "path": "/api/reports/2f0998558b1142b7aeedb364d34b39fa?view=display",
+      "status": 200,
+      "bytes": 661473
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 190529
+    },
+    {
+      "path": "/api/reports/8a5cf50022f340a39ae1f02c2a77a455?view=display",
+      "status": 200,
+      "bytes": 716766
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 225234
+    },
+    {
+      "path": "/api/reports/44188c0702aa4b579a11a8ae074ae095?view=display",
+      "status": 200,
+      "bytes": 661473
+    },
+    {
+      "path": "/api/reports/8d8804abe7ff4c15b7238e6753e99817?view=display",
+      "status": 200,
+      "bytes": 1870536
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 379806
+    },
+    {
+      "path": "/api/reports/03e907f50d344fb5ba315095f6531e98?view=display",
+      "status": 200,
+      "bytes": 6159471
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 790881
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 1201538
+    },
+    {
+      "path": "/api/reports/fc32a69757fa4c449f3f2f7131a1aba3?view=display",
+      "status": 200,
+      "bytes": 6159966
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "272b6310d8ecc3b5b3f4b5537701f96e8ec7c0821ba46421a1f09403826404b8",
+    "indexed-partial-parent.json": "c38eaf1d63fe97dc1eebfeba76cfd1b42372cc545b68938465c09c1cc07c19f0",
+    "indexed-partial-rebuilt-mobile.png": "31d814e590015ca31d8b7747578dca0b3ab466fceebc34c9b05f3717cb25ee54",
+    "world_hash-missing-report.json": "2262ba249493bd07babfb1e02f51b7e0fe60b1bfe2b3fd04a98d049792a661e8",
+    "indexed-partial-rebuilt-desktop.png": "6af2ef156cc1f1760d46aafcd6febafd876d472e58604b27a4ccd318b75c3c2e",
+    "world_hash-missing-desktop.png": "9301de786b494a01b77062870345c6f6ec153205f4053c3d28880eb352d5c8fa",
+    "synthetic-parent.json": "10e201c0a7fc956f361fc739068395a839776da66bb10e5982dffc9428014fed",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "26c8a22e98a289e5d45720c7c4118e39cf5e914a88c800decca2b1bd62c92310",
+    "world_hash-restored-report.json": "0d633081ac1dc6d5b35438e3db7924b8e936a6337786d80ec496b27f2128d91d",
+    "synthetic-positive-desktop.png": "53a7a38ff172a1efada8ae744d309b587c8df24300ce87a0a7b6a2872d8ccfbe",
+    "world_hash-restored-desktop.png": "80f2a0e085e1f5baff9e846bb47601dd5a50b378742154ddacb432fcbc53284c",
+    "synthetic-input.zip": "37c1cc63cce26502955f77607eccc48b9de2a656c7e29ac546b835f3b86aae70",
+    "valuation_hash-missing-mobile.png": "75841315c8f45c08db3ab9950bef18d507a7cadd5e03292da6f9c5125bb364eb",
+    "indexed-partial-desktop.png": "e668203a1fff2b7ccea6332ff6db1a0f7ebcac5aec6d282004a971bf4ec6541d",
+    "world_hash-restored-mobile.png": "6dff3c3ac87adf11802b69b7a357455932bd7a250fc6f1b6cff438dec8e2b888",
+    "valuation_hash-missing-desktop.png": "3aabc96e7eb2c37bf1659de72ff22ef356178adf8fd324abdd7c546f51aa1499",
+    "valuation_hash-restored-mobile.png": "89e98452c1aead9d04778035e7f4b398878539ec4c99d0cd61afc67aa5f24c8b",
+    "synthetic-positive-mobile.png": "c8b5614e75daf532fc4968e0886c07d28566595837b128f0618bb0b1f56f8f13",
+    "valuation_hash-restored-desktop.png": "d9611b3a5c36995ee15e9bbeb34f18ab55f58eced90d2083151f5d09c350692b",
+    "valuation_hash-missing-report.json": "67a2f6f45310248161a775f1029135b67aaa1ae2ef47822e5e974f1e6584a176",
+    "synthetic-ui-export.json": "10e201c0a7fc956f361fc739068395a839776da66bb10e5982dffc9428014fed",
+    "world_hash-missing-mobile.png": "e0e0b542026585a06fced6d88ddfa7deff15c4f0f80b7465deeea42591d7f875",
+    "valuation_hash-restored-report.json": "a58c0bc712a0b3a16a74446f8f6d730709d8c4313480afb80c248ab4f7b07b0e",
+    "indexed-input.zip": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "genuine-partial-desktop.png": "cad0ff36589f60cfa1b3fdb27f1f125d277d2c10af723836b88199464377eeb0",
+    "indexed-partial-mobile.png": "54c3f69cbf2a0eb3f021655b52a03b7c8f58a1ebcb0d50661813eb6ffe62b759",
+    "indexed-partial-child.json": "774be6e61305916729cd26b77c42e896b9e42f9d7059c265e2967d59f77e604d",
+    "genuine-partial-report.json": "4c24c12115d1430901ee8ed16ef744fccaf1d86c3b862e5316001918d7405f01"
+  }
+}

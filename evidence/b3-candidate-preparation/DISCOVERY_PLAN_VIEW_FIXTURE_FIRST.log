@@ -1,0 +1,184 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs[changes0] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40fb361580>, <fastapi.applications.FastAPI object at 0x7f40fb45ae70>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_full_summary_and_cohort_g0/data'))
+changes = {}
+
+    @pytest.mark.parametrize('changes', [{}, {'evidence_status': 'partial'}, {'methodology': 'fifo-v1'}])
+    def test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs(session, changes):
+        client, app, _ = session
+        cohort, hashes = identity_cohort(app.state.store)
+        original = saved_report(app.state.store, hashes['native'], **changes)
+        before = json.dumps(app.state.store.get('reports', original['id']), sort_keys=True)
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        direct = client.get('/api/discovery/' + cohort['id']).json()
+        plans = [state['discovery_cohorts'][0]['audit_plan'] for state in (full, summary)] + [direct['audit_plan']]
+        assert plans[0] == plans[1] == plans[2]
+        row = plans[0]['research_order'][0]
+        displayed = client.get('/api/reports/' + original['id']).json()
+        assert row['saved_qualification']['qualified'] == displayed['qualification']['qualified']
+        assert row['saved_qualification']['unknown_checks'] == displayed['qualification']['unknown_checks']
+        assert row['copy_review'] == displayed['copy_review']
+>       assert row['identity_state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_discovery_plan_views.py:47: AssertionError
+_ test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs[changes1] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40faa64f50>, <fastapi.applications.FastAPI object at 0x7f40faa67470>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_full_summary_and_cohort_g1/data'))
+changes = {'evidence_status': 'partial'}
+
+    @pytest.mark.parametrize('changes', [{}, {'evidence_status': 'partial'}, {'methodology': 'fifo-v1'}])
+    def test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs(session, changes):
+        client, app, _ = session
+        cohort, hashes = identity_cohort(app.state.store)
+        original = saved_report(app.state.store, hashes['native'], **changes)
+        before = json.dumps(app.state.store.get('reports', original['id']), sort_keys=True)
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        direct = client.get('/api/discovery/' + cohort['id']).json()
+        plans = [state['discovery_cohorts'][0]['audit_plan'] for state in (full, summary)] + [direct['audit_plan']]
+        assert plans[0] == plans[1] == plans[2]
+        row = plans[0]['research_order'][0]
+        displayed = client.get('/api/reports/' + original['id']).json()
+        assert row['saved_qualification']['qualified'] == displayed['qualification']['qualified']
+        assert row['saved_qualification']['unknown_checks'] == displayed['qualification']['unknown_checks']
+        assert row['copy_review'] == displayed['copy_review']
+>       assert row['identity_state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_discovery_plan_views.py:47: AssertionError
+_ test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs[changes2] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40fa931b50>, <fastapi.applications.FastAPI object at 0x7f40fa9329f0>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_full_summary_and_cohort_g2/data'))
+changes = {'methodology': 'fifo-v1'}
+
+    @pytest.mark.parametrize('changes', [{}, {'evidence_status': 'partial'}, {'methodology': 'fifo-v1'}])
+    def test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs(session, changes):
+        client, app, _ = session
+        cohort, hashes = identity_cohort(app.state.store)
+        original = saved_report(app.state.store, hashes['native'], **changes)
+        before = json.dumps(app.state.store.get('reports', original['id']), sort_keys=True)
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        direct = client.get('/api/discovery/' + cohort['id']).json()
+        plans = [state['discovery_cohorts'][0]['audit_plan'] for state in (full, summary)] + [direct['audit_plan']]
+        assert plans[0] == plans[1] == plans[2]
+        row = plans[0]['research_order'][0]
+        displayed = client.get('/api/reports/' + original['id']).json()
+        assert row['saved_qualification']['qualified'] == displayed['qualification']['qualified']
+        assert row['saved_qualification']['unknown_checks'] == displayed['qualification']['unknown_checks']
+        assert row['copy_review'] == displayed['copy_review']
+>       assert row['identity_state'] == 'PASS'
+E       AssertionError: assert 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN
+
+tests/test_discovery_plan_views.py:47: AssertionError
+_ test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[native] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40fa932960>, <fastapi.applications.FastAPI object at 0x7f40fa9308f0>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_required_identity_source_0/data'))
+role = 'native'
+
+    @pytest.mark.parametrize('role', ['native', 'account', 'pools', 'trades'])
+    def test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline(session, role):
+        client, app, directory = session
+        cohort, hashes = identity_cohort(app.state.store)
+        initial = client.get('/api/state?report_view=summary').json()
+>       assert initial['discovery_cohorts'][0]['audit_plan']['selected_addresses'] == [WALLET]
+E       AssertionError: assert [] == ['11111111111...111111111115']
+E         
+E         Right contains one more item: '11111111111111111111111111111115'
+E         Use -v to get more diff
+
+tests/test_discovery_plan_views.py:58: AssertionError
+_ test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[account] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40fa991160>, <fastapi.applications.FastAPI object at 0x7f40fa989010>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_required_identity_source_1/data'))
+role = 'account'
+
+    @pytest.mark.parametrize('role', ['native', 'account', 'pools', 'trades'])
+    def test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline(session, role):
+        client, app, directory = session
+        cohort, hashes = identity_cohort(app.state.store)
+        initial = client.get('/api/state?report_view=summary').json()
+>       assert initial['discovery_cohorts'][0]['audit_plan']['selected_addresses'] == [WALLET]
+E       AssertionError: assert [] == ['11111111111...111111111115']
+E         
+E         Right contains one more item: '11111111111111111111111111111115'
+E         Use -v to get more diff
+
+tests/test_discovery_plan_views.py:58: AssertionError
+_ test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[pools] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40faa97500>, <fastapi.applications.FastAPI object at 0x7f40fb3cf3b0>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_required_identity_source_2/data'))
+role = 'pools'
+
+    @pytest.mark.parametrize('role', ['native', 'account', 'pools', 'trades'])
+    def test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline(session, role):
+        client, app, directory = session
+        cohort, hashes = identity_cohort(app.state.store)
+        initial = client.get('/api/state?report_view=summary').json()
+>       assert initial['discovery_cohorts'][0]['audit_plan']['selected_addresses'] == [WALLET]
+E       AssertionError: assert [] == ['11111111111...111111111115']
+E         
+E         Right contains one more item: '11111111111111111111111111111115'
+E         Use -v to get more diff
+
+tests/test_discovery_plan_views.py:58: AssertionError
+_ test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[trades] _
+
+session = (<starlette.testclient.TestClient object at 0x7f40faa668a0>, <fastapi.applications.FastAPI object at 0x7f40faa65100>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_required_identity_source_3/data'))
+role = 'trades'
+
+    @pytest.mark.parametrize('role', ['native', 'account', 'pools', 'trades'])
+    def test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline(session, role):
+        client, app, directory = session
+        cohort, hashes = identity_cohort(app.state.store)
+        initial = client.get('/api/state?report_view=summary').json()
+>       assert initial['discovery_cohorts'][0]['audit_plan']['selected_addresses'] == [WALLET]
+E       AssertionError: assert [] == ['11111111111...111111111115']
+E         
+E         Right contains one more item: '11111111111111111111111111111115'
+E         Use -v to get more diff
+
+tests/test_discovery_plan_views.py:58: AssertionError
+_ test_positive_cohort_flags_do_not_replace_sources_and_default_partial_audits_remain_deferred _
+
+session = (<starlette.testclient.TestClient object at 0x7f40fa8efaa0>, <fastapi.applications.FastAPI object at 0x7f40fa81dbb0>, PosixPath('/tmp/pytest-of-agent/pytest-293/test_positive_cohort_flags_do_0/data'))
+
+    def test_positive_cohort_flags_do_not_replace_sources_and_default_partial_audits_remain_deferred(session):
+        client, app, _ = session
+        cohort, hashes = identity_cohort(app.state.store)
+        saved_report(app.state.store, hashes['native'], evidence_status='partial')
+        plan = client.get('/api/state?report_view=summary').json()['discovery_cohorts'][0]['audit_plan']
+>       assert plan['selected_addresses'] == [] and plan['deferred'][0]['action'] == 'resolve_report_dependencies'
+                                                    ^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_discovery_plan_views.py:79: IndexError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_discovery_plan_views.py::test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs[changes0]
+FAILED tests/test_discovery_plan_views.py::test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs[changes1]
+FAILED tests/test_discovery_plan_views.py::test_full_summary_and_cohort_get_plan_decisions_use_same_preprojection_source_inputs[changes2]
+FAILED tests/test_discovery_plan_views.py::test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[native]
+FAILED tests/test_discovery_plan_views.py::test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[account]
+FAILED tests/test_discovery_plan_views.py::test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[pools]
+FAILED tests/test_discovery_plan_views.py::test_required_identity_source_loss_revokes_plan_and_explicit_audit_then_restores_offline[trades]
+FAILED tests/test_discovery_plan_views.py::test_positive_cohort_flags_do_not_replace_sources_and_default_partial_audits_remain_deferred
+8 failed, 1 warning in 0.46s

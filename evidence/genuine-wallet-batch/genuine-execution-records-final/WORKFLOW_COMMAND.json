@@ -1,0 +1,42 @@
+{
+  "kind": "genuine-offline-final-candidate-execution",
+  "argv": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "tools/check_genuine_collection.py",
+    "--input",
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "--input-freeze",
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+    "--worked-expectations",
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+    "--output",
+    "evidence/genuine-wallet-batch/genuine-workflow-final"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "start": "2026-10-04T06:54:22.790447+00:00",
+  "end": "2026-10-04T06:56:16.457407+00:00",
+  "exit_code": 0,
+  "source_before_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+  "source_after_sha256": "7b7c55175a600d12b65ffc53a5fa96adde8d225c23b730b28fa69044b3a03755",
+  "source_unchanged": true,
+  "head_before": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+  "head_after": "f9756b56326c21826fc8e93a13fc57748cbba2c6",
+  "log": "genuine-full-workflow-final.log",
+  "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+  "log_bytes": 273,
+  "input_identities": {
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "bytes": 156832
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7",
+      "bytes": 2783
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "bytes": 177454
+    }
+  },
+  "scope": "Genuine normal workflow; real acceptance separate"
+}

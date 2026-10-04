@@ -1,0 +1,58 @@
+F...F..                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies[valid-unicode-page] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-350/test_unicode_raw_preimage_load0')
+native_source = False, value = 'λ'
+
+    @pytest.mark.parametrize('native_source', [False, True], ids=['page', 'native'])
+    @pytest.mark.parametrize('value', ['λ', '\ud800'], ids=['valid-unicode', 'malformed-surrogate'])
+    def test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies(tmp_path, native_source, value):
+        from scanner.indexed_input import source_bytes
+        from scanner.wallet_evidence import _selected_lot_observations
+        raw = native(slot=111_491_820)
+        edge, original = unicode_source([raw], native_source=native_source, value=value)
+        good = source([raw])
+        value_bundle = archived_query_bundle(raw, [good, edge])
+        store = Store(tmp_path)
+        manifest_hash = import_archive(store, pack_bytes(value_bundle))
+        loaded, parent, receipt = archive_assessment(store, manifest_hash)
+        assert source_bytes(store.evidence(edge['hash']))['response'] == original
+        assert _selected_lot_observations([], {}, {}, {}, {}, [], [], [edge], WALLET) == []
+        fee = parent['metrics']['observed_network_fees_sol']
+        if value == 'λ':
+            assert fee['status'] == 'known' and fee['value'] == '0.000005'
+>           assert receipt['query_coverage']['intervals']['report_period']['supported_record_state'] == 'PASS'
+E           AssertionError: assert 'UNKNOWN' == 'PASS'
+E             
+E             - PASS
+E             + UNKNOWN
+
+tests/test_real_coverage.py:58: AssertionError
+_ test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-350/test_malformed_unicode_page_ke0')
+
+    def test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence(tmp_path):
+        raw = native(slot=111_491_820)
+        bad = native('development-unicode-sibling', slot=111_491_821, at=START + 4000)
+        edge, _ = unicode_source([raw, bad], value='\ud800', ordinal=1)
+        store = Store(tmp_path)
+        manifest_hash = import_archive(store, pack_bytes(archived_query_bundle(raw, [edge])))
+        loaded, report, receipt = archive_assessment(store, manifest_hash)
+        linked = next(row for row in loaded['all_records'] if row['evidence_hash'] == edge['hash'])
+        assert linked['raw'] == raw
+>       assert report['metrics']['observed_network_fees_sol']['value'] == '0.000005'
+E       AssertionError: assert None == '0.000005'
+
+tests/test_real_coverage.py:87: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_real_coverage.py::test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies[valid-unicode-page]
+FAILED tests/test_real_coverage.py::test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence
+2 failed, 5 passed, 55 deselected, 1 warning in 2.00s

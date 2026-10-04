@@ -1,0 +1,40 @@
+{
+  "state": "DEVELOPMENT_PASS",
+  "command_exit": 0,
+  "cases": [
+    {
+      "case": "synthetic-positive-normal-report",
+      "state": "PASS"
+    },
+    {
+      "case": "valuation_hash-loss-and-exact-restoration",
+      "state": "PASS"
+    },
+    {
+      "case": "world_hash-loss-and-exact-restoration",
+      "state": "PASS"
+    },
+    {
+      "case": "genuine-selected-23-records",
+      "state": "PASS"
+    }
+  ],
+  "scoped_case_entries": 4,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "parent_unchanged": true,
+  "result": "evidence/genuine-wallet-batch/product-development-verified/result.json",
+  "result_sha256": "79ac26c0a10f2d2771e532113b5d6bc604c95db390b274292ad079287f4ebf0f",
+  "real_acceptance": {
+    "state": "BLOCKED",
+    "reason": "No independently supported genuine complete-wallet population/basis/classification/valuation corpus is present."
+  },
+  "source_unchanged": true,
+  "candidate_application_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+  "application_source_sha256": "eeb6f51777dda142376b8220896ccd768fe2c08e693873fa6630e09ed063cced",
+  "count_scope": "Replay scenarios overlap earlier executions and each other; not additional unique tests.",
+  "development": {
+    "state": "PASS",
+    "scope": "Executed normal offline app workflow with synthetic development and separately labelled partial real input"
+  }
+}

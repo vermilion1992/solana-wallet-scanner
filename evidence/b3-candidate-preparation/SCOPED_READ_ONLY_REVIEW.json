@@ -1,0 +1,130 @@
+{
+  "additional_confirmed_defects": [],
+  "branch": "codex/product-completion",
+  "checks": [
+    {
+      "finding": "All planner app/CLI calls use preprojection SQL semantic saved-report inputs; presentation summaries are explicitly rejected by planner. Full and summary GET plans preserve qualification and copy-review results.",
+      "name": "semantic_projection_inputs",
+      "state": "PASS"
+    },
+    {
+      "finding": "Primary identities require checksum-matching native/account/pool/trade bytes. Candidate/cohort linked digests are scanned independent of role; malformed, missing and conflicting association records retain UNKNOWN dependencies. Restoring exact bytes restores the supported plan.",
+      "name": "frozen_source_replay",
+      "state": "PASS"
+    },
+    {
+      "finding": "Only new identity-supported audit_wallet rows default to provider auditing. Current partial/stale/filter/policy/review reports are deferred. Manual backend and frontend selection are intersected with current source-supported identities; unsupported source loss revokes selection.",
+      "name": "default_vs_manual_selection",
+      "state": "PASS"
+    },
+    {
+      "finding": "GET planning replays stored source/report bytes with no provider, credential or reserve calls. CLI opens SQLite mode=ro and query_only. Existing report/cohort records, usage and frozen evidence remain unchanged in applicable controls.",
+      "name": "offline_readonly",
+      "state": "PASS"
+    },
+    {
+      "finding": "Pinned external provider API reference admits json/default-json and jsonParsed exact bytes. Effective encoding binds cursor scope. base64/base58 or malformed encodings retain explicit unsupported dependencies; no invented decoder or historical PASS.",
+      "name": "json_encoding_contract",
+      "state": "PASS"
+    }
+  ],
+  "executed_checks_this_agent": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_discovery_plan_views.py",
+      "exit_code": 0,
+      "ordinary_nodes": 13,
+      "raw_log": "evidence/b3-candidate-preparation/DISCOVERY_PLAN_VIEW_BOUNDARIES_FINAL.log",
+      "subtests": 0
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_indexed_input.py tests/test_indexed_chronology.py tests/test_indexed_report_integration.py",
+      "elapsed_seconds": 73.27,
+      "exit_code": 0,
+      "ordinary_nodes": 117,
+      "raw_log": "evidence/b3-candidate-preparation/INDEXED_ENCODING_CONTROLS.log",
+      "subtests": 0
+    }
+  ],
+  "head_before_pending_batch_commit": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "historical_confirmed_findings_resolved_in_current_source": [
+    {
+      "description": "Planning from presentation summary omitted qualification/archive/copy-review inputs; fixed by semantic preprojection callers and explicit rejection.",
+      "evidence": "tests/test_discovery_plan_views.py",
+      "id": "DISCOVERY-PROJECTION"
+    },
+    {
+      "description": "Wrong-role and candidate-only native alternatives lost contradiction dependencies; fixed by byte-derived association scanning independent of label.",
+      "evidence": "evidence/b3-candidate-preparation/DISCOVERY_LINKED_SOURCE_REPRO.json",
+      "id": "DISCOVERY-ALTERNATIVE-SCOPE"
+    },
+    {
+      "description": "List/dict primary evidence digests caused TypeError instead of UNKNOWN; fixed by type/format checks before set membership.",
+      "evidence": "evidence/b3-candidate-preparation/DISCOVERY_HASH_SHAPE_REPRO.json",
+      "id": "DISCOVERY-DIGEST-TYPE"
+    },
+    {
+      "description": "Malformed saved UNKNOWN check key caused AttributeError; fixed by string guard.",
+      "evidence": "evidence/b3-candidate-preparation/DISCOVERY_REPORT_CHECK_REPRO.json",
+      "id": "DISCOVERY-CHECK-KEY"
+    },
+    {
+      "description": "Stale frontend manual selection retained rows after identity evidence loss; fixed by current eligible intersection.",
+      "id": "DISCOVERY-MANUAL-SOURCE-LOSS"
+    }
+  ],
+  "kind": "distinct-scoped-read-only-review",
+  "limitations": [
+    "Review is a separate read-only phase of a collaborating developer agent, not an external independent reviewer.",
+    "The same agent authored the retained API boundary controls and the narrow indexed encoding correction; peer review and root full gates remain separately required.",
+    "No full acceptance suite or browser workflow was re-executed by this agent in this scope.",
+    "Development fixtures test interface correctness and do not close B3 or establish genuine complete wallet accounting.",
+    "No live provider request or credential use was performed by this agent; provider contract support is distinct from empirical historical coverage.",
+    "PRODUCT_READY remains false."
+  ],
+  "review_state": "PASS_WITH_DECLARED_SCOPE",
+  "reviewer": "Codex delegated agent indexed_adapter_trace",
+  "scope": "Evidence-linked discovery audit planning, current app/CLI callers, optional summary/full semantics, frontend default and manual selection, and narrow documented JSON indexed encoding admission.",
+  "source_binding": {
+    "frontend/scripts/check-discovery.mjs": {
+      "bytes": 62620,
+      "sha256": "1adf50029b128d35a874ceb423c0c5e855a633ae25a25cfea440c3bacdba241c"
+    },
+    "frontend/src/Discovery.tsx": {
+      "bytes": 39015,
+      "sha256": "b9911feaa4e5a8305c07a02f34b9eaf6fa2c19b9203ec4d47751cdd29c8cb12b"
+    },
+    "frontend/src/types.ts": {
+      "bytes": 13407,
+      "sha256": "7155061670c3e91ee73a9c2d80bde4cb7e4e8d4ab3d162ea0dcd32d3171ede18"
+    },
+    "scanner/app.py": {
+      "bytes": 73359,
+      "sha256": "1d86d1c0c24714a404dd82a186a56dba96e5df2936d8b860ecd64eeb4f987641"
+    },
+    "scanner/discovery.py": {
+      "bytes": 57114,
+      "sha256": "1afb378a174d986cf99ab4d474bfc56e7319784b2742084376463d60cccda19e"
+    },
+    "scanner/indexed_input.py": {
+      "bytes": 37108,
+      "sha256": "12ef4613f765df618fc23567d5176ce7a4f355b258baead1b65f27a3b24cad4d"
+    },
+    "tests/test_discovery_audit_plan.py": {
+      "bytes": 22608,
+      "sha256": "16f187ba5b0006204c7975359c793864160f198ed5010376ec60a5393746398c"
+    },
+    "tests/test_discovery_plan_views.py": {
+      "bytes": 9581,
+      "sha256": "151f1cd6855f6e97776dedc1ef9eb6dc0f3170b6b9af1270f7a3069a3d3792b7"
+    },
+    "tests/test_indexed_input.py": {
+      "bytes": 35248,
+      "sha256": "9956228a0c917914ba7a535eb7c864dac61f439199099e0c4d94f4a329b6f1ae"
+    },
+    "tools/discovery_plan.py": {
+      "bytes": 2857,
+      "sha256": "d455b742dd8806ca67c5e20a79a9781d0c57110fbebe5af94dd52f9efca100ac"
+    }
+  },
+  "timestamp_utc": "2026-10-04T06:09:42.722545+00:00"
+}

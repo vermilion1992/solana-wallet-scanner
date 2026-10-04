@@ -1,0 +1,91 @@
+{
+  "kind": "distinct-read-only-current-preview-freshness-review",
+  "state": "PASS_NONDEFECT",
+  "source_subset": {
+    "scanner/app.py": "10bbba2d3184da21bf7914e262e8d76a83877ec580b7fd1236b66459b0eb5c2a"
+  },
+  "cases": [
+    {
+      "view": "full",
+      "preset": {},
+      "assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "state": "PASS"
+    },
+    {
+      "view": "summary",
+      "preset": {},
+      "assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "state": "PASS"
+    },
+    {
+      "view": "full",
+      "preset": {
+        "window_days": 28
+      },
+      "assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "state": "PASS"
+    },
+    {
+      "view": "summary",
+      "preset": {
+        "window_days": 28
+      },
+      "assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "state": "PASS"
+    },
+    {
+      "view": "full",
+      "preset": {
+        "verification_days": 60
+      },
+      "assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "state": "PASS"
+    },
+    {
+      "view": "summary",
+      "preset": {
+        "verification_days": 60
+      },
+      "assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "state": "PASS"
+    }
+  ],
+  "preview_decorates_before_setting_preview_flag": true,
+  "saved_payload_unchanged": true,
+  "calls": {
+    "provider": 0,
+    "credential": 0,
+    "transport": 0
+  },
+  "scope": "Six development API diagnostics, not unique backend nodes, genuine financial expectations or whole-wallet acceptance. Private runtime outside Git."
+}

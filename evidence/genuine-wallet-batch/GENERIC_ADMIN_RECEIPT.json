@@ -1,0 +1,123 @@
+{
+  "scope": "Generic administration development checks only, no new application acceptance/B3 completion",
+  "source": {
+    "path": "scanner/decoder.py",
+    "sha256": "860a9b7982aba288b36db9feaa62fdd00c075e6739a87fb66477f3cdfcf246eb"
+  },
+  "tests": {
+    "path": "tests/test_generic_administration.py",
+    "sha256": "c391dfe88ae988952d95a7b6adee5fc8e33b62f4d85169d0175eaff737d43338",
+    "collected_unique_nodes": 72
+  },
+  "executions": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_generic_administration.py"
+      ],
+      "exit": 1,
+      "passed": 55,
+      "failed": 1,
+      "log": "evidence/genuine-wallet-batch/GENERIC_ADMIN_INITIAL.log",
+      "reason": "Initial genuine full-raw population assertion90 was wrong; physical raw count109 confirmed independently. Source controls preserved, assertion corrected; saved report fallback90 retained as distinct baseline population."
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_generic_administration.py",
+        "tests/test_decoder.py",
+        "tests/test_compiled_getter.py",
+        "tests/test_compiled_instructions.py",
+        "tests/test_compiled_report_integration.py",
+        "tests/test_instruction_scope.py"
+      ],
+      "exit": 4,
+      "passed": 0,
+      "log": "evidence/genuine-wallet-batch/GENERIC_ADMIN_FOCUSED.log",
+      "reason": "Misspelled nonexistent test module; no tests executed."
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_generic_administration.py",
+        "tests/test_decoder.py",
+        "tests/test_compiled_getter.py",
+        "tests/test_compiled_instructions.py",
+        "tests/test_compiled_report_integration.py",
+        "tests/test_instruction_contract_matrix.py",
+        "tests/test_token_instruction_schema.py"
+      ],
+      "exit": 0,
+      "passed_unique_nodes": 515,
+      "subtests_separate": 2,
+      "warnings": 1,
+      "log": "evidence/genuine-wallet-batch/GENERIC_ADMIN_FOCUSED_FINAL.log"
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "--collect-only",
+        "-q",
+        "tests/test_generic_administration.py"
+      ],
+      "exit": 0,
+      "collected_unique_nodes": 72,
+      "executed_tests": 0
+    },
+    {
+      "argv": [
+        ".venv/bin/python",
+        "evidence/genuine-wallet-batch/GENERIC_ADMIN_RAW_REPLAY.py"
+      ],
+      "environment": {
+        "PYTHONPATH": "."
+      },
+      "exit": 0,
+      "log": "evidence/genuine-wallet-batch/GENERIC_ADMIN_RAW_REPLAY.log",
+      "kind": "direct generic replay; not saved report acceptance"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "scanner/decoder.py"
+      ],
+      "exit": 0
+    }
+  ],
+  "count_policy": "Initial/affected/development runs overlap and are not additive unique tests. Corpus109 operations/87records and diagnostic captures are not tests.",
+  "source_binding_scope": "Owned source/test hashes captured after affected run and stable for distinct review. Full candidate source-before/after gate binding remains root responsibility.",
+  "offline_provider_requests": 0,
+  "offline_credential_lookups": 0,
+  "initial_inventory": {
+    "path": "evidence/genuine-wallet-batch/INITIAL_GAP_INVENTORY.json",
+    "sha256": "a9c57df9125a70290819043fef9ceba0519ba493b7bcb83b34d3e96ab996f768",
+    "bytes": 29430
+  },
+  "current_inventory_sha256": "c51ac77e3fdb7eae31aa276879092964f6569fa76a55eb33d84be2c2a7f25ac5",
+  "PRODUCT_READY": false,
+  "distinct_review": {
+    "record": "evidence/genuine-wallet-batch/read-only-batch-review/GENERIC_GUARDED_FINAL_REPLAY.json",
+    "sha256": "af43c59353390cd6f46b856bfbac20f41d55680e4cb9caee024e126ff76bd227",
+    "raw_log": "evidence/genuine-wallet-batch/read-only-batch-review/INDEPENDENT_GENERIC_FOCUSED.log",
+    "raw_log_sha256": "fd5f4c3ef8d7f070f7489a20c87d456888687bd717e5466be53253a866f77d0c",
+    "passed_unique_nodes": 117,
+    "separately_reported_subtests": 2,
+    "independent_sibling_cells": 16,
+    "ordinary_review_nodes_overlap_owner_run": true,
+    "new_application_acceptance": false
+  }
+}

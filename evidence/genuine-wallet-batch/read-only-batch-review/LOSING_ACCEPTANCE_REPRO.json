@@ -1,0 +1,11 @@
+{
+  "scope": "Pure acceptance-contract synthetic diagnostic only; genuine raw oracle unchanged; no provider call/application acceptance",
+  "mathematical_condition": "For net realised profit <=0, largest_contribution_pct denominator is nonpositive; accounting.py intentionally reports None/unknown for this undefined ratio. Other dependency sufficiency is assumed only to isolate the checker predicate.",
+  "result": {
+    "state": "BLOCKED",
+    "missing": [
+      "largest_contribution_pct: required source dependencies remain unresolved."
+    ],
+    "scope": "Original wallet-wide evidence requirements; a losing/policy-MISS report is acceptable."
+  }
+}

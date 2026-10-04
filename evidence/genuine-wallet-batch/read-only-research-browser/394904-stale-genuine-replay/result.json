@@ -1,0 +1,100 @@
+{
+  "kind": "distinct-stale-genuine-research-browser-review",
+  "state": "PASS",
+  "candidate_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "source_files": 228,
+  "preserved_parent_id": "05c48b44afc54d5e8026aefe04c38f8b",
+  "preserved_parent_method": "supported-subset-research-v2",
+  "original_database_sha256_before": "f354731b91c85c3097b40fa834cd5bd1e5654ec40aa2a2272b3cd76fbc4cf1d8",
+  "original_export_sha256_before": "ac71f6a66ed1b6ed4c98560a092106154f65b77a5d0f6740bc802d1bc7358db9",
+  "parent_payload_sha256_before": "827b72e69e53fa3e5a5336d194b236fbb7172254b3c14188c6852935cd42a54d",
+  "private_qa_outside_repository": true,
+  "private_qa_path": "/workspace/qa-private/research-stale-394904460c04-96552977570545488690aea865fb5c29",
+  "cases": [
+    {
+      "case": "genuine-7f-stale-research-ui-immutable-offline-child",
+      "state": "PASS",
+      "parent_id": "05c48b44afc54d5e8026aefe04c38f8b",
+      "child_id": "6a351ad13dca4945ad59f361c9fe5703",
+      "stale_assessment": {
+        "saved_methodology": "supported-subset-research-v2",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "rebuild_required",
+        "reason": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged."
+      },
+      "child_assessment": {
+        "saved_methodology": "supported-subset-research-v3-native-roles",
+        "current_methodology": "supported-subset-research-v3-native-roles",
+        "state": "current",
+        "reason": "Current scoped research interpretation; inspect each monetary/timing dependency."
+      },
+      "source_inspection": true,
+      "actual_UI_JSON_downloads": true,
+      "CSV_metric_schema_preserved": true,
+      "parent_payload_unchanged": true,
+      "parent_decorated_export_unchanged": true,
+      "usage_unchanged": true,
+      "child_observed_network_fees_sol": "0.000158868"
+    }
+  ],
+  "captures": 4,
+  "PRODUCT_READY": false,
+  "real_acceptance": "BLOCKED",
+  "stale_warning_geometry": [
+    {
+      "viewport": 1440,
+      "visible": true,
+      "hidden": false,
+      "width": 1138,
+      "scrollWidth": 1138,
+      "height": 16,
+      "scrollHeight": 16,
+      "text": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.",
+      "sourceText": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.",
+      "maxHeight": "none",
+      "lineClamp": "none"
+    },
+    {
+      "viewport": 390,
+      "visible": true,
+      "hidden": false,
+      "width": 348,
+      "scrollWidth": 348,
+      "height": 48,
+      "scrollHeight": 48,
+      "text": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.",
+      "sourceText": "Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.",
+      "maxHeight": "none",
+      "lineClamp": "none"
+    }
+  ],
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "server_returncode_before_cleanup": null,
+  "offline_guards_record_present": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "original_database_sha256_after": "f354731b91c85c3097b40fa834cd5bd1e5654ec40aa2a2272b3cd76fbc4cf1d8",
+  "original_export_sha256_after": "ac71f6a66ed1b6ed4c98560a092106154f65b77a5d0f6740bc802d1bc7358db9",
+  "original_database_and_export_unchanged": true,
+  "parent_payload_sha256_after": "827b72e69e53fa3e5a5336d194b236fbb7172254b3c14188c6852935cd42a54d",
+  "source_unchanged_before_after": true,
+  "compiled_assets": {
+    "frontend/dist/assets/index-J2-LWOXg.css": {
+      "bytes": 67370,
+      "sha256": "e8f98ce8f3ba162427deffaa71f9b50c7e71363d84cdfd55effa2fa9bac62121"
+    },
+    "frontend/dist/assets/index-vMLERUXl.js": {
+      "bytes": 291376,
+      "sha256": "9c87bdf9f1b82139f06f6e8779665ea099df6f6ddd8a809270182039cff43482"
+    },
+    "frontend/dist/index.html": {
+      "bytes": 577,
+      "sha256": "9422625c62228460d6b11e5abc2a8c416ce2ae66034ae375f7674b6ca99075f8"
+    }
+  },
+  "scope": "One separately counted browser workflow/four captures, not unique backend nodes or complete-wallet acceptance. Private QA data/server logs/session fragments stay outside Git."
+}

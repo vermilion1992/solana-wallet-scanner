@@ -1,0 +1,17 @@
+{
+  "kind": "preserved-initial-stale-ui-review-helper-failure",
+  "state": "FAILED_ENVIRONMENT_HELPER",
+  "candidate_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "reason": "Backend .venv has no Playwright. Import failed before browser startup; finally masked it with missing guard receipt. System Python already provides browser tooling; no installation or application edit. Missing guards are not claimed zero.",
+  "source_unchanged": true,
+  "artifacts": {
+    "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_STALE_BROWSER_394904_COMMAND.log": {
+      "bytes": 1207,
+      "sha256": "662f5c8f2e6e7bfece2f5fa396414d312e9af524e795a5fee751651c1236a5ab"
+    },
+    "evidence/genuine-wallet-batch/read-only-research-browser/394904-stale-genuine/result.json": {
+      "bytes": 934,
+      "sha256": "cf23b1ed47d5fb2223d315cf22fc5dcb6776329e640cf51d0912a4c6048f89ac"
+    }
+  }
+}

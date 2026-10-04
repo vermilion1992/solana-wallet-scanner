@@ -1,0 +1,26 @@
+{
+  "kind": "read-only-working-source-stale-research-consumer-diagnostic",
+  "scope": "Current working source subset, not frozen candidate review or genuine acceptance",
+  "source_sha256": "c5c11a41ae8460e2406e355808a3c3de1a2bba968dbbcf7f5ade5ce3b069eff5",
+  "research_methodology": {
+    "state": "UNKNOWN",
+    "detail": "Saved scoped research is stale or missing; create an immutable offline child before using its observations.",
+    "actual": null,
+    "evidence": [],
+    "conditional": true
+  },
+  "unmatched_basis": {
+    "state": "OBSERVED",
+    "detail": "Sales with unresolved earlier inventory or unmatched fetched purchase cost remain counted; they cannot be treated as zero-cost profit.",
+    "actual": {
+      "unresolved_basis_sales": 2,
+      "observed_unmatched_sales": 1
+    },
+    "evidence": [
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
+    "conditional": true
+  },
+  "provider_calls": 0,
+  "application_edits": false
+}

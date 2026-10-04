@@ -1,0 +1,38 @@
+{
+  "kind": "read-only-checker-correction-replay-v1",
+  "state": "PASS",
+  "checker_sha256": "24378ba651e059231573db07f96b042997a45e290f8717c4d1be8baf1975f68d",
+  "collector_sha256": "1b7a054653170061010be72f0b46fefa59ea817d18a00a6ec507ea77ff3de8d0",
+  "cases": [
+    {
+      "case": "mixed-public-and-native-frozen-phases",
+      "state": "PASS",
+      "financial_pages": 2,
+      "public_auxiliary_sources": 2,
+      "financial_admission_of_public_sources": false,
+      "original_files_unchanged": true
+    },
+    {
+      "case": "swallowed-provider-guard-rejects-workflow",
+      "state": "PASS",
+      "workflow_state": "FAILED",
+      "provider_attempts": 1,
+      "credential_attempts": 0,
+      "actual_external_requests": 0,
+      "actual_credential_reads": 0
+    },
+    {
+      "case": "swallowed-credential-guard-rejects-workflow",
+      "state": "PASS",
+      "workflow_state": "FAILED",
+      "provider_attempts": 0,
+      "credential_attempts": 1,
+      "actual_external_requests": 0,
+      "actual_credential_reads": 0
+    }
+  ],
+  "dispatches_in_review": 0,
+  "credential_reads_in_review": 0,
+  "scope": "Acquisition packaging and offline validator controls; no new genuine application acceptance.",
+  "PRODUCT_READY": false
+}

@@ -1,0 +1,12 @@
+{
+  "kind": "fresh-process-lossless-storage-verification-v1",
+  "state": "PASS",
+  "checked_utc": "2026-10-04T07:40:02.322973+00:00",
+  "index_sha256": "0e04384e132793bc350d4cf56a6949810a697f5a421256decd02884456a141a0",
+  "compressed_entries_checked": 77,
+  "fresh_decompression_matches_original_hashes": true,
+  "present_originals_reread_and_verified": 77,
+  "provider_requests": 0,
+  "credential_reads": 0,
+  "application_acceptance_claimed": false
+}

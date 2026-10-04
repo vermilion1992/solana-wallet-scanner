@@ -1,0 +1,189 @@
+{
+  "kind": "offline-public-candidate-selection",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "purpose": "Find a genuine manageable trading-wallet acceptance candidate; not assert profit or historical completeness.",
+  "report_window": {
+    "start": "2026-09-04T00:00:00Z",
+    "end": "2026-10-04T00:00:00Z"
+  },
+  "positive_weeks_window": {
+    "start": "2026-09-06T00:00:00Z",
+    "end": "2026-10-04T00:00:00Z"
+  },
+  "verification_90d_window": {
+    "start": "2026-07-06T00:00:00Z",
+    "end": "2026-10-04T00:00:00Z"
+  },
+  "seed_candidates": [
+    {
+      "rank": 1,
+      "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+      "source_path": "tests/fixtures/mainnet-pumpswap-buy-exact-quote.json",
+      "source_sha256": "8ba32c85a5dff609362f79ff2253285385cb5410421c9e5d296cf2323bf23d21",
+      "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+      "slot": 452635473,
+      "block_time": 1790950840,
+      "raw_network_fee_lamports": 141389,
+      "supported_route": "PumpSwap buy_exact_quote_in",
+      "event_time_wallet_balances": {
+        "preTokenBalances": [
+          {
+            "account_index": 2,
+            "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
+            "quantity_raw": "44824210540",
+            "decimals": 6
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "account_index": 2,
+            "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
+            "quantity_raw": "55487822596",
+            "decimals": 6
+          }
+        ]
+      },
+      "low_activity_demonstrated": false,
+      "post_2022_birth_demonstrated": false,
+      "complete_basis_demonstrated": false,
+      "complete_wallet_acceptance": false,
+      "risk": "Prior nonzero inventory requires acquisition origins before this cached record."
+    },
+    {
+      "rank": 2,
+      "address": "DY5qAVztKXXPMY9enjbgvJxn6wPPZ1Ek34Jp3xJm4Lct",
+      "source_path": "tests/fixtures/mainnet-pumpswap-sell-durable-nonce.json",
+      "source_sha256": "ba11dc687582a4fb80f6006b7bebc0fe4687ea048de849014b973a8e014fdf1b",
+      "signature": "24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs",
+      "slot": 452638051,
+      "block_time": 1790951525,
+      "raw_network_fee_lamports": 42000,
+      "supported_route": "PumpSwap sell with durable nonce",
+      "event_time_wallet_balances": {
+        "preTokenBalances": [
+          {
+            "account_index": 3,
+            "mint": "HXxJdaQbrYRvwTAM8M8mUPyoRPvmyuUbPFBRkiAAMASS",
+            "quantity_raw": "402359378326",
+            "decimals": 6
+          },
+          {
+            "account_index": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "quantity_raw": "652421018964",
+            "decimals": 9
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "account_index": 3,
+            "mint": "HXxJdaQbrYRvwTAM8M8mUPyoRPvmyuUbPFBRkiAAMASS",
+            "quantity_raw": "397140750366",
+            "decimals": 6
+          },
+          {
+            "account_index": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "quantity_raw": "652432364024",
+            "decimals": 9
+          }
+        ]
+      },
+      "low_activity_demonstrated": false,
+      "post_2022_birth_demonstrated": false,
+      "complete_basis_demonstrated": false,
+      "complete_wallet_acceptance": false,
+      "risk": "Cached 22 selected records span 106 seconds; likely high activity, use as screening fallback only."
+    }
+  ],
+  "staged_requests": [
+    {
+      "id": "screen-1",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+        {
+          "transactionDetails": "signatures",
+          "limit": 1000,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all",
+            "blockTime": {
+              "gte": 1783296000,
+              "lt": 1791072000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "screen-2",
+      "method": "getTransactionsForAddress",
+      "params": [
+        "DY5qAVztKXXPMY9enjbgvJxn6wPPZ1Ek34Jp3xJm4Lct",
+        {
+          "transactionDetails": "signatures",
+          "limit": 1000,
+          "sortOrder": "asc",
+          "commitment": "finalized",
+          "maxSupportedTransactionVersion": 1,
+          "filters": {
+            "status": "any",
+            "tokenAccounts": "all",
+            "blockTime": {
+              "gte": 1783296000,
+              "lt": 1791072000
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "screening_control": {
+    "order": "Screen 4dr first; use DY5 as fallback only if the first candidate is unmanageable.",
+    "signatures_only_conservative_credits_per_request": 10,
+    "stop_unmanageable_if": [
+      "Nonterminal pagination token",
+      "1,000 rows at the limit",
+      "Too many transactions to leave budget for full raw history, lifecycle, basis and classification controls"
+    ],
+    "terminal_page_is_complete_history": false,
+    "terminal_empty_new_wallet_satisfies_B3": false
+  },
+  "known_closed_control": {
+    "wallet": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+    "account": "8XeSQHdLxqhcFAegjUpYvaJu516GUPQttfPgen4eXFiG",
+    "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+    "source_path": "tests/fixtures/mainnet-pumpswap-buy-exact-quote.json",
+    "kind": "same-transaction ephemeral wSOL create/init/close",
+    "wallet_absent_from_keys": false,
+    "proves_closed_owner_membership_discovery": false
+  },
+  "reassigned_owner_control": {
+    "state": "MISSING",
+    "reason": "No genuine executed setAuthority/reassignment identified in five cached real wallets or supported route fixtures."
+  },
+  "source_contract": {
+    "document": "evidence/references/product-milestone/helius-index-guide.txt",
+    "original_url": "https://www.helius.dev/docs/rpc/gettransactionsforaddress.md",
+    "original_sha256": "ecb75c9566dfcda8e209ea1b5ed829373749d181a1c9326e363abe8eb346c54c",
+    "ownership_metadata_floor_slot": 111491819,
+    "documented": "all returns wallet-reference or token-account-owner history; mainnet unlimited retention; pre-2022 owner metadata unsupported.",
+    "still_unknown": [
+      "Historical closed/reassigned/non-ATA owner-membership completeness",
+      "Full record terminal history and actual wallet/account genesis",
+      "All required acquisition basis/cost/classification/interval/boundary evidence"
+    ]
+  },
+  "reject_prior_probe_wallet": {
+    "address": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+    "reason": "200 records span 78 seconds, with 184 failed records and nonterminal cursors; all 16 successful outer routes are unsupported.",
+    "source_path": "evidence/source-probe-2026-10-04/live/result.json"
+  },
+  "candidate_financial_qualification": false,
+  "PRODUCT_READY": false
+}

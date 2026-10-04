@@ -1,0 +1,86 @@
+{
+  "kind": "read-only-negative-affinity-reproduction",
+  "before_query": {
+    "state": "UNKNOWN",
+    "scope": "Complete documented indexed address-query population only; historical wallet membership is separate",
+    "reason": "A still-linked indexed page has no independently assignable request scope",
+    "evidence": [
+      "307371fc3ee89a42e510cbaeefbaac06c9d7bade4d20162d223706cc318f2a3b",
+      "b9f6ff8e9ac2d3e7151146705ef81e647a2442aedee68ff6e4b3bdab45532b31"
+    ],
+    "query_records_state": "UNKNOWN",
+    "supported_record_state": "UNKNOWN",
+    "historical_population_state": "UNKNOWN",
+    "format_population_state": "UNKNOWN",
+    "signatures": [
+      "indexed-dev-buy"
+    ],
+    "record_count": 1,
+    "gaps": [
+      "A still-linked indexed page has no independently assignable request scope",
+      "indexed-dev-buy: linked chronology is unresolved"
+    ],
+    "request_scope": {
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "status": "any",
+      "token_accounts": "all",
+      "block_time": {
+        "gte": 1790000000,
+        "lt": 1792592000
+      },
+      "sort_order": "asc",
+      "limit": 100,
+      "max_version": 0,
+      "commitment": "finalized"
+    },
+    "source_hashes": [
+      "b9f6ff8e9ac2d3e7151146705ef81e647a2442aedee68ff6e4b3bdab45532b31"
+    ],
+    "interval": "report_period",
+    "start": "2026-09-21T14:13:20+00:00",
+    "end": "2026-10-21T14:13:20+00:00"
+  },
+  "after_loss_query": {
+    "state": "PASS",
+    "scope": "Complete documented indexed address-query population only; historical wallet membership is separate",
+    "reason": "Every terminal query record enters the ordinary raw accounting path.",
+    "evidence": [
+      "307371fc3ee89a42e510cbaeefbaac06c9d7bade4d20162d223706cc318f2a3b",
+      "b9f6ff8e9ac2d3e7151146705ef81e647a2442aedee68ff6e4b3bdab45532b31"
+    ],
+    "query_records_state": "PASS",
+    "supported_record_state": "UNKNOWN",
+    "historical_population_state": "UNKNOWN",
+    "format_population_state": "UNKNOWN",
+    "signatures": [
+      "indexed-dev-buy"
+    ],
+    "record_count": 1,
+    "gaps": [
+      "indexed-dev-buy: a linked record is unavailable or unsupported",
+      "indexed-dev-buy: linked chronology is unresolved",
+      "indexed-dev-buy: linked raw identity is unresolved"
+    ],
+    "request_scope": {
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "status": "any",
+      "token_accounts": "all",
+      "block_time": {
+        "gte": 1790000000,
+        "lt": 1792592000
+      },
+      "sort_order": "asc",
+      "limit": 100,
+      "max_version": 0,
+      "commitment": "finalized"
+    },
+    "source_hashes": [
+      "b9f6ff8e9ac2d3e7151146705ef81e647a2442aedee68ff6e4b3bdab45532b31"
+    ],
+    "interval": "report_period",
+    "start": "2026-09-21T14:13:20+00:00",
+    "end": "2026-10-21T14:13:20+00:00"
+  },
+  "before_wallet_population": "UNKNOWN",
+  "after_wallet_population": "UNKNOWN"
+}

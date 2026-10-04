@@ -1,0 +1,1 @@
+{"state": "PASS", "candidate_commit": "394904460c0473f07a25ed6324736421e0db1544", "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186", "captures": 4, "offline_guards": {"provider_requests": 0, "credential_lookups": 0}, "source_unchanged_before_after": true, "original_database_and_export_unchanged": true}

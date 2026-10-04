@@ -1,0 +1,125 @@
+{
+  "scope": "Current-source synthetic escaped-provider-byte shared hash-boundary diagnostic. No provider/credential calls, actual acceptance or genuine expectation changes.",
+  "source_hashes": {
+    "scanner/archive_input.py": "60cb2c45cf7129a096ccede72479268972e873ac3fcee9ee379040f7740ad960",
+    "scanner/real_coverage.py": "b99a3c07dd7a5581e93a05a51577eba439a67298c6dac94dcc582ef7246e745e",
+    "scanner/wallet_evidence.py": "84ae31659162bffa3daa03a933879dde1f0b44edb8831bf1ad40470c18d84bba"
+  },
+  "matrix": [
+    {
+      "wrapper": "page",
+      "value_condition": "valid-unicode",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION"
+        }
+      }
+    },
+    {
+      "wrapper": "page",
+      "value_condition": "invalid-surrogate",
+      "operations": {
+        "archive-load": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "stack_boundary": [
+            "                                                         ^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 46, in canonical_bytes",
+            "    return _bounded_canonical(value)",
+            "           ^^^^^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes",
+            "    raise ValueError('Input cannot be canonically serialized') from exc",
+            "ValueError: Input cannot be canonically serialized"
+          ]
+        },
+        "query-bind": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "stack_boundary": [
+            "                                 ^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/indexed_input.py\", line 50, in canonical_bytes",
+            "    return _shared_canonical_bytes(value, max_depth=MAX_JSON_DEPTH, max_nodes=MAX_JSON_NODES, string_keys=True)",
+            "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes",
+            "    raise ValueError('Input cannot be canonically serialized') from exc",
+            "ValueError: Input cannot be canonically serialized"
+          ]
+        },
+        "lot-recovery": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "stack_boundary": [
+            "                                 ^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/indexed_input.py\", line 50, in canonical_bytes",
+            "    return _shared_canonical_bytes(value, max_depth=MAX_JSON_DEPTH, max_nodes=MAX_JSON_NODES, string_keys=True)",
+            "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes",
+            "    raise ValueError('Input cannot be canonically serialized') from exc",
+            "ValueError: Input cannot be canonically serialized"
+          ]
+        }
+      }
+    },
+    {
+      "wrapper": "native",
+      "value_condition": "valid-unicode",
+      "operations": {
+        "archive-load": {
+          "state": "NO_EXCEPTION"
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION"
+        },
+        "lot-recovery": {
+          "state": "NO_EXCEPTION"
+        }
+      }
+    },
+    {
+      "wrapper": "native",
+      "value_condition": "invalid-surrogate",
+      "operations": {
+        "archive-load": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "stack_boundary": [
+            "                                                         ^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/archive_input.py\", line 46, in canonical_bytes",
+            "    return _bounded_canonical(value)",
+            "           ^^^^^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes",
+            "    raise ValueError('Input cannot be canonically serialized') from exc",
+            "ValueError: Input cannot be canonically serialized"
+          ]
+        },
+        "query-bind": {
+          "state": "NO_EXCEPTION"
+        },
+        "lot-recovery": {
+          "state": "EXCEPTION",
+          "type": "ValueError",
+          "reason": "Input cannot be canonically serialized",
+          "stack_boundary": [
+            "                                 ^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/indexed_input.py\", line 50, in canonical_bytes",
+            "    return _shared_canonical_bytes(value, max_depth=MAX_JSON_DEPTH, max_nodes=MAX_JSON_NODES, string_keys=True)",
+            "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/solana-wallet-scanner/scanner/json_boundary.py\", line 61, in canonical_bytes",
+            "    raise ValueError('Input cannot be canonically serialized') from exc",
+            "ValueError: Input cannot be canonically serialized"
+          ]
+        }
+      }
+    }
+  ]
+}

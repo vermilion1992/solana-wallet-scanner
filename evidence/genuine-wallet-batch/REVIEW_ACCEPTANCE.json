@@ -1,0 +1,162 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "source_sha256": "519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186",
+  "application_commit": "394904460c0473f07a25ed6324736421e0db1544",
+  "source_files": 228,
+  "created_at": "2026-10-04T08:12:03.501579+00:00",
+  "matrix_review_complete": true,
+  "matrix_static_counts": {
+    "requirement_records": 43,
+    "selector_entries": 103,
+    "unique_selector_strings": 102,
+    "all_module_paths_present": true,
+    "runtime_matrix_check": "Root validator separately; these static counts are not test counts"
+  },
+  "findings": [
+    {
+      "id": "DISCOVERY-SHARED-KEYS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application defect",
+      "result": "Parsed signer/header conflicts rejected via shared key resolver; genuine headerless parsed positives and compiled/loading controls remain usable."
+    },
+    {
+      "id": "QUERY-SELECTED-REPRESENTATION",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application defect",
+      "result": "Original and selected counterpart byte/hash/pointer binding independently retained; selected native parsed alternatives do not erase original indexed dependencies. Loss/conflict/restoration stays metric-specific."
+    },
+    {
+      "id": "RAW-HASH-AND-RECOVERY",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application defects",
+      "result": "Escaped lone-surrogate native/page hashing and malformed linked signatures cannot crash recovery or manufacture native hash proof. Valid Unicode and valid sibling sources remain supported; frozen negatives remain dependencies."
+    },
+    {
+      "id": "GENERIC-ADMIN-LOADER",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A/B: corrected malformed boundary and missing administration consumer",
+      "result": "Pinned getter/immutable-owner facts preserve original coordinates without ledger/policy/population promotion. Malformed loaded metadata retains independent static payer fee; failed execution stays fee-only."
+    },
+    {
+      "id": "GENERIC-ADMIN-PERFORMANCE",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: new implementation performance correction",
+      "result": "Normalization receipt and inner group position maps eliminate observed quadratic scans while retaining exact original paths."
+    },
+    {
+      "id": "METRIC-REASON-LAYOUT",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected application/UI defect",
+      "result": "Main, all-metric and interval reason text wraps completely in the reviewed compiled CSS; initial clipped sibling evidence is retained."
+    },
+    {
+      "id": "CHECKER-LOSING-NA-TYPES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected engineering-acceptance interface defects",
+      "result": "Source-proved mathematically undefined losing/empty-cohort/zero-basis ratios can be N/A for engineering acceptance only. Canonical finite typed number strings reject malformed zero-basis inputs; saved metrics/policy/B3 remain unchanged."
+    },
+    {
+      "id": "FINANCIAL-GROSS-ROLES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected monetary-role defect; distinct financial reviewer owns internal signoff",
+      "result": "Final separate financial receipt exactly matches its retained module/file bindings; net-zero gross cash roles revoke dependent money while supported quantities/timing/fees remain separate. Native primary IDL recipient/direction contract is checksum bound."
+    },
+    {
+      "id": "RESEARCH-NATIVE-CASH-ROLE-CONSUMER",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: confirmed current application regression at new event representation consumer",
+      "source_commit": "7f87d3eaba4beea793835e586836d22210b91b6d",
+      "result": "Typed unknown cash roles remain counted and revoke dependent research basis/proceeds/profit and copied episode money. Independently proved quantities/timing/fees are retained. Positive buy/sell loop replays and linked cost/clock/fee/physical source controls pass on frozen source.",
+      "raw_reproduction": "evidence/genuine-wallet-batch/read-only-batch-review/RESEARCH_CASH_ROLE_7F_REPRO.json",
+      "reproduction_sha256": "ccdbe01ff5e302354a3925eadd2bcf6ccdbeb8a37783baeee9771d6efdacf2d5",
+      "root_full_suite_node": "tests/test_discovery_integration_review.py::test_successful_swap_replacement_keeps_sibling_unresolved_native_flows",
+      "separate_nondefect": "The old assertion demanding2 unsupported events is obsolete after typed cash-only representation; the real defect is lost uncertainty/cash-role propagation in research, not absence of those token-unsupported events.",
+      "resolved_at": "394904460c0473f07a25ed6324736421e0db1544"
+    },
+    {
+      "id": "RESEARCH-CURRENT-GENERATION-ISOLATION",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected neighboring research consumer",
+      "result": "Stale v2 fallback episodes and unmatched-basis counts are UNKNOWN. Independently current strict qualification and positions survive research-only staleness. Full/display/summary/preview/JSON expose the same transient assessment without mutating the saved payload."
+    },
+    {
+      "id": "RESEARCH-ORIGIN-PHYSICAL-SOURCE-MATCHING",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected neighboring research dependency",
+      "result": "Fresh transaction identity/cost/clock alone do not supply missing opening origin or resolve contradictory earlier stock/token-program facts. Exact raw-derived typed source/episode matching revokes sale-only zero-hold and contradicted money; source-required loss/restoration and genuinely disjoint72 observations retain metric-specific results."
+    },
+    {
+      "id": "STALE-GENUINE-UI-IMMUTABILITY",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "classification": "A: corrected saved-report presentation consumer",
+      "result": "Actual desktop/mobile UI displays the old genuine v2 warning before immutable offline rebuild and current assessment afterward. Source inspection, actual JSON downloads, unchanged parent payload/export, CSV schema and zero-provider/credential/JS/external controls pass; four captures represent one workflow."
+    },
+    {
+      "id": "PREVIEW-RESEARCH-FRESHNESS",
+      "status": "NONDEFECT_VERIFIED",
+      "blocking": false,
+      "classification": "D: suspected sibling checked without application change",
+      "result": "Preview decorates saved reports before setting preview=True and retains the inherited research assessment; all six preset/view API diagnostics pass. No preview defect was reproduced."
+    },
+    {
+      "id": "RESEARCH-PROOF-EVIDENCE-UNION",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "result": "Positive fresh-receipt plus development-anchor crash fixed;31 distinct controls PASS and original failures retained."
+    },
+    {
+      "id": "B1",
+      "status": "OPEN",
+      "blocking": false,
+      "blocking_to_product": true,
+      "result": "Free access/schema demonstrated; exhaustive historical ownership contract unproved."
+    },
+    {
+      "id": "B2",
+      "status": "OPEN",
+      "blocking": false,
+      "blocking_to_product": true,
+      "result": "Complete historical witness, unsupported economic routes, origin/cost/classification/valuation proof admission remain unfinished or source-blocked."
+    },
+    {
+      "id": "B3",
+      "status": "BLOCKED",
+      "blocking": false,
+      "blocking_to_product": true,
+      "result": "Complete genuine wallet dataset and independently worked whole-wallet expectations unavailable."
+    }
+  ],
+  "component_receipts": [
+    {
+      "path": "evidence/genuine-wallet-batch/read-only-batch-review/FINAL_ACCEPTED_REVIEW.json",
+      "sha256": "91831d8179d3ef6b0b10206263da7ef662ca294492a224a5c61c40897f0ef561",
+      "state": "PASS_IN_READ_ONLY_SCOPE"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_FINANCIAL_SCOPED_REVIEW.json",
+      "sha256": "97d86865735f0b0f5df2d154e76ee082c236b4650a99d7b4e4bc5d37c43a9a88",
+      "state": "PASS"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/ROOT_ACCEPTED_DIFF_REVIEW.json",
+      "sha256": "3a2a3bc32a6100e063c41bcf0a3d0eaadba11af25a76e329b969267b90db93ce",
+      "state": "PASS_READ_ONLY_SCOPE"
+    }
+  ],
+  "scope": "Distinct same-session Codex read-only review; full candidate gates execute separately. No external independent acceptance or full product readiness claim.",
+  "historical_failures_preserved": true,
+  "PRODUCT_READY": false
+}

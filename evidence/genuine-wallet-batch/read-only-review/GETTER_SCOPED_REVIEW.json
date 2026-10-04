@@ -1,0 +1,75 @@
+{
+  "version": "scoped-read-only-review-v1",
+  "scope": "New SPL read-only GetAccountDataSize opcode21 normalization diff only; distinct same-engineer review, not full candidate/B3 acceptance",
+  "created_at": "2026-10-04T06:25:44.793725+00:00",
+  "baseline": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+  "decision": "PASS_IN_MODULE_SCOPE",
+  "files_sha256": {
+    "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+    "tests/test_compiled_getter.py": "411a0b9db86c7ab2c466607455acbb3b5219893a51789e486c0929c1160e29c0",
+    "tests/test_compiled_instructions.py": "5d4fa06cfb17657440344aad4ce70c04fdb24fadf856b1e8e8cd84738c54efc4",
+    "tests/fixtures/compiled_instructions/getter-schema.json": "c855ac671274ef1ffa381dddf0a913dabe8deec2aef384aaf03dea58437010ba",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+    "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd"
+  },
+  "source_frozen": true,
+  "focused_replay": {
+    "scope": "Distinct read-only getter review, no full-suite or complete genuine-wallet acceptance",
+    "baseline": "00b70e6e2222c473a8d2b95be93bc6af260bfdcd",
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_compiled_getter.py",
+      "tests/test_compiled_instructions.py"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.326,
+    "files_sha256_before": {
+      "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+      "tests/test_compiled_getter.py": "411a0b9db86c7ab2c466607455acbb3b5219893a51789e486c0929c1160e29c0",
+      "tests/test_compiled_instructions.py": "5d4fa06cfb17657440344aad4ce70c04fdb24fadf856b1e8e8cd84738c54efc4",
+      "tests/fixtures/compiled_instructions/getter-schema.json": "c855ac671274ef1ffa381dddf0a913dabe8deec2aef384aaf03dea58437010ba",
+      "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+      "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd"
+    },
+    "files_sha256_after": {
+      "scanner/compiled_instructions.py": "bb09537dd120479a0bafba8a18ece489a4bee9b6c51d339fa5943fbed89792ad",
+      "tests/test_compiled_getter.py": "411a0b9db86c7ab2c466607455acbb3b5219893a51789e486c0929c1160e29c0",
+      "tests/test_compiled_instructions.py": "5d4fa06cfb17657440344aad4ce70c04fdb24fadf856b1e8e8cd84738c54efc4",
+      "tests/fixtures/compiled_instructions/getter-schema.json": "c855ac671274ef1ffa381dddf0a913dabe8deec2aef384aaf03dea58437010ba",
+      "tests/fixtures/compiled_instructions/spl-token-2022-interface-instruction.rs": "672b3890cb58e5700a67f202491069ed44dffcbfa0e7d0b83a0cfbbb05b3a287",
+      "tests/fixtures/compiled_instructions/spl-token-2022-interface-extension.rs": "502b8309d3243f81d3bb7b2ff5f9e412c48d4d68f354b8994792389fc904defd"
+    },
+    "source_unchanged": true,
+    "log": "evidence/genuine-wallet-batch/read-only-review/GETTER_FOCUSED_REPLAY.log",
+    "log_sha256": "f422805ad7ffd127587ca51dcc4d794c397aedab9fee88e0f7d3e0bf46cf2a63"
+  },
+  "ordinary_nodes_passed": 133,
+  "test_counts_note": "30 new getter nodes plus103 retained; repeated replay is not additional unique-test evidence. Manual29-row schema matrix is one review control, not29 tests.",
+  "primary_manual_matrix": "evidence/genuine-wallet-batch/read-only-review/GETTER_PRIMARY_MATRIX.json",
+  "confirmed_new_defects": [],
+  "reviewed_invariants": [
+    "Existing System/SPL transfer/lifecycle behavior and original opcode21 missing-account rejection remain preserved.",
+    "Classic SPL Token primary opcode21 ignores trailing data; normalized view contains mint only and original evidence bytes remain unchanged.",
+    "Token2022 opcode21 consumes strict little-endian u16 ExtensionType descriptors matching pinned3.1.1 primary enum; odd,truncated,unknown,test-only types remain rejecting dependencies.",
+    "Exact one mint-role account, primary-key membership, program identity, mixed-representation rejection, bounded base58 and original raw path receipts retain existing guards.",
+    "Getter requires no signer authority and emits no token movement, cost basis, historical classification, extension configuration/write proof or completion certificate.",
+    "Genuine83/85 getter paths normalize while byte-identical frozen page remains unchanged; this does not certify the purchase consideration or complete wallet accounting."
+  ],
+  "pending_candidate_integration": [
+    "Root owns native consumer version/freshness binding so saved older interpretations require immutable child rebuild.",
+    "Separate persistent UserVolumeAccumulator funding role remains under accounting implementation/review; independent frozen oracle expectations remain unchanged."
+  ],
+  "PRODUCT_READY": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "not_run": [
+    "Full backend suite",
+    "Browser acceptance",
+    "Genuine87 arithmetic oracle changes",
+    "Provider requests",
+    "Credentials"
+  ]
+}
