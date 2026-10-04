@@ -1,0 +1,96 @@
+{
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "ZIP_original_member_bindings_verified": 104,
+  "actual_original_inventory_components": [
+    {
+      "context_slot": 453173211,
+      "original_response": {
+        "bytes": 247,
+        "sha256": "feabb86540e5c606f765d034aa523643e4c469744e4d2ef684e2b1e04c673ebd"
+      },
+      "request": {
+        "bytes": 159,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-request.json",
+        "sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd"
+      },
+      "response_compressed": {
+        "bytes": 195,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-response.raw.gz",
+        "sha256": "b43a4e1e155fb5c2c872f328fccf1809a7063ba00c3e67daf91a1d52d24a5108"
+      },
+      "wrapper_hash": "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+    },
+    {
+      "context_slot": 453173213,
+      "original_response": {
+        "bytes": 104,
+        "sha256": "0842531d6a0f6d49937d9b314bd13096320d52543ff13839861640ade28728e4"
+      },
+      "request": {
+        "bytes": 228,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/02-current-legacy-accounts-request.json",
+        "sha256": "ed44f19d919499ac45424e0f40d47ace46bb373d278983e766119b994f341704"
+      },
+      "response_compressed": {
+        "bytes": 112,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/02-current-legacy-accounts-response.raw.gz",
+        "sha256": "e77588eb113107477809599d54fbe8cf72a288b1c4b357ae642429d9979d7afd"
+      },
+      "wrapper_hash": "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+    },
+    {
+      "context_slot": 453173215,
+      "original_response": {
+        "bytes": 667,
+        "sha256": "6497a39b1f7f34f1c054ef140473300762dd9f5c3fd2017b4318d755ffae0d3e"
+      },
+      "request": {
+        "bytes": 228,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/03-current-token2022-accounts-request.json",
+        "sha256": "91a6efe9c3137ca8a8d1f805d3ecafe4447ef1bb16ec7ad9c5f968940780ab90"
+      },
+      "response_compressed": {
+        "bytes": 488,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/03-current-token2022-accounts-response.raw.gz",
+        "sha256": "fc124e03a6d9366a356a7fe8412a04f2af2325a89127ec11a6715201d1971113"
+      },
+      "wrapper_hash": "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc"
+    }
+  ],
+  "all_original_curated_alias_bytes_identical": true,
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "credential_lookups": 0,
+  "curated_input": {
+    "bytes": 350517,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+    "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+  },
+  "curation_index": {
+    "bytes": 6450,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/implementation-inventory/CURATION_INDEX.json",
+    "sha256": "0c3c577b304f1456d11215de4f2c859aa263feaf2086005cde5774320973e02f"
+  },
+  "independent_integer_quantity_checks": "PASS",
+  "kind": "independent-curated-input-and-expectation-review",
+  "network_requests": 0,
+  "no_application_parser_for_worked_integer_expectations": true,
+  "original_indexed_request_response_bytes_preserved": true,
+  "original_input_unchanged": true,
+  "provider_requests": 0,
+  "raw_original_binding": {
+    "bytes": 24302,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/INPUT_BINDING.json",
+    "sha256": "235b2ef0dd692b518dcdf48b4525dedd593a7152de69b3f6d15c0538cec2f975"
+  },
+  "report_boundaries": "UNKNOWN",
+  "same_slot_inventory": "UNKNOWN",
+  "selected_indexed_records_preserved": 87,
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "state": "PASS",
+  "worked_expectations": {
+    "bytes": 7068,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/INVENTORY_EXPECTATIONS.json",
+    "sha256": "5fffba2b26f17f90b6d68c0ecdd0549e68912562753550496b6736cbfe55fa09"
+  }
+}

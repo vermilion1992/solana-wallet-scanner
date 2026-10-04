@@ -1,0 +1,163 @@
+{
+  "kind": "actual-offline-product-browser-candidate-replay",
+  "state": "PASS",
+  "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_files": 246,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/solana-wallet-scanner/tools/product_browser.py",
+    "--python",
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "--chromium",
+    "/usr/bin/chromium",
+    "--indexed-archive",
+    "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+    "--indexed-expected-fees",
+    "0.000158868",
+    "--inventory-snapshots",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "timeout_seconds": 300,
+  "timed_out": false,
+  "started_utc": "2026-10-04T18:00:24.475619+00:00",
+  "scope": "Scoped real partial/synthetic UI evidence, separately observed current inventory; complete genuine acceptance BLOCKED.",
+  "exit_code": 0,
+  "seconds": 60.31165969200083,
+  "finished_utc": "2026-10-04T18:01:24.787388+00:00",
+  "source_unchanged": true,
+  "commit_unchanged": true,
+  "raw_log_sha256": "ffcef327d430be4429da94efa1dc459cafc1dae37a8adc99685625449f80407d",
+  "raw_log_bytes": 5070,
+  "browser_receipt_sha256": "0b49e61ab4dbaa0619d870e283e459714ca43d490654a0f5e8bce457f0c6f02a",
+  "browser_state": "PASS",
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "parent_unchanged": true,
+  "captures": 16,
+  "case_count": 7,
+  "selected_cohort_ui_cases": [
+    {
+      "case": "import-synthetic-input",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-partial-real-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-indexed-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "indexed-partial-rebuilt",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    }
+  ],
+  "inventory_ui_assertions": [
+    {
+      "case": "indexed-inventory-import",
+      "state": "PASS",
+      "native_lamports": "650240",
+      "legacy_accounts": 0,
+      "token2022_accounts": 1,
+      "context_slots": [
+        453173211,
+        453173213,
+        453173215
+      ],
+      "source_inspection": true,
+      "combined_inventory": "UNKNOWN",
+      "report_boundaries": "UNKNOWN",
+      "wallet_qualification": false
+    },
+    {
+      "case": "indexed-inventory-rebuilt",
+      "state": "PASS",
+      "native_lamports": "650240",
+      "legacy_accounts": 0,
+      "token2022_accounts": 1,
+      "context_slots": [
+        453173211,
+        453173213,
+        453173215
+      ],
+      "source_inspection": true,
+      "combined_inventory": "UNKNOWN",
+      "report_boundaries": "UNKNOWN",
+      "wallet_qualification": false
+    }
+  ],
+  "contract": {
+    "state": "PASS",
+    "cases": 7,
+    "cohort_ui_sets": 8,
+    "captures": 16,
+    "inventory_ui_observations": 2,
+    "unique_test_nodes_added": 0,
+    "real_acceptance": "BLOCKED"
+  }
+}

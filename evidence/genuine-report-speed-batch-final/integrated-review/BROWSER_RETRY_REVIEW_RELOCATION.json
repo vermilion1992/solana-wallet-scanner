@@ -1,0 +1,21 @@
+{
+  "actual_browser_outputs_already_in_repository_prefix": true,
+  "files": [
+    {
+      "bytes": 15865,
+      "curated_path": "evidence/genuine-report-speed-batch-final/integrated-review/ACTUAL_PRODUCT_BROWSER_RETRY_REVIEW.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-correction-review/ACTUAL_PRODUCT_BROWSER_RETRY_REVIEW.json",
+      "sha256": "85a78003fe90c7afe53f4ec262ff37fa9d29d55af1da380904300fb8b0a851bf"
+    },
+    {
+      "bytes": 7601,
+      "curated_path": "evidence/genuine-report-speed-batch-final/integrated-review/review_actual_product_browser_retry.py",
+      "original_path": "/workspace/outputs/genuine-wallet-report-correction-review/review_actual_product_browser_retry.py",
+      "sha256": "81364c055662ee1080213453d07fbac3268b45dde100bf08a29c8099bad0513e"
+    }
+  ],
+  "kind": "actual-browser-review-relocation-supplement",
+  "producer_receipts_rewritten": false,
+  "source_or_Git_mutations": false,
+  "state": "PASS"
+}

@@ -1,0 +1,198 @@
+diff --git a/CODEX_TASK.md b/CODEX_TASK.md
+index 6606184..483f810 100644
+--- a/CODEX_TASK.md
++++ b/CODEX_TASK.md
+@@ -4,7 +4,7 @@ Continue the private `codex/product-completion` branch from
+ `ab62858dca7eccbdb18b3365a83dedd9b2e8f413`, with 43 preserved commits and
+ 241 source files: workspace manifest
+ `0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365`.
+-The accepted application remains `8aee62e50297d6773f347b77cecc3e8794f233cf`;
++The starting accepted application is `8aee62e50297d6773f347b77cecc3e8794f233cf`;
+ the later test-only usage correction and its full backend execution are bound by
+ `evidence/native-ci-usage-validation/`. Native run `37218468031` passed on the
+ exact starting HEAD. Preserve those historical records and all genuine inputs.
+@@ -32,6 +32,13 @@ The present archives do not contain an exhaustive historical owner witness;
+ additional paging or a paid account does not itself resolve that requirement.
+ This batch uses retained data only, without provider calls or credential reads.
+ 
++The first frozen inventory/speed candidate `eea37dc95b5a012a62d36f4b300f1097fc311f87`
++failed its full native rebuild checks despite passing the separate archive/browser
++and timing scopes. Preserve that evidence. Correct the shared INV-02 reference
++expansion without weakening accepted regressions or the archive dependency path.
++The corrected candidate requires fresh full gates; earlier observations retain
++their exact source identity and are not relabelled as corrected acceptance.
++
+ # Prior assignment — historical membership and position integration, 4 October 2026
+ 
+ Continue only from private `vermilion1992/solana-wallet-scanner`, branch
+diff --git a/ISSUES.md b/ISSUES.md
+index 4063efb..7393aa4 100644
+--- a/ISSUES.md
++++ b/ISSUES.md
+@@ -228,10 +228,12 @@ historical and superseded by the corresponding frozen FINAL_GATES records.
+ | --- | --- | --- | --- |
+ | CAP-INVENTORY | Missing implementation | Implemented pending validation: original-byte current native/token account observations, independent program receipts, same-slot aggregate and frozen negative request affinity. | Current snapshots cannot establish exact historical boundaries, hidden account population, token marks or flow roles. |
+ | INV-01 | Confirmed development interface defect | Fixed pending validation: invalid enclosing checksums could supply a foreign-wallet exclusion. Containing integrity is now required before exclusion. | Distinct negative/valid-disjoint controls and final integrated review. This is not a demonstrated Store/API exploit. |
++| INV-02 | Confirmed application regression | First full candidate reproduced frozen-reference expansion and loss of valid native fee/timing observations on repeated rebuild. Remove inventory-affinity injection from native collector references; preserve archive v4's separate dependency metadata. | Original 22 backend failures and browser reference assertion retained under `evidence/genuine-report-speed-batch/`; corrected native initial/repeated rebuild controls and new exact-candidate gates required. |
+ | PERF-02 | Performance implementation | Direct strict JSON responses avoid the repeated full-tree presentation conversion; per-invocation indexed-page reuse retains checked content/wallet keys and private snapshots. | Exact byte/interpretation equivalence, mutation/loss/restoration and final source-bound timing measurements; full responses still contain large repeated proofs. |
+ | OBS-01 | Environment / measurement | Bounded offline phase benchmark, private output exclusion and network/credential fences. | Timings apply to archived inputs and declared instrumentation; they are not full-history throughput or application acceptance. |
+ | DATA-01 / B1 | Missing source capability | Current primary documents and retained examples still do not establish the complete historical owner population. | Accepted exhaustive lifecycle/format coverage; no paid-account necessity established. |
+ | CAP-01 / B2 | Missing implementation | Complete real accounting remains OPEN. This batch adds usable inventory evidence and improves the existing report path. | Full origins/cost roles, classification, boundary/mark/flow admission and complete population remain separate obligations. |
++| CAP-NATIVE-CAPTURE | Missing implementation | The native collector's legacy snapshot bodies omit exact original RPC bytes. | Original-byte capture and a separately frozen selector dependency contract; do not add unsupported metadata roles to authentic collector links. |
+ | R1-B3 | Genuine acceptance | BLOCKED. Original 23/87/200-record partial cases and independent expected arithmetic remain unchanged. | One complete genuine supported wallet corpus with independently worked results and selective source removal/restoration. |
+ 
+ PRODUCT_READY=false. No new provider calls, key reads, purchases or funded wallet.
+diff --git a/docs/CONTRACT.md b/docs/CONTRACT.md
+index 7688dec..7f8c55a 100644
+--- a/docs/CONTRACT.md
++++ b/docs/CONTRACT.md
+@@ -8,6 +8,15 @@ dependencies only; it cannot supply response facts, marks, capital-flow roles or
+ wallet completeness. Existing accounting/policy methods and strict thresholds
+ remain unchanged. This batch requires its own source-bound acceptance records.
+ 
++Inventory request affinities belong to the archive's internally derived v4
++dependency metadata. They are not appended to native collector reference lists.
++Native saved-report rebuilds preserve the original collector/checkpoint universe;
++legacy method/result snapshots without original RPC bytes remain unsupported for
++positive inventory admission. Exact-byte native inputs can supply current facts
++while present, but absent unassignable inputs remain unresolved. Original-byte
++capture and separately frozen native selector metadata remain implementation
++work; the archive path already retains selectors for precise loss isolation.
++
+ Report/state/preview/enrichment presentation returns the same strict JSON-native
+ payload directly, avoiding a redundant recursive transport conversion. Default
+ full views and immutable JSON/CSV export contracts remain available. The local
+diff --git a/scanner/app.py b/scanner/app.py
+index 00c6ef4..bd30010 100644
+--- a/scanner/app.py
++++ b/scanner/app.py
+@@ -110,7 +110,6 @@ def _freeze_native_dependencies(store, collected, *, address, window):
+     from .wallet_evidence import raw_native_dependencies
+     from .real_coverage import query_source_dependencies
+     from .wallet_identity import wallet_identity_dependencies
+-    from .inventory_evidence import inventory_request_affinities
+     primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
+     negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
+     # These are negative associations, not completion or position certificates.
+@@ -122,8 +121,6 @@ def _freeze_native_dependencies(store, collected, *, address, window):
+                           for digest in query_source_dependencies(raw_sources)]
+     frozen['evidence'] += [{'kind': 'wallet-identity-affinity', 'hash': digest}
+                           for digest in wallet_identity_dependencies(raw_sources, wallet=address)]
+-    frozen['evidence'] += [{'kind': 'inventory-affinity', 'hash': store.archive(affinity)}
+-                          for affinity in inventory_request_affinities(raw_sources, wallet=address)]
+     return frozen, primary, linked, raw_sources, raw_receipts
+ 
+ 
+diff --git a/tests/test_inventory_evidence.py b/tests/test_inventory_evidence.py
+index 8b476f7..ffb660f 100644
+--- a/tests/test_inventory_evidence.py
++++ b/tests/test_inventory_evidence.py
+@@ -23,6 +23,7 @@ from scanner.inventory_evidence import (AFFINITY_VERSION, SOURCE_VERSION, VERSIO
+ from scanner.json_boundary import canonical_bytes
+ from scanner.providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
+ from tests.test_position_evidence import address
++from tests.review_v037.review_helpers import builder
+ from tests.test_indexed_report_integration import guarded
+ from tests.test_discovery_integration_review import session, isolate_credentials_and_transport
+ 
+@@ -445,7 +446,7 @@ def test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_
+     assert result['metrics']['observed_network_fees_sol']['status'] == 'unknown'
+ 
+ 
+-def test_native_frozen_inputs_replay_inventory_loss_without_altering_independent_fee_or_parent(tmp_path):
++def test_native_original_byte_presence_loss_restoration_preserves_fee_and_frozen_inputs(tmp_path):
+     import scanner.app as application
+     from scanner.report_rebuild import freeze_report_inputs
+     from scanner.storage import Store
+@@ -458,7 +459,7 @@ def test_native_frozen_inputs_replay_inventory_loss_without_altering_independent
+     collected = {'transactions': [{'signature': selected['signature'], 'evidence_hash': selected['hash']}],
+                  'evidence': deepcopy(bundle['manifest']['evidence'])}
+     frozen_inputs, *_ = application._freeze_native_dependencies(store, collected, address=WALLET, window=WINDOW)
+-    assert any(ref['kind'] == 'inventory-affinity' for ref in frozen_inputs['evidence'])
++    assert not any(ref['kind'] == 'inventory-affinity' for ref in frozen_inputs['evidence'])
+     identifier = freeze_report_inputs(store, WALLET, WINDOW, frozen_inputs)
+     parent = deepcopy(store.evidence(identifier))
+     def replay():
+@@ -474,8 +475,81 @@ def test_native_frozen_inputs_replay_inventory_loss_without_altering_independent
+     path.unlink()
+     missing = replay()
+     assert missing['inventory_observations']['components']['token_programs'][TOKEN_2022_PROGRAM]['state'] == 'UNKNOWN'
+-    assert missing['inventory_observations']['components']['native_account']['state'] == 'PASS'
++    # Native collector inputs have no internally admitted inventory selector
++    # inventory. A missing misleadingly labelled source cannot be excluded by
++    # caller role; its unassignable inventory scope remains UNKNOWN. Checked
++    # readable observations and independent native fees are still retained.
++    native = missing['inventory_observations']['components']['native_account']
++    assert native['state'] == 'UNKNOWN'
++    assert native['observations'][0]['lamports'] == '650240'
+     assert missing['components']['native_fee']['state'] == 'PASS'
+     path.write_bytes(original)
+     assert replay()['inventory_observations'] == before['inventory_observations']
+     assert store.evidence(identifier) == parent
++
++
++@pytest.mark.parametrize('role',['owned-accounts','native-balance'])
++@pytest.mark.parametrize('origin',['legacy-parent','initial-native'])
++def test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing(builder,role,origin,tmp_path,monkeypatch):
++    import inspect
++    import sys
++    import httpx
++    from types import SimpleNamespace
++    from fastapi.testclient import TestClient
++    import scanner.app as application
++    from tests.review_v037.review_helpers import pb
++    from tests.test_review_v037_independent import role_source, seed_actual_report
++    role_source(builder,role,'agreeing')
++    calls={'provider':0,'credential':0,'transport':0}
++    monkeypatch.delenv('HELIUS_API_KEY',raising=False)
++    def denied_credential(*args,**kwargs):
++        calls['credential']+=1;raise AssertionError('Offline native rebuild must not read credentials')
++    async def denied_provider(*args,**kwargs):
++        calls['provider']+=1;raise AssertionError('Offline native rebuild must not dispatch a provider')
++    async def denied_transport(*args,**kwargs):
++        calls['transport']+=1;raise AssertionError('Offline native rebuild must not use external transport')
++    monkeypatch.setitem(sys.modules,'keyring',SimpleNamespace(get_keyring=lambda:object(),get_password=denied_credential))
++    monkeypatch.setattr('scanner.providers.Gateway.rpc',denied_provider)
++    monkeypatch.setattr(httpx.AsyncHTTPTransport,'handle_async_request',denied_transport)
++    app=application.create_app(tmp_path/'app','native-inventory-scope-test')
++    with TestClient(app,base_url='http://127.0.0.1:8765') as client:
++        client.headers['X-CSRF-Token']=client.get('/api/bootstrap',headers={'X-Launch-Token':'native-inventory-scope-test'}).json()['csrf']
++        store=app.state.store
++        original,checkpoint=seed_actual_report(builder,store,role,'agreeing')
++        if origin=='initial-native':
++            # Use the same production builder invoked by the collection worker;
++            # every record is already archived and all provider dispatch is
++            # guarded. No parallel calculation or fake completion receipt.
++            endpoint=next(route.endpoint for route in app.routes if getattr(route,'path',None)=='/api/reports/{identifier}/rebuild')
++            implementation=inspect.getclosurevars(endpoint).nonlocals['_rebuild_report']
++            build=inspect.getclosurevars(implementation).nonlocals['build_report']
++            scan=store.get('scans',original['scan_id'])
++            collected={'transactions':builder.records,'checkpoint':deepcopy(checkpoint),
++                       'evidence':deepcopy(checkpoint['evidence']),'snapshot':deepcopy(checkpoint['snapshot']),
++                       'coverage':{'status':'partial'}}
++            original=client.portal.call(build,scan,pb.WALLET,collected)
++        usage=deepcopy(client.get('/api/usage').json())
++        parent=deepcopy(store.get('reports',original['id']))
++        identifier=parent['id']
++        for generation in range(2):
++            immediate_parent=deepcopy(store.get('reports',identifier))
++            response=client.post('/api/reports/'+identifier+'/rebuild')
++            assert response.status_code==200,response.text
++            child=client.get('/api/reports/'+response.json()['report_id']).json()
++            assert child['id']!=identifier
++            frozen=store.evidence(child['collection_input_hash'])
++            assert frozen['evidence']==frozen['checkpoint']['evidence']==checkpoint['evidence']
++            assert not any(row['kind']=='inventory-affinity' for row in frozen['evidence'])
++            history=child['coverage']['history_evidence'];position=child['coverage']['position_evidence']
++            assert history['source_consistency']['source_set']['complete'] is True
++            assert position['counts']['known_closed']==1
++            assert position['positions'][0]['hold_hours']['value']=='6'
++            assert history['native_address_metrics']['observed']['wallet_network_fees_sol']['value']=='0.000015'
++            assert history['native_address_metrics']['observed']['native_wallet_delta_sol']['value']=='-0.000016'
++            inventory=child['coverage']['wallet_evidence']['inventory_observations']['components']
++            assert inventory['same_slot_inventory']['state']==inventory['report_boundaries']['state']=='UNKNOWN'
++            assert store.get('reports',identifier)==immediate_parent
++            assert store.get('reports',parent['id'])==parent
++            assert client.get('/api/usage').json()==usage
++            identifier=child['id']
++        assert calls=={'provider':0,'credential':0,'transport':0}

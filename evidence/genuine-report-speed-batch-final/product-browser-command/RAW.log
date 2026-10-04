@@ -1,0 +1,12 @@
+{"output": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/product-browser-final/synthetic-input.zip", "sha256": "da7f65c4a038fcb8d8e1d4a70bd7336eaa9cec4502bd022313154b1012e29ddc", "scope": "Synthetic development", "provider_requests": 0}
+{"output": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/product-browser-final/partial-real-input.zip", "sha256": "31936daaa2e154b59941f93470eb91102abf2a465ae6a340b49d26a8f342e6e5", "scope": "Partial real sample; B3 remains blocked", "provider_requests": 0}
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 337, in <module>
+    raise SystemExit(run(p.parse_args()))
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 260, in run
+    rebuild_ui('0.49995','0.499955',name+'-restored')
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 240, in rebuild_ui
+    assert pending.value.status==200,pending.value.text()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {"detail":"Free disk space is below the configured reserve; free space before saving a rebuilt report"}

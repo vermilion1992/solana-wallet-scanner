@@ -1,0 +1,142 @@
+{
+  "kind": "corrected-freeze-performance-relocation-v1",
+  "acceptance_run": false,
+  "product_readiness_claim": false,
+  "source": {
+    "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+    "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+    "source_files": 246
+  },
+  "files": [
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/INDEX.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/INDEX.json",
+      "bytes": 8664,
+      "sha256": "09dd01bc85c3ec6cfd895b51af66536f2a5ef2c20835d92c19773501ca54383d",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal-outer.log",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine200-normal/outer.log",
+      "bytes": 1117,
+      "sha256": "f68f6431ae511f38bb754d9fe068b00a724b48e110120742b610c0282b1f943c",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal-SCOPED_ORACLE_RECHECK.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine200-normal/SCOPED_ORACLE_RECHECK.json",
+      "bytes": 1179,
+      "sha256": "564f3f5f7e0bbc6b27cf23bd209d28e32c8ac2247b0533061c542a20fb664961",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal/command.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine200-normal/command.json",
+      "bytes": 1117,
+      "sha256": "f68f6431ae511f38bb754d9fe068b00a724b48e110120742b610c0282b1f943c",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal/observations.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine200-normal/observations.json",
+      "bytes": 143506,
+      "sha256": "6796191ab5e44065b40f07143401df4750476ade16134e8b1d0b154a67f7402b",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal/benchmark.log",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine200-normal/benchmark.log",
+      "bytes": 915,
+      "sha256": "d2f5f1008648f95a2029a3dbd4f05f6c5eb7e4ab200b67cb06247e061c5e7080",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal-outer.log",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine87-augmented-normal/outer.log",
+      "bytes": 1150,
+      "sha256": "4a599caf2ebf203eee192748ac54cbcd02cb5057255e671b9b2369bdd8fd0175",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal-SCOPED_ORACLE_RECHECK.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine87-augmented-normal/SCOPED_ORACLE_RECHECK.json",
+      "bytes": 22256,
+      "sha256": "592439a92fc890da93bcbdeb4441f9b121a580bcf95864b7d56cd65313afbae6",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal/command.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine87-augmented-normal/command.json",
+      "bytes": 1150,
+      "sha256": "4a599caf2ebf203eee192748ac54cbcd02cb5057255e671b9b2369bdd8fd0175",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal/observations.json",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine87-augmented-normal/observations.json",
+      "bytes": 99580,
+      "sha256": "111f8c52567bbcbe9e9d612955476eb24e3bcf58b1c1c350dcf8df9bbd03d59f",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal/benchmark.log",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/genuine87-augmented-normal/benchmark.log",
+      "bytes": 915,
+      "sha256": "9381c66a17aec8488b40d05e30a88c7e78775fd3b43e30e701c605150abf6537",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/sequence.log",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/sequence.log",
+      "bytes": 172,
+      "sha256": "bc03f7ac8c121355f4e28a56938b705b2bc5de076ce1bfcee26ff0cf28393023",
+      "exact_original_bytes_preserved": true
+    },
+    {
+      "original_path": "/workspace/outputs/report-proof-profile/run_corrected_normal_sequence.py",
+      "published_path": "evidence/genuine-report-speed-batch-final/performance/reproduction/sequence.py",
+      "bytes": 9285,
+      "sha256": "d0860ec1f84ad8fbad3fc3ab134aae00efca59b683592298e242a9061c6928d2",
+      "exact_original_bytes_preserved": true
+    }
+  ],
+  "required_repository_reproduction_inputs": [
+    {
+      "path": "evidence/genuine-report-speed-batch/performance/inputs/genuine200-input.zip",
+      "bytes": 228710,
+      "sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/performance/inputs/genuine200-baseline-EXPECTED_RAW.json",
+      "bytes": 2320675,
+      "sha256": "795d5ee14211598bcd834239f3e0c9c555dd42034cdd3408a147fb1967a20987"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+      "bytes": 350517,
+      "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    }
+  ],
+  "tool_files": {
+    "tools/benchmark_report.py": {
+      "bytes": 17248,
+      "sha256": "b188b43ec11194b94d656529ff8e4b6d5ed73e85682b736509ea9570f3399c7d"
+    },
+    "tests/test_report_benchmark.py": {
+      "bytes": 5681,
+      "sha256": "09ee5d7065b4601d90344fcf942e0e7d3f2e2404947cbc18f88acafd8b9bc2d2"
+    }
+  },
+  "excluded": [
+    "private runtime and SQLite databases",
+    "full report responses and JSON exports",
+    "profile/binary profile files"
+  ],
+  "prior_records": "evidence/genuine-report-speed-batch/performance (preserved unchanged; prior candidate full-gate failure remains authoritative)",
+  "scope": "Only two new unprofiled normal observations from corrected source. No new cProfile/baseline/watchdog experiment or application acceptance."
+}

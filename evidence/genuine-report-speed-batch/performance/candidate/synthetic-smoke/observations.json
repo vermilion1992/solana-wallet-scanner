@@ -1,0 +1,674 @@
+{
+  "kind": "offline-report-performance-observations-v1",
+  "state": "OBSERVED",
+  "acceptance_run": false,
+  "product_readiness_claim": false,
+  "scope": "Timing and equivalence for the supplied archive only; source history and wallet qualification remain separate.",
+  "profile_enabled": false,
+  "full_details_enabled": true,
+  "source_before": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_file_count": 246
+  },
+  "input_before": {
+    "path": "/workspace/outputs/report-proof-profile/synthetic-benchmark-input.zip",
+    "bytes": 18211,
+    "sha256": "4b39d9322cd3b69557fb2311b948c372fc57e16615debdc3c36c8b0d686a3bfa"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "interpreter": "/workspace/solana-wallet-scanner/.venv/bin/python",
+  "phases": [
+    {
+      "name": "archive-import",
+      "seconds": 0.1208885480009485,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 172,
+      "response_sha256": "7f45d82ddeb73dc38f03781789ee4fbe96f9231f1090be7453f8d4210ab21b99"
+    },
+    {
+      "name": "report-display",
+      "seconds": 0.041696425003465265,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 2143339,
+      "response_sha256": "dc05511b69b353b82386d367601fee56d7541c162c981276a297307cea32856f"
+    },
+    {
+      "name": "source-inspection-1",
+      "seconds": 0.002098669996485114,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 3669,
+      "response_sha256": "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb"
+    },
+    {
+      "name": "source-inspection-2",
+      "seconds": 0.0012991069816052914,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 3668,
+      "response_sha256": "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+    },
+    {
+      "name": "source-inspection-3",
+      "seconds": 0.0011444340052548796,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 3667,
+      "response_sha256": "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41"
+    },
+    {
+      "name": "source-inspection-4",
+      "seconds": 0.001128059026086703,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 3665,
+      "response_sha256": "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae"
+    },
+    {
+      "name": "csv-export",
+      "seconds": 0.028850809001596645,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 1990,
+      "response_sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+    },
+    {
+      "name": "report-default-full",
+      "seconds": 0.04879488502047025,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 5298483,
+      "response_sha256": "f99ea5397afabac0167e0652e2dbbfc84d65e830805167440b0bca0b37f24781"
+    },
+    {
+      "name": "json-export",
+      "seconds": 0.14748028400936164,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 8454277,
+      "response_sha256": "b29928faf646498e72f3b54fa7ebbe3c9494598d07328a27bd3fb8bd382f05c5"
+    },
+    {
+      "name": "state-summary",
+      "seconds": 0.016972871002508327,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 36165,
+      "response_sha256": "d48287449b915b5d0e77044a473a264a4ef1cb04acd2bd2f94dd425692dd2a12"
+    },
+    {
+      "name": "same-input-rebuild",
+      "seconds": 0.10903621700708754,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 48,
+      "response_sha256": "4a8e6bc781d0fd0260abb5c9aa44942ab964d1956d4fe260d8f288153ccaefea"
+    },
+    {
+      "name": "child-display",
+      "seconds": 0.035061553004197776,
+      "outcome": "RETURNED",
+      "status_code": 200,
+      "response_bytes": 2143834,
+      "response_sha256": "1e58d93b88d99995e0c338060ac1594615f564012726b09710f755e5c9a1ea19"
+    }
+  ],
+  "calls": {
+    "provider": 0,
+    "credential": 0,
+    "transport": 0,
+    "socket": 0
+  },
+  "private_runtime": "private-runtime",
+  "timeout_seconds": 300,
+  "parent": {
+    "report_id": "57b4bdef1ba544a79bb7f7d3c42a1fc9",
+    "saved_payload": {
+      "bytes": 5298483,
+      "sha256": "f99ea5397afabac0167e0652e2dbbfc84d65e830805167440b0bca0b37f24781"
+    },
+    "dataset": "synthetic",
+    "window": {
+      "end": "2026-07-01T00:00:00+00:00",
+      "start": "2026-06-01T00:00:00+00:00"
+    },
+    "preset": {
+      "name": "Strict research",
+      "version": "strict-v0.3",
+      "window_days": 30,
+      "verification_days": 90,
+      "min_profit_sol": "5",
+      "min_realised_roi_pct": "10",
+      "min_median_roi_pct": "5",
+      "min_win_rate_pct": "50",
+      "max_win_rate_pct": "85",
+      "min_hold_hours": "1",
+      "max_hold_hours": "72",
+      "min_positions": 50,
+      "min_positions_90d": 100,
+      "min_mints": 20,
+      "max_mints": 100,
+      "max_rapid_sale_pct": "10",
+      "min_avg_buys": "1",
+      "max_avg_buys": "2",
+      "min_avg_sells": "1",
+      "max_avg_sells": "3",
+      "min_positive_weeks": 3,
+      "max_contribution_pct": "25",
+      "require_positive_economic_pnl": true
+    },
+    "archive_input_hash": "b4675bcf83a46551e977d9657b1e84cfcb227218469b5b9287c0ba9e69ba114b",
+    "evidence_status": "partial",
+    "qualification": {
+      "report_id": "57b4bdef1ba544a79bb7f7d3c42a1fc9",
+      "preset_version": "strict-v0.3",
+      "preset_snapshot": {
+        "name": "Strict research",
+        "version": "strict-v0.3",
+        "window_days": 30,
+        "verification_days": 90,
+        "min_profit_sol": "5",
+        "min_realised_roi_pct": "10",
+        "min_median_roi_pct": "5",
+        "min_win_rate_pct": "50",
+        "max_win_rate_pct": "85",
+        "min_hold_hours": "1",
+        "max_hold_hours": "72",
+        "min_positions": 50,
+        "min_positions_90d": 100,
+        "min_mints": 20,
+        "max_mints": 100,
+        "max_rapid_sale_pct": "10",
+        "min_avg_buys": "1",
+        "max_avg_buys": "2",
+        "min_avg_sells": "1",
+        "max_avg_sells": "3",
+        "min_positive_weeks": 3,
+        "max_contribution_pct": "25",
+        "require_positive_economic_pnl": true
+      },
+      "methodology": "fifo-v4",
+      "window": {
+        "end": "2026-07-01T00:00:00+00:00",
+        "start": "2026-06-01T00:00:00+00:00"
+      },
+      "financial_policy": "MISS",
+      "evidence_status": "partial",
+      "profit_sol": "0.49995",
+      "qualified": false,
+      "failed_checks": [
+        {
+          "key": "profit_sol",
+          "label": "Net realised profit",
+          "state": "FAIL",
+          "actual": "0.49995",
+          "expected": ">= 5",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "realised_roi_pct",
+          "label": "Realised ROI",
+          "state": "FAIL",
+          "actual": "7.14211734958089435394873589737179510073178310077464009057110510319606001407137831650601247852686240406284263270488319684572555098017507080331855957657294081092567526544548055185517194581447923",
+          "expected": ">= 10",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "median_roi_pct",
+          "label": "Median episode ROI",
+          "state": "FAIL",
+          "actual": "0",
+          "expected": ">= 5",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "win_rate_pct",
+          "label": "Position win rate",
+          "state": "FAIL",
+          "actual": "40",
+          "expected": "50 to 85",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "completed_positions",
+          "label": "Completed positions",
+          "state": "FAIL",
+          "actual": "5",
+          "expected": ">= 50",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "completed_positions_90d",
+          "label": "Completed positions in 90 days",
+          "state": "FAIL",
+          "actual": "5",
+          "expected": ">= 100",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "traded_mints",
+          "label": "Traded meme mints",
+          "state": "FAIL",
+          "actual": "4",
+          "expected": "20 to 100",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "positive_weeks",
+          "label": "Positive weeks",
+          "state": "FAIL",
+          "actual": "2",
+          "expected": ">= 3",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "largest_contribution_pct",
+          "label": "Largest token contribution",
+          "state": "FAIL",
+          "actual": "200.0150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015",
+          "expected": "<= 25",
+          "reason": "Outside preset; a preference mismatch"
+        }
+      ],
+      "unknown_checks": [
+        {
+          "key": "evidence_history",
+          "label": "History evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_identity",
+          "label": "Identity evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_basis",
+          "label": "Basis evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_positions",
+          "label": "Positions evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_fees",
+          "label": "Fees evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_classification",
+          "label": "Classification evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_valuation",
+          "label": "Valuation evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_findings",
+          "label": "Findings evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        }
+      ],
+      "checks": [
+        {
+          "key": "evidence_history",
+          "label": "History evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_identity",
+          "label": "Identity evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_basis",
+          "label": "Basis evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_positions",
+          "label": "Positions evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_fees",
+          "label": "Fees evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_classification",
+          "label": "Classification evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_valuation",
+          "label": "Valuation evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "evidence_findings",
+          "label": "Findings evidence",
+          "state": "UNKNOWN",
+          "actual": null,
+          "expected": "Verified",
+          "reason": "Independent coverage and review required"
+        },
+        {
+          "key": "profit_sol",
+          "label": "Net realised profit",
+          "state": "FAIL",
+          "actual": "0.49995",
+          "expected": ">= 5",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "realised_roi_pct",
+          "label": "Realised ROI",
+          "state": "FAIL",
+          "actual": "7.14211734958089435394873589737179510073178310077464009057110510319606001407137831650601247852686240406284263270488319684572555098017507080331855957657294081092567526544548055185517194581447923",
+          "expected": ">= 10",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "median_roi_pct",
+          "label": "Median episode ROI",
+          "state": "FAIL",
+          "actual": "0",
+          "expected": ">= 5",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "win_rate_pct",
+          "label": "Position win rate",
+          "state": "FAIL",
+          "actual": "40",
+          "expected": "50 to 85",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "median_hold_hours",
+          "label": "Median completed hold",
+          "state": "PASS",
+          "actual": "24",
+          "expected": "1 to 72",
+          "reason": "Within preset"
+        },
+        {
+          "key": "completed_positions",
+          "label": "Completed positions",
+          "state": "FAIL",
+          "actual": "5",
+          "expected": ">= 50",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "completed_positions_90d",
+          "label": "Completed positions in 90 days",
+          "state": "FAIL",
+          "actual": "5",
+          "expected": ">= 100",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "traded_mints",
+          "label": "Traded meme mints",
+          "state": "FAIL",
+          "actual": "4",
+          "expected": "20 to 100",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "rapid_sale_pct",
+          "label": "Rapid first-sale share",
+          "state": "PASS",
+          "actual": "0",
+          "expected": "<= 10",
+          "reason": "Within preset"
+        },
+        {
+          "key": "avg_buys",
+          "label": "Average buys per episode",
+          "state": "PASS",
+          "actual": "1",
+          "expected": "1 to 2",
+          "reason": "Within preset"
+        },
+        {
+          "key": "avg_sells",
+          "label": "Average sells per episode",
+          "state": "PASS",
+          "actual": "1.2",
+          "expected": "1 to 3",
+          "reason": "Within preset"
+        },
+        {
+          "key": "positive_weeks",
+          "label": "Positive weeks",
+          "state": "FAIL",
+          "actual": "2",
+          "expected": ">= 3",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "largest_contribution_pct",
+          "label": "Largest token contribution",
+          "state": "FAIL",
+          "actual": "200.0150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015001500150015",
+          "expected": "<= 25",
+          "reason": "Outside preset; a preference mismatch"
+        },
+        {
+          "key": "economic_pnl_sol",
+          "label": "Positive economic change",
+          "state": "PASS",
+          "actual": "0.499955",
+          "expected": "> 0",
+          "reason": "Boundary equity and external flows considered"
+        }
+      ],
+      "reason": "Demo, synthetic and preview reports do not qualify as live wallet matches.",
+      "notes": [
+        "Qualification applies to this saved preset and reporting window.",
+        "Financial qualification does not certify trader intent, copied fills, or future safety."
+      ]
+    },
+    "fee_observation": {
+      "value": "0.000055",
+      "status": "known",
+      "unit": "SOL",
+      "population": "Selected in-window records with an independently supported wallet fee payer; not all interval costs",
+      "reason": null,
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+        "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v2",
+        "state": "PASS",
+        "interval": "report_period",
+        "scope": "report_period",
+        "dependencies": [
+          "selected_record_identity",
+          "native_fee",
+          "fee_window"
+        ],
+        "unresolved_dependencies": [],
+        "reason": "Every required derived dependency explicitly passes.",
+        "evidence": [
+          "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+          "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+          "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+          "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+          "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+          "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+          "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+          "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+          "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+          "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+          "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+          "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+        ],
+        "component_scopes": {
+          "selected_record_identity": "Selected fee contributors; proved outside-window records are excluded",
+          "native_fee": "Selected fee contributors; proved outside-window records are excluded",
+          "fee_window": "Selected wallet-paid fee membership in the reporting window"
+        },
+        "checks": {
+          "selected_record_identity": {
+            "state": "PASS",
+            "reason": null,
+            "evidence": [
+              "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+              "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+              "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+              "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+              "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+              "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+              "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+              "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+              "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+              "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+              "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+              "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+            ],
+            "scope": "Selected fee contributors; proved outside-window records are excluded"
+          },
+          "native_fee": {
+            "state": "PASS",
+            "reason": null,
+            "evidence": [
+              "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+              "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+              "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+              "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+              "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+              "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+              "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+              "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+              "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+              "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+              "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+              "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+            ],
+            "scope": "Selected fee contributors; proved outside-window records are excluded"
+          },
+          "fee_window": {
+            "state": "PASS",
+            "reason": null,
+            "evidence": [
+              "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+              "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+              "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+              "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+              "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+              "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+              "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+              "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+              "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+              "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+              "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99",
+              "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff"
+            ],
+            "scope": "Selected wallet-paid fee membership in the reporting window"
+          }
+        }
+      }
+    },
+    "population_scope": null
+  },
+  "source_inspection": {
+    "hashes": [
+      "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+      "f105ab382de42b05e076db063dc89029b9e393300d1cc7b4d593966c8c1bacff",
+      "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+      "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae"
+    ],
+    "canonical_checksums_matched": true,
+    "scope": "Up to four selected original archive sources; not historical-population acceptance."
+  },
+  "full_export_equivalence": true,
+  "invariants": {
+    "immutable_parent_payload": true,
+    "rebuilt_metrics_equal": true,
+    "same_window": true,
+    "same_preset": true,
+    "same_archive_input": true,
+    "usage_unchanged": true,
+    "zero_provider_credential_transport_socket": true,
+    "no_collector_ancestry": true
+  },
+  "source_after": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_file_count": 246
+  },
+  "input_after": {
+    "path": "/workspace/outputs/report-proof-profile/synthetic-benchmark-input.zip",
+    "bytes": 18211,
+    "sha256": "4b39d9322cd3b69557fb2311b948c372fc57e16615debdc3c36c8b0d686a3bfa"
+  },
+  "seconds": 0.9340503640123643,
+  "peak_rss_kib": 137508,
+  "rss_scope": "Linux peak resident set in KiB"
+}

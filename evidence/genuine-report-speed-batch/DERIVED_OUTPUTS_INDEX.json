@@ -1,0 +1,319 @@
+{
+  "kind": "retained-local-reproducible-derived-outputs",
+  "state": "PASS",
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_files": 246,
+  "index": {
+    "path": "evidence/genuine-report-speed-batch/final-replays/INDEX.json",
+    "bytes": 45693,
+    "sha256": "79983c473f9f6713f31c931472f2848ca12dff6c36bb9356471a780235026010"
+  },
+  "records": [
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/baseline-child.json",
+      "bytes": 93020410,
+      "sha256": "39118dc7286a8065834720ecb8bb73e58c0c6d0cc91366403fe5b695022818b0",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/inspected-selected-sources.json",
+      "bytes": 101541522,
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-buy-missing-child.json",
+      "bytes": 93436409,
+      "sha256": "6dafd39689b19424f17a6fb74b2f5867a391a5cb534c111aa1f0e0cfba634fd5",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-buy-restored-child.json",
+      "bytes": 93020410,
+      "sha256": "f0d14e36bcf4708ae7368e34613afdb58b9b239d3764359a2648b3167b08922d",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-sell-missing-child.json",
+      "bytes": 93336408,
+      "sha256": "1f45dfd4f6f54f97962c96c50c4de098d49089c0c00d44a04194084c533ff136",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-sell-restored-child.json",
+      "bytes": 93020410,
+      "sha256": "71c5a215ce1fb95cc90e6addcab23476d7a99258496e135cbf14eef029f6125c",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/parent-report.json",
+      "bytes": 93019856,
+      "sha256": "875002e183e6221efdfdfa90879ddab13239455b6d26ca1e92b1a78bb5a631b5",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/source-missing-child.json",
+      "bytes": 93360598,
+      "sha256": "8e5c49ba9e836aac0357c024e90cc33e0089988d250874f119c9b802e5857648",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/source-restored-child.json",
+      "bytes": 93020410,
+      "sha256": "aa8331c4546cd6949ca0691fcbccf4e3f4072645aac297d9c9fa6a5273cf0a04",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/baseline-child.json",
+      "bytes": 93020410,
+      "sha256": "53c943c9cbf01da5f6810a655dadffa345bb44bf99341271f57b40060c27e7ec",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json",
+      "bytes": 101541522,
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-buy-missing-child.json",
+      "bytes": 93436409,
+      "sha256": "11adafb4e7ae7baf9d4e73795e180d61e5c3daccdf86ea476f376aa600d45309",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-buy-restored-child.json",
+      "bytes": 93020410,
+      "sha256": "bd92068d20d1ab7e2e9296151feabaee6c020a53930ee938093f62328f7a491b",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-sell-missing-child.json",
+      "bytes": 93336408,
+      "sha256": "db999f58c2df49b0f6299b2a44cb12a35430ecca40cc7d0ca61cd609aa1a0e5b",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-sell-restored-child.json",
+      "bytes": 93020410,
+      "sha256": "f4e0c02e08d0014630a2b1ed7e12f888dcbdbe8c4eb7599659e4fa58d61860d3",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/parent-report.json",
+      "bytes": 93019856,
+      "sha256": "56cc7a952a6ebb0ae950b091cf5f65494194da8747df7016fa4eec4f3142d876",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/source-missing-child.json",
+      "bytes": 93360598,
+      "sha256": "b35fcf9448b23803f022295245b86b8e6c1ff386ec8a3860fc7113d68389a193",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/source-restored-child.json",
+      "bytes": 93020410,
+      "sha256": "d5bd29d3d65609777cc4692cf1d2243ed270c3eaf01289338c2cf71425119f4a",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-development/partial-real-report.json",
+      "bytes": 31194284,
+      "sha256": "c87f19c08c01c87fe7788c50a14c49c291b28054063ff7af4b6628186e8964b5",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-development/synthetic-parent.json",
+      "bytes": 8454277,
+      "sha256": "47737b9c611dfb35cb29e20c7e43a2f7a8d3ddf7074d26edbfae5ff9f883d7ef",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-development/valuation_hash-missing-child.json",
+      "bytes": 8468565,
+      "sha256": "704c9e15cb49a5d1fe5973c38901377ec41bc25cc85fbe6bcce4367352905b50",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-development/world_hash-missing-child.json",
+      "bytes": 8588496,
+      "sha256": "c427abc33202d967ac5d836bb7d484b202220b34e0aae6123c639d0c6fbe5a36",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/partial-real-report.json",
+      "bytes": 31194284,
+      "sha256": "e35ab10639049f0f56437f34d2613605662196c86ec691203764e7865e838c09",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/synthetic-parent.json",
+      "bytes": 8454277,
+      "sha256": "32c5e0063af21895c4789232e72af60315d845e0736e3ee5a9c87c5e805b5f71",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/valuation_hash-missing-child.json",
+      "bytes": 8468565,
+      "sha256": "124c87a6241756f042a8b9cd9bf9edc3ec10e6988a0af0177c4905271cb68b9a",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    },
+    {
+      "path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/world_hash-missing-child.json",
+      "bytes": 8588496,
+      "sha256": "aaeac1fef2ee93a038fb66343216039c7a91bc76435e456a91740b51676b3f85",
+      "in_git": false,
+      "retained_unchanged_locally": true,
+      "kind": "reproducible-derived-report-or-source-inspection",
+      "input_source": "original archived source records and current exact application"
+    }
+  ],
+  "files": 26,
+  "bytes": 1806964110,
+  "original_files_removed": false,
+  "original_files_moved": false,
+  "original_files_rewritten": false,
+  "distributed_in_git": false,
+  "git_contents": "Complete original genuine/synthetic archived source inputs, independently worked expectations, current source, all current raw producer result receipts/logs/captures/guards and this hashed output index. Large generated JSON reports and source-inspection duplicates are retained unchanged locally.",
+  "reproduction_inputs_omitted": false,
+  "reproduction": {
+    "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "entry_points": [
+      {
+        "name": "genuine-development",
+        "argv": [
+          "/workspace/solana-wallet-scanner/.venv/bin/python",
+          "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+          "--output",
+          "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/final-replays/genuine-development",
+          "--input",
+          "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+          "--input-freeze",
+          "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+          "--worked-expectations",
+          "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json"
+        ],
+        "expected_exit_code": 0
+      },
+      {
+        "name": "genuine-real-acceptance",
+        "argv": [
+          "/workspace/solana-wallet-scanner/.venv/bin/python",
+          "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+          "--output",
+          "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance",
+          "--input",
+          "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+          "--input-freeze",
+          "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+          "--worked-expectations",
+          "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+          "--require-real-acceptance"
+        ],
+        "expected_exit_code": 2
+      },
+      {
+        "name": "product-development",
+        "argv": [
+          "/workspace/solana-wallet-scanner/.venv/bin/python",
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/final-replays/product-development"
+        ],
+        "expected_exit_code": 0
+      },
+      {
+        "name": "product-real-acceptance",
+        "argv": [
+          "/workspace/solana-wallet-scanner/.venv/bin/python",
+          "/workspace/solana-wallet-scanner/tools/check_product.py",
+          "--output",
+          "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/final-replays/product-real-acceptance",
+          "--require-real-acceptance"
+        ],
+        "expected_exit_code": 2
+      }
+    ],
+    "instructions": "Check out the exact application/source identity, install locked local dependencies, and run these existing application entry points using a fresh output directory. All archived raw inputs/oracles are retained in Git. Output paths are replaceable; preserve byte identities for the original retained local files. The separately recorded blocked real acceptance exits are expected."
+  },
+  "scope": "Distribution curation only, not missing source evidence or product acceptance. No original input/oracle bytes or current raw producer receipts/logs/captures/guards are omitted.",
+  "PRODUCT_READY": false
+}

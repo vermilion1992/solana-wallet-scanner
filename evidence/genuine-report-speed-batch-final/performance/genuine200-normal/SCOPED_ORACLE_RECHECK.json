@@ -1,0 +1,33 @@
+{
+  "kind": "genuine-normal-scoped-oracle-recheck",
+  "acceptance_run": false,
+  "source": {
+    "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+    "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+    "source_files": 246
+  },
+  "archive_sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0",
+  "observed_network_fees_sol": "0.008904733",
+  "whole_wallet_profit_status": "unknown",
+  "qualified": false,
+  "invariants": {
+    "immutable_parent_payload": true,
+    "rebuilt_metrics_equal": true,
+    "same_window": true,
+    "same_preset": true,
+    "same_archive_input": true,
+    "usage_unchanged": true,
+    "zero_provider_credential_transport_socket": true,
+    "no_collector_ancestry": true
+  },
+  "calls": {
+    "provider": 0,
+    "credential": 0,
+    "transport": 0,
+    "socket": 0
+  },
+  "existing_worked_oracle": "/workspace/outputs/report-proof-profile/baseline-ab62858/EXPECTED_RAW.json",
+  "oracle_sha256": "795d5ee14211598bcd834239f3e0c9c555dd42034cdd3408a147fb1967a20987",
+  "selected_record_count": 200,
+  "population_scope": "Partial nonterminal provider pages; no complete wallet qualification."
+}

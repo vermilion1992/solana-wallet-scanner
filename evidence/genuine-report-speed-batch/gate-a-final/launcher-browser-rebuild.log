@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/tools/browser_acceptance.py", line 182, in <module>
+    raise SystemExit(run(a))
+                     ^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/browser_acceptance.py", line 158, in run
+    real=cases['real'];rebuild(real['id'],False,'cached-real',real['fees'])
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/browser_acceptance.py", line 137, in rebuild
+    assert old['evidence']==new['evidence'] and old['checkpoint']['evidence']==new['checkpoint']['evidence']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

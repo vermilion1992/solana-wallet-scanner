@@ -1,0 +1,178 @@
+{
+  "kind": "frozen-offline-performance-sequence",
+  "acceptance_run": false,
+  "source_before": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_files": 246
+  },
+  "input_lock_hashes_before": {
+    "evidence/source-probe-2026-10-04/live/02-all-index-request.json": "5e8937ceb267e90d2370788ac3db86383fcfd79ab6883e0011a726b3ff551663",
+    "evidence/source-probe-2026-10-04/live/02-all-index-response.raw.gz": "d1681569e53f9f2d4d9f1dbcec920a12f44bdd5888c5cde876a19de0c3dece1c",
+    "evidence/source-probe-2026-10-04/live/03-all-continuation-request.json": "3e55841032d6d64dc78054c1d6b71e136d41a6c586aefddcedee0cc1de1022dc",
+    "evidence/source-probe-2026-10-04/live/03-all-continuation-response.raw.gz": "8610a50604708ec96782944977fadb2a7f75df153598660a23e59c9b0d13ce92",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "original_script_sha256": "8dd0eb7487cfe38325954cccf996685c63ac35fae8bf4ce1eee5289a814713f9",
+  "adapted_script_sha256": "db25ad331946665cc3b480e61425b7b192681faf52731efd8730e9bcc9390f0b",
+  "adaptation": "Only expected HEAD constant changed; original script unchanged. Same profiling/tree/normal routes as original baseline.",
+  "commands": [
+    {
+      "name": "synthetic-smoke",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/synthetic-benchmark-input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-eea37dc/synthetic-smoke",
+        "--full-details"
+      ],
+      "seconds": 1.3676234199956525,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-eea37dc/synthetic-smoke-outer.log",
+      "log_bytes": 1091,
+      "log_sha256": "3051b6acb2289e55f3c5a989d1c5f1600bedcdd26a62cbac0099c108e8c1b344",
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-eea37dc/synthetic-smoke/observations.json",
+      "receipt_sha256": "05a496df7feecb40b897145b54606ca03e4225a79956d03db268f78a093bd653",
+      "state": "OBSERVED",
+      "source_after": {
+        "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+        "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+        "source_files": 246
+      }
+    },
+    {
+      "name": "genuine200-normal",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine200-normal",
+        "--full-details"
+      ],
+      "seconds": 34.32836701799533,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine200-normal-outer.log",
+      "log_bytes": 1095,
+      "log_sha256": "b5011fac7065262cbdf10a27d186d4e59a7e8223eb83a70e2f19dfe322971b92",
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine200-normal/observations.json",
+      "receipt_sha256": "7ba1ec5de765947d22d7ebecd6b2b922928611bd9a241d30ef09576d1c3ba235",
+      "state": "OBSERVED",
+      "source_after": {
+        "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+        "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+        "source_files": 246
+      }
+    },
+    {
+      "name": "genuine200-profile-like-for-like",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/outputs/report-proof-profile/benchmark-eea37dc.py",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine200-profile-like-for-like"
+      ],
+      "seconds": 81.63857916899724,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine200-profile-like-for-like-outer.log",
+      "log_bytes": 1007,
+      "log_sha256": "ca366d064cfa85ce8d3185331039e4c02801911149ba17e1894d6ba08cc07cd5",
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine200-profile-like-for-like/result.json",
+      "receipt_sha256": "85fd544459b99cd88942a9d6108905150e576e8d6e2d60434379a01c12354a2c",
+      "state": "BASELINE_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "source_after": {
+        "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+        "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+        "source_files": 246
+      }
+    },
+    {
+      "name": "genuine87-augmented-normal",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/genuine-wallet-inventory/genuine87-inventory-input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine87-augmented-normal",
+        "--full-details"
+      ],
+      "seconds": 14.019286344002467,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine87-augmented-normal-outer.log",
+      "log_bytes": 1128,
+      "log_sha256": "d2590e13445e20640b18ebd50944cd8a478c5f2480dc78c028c4ffc5749f2042",
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-eea37dc/genuine87-augmented-normal/observations.json",
+      "receipt_sha256": "b6ff32a0abb6a4dae1ddcf01d1a7cef173b60a1cc1599b96ea50e8a1ec827bf9",
+      "state": "OBSERVED",
+      "source_after": {
+        "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+        "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+        "source_files": 246
+      }
+    },
+    {
+      "name": "watchdog-one-second",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-eea37dc/watchdog-one-second",
+        "--timeout",
+        "1"
+      ],
+      "seconds": 1.2231959350174293,
+      "exit_code": 124,
+      "expected_exit_code": 124,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-eea37dc/watchdog-one-second-outer.log",
+      "log_bytes": 1076,
+      "log_sha256": "16b07c86e47463fc4eb5dbc2361dabd7d47af5a904b4e31e8fc3824fc815fd20",
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-eea37dc/watchdog-one-second/observations.json",
+      "receipt_sha256": "c6af4cbd65914359d16a02806c9b49f8488ef18443b9d013e2b62dbecae3dbb2",
+      "state": "INCOMPLETE",
+      "source_after": {
+        "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+        "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+        "source_files": 246
+      }
+    }
+  ],
+  "source_after": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_files": 246
+  },
+  "input_lock_hashes_after": {
+    "evidence/source-probe-2026-10-04/live/02-all-index-request.json": "5e8937ceb267e90d2370788ac3db86383fcfd79ab6883e0011a726b3ff551663",
+    "evidence/source-probe-2026-10-04/live/02-all-index-response.raw.gz": "d1681569e53f9f2d4d9f1dbcec920a12f44bdd5888c5cde876a19de0c3dece1c",
+    "evidence/source-probe-2026-10-04/live/03-all-continuation-request.json": "3e55841032d6d64dc78054c1d6b71e136d41a6c586aefddcedee0cc1de1022dc",
+    "evidence/source-probe-2026-10-04/live/03-all-continuation-response.raw.gz": "8610a50604708ec96782944977fadb2a7f75df153598660a23e59c9b0d13ce92",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "state": "OBSERVED_ALL_REQUESTED_OPERATIONS"
+}

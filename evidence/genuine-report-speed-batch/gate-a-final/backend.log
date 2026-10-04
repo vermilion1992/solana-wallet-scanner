@@ -1,0 +1,1376 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........FFFF............................................................ [  8%]
+.......................................................... [ 10%]
+................................................... [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 16%]
+.............................................................................................................. [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+.............................................................................................. [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+............................................................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+...................................................... [ 54%]
+..................................................................... [ 56%]
+............................................................................... [ 59%]
+..................................................... [ 60%]
+........................................................................ [ 63%]
+................................................................ [ 65%]
+.................................................................. [ 67%]
+........................................................................ [ 69%]
+........................................................................ [ 71%]
+........................................................................ [ 73%]
+........................................................................ [ 75%]
+...........................................FF.......F.FFF.F.FFF.F.FFF... [ 78%]
+.FF..........FF......................................................... [ 80%]
+........................................................................ [ 82%]
+.......................................................................................................................... [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+........................................................................ [ 99%]
+..........                                                               [100%]
+=================================== FAILURES ===================================
+_ test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[missing-opening] __
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+boundary = 'opening', variant = 'missing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb068dbb5f0>
+
+    @pytest.mark.parametrize('boundary', ['opening', 'closing'])
+    @pytest.mark.parametrize('variant', ['missing', 'corrupt'])
+    def test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild(builder, boundary, variant, tmp_path, monkeypatch):
+        ref = conflict_page(builder, boundary)
+>       sequence, boundaries = api_damage_sequence(builder, tmp_path, monkeypatch, ref['hash'], variant)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/review_v037/test_v037_regressions.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb068dbb5f0>
+digest = '7a22c54c85a606d0722acfbedaf32ecc602378c5eeb07dcf7da4e338866f0c99'
+variant = 'missing'
+
+    def api_damage_sequence(case, tmp_path, monkeypatch, digest, variant):
+        """Real endpoint: intact conflict -> missing/corrupt -> exact byte restoration."""
+        import httpx
+        from fastapi.testclient import TestClient
+        from scanner.app import create_app
+        from scanner.config import STRICT
+        from scanner.report_rebuild import freeze_report_inputs
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        calls = {'provider': 0, 'credential': 0}
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('Credential access prohibited in independent review')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        async def deny_network(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('Provider IO prohibited in independent review')
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_network)
+        token = 'review-v037-local-test-token'
+        app = create_app(tmp_path / 'app', token)
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': token})
+            assert bootstrap.status_code == 200
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            checkpoint = deepcopy(case.cp)
+            for value in {ref['hash'] for ref in checkpoint['evidence']}:
+                assert store.archive(case.store.evidence(value)) == value
+            key = hashlib.sha256(f'{pb.WALLET}:{pb.START}:{pb.END}'.encode()).hexdigest()
+            store.put('collector_checkpoints', key, checkpoint)
+            window = {k: datetime.fromtimestamp(v, timezone.utc).isoformat() for k, v in pb.WINDOW.items()}
+            collected = {'transactions': list(checkpoint['transactions'].values()), 'checkpoint': checkpoint,
+                         'evidence': checkpoint['evidence'], 'snapshot': checkpoint['snapshot'], 'coverage': {'status': 'partial'}}
+            original = {'id': 'review-v037-original', 'scan_id': 'review-v037-scan', 'source': 'live',
+                        'address': pb.WALLET, 'created_at': '2026-10-03T00:00:00+00:00', 'window': window,
+                        'preset': dict(STRICT), 'methodology': 'fifo-v3', 'metrics': {}, 'checks': [],
+                        'policy': 'UNRESOLVED', 'evidence_status': 'partial', 'coverage': {}, 'token_risk': [],
+                        'evidence': checkpoint['evidence'],
+                        'collection_input_hash': freeze_report_inputs(store, pb.WALLET, window, collected)}
+            store.put('reports', original['id'], original)
+            store.put('scans', original['scan_id'], {'id': original['scan_id'], 'status': 'paused',
+                      'audit_addresses': [pb.WALLET], 'window': window, 'preset': dict(STRICT), 'budget_mode': 'setup-pilot'})
+            usage = client.get('/api/state').json()['usage']
+            archive = store.path / 'evidence' / f'{digest}.json.gz'
+            original_bytes = archive.read_bytes()
+            children, results = [], []
+            for phase in ['present_conflict', variant, 'restored_conflict']:
+                if phase == variant:
+                    damage(archive, variant)
+                elif phase == 'restored_conflict':
+                    archive.write_bytes(original_bytes)
+                response = client.post('/api/reports/' + original['id'] + '/rebuild')
+                assert response.status_code == 200, response.text
+                child = client.get('/api/reports/' + response.json()['report_id']).json()
+                assert child['id'] not in [original['id']] + children
+                children.append(child['id'])
+                assert store.get('reports', original['id']) == original
+                assert client.get('/api/state').json()['usage'] == usage
+                assert child['policy'] == 'UNRESOLVED' and child['qualification']['qualified'] is False
+                assert child['rebuild']['provider_requests'] == 0
+                h = child['coverage']['history_evidence']
+                assert set(h['evidence_gates'].values()) == {'UNKNOWN'}
+                frozen = store.evidence(child['collection_input_hash'])
+                assert frozen['checkpoint']['evidence'] == checkpoint['evidence']
+>               assert frozen['evidence'] == checkpoint['evidence']
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError
+
+tests/review_v037/review_helpers.py:139: AssertionError
+_ test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[missing-closing] __
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+boundary = 'closing', variant = 'missing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063d04b60>
+
+    @pytest.mark.parametrize('boundary', ['opening', 'closing'])
+    @pytest.mark.parametrize('variant', ['missing', 'corrupt'])
+    def test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild(builder, boundary, variant, tmp_path, monkeypatch):
+        ref = conflict_page(builder, boundary)
+>       sequence, boundaries = api_damage_sequence(builder, tmp_path, monkeypatch, ref['hash'], variant)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/review_v037/test_v037_regressions.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063d04b60>
+digest = '9adc1a7fccfdab8f97e503b11e47ee872c073530da0b581f3ebc1bcc55b01f0f'
+variant = 'missing'
+
+    def api_damage_sequence(case, tmp_path, monkeypatch, digest, variant):
+        """Real endpoint: intact conflict -> missing/corrupt -> exact byte restoration."""
+        import httpx
+        from fastapi.testclient import TestClient
+        from scanner.app import create_app
+        from scanner.config import STRICT
+        from scanner.report_rebuild import freeze_report_inputs
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        calls = {'provider': 0, 'credential': 0}
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('Credential access prohibited in independent review')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        async def deny_network(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('Provider IO prohibited in independent review')
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_network)
+        token = 'review-v037-local-test-token'
+        app = create_app(tmp_path / 'app', token)
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': token})
+            assert bootstrap.status_code == 200
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            checkpoint = deepcopy(case.cp)
+            for value in {ref['hash'] for ref in checkpoint['evidence']}:
+                assert store.archive(case.store.evidence(value)) == value
+            key = hashlib.sha256(f'{pb.WALLET}:{pb.START}:{pb.END}'.encode()).hexdigest()
+            store.put('collector_checkpoints', key, checkpoint)
+            window = {k: datetime.fromtimestamp(v, timezone.utc).isoformat() for k, v in pb.WINDOW.items()}
+            collected = {'transactions': list(checkpoint['transactions'].values()), 'checkpoint': checkpoint,
+                         'evidence': checkpoint['evidence'], 'snapshot': checkpoint['snapshot'], 'coverage': {'status': 'partial'}}
+            original = {'id': 'review-v037-original', 'scan_id': 'review-v037-scan', 'source': 'live',
+                        'address': pb.WALLET, 'created_at': '2026-10-03T00:00:00+00:00', 'window': window,
+                        'preset': dict(STRICT), 'methodology': 'fifo-v3', 'metrics': {}, 'checks': [],
+                        'policy': 'UNRESOLVED', 'evidence_status': 'partial', 'coverage': {}, 'token_risk': [],
+                        'evidence': checkpoint['evidence'],
+                        'collection_input_hash': freeze_report_inputs(store, pb.WALLET, window, collected)}
+            store.put('reports', original['id'], original)
+            store.put('scans', original['scan_id'], {'id': original['scan_id'], 'status': 'paused',
+                      'audit_addresses': [pb.WALLET], 'window': window, 'preset': dict(STRICT), 'budget_mode': 'setup-pilot'})
+            usage = client.get('/api/state').json()['usage']
+            archive = store.path / 'evidence' / f'{digest}.json.gz'
+            original_bytes = archive.read_bytes()
+            children, results = [], []
+            for phase in ['present_conflict', variant, 'restored_conflict']:
+                if phase == variant:
+                    damage(archive, variant)
+                elif phase == 'restored_conflict':
+                    archive.write_bytes(original_bytes)
+                response = client.post('/api/reports/' + original['id'] + '/rebuild')
+                assert response.status_code == 200, response.text
+                child = client.get('/api/reports/' + response.json()['report_id']).json()
+                assert child['id'] not in [original['id']] + children
+                children.append(child['id'])
+                assert store.get('reports', original['id']) == original
+                assert client.get('/api/state').json()['usage'] == usage
+                assert child['policy'] == 'UNRESOLVED' and child['qualification']['qualified'] is False
+                assert child['rebuild']['provider_requests'] == 0
+                h = child['coverage']['history_evidence']
+                assert set(h['evidence_gates'].values()) == {'UNKNOWN'}
+                frozen = store.evidence(child['collection_input_hash'])
+                assert frozen['checkpoint']['evidence'] == checkpoint['evidence']
+>               assert frozen['evidence'] == checkpoint['evidence']
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError
+
+tests/review_v037/review_helpers.py:139: AssertionError
+_ test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[corrupt-opening] __
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+boundary = 'opening', variant = 'corrupt'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb06802bf20>
+
+    @pytest.mark.parametrize('boundary', ['opening', 'closing'])
+    @pytest.mark.parametrize('variant', ['missing', 'corrupt'])
+    def test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild(builder, boundary, variant, tmp_path, monkeypatch):
+        ref = conflict_page(builder, boundary)
+>       sequence, boundaries = api_damage_sequence(builder, tmp_path, monkeypatch, ref['hash'], variant)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/review_v037/test_v037_regressions.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb06802bf20>
+digest = '7a22c54c85a606d0722acfbedaf32ecc602378c5eeb07dcf7da4e338866f0c99'
+variant = 'corrupt'
+
+    def api_damage_sequence(case, tmp_path, monkeypatch, digest, variant):
+        """Real endpoint: intact conflict -> missing/corrupt -> exact byte restoration."""
+        import httpx
+        from fastapi.testclient import TestClient
+        from scanner.app import create_app
+        from scanner.config import STRICT
+        from scanner.report_rebuild import freeze_report_inputs
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        calls = {'provider': 0, 'credential': 0}
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('Credential access prohibited in independent review')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        async def deny_network(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('Provider IO prohibited in independent review')
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_network)
+        token = 'review-v037-local-test-token'
+        app = create_app(tmp_path / 'app', token)
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': token})
+            assert bootstrap.status_code == 200
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            checkpoint = deepcopy(case.cp)
+            for value in {ref['hash'] for ref in checkpoint['evidence']}:
+                assert store.archive(case.store.evidence(value)) == value
+            key = hashlib.sha256(f'{pb.WALLET}:{pb.START}:{pb.END}'.encode()).hexdigest()
+            store.put('collector_checkpoints', key, checkpoint)
+            window = {k: datetime.fromtimestamp(v, timezone.utc).isoformat() for k, v in pb.WINDOW.items()}
+            collected = {'transactions': list(checkpoint['transactions'].values()), 'checkpoint': checkpoint,
+                         'evidence': checkpoint['evidence'], 'snapshot': checkpoint['snapshot'], 'coverage': {'status': 'partial'}}
+            original = {'id': 'review-v037-original', 'scan_id': 'review-v037-scan', 'source': 'live',
+                        'address': pb.WALLET, 'created_at': '2026-10-03T00:00:00+00:00', 'window': window,
+                        'preset': dict(STRICT), 'methodology': 'fifo-v3', 'metrics': {}, 'checks': [],
+                        'policy': 'UNRESOLVED', 'evidence_status': 'partial', 'coverage': {}, 'token_risk': [],
+                        'evidence': checkpoint['evidence'],
+                        'collection_input_hash': freeze_report_inputs(store, pb.WALLET, window, collected)}
+            store.put('reports', original['id'], original)
+            store.put('scans', original['scan_id'], {'id': original['scan_id'], 'status': 'paused',
+                      'audit_addresses': [pb.WALLET], 'window': window, 'preset': dict(STRICT), 'budget_mode': 'setup-pilot'})
+            usage = client.get('/api/state').json()['usage']
+            archive = store.path / 'evidence' / f'{digest}.json.gz'
+            original_bytes = archive.read_bytes()
+            children, results = [], []
+            for phase in ['present_conflict', variant, 'restored_conflict']:
+                if phase == variant:
+                    damage(archive, variant)
+                elif phase == 'restored_conflict':
+                    archive.write_bytes(original_bytes)
+                response = client.post('/api/reports/' + original['id'] + '/rebuild')
+                assert response.status_code == 200, response.text
+                child = client.get('/api/reports/' + response.json()['report_id']).json()
+                assert child['id'] not in [original['id']] + children
+                children.append(child['id'])
+                assert store.get('reports', original['id']) == original
+                assert client.get('/api/state').json()['usage'] == usage
+                assert child['policy'] == 'UNRESOLVED' and child['qualification']['qualified'] is False
+                assert child['rebuild']['provider_requests'] == 0
+                h = child['coverage']['history_evidence']
+                assert set(h['evidence_gates'].values()) == {'UNKNOWN'}
+                frozen = store.evidence(child['collection_input_hash'])
+                assert frozen['checkpoint']['evidence'] == checkpoint['evidence']
+>               assert frozen['evidence'] == checkpoint['evidence']
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError
+
+tests/review_v037/review_helpers.py:139: AssertionError
+_ test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[corrupt-closing] __
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+boundary = 'closing', variant = 'corrupt'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063a802f0>
+
+    @pytest.mark.parametrize('boundary', ['opening', 'closing'])
+    @pytest.mark.parametrize('variant', ['missing', 'corrupt'])
+    def test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild(builder, boundary, variant, tmp_path, monkeypatch):
+        ref = conflict_page(builder, boundary)
+>       sequence, boundaries = api_damage_sequence(builder, tmp_path, monkeypatch, ref['hash'], variant)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/review_v037/test_v037_regressions.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_lost_linked_page_cannot_u3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063a802f0>
+digest = '9adc1a7fccfdab8f97e503b11e47ee872c073530da0b581f3ebc1bcc55b01f0f'
+variant = 'corrupt'
+
+    def api_damage_sequence(case, tmp_path, monkeypatch, digest, variant):
+        """Real endpoint: intact conflict -> missing/corrupt -> exact byte restoration."""
+        import httpx
+        from fastapi.testclient import TestClient
+        from scanner.app import create_app
+        from scanner.config import STRICT
+        from scanner.report_rebuild import freeze_report_inputs
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        calls = {'provider': 0, 'credential': 0}
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('Credential access prohibited in independent review')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        async def deny_network(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('Provider IO prohibited in independent review')
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_network)
+        token = 'review-v037-local-test-token'
+        app = create_app(tmp_path / 'app', token)
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': token})
+            assert bootstrap.status_code == 200
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            checkpoint = deepcopy(case.cp)
+            for value in {ref['hash'] for ref in checkpoint['evidence']}:
+                assert store.archive(case.store.evidence(value)) == value
+            key = hashlib.sha256(f'{pb.WALLET}:{pb.START}:{pb.END}'.encode()).hexdigest()
+            store.put('collector_checkpoints', key, checkpoint)
+            window = {k: datetime.fromtimestamp(v, timezone.utc).isoformat() for k, v in pb.WINDOW.items()}
+            collected = {'transactions': list(checkpoint['transactions'].values()), 'checkpoint': checkpoint,
+                         'evidence': checkpoint['evidence'], 'snapshot': checkpoint['snapshot'], 'coverage': {'status': 'partial'}}
+            original = {'id': 'review-v037-original', 'scan_id': 'review-v037-scan', 'source': 'live',
+                        'address': pb.WALLET, 'created_at': '2026-10-03T00:00:00+00:00', 'window': window,
+                        'preset': dict(STRICT), 'methodology': 'fifo-v3', 'metrics': {}, 'checks': [],
+                        'policy': 'UNRESOLVED', 'evidence_status': 'partial', 'coverage': {}, 'token_risk': [],
+                        'evidence': checkpoint['evidence'],
+                        'collection_input_hash': freeze_report_inputs(store, pb.WALLET, window, collected)}
+            store.put('reports', original['id'], original)
+            store.put('scans', original['scan_id'], {'id': original['scan_id'], 'status': 'paused',
+                      'audit_addresses': [pb.WALLET], 'window': window, 'preset': dict(STRICT), 'budget_mode': 'setup-pilot'})
+            usage = client.get('/api/state').json()['usage']
+            archive = store.path / 'evidence' / f'{digest}.json.gz'
+            original_bytes = archive.read_bytes()
+            children, results = [], []
+            for phase in ['present_conflict', variant, 'restored_conflict']:
+                if phase == variant:
+                    damage(archive, variant)
+                elif phase == 'restored_conflict':
+                    archive.write_bytes(original_bytes)
+                response = client.post('/api/reports/' + original['id'] + '/rebuild')
+                assert response.status_code == 200, response.text
+                child = client.get('/api/reports/' + response.json()['report_id']).json()
+                assert child['id'] not in [original['id']] + children
+                children.append(child['id'])
+                assert store.get('reports', original['id']) == original
+                assert client.get('/api/state').json()['usage'] == usage
+                assert child['policy'] == 'UNRESOLVED' and child['qualification']['qualified'] is False
+                assert child['rebuild']['provider_requests'] == 0
+                h = child['coverage']['history_evidence']
+                assert set(h['evidence_gates'].values()) == {'UNKNOWN'}
+                frozen = store.evidence(child['collection_input_hash'])
+                assert frozen['checkpoint']['evidence'] == checkpoint['evidence']
+>               assert frozen['evidence'] == checkpoint['evidence']
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError
+
+tests/review_v037/review_helpers.py:139: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[agreeing-owned-accounts] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'agreeing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063d0ae70>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[agreeing-native-balance] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', state = 'agreeing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063d08590>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'e5f4b2cc9e182eafedb13ef3690511424987bca313b3d0cd10dba4cfe35b2270', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[missing-signature-page] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'signature-page', state = 'missing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_13')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb05acb5400>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '552eaf5b54f63288728dcab3e444f1e0fb050f897c9dd891d70147a5bdf73915', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[missing-snapshot-slot] ______
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'snapshot-slot', state = 'missing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_15')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063d2cad0>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '6fe2c5f5fdc6ffe8ed3493a43e5e0a86799a380e6df523823c6a8383f32777b7', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[missing-owned-accounts] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'missing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_16')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb05dfe3950>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '38673345d0a25bf692a8d28feabe0b6682b84320406ebe7e4b03124491043643', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[missing-native-balance] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', state = 'missing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_17')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb05dfe04d0>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '3fe50e8c9c60e6423c3df5f7a63f9a1a40b6bd6c8c3a50d9eb9cc22aca3bcd19', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[corrupt-signature-page] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'signature-page', state = 'corrupt'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_19')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb06822b410>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '552eaf5b54f63288728dcab3e444f1e0fb050f897c9dd891d70147a5bdf73915', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[corrupt-snapshot-slot] ______
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'snapshot-slot', state = 'corrupt'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_21')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb068228410>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '6fe2c5f5fdc6ffe8ed3493a43e5e0a86799a380e6df523823c6a8383f32777b7', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[corrupt-owned-accounts] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'corrupt'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_22')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063a822d0>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '38673345d0a25bf692a8d28feabe0b6682b84320406ebe7e4b03124491043643', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+_____ test_role_source_state_matrix_actual_rebuild[corrupt-native-balance] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', state = 'corrupt'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_23')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb05e098500>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '3fe50e8c9c60e6423c3df5f7a63f9a1a40b6bd6c8c3a50d9eb9cc22aca3bcd19', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[malformed-signature-page] ____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'signature-page', state = 'malformed'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_25')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063cf4e60>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c9c83750747ff4bc564d93c15678783af7ec9c39a9c5263fa36e2dc1ff860d4b', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[malformed-snapshot-slot] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'snapshot-slot', state = 'malformed'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_27')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063cf57c0>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c9c83750747ff4bc564d93c15678783af7ec9c39a9c5263fa36e2dc1ff860d4b', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[malformed-owned-accounts] ____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'malformed'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_28')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063cf57f0>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c9c83750747ff4bc564d93c15678783af7ec9c39a9c5263fa36e2dc1ff860d4b', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[malformed-native-balance] ____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', state = 'malformed'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_29')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063a0b980>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c9c83750747ff4bc564d93c15678783af7ec9c39a9c5263fa36e2dc1ff860d4b', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+___ test_role_source_state_matrix_actual_rebuild[unsupported-owned-accounts] ___
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'unsupported'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_34')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063c4de50>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '05faf00327cad320434e1dc572b1df1912ad4699b409a5670accd7412c708885', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+___ test_role_source_state_matrix_actual_rebuild[unsupported-native-balance] ___
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', state = 'unsupported'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_35')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb063d09e20>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': '849cc854a11632a09e09ed09869daa4f027a4b11fee871f179c62a945ac9aa3a', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[restored-owned-accounts] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'restored'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_46')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb04a787980>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+____ test_role_source_state_matrix_actual_rebuild[restored-native-balance] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', state = 'restored'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-472/test_role_source_state_matrix_47')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb0683273e0>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'e5f4b2cc9e182eafedb13ef3690511424987bca313b3d0cd10dba4cfe35b2270', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/review_v037/test_v037_regressions.py::test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[missing-opening]
+FAILED tests/review_v037/test_v037_regressions.py::test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[missing-closing]
+FAILED tests/review_v037/test_v037_regressions.py::test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[corrupt-opening]
+FAILED tests/review_v037/test_v037_regressions.py::test_lost_linked_page_cannot_upgrade_actual_frozen_rebuild[corrupt-closing]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-owned-accounts]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-native-balance]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-signature-page]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-snapshot-slot]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-owned-accounts]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[missing-native-balance]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-signature-page]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-snapshot-slot]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-owned-accounts]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[corrupt-native-balance]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-signature-page]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-snapshot-slot]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-owned-accounts]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[malformed-native-balance]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-owned-accounts]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[unsupported-native-balance]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-owned-accounts]
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[restored-native-balance]
+22 failed, 3220 passed, 1 warning, 440 subtests passed in 357.35s (0:05:57)

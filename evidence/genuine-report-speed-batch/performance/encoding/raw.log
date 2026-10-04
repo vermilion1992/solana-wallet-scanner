@@ -1,0 +1,23 @@
+START sqlite-existing-parent-read
+END sqlite-existing-parent-read 0.749
+START existing-parent-json-parse
+END existing-parent-json-parse 0.968
+START direct-json-response
+END direct-json-response 0.689
+START jsonable-encoder-alone
+END jsonable-encoder-alone 5.029
+START encoded-json-response
+END encoded-json-response 0.707
+START direct-display-json-response
+END direct-display-json-response 0.12
+START display-jsonable-encoder-alone
+END display-jsonable-encoder-alone 0.407
+START gzip-compress-level1
+END gzip-compress-level1 0.38
+START gzip-decompress-level1
+END gzip-decompress-level1 0.272
+START gzip-compress-level6
+END gzip-compress-level6 0.828
+START gzip-decompress-level6
+END gzip-decompress-level6 0.228
+EXACT_ENCODING_EQUIVALENCE_PASS

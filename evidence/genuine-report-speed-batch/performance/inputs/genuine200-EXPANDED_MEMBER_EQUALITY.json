@@ -1,0 +1,125 @@
+{
+  "kind": "exact-genuine200-expanded-member-equality",
+  "baseline_normal_zip": {
+    "path": "inputs/genuine200-input.zip",
+    "bytes": 228710,
+    "sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0"
+  },
+  "profile_zip": {
+    "path": "inputs/genuine200-profile-input.zip",
+    "bytes": 228710,
+    "sha256": "7e65b3147007a0c844cfde143a921cb85743a7ee1db002da431614e2ea259334"
+  },
+  "changed_byte_count": 20,
+  "byte_changes_only_zip_dos_timestamps": true,
+  "expanded_members": [
+    {
+      "name": "manifest.json",
+      "bytes": 537,
+      "sha256": "e289d6f1a3a9e4a025df7787e21db13b6013bdecebf20459db9a0d35bcdabdf5",
+      "baseline_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        28,
+        26
+      ],
+      "profile_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        56,
+        46
+      ]
+    },
+    {
+      "name": "raw/3e55841032d6d64dc78054c1d6b71e136d41a6c586aefddcedee0cc1de1022dc.json",
+      "bytes": 370,
+      "sha256": "3e55841032d6d64dc78054c1d6b71e136d41a6c586aefddcedee0cc1de1022dc",
+      "baseline_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        28,
+        26
+      ],
+      "profile_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        56,
+        46
+      ]
+    },
+    {
+      "name": "raw/5e8937ceb267e90d2370788ac3db86383fcfd79ab6883e0011a726b3ff551663.json",
+      "bytes": 335,
+      "sha256": "5e8937ceb267e90d2370788ac3db86383fcfd79ab6883e0011a726b3ff551663",
+      "baseline_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        28,
+        26
+      ],
+      "profile_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        56,
+        46
+      ]
+    },
+    {
+      "name": "raw/8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4.json",
+      "bytes": 1361007,
+      "sha256": "8b5c62df315785ed6bb8c01492e6f512af5ac423e16b1731aa5d86ede68557f4",
+      "baseline_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        28,
+        26
+      ],
+      "profile_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        56,
+        46
+      ]
+    },
+    {
+      "name": "raw/ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71.json",
+      "bytes": 1311341,
+      "sha256": "ff111868efbe3032aa0eb97654c63c6178ee3c3a668cf9bdb8d24bd5678f4a71",
+      "baseline_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        28,
+        26
+      ],
+      "profile_zip_timestamp": [
+        2026,
+        10,
+        4,
+        17,
+        56,
+        46
+      ]
+    }
+  ],
+  "all_expanded_members_exactly_identical": true,
+  "provider_calls": 0,
+  "scope": "Two directly extractable exact archived inputs; container timestamps differ, source bytes and financial inputs do not."
+}

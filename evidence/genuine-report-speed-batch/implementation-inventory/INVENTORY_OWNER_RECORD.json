@@ -1,0 +1,39 @@
+{
+  "kind": "inventory-owner-focused-validation",
+  "state": "PASS",
+  "scope": "Four affected modules; no new full application acceptance or genuine whole-wallet acceptance.",
+  "command": ".venv/bin/python -m pytest tests/test_inventory_evidence.py tests/test_wallet_identity.py tests/test_real_evidence_adapter.py tests/test_archive_input.py -q --tb=short",
+  "ordinary_nodes": 136,
+  "seconds": 43.51,
+  "log": "evidence/position-history-batch/INVENTORY_OWNER_FINAL.log",
+  "log_sha256": "3f6c4c82a97513e4d1fdfdd398410e7e176959330608acf4442d0437403e5d4d",
+  "source_freeze_files": [
+    {
+      "path": "scanner/inventory_evidence.py",
+      "bytes": 28477,
+      "sha256": "1fad8a58d82c1f3dd1da25ded5fb3e1f15e9d9fe9c83b025bab0169188fa3d8c"
+    },
+    {
+      "path": "scanner/wallet_evidence.py",
+      "bytes": 125466,
+      "sha256": "4035f7f651450bac10c5684062a0890a67d9b15012af0c8899cfd371c27de070"
+    },
+    {
+      "path": "scanner/archive_input.py",
+      "bytes": 57082,
+      "sha256": "b33f148ddca466051d300851f9dae4e25b1f0b3eceafa7feb8371fb6cace9b52"
+    },
+    {
+      "path": "tests/test_inventory_evidence.py",
+      "bytes": 28047,
+      "sha256": "a1628338a077c5220b9e1ce5a0124bb7c524718e2fe32133effcf44b09940ed3"
+    }
+  ],
+  "before_source_hashes_captured": false,
+  "source_binding": "Current owned module hashes recorded at freeze after execution. Final whole-source gates remain parent responsibility.",
+  "genuine_scope": "Original phase6 components + augmented original87 report fees158868lamports/scopednamedlotloss13270924lamports/529sec. Distinctslots prohibit exactcurrentaggregate/reportboundary.",
+  "PRODUCT_READY": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "no_source_edits_pending": true
+}

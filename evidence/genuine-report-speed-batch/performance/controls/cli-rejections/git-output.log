@@ -1,0 +1,3 @@
+usage: benchmark_report.py [-h] --archive ARCHIVE --output OUTPUT
+                           [--full-details] [--profile] [--timeout TIMEOUT]
+benchmark_report.py: error: --output must be outside every Git worktree; it contains private runtime state.

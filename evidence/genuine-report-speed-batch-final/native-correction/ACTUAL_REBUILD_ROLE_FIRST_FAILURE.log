@@ -1,0 +1,64 @@
+....F
+=================================== FAILURES ===================================
+____ test_role_source_state_matrix_actual_rebuild[agreeing-owned-accounts] _____
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', state = 'agreeing'
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-473/test_role_source_state_matrix_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1ab1baf620>
+
+    @pytest.mark.parametrize('role', ROLES)
+    @pytest.mark.parametrize('state', STATES)
+    def test_role_source_state_matrix_actual_rebuild(builder, role, state, tmp_path, monkeypatch):
+        ref = role_source(builder, role, state)
+        calls = {'provider': 0, 'credential': 0}
+        monkeypatch.delenv('HELIUS_API_KEY', raising=False)
+        def deny_credential(*args, **kwargs):
+            calls['credential'] += 1
+            raise AssertionError('No credential reads in R12 acceptance')
+        async def deny_provider(*args, **kwargs):
+            calls['provider'] += 1
+            raise AssertionError('No provider requests in R12 acceptance')
+        monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object(), get_password=deny_credential))
+        monkeypatch.setattr(httpx.AsyncClient, 'request', deny_provider)
+        app = create_app(tmp_path / 'app', 'synthetic-local-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            bootstrap = client.get('/api/bootstrap', headers={'x-launch-token': 'synthetic-local-token'})
+            client.headers['x-csrf-token'] = bootstrap.json()['csrf']
+            store = app.state.store
+            original, checkpoint = seed_actual_report(builder, store, role, state)
+            usage = client.get('/api/state').json()['usage']
+            mutate_available_archive(store, ref['hash'], state)
+            response = client.post('/api/reports/' + original['id'] + '/rebuild')
+            if role == 'block-order' and state in ('missing', 'corrupt', 'malformed', 'unsupported'):
+                # Preserve the existing safe loader policy for invalid block order.
+                assert response.status_code == 409
+                assert response.json()['detail'] == 'Archived block ordering is invalid'
+                assert store.get('reports', original['id']) == original
+                assert len(store.list('reports')) == 1
+                assert client.get('/api/state').json()['usage'] == usage
+                assert calls == {'provider': 0, 'credential': 0}
+                return
+            assert response.status_code == 200, response.text
+            child = client.get('/api/reports/' + response.json()['report_id']).json()
+            assert child['id'] != original['id']
+            assert store.get('reports', original['id']) == original
+            assert client.get('/api/state').json()['usage'] == usage
+            frozen = store.evidence(child['collection_input_hash'])
+>           assert frozen['evidence'] == frozen['checkpoint']['evidence'] == checkpoint['evidence']
+E           AssertionError: assert [{'hash': '8d...e-page'}, ...] == [{'hash': '8d...e-page'}, ...]
+E             
+E             Left contains one more item: {'hash': 'c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9', 'kind': 'inventory-affinity'}
+E             Use -v to get more diff
+
+tests/test_review_v037_independent.py:194: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_review_v037_independent.py::test_role_source_state_matrix_actual_rebuild[agreeing-owned-accounts]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 4 passed, 1 warning in 0.95s

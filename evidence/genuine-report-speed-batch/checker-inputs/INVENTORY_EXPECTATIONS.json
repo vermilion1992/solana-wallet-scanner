@@ -1,0 +1,154 @@
+{
+  "version": "independently-worked-current-inventory-expectations-v1",
+  "kind": "genuine_archived_component_observations",
+  "dataset": "real",
+  "wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+  "input_path": "evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+  "input_bytes": 350517,
+  "input_sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33",
+  "source_records": [
+    {
+      "name": "01-current-wallet-account",
+      "wrapper_hash": "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+      "request_path": "evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-request.json",
+      "request_bytes": 159,
+      "request_sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+      "stored_response_path": "evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-response.raw.gz",
+      "stored_response_bytes": 195,
+      "stored_response_sha256": "b43a4e1e155fb5c2c872f328fccf1809a7063ba00c3e67daf91a1d52d24a5108",
+      "response_bytes": 247,
+      "response_sha256": "feabb86540e5c606f765d034aa523643e4c469744e4d2ef684e2b1e04c673ebd",
+      "rpc_id": 1,
+      "method": "getAccountInfo",
+      "request_wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "commitment": "finalized",
+      "context_slot": 453173211,
+      "raw_paths": [
+        "request.params[0]",
+        "request.params[-1].commitment",
+        "response.result.context.slot",
+        "response.result.value"
+      ],
+      "expected": {
+        "native_wallet_lamports": "650240",
+        "native_wallet_sol": "0.00065024",
+        "account_owner": "11111111111111111111111111111111",
+        "executable": false,
+        "native_wallet_value_scale": 1000000000
+      }
+    },
+    {
+      "name": "02-current-legacy-accounts",
+      "wrapper_hash": "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4",
+      "request_path": "evidence/genuine-wallet-batch/collection/phase6/02-current-legacy-accounts-request.json",
+      "request_bytes": 228,
+      "request_sha256": "ed44f19d919499ac45424e0f40d47ace46bb373d278983e766119b994f341704",
+      "stored_response_path": "evidence/genuine-wallet-batch/collection/phase6/02-current-legacy-accounts-response.raw.gz",
+      "stored_response_bytes": 112,
+      "stored_response_sha256": "e77588eb113107477809599d54fbe8cf72a288b1c4b357ae642429d9979d7afd",
+      "response_bytes": 104,
+      "response_sha256": "0842531d6a0f6d49937d9b314bd13096320d52543ff13839861640ade28728e4",
+      "rpc_id": 2,
+      "method": "getTokenAccountsByOwner",
+      "request_wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "commitment": "finalized",
+      "context_slot": 453173213,
+      "raw_paths": [
+        "request.params[0]",
+        "request.params[-1].commitment",
+        "response.result.context.slot",
+        "response.result.value"
+      ],
+      "expected": {
+        "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "account_count": 0,
+        "accounts": [],
+        "mint_quantity_totals_raw": {},
+        "whole_historical_owned_account_population": "UNKNOWN"
+      }
+    },
+    {
+      "name": "03-current-token2022-accounts",
+      "wrapper_hash": "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc",
+      "request_path": "evidence/genuine-wallet-batch/collection/phase6/03-current-token2022-accounts-request.json",
+      "request_bytes": 228,
+      "request_sha256": "91a6efe9c3137ca8a8d1f805d3ecafe4447ef1bb16ec7ad9c5f968940780ab90",
+      "stored_response_path": "evidence/genuine-wallet-batch/collection/phase6/03-current-token2022-accounts-response.raw.gz",
+      "stored_response_bytes": 488,
+      "stored_response_sha256": "fc124e03a6d9366a356a7fe8412a04f2af2325a89127ec11a6715201d1971113",
+      "response_bytes": 667,
+      "response_sha256": "6497a39b1f7f34f1c054ef140473300762dd9f5c3fd2017b4318d755ffae0d3e",
+      "rpc_id": 3,
+      "method": "getTokenAccountsByOwner",
+      "request_wallet": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+      "commitment": "finalized",
+      "context_slot": 453173215,
+      "raw_paths": [
+        "request.params[0]",
+        "request.params[-1].commitment",
+        "response.result.context.slot",
+        "response.result.value"
+      ],
+      "expected": {
+        "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "account_count": 1,
+        "accounts": [
+          {
+            "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+            "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+            "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+            "quantity_raw": "0",
+            "decimals": 6,
+            "quantity_display": "0",
+            "account_lamports": "1513840",
+            "is_native": false,
+            "state": "initialized",
+            "account_lamports_are_not_token_price_or_proved_refundable_value": true
+          }
+        ],
+        "mint_quantity_totals_raw": {
+          "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump": "0"
+        },
+        "whole_historical_owned_account_population": "UNKNOWN"
+      }
+    }
+  ],
+  "worked_method": "Direct JSON extraction of retained original RPC request/response bytes, integer account/count checks and independently calculated integer sum/decimal scaling. No scanner inventory parser, decoder, FIFO or result receipt is called.",
+  "expected_component_states": {
+    "native_account": "PASS",
+    "native_lamports": "PASS",
+    "native_balance": "UNKNOWN (no getBalance original in these three inputs)",
+    "legacy_token_program": "PASS",
+    "token2022_program": "PASS",
+    "same_slot_inventory": "UNKNOWN",
+    "report_boundaries": "UNKNOWN"
+  },
+  "independently_worked_aggregate": {
+    "context_slots": [
+      453173211,
+      453173213,
+      453173215
+    ],
+    "same_slot": false,
+    "reason": "Three distinct finalized context slots cannot be merged into an exact inventory at any one slot; minContextSlot is a lower bound only and no context slot supplies an exact report-boundary timestamp.",
+    "combined_native_plus_token_equity_sol": null,
+    "opening_inventory": null,
+    "closing_inventory": null
+  },
+  "unsupported_conclusions": {
+    "historical_population": "UNKNOWN",
+    "historical_or_period_cost": "UNKNOWN",
+    "historical_marks": "UNKNOWN",
+    "valued_external_flows": "UNKNOWN",
+    "meme_eligibility": "UNKNOWN",
+    "wallet_profit": "UNKNOWN",
+    "economic_pnl": "UNKNOWN",
+    "wallet_qualification": false,
+    "B3_acceptance": false,
+    "PRODUCT_READY": false
+  },
+  "scope": "These current snapshots do not establish historical ownership/lifecycle, acquisition cost, classification, exact report-time boundaries, token prices, flow roles, profitability or safety. Account lamports are separate from raw token units; they are not added as marked token value.",
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

@@ -1,0 +1,31 @@
+{
+  "kind": "offline-report-performance-command-v1",
+  "acceptance_run": false,
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+    "--worker",
+    "--archive",
+    "/workspace/outputs/report-proof-profile/synthetic-benchmark-input.zip",
+    "--output",
+    "/workspace/outputs/report-proof-profile/tool-smoke",
+    "--timeout",
+    "300",
+    "--full-details"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "timeout_seconds": 300,
+  "exit_code": 1,
+  "timed_out": false,
+  "seconds": 0.515453603991773,
+  "raw_log": {
+    "path": "/workspace/outputs/report-proof-profile/tool-smoke/benchmark.log",
+    "bytes": 8307,
+    "sha256": "96b06ed531b845f48efa43c92fb063ac3332f476671c14a6de6eb2c1a8551e09"
+  },
+  "observations": {
+    "path": "/workspace/outputs/report-proof-profile/tool-smoke/observations.json",
+    "bytes": 1310,
+    "sha256": "bd70ead2bcd8dafb5aca9127c82f260db01b19eb87d3a4c91370425152d92c63"
+  }
+}

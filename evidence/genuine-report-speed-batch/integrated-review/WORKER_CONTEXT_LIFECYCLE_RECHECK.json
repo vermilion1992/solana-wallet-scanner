@@ -1,0 +1,15 @@
+{
+  "kind": "independent-benchmark-worker-CLI-lifecycle-fix-recheck",
+  "state": "PASS",
+  "script_sha256": "b188b43ec11194b94d656529ff8e4b6d5ed73e85682b736509ea9570f3399c7d",
+  "actual_exit_code": 2,
+  "stderr_sha256": "53f346d30a5252fe17cd248a8efb4927236dc28ce148c18818576385832b31db",
+  "stderr": "unrecognized arguments: --worker",
+  "manually_constructed_context_public_cli_rejected": true,
+  "private_runtime_created": false,
+  "application_worker_executed": false,
+  "network_requests": 0,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "source_or_Git_mutations": false
+}

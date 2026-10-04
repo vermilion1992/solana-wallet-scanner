@@ -1,0 +1,122 @@
+{
+  "checked_date": "2026-10-02",
+  "scope": "Installed dependency closure, compatible metadata, named advisories, broad registry audits and compiled frontend; no exploit or live-chain validation.",
+  "environment": {
+    "python": "3.12.14",
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "uv_lock_compiler": "0.12.19",
+    "pip_audit": "2.10.1",
+    "os": "Linux"
+  },
+  "minimums": {
+    "python": ">=3.11",
+    "frontend_build_node": ">=22.12.0"
+  },
+  "python_pins": {
+    "annotated-doc": "0.0.5",
+    "annotated-types": "0.8.0",
+    "anyio": "4.15.1",
+    "backports-tarfile": "1.2.0",
+    "certifi": "2026.7.22",
+    "cffi": "2.1.1",
+    "click": "8.5.0",
+    "colorama": "0.4.6",
+    "cryptography": "50.0.2",
+    "fastapi": "0.142.2",
+    "h11": "0.16.0",
+    "httpcore": "1.0.9",
+    "httpx": "0.28.1",
+    "idna": "3.20",
+    "importlib-metadata": "9.0.1",
+    "iniconfig": "2.3.0",
+    "jaraco-classes": "3.4.0",
+    "jaraco-context": "6.1.2",
+    "jaraco-functools": "4.6.0",
+    "jeepney": "0.9.0",
+    "keyring": "25.6.0",
+    "more-itertools": "11.1.0",
+    "opentelemetry-api": "1.45.0",
+    "packaging": "26.3",
+    "pluggy": "1.6.0",
+    "pycparser": "3.0",
+    "pydantic": "2.13.5",
+    "pydantic-core": "2.46.5",
+    "pygments": "2.21.0",
+    "pytest": "9.1.1",
+    "pywin32-ctypes": "0.2.3",
+    "secretstorage": "3.5.0",
+    "setuptools": "84.0.0",
+    "starlette": "1.7.0",
+    "typing-extensions": "4.16.0",
+    "typing-inspection": "0.4.4",
+    "uvicorn": "0.34.2",
+    "zipp": "4.1.0"
+  },
+  "lock_sha256": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "frontend/package-lock.json": "434da4c44527f95a064e663d546f8bdb54e0901a7781caa7f0abf20f9bfc8d90"
+  },
+  "named_advisories": [
+    {
+      "id": "GHSA-7f5h-v6xp-fcq8",
+      "package": "starlette",
+      "affected": ">=0.39.0,<=0.49.0",
+      "first_patch": "0.49.1",
+      "locked": "1.7.0",
+      "affected_locked": false,
+      "source": "https://github.com/Kludex/starlette/security/advisories/GHSA-7f5h-v6xp-fcq8"
+    },
+    {
+      "id": "GHSA-vg6x-rcgg-rjx6",
+      "package": "vite",
+      "locked": "8.3.2",
+      "affected_locked": false,
+      "source": "https://github.com/vitejs/vite/security/advisories/GHSA-vg6x-rcgg-rjx6"
+    },
+    {
+      "id": "GHSA-6w46-j5rx-g56g",
+      "package": "pytest",
+      "first_patch": "9.0.3",
+      "locked": "9.1.1",
+      "affected_locked": false,
+      "source": "https://github.com/advisories/GHSA-6w46-j5rx-g56g"
+    },
+    {
+      "id": "GHSA-h35f-9h28-mq5c",
+      "package": "setuptools",
+      "first_patch": "83.0.0",
+      "locked": "84.0.0",
+      "affected_locked": false,
+      "source": "https://github.com/advisories/GHSA-h35f-9h28-mq5c"
+    }
+  ],
+  "compatibility": {
+    "fastapi_metadata_requires_starlette": ">=0.46.0",
+    "plugin_react_metadata_requires_vite": "^8.0.0"
+  },
+  "checks": {
+    "fresh_hash_enforced_python_install": "passed",
+    "fresh_pip_check": "passed",
+    "application_pip_check": "passed",
+    "runtime_tests_passed": 64,
+    "runtime_test_warnings": [
+      "Upstream httpx test client deprecation"
+    ],
+    "npm_ci": "passed",
+    "vite_build": "passed",
+    "format_assertions": 16,
+    "discovery_assertions_at_dependency_handoff": 65,
+    "npm_audit_known_findings": 0,
+    "pip_audit_all_locked_package_pairs": 38,
+    "pip_audit_known_findings": 0
+  },
+  "limits": [
+    "Windows/macOS and Python 3.11 runtime not executed",
+    "Audits query known registry advisories rather than prove security",
+    "No denial-of-service exploit executed",
+    "Feature work continued after initial frontend build; final build validation is recorded separately",
+    "No Helius or live-chain request"
+  ],
+  "source_release": "0.3.1"
+}

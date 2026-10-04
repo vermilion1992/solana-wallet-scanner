@@ -1,0 +1,299 @@
+{
+  "kind": "read-only-current-source-native-rebuild-inventory-affinity-replay",
+  "results": [
+    {
+      "generation": 1,
+      "status_code": 200,
+      "native_references_preserved": true,
+      "frozen_evidence_equal_original": false,
+      "new_refs": [
+        {
+          "hash": "c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9",
+          "kind": "inventory-affinity"
+        }
+      ],
+      "source_set": {
+        "state": "PASS",
+        "complete": true,
+        "raw_reference_count": 9,
+        "authenticated_reference_count": 9,
+        "unique_link_count": 9,
+        "unique_hash_count": 9,
+        "invalid_link_count": 0,
+        "unauthenticated_link_count": 0,
+        "omitted_link_count": 0,
+        "invalid_authenticated_link_count": 0,
+        "inspected_hash_count": 9,
+        "omitted_hash_count": 0,
+        "budget": {
+          "max_unique_hashes": 40000
+        },
+        "omitted_scope": null,
+        "reason": "The authenticated link set is fully enumerated and every distinct archive had an inspection attempt within the fixed budget. Usable contents and metric dependencies are assessed separately.",
+        "evidence": [
+          "15d139dabf9de8bf1580c3b55cd660d7c6aba6ebbabf05a9abfdb99e6b4ec42d",
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "8d603c0c1097621cd4c9566cc6d00581a4c8e156c21ede550c066894c197f53b",
+          "b930ec1ca08a2e9313c4cd6bcdd1a5f77d6840492cf83fd385d183abd8669edc",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "ed504e36070b15bfb593647c2f0f3fad352a6e42302ae19a8ddd086f65fbedf1",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "universe": "frozen-manifest"
+      },
+      "known_closed": 1,
+      "hold": {
+        "status": "known",
+        "value": "6",
+        "unit": "hours",
+        "evidence": [
+          "15d139dabf9de8bf1580c3b55cd660d7c6aba6ebbabf05a9abfdb99e6b4ec42d",
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "8d603c0c1097621cd4c9566cc6d00581a4c8e156c21ede550c066894c197f53b",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "population": "This named token account only; not a wallet-wide position"
+      },
+      "wallet_fee": {
+        "status": "known",
+        "value": "0.000015",
+        "unit": "SOL",
+        "reason": "Arithmetic for the explicitly observed archived record set; native delta is not profit and fees have no inferred trade allocation.",
+        "evidence": [
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85"
+        ],
+        "record_count": 3,
+        "scope": "observed-record-set"
+      },
+      "native_delta": {
+        "status": "known",
+        "value": "-0.000016",
+        "unit": "SOL",
+        "reason": "Arithmetic for the explicitly observed archived record set; native delta is not profit and fees have no inferred trade allocation.",
+        "evidence": [
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "record_count": 3,
+        "scope": "observed-record-set"
+      }
+    },
+    {
+      "generation": 2,
+      "status_code": 200,
+      "native_references_preserved": true,
+      "frozen_evidence_equal_original": false,
+      "new_refs": [
+        {
+          "hash": "c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "b66b8d61abf99cb82fc82f108c93afd7dde60957e3b50069e7a3da88877e7931",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9",
+          "kind": "inventory-affinity"
+        }
+      ],
+      "source_set": {
+        "state": "UNKNOWN",
+        "complete": false,
+        "raw_reference_count": 10,
+        "authenticated_reference_count": 10,
+        "unique_link_count": 9,
+        "unique_hash_count": 9,
+        "invalid_link_count": 1,
+        "unauthenticated_link_count": 0,
+        "omitted_link_count": 0,
+        "invalid_authenticated_link_count": 1,
+        "inspected_hash_count": 9,
+        "omitted_hash_count": 0,
+        "budget": {
+          "max_unique_hashes": 40000
+        },
+        "omitted_scope": "entire-source-set",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "15d139dabf9de8bf1580c3b55cd660d7c6aba6ebbabf05a9abfdb99e6b4ec42d",
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "8d603c0c1097621cd4c9566cc6d00581a4c8e156c21ede550c066894c197f53b",
+          "b930ec1ca08a2e9313c4cd6bcdd1a5f77d6840492cf83fd385d183abd8669edc",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "ed504e36070b15bfb593647c2f0f3fad352a6e42302ae19a8ddd086f65fbedf1",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "universe": "frozen-manifest"
+      },
+      "known_closed": 0,
+      "hold": {
+        "status": "unknown",
+        "value": null,
+        "unit": "hours",
+        "evidence": [
+          "15d139dabf9de8bf1580c3b55cd660d7c6aba6ebbabf05a9abfdb99e6b4ec42d",
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "8d603c0c1097621cd4c9566cc6d00581a4c8e156c21ede550c066894c197f53b",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "population": "This named token account only; not a wallet-wide position"
+      },
+      "wallet_fee": {
+        "status": "unknown",
+        "value": null,
+        "unit": "SOL",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85"
+        ],
+        "record_count": 3,
+        "scope": "observed-record-set"
+      },
+      "native_delta": {
+        "status": "unknown",
+        "value": null,
+        "unit": "SOL",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "record_count": 3,
+        "scope": "observed-record-set"
+      }
+    },
+    {
+      "generation": 3,
+      "status_code": 200,
+      "native_references_preserved": true,
+      "frozen_evidence_equal_original": false,
+      "new_refs": [
+        {
+          "hash": "c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "b66b8d61abf99cb82fc82f108c93afd7dde60957e3b50069e7a3da88877e7931",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "112ac233a4b5e3401850309739a3ccd4e12fc8883a1342f818c51f8c8102ef3d",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "b66b8d61abf99cb82fc82f108c93afd7dde60957e3b50069e7a3da88877e7931",
+          "kind": "inventory-affinity"
+        },
+        {
+          "hash": "c95c56aed84dbc25ae26fbf4ec6d76ca3fd73fcb6dcbe3051819ab8e46def6a9",
+          "kind": "inventory-affinity"
+        }
+      ],
+      "source_set": {
+        "state": "UNKNOWN",
+        "complete": false,
+        "raw_reference_count": 12,
+        "authenticated_reference_count": 12,
+        "unique_link_count": 9,
+        "unique_hash_count": 9,
+        "invalid_link_count": 3,
+        "unauthenticated_link_count": 0,
+        "omitted_link_count": 0,
+        "invalid_authenticated_link_count": 3,
+        "inspected_hash_count": 9,
+        "omitted_hash_count": 0,
+        "budget": {
+          "max_unique_hashes": 40000
+        },
+        "omitted_scope": "entire-source-set",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "15d139dabf9de8bf1580c3b55cd660d7c6aba6ebbabf05a9abfdb99e6b4ec42d",
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "8d603c0c1097621cd4c9566cc6d00581a4c8e156c21ede550c066894c197f53b",
+          "b930ec1ca08a2e9313c4cd6bcdd1a5f77d6840492cf83fd385d183abd8669edc",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "ed504e36070b15bfb593647c2f0f3fad352a6e42302ae19a8ddd086f65fbedf1",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "universe": "frozen-manifest"
+      },
+      "known_closed": 0,
+      "hold": {
+        "status": "unknown",
+        "value": null,
+        "unit": "hours",
+        "evidence": [
+          "15d139dabf9de8bf1580c3b55cd660d7c6aba6ebbabf05a9abfdb99e6b4ec42d",
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "8d603c0c1097621cd4c9566cc6d00581a4c8e156c21ede550c066894c197f53b",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "population": "This named token account only; not a wallet-wide position"
+      },
+      "wallet_fee": {
+        "status": "unknown",
+        "value": null,
+        "unit": "SOL",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85"
+        ],
+        "record_count": 3,
+        "scope": "observed-record-set"
+      },
+      "native_delta": {
+        "status": "unknown",
+        "value": null,
+        "unit": "SOL",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "8451816fd20187eb41a72ad9b687723813a820c71b793699c42394caf8980f1d",
+          "871acb590d9782ef3af01dde85b901aa2cbcd78926b568a74fa215caca7957c3",
+          "ccd892c76998be787f696dc127ab3ba79f43bbace292c90121b314102fc62115",
+          "ce8a9adad9500e6dd7e76622261305d0fcf195c3d1340138dc60bdc1635cef85",
+          "f423910a817dc0a57bcb6a726c30d5e140ad99997c4f63b65b307cb5ca018d85"
+        ],
+        "record_count": 3,
+        "scope": "observed-record-set"
+      }
+    }
+  ],
+  "calls": {
+    "provider": 0,
+    "credential": 0
+  },
+  "parent_unchanged": true
+}

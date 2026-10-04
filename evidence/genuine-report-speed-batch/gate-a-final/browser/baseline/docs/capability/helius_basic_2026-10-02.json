@@ -1,0 +1,45 @@
+{
+  "kind": "authenticated-basic-native-rpc-capability",
+  "tested_at": "2026-10-02T14:05:29.369715+00:00",
+  "result": {
+    "status": "passed",
+    "capability_status": "passed",
+    "tested_at": "2026-10-02T14:05:29.369715+00:00",
+    "manifest_version": "helius-native-2026-10-02.v1",
+    "methods": [
+      "getVersion",
+      "getSlot"
+    ],
+    "credits": 2,
+    "snapshot_slot": 452632014,
+    "wallet_methods_verified": false,
+    "evidence": [
+      {
+        "hash": "6d91541dcdeeee124fc3b664215824f30470f484869775d1c4f542faef14452c",
+        "kind": "capability-test"
+      }
+    ],
+    "notes": [
+      "This proves tested method access, not provider billing entitlement or complete historical wallet ownership."
+    ],
+    "budget_scope": "Bounded capability pilot; actual billing-cycle dates and provider-dashboard usage remain unverified"
+  },
+  "raw_observations": {
+    "address": null,
+    "at": "2026-10-02T14:05:29.369715+00:00",
+    "kind": "capability-test",
+    "manifest_version": "helius-native-2026-10-02.v1",
+    "observations": {
+      "slot": 452632014,
+      "version": {
+        "feature-set": 3383571666,
+        "solana-core": "4.3.0"
+      }
+    }
+  },
+  "published_cost_reference": "https://www.helius.dev/docs/billing/credits",
+  "plan_reference": "https://www.helius.dev/docs/billing/plans",
+  "billing_verified": false,
+  "wallet_history_verified": false,
+  "credentials_included": false
+}

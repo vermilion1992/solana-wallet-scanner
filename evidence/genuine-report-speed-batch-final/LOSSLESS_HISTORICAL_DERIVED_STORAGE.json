@@ -1,0 +1,696 @@
+{
+  "kind": "verified-lossless-retained-derived-output-storage",
+  "state": "PASS",
+  "index": {
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/DERIVED_OUTPUTS_INDEX_FINAL.json",
+    "bytes": 23317,
+    "sha256": "8233cd80c107ef2aa314b79880ad676d6a1cd6fd206ab268c5fb637065834a42"
+  },
+  "verified_parent_backup": {
+    "path": "/workspace/outputs/complete-wallet-speed-batch/private-runtime-storage/completed-12.tar.gz",
+    "bytes": 34838527,
+    "sha256": "9ffd8203a7f507595c373a089940bf6efe34e4024f0d772a42f1ade5c6ebbccf",
+    "index": {
+      "path": "/workspace/outputs/complete-wallet-speed-batch/private-runtime-storage/INDEX.json",
+      "bytes": 396350,
+      "sha256": "e64f19f4aab82de83b7dc853aab1cfb396e13944745caeeaae75cf7da8868574"
+    }
+  },
+  "application_commit_during_storage": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "current_source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+  "original_scope": "Historical eea scoped outputs; no new application acceptance",
+  "records": [
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/baseline-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "39118dc7286a8065834720ecb8bb73e58c0c6d0cc91366403fe5b695022818b0",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/7ace005ce300eb8b61c2c5efe5d42d91c3b2150e77d854302f58d9c82387922c.json.gz",
+      "stored": {
+        "bytes": 6936163,
+        "sha256": "5151fd8a1c5e225e71167f0ffc762fe070f03be5c8d566b09a0dad3ee23f161f"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/inspected-selected-sources.json",
+      "original_bytes": 101541522,
+      "original_sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/cae2c1321f6b896868c2407352a7169e7552cd4cb2d6becaee97f3d12742f1da.json.gz",
+      "stored": {
+        "bytes": 25829685,
+        "sha256": "eff3704531221b61674e4bbf0909fbddf8a5c0bf4f84207ffb5fc1d95cb8405b"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-buy-missing-child.json",
+      "original_bytes": 93436409,
+      "original_sha256": "6dafd39689b19424f17a6fb74b2f5867a391a5cb534c111aa1f0e0cfba634fd5",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/9257db06bef9838f11fe5ce1bda5053e10a2fd0ef64c593ac3af557e58327bdd.json.gz",
+      "stored": {
+        "bytes": 6959405,
+        "sha256": "0a59c3a13150287cc2ffc85eb2139afd191f47ccb3e1d32019d5e70621cae8d5"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-buy-restored-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "f0d14e36bcf4708ae7368e34613afdb58b9b239d3764359a2648b3167b08922d",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/4fbc5a0f37ca944823af8c7e04c1a64003b188bcaec4e962dffe4705423414bb.json.gz",
+      "stored": {
+        "bytes": 6936150,
+        "sha256": "15c1ad9ed27162cf7b3e8c66131ec0fefbbb875bdc2eebb0defe6e747601498f"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-sell-missing-child.json",
+      "original_bytes": 93336408,
+      "original_sha256": "1f45dfd4f6f54f97962c96c50c4de098d49089c0c00d44a04194084c533ff136",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/e63ce767256219decc69c340313d6b442229e815af08db50dd9ff94476b7f185.json.gz",
+      "stored": {
+        "bytes": 6965512,
+        "sha256": "b81fd95e09e3e2cda6cce1cbb2707c71728c6dbc8165f9a0cbb491c240b5e273"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/lot-0-sell-restored-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "71c5a215ce1fb95cc90e6addcab23476d7a99258496e135cbf14eef029f6125c",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/9edc4d9a9495a278380942d3793f8126a656dc88cf5f204f113bf68a6189a813.json.gz",
+      "stored": {
+        "bytes": 6936154,
+        "sha256": "47728ddce7ebf93c63737c907bf6e169184a626c294e7bbc8b59d5ad0b1df9b8"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/parent-report.json",
+      "original_bytes": 93019856,
+      "original_sha256": "875002e183e6221efdfdfa90879ddab13239455b6d26ca1e92b1a78bb5a631b5",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/947fac2fe57450ad12e3053283fd6b220471e94470efbc74415ae3bc9f6e7d22.json.gz",
+      "stored": {
+        "bytes": 6935825,
+        "sha256": "b238749a92accbea536683d8cbaa84c87e7d2c0580d52dd25701bff4cf0fc688"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/source-missing-child.json",
+      "original_bytes": 93360598,
+      "original_sha256": "8e5c49ba9e836aac0357c024e90cc33e0089988d250874f119c9b802e5857648",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/b7df5829d5f74d44048321b1db1172346d7356bfc0ea4b1b0d4acc36bd414df3.json.gz",
+      "stored": {
+        "bytes": 6973789,
+        "sha256": "a863ab9e691643ad046b07752ce6eebca3d8f0425ab504d2132e427723059659"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-development/source-restored-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "aa8331c4546cd6949ca0691fcbccf4e3f4072645aac297d9c9fa6a5273cf0a04",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/5623dbb6eea9354fb0eb4411acd33201519709f8dc27517cd4871957a3f57b0d.json.gz",
+      "stored": {
+        "bytes": 6936154,
+        "sha256": "eddc351474daf79ff97c74a9c737095ca4903545c60965604ff23350db858cca"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/baseline-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "53c943c9cbf01da5f6810a655dadffa345bb44bf99341271f57b40060c27e7ec",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/94ec47eb8a65cbe11faf2844b1dd0145393f82d9e181d61919e91f099cbf6f69.json.gz",
+      "stored": {
+        "bytes": 6936146,
+        "sha256": "b11c77e426d465498f66f44b38b31a797829fce256ec5599052a3161b112fb7e"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json",
+      "original_bytes": 101541522,
+      "original_sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/84d307009a2ebc3fc91324909e26da968bc10dbbc3334b8a1e3feb0ae8be3ab9.json.gz",
+      "stored": {
+        "bytes": 25829685,
+        "sha256": "eff3704531221b61674e4bbf0909fbddf8a5c0bf4f84207ffb5fc1d95cb8405b"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-buy-missing-child.json",
+      "original_bytes": 93436409,
+      "original_sha256": "11adafb4e7ae7baf9d4e73795e180d61e5c3daccdf86ea476f376aa600d45309",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/6ba64d845cbaa0e0899ed7ec48d8ad4049dbea297c8d91ac5986fd347a5aa272.json.gz",
+      "stored": {
+        "bytes": 6959422,
+        "sha256": "7885f371c298e19309303e15bc3fa179cd89edcf021c61fd2d18ad6d6f6747b3"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-buy-restored-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "bd92068d20d1ab7e2e9296151feabaee6c020a53930ee938093f62328f7a491b",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/9a63999d32752b9c78a1c7b712ce50fcd507b560f779cc69ab7fda266c2d16e5.json.gz",
+      "stored": {
+        "bytes": 6936148,
+        "sha256": "2e862306fccd7a99e28a70845fb2aa1b4204d0b1e1c018124d99a46b4088f140"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-sell-missing-child.json",
+      "original_bytes": 93336408,
+      "original_sha256": "db999f58c2df49b0f6299b2a44cb12a35430ecca40cc7d0ca61cd609aa1a0e5b",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/1cec1a6b9fd0c9b63143ba81ce08c163d0f45d7608699bb111b860c483c7de1d.json.gz",
+      "stored": {
+        "bytes": 6965505,
+        "sha256": "153d6720a7d951778045eca01afa3b38050408930053ad57c5a6db0b17bfe3ad"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/lot-0-sell-restored-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "f4e0c02e08d0014630a2b1ed7e12f888dcbdbe8c4eb7599659e4fa58d61860d3",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/d9c56e4a4b962b13bab11f51012dd4b1397d41a13d225f28b3fae110fb5a8c6d.json.gz",
+      "stored": {
+        "bytes": 6936145,
+        "sha256": "5f7ef73e1d1168f9559eeb4b5951b3d570abadd4c27b395d89aa528823aaddc3"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/parent-report.json",
+      "original_bytes": 93019856,
+      "original_sha256": "56cc7a952a6ebb0ae950b091cf5f65494194da8747df7016fa4eec4f3142d876",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/71de8bccdacec36c6f43e19da37a90c3ff452b5c5051bd8879fefd54ecfcacbe.json.gz",
+      "stored": {
+        "bytes": 6935844,
+        "sha256": "fd697f69d9a75dc08fe9e117d51d57577db8ad26b830632f84f47145c033838d"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/source-missing-child.json",
+      "original_bytes": 93360598,
+      "original_sha256": "b35fcf9448b23803f022295245b86b8e6c1ff386ec8a3860fc7113d68389a193",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/56c6ab180689bd2f5c771b58d90bdfafaf86b4adea7ad12052b221f934a0b593.json.gz",
+      "stored": {
+        "bytes": 6973807,
+        "sha256": "b13515c574ba82f240b7bf82ce83264365c7f2cff46c447961dcd40447a28606"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance/source-restored-child.json",
+      "original_bytes": 93020410,
+      "original_sha256": "d5bd29d3d65609777cc4692cf1d2243ed270c3eaf01289338c2cf71425119f4a",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/6ccd40f513e6188309dc4e30e65e0c53f61ea08cc50e2703f40d283fd97b8359.json.gz",
+      "stored": {
+        "bytes": 6936159,
+        "sha256": "10aff4382b8e1902d7016dd8263d56905be2ecf8bc62c046934a5d6f7db981e3"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-development/partial-real-report.json",
+      "original_bytes": 31194284,
+      "original_sha256": "c87f19c08c01c87fe7788c50a14c49c291b28054063ff7af4b6628186e8964b5",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/dd9843a945d1c4e8e84df0056eddee1123d1fd1f264766f8f7419b03afde78b7.json.gz",
+      "stored": {
+        "bytes": 2443572,
+        "sha256": "1a21858e5857420c1669c9f4df10db4bb9c2f0f4d1370f9194f55f618f556462"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-development/synthetic-parent.json",
+      "original_bytes": 8454277,
+      "original_sha256": "47737b9c611dfb35cb29e20c7e43a2f7a8d3ddf7074d26edbfae5ff9f883d7ef",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/6a06e5eba0edf873d34e10897b272f8df1372738121256aef6a2761ac4e48c68.json.gz",
+      "stored": {
+        "bytes": 538105,
+        "sha256": "c36137f6f542980c4c2246e7198ca33a50711f0e72437707e782d47cb51c670b"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-development/valuation_hash-missing-child.json",
+      "original_bytes": 8468565,
+      "original_sha256": "704c9e15cb49a5d1fe5973c38901377ec41bc25cc85fbe6bcce4367352905b50",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/e3896b9175a57dfc0a941425a664544e5867838c5ecf581676dead0389a796ff.json.gz",
+      "stored": {
+        "bytes": 538984,
+        "sha256": "2c4a4b601b3e8fb4818168c514261ca099f7245bb177773ef8c5e9b452a84353"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-development/world_hash-missing-child.json",
+      "original_bytes": 8588496,
+      "original_sha256": "c427abc33202d967ac5d836bb7d484b202220b34e0aae6123c639d0c6fbe5a36",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/3a4096451e37060f336d3fc6e10b70c8ea0a5c3cba67789c59eb01aa96f73154.json.gz",
+      "stored": {
+        "bytes": 546532,
+        "sha256": "207829668ea4686a5a4bd0274c8a19b13c612054705dc881a063ecd34cfad04f"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/partial-real-report.json",
+      "original_bytes": 31194284,
+      "original_sha256": "e35ab10639049f0f56437f34d2613605662196c86ec691203764e7865e838c09",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/018b6fde63d744c89c374c637c2774d437371c66df8da0975bbc202e77842987.json.gz",
+      "stored": {
+        "bytes": 2444531,
+        "sha256": "bf2b744c4179aef26238e0bc988676cd732c432a8adf95daa51eee157d5b9c85"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/synthetic-parent.json",
+      "original_bytes": 8454277,
+      "original_sha256": "32c5e0063af21895c4789232e72af60315d845e0736e3ee5a9c87c5e805b5f71",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/93a7ade5d2b019d45323ef01c5733de7414e59d3205c82fd0d1647e4670fd45f.json.gz",
+      "stored": {
+        "bytes": 537975,
+        "sha256": "63b679d4099a818f8569f6cc0e499eac1fc3aba560136bf9035e25ce6e05797a"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/valuation_hash-missing-child.json",
+      "original_bytes": 8468565,
+      "original_sha256": "124c87a6241756f042a8b9cd9bf9edc3ec10e6988a0af0177c4905271cb68b9a",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/845bd53cc577b659b631070cb2423e7f4f9b2cea908b5c430e3f6b2e0fd13f2b.json.gz",
+      "stored": {
+        "bytes": 540170,
+        "sha256": "4512f289a88ea0c5d1949f125421870dd4dcb47000bf7e8aeaa562d5794b4493"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/final-replays/product-real-acceptance/world_hash-missing-child.json",
+      "original_bytes": 8588496,
+      "original_sha256": "aaeac1fef2ee93a038fb66343216039c7a91bc76435e456a91740b51676b3f85",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/78815646ff622b2f1cb0ed98da6019b70b49bdbae410b71f07df833199e3adb7.json.gz",
+      "stored": {
+        "bytes": 546538,
+        "sha256": "362d917bb298110c4050fabc39223023cb43c181ae89f6f5103cd56f834d1c24"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/data/exports/0fd0b33de46643a881068b2955b795a1.json",
+      "original_bytes": 8454277,
+      "original_sha256": "9659523817b8f901de2eed0b5d0ca15259a28951e8624f6c690b7284d8db1ba4",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/cfae272831b9127c99dc648c17d7009c7f8668bd9df726baa0badd3d6225ffc4.json.gz",
+      "stored": {
+        "bytes": 538127,
+        "sha256": "39826b0a6510966087a12d71398a664c0a6186b70adf4319739c0f66acf1351a"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "three-authorized-public-export-members-only",
+        "tar_path": "/workspace/outputs/complete-wallet-speed-batch/private-runtime-storage/completed-12.tar.gz",
+        "tar_sha256": "9ffd8203a7f507595c373a089940bf6efe34e4024f0d772a42f1ade5c6ebbccf",
+        "member": "exports/0fd0b33de46643a881068b2955b795a1.json"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/data/exports/1e02df4ab5ac40739cc9ccf78ef38ba2.json",
+      "original_bytes": 93064692,
+      "original_sha256": "7a1f68e584ca2d9c39ff5ff1e09163567159114cb6f9b67039c5005a6f761809",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/88d76e136af6a1bc9a1179b655ca29bde33d233505ac88793415fef94b580b32.json.gz",
+      "stored": {
+        "bytes": 6937456,
+        "sha256": "305636b3783448117298252a35557a48342ebb1fe26f4966a40ca0c0ad43bf4e"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "three-authorized-public-export-members-only",
+        "tar_path": "/workspace/outputs/complete-wallet-speed-batch/private-runtime-storage/completed-12.tar.gz",
+        "tar_sha256": "9ffd8203a7f507595c373a089940bf6efe34e4024f0d772a42f1ade5c6ebbccf",
+        "member": "exports/1e02df4ab5ac40739cc9ccf78ef38ba2.json"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/data/exports/af3ecf103aab487cabb669e466d01e1c.json",
+      "original_bytes": 93064139,
+      "original_sha256": "ff38c71213c890a04a521f9261619c0b6f813940315b5521c85a4d898ee1a64a",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/ec774cdeea541e00e06fe05820f33e35425c1f6bc43d82328379abe3d9e8cc65.json.gz",
+      "stored": {
+        "bytes": 6937217,
+        "sha256": "ab6501a20b2fbfc427585e9b0a8e47c29e9b7a0267a49623bbea0a3940e62be7"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "three-authorized-public-export-members-only",
+        "tar_path": "/workspace/outputs/complete-wallet-speed-batch/private-runtime-storage/completed-12.tar.gz",
+        "tar_sha256": "9ffd8203a7f507595c373a089940bf6efe34e4024f0d772a42f1ade5c6ebbccf",
+        "member": "exports/af3ecf103aab487cabb669e466d01e1c.json"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/genuine-partial-report.json",
+      "original_bytes": 6177503,
+      "original_sha256": "fef6e53e98d462d4ceea272d12cf84429d559d5c3b6120f9eb20c3c519b77840",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/914f15479aee62bd893a4e38b6e1db02c13da1a876d7968fbfa12ecbbf445628.json.gz",
+      "stored": {
+        "bytes": 479230,
+        "sha256": "b73cd8b9e7b1a45a5aac080e64cea1a77bf067df7ed7e54e77ad88ad9113243e"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-child.json",
+      "original_bytes": 93064692,
+      "original_sha256": "7a1f68e584ca2d9c39ff5ff1e09163567159114cb6f9b67039c5005a6f761809",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/ea69497845de50bfc1639e0e0a4bb9dcbb760ff4b800cd232161cac092ff7c03.json.gz",
+      "stored": {
+        "bytes": 6937456,
+        "sha256": "305636b3783448117298252a35557a48342ebb1fe26f4966a40ca0c0ad43bf4e"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-parent.json",
+      "original_bytes": 93064139,
+      "original_sha256": "ff38c71213c890a04a521f9261619c0b6f813940315b5521c85a4d898ee1a64a",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/0ba6fa7a2382b1b74cb0012d914864cc00e96176d276d42ad5ac97583b67968a.json.gz",
+      "stored": {
+        "bytes": 6937217,
+        "sha256": "ab6501a20b2fbfc427585e9b0a8e47c29e9b7a0267a49623bbea0a3940e62be7"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/synthetic-parent.json",
+      "original_bytes": 8454277,
+      "original_sha256": "9659523817b8f901de2eed0b5d0ca15259a28951e8624f6c690b7284d8db1ba4",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/b411e6c04f3bb9511151d7c389a207f29c69d33324dd38fa7adbe072341b8f4d.json.gz",
+      "stored": {
+        "bytes": 538127,
+        "sha256": "39826b0a6510966087a12d71398a664c0a6186b70adf4319739c0f66acf1351a"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/synthetic-ui-export.json",
+      "original_bytes": 8454277,
+      "original_sha256": "9659523817b8f901de2eed0b5d0ca15259a28951e8624f6c690b7284d8db1ba4",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/a8ec291030e03065de2fe06c24fae8dcc2a69d256f8d5a5df9b31784bee2f37e.json.gz",
+      "stored": {
+        "bytes": 538127,
+        "sha256": "39826b0a6510966087a12d71398a664c0a6186b70adf4319739c0f66acf1351a"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-missing-report.json",
+      "original_bytes": 3201999,
+      "original_sha256": "634768199028264a91d5c6db1a65c8d0e790195fae06fec01aa63326d6640e19",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/7c37bda0b69df48b3707d76b3e64b7970a052abe8310a6eccd716276ea327f44.json.gz",
+      "stored": {
+        "bytes": 220912,
+        "sha256": "11a8cdc468e92454892d645de440407f9a9693313b4e8e37f522de49f764a74f"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-restored-report.json",
+      "original_bytes": 3191126,
+      "original_sha256": "7edfc5a25c1a941dc344d7059f5b07de9e5da322c0670be1134942f85cec00cb",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/0fb51bf4c62d0c86346a4e8ed58dfe5f323f5318344250e0dd5454e51061a310.json.gz",
+      "stored": {
+        "bytes": 219788,
+        "sha256": "3a42c53e020ef76fce4be3a7227014e3917d6a3180000cfb957a03eed6029754"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/world_hash-missing-report.json",
+      "original_bytes": 3346715,
+      "original_sha256": "54233c770554f67057c959c7eb4db376e4e6f3be59b27bd3e23d8c9a9e478181",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/3f314fc658039ac6123eef7e739dceaab42ade778e49212afe6889ea670cc8ed.json.gz",
+      "stored": {
+        "bytes": 228074,
+        "sha256": "59d1a046b864e28ed39c82725523316d5e548b6b9e6aa918eac1eb7c2f1f3daa"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    },
+    {
+      "original_path": "evidence/genuine-report-speed-batch/product-browser-final/world_hash-restored-report.json",
+      "original_bytes": 3191126,
+      "original_sha256": "c52c879044337198217d201737013f2ffd5f33acf0f53df1ad8ea1ca690ad446",
+      "stored_path": "/workspace/outputs/scoped-batch-publication/retained-derived-storage/246113146009bd46c90c10d63cda3b728dfa2426bfd842a225ac88e68ddb222f.json.gz",
+      "stored": {
+        "bytes": 219785,
+        "sha256": "133c678d0ed1429de4c7e05db946043d3107ebb361721fe4e4b89e52a5719927"
+      },
+      "encoding": "gzip",
+      "roundtrip_verified": true,
+      "flat_original_retained": false,
+      "origin": {
+        "kind": "existing-authorized-untracked-flat-output"
+      },
+      "restoration": "Decompress gzip to recover exact original JSON bytes at recorded original path."
+    }
+  ],
+  "original_inputs_untouched": true,
+  "raw_producer_receipts_untouched": true,
+  "distributed_in_git": false,
+  "PRODUCT_READY": false,
+  "files": 38,
+  "original_bytes": 2223693072,
+  "stored_bytes": 201685621,
+  "seconds": 19.90832483698614,
+  "source_unchanged": true,
+  "head_unchanged": true,
+  "all_original_bytes_retained_losslessly": true,
+  "public_export_members_read": [
+    "exports/0fd0b33de46643a881068b2955b795a1.json",
+    "exports/1e02df4ab5ac40739cc9ccf78ef38ba2.json",
+    "exports/af3ecf103aab487cabb669e466d01e1c.json"
+  ],
+  "private_database_or_session_bodies_read": false
+}

@@ -1,0 +1,285 @@
+{
+  "recorded_at": "2026-10-02T14:53:28.449840+00:00",
+  "source": "User-authorized bounded native and public observations",
+  "provider_account_plan_verified": false,
+  "billing_cycle_verified": false,
+  "native_usage": {
+    "used": 200,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 0,
+    "cycle_start": "setup-pilot"
+  },
+  "public_usage": {
+    "used": 4,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 196,
+    "cycle_start": "2026-10-02"
+  },
+  "cohort": {
+    "id": "fb31ae05b3ee4ed288b282e29a734d37",
+    "created_at": "2026-10-02T14:31:36.160108+00:00",
+    "status": "partial",
+    "sample": {
+      "network": "solana",
+      "universe": "GeckoTerminal trending pools, page 1",
+      "pool_cap": 3,
+      "candidate_cap": 20,
+      "native_validation_cap": 8,
+      "per_pool_trade_cap": 300,
+      "window_start": "2026-10-01T14:31:36.160108+00:00",
+      "window_end": "2026-10-02T14:31:36.160108+00:00",
+      "boundary": "[start,end)",
+      "public_daily_request_cap": 200,
+      "public_requests_per_minute": 8,
+      "pool_selection": "SOL quote pools first, then provider page order; no liquidity safety threshold inferred"
+    },
+    "counts": {
+      "pools_observed": 20,
+      "pools_sampled": 3,
+      "trade_rows": 900,
+      "sampled_trades": 900,
+      "invalid_trades": 0,
+      "outside_window": 0,
+      "trades_over_cap": 0,
+      "leads_observed": 455,
+      "leads_deferred": 435,
+      "native_transaction_lookups": 8,
+      "native_account_checks": 6,
+      "candidates": 20,
+      "candidate": 6,
+      "rejected": 0,
+      "unresolved": 14
+    },
+    "limitations": [
+      "A bounded current trending-pool sample misses unlisted pools, older activity, and trades outside the latest 300 per pool.",
+      "Provider buy/sell labels and sender addresses are leads; native token movements do not by themselves prove DEX swaps.",
+      "Observed buying and selling determines research priority only; it is not realized profit, ROI, win rate, or a 30-day record.",
+      "Signer and current system-account checks cannot establish a human operator, legitimacy, absence of insider activity, or future safety.",
+      "Copy execution, liquidity, slippage, token risks and independently reviewed historical accounting remain unaudited."
+    ],
+    "evidence": [
+      {
+        "hash": "7414424e914a3a3d7e5eab098e55e188a2e43522673de92c23b4d0a60a1ad18a",
+        "kind": "trending-pools",
+        "observed_at": "2026-10-02T14:17:13.590878+00:00"
+      },
+      {
+        "hash": "d9f8ec1d6275c7a690295a10cfd6ba92821cefcf1115d1e0e14e334f420d416a",
+        "kind": "pool-trades",
+        "observed_at": "2026-10-02T14:21:15.380249+00:00",
+        "pool_address": "Cr469Kh7oCPtQk5YADEmjVpBWx1DiXXLiooPFJn23jsg"
+      },
+      {
+        "hash": "56288b436919a2d92dad3fe2922694d2f41d9644d823091cb77750b0659f6909",
+        "kind": "pool-trades",
+        "observed_at": "2026-10-02T14:31:36.314849+00:00",
+        "pool_address": "31eCTC8W3VcX7BiFwK2o5Ax41FPi2UyHcehcy2Gd3H5h"
+      },
+      {
+        "hash": "19e95abdb807d04f2a9ad8b52f34d21807895a8f5a629d8621db80797680e9cb",
+        "kind": "pool-trades",
+        "observed_at": "2026-10-02T14:31:43.944706+00:00",
+        "pool_address": "7Nj7mBE7iVmjvnBHNvjgaz6G3ZktTHFNbf7aQDfZ7iNR"
+      },
+      {
+        "hash": "d51c69f598e6071a31951a069f27f131c3c0dfd4338b8cfcc814d1a6d85efe7f",
+        "kind": "transaction",
+        "signature": "46YSCkUeZMwNnVYbxNCCBBgZv18BCNSex6rstgoMHbhQYgks993naXb5ZJ5x6J6ykNjK8cfLTYG2DuLQ5rQsBe3E"
+      },
+      {
+        "hash": "1df7546b401386dd3211caa32833aefc804534e6a7b1f6bf1e1d78a7c5c64553",
+        "kind": "wallet-account",
+        "address": "6eAZdxA68tQJBD1LiinU7quXkcuwkSScXh2vC6G56pNM"
+      },
+      {
+        "hash": "da36c47af0262adc7c2d4bef5d8fc9cf0e6a77d1ce0cadaa384dd3354744e4d2",
+        "kind": "transaction",
+        "signature": "4spuft3t2h4B3ZEpgwNuu9UEawQbKr4HSezVc62AsbNBYvEz2GxFjyctH86ixJSVhox7hKwYF8WKmBQDYVfqYr5X"
+      },
+      {
+        "hash": "cd75fb02924c347fea911afe4fb2bda0c8884a64751fca47db7ac4637b973cc6",
+        "kind": "wallet-account",
+        "address": "5phPCsrugVb2uVTmBrDJUdCKDsxUYZUJhvsZAvtrygQY"
+      },
+      {
+        "hash": "bba9659a6a791ea1de7ce129270ef8c7092304991a2c608335c86171c4924120",
+        "kind": "transaction",
+        "signature": "5vgiJbKULfpNUJ3eQ9ts3b7J3RJvHaV2b5o56QiCfVgn9dGtnXytRN8t2nvhKkQ3Ppyz2apiV2bBPD6HKqQTp9oh"
+      },
+      {
+        "hash": "5fabed4db99916b58ecb2a634d86f5d2fed8b8edc1fd2ababbe50b6206450b4d",
+        "kind": "wallet-account",
+        "address": "MriyaNN8TMp6qRWjfr723PK7xgQK7yCt7Kg2v2PQu7X"
+      },
+      {
+        "hash": "d78af84d7bfa0f848273280b6239db679729c39f12e0710760cc73698567a6b1",
+        "kind": "transaction",
+        "signature": "39g56XV3W4MgSVGNNGusuTFLMxEiS2vZAxcbWMQidMeg1Cr9Dsg7tKitRXThEBdCJxKppanmP6Wk8bj7pEaGmnj2"
+      },
+      {
+        "hash": "08a3982066055ca3efbcaf075985eaec36db3c1a87bbb17ccce0b92eaf1413bf",
+        "kind": "wallet-account",
+        "address": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T"
+      },
+      {
+        "hash": "c50a42e7de5735bf84cdf0303c5fc3e7c886f5feb5cea9a9365471cffc4e0f0b",
+        "kind": "transaction",
+        "signature": "4hvHfbByQDE3VoSGpGXAdbHV2Y7n7cbH2vHT9CjH9eW5pMBt1oCVCAyg3tCJhLH38NeKmX9G6vjqp6YG3cN76XN4"
+      },
+      {
+        "hash": "b71edb3661aec1650c8474128b124dd7b773a7da2f5c4e126e76f73b19d123a4",
+        "kind": "wallet-account",
+        "address": "DY5qAVztKXXPMY9enjbgvJxn6wPPZ1Ek34Jp3xJm4Lct"
+      },
+      {
+        "hash": "e2babeaf7fe7bcb32d7dffa1dc1332268a4655c5aad565e714890e23f2dbd952",
+        "kind": "transaction",
+        "signature": "2GCA7pdygNRveWpDUzV8aBpjdZGyzgk1FdGFrGhH8AYJVekuun5BuS67fo714d2bXnh85vuiqVePJd81F6mRAo9M"
+      },
+      {
+        "hash": "f1189b661ebc88c360b712d386022543400a27c51efab0a47a61fb32a7f7c46f",
+        "kind": "wallet-account",
+        "address": "6AGp6zbGNuyZpmzeswv9KCNU15Rf37UQDqDqFAeHmS8d"
+      }
+    ]
+  },
+  "audit": {
+    "id": "5887c2a477a845cc87760e91b60acd52",
+    "status": "paused",
+    "reason": "Free application credit cap reached, including pending requests; collection is incomplete. Resume only within the confirmed provider cycle and budget.",
+    "progress": {
+      "wallets_completed": 4,
+      "wallets_total": 5,
+      "pages": 44,
+      "transactions": 94,
+      "credits": 165,
+      "unresolved": 4
+    },
+    "window": {
+      "start": "2026-09-02T14:32:36+00:00",
+      "end": "2026-10-02T14:32:36+00:00"
+    },
+    "reports": [
+      {
+        "address": "6eAZdxA68tQJBD1LiinU7quXkcuwkSScXh2vC6G56pNM",
+        "id": "efd6981feb9c490ab2c6c1172168ff7c",
+        "policy": "UNRESOLVED",
+        "evidence_status": "partial",
+        "fetched_transactions": 3,
+        "supported_swaps": 0,
+        "observed_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "scope_complete": false,
+        "token_risk_statuses": [
+          {
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "status": "FLAGGED"
+          },
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "status": "UNRESOLVED"
+          },
+          {
+            "mint": "CNohWHNTurS7PpB55czspwUJfpk9yy92uf1wXdweEGg9",
+            "status": "UNRESOLVED"
+          }
+        ]
+      },
+      {
+        "address": "5phPCsrugVb2uVTmBrDJUdCKDsxUYZUJhvsZAvtrygQY",
+        "id": "71f802e901664c33b56dff9a85e3173e",
+        "policy": "UNRESOLVED",
+        "evidence_status": "partial",
+        "fetched_transactions": 23,
+        "supported_swaps": 0,
+        "observed_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "scope_complete": false,
+        "token_risk_statuses": [
+          {
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "status": "FLAGGED"
+          },
+          {
+            "mint": "FnNcduPcyrAuJKxcZjtzSYnNoSkyNnPnjKVqoafu7vqh",
+            "status": "UNRESOLVED"
+          },
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "status": "UNRESOLVED"
+          }
+        ]
+      },
+      {
+        "address": "MriyaNN8TMp6qRWjfr723PK7xgQK7yCt7Kg2v2PQu7X",
+        "id": "6d5352d9e16f4e3eb732a2f9d9fdf217",
+        "policy": "UNRESOLVED",
+        "evidence_status": "partial",
+        "fetched_transactions": 23,
+        "supported_swaps": 0,
+        "observed_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "scope_complete": false,
+        "token_risk_statuses": [
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "status": "UNRESOLVED"
+          },
+          {
+            "mint": "TkJufj22fWkqSxuKUgcB1p6S4Tru1VG1KitnfFkgLx7",
+            "status": "UNRESOLVED"
+          },
+          {
+            "mint": "PerPsCe2SJ7Q25CN4R5TTX4fmBdmknE2hQmqCt96fHL",
+            "status": "UNRESOLVED"
+          }
+        ]
+      },
+      {
+        "address": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+        "id": "237b73e9aeed470d930876077b7e8f88",
+        "policy": "UNRESOLVED",
+        "evidence_status": "partial",
+        "fetched_transactions": 23,
+        "supported_swaps": 0,
+        "observed_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "scope_complete": false,
+        "token_risk_statuses": [
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "status": "UNRESOLVED"
+          }
+        ]
+      },
+      {
+        "address": "DY5qAVztKXXPMY9enjbgvJxn6wPPZ1Ek34Jp3xJm4Lct",
+        "id": "f6b4fefd76ee4acfa5f7d12260161c42",
+        "policy": "UNRESOLVED",
+        "evidence_status": "partial",
+        "fetched_transactions": 22,
+        "supported_swaps": 0,
+        "observed_profit_sol": null,
+        "conditional_observed_lot_profit_sol": null,
+        "scope_complete": false,
+        "token_risk_statuses": [
+          {
+            "mint": "So11111111111111111111111111111111111111112",
+            "status": "UNRESOLVED"
+          },
+          {
+            "mint": "9aqmJjCnnMQv42TXLk921ceUkN35nea2QP969n1caqjj",
+            "status": "UNRESOLVED"
+          },
+          {
+            "mint": "XLBLxbY1Mr7aadnqAbmqSBXLEyUdjvUXtXCnz8Mpump",
+            "status": "UNRESOLVED"
+          }
+        ]
+      }
+    ]
+  },
+  "conclusion": "Six sampled native identities were verified. No sampled wallet has verified complete profitability or safe copying. Direct PumpSwap positive fixture coverage is separate from these candidate audits."
+}

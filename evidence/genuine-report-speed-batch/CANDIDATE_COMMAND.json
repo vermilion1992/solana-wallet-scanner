@@ -1,0 +1,47 @@
+{
+  "kind": "actual-frozen-candidate-command",
+  "state": "FAILED",
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_files": 246,
+  "command": [
+    ".venv/bin/python",
+    "tools/validate.py",
+    "--profile",
+    "candidate",
+    "--python",
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "--browser-python",
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "--chromium",
+    "/usr/bin/chromium",
+    "--install-record",
+    "evidence/product-milestone/CLEAN_INSTALL_FINAL.json",
+    "--review-record",
+    "evidence/genuine-report-speed-batch/REVIEW_ACCEPTANCE.json",
+    "--output",
+    "evidence/genuine-report-speed-batch/gate-a-final"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "started_utc": "2026-10-04T18:01:49.383668+00:00",
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "timeout_seconds": 1800,
+  "timed_out": false,
+  "exit_code": 1,
+  "seconds": 440.22371779798414,
+  "finished_utc": "2026-10-04T18:09:09.607611+00:00",
+  "source_unchanged": true,
+  "commit_unchanged": true,
+  "raw_command_log": {
+    "path": "evidence/genuine-report-speed-batch/candidate-command/RAW.log",
+    "bytes": 1080,
+    "sha256": "f9d34e97ffa70248fe3633051ecb7851a7a6c4c892feb303a7e359a4d0e52105"
+  },
+  "reason": "Actual candidate process/source/receipt must agree"
+}

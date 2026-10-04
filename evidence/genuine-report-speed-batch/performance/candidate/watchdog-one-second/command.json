@@ -1,0 +1,30 @@
+{
+  "kind": "offline-report-performance-command-v1",
+  "acceptance_run": false,
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-c",
+    "from tools.benchmark_report import main; raise SystemExit(main(_worker=True))",
+    "--archive",
+    "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+    "--output",
+    "/workspace/outputs/report-proof-profile/candidate-eea37dc/watchdog-one-second",
+    "--timeout",
+    "1"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "timeout_seconds": 1,
+  "exit_code": null,
+  "timed_out": true,
+  "seconds": 1.0055758809903637,
+  "raw_log": {
+    "path": "/workspace/outputs/report-proof-profile/candidate-eea37dc/watchdog-one-second/benchmark.log",
+    "bytes": 294,
+    "sha256": "5f272cd346f65d33be59f51a7c4cfdd1b437fc4a3393995420f22f2199fdac18"
+  },
+  "observations": {
+    "path": "/workspace/outputs/report-proof-profile/candidate-eea37dc/watchdog-one-second/observations.json",
+    "bytes": 1057,
+    "sha256": "c6af4cbd65914359d16a02806c9b49f8488ef18443b9d013e2b62dbecae3dbb2"
+  }
+}

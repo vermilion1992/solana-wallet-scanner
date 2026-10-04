@@ -1,0 +1,24 @@
+/workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+Traceback (most recent call last):
+  File "/workspace/outputs/scoped-batch-publication/run_final_replays_final.py", line 430, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/outputs/scoped-batch-publication/run_final_replays_final.py", line 412, in main
+    return offline_child(sys.argv[2:])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/outputs/scoped-batch-publication/run_final_replays_final.py", line 190, in offline_child
+    runpy.run_path(str(target), run_name='__main__')
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py", line 809, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py", line 805, in main
+    return run(content, args.output, acquisition=acquisition, worked_expectations=worked, require_real=args.require_real_acceptance)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py", line 688, in run
+    assert baseline.status_code == 200, baseline.text
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {"detail":"Free disk space is below the configured reserve; free space before saving a rebuilt report"}

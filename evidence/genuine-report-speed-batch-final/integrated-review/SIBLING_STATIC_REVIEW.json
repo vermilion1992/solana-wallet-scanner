@@ -1,0 +1,98 @@
+{
+  "kind": "independent-read-only-sibling-native-inventory-affinity-correction-static-review",
+  "state": "STATIC_PASS",
+  "findings": [],
+  "current_head": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "failed_candidate": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "baseline": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+  "scope": "Exact three-line native inventory-affinity injection removal plus initial/rebuild reference universe and test non-weakening. Static source/AST and read-only Git object comparisons only; no app imports/tests/collection/network/Git or source/evidence mutations.",
+  "production_delta": "Failed-to-corrected production code changes remove exactly the inventory_request_affinities import and two generated inventory-affinity append lines from scanner/app.py. Other correction changes are documentation and inventory tests.",
+  "freezer": {
+    "restores_baseline_exact_function_text": true,
+    "baseline_and_corrected_function_sha256": "e994cb93dad2b627c5bf2c8023ec21a9dbbd5932779c40166d85dd0de79aa77a",
+    "behavior": "Native freezer keeps original evidence, raw native negative associations, query-affinity and wallet-identity-affinity, without adding an unsupported inventory selector record to the authenticated native universe."
+  },
+  "native_reference_universe": [
+    "Collector, report_rebuild and source_consistency are byte-identical across baseline, failed and corrected commits; accepted owned-accounts/native-balance source roles and semantic receipt checks are unchanged.",
+    "Initial native build and native rebuild both invoke restored freezer when archive_loaded is None. Collection snapshot/checkpoint/evidence refs remain frozen without synthesized inventory-affinity records.",
+    "Rebuild continues partitioning only verified report metadata, merging checkpoint/native references, indexing admitted hashes and rebuilding source consistency from checked archives; no source-index role exemption was added."
+  ],
+  "archive_v4_affinity": {
+    "archive_input_and_inventory_evidence_unchanged_from_failed_candidate": true,
+    "retained_path": "Archive import still internally archives inventory_request_affinities and stores inventory_affinity_hashes in frozen archive-native-dependencies-v4. Archive reload reads the original bound dependency input and returns the affinity raw sources; archive_loaded build/rebuild bypasses native freezer.",
+    "retained_exact_byte_check": "Inventory affinity retains canonical source preimage, source hash, strict base64/canonical JSON checks and conservative unknown scope when exact request routing is unavailable."
+  },
+  "tests": {
+    "four_case_control": "owned-accounts/native-balance \u00d7 legacy-parent/initial-native. Actual production builder for initial case and two API rebuild generations; exact original/checkpoint refs, complete source set, closed count1, hold6h, fee0.000015 and delta-0.000016, UNKNOWN combined/boundary inventory, parent immutability/usage invariance and zero provider/credential/transport calls.",
+    "changed_loss_assertion": "Removes erroneous generated-affinity expectation. Unassignable native inventory scope stays UNKNOWN while readable650240-lamport observation and independent feePASS remain; restoring original bytes restores inventory and frozen parent.",
+    "retained_accepted_R12_files": {
+      "tests/test_review_v037_independent.py": {
+        "bytes": 16770,
+        "sha256": "c42bc29656d3a0b75ad3a6b6f76e0037775e7a7d074dd302ebc03283d8c5cb77",
+        "byte_identical_all_three_commits": true
+      },
+      "tests/test_source_role_matrix.py": {
+        "bytes": 6347,
+        "sha256": "8fba658a3b2074bb0add7547bf68231f32d047f28e86ad4ffd1fa55e0be162b3",
+        "byte_identical_all_three_commits": true
+      },
+      "tests/review_v037/review_helpers.py": {
+        "bytes": 8022,
+        "sha256": "1da69c593af035ef7932be5e233961fcbd6e2a75ca09de9c71470ce03a5f7e52",
+        "byte_identical_all_three_commits": true
+      },
+      "tests/review_v037/test_v037_controls.py": {
+        "bytes": 4676,
+        "sha256": "7011a901624dc593b775ef58b7441bbeec266713d8eee29b003ae4b6ad413a2a",
+        "byte_identical_all_three_commits": true
+      },
+      "tests/review_v037/test_v037_regressions.py": {
+        "bytes": 2438,
+        "sha256": "2cd8037df8527f7198b788f69a699da5044c0fe8446432cba5a3d97b7cd022be",
+        "byte_identical_all_three_commits": true
+      }
+    },
+    "no_test_execution_claim": true
+  },
+  "actual_file_identities": {
+    "scanner/app.py": {
+      "bytes": 78573,
+      "sha256": "722b2a249840c5d1952bddd6d7ca68d540d38ad369e6a707ad156f3952142888",
+      "workspace_equals_corrected_commit": true
+    },
+    "scanner/report_rebuild.py": {
+      "bytes": 17219,
+      "sha256": "e9c445fa26590e73f1a707b341ff590e874483fcc404832b73d1e483ec89bde6",
+      "workspace_equals_corrected_commit": true
+    },
+    "scanner/source_consistency.py": {
+      "bytes": 50171,
+      "sha256": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b",
+      "workspace_equals_corrected_commit": true
+    },
+    "scanner/collector.py": {
+      "bytes": 29014,
+      "sha256": "92c04794eefadc964c0d340d7dcc283642484b86fd10a45ab5f2c470db1f6ccc",
+      "workspace_equals_corrected_commit": true
+    },
+    "scanner/archive_input.py": {
+      "bytes": 57082,
+      "sha256": "b33f148ddca466051d300851f9dae4e25b1f0b3eceafa7feb8371fb6cace9b52",
+      "workspace_equals_corrected_commit": true
+    },
+    "scanner/inventory_evidence.py": {
+      "bytes": 28477,
+      "sha256": "1fad8a58d82c1f3dd1da25ded5fb3e1f15e9d9fe9c83b025bab0169188fa3d8c",
+      "workspace_equals_corrected_commit": true
+    },
+    "tests/test_inventory_evidence.py": {
+      "bytes": 33119,
+      "sha256": "8f2480920195f024ffa7fa18279e1b66ff53829b2bfa48a71616df22a17eb3d3",
+      "workspace_equals_corrected_commit": true
+    }
+  },
+  "limits": [
+    "Static correction-specific verdict; no broad acceptance or completed tests claim.",
+    "Earlier app performance/indexed context changes relative to baseline are outside this three-line correction review."
+  ]
+}

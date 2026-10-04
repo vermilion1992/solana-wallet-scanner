@@ -1,0 +1,13 @@
+{
+  "kind": "independent-synthetic-benchmark-internal-worker-dispatch-probe",
+  "draft_tool_sha256": "66dc46efa70743d44332aa1a59c1a4dea5cb5b5e483f05491698f4efbc01969c",
+  "fixture": "/workspace/outputs/genuine-wallet-report-review/worker-context-control-7vqmtj4h",
+  "manually_constructed_matching_context_accepted": true,
+  "existing_output_accepted": true,
+  "synthetic_worker_dispatched": true,
+  "actual_application_worker_executed": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "network_requests": 0,
+  "source_or_Git_mutations": false
+}

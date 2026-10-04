@@ -1,0 +1,80 @@
+{
+  "kind": "benchmark-cli-rejection-controls",
+  "state": "EXPECTED_REJECTIONS_OBSERVED",
+  "acceptance_run": false,
+  "tool_sha256": "b188b43ec11194b94d656529ff8e4b6d5ed73e85682b736509ea9570f3399c7d",
+  "cases": [
+    {
+      "case": "optimized-python",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-O",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/optimized"
+      ],
+      "exit_code": 2,
+      "seconds": 0.3649088790116366,
+      "log": "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/optimized-python.log",
+      "log_sha256": "ae3b7ab202b841e905f8adc824cfd200b77dc1cdfa6711df0656adf116ff974f",
+      "log_bytes": 226,
+      "application_executed": false
+    },
+    {
+      "case": "git-output",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/solana-wallet-scanner/benchmark-negative-control-output"
+      ],
+      "exit_code": 2,
+      "seconds": 0.11414274800335988,
+      "log": "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/git-output.log",
+      "log_sha256": "6315b23951c29e2e5d9a7638cec9faca009cc4b7a2ba66bc3811deb77353eef8",
+      "log_bytes": 250,
+      "application_executed": false
+    },
+    {
+      "case": "invalid-watchdog",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/watchdog",
+        "--timeout",
+        "301"
+      ],
+      "exit_code": 2,
+      "seconds": 0.11414438000065275,
+      "log": "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/invalid-watchdog.log",
+      "log_sha256": "698acbb7308e3aee0e23f8458cc9761ffa5cf0a36bb27ee2a08103c2fa7db1a6",
+      "log_bytes": 214,
+      "application_executed": false
+    },
+    {
+      "case": "removed-public-worker",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/uncreated",
+        "--worker"
+      ],
+      "exit_code": 2,
+      "seconds": 0.11411285700160079,
+      "log": "/workspace/outputs/report-proof-profile/tool-cli-controls-lifecycle/removed-public-worker.log",
+      "log_sha256": "53f346d30a5252fe17cd248a8efb4927236dc28ce148c18818576385832b31db",
+      "log_bytes": 203,
+      "application_executed": false
+    }
+  ]
+}

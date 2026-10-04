@@ -1,0 +1,22 @@
+{
+  "application_commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "curated_receipt": {
+    "bytes": 7967,
+    "path": "evidence/genuine-report-speed-batch-final/integrated-review/CONSOLIDATED_CORRECTED_FINAL_REVIEW.json",
+    "sha256": "73e4abbb86fef741681770315f2c7cc5304c7beaa053203a25e0ba53e94bdd34"
+  },
+  "entries_rechecked": 13,
+  "kind": "corrected-review-curation-and-producer-verification",
+  "original_body_rewrite": false,
+  "producer_predicate": "Actual current tools.validate.required_record AST",
+  "producer_state": "PASS",
+  "receipt": {
+    "bytes": 7967,
+    "path": "/workspace/outputs/genuine-wallet-report-correction-review/CONSOLIDATED_CORRECTED_FINAL_REVIEW.json",
+    "sha256": "73e4abbb86fef741681770315f2c7cc5304c7beaa053203a25e0ba53e94bdd34"
+  },
+  "review_evidence_local_descriptors_rechecked": 8,
+  "source_files_rechecked": 246,
+  "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+  "state": "PASS"
+}

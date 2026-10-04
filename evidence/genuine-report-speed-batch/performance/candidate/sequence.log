@@ -1,0 +1,11 @@
+START synthetic-smoke
+END synthetic-smoke 0 1.368
+START genuine200-normal
+END genuine200-normal 0 34.328
+START genuine200-profile-like-for-like
+END genuine200-profile-like-for-like 0 81.639
+START genuine87-augmented-normal
+END genuine87-augmented-normal 0 14.019
+START watchdog-one-second
+END watchdog-one-second 124 1.223
+FINAL OBSERVED_ALL_REQUESTED_OPERATIONS

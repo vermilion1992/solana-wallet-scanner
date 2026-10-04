@@ -1,0 +1,22 @@
+{
+  "kind": "retained-independent-initial-direct-interface-observation",
+  "state": "DRAFT_GAP_REPRODUCED",
+  "provenance": "Initial actual tool stdout and reviewer messages retained in this session; the initial full draft probe report was overwritten by the same-script recheck, so no original report hash or original module hash is asserted here.",
+  "observed_initial_states": {
+    "baseline": "PASS",
+    "valid_disjoint": "PASS",
+    "checksum_invalid_disjoint": "PASS",
+    "checksum_invalid_source_retained": false
+  },
+  "initial_application_API_executed": false,
+  "initial_network_requests": 0,
+  "initial_provider_requests": 0,
+  "initial_credential_lookups": 0,
+  "current_fix_recheck": {
+    "path": "/workspace/outputs/genuine-wallet-report-review/CHECKSUM_DISJOINT_SCOPE_FIX_RECHECK.json",
+    "bytes": 8835,
+    "sha256": "24ee2877d5bac3dd4a0c03ef326927dbd83ad0e231886e27ce0b9d9d3b1dab03",
+    "checksum_invalid_disjoint": "UNKNOWN",
+    "checksum_invalid_source_retained": true
+  }
+}

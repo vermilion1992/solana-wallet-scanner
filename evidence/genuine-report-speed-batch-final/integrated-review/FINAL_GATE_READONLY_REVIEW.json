@@ -1,0 +1,449 @@
+{
+  "B1": "HISTORICAL_SUFFICIENCY_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "actual_candidate_command": {
+    "bytes": 5378,
+    "path": "evidence/genuine-report-speed-batch-final/CANDIDATE_COMMAND.json",
+    "sha256": "17c32340ebfaaadf426cc57c512506be7cd2cbedb6ca76d186afa2e8c4bb714d"
+  },
+  "actual_candidate_receipt": {
+    "bytes": 364646,
+    "path": "evidence/genuine-report-speed-batch-final/gate-a-final/result.json",
+    "sha256": "67a404bf805165ad440b8739a3ad8c8350263e4d5c64911d687cee2c1f0e668a"
+  },
+  "actual_executed_commands": 11,
+  "application_commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "application_or_browser_reruns_by_reviewer": 0,
+  "backend": {
+    "current_collect_unique_nodes": 3246,
+    "duplicate_execution_counts_added": 0,
+    "execution_seconds": 374.5,
+    "full_command_without_selection": true,
+    "ordinary_terminal_passes": 3246,
+    "pytest_seconds": 373.12,
+    "separate_subtests": 440
+  },
+  "credential_lookups": 0,
+  "findings": [],
+  "full_batch_diff": {
+    "bytes": 426679,
+    "path": "/workspace/outputs/genuine-wallet-report-correction-review/FULL_BATCH_DIFF.patch",
+    "sha256": "c316eed1121382411fc26e5b6c2a417dbec019a671ee230239a7300a38f54f57"
+  },
+  "gates": [
+    {
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-c",
+        "import sys, pathlib, scanner; assert sys.version_info >= (3,11); assert pathlib.Path(scanner.__file__).resolve().parent == pathlib.Path.cwd()/\"scanner\"; print(sys.version)"
+      ],
+      "exit_code": 0,
+      "name": "runtime",
+      "seconds": 0.03,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "node",
+        "--version"
+      ],
+      "exit_code": 0,
+      "name": "node-runtime",
+      "seconds": 0.01,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 0,
+      "name": "backend",
+      "seconds": 374.5,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "exit_code": 0,
+      "name": "pip-check",
+      "seconds": 0.27,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "bash",
+        "-n",
+        "run.sh",
+        "setup.sh"
+      ],
+      "exit_code": 0,
+      "name": "shell-syntax",
+      "seconds": 0.0,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_matrix.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/gate-a-final/matrix.json"
+      ],
+      "exit_code": 0,
+      "name": "matrix",
+      "seconds": 7.08,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--prefer-offline",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "exit_code": 0,
+      "name": "frontend-locked-install",
+      "seconds": 1.82,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check:format"
+      ],
+      "exit_code": 0,
+      "name": "frontend-check-format",
+      "seconds": 0.72,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check:discovery"
+      ],
+      "exit_code": 0,
+      "name": "frontend-check-discovery",
+      "seconds": 4.08,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "name": "frontend-build",
+      "seconds": 2.94,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "name": "clean-locked-install",
+      "state": "PASS"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/solana-wallet-scanner/tools/browser_acceptance.py",
+        "--python",
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "--chromium",
+        "/usr/bin/chromium",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/gate-a-final/browser"
+      ],
+      "exit_code": 0,
+      "name": "launcher-browser-rebuild",
+      "seconds": 88.37,
+      "state": "PASS",
+      "timed_out": false
+    },
+    {
+      "name": "consolidated-review",
+      "state": "PASS"
+    }
+  ],
+  "install_scope": {
+    "matches_current_locks_and_Linux_runtime": true,
+    "new_fresh_whole_candidate_setup_claim": false,
+    "original_source_identity": "e72b673f3e6349dfa0dc0cb09a4e3c5e93d159aebb3d0f6ca70a498278e808d9",
+    "retained_record": {
+      "bytes": 1022,
+      "path": "evidence/product-milestone/CLEAN_INSTALL_FINAL.json",
+      "sha256": "7516ccbc37b7352da81a25ebc846abf4b200cd269ae1eac38b8b45129a72327e"
+    }
+  },
+  "kind": "independent-final-candidate-gate-readonly-review",
+  "launcher_browser": {
+    "actual_children": 6,
+    "all_frozen_references_and_parents_preserved": true,
+    "capture_binding_limit": "Original launcher receipt has no capture digest map. These current16 files were read and SHA256-bound by this supplement; retained producer DOM/assertion results establish exact text/behaviour. No independent pixel-text inspection or visual claim.",
+    "captures": [
+      {
+        "bytes": 1624639,
+        "height": 10524,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/cached-real-desktop.png",
+        "sha256": "01e1d7aef9ce9e6c29838eab1925691359d14e8f1e1e26878f1e3f723cc65f00",
+        "width": 1440
+      },
+      {
+        "bytes": 1341181,
+        "height": 19402,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/cached-real-mobile.png",
+        "sha256": "0e249e13d40642859bc3f605d404cea2c6eb836e6aaf7d0d059bfcd15d3891c8",
+        "width": 390
+      },
+      {
+        "bytes": 326964,
+        "height": 3085,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/candidate-import-desktop.png",
+        "sha256": "6316915a2be0caa4dd9d86f3158c512513afcb8159d09ce9cdd8cc00c02e60a4",
+        "width": 1440
+      },
+      {
+        "bytes": 262743,
+        "height": 4726,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/candidate-import-mobile.png",
+        "sha256": "a43d76de092fc60e018528649d65b951861a2019687ce16efefd3004bd9fa42e",
+        "width": 390
+      },
+      {
+        "bytes": 1239189,
+        "height": 8081,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/canonical-nonce-desktop.png",
+        "sha256": "29a93ff9873c5310e19792b9063cc60e1fd1f4b0a9f1629f0ca174924578f574",
+        "width": 1440
+      },
+      {
+        "bytes": 977927,
+        "height": 13744,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/canonical-nonce-mobile.png",
+        "sha256": "28871489d96d9a8cb67d716b30a34fddf2325eb094d6642e4acafeba2266162c",
+        "width": 390
+      },
+      {
+        "bytes": 1239292,
+        "height": 8081,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/loss-restoration-desktop.png",
+        "sha256": "9020fbc70e7d6ee30d53d6711604cc800efc0e1539dc522f998d7b01d002ac3f",
+        "width": 1440
+      },
+      {
+        "bytes": 978112,
+        "height": 13744,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/loss-restoration-mobile.png",
+        "sha256": "ce3aa568fa35095e0ef0f984b5364df5f9f0df0c778dd9e2ee68cd3aeaf87567",
+        "width": 390
+      },
+      {
+        "bytes": 1495804,
+        "height": 9991,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/owner-change-desktop.png",
+        "sha256": "66421cccbe877f767549f01653a896be4bce58c314821f4a3d41967129ff645b",
+        "width": 1440
+      },
+      {
+        "bytes": 1041842,
+        "height": 16177,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/owner-change-mobile.png",
+        "sha256": "cc0f78b34500b42b05b2ecc748a7f518c1773fe103c9c23f218bd98bec86246c",
+        "width": 390
+      },
+      {
+        "bytes": 1572795,
+        "height": 10321,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/required-source-missing-desktop.png",
+        "sha256": "90ccb25ffa80f0b5d25375113462de9032506b6f96f3834aa872c512191398e6",
+        "width": 1440
+      },
+      {
+        "bytes": 1090809,
+        "height": 16921,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/required-source-missing-mobile.png",
+        "sha256": "1ecca699b78d0b56f8fe8594daac52fa515a013871af8fd52a1aa1ceec4c6c22",
+        "width": 390
+      },
+      {
+        "bytes": 1239299,
+        "height": 8081,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/required-source-restored-desktop.png",
+        "sha256": "b0ebd4db85aaf15f64fd90981f1669fd94c9b6c386eff8a5e25ae49221345a0a",
+        "width": 1440
+      },
+      {
+        "bytes": 978112,
+        "height": 13744,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/required-source-restored-mobile.png",
+        "sha256": "ce3aa568fa35095e0ef0f984b5364df5f9f0df0c778dd9e2ee68cd3aeaf87567",
+        "width": 390
+      },
+      {
+        "bytes": 219423,
+        "height": 2205,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/settings-desktop.png",
+        "sha256": "2167b4ab4474354aab3ae8fadf4594eecd80c7bc2bac679b8e2ad6210ddb271e",
+        "width": 1440
+      },
+      {
+        "bytes": 153172,
+        "height": 3295,
+        "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/settings-mobile.png",
+        "sha256": "c5da5e27d4d5914d1d259a7fdf09244d1aaeb19b29ecd2748b2fa6fd47f5a649",
+        "width": 390
+      }
+    ],
+    "case_names": [
+      "canonical-nonce",
+      "loss-restoration",
+      "required-source-missing",
+      "required-source-restored",
+      "owner-change",
+      "cached-real"
+    ],
+    "credential_lookups": 0,
+    "external_browser_requests": 0,
+    "provider_requests": 0,
+    "usage_unchanged": true
+  },
+  "locks": {
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+  },
+  "matrix": {
+    "actual_mappings_equal_distinct_current_review": true,
+    "required_items": 92,
+    "requirements": 54,
+    "schema_examples": 38
+  },
+  "neighbouring_contracts": "Previously read whole batch/JSONResponse seams/indexed-cache/strict inventory/archivev4/UI/tool plus correction static source scope retained at exact current bytes; full diff and246 file/mode map rechecked. No confirmed current regression found.",
+  "network_requests": 0,
+  "pending_separate_scopes": [
+    "Product-browser environment retry",
+    "Four preserved genuine workflow environment retries",
+    "Eventual native CI"
+  ],
+  "producer_exit_code": 0,
+  "producer_seconds": 480.0259036850184,
+  "producer_state": "ACCEPTED_IN_SCOPE",
+  "provider_requests": 0,
+  "raw_gate_logs_verified": [
+    {
+      "bytes": 54,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/runtime.log",
+      "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b"
+    },
+    {
+      "bytes": 9,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/node-runtime.log",
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+    },
+    {
+      "bytes": 4227,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/backend.log",
+      "sha256": "81f7fe1564da01ae688970d950d46ef3a1299034fe8667697c83d7591d54bb69"
+    },
+    {
+      "bytes": 30,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/pip-check.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "bytes": 0,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/shell-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 168,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/matrix.log",
+      "sha256": "5ffa450ad01c198ef14917ef1dc062b99a43013d00c81bd66b4de84976eadc5c"
+    },
+    {
+      "bytes": 25,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/frontend-locked-install.log",
+      "sha256": "53982b9708472b1e744d6378385bffc025600b7a814d00fd25607378b952b043"
+    },
+    {
+      "bytes": 142,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/frontend-check-format.log",
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+    },
+    {
+      "bytes": 329,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/frontend-check-discovery.log",
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9"
+    },
+    {
+      "bytes": 415,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/frontend-build.log",
+      "sha256": "301899fda87ce36bf77cebac90477f23a7199d084b8dd5f2ac820757edded974"
+    },
+    {
+      "bytes": 608,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/launcher-browser-rebuild.log",
+      "sha256": "06511a66b587ffb1cdd174c5bc259d26f9e6ef9d1a518686700e0edd10d1275e"
+    }
+  ],
+  "raw_stdout": {
+    "bytes": 1128,
+    "path": "evidence/genuine-report-speed-batch-final/candidate-command/RAW.log",
+    "sha256": "6470c89b92a0fb7f2a90aa50a7d42e29ab9ad49b01723eb2a0e47951137c68f0"
+  },
+  "raw_structured_receipts_verified": [
+    {
+      "bytes": 282008,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/matrix.json",
+      "sha256": "614b83df6f664f72a74d8850500af4a193465bdecbd612389cedda82b1fb35ec"
+    },
+    {
+      "bytes": 1022,
+      "path": "evidence/product-milestone/CLEAN_INSTALL_FINAL.json",
+      "sha256": "7516ccbc37b7352da81a25ebc846abf4b200cd269ae1eac38b8b45129a72327e"
+    },
+    {
+      "bytes": 3029,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/browser/result.json",
+      "sha256": "e4b690ac042e6bb8ebde847c393a1af24af11d5cabea43963a1fc32fb0fab712"
+    },
+    {
+      "bytes": 7967,
+      "path": "evidence/genuine-report-speed-batch-final/REVIEW_ACCEPTANCE.json",
+      "sha256": "73e4abbb86fef741681770315f2c7cc5304c7beaa053203a25e0ba53e94bdd34"
+    }
+  ],
+  "required_gates_verified": 13,
+  "retained_typed_records_verified": 2,
+  "scope": "Read-only actual13 candidate gates, typed exit/duration/source/lock/runtime receipts, raw logs and terminal summaries, original mapped matrix and launcher/native references. This supplements immutable source review; no app/tests/browser commands rerun and no broad whole-wallet acceptance.",
+  "source_files": 246,
+  "source_or_Git_mutations": false,
+  "source_review_preserved": {
+    "bytes": 7967,
+    "path": "/workspace/outputs/genuine-wallet-report-correction-review/CONSOLIDATED_CORRECTED_FINAL_REVIEW.json",
+    "sha256": "73e4abbb86fef741681770315f2c7cc5304c7beaa053203a25e0ba53e94bdd34"
+  },
+  "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+  "source_unchanged_rechecked": true,
+  "state": "PASS"
+}

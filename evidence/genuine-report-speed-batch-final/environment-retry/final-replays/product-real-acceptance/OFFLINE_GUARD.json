@@ -1,0 +1,13 @@
+{
+  "application_command": [
+    "/workspace/solana-wallet-scanner/tools/check_product.py",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance",
+    "--require-real-acceptance"
+  ],
+  "application_exit_code": 2,
+  "bootstrap_credential_attempts": 0,
+  "kind": "counted-offline-python-guards",
+  "socket_attempts": 0,
+  "state": "PASS"
+}

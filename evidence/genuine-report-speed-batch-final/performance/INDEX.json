@@ -1,0 +1,182 @@
+{
+  "kind": "corrected-freeze-normal-performance-sequence",
+  "acceptance_run": false,
+  "product_readiness_claim": false,
+  "profile_enabled": false,
+  "source_before": {
+    "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+    "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+    "source_files": 246
+  },
+  "input_lock_hashes_before": {
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/02-all-index-request.json": {
+      "bytes": 335,
+      "sha256": "5e8937ceb267e90d2370788ac3db86383fcfd79ab6883e0011a726b3ff551663"
+    },
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/02-all-index-response.raw.gz": {
+      "bytes": 112488,
+      "sha256": "d1681569e53f9f2d4d9f1dbcec920a12f44bdd5888c5cde876a19de0c3dece1c"
+    },
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/03-all-continuation-request.json": {
+      "bytes": 370,
+      "sha256": "3e55841032d6d64dc78054c1d6b71e136d41a6c586aefddcedee0cc1de1022dc"
+    },
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/03-all-continuation-response.raw.gz": {
+      "bytes": 108860,
+      "sha256": "8610a50604708ec96782944977fadb2a7f75df153598660a23e59c9b0d13ce92"
+    },
+    "/workspace/solana-wallet-scanner/requirements.txt": {
+      "bytes": 32247,
+      "sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+    },
+    "/workspace/solana-wallet-scanner/requirements-build.in": {
+      "bytes": 168,
+      "sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e"
+    },
+    "/workspace/solana-wallet-scanner/pyproject.toml": {
+      "bytes": 663,
+      "sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598"
+    },
+    "/workspace/solana-wallet-scanner/frontend/package-lock.json": {
+      "bytes": 30454,
+      "sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+    },
+    "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip": {
+      "bytes": 228710,
+      "sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0"
+    },
+    "/workspace/outputs/genuine-wallet-inventory/genuine87-inventory-input.zip": {
+      "bytes": 350517,
+      "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+    },
+    "/workspace/outputs/report-proof-profile/baseline-ab62858/EXPECTED_RAW.json": {
+      "bytes": 2320675,
+      "sha256": "795d5ee14211598bcd834239f3e0c9c555dd42034cdd3408a147fb1967a20987"
+    },
+    "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    }
+  },
+  "commands": [
+    {
+      "name": "genuine200-normal",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal",
+        "--full-details"
+      ],
+      "seconds": 34.30906550399959,
+      "exit_code": 0,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal-outer.log",
+      "log_bytes": 1117,
+      "log_sha256": "f68f6431ae511f38bb754d9fe068b00a724b48e110120742b610c0282b1f943c",
+      "source_after": {
+        "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+        "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+        "source_files": 246
+      },
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal/observations.json",
+      "receipt_sha256": "6796191ab5e44065b40f07143401df4750476ade16134e8b1d0b154a67f7402b",
+      "state": "OBSERVED",
+      "oracle_recheck": {
+        "path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine200-normal-SCOPED_ORACLE_RECHECK.json",
+        "sha256": "564f3f5f7e0bbc6b27cf23bd209d28e32c8ac2247b0533061c542a20fb664961"
+      }
+    },
+    {
+      "name": "genuine87-augmented-normal",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--archive",
+        "/workspace/outputs/genuine-wallet-inventory/genuine87-inventory-input.zip",
+        "--output",
+        "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal",
+        "--full-details"
+      ],
+      "seconds": 13.19965441399836,
+      "exit_code": 0,
+      "outer_timed_out": false,
+      "timeout_seconds": 300,
+      "log": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal-outer.log",
+      "log_bytes": 1150,
+      "log_sha256": "4a599caf2ebf203eee192748ac54cbcd02cb5057255e671b9b2369bdd8fd0175",
+      "source_after": {
+        "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+        "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+        "source_files": 246
+      },
+      "receipt": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal/observations.json",
+      "receipt_sha256": "111f8c52567bbcbe9e9d612955476eb24e3bcf58b1c1c350dcf8df9bbd03d59f",
+      "state": "OBSERVED",
+      "oracle_recheck": {
+        "path": "/workspace/outputs/report-proof-profile/candidate-0db4125-normal/genuine87-augmented-normal-SCOPED_ORACLE_RECHECK.json",
+        "sha256": "592439a92fc890da93bcbdeb4441f9b121a580bcf95864b7d56cd65313afbae6"
+      }
+    }
+  ],
+  "scope": "Normal offline archive observations only. Old full-candidate failure is retained; these observations do not establish full Gate A or product readiness.",
+  "source_after": {
+    "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+    "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+    "source_files": 246
+  },
+  "input_lock_hashes_after": {
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/02-all-index-request.json": {
+      "bytes": 335,
+      "sha256": "5e8937ceb267e90d2370788ac3db86383fcfd79ab6883e0011a726b3ff551663"
+    },
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/02-all-index-response.raw.gz": {
+      "bytes": 112488,
+      "sha256": "d1681569e53f9f2d4d9f1dbcec920a12f44bdd5888c5cde876a19de0c3dece1c"
+    },
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/03-all-continuation-request.json": {
+      "bytes": 370,
+      "sha256": "3e55841032d6d64dc78054c1d6b71e136d41a6c586aefddcedee0cc1de1022dc"
+    },
+    "/workspace/solana-wallet-scanner/evidence/source-probe-2026-10-04/live/03-all-continuation-response.raw.gz": {
+      "bytes": 108860,
+      "sha256": "8610a50604708ec96782944977fadb2a7f75df153598660a23e59c9b0d13ce92"
+    },
+    "/workspace/solana-wallet-scanner/requirements.txt": {
+      "bytes": 32247,
+      "sha256": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+    },
+    "/workspace/solana-wallet-scanner/requirements-build.in": {
+      "bytes": 168,
+      "sha256": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e"
+    },
+    "/workspace/solana-wallet-scanner/pyproject.toml": {
+      "bytes": 663,
+      "sha256": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598"
+    },
+    "/workspace/solana-wallet-scanner/frontend/package-lock.json": {
+      "bytes": 30454,
+      "sha256": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+    },
+    "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip": {
+      "bytes": 228710,
+      "sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0"
+    },
+    "/workspace/outputs/genuine-wallet-inventory/genuine87-inventory-input.zip": {
+      "bytes": 350517,
+      "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+    },
+    "/workspace/outputs/report-proof-profile/baseline-ab62858/EXPECTED_RAW.json": {
+      "bytes": 2320675,
+      "sha256": "795d5ee14211598bcd834239f3e0c9c555dd42034cdd3408a147fb1967a20987"
+    },
+    "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    }
+  },
+  "state": "OBSERVED_BOTH_NORMAL_OFFLINE_OPERATIONS"
+}

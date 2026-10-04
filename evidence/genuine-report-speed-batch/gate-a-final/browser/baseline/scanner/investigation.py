@@ -1,0 +1,791 @@
+"""Bounded, evidence-linked spot swap reconstruction and current token checks.
+
+One successful outer instruction from a recognized deployed spot venue is needed.
+Its authority must be the investigated wallet. Net balances are then used to
+collapse routed legs, never to decide that arbitrary movements constitute a swap.
+The supported population is deliberately narrower than all Solana transactions:
+single wallet input/output, SOL/wSOL settlement, parsed token CPIs, and no other
+economic outer program. Explicit outside native transfers can be isolated, with
+their economic role retained as unresolved. This module does not certify complete wallet history,
+meme classification, profitability, sellability, or the honesty of a trader.
+
+Account layouts / discriminator sources (retrieved 2026-10-02):
+https://github.com/pump-fun/pump-public-docs/tree/main/idl
+https://github.com/raydium-io/raydium-cp-swap/tree/master/programs/cp-swap/src
+https://github.com/raydium-io/raydium-amm/blob/master/program/src/instruction.rs
+https://github.com/orca-so/whirlpools/tree/main/programs/whirlpool/src/instructions
+https://github.com/jup-ag/instruction-parser/blob/main/src/idl/jupiter.ts
+https://github.com/jup-ag/jupiter-cpi/blob/main/src/lib.rs
+Synthetic tests exercise these constraints. Archived raw mainnet golden fixtures
+check PumpSwap buy_exact_quote_in and a sell with durable nonce administration;
+other adapter routes have no successful live fixture. Neither fixture establishes
+earlier acquisition costs, complete wallet positions or historical profitability.
+"""
+from __future__ import annotations
+
+from collections import Counter, defaultdict
+from decimal import Decimal, localcontext
+from hashlib import sha256
+import base64
+
+from .accounting import canonical, raw_quantity, decimal
+from .decoder import SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, TOKEN_IDS, MEMO_IDS
+
+WSOL = 'So11111111111111111111111111111111111111112'
+JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
+PUMP = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
+PUMP_SWAP = 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
+RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
+RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
+WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
+LAMPORTS = Decimal(1_000_000_000)
+DECODER_VERSION = 'spot-v4-durable-nonce'
+RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
+_B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+_RAW_FIXTURE_ROUTES = {
+    (PUMP_SWAP, 'buy_exact_quote_in'): {
+        'state': 'RAW_MAINNET_GOLDEN',
+        'fixture': 'tests/fixtures/mainnet-pumpswap-buy-exact-quote.json',
+        'signature': '2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo',
+        'scope': 'One successful exact discriminator, wallet identity, amounts and separate native movements; no route-wide or history certificate',
+    },
+    (PUMP_SWAP, 'sell'): {
+        'state': 'RAW_MAINNET_GOLDEN',
+        'fixture': 'tests/fixtures/mainnet-pumpswap-sell-durable-nonce.json',
+        'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs',
+        'raw_hash': '25271562a99c96879c6d5f347792340320a6f55c12497a0ba3602db86eca6b4a',
+        'scope': 'One successful sell with exact owned quantities, persistent wSOL proceeds and wallet-paid fee; earlier nonzero inventory cost remains unknown',
+    },
+}
+
+
+def _integer(value):
+    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+        raise ValueError('Missing unsigned RPC integer')
+    return value
+
+
+def _anchor(name):
+    return sha256(('global:' + name).encode()).digest()[:8]
+
+
+def _data(value):
+    if isinstance(value, list) and len(value) == 2 and value[1] == 'base64':
+        return base64.b64decode(value[0], validate=True)
+    if not isinstance(value, str) or len(value) > 40000:
+        raise ValueError('Missing instruction bytes')
+    number = 0
+    for char in value:
+        if char not in _B58:
+            raise ValueError('Invalid base58 data')
+        number = number * 58 + _B58.index(char)
+    body = number.to_bytes((number.bit_length() + 7) // 8, 'big')
+    return b'\0' * (len(value) - len(value.lstrip('1'))) + body
+
+
+def _keys(message, meta):
+    entries = message.get('accountKeys')
+    if not isinstance(entries, list) or not entries:
+        raise ValueError('Missing account keys')
+    result = [item.get('pubkey') if isinstance(item, dict) else item for item in entries]
+    if any(not isinstance(key, str) or not key for key in result):
+        raise ValueError('Malformed account keys')
+    if all(isinstance(item, str) for item in entries):
+        loaded = meta.get('loadedAddresses') or {}
+        if not isinstance(loaded, dict):
+            raise ValueError('Malformed loaded account addresses')
+        writable, readonly = loaded.get('writable', []), loaded.get('readonly', [])
+        if not isinstance(writable, list) or not isinstance(readonly, list):
+            raise ValueError('Malformed loaded account addresses')
+        result += writable + readonly
+        if any(not isinstance(key, str) or not key for key in result):
+            raise ValueError('Malformed loaded account address')
+    return result
+
+
+def _program(instruction, keys):
+    program = instruction.get('programId')
+    if isinstance(program, str):
+        return program
+    index = instruction.get('programIdIndex')
+    return keys[_integer(index)]
+
+
+def _accounts(instruction, keys):
+    accounts = instruction.get('accounts')
+    if not isinstance(accounts, list):
+        raise ValueError('Missing route accounts')
+    return [keys[_integer(account)] if isinstance(account, int) else account for account in accounts]
+
+
+def _route(instruction, keys):
+    """Return a reviewed instruction layout; program names/log text are ignored."""
+    program = _program(instruction, keys)
+    payload = _data(instruction.get('data'))
+    accounts = _accounts(instruction, keys)
+    name, authority, owned_positions, expected = None, None, (), None
+    if program == JUPITER:
+        for candidate in ('route', 'route_with_token_ledger', 'exact_out_route',
+                          'shared_accounts_route', 'shared_accounts_route_with_token_ledger',
+                          'shared_accounts_exact_out_route'):
+            if payload[:8] == _anchor(candidate):
+                shared = candidate.startswith('shared_')
+                offset = 9 if shared else 8
+                count = int.from_bytes(payload[offset:offset + 4], 'little')
+                tail_size = 11 if candidate.endswith('with_token_ledger') else 19
+                # Every RoutePlanStep has at least one enum byte and the three
+                # percentage/index bytes. Enum variants may carry more data.
+                if not 1 <= count <= 128 or len(payload) < offset + 4 + 4 * count + tail_size:
+                    raise ValueError('Jupiter route plan is absent or truncated')
+                name = candidate
+                authority, owned_positions = (2, (3, 6)) if shared else (1, (2, 3))
+                break
+    elif program in (PUMP, PUMP_SWAP):
+        names = ('buy', 'sell', 'buy_exact_sol_in') if program == PUMP else ('buy', 'sell', 'buy_exact_quote_in')
+        for candidate in names:
+            if payload[:8] == _anchor(candidate) and len(payload) >= 24:
+                name = candidate
+                authority, owned_positions = (6, (5,)) if program == PUMP else (1, (5, 6))
+                expected = 'sell' if candidate == 'sell' else 'buy'
+                break
+    elif program == RAYDIUM_CPMM:
+        for candidate in ('swap_base_input', 'swap_base_output'):
+            if payload[:8] == _anchor(candidate) and len(payload) == 24 and len(accounts) >= 13:
+                name, authority, owned_positions = candidate, 0, (4, 5)
+                break
+    elif program == RAYDIUM_AMM and len(payload) == 17:
+        variants = {9: ('swap_base_in', (17, 18)), 11: ('swap_base_out', (17, 18)),
+                    16: ('swap_base_in_v2', (8,)), 17: ('swap_base_out_v2', (8,))}
+        if payload[0] in variants and len(accounts) in variants[payload[0]][1]:
+            name, authority, owned_positions = variants[payload[0]][0], -1, (-3, -2)
+    elif program == WHIRLPOOL:
+        if payload[:8] == _anchor('swap') and len(payload) == 42 and len(accounts) >= 11:
+            name, authority, owned_positions = 'swap', 1, (3, 5)
+        elif payload[:8] == _anchor('swap_v2') and len(payload) >= 43 and len(accounts) >= 15:
+            name, authority, owned_positions = 'swap_v2', 3, (7, 9)
+    if name is None:
+        raise ValueError('No reviewed spot swap instruction for this program and discriminator')
+    return {'program': program, 'instruction': name, 'authority': accounts[authority],
+            'owned_accounts': [accounts[position] for position in owned_positions],
+            'accounts': accounts, 'expected_kind': expected}
+
+
+def _verify_nonce_administration(message, info, keys, pre_lamports, post_lamports,
+                                 address, fee, outer, nested):
+    """Accept one narrow, non-economic System advanceNonce instruction.
+
+    The caller has already checked the actual System Program identity. The
+    successful primary instruction's exact parsed semantics, explicit signer,
+    writable nonce identity, unchanged nonce balance and whole-record native
+    conservation are required. No other nonce or System operation is inferred.
+    """
+    expected_fields = {'nonceAccount', 'nonceAuthority', 'recentBlockhashesSysvar'}
+    if nested or outer != 0 or not isinstance(info, dict) or set(info) != expected_fields:
+        raise ValueError('Nonce administration requires an exact first outer advanceNonce instruction')
+    nonce = info.get('nonceAccount')
+    if (not isinstance(nonce, str) or nonce in (address, RECENT_BLOCKHASHES_SYSVAR)
+            or keys.count(nonce) != 1 or keys.count(address) != 1
+            or info.get('nonceAuthority') != address
+            or info.get('recentBlockhashesSysvar') != RECENT_BLOCKHASHES_SYSVAR
+            or keys.count(RECENT_BLOCKHASHES_SYSVAR) != 1):
+        raise ValueError('Nonce administration account, authority or recent-blockhashes sysvar identity is unresolved')
+    entries = message.get('accountKeys')
+    authority_entry = next((entry for entry in entries if isinstance(entry, dict) and entry.get('pubkey') == address), None)
+    nonce_entry = next((entry for entry in entries if isinstance(entry, dict) and entry.get('pubkey') == nonce), None)
+    sysvar_entry = next((entry for entry in entries if isinstance(entry, dict) and entry.get('pubkey') == RECENT_BLOCKHASHES_SYSVAR), None)
+    if (not isinstance(authority_entry, dict) or authority_entry.get('signer') is not True
+            or not isinstance(nonce_entry, dict) or nonce_entry.get('writable') is not True
+            or not isinstance(sysvar_entry, dict) or sysvar_entry.get('writable') is not False
+            or sysvar_entry.get('signer') is not False):
+        raise ValueError('Nonce administration requires explicit primary signer and writable/read-only account roles')
+    nonce_index = keys.index(nonce)
+    if pre_lamports[nonce_index] != post_lamports[nonce_index]:
+        raise ValueError('Nonce administration is non-economic only with unchanged nonce-account lamports')
+    if sum(pre_lamports) - sum(post_lamports) != fee:
+        raise ValueError('Nonce transaction native balances do not conserve the exact network fee')
+    return {'kind': 'advanceNonce', 'nonce_account': nonce, 'authority': address,
+            'economic_role': 'administration',
+            'reason': 'First successful System advanceNonce changes nonce state only; nonce balance is unchanged and native endpoints conserve the network fee'}
+
+
+def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
+                              post_lamports, address, route, fee):
+    """Prove temporary wSOL accounts from primary instructions, not ATA hints.
+
+    Persistent accounts have event-time token balance evidence and keep that
+    separate ownership/rent path. An account absent from both token endpoints
+    needs creation, initialization, ordered flows and closure in this record.
+    This proves only its transaction-local lifecycle, never wallet-wide history.
+    """
+    ephemeral = candidates - set(owned)
+    if not ephemeral:
+        return
+    if sum(post_lamports) - sum(pre_lamports) != -fee:
+        raise ValueError('Temporary wrapped SOL native balances do not reconcile to the network fee')
+    route_position = next(index for index, row in enumerate(flat) if row[1] == route['path'])
+    for account in ephemeral:
+        if keys.count(account) != 1:
+            raise ValueError('Temporary wrapped SOL account lacks one explicit account key')
+        account_index = keys.index(account)
+        if pre_lamports[account_index] != 0 or post_lamports[account_index] != 0:
+            raise ValueError('Temporary wrapped SOL requires zero native endpoints; missing token balances are not a zero anchor')
+        creations, initializations, closes, movements = [], [], [], []
+        for position, (outer, path, instruction, _) in enumerate(flat):
+            program = _program(instruction, keys)
+            parsed = instruction.get('parsed')
+            if not isinstance(parsed, dict):
+                continue
+            kind, info = parsed.get('type'), parsed.get('info', {})
+            if program == SYSTEM_ID:
+                if kind in ('createAccount', 'createAccountWithSeed') and info.get('newAccount') == account:
+                    creations.append((position, info))
+                elif kind == 'transfer' and account in (info.get('source'), info.get('destination')):
+                    movements.append((position, outer, 'native', kind, program, info))
+            elif program in TOKEN_IDS:
+                if kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3') and info.get('account') == account:
+                    initializations.append((position, program, info))
+                elif kind == 'closeAccount' and info.get('account') == account:
+                    closes.append((position, program, info))
+                elif kind == 'syncNative' and info.get('account') == account:
+                    movements.append((position, outer, 'sync', kind, program, info))
+                elif kind in ('transfer', 'transferChecked') and account in (info.get('source'), info.get('destination')):
+                    movements.append((position, outer, 'token', kind, program, info))
+        if len(creations) != 1 or len(initializations) != 1 or len(closes) != 1:
+            raise ValueError('Temporary wrapped SOL needs one primary creation, initialization and closure; ATA idempotence is not proof')
+        creation_position, creation = creations[0]
+        initialization_position, token_program, initialization = initializations[0]
+        close_position, close_program, close = closes[0]
+        rent = _integer(creation.get('lamports'))
+        if (creation.get('source') != address or creation.get('owner') != token_program
+                or token_program != 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+                or _integer(creation.get('space')) != 165 or rent == 0):
+            raise ValueError('Temporary wrapped SOL creation lacks wallet-funded primary rent and native-token account identity')
+        if initialization.get('owner') != address or initialization.get('mint') != WSOL:
+            raise ValueError('Temporary wrapped SOL initialization lacks event-time wallet ownership and mint')
+        if close_program != token_program or close.get('owner') != address or close.get('destination') != address:
+            raise ValueError('Temporary wrapped SOL closure and rent refund must belong to the investigated wallet')
+        if not creation_position < initialization_position < route_position < close_position:
+            raise ValueError('Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved')
+        wrapped_units, pending_sync = 0, False
+        for position, outer, movement_type, kind, program, info in sorted(movements):
+            if not creation_position < position < close_position:
+                raise ValueError('Temporary wrapped SOL movement lies outside its primary lifecycle')
+            if movement_type == 'native':
+                if info.get('source') != address or info.get('destination') != account:
+                    raise ValueError('Temporary wrapped SOL funding or withdrawal has unresolved ownership and rent allocation')
+                wrapped_units += _integer(info.get('lamports'))
+                pending_sync = position > initialization_position
+            elif movement_type == 'sync':
+                if program != token_program or position <= initialization_position:
+                    raise ValueError('Temporary wrapped SOL sync lacks its primary initialized token account')
+                pending_sync = False
+            else:
+                if outer != route['index'] or program != token_program or position <= initialization_position:
+                    raise ValueError('Temporary wrapped SOL transfer is outside the initialized supported route')
+                checked = info.get('tokenAmount') if kind == 'transferChecked' else None
+                quantity = raw_quantity(checked['amount'] if checked else info.get('amount'))
+                if checked and (info.get('mint') != WSOL or _integer(checked.get('decimals')) != 9):
+                    raise ValueError('Temporary wrapped SOL transfer disagrees with its primary mint and decimals')
+                if info.get('source') == account:
+                    if pending_sync:
+                        raise ValueError('Temporary wrapped SOL funding lacks syncNative before its token debit')
+                    wrapped_units -= quantity
+                if info.get('destination') == account:
+                    wrapped_units += quantity
+                if wrapped_units < 0:
+                    raise ValueError('Temporary wrapped SOL transfer exceeds evidenced lifecycle funding')
+        # Closing a native token account returns its remaining wrapped units and
+        # funded rent. The zero native endpoint, wallet beneficiary, ordered
+        # primary proofs and exact native/quote reconciliations establish this
+        # refund without counting rent or representation changes as trade cost.
+
+
+def decode_supported_swaps(transactions, address):
+    """Decode record wrappers {signature,raw,evidence_hash,transaction_index?}.
+
+    coverage describes this fetched sample only. complete and history_complete
+    always remain False. No absence of a warning establishes complete evidence.
+    A wallet-paid network fee is allocated to the exact single reconstructed
+    trade only when no outside economic movement remains. Its display fee event
+    retains the actual amount and links allocation to that same-signature trade
+    path; accounting validates this link and excludes the display from overhead.
+    Failed, unsupported or ambiguous transactions keep unallocated fee evidence.
+    Sponsored fees stay excluded. meta.fee already includes priority fees.
+    """
+    events, findings, unresolved, evidence, administration = [], [], [], [], []
+    rows = []
+    for record in transactions:
+        raw = record.get('raw') if isinstance(record, dict) else None
+        if isinstance(raw, dict) and 'result' in raw:
+            raw = raw['result']
+        rows.append((record if isinstance(record, dict) else {}, raw))
+    slots = Counter(raw['slot'] for _, raw in rows if isinstance(raw, dict)
+                    and isinstance(raw.get('slot'), int) and not isinstance(raw['slot'], bool))
+    supported, failed, no_swap = 0, 0, 0
+    used_routes = set()
+    for record, raw in rows:
+        signature = record.get('signature')
+        transaction = raw.get('transaction') if isinstance(raw, dict) else None
+        actual = transaction.get('signatures', []) if isinstance(transaction, dict) else []
+        if not isinstance(actual, list):
+            actual = []
+        if not signature:
+            signature = actual[0] if actual else None
+        digest = record.get('evidence_hash')
+        hashes = [digest] if isinstance(digest, str) and digest else []
+        if hashes:
+            evidence.append({'kind': 'getTransaction', 'signature': signature, 'hash': digest})
+        timestamp = raw.get('blockTime') if isinstance(raw, dict) else None
+        slot = raw.get('slot') if isinstance(raw, dict) else None
+        sequence = 0
+
+        def emit(kind, path, **fields):
+            nonlocal sequence
+            event = {'kind': kind, 'timestamp': timestamp, 'signature': signature,
+                     'path': path, 'evidence': hashes, **fields}
+            if isinstance(slot, int) and not isinstance(slot, bool):
+                tx_index = record.get('transaction_index')
+                if slots[slot] == 1:
+                    event['order'] = slot * 1_000_000 + sequence
+                elif isinstance(tx_index, int) and not isinstance(tx_index, bool) and tx_index >= 0:
+                    event['order'] = slot * 1_000_000 + tx_index * 1_000 + sequence
+            sequence += 1
+            events.append(event)
+            return event
+
+        def unknown(reason, path='meta', mint=None):
+            issue = {'signature': signature, 'path': path, 'reason': reason, 'evidence': hashes}
+            if mint:
+                issue['mint'] = mint
+            unresolved.append(issue)
+            emit('unsupported', path, reason=reason, **({'mint': mint} if mint else {}))
+            findings.append({'severity': 'warning', 'title': 'Swap reconstruction gap',
+                             'detail': reason, 'signature': signature, 'evidence': hashes})
+
+        try:
+            if not isinstance(raw, dict):
+                raise ValueError('Missing raw transaction result')
+            if not signature or not actual or signature != actual[0]:
+                raise ValueError('Transaction signature identity is missing or disagrees')
+            _integer(timestamp)
+            _integer(slot)
+            version = raw.get('version', 'legacy')
+            if isinstance(version, bool) or version not in ('legacy', 0):
+                raise ValueError('Unsupported transaction version')
+            meta = raw.get('meta')
+            message = raw.get('transaction', {}).get('message')
+            if not isinstance(meta, dict) or not isinstance(message, dict) or 'err' not in meta:
+                raise ValueError('Missing transaction metadata or success state')
+            keys = _keys(message, meta)
+            fee = _integer(meta.get('fee'))
+            paid = keys[0] == address
+            fee_sol = canonical(Decimal(fee) / LAMPORTS)
+            fee_event = emit('fee', 'meta.fee', amount_sol=fee_sol,
+                             paid_by_wallet=paid, fee_payer=keys[0], failed=meta['err'] is not None,
+                             allocation='unallocated',
+                             reason='meta.fee includes network and priority fees; do not subtract a second priority charge')
+            if meta['err'] is not None:
+                failed += 1
+                continue
+            if address not in keys:
+                raise ValueError('Investigated wallet is absent from transaction account keys')
+            if slots[slot] > 1:
+                tx_index = record.get('transaction_index')
+                if not isinstance(tx_index, int) or isinstance(tx_index, bool) or tx_index < 0:
+                    raise ValueError('Same-slot ordering requires independently fetched block evidence')
+            instructions = message.get('instructions')
+            if not isinstance(instructions, list):
+                raise ValueError('Missing instructions')
+            routes = []
+            for index, instruction in enumerate(instructions):
+                if not isinstance(instruction, dict):
+                    raise ValueError('Malformed instruction')
+                if _program(instruction, keys) in (JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL):
+                    route = _route(instruction, keys)
+                    route.update(index=index, path=f'instructions.{index}')
+                    routes.append(route)
+            if not routes:
+                no_swap += 1
+                raise ValueError('No reviewed outer spot swap; transfers and balances alone do not prove trading')
+            if len(routes) != 1:
+                raise ValueError('Multiple outer swaps need separate instruction-level economic allocation')
+            route = routes[0]
+            used_routes.add((route['program'], route['instruction']))
+            if route['authority'] != address:
+                raise ValueError('Recognized swap authority is not the investigated wallet')
+            pre_lamports, post_lamports = meta.get('preBalances'), meta.get('postBalances')
+            if not isinstance(pre_lamports, list) or not isinstance(post_lamports, list) or len(pre_lamports) != len(keys) or len(post_lamports) != len(keys):
+                raise ValueError('Incomplete native balance evidence')
+            pre_lamports = [_integer(value) for value in pre_lamports]
+            post_lamports = [_integer(value) for value in post_lamports]
+            pre, post, identities = {}, {}, {}
+            for field, target in (('preTokenBalances', pre), ('postTokenBalances', post)):
+                balances = meta.get(field)
+                if not isinstance(balances, list):
+                    raise ValueError('Missing event-time token balances')
+                for balance in balances:
+                    index = _integer(balance['accountIndex'])
+                    account = keys[index]
+                    token = balance['uiTokenAmount']
+                    decimals = _integer(token['decimals'])
+                    if decimals > 255:
+                        raise ValueError('Invalid token decimals')
+                    owner, mint = balance.get('owner'), balance.get('mint')
+                    if not isinstance(owner, str) or not isinstance(mint, str) or not mint:
+                        raise ValueError('Missing event-time token ownership or mint')
+                    identity = {'owner': owner, 'mint': mint, 'decimals': decimals, 'index': index}
+                    if account in identities and identity != identities[account]:
+                        raise ValueError('Token ownership, identity or decimals changed in transaction')
+                    if account in target:
+                        raise ValueError('Duplicate token account balance')
+                    identities[account] = identity
+                    target[account] = raw_quantity(token['amount'])
+            owned = {account: value for account, value in identities.items() if value['owner'] == address}
+            inner = defaultdict(list)
+            for group in meta.get('innerInstructions') or []:
+                outer = _integer(group['index'])
+                for index, instruction in enumerate(group.get('instructions') or []):
+                    inner[outer].append((f'innerInstructions.{outer}.{index}', instruction))
+            flat = []
+            for index, instruction in enumerate(instructions):
+                flat.append((index, f'instructions.{index}', instruction, False))
+                flat.extend((index, path, nested, True) for path, nested in inner[index])
+            flow = defaultdict(int)
+            rent_funders, closures, allowed_wrapped = {}, {}, set()
+            outside_native = []
+            outside_native_delta = 0
+            nonce_administration = []
+            for outer, path, instruction, nested in flat:
+                program = _program(instruction, keys)
+                parsed = instruction.get('parsed')
+                kind = parsed.get('type') if isinstance(parsed, dict) else None
+                info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+                if program in (COMPUTE_ID, *MEMO_IDS):
+                    continue
+                if program == ASSOCIATED_ID:
+                    if kind not in ('create', 'createIdempotent'):
+                        raise ValueError('Unparsed associated account administration')
+                    if info.get('wallet') != address:
+                        raise ValueError('Associated account creation for another wallet is outside swap scope')
+                    account = info.get('account')
+                    if info.get('mint') == WSOL:
+                        allowed_wrapped.add(account)
+                    if info.get('source') == address:
+                        rent_funders[account] = address
+                    continue
+                if program == SYSTEM_ID:
+                    if kind == 'advanceNonce':
+                        nonce_administration.append({**_verify_nonce_administration(
+                            message, info, keys, pre_lamports, post_lamports, address, fee, outer, nested),
+                            'signature': signature, 'path': path, 'evidence': hashes})
+                    elif kind == 'transfer':
+                        source, destination = info.get('source'), info.get('destination')
+                        lamports = _integer(info.get('lamports'))
+                        if address not in (source, destination):
+                            continue
+                        if source == destination == address:
+                            continue
+                        other = destination if source == address else source
+                        wrapping = other in allowed_wrapped or owned.get(other, {}).get('mint') == WSOL
+                        if outer != route['index'] and not wrapping:
+                            if nested:
+                                raise ValueError('Unrelated inner native movement has unresolved economic scope')
+                            delta = -lamports if source == address else lamports
+                            outside_native_delta += delta
+                            outside_native.append({'path': path, 'source': source, 'destination': destination,
+                                                   'lamports': lamports, 'direction': 'withdrawal' if delta < 0 else 'deposit'})
+                    elif kind in ('createAccount', 'createAccountWithSeed'):
+                        account = info.get('newAccount')
+                        if info.get('source') == address:
+                            rent_funders[account] = address
+                        elif address in (info.get('source'), account):
+                            raise ValueError('Unresolved native account funding')
+                    else:
+                        raise ValueError('Unsupported system operation within swap transaction')
+                    continue
+                if program in TOKEN_IDS:
+                    if kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3'):
+                        account = info.get('account')
+                        if info.get('owner') == address and info.get('mint') == WSOL:
+                            allowed_wrapped.add(account)
+                        continue
+                    if kind in ('getAccountDataSize', 'syncNative', 'initializeImmutableOwner'):
+                        continue
+                    if kind == 'closeAccount':
+                        account = info.get('account')
+                        if info.get('destination') == address:
+                            if owned.get(account, {}).get('mint') == WSOL and info.get('owner') != address:
+                                raise ValueError('Wrapped SOL closure lacks the investigated wallet authority')
+                            closures[account] = address
+                        elif account in owned or account in allowed_wrapped:
+                            raise ValueError('Token account closes to another recipient')
+                        continue
+                    if kind not in ('transfer', 'transferChecked'):
+                        raise ValueError('Unsupported token permission, extension, mint or burn operation')
+                    source, destination = info.get('source'), info.get('destination')
+                    checked = info.get('tokenAmount') if kind == 'transferChecked' else None
+                    quantity = raw_quantity(checked['amount'] if checked else info.get('amount'))
+                    for account in (source, destination):
+                        identity = identities.get(account)
+                        if identity and checked and (_integer(checked.get('decimals')) != identity['decimals'] or info.get('mint') != identity['mint']):
+                            raise ValueError('Parsed transfer disagrees with token identity')
+                    if outer != route['index'] and any(account in owned for account in (source, destination)):
+                        raise ValueError('Unrelated token transfer prevents swap quantity attribution')
+                    flow[source] -= quantity
+                    flow[destination] += quantity
+                    continue
+                if outer != route['index']:
+                    raise ValueError('Unreviewed outer program may bundle other economic activity')
+                # CPIs are part of a successful, verified route; net owned legs
+                # still require exact parsed-transfer reconciliation below.
+            _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
+                                      post_lamports, address, route, fee)
+            for account in route['owned_accounts']:
+                if account not in owned and account not in allowed_wrapped:
+                    raise ValueError('Route user account lacks event-time wallet ownership')
+            deltas, decimals = defaultdict(int), {}
+            rent_correction = 0
+            for account, identity in owned.items():
+                delta = post.get(account, 0) - pre.get(account, 0)
+                mint, index = identity['mint'], identity['index']
+                if mint == WSOL and identity['decimals'] != 9:
+                    raise ValueError('Wrapped SOL decimals disagree with native units')
+                if mint == WSOL and account not in post:
+                    if post_lamports[index] != 0 or closures.get(account) != address:
+                        raise ValueError('Missing wrapped SOL closing token balance requires a primary wallet closure and zero native endpoint')
+                if mint == WSOL and account not in pre:
+                    creations, initializations = [], []
+                    for position, (_, path, instruction, _) in enumerate(flat):
+                        parsed = instruction.get('parsed')
+                        if not isinstance(parsed, dict):
+                            continue
+                        info, kind = parsed.get('info', {}), parsed.get('type')
+                        program = _program(instruction, keys)
+                        if program == SYSTEM_ID and kind in ('createAccount', 'createAccountWithSeed') and info.get('newAccount') == account:
+                            creations.append((position, info))
+                        if program in TOKEN_IDS and kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3') and info.get('account') == account:
+                            initializations.append((position, program, info))
+                    if (pre_lamports[index] != 0 or len(creations) != 1 or len(initializations) != 1
+                            or creations[0][1].get('source') != address
+                            or creations[0][1].get('owner') != initializations[0][1]
+                            or initializations[0][1] != 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+                            or _integer(creations[0][1].get('space')) != 165
+                            or _integer(creations[0][1].get('lamports')) == 0
+                            or initializations[0][2].get('owner') != address
+                            or initializations[0][2].get('mint') != WSOL
+                            or not creations[0][0] < initializations[0][0] < next(
+                                position for position, row in enumerate(flat) if row[1] == route['path'])):
+                        raise ValueError('Missing wrapped SOL opening token balance requires primary wallet-funded creation and initialization; ATA idempotence is not proof')
+                if mint != WSOL and delta != flow[account]:
+                    raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                if mint in decimals and decimals[mint] != identity['decimals']:
+                    raise ValueError('Conflicting decimals across owned accounts for one mint')
+                decimals[mint] = identity['decimals']
+                deltas[mint] += delta
+                native_delta = post_lamports[index] - pre_lamports[index]
+                reserve_delta = native_delta - delta if mint == WSOL else native_delta
+                if reserve_delta > 0:
+                    if rent_funders.get(account) != address:
+                        raise ValueError('Unproven or sponsored token account rent funding')
+                    rent_correction += reserve_delta
+                elif reserve_delta < 0:
+                    if closures.get(account) != address:
+                        raise ValueError('Unproven token account rent refund')
+                    rent_correction += reserve_delta
+            wallet_index = keys.index(address)
+            settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
+                          + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
+                          - outside_native_delta)
+            wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
+            if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
+                raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
+            assets = [(mint, delta) for mint, delta in deltas.items() if delta]
+            if len(assets) != 1:
+                raise ValueError('Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved')
+            mint, quantity = assets[0]
+            if not settlement or (quantity > 0) == (settlement > 0):
+                raise ValueError('No opposing SOL consideration for the evidenced asset exchange')
+            kind = 'buy' if quantity > 0 else 'sell'
+            if route['expected_kind'] and route['expected_kind'] != kind:
+                raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
+            with localcontext() as context:
+                context.prec = 192
+                amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
+            allocate_fee = paid and not outside_native
+            emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
+                 decimals=decimals[mint], amount_sol=amount, classification='unknown',
+                 source=route['program'], venue=route['program'], instruction=route['instruction'],
+                 owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
+                 settlement_mint=WSOL,
+                 observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
+                 observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
+                 observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
+                 reason='Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence' if allocate_fee else
+                        'Verified spot instruction and reconciled transaction-level owned net exchange; network fee remains unallocated')
+            if allocate_fee:
+                fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
+                fee_event['allocated_trade_path'] = route['path']
+            supported += 1
+            administration.extend(nonce_administration)
+            for movement in outside_native:
+                emit('capital', movement['path'], amount_sol=canonical(Decimal(movement['lamports']) / LAMPORTS),
+                     direction=movement['direction'], source=movement['source'], destination=movement['destination'],
+                     economic_role='unknown',
+                     reason='Explicit outside native movement isolated from swap consideration; capital flow or trading cost role unresolved')
+                unknown('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved', movement['path'])
+        except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
+            unknown(str(exc))
+    coverage = {'decoder_version': DECODER_VERSION, 'transactions': len(rows), 'decoded_swaps': supported,
+                'supported_transactions': supported, 'failed_transactions': failed,
+                'unresolved_transactions': len({issue['signature'] for issue in unresolved}),
+                'unrecognized_transactions': no_swap, 'complete': False, 'history_complete': False,
+                'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL settlement',
+                'classification': 'UNKNOWN', 'route_fixtures_independently_verified': False,
+                'non_economic_instructions': administration,
+                'fixture_validation': [{'program': program, 'instruction': instruction,
+                                        'discriminator': (_anchor(instruction).hex() if program != RAYDIUM_AMM else None),
+                                        **_RAW_FIXTURE_ROUTES.get((program, instruction), {'state': 'SYNTHETIC_ONLY',
+                                            'scope': 'No successful raw mainnet golden fixture for this discriminator'})}
+                                       for program, instruction in sorted(used_routes)]}
+    return {'events': events, 'findings': findings, 'coverage': coverage,
+            'unresolved': unresolved, 'evidence': evidence}
+
+
+def inspect_token_risk(raw_mint_info, pool_observations=None):
+    """Check present mint controls and provided present observations, never safety.
+
+    Accept a getAccountInfo envelope/result/value or parsed account object.
+    Optional observation dict: pools[{liquidity_usd}], owners[{owner,amount_raw}],
+    owner_balances_complete (explicit bool), and evidence[hashes]. Pool API numbers
+    may be decimal strings or integers; floats do not support precision-sensitive
+    conclusions. Token account concentration is not owner concentration.
+    """
+    findings, gates = [], {}
+    observations = pool_observations if isinstance(pool_observations, dict) else {}
+    hashes = observations.get('evidence', [])
+    if not isinstance(hashes, list) or any(not isinstance(value, str) for value in hashes):
+        hashes = []
+
+    def check(key, state, detail, severity=None, actual=None):
+        gates[key] = {'state': state, 'detail': detail, 'actual': actual, 'evidence': hashes}
+        if severity or state == 'UNKNOWN':
+            findings.append({'key': key, 'severity': severity or 'info', 'title': key.replace('_', ' ').capitalize(),
+                             'detail': detail, 'state': state, 'evidence': hashes})
+
+    account = raw_mint_info
+    if isinstance(account, dict) and 'result' in account:
+        account = account['result']
+    if isinstance(account, dict) and 'value' in account:
+        account = account['value']
+    info, extensions, supply = None, None, None
+    if isinstance(account, dict):
+        parsed = account.get('data', {}).get('parsed') if isinstance(account.get('data'), dict) else None
+        if account.get('owner') in TOKEN_IDS and isinstance(parsed, dict) and parsed.get('type') == 'mint':
+            info = parsed.get('info')
+    if not isinstance(info, dict):
+        check('mint_identity', 'UNKNOWN', 'Missing parsed mint account from a supported token program')
+        check('mint_authority', 'UNKNOWN', 'Mint authority has not been observed')
+        check('freeze_authority', 'UNKNOWN', 'Freeze authority has not been observed')
+        check('token_extensions', 'UNKNOWN', 'Token extension controls have not been observed')
+    else:
+        check('mint_identity', 'PASS', 'Current RPC account owner and parsed type identify a token mint')
+        for key, title in (('mintAuthority', 'mint_authority'), ('freezeAuthority', 'freeze_authority')):
+            if key not in info:
+                check(title, 'UNKNOWN', 'Authority field is absent from current mint evidence')
+            elif info[key] is None:
+                check(title, 'PASS', 'Authority is currently revoked; this does not establish historical behavior')
+            elif isinstance(info[key], str) and info[key]:
+                check(title, 'FAIL', 'Active authority can change token supply' if key == 'mintAuthority' else 'Active authority can freeze token accounts', 'warning', info[key])
+            else:
+                check(title, 'UNKNOWN', 'Malformed authority evidence')
+        try:
+            supply = raw_quantity(info.get('supply'))
+        except ValueError:
+            pass
+        token_2022 = account['owner'] == 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        extensions = info.get('extensions')
+        if not token_2022:
+            check('token_extensions', 'PASS', 'Legacy token program has no Token-2022 mint extensions')
+        elif not isinstance(extensions, list):
+            check('token_extensions', 'UNKNOWN', 'Token-2022 mint extension inventory is missing')
+        else:
+            risky, unknown = [], []
+            passive = {'metadatapointer', 'tokenmetadata', 'grouppointer', 'groupmemberpointer',
+                       'tokengroup', 'tokengroupmember', 'interestbearingconfig', 'scaleduiamount'}
+            for extension in extensions:
+                if not isinstance(extension, dict):
+                    unknown.append('malformed extension')
+                    continue
+                name = extension.get('extension') or extension.get('type')
+                normalized = str(name).replace('_', '').replace('-', '').lower()
+                state = extension.get('state') or {}
+                if not isinstance(state, dict):
+                    state = {}
+                if normalized == 'permanentdelegate':
+                    risky.append('Permanent delegate can transfer or burn holder tokens')
+                elif normalized == 'transferfeeconfig':
+                    risky.append('Transfer fee configuration can change received quantity and execution costs')
+                elif normalized == 'transferhook':
+                    risky.append('Transfer hook executes external logic and may restrict transfers')
+                elif normalized == 'defaultaccountstate':
+                    value = state.get('accountState', state.get('state'))
+                    if str(value).lower() in ('frozen', '2'):
+                        risky.append('New token accounts default to frozen')
+                    elif str(value).lower() not in ('initialized', '1'):
+                        unknown.append('Default account state is unresolved')
+                elif normalized in ('nontransferable', 'pausable', 'pausableconfig', 'confidentialtransfermint', 'confidentialtransferfeeconfig'):
+                    risky.append(f'{name} may restrict ordinary token transfers')
+                elif normalized not in passive:
+                    unknown.append(f'Unreviewed extension: {name}')
+            if risky:
+                check('token_extensions', 'FAIL', '; '.join(risky), 'warning')
+            elif unknown:
+                check('token_extensions', 'UNKNOWN', '; '.join(unknown))
+            else:
+                check('token_extensions', 'PASS', 'No reviewed restrictive extension in the provided current inventory')
+    pools = observations.get('pools')
+    liquidity = []
+    if isinstance(pools, list):
+        for pool in pools:
+            try:
+                value = pool.get('liquidity_usd')
+                value = str(value) if isinstance(value, int) and not isinstance(value, bool) else value
+                liquidity.append(decimal(value))
+            except (ValueError, TypeError, AttributeError):
+                continue
+    if liquidity:
+        total = sum(liquidity, Decimal(0))
+        check('current_liquidity', 'PASS' if total > 0 else 'FAIL',
+              'Provided pools report current liquidity; this is not executable depth or historical liquidity',
+              'warning' if total == 0 else None, canonical(total))
+    else:
+        check('current_liquidity', 'UNKNOWN', 'Current liquidity has not been measured for a supported pool')
+    check('liquidity_control', 'UNKNOWN', 'LP ownership, lock terms, concentrated liquidity positions and withdrawal rights require independent pool evidence')
+    owners = observations.get('owners')
+    amounts = defaultdict(int)
+    valid_owners = isinstance(owners, list) and bool(owners)
+    if valid_owners:
+        try:
+            for owner in owners:
+                if not isinstance(owner.get('owner'), str) or not owner['owner']:
+                    raise ValueError('Missing owner')
+                amounts[owner['owner']] += raw_quantity(owner['amount_raw'])
+        except (ValueError, KeyError, TypeError, AttributeError):
+            valid_owners = False
+    if valid_owners and supply and sum(amounts.values()) == supply and observations.get('owner_balances_complete') is True:
+        with localcontext() as context:
+            context.prec = 192
+            largest = Decimal(max(amounts.values())) / Decimal(supply) * 100
+            top10 = Decimal(sum(sorted(amounts.values(), reverse=True)[:10])) / Decimal(supply) * 100
+        check('holder_concentration', 'FAIL' if largest > 20 else 'PASS',
+              'Current largest owner and top ten shares use provided owner aggregation; pool/escrow attribution still needs review',
+              'warning' if largest > 20 else None,
+              {'largest_owner_pct': canonical(largest), 'top10_owner_pct': canonical(top10)})
+    else:
+        check('holder_concentration', 'UNKNOWN', 'Complete current balances grouped by owner and mint supply are required; top token accounts alone do not identify owner concentration')
+    check('creator_links', 'UNKNOWN', 'Creator funding links, deployer holdings and coordinated accounts have not been investigated')
+    check('historical_sellability', 'UNKNOWN', 'Current controls and reported liquidity do not prove historical or future exit execution')
+    states = {value['state'] for value in gates.values()}
+    return {'gates': gates, 'findings': findings, 'status': 'FLAGGED' if 'FAIL' in states else 'UNRESOLVED',
+            'scope': 'Current observations only', 'safe': None,
+            'notes': ['No legitimacy score or promise of safe copying.', 'Current checks cannot rule out scams, manipulation or future losses.']}

@@ -1,0 +1,311 @@
+{
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "actual_command": {
+    "bytes": 5225,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-command/COMMAND.json",
+    "sha256": "d46c27e1ac3d86c84647556bc8c351eb339983a601dc9324eaca95f59405a4bb"
+  },
+  "actual_exit_code": 0,
+  "actual_original_cases": 7,
+  "actual_result": {
+    "bytes": 10897,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/result.json",
+    "sha256": "0b49e61ab4dbaa0619d870e283e459714ca43d490654a0f5e8bce457f0c6f02a"
+  },
+  "actual_seconds": 60.31165969200083,
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "browser_executed_by_reviewer": false,
+  "cohort_UI_groups": 8,
+  "credential_lookups": 0,
+  "digest_verified_artifacts": [
+    {
+      "bytes": 6941608,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/partial-real-input.zip",
+      "sha256": "511213d07d7b6162e3853690bd3be738559d58a90a128b6311d5126ccd8e4f2e"
+    },
+    {
+      "bytes": 93064139,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-parent.json",
+      "sha256": "ff38c71213c890a04a521f9261619c0b6f813940315b5521c85a4d898ee1a64a"
+    },
+    {
+      "bytes": 4923822,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-rebuilt-mobile.png",
+      "sha256": "fdec73a9ba00a460331228f42eaf5a13d683dab6b6c5fb77ff4891050d5f6600"
+    },
+    {
+      "bytes": 3346715,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-missing-report.json",
+      "sha256": "54233c770554f67057c959c7eb4db376e4e6f3be59b27bd3e23d8c9a9e478181"
+    },
+    {
+      "bytes": 5393266,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-rebuilt-desktop.png",
+      "sha256": "a31c9f148da5309c3f5a48d00c2b904db34f11ebade35184d3c65dd908b855e7"
+    },
+    {
+      "bytes": 982758,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-missing-desktop.png",
+      "sha256": "2e4471accc68800e938cadb95c0c0175a0f50bedcd8ef49edc07f227fdac130d"
+    },
+    {
+      "bytes": 8454277,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-parent.json",
+      "sha256": "9659523817b8f901de2eed0b5d0ca15259a28951e8624f6c690b7284d8db1ba4"
+    },
+    {
+      "bytes": 50,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/guards.json",
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a"
+    },
+    {
+      "bytes": 1839104,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/genuine-partial-mobile.png",
+      "sha256": "8971eda2f84420e230fa9279fc9b7051fae91f96f328ce87813b41cec1416724"
+    },
+    {
+      "bytes": 3191126,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-restored-report.json",
+      "sha256": "c52c879044337198217d201737013f2ffd5f33acf0f53df1ad8ea1ca690ad446"
+    },
+    {
+      "bytes": 360659,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-positive-desktop.png",
+      "sha256": "a1d7f7eed54cacd30fbdec6c32c41cce144a4b1cd29072a2d25b173af1af2e52"
+    },
+    {
+      "bytes": 372749,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-restored-desktop.png",
+      "sha256": "60bf70d0ffe5339b189facf8e537ac21056a51e3cb46ec6e03ddec130557c4ef"
+    },
+    {
+      "bytes": 18211,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-input.zip",
+      "sha256": "aea3508b987106ce19b7cc13f945581b57da533eaec71322a0d505554f17a5bd"
+    },
+    {
+      "bytes": 306549,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-missing-mobile.png",
+      "sha256": "483b29bd3171c100ac825ceaf4de4af7d5ca2a3260e2b09a0abd09565dafb611"
+    },
+    {
+      "bytes": 5380772,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-desktop.png",
+      "sha256": "63f6af4871906f26c4c9b801bc7eab7dec419ed1dab776b1322cc5d553b1abf7"
+    },
+    {
+      "bytes": 284614,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-restored-mobile.png",
+      "sha256": "8a3f90ef9402f11f3da2cb46687e530c05d9fdc8f118695b805f0f45b8271508"
+    },
+    {
+      "bytes": 406526,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-missing-desktop.png",
+      "sha256": "52b3f4fdb1bb162950289b0fe583f1580ed32090a13795373635a2e35ea47916"
+    },
+    {
+      "bytes": 284575,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-restored-mobile.png",
+      "sha256": "84f31898e097c905a2712b46e9d3b79dac46b5d0614ab98695e16cf4760d4f05"
+    },
+    {
+      "bytes": 282613,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-positive-mobile.png",
+      "sha256": "7527b2bd0b24e58ca71687f6601a830dcb28f49c67fe42868450aac2f3f8a33b"
+    },
+    {
+      "bytes": 372754,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-restored-desktop.png",
+      "sha256": "e306c6f029cbac507b79dcdab7f1c9bb4bb5a290e4ab0166d4f51ddf207c31ac"
+    },
+    {
+      "bytes": 3201999,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-missing-report.json",
+      "sha256": "634768199028264a91d5c6db1a65c8d0e790195fae06fec01aa63326d6640e19"
+    },
+    {
+      "bytes": 8454277,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-ui-export.json",
+      "sha256": "9659523817b8f901de2eed0b5d0ca15259a28951e8624f6c690b7284d8db1ba4"
+    },
+    {
+      "bytes": 714160,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-missing-mobile.png",
+      "sha256": "3717df602097a960731ea101b1d4f837cf47a9a843de5781f2e08809b74dc909"
+    },
+    {
+      "bytes": 3191126,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-restored-report.json",
+      "sha256": "7edfc5a25c1a941dc344d7059f5b07de9e5da322c0670be1134942f85cec00cb"
+    },
+    {
+      "bytes": 350517,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-input.zip",
+      "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+    },
+    {
+      "bytes": 2089493,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/genuine-partial-desktop.png",
+      "sha256": "00a6935ca943dd5178bb847b5385334bc02b968fb7448f7b3a228dd52514924d"
+    },
+    {
+      "bytes": 4919919,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-mobile.png",
+      "sha256": "d7c43ef28517d3a790decc4ea6b74b422d094f2304e331c401aad54054ff7c3c"
+    },
+    {
+      "bytes": 93064692,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-child.json",
+      "sha256": "7a1f68e584ca2d9c39ff5ff1e09163567159114cb6f9b67039c5005a6f761809"
+    },
+    {
+      "bytes": 6177503,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/genuine-partial-report.json",
+      "sha256": "fef6e53e98d462d4ceea272d12cf84429d559d5c3b6120f9eb20c3c519b77840"
+    }
+  ],
+  "digest_verified_captures": [
+    {
+      "bytes": 4923822,
+      "height": 70512,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-rebuilt-mobile.png",
+      "sha256": "fdec73a9ba00a460331228f42eaf5a13d683dab6b6c5fb77ff4891050d5f6600",
+      "width": 390
+    },
+    {
+      "bytes": 5393266,
+      "height": 51911,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-rebuilt-desktop.png",
+      "sha256": "a31c9f148da5309c3f5a48d00c2b904db34f11ebade35184d3c65dd908b855e7",
+      "width": 1440
+    },
+    {
+      "bytes": 982758,
+      "height": 5598,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-missing-desktop.png",
+      "sha256": "2e4471accc68800e938cadb95c0c0175a0f50bedcd8ef49edc07f227fdac130d",
+      "width": 1440
+    },
+    {
+      "bytes": 1839104,
+      "height": 25537,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/genuine-partial-mobile.png",
+      "sha256": "8971eda2f84420e230fa9279fc9b7051fae91f96f328ce87813b41cec1416724",
+      "width": 390
+    },
+    {
+      "bytes": 360659,
+      "height": 3288,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-positive-desktop.png",
+      "sha256": "a1d7f7eed54cacd30fbdec6c32c41cce144a4b1cd29072a2d25b173af1af2e52",
+      "width": 1440
+    },
+    {
+      "bytes": 372749,
+      "height": 3288,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-restored-desktop.png",
+      "sha256": "60bf70d0ffe5339b189facf8e537ac21056a51e3cb46ec6e03ddec130557c4ef",
+      "width": 1440
+    },
+    {
+      "bytes": 306549,
+      "height": 5202,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-missing-mobile.png",
+      "sha256": "483b29bd3171c100ac825ceaf4de4af7d5ca2a3260e2b09a0abd09565dafb611",
+      "width": 390
+    },
+    {
+      "bytes": 5380772,
+      "height": 51859,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-desktop.png",
+      "sha256": "63f6af4871906f26c4c9b801bc7eab7dec419ed1dab776b1322cc5d553b1abf7",
+      "width": 1440
+    },
+    {
+      "bytes": 284614,
+      "height": 4882,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-restored-mobile.png",
+      "sha256": "8a3f90ef9402f11f3da2cb46687e530c05d9fdc8f118695b805f0f45b8271508",
+      "width": 390
+    },
+    {
+      "bytes": 406526,
+      "height": 3473,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-missing-desktop.png",
+      "sha256": "52b3f4fdb1bb162950289b0fe583f1580ed32090a13795373635a2e35ea47916",
+      "width": 1440
+    },
+    {
+      "bytes": 284575,
+      "height": 4882,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-restored-mobile.png",
+      "sha256": "84f31898e097c905a2712b46e9d3b79dac46b5d0614ab98695e16cf4760d4f05",
+      "width": 390
+    },
+    {
+      "bytes": 282613,
+      "height": 4830,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/synthetic-positive-mobile.png",
+      "sha256": "7527b2bd0b24e58ca71687f6601a830dcb28f49c67fe42868450aac2f3f8a33b",
+      "width": 390
+    },
+    {
+      "bytes": 372754,
+      "height": 3288,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/valuation_hash-restored-desktop.png",
+      "sha256": "e306c6f029cbac507b79dcdab7f1c9bb4bb5a290e4ab0166d4f51ddf207c31ac",
+      "width": 1440
+    },
+    {
+      "bytes": 714160,
+      "height": 10273,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/world_hash-missing-mobile.png",
+      "sha256": "3717df602097a960731ea101b1d4f837cf47a9a843de5781f2e08809b74dc909",
+      "width": 390
+    },
+    {
+      "bytes": 2089493,
+      "height": 11385,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/genuine-partial-desktop.png",
+      "sha256": "00a6935ca943dd5178bb847b5385334bc02b968fb7448f7b3a228dd52514924d",
+      "width": 1440
+    },
+    {
+      "bytes": 4919919,
+      "height": 70460,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-final/indexed-partial-mobile.png",
+      "sha256": "d7c43ef28517d3a790decc4ea6b74b422d094f2304e331c401aad54054ff7c3c",
+      "width": 390
+    }
+  ],
+  "external_browser_requests": 0,
+  "inventory_UI_import_and_rebuild_assertions": 2,
+  "kind": "independent-actual-product-browser-receipt-review",
+  "locks": {
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+  },
+  "provider_requests": 0,
+  "raw_producer_stdout": {
+    "bytes": 5070,
+    "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/product-browser-command/RAW.log",
+    "sha256": "ffcef327d430be4429da94efa1dc459cafc1dae37a8adc99685625449f80407d"
+  },
+  "scope": "Actual root-produced browser command, raw stdout, result, artifact/capture binding and scoped DOM assertions; no test or browser rerun, complete-wallet acceptance or throughput claim.",
+  "source_files": 246,
+  "source_only_review_rewritten": false,
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_unchanged_rechecked": true,
+  "state": "PASS",
+  "unique_backend_test_nodes_added": 0,
+  "visual_sampling": {
+    "files": [
+      "indexed-partial-desktop.png",
+      "indexed-partial-rebuilt-mobile.png"
+    ],
+    "scope": "Full-page previews inspected for layout. The captures are extremely tall; exact inventory text is verified by retained DOM assertions, not independently read from these scaled previews."
+  }
+}

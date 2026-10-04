@@ -1,0 +1,577 @@
+{
+  "B1": "HISTORICAL_SUFFICIENCY_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "actual_terminal_index": {
+    "bytes": 46204,
+    "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/INDEX.json",
+    "sha256": "d068f7c86e0c4fc3ca14e2472ccc33ae0024abf71b8608f05e1eb11fd585a9f8"
+  },
+  "all_producer_artifact_bytes_checked": true,
+  "application_commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "counts_scope": "Four invocations repeat the original workflow/case set in development and real-required modes; none is added to3246 unique backend node counts. Named partial genuine losing lot remains scoped; both real-required entrypoints correctly return2/BLOCKED.",
+  "credential_lookups": 0,
+  "findings": [],
+  "full_candidate_gate_consistency": {
+    "prior_distinct_gate_review": {
+      "bytes": 15909,
+      "path": "/workspace/outputs/genuine-wallet-report-correction-review/FINAL_GATE_READONLY_REVIEW.json",
+      "sha256": "50669980d786216434a5f803f2ff212e15bf0bfe0a6478b1ec0464c4d68597e5"
+    },
+    "receipt": {
+      "bytes": 364646,
+      "path": "evidence/genuine-report-speed-batch-final/gate-a-final/result.json",
+      "sha256": "67a404bf805165ad440b8739a3ad8c8350263e4d5c64911d687cee2c1f0e668a"
+    },
+    "required_gates": 13,
+    "same246_file_mode_map_and_locks": true,
+    "state": "ACCEPTED_IN_SCOPE"
+  },
+  "guard_bootstrap_credential_attempts": 0,
+  "guard_socket_attempts": 0,
+  "independent_raw_oracle_scope": {
+    "basis_lamports": 565194018,
+    "conditional_named_lot_loss_lamports": -13270924,
+    "hold_fraction_hours": "529/3600",
+    "named_lot_quantity_raw": "516612982765",
+    "native_alternative_duplicates": 5,
+    "original_page_records": 87,
+    "original_request_response_hashes_verified": 14,
+    "partial23_fee_lamports": 240394,
+    "production_arithmetic_imports": 0,
+    "quote_instruction_byte_facts_verified": 8,
+    "selected_report_fee_lamports": 158868,
+    "sell_net_proceeds_lamports": 551923094,
+    "unique_selected_signatures": 87,
+    "whole_wallet_population_or_financial_promotion": false
+  },
+  "kind": "independent-actual-four-offline-workflow-receipt-review",
+  "locks": {
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+  },
+  "new_tests_or_application_workflows_run_by_reviewer": 0,
+  "original_inputs_rechecked": 67,
+  "original_inputs_unchanged": true,
+  "parent_immutability": "Actual producer assertions retained for original and loss/restoration parents; all frozen original input hashes rechecked. No rerun or separately reconstructed runtime store.",
+  "provider_requests": 0,
+  "scope": "Read-only terminal actual four producer commands, raw/typed receipts/artifact hashes, independently recomputed original-byte fee/selected-lot arithmetic, source-loss restoration and exact candidate/gate source consistency. No synthetic B3 requirement, product-ready claim or new full-history throughput claim.",
+  "source_files": 246,
+  "source_or_Git_mutations": false,
+  "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+  "source_unchanged_rechecked": true,
+  "state": "PASS",
+  "workflow_invocations": [
+    {
+      "artifacts_verified": [
+        {
+          "bytes": 93360598,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/source-missing-child.json",
+          "sha256": "a5050290a19c7830eadbcc4b11935c2549942e7b8a9053e33fd0a24e7fc6ba48"
+        },
+        {
+          "bytes": 177469,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/EXPECTED_WORKED.json",
+          "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad"
+        },
+        {
+          "bytes": 21531,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/parent-report.csv",
+          "sha256": "6f234cc16be2a5544d1870ddb23d535a5c6eb8bbe7d520084a5cb17ca01ebd66"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/lot-0-buy-restored-child.json",
+          "sha256": "b7a371483ba616d69cad30259592fcbb4db589772b3dac1f1c68e7a921e38248"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/baseline-child.json",
+          "sha256": "4e595825e65a68219c4f465011c33d30178ca0b3439d559dd776d7b49cbab38b"
+        },
+        {
+          "bytes": 101541522,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/inspected-selected-sources.json",
+          "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef"
+        },
+        {
+          "bytes": 156832,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/input.zip",
+          "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/lot-0-sell-restored-child.json",
+          "sha256": "93cabaa2e6c0896dc8f282c35c77d9825bed1353211a1b540510a411bfddb6b7"
+        },
+        {
+          "bytes": 93336408,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/lot-0-sell-missing-child.json",
+          "sha256": "ff79ebe8bf7f0a959c78fdbc7245d8fa2206597c39c391c535c150b718a29e9f"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/source-restored-child.json",
+          "sha256": "6aabd831e8b88a94383c4c528f06fed97e67f9461f288050cd69b2bcefd83f7a"
+        },
+        {
+          "bytes": 343825,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/EXPECTED_RAW.json",
+          "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec"
+        },
+        {
+          "bytes": 93436409,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/lot-0-buy-missing-child.json",
+          "sha256": "2f77ea3b7a9fdadbba2aa33dc334ff8e891bed98ff47750f68cb024abdf8e598"
+        },
+        {
+          "bytes": 93019856,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/parent-report.json",
+          "sha256": "8ea69fd7757be579a481474c4ea86bc768113135c0e80cfbc48abbf1c300bba2"
+        }
+      ],
+      "case_identities": [
+        [
+          "separately-worked-supported-results",
+          "parent",
+          null,
+          null
+        ],
+        [
+          "raw-input-normal-report-source-inspection-json-csv",
+          null,
+          null,
+          null
+        ],
+        [
+          "separately-worked-supported-results",
+          "baseline-child",
+          null,
+          null
+        ],
+        [
+          "separately-worked-supported-results",
+          "fee-source-restored-child",
+          null,
+          null
+        ],
+        [
+          "selected-lot-required-source-loss-exact-restoration",
+          null,
+          0,
+          "buy"
+        ],
+        [
+          "selected-lot-required-source-loss-exact-restoration",
+          null,
+          0,
+          "sell"
+        ],
+        [
+          "primary-source-loss-exact-restoration-immutable-parent",
+          null,
+          null,
+          null
+        ]
+      ],
+      "command_receipt": {
+        "bytes": 6632243,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/result.json",
+        "sha256": "b0269605ccc93d49d28cc78201be2217a91905c427bfa945521c8acacbd07870"
+      },
+      "name": "genuine-development",
+      "offline_guard": {
+        "bytes": 802,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development/OFFLINE_GUARD.json",
+        "sha256": "b2a24d2bfa3a58bf4b793c4c80ef93d1afd82bd97d7d21902fc018510bc2a7be"
+      },
+      "producer_exit_code": 0,
+      "producer_seconds": 72.57683722101501,
+      "producer_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "raw_log": {
+        "bytes": 273,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-development.log",
+        "sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d"
+      },
+      "review_state": "PASS",
+      "scope_details": {
+        "actual_selected_records": 87,
+        "all15_original_metric_expectations_checked": true,
+        "complete_wallet_qualification": false,
+        "conditional_named_lot_loss_lamports": -13270924,
+        "genuine_case_entries": 7,
+        "hold_seconds": 529,
+        "loss_restoration": [
+          {
+            "missing_fee": "UNKNOWN",
+            "restored_fee": "0.000158868",
+            "restored_selected_loss_sol": "-0.013270924",
+            "role": "source",
+            "wallet_qualification": false
+          },
+          {
+            "missing_fee": "UNKNOWN",
+            "restored_fee": "0.000158868",
+            "restored_selected_loss_sol": "-0.013270924",
+            "role": "lot-0-buy",
+            "wallet_qualification": false
+          },
+          {
+            "missing_fee": "UNKNOWN",
+            "restored_fee": "0.000158868",
+            "restored_selected_loss_sol": "-0.013270924",
+            "role": "lot-0-sell",
+            "wallet_qualification": false
+          }
+        ],
+        "observed_wallet_fee_lamports": 158868,
+        "raw_records_including_duplicate_native_alternatives": 92
+      }
+    },
+    {
+      "artifacts_verified": [
+        {
+          "bytes": 93360598,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/source-missing-child.json",
+          "sha256": "374b3a79de0e2c6b3fcc653b9a7a47691d7e44790a4a00f8d8ccdc8e441bf218"
+        },
+        {
+          "bytes": 177469,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/EXPECTED_WORKED.json",
+          "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad"
+        },
+        {
+          "bytes": 21531,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/parent-report.csv",
+          "sha256": "6f234cc16be2a5544d1870ddb23d535a5c6eb8bbe7d520084a5cb17ca01ebd66"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/lot-0-buy-restored-child.json",
+          "sha256": "1c62e08a82599c220588e4fca0f9e0630fc29c96f04c6fe02c629ae34e6d32f2"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/baseline-child.json",
+          "sha256": "bcc6aaf1ec0086d5dbf76dc6336e644ccc73b8bea876c5f5924102cf2a1e5967"
+        },
+        {
+          "bytes": 101541522,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/inspected-selected-sources.json",
+          "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef"
+        },
+        {
+          "bytes": 156832,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/input.zip",
+          "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/lot-0-sell-restored-child.json",
+          "sha256": "d79f8875df998666b00d23dc034c4d085349782af6f64ffdca10189d620135b7"
+        },
+        {
+          "bytes": 93336408,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/lot-0-sell-missing-child.json",
+          "sha256": "8c507fab25cc7e481717a9c8367bdad158b5673c957800c455a038bdf9d550e6"
+        },
+        {
+          "bytes": 93020410,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/source-restored-child.json",
+          "sha256": "cb6f4260237eb089714760f5a3c0d3e7c9dd04b7566f1f46384bfa478f19b068"
+        },
+        {
+          "bytes": 343825,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/EXPECTED_RAW.json",
+          "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec"
+        },
+        {
+          "bytes": 93436409,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/lot-0-buy-missing-child.json",
+          "sha256": "8e4947f232fcec3512dbf0c617b075013c0596de076124d2e1d111ecb7430f9d"
+        },
+        {
+          "bytes": 93019856,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/parent-report.json",
+          "sha256": "fa53cc2e5e888349f16d44f03469b69c33ef3707cac408998b92308eaa7b7bef"
+        }
+      ],
+      "case_identities": [
+        [
+          "separately-worked-supported-results",
+          "parent",
+          null,
+          null
+        ],
+        [
+          "raw-input-normal-report-source-inspection-json-csv",
+          null,
+          null,
+          null
+        ],
+        [
+          "separately-worked-supported-results",
+          "baseline-child",
+          null,
+          null
+        ],
+        [
+          "separately-worked-supported-results",
+          "fee-source-restored-child",
+          null,
+          null
+        ],
+        [
+          "selected-lot-required-source-loss-exact-restoration",
+          null,
+          0,
+          "buy"
+        ],
+        [
+          "selected-lot-required-source-loss-exact-restoration",
+          null,
+          0,
+          "sell"
+        ],
+        [
+          "primary-source-loss-exact-restoration-immutable-parent",
+          null,
+          null,
+          null
+        ]
+      ],
+      "command_receipt": {
+        "bytes": 6632213,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/result.json",
+        "sha256": "26ca2474aad37b5e6aa3d0119e08b66ac021654fb1ab5ca3c8d06808bfe276e3"
+      },
+      "name": "genuine-real-acceptance",
+      "offline_guard": {
+        "bytes": 839,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance/OFFLINE_GUARD.json",
+        "sha256": "af632b5b87b040ebd158cf5df194088585db255992ec977ef49d8185406bc0e7"
+      },
+      "producer_exit_code": 2,
+      "producer_seconds": 72.89461767600733,
+      "producer_state": "BLOCKED",
+      "raw_log": {
+        "bytes": 273,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/genuine-real-acceptance.log",
+        "sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d"
+      },
+      "review_state": "PASS_EXPECTED_REAL_BLOCK",
+      "scope_details": {
+        "actual_selected_records": 87,
+        "all15_original_metric_expectations_checked": true,
+        "complete_wallet_qualification": false,
+        "conditional_named_lot_loss_lamports": -13270924,
+        "genuine_case_entries": 7,
+        "hold_seconds": 529,
+        "loss_restoration": [
+          {
+            "missing_fee": "UNKNOWN",
+            "restored_fee": "0.000158868",
+            "restored_selected_loss_sol": "-0.013270924",
+            "role": "source",
+            "wallet_qualification": false
+          },
+          {
+            "missing_fee": "UNKNOWN",
+            "restored_fee": "0.000158868",
+            "restored_selected_loss_sol": "-0.013270924",
+            "role": "lot-0-buy",
+            "wallet_qualification": false
+          },
+          {
+            "missing_fee": "UNKNOWN",
+            "restored_fee": "0.000158868",
+            "restored_selected_loss_sol": "-0.013270924",
+            "role": "lot-0-sell",
+            "wallet_qualification": false
+          }
+        ],
+        "observed_wallet_fee_lamports": 158868,
+        "raw_records_including_duplicate_native_alternatives": 92
+      }
+    },
+    {
+      "artifacts_verified": [
+        {
+          "bytes": 6941608,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/partial-real-input.zip",
+          "sha256": "1d42d4e53b115e88dbdff874c2d2767b42cdfc14dce69cf0f36aa27a8549cae9"
+        },
+        {
+          "bytes": 8468565,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/valuation_hash-missing-child.json",
+          "sha256": "dc9d6e23a01b8013fbeff585c8b8f0ac471274853897767c1ec0b4d1bbc51f63"
+        },
+        {
+          "bytes": 31194284,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/partial-real-report.json",
+          "sha256": "680efb16f05c0948ab7a4e7eb3f8403b38fb14853fcb36c914d7be74f0f72617"
+        },
+        {
+          "bytes": 8454277,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/synthetic-parent.json",
+          "sha256": "231ea4f9e4473bb9dc83bd485fb0ee6eb645d5102838da79db19b636513e275c"
+        },
+        {
+          "bytes": 1990,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/synthetic-export.csv",
+          "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+        },
+        {
+          "bytes": 8588496,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/world_hash-missing-child.json",
+          "sha256": "8dc16f9a90db780708955c39072e524dd75fc37410f9c2210ca654b6dc941a1c"
+        }
+      ],
+      "case_identities": [
+        [
+          "synthetic-positive-normal-report",
+          null,
+          null,
+          null
+        ],
+        [
+          "valuation_hash-loss-and-exact-restoration",
+          null,
+          null,
+          null
+        ],
+        [
+          "world_hash-loss-and-exact-restoration",
+          null,
+          null,
+          null
+        ],
+        [
+          "genuine-selected-23-records",
+          null,
+          null,
+          null
+        ]
+      ],
+      "command_receipt": {
+        "bytes": 3279,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/result.json",
+        "sha256": "06631010a74333aaa5f3172c42623f9c9d9d489add8ac4746940c47c7fa40dbe"
+      },
+      "name": "product-development",
+      "offline_guard": {
+        "bytes": 401,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development/OFFLINE_GUARD.json",
+        "sha256": "e4e0a8792a71c08bde73b60c01d75f049234514b6d9e14d0d65ca211a7ff09ee"
+      },
+      "producer_exit_code": 0,
+      "producer_seconds": 18.6206776080071,
+      "producer_state": "DEVELOPMENT_PASS",
+      "raw_log": {
+        "bytes": 671,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-development.log",
+        "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4"
+      },
+      "review_state": "PASS",
+      "scope_details": {
+        "complete_wallet_qualification": false,
+        "independent_raw_fee_lamports": 240394,
+        "original_product_case_entries": 4,
+        "partial_genuine_records": 23,
+        "source_loss_cases": 2,
+        "source_restoration": "PASS in retained actual producer assertions; product checker does not persist restored child JSON"
+      }
+    },
+    {
+      "artifacts_verified": [
+        {
+          "bytes": 6941608,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/partial-real-input.zip",
+          "sha256": "05734c38965494ca84d45acbcf9ca7e409fed67b9ea97f68988a1beb8f2fe363"
+        },
+        {
+          "bytes": 8468565,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/valuation_hash-missing-child.json",
+          "sha256": "ce207e03fdd6964418ef88127b37a3ed6c5a62720edaae2d1ad955d30d1f2106"
+        },
+        {
+          "bytes": 31194284,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/partial-real-report.json",
+          "sha256": "b3c48184c54a95c5df026dfb45d86e38a216066ffecc913bb9615edbeacaee25"
+        },
+        {
+          "bytes": 8454277,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/synthetic-parent.json",
+          "sha256": "bd6ed9024fc35650e7d02cc118c96f1ee72fab0e8a74a5b06c87f0ff3b08724d"
+        },
+        {
+          "bytes": 1990,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/synthetic-export.csv",
+          "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843"
+        },
+        {
+          "bytes": 8588496,
+          "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/world_hash-missing-child.json",
+          "sha256": "ed8d6a83bc98aa5dde11b6dd9517e57d30a895dcfd3d04b1ecc91ed3b22700c0"
+        }
+      ],
+      "case_identities": [
+        [
+          "synthetic-positive-normal-report",
+          null,
+          null,
+          null
+        ],
+        [
+          "valuation_hash-loss-and-exact-restoration",
+          null,
+          null,
+          null
+        ],
+        [
+          "world_hash-loss-and-exact-restoration",
+          null,
+          null,
+          null
+        ],
+        [
+          "genuine-selected-23-records",
+          null,
+          null,
+          null
+        ]
+      ],
+      "command_receipt": {
+        "bytes": 3269,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/result.json",
+        "sha256": "58a9d1fe729518f8f0136076a5bd113e4035dec8c4f320013cd52b2dfaee53c1"
+      },
+      "name": "product-real-acceptance",
+      "offline_guard": {
+        "bytes": 438,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance/OFFLINE_GUARD.json",
+        "sha256": "08d052378cd3b881d15af4e92132d60ac050023c8ba77738d9877b8629acacc7"
+      },
+      "producer_exit_code": 2,
+      "producer_seconds": 18.37195457299822,
+      "producer_state": "BLOCKED",
+      "raw_log": {
+        "bytes": 662,
+        "path": "evidence/genuine-report-speed-batch-final/environment-retry/final-replays/product-real-acceptance.log",
+        "sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7"
+      },
+      "review_state": "PASS_EXPECTED_REAL_BLOCK",
+      "scope_details": {
+        "complete_wallet_qualification": false,
+        "independent_raw_fee_lamports": 240394,
+        "original_product_case_entries": 4,
+        "partial_genuine_records": 23,
+        "source_loss_cases": 2,
+        "source_restoration": "PASS in retained actual producer assertions; product checker does not persist restored child JSON"
+      }
+    }
+  ]
+}

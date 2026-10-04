@@ -1,0 +1,18 @@
+{
+  "source_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "producer_files": {
+    "tools/benchmark_report.py": {
+      "bytes": 17248,
+      "sha256": "b188b43ec11194b94d656529ff8e4b6d5ed73e85682b736509ea9570f3399c7d"
+    },
+    "tests/test_report_benchmark.py": {
+      "bytes": 5681,
+      "sha256": "09ee5d7065b4601d90344fcf942e0e7d3f2e2404947cbc18f88acafd8b9bc2d2"
+    }
+  },
+  "focused_controls": 9,
+  "acceptance_claim": false,
+  "public_cli_internal_worker_bypass_removed": true,
+  "watchdog_scope": "Normal public CLI child process; no arbitrary Python-call or descendant-process guarantee."
+}

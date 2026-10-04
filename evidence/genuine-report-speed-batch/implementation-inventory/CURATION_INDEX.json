@@ -1,0 +1,112 @@
+{
+  "kind": "inventory-evidence-curation",
+  "state": "PASS",
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "application_source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_files": 246,
+  "originals_preserved_byte_for_byte": true,
+  "protected_source_and_frozen_manifest_unchanged": true,
+  "files": [
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_CORRECTION.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_CORRECTION.log",
+      "bytes": 1827,
+      "sha256": "5d5f769b978235fff4cd54c9224da64a93fc7d9b73d3e44aa74a0cbd9befc5d0",
+      "result": "historical_failed_attempt_preserved",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_CURRENT.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_CURRENT.log",
+      "bytes": 600,
+      "sha256": "d4cf6d85f6efa73c87aeaca593f3e0280d70b1ad4181edd0f17e51e89c8bd350",
+      "result": "historical_focused_PASS",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_FINAL.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_FINAL.log",
+      "bytes": 682,
+      "sha256": "3f6c4c82a97513e4d1fdfdd398410e7e176959330608acf4442d0437403e5d4d",
+      "result": "historical_focused_PASS",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_FOCUSED.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_FOCUSED.log",
+      "bytes": 2269,
+      "sha256": "a86333108e51992a7adc953168193caf0af71a7c61f74ebcbe4a19165e8d11bd",
+      "result": "historical_failed_attempt_preserved",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_FOCUSED_CORRECTION.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_FOCUSED_CORRECTION.log",
+      "bytes": 682,
+      "sha256": "b5f66d38a60206047b74a839f070265521f361c7276ce945180f1d360be27f03",
+      "result": "historical_focused_PASS",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_GENUINE87.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_GENUINE87.log",
+      "bytes": 1315,
+      "sha256": "4e3d3e83ec2f64636849251cbb0de1cb59c4634191c34960ac3a8f7061bf50c1",
+      "result": "historical_failed_attempt_preserved",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_INITIAL.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_INITIAL.log",
+      "bytes": 1843,
+      "sha256": "9d3a6946bfda341634073af000053a3705d8cca977e76c186ab483c4ebff22af",
+      "result": "historical_failed_attempt_preserved",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_NATIVE_FOCUSED.log",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_NATIVE_FOCUSED.log",
+      "bytes": 1387,
+      "sha256": "1a0f171358e00d3e71d61694eefb67a5582bb0047114e41213d53c55da9a0ef8",
+      "result": "historical_failed_attempt_preserved",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "evidence/position-history-batch/INVENTORY_OWNER_RECORD.json",
+      "curated_path": "evidence/genuine-report-speed-batch/implementation-inventory/INVENTORY_OWNER_RECORD.json",
+      "bytes": 1748,
+      "sha256": "97490530a7690f8d0e7fb5090dcd1f9ca24f1ebd68222a5fe61efd45d7075200",
+      "result": "owner_record_as_original",
+      "binding": "Raw original copied byte-for-byte; owner record includes uncaptured-before-source limitation."
+    },
+    {
+      "original_path": "/workspace/outputs/genuine-wallet-inventory/genuine87-inventory-input.zip",
+      "curated_path": "evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+      "bytes": 350517,
+      "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33",
+      "result": "input_artifact_not_release_or_acceptance",
+      "binding": "Original receipt paths unchanged; this index supplies relocation aliases."
+    },
+    {
+      "original_path": "/workspace/outputs/genuine-wallet-inventory/INPUT_BINDING.json",
+      "curated_path": "evidence/genuine-report-speed-batch/checker-inputs/INPUT_BINDING.json",
+      "bytes": 24302,
+      "sha256": "235b2ef0dd692b518dcdf48b4525dedd593a7152de69b3f6d15c0538cec2f975",
+      "result": "input_artifact_not_release_or_acceptance",
+      "binding": "Original receipt paths unchanged; this index supplies relocation aliases."
+    }
+  ],
+  "independent_expectations": {
+    "path": "evidence/genuine-report-speed-batch/checker-inputs/INVENTORY_EXPECTATIONS.json",
+    "bytes": 7068,
+    "sha256": "5fffba2b26f17f90b6d68c0ecdd0549e68912562753550496b6736cbfe55fa09"
+  },
+  "notes": [
+    "The copied owner record retains its original log path and honest uncaptured-before-source limitation; aliases above map to curated copies.",
+    "Historical failed attempts remain distinct from focused passing owner runs. Test-node counts are execution records, never added together.",
+    "The augmented ZIP is a genuine accounting input, not a release ZIP or new acceptance result. Original indexed ZIP and oracle remain unchanged."
+  ],
+  "git_staging_performed": false,
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

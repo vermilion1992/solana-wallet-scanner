@@ -1,0 +1,149 @@
+{
+  "scope": "Unauthenticated public documentation review only; no provider/RPC request, no credentials/key/environment dump, no tests or repository source edits",
+  "canonical_url": "https://www.helius.dev/docs/api-reference/rpc/http/gettransactionsforaddress",
+  "markdown_url": "https://www.helius.dev/docs/api-reference/rpc/http/gettransactionsforaddress.md",
+  "retrieved_utc": "2026-10-04T17:25:01.524959+00:00",
+  "sha256": "9dbb7415eb7389752ed7f0a0601983bd73bd0d32ff14f0d4e3b61a1e2aa6acec",
+  "raw_markdown_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md",
+  "quotes": [
+    {
+      "subject": "Broad history claim",
+      "lines": [
+        7,
+        7
+      ],
+      "classification": "Broad claim; membership and retention not defined here",
+      "quote": "> getTransactionsForAddress returns complete Solana transaction history for an address in one call \u2014 time, slot, and status filters, sorting, and keyset paging.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Result bound",
+      "lines": [
+        40,
+        41
+      ],
+      "classification": "Explicit per-request maximum, rather than unbounded one-call wallet history",
+      "quote": "<ParamField body=\"limit\" type=\"number\" default=\"1000\">\n  Maximum number of transactions per request. Use 1\u20131000 for transactionDetails:\"signatures\" and 1\u20131000 for transactionDetails:\"full\".",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Commitment",
+      "lines": [
+        29,
+        33
+      ],
+      "classification": "Explicit: finalized default; confirmed allowed; processed unsupported",
+      "quote": "<ParamField body=\"commitment\" type=\"string\" default=\"finalized\">\n  The commitment level for the request. The `processed` commitment is not supported.\n\n  * `confirmed`\n  * `finalized`",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Full transaction formats",
+      "lines": [
+        48,
+        58
+      ],
+      "classification": "Explicit: full encodings json/jsonParsed/base58/base64; set maxSupportedTransactionVersion 1 for legacy/v0/v1",
+      "quote": "<ParamField body=\"encoding\" type=\"string\" default=\"json\">\n  Encoding format for transaction data (applies only when transactionDetails=full).\n\n  * `json`\n  * `jsonParsed`\n  * `base58`\n  * `base64`\n</ParamField>\n\n<ParamField body=\"maxSupportedTransactionVersion\" type=\"number\">\n  Maximum transaction version to return (applies only when transactionDetails=full). Set to 1 to receive legacy, v0, and v1 transactions.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Status",
+      "lines": [
+        129,
+        134
+      ],
+      "classification": "Explicit: status default any; succeeded/failed/any options",
+      "quote": "<ParamField body=\"filters.status\" type=\"string\" default=\"any\">\n  Filter by transaction status.\n\n  * `succeeded`\n  * `failed`\n  * `any`",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Token-account membership wording",
+      "lines": [
+        137,
+        143
+      ],
+      "classification": "Explicit inclusion option and owned-by wording; temporal ownership, program coverage and account subtypes not defined",
+      "quote": "<ParamField body=\"filters.tokenAccounts\" type=\"string\" default=\"none\">\n  Filter transactions for related token accounts. Controls whether to include transactions involving token accounts owned by the address.\n\n  * `none`\n  * `balanceChanged`\n  * `all`\n</ParamField>",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Transfer-filter narrowing",
+      "lines": [
+        145,
+        146
+      ],
+      "classification": "Explicit optional narrowing; AND semantics",
+      "quote": "<ParamField body=\"filters.tokenTransfer\" type=\"object\">\n  Narrows results to transactions where the queried address participated in a token transfer matching specific criteria. All fields are optional and combined with AND semantics.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "OpenAPI associated-account wording",
+      "lines": [
+        210,
+        211
+      ],
+      "classification": "Uses associated token accounts but does not define coverage of non-ATA accounts",
+      "quote": "        - Token account support (include transactions for associated token\n        accounts)",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Signature result nullable timestamp",
+      "lines": [
+        540,
+        550
+      ],
+      "classification": "Explicit null blockTime allowed; no handling rule for null timestamps in blockTime filtering stated",
+      "quote": "                                blockTime:\n                                  oneOf:\n                                    - type: integer\n                                      description: >-\n                                        Estimated production time as Unix\n                                        timestamp\n                                    - type: 'null'\n                                  description: >-\n                                    Estimated production time as Unix timestamp\n                                    (seconds since epoch), or null if not\n                                    available.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Full metadata shape",
+      "lines": [
+        593,
+        601
+      ],
+      "classification": "Explicit metadata shape incl err/fee/balances/token balances/innerInstructions/logMessages/compute units; not a completeness/retention guarantee for every historical field",
+      "quote": "                                meta:\n                                  type: object\n                                  description: >-\n                                    Transaction status metadata \u2014 same shape as\n                                    getTransaction, including err, fee,\n                                    preBalances/postBalances,\n                                    preTokenBalances/postTokenBalances,\n                                    innerInstructions, logMessages, and\n                                    computeUnitsConsumed.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Full result nullable timestamp",
+      "lines": [
+        602,
+        612
+      ],
+      "classification": "Explicit null blockTime allowed",
+      "quote": "                                blockTime:\n                                  oneOf:\n                                    - type: integer\n                                      description: >-\n                                        Estimated production time as Unix\n                                        timestamp\n                                    - type: 'null'\n                                  description: >-\n                                    Estimated production time as Unix timestamp\n                                    (seconds since epoch), or null if not\n                                    available.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    },
+    {
+      "subject": "Terminal pagination",
+      "lines": [
+        617,
+        624
+      ],
+      "classification": "Explicit next-page token or null if no more results for declared query",
+      "quote": "                      paginationToken:\n                        oneOf:\n                          - type: string\n                            description: Token for retrieving the next page of results\n                          - type: 'null'\n                        description: >-\n                          Pagination token for next page, or null if no more\n                          results.",
+      "source_path": "/workspace/outputs/genuine-wallet-feasibility/current-docs/reference/gettransactionsforaddress.md"
+    }
+  ],
+  "reference_term_matches": {
+    "closed": [],
+    "reassigned": [],
+    "reassignment": [],
+    "non-ATA": [],
+    "Token-2022": [],
+    "2022": [],
+    "retention": [],
+    "archive": [],
+    "historical ownership": [],
+    "owner intervals": []
+  },
+  "interpretation": {
+    "owner_membership": "The reference does not specify current-versus-event-time ownership, account close/reopen/reassignment intervals, non-ATA coverage, legacy versus Token-2022 program membership, or whether observed ownership authorizes all past/future transactions for an account. The owned-by and associated-account phrases alone do not establish that contract.",
+    "cutoff_retention": "No after-2022 cutoff or retention floor/promise appears in this reference. A cutoff in a separate guide must be attributed to that guide.",
+    "terminal": "A null paginationToken marks exhaustion of results for the declared query. This alone does not establish exhaustive whole-wallet historical membership.",
+    "exclusions": "Processed commitment is explicitly unsupported. Status and tokenTransfer/time/slot/signature filters can narrow results. Version handling for unsupported versions and nullable timestamps in time-filtered queries are not specified as failure versus omission.",
+    "paid_necessity": "This reference provides no plan or billing necessity statement; no paid necessity is inferred."
+  }
+}

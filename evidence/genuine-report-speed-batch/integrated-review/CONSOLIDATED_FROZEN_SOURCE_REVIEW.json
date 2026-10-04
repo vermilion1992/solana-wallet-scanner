@@ -1,0 +1,204 @@
+{
+  "B1": "HISTORICAL_SUFFICIENCY_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "accepted_application_commit_separate": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "accepted_application_source_sha256_separate": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "actual_API_workflows_run_by_reviewer": 0,
+  "actual_application_tests_run_by_reviewer": 0,
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "baseline": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+  "changed_paths": [
+    "M\tACCEPTANCE.md",
+    "M\tCODEX_TASK.md",
+    "M\tISSUES.md",
+    "M\tdocs/ACCEPTANCE_MATRIX.json",
+    "M\tdocs/CONTRACT.md",
+    "M\tdocs/R1_SOURCE_DECISION.md",
+    "R071\tfrontend/dist/assets/index-DrmOUz_e.js\tfrontend/dist/assets/index-DLyxdI99.js",
+    "M\tfrontend/dist/index.html",
+    "A\tfrontend/src/InventoryObservations.tsx",
+    "M\tfrontend/src/report.tsx",
+    "M\tscanner/app.py",
+    "M\tscanner/archive_input.py",
+    "M\tscanner/indexed_input.py",
+    "A\tscanner/inventory_evidence.py",
+    "M\tscanner/wallet_evidence.py",
+    "A\ttests/test_inventory_evidence.py",
+    "A\ttests/test_report_benchmark.py",
+    "M\ttests/test_source_fact_reuse.py",
+    "A\ttools/benchmark_report.py",
+    "M\ttools/product_browser.py",
+    "M\ttools/validate.py"
+  ],
+  "credential_lookups": 0,
+  "current_head": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "direct_controls": [
+    {
+      "case": "positive_same_slot",
+      "observed_inventory": "PASS",
+      "report_boundaries": "UNKNOWN",
+      "state": "PASS",
+      "unsigned_fixture_only": true
+    },
+    {
+      "case": "valid_disjoint_source",
+      "observed_inventory": "PASS",
+      "report_boundaries": "UNKNOWN",
+      "state": "PASS",
+      "unsigned_fixture_only": true
+    },
+    {
+      "case": "invalid_checksum_disjoint_source",
+      "observed_inventory": "UNKNOWN",
+      "report_boundaries": "UNKNOWN",
+      "state": "PASS",
+      "unsigned_fixture_only": true
+    },
+    {
+      "case": "forged_foreign_preimage_cannot_hide_missing_original",
+      "state": "PASS",
+      "unsigned_fixture_only": true
+    },
+    {
+      "case": "affinity_cannot_restore_positive_observations",
+      "state": "PASS",
+      "unsigned_fixture_only": true
+    },
+    {
+      "case": "three_actual_original_RPC_components_remain_different_slots",
+      "complete_genuine_acceptance": false,
+      "evidence": {
+        "bytes": 13098,
+        "path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_GENUINE_COMPONENT_REPLAY.json",
+        "sha256": "177390d5ead31d3df734a18c6feae337e9479f8e8c8dc4ba645a31fb4940db86"
+      },
+      "state": "PASS"
+    },
+    {
+      "cache_stats": {
+        "active": true,
+        "admissions": 1,
+        "entries": 1,
+        "guard_bypasses": 1,
+        "hits": 2,
+        "max_entries": 256,
+        "max_retained_bytes": 268435456,
+        "misses": 1,
+        "overflows": 0,
+        "retained_bytes": 2279907
+      },
+      "case": "actual_indexed_page_reuse_bytes_mutation_loss_and_cleanup",
+      "complete_history_claim": false,
+      "current_source_revalidated": true,
+      "expected_fact_bytes": {
+        "bytes": 1816827,
+        "sha256": "c9d4e76c72da71aa2daa86bdbaa2ffd30e35d3164d3af50e62ea430b798a1c1a"
+      },
+      "state": "PASS"
+    },
+    {
+      "application_API_executed": false,
+      "case": "public_worker_flag_rejected_before_private_state",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/benchmark_report.py",
+        "--worker",
+        "--archive",
+        "/workspace/outputs/genuine-wallet-report-review/frozen-public-worker-rejection/not-executed.zip",
+        "--output",
+        "/workspace/outputs/genuine-wallet-report-review/frozen-public-worker-rejection/output"
+      ],
+      "exit_code": 2,
+      "raw_log": {
+        "bytes": 203,
+        "path": "/workspace/outputs/genuine-wallet-report-review/frozen-public-worker-rejection/raw.log",
+        "sha256": "53f346d30a5252fe17cd248a8efb4927236dc28ce148c18818576385832b31db"
+      },
+      "state": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "bytes": 37595,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/SOURCE_MANIFEST.json",
+      "sha256": "e3796ee636a4b6fad23da096c5a93d4f886a2b1858df2204c83199c5b211c25c"
+    },
+    {
+      "bytes": 1424,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/FROZEN_CANDIDATE.json",
+      "sha256": "60f67eebe197081ccdd7c26720b96a149d5c38501befd0a911e3786242c11d30"
+    },
+    {
+      "bytes": 420870,
+      "path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_SOURCE_DIFF.patch",
+      "sha256": "e03bb201c4c88f39cb8214db1cffb26fb993c653a9933bd972d34ee7c5565148"
+    },
+    {
+      "bytes": 13098,
+      "path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_GENUINE_COMPONENT_REPLAY.json",
+      "sha256": "177390d5ead31d3df734a18c6feae337e9479f8e8c8dc4ba645a31fb4940db86"
+    },
+    {
+      "bytes": 203,
+      "path": "/workspace/outputs/genuine-wallet-report-review/frozen-public-worker-rejection/raw.log",
+      "sha256": "53f346d30a5252fe17cd248a8efb4927236dc28ce148c18818576385832b31db"
+    }
+  ],
+  "findings": [],
+  "kind": "consolidated-review",
+  "locks": {
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+  },
+  "network_requests": 0,
+  "new_full_gate_A_claim": false,
+  "preserved_original_inputs": [
+    {
+      "bytes": 156832,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    },
+    {
+      "bytes": 177454,
+      "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    }
+  ],
+  "provider_requests": 0,
+  "resolved_findings": [
+    {
+      "control": "invalid_checksum_disjoint_source",
+      "id": "INV-01",
+      "scope": "unsigned direct interface, not a demonstrated Store/API exploit",
+      "state": "RESOLVED"
+    },
+    {
+      "control": "public_worker_flag_rejected_before_private_state",
+      "id": "OBS-WORKER-CLI",
+      "scope": "public benchmark CLI lifecycle",
+      "state": "RESOLVED"
+    }
+  ],
+  "reviewed_interfaces": [
+    "Original request/response checksums, method/id/finalized/context/u64/program/eventowner/raw-unit/duplicate contracts and internally frozen negative-only affinity.",
+    "Same-slot native congruence and both token programs; current components cannot produce historical boundaries, valuation, flow roles or profit qualification.",
+    "Archive v1/v2/v3/v4 dependency compatibility, public affinity rejection, ordinary loss/restoration and native disguised transaction sibling paths.",
+    "Context ownership/nesting/child-task/cancellation cleanup, fresh whole-envelope/original-byte hashing, private deep copies, bounded overflow and rejecting-input equivalence.",
+    "Direct JSONResponse retains view/auth/CSRF/error/decoration/save ordering; ordinary full/export and existing financial interpretation are distinct from additive inventory metadata.",
+    "Archived UI guards current version/live/history interpretation and shows original-slot component observations without combined balance or historical profit promotion.",
+    "Benchmark public watchdog and fresh output, Python-O/Git-worktree rejection, credential/provider/HTTP/socket fences, parent/source/input invariants and nonacceptance timing scope.",
+    "Optional two browser inventory assertions add to existing import/rebuild cases without duplicate backend counts; ten focused groups contain41 unique retained+new selectors.",
+    "Source decision and active docs preserve unresolved historical sufficiency, complete B2 OPEN, B3 BLOCKED and PRODUCT_READY=false."
+  ],
+  "scope": "Distinct read-only exact frozen source/diff/interface review and bounded direct probes; application gate/native CI execution, final evidence/publication and complete genuine accounting remain separately required.",
+  "source_files": 246,
+  "source_or_Git_mutations": false,
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_unchanged_during_review": true,
+  "state": "PASS",
+  "timing_or_complete_scan_SLA_claim": false
+}

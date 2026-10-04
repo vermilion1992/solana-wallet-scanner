@@ -1,0 +1,85 @@
+{
+  "kind": "read-only-expanded-report-encoding-experiment",
+  "source_binding": {
+    "commit": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+    "source_sha256": "0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365",
+    "source_files": 241
+  },
+  "state": "EXACT_ENCODING_EQUIVALENCE_PASS",
+  "operations": [
+    {
+      "name": "sqlite-existing-parent-read",
+      "seconds": 0.7491875280102249
+    },
+    {
+      "name": "existing-parent-json-parse",
+      "seconds": 0.9682733490190003
+    },
+    {
+      "name": "direct-json-response",
+      "seconds": 0.6893805179861374
+    },
+    {
+      "name": "jsonable-encoder-alone",
+      "seconds": 5.028898373973789
+    },
+    {
+      "name": "encoded-json-response",
+      "seconds": 0.7073719359759707
+    },
+    {
+      "name": "direct-display-json-response",
+      "seconds": 0.12013516001752578
+    },
+    {
+      "name": "display-jsonable-encoder-alone",
+      "seconds": 0.4073158729879651
+    },
+    {
+      "name": "gzip-compress-level1",
+      "seconds": 0.3796661770029459
+    },
+    {
+      "name": "gzip-decompress-level1",
+      "seconds": 0.27153545699547976
+    },
+    {
+      "name": "gzip-compress-level6",
+      "seconds": 0.8276744280010462
+    },
+    {
+      "name": "gzip-decompress-level6",
+      "seconds": 0.22822479502065107
+    }
+  ],
+  "schema_change": false,
+  "application_source_changed": false,
+  "new_acceptance_claim": false,
+  "original_body": {
+    "bytes": 181198289,
+    "sha256": "cc2a7cc7586c1115b41346216f8382393eec7450fd47531dcf471d6391351fed"
+  },
+  "direct_body": {
+    "bytes": 181198289,
+    "sha256": "cc2a7cc7586c1115b41346216f8382393eec7450fd47531dcf471d6391351fed",
+    "exact_default_full_body": true
+  },
+  "existing_fastapi_encoder_semantics_exact": true,
+  "display_body": {
+    "bytes": 36272837,
+    "sha256": "b5ec63931e01873d685cfc2265af127a8490c07c285867d76cc278dccff53238",
+    "encoder_semantics_exact": true
+  },
+  "gzip_level1": {
+    "bytes": 13766059,
+    "sha256": "1ee36aa26c0efd93d07e27b2dcf67bec9b7de7cba2e5450d3bd8b730d3c1b423",
+    "exact_roundtrip": true
+  },
+  "gzip_level6": {
+    "bytes": 7357663,
+    "sha256": "783b2c131b6149f37143644eeabf2326a805f1feed744a882feda49d73724e50",
+    "exact_roundtrip": true
+  },
+  "total_seconds": 13.63885678499355,
+  "peak_rss_kib": 1201828
+}

@@ -1,0 +1,91 @@
+{
+  "kind": "offline-product-browser",
+  "state": "FAILED",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "19daf36a001445f4aac4c030dfaf207d"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "AssertionError: {\"detail\":\"Free disk space is below the configured reserve; free space before saving a rebuilt report\"}",
+  "assertion_timeout_ms": 120000,
+  "selected_cohort_ui_assertions": [
+    {
+      "case": "import-synthetic-input",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "31936daaa2e154b59941f93470eb91102abf2a465ae6a340b49d26a8f342e6e5",
+    "world_hash-missing-report.json": "0f71f0e98a0d890fe9fee1272865fe85b5fd3da78ceb76cf1e7db40520c0f7ac",
+    "world_hash-missing-desktop.png": "2e4471accc68800e938cadb95c0c0175a0f50bedcd8ef49edc07f227fdac130d",
+    "synthetic-parent.json": "6a685ce2e3396ab13ffedf30eaeb9a69ca420c30e0962585e944d8fa3424f8d7",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "synthetic-positive-desktop.png": "a1d7f7eed54cacd30fbdec6c32c41cce144a4b1cd29072a2d25b173af1af2e52",
+    "synthetic-input.zip": "da7f65c4a038fcb8d8e1d4a70bd7336eaa9cec4502bd022313154b1012e29ddc",
+    "valuation_hash-missing-mobile.png": "483b29bd3171c100ac825ceaf4de4af7d5ca2a3260e2b09a0abd09565dafb611",
+    "valuation_hash-missing-desktop.png": "52b3f4fdb1bb162950289b0fe583f1580ed32090a13795373635a2e35ea47916",
+    "valuation_hash-restored-mobile.png": "e36705e76e3bfbe56047c56a26f1dea41959ca01e362a319f7f46c4b0e0329c9",
+    "synthetic-positive-mobile.png": "ac339ab9c2ef5ad046efcd3a1ef6fd77d0da6e1e02e615f34cdc5c676a703cbf",
+    "valuation_hash-restored-desktop.png": "e306c6f029cbac507b79dcdab7f1c9bb4bb5a290e4ab0166d4f51ddf207c31ac",
+    "valuation_hash-missing-report.json": "dbcfac0ec8ec78f4351dfbe8e13b660a560fa672f4a08fab03f0a501e6da71f0",
+    "synthetic-ui-export.json": "6a685ce2e3396ab13ffedf30eaeb9a69ca420c30e0962585e944d8fa3424f8d7",
+    "world_hash-missing-mobile.png": "3717df602097a960731ea101b1d4f837cf47a9a843de5781f2e08809b74dc909",
+    "valuation_hash-restored-report.json": "cdc68ec84fbad73b346cf5c3533fbb6a5256f83a27a18bf5a264bf24e5917dfb",
+    "indexed-input.zip": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+  }
+}

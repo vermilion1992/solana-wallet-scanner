@@ -1,0 +1,151 @@
+{
+  "B1": "HISTORICAL_SUFFICIENCY_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "PRODUCT_READY": false,
+  "accepted_application_commit_separate": "8aee62e50297d6773f347b77cecc3e8794f233cf",
+  "accepted_application_source_sha256_separate": "05143c96aea6afd96ede6006fb27b99bf26e648611cf161fe620306154284e96",
+  "actual_API_workflows_run_by_reviewer": 0,
+  "actual_application_tests_run_by_reviewer": 0,
+  "actual_collection_runs_by_reviewer": 1,
+  "application_commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "baseline": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+  "corrected_interfaces": [
+    "Restored baseline native freezer keeps authenticated collector/checkpoint universe; initial production builder and repeated native rebuild share the restored path.",
+    "Unchanged accepted R12 source roles, indexing/read receipts and report metadata partition continue fail-closed handling of unassignable source links; no new role exemption added.",
+    "Archive v4 internally derived selector metadata and exact-byte checks remain unchanged; original-byte inventory facts remain available while present, missing unassignable native scope stays UNKNOWN and independent fees remain usable.",
+    "Four new controls preserve initial/legacy native parent and immediate-parent bytes, source refs, fee/delta/hold values, usage and zero-provider dispatch through two rebuild generations; retained accepted controls unchanged.",
+    "Current docs retain confirmed earlier full-suite/browser failure, open native exact-byte capture contract and unresolved complete-wallet obligations.",
+    "Byte-identical inventory admission, task-owned page reuse, JSONResponse seams, UI/source inspection, bounded benchmark, optional browser checks, matrix partition and original genuine curated-input scopes are reused only for their exact unchanged bytes."
+  ],
+  "credential_lookups": 0,
+  "current_environment_browser_observation": {
+    "acceptance_claim": false,
+    "command_path": "evidence/genuine-report-speed-batch-final/product-browser-command/COMMAND.json",
+    "observed_reason": "Configured free disk reserve rejected a rebuild; this source-only review does not convert that recorded failure into browser acceptance.",
+    "state": "FAILED"
+  },
+  "current_head": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "findings": [
+    {
+      "blocking": false,
+      "id": "INV-02",
+      "scope": "Corrected native collector reference universe, sibling static source paths and inspected actual owner positive terminal/replay observations; root fresh full gates required.",
+      "status": "VERIFIED_IN_SCOPE"
+    },
+    {
+      "blocking": false,
+      "id": "CAP-NATIVE-CAPTURE",
+      "scope": "Native collectors still omit exact original RPC bytes and separately frozen native selector metadata; complete native inventory support is outside this correction acceptance.",
+      "status": "OPEN"
+    }
+  ],
+  "kind": "consolidated-review",
+  "locks": {
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44"
+  },
+  "matrix_review": {
+    "actual_collected_unique_nodes": 3246,
+    "collection_counts_are_not_passing_executions": true,
+    "disjoint_groups": 10,
+    "focused_mapped_unique_nodes": 1929,
+    "matrix": {
+      "bytes": 18253,
+      "path": "/workspace/solana-wallet-scanner/docs/ACCEPTANCE_MATRIX.json",
+      "sha256": "328e25800ded5e1a038b3bb81792a53ba6a6383e7667e90801b1fae9b91b38c1"
+    },
+    "required_items": 92,
+    "requirements": 54,
+    "review": {
+      "bytes": 292457,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/FROZEN_MATRIX_REVIEW_FINAL.json",
+      "sha256": "7fc7a1f4e6b3de8fe1efd910eec3076ff493a03b90e03af300fa275a7765bcd8"
+    },
+    "schema": {
+      "bytes": 25994,
+      "path": "/workspace/solana-wallet-scanner/tests/fixtures/instruction_family_schema.json",
+      "sha256": "1675d43932c9c54f973d6f97551ebc8a679313f27b78f0114e5a477bd8aa599a"
+    },
+    "schema_examples": 38,
+    "test_bodies_executed": 0,
+    "unique_selectors": 41
+  },
+  "matrix_review_complete": true,
+  "network_requests": 0,
+  "new_browser_acceptance_claim": false,
+  "new_full_gate_A_claim": false,
+  "new_native_CI_acceptance_claim": false,
+  "prior_review_scope_reuse": {
+    "correction_files_newly_reviewed": 5,
+    "original_receipts_preserved": true,
+    "previous_kind_PASS_not_inherited_as_current_acceptance": true,
+    "prior_candidate_failed": true,
+    "prior_review_missed_INV02": true,
+    "source_files_identical": 241
+  },
+  "provider_requests": 0,
+  "reachable_commits": 45,
+  "review_evidence": [
+    {
+      "bytes": 20251,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/CORRECTED_FROZEN_SOURCE_REVIEW.json",
+      "sha256": "f29f60226d1e4779fe1909259dd3b87ed20e3255a038d16773300edefea6435d"
+    },
+    {
+      "bytes": 292457,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/FROZEN_MATRIX_REVIEW_FINAL.json",
+      "sha256": "7fc7a1f4e6b3de8fe1efd910eec3076ff493a03b90e03af300fa275a7765bcd8"
+    },
+    {
+      "bytes": 390727,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/FROZEN_MATRIX_COLLECT_ONLY.log",
+      "sha256": "e3877d89fb9a056e896d599bb3e683c0941afc8e7dc8afcd507200fd1777b296"
+    },
+    {
+      "bytes": 6101,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/SIBLING_STATIC_REVIEW.json",
+      "sha256": "c3eb22a823b381f236a6f3d49122761287003b255af8e46c993a7b9bd48bc253"
+    },
+    {
+      "bytes": 7663,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/RELOCATION_INDEX.json",
+      "sha256": "3adaf97136ced134091244bfef541e0a0dadac27aa7d3fa9071bfcc72b28766f"
+    },
+    {
+      "bytes": 8834,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/PRIOR_EEA_SOURCE_REVIEW_UNCHANGED.json",
+      "sha256": "b1665e7cca4d678cf8dc19c1b3b336133154fcb3c095dbbb90f5f9a1142f9ddc"
+    },
+    {
+      "bytes": 4428,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/PRIOR_UNCHANGED_CURATED_INPUT_REVIEW.json",
+      "sha256": "3ff528e6c0f4f3e146b44907479527262c06457bcced4b6a59cbc3ccc32c0985"
+    },
+    {
+      "bytes": 599,
+      "path": "evidence/genuine-report-speed-batch-final/integrated-review/OWNER_FINAL_FOUR_CASE_RAW.log",
+      "sha256": "bda815c727baac9c516542a337f05da04aa638008c5d1a745dbf3d951a846013"
+    }
+  ],
+  "review_evidence_curation_only": true,
+  "scope": "Distinct read-only corrected exact source review, all five correction files and full batch neighbouring interfaces through explicitly byte-identical prior scope; current actual collect-only mapping of all92 matrix/schema items. Owner terminal/replay outputs inspected as owner-produced scoped observations. Full candidate gates, browser, workflow/native-CI execution and complete genuine wallet acceptance remain separately required.",
+  "sibling_review": {
+    "bytes": 6101,
+    "path": "evidence/genuine-report-speed-batch-final/integrated-review/SIBLING_STATIC_REVIEW.json",
+    "sha256": "c3eb22a823b381f236a6f3d49122761287003b255af8e46c993a7b9bd48bc253"
+  },
+  "source_files": 246,
+  "source_or_Git_mutations": false,
+  "source_review": {
+    "bytes": 20251,
+    "path": "evidence/genuine-report-speed-batch-final/integrated-review/CORRECTED_FROZEN_SOURCE_REVIEW.json",
+    "sha256": "f29f60226d1e4779fe1909259dd3b87ed20e3255a038d16773300edefea6435d"
+  },
+  "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+  "source_unchanged_during_review": true,
+  "state": "PASS",
+  "timing_or_complete_scan_SLA_claim": false
+}

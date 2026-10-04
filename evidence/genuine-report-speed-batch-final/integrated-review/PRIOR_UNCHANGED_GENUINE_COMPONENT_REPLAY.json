@@ -1,0 +1,320 @@
+{
+  "raw_inputs": [
+    {
+      "compressed_response": {
+        "bytes": 195,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-response.raw.gz",
+        "sha256": "b43a4e1e155fb5c2c872f328fccf1809a7063ba00c3e67daf91a1d52d24a5108"
+      },
+      "raw_response": {
+        "bytes": 247,
+        "sha256": "feabb86540e5c606f765d034aa523643e4c469744e4d2ef684e2b1e04c673ebd"
+      },
+      "request": {
+        "bytes": 159,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-request.json",
+        "sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd"
+      }
+    },
+    {
+      "compressed_response": {
+        "bytes": 112,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/02-current-legacy-accounts-response.raw.gz",
+        "sha256": "e77588eb113107477809599d54fbe8cf72a288b1c4b357ae642429d9979d7afd"
+      },
+      "raw_response": {
+        "bytes": 104,
+        "sha256": "0842531d6a0f6d49937d9b314bd13096320d52543ff13839861640ade28728e4"
+      },
+      "request": {
+        "bytes": 228,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/02-current-legacy-accounts-request.json",
+        "sha256": "ed44f19d919499ac45424e0f40d47ace46bb373d278983e766119b994f341704"
+      }
+    },
+    {
+      "compressed_response": {
+        "bytes": 488,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/03-current-token2022-accounts-response.raw.gz",
+        "sha256": "fc124e03a6d9366a356a7fe8412a04f2af2325a89127ec11a6715201d1971113"
+      },
+      "raw_response": {
+        "bytes": 667,
+        "sha256": "6497a39b1f7f34f1c054ef140473300762dd9f5c3fd2017b4318d755ffae0d3e"
+      },
+      "request": {
+        "bytes": 228,
+        "path": "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/03-current-token2022-accounts-request.json",
+        "sha256": "91a6efe9c3137ca8a8d1f805d3ecafe4447ef1bb16ec7ad9c5f968940780ab90"
+      }
+    }
+  ],
+  "receipt": {
+    "components": {
+      "native_account": {
+        "conflicting_slots": [],
+        "evidence": [
+          "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+        ],
+        "observations": [
+          {
+            "evidence": [
+              "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+            ],
+            "executable": false,
+            "lamports": "650240",
+            "owner": "11111111111111111111111111111111",
+            "raw_paths": [
+              "response.result.value.lamports",
+              "response.result.value.owner",
+              "response.result.value.executable"
+            ],
+            "slot": 453173211
+          }
+        ],
+        "reason": "All linked finalized observations agree at each exact context slot",
+        "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+        "state": "PASS",
+        "versions": [
+          {
+            "evidence": [
+              "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+            ],
+            "observations": [
+              {
+                "executable": false,
+                "lamports": "650240",
+                "owner": "11111111111111111111111111111111",
+                "raw_paths": [
+                  "response.result.value.lamports",
+                  "response.result.value.owner",
+                  "response.result.value.executable"
+                ],
+                "slot": 453173211
+              }
+            ],
+            "reason": "Original finalized component observations validate independently",
+            "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+            "state": "PASS"
+          }
+        ]
+      },
+      "native_balance": {
+        "conflicting_slots": [],
+        "evidence": [],
+        "observations": [],
+        "reason": "All linked finalized observations agree at each exact context slot",
+        "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+        "state": "UNKNOWN",
+        "versions": []
+      },
+      "native_lamports": {
+        "conflicting_slots": [],
+        "evidence": [
+          "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+        ],
+        "observations": [
+          {
+            "evidence": [
+              "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+            ],
+            "lamports": "650240",
+            "slot": 453173211
+          }
+        ],
+        "reason": "Wallet SOL lamports remain separate from token account lamports and token units",
+        "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+        "state": "PASS"
+      },
+      "report_boundaries": {
+        "dependencies": [
+          "exact_opening_inventory",
+          "exact_closing_inventory",
+          "exact_boundary_time_state_contract"
+        ],
+        "evidence": [
+          "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+          "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc",
+          "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+        ],
+        "reason": "Current context slots have no admitted exact reporting-time boundary mapping or historical state/bridging contract",
+        "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+        "state": "UNKNOWN",
+        "window": null
+      },
+      "same_slot_inventory": {
+        "evidence": [
+          "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+          "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc",
+          "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+        ],
+        "observations": [],
+        "reason": "Exact matching finalized context slots are required across native SOL and BOTH current token-program queries; minContextSlot is only a floor",
+        "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+        "state": "UNKNOWN"
+      },
+      "token_programs": {
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": {
+          "conflicting_slots": [],
+          "evidence": [
+            "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+          ],
+          "observations": [
+            {
+              "account_count": 0,
+              "accounts": [],
+              "evidence": [
+                "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+              ],
+              "mint_totals": [],
+              "raw_paths": [
+                "response.result.value"
+              ],
+              "slot": 453173213
+            }
+          ],
+          "reason": "All linked finalized observations agree at each exact context slot",
+          "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+          "state": "PASS",
+          "versions": [
+            {
+              "evidence": [
+                "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+              ],
+              "observations": [
+                {
+                  "account_count": 0,
+                  "accounts": [],
+                  "mint_totals": [],
+                  "raw_paths": [
+                    "response.result.value"
+                  ],
+                  "slot": 453173213
+                }
+              ],
+              "reason": "Original finalized component observations validate independently",
+              "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+              "state": "PASS"
+            }
+          ]
+        },
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb": {
+          "conflicting_slots": [],
+          "evidence": [
+            "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc"
+          ],
+          "observations": [
+            {
+              "account_count": 1,
+              "accounts": [
+                {
+                  "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+                  "account_lamports": "1513840",
+                  "close_authority": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+                  "decimals": 6,
+                  "is_native": false,
+                  "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+                  "native_reserve_raw": null,
+                  "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+                  "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "quantity_raw": "0",
+                  "raw_paths": [
+                    "response.result.value[0].pubkey",
+                    "response.result.value[0].account.owner",
+                    "response.result.value[0].account.lamports",
+                    "response.result.value[0].account.data.parsed.info"
+                  ],
+                  "state": "initialized"
+                }
+              ],
+              "evidence": [
+                "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc"
+              ],
+              "mint_totals": [
+                {
+                  "decimals": 6,
+                  "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+                  "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "quantity_raw": "0"
+                }
+              ],
+              "raw_paths": [
+                "response.result.value"
+              ],
+              "slot": 453173215
+            }
+          ],
+          "reason": "All linked finalized observations agree at each exact context slot",
+          "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+          "state": "PASS",
+          "versions": [
+            {
+              "evidence": [
+                "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc"
+              ],
+              "observations": [
+                {
+                  "account_count": 1,
+                  "accounts": [
+                    {
+                      "account": "8VfvwKKWB7gUzQ5zvAyYe7qUj7Ujo1Su2XCjx1GXL6Sw",
+                      "account_lamports": "1513840",
+                      "close_authority": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+                      "decimals": 6,
+                      "is_native": false,
+                      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+                      "native_reserve_raw": null,
+                      "owner": "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY",
+                      "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                      "quantity_raw": "0",
+                      "raw_paths": [
+                        "response.result.value[0].pubkey",
+                        "response.result.value[0].account.owner",
+                        "response.result.value[0].account.lamports",
+                        "response.result.value[0].account.data.parsed.info"
+                      ],
+                      "state": "initialized"
+                    }
+                  ],
+                  "mint_totals": [
+                    {
+                      "decimals": 6,
+                      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+                      "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                      "quantity_raw": "0"
+                    }
+                  ],
+                  "raw_paths": [
+                    "response.result.value"
+                  ],
+                  "slot": 453173215
+                }
+              ],
+              "reason": "Original finalized component observations validate independently",
+              "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+              "state": "PASS"
+            }
+          ]
+        }
+      }
+    },
+    "credential_lookups": 0,
+    "external_flow_state": "UNKNOWN",
+    "historical_population_state": "UNKNOWN",
+    "inspection_budget": {
+      "max_sources": 10000,
+      "sources": 3,
+      "state": "PASS"
+    },
+    "provider_requests": 0,
+    "qualification": false,
+    "scope": "Archived finalized current RPC observations; no historical/report-boundary or valuation proof",
+    "source_dependencies": [
+      "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+      "3cc5cd4eb5fce9c0321b05203a98dbda855d2c7ef3171492e6e7c695584bcadc",
+      "e66447329d59af5005aa116cb6f54e365df4e8ed95fe8688e3f2286c927d5da4"
+    ],
+    "valuation_state": "UNKNOWN",
+    "version": "current-inventory-evidence-v1"
+  }
+}

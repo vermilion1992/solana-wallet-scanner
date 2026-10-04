@@ -1,0 +1,93 @@
+{
+  "kind": "frozen-observability-comparison",
+  "acceptance_run": false,
+  "product_ready": false,
+  "source": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_files": 246
+  },
+  "baseline_source": {
+    "commit": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+    "source_sha256": "0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365",
+    "source_files": 241
+  },
+  "same_profile_configuration": true,
+  "original_script_unchanged": true,
+  "adaptation_only_expected_head": true,
+  "profiled_comparison": {
+    "archive-import": {
+      "before_seconds": 19.962990502011962,
+      "after_seconds": 17.885787764011184
+    },
+    "default-full-get": {
+      "before_seconds": 9.054591691994574,
+      "after_seconds": 2.0796676379977725
+    },
+    "same-input-rebuild": {
+      "before_seconds": 20.431186970003182,
+      "after_seconds": 19.585569111979567
+    },
+    "rebuilt-full-get": {
+      "before_seconds": 8.775228785001673,
+      "after_seconds": 2.306944217009004
+    },
+    "json-export": {
+      "before_seconds": 6.476042057998711,
+      "after_seconds": 5.794195725000463
+    },
+    "display-get": {
+      "before_seconds": 1.9010070200019982,
+      "after_seconds": 1.473595021001529
+    },
+    "state-summary": {
+      "before_seconds": 0.6109848780033644,
+      "after_seconds": 0.6725280990067404
+    }
+  },
+  "genuine200_normal": {
+    "archive-import": 7.5086575930181425,
+    "report-display": 1.3592088570003398,
+    "source-inspection-1": 0.013367531006224453,
+    "source-inspection-2": 0.012427845998900011,
+    "source-inspection-3": 0.0015419520204886794,
+    "source-inspection-4": 0.0011484790011309087,
+    "csv-export": 1.2129497339774389,
+    "report-default-full": 2.078257549001137,
+    "json-export": 5.98249452401069,
+    "state-summary": 0.7827817060169764,
+    "same-input-rebuild": 9.341867595998337,
+    "child-display": 1.4101430180016905
+  },
+  "genuine87_augmented_normal": {
+    "archive-import": 3.6607648839999456,
+    "report-display": 0.47436429499066435,
+    "source-inspection-1": 0.0020324609940871596,
+    "source-inspection-2": 0.01042624399997294,
+    "source-inspection-3": 0.001853241992648691,
+    "source-inspection-4": 0.0013967539998702705,
+    "csv-export": 0.3764452449977398,
+    "report-default-full": 0.7035728830087464,
+    "json-export": 1.8023006260045804,
+    "state-summary": 0.21662509001907893,
+    "same-input-rebuild": 4.2992569979978725,
+    "child-display": 0.44402563298353925
+  },
+  "genuine200_fee_sol": "0.008904733",
+  "genuine87_fee_sol": "0.000158868",
+  "genuine87_scoped_lot_profit_sol": "-0.013270924",
+  "genuine87_holding_seconds": 529,
+  "default_full_bytes_before": 181198289,
+  "default_full_bytes_after": 181203823,
+  "all_source_inputs_locks_unchanged": true,
+  "evidence_not_omitted": true,
+  "scope": "Local timing observations only; report IDs/timestamps differ across independent runs. Full stored-parent bytes are immutable within each run. Full APIs/exports retain their existing proof schema; genuine whole-wallet acceptance remains blocked.",
+  "baseline_peak_rss_kib": 2585816,
+  "candidate_profile_peak_rss_kib": 2577552,
+  "candidate_normal_peak_rss_kib": 2489464,
+  "watchdog": {
+    "public_cli_exit": 124,
+    "timed_out": true,
+    "worker_state": "INCOMPLETE"
+  }
+}

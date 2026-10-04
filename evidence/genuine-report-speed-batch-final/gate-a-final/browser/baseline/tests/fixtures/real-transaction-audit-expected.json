@@ -1,0 +1,49 @@
+{
+  "version": "real-transaction-audit-contract-v1",
+  "primary_fixture": "mainnet-pumpswap-buy-exact-quote.json",
+  "raw_sha256": "9ffe9059c331907e4c8d9835e4c06fd1d258782da7b96c7bb639c00ded5001d0",
+  "wallet": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+  "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
+  "signature": "2w3FS5exzzoFkHXCdsfWreHApvEGq7WBfMas9qNBhhmsnLmBPURs2u1nVtTKDM2SQeDNw2rNrLbjMoSLQ3HNuYAo",
+  "slot": 452635473,
+  "block_time": "2026-10-02T14:20:40+00:00",
+  "scope": "One explicitly enumerated transaction and its involved owned accounts; no continuous wallet history",
+  "metrics": {
+    "gross_buy_consideration_sol": "0.25",
+    "wallet_network_fees_sol": "0.000141389",
+    "native_wallet_delta_sol": "-0.253641389",
+    "outside_native_delta_sol": "-0.0035",
+    "asset_net_quantities_raw": {
+      "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H": "10663612056"
+    }
+  },
+  "opening_quantity_raw": "44824210540",
+  "closing_quantity_raw": "55487822596",
+  "temporary_wsol_rent_funded_lamports": "1488440",
+  "temporary_wsol_rent_refunded_lamports": "1488440",
+  "native_equation": "-253641389 = -250000000 - 141389 + (-3500000); temporary reserve returns to zero",
+  "unknown_checks": [
+    "wallet_history",
+    "opening_basis",
+    "classification",
+    "closed_positions",
+    "boundary_valuation",
+    "wallet_profit",
+    "four_week_consistency",
+    "copy_safety",
+    "fee_allocation"
+  ],
+  "unknown_metrics": [
+    "opening_basis_sol",
+    "wallet_profit_sol",
+    "realised_roi_pct",
+    "positive_weeks",
+    "economic_pnl_sol"
+  ],
+  "interpretation": [
+    "The raw purchase consideration is known; pre-existing token basis is not.",
+    "Outside native transfers of 2500000 and 1000000 lamports are isolated; neither intent nor their all-in trading cost role is determined.",
+    "A scoped transaction certificate cannot qualify this wallet against the PDF financial policy.",
+    "Counterexamples with missing claimed records, omitted owned accounts, unsupported routes and missing raw lifecycle/fees must revoke affected certificate checks."
+  ]
+}

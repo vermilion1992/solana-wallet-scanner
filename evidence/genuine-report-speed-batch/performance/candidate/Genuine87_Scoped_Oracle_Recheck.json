@@ -1,0 +1,35 @@
+{
+  "kind": "frozen-genuine87-scope-observation",
+  "acceptance_run": false,
+  "archive_sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33",
+  "source": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_file_count": 246
+  },
+  "existing_worked_oracle": "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+  "existing_worked_oracle_sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+  "expected_raw_fee_sol": "0.000158868",
+  "expected_scoped_lot_profit_sol": "-0.013270924",
+  "holding_seconds": 529.0,
+  "supported_lots": [
+    {
+      "id": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump:17",
+      "mint": "BQJfL1yiHbJQ8AciHLcKxaCbQrWP2ws8oZHHYgbBpump",
+      "monetary_state": "PASS",
+      "timing_state": "PASS",
+      "conditional_lot_profit_sol": "-0.013270924",
+      "conditional_hold_hours": "0.146944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+      "wallet_population_state": "UNKNOWN",
+      "fifo_bounds": {
+        "start": "2026-10-04T02:08:20+00:00",
+        "end": "2026-10-04T02:17:09+00:00"
+      }
+    }
+  ],
+  "observed_native_lamports": "650240",
+  "inventory_historical_population": "UNKNOWN",
+  "inventory_valuation": "UNKNOWN",
+  "whole_wallet_acceptance": false,
+  "manual_recheck_note": "An initial manual SQL inspection requested nonexistent conditional_profit_sol; corrected to the actual conditional_lot_profit_sol schema. The application value is correct; no application changes."
+}

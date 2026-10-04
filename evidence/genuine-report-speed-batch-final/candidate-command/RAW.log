@@ -1,0 +1,37 @@
+runtime: running
+runtime: PASS
+node-runtime: running
+node-runtime: PASS
+backend: running
+command active: 30s / 1800s limit
+command active: 60s / 1800s limit
+command active: 90s / 1800s limit
+command active: 120s / 1800s limit
+command active: 150s / 1800s limit
+command active: 180s / 1800s limit
+command active: 210s / 1800s limit
+command active: 240s / 1800s limit
+command active: 270s / 1800s limit
+command active: 300s / 1800s limit
+command active: 330s / 1800s limit
+command active: 360s / 1800s limit
+backend: PASS
+pip-check: running
+pip-check: PASS
+shell-syntax: running
+shell-syntax: PASS
+matrix: running
+matrix: PASS
+frontend-locked-install: running
+frontend-locked-install: PASS
+frontend-check-format: running
+frontend-check-format: PASS
+frontend-check-discovery: running
+frontend-check-discovery: PASS
+frontend-build: running
+frontend-build: PASS
+launcher-browser-rebuild: running
+command active: 30s / 1800s limit
+command active: 60s / 1800s limit
+launcher-browser-rebuild: PASS
+ACCEPTED_IN_SCOPE; Gate B remains OPEN. Evidence: /workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/gate-a-final

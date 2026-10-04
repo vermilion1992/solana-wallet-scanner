@@ -1,0 +1,10 @@
+{
+  "url": "https://www.helius.dev/docs/rpc/gettransactionsforaddress.md",
+  "final_url": "https://www.helius.dev/docs/rpc/gettransactionsforaddress.md",
+  "status": 200,
+  "content_type": "text/markdown; charset=utf-8",
+  "retrieved_at": "2026-10-04T17:24:52.374763+00:00",
+  "bytes": 40596,
+  "sha256": "ecb75c9566dfcda8e209ea1b5ed829373749d181a1c9326e363abe8eb346c54c",
+  "scope": "Unauthenticated public documentation retrieval only; no provider RPC requests or credential lookups."
+}

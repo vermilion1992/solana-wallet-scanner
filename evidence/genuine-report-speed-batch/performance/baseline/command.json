@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "/workspace/outputs/report-proof-profile/benchmark.py",
+    "--output",
+    "/workspace/outputs/report-proof-profile/baseline-ab62858"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "timeout_seconds": 300,
+  "script_sha256": "8dd0eb7487cfe38325954cccf996685c63ac35fae8bf4ce1eee5289a814713f9",
+  "exit_code": 0,
+  "timed_out": false,
+  "seconds": 98.77171566302422,
+  "raw_log": "/workspace/outputs/report-proof-profile/baseline-ab62858.log",
+  "log_bytes": 1009,
+  "log_sha256": "2f097a9bda2ae5e9478dd1fec2cfadfca818abd050b3539a31b6f55e1fc63b05"
+}

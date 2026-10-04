@@ -1,0 +1,347 @@
+{
+  "checked_date": "2026-10-02",
+  "checked_at_utc": "2026-10-02T21:47:33Z",
+  "source_release": "0.3.2",
+  "scope": "Current registry advisory queries for unchanged exact dependency closures, fresh Linux hash-enforced setup and isolated loopback launcher. Final R5 application suite, frontend build, browser and release archive validation are recorded separately.",
+  "environment": {
+    "os": "Linux",
+    "python": "3.12.14",
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "pip_audit": "2.10.1",
+    "http_policy": "unrestricted, enforced",
+    "network": "Inherited HTTP/HTTPS proxy and CA trust; TLS verification enabled; no blockchain/provider calls."
+  },
+  "baseline": {
+    "source_release": "0.3.1",
+    "archive_sha256": "151348355534bcdbd5e85bf2e76bc401ed2ff9080cc14ead91bcc60773bf3919",
+    "historical_record": "dependency_review_2026-10-02.json",
+    "historical_record_edited": false
+  },
+  "lock_sha256": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "frontend/package-lock.json": "7bed5cf15cd0a6b0933449ee449406ac94e3add10934da6d70c95eca2707f923"
+  },
+  "unchanged_dependencies": {
+    "python_package_version_pairs": 38,
+    "requirements_txt_bytes_identical_to_v031": true,
+    "npm_graph_identical_to_v031": true,
+    "npm_lock_changes": [
+      "root version: 0.3.1 -> 0.3.2",
+      "packages[\"\"].version: 0.3.1 -> 0.3.2"
+    ],
+    "python_pins": {
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anyio": "4.15.1",
+      "backports-tarfile": "1.2.0",
+      "certifi": "2026.7.22",
+      "cffi": "2.1.1",
+      "click": "8.5.0",
+      "colorama": "0.4.6",
+      "cryptography": "50.0.2",
+      "fastapi": "0.142.2",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpx": "0.28.1",
+      "idna": "3.20",
+      "importlib-metadata": "9.0.1",
+      "iniconfig": "2.3.0",
+      "jaraco-classes": "3.4.0",
+      "jaraco-context": "6.1.2",
+      "jaraco-functools": "4.6.0",
+      "jeepney": "0.9.0",
+      "keyring": "25.6.0",
+      "more-itertools": "11.1.0",
+      "opentelemetry-api": "1.45.0",
+      "packaging": "26.3",
+      "pluggy": "1.6.0",
+      "pycparser": "3.0",
+      "pydantic": "2.13.5",
+      "pydantic-core": "2.46.5",
+      "pygments": "2.21.0",
+      "pytest": "9.1.1",
+      "pywin32-ctypes": "0.2.3",
+      "secretstorage": "3.5.0",
+      "setuptools": "84.0.0",
+      "starlette": "1.7.0",
+      "typing-extensions": "4.16.0",
+      "typing-inspection": "0.4.4",
+      "uvicorn": "0.34.2",
+      "zipp": "4.1.0"
+    }
+  },
+  "audit_commands": {
+    "python": "pip-audit 2.10.1 -r all-38-locked-pairs-without-markers.txt --no-deps --disable-pip --format json",
+    "npm": "npm audit --json"
+  },
+  "advisory_results": {
+    "python": {
+      "package_version_pairs_submitted": 38,
+      "markers_removed_for_audit_only": true,
+      "skipped": 0,
+      "known_vulnerabilities": 0,
+      "packages": [
+        {
+          "name": "annotated-doc",
+          "version": "0.0.5",
+          "vulns": []
+        },
+        {
+          "name": "annotated-types",
+          "version": "0.8.0",
+          "vulns": []
+        },
+        {
+          "name": "anyio",
+          "version": "4.15.1",
+          "vulns": []
+        },
+        {
+          "name": "backports-tarfile",
+          "version": "1.2.0",
+          "vulns": []
+        },
+        {
+          "name": "certifi",
+          "version": "2026.7.22",
+          "vulns": []
+        },
+        {
+          "name": "cffi",
+          "version": "2.1.1",
+          "vulns": []
+        },
+        {
+          "name": "click",
+          "version": "8.5.0",
+          "vulns": []
+        },
+        {
+          "name": "colorama",
+          "version": "0.4.6",
+          "vulns": []
+        },
+        {
+          "name": "cryptography",
+          "version": "50.0.2",
+          "vulns": []
+        },
+        {
+          "name": "fastapi",
+          "version": "0.142.2",
+          "vulns": []
+        },
+        {
+          "name": "h11",
+          "version": "0.16.0",
+          "vulns": []
+        },
+        {
+          "name": "httpcore",
+          "version": "1.0.9",
+          "vulns": []
+        },
+        {
+          "name": "httpx",
+          "version": "0.28.1",
+          "vulns": []
+        },
+        {
+          "name": "idna",
+          "version": "3.20",
+          "vulns": []
+        },
+        {
+          "name": "importlib-metadata",
+          "version": "9.0.1",
+          "vulns": []
+        },
+        {
+          "name": "iniconfig",
+          "version": "2.3.0",
+          "vulns": []
+        },
+        {
+          "name": "jaraco-classes",
+          "version": "3.4.0",
+          "vulns": []
+        },
+        {
+          "name": "jaraco-context",
+          "version": "6.1.2",
+          "vulns": []
+        },
+        {
+          "name": "jaraco-functools",
+          "version": "4.6.0",
+          "vulns": []
+        },
+        {
+          "name": "jeepney",
+          "version": "0.9.0",
+          "vulns": []
+        },
+        {
+          "name": "keyring",
+          "version": "25.6.0",
+          "vulns": []
+        },
+        {
+          "name": "more-itertools",
+          "version": "11.1.0",
+          "vulns": []
+        },
+        {
+          "name": "opentelemetry-api",
+          "version": "1.45.0",
+          "vulns": []
+        },
+        {
+          "name": "packaging",
+          "version": "26.3",
+          "vulns": []
+        },
+        {
+          "name": "pluggy",
+          "version": "1.6.0",
+          "vulns": []
+        },
+        {
+          "name": "pycparser",
+          "version": "3.0",
+          "vulns": []
+        },
+        {
+          "name": "pydantic",
+          "version": "2.13.5",
+          "vulns": []
+        },
+        {
+          "name": "pydantic-core",
+          "version": "2.46.5",
+          "vulns": []
+        },
+        {
+          "name": "pygments",
+          "version": "2.21.0",
+          "vulns": []
+        },
+        {
+          "name": "pytest",
+          "version": "9.1.1",
+          "vulns": []
+        },
+        {
+          "name": "pywin32-ctypes",
+          "version": "0.2.3",
+          "vulns": []
+        },
+        {
+          "name": "secretstorage",
+          "version": "3.5.0",
+          "vulns": []
+        },
+        {
+          "name": "setuptools",
+          "version": "84.0.0",
+          "vulns": []
+        },
+        {
+          "name": "starlette",
+          "version": "1.7.0",
+          "vulns": []
+        },
+        {
+          "name": "typing-extensions",
+          "version": "4.16.0",
+          "vulns": []
+        },
+        {
+          "name": "typing-inspection",
+          "version": "0.4.4",
+          "vulns": []
+        },
+        {
+          "name": "uvicorn",
+          "version": "0.34.2",
+          "vulns": []
+        },
+        {
+          "name": "zipp",
+          "version": "4.1.0",
+          "vulns": []
+        }
+      ],
+      "result_sha256": "2e47d235066fb8d2641e7580c43506bbd479768b12f7c957567a621e44696f05"
+    },
+    "npm": {
+      "metadata": {
+        "vulnerabilities": {
+          "info": 0,
+          "low": 0,
+          "moderate": 0,
+          "high": 0,
+          "critical": 0,
+          "total": 0
+        },
+        "dependencies": {
+          "prod": 7,
+          "dev": 46,
+          "optional": 27,
+          "peer": 0,
+          "peerOptional": 0,
+          "total": 52
+        }
+      },
+      "known_vulnerabilities": 0,
+      "result_sha256": "3644b4afba9b2dc2bfc2cfba6b81aede4ff3a919187b1448ffa96e0b9147db39"
+    }
+  },
+  "setup": {
+    "source": "fresh isolated clone of source directories, compiled interface, setup/run scripts and exact Python lock; no application .venv, data, config, credentials, node_modules or logs copied",
+    "command": "./setup.sh --skip-frontend",
+    "result": "passed",
+    "hash_enforced_dependency_install": "passed",
+    "local_editable_install": "passed with --no-deps --no-build-isolation",
+    "pip_check": "passed",
+    "installed_versions": {
+      "solana-wallet-scanner": "0.3.2",
+      "fastapi": "0.142.2",
+      "starlette": "1.7.0",
+      "uvicorn": "0.34.2",
+      "httpx": "0.28.1",
+      "pytest": "9.1.1",
+      "setuptools": "84.0.0"
+    },
+    "cli_version_and_help": "passed",
+    "setup_log_sha256": "3cd1b164d863403fc174c20fb5908274534f09de3691e7f5679ddec9ea4c147f"
+  },
+  "launcher": {
+    "launcher": "run.sh --data-dir FRESH --port 8783 --no-browser",
+    "loopback_ready": true,
+    "http_index": 200,
+    "unauthenticated_state": 401,
+    "authenticated_bootstrap": 200,
+    "authenticated_state": 200,
+    "application_version": "0.3.2",
+    "methodology_at_setup_snapshot": "fifo-v3",
+    "key_configured": false,
+    "refresh_minutes": 0,
+    "provider_credits_used": 0,
+    "provider_credits_reserved": 0,
+    "jobs": 0,
+    "wallet_reports": 0,
+    "scope": "fresh isolated source clone; final R5 source build and browser checked separately",
+    "shutdown_exit_code": 0
+  },
+  "limits": [
+    "Actual check date is 2 October 2026; dates appearing in uploaded reviews do not change the execution date.",
+    "Windows/macOS and Python 3.11 runtime not executed; conditional package pins included in advisory query only.",
+    "Known advisory queries do not prove security, exploit resistance, live-chain reconstruction or wallet profitability.",
+    "--skip-frontend uses a compiled interface; final v0.3.2 source build and browser checks are recorded separately.",
+    "Setup/launcher ran while R5 application source work continued; the root final code tests and browser checks cover final source.",
+    "No Helius credential read or printed, blockchain/provider request, subscription, or paid service used."
+  ]
+}

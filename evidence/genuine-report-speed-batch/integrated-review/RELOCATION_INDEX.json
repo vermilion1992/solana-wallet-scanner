@@ -1,0 +1,130 @@
+{
+  "Git_staging_performed": false,
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "files": [
+    {
+      "bytes": 15141,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/review_frozen_candidate.py",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/review_frozen_candidate.py",
+      "sha256": "bc7e352fed28fe5d4e8ecd6412b4bad88554724532178932cc89ddc379b78750"
+    },
+    {
+      "bytes": 18451,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/review_matrix_and_curation.py",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/review_matrix_and_curation.py",
+      "sha256": "9141b33e3ae73ba4ff8202342d994b678296bc6de7959da2822e8618a5659d62"
+    },
+    {
+      "bytes": 420870,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/FROZEN_SOURCE_DIFF.patch",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_SOURCE_DIFF.patch",
+      "sha256": "e03bb201c4c88f39cb8214db1cffb26fb993c653a9933bd972d34ee7c5565148"
+    },
+    {
+      "bytes": 13098,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/FROZEN_GENUINE_COMPONENT_REPLAY.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_GENUINE_COMPONENT_REPLAY.json",
+      "sha256": "177390d5ead31d3df734a18c6feae337e9479f8e8c8dc4ba645a31fb4940db86"
+    },
+    {
+      "bytes": 11929,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/CONSOLIDATED_FROZEN_FINAL_REVIEW.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/CONSOLIDATED_FROZEN_FINAL_REVIEW.json",
+      "sha256": "a76d1dd19438596adde2f99c95a15d2c2c175064d361bf252bc4d3a62f5cccdb"
+    },
+    {
+      "bytes": 291829,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/FROZEN_MATRIX_REVIEW.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_MATRIX_REVIEW.json",
+      "sha256": "b34c021d713461be1e989edee91346dc071fbcf15cb9446836859caf7beadd10"
+    },
+    {
+      "bytes": 291829,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/FROZEN_MATRIX_REVIEW_FINAL.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_MATRIX_REVIEW_FINAL.json",
+      "sha256": "b34c021d713461be1e989edee91346dc071fbcf15cb9446836859caf7beadd10"
+    },
+    {
+      "bytes": 390164,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/FROZEN_MATRIX_COLLECT_ONLY.log",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/FROZEN_MATRIX_COLLECT_ONLY.log",
+      "sha256": "8d87a4ecb5b37814fe42c6a51cac6823e9bae2c4690ace6dbb51e5337807904d"
+    },
+    {
+      "bytes": 4428,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/CURATED_INPUT_REVIEW.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/CURATED_INPUT_REVIEW.json",
+      "sha256": "3ff528e6c0f4f3e146b44907479527262c06457bcced4b6a59cbc3ccc32c0985"
+    },
+    {
+      "bytes": 560,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/WORKER_CONTEXT_LIFECYCLE_PROBE.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/WORKER_CONTEXT_LIFECYCLE_PROBE.json",
+      "sha256": "1bb5d50691d6a6c5a699b6b01ab612168c7e3c2ba86f87eb2610fdf00283969c"
+    },
+    {
+      "bytes": 203,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/FROZEN_WORKER_CLI_REJECTION.log",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/frozen-public-worker-rejection/raw.log",
+      "sha256": "53f346d30a5252fe17cd248a8efb4927236dc28ce148c18818576385832b31db"
+    },
+    {
+      "bytes": 8834,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/CONSOLIDATED_FROZEN_SOURCE_REVIEW.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/CONSOLIDATED_FROZEN_SOURCE_REVIEW.json",
+      "sha256": "b1665e7cca4d678cf8dc19c1b3b336133154fcb3c095dbbb90f5f9a1142f9ddc"
+    },
+    {
+      "bytes": 1002,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/CHECKSUM_DISJOINT_SCOPE_INITIAL_OBSERVATION.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/CHECKSUM_DISJOINT_SCOPE_INITIAL_OBSERVATION.json",
+      "sha256": "7eaf4fada4a4cef2817f874511540ac226e85fe35c988d0e72aa5c36a2d70521"
+    },
+    {
+      "bytes": 3023,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/reproduce_checksum_disjoint_scope.py",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/reproduce_checksum_disjoint_scope.py",
+      "sha256": "625f14f31171e603e90d948e614cd5d3f9bcbf5b30d2777aa1d89170937f69b1"
+    },
+    {
+      "bytes": 1725,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/reproduce_worker_context_lifecycle.py",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/reproduce_worker_context_lifecycle.py",
+      "sha256": "f6df047e25e0aac0ad65b35191ea3a1b49d9eed81676e4e167bb8a21672d6d0b"
+    },
+    {
+      "bytes": 8835,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/CHECKSUM_DISJOINT_SCOPE_FIX_RECHECK.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/CHECKSUM_DISJOINT_SCOPE_FIX_RECHECK.json",
+      "sha256": "24ee2877d5bac3dd4a0c03ef326927dbd83ad0e231886e27ce0b9d9d3b1dab03"
+    },
+    {
+      "bytes": 587,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/WORKER_CONTEXT_LIFECYCLE_RECHECK.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/WORKER_CONTEXT_LIFECYCLE_RECHECK.json",
+      "sha256": "1d0b125a87d2a43d7433398525f4ce5c1dacef34874d4b47b4aca0d5e9ab197c"
+    },
+    {
+      "bytes": 3462,
+      "curated_path": "evidence/genuine-report-speed-batch/integrated-review/INTERFACE_PREPARATION.json",
+      "original_path": "/workspace/outputs/genuine-wallet-report-review/INTERFACE_PREPARATION.json",
+      "sha256": "2576817d8241af141e5fd7692708cc3d571b4d3e147ca98cdfb9f29163f4f755"
+    }
+  ],
+  "kind": "independent-review-relocation-index",
+  "original_absolute_paths_preserved": true,
+  "producer_receipts_rewritten": false,
+  "retained_repository_dependencies": [
+    "docs/ACCEPTANCE_MATRIX.json",
+    "tests/fixtures/instruction_family_schema.json",
+    "evidence/genuine-report-speed-batch/SOURCE_MANIFEST.json",
+    "evidence/genuine-report-speed-batch/FROZEN_CANDIDATE.json",
+    "evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+    "evidence/genuine-report-speed-batch/checker-inputs/INPUT_BINDING.json",
+    "evidence/genuine-report-speed-batch/checker-inputs/INVENTORY_EXPECTATIONS.json"
+  ],
+  "runtime_databases_or_credentials_copied": false,
+  "scope": "Exact review bytes relocated only. Prior failed draft probes and current fixed controls remain separately identified; collection mapping does not count as completed tests.",
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "state": "PASS"
+}

@@ -1,0 +1,31 @@
+{
+  "application_commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+  "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+  "source_files": 246,
+  "preserved_genuine_inputs": {
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    }
+  },
+  "product_ready": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "frozen_at": "2026-10-04T17:55:02.683807+00:00",
+  "preserved_baseline": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+  "browser_indexed_input": {
+    "path": "evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+    "bytes": 350517,
+    "sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "kind": "actual-offline-product-browser-candidate-replay",
+  "state": "FAILED",
+  "commit": "0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd",
+  "source_sha256": "babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c",
+  "source_files": 246,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/solana-wallet-scanner/tools/product_browser.py",
+    "--python",
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "--chromium",
+    "/usr/bin/chromium",
+    "--indexed-archive",
+    "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip",
+    "--indexed-expected-fees",
+    "0.000158868",
+    "--inventory-snapshots",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch-final/product-browser-final"
+  ],
+  "cwd": "/workspace/solana-wallet-scanner",
+  "timeout_seconds": 300,
+  "timed_out": false,
+  "started_utc": "2026-10-04T18:18:56.995809+00:00",
+  "scope": "Scoped real partial/synthetic UI evidence, separately observed current inventory; complete genuine acceptance BLOCKED.",
+  "exit_code": 1,
+  "seconds": 11.409495511004934,
+  "finished_utc": "2026-10-04T18:19:08.405473+00:00",
+  "source_unchanged": true,
+  "commit_unchanged": true,
+  "raw_log_sha256": "1b7a9121b0cc86a2dad352838e2b3123d5e31e30db85c95a9fed9826cecb6957",
+  "raw_log_bytes": 1209,
+  "reason": "Actual browser command/source/locks mismatch"
+}

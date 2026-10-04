@@ -1,0 +1,35 @@
+........................................................................ [ 53%]
+...FFF.........................................................          [100%]
+=================================== FAILURES ===================================
+_ test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired] _
+tests/test_wallet_identity.py:344: in test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope
+    assert identity['state'] == expected
+E   AssertionError: assert 'UNKNOWN' == 'PASS'
+E     
+E     - PASS
+E     + UNKNOWN
+_ test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired-alias] _
+tests/test_wallet_identity.py:344: in test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope
+    assert identity['state'] == expected
+E   AssertionError: assert 'UNKNOWN' == 'PASS'
+E     
+E     - PASS
+E     + UNKNOWN
+_ test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[store-wrapper] _
+tests/test_wallet_identity.py:344: in test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope
+    assert identity['state'] == expected
+E   AssertionError: assert 'UNKNOWN' == 'PASS'
+E     
+E     - PASS
+E     + UNKNOWN
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_wallet_identity.py::test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired]
+FAILED tests/test_wallet_identity.py::test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired-alias]
+FAILED tests/test_wallet_identity.py::test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[store-wrapper]
+3 failed, 132 passed, 1 warning in 44.45s

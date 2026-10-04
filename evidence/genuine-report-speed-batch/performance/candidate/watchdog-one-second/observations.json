@@ -1,0 +1,30 @@
+{
+  "kind": "offline-report-performance-observations-v1",
+  "state": "INCOMPLETE",
+  "acceptance_run": false,
+  "product_readiness_claim": false,
+  "scope": "Timing and equivalence for the supplied archive only; source history and wallet qualification remain separate.",
+  "profile_enabled": false,
+  "full_details_enabled": false,
+  "source_before": {
+    "commit": "eea37dc95b5a012a62d36f4b300f1097fc311f87",
+    "source_sha256": "c6476e7ea65bc12e42c70488dab6b5a4b9c6170fa9a81f5f333e38546e528cd6",
+    "source_file_count": 246
+  },
+  "input_before": {
+    "path": "/workspace/outputs/report-proof-profile/baseline-ab62858/input.zip",
+    "bytes": 228710,
+    "sha256": "823a535edbcc4a84c5d293c6bafad2a504f0929bf76fe085d05937133c47d9f0"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "interpreter": "/workspace/solana-wallet-scanner/.venv/bin/python",
+  "phases": [],
+  "calls": {
+    "provider": 0,
+    "credential": 0,
+    "transport": 0,
+    "socket": 0
+  },
+  "private_runtime": "private-runtime",
+  "timeout_seconds": 1
+}

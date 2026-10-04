@@ -1,0 +1,19 @@
+{
+  "application_command": [
+    "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/final-replays/genuine-real-acceptance",
+    "--input",
+    "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "--input-freeze",
+    "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+    "--worked-expectations",
+    "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+    "--require-real-acceptance"
+  ],
+  "application_exit_code": 2,
+  "bootstrap_credential_attempts": 0,
+  "kind": "counted-offline-python-guards",
+  "socket_attempts": 0,
+  "state": "PASS"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "solana-wallet-scanner-ui",
+  "private": true,
+  "version": "0.3.11",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check:format": "node scripts/check-format.mjs",
+    "check:discovery": "node scripts/check-discovery.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "0.468.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "6.1.1",
+    "typescript": "5.7.3",
+    "vite": "8.3.2"
+  }
+}

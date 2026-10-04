@@ -1,0 +1,65 @@
+{
+  "kind": "distinct-read-only-accounting-interface-preparation",
+  "state": "DRAFT_INTERFACE_REVIEW_NON_FINAL",
+  "base_head": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+  "base_source_sha256": "0fad6d9bd6647b2663724d4bae2e280a02ed499f03f730eeff58f057ac98d365",
+  "base_source_files": 241,
+  "reviewed_draft_files": {
+    "scanner/app.py": {
+      "bytes": 77824,
+      "sha256": "bb4436e07280c509b8e999b05f5aa4cc705b64318932e6b06f78db426c201cfd"
+    },
+    "scanner/archive_input.py": {
+      "bytes": 55381,
+      "sha256": "622639dadf426a72fdfe89876f81055c0fed3ccfcd1c66bac70a3fe12e00ce2b"
+    },
+    "scanner/wallet_evidence.py": {
+      "bytes": 124876,
+      "sha256": "2037f24c6d59c80599ddbdf8d2307333686bb1c59557ac62654ab01ae0b178f7"
+    },
+    "scanner/wallet_identity.py": {
+      "bytes": 16505,
+      "sha256": "f58f5b18599e5ae3da2fe3f972015184d1921a5753ed1369881d90b3db69f98a"
+    },
+    "scanner/source_consistency.py": {
+      "bytes": 50171,
+      "sha256": "d50482bb5e9f4054bd001eea8b893e4b8e9b6121c5f3c768014e7e1f0835178b"
+    },
+    "scanner/report_rebuild.py": {
+      "bytes": 17219,
+      "sha256": "e9c445fa26590e73f1a707b341ff590e874483fcc404832b73d1e483ec89bde6"
+    },
+    "scanner/report_view.py": {
+      "bytes": 6608,
+      "sha256": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb"
+    },
+    "scanner/metric_evidence.py": {
+      "bytes": 27096,
+      "sha256": "54e1d812bd3013cc4eccbe180307a862df12dc9706a3f81a7a0460d670faad66"
+    },
+    "scanner/collector.py": {
+      "bytes": 29014,
+      "sha256": "92c04794eefadc964c0d340d7dcc283642484b86fd10a45ab5f2c470db1f6ccc"
+    }
+  },
+  "draft_response_change": "Exactly four existing return expressions replaced by direct JSONResponse: state, preset preview, full/display report, full/display enrich. Their authorization/view/error/mutation ordering remains intact; current data originates in JSON storage or JSON-native projections. Final endpoint equivalence verification belongs to frozen batch.",
+  "required_inventory_seams": [
+    "Typed original-byte envelope method/request/response/ID/version/wallet/program/context/quantity validation",
+    "Both-program enumeration plus native balance/account info congruence at one exact observed slot; no minContextSlot historical promotion",
+    "Negative affinity freezes before conflict loss through direct, live frozen, archive import and immutable child rebuild paths",
+    "Shared raw-native alternative inspection prevents disguised transaction conflicts from hiding in inventory labels/envelopes",
+    "Malformed/ambiguous/capped sources remain UNKNOWN dependencies; permutations and duplicate links cannot outvote contradictions",
+    "Current observations remain separate from exact historical opening/closing inventory, historical marks, valued external flows, classification, population and wallet-wide metric decisions",
+    "Response full/summary/display/preview/enrich/export compatibility, old report freshness, parent immutability and auth/CSRF/error controls"
+  ],
+  "current_blocking_findings": [],
+  "planned_tests": "Risk-based focused controls only after concrete frozen interfaces; no application tests have been executed by this preparatory review.",
+  "B1": "UNRESOLVED",
+  "complete_real_B2": "OPEN",
+  "B3": "BLOCKED",
+  "PRODUCT_READY": false,
+  "reviewer_network_requests": 0,
+  "reviewer_provider_requests": 0,
+  "reviewer_credential_lookups": 0,
+  "source_or_Git_mutations": false
+}

@@ -1,0 +1,337 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "31191a3ec73744fea0a5b471906ea8a2"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    },
+    {
+      "case": "indexed-partial-ui-import-inspection-immutable-rebuild",
+      "state": "PASS",
+      "source_archive_sha256": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33",
+      "expected_selected_fees_sol": "0.000158868",
+      "parent_unchanged": true,
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "assertion_timeout_ms": 120000,
+  "selected_cohort_ui_assertions": [
+    {
+      "case": "import-synthetic-input",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-partial-real-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-indexed-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "indexed-partial-rebuilt",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    }
+  ],
+  "inventory_ui_assertions": [
+    {
+      "case": "indexed-inventory-import",
+      "state": "PASS",
+      "native_lamports": "650240",
+      "legacy_accounts": 0,
+      "token2022_accounts": 1,
+      "context_slots": [
+        453173211,
+        453173213,
+        453173215
+      ],
+      "source_inspection": true,
+      "combined_inventory": "UNKNOWN",
+      "report_boundaries": "UNKNOWN",
+      "wallet_qualification": false
+    },
+    {
+      "case": "indexed-inventory-rebuilt",
+      "state": "PASS",
+      "native_lamports": "650240",
+      "legacy_accounts": 0,
+      "token2022_accounts": 1,
+      "context_slots": [
+        453173211,
+        453173213,
+        453173215
+      ],
+      "source_inspection": true,
+      "combined_inventory": "UNKNOWN",
+      "report_boundaries": "UNKNOWN",
+      "wallet_qualification": false
+    }
+  ],
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "browser_report_transfers": [
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 2909
+    },
+    {
+      "path": "/api/reports/31191a3ec73744fea0a5b471906ea8a2?view=display",
+      "status": 200,
+      "bytes": 2143339
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 36195
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 70877
+    },
+    {
+      "path": "/api/reports/675f625f09104870a556795886ca619c?view=display",
+      "status": 200,
+      "bytes": 2153298
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 103744
+    },
+    {
+      "path": "/api/reports/3e633cb5cf8b4347b87670785c6a9230?view=display",
+      "status": 200,
+      "bytes": 2143834
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 185149
+    },
+    {
+      "path": "/api/reports/c73ca65d1214443484d0948d38c6660d?view=display",
+      "status": 200,
+      "bytes": 2302389
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 218016
+    },
+    {
+      "path": "/api/reports/3202d8443cb44b4ab21f886cd3d4bdb8?view=display",
+      "status": 200,
+      "bytes": 2143834
+    },
+    {
+      "path": "/api/reports/a152124f2d954e33857699a4293e0d66?view=display",
+      "status": 200,
+      "bytes": 4501493
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 388580
+    },
+    {
+      "path": "/api/reports/4b0b2dda249e4bbe914d3d8e56ffa84a?view=display",
+      "status": 200,
+      "bytes": 17346796
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 769445
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 1149892
+    },
+    {
+      "path": "/api/reports/ad06c6e3cdcf4117beaaa664dcbcf1f9?view=display",
+      "status": 200,
+      "bytes": 17347291
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "3ec408ccb7b720b6a3b5c9f13a49bbfc44ef85b7912c0c017152b4aca194f273",
+    "indexed-partial-parent.json": "f89584fa1ca43d826263114667c9605807ad60402d1256d4c8a3ad00d2d09497",
+    "indexed-partial-rebuilt-mobile.png": "fdec73a9ba00a460331228f42eaf5a13d683dab6b6c5fb77ff4891050d5f6600",
+    "world_hash-missing-report.json": "71d57d60726e275dc2a5bfff06cdf0b49d3d011bd8356eaae6bf41f87170405b",
+    "indexed-partial-rebuilt-desktop.png": "a31c9f148da5309c3f5a48d00c2b904db34f11ebade35184d3c65dd908b855e7",
+    "world_hash-missing-desktop.png": "2e4471accc68800e938cadb95c0c0175a0f50bedcd8ef49edc07f227fdac130d",
+    "synthetic-parent.json": "6c4f0a211ed043e7466d6349f5c6abccfcb57b9ddab303d0242b007e26a2b952",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "8971eda2f84420e230fa9279fc9b7051fae91f96f328ce87813b41cec1416724",
+    "world_hash-restored-report.json": "28829f6aad40bda2f0b477939a7fcd099125bfdcc86a74c31382f5bf7702858b",
+    "synthetic-positive-desktop.png": "a1d7f7eed54cacd30fbdec6c32c41cce144a4b1cd29072a2d25b173af1af2e52",
+    "world_hash-restored-desktop.png": "60bf70d0ffe5339b189facf8e537ac21056a51e3cb46ec6e03ddec130557c4ef",
+    "synthetic-input.zip": "0b2483e714d7aca570841b8ea4f910426b6a7870c8ba8d5b074cb37442a06b16",
+    "valuation_hash-missing-mobile.png": "483b29bd3171c100ac825ceaf4de4af7d5ca2a3260e2b09a0abd09565dafb611",
+    "indexed-partial-desktop.png": "63f6af4871906f26c4c9b801bc7eab7dec419ed1dab776b1322cc5d553b1abf7",
+    "world_hash-restored-mobile.png": "8a3f90ef9402f11f3da2cb46687e530c05d9fdc8f118695b805f0f45b8271508",
+    "valuation_hash-missing-desktop.png": "52b3f4fdb1bb162950289b0fe583f1580ed32090a13795373635a2e35ea47916",
+    "valuation_hash-restored-mobile.png": "e36705e76e3bfbe56047c56a26f1dea41959ca01e362a319f7f46c4b0e0329c9",
+    "synthetic-positive-mobile.png": "ac339ab9c2ef5ad046efcd3a1ef6fd77d0da6e1e02e615f34cdc5c676a703cbf",
+    "valuation_hash-restored-desktop.png": "e306c6f029cbac507b79dcdab7f1c9bb4bb5a290e4ab0166d4f51ddf207c31ac",
+    "valuation_hash-missing-report.json": "e214dedb0d27bebeb804619bd11adc8214470f8863883bd778abf015f1de5fca",
+    "synthetic-ui-export.json": "6c4f0a211ed043e7466d6349f5c6abccfcb57b9ddab303d0242b007e26a2b952",
+    "world_hash-missing-mobile.png": "3717df602097a960731ea101b1d4f837cf47a9a843de5781f2e08809b74dc909",
+    "valuation_hash-restored-report.json": "75245d6e7a0ea90500a7163c2edd4ddcc7c757dd0fd71e4e3ee6b9e2b8307074",
+    "indexed-input.zip": "ac154d0f32192e1f6122c0703054a1570c661c311a7c1ca7705442183cdada33",
+    "genuine-partial-desktop.png": "00a6935ca943dd5178bb847b5385334bc02b968fb7448f7b3a228dd52514924d",
+    "indexed-partial-mobile.png": "d7c43ef28517d3a790decc4ea6b74b422d094f2304e331c401aad54054ff7c3c",
+    "indexed-partial-child.json": "2505018f6ac8841a613190d5fb88a709943b7fd179c14af8f589037732e43f87",
+    "genuine-partial-report.json": "2b1bd84cc9792b592e334aec2230e49106aa99096b2bca27cf6abcd2b7974dda"
+  }
+}

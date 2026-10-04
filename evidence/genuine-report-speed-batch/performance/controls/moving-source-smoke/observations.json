@@ -1,0 +1,36 @@
+{
+  "kind": "offline-report-performance-observations-v1",
+  "state": "FAILED",
+  "acceptance_run": false,
+  "product_readiness_claim": false,
+  "scope": "Timing and equivalence for the supplied archive only; source history and wallet qualification remain separate.",
+  "profile_enabled": false,
+  "full_details_enabled": true,
+  "source_before": {
+    "commit": "ab62858dca7eccbdb18b3365a83dedd9b2e8f413",
+    "source_sha256": "57f5ccfa10129255e421ce5128523fc780ef704d95a4dffd6d437f541a499cab",
+    "source_file_count": 243
+  },
+  "input_before": {
+    "path": "/workspace/outputs/report-proof-profile/synthetic-benchmark-input.zip",
+    "bytes": 18211,
+    "sha256": "4b39d9322cd3b69557fb2311b948c372fc57e16615debdc3c36c8b0d686a3bfa"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "interpreter": "/workspace/solana-wallet-scanner/.venv/bin/python",
+  "phases": [],
+  "calls": {
+    "provider": 0,
+    "credential": 0,
+    "transport": 0,
+    "socket": 0
+  },
+  "private_runtime": "private-runtime",
+  "timeout_seconds": 300,
+  "error": {
+    "type": "ImportError",
+    "message": "cannot import name 'validated_page_context' from 'scanner.indexed_input' (/workspace/solana-wallet-scanner/scanner/indexed_input.py)"
+  },
+  "seconds": 0.28024615201866254,
+  "peak_rss_kib": 50856
+}

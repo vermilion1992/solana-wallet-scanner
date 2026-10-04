@@ -1,0 +1,166 @@
+{
+  "commit": "9480479ff42af8a9db3da1649297dfcd9d27e5be",
+  "url": "https://raw.githubusercontent.com/anza-xyz/agave/9480479ff42af8a9db3da1649297dfcd9d27e5be/transaction-status/src/parse_token.rs",
+  "sha256": "50370cf477d4d526960a226a945f712426c059f220fd4c84f63f493da64d88c0",
+  "scope": "Manually specified synthetic RPC-schema examples, based on the pinned primary parser branches; no signed transactions or mainnet provenance. Field names are independent of application lookup tables. Only the four standard authority types are admitted here.",
+  "examples": [
+    {
+      "id": "approve",
+      "parser_lines": [
+        180,
+        200
+      ],
+      "target_field": "source",
+      "expect_hold": true,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "approve",
+          "info": {
+            "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "delegate": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "amount": "25"
+          }
+        }
+      }
+    },
+    {
+      "id": "approveChecked",
+      "parser_lines": [
+        388,
+        413
+      ],
+      "target_field": "source",
+      "expect_hold": true,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "approveChecked",
+          "info": {
+            "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "delegate": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "tokenAmount": {
+              "amount": "25",
+              "decimals": 6,
+              "uiAmount": 2.5e-05,
+              "uiAmountString": "0.000025"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "revoke",
+      "parser_lines": [
+        201,
+        219
+      ],
+      "target_field": "source",
+      "expect_hold": true,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "revoke",
+          "info": {
+            "source": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+          }
+        }
+      }
+    },
+    {
+      "id": "setAuthority-mintTokens",
+      "parser_lines": [
+        220,
+        260
+      ],
+      "target_field": "mint",
+      "expect_hold": true,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "setAuthority",
+          "info": {
+            "authorityType": "mintTokens",
+            "mint": "2d46SEBFCA8SMB1BUAq3z1XJrp3qAXUgQnzkQ85Nvzjy",
+            "authority": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "newAuthority": null
+          }
+        }
+      }
+    },
+    {
+      "id": "setAuthority-freezeAccount",
+      "parser_lines": [
+        220,
+        260
+      ],
+      "target_field": "mint",
+      "expect_hold": true,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "setAuthority",
+          "info": {
+            "authorityType": "freezeAccount",
+            "mint": "2d46SEBFCA8SMB1BUAq3z1XJrp3qAXUgQnzkQ85Nvzjy",
+            "authority": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "newAuthority": null
+          }
+        }
+      }
+    },
+    {
+      "id": "setAuthority-accountOwner",
+      "parser_lines": [
+        220,
+        260
+      ],
+      "target_field": "account",
+      "expect_hold": false,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "setAuthority",
+          "info": {
+            "authorityType": "accountOwner",
+            "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "authority": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "newAuthority": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx"
+          }
+        }
+      }
+    },
+    {
+      "id": "setAuthority-closeAccount",
+      "parser_lines": [
+        220,
+        260
+      ],
+      "target_field": "account",
+      "expect_hold": false,
+      "instruction": {
+        "program": "spl-token",
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "parsed": {
+          "type": "setAuthority",
+          "info": {
+            "authorityType": "closeAccount",
+            "account": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "authority": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "newAuthority": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx"
+          }
+        }
+      }
+    }
+  ]
+}
