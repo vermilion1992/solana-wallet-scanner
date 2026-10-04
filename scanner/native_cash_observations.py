@@ -211,8 +211,12 @@ def project_native_cash_observations(*, selected, raw_versions, wallet, window, 
                 # A proved exclusion contributes exact selected-scope zero.
                 # Its original clock dependencies remain in the receipt so
                 # losing that proof cannot silently retain the zero result.
-                checks.append(True)
-                evidence += membership['evidence']
+                # The clock can exclude this named record, but it cannot
+                # exclude an unassignable still-linked record from the
+                # selected source inventory. Keep that independent guard
+                # without requiring outside-window transfer/fee decoding.
+                checks.append(source_set.get('state') == 'PASS')
+                evidence += membership['evidence'] + source_set.get('evidence', [])
                 continue
             check = row['transfer_check']
             zero = check['state'] == 'PASS' and row['gross_in_lamports'] == row['gross_out_lamports'] == '0'

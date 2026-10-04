@@ -1728,10 +1728,24 @@ try {
         observations: [{ slot: 42, lamports: "1000000001", evidence: ["a".repeat(64)] }] },
     },
   };
-  const renderInventory = (next = inventoryReport) => renderToStaticMarkup(React.createElement(InventoryObservations, {
-    report: next, currentWalletMethod: "wallet-raw-evidence-v8", historyCurrent: true, showEvidence: () => undefined,
+  const renderInventory = (next = inventoryReport, options = {}) => renderToStaticMarkup(React.createElement(InventoryObservations, {
+    report: next, currentWalletMethod: "wallet-raw-evidence-v8", historyCurrent: true, showEvidence: () => undefined, ...options,
   }));
   assert.ok(renderInventory().includes("1.000000001 SOL"), "Source-bound native inventory remains visible");
+  const inventoryWithoutMethod = structuredClone(inventoryReport);
+  delete inventoryWithoutMethod.coverage.wallet_evidence.version;
+  for (const [next, options] of [
+    [inventoryWithoutMethod, { currentWalletMethod: undefined }],
+    [{ ...inventoryReport, wallet_assessment: { ...inventoryReport.wallet_assessment, saved_methodology: undefined } }, {}],
+    [{ ...inventoryReport, wallet_assessment: { ...inventoryReport.wallet_assessment, state: "rebuild_required" } }, {}],
+  ]) {
+    const original = structuredClone(next);
+    const savedInventoryHtml = renderInventory(next, options);
+    assert.ok(!savedInventoryHtml.includes("1.000000001 SOL"), "Inventory values need an explicit matching current wallet assessment");
+    assert.ok(savedInventoryHtml.includes("Rebuild from saved records"));
+    assert.ok(savedInventoryHtml.includes("Source aaaaa"));
+    assert.deepEqual(next, original, "Freshness rendering preserves saved inventory and source references");
+  }
   for (const evidence of [undefined, [], ["invalid-hash"], ["a".repeat(64), null]]) {
     const cashWithoutSources = changedCash((value) => { value.intervals.report_period.check.evidence = evidence; });
     const inventoryWithoutSources = structuredClone(inventoryReport);

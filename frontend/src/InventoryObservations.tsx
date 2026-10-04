@@ -41,8 +41,11 @@ export function InventoryObservations({ report, currentWalletMethod, historyCurr
   if (!inventory || sources(inventory.source_dependencies).length === 0) return null;
   const components = facts(inventory.components);
   const programs = facts(components?.token_programs);
-  const current = historyCurrent && report.source === "live" && !report.preview &&
-    wallet?.version === currentWalletMethod && inventory.version === "current-inventory-evidence-v1";
+  const assessment = report.wallet_assessment;
+  const current = Boolean(currentWalletMethod && historyCurrent && report.source === "live" && !report.preview &&
+    wallet?.version === currentWalletMethod && assessment?.state === "current" &&
+    assessment.saved_methodology === currentWalletMethod && assessment.current_methodology === currentWalletMethod &&
+    inventory.version === "current-inventory-evidence-v1");
   const rows = [
     ["Native SOL", facts(components?.native_lamports)],
     ["Legacy token accounts", facts(programs?.TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA)],

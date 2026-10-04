@@ -179,6 +179,11 @@ def test_all_proved_outside_records_supply_scoped_zero_with_retained_exclusion_a
     assert lost['intervals']['report_period']['check']['state'] == 'UNKNOWN'
     assert lost['intervals']['report_period']['gross_out_lamports'] is None
     assert lost['transactions']['cash-development']['network_fee']['check']['state'] == 'PASS'
+    inventory_lost = derive([original], alternatives=[
+        {'signature': None, 'evidence_hash': 'a' * 64, 'raw': None}])
+    assert inventory_lost['intervals']['report_period']['check']['state'] == 'UNKNOWN'
+    assert inventory_lost['intervals']['report_period']['gross_out_lamports'] is None
+    assert record(original)['evidence_hash'] in inventory_lost['intervals']['report_period']['check']['evidence']
     assert derive([original]) == parent
 
 
