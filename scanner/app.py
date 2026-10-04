@@ -102,6 +102,44 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
         else:
             sources.append({'hash': digest, 'kind': ref.get('kind'),
                             'signature': ref.get('signature'), 'payload': payload})
+    # Separately frozen inventory routing is application metadata, never part
+    # of the authenticated native collector link universe. Read it only from
+    # the exact saved input cited by this report; it carries no positive fact.
+    dependencies = collected.get('native_inventory_dependencies')
+    if dependencies is not None:
+        from .inventory_evidence import NATIVE_DEPENDENCIES_VERSION, MAX_SOURCES
+        frozen_hash = collected.get('frozen_input_hash')
+        valid = False
+        try:
+            frozen_input = store.evidence(frozen_hash)
+            encoded = json.dumps(frozen_input, sort_keys=True, ensure_ascii=False, allow_nan=False,
+                                 separators=(',', ':')).encode()
+            bound_report = store.get('reports', collected.get('frozen_report_id'))
+            affinity_hashes = dependencies.get('affinity_hashes') if isinstance(dependencies, dict) else None
+            valid = (hashlib.sha256(encoded).hexdigest() == frozen_hash
+                and isinstance(bound_report, dict) and bound_report.get('source') == 'live'
+                and not bound_report.get('preview') and bound_report.get('collection_input_hash') == frozen_hash
+                and bound_report.get('address') == address and bound_report.get('window') == window
+                and frozen_input.get('version') == 'saved-report-input-v1'
+                and frozen_input.get('address') == address and frozen_input.get('window') == window
+                and frozen_input.get('native_inventory_dependencies') == dependencies
+                and set(dependencies) == {'version', 'affinity_hashes'}
+                and dependencies['version'] == NATIVE_DEPENDENCIES_VERSION
+                and isinstance(affinity_hashes, list) and len(affinity_hashes) <= MAX_SOURCES
+                and all(isinstance(h, str) and re.fullmatch(r'[a-f0-9]{64}', h) for h in affinity_hashes)
+                and affinity_hashes == sorted(set(affinity_hashes))
+                and len(hashes | {h for h in cache if isinstance(h, str) and re.fullmatch(r'[a-f0-9]{64}', h)}
+                        | set(affinity_hashes)) <= SOURCE_HASH_LIMIT)
+        except (EvidenceError, TypeError, ValueError, OSError, KeyError):
+            valid = False
+        if not valid:
+            raise EvidenceError('Frozen native inventory routing lacks its exact saved-report binding')
+        for digest in affinity_hashes:
+            payload = read(digest, 'inventory-affinity')
+            # Every frozen selector must still name an original native link.
+            if isinstance(payload, dict) and payload.get('source_hash') not in hashes:
+                payload = None
+            sources.append({'hash': digest, 'kind': 'inventory-affinity', 'payload': payload})
     primary = [row for row in records if (row['signature'], row['evidence_hash']) in selected]
     return primary, records, sources, receipts
 
@@ -121,6 +159,34 @@ def _freeze_native_dependencies(store, collected, *, address, window):
                           for digest in query_source_dependencies(raw_sources)]
     frozen['evidence'] += [{'kind': 'wallet-identity-affinity', 'hash': digest}
                           for digest in wallet_identity_dependencies(raw_sources, wallet=address)]
+    if not collected.get('frozen_input_hash') and not collected.get('frozen_report_id'):
+        from .inventory_evidence import (NATIVE_SOURCE_VERSION, NATIVE_DEPENDENCIES_VERSION, MAX_SOURCES,
+                                         inventory_request_affinities)
+        from .source_consistency import SOURCE_HASH_LIMIT
+        from .json_boundary import canonical_bytes
+        captured = [source for source in raw_sources if isinstance(source.get('payload'), dict)
+                    and source['payload'].get('version') == NATIVE_SOURCE_VERSION]
+        if captured:
+            affinities = inventory_request_affinities(captured, wallet=address)
+            # Apply the same combined source/selector budget as saved-input
+            # consumption before writing any metadata or claiming observations.
+            affinity_rows = [{'kind': 'inventory-affinity',
+                              'hash': hashlib.sha256(canonical_bytes(value)).hexdigest(), 'payload': value}
+                             for value in affinities]
+            source_hashes = {row['hash'] for row in raw_receipts if isinstance(row.get('hash'), str)
+                             and re.fullmatch(r'[a-f0-9]{64}', row['hash'])}
+            affinity_hashes = {row['hash'] for row in affinity_rows}
+            if len(affinity_hashes) > MAX_SOURCES or len(source_hashes | affinity_hashes) > SOURCE_HASH_LIMIT:
+                raise EvidenceError('Frozen native inventory source/selector set exceeds its fixed inspection budget')
+            for row in affinity_rows:
+                if store.archive(row['payload']) != row['hash']:
+                    raise EvidenceError('Frozen native inventory selector archive checksum disagrees')
+            frozen['native_inventory_dependencies'] = {'version': NATIVE_DEPENDENCIES_VERSION,
+                'affinity_hashes': sorted({row['hash'] for row in affinity_rows})}
+            raw_sources += affinity_rows
+            raw_receipts += [{'hash': row['hash'], 'role': 'inventory-affinity', 'state': 'PASS',
+                              'reason': 'Internally frozen negative routing; no response/completion fact.'}
+                             for row in affinity_rows]
     return frozen, primary, linked, raw_sources, raw_receipts
 
 
@@ -338,7 +404,8 @@ def create_app(data_dir, launch_token=None):
             history_complete = (wallet_evidence['components']['historical_population']['state'] == 'PASS'
                                 and derived_intervals['report_period']['status'] == 'complete')
             result = analyze(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete,
-                             interval_coverage=derived_intervals)
+                             interval_coverage=derived_intervals,
+                             **wallet_evidence['economic_evidence']['economic_inputs'].get('report_period', {}))
             research = summarize_research(events, scan["window"]["start"], scan["window"]["end"],
                                           history_complete=history_complete, wallet_evidence=wallet_evidence)
             # Reuse the existing raw-payer/window projection. This independent

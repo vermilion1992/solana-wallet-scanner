@@ -12,8 +12,13 @@ function facts(value: unknown): Facts | undefined {
 
 function sources(value: unknown): string[] {
   return Array.isArray(value)
-    ? value.filter((hash): hash is string => typeof hash === "string" && /^[a-f0-9]{64}$/.test(hash))
+    ? [...new Set(value.filter((hash): hash is string => typeof hash === "string" && /^[a-f0-9]{64}$/.test(hash)))]
     : [];
+}
+
+function hasSourceReferences(value: unknown): value is string[] {
+  return Array.isArray(value) && value.length > 0 &&
+    value.every((hash) => typeof hash === "string" && /^[a-f0-9]{64}$/.test(hash));
 }
 
 function nativeAmount(value: unknown): string | undefined {
@@ -43,7 +48,8 @@ export function InventoryObservations({ report, currentWalletMethod, historyCurr
     ["Legacy token accounts", facts(programs?.TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA)],
     ["Token2022 accounts", facts(programs?.TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)],
   ] as const;
-  const combined = current && facts(components?.same_slot_inventory)?.state === "PASS";
+  const aggregate = facts(components?.same_slot_inventory);
+  const combined = current && aggregate?.state === "PASS" && hasSourceReferences(aggregate.evidence);
   return <section className="panel" data-inventory-observations={current ? "current" : "rebuild_required"}>
     <SectionHeading title="Archived balance snapshots"
       subtitle="Balances recorded in supplied evidence. Reporting-period balances and profit need separate evidence."
@@ -51,7 +57,7 @@ export function InventoryObservations({ report, currentWalletMethod, historyCurr
     {!current && <p className="small-note">Rebuild from saved records to use the current interpretation.</p>}
     <div className="checks-list">
       {rows.map(([title, check]) => {
-        const known = current && check?.state === "PASS";
+        const known = current && check?.state === "PASS" && hasSourceReferences(check.evidence);
         const observations = Array.isArray(check?.observations)
           ? check.observations.flatMap((value) => facts(value) ? [facts(value)!] : []) : [];
         return <div className="check-row" key={title} data-inventory-component={title}>
@@ -60,7 +66,8 @@ export function InventoryObservations({ report, currentWalletMethod, historyCurr
             {known && observations.length > 0 ? observations.map((point, index) => {
               const slot = typeof point.slot === "number" && Number.isSafeInteger(point.slot) && point.slot >= 0
                 ? point.slot.toLocaleString() : undefined;
-              const amount = title === "Native SOL" ? nativeAmount(point.lamports)
+              const amount = !hasSourceReferences(point.evidence) ? undefined
+                : title === "Native SOL" ? nativeAmount(point.lamports)
                 : typeof point.account_count === "number" && Number.isSafeInteger(point.account_count) && point.account_count >= 0
                   ? `${point.account_count.toLocaleString()} ${point.account_count === 1 ? "account" : "accounts"}` : undefined;
               return <p key={index}>{amount && slot ? `${amount} · Slot ${slot}` : "Unknown"}</p>;

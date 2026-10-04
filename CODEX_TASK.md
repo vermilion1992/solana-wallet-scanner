@@ -1,4 +1,33 @@
-# Active assignment — genuine wallet report and scanning times, 4 October 2026
+# Active assignment — remaining wallet-report adapters, 4 October 2026
+
+Continue from private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, published HEAD
+`3f14f188933bd5d9a9270e1f591e0bb9fadd94bf`. Its evidence binds tested application
+`0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd`, with 246 source files and manifest
+`babd86cab36e5674d286b8b59f4692e8f2f0109e0c2375a36ab7a86ad1185b3c`.
+Preserve the complete history and all prior acceptance records.
+
+The user asks to implement the remaining report items while avoiding large,
+unnecessary tests. Complete original-byte native inventory capture, observed
+gross native cash movement, original-evidence asset classification and economic
+phase/boundary interfaces through the existing saved-report path. Use targeted
+source-family checks and a normal offline import/rebuild/export workflow; do not
+claim that this focused batch reran full Gate A or achieved genuine B3.
+
+Use retained genuine inputs only; make no provider requests or credential reads.
+Gross SOL direction cannot prove capital/cost roles; protocol WSOL denomination
+cannot value other tokens; current mint controls cannot prove historical meme or
+nonspam eligibility. Independent population, acquisition and report/28/90-day
+dependencies remain explicit. Complete historical coverage and a genuine,
+independently worked whole-wallet acceptance case remain unresolved.
+
+Keep immutable parents, selected and linked alternatives, source-loss/restoration
+and independent fees/realised/valuation uncertainty. Perform a distinct read-only
+diff review and coherent private Git publication. No new release ZIP, paid
+service, trading/signing/custody or restarted historical stabilisation cycle.
+PRODUCT_READY=false.
+
+# Prior assignment — genuine wallet report and scanning times, 4 October 2026
 
 Continue the private `codex/product-completion` branch from
 `ab62858dca7eccbdb18b3365a83dedd9b2e8f413`, with 43 preserved commits and

@@ -2,8 +2,8 @@
 
 Status is deliberately split between execution evidence and future work. The starting workflow handoff asserted no new application defect; the bounded audit below subsequently reproduced SC-01.
 
-Current identity and status are in the final **historical membership and position
-integration** section below. Earlier tables remain historical findings and scoped
+Current identity and status are in the final **remaining wallet-report adapters**
+section below. Earlier tables remain historical findings and scoped
 execution records; their pending or active labels do not supersede that section.
 
 | Work item | Existing finding IDs | Starting status | Owner / next deliverable | Acceptance |
@@ -238,3 +238,26 @@ historical and superseded by the corresponding frozen FINAL_GATES records.
 
 PRODUCT_READY=false. No new provider calls, key reads, purchases or funded wallet.
 The existing source decision contains the concrete genuine-case dependency list.
+
+## Current remaining wallet-report adapters — 4 October 2026
+
+Baseline published HEAD `3f14f188933bd5d9a9270e1f591e0bb9fadd94bf` binds
+accepted application `0db4125e8c1ab6b2df5bb1e79e807c80e3d195bd`. This batch
+uses focused source-bound checks at `evidence/wallet-report-adapters-batch/`;
+it does not claim a new full Gate A run or genuine acceptance.
+
+| Item | Category | Current implementation | Remaining obligation |
+| --- | --- | --- | --- |
+| CAP-NATIVE-CAPTURE | Missing implementation addressed in this batch | Exact successful RPC body bytes for native balance and both token programs; separately frozen selector dependencies survive two offline generations without expanding collector roles. | Legacy snapshots remain unsupported for positive original-byte admission; current snapshots do not prove historical boundaries. |
+| CAP-ROUTES | Missing implementation partly addressed | Exact gross wallet-address System transfer observations, linked alternatives, executed/failed distinction, fee isolation and independent interval projections. | Payment/tip/capital semantics, all owned-account movement roles and complete cost/flow population remain OPEN. |
+| CAP-CLASS | Missing implementation partly addressed; source gap remains | Original-event asset identity, protocol WSOL settlement exclusion and independent report/28/90 classification dependencies; current mint controls remain separate observations. | Accepted time-relevant meme and nonspam sources for other assets remain unavailable. |
+| CAP-VALUATION | Missing implementation partly addressed; source gap remains | Original native/token phase observations, protocol unit marks and independently gated boundary/flow dependencies. Zero-flow inputs cannot become equity. | Exact all-account historical boundaries, nonsettlement marks and complete flow-role admission remain OPEN. |
+| CAP-ORIGIN-COMPLETE / CAP-HIST-EXHAUSTIVE | Missing implementation and source capability | Existing supported selected acquisition/FIFO/cost paths are preserved. | Exhaustive historical ownership/records and all genuine acquisition origins remain unresolved; sparse checkpoints and terminal selected queries do not supply them. |
+| DATA-01 / B1 | Missing source capability | Existing Free endpoint/schema/query observations preserved; no provider or credential operations in this batch. | Exhaustive historical lifecycle/format contract remains unproved. A paid account is not established as necessary or sufficient. |
+| CAP-01 / B2 | Missing implementation | Normal immutable import/report/UI/source/export/rebuild path now includes the new adapters without a parallel calculator. | Complete real accounting remains OPEN. |
+| B3 | Missing genuine acceptance data | Retained genuine fee, phase and transfer controls remain useful partial evidence. | Complete genuine corpus, explicit coverage and independently worked whole-wallet expectations remain BLOCKED. |
+
+No new baseline arithmetic defect is asserted. Distinct read-only review corrections
+in the new adapters and their small regressions are recorded in the batch review.
+Installation/host/provider limits remain separate from application findings.
+PRODUCT_READY=false; development-functional, real-acceptance-blocked.

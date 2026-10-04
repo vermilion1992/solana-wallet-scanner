@@ -15,6 +15,7 @@ import weakref
 import logging
 import re
 from decimal import Decimal, InvalidOperation
+from dataclasses import dataclass
 
 import httpx
 
@@ -100,6 +101,15 @@ class MethodDenied(ProviderError):
     pass
 
 
+@dataclass(frozen=True)
+class CapturedRPC:
+    """Successful RPC payload and exact HTTP body bytes, excluding URLs/headers."""
+
+    result: Any
+    request_bytes: bytes
+    response_bytes: bytes
+
+
 class Gateway:
     """Only static native read methods; every dispatched attempt is charged.
 
@@ -158,6 +168,13 @@ class Gateway:
         return min(max(delay, 0), 300)
 
     async def rpc(self, method: str, params: list | None = None) -> Any:
+        return (await self._rpc(method, params)).result
+
+    async def rpc_capture(self, method: str, params: list | None = None) -> CapturedRPC:
+        """Use the same allowlist, accounting and retries while retaining body bytes."""
+        return await self._rpc(method, params)
+
+    async def _rpc(self, method: str, params: list | None = None) -> CapturedRPC:
         if method not in METHOD_COSTS:
             raise MethodDenied("Method is outside the pinned native read-only cost manifest.", "method_denied")
         if params is None:
@@ -179,10 +196,10 @@ class Gateway:
                 dispatched = True
                 self.credits += cost
                 self.requests += 1
-                response = await self._client.post(
-                    "/", params={"api-key": self._key},
-                    json={"jsonrpc": "2.0", "id": request_id, "method": method, "params": params},
-                )
+                request = self._client.build_request("POST", "/", params={"api-key": self._key},
+                    json={"jsonrpc": "2.0", "id": request_id, "method": method, "params": params})
+                request_bytes = request.content
+                response = await self._client.send(request)
             except httpx.TransportError as exc:
                 # In particular, TLS errors are never retried with verification off.
                 raise ProviderError("Provider connection failed; dispatched request was charged.", "transport") from None
@@ -224,7 +241,7 @@ class Gateway:
                 raise ProviderError(message, code)
             if "result" not in payload:
                 raise ProviderError("Provider response omitted its result.", "malformed")
-            return payload["result"]
+            return CapturedRPC(payload["result"], request_bytes, response.content)
         raise ProviderError("Provider retry limit reached.")
 
     async def capability_test(self, address: str | None = None) -> dict:

@@ -25,7 +25,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v8'
+VERSION = 'wallet-raw-evidence-v9'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -1715,6 +1715,26 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
     # receipts are already consumed by the transaction adapter and are not
     # manufactured missing inventory versions.
     inventory_observations = derive_inventory_evidence(raw_sources, wallet=wallet, window=window)
+    from .asset_classification import project_asset_classification
+    classification_observations = project_asset_classification(selected=selected,
+        raw_versions=raw_versions, transactions=transactions, clocks=clocks,
+        consistency=consistency, raw_sources=source_rows, wallet=wallet, window=window)
+    components['classification_by_interval'] = classification_observations['classification_by_interval']
+    components['classification'] = _combine(components['classification_by_interval'].values(),
+        'Asset eligibility is derived independently in each report, 28-day and 90-day interval.')
+    from .native_cash_observations import project_native_cash_observations
+    native_cash_observations = project_native_cash_observations(selected=selected,
+        raw_versions=raw_versions, wallet=wallet, window=window,
+        consistency=consistency, chronology=clocks)
+    components['observed_native_cash_moves'] = native_cash_observations['intervals']['report_period']['check']
+    from .economic_evidence import derive_economic_evidence
+    economic_evidence = derive_economic_evidence(list(selected.values()), all_records=linked,
+        wallet=wallet, window=window, wallet_evidence={
+            'components': components, 'transactions': transactions, 'intervals': intervals,
+            'query_coverage': query_coverage, 'inventory_observations': inventory_observations,
+            'source_consistency': consistency, 'chronology': clocks,
+            'native_cash_observations': native_cash_observations})
+    components.update(economic_evidence['component_checks'])
     from .metric_evidence import compose_metric_decisions
     return {'version': VERSION, 'scope': OBSERVED_SCOPE, 'components': components,
         'inspection_budget': {'max_records': MAX_RECORDS, 'linked_records': len(linked),
@@ -1730,5 +1750,8 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         'source_dependencies': contents['receipts'], 'source_consistency': consistency, 'chronology': clocks,
         'query_coverage': query_coverage, 'query_accounting': query_accounting, 'wallet_identity': wallet_identity,
         'inventory_observations': inventory_observations,
+        'classification_observations': classification_observations,
+        'native_cash_observations': native_cash_observations,
+        'economic_evidence': economic_evidence,
         'gaps': sorted({gap for row in transactions.values() for gap in row['gaps']} | {unresolved['reason']}),
         'provider_requests': 0, 'credential_lookups': 0}

@@ -12,10 +12,11 @@ Inventory request affinities belong to the archive's internally derived v4
 dependency metadata. They are not appended to native collector reference lists.
 Native saved-report rebuilds preserve the original collector/checkpoint universe;
 legacy method/result snapshots without original RPC bytes remain unsupported for
-positive inventory admission. Exact-byte native inputs can supply current facts
-while present, but absent unassignable inputs remain unresolved. Original-byte
-capture and separately frozen native selector metadata remain implementation
-work; the archive path already retains selectors for precise loss isolation.
+positive inventory admission. New native snapshots preserve exact RPC body bytes
+through the same allowlist/quota gateway. Separately frozen selector dependencies
+are bound to immutable saved inputs and retained across child generations; they
+never become authenticated collector roles. Source loss revokes the dependent
+snapshot while separately supported native/other-program/fee facts remain usable.
 
 Report/state/preview/enrichment presentation returns the same strict JSON-native
 payload directly, avoiding a redundant recursive transport conversion. Default
@@ -26,11 +27,12 @@ partial archived sample exclude live acquisition and complete-wallet workload.
 
 Single-user local research app, loopback only. Python FastAPI serves built React assets. No signing, wallet connection, blockchain submission, simulations, paid endpoints, or arbitrary URL proxy.
 
-Current integration methods are wallet v8, archive v11, research v5,
+Current integration methods are wallet v9, archive v12, research v5,
 selected-cohort v2 and metric-evidence v2, using existing FIFO v4 and internal
 production composition v1. Earlier method descriptions below retain their
 history; the final sections define the current scope. Current edits remain
-pending their own exact-candidate validation. Development-functional archived
+pending their own focused source-bound validation. Full Gate A from the prior
+published candidate remains historical acceptance. Development-functional archived
 research does not close B1 historical coverage, complete real B2 or genuine B3;
 PRODUCT_READY=false.
 
@@ -311,3 +313,28 @@ retain original paths, supported limits, duplicate semantics and relevant linked
 conflicts; no process-global or object-identity cache can confer trust across a
 mutation, loss/restoration or offline child rebuild. Archive import/rebuild,
 inspection and JSON/CSV export remain offline and preserve saved parents.
+
+## Remaining wallet-report adapter contracts
+
+Wallet v9/archive v12 append observations only to new reports and immutable child
+rebuilds. `native-cash-observations-v1` reads original executed System transfers
+at the wallet address, keeps gross incoming/outgoing sides distinct, checks all
+linked versions and independently projects report/28/90 intervals. A known gross
+movement does not prove capital, tip, purchase, fee or payment semantics. Failed
+execution has zero committed transfer movement; separately proved fees remain
+usable. Unknown CPI scope cannot establish a complete observed transfer set.
+
+`asset-classification-evidence-v1` revalidates original native asset identities.
+Canonical legacy WSOL with nine decimals can prove settlement exclusion. Other
+assets require accepted time-relevant meme and nonspam evidence. Gross asset
+activity cannot disappear because endpoint quantities cancel. Current mint
+authorities/extensions are exact-source observations, not historical eligibility.
+
+`economic-raw-observations-v1` preserves raw native/token phases and protocol
+WSOL denomination independently of fees or unrelated price gaps. Transaction
+phases and current slots are not historical boundary equity. Boundary inventory,
+marks and flow dependencies are independent by interval. Native account/rent
+lamports cannot be added to token value without entitlement/reserve proof.
+Supported zero external flows, where derivable, remain separate from complete
+economic inputs; opening/closing equities are never defaulted. No accepted
+current genuine all-account boundary/mark adapter supplies full equity.

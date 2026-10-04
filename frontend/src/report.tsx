@@ -42,6 +42,7 @@ import { samePresetSnapshot } from "./Discovery";
 import { reportDisplay } from "./api";
 import { SelectedCohortSection } from "./SelectedCohorts";
 import { InventoryObservations } from "./InventoryObservations";
+import { NativeCashObservations } from "./NativeCashObservations";
 
 export function currentHistoryState(
   report: Report,
@@ -1387,6 +1388,12 @@ export function ReportView({
               showEvidence={showEvidence}
             />
             <InventoryObservations
+              report={report}
+              currentWalletMethod={state.wallet_evidence_methodology}
+              historyCurrent={historyCurrent}
+              showEvidence={showEvidence}
+            />
+            <NativeCashObservations
               report={report}
               currentWalletMethod={state.wallet_evidence_methodology}
               historyCurrent={historyCurrent}

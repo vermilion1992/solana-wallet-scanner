@@ -245,13 +245,28 @@ async def collect_wallet(gateway, store, address, start, end, limits,
             if value:
                 raise CollectionPaused("Paused by user; archived work is retained.", cp)
 
-    async def rpc(method, params):
+    async def rpc(method, params, *, capture=False):
         await check_pause()
         check_disk()
         current = prior_credits + getattr(gateway, "credits", initial_credits) - initial_credits
         if current + METHOD_COSTS[method] > credit_limit:
             raise CollectionPaused("Wallet credit limit reached; reduce workload or resume with a higher bounded limit.", cp)
-        return await gateway.rpc(method, params)
+        capture_method = getattr(gateway, 'rpc_capture', None)
+        if capture and callable(capture_method):
+            observed = await capture_method(method, params)
+            return observed.result, observed
+        result = await gateway.rpc(method, params)
+        return (result, None) if capture else result
+
+    def snapshot_payload(method, response, captured, *, program=None):
+        legacy = ({'method': method, 'owner': address, 'program': program, 'result': response}
+                  if program else {'method': method, 'address': address, 'result': response})
+        if captured is None:
+            # Old/custom gateways remain readable without fabricated byte evidence.
+            return legacy
+        from .inventory_evidence import native_inventory_source
+        return native_inventory_source(captured.request_bytes, captured.response_bytes,
+            method=method, result=response, address=address, program=program)
 
     def gap(reason, signature=None, account=None):
         entry = {"reason": reason}
@@ -360,13 +375,13 @@ async def collect_wallet(gateway, store, address, start, end, limits,
         for program in (TOKEN_PROGRAM, TOKEN_2022_PROGRAM):
             if program in cp["snapshot"]["accounts"]:
                 continue
-            response = await rpc("getTokenAccountsByOwner", [address, {"programId": program}, {"encoding": "jsonParsed", "commitment": "finalized", "minContextSlot": slot}])
-            digest = evidence({"method": "getTokenAccountsByOwner", "owner": address, "program": program, "result": response}, "owned-accounts")
+            response, captured = await rpc("getTokenAccountsByOwner", [address, {"programId": program}, {"encoding": "jsonParsed", "commitment": "finalized", "minContextSlot": slot}], capture=True)
+            digest = evidence(snapshot_payload('getTokenAccountsByOwner', response, captured, program=program), "owned-accounts")
             inspect_enumeration(program, response, digest)
             await notify()
         if "native_balance" not in cp["snapshot"]:
-            balance = await rpc("getBalance", [address, {"commitment": "finalized", "minContextSlot": slot}])
-            digest = evidence({"method": "getBalance", "address": address, "result": balance}, "native-balance")
+            balance, captured = await rpc("getBalance", [address, {"commitment": "finalized", "minContextSlot": slot}], capture=True)
+            digest = evidence(snapshot_payload('getBalance', balance, captured), "native-balance")
             if not isinstance(balance, dict) or not _integer(balance.get("value")) or not _integer(balance.get("context", {}).get("slot")) or balance["context"]["slot"] < slot:
                 gap("Finalized native balance snapshot is incomplete.")
             cp["snapshot"]["native_balance"] = str(balance["value"])

@@ -29,7 +29,9 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_research_disposal_scopes.py',
            'tests/test_historical_membership.py', 'tests/test_wallet_position_population.py',
            'tests/test_source_fact_reuse.py', 'tests/test_disposed_origin_scopes.py',
-           'tests/test_inventory_evidence.py', 'tests/test_report_benchmark.py']
+           'tests/test_inventory_evidence.py', 'tests/test_report_benchmark.py',
+           'tests/test_native_inventory_capture.py', 'tests/test_asset_classification.py',
+           'tests/test_native_cash_observations.py', 'tests/test_economic_evidence.py']
 
 # Retain all 35 baseline selectors (original 30 plus five metric regressions) and
 # include the retained development-contract/performance modules, inventory admission
@@ -48,13 +50,14 @@ FOCUSED_GROUPS = {
                  'tests/test_metric_evidence.py', 'tests/test_real_evidence_adapter.py',
                  'tests/test_selected_cohort_observations.py',
                  'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py',
-                 'tests/test_wallet_position_population.py'],
+                 'tests/test_wallet_position_population.py', 'tests/test_asset_classification.py',
+                 'tests/test_native_cash_observations.py', 'tests/test_economic_evidence.py'],
     'indexed-input': ['tests/test_indexed_input.py'],
     'indexed-chronology': ['tests/test_indexed_chronology.py'],
     'indexed-dependencies': ['tests/test_indexed_source_dependencies.py', 'tests/test_source_fact_reuse.py'],
     'indexed-integration': ['tests/test_indexed_report_integration.py'],
     'indexed-coverage': ['tests/test_real_coverage.py', 'tests/test_historical_membership.py',
-                         'tests/test_inventory_evidence.py'],
+                         'tests/test_inventory_evidence.py', 'tests/test_native_inventory_capture.py'],
     'research': ['tests/test_report_view.py', 'tests/test_research.py', 'tests/test_research_source_roles.py',
                  'tests/test_accounting_metric_isolation.py', 'tests/test_research_disposal_scopes.py',
                  'tests/test_disposed_origin_scopes.py', 'tests/test_report_benchmark.py'],

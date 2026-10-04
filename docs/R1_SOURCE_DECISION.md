@@ -260,3 +260,20 @@ genuine archives and separately worked fee/named-lot calculations remain partial
 B1 historical sufficiency is unresolved, complete real B2 OPEN, genuine B3
 BLOCKED and PRODUCT_READY=false. No paid account, further live collection or
 scope substitution is required or authorised by this decision.
+
+## Retained-input adapter implementation update — 4 October 2026
+
+The original source decision remains in force. This offline batch adds concrete
+interfaces to normal reports; it neither executes nor extends collection.
+
+| Evidence | New derivation | Exact remaining source requirement |
+| --- | --- | --- |
+| Current native/both-program inventory | Original RPC bytes are captured through the existing fixed method allowlist, with per-request frozen negative dependencies. | Independent slots remain independent; historical all-account report/28/90 boundaries are not supplied by current RPC snapshots. |
+| Native cash movement | Original System instruction quantities/directions, selected and linked alternatives, independent interval membership. Retained genuine sponsored outflow independently equals 2,209,800 lamports. | Gross direction does not identify capital/payment/tip; complete economic roles require more than matching endpoint deltas. |
+| Asset classification | Raw event identity can exclude canonical legacy WSOL as settlement; current authority/extension facts remain separately inspectable. | Authoritative, time-relevant meme and nonspam classification for other assets remains unavailable. Mint suffixes/authority flags are insufficient. |
+| Economic valuation | Native/token phase observations and WSOL protocol denomination are derived; exact boundary/mark/flow dependencies are separated. | Accepted exhaustive historical population plus all-account boundary equity, nonsettlement marks and complete valued flows remain required. Zero-flow evidence cannot supply equity. |
+
+B1 remains historical-coverage unresolved, complete real B2 OPEN, genuine B3
+BLOCKED and PRODUCT_READY=false. User-requested focused checks are recorded
+separately from the prior full candidate gates. No synthetic observation or
+selected genuine transfer closes whole-wallet acceptance.

@@ -50,6 +50,8 @@ try {
     sourceSetComplete,
   } = require(join(output, "report.js"));
   const { SelectedCohortSection, selectedCohortFreshness } = require(join(output, "SelectedCohorts.js"));
+  const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
+  const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -1676,8 +1678,95 @@ try {
   assert.ok(!renderCohorts({ ...cohortReport, coverage: {} }).includes("Selected holding observations"));
   assert.ok(!renderCohorts({ ...cohortReport, preview: true }).includes("Selected holding observations"));
   assert.ok(!renderCohorts({ ...cohortReport, source: "demo" }).includes("Selected holding observations"));
+  // Native cash UI controls are synthetic rendering inputs, not wallet proof.
+  assert.equal(nativeCashAmount("1"), "0.000000001");
+  assert.equal(nativeCashAmount("0"), "0");
+  assert.equal(nativeCashAmount("9007199254740993000001"), "9007199254740.993000001");
+  assert.equal(nativeCashAmount("18446744073709551616000"), "18446744073709.551616");
+  for (const value of [null, 1, "-1", "1.5", "1e9", "9".repeat(513)])
+    assert.equal(nativeCashAmount(value), undefined);
+  const cashInterval = (start) => ({ start, end: cohortEnd,
+    gross_in_lamports: "1000000001", gross_out_lamports: "1000000001",
+    economic_roles_state: "UNKNOWN", wallet_population_state: "UNKNOWN",
+    check: { state: "PASS", evidence: ["a".repeat(64)] } });
+  const cashReport = structuredClone(cohortReport);
+  cashReport.coverage.wallet_evidence.native_cash_observations = {
+    version: "native-cash-observations-v1", intervals: {
+      report_period: cashInterval(cohortStart),
+      four_weeks: cashInterval(new Date(Date.parse(cohortEnd) - 28 * 86400000).toISOString()),
+      verification_90d: cashInterval(new Date(Date.parse(cohortEnd) - 90 * 86400000).toISOString()),
+    },
+  };
+  const renderCash = (next = cashReport, options = {}) => renderToStaticMarkup(React.createElement(NativeCashObservations, {
+    report: next, currentWalletMethod: "wallet-raw-evidence-v8", historyCurrent: true,
+    showEvidence: () => undefined, ...options,
+  }));
+  const cashSnapshot = structuredClone(cashReport);
+  const cashHtml = renderCash();
+  assert.ok(cashHtml.includes('data-native-cash-observations="current"'));
+  assert.equal((cashHtml.match(/1\.000000001<small> SOL/g) ?? []).length, 6, "Cancelling gross amounts remain separately visible");
+  assert.ok(cashHtml.includes("economic role of these movements remains unknown"));
+  assert.ok(cashHtml.includes("capital deposits, withdrawals, profit or complete wallet history"));
+  assert.ok(cashHtml.includes("Source aaaaa"));
+  assert.deepEqual(cashReport, cashSnapshot, "Rendering preserves saved cash evidence");
+  for (const next of [
+    { ...cashReport, wallet_assessment: undefined },
+    { ...cashReport, wallet_assessment: { ...cashReport.wallet_assessment, state: "rebuild_required" } },
+    { ...cashReport, wallet_assessment: { ...cashReport.wallet_assessment, current_methodology: "different-method" } },
+  ]) assert.ok(!renderCash(next).includes("1.000000001<small> SOL"));
+  assert.ok(!renderCash(cashReport, { historyCurrent: false }).includes("1.000000001<small> SOL"));
+  assert.ok(!renderCash(cashReport, { currentWalletMethod: undefined }).includes("1.000000001<small> SOL"));
+  const changedCash = (mutate) => {
+    const next = structuredClone(cashReport);
+    mutate(next.coverage.wallet_evidence.native_cash_observations);
+    return renderCash(next);
+  };
+  const inventoryReport = structuredClone(cashReport);
+  inventoryReport.coverage.wallet_evidence.inventory_observations = {
+    version: "current-inventory-evidence-v1", source_dependencies: ["a".repeat(64)], components: {
+      native_lamports: { state: "PASS", evidence: ["a".repeat(64)],
+        observations: [{ slot: 42, lamports: "1000000001", evidence: ["a".repeat(64)] }] },
+    },
+  };
+  const renderInventory = (next = inventoryReport) => renderToStaticMarkup(React.createElement(InventoryObservations, {
+    report: next, currentWalletMethod: "wallet-raw-evidence-v8", historyCurrent: true, showEvidence: () => undefined,
+  }));
+  assert.ok(renderInventory().includes("1.000000001 SOL"), "Source-bound native inventory remains visible");
+  for (const evidence of [undefined, [], ["invalid-hash"], ["a".repeat(64), null]]) {
+    const cashWithoutSources = changedCash((value) => { value.intervals.report_period.check.evidence = evidence; });
+    const inventoryWithoutSources = structuredClone(inventoryReport);
+    inventoryWithoutSources.coverage.wallet_evidence.inventory_observations.components.native_lamports.evidence = evidence;
+    assert.deepEqual([
+      (cashWithoutSources.match(/1\.000000001<small> SOL/g) ?? []).length,
+      (renderInventory(inventoryWithoutSources).match(/1\.000000001 SOL/g) ?? []).length,
+    ], [4, 0], "Missing, empty, invalid or partly malformed references cannot support native observations");
+  }
+  const pointWithoutSources = structuredClone(inventoryReport);
+  delete pointWithoutSources.coverage.wallet_evidence.inventory_observations.components.native_lamports.observations[0].evidence;
+  assert.ok(!renderInventory(pointWithoutSources).includes("1.000000001 SOL"), "Each inventory point needs its own source references");
+  assert.ok(renderInventory().includes("1.000000001 SOL"), "Restored inventory references recover the observation");
+  assert.equal((changedCash((value) => { value.intervals.report_period.check.state = "UNKNOWN"; })
+    .match(/1\.000000001<small> SOL/g) ?? []).length, 4, "A reporting-period dependency gap preserves 28/90-day observations");
+  assert.equal((changedCash((value) => { value.intervals.four_weeks.start = cohortStart; })
+    .match(/1\.000000001<small> SOL/g) ?? []).length, 4, "Each interval must match its own boundaries");
+  const malformedCashHtml = changedCash((value) => {
+    value.intervals.report_period.gross_in_lamports = "NaN";
+    value.intervals.report_period.gross_out_lamports = 1000000001;
+    value.intervals.report_period.check.evidence = [null, "../private", "a".repeat(64), "a".repeat(64)];
+    value.intervals.four_weeks = null;
+  });
+  assert.ok(!malformedCashHtml.includes("NaN"));
+  assert.ok(!malformedCashHtml.includes("../private"));
+  assert.equal((malformedCashHtml.match(/Source aaaaa/g) ?? []).length, 2);
+  assert.ok(!changedCash((value) => { value.version = "older-method"; }).includes("1.000000001<small> SOL"));
+  assert.equal(renderCash({ ...cashReport, preview: true }), "");
+  assert.equal(renderCash({ ...cashReport, source: "demo" }), "");
+  const integratedCashHtml = renderToStaticMarkup(React.createElement(ReportView, { ...actions, state: selectedState,
+    report: { ...cashReport, history_assessment: visibleCohortReport.history_assessment },
+    showEvidence: () => undefined, selected: [], onSelect: () => undefined }));
+  assert.ok(integratedCashHtml.includes('data-native-cash-observations="current"'));
   console.log(
-    "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
+    "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );
 } finally {
   rmSync(output, { recursive: true, force: true });

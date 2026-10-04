@@ -132,3 +132,25 @@ frontend locked install/check/build, applicable guarded browser workflows, curre
 install binding, distinct read-only consolidated review and unchanged source after
 validation. Development internal PASS cases do not close B1/B2/B3. New arithmetic
 and scope semantics require new child reports, not rewriting original evidence.
+
+## Remaining report adapters: focused iteration validation
+
+The user requests small meaningful checks. This batch uses source-bound targeted
+commands and a distinct read-only diff review in
+`evidence/wallet-report-adapters-batch/`, with explicit logs/exit codes and
+unchanged source identities. Full candidate Gate A remains the previous
+application's historical evidence; no full suite/browser matrix is claimed here.
+The existing `tools/validate.py` entry point and its disjoint groups retain all
+previous selectors and include each new regression module once for future CI.
+
+| Shared contract | Small regression population |
+| --- | --- |
+| Exact native capture/frozen selector dependencies | `tests/test_native_inventory_capture.py` |
+| Original-event settlement/classification/linked-source dependencies | `tests/test_asset_classification.py` |
+| Gross native movement, failed/CPI scope, disjoint intervals and genuine control | `tests/test_native_cash_observations.py` |
+| Independent raw phases/marks/boundaries; zero flows are not equity | `tests/test_economic_evidence.py` |
+| Shared FIFO/cohort monetary isolation and normal immutable archive workflow | Named existing nodes listed in the actual targeted-checks receipt |
+| UI exact amounts, interval/method freshness and unknown states | Existing frontend checks plus production build; repeated assertions are not unique backend tests |
+
+B3 requires the unchanged genuine whole-wallet acceptance conditions above.
+Focused implementation tests cannot establish PRODUCT_READY.

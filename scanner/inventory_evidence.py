@@ -21,6 +21,8 @@ from .wallet_identity import ACCOUNT_SOURCE_VERSION, account_info_source, accoun
 
 VERSION = 'current-inventory-evidence-v1'
 SOURCE_VERSION = 'inventory-rpc-source-v1'
+NATIVE_SOURCE_VERSION = 'native-inventory-rpc-source-v1'
+NATIVE_DEPENDENCIES_VERSION = 'native-inventory-dependencies-v1'
 AFFINITY_VERSION = 'inventory-request-affinity-v1'
 MAX_SOURCES = 10_000
 MAX_ACCOUNTS = 100_000
@@ -81,10 +83,47 @@ def inventory_source(request_bytes, response_bytes):
 
 
 def inventory_source_bytes(payload):
+    if isinstance(payload, dict) and payload.get('version') == NATIVE_SOURCE_VERSION:
+        original = _native_source_bytes(payload)
+        return original
     if (not isinstance(payload, dict) or set(payload) != _FIELDS
             or payload.get('version') not in (SOURCE_VERSION, ACCOUNT_SOURCE_VERSION)):
         raise ValueError('Inventory requires an exact supported original-byte envelope')
     return account_source_bytes({**payload, 'version': ACCOUNT_SOURCE_VERSION})
+
+
+def native_inventory_source(request_bytes, response_bytes, *, method, result, address, program=None):
+    """Versioned native snapshot retaining the old source-role projection."""
+    payload = {**inventory_source(request_bytes, response_bytes), 'version': NATIVE_SOURCE_VERSION,
+               'method': method, 'result': result}
+    if method == 'getTokenAccountsByOwner':
+        payload.update(owner=address, program=program)
+    elif method == 'getBalance':
+        payload['address'] = address
+    else:
+        raise ValueError('Native inventory capture supports balance and exact token-program queries')
+    _native_source_bytes(payload)
+    return payload
+
+
+def _native_source_bytes(payload):
+    method = payload.get('method')
+    projection = {'method', 'result'} | ({'owner', 'program'} if method == 'getTokenAccountsByOwner' else {'address'})
+    if method not in ('getBalance', 'getTokenAccountsByOwner') or set(payload) != _FIELDS | projection:
+        raise ValueError('Native captured inventory wrapper is malformed')
+    original = account_source_bytes({key: ACCOUNT_SOURCE_VERSION if key == 'version' else payload[key]
+                                     for key in _FIELDS})
+    request = parse_json(original['request'], max_nodes=MAX_NODES)
+    response = parse_json(original['response'], max_nodes=MAX_NODES)
+    params = request.get('params') if isinstance(request, dict) else None
+    if (not isinstance(request, dict) or request.get('method') != method
+            or not isinstance(params, list) or len(params) != (3 if method == 'getTokenAccountsByOwner' else 2)
+            or params[0] != payload.get('owner', payload.get('address'))
+            or method == 'getTokenAccountsByOwner' and params[1] != {'programId': payload['program']}
+            or not isinstance(response, dict) or 'result' not in response
+            or canonical_bytes(response['result'], max_nodes=MAX_NODES) != canonical_bytes(payload['result'], max_nodes=MAX_NODES)):
+        raise ValueError('Native snapshot selector/result projection disagrees with original RPC bytes')
+    return original
 
 
 def _request_bytes(payload):

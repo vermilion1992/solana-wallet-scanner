@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
 from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v11'
+METHOD = 'archive-ledger-v12'
 _CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
@@ -573,10 +573,11 @@ def _quantity_episodes(points, *, supported, world_hash):
     return completed
 
 
-def _valuation_inputs(loaded, boundaries, scope):
+def _valuation_inputs(loaded, boundaries, scope, *, real_evidence=None):
     value, world = loaded['valuation'], loaded['world']
     if loaded['manifest']['dataset'] != 'synthetic':
-        return {}, 'No accepted genuine boundary inventory, historical mark and valued-flow adapter is present.'
+        economic = real_evidence['economic_inputs'].get('report_period', {}) if real_evidence else {}
+        return economic, None if economic else 'Exact all-account boundaries, historical marks and complete external-flow roles remain unresolved.'
     if not scope or not isinstance(value, dict) or value.get('kind') != 'synthetic-valuation-v1':
         return {}, 'Boundary inventories, marks and valued external flows are not supported.'
     try:
@@ -681,7 +682,8 @@ def analyze_archive(loaded, events):
                                if manifest['dataset'] == 'synthetic' else real_intervals[name]['reason']}
     with localcontext() as ctx:
         ctx.prec = 192
-        economic, economic_gap = _valuation_inputs(loaded, boundaries, financial_scope)
+        economic, economic_gap = _valuation_inputs(loaded, boundaries, financial_scope,
+            real_evidence=adapter['economic_evidence'])
         # Acquisition/valuation loss is applied by per-metric dependencies.
         # Complete physical history must not become incomplete solely because
         # an unrelated monetary prerequisite is absent.
@@ -797,6 +799,9 @@ def analyze_archive(loaded, events):
             for e in events if e['kind'] in ('buy', 'sell', 'transfer_in', 'transfer_out'))
         components['classification'] = development_check(classified, 'Each traded asset needs one available development classification.',
             manifest.get('classification_hashes', []))
+        components['classification_by_interval'] = {
+            name: {**deepcopy(components['classification']), 'interval': name}
+            for name in real_intervals}
         for name in ('acquisition_basis', 'economic_costs'):
             components[name] = development_check(financial_scope, 'Supported origins and cost roles require the financial source scope.', world_evidence)
             components[name + '_by_interval'] = {
@@ -807,6 +812,9 @@ def analyze_archive(loaded, events):
         valuation_evidence = [manifest['valuation_hash']] if manifest.get('valuation_hash') else []
         for name in ('boundary_inventory', 'historical_marks', 'valued_external_flows'):
             components[name] = development_check(bool(economic), economic_gap or 'Validated finite-world boundary valuation and flows.', valuation_evidence)
+            components[name + '_by_interval'] = {
+                interval: {**deepcopy(components[name]), 'interval': interval}
+                for interval in real_intervals}
         interval_checks = {name: {**development_check(row['status'] == 'complete',
             row['reason'] or 'Finite world independently spans this interval.', row['evidence']),
             'interval': name, 'start': row['start'], 'end': row['end']}

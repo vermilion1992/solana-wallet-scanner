@@ -120,6 +120,8 @@ def freeze_report_inputs(store, address, window, collected):
                "transactions": [{key: record.get(key) for key in
                                   ("signature", "evidence_hash", "transaction_index", "in_window")}
                                  for record in collected.get("transactions", [])]}
+    if 'native_inventory_dependencies' in collected:
+        payload['native_inventory_dependencies'] = deepcopy(collected['native_inventory_dependencies'])
     return store.archive(payload)
 
 
@@ -267,6 +269,9 @@ def load_report_inputs(store, report):
     # Missing ordering is a gap; signature text never supplies a tie breaker.
     records.sort(key=lambda item: (item["raw"]["slot"] if type(item["raw"].get("slot")) is int else -1,
                                    item["transaction_index"] if item["transaction_index"] is not None else -1))
-    return {"transactions": records, "checkpoint": deepcopy(checkpoint), "snapshot": deepcopy(snapshot),
+    result = {"transactions": records, "checkpoint": deepcopy(checkpoint), "snapshot": deepcopy(snapshot),
             "coverage": coverage, "evidence": deepcopy(evidence), "frozen_input_hash": frozen,
             "frozen_report_id": report.get("id")}
+    if frozen and 'native_inventory_dependencies' in inputs:
+        result['native_inventory_dependencies'] = deepcopy(inputs['native_inventory_dependencies'])
+    return result
