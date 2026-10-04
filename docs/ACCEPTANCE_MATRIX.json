@@ -361,6 +361,41 @@
       "selectors": [
         "tests/test_generic_administration.py::*"
       ]
+    },
+    {
+      "id": "quantity-money-isolation",
+      "axis": "Execution/quantity",
+      "selectors": [
+        "tests/test_accounting_metric_isolation.py::*"
+      ]
+    },
+    {
+      "id": "selected-closed-disposed-open",
+      "axis": "User path",
+      "selectors": [
+        "tests/test_selected_cohort_observations.py::*"
+      ]
+    },
+    {
+      "id": "production-evidence-composition",
+      "axis": "Source set",
+      "selectors": [
+        "tests/test_production_evidence_composition.py::*"
+      ]
+    },
+    {
+      "id": "raw-wallet-identity",
+      "axis": "Source role",
+      "selectors": [
+        "tests/test_wallet_identity.py::*"
+      ]
+    },
+    {
+      "id": "independent-disposal-scopes",
+      "axis": "Relevance/chronology",
+      "selectors": [
+        "tests/test_research_disposal_scopes.py::*"
+      ]
     }
   ],
   "browser_required": [

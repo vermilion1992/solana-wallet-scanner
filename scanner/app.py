@@ -109,6 +109,7 @@ def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
 def _freeze_native_dependencies(store, collected, *, address, window):
     from .wallet_evidence import raw_native_dependencies
     from .real_coverage import query_source_dependencies
+    from .wallet_identity import wallet_identity_dependencies
     primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=window)
     negatives = raw_native_dependencies(raw_sources, raw_receipts, {r['signature'] for r in primary})
     # These are negative associations, not completion or position certificates.
@@ -118,6 +119,8 @@ def _freeze_native_dependencies(store, collected, *, address, window):
         if isinstance(r.get('evidence_hash'), str) and re.fullmatch(r'[a-f0-9]{64}', r['evidence_hash'])]}
     frozen['evidence'] += [{'kind': 'query-affinity', 'hash': digest}
                           for digest in query_source_dependencies(raw_sources)]
+    frozen['evidence'] += [{'kind': 'wallet-identity-affinity', 'hash': digest}
+                          for digest in wallet_identity_dependencies(raw_sources, wallet=address)]
     return frozen, primary, linked, raw_sources, raw_receipts
 
 
@@ -171,6 +174,7 @@ def create_app(data_dir, launch_token=None):
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
         from .position_evidence import VERSION as POSITION_METHODOLOGY
         from .research import VERSION as RESEARCH_METHODOLOGY
+        from .wallet_evidence import VERSION as WALLET_METHODOLOGY
         result = {**report, "qualification": qualify_report(report), "copy_review": review_copy_behavior(report)}
         if not report.get('preview'):
             research = report.get('research')
@@ -179,6 +183,13 @@ def create_app(data_dir, launch_token=None):
             result['research_assessment'] = {'saved_methodology': saved, 'current_methodology': RESEARCH_METHODOLOGY,
                 'state': state, 'reason': 'Current scoped research interpretation; inspect each monetary/timing dependency.' if state == 'current' else
                 'Rebuild this saved report offline before using its research monetary results. Saved values remain unchanged.'}
+            coverage = report.get('coverage') if isinstance(report.get('coverage'), dict) else {}
+            wallet_receipt = coverage.get('wallet_evidence')
+            wallet_saved = wallet_receipt.get('version') if isinstance(wallet_receipt, dict) else None
+            wallet_state = 'current' if wallet_saved == WALLET_METHODOLOGY else 'rebuild_required' if wallet_saved else 'missing'
+            result['wallet_assessment'] = {'saved_methodology': wallet_saved, 'current_methodology': WALLET_METHODOLOGY,
+                'state': wallet_state, 'reason': 'Current selected-record accounting; historical population and qualification remain separate.' if wallet_state == 'current' else
+                'Rebuild this report offline before using the current selected-record observations. Saved values remain unchanged.'}
         if report.get('archive_input_hash') and not report.get('preview'):
             from .archive_input import METHOD as ARCHIVE_METHODOLOGY
             archive = report.get('archive_accounting')
@@ -284,9 +295,7 @@ def create_app(data_dir, launch_token=None):
         position_evidence = derive_position_evidence(store, address, scan["window"],
                                                      checkpoint=collected.get("checkpoint"), collected=collected,
                                                      history_evidence=history_evidence)
-        history_complete = history_evidence["metric_decisions"]["history"]["state"] == "PASS"
-        evidence_verified = all(history_evidence["evidence_gates"].get(gate) == "PASS"
-                                for gate in ("history", "identity", "basis", "positions", "fees", "classification", "valuation", "findings"))
+        history_complete = False
         if archive_loaded is None:
             collected, primary, linked, raw_sources, raw_receipts = _freeze_native_dependencies(
                 store, collected, address=address, window=scan['window'])
@@ -301,29 +310,54 @@ def create_app(data_dir, launch_token=None):
         decoded = decode_transactions([record for record in records if record.get("signature") not in supported], address)
         events = decoded["events"] + [event for event in swaps["events"] if event.get("signature") in supported]
         from .wallet_evidence import derive_wallet_evidence
-        from .metric_evidence import compose_metric_decisions, apply_metric_decisions
+        from .metric_evidence import (accounting_intervals, compose_metric_decisions,
+                                      apply_metric_decisions, compose_production_evidence, selected_fee_checks)
         archive_accounting = None
         if archive_loaded is not None:
             from .archive_input import analyze_archive
             result, events, archive_accounting = analyze_archive(archive_loaded, events)
             wallet_evidence = archive_accounting['wallet_evidence']
             derived_decisions = archive_accounting['metric_requirements']
+            production_evidence = archive_accounting['production_evidence']
+            history_complete = archive_accounting['quantity_population_state'] == 'PASS'
         else:
             wallet_evidence = derive_wallet_evidence(primary, all_records=linked, wallet=address,
                 window=scan['window'], events=events, raw_sources=raw_sources, source_receipts=raw_receipts,
                 source_consistency=history_evidence['source_consistency'],
                 chronology=history_evidence['paging']['chronology'])
-            derived_decisions = compose_metric_decisions(wallet_evidence['components'], wallet_evidence['intervals'])
-            # Current native sources still lack population/class/valuation
-            # proofs; narrow observations cannot activate those prerequisites.
+            # Current raw receipts, including explicit independent bounds,
+            # govern FIFO. Old account-page receipts remain visible and cannot
+            # veto a future admitted proof or substitute for a missing one.
+            derived_intervals = accounting_intervals(wallet_evidence['intervals'], scan['window'])
             history_complete = (wallet_evidence['components']['historical_population']['state'] == 'PASS'
-                                and wallet_evidence['intervals']['report_period']['state'] == 'PASS')
+                                and derived_intervals['report_period']['status'] == 'complete')
             result = analyze(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete,
-                             interval_coverage={name: history_evidence["intervals"][name]
-                                                for name in ("report_period", "four_weeks", "verification_90d")})
+                             interval_coverage=derived_intervals)
+            research = summarize_research(events, scan["window"]["start"], scan["window"]["end"],
+                                          history_complete=history_complete, wallet_evidence=wallet_evidence)
+            # Reuse the existing raw-payer/window projection. This independent
+            # observation must also exist on ordinary native reports, not just
+            # archives; token/classification gaps do not invent or erase fees.
+            observed_fees = research.get('wallet_fees_paid_sol')
+            fee_refs = sorted({digest for name in ('native_fee', 'fee_window', 'selected_record_identity')
+                               for digest in wallet_evidence['components'][name]['evidence']})
+            result['metrics']['observed_network_fees_sol'] = {'value': observed_fees,
+                'status': 'known' if observed_fees is not None else 'unknown', 'unit': 'SOL',
+                'population': 'Selected native records within the reporting window; wallet completeness is separate',
+                'reason': None if observed_fees is not None else 'Selected native payer/fee or interval placement is unresolved.',
+                'evidence': fee_refs}
+            metric_components = deepcopy(wallet_evidence['components'])
+            metric_components.update(selected_fee_checks(wallet_evidence))
+            derived_decisions = compose_metric_decisions(metric_components,
+                {name: {'state': 'PASS' if row['status'] == 'complete' else 'UNKNOWN',
+                        'interval': name, 'reason': row['reason'], 'evidence': row['evidence'], 'scope': row.get('scope')}
+                 for name, row in derived_intervals.items()}, metric_observations=result['metrics'])
             result = apply_metric_decisions(result, derived_decisions)
-        research = summarize_research(events, scan["window"]["start"], scan["window"]["end"],
-                                      history_complete=history_complete, wallet_evidence=wallet_evidence)
+            production_evidence = compose_production_evidence(wallet_evidence, result, scan['window'],
+                source_input_hash=collection_input_hash, component_checks=metric_components)
+        if archive_loaded is not None:
+            research = summarize_research(events, scan["window"]["start"], scan["window"]["end"],
+                                          history_complete=history_complete, wallet_evidence=wallet_evidence)
         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
         mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
         risk_evidence = []
@@ -359,13 +393,15 @@ def create_app(data_dir, launch_token=None):
                 risk_evidence.append({"hash": cached["hash"], "kind": "current-mint-controls", "mint": mint})
             except (ProviderError, QuotaExceeded, EvidenceError):
                 token_risk.append({"mint": mint, **inspect_token_risk(None), "evidence": []})
-        evaluated = evaluate_policy(result["metrics"], scan["preset"], evidence_verified=evidence_verified)
+        evaluated = evaluate_policy(result["metrics"], scan["preset"],
+                                    evidence_verified=production_evidence['evidence_gates'])
         report = {"id": uuid.uuid4().hex, "scan_id": scan["id"], "address": address, "label": "", "source": "live", "created_at": now(),
-                  "window": scan["window"], "methodology": METHODOLOGY, "preset": scan["preset"], "evidence_status": "verified" if evidence_verified else "partial", **result, **evaluated,
+                  "window": scan["window"], "methodology": METHODOLOGY, "preset": scan["preset"], "evidence_status": production_evidence['evidence_status'], **result, **evaluated,
                   "collection_input_hash": collection_input_hash,
                   "events": events, "coverage": {**collected.get("coverage", {}), "history_evidence": history_evidence,
                                                   "position_evidence": position_evidence, "swap_reconstruction": swaps["coverage"],
-                                                  "wallet_evidence": wallet_evidence, "metric_dependencies": derived_decisions},
+                                                  "wallet_evidence": wallet_evidence, "metric_dependencies": derived_decisions,
+                                                  "production_evidence": production_evidence},
                   "evidence": collected.get("evidence", []) + risk_evidence + [{"hash": collection_input_hash, "kind": "saved-rebuild-inputs"}],
                   "research": research, "token_risk": token_risk,
                   "findings": result.get("findings", []) + decoded.get("findings", []) + swaps.get("findings", []),
@@ -375,7 +411,7 @@ def create_app(data_dir, launch_token=None):
         if archive_loaded is not None:
             manifest = archive_loaded["manifest"]
             report.update(archive_input_hash=archive_loaded["input_hash"], archive_dependency_input_hash=archive_loaded.get('dependency_input_hash'), archive_accounting=archive_accounting,
-                          source="demo" if manifest["dataset"] == "synthetic" else "live", evidence_status="partial")
+                          source="demo" if manifest["dataset"] == "synthetic" else "live")
             witness_refs = [{"kind": "archived-wallet-manifest", "hash": archive_loaded["input_hash"]}]
             if archive_loaded.get('dependency_input_hash'):
                 witness_refs.append({'kind': 'archive-native-dependencies', 'hash': archive_loaded['dependency_input_hash']})
@@ -734,6 +770,7 @@ def create_app(data_dir, launch_token=None):
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
         from .position_evidence import VERSION as POSITION_METHODOLOGY
         from .source_consistency import VERSION as SOURCE_CONSISTENCY_METHODOLOGY
+        from .wallet_evidence import VERSION as WALLET_METHODOLOGY
         from .candidate_import import aggregate_candidate_universe
         disk = store.stats()
         disk["warnings"] = []
@@ -747,6 +784,7 @@ def create_app(data_dir, launch_token=None):
                 "history_evidence_methodology": HISTORY_METHODOLOGY,
                 "position_evidence_methodology": POSITION_METHODOLOGY,
                 "source_consistency_methodology": SOURCE_CONSISTENCY_METHODOLOGY,
+                "wallet_evidence_methodology": WALLET_METHODOLOGY,
                 "settings": settings(), "preset": preset(), "provider": provider(), "usage": usage(),
                 "scans": store.list("scans"), "discovery_cohorts": cohorts, "reports": saved_reports,
                 "candidate_universe": aggregate_candidate_universe(cohorts, saved_reports, candidate_cap=settings()["limits"]["candidate_cap"]),

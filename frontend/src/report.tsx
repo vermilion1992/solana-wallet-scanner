@@ -40,6 +40,7 @@ import {
 import { count, date, dateTime, decimal, label, shorten } from "./format";
 import { samePresetSnapshot } from "./Discovery";
 import { reportDisplay } from "./api";
+import { SelectedCohortSection } from "./SelectedCohorts";
 
 export function currentHistoryState(
   report: Report,
@@ -1377,6 +1378,13 @@ export function ReportView({
           )}
           {report.source === "live" && !report.preview && (
             <>
+            <SelectedCohortSection
+              report={report}
+              currentWalletMethod={state.wallet_evidence_methodology}
+              currentAccountingMethod={state.methodology}
+              historyCurrent={historyCurrent}
+              showEvidence={showEvidence}
+            />
             <SourceConsistencySection
               evidence={report.coverage.history_evidence?.source_consistency}
               currentMethodology={state.source_consistency_methodology}

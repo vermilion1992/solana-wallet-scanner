@@ -167,3 +167,29 @@ The implementation now derives raw indexed query receipts, supported-record depe
 ### Current research consumer correction
 
 The genuine batch exposed a shared adjacent consumer defect: explicit unknown cash roles were retained by raw/typed accounting proofs but conditional research still calculated dependent money. Research v3 now consumes the freshly derived native wallet v6 or archive v9 transaction, scoped physical, clock and fee-window dependencies. Unknown acquisition basis, consideration, required fees or conflicting physical records revoke only dependent monetary projections. Independently supported quantities, timing, selected network fees and proven disjoint lot observations remain usable; aggregate historical populations and unsupported chronology remain unknown. Immutable saved v2 research is labelled for an offline child rebuild and cannot supply current fallback copy observations. Independently proven strict financial qualification and strict positions remain separate from auxiliary research freshness. This correction changes no original genuine arithmetic or historical ownership contract. B1 historical sufficiency is OPEN, complete real B2 is OPEN, B3 is BLOCKED and PRODUCT_READY=false.
+
+## Offline completion reconciliation — no new collection
+
+The completed 19-request/170-credit conservative genuine collection remains
+stopped. This batch uses its preserved bytes only; actual billed usage remains
+unobserved. No paid account or upgrade has been established as necessary or
+sufficient. Endpoint access, schema compatibility, terminal declared-query
+coverage and wallet qualification remain separate conclusions.
+
+There are application gaps as well as source gaps. Quantity-versus-money FIFO
+isolation, explicit selected closed/disposed/open observations and saved-report
+production gate composition can be implemented offline now. Current-account
+system ownership plus actual economic signer evidence supports a narrow current
+identity observation, not historical lifecycle/population. No existing raw input
+contract supplies complete closed/reassigned/non-ATA ownership for both token
+programs, all acquisition origins/unsupported routes, historical eligibility or
+exact report-boundary inventories/marks/valued flows. Those adapters and their
+source admission remain OPEN; current absence cannot be repaired with caller
+flags, mint suffixes, zero valuation or a successful RPC call.
+
+Current genuine report fees remain 158,868 lamports = 0.000158868 SOL. The named
+supported lot retains a separately worked loss of 13,270,924 lamports and
+529-second hold under its narrow assumptions. All selected wallet profit and
+whole-wallet qualification remain unproved. Original input/archive and worked
+expectation hashes are preserved and rechecked by this batch. B1 historical
+coverage unresolved; complete real B2 OPEN; genuine complete B3 BLOCKED.

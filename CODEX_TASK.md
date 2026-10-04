@@ -1,3 +1,26 @@
+# Active assignment — offline accounting completion batch, 4 October 2026
+
+Continue private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, exact preserved evidence HEAD
+`1bfc75222fce863313e6be333832a1b381d1cda4`, binding tested application
+`394904460c0473f07a25ed6324736421e0db1544` (228 source files;
+`519a2bb6077371600293e2725765eec1dae5c1d508d61cf62d3faf6a599ea186`).
+Complete the interrupted local edits, retained regression matrices, separate
+read-only review and exact-candidate gates before private publication. No new
+ZIP, branch, broad R5–R15 restart or live collection. The previous bounded
+collection has stopped; this offline batch makes no provider requests or
+credential lookups and does not extend its allowance.
+
+The batch addresses the quantity/money shared cause, independent selected
+closed/disposed/open observations, current production evidence composition,
+raw current-account/economic-signer identity and bounded offline CI receipts.
+Preserve old reports and original genuine bytes/arithmetic; new interpretations
+produce children. Complete historical population, classification and valuation
+contracts remain missing implementations with unresolved source capability.
+B1 coverage remains unresolved, complete real B2 OPEN, genuine B3 BLOCKED and
+PRODUCT_READY=false. Current execution/review is under
+`evidence/metric-completion-batch/`; earlier assignments remain history below.
+
 # Active assignment — genuine wallet product batch, 4 October 2026
 
 The user explicitly requested all four next items: finish the real evidence path,

@@ -101,11 +101,64 @@ def run(args):
                 for width,height,device in ((1440,900,'desktop'),(390,844,'mobile')):
                     page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(120)
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth&&scrollX===0')
-                    assert page.evaluate("""() => [...document.querySelectorAll('.report-metric > small, .all-metrics-grid > div > small, .metric-interval-detail p')]
+                    assert page.evaluate("""() => [...document.querySelectorAll('.report-metric > small, .all-metrics-grid > div > small, .metric-interval-detail p, .selected-cohort-values > div, .selected-open-lot > span, .selected-cohort-window .small-note')]
                         .filter(element => element.getClientRects().length)
                         .every(element => element.scrollWidth <= element.clientWidth + 1 && element.scrollHeight <= element.clientHeight + 1)"""), 'Metric dependency text is clipped inside its field'
                     page.screenshot(path=str(out/f'{name}-{device}.png'),full_page=True);captures+=1
                 page.set_viewport_size({'width':1440,'height':900})
+            def selected_cohort_ui(report, label):
+                observations=report.get('coverage',{}).get('wallet_evidence',{}).get('query_accounting',{}).get('selected_cohort_observations')
+                panel=page.locator('[data-selected-cohort-freshness]')
+                assert isinstance(observations,dict), 'Current archive report must retain its selected-cohort observations'
+                expect(panel).to_have_attribute('data-selected-cohort-freshness','current')
+                expect(panel).to_contain_text('selected records only')
+                expect(panel).to_contain_text('wallet-wide profit or a copy-trading recommendation')
+                # Open the real UI rather than relying on hidden DOM strings.
+                outer=panel.locator('details.selected-cohort-details')
+                if outer.get_attribute('open') is None:
+                    outer.locator(':scope > summary').click()
+                expected_windows=(('report_period','Reporting period'),('four_weeks','Independent 28 days'),('verification_90d','Independent 90 days'))
+                for key,name in expected_windows:
+                    window=panel.locator('[data-selected-cohort-window="'+name+'"]')
+                    if window.get_attribute('open') is None:
+                        window.locator(':scope > summary').click()
+                    expect(window).to_be_visible()
+                    interval=observations.get('intervals',{}).get(key)
+                    assert isinstance(interval,dict) and isinstance(interval.get('closed_cohort'),dict) and isinstance(interval.get('disposed_units'),dict)
+                    expect(window).to_contain_text('Completed holdings in selected records')
+                    expect(window).to_contain_text('Disposed units in selected records')
+                    closed=interval['closed_cohort'];disposed=interval['disposed_units']
+                    values=window.locator('.selected-cohort-values').first
+                    closed_money=(closed.get('population_state')=='PASS' and closed.get('monetary_state')=='PASS'
+                                  and type(closed.get('candidate_count')) is int and closed['candidate_count']>0)
+                    profit=values.locator('div').filter(has=page.get_by_text('Conditional closed-holding P&L',exact=True)).locator('strong')
+                    if closed_money and isinstance(closed.get('conditional_profit_sol'),str):
+                        expect(profit).to_have_attribute('title',closed['conditional_profit_sol'])
+                    else:
+                        expect(profit).to_have_text('Unknown')
+                    timing_known=(closed.get('population_state')=='PASS' and closed.get('timing_state')=='PASS'
+                                  and type(closed.get('candidate_count')) is int and closed['candidate_count']>0)
+                    hold=values.locator('div').filter(has=page.get_by_text('Median completed hold',exact=True)).locator('strong')
+                    if timing_known and isinstance(closed.get('conditional_median_hold_hours'),str):
+                        expect(hold).to_have_attribute('title',closed['conditional_median_hold_hours'])
+                    else:
+                        expect(hold).to_have_text('Unknown')
+                    disposed_money=(disposed.get('quantity_state')=='PASS' and disposed.get('monetary_state')=='PASS'
+                                    and type(disposed.get('candidate_sale_count')) is int and disposed['candidate_sale_count']>0)
+                    disposal=window.locator('.selected-cohort-values').nth(1).locator('div').filter(has=page.get_by_text('Conditional disposal P&L',exact=True)).locator('strong')
+                    if disposed_money and isinstance(disposed.get('conditional_profit_sol'),str):
+                        expect(disposal).to_have_attribute('title',disposed['conditional_profit_sol'])
+                    else:
+                        expect(disposal).to_have_text('Unknown')
+                    assert closed.get('qualification') is False and disposed.get('qualification') is False
+                stock=panel.locator('[data-selected-open-stock]')
+                if stock.get_attribute('open') is None:
+                    stock.locator(':scope > summary').click()
+                expect(stock).to_be_visible()
+                expect(stock).to_contain_text('Acquisition cost and market value are separate')
+                assert observations.get('qualification') is False and observations.get('wallet_population_state')=='UNKNOWN'
+                result.setdefault('selected_cohort_ui_assertions',[]).append({'case':label,'state':'PASS',
+                    'freshness':'current','independent_intervals':3,'open_stock_visible':True,'wallet_qualification':False})
             def import_ui(file, dataset):
                 page.get_by_role('button',name='Discover',exact=True).click()
                 page.get_by_role('button',name='Advanced manual scan',exact=True).click()
@@ -117,6 +170,7 @@ def run(args):
                 identifier=panel.get_attribute('data-archive-report-id')
                 report=page.request.get(base+'/api/reports/'+identifier+'?view=display').json()
                 assert report['qualification']['qualified'] is False
+                selected_cohort_ui(report,'import-'+file.stem)
                 return report
             parent=import_ui(out/'synthetic-input.zip','synthetic');pid=parent['id']
             assert parent['metrics']['profit_sol']['value']=='0.49995' and parent['metrics']['completed_positions']['value']=='5'
@@ -147,6 +201,7 @@ def run(args):
                 assert child['archive_input_hash']==parent['archive_input_hash'] and child['preset']==parent['preset'] and child['window']==parent['window']
                 assert page.request.get(base+f'/api/export/reports/{pid}.json').body()==original
                 assert page.request.get(base+'/api/state?report_view=summary').json()['usage']==usage
+                selected_cohort_ui(child,label)
                 (out/(label+'-report.json')).write_text(json.dumps(child,indent=2)+'\n')
                 capture(label);result['cases'].append({'case':label,'state':'PASS','parent_unchanged':True})
             fixture=json.loads((ROOT/'scanner/examples/archive-wallet-synthetic.json').read_text())
@@ -190,6 +245,7 @@ def run(args):
                 expect(page.locator('[data-archive-accounting="real"]')).to_have_attribute('data-archive-report-id',child_id)
                 child=page.request.get(base+'/api/reports/'+child_id+'?view=display').json()
                 assert child['metrics']==real['metrics'] and child['rebuilt_from']==real['id']
+                selected_cohort_ui(child,'indexed-partial-rebuilt')
                 assert export_hash(real['id'])==original_indexed_hash
                 export_download(child_id, out/'indexed-partial-child.json')
                 capture('indexed-partial-rebuilt')

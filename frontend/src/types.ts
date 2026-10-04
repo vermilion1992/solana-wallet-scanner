@@ -259,6 +259,7 @@ export type Report = {
   history_assessment?: HistoryAssessment;
   position_assessment?: PositionAssessment;
   research_assessment?: HistoryAssessment;
+  wallet_assessment?: HistoryAssessment;
   qualification?: Qualification;
   copy_review?: CopyReview;
   metrics: Record<string, Metric>;
@@ -482,6 +483,7 @@ export type State = {
   history_evidence_methodology?: string;
   position_evidence_methodology?: string;
   source_consistency_methodology?: string;
+  wallet_evidence_methodology?: string;
   settings: { limits: Record<string, number>; refresh_minutes: number };
   preset: Preset;
   scans: Scan[];

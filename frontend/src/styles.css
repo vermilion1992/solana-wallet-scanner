@@ -4613,6 +4613,83 @@ pre {
   line-height: 1.9;
   margin-top: 8px;
 }
+.selected-cohorts {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.selected-cohort-details,
+.selected-cohort-window {
+  padding: 14px 20px;
+}
+.selected-cohort-details summary,
+.selected-cohort-window summary {
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1.7;
+  font-weight: 550;
+}
+.selected-cohort-windows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.selected-cohort-window {
+  min-width: 0;
+  border: 1px solid #eaf0e3;
+  border-radius: 7px;
+}
+.selected-cohort-window h3 {
+  font-size: 11px;
+  margin: 16px 0 8px;
+}
+.selected-cohort-states,
+.selected-cohort-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 9px;
+}
+.selected-cohort-state {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+.selected-cohort-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.selected-cohort-values > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 10px;
+}
+.selected-cohort-values strong,
+.selected-open-lot strong {
+  font-size: 13px;
+  font-weight: 550;
+}
+.selected-cohort-values small,
+.selected-open-lot small {
+  font-size: 9px;
+  font-weight: 400;
+}
+.selected-open-lot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid #eaf0e3;
+  font-size: 10px;
+  min-width: 0;
+}
 .discovery-demo {
   padding: 22px;
   border: 1px dashed #d5ddc7;

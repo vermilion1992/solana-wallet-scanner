@@ -79,3 +79,19 @@ Record source commit/manifest and lockfile hashes; runtime versions; command, ex
 ## Active product checkpoint commands
 
 `python tools/check_product.py --output <new-directory>` executes the normal offline archive/report/rebuild/export application workflow independently of pytest. `python tools/product_browser.py --python <configured-app-python> --output <new-directory>` drives archive import, normal reports, source inspection, loss/restoration and downloads through the guarded real launcher at desktop/mobile widths. Run the browser command with the configured Playwright interpreter. Synthetic development and partial genuine inputs are distinct cases. `check_product.py --require-real-acceptance` must return BLOCKED/nonzero until an independently supported complete genuine corpus exists; a development PASS or Gate A acceptance does not close B1/B2/B3. Preserve historical `evidence/FINAL_GATES.json`; current checkpoint records live under `evidence/product-milestone/` with actual linked logs/captures.
+
+## Current offline CI and accounting batch
+
+`tools/validate.py` remains the only gate entry point. Six disjoint focused groups
+retain the original 30 selectors and add five current regression modules once.
+Focused summary requires all group receipts plus a separate offline-development
+receipt, exact Git/source/locks/runtime, successful commands and explicit PASS
+assertions; interrupted or absent execution cannot pass. CI artifacts use fixed
+bounded allowlists and exclude runtime databases, raw private inputs and reports.
+Native CI is separate from full local candidate acceptance.
+
+The frozen candidate still requires the full unique backend suite, current matrix,
+frontend locked install/check/build, applicable guarded browser workflows, current
+install binding, distinct read-only consolidated review and unchanged source after
+validation. Development internal PASS cases do not close B1/B2/B3. New arithmetic
+and scope semantics require new child reports, not rewriting original evidence.

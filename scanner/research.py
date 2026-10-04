@@ -26,7 +26,7 @@ from .accounting import analyze, canonical, decimal, raw_quantity, utc, median, 
 
 D = Decimal
 ZERO = D('0')
-VERSION = 'supported-subset-research-v3-native-roles'
+VERSION = 'supported-subset-research-v4-disposal-scopes'
 
 
 def summarize_research(events, start, end, *, history_complete=False,
@@ -279,6 +279,7 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings,
                     for when, _, _, event in ordered)
     unknown_transactions = asset_gaps + len(cash_gaps) + trade_gaps
     sale_details = []
+    historical_sale_details = []
     for when, _, event_index, event in ordered:
         kind = event.get('kind')
         paid = event.get('paid_by_wallet', True)
@@ -313,7 +314,8 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings,
             episode_ordinals[mint] += 1
             active_episodes[mint] = (mint, episode_ordinals[mint])
             episode_roles[active_episodes[mint]] = {'buy_unknown': False, 'sell_unknown': False, 'timing_unknown': False, 'quantity_unknown': False}
-        role = episode_roles[active_episodes[mint]]
+        episode_key = active_episodes[mint]
+        role = episode_roles[episode_key]
         if not physical_known(event) or not source_check(event, 'identity') or not episode_support(active_episodes[mint], 'quantity_state', event):
             role['quantity_unknown'] = True
         scoped_origin = episode_support(active_episodes[mint], 'origin_state', event)
@@ -372,22 +374,35 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings,
             continue
         proceeds = decimal(event['amount_sol']) if event.get('amount_sol') is not None and price_supported else None
         net = proceeds - basis - fee if matched and proceeds is not None and fee is not None else None
+        attributable = net is not None and verified and scoped_chronology_available
+        detail = {'mint': mint, 'signature': event.get('signature'),
+                  'fifo_episode': {'mint': mint, 'ordinal': episode_key[1]},
+                  'timestamp': when.isoformat(), 'quantity_raw': str(quantity),
+                  'conditional_matched_basis_sol': canonical(basis) if matched else None,
+                  'conditional_profit_sol': canonical(net) if scoped_chronology_available else None,
+                  'conditional_proceeds_sol': canonical(proceeds),
+                  'conditional_exit_fees_sol': canonical(fee),
+                  'monetary_state': 'PASS' if net is not None and scoped_chronology_available else 'UNKNOWN',
+                  'quantity_state': 'UNKNOWN' if role['quantity_unknown'] else 'PASS',
+                  'clock_state': 'PASS' if scoped_chronology_available and not role['timing_unknown'] else 'UNKNOWN',
+                  'origin_state': 'PASS' if scoped_origin else 'UNKNOWN',
+                  'attributable': attributable, 'evidence': list(event.get('evidence', [])),
+                  'reason': 'Independent opening inventory and intervening flows verified' if attributable else
+                            'Earlier inventory or unmatched cost remains unresolved; observed-lot model only'}
+        # Reuse the exact result of the one FIFO consumption above. Keeping
+        # earlier disposals lets each independent interval select its own
+        # records without recomputing basis or borrowing report-window sales.
+        historical_sale_details.append(deepcopy(detail))
         if not in_window:
             continue
         sales += 1
-        attributable = net is not None and verified and scoped_chronology_available
         if net is not None and scoped_chronology_available:
             conditional_matches += 1
             conditional_net += net
         if attributable:
             verified_matches += 1
             verified_net += net
-        sale_details.append({'mint': mint, 'timestamp': when.isoformat(), 'quantity_raw': str(quantity),
-                             'conditional_matched_basis_sol': canonical(basis) if matched else None,
-                             'conditional_profit_sol': canonical(net) if scoped_chronology_available else None,
-                             'attributable': attributable, 'evidence': event.get('evidence', []),
-                             'reason': 'Independent opening inventory and intervening flows verified' if attributable else
-                                       'Earlier inventory or unmatched cost remains unresolved; observed-lot model only'})
+        sale_details.append(detail)
     if wallet_evidence is not None:
         wallet_fees = period_fee_total
     conditional_profit = conditional_net - overhead if conditional_matches and not missing_fee and not chronology_unknown and not period_cash_gap else None
@@ -476,5 +491,6 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings,
             'unallocated_fees_sol': None if missing_fee else canonical(overhead),
             'unresolved_transactions': unknown_transactions, 'chronology_unknown': chronology_unknown,
             'scoped_chronology_unknown': any(role['timing_unknown'] for role in episode_roles.values()),
-            'episodes': episodes, 'sales_detail': sale_details, 'evidence': sorted(hashes),
+            'episodes': episodes, 'sales_detail': sale_details,
+            'historical_sales_detail': historical_sale_details, 'evidence': sorted(hashes),
             'risk_findings': risk_findings, 'limitations': limits}

@@ -186,3 +186,46 @@ Full saved snapshots and the default report/state API remain complete. Explicit 
 Discovery's shared source-backed audit planner produces selected, deferred and excluded research leads, re-evaluates current semantic saved reports and validates all linked archived evidence. API default audit requests and refreshed UI selections consume that plan under the existing quotas. Display summaries cannot substitute for financial proof. A source-backed lead is not a wallet qualification or scam-free/copy-safe statement. The bounded operator collection tool remains separate from the live provider allowlist and has independent request/credit caps, no retries and session-only credential input; offline import/rebuild/test/browser paths make zero provider calls.
 
 The genuine-record decoder slice is `compiled-instructions-v2` / `spot-v7-native-flow-roles`. Current native history and positions are `history-evidence-v11` and `account-position-evidence-v13`, so earlier report snapshots require immutable child rebuilds to adopt the new support. Pinned read-only GetAccountDataSize variants are program-specific; unsupported extension writes remain dependencies. Current discovery is `public-pool-discovery-v2` and audit planning `evidence-linked-audit-plan-v2`; both parsed and compiled signer/header/lookup facts now use the shared key resolver, including linked alternatives.
+
+## Current quantity, selected-cohort and production evidence contract
+
+FIFO v4 separates exact physical episode/population completeness from monetary
+cost/proceeds completeness. Missing acquisition money blocks dependent profit,
+ROI and win-rate, while proved quantity-backed hold/count/buy/sell facts remain
+usable when their independent history, chronology and classification gates pass.
+Rapid-sale share requires positive-sale amount evidence; unknown proceeds do not
+prove its first-positive-sale timing. Mathematically undefined ratios retain null
+with current-engine domain witnesses; loss and breakeven are not removed from
+the population or changed into invented zero percentages.
+
+Current wallet interpretation v7 and research v4 reuse the existing FIFO for
+selected closed cohorts, every selected disposal before report end and open stock.
+Report, 28-day and 90-day boundaries are independent and half open. Selected
+census/quantity/origin/cost/timing checks and original source dependencies remain
+visible. Selected observation numbers are conditional, never wallet-wide metrics
+or classification certificates. Open remaining basis is not a closing market
+value or economic profit. Per-sale and per-episode evidence loss revokes only its
+dependent observations; aggregate uncertainty cannot erase independent fees.
+
+The internal production composer v1 combines current raw interpreter versions,
+frozen source identity, explicit interval bounds, metric-specific components and
+current-engine numeric/domain results. Archived and ordinary saved reports use
+this same composition. A checksum establishes integrity; no imported hash,
+completion field, position or caller declaration authenticates historical scope.
+Synthetic finite-world receipts remain development-only. Full readiness still
+requires genuine B1/B2/B3 evidence. New children apply current methods; saved
+parents and original raw bytes are immutable. Read-time freshness annotations
+mark older wallet/research interpretations without relabelling them.
+
+The standalone current-account envelope retains exact original getAccountInfo
+request/response bytes and their checksums, then checks the finalized exact
+wallet request, compatible response, system owner and nonexecutable state.
+Selected supported economic operations require actual outer signers in every
+linked native version; fee-payer identity alone is insufficient. Internal frozen
+identity affinity hashes are negative dependencies only (archive inventory v3);
+public manifests cannot import them as trust declarations. Lost/conflicting
+identity evidence does not erase independently supported network fees. Current
+identity and historical ownership population remain separate components. The
+original indexed 87-record input and independently worked oracle remain unchanged;
+a separately derived ordinary archive may add original account bytes for this
+narrow identity replay without certifying historical completeness.

@@ -22,7 +22,172 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_indexed_input.py', 'tests/test_indexed_chronology.py',
            'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py', 'tests/test_report_view.py',
            'tests/test_real_coverage.py', 'tests/test_research.py', 'tests/test_research_source_roles.py', 'tests/test_generic_administration.py', 'tests/test_retained_protocol_funding.py', 'tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py', 'tests/test_discovery_native_identity.py',
-           'tests/test_bounded_collection.py', 'tests/test_genuine_collection_workflow.py']
+           'tests/test_bounded_collection.py', 'tests/test_genuine_collection_workflow.py',
+           'tests/test_accounting_metric_isolation.py', 'tests/test_selected_cohort_observations.py',
+           'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py',
+           'tests/test_research_disposal_scopes.py']
+
+# Retain the original 30 selectors and add this batch's five regression modules.
+# Every selector appears exactly once. These are execution batches of one
+# focused suite, not additional suites or additional acceptance counts.
+FOCUSED_GROUPS = {
+    'historical': ['tests/review_v039', 'tests/review_v0310'],
+    'schemas': ['tests/test_token_instruction_schema.py', 'tests/test_instruction_contract_matrix.py',
+                'tests/test_source_role_matrix.py', 'tests/test_validation_gates.py',
+                'tests/test_compiled_instructions.py', 'tests/test_compiled_getter.py',
+                'tests/test_compiled_report_integration.py', 'tests/test_generic_administration.py',
+                'tests/test_retained_protocol_funding.py'],
+    'archives': ['tests/test_archive_input.py', 'tests/test_archive_fee_window.py',
+                 'tests/test_report_rebuild.py', 'tests/test_wallet_evidence.py',
+                 'tests/test_metric_evidence.py', 'tests/test_real_evidence_adapter.py',
+                 'tests/test_selected_cohort_observations.py',
+                 'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py'],
+    'indexed': ['tests/test_indexed_input.py', 'tests/test_indexed_chronology.py',
+                'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py',
+                'tests/test_real_coverage.py'],
+    'research': ['tests/test_report_view.py', 'tests/test_research.py', 'tests/test_research_source_roles.py',
+                 'tests/test_accounting_metric_isolation.py', 'tests/test_research_disposal_scopes.py'],
+    'discovery': ['tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py',
+                  'tests/test_discovery_native_identity.py', 'tests/test_bounded_collection.py',
+                  'tests/test_genuine_collection_workflow.py'],
+}
+
+
+def focused_groups():
+    selectors = [path for group in FOCUSED_GROUPS.values() for path in group]
+    if len(selectors) != len(set(selectors)) or set(selectors) != set(FOCUSED):
+        raise ValueError('Focused groups must be an exact nonoverlapping partition of FOCUSED.')
+    if any(a != b and b.startswith(a.rstrip('/') + '/') for a in selectors for b in selectors):
+        raise ValueError('Focused selectors cannot overlap through a parent directory.')
+    return {name: list(paths) for name, paths in FOCUSED_GROUPS.items()}
+
+
+def focused_group_records(paths, *, source, locks, runtime, commit):
+    """Verify the complete focused union without trusting a green job alone."""
+    expected = focused_groups()
+    result = {'name': 'focused-group-receipts', 'state': 'INCOMPLETE', 'receipts': []}
+    seen = set()
+    if not isinstance(commit, str) or not commit:
+        result['reason'] = 'Current Git identity is unavailable.'
+        return result
+    for path in paths:
+        receipt = read_receipt(path)
+        result['receipts'].append(receipt)
+        record = receipt.get('record', {})
+        name = record.get('focused_group')
+        if not isinstance(name, str) or name not in expected or name in seen:
+            result['reason'] = 'Missing, unsupported or repeated focused group identity.'
+            return result
+        seen.add(name)
+        if (record.get('profile') != 'focused' or record.get('state') != 'FOCUSED_GROUP_PASS'
+            or record.get('source_unchanged') is not True or record.get('selection') != expected[name]
+            or record.get('source') != source or record.get('locks') != locks
+            or record.get('runtime') != runtime or record.get('commit') != commit):
+            result['reason'] = 'Focused receipt is nonpassing or does not bind the exact selection, source, locks and runtime.'
+            return result
+        gates = record.get('gates')
+        if (not isinstance(gates, list) or len(gates) != 3
+            or not all(isinstance(gate, dict) and isinstance(gate.get('name'), str) for gate in gates)
+            or {gate.get('name') for gate in gates} != {'runtime', 'node-runtime', 'backend'}
+            or any(gate.get('state') != 'PASS' or type(gate.get('exit_code')) is not int
+                   or gate['exit_code'] != 0 for gate in gates)):
+            result['reason'] = 'Focused receipt lacks explicitly passing command gates.'
+            return result
+        backend = next(gate for gate in gates if gate['name'] == 'backend')
+        interpreter = record.get('interpreter')
+        if (not isinstance(interpreter, str) or not interpreter
+            or backend.get('command') != [interpreter, '-m', 'pytest', '-q', *expected[name]]):
+            result['reason'] = 'Backend command does not execute the declared exact group.'
+            return result
+        for gate in gates:
+            # Original absolute runner paths are informational. Read only the
+            # allowlisted sibling logs that were transferred with this receipt.
+            try:
+                raw = (path.parent / (gate['name'] + '.log')).read_bytes()
+            except OSError:
+                result['reason'] = 'A required focused command log is missing.'
+                return result
+            if (type(gate.get('log_bytes')) is not int or gate['log_bytes'] != len(raw)
+                or gate.get('log_sha256') != hashlib.sha256(raw).hexdigest()):
+                result['reason'] = 'A required focused command log is unbound or changed.'
+                return result
+        receipt['state'] = 'PASS'
+    if seen != set(expected):
+        result['reason'] = 'The focused union is incomplete.'
+        return result
+    return {**result, 'state': 'PASS', 'groups': list(expected),
+            'selectors': FOCUSED, 'count_policy': 'One partition of the existing focused suite; no additional test counts.'}
+
+
+def offline_development_record(path, *, source, locks, runtime, commit):
+    receipt = read_receipt(path) if path else {'state': 'INCOMPLETE'}
+    record = receipt.get('record', {})
+    receipt.update(name='offline-development-receipt', state='INCOMPLETE')
+    names = {'runtime', 'node-runtime', 'pip-check', 'shell-syntax', 'product',
+             'frontend-check-format', 'frontend-check-discovery', 'frontend-build'}
+    if (record.get('profile') != 'offline-development' or record.get('state') != 'DEVELOPMENT_CHECK_PASS'
+        or record.get('source_unchanged') is not True or record.get('source') != source
+        or record.get('locks') != locks or record.get('runtime') != runtime or record.get('commit') != commit):
+        receipt['reason'] = 'Missing or nonpassing offline development receipt, or stale source/locks/runtime/Git identity.'
+        return receipt
+    gates = record.get('gates')
+    if (not isinstance(gates, list) or len(gates) != len(names)
+        or not all(isinstance(g, dict) and isinstance(g.get('name'), str) for g in gates)
+        or {g['name'] for g in gates} != names
+        or any(g.get('state') != 'PASS' or type(g.get('exit_code')) is not int or g['exit_code'] != 0 for g in gates)):
+        receipt['reason'] = 'Development receipt lacks explicitly passing command gates.'
+        return receipt
+    product = next(g for g in gates if g['name'] == 'product')
+    assertions = product.get('product_assertions')
+    expected_assertions = {'development_pass': True, 'real_acceptance_blocked': True,
+        'zero_provider_requests': True, 'zero_credential_lookups': True,
+        'parent_unchanged': True, 'usage_unchanged': True, 'no_collector_ancestry': True}
+    if (not isinstance(assertions, dict) or assertions != expected_assertions
+        or not all(value is True for value in assertions.values())):
+        receipt['reason'] = 'Development receipt lacks explicitly passing offline product assertions.'
+        return receipt
+    for gate in gates:
+        try:
+            raw = (path.parent / (gate['name'] + '.log')).read_bytes()
+        except OSError:
+            receipt['reason'] = 'A required development command log is missing.'
+            return receipt
+        if (type(gate.get('log_bytes')) is not int or gate['log_bytes'] != len(raw)
+            or gate.get('log_sha256') != hashlib.sha256(raw).hexdigest()):
+            receipt['reason'] = 'A required development command log is unbound or changed.'
+            return receipt
+    receipt['state'] = 'PASS'
+    return receipt
+
+
+def offline_product_gate(command_gate, path):
+    """Consume the real producer receipt, retaining only safe assertions in CI."""
+    receipt = read_receipt(path)
+    record = receipt.get('record', {})
+    cases = record.get('cases')
+    required_cases = {'synthetic-positive-normal-report', 'valuation_hash-loss-and-exact-restoration',
+                      'world_hash-loss-and-exact-restoration'}
+    valid_cases = (isinstance(cases, list) and all(isinstance(c, dict) and isinstance(c.get('case'), str) for c in cases)
+                   and len({c['case'] for c in cases}) == len(cases)
+                   and required_cases <= {c['case'] for c in cases if c.get('state') == 'PASS'})
+    checks = {'development_pass': record.get('kind') == 'offline-product-check'
+              and record.get('real_acceptance_required') is False and valid_cases and record.get('state') == 'DEVELOPMENT_PASS'
+              and isinstance(record.get('development'), dict) and record['development'].get('state') == 'PASS',
+              'real_acceptance_blocked': isinstance(record.get('real_acceptance'), dict)
+              and record['real_acceptance'].get('state') == 'BLOCKED',
+              'zero_provider_requests': type(record.get('provider_requests')) is int and record['provider_requests'] == 0,
+              'zero_credential_lookups': type(record.get('credential_lookups')) is int and record['credential_lookups'] == 0,
+              'parent_unchanged': record.get('parent_unchanged') is True,
+              'usage_unchanged': isinstance(record.get('usage_before'), dict) and record.get('usage_after') == record['usage_before'],
+              'no_collector_ancestry': record.get('collector_ancestry_created') is False}
+    passing = all(checks.values())
+    # Never copy the producer's report identifiers, cases, archive paths or
+    # application state into the transferable validation receipt.
+    command_gate.update(product_assertions=checks, product_receipt_sha256=receipt.get('sha256'))
+    if command_gate['state'] == 'PASS' and not passing:
+        command_gate.update(state='FAILED' if record.get('state') == 'FAILED' else 'BLOCKED' if record.get('state') == 'BLOCKED' else 'INCOMPLETE',
+                            reason='Product command lacks a usable explicitly passing offline receipt.')
+    return command_gate
 
 
 def lock_hashes(root=ROOT):
@@ -148,7 +313,10 @@ def gate_decision(gates, *, stable):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--profile', choices=('focused', 'candidate'), default='focused')
+    parser.add_argument('--profile', choices=('focused', 'focused-summary', 'offline-development', 'candidate'), default='focused')
+    parser.add_argument('--focused-group', choices=tuple(FOCUSED_GROUPS))
+    parser.add_argument('--group-record', type=Path, action='append', default=[])
+    parser.add_argument('--development-record', type=Path)
     parser.add_argument('--python', default=str(ROOT / '.venv/bin/python') if (ROOT / '.venv/bin/python').exists() else sys.executable)
     parser.add_argument('--browser-python', default=shutil.which('python3'))
     parser.add_argument('--chromium', default='/usr/bin/chromium')
@@ -156,6 +324,13 @@ def main(argv=None):
     parser.add_argument('--review-record', type=Path, default=ROOT / 'evidence/REVIEW.json')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args(argv)
+    if args.focused_group and args.profile != 'focused':
+        parser.error('--focused-group requires --profile focused')
+    if args.group_record and args.profile != 'focused-summary':
+        parser.error('--group-record requires --profile focused-summary')
+    if args.development_record and args.profile != 'focused-summary':
+        parser.error('--development-record requires --profile focused-summary')
+    groups = focused_groups()
     # Keep virtualenv paths absolute without resolving their interpreter symlink.
     # Browser baseline derivation runs from a different working directory.
     args.python = os.path.abspath(shutil.which(args.python) or args.python)
@@ -169,6 +344,8 @@ def main(argv=None):
     env['PYTHONDONTWRITEBYTECODE'] = '1'
     report = {'profile': args.profile, 'source': before, 'locks': lock_hashes(),
               'interpreter': args.python, 'gates': [], 'gate_B': {'state': 'OPEN', 'reason': 'Source, implementation and independent real-wallet acceptance remain separate.'}}
+    if args.focused_group:
+        report.update(focused_group=args.focused_group, selection=groups[args.focused_group])
     try:
         report['commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     except subprocess.CalledProcessError:
@@ -178,6 +355,11 @@ def main(argv=None):
     save()
     def run(name, command, cwd=ROOT):
         start = time.monotonic(); log = output / (name + '.log')
+        if args.profile != 'candidate':
+            # Keep an interruption diagnosable even when a runner disappears
+            # before subprocess.run returns. RUNNING is never passing evidence.
+            report['running_gate'] = {'name': name, 'command': command, 'log': str(log)}
+            save()
         print(f'{name}: running', flush=True)
         try:
             with log.open('w') as stream:
@@ -187,16 +369,35 @@ def main(argv=None):
         except (OSError, subprocess.TimeoutExpired) as exc:
             gate = {'name': name, 'command': command, 'state': 'BLOCKED', 'reason': str(exc), 'log': str(log)}
         gate['seconds'] = round(time.monotonic() - start, 2)
+        if (args.focused_group or args.profile == 'offline-development') and log.is_file():
+            raw = log.read_bytes()
+            gate.update(log_bytes=len(raw), log_sha256=hashlib.sha256(raw).hexdigest())
+        report.pop('running_gate', None)
         report['gates'].append(gate); save(); print(f'{name}: {gate["state"]}', flush=True)
         return gate
     runtime = run('runtime', [args.python, '-c', 'import sys, pathlib, scanner; assert sys.version_info >= (3,11); assert pathlib.Path(scanner.__file__).resolve().parent == pathlib.Path.cwd()/"scanner"; print(sys.version)'])
     if runtime['state'] != 'PASS':
         report['state'] = 'INCOMPLETE'; save(); return 2
     report['runtime'] = {'python':subprocess.check_output([args.python,'-c','import platform;print(platform.python_version())'],text=True).strip(),'platform':sys.platform}
-    if args.profile == 'candidate':
+    if args.profile != 'focused' or args.focused_group:
         node_gate=run('node-runtime',['node','--version'])
         report['runtime']['node']=Path(node_gate['log']).read_text().strip().removeprefix('v') if node_gate['state']=='PASS' else 'unavailable'
-    run('backend', [args.python, '-m', 'pytest', '-q', *FOCUSED] if args.profile == 'focused' else [args.python, '-m', 'pytest', '-q'])
+    if args.profile == 'focused-summary':
+        report['gates'].append(focused_group_records(args.group_record, source=before,
+            locks=report['locks'], runtime=report['runtime'], commit=report['commit']))
+        report['gates'].append(offline_development_record(args.development_record, source=before,
+            locks=report['locks'], runtime=report['runtime'], commit=report['commit']))
+        save()
+    elif args.profile == 'offline-development':
+        run('pip-check', [args.python, '-m', 'pip', 'check'])
+        run('shell-syntax', ['bash', '-n', 'run.sh', 'setup.sh'])
+        product = run('product', [args.python, str(ROOT / 'tools/check_product.py'), '--output', str(output / 'private-product')])
+        offline_product_gate(product, output / 'private-product/result.json'); save()
+        for name in ('check:format', 'check:discovery', 'build'):
+            run('frontend-' + name.replace(':', '-'), ['npm', 'run', name], ROOT / 'frontend')
+    else:
+        selected = groups[args.focused_group] if args.focused_group else FOCUSED
+        run('backend', [args.python, '-m', 'pytest', '-q', *selected] if args.profile == 'focused' else [args.python, '-m', 'pytest', '-q'])
     if args.profile == 'candidate':
         run('pip-check', [args.python, '-m', 'pip', 'check'])
         run('shell-syntax', ['bash', '-n', 'run.sh', 'setup.sh'])
@@ -216,8 +417,10 @@ def main(argv=None):
     stable = source_manifest()['sha256'] == before['sha256']
     report['source_unchanged'] = stable
     report['state'], code = gate_decision(report['gates'], stable=stable)
-    if args.profile == 'focused' and code == 0:
-        report['state'] = 'FOCUSED_PASS'
+    if args.profile in ('focused', 'focused-summary') and code == 0:
+        report['state'] = 'FOCUSED_GROUP_PASS' if args.focused_group else 'FOCUSED_PASS'
+    elif args.profile == 'offline-development' and code == 0:
+        report['state'] = 'DEVELOPMENT_CHECK_PASS'
     save()
     print(f'{report["state"]}; Gate B remains OPEN. Evidence: {output}', flush=True)
     return code

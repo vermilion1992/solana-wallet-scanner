@@ -49,6 +49,7 @@ try {
     CoverageDetails,
     sourceSetComplete,
   } = require(join(output, "report.js"));
+  const { SelectedCohortSection, selectedCohortFreshness } = require(join(output, "SelectedCohorts.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -1537,8 +1538,135 @@ try {
   } finally {
     globalThis.fetch = originalFetch;
   }
+  // Synthetic UI contract controls only; these do not authenticate a wallet.
+  const cohortEnd = "2026-01-31T00:00:00Z";
+  const cohortStart = "2026-01-25T00:00:00Z";
+  const observedClosed = {
+    candidate_count: 2, population_state: "PASS", monetary_state: "PASS", timing_state: "PASS",
+    conditional_profit_sol: "-0.2", conditional_win_rate_pct: "0", conditional_median_roi_pct: "-10",
+    conditional_median_hold_hours: "2.5", conditional_first_sale_hours: "0.25",
+    conditional_exit_50_hours: "1", conditional_exit_90_hours: "2", evidence: ["a".repeat(64)],
+  };
+  const observedDisposed = {
+    candidate_sale_count: 3, quantity_state: "PASS", monetary_state: "PASS",
+    conditional_profit_sol: "0", conditional_matched_basis_sol: "1.25", evidence: ["b".repeat(64)],
+  };
+  const intervalFact = (start) => ({ start, end: cohortEnd, closed_cohort: structuredClone(observedClosed), disposed_units: structuredClone(observedDisposed) });
+  const cohortObservation = {
+    version: "selected-cohort-observations-v1",
+    intervals: {
+      report_period: intervalFact(cohortStart),
+      four_weeks: intervalFact(new Date(Date.parse(cohortEnd) - 28 * 86400000).toISOString()),
+      verification_90d: intervalFact(new Date(Date.parse(cohortEnd) - 90 * 86400000).toISOString()),
+    },
+    open_stock: { at: cohortEnd, candidate_count: 1, quantity_state: "PASS", cost_basis_state: "PASS",
+      valuation_state: "UNKNOWN", conditional_remaining_basis_sol: "0.5000025", closing_value_sol: null,
+      evidence: ["c".repeat(64)], lots: [{ id: "selected-lot", mint: address, remaining_raw: "9007199254740993000000",
+        quantity_state: "PASS", cost_basis_state: "PASS", conditional_remaining_basis_sol: "0.5000025", evidence: ["c".repeat(64)] }] },
+  };
+  const cohortReport = { ...report, source: "live", methodology: "fifo-v4", window: { start: cohortStart, end: cohortEnd },
+    research: { ...(report.research ?? {}), version: "supported-subset-research-v4-disposal-scopes" },
+    research_assessment: { state: "current", saved_methodology: "supported-subset-research-v4-disposal-scopes", current_methodology: "supported-subset-research-v4-disposal-scopes" },
+    wallet_assessment: { state: "current", saved_methodology: "wallet-raw-evidence-v7", current_methodology: "wallet-raw-evidence-v7" },
+    coverage: { wallet_evidence: { version: "wallet-raw-evidence-v7", query_accounting: { selected_cohort_observations: cohortObservation } } } };
+  const renderCohorts = (next = cohortReport, options = {}) => renderToStaticMarkup(React.createElement(SelectedCohortSection, {
+    report: next, currentWalletMethod: "wallet-raw-evidence-v7", currentAccountingMethod: "fifo-v4", historyCurrent: true,
+    showEvidence: () => undefined, ...options,
+  }));
+  const cohortSnapshot = structuredClone(cohortReport);
+  const cohortHtml = renderCohorts();
+  assert.ok(cohortHtml.includes('data-selected-cohort-freshness="current"'));
+  assert.ok(cohortHtml.includes("selected records only"));
+  assert.ok(cohortHtml.includes("wallet-wide profit or a copy-trading recommendation"));
+  for (const name of ["Reporting period", "Independent 28 days", "Independent 90 days"])
+    assert.ok(cohortHtml.includes(`data-selected-cohort-window="${name}"`));
+  assert.ok(cohortHtml.includes("-0.2<small> SOL"), "A losing observed cohort remains included");
+  assert.ok(cohortHtml.includes("0<small> SOL"), "Known zero disposal profit remains known");
+  assert.ok(cohortHtml.includes("0<small> %"), "Known zero win rate is not empty");
+  assert.ok(cohortHtml.includes("0.5000025<small> SOL"));
+  assert.ok(cohortHtml.includes("9007199254740993000000"), "Raw quantities retain exact integer text");
+  assert.ok(cohortHtml.includes("Closing market value</span><strong>Unknown"));
+  assert.ok(cohortHtml.includes("Source aaaaa"));
+  assert.deepEqual(cohortReport, cohortSnapshot, "Rendering never changes saved evidence");
+  for (const next of [
+    { ...cohortReport, methodology: "fifo-v3" },
+    { ...cohortReport, wallet_assessment: { ...cohortReport.wallet_assessment, saved_methodology: "wallet-raw-evidence-v6" } },
+    { ...cohortReport, wallet_assessment: undefined },
+    { ...cohortReport, research_assessment: { ...cohortReport.research_assessment, state: "rebuild_required" } },
+    { ...cohortReport, research_assessment: undefined },
+    { ...cohortReport, research: { ...cohortReport.research, version: "supported-subset-research-v3" } },
+  ]) {
+    const savedHtml = renderCohorts(next);
+    assert.ok(savedHtml.includes("Saved observations require a rebuild"));
+    assert.ok(!savedHtml.includes("-0.2<small> SOL"));
+    assert.ok(!savedHtml.includes("0.5000025<small> SOL"));
+    assert.ok(!savedHtml.includes('class="badge pass"'));
+  }
+  assert.equal(selectedCohortFreshness(cohortReport, undefined, "fifo-v4", true), "method_unavailable");
+  assert.ok(!renderCohorts(cohortReport, { historyCurrent: false }).includes("-0.2<small> SOL"));
+  const changedCohort = (mutate) => {
+    const next = structuredClone(cohortReport);
+    mutate(next.coverage.wallet_evidence.query_accounting.selected_cohort_observations);
+    return renderCohorts(next);
+  };
+  const missingBasisHtml = changedCohort((value) => {
+    value.intervals.report_period.closed_cohort.monetary_state = "UNKNOWN";
+    value.intervals.report_period.disposed_units.monetary_state = "UNKNOWN";
+    value.open_stock.cost_basis_state = "UNKNOWN";
+    value.open_stock.lots[0].cost_basis_state = "UNKNOWN";
+  });
+  assert.equal((missingBasisHtml.match(/-0\.2<small> SOL/g) ?? []).length, 2, "28/90-day values survive a report-period basis gap");
+  assert.ok(missingBasisHtml.includes("2.5<small> hours"), "Missing money does not erase supported timing");
+  assert.ok(missingBasisHtml.includes("9007199254740993000000"), "Missing money does not erase supported quantities");
+  assert.ok(!missingBasisHtml.includes("0.5000025<small> SOL"));
+  const malformedHtml = changedCohort((value) => {
+    value.intervals.report_period.closed_cohort.candidate_count = "2";
+    value.intervals.four_weeks.closed_cohort.monetary_state = true;
+    value.intervals.verification_90d.closed_cohort.conditional_profit_sol = "NaN";
+    value.open_stock.candidate_count = null;
+    value.open_stock.lots = [null, 42, { quantity_state: "PASS", cost_basis_state: "PASS", remaining_raw: "bad", conditional_remaining_basis_sol: [] }];
+  });
+  assert.ok(malformedHtml.includes("Candidate count unknown"));
+  assert.ok(malformedHtml.includes("Open-holding count unknown"));
+  assert.ok(!malformedHtml.includes("-0.2<small> SOL"));
+  assert.ok(!malformedHtml.includes("NaN"));
+  assert.ok(!malformedHtml.includes("0.5000025<small> SOL"));
+  const wrongBoundaryHtml = changedCohort((value) => {
+    value.intervals.report_period.start = value.intervals.four_weeks.start;
+    value.open_stock.at = cohortStart;
+  });
+  assert.equal((wrongBoundaryHtml.match(/-0\.2<small> SOL/g) ?? []).length, 2);
+  assert.ok(wrongBoundaryHtml.includes("saved boundaries do not match"));
+  assert.ok(!wrongBoundaryHtml.includes("0.5000025<small> SOL"));
+  assert.ok(!changedCohort((value) => { value.version = "unknown-method"; }).includes('class="badge pass"'));
+  const invalidSourcesHtml = changedCohort((value) => {
+    for (const interval of Object.values(value.intervals)) {
+      interval.closed_cohort.evidence = [null, "javascript:bad", "../private", "a".repeat(64), "a".repeat(64)];
+    }
+  });
+  assert.ok(!invalidSourcesHtml.includes("javascript:bad"));
+  assert.ok(!invalidSourcesHtml.includes("../private"));
+  assert.equal((invalidSourcesHtml.match(/Source aaaaa/g) ?? []).length, 3);
+  const emptyHtml = changedCohort((value) => {
+    for (const interval of Object.values(value.intervals)) {
+      interval.closed_cohort.candidate_count = 0;
+      interval.disposed_units.candidate_sale_count = 0;
+    }
+    value.open_stock.candidate_count = 0;
+  });
+  assert.ok(emptyHtml.includes("empty cohort"));
+  assert.ok(!emptyHtml.includes("-0.2<small> SOL"));
+  assert.ok(!emptyHtml.includes("0<small> SOL"));
+  assert.ok(!emptyHtml.includes("0<small> %"));
+  const selectedState = { ...state, methodology: "fifo-v4", wallet_evidence_methodology: "wallet-raw-evidence-v7" };
+  const visibleCohortReport = { ...cohortReport, history_assessment: { state: "current", saved_methodology: state.history_evidence_methodology, current_methodology: state.history_evidence_methodology } };
+  const integratedCohortHtml = renderToStaticMarkup(React.createElement(ReportView, { ...actions, state: selectedState, report: visibleCohortReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined }));
+  assert.ok(integratedCohortHtml.includes('data-selected-cohort-freshness="current"'));
+  assert.ok(!renderCohorts({ ...cohortReport, coverage: {} }).includes("Selected holding observations"));
+  assert.ok(!renderCohorts({ ...cohortReport, preview: true }).includes("Selected holding observations"));
+  assert.ok(!renderCohorts({ ...cohortReport, source: "demo" }).includes("Selected holding observations"));
   console.log(
-    "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
+    "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );
 } finally {
   rmSync(output, { recursive: true, force: true });

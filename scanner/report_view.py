@@ -17,11 +17,12 @@ _SUMMARY_TOP = (
     'reviewed_copy_checks', 'archive_input_hash', 'archive_dependency_input_hash',
     'collection_input_hash', 'rebuilt_from', 'previous_methodology', 'previous_history_methodology',
     'previous_position_methodology', 'rebuild', 'market_observation_scope', 'market_observation_note',
-    'history_assessment', 'position_assessment', 'archive_assessment',
+    'history_assessment', 'position_assessment', 'archive_assessment', 'wallet_assessment',
 )
 _SUMMARY_NESTED = (
     ('coverage', 'history_evidence', 'version'),
     ('coverage', 'position_evidence', 'version'),
+    ('coverage', 'wallet_evidence', 'version'),
     ('coverage', 'history_scope_complete'),
     ('coverage', 'historical_ownership_verified'),
     ('archive_accounting', 'version'),
@@ -91,7 +92,7 @@ def summary_view(decorated):
     if isinstance(coverage, dict):
         compact_coverage = {}
         for path in _SUMMARY_NESTED:
-            if path[0] != 'coverage':
+            if path[0] != 'coverage' or path[1] == 'wallet_evidence':
                 continue
             current = coverage
             for key in path[1:]:

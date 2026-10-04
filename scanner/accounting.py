@@ -32,7 +32,7 @@ from decimal import Decimal, localcontext
 import re
 from typing import Any
 
-METHODOLOGY = 'fifo-v3'
+METHODOLOGY = 'fifo-v4'
 D = Decimal
 ZERO = D('0')
 HUNDRED = D('100')
@@ -292,13 +292,14 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
     latest_decimals = {}
     latest_classification = {}
 
-    def new_episode(mint, when, classification):
+    def new_episode(mint, when, classification, order):
         episode = {'id': f'{mint}:{len(positions) + 1}', 'mint': mint,
-                   'classification': classification, 'start': when, 'end': None,
+                   'classification': classification, 'start': when, 'end': None, 'start_order': order, 'end_order': None,
                    'quantity': 0, 'acquired': 0, 'sold': 0, 'lots': [],
                    'buy_count': 0, 'sell_count': 0, 'basis': ZERO,
                    'proceeds': ZERO, 'exit_fees': ZERO, 'matched_basis': ZERO,
-                   'unknown': False, 'interrupted': False, 'first_sale': None,
+                   'unknown': False, 'quantity_unknown': False, 'basis_unknown': False,
+                   'interrupted': False, 'first_sale': None, 'first_sale_unknown': False,
                    'disposals': [], 'evidence': set(), 'decimals': None}
         positions.append(episode)
         active[mint] = episode
@@ -314,6 +315,7 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             take = min(lot['quantity'], remaining)
             if lot['basis'] is None:
                 known = False
+                episode['basis_unknown'] = True
             else:
                 cost = lot['basis'] if take == lot['quantity'] else lot['basis'] * D(take) / D(lot['quantity'])
                 basis += cost
@@ -325,6 +327,7 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
         if remaining:
             known = False
             episode['unknown'] = True
+            episode['quantity_unknown'] = True
         return basis if known else None
 
     for when, order, index, event in normalized:
@@ -388,7 +391,7 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             ledger_unknown = True
         if kind in ('buy', 'sell') and in_window:
             traded_mints.add(mint)
-        episode = active.get(mint) or new_episode(mint, when, classification)
+        episode = active.get(mint) or new_episode(mint, when, classification, order)
         episode['decimals'] = decimals
         episode['evidence'].update(evidence)
         if episode['classification'] != classification:
@@ -405,11 +408,14 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             else:
                 basis = decimal(event['basis_sol']) if event.get('basis_sol') is not None else None
                 episode['interrupted'] = True
-            episode['lots'].append({'quantity': quantity, 'basis': basis, 'timestamp': when})
+            episode['lots'].append({'quantity': quantity, 'basis': basis, 'timestamp': when,
+                'order': order, 'signature': event.get('signature'), 'evidence': list(evidence),
+                'acquisition_quantity': quantity})
             episode['quantity'] += quantity
             episode['acquired'] += quantity
             if basis is None:
                 episode['unknown'] = True
+                episode['basis_unknown'] = True
             else:
                 episode['basis'] += basis
             continue
@@ -420,6 +426,8 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             episode['quantity'] += gap
             episode['acquired'] += gap
             episode['unknown'] = True
+            episode['quantity_unknown'] = True
+            episode['basis_unknown'] = True
             findings.append({'severity': 'warning', 'title': 'Earlier inventory unresolved',
                              'detail': f'A disposal of {mint} needs {gap} earlier raw units and their cost.',
                              'evidence': evidence})
@@ -442,6 +450,11 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
                 episode['unknown'] = True
             if proceeds is not None and proceeds > ZERO and episode['first_sale'] is None:
                 episode['first_sale'] = when
+            elif proceeds is None and episode['first_sale'] is None:
+                # Missing money cannot hide an earlier positive economic sale
+                # behind a later observed one. Entry costs and exit fees do not
+                # determine whether the gross sale consideration is positive.
+                episode['first_sale_unknown'] = True
             episode['disposals'].append({'timestamp': when, 'quantity': quantity})
             realised.append({'timestamp': when, 'mint': mint, 'basis': basis, 'net': net,
                              'proceeds': proceeds, 'fee': fee, 'evidence': evidence})
@@ -449,16 +462,22 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
                 financial_unknown = True
         if episode['quantity'] == 0:
             episode['end'] = when
+            episode['end_order'] = order
             active.pop(mint, None)
 
     eligible = [p for p in positions if p['end'] is not None and start <= p['end'] < end]
     cohort = [p for p in eligible if not p['interrupted']]
     verification = [p for p in positions if p['end'] is not None and verification_start <= p['end'] < end and not p['interrupted']]
     # An interrupted candidate could conceal a full episode; do not omit it from fit.
+    # Quantity/origin and strict-zero membership have different dependencies
+    # from acquisition money. A known buy of ten units with missing cost can
+    # still close a known two-hour episode when those ten units are sold.
     ambiguous = [p for p in positions if (p['end'] is None or p['end'] >= start) and
-                 (p['unknown'] or p['interrupted'] or p['classification'] == 'unknown')]
+                 (p['quantity_unknown'] or p['interrupted'] or p['classification'] == 'unknown')]
     cohort_uncertain = episode_unknown or bool(ambiguous)
-    verification_uncertain = episode_unknown or any(p['unknown'] or p['interrupted'] for p in positions if p['end'] is None or p['end'] >= verification_start)
+    verification_uncertain = episode_unknown or any(p['quantity_unknown'] or p['interrupted'] for p in positions if p['end'] is None or p['end'] >= verification_start)
+    monetary_cohort_uncertain = cohort_uncertain or any(p['unknown'] for p in cohort)
+    first_sale_uncertain = cohort_uncertain or any(p['first_sale_unknown'] for p in cohort)
     sales = [r for r in realised if start <= r['timestamp'] < end]
     known_net = sum((r['net'] for r in sales if r['net'] is not None), ZERO)
     known_overhead = sum((amount for when, amount, _ in overhead if start <= when < end and amount is not None), ZERO)
@@ -469,10 +488,10 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
     episode_profits = [p['proceeds'] - p['matched_basis'] - p['exit_fees'] for p in cohort]
     rois = [(p['proceeds'] - p['matched_basis'] - p['exit_fees']) / p['matched_basis'] * HUNDRED
             for p in cohort if p['matched_basis'] > ZERO]
-    roi_uncertain = cohort_uncertain or len(rois) != len(cohort)
+    roi_uncertain = monetary_cohort_uncertain or len(rois) != len(cohort)
     count = len(cohort)
-    win_rate = D(sum(p > ZERO for p in episode_profits)) / D(count) * HUNDRED if count and not cohort_uncertain else None
-    rapid = D(sum(p['first_sale'] is not None and (p['first_sale'] - p['start']) <= timedelta(minutes=5) for p in cohort)) / D(count) * HUNDRED if count and not cohort_uncertain else None
+    win_rate = D(sum(p > ZERO for p in episode_profits)) / D(count) * HUNDRED if count and not monetary_cohort_uncertain else None
+    rapid = D(sum(p['first_sale'] is not None and (p['first_sale'] - p['start']) <= timedelta(minutes=5) for p in cohort)) / D(count) * HUNDRED if count and not first_sale_uncertain else None
     buys = D(sum(p['buy_count'] for p in cohort)) / D(count) if count and not cohort_uncertain else None
     sells = D(sum(p['sell_count'] for p in cohort)) / D(count) if count and not cohort_uncertain else None
     intervals = _metric_intervals(start, end, history_complete, interval_coverage, all_evidence)
@@ -505,26 +524,61 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
     if all(value is not None for value in (opening_equity, closing_equity, deposits, withdrawals)):
         economic = decimal(closing_equity) - decimal(opening_equity) - decimal(deposits) + decimal(withdrawals)
     reason = 'Incomplete basis, chronology, classification or interrupted eligible episode'
+    quantity_reason = 'Incomplete acquisition quantities, chronology, classification or interrupted eligible episode'
+    first_sale_reason = 'Incomplete eligible episode population or first positive sale consideration'
     metrics = {
         'profit_sol': _metric(profit, 'SOL', 'In-window meme disposals less matched basis, exit costs and trading overhead', reason=reason, evidence=all_evidence),
         'realised_roi_pct': _metric(realised_roi, '%', 'Period net realised profit / disposed acquisition cost', reason=reason if financial_unknown else 'No positive disposed basis', evidence=all_evidence),
         'median_roi_pct': _metric(None if roi_uncertain else median(rois), '%', 'Whole-episode net ROI; strict-zero completed cohort', reason=reason if roi_uncertain else 'No completed episodes', evidence=all_evidence),
-        'win_rate_pct': _metric(win_rate, '%', 'Net-positive strict-zero completed episodes / all completed episodes (breakeven included)', reason=reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
-        'median_hold_hours': _metric(None if cohort_uncertain else median(holds), 'hours', 'First acquisition to final sale; strict-zero closes inside reporting window', reason=reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
-        'completed_positions': _metric(None if cohort_uncertain else count, 'positions', 'Strict-zero completed episodes closing in report window', reason=reason, evidence=all_evidence),
-        'completed_positions_90d': _metric(None if verification_uncertain else len(verification), 'positions', 'Strict-zero completed episodes closing in 90 days ending at report end', reason=reason, evidence=all_evidence),
+        'win_rate_pct': _metric(win_rate, '%', 'Net-positive strict-zero completed episodes / all completed episodes (breakeven included)', reason=reason if monetary_cohort_uncertain else 'No completed episodes', evidence=all_evidence),
+        'median_hold_hours': _metric(None if cohort_uncertain else median(holds), 'hours', 'First acquisition to final sale; strict-zero closes inside reporting window', reason=quantity_reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
+        'completed_positions': _metric(None if cohort_uncertain else count, 'positions', 'Strict-zero completed episodes closing in report window', reason=quantity_reason, evidence=all_evidence),
+        'completed_positions_90d': _metric(None if verification_uncertain else len(verification), 'positions', 'Strict-zero completed episodes closing in 90 days ending at report end', reason=quantity_reason, evidence=all_evidence),
         'traded_mints': _metric(None if uncertain_classification or general_unknown else len(traded_mints), 'mints', 'Distinct meme mint IDs traded in reporting window; settlement assets excluded', reason='Classification or scope unresolved', evidence=all_evidence),
-        'rapid_sale_pct': _metric(rapid, '%', 'Completed episodes with first positive economic sale within five minutes', reason=reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
-        'avg_buys': _metric(buys, 'buys/episode', 'Buy events per strict-zero completed episode', reason=reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
-        'avg_sells': _metric(sells, 'sells/episode', 'Sale events per strict-zero completed episode', reason=reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
+        'rapid_sale_pct': _metric(rapid, '%', 'Completed episodes with first positive economic sale within five minutes', reason=first_sale_reason if first_sale_uncertain else 'No completed episodes', evidence=all_evidence),
+        'avg_buys': _metric(buys, 'buys/episode', 'Buy events per strict-zero completed episode', reason=quantity_reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
+        'avg_sells': _metric(sells, 'sells/episode', 'Sale events per strict-zero completed episode', reason=quantity_reason if cohort_uncertain else 'No completed episodes', evidence=all_evidence),
         'positive_weeks': _metric(positive_weeks, 'weeks', 'Four independent consecutive seven-day periods over [report end - 28 days, report end)', reason='Independent four-week history, matched basis or costs remain unresolved', evidence=all_evidence | set(four_week_coverage['evidence'])),
         'largest_contribution_pct': _metric(concentration, '%', 'Highest positive aggregate realised P&L for one mint / positive net period P&L', reason=reason if financial_unknown else 'Net period profit is not positive', evidence=all_evidence),
         'economic_pnl_sol': _metric(economic, 'SOL', 'Closing equity - opening equity - external deposits + withdrawals', reason='Boundary equity and valued external flows must all be reconciled', evidence=all_evidence),
     }
+    # A missing proof and an arithmetic domain with no defined answer are
+    # different outcomes. These witnesses are produced from this FIFO pass,
+    # never accepted from normalized event flags. Undefined metrics retain a
+    # null numerical value; the application still verifies their dependencies.
+    metric_domains = {key: {'status': 'defined' if metric['value'] is not None else 'unknown',
+                            'reason_code': None, 'witness': {}}
+                      for key, metric in metrics.items()}
+
+    def undefined_domain(key, reason_code, witness):
+        if metrics[key]['value'] is None:
+            metric_domains[key] = {'status': 'undefined', 'reason_code': reason_code,
+                                   'witness': witness}
+
+    if profit is not None and profit <= ZERO:
+        undefined_domain('largest_contribution_pct', 'nonpositive_period_profit',
+                         {'profit_sol': canonical(profit)})
+    if profit is not None and disposed_basis == ZERO:
+        undefined_domain('realised_roi_pct', 'zero_disposed_basis',
+                         {'disposed_basis_sol': '0', 'profit_sol': canonical(profit)})
+    if not cohort_uncertain and count == 0:
+        for key in ('median_hold_hours', 'win_rate_pct', 'rapid_sale_pct', 'avg_buys', 'avg_sells',
+                    'median_roi_pct'):
+            undefined_domain(key, 'empty_completed_cohort', {'completed_positions': '0'})
+    elif not monetary_cohort_uncertain and count:
+        zero_basis = [p['id'] for p in cohort if p['matched_basis'] == ZERO]
+        if zero_basis:
+            undefined_domain('median_roi_pct', 'zero_episode_basis',
+                             {'completed_positions': str(count), 'zero_basis_episode_ids': zero_basis})
     rendered = []
     for episode in positions:
         state = 'interrupted' if episode['interrupted'] else ('unresolved' if episode['unknown'] or episode['classification'] == 'unknown' else ('closed' if episode['end'] else 'open'))
+        quantity_known = not (episode_unknown or episode['quantity_unknown'] or
+                              episode['interrupted'] or episode['classification'] == 'unknown')
         pnl = None if episode['unknown'] or episode['interrupted'] else episode['proceeds'] - episode['matched_basis'] - episode['exit_fees']
+        basis_known = not (episode['basis_unknown'] or episode['quantity_unknown'] or episode['interrupted'])
+        remaining_basis_known = not (episode['quantity_unknown'] or episode['interrupted']) and all(
+            lot['basis'] is not None for lot in episode['lots'])
         sold_targets = {}
         for pct in (50, 90):
             target = D(episode['acquired']) * D(pct) / HUNDRED
@@ -538,7 +592,26 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             sold_targets[str(pct)] = canonical(_hours(episode['start'], hit)) if hit is not None else None
         rendered.append({'id': episode['id'], 'mint': episode['mint'], 'classification': episode['classification'],
                          'status': state, 'in_window': episode['end'] is None or episode['end'] >= start, 'start': episode['start'].isoformat(),
+                         # Legacy status/timing fields remain observations for
+                         # conditional consumers. These typed states describe
+                         # strict normalized-input population dependencies.
+                         'cohort_quantity_status': 'known' if quantity_known else 'unknown',
+                         'monetary_status': 'unknown' if episode['unknown'] or episode['interrupted'] else 'known',
+                         'first_sale_status': 'known' if quantity_known and not episode['first_sale_unknown'] else 'unknown',
+                         'first_sale_observation_status': 'known' if not (episode['quantity_unknown'] or episode['interrupted'] or episode['first_sale_unknown']) else 'unknown',
+                         'acquisition_basis_status': 'known' if basis_known else 'unknown',
+                         'known_basis_sol': canonical(episode['basis']) if basis_known else None,
+                         'known_matched_basis_sol': canonical(episode['matched_basis']) if basis_known else None,
+                         'remaining_basis_status': 'known' if remaining_basis_known else 'unknown',
+                         'remaining_basis_sol': canonical(sum((lot['basis'] for lot in episode['lots']), ZERO)) if remaining_basis_known else None,
                          'end': episode['end'].isoformat() if episode['end'] else None,
+                         'start_order': episode['start_order'], 'end_order': episode['end_order'],
+                         'remaining_lots': [{'quantity_raw': str(lot['quantity']),
+                             'basis_sol': canonical(lot['basis']), 'basis_status': 'known' if lot['basis'] is not None else 'unknown',
+                             'acquisition': {'signature': lot.get('signature'), 'evidence': lot.get('evidence', []),
+                                 'timestamp': lot['timestamp'].isoformat() if lot['timestamp'] is not None else None,
+                                 'order': lot.get('order'), 'quantity_raw': str(lot.get('acquisition_quantity', lot['quantity']))}}
+                             for lot in episode['lots']],
                          'quantity_raw': str(episode['quantity']), 'acquired_raw': str(episode['acquired']),
                          'sold_raw': str(episode['sold']), 'decimals': episode['decimals'],
                          'buy_count': episode['buy_count'], 'sell_count': episode['sell_count'],
@@ -558,9 +631,11 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             'weekly': list(reversed(weeks)), 'known_realised_profit_sol': canonical(known_net - known_overhead),
             'unallocated_overhead_sol': canonical(known_overhead),
             'metric_intervals': intervals, 'metric_coverage': metric_coverage,
+            'metric_domains': metric_domains, 'metric_domain_methodology': METHODOLOGY,
             'notes': ['Analytical FIFO; strict-zero closes; raw mint identities; half-open UTC window.',
                       'A reconciled ledger does not establish historical account ownership completeness.',
-                      'Unknown eligible episodes remain visible and block affected populations.']}
+                      'Unknown eligible episodes remain visible and block affected populations.',
+                      'Missing acquisition money does not revoke independently supported quantity or holding populations.']}
 
 
 def evaluate_policy(metrics, preset, evidence_verified=False):

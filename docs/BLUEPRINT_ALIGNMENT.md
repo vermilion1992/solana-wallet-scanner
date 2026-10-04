@@ -90,3 +90,17 @@ The v0.3.10 R14 correction addresses PDF pages 6–8's event-time ownership and 
 ## v0.3.11 RPC target-schema correction (R15)
 
 The original PDF pages 6–8 require event-time ownership and supported operations. The scoped account interpreter now follows primary RPC target names for approvals/revocation and the four standard authority-type branches, retaining R14 representation checks and required uncertainty. Primary-schema examples are unsigned synthetic conformance inputs, not historical ownership witnesses. Page 9 strict filters and 30/90-day populations remain unchanged. R1 remains OPEN: page 6's independent historical ownership requirement and page 18's source sufficiency decision still need an implemented complete accounting branch and independent real-wallet acceptance data. More isolated receipts or another synthetic six-hour episode do not supply that milestone.
+
+## Offline accounting completion slice — original scope preserved
+
+The original PDF's independent historical ownership, quantity/acquisition and
+30/28/90-day population requirements remain authoritative. The current slice
+separates physical episode proof from money, preserves losing/breakeven members,
+and exposes selected closed/disposed/open observations using the existing FIFO.
+It connects current evidence components to normal policy/report/rebuild paths
+without importing trusted PASS flags. These changes address unfinished code and
+conservative false UNKNOWN behavior; they do not establish historically exhaustive
+wallet membership, time-relevant meme eligibility or exact economic valuation.
+All original thresholds and read-only/no-subscription boundaries remain unchanged.
+The genuine partial dataset and independent named-lot/fee calculations retain
+scope labels. PRODUCT_READY=false until genuine supported B1/B2/B3 acceptance.
