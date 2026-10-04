@@ -1,0 +1,167 @@
+{
+  "kind": "actual-launcher-offline-synthetic-screening-browser",
+  "state": "PASS",
+  "software_functionality": "PASS_IN_SYNTHETIC_BROWSER_SCOPE",
+  "genuine_live_evidence": "NOT_RUN_IN_OFFLINE_BROWSER",
+  "full_historical_acceptance": "BLOCKED",
+  "PRODUCT_READY": false,
+  "cases": [
+    {
+      "case": "import-address-is-not-identity",
+      "state": "PASS",
+      "cohort_id": "bdea58dc42244e92a91ead8fd1cba655"
+    },
+    {
+      "case": "synthetic-reconnecting-provider-is-visible",
+      "state": "CONFIRMED_UX_GAP",
+      "paper_status": "running",
+      "observer_status": "reconnecting",
+      "connection_visible": false
+    }
+  ],
+  "limitations": [
+    "Synthetic provider fixtures validate software mechanics, not chain authenticity or actual copied fills."
+  ],
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "api_trace": [
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/import",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/bdea58dc42244e92a91ead8fd1cba655/identity",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/bdea58dc42244e92a91ead8fd1cba655/audit",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/screenings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/7a281e3425fd48b78cef41f2701d92d6",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations/7a281e3425fd48b78cef41f2701d92d6/stop",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    }
+  ],
+  "actual_launcher": "/workspace/solana-wallet-scanner/run.sh",
+  "browser": "Chromium 151.0.7922.173",
+  "launcher_stopped": true,
+  "offline_guards": {
+    "synthetic_provider_requests": 8,
+    "external_provider_requests": 0,
+    "credential_lookups": 0,
+    "blocked_requests": 0,
+    "synthetic_subscriptions": 1,
+    "transport": "explicit offline synthetic test, no genuine provider collection",
+    "requests": [
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getSignaturesForAddress",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getAccountInfo",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getSignaturesForAddress",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getTransaction",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getSignaturesForAddress",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_provider_requests",
+        "method": "getAccountInfo",
+        "path": "/"
+      },
+      {
+        "kind": "synthetic_subscriptions",
+        "method": "connect",
+        "path": "address-specific logsSubscribe"
+      }
+    ]
+  }
+}

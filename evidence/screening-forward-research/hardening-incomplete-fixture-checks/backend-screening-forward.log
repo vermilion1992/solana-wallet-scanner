@@ -1,0 +1,319 @@
+........................................................................ [ 11%]
+........................................................................ [ 22%]
+........................................................ [ 31%]
+....................................... [ 37%]
+........................................................................ [ 48%]
+........................................................................ [ 59%]
+........................................................................ [ 70%]
+........................................................................ [ 81%]
+........................................................................ [ 92%]
+...F...............................FFFFFFF....                           [100%]
+=================================== FAILURES ===================================
+_ test_genuine_original_component_observations_remain_distinct_from_report_boundaries _
+
+    def test_genuine_original_component_observations_remain_distinct_from_report_boundaries():
+>       result = derive(frozen(genuine_sources()))
+                               ^^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:64: in genuine_sources
+    request = (GENUINE / (name + '-request.json')).read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-request.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-request.json'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_normal_genuine_archive_inspection_exports_immutable_rebuild_loss_and_restoration _
+
+guarded = (<starlette.testclient.TestClient object at 0x7f8d2384f140>, <fastapi.applications.FastAPI object at 0x7f8d23b23380>, ...tmp/pytest-of-agent/pytest-64/test_normal_genuine_archive_in0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_normal_genuine_archive_inspection_exports_immutable_rebuild_loss_and_restoration(guarded):
+        from tests.test_indexed_report_integration import import_report, rebuild
+        client, app, directory, calls = guarded
+>       bundle, sources = genuine_bundle()
+                          ^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:306: in genuine_bundle
+    raw = json.loads(gzip.decompress((GENUINE / '04-selected-buy-response.raw.gz').read_bytes()))['result']
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_public_internal_affinity_payload_cannot_be_smuggled_under_another_role __
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-64/test_public_internal_affinity_0')
+
+    def test_public_internal_affinity_payload_cannot_be_smuggled_under_another_role(tmp_path):
+        from scanner.archive_input import import_archive
+        from scanner.storage import Store
+>       bundle, rows = genuine_bundle()
+                       ^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:379: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:306: in genuine_bundle
+    raw = json.loads(gzip.decompress((GENUINE / '04-selected-buy-response.raw.gz').read_bytes()))['result']
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_genuine87_augmented_normal_report_preserves_exact_fee_losing_lot_and_current_only_inventory _
+
+guarded = (<starlette.testclient.TestClient object at 0x7f8d200a1010>, <fastapi.applications.FastAPI object at 0x7f8d22aa9070>, ...tmp/pytest-of-agent/pytest-64/test_genuine87_augmented_norma0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_genuine87_augmented_normal_report_preserves_exact_fee_losing_lot_and_current_only_inventory(guarded):
+        from tests.test_indexed_report_integration import import_report
+        client, _, _, calls = guarded
+>       bundle, snapshots = genuine87_inventory_bundle()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:392: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:322: in genuine87_inventory_bundle
+    original = path.read_bytes()
+               ^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[inventory-source] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-64/test_inventory_byte_envelope_c0')
+label = 'inventory-source'
+
+    @pytest.mark.parametrize('label', ['inventory-source', 'owned-accounts', 'classification'])
+    def test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label(tmp_path, label):
+        from scanner.archive_input import import_archive, load_archive, decode_archive, analyze_archive
+        from scanner.storage import Store
+>       bundle, _rows = genuine_bundle()
+                        ^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:306: in genuine_bundle
+    raw = json.loads(gzip.decompress((GENUINE / '04-selected-buy-response.raw.gz').read_bytes()))['result']
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[owned-accounts] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-64/test_inventory_byte_envelope_c1')
+label = 'owned-accounts'
+
+    @pytest.mark.parametrize('label', ['inventory-source', 'owned-accounts', 'classification'])
+    def test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label(tmp_path, label):
+        from scanner.archive_input import import_archive, load_archive, decode_archive, analyze_archive
+        from scanner.storage import Store
+>       bundle, _rows = genuine_bundle()
+                        ^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:306: in genuine_bundle
+    raw = json.loads(gzip.decompress((GENUINE / '04-selected-buy-response.raw.gz').read_bytes()))['result']
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[classification] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-64/test_inventory_byte_envelope_c2')
+label = 'classification'
+
+    @pytest.mark.parametrize('label', ['inventory-source', 'owned-accounts', 'classification'])
+    def test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label(tmp_path, label):
+        from scanner.archive_input import import_archive, load_archive, decode_archive, analyze_archive
+        from scanner.storage import Store
+>       bundle, _rows = genuine_bundle()
+                        ^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:306: in genuine_bundle
+    raw = json.loads(gzip.decompress((GENUINE / '04-selected-buy-response.raw.gz').read_bytes()))['result']
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_native_original_byte_presence_loss_restoration_preserves_fee_and_frozen_inputs _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-64/test_native_original_byte_pres0')
+
+    def test_native_original_byte_presence_loss_restoration_preserves_fee_and_frozen_inputs(tmp_path):
+        import scanner.app as application
+        from scanner.report_rebuild import freeze_report_inputs
+        from scanner.storage import Store
+        from scanner.wallet_evidence import derive_wallet_evidence
+>       bundle, snapshots = genuine_bundle()
+                            ^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:454: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_inventory_evidence.py:306: in genuine_bundle
+    raw = json.loads(gzip.decompress((GENUINE / '04-selected-buy-response.raw.gz').read_bytes()))['result']
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/collection/phase6/04-selected-buy-response.raw.gz'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_inventory_evidence.py::test_genuine_original_component_observations_remain_distinct_from_report_boundaries
+FAILED tests/test_inventory_evidence.py::test_normal_genuine_archive_inspection_exports_immutable_rebuild_loss_and_restoration
+FAILED tests/test_inventory_evidence.py::test_public_internal_affinity_payload_cannot_be_smuggled_under_another_role
+FAILED tests/test_inventory_evidence.py::test_genuine87_augmented_normal_report_preserves_exact_fee_losing_lot_and_current_only_inventory
+FAILED tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[inventory-source]
+FAILED tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[owned-accounts]
+FAILED tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[classification]
+FAILED tests/test_inventory_evidence.py::test_native_original_byte_presence_loss_restoration_preserves_fee_and_frozen_inputs
+8 failed, 637 passed, 1 warning, 49 subtests passed in 56.03s

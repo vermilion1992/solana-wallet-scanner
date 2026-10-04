@@ -1,0 +1,135 @@
+INFO:     Started server process [6955]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready: http://127.0.0.1:45757/#session=[redacted]
+Press Ctrl+C to stop.
+
+INFO:     127.0.0.1:51638 - "GET /api/state HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51650 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51650 - "GET /assets/index-CR-pm_pb.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51658 - "GET /assets/index-DWJWoVTP.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51650 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51658 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51658 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/discovery/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/discovery/154a73d6ff0a4fd4b5b4594b8a8240b2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/discovery/154a73d6ff0a4fd4b5b4594b8a8240b2/identity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/discovery/154a73d6ff0a4fd4b5b4594b8a8240b2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/discovery/154a73d6ff0a4fd4b5b4594b8a8240b2/audit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/reports/7e6daa163f56462b991665b98afa35b9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/screenings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/screenings/e17aa640d83f44fe9269a82011172237/export HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/reports/7e6daa163f56462b991665b98afa35b9?view=display HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/evidence/3e162eeb2c6e9983f7a1cec6a37fd949cc1523faebd07171375abae9b73f8788 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/screenings/e17aa640d83f44fe9269a82011172237 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/observations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/observations/b57e538347144f759dae06fba4d2a82e/mark HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "POST /api/observations/b57e538347144f759dae06fba4d2a82e/stop HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51638 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51672 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e/export HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6955]
+INFO:     Started server process [7355]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready: http://127.0.0.1:39731/#session=[redacted]
+Press Ctrl+C to stop.
+
+INFO:     127.0.0.1:37620 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37620 - "GET /assets/index-CR-pm_pb.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37630 - "GET /assets/index-DWJWoVTP.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37620 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37630 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37620 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37620 - "GET /api/screenings/e17aa640d83f44fe9269a82011172237 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37630 - "GET /api/screenings/e17aa640d83f44fe9269a82011172237 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37630 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37630 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37636 - "GET /api/observations/b57e538347144f759dae06fba4d2a82e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37636 - "GET /api/screenings/e17aa640d83f44fe9269a82011172237 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7355]

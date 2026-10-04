@@ -1,0 +1,177 @@
+{
+  "export_version": "quote-paper-v1",
+  "exported_at": "2026-10-04T23:19:42.413087+00:00",
+  "run": {
+    "version": "quote-paper-v1",
+    "strategy": "fixed-entry-first-sale-v1",
+    "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+    "settings": {
+      "capital_sol": "10",
+      "entry_sol": "0.1",
+      "max_open_positions": 5,
+      "reaction_delay_seconds": 5,
+      "adverse_bps": 100,
+      "execution_fee_sol": "0.00001",
+      "max_price_impact_pct": "5",
+      "max_events": 1000,
+      "max_quotes": 500,
+      "max_duration_minutes": 2
+    },
+    "started_at": "2026-10-04T23:19:40.136982+00:00",
+    "screening_id": "d1a6ae327f154e898b2cf572a44c51c8",
+    "copy_research_preset_snapshot": {
+      "name": "Forward quote copy research",
+      "version": "forward-copy-preset-v1",
+      "exclude_after_leader_exits_before_entry": 2,
+      "minimum_closed_positions_for_disadvantage": 3,
+      "exclude_negative_aggregate_closed_pnl": true,
+      "require_available_exits_and_known_open_valuation": true
+    },
+    "id": "874938e3cc6544298fbb288600af42b2",
+    "settings_snapshot_hash": "dedbe5e380f009a721ba46b89817bf3cefdd059fa70cfb600814852dd625dd69",
+    "status": "stopped",
+    "stop_reason": "user_stopped",
+    "deadline_at": "2026-10-04T23:21:40.136982+00:00",
+    "initial_cash_lamports": "10000000000",
+    "cash_lamports": "10000000000",
+    "signals": [],
+    "quote_requests": [],
+    "positions": [],
+    "gaps": [
+      {
+        "id": "72a10bd04e3c458881b8d25e307cfebf",
+        "reason": "Connecting/reconnecting interval; activity was not replayed",
+        "start_at": "2026-10-04T23:19:40.136982+00:00",
+        "end_at": "2026-10-04T23:19:40.531471+00:00",
+        "backfilled": false
+      },
+      {
+        "id": "d1aa0e4da83d4e1eb011456954e29da2",
+        "reason": "Observation stopped; future/missed activity is not replayed",
+        "start_at": "2026-10-04T23:19:41.286226+00:00",
+        "end_at": "2026-10-04T23:19:41.286231+00:00",
+        "backfilled": false
+      }
+    ],
+    "budgets": {
+      "events_used": 0,
+      "quotes_used": 0
+    },
+    "checkpoint": {
+      "last_signal_id": null,
+      "last_detected_at": null
+    },
+    "updated_at": "2026-10-04T23:19:42.411679+00:00",
+    "summary": {
+      "initial_capital_sol": "10",
+      "cash_sol": "10",
+      "realised_pnl_sol": "0",
+      "open_positions": 0,
+      "closed_positions": 0,
+      "open_cost_sol": "0",
+      "marked_open_value_sol": "0",
+      "known_marked_open_value_sol": "0",
+      "economic_pnl_sol": "0",
+      "supported_economic_pnl_sol": null,
+      "source_availability": {
+        "state": "KNOWN",
+        "required_sources": 1,
+        "available_sources": 1,
+        "missing_sources": [],
+        "reason": "Required original settings, signal and quote archives remain available."
+      },
+      "supported_performance_state": "INCOMPLETE",
+      "open_pnl_sol": "0",
+      "valuation_status": "known",
+      "valuation_reason": null,
+      "valuation_times": [],
+      "signal_count": 0,
+      "quote_count": 0,
+      "unavailable_quotes": 0,
+      "unavailable_exits": 0,
+      "monitoring_gaps": 2,
+      "complete_observation": false,
+      "result_label": "Quote-based paper results",
+      "price_basis": "Quotes obtained after detection, decoding and reaction delay; quotes are not execution guarantees.",
+      "fees": {
+        "observed": "Provider/pool fees are already included in quoted output and are not deducted again.",
+        "modeled": "Adverse output haircut plus one additional SOL execution cost per hypothetical entry or exit."
+      }
+    },
+    "risk_observations": [],
+    "copyability": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Monitoring gaps remain; missed periods were not reconstructed as followed activity.",
+        "No eligible forward strategy signal has been observed yet."
+      ],
+      "preset_snapshot": {
+        "name": "Forward quote copy research",
+        "version": "forward-copy-preset-v1",
+        "exclude_after_leader_exits_before_entry": 2,
+        "minimum_closed_positions_for_disadvantage": 3,
+        "exclude_negative_aggregate_closed_pnl": true,
+        "require_available_exits_and_known_open_valuation": true
+      },
+      "scope": "Defined hypothetical follower strategy; this does not qualify leader profit or establish trader intent or future safety."
+    },
+    "stopped_at": "2026-10-04T23:19:42.352119+00:00",
+    "observer": {
+      "run_id": "874938e3cc6544298fbb288600af42b2",
+      "status": "stopped",
+      "scope": "Address mentions only; beneficial-wallet activity completeness is not established",
+      "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+      "limits": {
+        "max_transactions": 100,
+        "max_notifications": 1000,
+        "max_minutes": 2
+      },
+      "version": "forward-observer-v1",
+      "started_at": "2026-10-04T23:19:40.141000+00:00",
+      "notifications": 0,
+      "transactions": 0,
+      "stop_reason": "operator_stop",
+      "completeness": false,
+      "monitoring_gap_started_at": null,
+      "updated_at": "2026-10-04T23:19:42.351726+00:00",
+      "connected_at": "2026-10-04T23:19:40.529307+00:00",
+      "subscription": 109283582,
+      "subscription_evidence_hash": "8c1893eefa9816cb446ce52fa53d05779e4817e91627abd12395f0ca5470009b",
+      "stopped_at": "2026-10-04T23:19:42.351702+00:00"
+    },
+    "notifications": []
+  },
+  "scope": "Forward quote-only paper observation; no signed transaction, actual fill or verified leader profit.",
+  "settings_evidence": {
+    "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+    "copy_research_preset_snapshot": {
+      "exclude_after_leader_exits_before_entry": 2,
+      "exclude_negative_aggregate_closed_pnl": true,
+      "minimum_closed_positions_for_disadvantage": 3,
+      "name": "Forward quote copy research",
+      "require_available_exits_and_known_open_valuation": true,
+      "version": "forward-copy-preset-v1"
+    },
+    "screening_id": "d1a6ae327f154e898b2cf572a44c51c8",
+    "settings": {
+      "adverse_bps": 100,
+      "capital_sol": "10",
+      "entry_sol": "0.1",
+      "execution_fee_sol": "0.00001",
+      "max_duration_minutes": 2,
+      "max_events": 1000,
+      "max_open_positions": 5,
+      "max_price_impact_pct": "5",
+      "max_quotes": 500,
+      "reaction_delay_seconds": 5
+    },
+    "started_at": "2026-10-04T23:19:40.136982+00:00",
+    "strategy": "fixed-entry-first-sale-v1",
+    "version": "quote-paper-v1"
+  },
+  "settings_evidence_availability": {
+    "state": "KNOWN",
+    "hash": "dedbe5e380f009a721ba46b89817bf3cefdd059fa70cfb600814852dd625dd69",
+    "reason": "Original settings archive is readable."
+  }
+}

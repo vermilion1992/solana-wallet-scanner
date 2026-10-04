@@ -1,0 +1,11 @@
+# Changed-path peer review, 4 October 2026
+
+Application commit: `35b450783754bc006940e82e04bc226912d7e2f7`. Source hashes for the examined files are in `result.json`; CI/README/classification edit hashes and earlier hosted diagnostics are in `CI_REVIEW.json`. Original earlier review receipts were preserved.
+
+The final read-only peer controls pass: 15 grouped checks, including quote/settings source loss and restoration, immutable terminal allowance, unfunded marks/exits retaining open exposure, once-only modeled costs, late receipt cancellation, ineligible-only observations, initial/reconnect gaps, mixed result/error subscription ACK rejection, selected continuation, cross-cohort identity alternatives, malformed account owners, and saved screening source availability.
+
+No unresolved blocker was reproduced in these examined paths. Source inspection covered the new paper cash/fee checks and gap exclusion, current-vs-frozen screening availability, bounded observer captures/diagnostics and cached native-report mint enrichment. The parent agent independently inspected the classification/wallet boundary correction; this agent implemented that correction, so it is not labeled its own independent source review. Existing genuine inputs remained unchanged.
+
+The prior hosted candidate failed four actual regression cases in two groups; eight other groups and offline development passed, and the aggregate correctly rejected the failed groups. The two classification regressions were reproduced and corrected; the cached-report integration pair was assigned to the app owner. Local affected check logs are enumerated in `CI_REVIEW.json`. Hosted CI for a subsequently published final candidate is a separate result.
+
+All peer probes used synthetic transports and temporary stores with zero provider calls or credential lookups. No independent browser review, live validation, full historical matrix or fresh local installer execution was performed by this agent. Hosted Linux locked setup and local dependency compatibility were inspected separately. Full-wallet historical acceptance remains open and PRODUCT_READY stays false. The parent performs final frozen-candidate gates and the actual browser/live workflow.

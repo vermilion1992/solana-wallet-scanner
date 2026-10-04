@@ -1,0 +1,102 @@
+{
+  "scope": "Independent read-only source review and offline synthetic deterministic controls",
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "independent_browser_run": false,
+  "full_suite_run": false,
+  "results": [
+    {
+      "control": "quote_source_loss_and_exact_restoration",
+      "status": "PASS",
+      "retained_pnl": "0.2",
+      "missing_supported_pnl": null,
+      "missing_complete": false,
+      "restored_complete": true
+    },
+    {
+      "control": "observation_export_wrapper_shape",
+      "status": "PASS"
+    },
+    {
+      "control": "ineligible_only_has_no_supported_performance",
+      "status": "PASS"
+    },
+    {
+      "control": "deadline_receipt_cannot_spend_cash",
+      "status": "PASS",
+      "request_status": "cancelled"
+    },
+    {
+      "control": "independently_worked_costs_once",
+      "status": "PASS",
+      "expected_pnl": "-0.129",
+      "expected_cash": "1.871"
+    },
+    {
+      "control": "missing_settings_export_is_reviewable_and_cannot_support_current_pnl",
+      "status": "PASS"
+    },
+    {
+      "control": "unfunded_exit_and_mark_preserve_open_exposure_without_negative_cash",
+      "status": "PASS"
+    },
+    {
+      "control": "exhausted_quote_allowance_cannot_be_reset_by_stop_resume",
+      "status": "PASS"
+    },
+    {
+      "control": "initial_and_reconnect_intervals_include_waits",
+      "status": "PASS",
+      "spans_seconds": [
+        5.0,
+        7.0
+      ]
+    },
+    {
+      "control": "selected_continuation_preserves_other_wallet_checkpoint",
+      "status": "PASS"
+    },
+    {
+      "control": "cross_cohort_same_slot_conflict_is_dependency",
+      "status": "PASS"
+    },
+    {
+      "control": "same_cohort_newer_current_snapshot_preserves_old_dependency",
+      "status": "PASS"
+    },
+    {
+      "control": "malformed_native_account_owner_is_unknown",
+      "status": "PASS",
+      "owner_cases": [
+        "null",
+        "object",
+        "array",
+        "number"
+      ]
+    },
+    {
+      "control": "mixed_result_error_ack_retains_gap_and_accepts_no_activity",
+      "status": "PASS"
+    },
+    {
+      "control": "saved_screening_source_loss_blocks_current_observation_and_restores_without_rewriting_snapshot",
+      "status": "PASS"
+    }
+  ],
+  "source_sha256": {
+    "scanner/paper.py": "cc963944c01fb36a720580ff0d7ee13a9f119feb805fe0a419336d66aa6e7f04",
+    "scanner/observer.py": "300f06636c87a21c732b26f791179a3b49f1dbbd49e3e02a4fe9c2433072e7c8",
+    "scanner/screening.py": "f4a67f7c384490fb679e88e5c7cb29cd1c12a5799931f04c50750b0d288bd3ff",
+    "scanner/screening_routes.py": "c23725a4d957bf6d0924ed57ae653c6f28264fc7481dd79e3cfc6cedcf927c19",
+    "scanner/app.py": "13f0d2719d73b0c675a203d455eb21ce23614d32787a5fc7b162b6bd9002226a",
+    "scanner/discovery.py": "28d24bab2021e2a4053cb9a2e34ab173b83a19a1ecdee41ef81aadfdf2447425",
+    "scanner/candidate_import.py": "a8e45ef311bb4608fe4a1e61e26dd773eb98070667b0c277f17f33bd6e9d6ab2",
+    "frontend/src/Research.tsx": "0a02425033184d3150939e44b3786429809f37f3bba4c26ab71a22d84e99b4dd",
+    "frontend/src/Discovery.tsx": "1015302070270658becd4b98d30b6d4b75348f40ae469cbdc553c2d083f84070",
+    "scanner/asset_classification.py": "52592e1508f11e98d1aa9ca3cce335247d1da894fae4ae52d06125b29f792c9f",
+    "scanner/wallet_evidence.py": "5003b1624e19ae5f53607693825893e2e981b42d09abf9a7d4381047a73122b5",
+    "tools/validate.py": "82a96b7ee88252ae46909520beadba2a324f8cc65416a1b6928b11394a355394",
+    ".github/workflows/offline-focused.yml": "d4f9942dbb2d02cc57e746486dc5d3da973baf18db588cecdb4a164219272fa0",
+    "README.md": "b7a0c45d0f670728e3d23e275db2b2253de7c3fd463f059e56509ea94f8c31a8"
+  }
+}

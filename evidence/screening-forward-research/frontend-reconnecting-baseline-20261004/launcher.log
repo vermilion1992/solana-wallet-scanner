@@ -1,0 +1,23 @@
+INFO:     Started server process [7490]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready: http://127.0.0.1:41525/#session=[redacted]
+Press Ctrl+C to stop.
+
+INFO:     127.0.0.1:56918 - "GET /api/state HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56922 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56938 - "GET /assets/index-DWJWoVTP.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56922 - "GET /assets/index-CR-pm_pb.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56948 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56962 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56962 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56962 - "POST /api/discovery/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56962 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56918 - "GET /api/discovery/7f042f7134224642a63d1fafb3be654c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56962 - "POST /api/discovery/7f042f7134224642a63d1fafb3be654c/identity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56962 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7490]

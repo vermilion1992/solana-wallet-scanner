@@ -1,0 +1,31 @@
+{
+  "kind": "genuine-bounded-read-only-launcher-workflow",
+  "state": "FAILED",
+  "cases": [
+    {
+      "case": "ordinary-launcher-import-and-live-identity",
+      "state": "PASS"
+    },
+    {
+      "case": "genuine-bounded-sample-screen-save-export",
+      "state": "PASS"
+    }
+  ],
+  "PRODUCT_READY": false,
+  "identity_response": {
+    "status": 200,
+    "body": {
+      "checked": [
+        {
+          "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+          "status": "candidate",
+          "reason": "Native signer with owned token movement and current system account checked."
+        }
+      ]
+    }
+  },
+  "report_id": "800355a60dc640ba920be8946c3ec778",
+  "screening_result": "excluded_by_preset",
+  "screening_id": "c10cceb7585247d3b3b88921d391bc30",
+  "reason": "AssertionError: {\"detail\":\"CSRF token required\"}"
+}

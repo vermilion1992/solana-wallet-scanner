@@ -1,0 +1,21 @@
+{
+  "scope": "Local verified TLS websocket probe; no external requests",
+  "results": [
+    {
+      "connector": "library_default",
+      "outcome": "redirect_followed",
+      "tls_verification_enabled": true,
+      "cross_origin": true,
+      "final_path": "/redirected",
+      "redirected_destination_subscriptions": 1
+    },
+    {
+      "connector": "application_default",
+      "outcome": "redirect_followed",
+      "tls_verification_enabled": true,
+      "cross_origin": true,
+      "final_path": "/redirected",
+      "redirected_destination_subscriptions": 1
+    }
+  ]
+}
