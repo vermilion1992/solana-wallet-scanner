@@ -2,6 +2,10 @@
 
 Status is deliberately split between execution evidence and future work. The starting workflow handoff asserted no new application defect; the bounded audit below subsequently reproduced SC-01.
 
+Current identity and status are in the final **historical membership and position
+integration** section below. Earlier tables remain historical findings and scoped
+execution records; their pending or active labels do not supersede that section.
+
 | Work item | Existing finding IDs | Starting status | Owner / next deliverable | Acceptance |
 |---|---|---|---|---|
 | Evidence integrity, chronology and dependencies | R5–R14 | Historical scoped corrections retained by the release; not all independently replayed in this handoff | Builder: shared matrix and sibling-path audit; reviewer: consolidated findings | Gate A plus retained positive/removal/API controls |
@@ -125,7 +129,7 @@ The prior indexed/native B2-UI-01 candidate is VERIFIED_IN_SCOPE by `evidence/in
 
 The genuine first replay additionally reproduced missing compiled read-only GetAccountDataSize support, retained PumpSwap user-PDA funding being mixed into purchase consideration, wallet-wide uncertainty erasing independent lot observations, and nullable-clock sorting in the new scoped projection. Pinned program-specific getters, exact PDA/owner/payer/CPI/endpoint checks and metric-specific selected-lot dependencies now correct these shared paths. Funding recovery and valuation remain UNKNOWN. Current methods are compiled v2, spot v7, history v11 and position v13; older snapshots require child rebuilds. The checker also rejects swallowed offline provider/credential attempts and distinguishes source-proved mathematically undefined losing/empty-cohort ratios from missing evidence for engineering acceptance only. Its N/A receipt never changes financial policy or current B3 status. First reproductions, frozen raw expectations and final scoped validation are retained under `evidence/genuine-wallet-batch/`.
 
-## Current offline accounting batch — 4 October 2026
+## Prior offline accounting batch — 4 October 2026
 
 Baseline is evidence HEAD `1bfc75222fce863313e6be333832a1b381d1cda4` / tested
 application `394904460c0473f07a25ed6324736421e0db1544`. Prior accepted scoped gates,
@@ -161,11 +165,52 @@ historical R5–R15 work. A null reason in a positive/partial future adapter rec
 was separately handled as an interface gap, not a genuine-data regression.
 Normal native reports now expose the same independent selected network fee
 observation already supported by their raw-payer/window research projection.
-All statuses here are pending the current full candidate gates and final review.
+That batch's final accepted scope is recorded in
+`evidence/metric-completion-batch/FINAL_GATES.json`; later work below has its own
+pending exact-candidate gates and does not reuse acceptance on changed bytes.
 
-CAP-POSITIONS remains a missing production implementation, not merely unavailable
-data: the current wallet-wide positions component still requires all observed
-FIFO positions to close before it can support a complete population. Correct
-mixed closed/open full-wallet inventory admission needs its own source-backed
-population contract. The new selected closed/disposed/open views isolate useful
-facts, but do not replace this unfinished strict wallet component or close B2.
+## Current historical membership and position integration — 4 October 2026
+
+Preserved baseline: private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, evidence HEAD
+`1040215f498b1317b1b942838994127f43a822bd`, tested application
+`7e4769922ad8055b8c290f7625401d8a42fd183b`; 235 source files, literal-byte/POSIX-mode
+manifest `578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2`.
+Its passing local gates and original raw expectations remain unchanged. Current
+uncommitted changes are **FIXED_PENDING_VALIDATION** or implementation progress
+until their own final source-bound gate and review records explicitly pass.
+
+| ID | Category | Current finding / implementation | Status and remaining proof |
+| --- | --- | --- | --- |
+| CAP-HIST | B: missing implementation | New historical-membership interface derives true pre/post presence and owner facts, successful create/reassign/close operations and transfer-time ownership from raw selected/linked alternatives in both token programs. Sparse agreeing checkpoints never prove unseen continuous ownership or exhaustive historical population. Caller completion/owner declarations cannot admit evidence. | Development implementation pending exact candidate validation. Exhaustive population source admission and unseen intervals remain OPEN. |
+| ACC-LIFECYCLE-01 | A: confirmed current application defect | A transient foreign → wallet → foreign authority sequence could retain only one owner change because neither endpoint was wallet-owned. The shared lifecycle relevance pass now retains the whole targeted account's instruction sequence, with original paths, program/schema and committed execution checks. | FIXED_PENDING_VALIDATION. Original reproduction: `evidence/position-history-batch/reproductions/TRANSIENT_OWNER_BASELINE.json`; outer/inner, parsed/compiled, both programs, failed and linked-conflict controls retained. This does not establish unobserved historical membership. |
+| CAP-POSITIONS | B: missing implementation | Current mint-aggregate position admission supports mixed closed/open episodes, owned-account transfers and FIFO re-entry/remainders. Exact quantities, per-episode timing/basis and independent interval closed cohorts use the existing FIFO and normal report path. | Development implementation pending exact candidate gates. Wallet-wide eligible population, complete hidden account history and classification remain UNKNOWN. |
+| ACC-POSITION-01 | A: confirmed development adapter defect | A readable final re-entry with wrong outer signature could be omitted while a known per-mint quantity of zero survived. The public raw wrapper now binds identity and retains unassignable/missing/unsupported source gaps in per-mint quantity dependencies. | FIXED_PENDING_VALIDATION. Distinct reproduction/review under `evidence/position-population-batch/`; selected/alternative controls and normal offline import/rebuild/export preserve parent immutability. |
+| ACC-MEMBERSHIP-01 | A: confirmed integrated census defect | A selected or alternative raw record with unsupported version, missing metadata or malformed lifecycle target could be omitted from the overall observed-membership census when it supplied no valid account boundary. The adapter now retains `complete_selected_operation_inspection` as a negative dependency while independently supported account membership and proved neutral fee-only records retain their scope. | FIXED_PENDING_VALIDATION. Six selected/alternative controls in `tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts` cover the three invalid forms and exact restoration. |
+| ACC-PHYSICAL-01 | A: confirmed shared observation defect | A proved failed transaction with identical token endpoints but missing fee could erase remaining purchase basis through generic unsupported-fee scope. Physical projection now proves unchanged failed endpoints/ownership separately; the dependent fee and monetary roles stay UNKNOWN. | FIXED_PENDING_VALIDATION. Missing/conflicting/unsupported token evidence cannot use this exclusion; supported fees/timing remain independently scoped. |
+| CAP-ORIGIN | B: missing implementation | Disposed-unit basis now has its own dependency check, independent of sale proceeds/fee, and separate report/28-day/90-day evidence maps. Unconsumed unknown-basis open stock cannot erase separately supported disposed basis; an unknown consumed acquisition still blocks its basis/profit. | Development scope implemented pending exact validation. Complete real acquisition provenance and historical population remain OPEN; no global acquisition flag is promoted. |
+| ACC-DEVELOPMENT-01 | A: confirmed integration regression | New explicit scoped dependencies shadowed the validated synthetic finite-world origins/cost branch, causing four retained positive controls to fail. The existing finite-world validator now supplies explicit independent development interval maps from its validated scope and interval receipts. | FIXED_PENDING_VALIDATION. No caller flag or genuine-data override is introduced; synthetic scope remains labelled development-only and cannot close B3. |
+| ACC-UI-BASIS-01 | A: confirmed sibling display defect | Matched disposed acquisition basis was hidden by the sale-money display gate even when current scoped quantity and `cost_basis_state` independently PASS. Rendering now has a separate basis gate under current method and exact interval freshness checks. | FIXED_PENDING_VALIDATION. Missing sale fee still blocks displayed profit; unknown consumed basis still hides basis. Frontend checks/build and actual browser workflow remain required. |
+| CAP-ROUTES | B: missing implementation | Economic cost-role observations are separated by reporting interval, retaining unresolved native rent/tip/capital/transfer roles and actual fee dependencies. Proven out-of-window unrelated costs do not erase the reporting scope; consumed pre-window basis costs remain dependencies. | Scoped implementation pending exact validation. Unsupported economic wrappers and complete external-flow/cost/allocation admission remain OPEN; net balance alone never classifies an economic role. |
+| PERF-01 | Implementation performance / validation | Source consistency prepares immutable instruction/key/program facts once per raw variant per invocation; indexed envelopes reuse only values parsed from checksum-validated original bytes. Source set, malformed/unsupported guards, conflicts, budgets and original field paths remain unchanged. No global or object-identity cache. | Pending exact integrated validation. Complete-output equivalence and bounded normalization evidence: `evidence/position-history-batch/performance/`; a local footprint is not a proved hosted shutdown cause. |
+| CI-01 | D: environment / validation, with confirmed receipt-control defect | Baseline native run `37208279838` was cancelled without an indexed receipt; final union INCOMPLETE / exit 2, shutdown cause unproved. Ten disjoint groups retain all 35 baseline selectors plus four new modules once. 600-second focused/development command caps precede hosted step/job caps. Distinct current reproduction also showed an offline-development PASS accepting running/timeout fields or missing exact command binding; strict guards now reject it. | FIXED_PENDING_VALIDATION. CI control reproductions/review are under `evidence/ci-completion-batch/`; a new current-HEAD native union must be observed independently of local full application acceptance. Historical failed run/receipts remain unchanged. |
+| CAP-CLASS / CAP-VALUATION | B: missing implementation and C: source requirements | Accepted time-relevant eligible-asset classification and exact all-account boundary inventory, historical marks and valued external-flow admission are still unfinished. Missing valuation cannot erase independent realised/basis/fee observations. | OPEN. No suffix, current token list, zero valuation or caller PASS supplies these contracts. |
+| DATA-01 / B1 | C: missing data / source capability | Free access, supported schemas, specific lifecycle examples and terminal traversal of the declared 87-record query are observed. Exhaustive formerly closed/reassigned/non-ATA historical ownership across both programs remains unproved. | Historical sufficiency unresolved. A paid account is neither established as necessary nor sufficient. Existing collection remains stopped; no new live requests or key reads in this batch. |
+| CAP-01 / B2 | B: product implementation | Archive → preserved evidence → shared consistency/chronology → decoder → FIFO → metric dependencies → normal immutable report/UI/source inspection/export/rebuild remains development-functional. This batch adds real raw-evidence interfaces without a parallel calculator. | Complete real wallet accounting OPEN. New development/synthetic interfaces do not close complete-wallet acceptance. |
+| R1-B3 | C: genuine acceptance data | Genuine 23-record fee sample and 87-record indexed query/named-lot observations remain labelled partial; original inputs and separately worked expectations are preserved. | BLOCKED. Need a genuinely supported complete coverage contract, required origins/population/classification/valuation and independent whole-wallet calculations/removal/restoration. A loss/MISS is valid; selected real observations or synthetic cases cannot close B3. |
+| GIT-01 | D: repository access | RESOLVED: authorised private repository and implementation branch accessible; full accepted Git history retained. | Exact new publication requires current source/secret/history checks. Historical access failures remain unchanged. No public repository or new release ZIP. |
+
+Current methods: wallet v8, archive v11, research v5, selected-cohort v2,
+metric-evidence v2; arithmetic remains FIFO v4 and internal production composition
+v1. Changed interpretations create new children and leave saved parents/raw
+archives unchanged. Original R5–R15, PROC-03 and ARC-02 accepted scopes are retained;
+the new CI receipt reproduction is a current sibling-path finding, not a generic
+restart. PRODUCT_READY=false. Current affected checks/reviews are development
+evidence; only the final source-bound gate record may establish new Gate A scope.
+
+CAP-POSITIONS now admits supported mixed closed/open observations through the
+shared FIFO. Complete wallet-wide positions still require an accepted historical
+population and relevant event/quantity scope; observed endpoint reconciliation
+cannot exclude unseen accounts or episodes. That remaining production admission
+and source contract keeps full B2 OPEN without requiring every observed position
+to close.

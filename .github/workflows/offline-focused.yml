@@ -1,7 +1,7 @@
 name: Offline focused correctness
 
-# Iteration checks only. Six disjoint batches retain the original 30 selectors
-# and add five regression modules. Full candidate and real acceptance are separate.
+# Iteration checks only. Ten disjoint batches retain all 35 baseline selectors
+# and add four development regression modules once. Full candidate and real acceptance are separate.
 on:
   push:
     branches: [codex/product-completion]
@@ -18,12 +18,12 @@ concurrency:
 jobs:
   focused-group:
     runs-on: ubuntu-22.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       max-parallel: 3
       matrix:
-        group: [historical, schemas, archives, indexed, research, discovery]
+        group: [historical, schemas, archives, indexed-input, indexed-chronology, indexed-dependencies, indexed-integration, indexed-coverage, research, discovery]
     steps:
       - name: Check out the exact candidate
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -44,6 +44,7 @@ jobs:
       # Download dependencies before isolation; never load provider/repository
       # credentials. The isolated namespace has no routed interface. Drop root.
       - name: Run the exact focused group without network access
+        timeout-minutes: 15
         shell: bash
         env:
           CI_GROUP: ${{ matrix.group }}
@@ -56,6 +57,8 @@ jobs:
           test -z "${HELIUS_API_KEY:-}"
           test -z "${GH_TOKEN:-}"
           test -z "${GITHUB_TOKEN:-}"
+          # Validator command cap 600s precedes the 15min step/30min job caps,
+          # leaving time for nonpassing receipts and fixed diagnostic uploads.
           .venv/bin/python tools/validate.py --profile focused --focused-group "$CI_GROUP" --output "$CI_EVIDENCE/$CI_GROUP"
           CHECKS
       - name: Preserve bounded diagnostics even after failure or interruption
@@ -99,7 +102,7 @@ jobs:
 
   offline-development:
     runs-on: ubuntu-22.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Check out the exact candidate
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -121,6 +124,7 @@ jobs:
           ./setup.sh --skip-frontend
           npm ci --prefix frontend --no-audit --no-fund --ignore-scripts
       - name: Run product and frontend checks without network access
+        timeout-minutes: 15
         shell: bash
         run: |
           set -euo pipefail
@@ -216,11 +220,47 @@ jobs:
             --group-record "$CI_RECEIPTS/focused-historical/result.json" \
             --group-record "$CI_RECEIPTS/focused-schemas/result.json" \
             --group-record "$CI_RECEIPTS/focused-archives/result.json" \
-            --group-record "$CI_RECEIPTS/focused-indexed/result.json" \
+            --group-record "$CI_RECEIPTS/focused-indexed-input/result.json" \
+            --group-record "$CI_RECEIPTS/focused-indexed-chronology/result.json" \
+            --group-record "$CI_RECEIPTS/focused-indexed-dependencies/result.json" \
+            --group-record "$CI_RECEIPTS/focused-indexed-integration/result.json" \
+            --group-record "$CI_RECEIPTS/focused-indexed-coverage/result.json" \
             --group-record "$CI_RECEIPTS/focused-research/result.json" \
             --group-record "$CI_RECEIPTS/focused-discovery/result.json" \
             --development-record "$CI_RECEIPTS/offline-development-receipt/result.json"
           CHECKS
+      - name: Preserve bounded aggregate diagnostics
+        if: always()
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/focused-summary" "$RUNNER_TEMP/ci-summary-diagnostics" <<'PY'
+          import hashlib, json, sys
+          from pathlib import Path
+          source, target = map(Path, sys.argv[1:]); target.mkdir(parents=True, exist_ok=True)
+          records = []
+          for name in ('result.json', 'runtime.log', 'node-runtime.log'):
+              path = source / name
+              if not path.is_file() or path.is_symlink():
+                  records.append({'name': name, 'state': 'MISSING'}); continue
+              size = path.stat().st_size
+              if size > 4 * 1024 * 1024:
+                  records.append({'name': name, 'state': 'OMITTED_TRANSFER_BOUND', 'bytes': size}); continue
+              raw = path.read_bytes(); (target / name).write_bytes(raw)
+              records.append({'name': name, 'state': 'COPIED', 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
+          (target / 'DIAGNOSTIC_STATUS.json').write_text(json.dumps({'scope': 'Strict aggregate receipt and fixed validator logs only; no application data.', 'records': records}, indent=2)+'\n')
+          PY
+      - name: Upload aggregate receipt even when the union is incomplete
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: focused-union-receipt
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/ci-summary-diagnostics/result.json
+            ${{ runner.temp }}/ci-summary-diagnostics/runtime.log
+            ${{ runner.temp }}/ci-summary-diagnostics/node-runtime.log
+            ${{ runner.temp }}/ci-summary-diagnostics/DIAGNOSTIC_STATUS.json
       - name: Report the verified iteration scope
         if: success()
         shell: bash

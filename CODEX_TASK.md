@@ -1,4 +1,54 @@
-# Active assignment — offline accounting completion batch, 4 October 2026
+# Active assignment — historical membership and position integration, 4 October 2026
+
+Continue only from private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, preserved evidence HEAD
+`1040215f498b1317b1b942838994127f43a822bd`. It binds tested application
+`7e4769922ad8055b8c290f7625401d8a42fd183b`: 235 application-source files,
+literal-byte/POSIX-mode manifest SHA-256
+`578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2`,
+portable byte manifest SHA-256
+`2f261099c0274e15f840c86f215966e503af51601a1f983b416fe4b4fed01475`.
+Keep that accepted scoped baseline, complete Git history, original genuine
+archives and independently worked expectations unchanged. Current edits require
+their own exact-candidate validation; the baseline's 3,007 unique backend nodes
+and 440 separately reported subtests are historical execution, not new-batch
+acceptance.
+
+Complete the non-data-blocked real-input contracts through the existing report
+path: executed historical membership from retained raw lifecycle instructions,
+mint-aggregate closed and open positions using the same FIFO, and disposed-basis
+and cost-role evidence separated into report/28-day/90-day scopes. Sparse endpoint
+agreement must never prove an unseen ownership interval or exhaustive wallet
+population. Preserve quantity and supported acquisition basis when an unrelated
+fee or valuation is unknown; retain missing, conflicting and unsupported inputs
+as dependencies. Current methods are wallet v8, archive v11, research v5,
+selected-cohort v2 and metric-evidence v2; saved parents require new immutable
+children to adopt changed interpretations.
+
+Retain invocation-local source-fact and indexed-page parsing reuse without a
+global cache or trusted caller receipts. Finish the distinct integrated read-only
+review, affected matrices, frontend checks/build, exact-source full candidate
+gates and actual offline product/genuine/browser workflows before publication.
+The native run on preserved HEAD `1040215…` was cancelled without an indexed
+receipt; its strict union returned INCOMPLETE. The shutdown cause is not proved.
+The current CI correction keeps all 35 baseline focused selectors plus four new
+modules exactly once in ten groups, with 600-second focused/development command
+caps preceding 15-minute steps and 30-minute jobs. Observe a new native result
+separately from local candidate acceptance; do not infer PASS from partial jobs.
+
+B1 exhaustive historical coverage remains unresolved. B2 is development-functional
+for supported records; complete real wallet accounting remains OPEN. Genuine B3
+remains BLOCKED and PRODUCT_READY=false. Historical population admission,
+unsupported economic routes, complete origins/roles, classification and exact
+valuation still have implementation and source requirements. No new provider
+requests, credential lookups, purchases, upgrades, signing or funded wallet are
+authorised by this offline batch. Publish coherent commits privately on the same
+branch after secret/source checks; do not create a release ZIP. Current development
+evidence is under `evidence/position-history-batch/`,
+`evidence/ownership-position-batch/`, `evidence/position-population-batch/` and
+`evidence/ci-completion-batch/`; the final candidate record governs acceptance.
+
+# Prior assignment — offline accounting completion batch, 4 October 2026
 
 Continue private `vermilion1992/solana-wallet-scanner`, branch
 `codex/product-completion`, exact preserved evidence HEAD

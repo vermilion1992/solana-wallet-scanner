@@ -26,7 +26,7 @@ from .accounting import analyze, canonical, decimal, raw_quantity, utc, median, 
 
 D = Decimal
 ZERO = D('0')
-VERSION = 'supported-subset-research-v4-disposal-scopes'
+VERSION = 'supported-subset-research-v5-origin-scopes'
 
 
 def summarize_research(events, start, end, *, history_complete=False,
@@ -382,6 +382,8 @@ def _summarize(events, start, end, history_complete, anchors, supplied_findings,
                   'conditional_profit_sol': canonical(net) if scoped_chronology_available else None,
                   'conditional_proceeds_sol': canonical(proceeds),
                   'conditional_exit_fees_sol': canonical(fee),
+                  'cost_basis_state': 'PASS' if matched and scoped_origin and scoped_clocks
+                      and not role['quantity_unknown'] else 'UNKNOWN',
                   'monetary_state': 'PASS' if net is not None and scoped_chronology_available else 'UNKNOWN',
                   'quantity_state': 'UNKNOWN' if role['quantity_unknown'] else 'PASS',
                   'clock_state': 'PASS' if scoped_chronology_available and not role['timing_unknown'] else 'UNKNOWN',

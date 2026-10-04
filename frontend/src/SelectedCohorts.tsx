@@ -111,6 +111,8 @@ function SelectedInterval({ value, name, current, start, end, showEvidence }: {
   const timingKnown = populationKnown && closedCount! > 0 && closed?.timing_state === "PASS";
   const disposalKnown = intervalCurrent && saleCount !== undefined && saleCount > 0 &&
     disposed?.quantity_state === "PASS" && disposed?.monetary_state === "PASS";
+  const disposalBasisKnown = intervalCurrent && saleCount !== undefined && saleCount > 0 &&
+    disposed?.quantity_state === "PASS" && disposed?.cost_basis_state === "PASS";
   return <details className="selected-cohort-window" data-selected-cohort-window={name}>
     <summary>{name}</summary>
     <p className="small-note">
@@ -155,7 +157,7 @@ function SelectedInterval({ value, name, current, start, end, showEvidence }: {
     </div>
     <div className="selected-cohort-values">
       <div><span>Conditional disposal P&L</span><ObservationValue value={disposed?.conditional_profit_sol} known={disposalKnown} unit="SOL" /></div>
-      <div><span>Matched acquisition basis</span><ObservationValue value={disposed?.conditional_matched_basis_sol} known={disposalKnown} unit="SOL" /></div>
+      <div><span>Matched acquisition basis</span><ObservationValue value={disposed?.conditional_matched_basis_sol} known={disposalBasisKnown} unit="SOL" /></div>
     </div>
     <SourceLinks value={disposed?.evidence} showEvidence={showEvidence} />
   </details>;
@@ -175,7 +177,7 @@ export function SelectedCohortSection({ report, currentWalletMethod, currentAcco
   const observation = facts(accounting?.selected_cohort_observations);
   if (!observation) return null;
   const freshness = selectedCohortFreshness(report, currentWalletMethod, currentAccountingMethod, historyCurrent);
-  const current = freshness === "current" && observation.version === "selected-cohort-observations-v1";
+  const current = freshness === "current" && observation.version === "selected-cohort-observations-v2";
   const intervals = facts(observation.intervals);
   const end = instant(report.window.end);
   const stock = facts(observation.open_stock);

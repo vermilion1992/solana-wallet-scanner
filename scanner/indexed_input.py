@@ -168,7 +168,15 @@ def manifest_bytes(payload):
 
 def _request(payload, address):
     raw = source_bytes(payload)
-    request, response = _json(raw['request']), _json(raw['response'])
+    return _request_values(payload, address, _json(raw['request']), _json(raw['response']))
+
+
+def _request_values(payload, address, request, response):
+    """Validate values parsed from already checksum-verified original bytes.
+
+    This private helper neither replaces nor mutates the parsed response. Public
+    entry points still verify both original byte hashes before calling it.
+    """
     if (not isinstance(request, dict) or set(request) != {'jsonrpc', 'id', 'method', 'params'}
         or request.get('jsonrpc') != '2.0' or not isinstance(request.get('params'), list)
         or not isinstance(response, dict) or response.get('jsonrpc') != '2.0'
@@ -247,7 +255,7 @@ def validate_page_envelope(payload, address=None):
                     result['unassignable_records'].append(index)
                 else:
                     result['signatures'].append(signature)
-        request, response, scope = _request(payload, address)
+        request, response, scope = _request_values(payload, address, _json(preserved['request']), response_lead)
         result.update(request=request, response=response, request_scope=scope,
                       cursor_in=request['params'][1].get('paginationToken'))
         page = response['result']
@@ -256,7 +264,7 @@ def validate_page_envelope(payload, address=None):
             or page.get('paginationToken') is not None and _cursor(page['paginationToken']) is None):
             raise ValueError('Indexed page data/cursor shape is malformed')
         result.update(records=page['data'], cursor_out=page['paginationToken'], signatures=[], unassignable_records=[],
-                      record_hashes=[_digest(canonical_bytes(raw)) for raw in page['data']])
+                      record_hashes=result['record_hashes'])
         seen, positions, previous = set(), set(), None
         incoming, outgoing = _cursor(result['cursor_in']), _cursor(result['cursor_out'])
         direction = 1 if scope['sort_order'] == 'asc' else -1

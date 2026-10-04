@@ -2,6 +2,14 @@
 
 Single-user local research app, loopback only. Python FastAPI serves built React assets. No signing, wallet connection, blockchain submission, simulations, paid endpoints, or arbitrary URL proxy.
 
+Current integration methods are wallet v8, archive v11, research v5,
+selected-cohort v2 and metric-evidence v2, using existing FIFO v4 and internal
+production composition v1. Earlier method descriptions below retain their
+history; the final sections define the current scope. Current edits remain
+pending their own exact-candidate validation. Development-functional archived
+research does not close B1 historical coverage, complete real B2 or genuine B3;
+PRODUCT_READY=false.
+
 Modules are independent: `storage.py` handles persistence, `app.py` owns HTTP and the serialized research worker, `providers.py` and `collector.py` handle native reads, `discovery.py` handles bounded public cohorts and identity checks, `candidate_import.py` handles offline identifier imports and saved-universe derivation, `evidence_audit.py` handles separate raw transaction-set checks, `history_evidence.py` derives local collection receipts, `chronology_evidence.py` reconciles shared per-slot evidence, `report_rebuild.py` freezes/loads saved native inputs, `investigation.py` reconstructs narrowly recognized spot swaps and current token controls, `research.py` handles conditional observations, and `accounting.py` evaluates strict FIFO metrics. `frontend/` contains the React interface. The launcher holds a nonblocking OS lock for the entire lifetime of each data directory's running server.
 
 ## API
@@ -198,7 +206,7 @@ prove its first-positive-sale timing. Mathematically undefined ratios retain nul
 with current-engine domain witnesses; loss and breakeven are not removed from
 the population or changed into invented zero percentages.
 
-Current wallet interpretation v7 and research v4 reuse the existing FIFO for
+Current wallet interpretation v8 and research v5 reuse the existing FIFO for
 selected closed cohorts, every selected disposal before report end and open stock.
 Report, 28-day and 90-day boundaries are independent and half open. Selected
 census/quantity/origin/cost/timing checks and original source dependencies remain
@@ -229,3 +237,53 @@ identity and historical ownership population remain separate components. The
 original indexed 87-record input and independently worked oracle remain unchanged;
 a separately derived ordinary archive may add original account bytes for this
 narrow identity replay without certifying historical completeness.
+
+## Historical membership, mixed positions and scoped origin admission
+
+`historical-membership-evidence-v1` admits true raw pre/post presence, token owner,
+successful create/reassign/close operations and instruction-position transfer
+ownership. Every selected/linked alternative is subject to the existing shared
+source, supported-schema, execution and chronology checks. A failed instruction
+is an attempt; synthetic zero endpoints do not establish presence before create
+or after close. Sparse matching checkpoints never prove continuous unobserved
+ownership, and historical wallet population remains a separate dependency.
+
+Sources that cannot supply valid account-boundary facts still enter the complete
+selected-operation inspection dependency. Unsupported or malformed selected and
+linked alternative records cannot disappear from the global observed-membership
+census; independently supported named account membership remains separate. A
+proved neutral fee-only record is not manufactured into a token-membership gap.
+
+`wallet-position-population-v1` reconciles wallet-mint endpoint quantities and
+internal owned-account transfers with the existing FIFO. Mixed closed/open
+episodes, partial exits and re-entry remain admitted observations. Missing fees
+can block money while exact units and remaining independently proved purchase
+basis survive. A failed transaction can be physically excluded only when its raw
+identity, linked execution and unchanged token endpoints/ownership are proved;
+missing/conflicting token evidence cannot use that exclusion. Missing, unreadable
+or wrong-identity sources remain dependencies in affected per-mint quantities.
+
+Selected-cohort v2 exposes separate disposed-unit basis and money checks. Basis
+requires the consumed acquisition origin/cost, exact units and chronology; it
+does not require unused sale proceeds, sale fees or closing market prices.
+Report-period, four-week and 90-day acquisition/cost maps are independent. An
+explicit malformed or missing scoped component cannot fall back to a global
+PASS. Unconsumed unknown-basis stock or a proved unrelated out-of-window cost
+does not erase a supported disposal. Consumed pre-window basis costs, relevant
+unsupported roles and unresolved chronology remain dependencies. None of these
+selected observations admits whole-wallet historical, eligible population,
+classification or valuation completeness.
+
+The selected-cohort display gates matched acquisition basis independently of
+sale money, using current method/interval freshness plus proved quantity and
+`cost_basis_state`. A missing sale fee can hide profit while supported consumed
+basis remains visible. Synthetic finite-world accounting supplies explicit scoped
+origin/cost maps only from its existing validated development receipts; no real
+dataset or imported completion field can activate that branch.
+
+Source-consistency instruction/key/program preparation and indexed envelope
+parsing reuse only fresh checksum-validated facts within one invocation. They
+retain original paths, supported limits, duplicate semantics and relevant linked
+conflicts; no process-global or object-identity cache can confer trust across a
+mutation, loss/restoration or offline child rebuild. Archive import/rebuild,
+inspection and JSON/CSV export remain offline and preserve saved parents.

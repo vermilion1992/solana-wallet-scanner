@@ -32,7 +32,7 @@ from .storage import EvidenceError, now
 from .json_boundary import canonical_bytes as _bounded_canonical, parse_json
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v10'
+METHOD = 'archive-ledger-v11'
 _CURRENT_IMPORT = object()
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
@@ -780,6 +780,11 @@ def analyze_archive(loaded, events):
             manifest.get('classification_hashes', []))
         for name in ('acquisition_basis', 'economic_costs'):
             components[name] = development_check(financial_scope, 'Supported origins and cost roles require the financial source scope.', world_evidence)
+            components[name + '_by_interval'] = {
+                interval: {**development_check(financial_scope and row['status'] == 'complete',
+                    'Validated finite-world origins and cost roles must span this independent development interval.',
+                    world_evidence + row['evidence']), 'interval': interval}
+                for interval, row in intervals.items()}
         valuation_evidence = [manifest['valuation_hash']] if manifest.get('valuation_hash') else []
         for name in ('boundary_inventory', 'historical_marks', 'valued_external_flows'):
             components[name] = development_check(bool(economic), economic_gap or 'Validated finite-world boundary valuation and flows.', valuation_evidence)

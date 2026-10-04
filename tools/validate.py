@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -25,9 +26,12 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_bounded_collection.py', 'tests/test_genuine_collection_workflow.py',
            'tests/test_accounting_metric_isolation.py', 'tests/test_selected_cohort_observations.py',
            'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py',
-           'tests/test_research_disposal_scopes.py']
+           'tests/test_research_disposal_scopes.py',
+           'tests/test_historical_membership.py', 'tests/test_wallet_position_population.py',
+           'tests/test_source_fact_reuse.py', 'tests/test_disposed_origin_scopes.py']
 
-# Retain the original 30 selectors and add this batch's five regression modules.
+# Retain all 35 baseline selectors (original 30 plus five metric regressions) and
+# add this batch's four development-contract/performance regression modules.
 # Every selector appears exactly once. These are execution batches of one
 # focused suite, not additional suites or additional acceptance counts.
 FOCUSED_GROUPS = {
@@ -41,12 +45,16 @@ FOCUSED_GROUPS = {
                  'tests/test_report_rebuild.py', 'tests/test_wallet_evidence.py',
                  'tests/test_metric_evidence.py', 'tests/test_real_evidence_adapter.py',
                  'tests/test_selected_cohort_observations.py',
-                 'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py'],
-    'indexed': ['tests/test_indexed_input.py', 'tests/test_indexed_chronology.py',
-                'tests/test_indexed_source_dependencies.py', 'tests/test_indexed_report_integration.py',
-                'tests/test_real_coverage.py'],
+                 'tests/test_production_evidence_composition.py', 'tests/test_wallet_identity.py',
+                 'tests/test_wallet_position_population.py'],
+    'indexed-input': ['tests/test_indexed_input.py'],
+    'indexed-chronology': ['tests/test_indexed_chronology.py'],
+    'indexed-dependencies': ['tests/test_indexed_source_dependencies.py', 'tests/test_source_fact_reuse.py'],
+    'indexed-integration': ['tests/test_indexed_report_integration.py'],
+    'indexed-coverage': ['tests/test_real_coverage.py', 'tests/test_historical_membership.py'],
     'research': ['tests/test_report_view.py', 'tests/test_research.py', 'tests/test_research_source_roles.py',
-                 'tests/test_accounting_metric_isolation.py', 'tests/test_research_disposal_scopes.py'],
+                 'tests/test_accounting_metric_isolation.py', 'tests/test_research_disposal_scopes.py',
+                 'tests/test_disposed_origin_scopes.py'],
     'discovery': ['tests/test_discovery_audit_plan.py', 'tests/test_discovery_plan_views.py',
                   'tests/test_discovery_native_identity.py', 'tests/test_bounded_collection.py',
                   'tests/test_genuine_collection_workflow.py'],
@@ -80,7 +88,7 @@ def focused_group_records(paths, *, source, locks, runtime, commit):
             return result
         seen.add(name)
         if (record.get('profile') != 'focused' or record.get('state') != 'FOCUSED_GROUP_PASS'
-            or record.get('source_unchanged') is not True or record.get('selection') != expected[name]
+            or record.get('source_unchanged') is not True or 'running_gate' in record or 'timeout_abort' in record or record.get('selection') != expected[name]
             or record.get('source') != source or record.get('locks') != locks
             or record.get('runtime') != runtime or record.get('commit') != commit):
             result['reason'] = 'Focused receipt is nonpassing or does not bind the exact selection, source, locks and runtime.'
@@ -90,16 +98,31 @@ def focused_group_records(paths, *, source, locks, runtime, commit):
             or not all(isinstance(gate, dict) and isinstance(gate.get('name'), str) for gate in gates)
             or {gate.get('name') for gate in gates} != {'runtime', 'node-runtime', 'backend'}
             or any(gate.get('state') != 'PASS' or type(gate.get('exit_code')) is not int
-                   or gate['exit_code'] != 0 for gate in gates)):
+                   or gate['exit_code'] != 0 or gate.get('timed_out') is not False
+                   or type(gate.get('timeout_seconds')) is not int or gate['timeout_seconds'] != 600 for gate in gates)):
             result['reason'] = 'Focused receipt lacks explicitly passing command gates.'
             return result
         backend = next(gate for gate in gates if gate['name'] == 'backend')
-        interpreter = record.get('interpreter')
+        interpreter, source_root = record.get('interpreter'), record.get('source_root')
+        if not all(isinstance(value, str) and value and '\x00' not in value and Path(value).is_absolute()
+                   for value in (interpreter, source_root)):
+            result['reason'] = 'Focused command paths are missing or malformed.'
+            return result
         if (not isinstance(interpreter, str) or not interpreter
-            or backend.get('command') != [interpreter, '-m', 'pytest', '-q', *expected[name]]):
+            or backend.get('command') != [interpreter, '-m', 'pytest', '-v', '--durations=10', *expected[name]]
+            or type(backend.get('timeout_seconds')) is not int or backend['timeout_seconds'] != 600
+            or backend.get('timed_out') is not False):
             result['reason'] = 'Backend command does not execute the declared exact group.'
             return result
+        expected_commands = {
+            'runtime': [interpreter, '-c', 'import sys, pathlib, scanner; assert sys.version_info >= (3,11); assert pathlib.Path(scanner.__file__).resolve().parent == pathlib.Path.cwd()/"scanner"; print(sys.version)'],
+            'node-runtime': ['node', '--version'],
+            'backend': [interpreter, '-m', 'pytest', '-v', '--durations=10', *expected[name]],
+        }
         for gate in gates:
+            if gate.get('command') != expected_commands[gate['name']] or gate.get('cwd') != source_root:
+                result['reason'] = 'Focused command or working directory does not execute the declared checkout.'
+                return result
             # Original absolute runner paths are informational. Read only the
             # allowlisted sibling logs that were transferred with this receipt.
             try:
@@ -126,7 +149,7 @@ def offline_development_record(path, *, source, locks, runtime, commit):
     names = {'runtime', 'node-runtime', 'pip-check', 'shell-syntax', 'product',
              'frontend-check-format', 'frontend-check-discovery', 'frontend-build'}
     if (record.get('profile') != 'offline-development' or record.get('state') != 'DEVELOPMENT_CHECK_PASS'
-        or record.get('source_unchanged') is not True or record.get('source') != source
+        or record.get('source_unchanged') is not True or 'running_gate' in record or 'timeout_abort' in record or record.get('source') != source
         or record.get('locks') != locks or record.get('runtime') != runtime or record.get('commit') != commit):
         receipt['reason'] = 'Missing or nonpassing offline development receipt, or stale source/locks/runtime/Git identity.'
         return receipt
@@ -134,9 +157,34 @@ def offline_development_record(path, *, source, locks, runtime, commit):
     if (not isinstance(gates, list) or len(gates) != len(names)
         or not all(isinstance(g, dict) and isinstance(g.get('name'), str) for g in gates)
         or {g['name'] for g in gates} != names
-        or any(g.get('state') != 'PASS' or type(g.get('exit_code')) is not int or g['exit_code'] != 0 for g in gates)):
+        or any(g.get('state') != 'PASS' or type(g.get('exit_code')) is not int or g['exit_code'] != 0
+               or g.get('timed_out') is not False or type(g.get('timeout_seconds')) is not int
+               or g['timeout_seconds'] != 600 for g in gates)):
         receipt['reason'] = 'Development receipt lacks explicitly passing command gates.'
         return receipt
+    interpreter, source_root, output = (record.get(key) for key in ('interpreter', 'source_root', 'output'))
+    if not all(isinstance(value, str) and value and '\x00' not in value and Path(value).is_absolute()
+               for value in (interpreter, source_root, output)):
+        receipt['reason'] = 'Development command paths are missing or malformed.'
+        return receipt
+    # Absolute producer paths are preserved for command/cwd binding. The logs
+    # are still read only from the transferred fixed-name siblings, never from
+    # these paths or the private product directory.
+    expected_commands = {
+        'runtime': [interpreter, '-c', 'import sys, pathlib, scanner; assert sys.version_info >= (3,11); assert pathlib.Path(scanner.__file__).resolve().parent == pathlib.Path.cwd()/"scanner"; print(sys.version)'],
+        'node-runtime': ['node', '--version'],
+        'pip-check': [interpreter, '-m', 'pip', 'check'],
+        'shell-syntax': ['bash', '-n', 'run.sh', 'setup.sh'],
+        'product': [interpreter, str(Path(source_root) / 'tools/check_product.py'), '--output', str(Path(output) / 'private-product')],
+        'frontend-check-format': ['npm', 'run', 'check:format'],
+        'frontend-check-discovery': ['npm', 'run', 'check:discovery'],
+        'frontend-build': ['npm', 'run', 'build'],
+    }
+    for gate in gates:
+        expected_cwd = str(Path(source_root) / 'frontend') if gate['name'].startswith('frontend-') else source_root
+        if gate.get('command') != expected_commands[gate['name']] or gate.get('cwd') != expected_cwd:
+            receipt['reason'] = 'Development command or working directory does not execute the declared checkout workflow.'
+            return receipt
     product = next(g for g in gates if g['name'] == 'product')
     assertions = product.get('product_assertions')
     expected_assertions = {'development_pass': True, 'real_acceptance_blocked': True,
@@ -311,6 +359,62 @@ def gate_decision(gates, *, stable):
     return 'ACCEPTED_IN_SCOPE', 0
 
 
+def execute_command(command, *, cwd, env, stdout, timeout):
+    """Bound a command and its POSIX descendants, while exposing liveness.
+
+    A focused command expires before the hosted step/job deadlines, giving the
+    validator time to save a nonpassing receipt and upload its original log.
+    The new session is private to this child; unrelated worker processes are
+    never signalled. Candidate full-suite timeout remains separately configured.
+    """
+    start = time.monotonic()
+    process = subprocess.Popen(command, cwd=cwd, env=env, stdout=stdout,
+                               stderr=subprocess.STDOUT, start_new_session=(os.name == 'posix'))
+    try:
+        while True:
+            remaining = timeout - (time.monotonic() - start)
+            if remaining <= 0:
+                raise subprocess.TimeoutExpired(command, timeout)
+            try:
+                return subprocess.CompletedProcess(command, process.wait(timeout=min(30, remaining)))
+            except subprocess.TimeoutExpired:
+                if time.monotonic() - start >= timeout:
+                    raise subprocess.TimeoutExpired(command, timeout)
+                print(f'command active: {round(time.monotonic() - start)}s / {timeout}s limit', flush=True)
+    except subprocess.TimeoutExpired:
+        # Stop descendants as well as pytest itself, retaining the partial raw
+        # output. A timed-out child can never become PASS through its final code.
+        if os.name == 'posix':
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        else:
+            process.terminate()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            if os.name == 'posix':
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            else:
+                process.kill()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                stdout.write('VALIDATION_CLEANUP_TIMEOUT: killed command was not reaped within5s\n')
+        if os.name == 'posix':
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        stdout.write(f'\nVALIDATION_COMMAND_TIMEOUT: limit={timeout}s; command and supported descendant scope stopped\n')
+        stdout.flush()
+        raise
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--profile', choices=('focused', 'focused-summary', 'offline-development', 'candidate'), default='focused')
@@ -342,10 +446,13 @@ def main(argv=None):
     before = source_manifest()
     env = {k: v for k, v in os.environ.items() if k != 'HELIUS_API_KEY'}
     env['PYTHONDONTWRITEBYTECODE'] = '1'
+    env['PYTHONUNBUFFERED'] = '1'
     report = {'profile': args.profile, 'source': before, 'locks': lock_hashes(),
               'interpreter': args.python, 'gates': [], 'gate_B': {'state': 'OPEN', 'reason': 'Source, implementation and independent real-wallet acceptance remain separate.'}}
+    if args.profile == 'offline-development':
+        report.update(source_root=str(ROOT), output=str(output))
     if args.focused_group:
-        report.update(focused_group=args.focused_group, selection=groups[args.focused_group])
+        report.update(focused_group=args.focused_group, selection=groups[args.focused_group], source_root=str(ROOT))
     try:
         report['commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     except subprocess.CalledProcessError:
@@ -355,19 +462,30 @@ def main(argv=None):
     save()
     def run(name, command, cwd=ROOT):
         start = time.monotonic(); log = output / (name + '.log')
+        timeout = 60 if args.profile == 'focused-summary' else 600 if args.focused_group or args.profile == 'offline-development' else 1800
         if args.profile != 'candidate':
             # Keep an interruption diagnosable even when a runner disappears
-            # before subprocess.run returns. RUNNING is never passing evidence.
-            report['running_gate'] = {'name': name, 'command': command, 'log': str(log)}
+            # before the command returns. RUNNING is never passing evidence.
+            report['running_gate'] = {'name': name, 'command': command, 'log': str(log), 'timeout_seconds': timeout}
             save()
         print(f'{name}: running', flush=True)
+        failure = None
         try:
             with log.open('w') as stream:
-                proc = subprocess.run(command, cwd=cwd, env=env, stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
-            gate = {'name': name, 'command': command, 'cwd': str(cwd), 'exit_code': proc.returncode,
-                    'state': 'PASS' if proc.returncode == 0 else 'FAILED', 'log': str(log)}
+                if args.profile != 'candidate' and report.get('timeout_abort') is True:
+                    stream.write('NOT_EXECUTED_AFTER_PRIOR_COMMAND_TIMEOUT: retained as a required nonpassing gate\n')
+                    gate = {'name': name, 'command': command, 'cwd': str(cwd), 'state': 'BLOCKED',
+                            'attempted': False, 'reason': 'Prior CI command timed out; this required command was not executed.', 'log': str(log)}
+                else:
+                    proc = execute_command(command, cwd=cwd, env=env, stdout=stream, timeout=timeout)
+                    gate = {'name': name, 'command': command, 'cwd': str(cwd), 'exit_code': proc.returncode,
+                            'state': 'PASS' if proc.returncode == 0 else 'FAILED', 'attempted': True, 'log': str(log)}
         except (OSError, subprocess.TimeoutExpired) as exc:
+            failure = exc
+            if args.profile != 'candidate' and isinstance(exc, subprocess.TimeoutExpired):
+                report['timeout_abort'] = True
             gate = {'name': name, 'command': command, 'state': 'BLOCKED', 'reason': str(exc), 'log': str(log)}
+        gate.update(timeout_seconds=timeout, timed_out=isinstance(failure, subprocess.TimeoutExpired))
         gate['seconds'] = round(time.monotonic() - start, 2)
         if (args.focused_group or args.profile == 'offline-development') and log.is_file():
             raw = log.read_bytes()
@@ -397,7 +515,7 @@ def main(argv=None):
             run('frontend-' + name.replace(':', '-'), ['npm', 'run', name], ROOT / 'frontend')
     else:
         selected = groups[args.focused_group] if args.focused_group else FOCUSED
-        run('backend', [args.python, '-m', 'pytest', '-q', *selected] if args.profile == 'focused' else [args.python, '-m', 'pytest', '-q'])
+        run('backend', [args.python, '-m', 'pytest', '-v', '--durations=10', *selected] if args.focused_group else [args.python, '-m', 'pytest', '-q', *selected] if args.profile == 'focused' else [args.python, '-m', 'pytest', '-q'])
     if args.profile == 'candidate':
         run('pip-check', [args.python, '-m', 'pip', 'check'])
         run('shell-syntax', ['bash', '-n', 'run.sh', 'setup.sh'])

@@ -435,8 +435,8 @@ def _group(checks, *, hashes, signature, account=None):
                       "Every linked archive agrees on the metric's normalized native facts."}
 
 
-def _program_facts(raw, keys, account, digest):
-    """Missing balance annotations can use explicit relevant parsed SPL facts."""
+def _program_entries(raw, keys, digest):
+    """Yield parsed SPL participants and original-input program facts once."""
     from .transaction_format import _needs_instruction_view, original_instruction_paths
     original = raw
     normalized = None
@@ -452,7 +452,6 @@ def _program_facts(raw, keys, account, digest):
     for group_index, group in enumerate(nested if isinstance(nested, list) else []):
         if isinstance(group, dict) and isinstance(group.get("instructions"), list):
             flat += [(f"meta.innerInstructions.{group_index}.instructions.{index}", item) for index, item in enumerate(group["instructions"])]
-    result = []
     for path, instruction in flat:
         if not isinstance(instruction, dict):
             continue
@@ -460,13 +459,58 @@ def _program_facts(raw, keys, account, digest):
         program = instruction.get("programId") or (keys[index] if _integer(index) and index < len(keys) else None)
         parsed = instruction.get("parsed")
         info = parsed.get("info") if isinstance(parsed, dict) else None
-        if isinstance(program, str) and program in _TOKEN_IDS and isinstance(info, dict) and account in (info.get("source"), info.get("destination"), info.get("account")):
-            result.extend(_fact(digest, source_path, program) for source_path in
-                          original_instruction_paths(original, [path + ".programId"], normalized=normalized))
-    return result
+        if isinstance(program, str) and program in _TOKEN_IDS and isinstance(info, dict):
+            participants = (info.get("source"), info.get("destination"), info.get("account"))
+            # The needs-view decision above is shared by the whole record.
+            # Parsed records already use their original instruction paths.
+            paths = (original_instruction_paths(original, [path + ".programId"], normalized=normalized)
+                     if normalized is not None else [path + ".programId"])
+            facts = [_fact(digest, source_path, program) for source_path in paths]
+            yield participants, facts
 
 
-def _account_facts(raw, digest, signature, account, identity):
+def _program_facts(raw, keys, account, digest):
+    """Missing balance annotations can use explicit relevant parsed SPL facts."""
+    return [fact for participants, facts in _program_entries(raw, keys, digest)
+            if account in participants for fact in facts]
+
+
+def _prepare_record_facts(raw, digest, keys):
+    """Assessment-local indexes; never persist a view across source rebuilds.
+
+    Each linked variant retains its own raw record, digest and normalization
+    receipt. A malformed balance index applies to the whole corresponding
+    phase just as it does in the unindexed account path. Program facts retain
+    original paths, including failed or unsupported normalization outcomes.
+    """
+    if not isinstance(raw, dict):
+        return None
+    meta = raw.get('meta')
+    meta = meta if isinstance(meta, dict) else {}
+    balances = {}
+    for name in ('preTokenBalances', 'postTokenBalances'):
+        by_account, invalid = defaultdict(list), False
+        rows = meta.get(name)
+        if isinstance(rows, list) and keys:
+            for index, row in enumerate(rows):
+                account_index = row.get('accountIndex') if isinstance(row, dict) else None
+                if not _integer(account_index) or account_index >= len(keys):
+                    invalid = True
+                else:
+                    by_account[keys[account_index]].append((index, row))
+        balances[name] = (by_account, invalid)
+    programs = defaultdict(list)
+    if keys:
+        for participants, facts in _program_entries(raw, keys, digest):
+            # Accounts admitted by _keys are strings. Repeated roles in one
+            # instruction remain one program observation for that account.
+            for account in {value for value in participants if isinstance(value, str)}:
+                programs[account].extend(facts)
+    return {'keys': keys, 'key_counts': Counter(keys or ()),
+            'balances': balances, 'programs': programs}
+
+
+def _account_facts(raw, digest, signature, account, identity, *, prepared=None):
     fields = defaultdict(list)
     fields["native_identity"].append(identity)
     fields["transaction_format"].append(_format_fact(raw, digest))
@@ -474,17 +518,21 @@ def _account_facts(raw, digest, signature, account, identity):
         for field in ("account_membership", "execution", "pre_quantity", "post_quantity", "owner", "mint", "decimals", "program"):
             fields[field].append(_fact(digest, "$", status="missing"))
         return fields
-    keys, meta = _keys(raw), raw.get("meta")
+    keys, meta = prepared['keys'] if prepared is not None else _keys(raw), raw.get("meta")
     meta = meta if isinstance(meta, dict) else {}
-    fields["account_membership"].append(_fact(digest, "transaction.message.accountKeys", bool(keys and keys.count(account) == 1),
-                                                   "known" if keys and keys.count(account) == 1 else "invalid"))
+    membership = bool(keys and (prepared['key_counts'][account] if prepared is not None else keys.count(account)) == 1)
+    fields["account_membership"].append(_fact(digest, "transaction.message.accountKeys", membership,
+                                                   "known" if membership else "invalid"))
     fields["execution"].append(_fact(digest, "meta.err", meta.get("err"), "known" if "err" in meta else "missing"))
     failed_empty = ("err" in meta and meta["err"] is not None and meta.get("preTokenBalances") == [] and meta.get("postTokenBalances") == [])
     programs = []
     for phase, name in (("pre", "preTokenBalances"), ("post", "postTokenBalances")):
         rows = meta.get(name)
         found, invalid = [], False
-        if isinstance(rows, list) and keys:
+        if prepared is not None:
+            by_account, invalid = prepared['balances'][name]
+            found = by_account.get(account, [])
+        elif isinstance(rows, list) and keys:
             for index, row in enumerate(rows):
                 account_index = row.get("accountIndex") if isinstance(row, dict) else None
                 if not _integer(account_index) or account_index >= len(keys):
@@ -512,7 +560,8 @@ def _account_facts(raw, digest, signature, account, identity):
         if row.get("programId") is not None:
             programs.append(_fact(digest, path + ".programId", row["programId"], "known" if isinstance(row["programId"], str) and row["programId"] in _TOKEN_IDS else "invalid"))
     if keys:
-        programs += _program_facts(raw, keys, account, digest)
+        programs += ([dict(fact) for fact in prepared['programs'].get(account, [])] if prepared is not None
+                     else _program_facts(raw, keys, account, digest))
     fields["program"] += programs or [_fact(digest, "meta.*TokenBalances.programId", status="not_applicable" if failed_empty else "missing")]
     return fields
 
@@ -609,7 +658,7 @@ def assess_source_consistency(records, *, accounts=(), wallet=None, source_index
         execution_rows = unresolved_source_dependencies(unresolved, signature, list(sources.values()), purpose='execution')
         unavailable_execution = [_fact(row['hash'], '$.unresolved_signature_page', status='missing') for row in execution_rows]
         targets = set(accounts.get(signature, ())) if isinstance(accounts, dict) else set(accounts)
-        scoped_accounts, identities = (set(targets) if isinstance(accounts, dict) else set()), {}
+        scoped_accounts, identities, source_keys = (set(targets) if isinstance(accounts, dict) else set()), {}, {}
         for digest, raw in sources.items():
             transaction = raw.get("transaction") if isinstance(raw, dict) else None
             signatures = transaction.get("signatures") if isinstance(transaction, dict) else None
@@ -617,6 +666,7 @@ def assess_source_consistency(records, *, accounts=(), wallet=None, source_index
             identities[digest] = _fact(digest, "transaction.signatures.0", signatures[0] if isinstance(signatures, list) and signatures else None,
                                       "known" if known else "invalid" if isinstance(raw, dict) else "missing")
             keys = _keys(raw) if isinstance(raw, dict) else None
+            source_keys[digest] = keys
             if keys:
                 scoped_accounts.update(targets & set(keys))
                 meta = raw["meta"]
@@ -625,11 +675,17 @@ def assess_source_consistency(records, *, accounts=(), wallet=None, source_index
                         index = row.get("accountIndex") if isinstance(row, dict) else None
                         if _integer(index) and index < len(keys):
                             scoped_accounts.add(keys[index])
+        # Only prepare instruction views when this transaction actually has
+        # scoped account checks. The indexes live for this signature in this
+        # invocation; an alternative or later rebuild gets a fresh preparation.
+        prepared_records = ({digest: _prepare_record_facts(raw, digest, source_keys[digest])
+                             for digest, raw in sources.items()} if scoped_accounts else {})
         account_checks = {}
         for account in sorted(scoped_accounts):
             facts = defaultdict(list)
             for digest, raw in sources.items():
-                for field, values in _account_facts(raw, digest, signature, account, identities[digest]).items():
+                for field, values in _account_facts(raw, digest, signature, account, identities[digest],
+                                                  prepared=prepared_records[digest]).items():
                     facts[field] += values
             facts["execution"] += page_execution[signature] + unavailable_execution
             checks = {field: _check(values, field, signature=signature, account=account) for field, values in sorted(facts.items())}

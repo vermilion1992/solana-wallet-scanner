@@ -25,7 +25,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v7'
+VERSION = 'wallet-raw-evidence-v8'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -214,6 +214,26 @@ def _observe(record, wallet):
                                                'path': f'transaction.message.instructions.{index}', 'facts': {}})
         else:
             flat = _flat(raw, keys)
+            # Endpoint ownership alone misses accounts owned only between
+            # committed operations. Once a validated owner transition touches
+            # this wallet, retain the whole account lifecycle in execution
+            # order; its authority/endpoint checks below still decide whether
+            # that chain is supported.
+            lifecycle_accounts = set(observed_owned)
+            for _, _, instruction, _, view in flat:
+                parsed = instruction.get('parsed')
+                info = parsed.get('info') if isinstance(parsed, dict) else None
+                kind = parsed.get('type') if isinstance(parsed, dict) else None
+                if view['program'] not in TOKEN_IDS or not isinstance(info, dict):
+                    continue
+                account = info.get('account')
+                if not _valid_account(account):
+                    continue
+                if (kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3', 'closeAccount')
+                    and info.get('owner') == wallet
+                    or kind == 'setAuthority' and info.get('authorityType') == 'accountOwner'
+                    and wallet in (info.get('authority'), info.get('newAuthority'))):
+                    lifecycle_accounts.add(account)
             for _, path, instruction, _, view in flat:
                 parsed = instruction.get('parsed')
                 info = parsed.get('info') if isinstance(parsed, dict) else None
@@ -225,8 +245,8 @@ def _observe(record, wallet):
                             'reason': 'Validated mint permission target does not change token-account owners or quantities; asset classification/risk remains separate.'})
                         continue
                     account = info.get('account')
-                    if (account not in observed_owned and info.get('owner') != wallet and info.get('newAuthority') != wallet
-                        and not view['references'] & observed_owned):
+                    if (account not in lifecycle_accounts and info.get('owner') != wallet and info.get('newAuthority') != wallet
+                        and not view['references'] & lifecycle_accounts):
                         result['disjoint_operations'].append({'path': path, 'account': account,
                             'reason': 'Validated operation target is disjoint from the observed wallet-owned token accounts.',
                             'paths': view['paths']})
@@ -936,8 +956,15 @@ def _selected_lot_observations(positions, selected, raw_versions, transactions, 
                 pair['pre'] and pair['post'] and pair['pre']['quantity'] == pair['post']['quantity'] == '0'
                 and all(pair['checks'][field]['state'] == 'PASS' for field in ('ownership', 'quantities', 'lifecycle'))
                 for pair in target_pairs)
+            failed_unchanged = (identity['state'] == 'PASS' and bool(target_pairs) and bool(versions)
+                and all(_safe_raw(row.get('raw')) and row['raw']['meta']['err'] is not None for row in versions)
+                and all(pair['pre'] and pair['post']
+                    and all(pair['pre'][field] == pair['post'][field] for field in ('quantity', 'owner', 'mint', 'decimals'))
+                    and all(pair['checks'][field]['state'] == 'PASS' for field in ('ownership', 'quantities', 'lifecycle'))
+                    for pair in target_pairs))
             if any(event['kind'] in ('transfer_in', 'transfer_out') and event.get('mint') == mint
-                   or event['kind'] == 'unsupported' and not zero_administration for event in signature_events):
+                   or event['kind'] == 'unsupported' and not (zero_administration or failed_unchanged)
+                   for event in signature_events):
                 scope_gaps.append(f'{signature}: required record contains unsupported or transfer-interrupted named-account activity')
             evidence.update(observed['evidence'])
         # Account-continuity checks use only this lot's observed named accounts.
@@ -1058,7 +1085,7 @@ def _selected_cohort_observations(lots, selected, transactions, raw_versions, cl
     for lot in lots:
         lot_ordinals[lot['mint']] += 1
         lot_index[(lot['mint'], lot_ordinals[lot['mint']])] = lot
-    result = {'version': 'selected-cohort-observations-v1',
+    result = {'version': 'selected-cohort-observations-v2',
         'scope': 'Conditional cohorts of selected named-account FIFO observations; no historical wallet or eligible-asset population is established',
         'wallet_population_state': 'UNKNOWN', 'classification_state': 'UNKNOWN',
         'valuation_state': 'UNKNOWN', 'qualification': False, 'intervals': {}}
@@ -1162,7 +1189,7 @@ def _selected_cohort_observations(lots, selected, transactions, raw_versions, cl
             # Consume the existing research FIFO's exact per-disposal result.
             # Episode bounds, immutable source hashes and the original decoded
             # sale bind each projection; supplied row flags alone grant nothing.
-            sales, sale_checks, quantity_sale_checks = [], [], []
+            sales, sale_checks, quantity_sale_checks, basis_sale_checks = [], [], [], []
             for row in research.get('historical_sales_detail', []):
                 if row['mint'] == WSOL:
                     continue
@@ -1186,6 +1213,12 @@ def _selected_cohort_observations(lots, selected, transactions, raw_versions, cl
                     and lot.get('quantity_state') == 'PASS' if bound else False,
                     'Selected disposal quantity must bind its exact raw sale and named-account physical proof.',
                     evidence, dependencies=['disposal_source_binding', 'quantity_state', 'disposal_interval_membership'])
+                basis_check = _check(bound and quantity_check['state'] == 'PASS' and lot.get('origin_state') == 'PASS'
+                    and lot.get('chronology_state') == 'PASS' and row.get('cost_basis_state') == 'PASS'
+                    and row.get('origin_state') == 'PASS' and row.get('clock_state') == 'PASS'
+                    and row.get('conditional_matched_basis_sol') is not None if bound else False,
+                    'Disposed basis consumes supported acquisition units; unconsumed holdings, proceeds and sale fees have separate dependencies.',
+                    evidence, dependencies=['disposal_source_binding', 'disposed_fifo_origins', 'acquisition_cost_roles'])
                 monetary_check = _check(bound and quantity_check['state'] == 'PASS' and lot.get('origin_state') == 'PASS'
                     and lot.get('chronology_state') == 'PASS' and row.get('monetary_state') == 'PASS'
                     and row.get('origin_state') == 'PASS' and row.get('clock_state') == 'PASS'
@@ -1194,9 +1227,11 @@ def _selected_cohort_observations(lots, selected, transactions, raw_versions, cl
                     'Selected disposal profit must consume an exact supported FIFO origin, consideration, cost and raw clock dependency set.',
                     evidence, dependencies=['disposal_source_binding', 'cost_basis_state', 'monetary_state', 'origin_state', 'clock_state'])
                 quantity_sale_checks.append(quantity_check); sale_checks.append(monetary_check)
+                basis_sale_checks.append(basis_check)
                 sales.append({**row, 'quantity_state': quantity_check['state'], 'monetary_state': monetary_check['state'],
-                    'checks': {'quantity': quantity_check, 'monetary': monetary_check},
-                    'conditional_matched_basis_sol': row['conditional_matched_basis_sol'] if monetary_check['state'] == 'PASS' else None,
+                    'cost_basis_state': basis_check['state'],
+                    'checks': {'quantity': quantity_check, 'basis': basis_check, 'monetary': monetary_check},
+                    'conditional_matched_basis_sol': row['conditional_matched_basis_sol'] if basis_check['state'] == 'PASS' else None,
                     'conditional_profit_sol': row['conditional_profit_sol'] if monetary_check['state'] == 'PASS' else None,
                     'conditional_proceeds_sol': row['conditional_proceeds_sol'] if monetary_check['state'] == 'PASS' else None,
                     'conditional_exit_fees_sol': row['conditional_exit_fees_sol'] if monetary_check['state'] == 'PASS' else None})
@@ -1204,7 +1239,10 @@ def _selected_cohort_observations(lots, selected, transactions, raw_versions, cl
                 'Every declared selected disposal remains in its interval denominator; unmatched origins do not invent monetary basis.')
             sale_money = _combine([population] + sale_checks,
                 'Every declared selected disposal needs its own supported FIFO origin and cost proof; unresolved sales remain counted.')
+            sale_basis = _combine([population] + basis_sale_checks,
+                'Every declared selected disposal needs matched acquisition cost and origin evidence in its own interval.')
             sale_known = bool(sales) and sale_money['state'] == 'PASS'
+            basis_known = bool(sales) and sale_basis['state'] == 'PASS'
             quantities_by_mint = defaultdict(int)
             if sale_quantity['state'] == 'PASS':
                 for row in sales:
@@ -1213,14 +1251,15 @@ def _selected_cohort_observations(lots, selected, transactions, raw_versions, cl
                 'scope': 'Selected named-account disposal units in this interval; excludes unallocated overhead, eligibility and wallet-wide profit',
                 'candidate_sale_count': len(sales), 'sales': sales,
                 'quantity_state': sale_quantity['state'], 'monetary_state': 'PASS' if sale_known else 'UNKNOWN',
+                'cost_basis_state': 'PASS' if basis_known else 'UNKNOWN',
                 'disposed_raw_by_mint': {mint: str(quantity) for mint, quantity in sorted(quantities_by_mint.items())}
                     if sale_quantity['state'] == 'PASS' else None,
                 'conditional_profit_sol': canonical(sum((decimal(row['conditional_profit_sol'], signed=True, max_length=512) for row in sales), Decimal(0))) if sale_known else None,
-                'conditional_matched_basis_sol': canonical(sum((decimal(row['conditional_matched_basis_sol'], max_length=512) for row in sales), Decimal(0))) if sale_known else None,
+                'conditional_matched_basis_sol': canonical(sum((decimal(row['conditional_matched_basis_sol'], max_length=512) for row in sales), Decimal(0))) if basis_known else None,
                 'conditional_proceeds_sol': canonical(sum((decimal(row['conditional_proceeds_sol'], max_length=512) for row in sales), Decimal(0))) if sale_known else None,
                 'conditional_exit_fees_sol': canonical(sum((decimal(row['conditional_exit_fees_sol'], max_length=512) for row in sales), Decimal(0))) if sale_known else None,
-                'checks': {'quantity': sale_quantity, 'monetary': sale_money},
-                'evidence': sorted(set(sale_quantity['evidence'] + sale_money['evidence'])),
+                'checks': {'quantity': sale_quantity, 'basis': sale_basis, 'monetary': sale_money},
+                'evidence': sorted(set(sale_quantity['evidence'] + sale_basis['evidence'] + sale_money['evidence'])),
                 'wallet_population_state': 'UNKNOWN', 'classification_state': 'UNKNOWN', 'qualification': False}
 
         # The boundary is common to all three windows. No per-period flow or
@@ -1599,6 +1638,73 @@ def derive_wallet_evidence(records, *, all_records, wallet, window, source_consi
         for name, row in cohorts['intervals'].items()}
     components['observed_disposal_money'] = {name: row['disposed_units']['checks']['monetary']
         for name, row in cohorts['intervals'].items()}
+    components['observed_disposed_basis_by_interval'] = {
+        name: {**row['disposed_units']['checks']['basis'], 'interval': name}
+        for name, row in cohorts['intervals'].items()}
+    components['acquisition_basis_by_interval'] = {
+        name: {**_combine([unresolved, check],
+            'Wallet disposed-unit basis requires historical population and only the acquisition units consumed in this independent interval.',
+            scope='Wallet-wide disposed-unit acquisition basis'), 'interval': name}
+        for name, check in components['observed_disposed_basis_by_interval'].items()}
+    role_groups, decoded_groups = defaultdict(list), defaultdict(list)
+    for check in native_role_checks:
+        role_groups[check['signature']].append(check)
+    for event in ledger_events:
+        decoded_groups[event.get('signature')].append(event)
+    interval_costs = {}
+    for name, begin in (('report_period', start), ('four_weeks', end - timedelta(days=28)),
+                        ('verification_90d', end - timedelta(days=90))):
+        checks = []
+        for signature in selected:
+            membership = assess_interval_membership(clocks, signature, begin, end)
+            if membership['state'] == 'PASS' and membership.get('member') is False:
+                continue
+            observed = transactions[signature]
+            group = decoded_groups[signature]
+            roles_known = bool(role_groups[signature]) and all(c['state'] == 'PASS' for c in role_groups[signature])
+            supported = not any(event['kind'] in ('unsupported', 'capital', 'rent', 'wrap') for event in group)
+            trades = any(event['kind'] in ('buy', 'sell') for event in group)
+            fee = observed['network_fee']
+            fee_known = fee['check']['state'] == 'PASS'
+            zero = roles_known and supported and not trades and fee_known and fee['lamports'] == '0'
+            known = (membership['state'] == 'PASS' or zero) and roles_known and supported and fee_known
+            known = known and observed['checks']['identity']['state'] == 'PASS'
+            known = known and (not trades or observed['checks']['cost_roles']['state'] == 'PASS')
+            checks.append(_check(known,
+                'Every selected in-scope native charge has supported gross roles and fee allocation; pre-window consumed acquisition costs are required separately.',
+                membership['evidence'] + observed['evidence']
+                    + [h for check in role_groups[signature] for h in check['evidence']],
+                dependencies=['selected_interval_membership', 'native_cost_roles', 'network_fee_allocation']))
+        interval_costs[name] = {**_combine(checks,
+            'All selected economic cost roles in this independent interval are supported; valued external flows remain separate.'),
+            'interval': name}
+    components['observed_economic_roles_by_interval'] = interval_costs
+    components['economic_costs_by_interval'] = {
+        name: {**_combine([unresolved, check],
+            'Wallet interval costs require historical population and supported period charge roles.',
+            scope='Wallet-wide interval economic costs'), 'interval': name}
+        for name, check in interval_costs.items()}
+    closed = cohorts['intervals']['report_period']['closed_cohort']
+    query_accounting['timing_state'] = closed['timing_state']
+    for field in ('conditional_median_hold_hours', 'conditional_first_sale_hours',
+                  'conditional_exit_50_hours', 'conditional_exit_90_hours'):
+        query_accounting[field] = closed[field]
+    from .historical_membership import _admit_observations
+    membership = _admit_observations(selected, versions, consistency, clocks, wallet,
+                                    raw_versions=raw_versions)
+    components['observed_historical_membership'] = membership['observed_event_membership']
+    query_accounting['historical_membership'] = membership
+    from .wallet_positions import project_wallet_positions
+    position_population = project_wallet_positions(selected=selected, raw_versions=raw_versions,
+        transactions=transactions, clocks=clocks, consistency=consistency, fifo_positions=fifo_positions,
+        ledger_events=ledger_events, wallet=wallet, window=window, cohorts=cohorts,
+        inspection=lot_inspection, lots=supported_lots)
+    observed_positions = position_population['checks']['observed_population']
+    components['observed_positions'] = observed_positions
+    components['positions'] = _combine([unresolved, observed_positions],
+        'Wallet positions require historical population plus supported mint-aggregate closed and open inventory.',
+        scope='Wallet-wide mint aggregate positions')
+    query_accounting['position_population'] = position_population
     from .wallet_identity import derive_wallet_identity
     wallet_identity = derive_wallet_identity(list(selected.values()), all_records=linked, raw_sources=source_rows, wallet=wallet)
     components['wallet_identity'] = wallet_identity

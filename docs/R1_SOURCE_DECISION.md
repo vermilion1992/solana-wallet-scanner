@@ -193,3 +193,35 @@ supported lot retains a separately worked loss of 13,270,924 lamports and
 whole-wallet qualification remain unproved. Original input/archive and worked
 expectation hashes are preserved and rechecked by this batch. B1 historical
 coverage unresolved; complete real B2 OPEN; genuine complete B3 BLOCKED.
+
+## Current historical membership and position decision — offline only
+
+The preserved baseline is evidence HEAD
+`1040215f498b1317b1b942838994127f43a822bd`, binding tested application
+`7e4769922ad8055b8c290f7625401d8a42fd183b` and its 235-file source manifest
+`578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2`.
+The current integration has its own pending exact-candidate gates. It performs no
+provider request or credential lookup and extends neither prior collection budget.
+
+| Required evidence | Offline implementation now available | Source / admission decision |
+| --- | --- | --- |
+| Observed event-time historical membership | Raw selected and linked legacy/v0 records admit true endpoint presence, token owner and successful ordered lifecycle/transfer membership through shared consistency and chronology. Both token programs are inspected; parsed/compiled/outer/inner alternatives retain original paths. Missing/conflicting/unsupported dependencies remain explicit. | GO for facts in admitted retained records. Sparse matching checkpoints cannot establish ownership between unobserved records; query termination cannot establish exhaustive historic owner population. Full B1 population remains unresolved. |
+| Observed mint aggregate / FIFO positions | Owned-account quantities reconcile with the existing FIFO, including closed/open mixtures, transfers, partial exits and re-entry. Timing, basis and monetary prerequisites are independent. | GO for supported selected-record observations. Complete eligible wallet population still requires exhaustive historical accounts, events, origins and classification. No caller-supplied position declaration is accepted. |
+| Disposed acquisition basis | Basis for actually matched disposed units is independently checked in report, 28-day and 90-day scopes. Unknown unconsumed stock can remain UNKNOWN while supported disposed basis survives; missing consumed cost blocks the dependent basis. | GO for scoped admitted acquisitions. No new complete real acquisition-origin source or historical population witness has been supplied. |
+| Period costs and economic roles | Raw supported native/fee/trade roles are assessed per independent interval; consumed pre-window costs remain acquisition dependencies. Unrelated proved out-of-window cost gaps do not erase a narrower period. | GO for supported scoped roles. Unreviewed wrappers, rent/tip/capital allocation, complete valued external flows and historical classification/valuation admission remain implementation and source gaps. Net balance conservation does not prove role. |
+
+`historical-membership-evidence-v1` and `wallet-position-population-v1` are evidence
+interfaces feeding the normal wallet/archive report, not independent accounting
+engines. Wallet v8 / archive v11 / research v5 / selected-cohort v2 /
+metric-evidence v2 apply changed interpretations only in new immutable children.
+Raw-source parsing reuse is invocation-local and checksum-bound; it cannot admit
+additional evidence or alter the provider coverage contract.
+
+The concrete decision remains: **access OBSERVED; tested response compatibility
+OBSERVED; declared-query terminal traversal OBSERVED; exhaustive historical
+coverage UNPROVED; wallet qualification UNPROVED**. Current code closes usable
+interface gaps, not the unseen population/source requirements. The original
+genuine archives and separately worked fee/named-lot calculations remain partial.
+B1 historical sufficiency is unresolved, complete real B2 OPEN, genuine B3
+BLOCKED and PRODUCT_READY=false. No paid account, further live collection or
+scope substitution is required or authorised by this decision.

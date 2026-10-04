@@ -1,6 +1,10 @@
 # Acceptance — fewer handoffs, stronger gates
 
-This is a proposed acceptance contract, not a claim that the new matrix or release runner has already been implemented. Retain the original product contract; a narrower milestone does not change the promised wallet-wide scope.
+The matrix and validation runner implement this acceptance contract. Actual
+acceptance still requires the exact candidate's explicitly passing receipts;
+implementation of a gate does not mean it has executed. Retain the original
+product contract; a narrower milestone does not change the promised wallet-wide
+scope.
 
 ## Gate A: scoped evidence stabilisation
 
@@ -82,13 +86,31 @@ Record source commit/manifest and lockfile hashes; runtime versions; command, ex
 
 ## Current offline CI and accounting batch
 
-`tools/validate.py` remains the only gate entry point. Six disjoint focused groups
-retain the original 30 selectors and add five current regression modules once.
+`tools/validate.py` remains the only gate entry point. Ten disjoint focused groups
+retain all 35 baseline selectors (the original 30 plus five metric regressions)
+and add four current modules exactly once: historical membership, aggregate
+position population, invocation-local source-fact reuse and disposed-origin
+scopes. These are partitions of one focused suite, not additional test suites.
 Focused summary requires all group receipts plus a separate offline-development
 receipt, exact Git/source/locks/runtime, successful commands and explicit PASS
 assertions; interrupted or absent execution cannot pass. CI artifacts use fixed
-bounded allowlists and exclude runtime databases, raw private inputs and reports.
-Native CI is separate from full local candidate acceptance.
+bounded allowlists (at most 4 MiB per included file) and exclude runtime databases,
+raw private inputs and reports. Native CI is separate from full local candidate
+acceptance. Focused and offline-development commands are capped at 600 seconds;
+the hosted step cap is 15 minutes and whole-job cap 30 minutes so a command can
+emit its timeout receipt and diagnostics first. Full candidate command caps stay
+at 1,800 seconds; summary runtime probes are capped at 60 seconds. A timed-out or
+running command, wrong argv/cwd, stale source or missing receipt fails its scope.
+Later commands after a timeout remain explicitly BLOCKED. The strict union must
+receive all ten focused receipts and the development receipt, bind their source
+bytes/locks/runtime and verify command/log hashes; no subset establishes PASS.
+
+Native run `37208279838` on preserved HEAD
+`1040215f498b1317b1b942838994127f43a822bd` was cancelled without a completed
+indexed receipt, and its final union returned INCOMPLETE / exit 2. Six successful
+job artifacts were verified individually; they do not close the missing union.
+The indexed shutdown cause is unproved. Preserve those observations as history,
+and bind any new native run to its exact pushed HEAD independently.
 
 The frozen candidate still requires the full unique backend suite, current matrix,
 frontend locked install/check/build, applicable guarded browser workflows, current

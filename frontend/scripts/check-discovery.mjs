@@ -1548,12 +1548,12 @@ try {
     conditional_exit_50_hours: "1", conditional_exit_90_hours: "2", evidence: ["a".repeat(64)],
   };
   const observedDisposed = {
-    candidate_sale_count: 3, quantity_state: "PASS", monetary_state: "PASS",
+    candidate_sale_count: 3, quantity_state: "PASS", cost_basis_state: "PASS", monetary_state: "PASS",
     conditional_profit_sol: "0", conditional_matched_basis_sol: "1.25", evidence: ["b".repeat(64)],
   };
   const intervalFact = (start) => ({ start, end: cohortEnd, closed_cohort: structuredClone(observedClosed), disposed_units: structuredClone(observedDisposed) });
   const cohortObservation = {
-    version: "selected-cohort-observations-v1",
+    version: "selected-cohort-observations-v2",
     intervals: {
       report_period: intervalFact(cohortStart),
       four_weeks: intervalFact(new Date(Date.parse(cohortEnd) - 28 * 86400000).toISOString()),
@@ -1565,12 +1565,12 @@ try {
         quantity_state: "PASS", cost_basis_state: "PASS", conditional_remaining_basis_sol: "0.5000025", evidence: ["c".repeat(64)] }] },
   };
   const cohortReport = { ...report, source: "live", methodology: "fifo-v4", window: { start: cohortStart, end: cohortEnd },
-    research: { ...(report.research ?? {}), version: "supported-subset-research-v4-disposal-scopes" },
-    research_assessment: { state: "current", saved_methodology: "supported-subset-research-v4-disposal-scopes", current_methodology: "supported-subset-research-v4-disposal-scopes" },
-    wallet_assessment: { state: "current", saved_methodology: "wallet-raw-evidence-v7", current_methodology: "wallet-raw-evidence-v7" },
-    coverage: { wallet_evidence: { version: "wallet-raw-evidence-v7", query_accounting: { selected_cohort_observations: cohortObservation } } } };
+    research: { ...(report.research ?? {}), version: "supported-subset-research-v5-origin-scopes" },
+    research_assessment: { state: "current", saved_methodology: "supported-subset-research-v5-origin-scopes", current_methodology: "supported-subset-research-v5-origin-scopes" },
+    wallet_assessment: { state: "current", saved_methodology: "wallet-raw-evidence-v8", current_methodology: "wallet-raw-evidence-v8" },
+    coverage: { wallet_evidence: { version: "wallet-raw-evidence-v8", query_accounting: { selected_cohort_observations: cohortObservation } } } };
   const renderCohorts = (next = cohortReport, options = {}) => renderToStaticMarkup(React.createElement(SelectedCohortSection, {
-    report: next, currentWalletMethod: "wallet-raw-evidence-v7", currentAccountingMethod: "fifo-v4", historyCurrent: true,
+    report: next, currentWalletMethod: "wallet-raw-evidence-v8", currentAccountingMethod: "fifo-v4", historyCurrent: true,
     showEvidence: () => undefined, ...options,
   }));
   const cohortSnapshot = structuredClone(cohortReport);
@@ -1612,6 +1612,7 @@ try {
   const missingBasisHtml = changedCohort((value) => {
     value.intervals.report_period.closed_cohort.monetary_state = "UNKNOWN";
     value.intervals.report_period.disposed_units.monetary_state = "UNKNOWN";
+    value.intervals.report_period.disposed_units.cost_basis_state = "UNKNOWN";
     value.open_stock.cost_basis_state = "UNKNOWN";
     value.open_stock.lots[0].cost_basis_state = "UNKNOWN";
   });
@@ -1619,6 +1620,16 @@ try {
   assert.ok(missingBasisHtml.includes("2.5<small> hours"), "Missing money does not erase supported timing");
   assert.ok(missingBasisHtml.includes("9007199254740993000000"), "Missing money does not erase supported quantities");
   assert.ok(!missingBasisHtml.includes("0.5000025<small> SOL"));
+  assert.equal((missingBasisHtml.match(/Matched acquisition basis<\/span><strong title="1\.25">1\.25<small> SOL/g) ?? []).length, 2,
+    "Missing report-period basis cannot borrow known 28/90-day acquisition basis");
+  const missingSaleFeeHtml = changedCohort((value) => {
+    value.intervals.report_period.disposed_units.monetary_state = "UNKNOWN";
+    value.intervals.report_period.disposed_units.conditional_profit_sol = null;
+  });
+  assert.equal((missingSaleFeeHtml.match(/Matched acquisition basis<\/span><strong title="1\.25">1\.25<small> SOL/g) ?? []).length, 3,
+    "Supported acquisition basis remains visible when a missing sale fee blocks profit");
+  assert.equal((missingSaleFeeHtml.match(/Conditional disposal P&amp;L<\/span><strong title="0">0<small> SOL/g) ?? []).length, 2,
+    "Missing sale fees still revoke only the dependent disposal profit");
   const malformedHtml = changedCohort((value) => {
     value.intervals.report_period.closed_cohort.candidate_count = "2";
     value.intervals.four_weeks.closed_cohort.monetary_state = true;
@@ -1658,7 +1669,7 @@ try {
   assert.ok(!emptyHtml.includes("-0.2<small> SOL"));
   assert.ok(!emptyHtml.includes("0<small> SOL"));
   assert.ok(!emptyHtml.includes("0<small> %"));
-  const selectedState = { ...state, methodology: "fifo-v4", wallet_evidence_methodology: "wallet-raw-evidence-v7" };
+  const selectedState = { ...state, methodology: "fifo-v4", wallet_evidence_methodology: "wallet-raw-evidence-v8" };
   const visibleCohortReport = { ...cohortReport, history_assessment: { state: "current", saved_methodology: state.history_evidence_methodology, current_methodology: state.history_evidence_methodology } };
   const integratedCohortHtml = renderToStaticMarkup(React.createElement(ReportView, { ...actions, state: selectedState, report: visibleCohortReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined }));
   assert.ok(integratedCohortHtml.includes('data-selected-cohort-freshness="current"'));

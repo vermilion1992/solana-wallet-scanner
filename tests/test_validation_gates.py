@@ -65,7 +65,7 @@ def save_scenarios():
 
 def execute_main(tmp_path, monkeypatch, *, receipt='producer-pass', matrix_receipt='producer-pass',
                  browser_exit=0, backend_exit=0, profile='candidate', stable=True,
-                 omit_record=None, focused_group=None, summary_change=None, product_receipt='producer-pass'):
+                 omit_record=None, focused_group=None, summary_change=None, product_receipt='producer-pass', backend_timeout=False, product_timeout=False):
     fixture = json.loads((Path(__file__).parent / 'fixtures/validation_receipts.json').read_text())
     if receipt == 'producer-pass':
         receipt = json.dumps(fixture['browser'])
@@ -112,6 +112,8 @@ def execute_main(tmp_path, monkeypatch, *, receipt='producer-pass', matrix_recei
                 Path(command[command.index('--output') + 1]).write_text(matrix_receipt)
             return subprocess.CompletedProcess(command, 0)
         if any(str(arg).endswith('check_product.py') for arg in command):
+            if product_timeout:
+                raise subprocess.TimeoutExpired(command, kwargs['timeout'])
             directory = Path(command[command.index('--output') + 1])
             directory.mkdir()
             if product_receipt is not None:
@@ -119,11 +121,13 @@ def execute_main(tmp_path, monkeypatch, *, receipt='producer-pass', matrix_recei
                 (directory / 'result.json').write_text(json.dumps(value))
             return subprocess.CompletedProcess(command, 0)
         if 'pytest' in command:
+            if backend_timeout:
+                raise subprocess.TimeoutExpired(command, kwargs['timeout'])
             return subprocess.CompletedProcess(command, backend_exit)
         return subprocess.CompletedProcess(command, 0)
 
     monkeypatch.setattr(VALIDATOR.subprocess, 'check_output', fake_output)
-    monkeypatch.setattr(VALIDATOR.subprocess, 'run', fake_run)
+    monkeypatch.setattr(VALIDATOR, 'execute_command', fake_run)
     error = None
     code = None
     extra = ['--focused-group', focused_group] if focused_group else []
@@ -266,18 +270,25 @@ def group_receipts(tmp_path):
     for name, selectors in VALIDATOR.focused_groups().items():
         directory = tmp_path / name
         directory.mkdir()
+        source_root = str(VALIDATOR.ROOT)
+        commands = {
+            'runtime': [sys.executable, '-c', 'import sys, pathlib, scanner; assert sys.version_info >= (3,11); assert pathlib.Path(scanner.__file__).resolve().parent == pathlib.Path.cwd()/"scanner"; print(sys.version)'],
+            'node-runtime': ['node', '--version'],
+            'backend': [sys.executable, '-m', 'pytest', '-v', '--durations=10', *selectors],
+        }
         gates = []
         for gate_name in ('runtime', 'node-runtime', 'backend'):
             raw = f'raw {name} {gate_name} output\n'.encode()
             (directory / (gate_name + '.log')).write_bytes(raw)
             gates.append({'name': gate_name, 'state': 'PASS', 'exit_code': 0,
-                          'command': [sys.executable, '-m', 'pytest', '-q', *selectors] if gate_name == 'backend' else [],
+                          'command': commands[gate_name], 'cwd': source_root,
+                          'timeout_seconds': 600, 'timed_out': False,
                           'log_bytes': len(raw), 'log_sha256': hashlib.sha256(raw).hexdigest()})
         path = directory / 'result.json'
         path.write_text(json.dumps({'profile': 'focused', 'state': 'FOCUSED_GROUP_PASS',
             'focused_group': name, 'selection': selectors, 'source_unchanged': True,
             'source': SOURCE, 'locks': LOCKS, 'runtime': RUNTIME, 'commit': 'current',
-            'interpreter': sys.executable, 'gates': gates}))
+            'interpreter': sys.executable, 'source_root': source_root, 'gates': gates}))
         paths.append(path)
     return paths
 
@@ -289,7 +300,7 @@ def read_group_records(paths):
 def test_focused_batches_preserve_the_exact_existing_union():
     groups = VALIDATOR.focused_groups()
     selectors = [selector for paths in groups.values() for selector in paths]
-    assert len(groups) == 6
+    assert len(groups) == 10
     assert len(selectors) == len(set(selectors)) == len(VALIDATOR.FOCUSED)
     assert set(selectors) == set(VALIDATOR.FOCUSED)
 
@@ -314,7 +325,7 @@ def test_focused_partition_rejects_selector_loss_and_overlap(monkeypatch, change
 def test_complete_bound_group_receipts_pass_in_any_order(tmp_path):
     paths = group_receipts(tmp_path)
     result = read_group_records(list(reversed(paths)))
-    assert result['state'] == 'PASS' and len(result['receipts']) == 6
+    assert result['state'] == 'PASS' and len(result['receipts']) == 10
     assert all(receipt['state'] == 'PASS' and len(receipt['sha256']) == 64 for receipt in result['receipts'])
     assert result['selectors'] == VALIDATOR.FOCUSED
 
@@ -322,7 +333,10 @@ def test_complete_bound_group_receipts_pass_in_any_order(tmp_path):
 @pytest.mark.parametrize('change', ['missing', 'duplicate', 'unknown', 'nonpassing', 'changed-source',
     'changed-locks', 'changed-runtime', 'changed-commit', 'source-modified', 'changed-selection',
     'zero-exit-nonpassing-gate', 'false-exit-code', 'changed-command', 'missing-log', 'changed-log',
-    'non-object-receipt', 'malformed-receipt', 'unhashable-gate-name'])
+    'non-object-receipt', 'malformed-receipt', 'unhashable-gate-name',
+    'timeout-even-zero-exit', 'wrong-timeout', 'boolean-timeout', 'missing-timeout', 'missing-timeout-state',
+    'runtime-timeout', 'active-gate-remains', 'wrong-runtime-command', 'wrong-node-command',
+    'wrong-cwd', 'bad-source-root', 'missing-source-root', 'relative-interpreter', 'timeout-abort'])
 def test_focused_union_rejects_incomplete_or_stale_evidence(tmp_path, change):
     paths = group_receipts(tmp_path)
     path = paths[0]
@@ -357,6 +371,34 @@ def test_focused_union_rejects_incomplete_or_stale_evidence(tmp_path, change):
         (path.parent / 'backend.log').unlink()
     elif change == 'changed-log':
         (path.parent / 'backend.log').write_text('replacement bytes')
+    elif change == 'timeout-abort':
+        record['timeout_abort'] = True
+    elif change == 'wrong-runtime-command':
+        record['gates'][0]['command'] = [sys.executable, '-c', 'print("fake-runtime")']
+    elif change == 'wrong-node-command':
+        record['gates'][1]['command'] = ['node', '-e', 'console.log("fake-runtime")']
+    elif change == 'wrong-cwd':
+        record['gates'][-1]['cwd'] = '/other-checkout'
+    elif change == 'bad-source-root':
+        record['source_root'] = []
+    elif change == 'missing-source-root':
+        del record['source_root']
+    elif change == 'relative-interpreter':
+        record['interpreter'] = 'python'
+    elif change == 'runtime-timeout':
+        record['gates'][0]['timed_out'] = True
+    elif change == 'active-gate-remains':
+        record['running_gate'] = {'name': 'backend'}
+    elif change == 'timeout-even-zero-exit':
+        record['gates'][-1]['timed_out'] = True
+    elif change == 'wrong-timeout':
+        record['gates'][-1]['timeout_seconds'] = 1800
+    elif change == 'boolean-timeout':
+        record['gates'][-1]['timeout_seconds'] = True
+    elif change == 'missing-timeout':
+        del record['gates'][-1]['timeout_seconds']
+    elif change == 'missing-timeout-state':
+        del record['gates'][-1]['timed_out']
     elif change == 'non-object-receipt':
         record = []
     elif change == 'malformed-receipt':
@@ -371,24 +413,41 @@ def test_focused_union_rejects_incomplete_or_stale_evidence(tmp_path, change):
 def development_receipt(tmp_path):
     directory = tmp_path / 'development'
     directory.mkdir()
+    source_root = str(VALIDATOR.ROOT)
+    commands = {
+        'runtime': [sys.executable, '-c', 'import sys, pathlib, scanner; assert sys.version_info >= (3,11); assert pathlib.Path(scanner.__file__).resolve().parent == pathlib.Path.cwd()/"scanner"; print(sys.version)'],
+        'node-runtime': ['node', '--version'],
+        'pip-check': [sys.executable, '-m', 'pip', 'check'],
+        'shell-syntax': ['bash', '-n', 'run.sh', 'setup.sh'],
+        'product': [sys.executable, str(VALIDATOR.ROOT / 'tools/check_product.py'), '--output', str(directory / 'private-product')],
+        'frontend-check-format': ['npm', 'run', 'check:format'],
+        'frontend-check-discovery': ['npm', 'run', 'check:discovery'],
+        'frontend-build': ['npm', 'run', 'build'],
+    }
     gates = []
     for name in ('runtime', 'node-runtime', 'pip-check', 'shell-syntax', 'product',
                  'frontend-check-format', 'frontend-check-discovery', 'frontend-build'):
         raw = (name + ' command output\n').encode()
         (directory / (name + '.log')).write_bytes(raw)
         gates.append({'name': name, 'state': 'PASS', 'exit_code': 0,
+                      'timeout_seconds': 600, 'timed_out': False, 'command': commands[name],
+                      'cwd': str(VALIDATOR.ROOT / 'frontend') if name.startswith('frontend-') else source_root,
                       'log_bytes': len(raw), 'log_sha256': hashlib.sha256(raw).hexdigest()})
     gates[4]['product_assertions'] = {name: True for name in ('development_pass', 'real_acceptance_blocked',
         'zero_provider_requests', 'zero_credential_lookups', 'parent_unchanged', 'usage_unchanged', 'no_collector_ancestry')}
     path = directory / 'result.json'
     path.write_text(json.dumps({'profile': 'offline-development', 'state': 'DEVELOPMENT_CHECK_PASS',
         'source_unchanged': True, 'source': SOURCE, 'locks': LOCKS, 'runtime': RUNTIME,
-        'commit': 'current', 'gates': gates}))
+        'commit': 'current', 'gates': gates, 'interpreter': sys.executable,
+        'source_root': source_root, 'output': str(directory)}))
     return path
 
 
 @pytest.mark.parametrize('change', ['positive', 'missing', 'nonpassing', 'runtime', 'changed-after-build',
-                                   'product-failed', 'credential-lookup', 'integer-assertion', 'missing-log', 'changed-log'])
+                                   'product-failed', 'credential-lookup', 'integer-assertion', 'missing-log', 'changed-log',
+    'active-gate', 'timed-out', 'missing-timeout', 'wrong-timeout', 'boolean-timeout', 'missing-timeout-state',
+    'missing-interpreter', 'bad-source-root', 'missing-output', 'wrong-python', 'wrong-product-path',
+    'wrong-private-output', 'wrong-frontend-script', 'wrong-cwd', 'timeout-abort'])
 def test_development_receipt_requires_bound_passing_product_and_frontend(tmp_path, change):
     path = development_receipt(tmp_path)
     record = json.loads(path.read_text())
@@ -400,6 +459,36 @@ def test_development_receipt_requires_bound_passing_product_and_frontend(tmp_pat
         record['runtime'] = {}
     elif change == 'changed-after-build':
         record['source_unchanged'] = False
+    elif change == 'timeout-abort':
+        record['timeout_abort'] = True
+    elif change == 'active-gate':
+        record['running_gate'] = {'name': 'product'}
+    elif change == 'timed-out':
+        record['gates'][4]['timed_out'] = True
+    elif change == 'missing-timeout':
+        del record['gates'][4]['timeout_seconds']
+    elif change == 'wrong-timeout':
+        record['gates'][4]['timeout_seconds'] = 1800
+    elif change == 'boolean-timeout':
+        record['gates'][4]['timeout_seconds'] = True
+    elif change == 'missing-timeout-state':
+        del record['gates'][4]['timed_out']
+    elif change == 'missing-interpreter':
+        del record['interpreter']
+    elif change == 'bad-source-root':
+        record['source_root'] = []
+    elif change == 'missing-output':
+        del record['output']
+    elif change == 'wrong-python':
+        record['gates'][2]['command'][0] = '/different/python'
+    elif change == 'wrong-product-path':
+        record['gates'][4]['command'][1] = '/other/tools/check_product.py'
+    elif change == 'wrong-private-output':
+        record['gates'][4]['command'][-1] = '/other/private-product'
+    elif change == 'wrong-frontend-script':
+        record['gates'][-1]['command'] = ['npm', 'run', 'unreviewed-script']
+    elif change == 'wrong-cwd':
+        record['gates'][-1]['cwd'] = '/other/frontend'
     elif change == 'product-failed':
         record['gates'][4]['state'] = 'FAILED'
     elif change == 'credential-lookup':
@@ -466,7 +555,8 @@ def test_group_entrypoint_runs_only_its_exact_selection_and_writes_bound_logs(tm
     assert {gate['name'] for gate in result['gates']} == {'runtime', 'node-runtime', 'backend'}
     assert all(type(gate['log_bytes']) is int and len(gate['log_sha256']) == 64 for gate in result['gates'])
     backend = next(g for g in result['gates'] if g['name'] == 'backend')
-    assert backend['command'][1:] == ['-m', 'pytest', '-q', *VALIDATOR.FOCUSED_GROUPS[group]]
+    assert backend['command'][1:] == ['-m', 'pytest', '-v', '--durations=10', *VALIDATOR.FOCUSED_GROUPS[group]]
+    assert backend['timeout_seconds'] == 600 and backend['timed_out'] is False
 
 
 @pytest.mark.parametrize('change,expected', [(None, 'FOCUSED_PASS'), ('missing-group', 'INCOMPLETE'),
@@ -487,3 +577,71 @@ def test_development_entrypoint_checks_product_receipt_and_final_source(tmp_path
     assert (result['return_code'] == 0) == (expected == 'DEVELOPMENT_CHECK_PASS')
     assert not any(gate['name'] == 'backend' for gate in result['gates'])
     assert len(result['gates']) == 8
+
+
+def test_interrupted_focused_command_retains_bound_log_and_nonpassing_receipt(tmp_path, monkeypatch):
+    result = execute_main(tmp_path, monkeypatch, profile='focused',
+                          focused_group='indexed-integration', backend_timeout=True)
+    assert result['exception'] is None and result['return_code'] == 2
+    assert result['state'] == 'INCOMPLETE'
+    backend = next(gate for gate in result['gates'] if gate['name'] == 'backend')
+    assert backend['state'] == 'BLOCKED' and backend['timed_out'] is True
+    assert backend['timeout_seconds'] == 600 and 'exit_code' not in backend
+    assert type(backend['log_bytes']) is int and len(backend['log_sha256']) == 64
+    receipt = json.loads((tmp_path / 'repo/evidence/run/result.json').read_text())
+    assert receipt['source'] == SOURCE and receipt['source_unchanged'] is True
+    assert 'running_gate' not in receipt
+
+
+def test_candidate_command_timeout_is_preserved(tmp_path, monkeypatch):
+    result = execute_main(tmp_path, monkeypatch, backend_timeout=True)
+    backend = next(gate for gate in result['gates'] if gate['name'] == 'backend')
+    assert result['return_code'] == 2 and backend['state'] == 'BLOCKED'
+    assert backend['timeout_seconds'] == 1800 and backend['timed_out'] is True
+
+
+def test_development_timeout_preserves_diagnostics_without_starting_more_commands(tmp_path, monkeypatch):
+    result = execute_main(tmp_path, monkeypatch, profile='offline-development', product_timeout=True)
+    assert result['exception'] is None and result['return_code'] == 2
+    assert result['state'] == 'INCOMPLETE'
+    receipt = json.loads((tmp_path / 'repo/evidence/run/result.json').read_text())
+    assert receipt['timeout_abort'] is True and receipt['source_unchanged'] is True
+    product = next(g for g in result['gates'] if g['name'] == 'product')
+    assert product['state'] == 'BLOCKED' and product['timed_out'] is True
+    frontend = [g for g in result['gates'] if g['name'].startswith('frontend-')]
+    assert len(frontend) == 3
+    for gate in frontend:
+        assert gate['state'] == 'BLOCKED' and gate['attempted'] is False
+        assert 'exit_code' not in gate and gate['timeout_seconds'] == 600
+        assert 'NOT_EXECUTED_AFTER_PRIOR_COMMAND_TIMEOUT' in Path(gate['log']).read_text()
+        assert len(gate['log_sha256']) == 64
+
+
+def test_real_bounded_command_preserves_output_and_success(tmp_path):
+    log = tmp_path / 'command.log'
+    with log.open('w') as output:
+        proc = VALIDATOR.execute_command([sys.executable, '-u', '-c', 'print("actual-child-output")'],
+            cwd=tmp_path, env={**os.environ, 'PYTHONUNBUFFERED': '1'}, stdout=output, timeout=5)
+    assert proc.returncode == 0 and log.read_text() == 'actual-child-output\n'
+
+
+def test_real_timeout_stops_command_and_posix_descendants_without_losing_output(tmp_path):
+    import time
+    marker = tmp_path / 'descendant-after-timeout'
+    ready = tmp_path / 'descendant-ready'
+    child = 'import time,pathlib,signal; signal.signal(signal.SIGTERM, signal.SIG_IGN); pathlib.Path(' + repr(str(ready)) + ').write_text("ready"); time.sleep(2); pathlib.Path(' + repr(str(marker)) + ').write_text("should-not-run")'
+    # POSIX exercises a descendant, while other platforms still exercise the
+    # direct-child timeout; only the executed Linux process-group scope is claimed.
+    spawn = ('import subprocess,time,pathlib\nsubprocess.Popen(' + repr([sys.executable, '-c', child]) + ')\n'
+             + 'while not pathlib.Path(' + repr(str(ready)) + ').exists(): time.sleep(0.01)\n') if os.name == 'posix' else ''
+    command = [sys.executable, '-u', '-c', spawn + 'import time; print("before-timeout", flush=True); time.sleep(30)']
+    log = tmp_path / 'partial.log'
+    with log.open('w') as output:
+        with pytest.raises(subprocess.TimeoutExpired):
+            VALIDATOR.execute_command(command, cwd=tmp_path,
+                env={**os.environ, 'PYTHONUNBUFFERED': '1'}, stdout=output, timeout=1)
+    assert 'before-timeout' in log.read_text() and 'VALIDATION_COMMAND_TIMEOUT' in log.read_text()
+    if os.name == 'posix':
+        assert ready.read_text() == 'ready'
+        time.sleep(2)
+        assert not marker.exists()

@@ -65,7 +65,10 @@ def test_losing_and_breakeven_closed_cohort_keeps_open_stock_separate():
     assert cohort['open_stock']['conditional_remaining_basis_sol'] == '1.000015'
     assert cohort['open_stock']['closing_value_sol'] is None
     assert cohort['open_stock']['valuation_state'] == 'UNKNOWN'
-    assert result['components']['observed_positions']['state'] == 'UNKNOWN'
+    # Raw-supported open holdings now coexist with the completed episodes;
+    # admitting this selected population does not establish wallet completeness.
+    assert result['components']['observed_positions']['state'] == 'PASS'
+    assert result['components']['positions']['state'] == 'UNKNOWN'
     assert result['metric_dependencies']['profit_sol']['state'] == 'UNKNOWN'
     assert cohort['wallet_population_state'] == cohort['classification_state'] == 'UNKNOWN'
     assert cohort['qualification'] is False and raws == before

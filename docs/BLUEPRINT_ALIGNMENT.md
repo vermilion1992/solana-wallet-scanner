@@ -104,3 +104,28 @@ wallet membership, time-relevant meme eligibility or exact economic valuation.
 All original thresholds and read-only/no-subscription boundaries remain unchanged.
 The genuine partial dataset and independent named-lot/fee calculations retain
 scope labels. PRODUCT_READY=false until genuine supported B1/B2/B3 acceptance.
+
+## Historical membership and mixed-position integration
+
+PDF pages 6–8 require event-time ownership, absolute quantities and dependencies
+beyond a current account list. The current raw historical-membership interface
+retains successful create/reassign/close sequences and transfer-position owner
+facts across selected/alternative, parsed/compiled and outer/inner sources for
+both token programs. Transient wallet ownership is inspected even when neither
+endpoint is wallet-owned. Sparse matching checkpoints cannot certify unseen
+continuous ownership or the hidden historical account population.
+
+The same FIFO now supplies aggregate closed/open position observations and
+independent disposed acquisition-basis/cost scopes. Unknown sale fees can leave
+supported consumed purchase basis known while profit stays unknown; unknown
+unconsumed holdings do not erase an unrelated supported disposal. Report, 28-day
+and 90-day scope gates remain independent. Exact quantities and network fees do
+not establish eligible wallet populations, complete monetary roles, historical
+classification, boundary inventory or valued flows. Those remaining B1/B2/B3
+requirements preserve the original page 9 filters and page 18 source decision.
+
+Wallet v8 / archive v11 / research v5 / selected-cohort v2 / metric-evidence v2
+create new immutable interpretations, leaving old snapshots and genuine bytes
+unchanged. Current synthetic interface checks are development evidence; this
+integration is pending exact-source gates. No additional provider collection,
+paid subscription, signing or trading is introduced. PRODUCT_READY=false.

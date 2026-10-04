@@ -396,6 +396,34 @@
       "selectors": [
         "tests/test_research_disposal_scopes.py::*"
       ]
+    },
+    {
+      "id": "raw-historical-membership-admission",
+      "axis": "Historical ownership/lifecycle and source dependencies",
+      "selectors": [
+        "tests/test_historical_membership.py::*"
+      ]
+    },
+    {
+      "id": "aggregate-closed-open-position-admission",
+      "axis": "Execution/quantity and immutable offline report workflow",
+      "selectors": [
+        "tests/test_wallet_position_population.py::*"
+      ]
+    },
+    {
+      "id": "invocation-local-source-fact-equivalence",
+      "axis": "Source-set equivalence, conflicts and loss/restoration",
+      "selectors": [
+        "tests/test_source_fact_reuse.py::*"
+      ]
+    },
+    {
+      "id": "disposed-basis-and-period-cost-isolation",
+      "axis": "Metric-specific dependencies and independent interval scopes",
+      "selectors": [
+        "tests/test_disposed_origin_scopes.py::*"
+      ]
     }
   ],
   "browser_required": [

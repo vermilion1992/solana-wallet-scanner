@@ -14,7 +14,7 @@ from types import MappingProxyType
 
 from .accounting import METHODOLOGY, decimal, utc
 
-VERSION = 'metric-evidence-v1'
+VERSION = 'metric-evidence-v2'
 PRODUCTION_VERSION = 'production-evidence-v1'
 INTERVALS = ('report_period', 'four_weeks', 'verification_90d')
 _HASH = re.compile(r'^[a-f0-9]{64}$')
@@ -79,6 +79,10 @@ def _check(value, interval):
 
 
 def _component(components, name, interval):
+    scoped_name = name + '_by_interval'
+    if isinstance(components, dict) and scoped_name in components:
+        scoped = components[scoped_name]
+        return _check(scoped.get(interval) if isinstance(scoped, dict) else None, interval)
     value = components.get(name) if isinstance(components, dict) else None
     if isinstance(value, dict) and 'state' not in value:
         value = value.get(interval)
