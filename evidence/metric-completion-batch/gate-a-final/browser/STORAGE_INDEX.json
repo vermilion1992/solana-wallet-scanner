@@ -1,0 +1,19 @@
+{
+  "kind": "lossless-flat-json-storage-index",
+  "state": "PASS",
+  "time_utc": "2026-10-04T13:47:41.701617+00:00",
+  "scope": "Completed old gate-a-final/browser flat JSON only; baseline and data trees are excluded and their contents were neither read nor removed. New gate-a-accepted untouched.",
+  "threshold_bytes": 2097152,
+  "entries": [],
+  "eligible_large_json_files": 0,
+  "original_bytes": 0,
+  "compressed_bytes": 0,
+  "preserved_browser_receipt_sha256": "f76ae3795ba6accd1197d9ea11b85ab894e490ef6288041a7ff32bccf978c061",
+  "browser_receipt_unchanged": true,
+  "excluded_directories": [
+    "baseline",
+    "data"
+  ],
+  "originals_retained": true,
+  "note": "There are no flat JSON files larger than2MiB in this completed browser directory."
+}

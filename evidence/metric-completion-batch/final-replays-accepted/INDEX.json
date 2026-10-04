@@ -1,0 +1,226 @@
+{
+  "PRODUCT_READY": false,
+  "commands": [
+    {
+      "checks": {
+        "cases_explicitly_passing": true,
+        "credential_lookups_zero": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "oracle_frozen_before_application": true,
+        "original_archive_identity": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "product_ready_false": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/final-replays-accepted/genuine-development",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "finished_at": "2026-10-04T13:38:17.596266+00:00",
+      "log": "evidence/metric-completion-batch/final-replays-accepted/genuine-development.log",
+      "log_bytes": 273,
+      "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "name": "genuine-development",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/result.json",
+      "receipt_bytes": 728677,
+      "receipt_sha256": "b879bdacf1b130c91f81449dd1e1d551570773b3b17431bdf35b76e1779a7354",
+      "receipt_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "seconds": 115.592156,
+      "started_at": "2026-10-04T13:36:22.041503+00:00",
+      "state": "PASS"
+    },
+    {
+      "checks": {
+        "cases_explicitly_passing": true,
+        "credential_lookups_zero": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "oracle_frozen_before_application": true,
+        "original_archive_identity": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "product_ready_false": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+        "--require-real-acceptance"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "finished_at": "2026-10-04T13:40:09.967724+00:00",
+      "log": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance.log",
+      "log_bytes": 273,
+      "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "name": "genuine-real-acceptance",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/result.json",
+      "receipt_bytes": 728647,
+      "receipt_sha256": "ac1dd02dcfc93a46cd7882d66ce0e19b8a69247a26b88ceb9ee9f32585824276",
+      "receipt_state": "BLOCKED",
+      "seconds": 112.369002,
+      "started_at": "2026-10-04T13:38:17.634714+00:00",
+      "state": "PASS_EXPECTED_REAL_BLOCK"
+    },
+    {
+      "checks": {
+        "cases_explicitly_passing": true,
+        "credential_lookups_zero": true,
+        "development_passing": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_product.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/final-replays-accepted/product-development"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "finished_at": "2026-10-04T13:40:27.272244+00:00",
+      "log": "evidence/metric-completion-batch/final-replays-accepted/product-development.log",
+      "log_bytes": 671,
+      "log_sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4",
+      "name": "product-development",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/metric-completion-batch/final-replays-accepted/product-development/result.json",
+      "receipt_bytes": 3279,
+      "receipt_sha256": "b9fe0a1f806ba96ebb49a098f815ae32edac8cc7eefadf4b6b550d8d2d7e701a",
+      "receipt_state": "DEVELOPMENT_PASS",
+      "seconds": 17.291727,
+      "started_at": "2026-10-04T13:40:10.005368+00:00",
+      "state": "PASS"
+    },
+    {
+      "checks": {
+        "cases_explicitly_passing": true,
+        "credential_lookups_zero": true,
+        "development_passing": true,
+        "exact_commit_after": true,
+        "exact_commit_before": true,
+        "exact_source_after": true,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_product.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance",
+        "--require-real-acceptance"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "finished_at": "2026-10-04T13:40:44.916648+00:00",
+      "log": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance.log",
+      "log_bytes": 662,
+      "log_sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7",
+      "name": "product-real-acceptance",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/result.json",
+      "receipt_bytes": 3269,
+      "receipt_sha256": "94847e20a3eb97e4ba49ad1769e3ec4b29fd984320b815617eb341272196c8eb",
+      "receipt_state": "BLOCKED",
+      "seconds": 17.648096,
+      "started_at": "2026-10-04T13:40:27.297540+00:00",
+      "state": "PASS_EXPECTED_REAL_BLOCK"
+    }
+  ],
+  "commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "commit_unchanged": true,
+  "finished_at": "2026-10-04T13:40:44.968300+00:00",
+  "inputs_after": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "bytes": 2783,
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    }
+  },
+  "inputs_before": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "bytes": 2783,
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    }
+  },
+  "kind": "four-frozen-offline-entrypoints",
+  "original_inputs_unchanged": true,
+  "scope": "Development workflow validation and explicit real-acceptance blockage; no full product-readiness claim.",
+  "source_file_count": 235,
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "source_unchanged": true,
+  "started_at": "2026-10-04T13:36:22.041286+00:00",
+  "state": "PASS"
+}

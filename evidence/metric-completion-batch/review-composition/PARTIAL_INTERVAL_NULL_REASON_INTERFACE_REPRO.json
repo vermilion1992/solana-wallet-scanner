@@ -1,0 +1,9 @@
+{
+  "kind": "development-interface-review-reproduction",
+  "scope": "Internal adapter test injection only; not an admissible genuine historical population source or current real-data acceptance.",
+  "input": "Valid derived historical_population PASS with reason null, while independent reporting interval remains UNKNOWN.",
+  "actual_error": "TypeError: '<' not supported between instances of 'str' and 'NoneType'",
+  "expected": "Structured partial report preserving unresolved reporting interval without exception.",
+  "classification": "Missing positive/partial adapter interface handling; not a reproduced genuine-source regression.",
+  "archive_source_sha256": "f70bdf8d9ffd0c0f93445a0b724a1f537fd2123eecf1e039aa895f37acac0d03"
+}

@@ -1,0 +1,3471 @@
+{
+  "kind": "explicit-private-git-evidence-publication-plan",
+  "state": "COMPLETED_PRODUCERS_AND_PEER_REVIEW_REQUIRES_FINAL_CONTENT_AUDIT",
+  "created_at": "2026-10-04T13:57:08.412849+00:00",
+  "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "application_source_files": 235,
+  "source_or_history_mutated": false,
+  "git_index_mutated": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "external_uploads": 0,
+  "automatic_stage_allowed": false,
+  "scope": "Read-only recommended new evidence paths. Root must refresh active producer hashes, audit secrets/history, inspect exact staging diff and publish only to the authorized private implementation branch.",
+  "recommended_paths": [
+    {
+      "path": "evidence/metric-completion-batch/ASSEMBLE_FINAL_GATES_REPRO.py",
+      "bytes": 9372,
+      "sha256": "714e71a1bc95b6315bfca406281df7e6cff5f61f3e25baac02d48d3ab98d0f3d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ASSEMBLY_REPAIR_DECISION.json",
+      "bytes": 995,
+      "sha256": "eb04c6e66bb417cacb88f99c63f25e3ab3eecbfdc3f5f694b7bfe658d133dbf5",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/CANDIDATE_ACCEPTED_COMMAND.log",
+      "bytes": 637,
+      "sha256": "9b985abeedf7ff2d32b71bb25dad6e17f91ea06f4015decad4170e1af1773a36",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/CANDIDATE_COMMAND.log",
+      "bytes": 627,
+      "sha256": "4079843e280112a93c8efc64bd5768b3f56dc7b512614e5cba3c7ec08d351e13",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FINAL_GATES.json",
+      "bytes": 5822,
+      "sha256": "ea68178993f6051279976061e02889b5828fa570b54f32932e2e3ea06aca3326",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FINAL_GATES_ASSEMBLY.log",
+      "bytes": 1743,
+      "sha256": "e2cfe5501b6952bbe5a6f028feee04855813ffe3b837742b4cbde48e961a5fb3",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FINAL_GATES_ASSEMBLY_INITIAL_FAILED.log",
+      "bytes": 1024,
+      "sha256": "05b9fa6223479b33c6b065cb6b622ed18f5085d928b164e334c53406ba3edfb9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRESH_SOURCE_EXTRACTION.json",
+      "bytes": 69935,
+      "sha256": "18e45e67dd40a520bf285f0f5dd6291717c090f440cc88ea0a98ec374dd8e1e7",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRESH_SOURCE_EXTRACTION_7e47699.json",
+      "bytes": 155602,
+      "sha256": "4fd571901aef8ba0e679f4099f2b3630bdaaaf3bfdb77d7f80cb8a742c2bf1a6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRONTEND_PRE_FREEZE_BUILD.log",
+      "bytes": 415,
+      "sha256": "55d1bea7289e6bb666f69581365ffd81a4f9330152bb368b2ac999ad53b55c6a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FROZEN_CANDIDATE.json",
+      "bytes": 675,
+      "sha256": "36922d9001f4dc7d47dc22003844b46008881813b328818d17c0aef35084abdb",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FROZEN_CANDIDATE_ce8fbb7.json",
+      "bytes": 675,
+      "sha256": "9a215f8f682decbc30034c1f9d6c703a3889436b1eae9da321772a64dee2308d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/FROZEN_PRE_WHITESPACE.json",
+      "bytes": 675,
+      "sha256": "407a6b859257e9a4b05e9fdbd8ae41c1496b0c2b46f549b577da08b436526cde",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/GIT_FSCK.log",
+      "bytes": 1155,
+      "sha256": "0f52a57240b9fec6e67e738f510157ed6e63a9e1cbc6e6fa74efe69896b73216",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/MATRIX_PRE_FREEZE.json",
+      "bytes": 244809,
+      "sha256": "a51dde93bb02b112064c59a77d5a1c4bfa73b7298fc9e327ccb2659b7bc4ff35",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/MATRIX_PRE_FREEZE.log",
+      "bytes": 168,
+      "sha256": "c3604ec9f6d4d3c035b332f97e8c515ef1c180da4c654ce53eb75fa26b8306a9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/PRODUCT_BROWSER_COMMAND.log",
+      "bytes": 13136,
+      "sha256": "063ef2773afb61adf3e0a4f2057e5d874ec6e6e3822cc8b9c562299ca3e6d689",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/PUBLICATION_INDEX_PLAN_PROVISIONAL.json",
+      "bytes": 152303,
+      "sha256": "a227ebd4d1c83faa9a6b05deac9d75367b8c71114996ea553e7cf9b19baf79bc",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/READ_ME_HANDOFF.json",
+      "bytes": 6232,
+      "sha256": "d96df19cdd610a895251c150849ab81b31d4d28cd320620a4512aec0d37ce34f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/REVIEW_ACCEPTANCE.json",
+      "bytes": 5133,
+      "sha256": "d094ef9184ef3f0f86887680b3723bb4fc0dcdff360ff701117c0ddd95e6b700",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/REVIEW_ACCEPTANCE_ce8fbb7.json",
+      "bytes": 4024,
+      "sha256": "2c64c429389c313c9c231783d7f570151e3bb7512c0788280bf6cb17bad60fde",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_COMPOSITION_ACCEPTED.log",
+      "bytes": 2409,
+      "sha256": "ab79bc417a95366de536ea0d31bff6db77e1f66ea889a49c23655044abb129c0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_COMPOSITION_ACCEPTED2.log",
+      "bytes": 600,
+      "sha256": "7c5ef35cc97de7714c57cb8de3ae8e2217072fd010cc274d74f80d0fdab69dc8",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_COMPOSITION_FINAL.log",
+      "bytes": 15147,
+      "sha256": "853e6dcf673337d170c9949db55b7fe7bc4b78b07e4303acd3943ac494c059c3",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_INTEGRATION_INITIAL.log",
+      "bytes": 838,
+      "sha256": "cd213d59f8f83eb997da9fa2ffb1d45ba417539b0ff75bec426a552f965a9ddf",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_INTERVAL_IDENTITY_FIXED.log",
+      "bytes": 681,
+      "sha256": "b6dc15f63983771ad282e8a5ce36fab4477a92f39a13ec6b0d70c70e37cd3fae",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_INTERVAL_IDENTITY_TARGETED.log",
+      "bytes": 4304,
+      "sha256": "60574556a21199440e9e328f4e22369a62fe062e3c375b7f721740cfee7c560d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_NATIVE_FEE_ACCEPTED.log",
+      "bytes": 600,
+      "sha256": "81a905f33b906c323218313b482018514211c3fae35690edb1e76e58a06c1b59",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_NATIVE_FEE_DISJOINT_FIXED.log",
+      "bytes": 3239,
+      "sha256": "c725fec0e35a777542ce58693b9bf05d9cc91f336d244b479b2b10af6cafd302",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_NATIVE_FEE_FINAL.log",
+      "bytes": 1937,
+      "sha256": "e9e40dec5f0eee9ca62a5c09ce99a123fd8a8f4f5940c2dd7d68454523fe589e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_SHARED_FEE_FINAL.log",
+      "bytes": 680,
+      "sha256": "81c3a406cbc4e30d8e456a9ca05346a2733e9466eb6a0434fe7858445c89e4ee",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_SHARED_FEE_PROJECTION.log",
+      "bytes": 680,
+      "sha256": "981eb857d25521650d82fb0c3f66bd7de261d3289f16deb281000cee1c678789",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_TARGETED.log",
+      "bytes": 99,
+      "sha256": "c31d969a7c1cf00bc287f5bba1ff0d22db462b6b6fa4b05e8792c989b4e312b9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ROOT_VIEW_FINAL.log",
+      "bytes": 13510,
+      "sha256": "f24874855746378c719add8261883ce223ae48c76063010b3024f0ddd23c45c6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/SOURCE_IDENTITY_PORTABILITY.json",
+      "bytes": 1031,
+      "sha256": "8ebcef9ab460c7a40ba0b4e4b29f5c90e4dce4eff6684b165213fff2d4481182",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/SOURCE_MANIFEST.json",
+      "bytes": 35906,
+      "sha256": "848879de0461b87b07e45eebc2ed746f80b254b335909ec7ba321a3c12b12b54",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/SOURCE_MANIFEST_ce8fbb7.json",
+      "bytes": 35906,
+      "sha256": "1790274e2642d197d57ef145bc616b1f4799d2d15f75481ac13eb47b3ba7d65e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/COMPOSED_MATRIX.log",
+      "bytes": 862,
+      "sha256": "30fc3ac003d659e1b18560bd5e86e13d574682b5f87b3ec3228dbc73873d1930",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/DEVELOPER_RECORD.json",
+      "bytes": 5760,
+      "sha256": "8ee31714d5acb589be67c7419cf46d9bb781212e29ec963e0373dd5b40b8a24f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FINAL_DEVELOPER_RECORD.json",
+      "bytes": 7219,
+      "sha256": "bb73159cb8e8177215db04668070a04603fefe530f624a1a3111060784452de2",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FINAL_FOCUSED.log",
+      "bytes": 691,
+      "sha256": "85c135f8550e313a118ed9dc0a61bdef701197187f4a7bfc3b768d5b03addf25",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FINAL_IMPACTED.log",
+      "bytes": 2754,
+      "sha256": "9f01f3ce3925d1e5f4182767624bcaac4bb485261145e7ff1e360b14718d87ce",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FINAL_STABLE_IMPACTED.log",
+      "bytes": 912,
+      "sha256": "9cd22d3fbd6ac495416f2eef2e43b7a3d7fbd7bde518dcfc8f358aac660784cf",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FOCUSED_INITIAL.log",
+      "bytes": 3795,
+      "sha256": "3e0c78702d0534c8e7b6dabed5a673bde73f4cfa0ea933fe6d8b89eb6a35807b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FOCUSED_SECOND.log",
+      "bytes": 818,
+      "sha256": "12e20eac8dc381ab935f4dd2e7bd36d1f4ee38dc31ae01a7d80136142c25cdf8",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/NATIVE_ENVELOPE_MATRIX.log",
+      "bytes": 771,
+      "sha256": "6f4633e136e50d7923176b14ede45bf2de606190771effb64e409b39af36a069",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/NEW_MATRIX.log",
+      "bytes": 610,
+      "sha256": "b3715fc503e30e1d283cc43ad5bfe9fd409c73f40f3dd41029d4c0ea57769ae1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/ORDERED_TRANSFER_FINAL.log",
+      "bytes": 771,
+      "sha256": "933808674acaedbb5b4028d02e91af7d1e08d0cef2af295605ec41a46c7c3960",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/REVIEW_FIXES_FINAL.log",
+      "bytes": 771,
+      "sha256": "97672f86a55efad842efa59dccd81ccb26e094c32ae24d5e6d44a68777ca8d60",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/REVIEW_FIXES_INTERIM.log",
+      "bytes": 691,
+      "sha256": "cdd3e7366e5d8abf301e77b491859f1b9093e1f0ff401057e25a9bc8f22c4493",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/REVIEW_FIXES_MATRIX.log",
+      "bytes": 771,
+      "sha256": "f7a406182c9bf5d9a28b4c65cdab9d9e4a7b6dd8b9fa9bc376ff7b3a4f19a173",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/REVIEW_FIXES_TOPUP.log",
+      "bytes": 771,
+      "sha256": "e76c3bc297daddb579231730492af08d6b4f17b6b849f68c715843abb0c92263",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/SAME_SECOND_REPRO.log",
+      "bytes": 12094,
+      "sha256": "eb1017d2b0b5cc9b03744e02db66d0c10d5e535a45401def7c2ea76e1bcb502f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/ASSEMBLER_INPUT_READ_ONLY_REVIEW.json",
+      "bytes": 3189,
+      "sha256": "79b3b60837ba209955a9d67cf059a0c2e556f35b61cabbc022db8d92b0d64619",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/CHECK_WORKFLOW_STATIC.py",
+      "bytes": 4305,
+      "sha256": "710fab788015fd3538356fd6e48118985631d55f77d854a97d4da90d2b478e0b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/FINAL_EVIDENCE_READ_ONLY_REVIEW.json",
+      "bytes": 6876,
+      "sha256": "7c51944abb438ddbb859290b313c83298641bcd8dd40ac4447c758e35da55880",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/FINAL_EVIDENCE_REVIEW_HELPER_INITIAL_FAILURE.json",
+      "bytes": 456,
+      "sha256": "b726ac56e6b1bbbceb9a7e2705b1ff7a0fed7cbd7cb7a1df7a24264ca394d31f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/MISSING_SUMMARY_CONTROL.json",
+      "bytes": 794,
+      "sha256": "a358f532df6c919c874c4b4f838251763f68909ae27fd447647a7608a694e201",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/MISSING_SUMMARY_SMOKE.log",
+      "bytes": 206,
+      "sha256": "3b50f64f1b5daca3ecce5e9d236f213b09a3e34bb2229b539f0eef9defea7f55",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/PUBLISHER_READ_ONLY_REVIEW.json",
+      "bytes": 4398,
+      "sha256": "3956e45f24f331bf364074a8b4c7f9a45566512f7f4349484e7703283f04ed61",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/PUBLISHER_READ_ONLY_REVIEW_FINAL.json",
+      "bytes": 4398,
+      "sha256": "3956e45f24f331bf364074a8b4c7f9a45566512f7f4349484e7703283f04ed61",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/PUBLISHER_READ_ONLY_REVIEW_INITIAL_BLOCKED.json",
+      "bytes": 4875,
+      "sha256": "ae8f65cc13f10025a8f31a3cec310c2edfcc4bac1c43319c31e940ad81a76d29",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/PUBLISH_EXACT_CANDIDATE_REPRO.py",
+      "bytes": 13085,
+      "sha256": "847f66ca404c2f41ca4a44b7470459e58c9266ba8b94d24d5393dc95a957ecac",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/READ_ONLY_REVIEW.json",
+      "bytes": 2763,
+      "sha256": "77ee5bc7e52f60dbee93682bb77dd041b966cc5b492be914b24e2bce92cfcc8a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/VALIDATOR_EXTENDED.log",
+      "bytes": 180,
+      "sha256": "15ca61784fd2bfd3f829c2c4f97dc6cbe1532a152fd16491d334028c1505478e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/VALIDATOR_RESUMED.log",
+      "bytes": 180,
+      "sha256": "9cfb6bbff06afdee1fc0ce752127f2ff5c69ed500ceec1ff3232553d9d28c0ea",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/WORKFLOW_STATIC.log",
+      "bytes": 60,
+      "sha256": "d753ae1e0a060c813ffe6d25ce7aaf389c2ad20d0103cdcee940ec060fa648c0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/WORKFLOW_STATIC_CONTRACT.json",
+      "bytes": 3992,
+      "sha256": "11bdba2f92f63e2e71d648712045efaf55239acea90ae3e527a1abe2051b1c07",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/missing-summary-smoke/node-runtime.log",
+      "bytes": 9,
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/missing-summary-smoke/result.json",
+      "bytes": 38681,
+      "sha256": "b1b1a53cb3c82040a102be90fa6f841819038c33260c7d4da01757050d2555c3",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/ci/missing-summary-smoke/runtime.log",
+      "bytes": 54,
+      "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/ACCOUNT_ROLE_ISOLATION_REPRODUCTION.json",
+      "bytes": 10447,
+      "sha256": "cae10242c5d6185cea13250a9d5279d157e3d06d28bfa260d05834f094792fe0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/FIFO_PRECISION_REPRODUCTION.json",
+      "bytes": 15675,
+      "sha256": "0f64dd567769bb89da051c2b5500d55294ab29e2ac4b21f93d75661abfebd1c5",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/FINAL_READ_ONLY_REVIEW.json",
+      "bytes": 44612,
+      "sha256": "6cf6976f5dcd937f13ada659f0ccc943d1ba61d76b7c1a43bc695e130ddb2235",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/HARNESS_READ_ONLY_REVIEW.json",
+      "bytes": 45942,
+      "sha256": "bfce1d697a3df3d1699de047aa508d9b85da72d2f07fec8092cf7e0af265e014",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/NATIVE_ENVELOPE_REPLAY.log",
+      "bytes": 599,
+      "sha256": "66c6e7d26339c82abb2e5bab47c085e53753c08b36c34082bf5d8fbee0dbd73a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/ORDERED_TRANSFER_REPLAY.json",
+      "bytes": 662,
+      "sha256": "6997ab3a4024b2a2721a31c15ccb688b54cfb77958653fbf476541f7cff2c137",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/READ_ONLY_REVIEW.json",
+      "bytes": 6611,
+      "sha256": "6bc1d079701eab635eef5b8199e9dfa837300ddb1679884d1937bd3625eaea6d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/REMAINING_COST_REPRODUCTION.json",
+      "bytes": 25941,
+      "sha256": "44f33fb6c8648fcd2f231e9737ebe0dc56db77bae9c0d38287037a0be246b77f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/REPRODUCTION_REPLAY.json",
+      "bytes": 1424,
+      "sha256": "abcb100cebbec7e8fa5a2c4247bfb84c7594f75c4568612f4d3b52db6dde6faa",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/SAME_SECOND_DISJOINT_TRANSFER_REPRODUCTION.json",
+      "bytes": 27608,
+      "sha256": "8cacd1f91adae2b3c1419c5952a2e671615344cc60e02a013a954d7150b0c982",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/SAME_SECOND_TOPUP_REPRODUCTION.json",
+      "bytes": 22585,
+      "sha256": "451ddfc4ae51d68a9af8b92d47b05308fb641a15e836c3e75e310a35e449ebe1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/INDEX.json",
+      "bytes": 3565,
+      "sha256": "683a2097cffc6a2a82eaec4c5c0442ceda73c12f23b9a3f5d511faf145a68ed1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/RUNTIME_CLEANUP.json",
+      "bytes": 1046,
+      "sha256": "442643586c46212c0611e53b1d9fa48a4c3e9b5a882d3d5dc6306f99177c3c7c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/SOURCE_BEFORE.json",
+      "bytes": 35906,
+      "sha256": "6adf2320fed6189fbe6209af73dff77a16d0cff748499c8b9ac144a98e2eba0e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "bytes": 7664,
+      "sha256": "5234f82f7458a4f504d2c11bda973459a134d4eac8e07f6258f742e2daa52775",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/EXPECTED_RAW.json",
+      "bytes": 343825,
+      "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/EXPECTED_WORKED.json",
+      "bytes": 177469,
+      "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/baseline-child.json.gz",
+      "bytes": 3041472,
+      "sha256": "30774b92691e2e5f9fc88ae28b0ec03fb47d01aeabda75010cec391d897b8267",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/inspected-selected-sources.json.gz",
+      "bytes": 21258766,
+      "sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-missing-child.json.gz",
+      "bytes": 3068649,
+      "sha256": "0b9db3d461e8fcacfa3ea8dbccd5c4b055b52aa326d313ab34a72dd43797dabd",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-restored-child.json.gz",
+      "bytes": 3041464,
+      "sha256": "9027863bda55bee7641f58d1ffbc14718ef4ba138ee7699a70dcf15c1f835eef",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-missing-child.json.gz",
+      "bytes": 3087143,
+      "sha256": "1e42ff6a549fdac0660d52e295d45a19b81845ddfc0a87048098cdde1b302d7f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-restored-child.json.gz",
+      "bytes": 3041471,
+      "sha256": "8c05c085a9fac305bc05e73ce7dc1b8e40cf3c19b7ef26cd56b81804c671f42e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/parent-report.csv",
+      "bytes": 21377,
+      "sha256": "42cd40f555ab80e478a46e1a806c0cdc3e8f2079a167cf6c2cdd963458a945c1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/parent-report.json.gz",
+      "bytes": 3041276,
+      "sha256": "c57362574ad2e6812bf5481073fb44d92f30f3954f6415c7e1edc6d8ce991375",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/result.json",
+      "bytes": 728677,
+      "sha256": "63f2e3196dc5cec9c3fa75756ad9f29ebbb19cd0f8fc4ac605686923b7ea6cdc",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/source-missing-child.json.gz",
+      "bytes": 3067358,
+      "sha256": "2e6f91bfbd53d0f947515297ad809b7ec18997f08fcc51e824b23d8fb14b9e8a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/source-restored-child.json.gz",
+      "bytes": 3041467,
+      "sha256": "567d23c955da8c556880320fa86981aa3099bdf6fd03026670ff81cd718d1b65",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development.log",
+      "bytes": 273,
+      "sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/EXPECTED_RAW.json",
+      "bytes": 343825,
+      "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/EXPECTED_WORKED.json",
+      "bytes": 177469,
+      "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/baseline-child.json.gz",
+      "bytes": 3041471,
+      "sha256": "c1ac326b3ff8f7dfb2816e0febe7d06c4c5c3d4f61f285af4bd768ba532f8e50",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json.gz",
+      "bytes": 21258766,
+      "sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/parent-report.csv",
+      "bytes": 21377,
+      "sha256": "42cd40f555ab80e478a46e1a806c0cdc3e8f2079a167cf6c2cdd963458a945c1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/parent-report.json.gz",
+      "bytes": 3041287,
+      "sha256": "408f872a38b3c50327c4df5b47f18858067e191adae6c8e4bc92ffbc5f74cbee",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/result.json",
+      "bytes": 2818,
+      "sha256": "7e57376a7c55f25157264e93bc53f00b89ee8fb7ebe9f552dbac948dbcc78bd4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance.log",
+      "bytes": 273,
+      "sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/run_frozen_entrypoints.py",
+      "bytes": 7887,
+      "sha256": "fc4d2e4afa88dd6ccded71c5fd0e089becf3afc60f2f599c54c7faab63708fe4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/runner.log",
+      "bytes": 183,
+      "sha256": "8f4217a0d4e1162629f4eb6681b7417b91e005ed183edac7fafc919fddcc2867",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/INDEX.json",
+      "bytes": 9672,
+      "sha256": "f2f4bb9735f8cde253d4ba2c756548db9f3e3a541b30740c58066afbd001e28c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/RUNTIME_CLEANUP.json",
+      "bytes": 2121,
+      "sha256": "6cd4e0140bededd4101f58b6838868732f58ef457e1b10a1c0be25d5a8e0f1d9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/SOURCE_AFTER.json",
+      "bytes": 35906,
+      "sha256": "8b0a764bee40f31a1ec1b0393fc955f1c12738463f7eb4c7a5620e83b4d155bb",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/SOURCE_BEFORE.json",
+      "bytes": 35906,
+      "sha256": "8b0a764bee40f31a1ec1b0393fc955f1c12738463f7eb4c7a5620e83b4d155bb",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "bytes": 16013,
+      "sha256": "60f3b0611101b7dd5e0d6a679a149bc5f50294107610be0c1f0642627f414136",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/compress_flat_exports.py",
+      "bytes": 4536,
+      "sha256": "a4cf2c5964a17f309c8623d19d9597825c6dd0ccf2727f3c261c25527f26dc3e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/compression.log",
+      "bytes": 294,
+      "sha256": "ac6c29644c573fd83958355b50f823a99b5c56b499bf3700dd42dad269c6f8f6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/EXPECTED_RAW.json",
+      "bytes": 343825,
+      "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/EXPECTED_WORKED.json",
+      "bytes": 177469,
+      "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/baseline-child.json.gz",
+      "bytes": 3041474,
+      "sha256": "eb364e24f96c1b8d4db6c376fb369599fca00465457382b47f5747faa76c89e3",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/inspected-selected-sources.json.gz",
+      "bytes": 21258766,
+      "sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-missing-child.json.gz",
+      "bytes": 3068644,
+      "sha256": "8cbeb80b2af5ea210fcf2f30bdbd7e8dcfa6f8243917c8dcb8e1eaa96c27ba17",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-restored-child.json.gz",
+      "bytes": 3041470,
+      "sha256": "946308ae8c08e4c8e59abfd2a89910b6fb050d2425a005c75a73673006c86aa3",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-missing-child.json.gz",
+      "bytes": 3087139,
+      "sha256": "549fb1faf3c4efafc447684725a6bdf1d61ae14990b63acdafe0b9ee1f77974a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-restored-child.json.gz",
+      "bytes": 3041471,
+      "sha256": "a6a0ee099cdde2b17bd74eb396cb95d66cbaca7e6c04f10f78f446c6abb4f62d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/parent-report.csv",
+      "bytes": 21377,
+      "sha256": "42cd40f555ab80e478a46e1a806c0cdc3e8f2079a167cf6c2cdd963458a945c1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/parent-report.json.gz",
+      "bytes": 3041276,
+      "sha256": "0d4f28f7c867248a31b284d1cb4bd74c1b63f574c5620ba815e2de7748893dea",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/result.json",
+      "bytes": 728677,
+      "sha256": "b879bdacf1b130c91f81449dd1e1d551570773b3b17431bdf35b76e1779a7354",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-missing-child.json.gz",
+      "bytes": 3067356,
+      "sha256": "8b0e8cdbe74cb764af57afe18dc457f6802804d4975ed31e0d41a699d317693b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-restored-child.json.gz",
+      "bytes": 3041472,
+      "sha256": "f464e254ee09d86fee8f1beb5a4f4e40174f81ed45ddab5beed4c5029d5b7d73",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development.log",
+      "bytes": 273,
+      "sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/EXPECTED_RAW.json",
+      "bytes": 343825,
+      "sha256": "bba7e32b4fd36959875f7520d25475045e0d6641b5d4626bfdfbd59456e393ec",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/EXPECTED_WORKED.json",
+      "bytes": 177469,
+      "sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/baseline-child.json.gz",
+      "bytes": 3041474,
+      "sha256": "4904d88af36b8856d439cb9722950644b70aeb88275b5568eed3ecba3927d913",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/inspected-selected-sources.json.gz",
+      "bytes": 21258766,
+      "sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-missing-child.json.gz",
+      "bytes": 3068642,
+      "sha256": "783d5f0b66b4a380679f9c7ec1e65a5b2c65769aa12d55032fdcd3a6aa3c2bdc",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-restored-child.json.gz",
+      "bytes": 3041473,
+      "sha256": "bcfcbf983f6904721e2c79637310ab4eddc7071220911ae84856324b1cc58646",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-missing-child.json.gz",
+      "bytes": 3087142,
+      "sha256": "7a1468a6d77fb080600954f9c5955735ebd1b280d41825196203c64f27856de9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-restored-child.json.gz",
+      "bytes": 3041472,
+      "sha256": "42699ff8d98e524255d6967f81dd80ec51d7c1a01a39cb1133d27aa375d6f11d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/parent-report.csv",
+      "bytes": 21377,
+      "sha256": "42cd40f555ab80e478a46e1a806c0cdc3e8f2079a167cf6c2cdd963458a945c1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/parent-report.json.gz",
+      "bytes": 3041281,
+      "sha256": "626a32d21ccbab1c6b92229d62aa25a8165a6424de43cf1a62e7a2e798a517ee",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/result.json",
+      "bytes": 728647,
+      "sha256": "ac1dd02dcfc93a46cd7882d66ce0e19b8a69247a26b88ceb9ee9f32585824276",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-missing-child.json.gz",
+      "bytes": 3067359,
+      "sha256": "11a68bdbf43c45688954e4369e9ccffe5bc7f179ebe3109ad742811c559693af",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-restored-child.json.gz",
+      "bytes": 3041471,
+      "sha256": "6d5dc93f4dddda1123de13e4d5282bd3a7a47599074926af402e855aa75e4d96",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance.log",
+      "bytes": 273,
+      "sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/partial-real-input.zip",
+      "bytes": 6941608,
+      "sha256": "9ecd92ab4496b40528594d000ac8071b58277f68eb17b4abc6ce0bbe9af8419a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/partial-real-report.json.gz",
+      "bytes": 1406894,
+      "sha256": "661d41f23efc253b7df4bfd525a3ece56b8b7662415fbdfe6e550272016526e8",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/result.json",
+      "bytes": 3279,
+      "sha256": "b9fe0a1f806ba96ebb49a098f815ae32edac8cc7eefadf4b6b550d8d2d7e701a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/synthetic-export.csv",
+      "bytes": 1990,
+      "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/synthetic-parent.json.gz",
+      "bytes": 201353,
+      "sha256": "298102817fdf48665bb407103d1368ce2558bdefb241b4e44dc5517ca45e2164",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/valuation_hash-missing-child.json.gz",
+      "bytes": 202297,
+      "sha256": "8ca6bf22bfe2d435940fda66286a6fea106810ea54474fb658306767507f87d9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/world_hash-missing-child.json.gz",
+      "bytes": 205061,
+      "sha256": "164c69e802a4271e7c43a65e460414c005538f205c63645cd0bf36de02d69629",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development.log",
+      "bytes": 671,
+      "sha256": "373af9a7effbacffa0f5420e78a0f0e5043435fe618013643366f35e98b53de4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/partial-real-input.zip",
+      "bytes": 6941608,
+      "sha256": "30842b2fed584784c2e7241b638e6e7b44b530166af8b752a51494d3059d22c6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/partial-real-report.json.gz",
+      "bytes": 1406889,
+      "sha256": "2aa9b1728d3b4e0d305e05de747502e9520f46cb72ae8940c33571260fb03256",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/result.json",
+      "bytes": 3269,
+      "sha256": "94847e20a3eb97e4ba49ad1769e3ec4b29fd984320b815617eb341272196c8eb",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/synthetic-export.csv",
+      "bytes": 1990,
+      "sha256": "6af73cf37e644c81e852565b047fde7f4eb36ddd8f0e3ed89252afcf0de7a843",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/synthetic-parent.json.gz",
+      "bytes": 201353,
+      "sha256": "6ace3f094b77c24170f931fb90299ba7b000c946083c8980ff41bce734dc60c7",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/valuation_hash-missing-child.json.gz",
+      "bytes": 202290,
+      "sha256": "9bfc19500aaac331a2ff254fa33a8cdef66eecbc0fb0f1d71c50eb965d04ac8a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/world_hash-missing-child.json.gz",
+      "bytes": 205056,
+      "sha256": "2728f0a88ac64cd1ef1204075b7620e5dc14d3dc24b87b165851b9b89276ea2a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance.log",
+      "bytes": 662,
+      "sha256": "3a3bea3e949d10cc05512999213ca6f30492a72022083e1850036935c30baac7",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/run_frozen_entrypoints.py",
+      "bytes": 8135,
+      "sha256": "74d8d69d9895610ab77b258ba3d8745873467808b78666a44e2709487da23887",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/runner.log",
+      "bytes": 875,
+      "sha256": "a2ffd1910efb4c059cb63f6244bdece18ec4e12d14f5b4df5a6c9ffdc2abf287",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/DIFF_REVIEW.json",
+      "bytes": 2167,
+      "sha256": "43699f9fa1512156ded201210104af2940846a3b109d8414fc9df12b208042e0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/FINAL_ITERATION_REVIEW.json",
+      "bytes": 3584,
+      "sha256": "dc8aea2472c1f8f4bc0f762b1b90e8a8e2e8863299262b1894d41d3597256383",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/ITERATION.json",
+      "bytes": 2204,
+      "sha256": "99b01fb78af16fbedbc2bf7c51310c0a2b36a6169327b0d13643e3eedb363325",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/browser-syntax-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/browser-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/discovery.log",
+      "bytes": 329,
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/final-browser-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/final-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/final-discovery.log",
+      "bytes": 329,
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/final-format.log",
+      "bytes": 142,
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/format.log",
+      "bytes": 142,
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/backend.log",
+      "bytes": 3907,
+      "sha256": "56e1491ab884b2cdb86c48e3e9afd7702fae7ca5ca5a17086d6a456ec2c6e7f4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/STORAGE_INDEX.json",
+      "bytes": 1402,
+      "sha256": "e8b416efb4e6139752f75246cdd25fc6415db781b1271ad4a931ea4ac204e3b7",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/cached-real-desktop.png",
+      "bytes": 1581632,
+      "sha256": "a2f9a83694c6e4e3d24033eec58ff066ebd19d06853a81f5fc694ee80d54c3a2",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/cached-real-mobile.png",
+      "bytes": 1307595,
+      "sha256": "b3d6343afdcbd959ca6af85a02a5e52c623a4bc060094e98f70f5f8277b94f6d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/candidate-import-desktop.png",
+      "bytes": 326847,
+      "sha256": "31c9960092953717e777421c535aa729396001013f8bf5f313002ce0fc1c96ff",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/candidate-import-mobile.png",
+      "bytes": 262608,
+      "sha256": "94b00124bd39cc2248a3e7d43a0204894067e4b37e6d413812d1fc75688c58fc",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/canonical-nonce-desktop.png",
+      "bytes": 1235483,
+      "sha256": "9c2bf9fee59d6ee8cac1be59b168e487687cc2a99a94f78c0a5bbd5ec7cc3aa6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/canonical-nonce-mobile.png",
+      "bytes": 967685,
+      "sha256": "fda641a6c67ecff40d98b0dcb0f1b4ec514187a1fd0096cdded6254b01c8c7b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/cases.json",
+      "bytes": 919,
+      "sha256": "85da487d32006118d7a430f302d50e6d979cb0f3029f939d48a1693315e8d2e1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/guards.json",
+      "bytes": 50,
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/loss-restoration-desktop.png",
+      "bytes": 1235573,
+      "sha256": "76e1a3e1cac48aed8816a8cd841591bd26b745d23636853965043ae35a9b4ad6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/loss-restoration-mobile.png",
+      "bytes": 967870,
+      "sha256": "b09cc94f8039fa9649ab4c9b9c43cf1456bcf7c68db7c24939988e8b94e2fa20",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/owner-change-desktop.png",
+      "bytes": 1491414,
+      "sha256": "5fcfdbeb519b7eda91f13c6ca501eac1b5e6968b91042cc84ec30ead8437f81f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/owner-change-mobile.png",
+      "bytes": 1039116,
+      "sha256": "258b7f9a5ec3416572f6f8a20b908ffdaff434507df6e4786f7ee95a77f4280c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/required-source-missing-desktop.png",
+      "bytes": 1566140,
+      "sha256": "b2ecfffe1a436412aa573ee3beb00db608b6f9bef9526dd6871ad285f936c255",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/required-source-missing-mobile.png",
+      "bytes": 1088325,
+      "sha256": "46890f3b67502dc83126e0a9e300de5d5d660110538226d8857d779cf3f309dd",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/required-source-restored-desktop.png",
+      "bytes": 1235580,
+      "sha256": "7d587af6bc9fcc10b299320ea27a0ab2a03381c30fdbdeeb21800c13cf54af75",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/required-source-restored-mobile.png",
+      "bytes": 967870,
+      "sha256": "b09cc94f8039fa9649ab4c9b9c43cf1456bcf7c68db7c24939988e8b94e2fa20",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/result.json",
+      "bytes": 3029,
+      "sha256": "e41bf54ec8d9da1f50503b7a7d9847f2f50167a186a8c9268b9b3c89b134caf0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/settings-desktop.png",
+      "bytes": 219186,
+      "sha256": "a525dbf472713c61a0580de16f2b485f74ebcbea6f5577ef641a675be9686489",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/settings-mobile.png",
+      "bytes": 153019,
+      "sha256": "34c91543eb4714af8d9118271b8ec95ba278efe4fb561bf66ec2c807e459b8cb",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-build.log",
+      "bytes": 415,
+      "sha256": "91fe87326fb2d16bcf17d84e0b100591c6a406dc43aecf7d67b38439b2ad30c5",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-check-discovery.log",
+      "bytes": 329,
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-check-format.log",
+      "bytes": 142,
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-locked-install.log",
+      "bytes": 25,
+      "sha256": "53982b9708472b1e744d6378385bffc025600b7a814d00fd25607378b952b043",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/launcher-browser-rebuild.log",
+      "bytes": 608,
+      "sha256": "06511a66b587ffb1cdd174c5bc259d26f9e6ef9d1a518686700e0edd10d1275e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/matrix.json",
+      "bytes": 247861,
+      "sha256": "21d411c1a42d9628f212819166b9de54f4de44f4078eef1a2b2a4f2ec3428d13",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/matrix.log",
+      "bytes": 168,
+      "sha256": "77b3f4ddc2aa5118da392f62f477996e2f791b2db0c0ca3c257f617008288186",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/node-runtime.log",
+      "bytes": 9,
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/pip-check.log",
+      "bytes": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/result.json",
+      "bytes": 322516,
+      "sha256": "0bd2cb9634ec98ed0628dd6eafa7ba7713fd7a8b5b57d81549ce4988441b7ac1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/runtime.log",
+      "bytes": 54,
+      "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/shell-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/backend.log",
+      "bytes": 3907,
+      "sha256": "9fb7662edbf9526d921974ca36c6c96ff5071f83dc68bc1bd1598b855f0d5757",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/STORAGE_INDEX.json",
+      "bytes": 758,
+      "sha256": "56b00080e177616c35b279f0ecf03e6fa8d106b2029757d092bdf111d59fece9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/cached-real-desktop.png",
+      "bytes": 1581632,
+      "sha256": "a2f9a83694c6e4e3d24033eec58ff066ebd19d06853a81f5fc694ee80d54c3a2",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/cached-real-mobile.png",
+      "bytes": 1307595,
+      "sha256": "b3d6343afdcbd959ca6af85a02a5e52c623a4bc060094e98f70f5f8277b94f6d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/candidate-import-desktop.png",
+      "bytes": 326992,
+      "sha256": "0f4a0bef7bb7d45b6aee02ed1e999d9241a03eb93f589cfc1dcc126ddccdf39a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/candidate-import-mobile.png",
+      "bytes": 262688,
+      "sha256": "21d4d362bf0082e2450643fb8c175b2b8c5bc4f580760cb3fdff91bd0214741a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/canonical-nonce-desktop.png",
+      "bytes": 1235483,
+      "sha256": "9c2bf9fee59d6ee8cac1be59b168e487687cc2a99a94f78c0a5bbd5ec7cc3aa6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/canonical-nonce-mobile.png",
+      "bytes": 967685,
+      "sha256": "fda641a6c67ecff40d98b0dcb0f1b4ec514187a1fd0096cdded6254b01c8c7b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/cases.json",
+      "bytes": 919,
+      "sha256": "85da487d32006118d7a430f302d50e6d979cb0f3029f939d48a1693315e8d2e1",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/guards.json",
+      "bytes": 50,
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/loss-restoration-desktop.png",
+      "bytes": 1235573,
+      "sha256": "76e1a3e1cac48aed8816a8cd841591bd26b745d23636853965043ae35a9b4ad6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/loss-restoration-mobile.png",
+      "bytes": 967870,
+      "sha256": "b09cc94f8039fa9649ab4c9b9c43cf1456bcf7c68db7c24939988e8b94e2fa20",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/owner-change-desktop.png",
+      "bytes": 1491414,
+      "sha256": "5fcfdbeb519b7eda91f13c6ca501eac1b5e6968b91042cc84ec30ead8437f81f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/owner-change-mobile.png",
+      "bytes": 1039116,
+      "sha256": "258b7f9a5ec3416572f6f8a20b908ffdaff434507df6e4786f7ee95a77f4280c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/required-source-missing-desktop.png",
+      "bytes": 1566140,
+      "sha256": "b2ecfffe1a436412aa573ee3beb00db608b6f9bef9526dd6871ad285f936c255",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/required-source-missing-mobile.png",
+      "bytes": 1088325,
+      "sha256": "46890f3b67502dc83126e0a9e300de5d5d660110538226d8857d779cf3f309dd",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/required-source-restored-desktop.png",
+      "bytes": 1235580,
+      "sha256": "7d587af6bc9fcc10b299320ea27a0ab2a03381c30fdbdeeb21800c13cf54af75",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/required-source-restored-mobile.png",
+      "bytes": 967870,
+      "sha256": "b09cc94f8039fa9649ab4c9b9c43cf1456bcf7c68db7c24939988e8b94e2fa20",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/result.json",
+      "bytes": 3029,
+      "sha256": "f76ae3795ba6accd1197d9ea11b85ab894e490ef6288041a7ff32bccf978c061",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/settings-desktop.png",
+      "bytes": 218846,
+      "sha256": "6b4d66b9d8bfc93c2c19f72ebfe7774e24f18227ca648bf70658357616771122",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/settings-mobile.png",
+      "bytes": 153015,
+      "sha256": "17c02ce06a20d134b0e5157bd082b24dc10ccc9faf606b99a3568c5a04d722b6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/frontend-build.log",
+      "bytes": 415,
+      "sha256": "2e78576dff771e18cf61dfe33a6798a9b581ed20079e49e61b437a43e202c6a3",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/frontend-check-discovery.log",
+      "bytes": 329,
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/frontend-check-format.log",
+      "bytes": 142,
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/frontend-locked-install.log",
+      "bytes": 25,
+      "sha256": "53982b9708472b1e744d6378385bffc025600b7a814d00fd25607378b952b043",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/launcher-browser-rebuild.log",
+      "bytes": 608,
+      "sha256": "06511a66b587ffb1cdd174c5bc259d26f9e6ef9d1a518686700e0edd10d1275e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/matrix.json",
+      "bytes": 247861,
+      "sha256": "21d411c1a42d9628f212819166b9de54f4de44f4078eef1a2b2a4f2ec3428d13",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/matrix.log",
+      "bytes": 168,
+      "sha256": "77b3f4ddc2aa5118da392f62f477996e2f791b2db0c0ca3c257f617008288186",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/node-runtime.log",
+      "bytes": 9,
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/pip-check.log",
+      "bytes": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/result.json",
+      "bytes": 322325,
+      "sha256": "265023f41c11d1be620624680c3341671966367b49c7a78d71cd2591ea6d0f37",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/runtime.log",
+      "bytes": 54,
+      "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/shell-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/account-envelope-native-alternative-reproduction.json",
+      "bytes": 6967,
+      "sha256": "81ef76b4338cb25857f0f9fb0f026532fb107178e35ad329d194d4ae13331dcc",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/alias-review-control.txt",
+      "bytes": 4722,
+      "sha256": "8d44eda04a3bb8a3dfa40c600c4cb46139831ba616d574bd08824c1d74fb93c0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/alias-review-fixed.txt",
+      "bytes": 661,
+      "sha256": "72f618678a27480ad915969ea64a2d066a3aa6b29527a361d57bb63eb20bfdb5",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/derived-genuine-account-input.zip",
+      "bytes": 348371,
+      "sha256": "d57207381e2835b9a8d9b299e56d2a419b44fa9afc7526a5987b29579b3bcd78",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-api-replay.json",
+      "bytes": 3065,
+      "sha256": "d6c8772745a6addfed165d0d419d5f583ae7051a298b4b02ad2ce85510a8c55c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-api-replay.txt",
+      "bytes": 637,
+      "sha256": "347a07f1ac113f1c04d4a215fd1f17e9a59abcfadb33d1a560e4a3ba778624f6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-missing_account_child.json.gz",
+      "bytes": 3043734,
+      "sha256": "30b7c44ce102b267aeac496c5a30c5e9f01f10d766d54188453cacf920a30f28",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-parent.json.gz",
+      "bytes": 3044023,
+      "sha256": "c13926631ce992d4cb5caed03c5e47f67a4a1d1ed1a22f6d2f251d3d3b1a281c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-restored_account_child.json.gz",
+      "bytes": 3044245,
+      "sha256": "c71b2227bf6a311a686e2868793b59d920ef197f0120aee3f4f41e28b8a5887f",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-restored_export_csv.csv.gz",
+      "bytes": 1688,
+      "sha256": "eef7e1c050d0f23268814dc33f693c9e63198e41f0e89836cdbbe89615eea9d0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-selected-identity.json",
+      "bytes": 46305,
+      "sha256": "b991a0be3ae7e92361429a022f02aa4599b0285b57870fb073d84f94c1064e78",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/native-envelope-api-before-fix.txt",
+      "bytes": 11480,
+      "sha256": "4368737a5c6e2eb333330b86f41a72460c0f27e0090111c758658ac126eb26c2",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/replay_genuine_identity.py",
+      "bytes": 9987,
+      "sha256": "063f5d680d28f09dd67b7a9f90d79fb54ca6487bae043c83c14cc7118401986c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/targeted-tests-final.txt",
+      "bytes": 823,
+      "sha256": "7128b1e8c67edafb91049febda6c95ab0bb75f149aebc71fe8c27373a37ba826",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/targeted-tests.txt",
+      "bytes": 823,
+      "sha256": "ad75cd54fb16622c9740e94ecd27ca65fc990d1e18e4e491fe26469745796b27",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/RUNTIME_CLEANUP.json",
+      "bytes": 6896,
+      "sha256": "5a826d36a1c4030c60114fb05e4c5377313cc2f6e91dc3e7fbf12029e1c9c1e0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/STORAGE_INDEX.json",
+      "bytes": 463,
+      "sha256": "13cd4d7ce8c5ef32222757693ca98498a360744a7b9f4fa1340ca2848179a472",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/guards.json",
+      "bytes": 50,
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/indexed-input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/partial-real-input.zip",
+      "bytes": 6941608,
+      "sha256": "4f6be30f2665c03296f8189730a6f2438e3432b19b5993cd5071b58f0f7c52ba",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/result.json",
+      "bytes": 12086,
+      "sha256": "d8a9a8690b26bb5684d09a0bc66b628c590437b2ebb87bbe916e418a0873845b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-final/synthetic-input.zip",
+      "bytes": 18211,
+      "sha256": "4e68ecdca6e9e56a6f9d132bf5386f508790abc58501a1471f9787abf4718318",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/RUNTIME_CLEANUP.json",
+      "bytes": 51151,
+      "sha256": "fb12f93742517f89c92ef87166dbea0a11072019c3cec93c108840798096bf6a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json",
+      "bytes": 3880,
+      "sha256": "94bf359d149ad6fa3108a507cf90e50d712171021b1c2425c8da26a2882ca7ed",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-desktop.png",
+      "bytes": 2038608,
+      "sha256": "9673fcb35358990cecf5f783bfa4ee746e0428ca464cb6ff02ae97565fab0d75",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-mobile.png",
+      "bytes": 1797696,
+      "sha256": "fe9f7cf2b2a492a376d6aec4a1544bbcaf07656c65bcdda483a97ae5756568cd",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json.gz",
+      "bytes": 169928,
+      "sha256": "bea83926fd02801f7e66cbd5970728cf81a9120656167081a10d1fd7c0f91517",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/guards.json",
+      "bytes": 50,
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json.gz",
+      "bytes": 3041474,
+      "sha256": "d30ffa35112264ea22dac2dd558500ddd7c62e054dcccf356cabce06c4f3a743",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-desktop.png",
+      "bytes": 5337435,
+      "sha256": "f315d193e75bfcb1b2fc88f15279cb36a8e499c9e892bce7ae033fbab3e08d17",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-mobile.png",
+      "bytes": 4874530,
+      "sha256": "d4ff9df6c7e426994cad81896253110e52c3454a5a667207c41e1862a32f7074",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json.gz",
+      "bytes": 3041276,
+      "sha256": "6784694a82caa610a8ed4eb744af2654dcbcf8dc0571cd951ebe9ad1e125214c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-rebuilt-desktop.png",
+      "bytes": 5349747,
+      "sha256": "6f9b3044101fad6eb30bcf38f65cbb61f7ea44584682c20af820257d61e3c600",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-rebuilt-mobile.png",
+      "bytes": 4878337,
+      "sha256": "9fed9dd999baf2b53d544790075a0e30a295a0c687f699c81596bbf8945643bf",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/partial-real-input.zip",
+      "bytes": 6941608,
+      "sha256": "0b74d92553c93c0b574b94f03cef207e1643f86270471990dc56f1701a46df70",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/result.json",
+      "bytes": 10043,
+      "sha256": "e3af79c5d253b2ca4ea6e5dd7f1e380ad4a7c56c12213c943f64075ce2f50b82",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-input.zip",
+      "bytes": 18211,
+      "sha256": "dff9eecfefe3127c25081dbbfea087bf3651b98e1fa5eb2c6c7977adff45c265",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json.gz",
+      "bytes": 201358,
+      "sha256": "bf24769b04128a527bd858947724ad65ec863930bef0f60c45fc540148a2352d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-positive-desktop.png",
+      "bytes": 360659,
+      "sha256": "a1d7f7eed54cacd30fbdec6c32c41cce144a4b1cd29072a2d25b173af1af2e52",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-positive-mobile.png",
+      "bytes": 282613,
+      "sha256": "7527b2bd0b24e58ca71687f6601a830dcb28f49c67fe42868450aac2f3f8a33b",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json.gz",
+      "bytes": 201358,
+      "sha256": "bf24769b04128a527bd858947724ad65ec863930bef0f60c45fc540148a2352d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/valuation_hash-missing-desktop.png",
+      "bytes": 406526,
+      "sha256": "52b3f4fdb1bb162950289b0fe583f1580ed32090a13795373635a2e35ea47916",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/valuation_hash-missing-mobile.png",
+      "bytes": 306509,
+      "sha256": "9c111c1f2f466ff40eff58ad0a20e966497146be2eb5779c1fd2200c7cb04e2e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/valuation_hash-missing-report.json",
+      "bytes": 1518819,
+      "sha256": "80825117fbd8db96049fe09ce21456b9754bd907f467065232ae3f094226d856",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/valuation_hash-restored-desktop.png",
+      "bytes": 372754,
+      "sha256": "e306c6f029cbac507b79dcdab7f1c9bb4bb5a290e4ab0166d4f51ddf207c31ac",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/valuation_hash-restored-mobile.png",
+      "bytes": 284575,
+      "sha256": "84f31898e097c905a2712b46e9d3b79dac46b5d0614ab98695e16cf4760d4f05",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/valuation_hash-restored-report.json",
+      "bytes": 1510798,
+      "sha256": "badef9bb0deed145a42f90d21b8a0e0faf92a736f0930bec39e80e75bfb7ceef",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/world_hash-missing-desktop.png",
+      "bytes": 966153,
+      "sha256": "7be2c10703ae324ef59ad79e4f41359a067c78fe95964735c021dd600fcb2b13",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/world_hash-missing-mobile.png",
+      "bytes": 701175,
+      "sha256": "e04bd88dc9051e6e47b9d343d48d9fd55cddca424f46c850fdb3873f7ed5eb6a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/world_hash-missing-report.json",
+      "bytes": 1660831,
+      "sha256": "764838d1c3e8249422e49015c6c76441801f6f528ad821877bdadcd1eb12449e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/world_hash-restored-desktop.png",
+      "bytes": 372749,
+      "sha256": "60bf70d0ffe5339b189facf8e537ac21056a51e3cb46ec6e03ddec130557c4ef",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/world_hash-restored-mobile.png",
+      "bytes": 284614,
+      "sha256": "8a3f90ef9402f11f3da2cb46687e530c05d9fdc8f118695b805f0f45b8271508",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/world_hash-restored-report.json",
+      "bytes": 1510798,
+      "sha256": "9c728042570aa7623b5e63683a06c99e57d165156f3dc222a1b3ed8942e370ec",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/COMMAND.json",
+      "bytes": 4076,
+      "sha256": "f7af10dcca1bf615c246d8d42bb94ef04d3e5a3ce7bcf9b7c328f985c7e15fe5",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/PRECHECK_FAILURE.json",
+      "bytes": 322,
+      "sha256": "50421a4129a5f018b883f0c103d6b08a6ec92e42befbd324c438dfe6d240113c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/RAW.log",
+      "bytes": 4426,
+      "sha256": "52b1b5686af0d4732eee61d2b30dc374aab8894655d59aaff37d66e919239785",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/READ_ONLY_REPLAY_REVIEW.json",
+      "bytes": 1192,
+      "sha256": "d661610f48a73f7ee4d37345585499602f97b22318db4eebaed7e92f3f4d87fd",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/SOURCE_AFTER.json",
+      "bytes": 35906,
+      "sha256": "848879de0461b87b07e45eebc2ed746f80b254b335909ec7ba321a3c12b12b54",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/SOURCE_BEFORE.json",
+      "bytes": 35906,
+      "sha256": "848879de0461b87b07e45eebc2ed746f80b254b335909ec7ba321a3c12b12b54",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_ACCEPTED.json",
+      "bytes": 2247,
+      "sha256": "447ba5ccc0db70d642849f343b47cb2fbbd534e2948268e286abc014353ad7ba",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_ACCEPTED.log",
+      "bytes": 753,
+      "sha256": "54a0f9155f9b97d01a74cb283c02a0eb5a6e116d5768fc239d205aeaa6fab992",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_CHECKS.log",
+      "bytes": 673,
+      "sha256": "e31352fc72e4360e3d061d6871f539eeb7a36c5988c0c285ec47939c013a7bb6",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_FINAL.log",
+      "bytes": 2562,
+      "sha256": "7fe0a6b523a7b086780fbcc348828342a0294f7eca2871c6faded13523b7d103",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_VERIFIED.json",
+      "bytes": 2292,
+      "sha256": "cd4b2568e61e2026f71275300f1fda96bf722be9bdce976b6b84c279cd624363",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_VERIFIED.log",
+      "bytes": 833,
+      "sha256": "05cbac36ded84672effed670b230b2cd124a3e6861ca75b58068bacf282657a2",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/FROZEN_IDENTITY_V3_REVIEW.json",
+      "bytes": 1481,
+      "sha256": "59923deeb6185dc7ead15deda5ec749497281b8876418e357de6b3f2e80027d4",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/MISSING_FEE_QUANTITY_REPRO.json",
+      "bytes": 64183,
+      "sha256": "0f7d909f32b2f48185137d28ab1d28ef5177d2691080e76c50efa23b8392f711",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/NATIVE_FEE_DISJOINT_REPRO.log",
+      "bytes": 3239,
+      "sha256": "7d664a4b4d0405b756cc495a8f1095716734988759afd17cc177af5a07ef4b7e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/NATIVE_FEE_DISJOINT_VERIFIED.log",
+      "bytes": 599,
+      "sha256": "9b0ee97a92a16506ab0d08251b7f07fb4bf8d5ae8c42165f37d9c2f7cafdc71c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/PARTIAL_INTERVAL_NULL_REASON_INTERFACE_REPRO.json",
+      "bytes": 735,
+      "sha256": "16b66ff44eadeb7971fe2f93c03351f7eb6269850c2a417cada278209515549d",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/PARTIAL_INTERVAL_NULL_REASON_INTERFACE_VERIFIED.json",
+      "bytes": 796,
+      "sha256": "00b52fec9b65240783d4735e2051ca99acfc59e8b47761050d5852ae7067fea0",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/READ_ONLY_REVIEW.json",
+      "bytes": 5360,
+      "sha256": "7c23543ac0055fae15c406125d787d4a4f47f451c62c351baf93207339f1ffb5",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/READ_ONLY_REVIEW_PENDING.json",
+      "bytes": 3913,
+      "sha256": "2152bb61a3a328219f89acbf84a5b6516b5a216f20116635cafbc85e4fdba05e",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/RESEARCH_CURRENT_TEST_BYTES.json",
+      "bytes": 1960,
+      "sha256": "4ccc66b2aae280e307554a82010ee5e43211dbe49ea59c39d247edbc33f8641a",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/RESEARCH_CURRENT_TEST_BYTES.log",
+      "bytes": 98,
+      "sha256": "d8723ee001feaaf2086b9ce1b811b05cd7fcaa5a6810308b70293e0529ba97f7",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/SELECTED_FEE_CONTRACT_REVIEW.json",
+      "bytes": 2971,
+      "sha256": "7f1074ba4430b5ccd3059731c8e213c2993730e222d2c7fde3286fbbd5f66b4c",
+      "stable_during_read": true
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/test_native_fee_disjoint_review.py",
+      "bytes": 1977,
+      "sha256": "c0e0f7aedad3391b0ba6f6e7c17ee941710d5672396f993d74f3ebccf9560d73",
+      "stable_during_read": true
+    }
+  ],
+  "verified_compressions": [
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/baseline-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "25e16df82790c068985f0fe1c9dfe190acc369999fca7287ea122918b4fe4d1f",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/baseline-child.json.gz",
+      "stored_bytes": 3041472,
+      "stored_sha256": "30774b92691e2e5f9fc88ae28b0ec03fb47d01aeabda75010cec391d897b8267",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/inspected-selected-sources.json",
+      "original_bytes": 101541522,
+      "original_sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/inspected-selected-sources.json.gz",
+      "stored_bytes": 21258766,
+      "stored_sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-missing-child.json",
+      "original_bytes": 74909822,
+      "original_sha256": "2cd59c1eeb6715caede6aa8a9cd09befa081d5e0fa234f26982d46b54aa46f9b",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-missing-child.json.gz",
+      "stored_bytes": 3068649,
+      "stored_sha256": "0b9db3d461e8fcacfa3ea8dbccd5c4b055b52aa326d313ab34a72dd43797dabd",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "df417515fe0e2cb7c675ae73651f71fe65ddb8dab1af2ea5d150197d0b787534",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-restored-child.json.gz",
+      "stored_bytes": 3041464,
+      "stored_sha256": "9027863bda55bee7641f58d1ffbc14718ef4ba138ee7699a70dcf15c1f835eef",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-missing-child.json",
+      "original_bytes": 74810892,
+      "original_sha256": "888058892e7ee2cb015d7c431cd4e8c63fcf0d074f54242c8c14d3e24aa2655e",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-missing-child.json.gz",
+      "stored_bytes": 3087143,
+      "stored_sha256": "1e42ff6a549fdac0660d52e295d45a19b81845ddfc0a87048098cdde1b302d7f",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "828178f0073dfeafc7c8d1bc6b6241220e559b6efdf9b45f25824436f2bdfcc7",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-restored-child.json.gz",
+      "stored_bytes": 3041471,
+      "stored_sha256": "8c05c085a9fac305bc05e73ce7dc1b8e40cf3c19b7ef26cd56b81804c671f42e",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/parent-report.json",
+      "original_bytes": 74172650,
+      "original_sha256": "2742514a213492923955782ef67bfc42aa71f3cb054d1ce816963e211ad815af",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/parent-report.json.gz",
+      "stored_bytes": 3041276,
+      "stored_sha256": "c57362574ad2e6812bf5481073fb44d92f30f3954f6415c7e1edc6d8ce991375",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/source-missing-child.json",
+      "original_bytes": 74508067,
+      "original_sha256": "3df0a00df610aeebdca9d4b71296c076b165470793f1ea3981989baecbcccfa0",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/source-missing-child.json.gz",
+      "stored_bytes": 3067358,
+      "stored_sha256": "2e6f91bfbd53d0f947515297ad809b7ec18997f08fcc51e824b23d8fb14b9e8a",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-development/source-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "371529227495f712a77e828343a8fe6728ac43aea77dc0263861f3d8e80ff193",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-development/source-restored-child.json.gz",
+      "stored_bytes": 3041467,
+      "stored_sha256": "567d23c955da8c556880320fa86981aa3099bdf6fd03026670ff81cd718d1b65",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/baseline-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "b4eed73a8fac3f52d5512a4bced43b30743229d38fc9029c7d2a42038d75f301",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/baseline-child.json.gz",
+      "stored_bytes": 3041471,
+      "stored_sha256": "c1ac326b3ff8f7dfb2816e0febe7d06c4c5c3d4f61f285af4bd768ba532f8e50",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json",
+      "original_bytes": 101541522,
+      "original_sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json.gz",
+      "stored_bytes": 21258766,
+      "stored_sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/parent-report.json",
+      "original_bytes": 74172650,
+      "original_sha256": "badd6efbcb13368edcf84be187fdb107fa396eb9db336a912813cce8dd3e695b",
+      "stored_path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/parent-report.json.gz",
+      "stored_bytes": 3041287,
+      "stored_sha256": "408f872a38b3c50327c4df5b47f18858067e191adae6c8e4bc92ffbc5f74cbee",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/baseline-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "d884212c73efebd850f9c670d1bcd380bbadb6aff4f444e0d5adbf2d3c2de2d6",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/baseline-child.json.gz",
+      "stored_bytes": 3041474,
+      "stored_sha256": "eb364e24f96c1b8d4db6c376fb369599fca00465457382b47f5747faa76c89e3",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/inspected-selected-sources.json",
+      "original_bytes": 101541522,
+      "original_sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/inspected-selected-sources.json.gz",
+      "stored_bytes": 21258766,
+      "stored_sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-missing-child.json",
+      "original_bytes": 74909822,
+      "original_sha256": "c887088a3a8fccb8d1230ea2424968fe3d4d882bee3af444501e3ed32ba0b0fa",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-missing-child.json.gz",
+      "stored_bytes": 3068644,
+      "stored_sha256": "8cbeb80b2af5ea210fcf2f30bdbd7e8dcfa6f8243917c8dcb8e1eaa96c27ba17",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "bab581b706ca55c001c686bdc292d7c41c5fd9dffb4b8f306e0e3ed06e5b74df",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-restored-child.json.gz",
+      "stored_bytes": 3041470,
+      "stored_sha256": "946308ae8c08e4c8e59abfd2a89910b6fb050d2425a005c75a73673006c86aa3",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-missing-child.json",
+      "original_bytes": 74810892,
+      "original_sha256": "974f76e9da623ba5705a1a1ae0de7041ab89cc9d66d1ababbb1f13d6bf875b66",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-missing-child.json.gz",
+      "stored_bytes": 3087139,
+      "stored_sha256": "549fb1faf3c4efafc447684725a6bdf1d61ae14990b63acdafe0b9ee1f77974a",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "af91f5edc4a9bf6a8b2b293b9e10a3f6ce992584b1c5bc36728132c6741a82e1",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-restored-child.json.gz",
+      "stored_bytes": 3041471,
+      "stored_sha256": "a6a0ee099cdde2b17bd74eb396cb95d66cbaca7e6c04f10f78f446c6abb4f62d",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/parent-report.json",
+      "original_bytes": 74172650,
+      "original_sha256": "93bdc3aa67083706a14b46231d3d3482bd75e0c776c4ee07a3dd7849f91abb01",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/parent-report.json.gz",
+      "stored_bytes": 3041276,
+      "stored_sha256": "0d4f28f7c867248a31b284d1cb4bd74c1b63f574c5620ba815e2de7748893dea",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-missing-child.json",
+      "original_bytes": 74508067,
+      "original_sha256": "9a8dd9d99c06745b90a4a49a8a7a53985de73545610f452944917f56dbea5f5a",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-missing-child.json.gz",
+      "stored_bytes": 3067356,
+      "stored_sha256": "8b0e8cdbe74cb764af57afe18dc457f6802804d4975ed31e0d41a699d317693b",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "516012a3dc8e02ec1285d525f9085d98f9e87c47ea12a835fd0ae4f5a94e0984",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-restored-child.json.gz",
+      "stored_bytes": 3041472,
+      "stored_sha256": "f464e254ee09d86fee8f1beb5a4f4e40174f81ed45ddab5beed4c5029d5b7d73",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/baseline-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "b8f653cd2e62313e86e13db11eb409afea90aa64e317bb2643d764ffbc7a0b8b",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/baseline-child.json.gz",
+      "stored_bytes": 3041474,
+      "stored_sha256": "4904d88af36b8856d439cb9722950644b70aeb88275b5568eed3ecba3927d913",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/inspected-selected-sources.json",
+      "original_bytes": 101541522,
+      "original_sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/inspected-selected-sources.json.gz",
+      "stored_bytes": 21258766,
+      "stored_sha256": "db7926a90e72217d68a5ed1508bbca52ebef63ab926e54f2af90c561a0317479",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-missing-child.json",
+      "original_bytes": 74909822,
+      "original_sha256": "c07151b34ffe1f4b44f6e72e98424d869f6353f6bfa4d0c66c6c279faa3200cc",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-missing-child.json.gz",
+      "stored_bytes": 3068642,
+      "stored_sha256": "783d5f0b66b4a380679f9c7ec1e65a5b2c65769aa12d55032fdcd3a6aa3c2bdc",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "57027591f99584723add0f511121f1af6d56a4becb1e56a6db4cfa42e009182b",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-restored-child.json.gz",
+      "stored_bytes": 3041473,
+      "stored_sha256": "bcfcbf983f6904721e2c79637310ab4eddc7071220911ae84856324b1cc58646",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-missing-child.json",
+      "original_bytes": 74810892,
+      "original_sha256": "5abbaef19ce9df4571003e4b4d0a1c2f06a97f482568c80bd77fbb852db9c451",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-missing-child.json.gz",
+      "stored_bytes": 3087142,
+      "stored_sha256": "7a1468a6d77fb080600954f9c5955735ebd1b280d41825196203c64f27856de9",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "b92a73e9420f06f3db0e5158aea62b61d23a6e21d28341855b67d8ff559e8a01",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-restored-child.json.gz",
+      "stored_bytes": 3041472,
+      "stored_sha256": "42699ff8d98e524255d6967f81dd80ec51d7c1a01a39cb1133d27aa375d6f11d",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/parent-report.json",
+      "original_bytes": 74172650,
+      "original_sha256": "d9e73dfa0f8a510d888fad225937531b12dc392c646a1a7aca09c25817dfa588",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/parent-report.json.gz",
+      "stored_bytes": 3041281,
+      "stored_sha256": "626a32d21ccbab1c6b92229d62aa25a8165a6424de43cf1a62e7a2e798a517ee",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-missing-child.json",
+      "original_bytes": 74508067,
+      "original_sha256": "9d45932e23d3387be7154a0cf39fd6764504e852b6dceff88fbea04c840efd0b",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-missing-child.json.gz",
+      "stored_bytes": 3067359,
+      "stored_sha256": "11a68bdbf43c45688954e4369e9ccffe5bc7f179ebe3109ad742811c559693af",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-restored-child.json",
+      "original_bytes": 74173204,
+      "original_sha256": "37682d661218b2f00bf7df0cb85e134c44f62ba10433c62f783f89e17943a903",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-restored-child.json.gz",
+      "stored_bytes": 3041471,
+      "stored_sha256": "6d5dc93f4dddda1123de13e4d5282bd3a7a47599074926af402e855aa75e4d96",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/partial-real-report.json",
+      "original_bytes": 27281571,
+      "original_sha256": "613e8c735e10a178b0dfe6ab5c9077f2b94950133603fa745e1d950f74c8f031",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/partial-real-report.json.gz",
+      "stored_bytes": 1406894,
+      "stored_sha256": "661d41f23efc253b7df4bfd525a3ece56b8b7662415fbdfe6e550272016526e8",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/synthetic-parent.json",
+      "original_bytes": 5915188,
+      "original_sha256": "f85364ed60a9ddc409c16eccd70dc5fab581a748d15161db1fc8239241586b3f",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/synthetic-parent.json.gz",
+      "stored_bytes": 201353,
+      "stored_sha256": "298102817fdf48665bb407103d1368ce2558bdefb241b4e44dc5517ca45e2164",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/valuation_hash-missing-child.json",
+      "original_bytes": 5923772,
+      "original_sha256": "e8602cc960e02272ace145d765b28793545c51f6a199624004b320bad2f35d9a",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/valuation_hash-missing-child.json.gz",
+      "stored_bytes": 202297,
+      "stored_sha256": "8ca6bf22bfe2d435940fda66286a6fea106810ea54474fb658306767507f87d9",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/world_hash-missing-child.json",
+      "original_bytes": 6043851,
+      "original_sha256": "5335bc592e77559d1e32eece94996eb3fef1fcb8e37dd6dd67b21de27bbe3f94",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-development/world_hash-missing-child.json.gz",
+      "stored_bytes": 205061,
+      "stored_sha256": "164c69e802a4271e7c43a65e460414c005538f205c63645cd0bf36de02d69629",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/partial-real-report.json",
+      "original_bytes": 27281571,
+      "original_sha256": "058e1b3b3c63dce19ba48297a615a75ad686f5d22425537d211ab0fe977b7dbc",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/partial-real-report.json.gz",
+      "stored_bytes": 1406889,
+      "stored_sha256": "2aa9b1728d3b4e0d305e05de747502e9520f46cb72ae8940c33571260fb03256",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/synthetic-parent.json",
+      "original_bytes": 5915188,
+      "original_sha256": "af4b5f2b80746f62a5333ea77fb3b21a8755e9748487b14e4e562fc33aec35df",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/synthetic-parent.json.gz",
+      "stored_bytes": 201353,
+      "stored_sha256": "6ace3f094b77c24170f931fb90299ba7b000c946083c8980ff41bce734dc60c7",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/valuation_hash-missing-child.json",
+      "original_bytes": 5923772,
+      "original_sha256": "ae15d1c8b6f444d9ffdee51f1ebea4fac46380d9c8fa9ca938da863eec47ae2e",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/valuation_hash-missing-child.json.gz",
+      "stored_bytes": 202290,
+      "stored_sha256": "9bfc19500aaac331a2ff254fa33a8cdef66eecbc0fb0f1d71c50eb965d04ac8a",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/world_hash-missing-child.json",
+      "original_bytes": 6043851,
+      "original_sha256": "8d96435562e232d112b368e8bd24e55a4061212188d130cbea28414bb1108af8",
+      "stored_path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/world_hash-missing-child.json.gz",
+      "stored_bytes": 205056,
+      "stored_sha256": "2728f0a88ac64cd1ef1204075b7620e5dc14d3dc24b87b165851b9b89276ea2a",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json",
+      "original_bytes": 3588115,
+      "original_sha256": "487815c13727ebf814dd41c3ae968b026b57bbb1955e73bc4bc0f21692f868ed",
+      "stored_path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json.gz",
+      "stored_bytes": 169928,
+      "stored_sha256": "bea83926fd02801f7e66cbd5970728cf81a9120656167081a10d1fd7c0f91517",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json",
+      "original_bytes": 74173203,
+      "original_sha256": "e68d31227bd907a9002694a19e65580e38248e14991e01ff1fb45f41d6245750",
+      "stored_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json.gz",
+      "stored_bytes": 3041474,
+      "stored_sha256": "d30ffa35112264ea22dac2dd558500ddd7c62e054dcccf356cabce06c4f3a743",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json",
+      "original_bytes": 74172650,
+      "original_sha256": "a4c46a0cfd42c59ee0c36f858a04dd7c30fbb445dbae0fa53855f9c1379eda60",
+      "stored_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json.gz",
+      "stored_bytes": 3041276,
+      "stored_sha256": "6784694a82caa610a8ed4eb744af2654dcbcf8dc0571cd951ebe9ad1e125214c",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json",
+      "original_bytes": 5915188,
+      "original_sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "stored_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json.gz",
+      "stored_bytes": 201358,
+      "stored_sha256": "bf24769b04128a527bd858947724ad65ec863930bef0f60c45fc540148a2352d",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json",
+      "original_bytes": 5915188,
+      "original_sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "stored_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json.gz",
+      "stored_bytes": 201358,
+      "stored_sha256": "bf24769b04128a527bd858947724ad65ec863930bef0f60c45fc540148a2352d",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true,
+        "original_bytes": true,
+        "original_sha256": true,
+        "stable_original_read": true
+      },
+      "original_exists_locally": true,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/identity/genuine-missing_account_child.json",
+      "original_bytes": 74185198,
+      "original_sha256": "a9802ae96f8f2f3bc3a4545702305faab925133f094c49000386131554dc2136",
+      "stored_path": "evidence/metric-completion-batch/identity/genuine-missing_account_child.json.gz",
+      "stored_bytes": 3043734,
+      "stored_sha256": "30b7c44ce102b267aeac496c5a30c5e9f01f10d766d54188453cacf920a30f28",
+      "index_path": "evidence/metric-completion-batch/identity/genuine-api-replay.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true
+      },
+      "original_exists_locally": false,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/identity/genuine-parent.json",
+      "original_bytes": 74188220,
+      "original_sha256": "75badd879395ab442ac5ee631283d3df0f2c3f4d9c4c818f3b26d86c83bd457d",
+      "stored_path": "evidence/metric-completion-batch/identity/genuine-parent.json.gz",
+      "stored_bytes": 3044023,
+      "stored_sha256": "c13926631ce992d4cb5caed03c5e47f67a4a1d1ed1a22f6d2f251d3d3b1a281c",
+      "index_path": "evidence/metric-completion-batch/identity/genuine-api-replay.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true
+      },
+      "original_exists_locally": false,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/identity/genuine-restored_account_child.json",
+      "original_bytes": 74188773,
+      "original_sha256": "e2586734f53719e9ca7f2da297a5f7886534e5a11aeac8ec439d24dcfe5f8887",
+      "stored_path": "evidence/metric-completion-batch/identity/genuine-restored_account_child.json.gz",
+      "stored_bytes": 3044245,
+      "stored_sha256": "c71b2227bf6a311a686e2868793b59d920ef197f0120aee3f4f41e28b8a5887f",
+      "index_path": "evidence/metric-completion-batch/identity/genuine-api-replay.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true
+      },
+      "original_exists_locally": false,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/identity/genuine-restored_export_csv.csv",
+      "original_bytes": 21377,
+      "original_sha256": "42cd40f555ab80e478a46e1a806c0cdc3e8f2079a167cf6c2cdd963458a945c1",
+      "stored_path": "evidence/metric-completion-batch/identity/genuine-restored_export_csv.csv.gz",
+      "stored_bytes": 1688,
+      "stored_sha256": "eef7e1c050d0f23268814dc33f693c9e63198e41f0e89836cdbbe89615eea9d0",
+      "index_path": "evidence/metric-completion-batch/identity/genuine-api-replay.json",
+      "checks": {
+        "stored_bytes": true,
+        "stored_sha256": true,
+        "decompressed_bytes": true,
+        "decompressed_sha256": true,
+        "stable_stored_read": true
+      },
+      "original_exists_locally": false,
+      "publish": "compressed body plus its index; omit flat duplicate only after this independent verification"
+    }
+  ],
+  "flat_duplicates_to_omit": [
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/baseline-child.json",
+      "bytes": 74173204,
+      "sha256": "25e16df82790c068985f0fe1c9dfe190acc369999fca7287ea122918b4fe4d1f",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/baseline-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/inspected-selected-sources.json",
+      "bytes": 101541522,
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/inspected-selected-sources.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-missing-child.json",
+      "bytes": 74909822,
+      "sha256": "2cd59c1eeb6715caede6aa8a9cd09befa081d5e0fa234f26982d46b54aa46f9b",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "df417515fe0e2cb7c675ae73651f71fe65ddb8dab1af2ea5d150197d0b787534",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-buy-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-missing-child.json",
+      "bytes": 74810892,
+      "sha256": "888058892e7ee2cb015d7c431cd4e8c63fcf0d074f54242c8c14d3e24aa2655e",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "828178f0073dfeafc7c8d1bc6b6241220e559b6efdf9b45f25824436f2bdfcc7",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/lot-0-sell-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/parent-report.json",
+      "bytes": 74172650,
+      "sha256": "2742514a213492923955782ef67bfc42aa71f3cb054d1ce816963e211ad815af",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/parent-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/source-missing-child.json",
+      "bytes": 74508067,
+      "sha256": "3df0a00df610aeebdca9d4b71296c076b165470793f1ea3981989baecbcccfa0",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/source-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/source-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "371529227495f712a77e828343a8fe6728ac43aea77dc0263861f3d8e80ff193",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-development/source-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/baseline-child.json",
+      "bytes": 74173204,
+      "sha256": "b4eed73a8fac3f52d5512a4bced43b30743229d38fc9029c7d2a42038d75f301",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/baseline-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json",
+      "bytes": 101541522,
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/inspected-selected-sources.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/parent-report.json",
+      "bytes": 74172650,
+      "sha256": "badd6efbcb13368edcf84be187fdb107fa396eb9db336a912813cce8dd3e695b",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/parent-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/baseline-child.json",
+      "bytes": 74173204,
+      "sha256": "d884212c73efebd850f9c670d1bcd380bbadb6aff4f444e0d5adbf2d3c2de2d6",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/baseline-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/inspected-selected-sources.json",
+      "bytes": 101541522,
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/inspected-selected-sources.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-missing-child.json",
+      "bytes": 74909822,
+      "sha256": "c887088a3a8fccb8d1230ea2424968fe3d4d882bee3af444501e3ed32ba0b0fa",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "bab581b706ca55c001c686bdc292d7c41c5fd9dffb4b8f306e0e3ed06e5b74df",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-buy-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-missing-child.json",
+      "bytes": 74810892,
+      "sha256": "974f76e9da623ba5705a1a1ae0de7041ab89cc9d66d1ababbb1f13d6bf875b66",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "af91f5edc4a9bf6a8b2b293b9e10a3f6ce992584b1c5bc36728132c6741a82e1",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/lot-0-sell-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/parent-report.json",
+      "bytes": 74172650,
+      "sha256": "93bdc3aa67083706a14b46231d3d3482bd75e0c776c4ee07a3dd7849f91abb01",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/parent-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-missing-child.json",
+      "bytes": 74508067,
+      "sha256": "9a8dd9d99c06745b90a4a49a8a7a53985de73545610f452944917f56dbea5f5a",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "516012a3dc8e02ec1285d525f9085d98f9e87c47ea12a835fd0ae4f5a94e0984",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/source-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/baseline-child.json",
+      "bytes": 74173204,
+      "sha256": "b8f653cd2e62313e86e13db11eb409afea90aa64e317bb2643d764ffbc7a0b8b",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/baseline-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/inspected-selected-sources.json",
+      "bytes": 101541522,
+      "sha256": "71a21bd0d8f03b9014418e36f900b3966dff5f1500957b6491bffeef670e7eef",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/inspected-selected-sources.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-missing-child.json",
+      "bytes": 74909822,
+      "sha256": "c07151b34ffe1f4b44f6e72e98424d869f6353f6bfa4d0c66c6c279faa3200cc",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "57027591f99584723add0f511121f1af6d56a4becb1e56a6db4cfa42e009182b",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-buy-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-missing-child.json",
+      "bytes": 74810892,
+      "sha256": "5abbaef19ce9df4571003e4b4d0a1c2f06a97f482568c80bd77fbb852db9c451",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "b92a73e9420f06f3db0e5158aea62b61d23a6e21d28341855b67d8ff559e8a01",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/lot-0-sell-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/parent-report.json",
+      "bytes": 74172650,
+      "sha256": "d9e73dfa0f8a510d888fad225937531b12dc392c646a1a7aca09c25817dfa588",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/parent-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-missing-child.json",
+      "bytes": 74508067,
+      "sha256": "9d45932e23d3387be7154a0cf39fd6764504e852b6dceff88fbea04c840efd0b",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-restored-child.json",
+      "bytes": 74173204,
+      "sha256": "37682d661218b2f00bf7df0cb85e134c44f62ba10433c62f783f89e17943a903",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/source-restored-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/partial-real-report.json",
+      "bytes": 27281571,
+      "sha256": "613e8c735e10a178b0dfe6ab5c9077f2b94950133603fa745e1d950f74c8f031",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-development/partial-real-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/synthetic-parent.json",
+      "bytes": 5915188,
+      "sha256": "f85364ed60a9ddc409c16eccd70dc5fab581a748d15161db1fc8239241586b3f",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-development/synthetic-parent.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/valuation_hash-missing-child.json",
+      "bytes": 5923772,
+      "sha256": "e8602cc960e02272ace145d765b28793545c51f6a199624004b320bad2f35d9a",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-development/valuation_hash-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/world_hash-missing-child.json",
+      "bytes": 6043851,
+      "sha256": "5335bc592e77559d1e32eece94996eb3fef1fcb8e37dd6dd67b21de27bbe3f94",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-development/world_hash-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/partial-real-report.json",
+      "bytes": 27281571,
+      "sha256": "058e1b3b3c63dce19ba48297a615a75ad686f5d22425537d211ab0fe977b7dbc",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/partial-real-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/synthetic-parent.json",
+      "bytes": 5915188,
+      "sha256": "af4b5f2b80746f62a5333ea77fb3b21a8755e9748487b14e4e562fc33aec35df",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/synthetic-parent.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/valuation_hash-missing-child.json",
+      "bytes": 5923772,
+      "sha256": "ae15d1c8b6f444d9ffdee51f1ebea4fac46380d9c8fa9ca938da863eec47ae2e",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/valuation_hash-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/world_hash-missing-child.json",
+      "bytes": 6043851,
+      "sha256": "8d96435562e232d112b368e8bd24e55a4061212188d130cbea28414bb1108af8",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/world_hash-missing-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/final-replays-accepted/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json",
+      "bytes": 3588115,
+      "sha256": "487815c13727ebf814dd41c3ae968b026b57bbb1955e73bc4bc0f21692f868ed",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json.gz",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json",
+      "bytes": 74173203,
+      "sha256": "e68d31227bd907a9002694a19e65580e38248e14991e01ff1fb45f41d6245750",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json.gz",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json",
+      "bytes": 74172650,
+      "sha256": "a4c46a0cfd42c59ee0c36f858a04dd7c30fbb445dbae0fa53855f9c1379eda60",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json.gz",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json",
+      "bytes": 5915188,
+      "sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json.gz",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json",
+      "bytes": 5915188,
+      "sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "reason": "byte-identical verified gzip publication body retained with reconstruction index",
+      "reconstruction": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json.gz",
+      "index_path": "evidence/metric-completion-batch/product-browser-repaired/STORAGE_INDEX.json"
+    }
+  ],
+  "held_paths": [],
+  "compression_holds": [],
+  "incomplete_indexes": [],
+  "excluded_paths": [],
+  "excluded_roots": [
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/baseline",
+      "reason": "excluded generated/private state or baseline directory"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/data",
+      "reason": "excluded generated/private state or baseline directory"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/baseline",
+      "reason": "excluded generated/private state or baseline directory"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-final/browser/data",
+      "reason": "excluded generated/private state or baseline directory"
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/__pycache__",
+      "reason": "excluded generated/private state or baseline directory"
+    },
+    {
+      "path": "evidence/metric-completion-batch/review-composition/__pycache__",
+      "reason": "excluded generated/private state or baseline directory"
+    }
+  ],
+  "dependency_references": [
+    {
+      "path": "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "stable_during_read": true,
+      "role": "Original immutable 87-record archive",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+      "bytes": 2783,
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7",
+      "stable_during_read": true,
+      "role": "Frozen input identity and source-byte manifest",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+      "stable_during_read": true,
+      "role": "Separately worked original integer cash/FIFO expectations",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/WORKED_REAL_CALCULATOR.py",
+      "bytes": 17849,
+      "sha256": "a40be76060e0f743ffc4c62e91387050c975e7a89db5b69b7562e3d0254e8772",
+      "stable_during_read": true,
+      "role": "Independent calculator; no production financial imports",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-request.json",
+      "bytes": 159,
+      "sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+      "stable_during_read": true,
+      "role": "Original already-collected account RPC request bytes",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/collection/phase6/01-current-wallet-account-response.raw.gz",
+      "bytes": 195,
+      "sha256": "b43a4e1e155fb5c2c872f328fccf1809a7063ba00c3e67daf91a1d52d24a5108",
+      "stable_during_read": true,
+      "role": "Original already-collected account RPC response bytes, separately compressed",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/collection/phase6/result.json",
+      "bytes": 15794,
+      "sha256": "0524aaa8966381285c1501b5cded4fb9054b8fa309cc1233f05d0e6554809705",
+      "stable_during_read": true,
+      "role": "Retained collection acquisition/budget receipt",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "docs/R1_SOURCE_DECISION.md",
+      "bytes": 42765,
+      "sha256": "0d3c98c775a2076cf763b0f2dcaf4b64449b40da6ab097b3c34ca5cc52941ecf",
+      "stable_during_read": true,
+      "role": "Complete current source decision in tested source commit",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "ISSUES.md",
+      "bytes": 42444,
+      "sha256": "bc66ad07659d2b7b92baf8fbbaa891474ee03d47a4560a1af959a14ac2984f27",
+      "stable_during_read": true,
+      "role": "Single current issue register in tested source commit",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "docs/ACCEPTANCE_MATRIX.json",
+      "bytes": 16869,
+      "sha256": "8f9a41e0812dc8e2455faf77cc4c3cc9442641215cfb1de3d035fd500995d2ff",
+      "stable_during_read": true,
+      "role": "Single current acceptance matrix in tested source commit",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    },
+    {
+      "path": "evidence/BASELINE.json",
+      "bytes": 1381,
+      "sha256": "40a6f7d7397bc4a0303aa0d74feac788e9a76e5786513c74d64f8f2bdce36de3",
+      "stable_during_read": true,
+      "role": "Original browser baseline identity; recover its tree from preserved Git history",
+      "exists": true,
+      "already_tracked": true,
+      "publication_dependency": "retain existing tracked input/source; do not copy a private runtime directory"
+    }
+  ],
+  "sensitive_path_checks": {
+    "applied_excluded_directory_segments": [
+      ".cache",
+      ".git",
+      ".pytest_cache",
+      ".venv",
+      "__pycache__",
+      "baseline",
+      "browser-profile",
+      "browser_profile",
+      "cache",
+      "chromium-profile",
+      "chromium_profile",
+      "credentials",
+      "data",
+      "keyring",
+      "local-data",
+      "node_modules",
+      "private-runtime",
+      "profile",
+      "profiles",
+      "runtime",
+      "sessions",
+      "venv"
+    ],
+    "applied_credential_database_suffixes": [
+      ".db",
+      ".key",
+      ".p12",
+      ".pem",
+      ".pfx",
+      ".shm",
+      ".sqlite",
+      ".sqlite3",
+      ".wal"
+    ],
+    "symlinks_excluded": true,
+    "recommended_paths_have_no_denied_segments": true,
+    "credentials_content_audit": "NOT_CLAIMED; root performs final full tree/history/nested archive secret audit. This plan checks paths and byte identities only.",
+    "private_runtime_content_read": false
+  },
+  "refresh_required": [
+    "Allproducer andpeer recordscomplete; explicitpath/hashverifiedbeforestaging.",
+    "Plan cannot hashitself; Gitcommit/fullhistoryaudit binditsbytes.",
+    "Full secret/historyaudit andprivateexactpublication remainrequired; automaticstage false."
+  ],
+  "reconstruction": "For every flat duplicate omitted, decompress its individual tracked gzip to the listed original_path; require original_bytes and original_sha256 before replaying any receipt that references the flat path. Original application source remains the tested Git commit, not a reconstructed evidence export.",
+  "totals": {
+    "recommended_files": 322,
+    "recommended_bytes": 286614061,
+    "verified_compression_pairs": 47,
+    "omitted_flat_files": 43,
+    "omitted_flat_bytes": 2593887791,
+    "held_files": 0,
+    "held_bytes": 0,
+    "excluded_roots": 6
+  }
+}

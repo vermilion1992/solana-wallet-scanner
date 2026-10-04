@@ -1,0 +1,28 @@
+.....................................F                                   [100%]
+=================================== FAILURES ===================================
+_ test_native_saved_rebuild_exposes_raw_selected_fee_independently_of_wallet_profit _
+
+session = (<starlette.testclient.TestClient object at 0x7f46ca5d15e0>, <fastapi.applications.FastAPI object at 0x7f46ca5d1ac0>, PosixPath('/tmp/pytest-of-agent/pytest-409/test_native_saved_rebuild_expo0/data'))
+
+    def test_native_saved_rebuild_exposes_raw_selected_fee_independently_of_wallet_profit(session):
+        from tests.test_report_rebuild import seed_report
+        from scanner.report_rebuild import load_report_inputs
+        from tests.test_indexed_report_integration import rebuild
+        from scanner.accounting import canonical
+        from decimal import Decimal
+        client, app, _ = session
+        parent = seed_report(app.state.store)
+>       inputs = app.state.store.evidence(parent['collection_input_hash'])
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: tuple indices must be integers or slices, not str
+
+tests/test_production_evidence_composition.py:211: TypeError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_production_evidence_composition.py::test_native_saved_rebuild_exposes_raw_selected_fee_independently_of_wallet_profit
+1 failed, 37 passed, 1 warning in 0.43s

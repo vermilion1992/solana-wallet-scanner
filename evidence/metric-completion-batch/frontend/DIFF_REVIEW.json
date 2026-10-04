@@ -1,0 +1,34 @@
+{
+  "kind": "frontend-read-only-diff-review",
+  "state": "PASS",
+  "time_utc": "2026-10-04T13:17:21.341879+00:00",
+  "application_acceptance": false,
+  "reviewed_files": {
+    "frontend/src/SelectedCohorts.tsx": "e7ff0d9135b773ff0c4ae4251f877746d706430c7abad852c58330f376794f7d",
+    "frontend/src/report.tsx": "bc7d5066c0d4d05a3ebb11569822f839dee9471630567f112943e2686053f6cb",
+    "frontend/src/types.ts": "c1218d562ae8ee2044e2bdd194904ce773277b83d88eafea4099841e090c4ee3",
+    "frontend/src/styles.css": "1545a734b1999f7cd76f2708aac40dad27087ae8e2c3744d51d4f2bef79c01bf",
+    "frontend/scripts/check-discovery.mjs": "35f9fcc27ee8e224cd6a8709bb9fa878dc41180075e4a5209c6b555cebebe792",
+    "tools/product_browser.py": "094bec0916f1f0a5b5ff1b680ff9f746f98e5ea146945686f5f7fbb28338a331"
+  },
+  "confirmed_remaining_findings": [],
+  "checks_reviewed": [
+    "Exact wallet/history/accounting freshness; saved parents cannot be re-labelled current",
+    "Independent report/28/90 interval boundaries and common report-end stock boundary",
+    "Unknown money retains independently supported quantity/timing; losing and zero values do not disappear",
+    "Malformed/null/numeric-vs-string counts, invalid amount strings, empty cohorts and unsupported versions",
+    "Validated checksum-shaped source selectors; no arbitrary path or URL links",
+    "Read-only rendering and original report immutability",
+    "Responsive wrapping and existing browser capture clipping assertions",
+    "Actual new-panel browser assertions added to existing import/rebuild paths; no external/provider calls introduced"
+  ],
+  "executed": [
+    "npm run check:discovery",
+    "npm run check:format",
+    ".venv/bin/python -m py_compile tools/product_browser.py",
+    "git diff --check -- frontend/src/types.ts frontend/src/report.tsx frontend/src/styles.css frontend/scripts/check-discovery.mjs tools/product_browser.py"
+  ],
+  "browser_execution": "NOT_RUN in this iteration record; root will build compiled assets and execute exact-source candidate browser gates",
+  "compiled_assets": "Not changed by this agent; root final build required",
+  "source_files_read_only_during_review": true
+}

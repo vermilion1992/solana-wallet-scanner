@@ -1,0 +1,159 @@
+{
+  "kind": "independent-final-evidence-and-publication-guard-review",
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "observed_HEAD": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "source_files": 235,
+  "source_unchanged_during_review": true,
+  "committed_diff_from_application": [],
+  "pending_evidence_paths": 321,
+  "pending_scope": "All existing staged/preparation changes are evidence/metric-completion-batch only; root must finish evidence commit and leave clean branch before publisher execution.",
+  "application_source_changed": false,
+  "final_gates": {
+    "path": "evidence/metric-completion-batch/FINAL_GATES.json",
+    "bytes": 5822,
+    "sha256": "ea68178993f6051279976061e02889b5828fa570b54f32932e2e3ea06aca3326"
+  },
+  "candidate_gate_count": 13,
+  "candidate_gate_names": [
+    "backend",
+    "clean-locked-install",
+    "consolidated-review",
+    "frontend-build",
+    "frontend-check-discovery",
+    "frontend-check-format",
+    "frontend-locked-install",
+    "launcher-browser-rebuild",
+    "matrix",
+    "node-runtime",
+    "pip-check",
+    "runtime",
+    "shell-syntax"
+  ],
+  "candidate_command_logs": [
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/runtime.log",
+      "bytes": 54,
+      "sha256": "112ee4ae24d61100b5a0246da4c30bdf37c18ef6ebef4e8c636bce001184605b"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/node-runtime.log",
+      "bytes": 9,
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/backend.log",
+      "bytes": 3907,
+      "sha256": "56e1491ab884b2cdb86c48e3e9afd7702fae7ca5ca5a17086d6a456ec2c6e7f4"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/pip-check.log",
+      "bytes": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/shell-syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/matrix.log",
+      "bytes": 168,
+      "sha256": "77b3f4ddc2aa5118da392f62f477996e2f791b2db0c0ca3c257f617008288186"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-locked-install.log",
+      "bytes": 25,
+      "sha256": "53982b9708472b1e744d6378385bffc025600b7a814d00fd25607378b952b043"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-check-format.log",
+      "bytes": 142,
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-check-discovery.log",
+      "bytes": 329,
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/frontend-build.log",
+      "bytes": 415,
+      "sha256": "91fe87326fb2d16bcf17d84e0b100591c6a406dc43aecf7d67b38439b2ad30c5"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/launcher-browser-rebuild.log",
+      "bytes": 608,
+      "sha256": "06511a66b587ffb1cdd174c5bc259d26f9e6ef9d1a518686700e0edd10d1275e"
+    }
+  ],
+  "structured_receipts_checked": [
+    "matrix",
+    "clean-locked-install",
+    "launcher-browser-rebuild",
+    "consolidated-review"
+  ],
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "node": "24.19.0"
+  },
+  "backend_unique_nodes": 3007,
+  "backend_subtests_separate": 440,
+  "gate_A": "ACCEPTED_IN_SCOPE",
+  "product_browser_cases": 7,
+  "product_browser_captures": 16,
+  "four_mode_exits": {
+    "genuine-development": 0,
+    "genuine-real-acceptance": 2,
+    "product-development": 0,
+    "product-real-acceptance": 2
+  },
+  "independent_previous_input_review": {
+    "path": "evidence/metric-completion-batch/ci/ASSEMBLER_INPUT_READ_ONLY_REVIEW.json",
+    "bytes": 3189,
+    "sha256": "79b3b60837ba209955a9d67cf059a0c2e556f35b61cabbc022db8d92b0d64619"
+  },
+  "independent_previous_input_review_hashes_reverified": true,
+  "assembler_sha256": "714e71a1bc95b6315bfca406281df7e6cff5f61f3e25baac02d48d3ab98d0f3d",
+  "assembler_review": "Corrected script checks exact gate/mode sets, source pins, locks/runtime, raw structured receipts, explicit case/control assertions, immutable input hashes and separately normalized worked-expectation bytes; procedural repair does not change application acceptance.",
+  "publisher_sha256": "847f66ca404c2f41ca4a44b7470459e58c9266ba8b94d24d5393dc95a957ecac",
+  "publisher_review": "Corrected reviewed script unchanged: exact pins, fresh complete-history secret audit, stable candidate and private destination guards before mutation; immutable Git objects/parents SHA verified; fixed branch force:false with ancestor guard.",
+  "review_helper_corrections": [
+    "Success can produce a valid empty bash -n log; its zero-byte SHA is now bound normally. Initial explanation retained.",
+    "Root began staging evidence during review; pending evidence-only additions are permitted for this preparation review. Actual publisher still requires committed clean tracked state."
+  ],
+  "executed_by_reviewer": [
+    "Local source/hash, HEAD/branch/diff and locks/runtime reads",
+    "Raw leaf receipt/log SHA-256 and byte counts",
+    "Strict parsed gate/workflow/browser/immutability/readiness assertions",
+    "AST parse and read-only publisher/assembler inspection"
+  ],
+  "not_executed_by_reviewer": [
+    "Backend suite",
+    "Frontend checks/build",
+    "Browser or workflow application commands",
+    "Publisher",
+    "Assembler",
+    "Fresh secret audit",
+    "GitHub API"
+  ],
+  "network_requests": 0,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "API_mutations": 0,
+  "PRODUCT_READY": false,
+  "remaining_product_status": {
+    "B1": "HISTORICAL_COVERAGE_UNRESOLVED",
+    "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+    "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED"
+  },
+  "scope": "Independent inspection of exact candidate stored execution evidence and publication preparation only. Root performed full validation; reviewer did not execute or newly claim it. No native hosted CI or complete genuine acceptance claim."
+}

@@ -1,0 +1,72 @@
+{
+  "kind": "lossless-flat-json-storage-index",
+  "state": "PASS",
+  "time_utc": "2026-10-04T13:42:05.095326+00:00",
+  "threshold_bytes": 2097152,
+  "compression": "Deterministic gzip (mtime0); each .json.gz independently extracts byte-identical original JSON. Originals retained locally.",
+  "entries": [
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json",
+      "original_bytes": 3588115,
+      "original_sha256": "487815c13727ebf814dd41c3ae968b026b57bbb1955e73bc4bc0f21692f868ed",
+      "gzip_path": "evidence/metric-completion-batch/product-browser-repaired/genuine-partial-report.json.gz",
+      "gzip_bytes": 169928,
+      "gzip_sha256": "bea83926fd02801f7e66cbd5970728cf81a9120656167081a10d1fd7c0f91517",
+      "decompressed_bytes": 3588115,
+      "decompressed_sha256": "487815c13727ebf814dd41c3ae968b026b57bbb1955e73bc4bc0f21692f868ed",
+      "original_retained": true,
+      "decompression_verified": true
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json",
+      "original_bytes": 74173203,
+      "original_sha256": "e68d31227bd907a9002694a19e65580e38248e14991e01ff1fb45f41d6245750",
+      "gzip_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-child.json.gz",
+      "gzip_bytes": 3041474,
+      "gzip_sha256": "d30ffa35112264ea22dac2dd558500ddd7c62e054dcccf356cabce06c4f3a743",
+      "decompressed_bytes": 74173203,
+      "decompressed_sha256": "e68d31227bd907a9002694a19e65580e38248e14991e01ff1fb45f41d6245750",
+      "original_retained": true,
+      "decompression_verified": true
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json",
+      "original_bytes": 74172650,
+      "original_sha256": "a4c46a0cfd42c59ee0c36f858a04dd7c30fbb445dbae0fa53855f9c1379eda60",
+      "gzip_path": "evidence/metric-completion-batch/product-browser-repaired/indexed-partial-parent.json.gz",
+      "gzip_bytes": 3041276,
+      "gzip_sha256": "6784694a82caa610a8ed4eb744af2654dcbcf8dc0571cd951ebe9ad1e125214c",
+      "decompressed_bytes": 74172650,
+      "decompressed_sha256": "a4c46a0cfd42c59ee0c36f858a04dd7c30fbb445dbae0fa53855f9c1379eda60",
+      "original_retained": true,
+      "decompression_verified": true
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json",
+      "original_bytes": 5915188,
+      "original_sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "gzip_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-parent.json.gz",
+      "gzip_bytes": 201358,
+      "gzip_sha256": "bf24769b04128a527bd858947724ad65ec863930bef0f60c45fc540148a2352d",
+      "decompressed_bytes": 5915188,
+      "decompressed_sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "original_retained": true,
+      "decompression_verified": true
+    },
+    {
+      "original_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json",
+      "original_bytes": 5915188,
+      "original_sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "gzip_path": "evidence/metric-completion-batch/product-browser-repaired/synthetic-ui-export.json.gz",
+      "gzip_bytes": 201358,
+      "gzip_sha256": "bf24769b04128a527bd858947724ad65ec863930bef0f60c45fc540148a2352d",
+      "decompressed_bytes": 5915188,
+      "decompressed_sha256": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+      "original_retained": true,
+      "decompression_verified": true
+    }
+  ],
+  "original_bytes": 163764344,
+  "compressed_bytes": 6655394,
+  "preserved_browser_receipt_sha256": "e3af79c5d253b2ca4ea6e5dd7f1e380ad4a7c56c12213c943f64075ce2f50b82"
+}

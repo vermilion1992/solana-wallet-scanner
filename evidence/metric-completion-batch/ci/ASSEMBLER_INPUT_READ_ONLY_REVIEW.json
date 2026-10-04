@@ -1,0 +1,72 @@
+{
+  "kind": "assembler-input-read-only-review",
+  "state": "PASS_REVIEWED_COMPLETE_INPUTS",
+  "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "checks": {
+    "four_distinct_modes_raw_receipts_exact_exit_types_and_states": "PASS",
+    "zero_provider_credential_counters_parent_immutability_and_usage": "PASS",
+    "actual_product_browser_case_flags_and_candidate_binding": "PASS",
+    "frozen_inputs_and_actual_fresh_extraction_identity": "PASS",
+    "actual_product_browser_command_raw_log_hash": "PASS"
+  },
+  "evidence": [
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/INDEX.json",
+      "sha256": "f2f4bb9735f8cde253d4ba2c756548db9f3e3a541b30740c58066afbd001e28c",
+      "bytes": 9672
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/result.json",
+      "sha256": "b879bdacf1b130c91f81449dd1e1d551570773b3b17431bdf35b76e1779a7354",
+      "bytes": 728677
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/result.json",
+      "sha256": "ac1dd02dcfc93a46cd7882d66ce0e19b8a69247a26b88ceb9ee9f32585824276",
+      "bytes": 728647
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/result.json",
+      "sha256": "b9fe0a1f806ba96ebb49a098f815ae32edac8cc7eefadf4b6b550d8d2d7e701a",
+      "bytes": 3279
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/result.json",
+      "sha256": "94847e20a3eb97e4ba49ad1769e3ec4b29fd984320b815617eb341272196c8eb",
+      "bytes": 3269
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/result.json",
+      "sha256": "e3af79c5d253b2ca4ea6e5dd7f1e380ad4a7c56c12213c943f64075ce2f50b82",
+      "bytes": 10043
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/COMMAND.json",
+      "sha256": "f7af10dcca1bf615c246d8d42bb94ef04d3e5a3ce7bcf9b7c328f985c7e15fe5",
+      "bytes": 4076
+    },
+    {
+      "path": "evidence/metric-completion-batch/FROZEN_CANDIDATE.json",
+      "sha256": "36922d9001f4dc7d47dc22003844b46008881813b328818d17c0aef35084abdb",
+      "bytes": 675
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRESH_SOURCE_EXTRACTION_7e47699.json",
+      "sha256": "4fd571901aef8ba0e679f4099f2b3630bdaaaf3bfdb77d7f80cb8a742c2bf1a6",
+      "bytes": 155602
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/RAW.log",
+      "sha256": "52b1b5686af0d4732eee61d2b30dc374aab8894655d59aaff37d66e919239785",
+      "bytes": 4426
+    }
+  ],
+  "gate_A": "PENDING_ACTIVE_FULL_CANDIDATE",
+  "FINAL_GATES": "PENDING",
+  "scope": "Independently read and verified actual existing four workflow-mode receipts, product browser, preserved inputs and fresh extraction. No assembler or application validation executed by this reviewer. Full Gate A remains pending.",
+  "network_requests": 0,
+  "provider_requests": 0,
+  "application_source_changes": false,
+  "PRODUCT_READY": false
+}

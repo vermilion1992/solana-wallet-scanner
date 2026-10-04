@@ -1,0 +1,55 @@
+....................................F....F..................................................................... [ 67%]
+......................................................     [100%]
+=================================== FAILURES ===================================
+_ test_missing_trade_fee_revokes_money_and_open_basis_but_preserves_closed_holding_time _
+
+    def test_missing_trade_fee_revokes_money_and_open_basis_but_preserves_closed_holding_time():
+        raws = [exchange('buy', 100, START + 3600, 0, 100), exchange('sale', 101, START + 7200, 100, 0)]
+        raws[0]['meta']['fee'] = None
+        closed = interval(observations(raws))['closed_cohort']
+>       assert closed['candidate_count'] == 1 and closed['timing_state'] == 'PASS'
+E       AssertionError: assert (1 == 1 and 'UNKNOWN' == 'PASS'
+E         
+E         - PASS
+E         + UNKNOWN)
+
+tests/test_selected_cohort_observations.py:144: AssertionError
+_ test_normal_archive_saved_report_rebuild_exports_and_source_restoration_stay_offline _
+
+guarded = (<starlette.testclient.TestClient object at 0x7fdb5471fe60>, <fastapi.applications.FastAPI object at 0x7fdb5471d6a0>, ...mp/pytest-of-agent/pytest-385/test_normal_archive_saved_repo0/data'), {'provider': 0, 'credential': 0, 'transport': 0})
+
+    def test_normal_archive_saved_report_rebuild_exports_and_source_restoration_stay_offline(guarded):
+        client, app, _, calls = guarded
+        raws = [exchange('buy', 100, START + 3600, 0, 100), exchange('sale', 101, START + 7200, 100, 0)]
+        parent = import_report(client, archive(raws))
+        stored = deepcopy(app.state.store.get('reports', parent['id']))
+        parent_cohort = parent['coverage']['wallet_evidence']['query_accounting']['selected_cohort_observations']
+        assert interval(parent_cohort)['closed_cohort']['conditional_profit_sol'] == '-0.00001'
+        buy_hash = record(raws[0])['evidence_hash']
+        path = app.state.store.path / 'evidence' / f'{buy_hash}.json.gz'
+        original = path.read_bytes()
+        path.unlink()
+        lost = rebuild(client, parent)
+        child_cohort = lost['coverage']['wallet_evidence']['query_accounting']['selected_cohort_observations']
+        assert interval(child_cohort)['closed_cohort']['monetary_state'] == 'UNKNOWN'
+        assert interval(child_cohort)['closed_cohort']['candidate_count'] == 1
+        path.write_bytes(original)
+        restored = rebuild(client, parent)
+        assert restored['coverage']['wallet_evidence']['query_accounting']['selected_cohort_observations'] == parent_cohort
+        assert app.state.store.get('reports', parent['id']) == stored
+        export = client.get('/api/reports/' + restored['id'] + '/export.json')
+>       assert export.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_selected_cohort_observations.py:221: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_selected_cohort_observations.py::test_missing_trade_fee_revokes_money_and_open_basis_but_preserves_closed_holding_time
+FAILED tests/test_selected_cohort_observations.py::test_normal_archive_saved_report_rebuild_exports_and_source_restoration_stay_offline
+2 failed, 163 passed, 1 warning, 191 subtests passed in 1.47s

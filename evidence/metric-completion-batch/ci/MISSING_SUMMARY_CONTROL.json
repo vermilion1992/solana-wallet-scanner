@@ -1,0 +1,18 @@
+{
+  "state": "PASS",
+  "scope": "Actual validation entrypoint fails closed when all group and development receipts are absent; not acceptance.",
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "tools/validate.py",
+    "--profile",
+    "focused-summary",
+    "--output",
+    "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/ci/missing-summary-smoke"
+  ],
+  "exit_code": 2,
+  "validator_state": "INCOMPLETE",
+  "raw_log": "evidence/metric-completion-batch/ci/MISSING_SUMMARY_SMOKE.log",
+  "raw_log_sha256": "3b50f64f1b5daca3ecce5e9d236f213b09a3e34bb2229b539f0eef9defea7f55",
+  "receipt": "evidence/metric-completion-batch/ci/missing-summary-smoke/result.json",
+  "receipt_sha256": "b1b1a53cb3c82040a102be90fa6f841819038c33260c7d4da01757050d2555c3"
+}

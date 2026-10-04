@@ -1,0 +1,45 @@
+{
+  "records": [
+    {
+      "at": "2026-10-04T13:39:22.698962+00:00",
+      "bytes": 452581840,
+      "file_count": 106,
+      "name": "genuine-development",
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/data",
+      "receipt_sha256": "b879bdacf1b130c91f81449dd1e1d551570773b3b17431bdf35b76e1779a7354",
+      "removed": true,
+      "tree_manifest_sha256": "f80169db4e84e722d72758d8b75043dd17dc91773a3c484c96c2dd4ce972c6fd"
+    },
+    {
+      "at": "2026-10-04T13:41:14.558727+00:00",
+      "bytes": 452581840,
+      "file_count": 106,
+      "name": "genuine-real-acceptance",
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/data",
+      "receipt_sha256": "ac1dd02dcfc93a46cd7882d66ce0e19b8a69247a26b88ceb9ee9f32585824276",
+      "removed": true,
+      "tree_manifest_sha256": "19bf7056d3755af20323e4a8452c9ee3fbf3b50d8dfab185b5f4da36f2918fa0"
+    },
+    {
+      "at": "2026-10-04T13:41:14.661905+00:00",
+      "bytes": 48719314,
+      "file_count": 90,
+      "name": "product-development",
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/data",
+      "receipt_sha256": "b9fe0a1f806ba96ebb49a098f815ae32edac8cc7eefadf4b6b550d8d2d7e701a",
+      "removed": true,
+      "tree_manifest_sha256": "851ed6c83de6872d9b71fe540e56335e8b2c874b0fbbf5efeaf30ad4c645ad3e"
+    },
+    {
+      "at": "2026-10-04T13:41:14.721556+00:00",
+      "bytes": 48719314,
+      "file_count": 90,
+      "name": "product-real-acceptance",
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/data",
+      "receipt_sha256": "94847e20a3eb97e4ba49ad1769e3ec4b29fd984320b815617eb341272196c8eb",
+      "removed": true,
+      "tree_manifest_sha256": "acb200d14d7dea0742d9ce35946e22bb1104e92d331060e63e02538eb16c087e"
+    }
+  ],
+  "scope": "Remove only completed checker own-generated disposable output/data runtime directories; preserve all flat receipts, original reportexports, rawlogs, original inputs and workedoracle. No user runtime state or historical evidence touched."
+}

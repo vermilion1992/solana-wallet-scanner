@@ -1,0 +1,291 @@
+{"output": "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/product-browser-final/synthetic-input.zip", "sha256": "4e68ecdca6e9e56a6f9d132bf5386f508790abc58501a1471f9787abf4718318", "scope": "Synthetic development", "provider_requests": 0}
+{"output": "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/product-browser-final/partial-real-input.zip", "sha256": "4f6be30f2665c03296f8189730a6f2438e3432b19b5993cd5071b58f0f7c52ba", "scope": "Partial real sample; B3 remains blocked", "provider_requests": 0}
+Traceback (most recent call last):
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 285, in <module>
+    raise SystemExit(run(p.parse_args()))
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 175, in run
+    parent=import_ui(out/'synthetic-input.zip','synthetic');pid=parent['id']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 173, in import_ui
+    selected_cohort_ui(report,'import-'+file.stem)
+  File "/workspace/solana-wallet-scanner/tools/product_browser.py", line 113, in selected_cohort_ui
+    expect(panel).to_have_attribute('data-selected-cohort-freshness','current')
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 22107, in to_have_attribute
+    self._sync(
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_assertions.py", line 349, in to_have_attribute
+    await self._expect_impl(
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_assertions.py", line 128, in _expect_impl
+    _record_soft_or_raise(
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/playwright/_impl/_assertions.py", line 60, in _record_soft_or_raise
+    raise error
+AssertionError: Locator expected to have attribute 'current'
+Actual value: None
+Error: element(s) not found 
+Call log:
+  - Expect "to_have_attribute" with timeout 120000ms
+  - waiting for locator("[data-selected-cohort-freshness]")
+
+Aria snapshot:
+- complementary:
+  - button "Wallet Atlas. SOLANA RESEARCH":
+    - img
+    - strong: Wallet Atlas.
+    - text: SOLANA RESEARCH
+  - text: LOCAL WORKSPACE
+  - navigation "Main navigation":
+    - button "Discover":
+      - img
+      - text: Discover
+    - button "Overview":
+      - img
+      - text: Overview
+    - button "Results 1":
+      - img
+      - text: Results 1
+    - button "Compare":
+      - img
+      - text: Compare
+    - button "Watchlist":
+      - img
+      - text: Watchlist
+    - button "Settings":
+      - img
+      - text: Settings
+  - text: Setup pilot allowance
+  - img
+  - text: Not connected Configure in Settings
+  - button "Manage data access":
+    - text: Manage data access
+    - img
+  - img
+  - text: Saved on this computer FREE LOCAL EDITION · V0.3.11
+- main:
+  - text: Workspace
+  - img
+  - strong: Wallet report
+  - text: Local & private
+  - img
+  - text: Read-only WA
+  - img
+  - strong: Offline demonstration
+  - text: · Synthetic reports are labelled throughout. They are not wallet performance evidence.
+  - button "View reports":
+    - text: View reports
+    - img
+  - text: UNDER THE SURFACE
+  - heading "Wallet report" [level=1]
+  - paragraph: Trace every conclusion back to its positions and source records.
+  - button "Back to results":
+    - img
+    - text: Back to results
+  - button "Rebuild from saved records":
+    - img
+    - text: Rebuild from saved records
+  - button "Select to compare":
+    - img
+    - text: Select to compare
+  - button "Watch wallet":
+    - img
+    - text: Watch wallet
+  - link "Export CSV":
+    - /url: /api/export/reports/c4883e7350754505a0a61ed8e0ee1fb7.csv
+    - img
+    - text: Export CSV
+  - text: 4V
+  - heading "4vJ9JU1b…4P3bkLKi" [level=2]
+  - text: Miss
+  - img
+  - text: Synthetic demo 4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi
+  - button "Copy wallet address":
+    - img
+  - text: Jun 1, 2026, 00:00:00
+  - img
+  - text: Jul 1, 2026, 00:00:00 · UTC Evidence completeness Partial fifo-v4 · saved Oct 4, 2026
+  - img
+  - text: This entire report uses synthetic offline records. Addresses, events, and conclusions are demonstration controls.
+  - heading "Synthetic accounting · development" [level=2]
+  - paragraph: Synthetic enumerated finite world; development only
+  - paragraph: "Selected network fees: 0.000055 SOL. This observation does not establish all trading costs."
+  - group: Inspect metric evidence requirements
+  - tablist "Report sections":
+    - tab "Summary" [selected]
+    - tab "Positions (5)"
+    - tab "Ledger & flows (23)"
+    - tab "Source evidence (21)"
+  - paragraph: Display values are rounded; full values remain in records and exports. SOL ledger amounts retain nine decimal places.
+  - text: Realised profit
+  - img "Net FIFO profit on all evidenced disposals in the reporting window, including partial exits"
+  - strong: 0.5 SOL
+  - text: From eligible evidenced records Realised ROI
+  - img "Net realised profit divided by the acquisition cost of disposed quantities"
+  - strong: 7.14 %
+  - text: From eligible evidenced records Win rate
+  - img "Positive completed positions / eligible completed positions"
+  - strong: 40 %
+  - text: From eligible evidenced records Median hold
+  - img "Median duration from first acquisition to the final exit that returns the position to zero"
+  - strong: 24 hours
+  - text: From eligible evidenced records Completed positions
+  - img "Fully closed eligible positions in the reporting window"
+  - strong: "5"
+  - text: From eligible evidenced records Economic P&L
+  - img "Equity change adjusted for external flows"
+  - strong: 0.5 SOL
+  - text: From eligible evidenced records
+  - heading "Why this result?" [level=2]
+  - paragraph: The report's saved thresholds, evaluated check by check.
+  - img
+  - strong: At least one known check fails
+  - paragraph: Known failures remain failures even when other checks are unknown.
+  - img
+  - strong: History evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Identity evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Basis evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Positions evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Fees evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Classification evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Valuation evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Findings evidence
+  - text: Expected Verified · Independent coverage and review required Unknown Unknown
+  - img
+  - strong: Net realised profit
+  - text: Expected >= 5 · Outside preset; a preference mismatch 0.5 Fail
+  - img
+  - strong: Realised ROI
+  - text: Expected >= 10 · Outside preset; a preference mismatch 7.14 Fail
+  - img
+  - strong: Median episode ROI
+  - text: Expected >= 5 · Outside preset; a preference mismatch 0 Fail
+  - img
+  - strong: Position win rate
+  - text: Expected 50 to 85 · Outside preset; a preference mismatch 40 Fail
+  - img
+  - strong: Median completed hold
+  - text: Expected 1 to 72 · Within preset 24 Pass
+  - img
+  - strong: Completed positions
+  - text: Expected >= 50 · Outside preset; a preference mismatch 5 Fail
+  - img
+  - strong: Completed positions in 90 days
+  - text: Expected >= 100 · Outside preset; a preference mismatch 5 Fail
+  - img
+  - strong: Traded meme mints
+  - text: Expected 20 to 100 · Outside preset; a preference mismatch 4 Fail
+  - img
+  - strong: Rapid first-sale share
+  - text: Expected <= 10 · Within preset 0 Pass
+  - img
+  - strong: Average buys per episode
+  - text: Expected 1 to 2 · Within preset 1 Pass
+  - img
+  - strong: Average sells per episode
+  - text: Expected 1 to 3 · Within preset 1.2 Pass
+  - img
+  - strong: Positive weeks
+  - text: Expected >= 3 · Outside preset; a preference mismatch 2 Fail
+  - img
+  - strong: Largest token contribution
+  - text: Expected <= 25 · Outside preset; a preference mismatch 200.02 Fail
+  - img
+  - strong: Positive economic change
+  - text: Expected > 0 · Boundary equity and external flows considered 0.5 Pass
+  - heading "Investigation notes" [level=2]
+  - paragraph: What the records support, and where they fall short.
+  - img
+  - strong: Failed transaction retained
+  - paragraph: Only the incurred wallet fee is retained; instructions did not execute successfully.
+  - button "Source 3df2e…8f190":
+    - text: Source 3df2e…8f190
+    - img
+  - img
+  - strong: Live exchange decoding is limited
+  - paragraph: This build supports parsed transfers, account administration and fees. It has no reviewed DEX buy/sell adapters or historical meme classifier; live trading metrics remain unresolved.
+  - paragraph: Imported archive checks establish byte integrity and selected raw observations; genuine chain authentication and historical wallet completeness require independent evidence.
+  - paragraph: Only recognized spot instructions with reconciled SOL consideration become buys/sells; unsupported wrappers, crossquotes and missing marks remain unresolved.
+  - paragraph: No current market price is substituted for historical valuation. No paid data path is enabled.
+  - paragraph: Synthetic enumerated finite world; development only; imported records do not establish native collector ancestry or complete real-wallet acceptance.
+  - heading "Reconstruction coverage" [level=2]
+  - paragraph: Episodes open or closing within the reporting window; earlier closed episodes remain visible for verification.
+  - strong: "5"
+  - text: Closed
+  - strong: "0"
+  - text: Open
+  - strong: "0"
+  - text: Interrupted
+  - strong: "0"
+  - text: Unresolved
+  - term: Source
+  - definition: archived-wallet-input-v1
+  - term: Complete
+  - definition: "No"
+  - term: History Complete
+  - definition: "No"
+  - term: History Evidence
+  - definition:
+    - group: Inspect saved coverage
+  - term: Swap Reconstruction
+  - definition:
+    - group: Inspect saved coverage
+  - term: Wallet Evidence
+  - definition:
+    - group: Inspect coverage summary
+  - term: Metric Dependencies
+  - definition:
+    - group: Inspect saved coverage
+  - term: Production Evidence
+  - definition:
+    - group: Inspect saved coverage
+  - heading "All screening measures" [level=2]
+  - paragraph: Values stay exact decimal strings; unavailable measures include the reason.
+  - text: Realised profit
+  - strong: 0.5 SOL
+  - text: "Population: In-window meme disposals less matched basis, exit costs and trading overhead Realised ROI"
+  - strong: 7.14 %
+  - text: "Population: Period net realised profit / disposed acquisition cost Median position ROI"
+  - strong: 0 %
+  - text: "Population: Whole-episode net ROI; strict-zero completed cohort Win rate"
+  - strong: 40 %
+  - text: "Population: Net-positive strict-zero completed episodes / all completed episodes (breakeven included) Median hold"
+  - strong: 24 hours
+  - text: "Population: First acquisition to final sale; strict-zero closes inside reporting window Completed positions"
+  - strong: "5"
+  - text: "Population: Strict-zero completed episodes closing in report window 90-day positions"
+  - strong: "5"
+  - text: "Population: Strict-zero completed episodes closing in 90 days ending at report end Traded mints"
+  - strong: "4"
+  - text: "Population: Distinct meme mint IDs traded in reporting window; settlement assets excluded Rapid sales"
+  - strong: 0 %
+  - text: "Population: Completed episodes with first positive economic sale within five minutes Average buys"
+  - strong: "1"
+  - text: "Population: Buy events per strict-zero completed episode Average sells"
+  - strong: "1.2"
+  - text: "Population: Sale events per strict-zero completed episode Positive weeks"
+  - strong: "2"
+  - text: "Population: Four independent consecutive seven-day periods over [report end - 28 days, report end) Independent four-week interval"
+  - paragraph: Jun 3, 2026, 00:00:00 → Jul 1, 2026, 00:00:00 · UTC
+  - paragraph: "Coverage: Complete"
+  - text: Largest contribution
+  - strong: 200.02 %
+  - text: "Population: Highest positive aggregate realised P&L for one mint / positive net period P&L Economic P&L"
+  - strong: 0.5 SOL
+  - text: "Population: Closing equity - opening equity - external deposits + withdrawals"
+  - img
+  - text: Built for investigation. Every conclusion needs a source. Wallet Atlas · V0.3.11

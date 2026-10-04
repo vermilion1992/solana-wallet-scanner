@@ -1,0 +1,100 @@
+{
+  "version": "accounting-cohort-development-record-v1",
+  "state": "PASS_IN_DECLARED_SCOPE",
+  "application_acceptance": false,
+  "genuine_B3_acceptance": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "methods": {
+    "fifo": "fifo-v4",
+    "wallet": "wallet-raw-evidence-v7",
+    "selected_cohort": "selected-cohort-observations-v1"
+  },
+  "files": {
+    "scanner/accounting.py": "febfdf22a3b3ecc840ef596653823c805063a38fbb933e3e17e2c6a98ac233ea",
+    "scanner/wallet_evidence.py": "fa415523394f53fc6e7b80fa9b0288dfa2318dae42475fb5edddf0943373c29e",
+    "tests/test_accounting_metric_isolation.py": "e7e4293e0975beffd4c1075eaa55bca4d04b0f4ff53c80f7de128b53738561c4",
+    "tests/test_selected_cohort_observations.py": "fc550a77d0d00b2eb7a8e6cc155b1d799e7a6331b334e16cbd6c5c291fce6b2f"
+  },
+  "logs": {
+    "FOCUSED_INITIAL.log": {
+      "sha256": "3e0c78702d0534c8e7b6dabed5a673bde73f4cfa0ea933fe6d8b89eb6a35807b",
+      "bytes": 3795
+    },
+    "FOCUSED_SECOND.log": {
+      "sha256": "12e20eac8dc381ab935f4dd2e7bd36d1f4ee38dc31ae01a7d80136142c25cdf8",
+      "bytes": 818
+    },
+    "NEW_MATRIX.log": {
+      "sha256": "b3715fc503e30e1d283cc43ad5bfe9fd409c73f40f3dd41029d4c0ea57769ae1",
+      "bytes": 610
+    },
+    "COMPOSED_MATRIX.log": {
+      "sha256": "30fc3ac003d659e1b18560bd5e86e13d574682b5f87b3ec3228dbc73873d1930",
+      "bytes": 862
+    },
+    "FINAL_FOCUSED.log": {
+      "sha256": "85c135f8550e313a118ed9dc0a61bdef701197187f4a7bfc3b768d5b03addf25",
+      "bytes": 691
+    }
+  },
+  "executed": [
+    {
+      "log": "FOCUSED_INITIAL.log",
+      "command": ".venv/bin/python -m pytest -q tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py tests/test_accounting.py tests/test_wallet_evidence.py tests/test_research.py",
+      "exit": 1,
+      "passed": 163,
+      "failed": 2,
+      "subtests_passed": 191,
+      "scope": "Initial reproduction: fee-to-transfer fallback erased holding timing; new export test used nonexistent route."
+    },
+    {
+      "log": "FOCUSED_SECOND.log",
+      "command": ".venv/bin/python -m pytest -q tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py tests/test_accounting.py tests/test_wallet_evidence.py tests/test_research.py tests/test_research_source_roles.py tests/test_retained_protocol_funding.py",
+      "exit": 0,
+      "passed": 226,
+      "subtests_passed": 191,
+      "scope": "Interim impacted controls, before later isolation and identity wiring changes."
+    },
+    {
+      "log": "NEW_MATRIX.log",
+      "command": ".venv/bin/python -m pytest -q tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py",
+      "exit": 0,
+      "passed": 52,
+      "subtests_passed": 155,
+      "scope": "Expanded new development matrix, before source-label and aggregate-origin controls."
+    },
+    {
+      "log": "COMPOSED_MATRIX.log",
+      "command": ".venv/bin/python -m pytest -q tests/test_selected_cohort_observations.py tests/test_wallet_identity.py tests/test_accounting_metric_isolation.py tests/test_wallet_evidence.py tests/test_retained_protocol_funding.py tests/test_research_source_roles.py",
+      "exit": 0,
+      "passed": 225,
+      "subtests_passed": 155,
+      "scope": "Impacted integrated controls before final small aggregate-origin guard."
+    },
+    {
+      "log": "FINAL_FOCUSED.log",
+      "command": ".venv/bin/python -m pytest -q tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py tests/test_wallet_evidence.py",
+      "exit": 0,
+      "passed": 130,
+      "subtests_passed": 155,
+      "scope": "Final owned source; whole-application final acceptance remains root responsibility."
+    }
+  ],
+  "reviewed": [
+    "Strict normalized quantity/cohort population is separate from missing acquisition money; missing quantity, origin, chronology, classification, history and interrupted transfers still block it.",
+    "Losing and breakeven cohorts retain denominator membership; undefined concentration/ROI/empty-cohort arithmetic stays null with internally derived domain witnesses.",
+    "Missing network fee fallback uses existing raw route quantity interpreter and every linked physical check; wallet-mint aggregate opening units prevent an unchanged same-mint account from becoming invented zero inventory. No monetary consideration or fee is supplied.",
+    "A provably earlier closed episode does not add its cost dependency to a later independently supported re-entry. Unavailable/conflicting clocks cannot prove that exclusion.",
+    "Current per-sale projections reuse existing research FIFO and bind raw signatures, event hashes, quantities, timestamps and original lot origin/physical/chronology proof. Later exit-money loss cannot erase independently supported earlier sale but revokes the aggregate.",
+    "Remaining-cost observation reuses existing FIFO lot remainders. Exit proceeds/fees are separate from acquisition basis; valuation remains UNKNOWN.",
+    "New identity source roles do not hide readable native or malformed transaction shapes. Identity receipt does not establish historical wallet population.",
+    "API archive saved-report/rebuild/export source loss/restoration runs offline and preserves parent; tests use existing export routes."
+  ],
+  "counting": "All runs overlap. Do not sum reported ordinary tests or subtests as unique final acceptance nodes.",
+  "limitations": [
+    "All new positive cases are development evidence, never genuine B3 proof.",
+    "Selected cohort census is explicitly conditional and retains wallet_population/classification/valuation UNKNOWN and qualification false.",
+    "No full application acceptance, source manifest or freeze claim from this scoped developer record."
+  ]
+}

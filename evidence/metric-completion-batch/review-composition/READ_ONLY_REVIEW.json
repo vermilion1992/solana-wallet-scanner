@@ -1,0 +1,83 @@
+{
+  "kind": "distinct-root-composition-read-only-review",
+  "state": "PASS",
+  "scope": "Root-owned composition/research/report changes and neighbouring identity/native/archive paths; no source edits by reviewer.",
+  "source_hashes": {
+    "scanner/app.py": "b437ab3dc61a49c261949fb2b003957ccf5278337e38da09840161448940a3f6",
+    "scanner/archive_input.py": "825252529cd2b42f2fe3a9fc98e28c7b4b72b63dcaf9e6ba65204faa26c9f375",
+    "scanner/metric_evidence.py": "1760c72620442d7781786e1cd297210128cd8e3b8433cbfe6a9fb06cfb5fca65",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/report_view.py": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb",
+    "tests/test_production_evidence_composition.py": "1476554193e1b3ef1ad72f1e7c8e3d71ea007a9ee1903160f91ee7080d1b3ed3",
+    "tests/test_research_disposal_scopes.py": "239b123e4175cc02ea097ffdf73b6dd974dcd919c764c46e60ef10b99dbff94f"
+  },
+  "findings": [
+    {
+      "id": "REV-COMP-01",
+      "blocking": false,
+      "status": "VERIFIED_IN_SCOPE",
+      "kind": "development-interface handling",
+      "description": "Null reason on PASS historical population plus UNKNOWN independent interval previously raised TypeError; fixed string-only real gaps preserve UNKNOWN interval.",
+      "reproduction": "PARTIAL_INTERVAL_NULL_REASON_INTERFACE_REPRO.json",
+      "verification": "PARTIAL_INTERVAL_NULL_REASON_INTERFACE_VERIFIED.json"
+    },
+    {
+      "id": "REV-COMP-02",
+      "blocking": false,
+      "status": "VERIFIED_IN_SCOPE",
+      "kind": "route normalization asymmetry",
+      "description": "Root aligned archive and native independent interval normalization before FIFO and metric gating; current bounds remain independent."
+    },
+    {
+      "id": "REV-COMP-03",
+      "blocking": false,
+      "status": "VERIFIED_IN_SCOPE",
+      "kind": "confirmed native metric projection defect",
+      "description": "Confirmed native metric originally erased supported in-window fees because a proved outside-window record lacked fee evidence. Fixed via shared selected_fee_checks, derived internally and used on both native/archive routes. Native metric reuses the existing raw-backed fee sum; no extra calculation engine or imported monetary flags.",
+      "reproduction": "test_native_fee_disjoint_review.py",
+      "raw_failure": "NATIVE_FEE_DISJOINT_REPRO.log",
+      "required_fix": "Project native fee and identity dependencies using current raw fee/window receipts, retaining unresolved or boundary-crossing clocks and proven-zero exclusions. Preserve parent/source bytes.",
+      "verification": "NATIVE_FEE_DISJOINT_VERIFIED.log",
+      "sibling_controls": "SELECTED_FEE_CONTRACT_REVIEW.json"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": "FOCUSED_REVIEW_VERIFIED.json",
+      "result": "225 ordinary nodes +21 separate subtests PASS in 46.62 seconds; all seven reviewed files unchanged during execution."
+    },
+    {
+      "evidence": "RESEARCH_CURRENT_TEST_BYTES.json",
+      "result": "Only research regression test bytes changed afterward; current module re-executed PASS, all reviewed files remained unchanged."
+    },
+    {
+      "evidence": "NATIVE_FEE_DISJOINT_VERIFIED.log",
+      "result": "Original actual native immutable rebuild reproducer now PASS after shared projection fix; no additional arithmetic engine or caller monetary flags."
+    },
+    {
+      "evidence": "SELECTED_FEE_CONTRACT_REVIEW.json",
+      "result": "Ten manual strict-member/malformed-clock/native-zero/inside-source-loss/permutation controls PASS."
+    },
+    {
+      "evidence": "FROZEN_IDENTITY_V3_REVIEW.json",
+      "result": "Five manual malformed-v3/dependency-loss/restoration controls PASS."
+    }
+  ],
+  "retained_failure": "FOCUSED_REVIEW_FINAL.log retains the new test setup pack_bytes call failure; current corrected call passed subsequent 172-node run.",
+  "non_defect_trace": "MISSING_FEE_QUANTITY_REPRO.json correctly preserves physical timings while malformed mandatory native fee yields unsupported strict swap/classification; no genuine-source regression was claimed.",
+  "limitations": [
+    "Read-only review covers the five root-owned source files plus two regression modules, not entire app acceptance.",
+    "No source edits, providers or credential reads by reviewer.",
+    "Full candidate backend/frontend/browser/gates remain parent-owned.",
+    "Development interface injections do not establish genuine source coverage or mainnet acceptance."
+  ],
+  "source_unchanged_during_verification": true,
+  "count_policy": "Overlapping focused/delta executions, API children and manual controls are not additional unique full-suite tests.",
+  "remaining_product_limits": [
+    "Full real historical population contract remains unresolved.",
+    "CAP-POS full open-plus-closed wallet position population proof remains incomplete; selected cohorts/open basis do not establish it.",
+    "Classification and valuation/flow source contracts remain independently unresolved.",
+    "Genuine B3 and PRODUCT_READY are not closed by this review."
+  ],
+  "reviewed_new_shared_component": "selected_fee_checks only projects current raw prerequisites; both native and archive callers use it before metric gating; malformed member/clock and required loss retain UNKNOWN while proved exclusions/native zero remain independent."
+}

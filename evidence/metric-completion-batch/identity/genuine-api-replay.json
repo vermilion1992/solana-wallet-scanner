@@ -1,0 +1,59 @@
+{
+  "artifacts": {
+    "genuine-missing_account_child.json.gz": {
+      "compressed_bytes": 3043734,
+      "compressed_sha256": "30b7c44ce102b267aeac496c5a30c5e9f01f10d766d54188453cacf920a30f28",
+      "original_bytes": 74185198,
+      "original_sha256": "a9802ae96f8f2f3bc3a4545702305faab925133f094c49000386131554dc2136"
+    },
+    "genuine-parent.json.gz": {
+      "compressed_bytes": 3044023,
+      "compressed_sha256": "c13926631ce992d4cb5caed03c5e47f67a4a1d1ed1a22f6d2f251d3d3b1a281c",
+      "original_bytes": 74188220,
+      "original_sha256": "75badd879395ab442ac5ee631283d3df0f2c3f4d9c4c818f3b26d86c83bd457d"
+    },
+    "genuine-restored_account_child.json.gz": {
+      "compressed_bytes": 3044245,
+      "compressed_sha256": "c71b2227bf6a311a686e2868793b59d920ef197f0120aee3f4f41e28b8a5887f",
+      "original_bytes": 74188773,
+      "original_sha256": "e2586734f53719e9ca7f2da297a5f7886534e5a11aeac8ec439d24dcfe5f8887"
+    },
+    "genuine-restored_export_csv.csv.gz": {
+      "compressed_bytes": 1688,
+      "compressed_sha256": "eef7e1c050d0f23268814dc33f693c9e63198e41f0e89836cdbbe89615eea9d0",
+      "original_bytes": 21377,
+      "original_sha256": "42cd40f555ab80e478a46e1a806c0cdc3e8f2079a167cf6c2cdd963458a945c1"
+    }
+  },
+  "credential_lookups": 0,
+  "credentials_adapter": "Explicit no-key/no-backend replacement before app creation; original credential constructor never executes.",
+  "historical_population_state": "UNKNOWN",
+  "independent_fee_sol": "0.000158868",
+  "inputs": {
+    "account_envelope_sha256": "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+    "account_request_sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+    "account_response_sha256": "feabb86540e5c606f765d034aa523643e4c469744e4d2ef684e2b1e04c673ebd",
+    "derived_input_bytes": 348371,
+    "derived_input_sha256": "d57207381e2835b9a8d9b299e56d2a419b44fa9afc7526a5987b29579b3bcd78",
+    "oracle_sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+    "original_bytes": 156832,
+    "original_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "retained_selected_links_sha256": "d4202ead46e22726f7a4233c873f3e3b89b1b11536c8155f92a3d71142367cbc",
+    "selected_records": 87
+  },
+  "missing_account_identity_state": "UNKNOWN",
+  "parent_economic_signature_count": 16,
+  "parent_identity_state": "PASS",
+  "parent_unchanged": true,
+  "product_ready": false,
+  "provider_attempts": 0,
+  "provider_requests": 0,
+  "restoration_preserved_identity": true,
+  "scope": "Genuine current account and 16 selected supported economic signatures only; full wallet acceptance stays blocked.",
+  "sources": {
+    "evidence/metric-completion-batch/identity/replay_genuine_identity.py": "063f5d680d28f09dd67b7a9f90d79fb54ca6487bae043c83c14cc7118401986c",
+    "scanner/wallet_identity.py": "f58f5b18599e5ae3da2fe3f972015184d1921a5753ed1369881d90b3db69f98a",
+    "tests/test_wallet_identity.py": "fb86c10623cd8b52007c4b404d864c4587dc58322a2680ac3dabc198122698a3"
+  },
+  "state": "PASS"
+}

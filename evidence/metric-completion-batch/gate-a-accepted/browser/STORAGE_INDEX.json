@@ -1,0 +1,36 @@
+{
+  "kind": "lossless-flat-json-storage-index",
+  "state": "PASS",
+  "time_utc": "2026-10-04T13:52:43.276801+00:00",
+  "scope": "Completed gate-a-accepted/browser flat JSON only; baseline and data contents are excluded and were neither read nor removed. Original receipts, captures, logs and exports retained.",
+  "threshold_bytes": 2097152,
+  "flat_json_files": [
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/cases.json",
+      "bytes": 919,
+      "sha256": "85da487d32006118d7a430f302d50e6d979cb0f3029f939d48a1693315e8d2e1"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/guards.json",
+      "bytes": 50,
+      "sha256": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/result.json",
+      "bytes": 3029,
+      "sha256": "e41bf54ec8d9da1f50503b7a7d9847f2f50167a186a8c9268b9b3c89b134caf0"
+    }
+  ],
+  "entries": [],
+  "eligible_large_json_files": 0,
+  "original_bytes": 0,
+  "compressed_bytes": 0,
+  "preserved_browser_receipt_sha256": "e41bf54ec8d9da1f50503b7a7d9847f2f50167a186a8c9268b9b3c89b134caf0",
+  "browser_receipt_unchanged": true,
+  "excluded_directories": [
+    "baseline",
+    "data"
+  ],
+  "originals_retained": true,
+  "note": "There are no flat JSON files larger than2MiB in this completed browser directory."
+}

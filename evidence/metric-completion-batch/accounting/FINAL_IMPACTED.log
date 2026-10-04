@@ -1,0 +1,50 @@
+........................................ [ 15%]
+.................................................................. [ 42%]
+............ [ 47%]
+..............................................F.. [ 66%]
+........................................................................ [ 95%]
+............                                                             [100%]
+=================================== FAILURES ===================================
+_ test_readable_account_source_alias_does_not_erase_independent_selected_fees __
+
+    def test_readable_account_source_alias_does_not_erase_independent_selected_fees():
+>       from test_wallet_identity import paired, source
+
+tests/test_selected_cohort_observations.py:311: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Unsigned interface controls, never genuine wallet/population acceptance.
+    
+    Outer signer/header/loaded-key shapes use the already pinned Solana RPC schema
+    in tests/fixtures/compiled_instructions. Account-info requests use the actual
+    JSON-RPC request/context/value contract; expected identity is worked separately
+    from the existing swap decoder's amount calculations.
+    """
+    from copy import deepcopy
+    import base64
+    import hashlib
+    import json
+    
+    import pytest
+    
+    from scanner.decoder import SYSTEM_ID
+    from scanner.json_boundary import canonical_bytes
+>   from scanner.wallet_identity import (
+        ACCOUNT_SOURCE_VERSION, account_info_source, account_source_bytes, derive_wallet_identity,
+        wallet_identity_dependencies,
+    )
+E   ImportError: cannot import name 'account_source_bytes' from 'scanner.wallet_identity' (/workspace/solana-wallet-scanner/scanner/wallet_identity.py)
+
+tests/test_wallet_identity.py:17: ImportError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_selected_cohort_observations.py::test_readable_account_source_alias_does_not_erase_independent_selected_fees
+1 failed, 250 passed, 1 warning, 193 subtests passed in 65.03s (0:01:05)

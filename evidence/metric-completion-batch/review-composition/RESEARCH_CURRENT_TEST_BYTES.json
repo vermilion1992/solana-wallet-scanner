@@ -1,0 +1,32 @@
+{
+  "kind": "scoped-review-delta-verification",
+  "state": "PASS",
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_research_disposal_scopes.py"
+  ],
+  "exit_code": 0,
+  "source_hashes_before": {
+    "scanner/app.py": "b437ab3dc61a49c261949fb2b003957ccf5278337e38da09840161448940a3f6",
+    "scanner/archive_input.py": "825252529cd2b42f2fe3a9fc98e28c7b4b72b63dcaf9e6ba65204faa26c9f375",
+    "scanner/metric_evidence.py": "1760c72620442d7781786e1cd297210128cd8e3b8433cbfe6a9fb06cfb5fca65",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/report_view.py": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb",
+    "tests/test_production_evidence_composition.py": "1476554193e1b3ef1ad72f1e7c8e3d71ea007a9ee1903160f91ee7080d1b3ed3",
+    "tests/test_research_disposal_scopes.py": "239b123e4175cc02ea097ffdf73b6dd974dcd919c764c46e60ef10b99dbff94f"
+  },
+  "source_hashes_after": {
+    "scanner/app.py": "b437ab3dc61a49c261949fb2b003957ccf5278337e38da09840161448940a3f6",
+    "scanner/archive_input.py": "825252529cd2b42f2fe3a9fc98e28c7b4b72b63dcaf9e6ba65204faa26c9f375",
+    "scanner/metric_evidence.py": "1760c72620442d7781786e1cd297210128cd8e3b8433cbfe6a9fb06cfb5fca65",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/report_view.py": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb",
+    "tests/test_production_evidence_composition.py": "1476554193e1b3ef1ad72f1e7c8e3d71ea007a9ee1903160f91ee7080d1b3ed3",
+    "tests/test_research_disposal_scopes.py": "239b123e4175cc02ea097ffdf73b6dd974dcd919c764c46e60ef10b99dbff94f"
+  },
+  "source_unchanged": true,
+  "reason": "Only research regression module bytes changed after the 225-node source-unchanged focused run; current module re-executed. Overlapping execution does not add unique tests."
+}

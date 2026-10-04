@@ -1,0 +1,7 @@
+{
+  "state": "REVIEW_HELPER_CORRECTION",
+  "application_defect": false,
+  "reason": "Reviewer helper incorrectly required every successful command log to be nonempty. bash -n correctly emits no output on success; zero-byte raw logs are valid and must be hash-bound. The final review removes only this unsupported nonempty assumption. Actual command exit remains required as strict integer zero.",
+  "application_changes": false,
+  "provider_requests": 0
+}

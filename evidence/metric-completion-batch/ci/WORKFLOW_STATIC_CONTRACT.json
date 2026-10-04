@@ -1,0 +1,119 @@
+{
+  "kind": "CI-workflow-static-contract",
+  "state": "PASS",
+  "tested_baseline": "1bfc75222fce863313e6be333832a1b381d1cda4",
+  "retained_selectors": 30,
+  "added_regression_selectors": [
+    "tests/test_accounting_metric_isolation.py",
+    "tests/test_production_evidence_composition.py",
+    "tests/test_research_disposal_scopes.py",
+    "tests/test_selected_cohort_observations.py",
+    "tests/test_wallet_identity.py"
+  ],
+  "focused_selectors": 35,
+  "groups": {
+    "historical": [
+      "tests/review_v039",
+      "tests/review_v0310"
+    ],
+    "schemas": [
+      "tests/test_token_instruction_schema.py",
+      "tests/test_instruction_contract_matrix.py",
+      "tests/test_source_role_matrix.py",
+      "tests/test_validation_gates.py",
+      "tests/test_compiled_instructions.py",
+      "tests/test_compiled_getter.py",
+      "tests/test_compiled_report_integration.py",
+      "tests/test_generic_administration.py",
+      "tests/test_retained_protocol_funding.py"
+    ],
+    "archives": [
+      "tests/test_archive_input.py",
+      "tests/test_archive_fee_window.py",
+      "tests/test_report_rebuild.py",
+      "tests/test_wallet_evidence.py",
+      "tests/test_metric_evidence.py",
+      "tests/test_real_evidence_adapter.py",
+      "tests/test_selected_cohort_observations.py",
+      "tests/test_production_evidence_composition.py",
+      "tests/test_wallet_identity.py"
+    ],
+    "indexed": [
+      "tests/test_indexed_input.py",
+      "tests/test_indexed_chronology.py",
+      "tests/test_indexed_source_dependencies.py",
+      "tests/test_indexed_report_integration.py",
+      "tests/test_real_coverage.py"
+    ],
+    "research": [
+      "tests/test_report_view.py",
+      "tests/test_research.py",
+      "tests/test_research_source_roles.py",
+      "tests/test_accounting_metric_isolation.py",
+      "tests/test_research_disposal_scopes.py"
+    ],
+    "discovery": [
+      "tests/test_discovery_audit_plan.py",
+      "tests/test_discovery_plan_views.py",
+      "tests/test_discovery_native_identity.py",
+      "tests/test_bounded_collection.py",
+      "tests/test_genuine_collection_workflow.py"
+    ]
+  },
+  "script_checks": [
+    {
+      "job": "focused-group",
+      "step": "Install locked backend dependencies",
+      "bash_syntax_exit": 0
+    },
+    {
+      "job": "focused-group",
+      "step": "Run the exact focused group without network access",
+      "bash_syntax_exit": 0
+    },
+    {
+      "job": "focused-group",
+      "step": "Preserve bounded diagnostics even after failure or interruption",
+      "bash_syntax_exit": 0,
+      "embedded_python_syntax": "PASS"
+    },
+    {
+      "job": "offline-development",
+      "step": "Install locked dependencies",
+      "bash_syntax_exit": 0
+    },
+    {
+      "job": "offline-development",
+      "step": "Run product and frontend checks without network access",
+      "bash_syntax_exit": 0
+    },
+    {
+      "job": "offline-development",
+      "step": "Preserve bounded development diagnostics",
+      "bash_syntax_exit": 0,
+      "embedded_python_syntax": "PASS"
+    },
+    {
+      "job": "focused-union",
+      "step": "Install locked backend dependencies",
+      "bash_syntax_exit": 0
+    },
+    {
+      "job": "focused-union",
+      "step": "Require the exact complete passing focused union",
+      "bash_syntax_exit": 0
+    },
+    {
+      "job": "focused-union",
+      "step": "Report the verified iteration scope",
+      "bash_syntax_exit": 0
+    }
+  ],
+  "artifact_allowlist": "Exact validator receipt/text paths; four MiB maximum per file; private product state excluded.",
+  "network_scope": "No Actions or provider execution. Static syntax and scope review only.",
+  "source_hashes": {
+    ".github/workflows/offline-focused.yml": "1beacb419b2e5be47d50f86b74c2c3df501f307cadfd509ce92477b6d7317065",
+    "tools/validate.py": "a8b16e473b09ac2d3fcf3bc11277aeb8c0a00e4c813fe4bfbf0b8baec4bedcec",
+    "tests/test_validation_gates.py": "436b6b06f53befd38d9183bb59a4b5730f8fbc73ba952c8192df6c5e0d2513f7"
+  }
+}

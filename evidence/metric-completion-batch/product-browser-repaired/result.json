@@ -1,0 +1,303 @@
+{
+  "kind": "offline-product-browser",
+  "state": "PASS",
+  "cases": [
+    {
+      "case": "synthetic-positive-ui-import-accounting-source-inspection-export",
+      "state": "PASS",
+      "report_id": "fff1bbbcb90f4f7e903157a2a306c3d4"
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "parent_unchanged": true
+    },
+    {
+      "case": "genuine-23-record-partial-ui-import",
+      "state": "PASS",
+      "real_acceptance": "BLOCKED"
+    },
+    {
+      "case": "indexed-partial-ui-import-inspection-immutable-rebuild",
+      "state": "PASS",
+      "source_archive_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+      "expected_selected_fees_sol": "0.000158868",
+      "parent_unchanged": true,
+      "real_acceptance": "BLOCKED"
+    }
+  ],
+  "real_acceptance": "BLOCKED",
+  "reason": "Synthetic development and partial genuine inputs cannot close B3.",
+  "assertion_timeout_ms": 120000,
+  "selected_cohort_ui_assertions": [
+    {
+      "case": "import-synthetic-input",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "valuation_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-missing",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "world_hash-restored",
+      "state": "PASS",
+      "dataset": "synthetic",
+      "source": "demo",
+      "panel_absent": true,
+      "scope": "Synthetic demonstration does not render the live selected-record panel",
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-partial-real-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "import-indexed-input",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    },
+    {
+      "case": "indexed-partial-rebuilt",
+      "state": "PASS",
+      "freshness": "current",
+      "independent_intervals": 3,
+      "open_stock_visible": true,
+      "wallet_qualification": false
+    }
+  ],
+  "scope": "Development archive workflow; genuine partial input is not B3",
+  "captures": 16,
+  "desktop_width": 1440,
+  "mobile_width": 390,
+  "no_overflow": true,
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "anonymous_state": 401,
+  "usage_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "usage_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot",
+    "mode": "setup-pilot",
+    "billing_cycle_verified": false,
+    "cycle_end": null,
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    },
+    "public_discovery": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "2026-10-04"
+    },
+    "manifest_version": "helius-native-2026-10-02.v1"
+  },
+  "actual_UI_json_exports": true,
+  "evidence_inspection": true,
+  "source_loss_and_exact_restoration": true,
+  "parent_unchanged": true,
+  "browser_report_transfers": [
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 2885
+    },
+    {
+      "path": "/api/reports/fff1bbbcb90f4f7e903157a2a306c3d4?view=display",
+      "status": 200,
+      "bytes": 1091785
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 36175
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 70861
+    },
+    {
+      "path": "/api/reports/73e78f1bda0f49cc8bcf398fbe804a51?view=display",
+      "status": 200,
+      "bytes": 1099832
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 103732
+    },
+    {
+      "path": "/api/reports/1bd925621fe34b8ba4b21ef0eb8c7138?view=display",
+      "status": 200,
+      "bytes": 1092280
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 183789
+    },
+    {
+      "path": "/api/reports/f2b52bd211604d8c910e8fd8f1757c03?view=display",
+      "status": 200,
+      "bytes": 1245279
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 216660
+    },
+    {
+      "path": "/api/reports/cef0efe9109749e6860bfad0facce9b7?view=display",
+      "status": 200,
+      "bytes": 1092280
+    },
+    {
+      "path": "/api/reports/92a500de024c4d8db264953f3bcd8ffe?view=display",
+      "status": 200,
+      "bytes": 2898353
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 386612
+    },
+    {
+      "path": "/api/reports/c8d26c47b17648e4a5a19bb229f84e28?view=display",
+      "status": 200,
+      "bytes": 9406328
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 766559
+    },
+    {
+      "path": "/api/state?report_view=summary",
+      "status": 200,
+      "bytes": 1146088
+    },
+    {
+      "path": "/api/reports/b01914eb3e034b348d1c88ed115076d0?view=display",
+      "status": 200,
+      "bytes": 9406823
+    }
+  ],
+  "server_stopped": true,
+  "offline_guards": {
+    "provider_requests": 0,
+    "credential_lookups": 0
+  },
+  "artifacts": {
+    "partial-real-input.zip": "0b74d92553c93c0b574b94f03cef207e1643f86270471990dc56f1701a46df70",
+    "indexed-partial-parent.json": "a4c46a0cfd42c59ee0c36f858a04dd7c30fbb445dbae0fa53855f9c1379eda60",
+    "indexed-partial-rebuilt-mobile.png": "9fed9dd999baf2b53d544790075a0e30a295a0c687f699c81596bbf8945643bf",
+    "world_hash-missing-report.json": "764838d1c3e8249422e49015c6c76441801f6f528ad821877bdadcd1eb12449e",
+    "indexed-partial-rebuilt-desktop.png": "6f9b3044101fad6eb30bcf38f65cbb61f7ea44584682c20af820257d61e3c600",
+    "world_hash-missing-desktop.png": "7be2c10703ae324ef59ad79e4f41359a067c78fe95964735c021dd600fcb2b13",
+    "synthetic-parent.json": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+    "guards.json": "fad26fbf67aad86c332457a6176d74152fd71b08dfa71be2c5f1ae6a25a9de5a",
+    "genuine-partial-mobile.png": "fe9f7cf2b2a492a376d6aec4a1544bbcaf07656c65bcdda483a97ae5756568cd",
+    "world_hash-restored-report.json": "9c728042570aa7623b5e63683a06c99e57d165156f3dc222a1b3ed8942e370ec",
+    "synthetic-positive-desktop.png": "a1d7f7eed54cacd30fbdec6c32c41cce144a4b1cd29072a2d25b173af1af2e52",
+    "world_hash-restored-desktop.png": "60bf70d0ffe5339b189facf8e537ac21056a51e3cb46ec6e03ddec130557c4ef",
+    "synthetic-input.zip": "dff9eecfefe3127c25081dbbfea087bf3651b98e1fa5eb2c6c7977adff45c265",
+    "valuation_hash-missing-mobile.png": "9c111c1f2f466ff40eff58ad0a20e966497146be2eb5779c1fd2200c7cb04e2e",
+    "indexed-partial-desktop.png": "f315d193e75bfcb1b2fc88f15279cb36a8e499c9e892bce7ae033fbab3e08d17",
+    "world_hash-restored-mobile.png": "8a3f90ef9402f11f3da2cb46687e530c05d9fdc8f118695b805f0f45b8271508",
+    "valuation_hash-missing-desktop.png": "52b3f4fdb1bb162950289b0fe583f1580ed32090a13795373635a2e35ea47916",
+    "valuation_hash-restored-mobile.png": "84f31898e097c905a2712b46e9d3b79dac46b5d0614ab98695e16cf4760d4f05",
+    "synthetic-positive-mobile.png": "7527b2bd0b24e58ca71687f6601a830dcb28f49c67fe42868450aac2f3f8a33b",
+    "valuation_hash-restored-desktop.png": "e306c6f029cbac507b79dcdab7f1c9bb4bb5a290e4ab0166d4f51ddf207c31ac",
+    "valuation_hash-missing-report.json": "80825117fbd8db96049fe09ce21456b9754bd907f467065232ae3f094226d856",
+    "synthetic-ui-export.json": "0bac3deb697032d2296056fbad99f22db25be1b8a94b54ac43464a0ab229c684",
+    "world_hash-missing-mobile.png": "e04bd88dc9051e6e47b9d343d48d9fd55cddca424f46c850fdb3873f7ed5eb6a",
+    "valuation_hash-restored-report.json": "badef9bb0deed145a42f90d21b8a0e0faf92a736f0930bec39e80e75bfb7ceef",
+    "indexed-input.zip": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+    "genuine-partial-desktop.png": "9673fcb35358990cecf5f783bfa4ee746e0428ca464cb6ff02ae97565fab0d75",
+    "indexed-partial-mobile.png": "d4ff9df6c7e426994cad81896253110e52c3454a5a667207c41e1862a32f7074",
+    "indexed-partial-child.json": "e68d31227bd907a9002694a19e65580e38248e14991e01ff1fb45f41d6245750",
+    "genuine-partial-report.json": "487815c13727ebf814dd41c3ae968b026b57bbb1955e73bc4bc0f21692f868ed"
+  }
+}

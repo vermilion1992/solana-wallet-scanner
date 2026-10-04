@@ -1,0 +1,7 @@
+{
+  "state": "FAILED_PRECHECK",
+  "reason": "The preceding wrapper transcribed an extra trailing2 from the compact hash/count message; failed before any browser process",
+  "actual_source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "source_mutated": false,
+  "browser_executed": false
+}

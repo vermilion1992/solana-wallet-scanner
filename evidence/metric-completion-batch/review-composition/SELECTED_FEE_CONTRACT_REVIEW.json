@@ -1,0 +1,111 @@
+{
+  "kind": "distinct-selected-fee-contract-controls",
+  "state": "PASS",
+  "scope": "Internal development checks only, no imported declarations/mainnet acceptance.",
+  "cases": [
+    {
+      "variant": "integer-member",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "string-member",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "malformed-clock",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "wrong-interval",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "unsupported-clock",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "malformed-hash",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "zero-unknown-clock",
+      "expected_all_pass": true,
+      "actual_states": {
+        "native_fee": "PASS",
+        "selected_record_identity": "PASS",
+        "fee_window": "PASS"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "zero-unproved-native",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "UNKNOWN"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "inside-native-loss",
+      "expected_all_pass": false,
+      "actual_states": {
+        "native_fee": "UNKNOWN",
+        "selected_record_identity": "PASS",
+        "fee_window": "PASS"
+      },
+      "input_unchanged": true
+    },
+    {
+      "variant": "permutation",
+      "expected_all_pass": true,
+      "actual_states": {
+        "native_fee": "PASS",
+        "selected_record_identity": "PASS",
+        "fee_window": "PASS"
+      },
+      "input_unchanged": true
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "count_policy": "Ten manual controls are not counted as additional unique backend suite nodes.",
+  "source_sha256": "1760c72620442d7781786e1cd297210128cd8e3b8433cbfe6a9fb06cfb5fca65"
+}

@@ -1,0 +1,978 @@
+{
+  "credential_lookups": 0,
+  "envelope_sha256": "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+  "identity": {
+    "credential_lookups": 0,
+    "current_account": {
+      "dependencies": [
+        "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+      ],
+      "evidence": [
+        "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+      ],
+      "reason": "All linked current-account observations must independently support identity; this says nothing about earlier owners.",
+      "scope": "Current archived system-account identity and selected supported economic signers only",
+      "state": "PASS",
+      "versions": [
+        {
+          "dependencies": [
+            "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+          ],
+          "evidence": [
+            "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887"
+          ],
+          "observations": [
+            {
+              "executable": false,
+              "owner": "11111111111111111111111111111111",
+              "raw_paths": [
+                "request.params",
+                "response.result.context.slot",
+                "response.result.value"
+              ],
+              "slot": 453173211
+            }
+          ],
+          "reason": "Archived finalized current system-account identity is supported.",
+          "scope": "Current archived system-account identity and selected supported economic signers only",
+          "state": "PASS"
+        }
+      ]
+    },
+    "dependencies": [
+      "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56",
+      "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2",
+      "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d",
+      "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+      "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f",
+      "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d",
+      "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b",
+      "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d",
+      "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4",
+      "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116",
+      "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc",
+      "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4",
+      "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181",
+      "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e",
+      "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688",
+      "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621",
+      "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979",
+      "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84",
+      "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+      "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a",
+      "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916",
+      "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+    ],
+    "economic_signer": {
+      "dependencies": [
+        "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56",
+        "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2",
+        "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d",
+        "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f",
+        "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d",
+        "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b",
+        "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d",
+        "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4",
+        "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116",
+        "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc",
+        "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4",
+        "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181",
+        "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e",
+        "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688",
+        "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621",
+        "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979",
+        "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84",
+        "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+        "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a",
+        "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916",
+        "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+      ],
+      "evidence": [
+        "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56",
+        "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2",
+        "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d",
+        "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f",
+        "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d",
+        "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b",
+        "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d",
+        "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4",
+        "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116",
+        "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc",
+        "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4",
+        "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181",
+        "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e",
+        "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688",
+        "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621",
+        "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979",
+        "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84",
+        "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+        "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a",
+        "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916",
+        "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+      ],
+      "reason": "Selected supported economic signer only; payer identity and current owner alone are insufficient.",
+      "scope": "Current archived system-account identity and selected supported economic signers only",
+      "state": "PASS"
+    },
+    "evidence": [
+      "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56",
+      "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2",
+      "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d",
+      "3a79ad132ddce6b45dfa464dbf300d5c84b280bbd066770c052ae2c3bc0fd887",
+      "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f",
+      "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d",
+      "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b",
+      "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d",
+      "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4",
+      "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116",
+      "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc",
+      "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4",
+      "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181",
+      "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e",
+      "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688",
+      "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621",
+      "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979",
+      "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84",
+      "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+      "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a",
+      "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916",
+      "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+    ],
+    "historical_population_state": "UNKNOWN",
+    "provider_requests": 0,
+    "reason": "Current account and every linked selected economic signer must both be supported; historical population remains unproved.",
+    "scope": "Current archived system-account identity and selected supported economic signers only",
+    "state": "PASS",
+    "transactions": {
+      "2HJHWV9is2H2iXxpZYNXDhVQe63Ze6mjsA4RaTZxCZxE3w1dt2ti7atvVwwJxjpACU8U43fH4g8zwhSaZ7BMTB7q": {
+        "dependencies": [
+          "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f"
+            ],
+            "evidence": [
+              "3bb59d0afe679dee0eb3ec0e0d90d85afdacd48de70d2230e0acba6e4ae0cc6f"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "2HV8R4P2DUG1BQ4L149tn1MdSMn81NLcVgm7WNeSkb4yfyQcodTgquK9NYsbpW5ZnrgsbQxCeTYtYVzAdW2aQNoY": {
+        "dependencies": [
+          "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116",
+          "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc",
+          "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116",
+          "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc",
+          "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc"
+            ],
+            "evidence": [
+              "601a1c63f43938b07f1b273f811da2d64a8ee822cd4b72ffaaf3f04fe849dacc"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4"
+            ],
+            "evidence": [
+              "66ea9e440f67d289dc7d9894be4695df2a61dd571712d2c67f48f15a7e663ec4"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116"
+            ],
+            "evidence": [
+              "5f8a48f195ef31d1c28edd75b6fdf5fa6601c32cc2b9ca6048281ecb6f52f116"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "2NWtBmk33d83Vy7wo25s8tBEbfx5yMmjn6j5ywSaTZip1gwCEGRcKNBRU9PGFrfRZ1Tkcwa7fm9YUY9LTd28c5Nm": {
+        "dependencies": [
+          "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4"
+            ],
+            "evidence": [
+              "5a570c24be853af3acd38f27cec7b53675e24bd85848ea9f13a9ce8a6aed32c4"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "2dj5wYE8drY1ntb5odwfwQWBAXGagCqHsbNgjjVfCPNAcdYsqy42MiBYzLfgLswZs1KNGakUf3jCrwnGaXsyBWf8": {
+        "dependencies": [
+          "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d"
+            ],
+            "evidence": [
+              "4189a11ee52a6c348e85ba9a4c863d9444c7c5828121110eca6f42b95123474d"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "2koT7xwLE1ksPrdaioMYHr6dWvF6u8fJWdKfFNiAhxT5ekaE4xVHBh9ef6qp2E7XrxT73S15UX1LFxCdsbimba6Q": {
+        "dependencies": [
+          "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e"
+            ],
+            "evidence": [
+              "8597cfe3f96c400d5c67ce940e4900cf891c3d998f1f18c640b17e1e79fed30e"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "3A857nTw7QzobvWJNUPoMBEDeHTyMp6RkKQDUu5HVrbricTVGXGSri7aMtLKEoadMFMe5YcA8WzUKH5vwnwnTcQ8": {
+        "dependencies": [
+          "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d"
+            ],
+            "evidence": [
+              "20fe7b95f741573ea16e436f97c4278041f33fe514a314719082bb1b41c5084d"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "3bP6SoKEofuXszh7KdCv8CpgoUPZ9HhnptWefzMMTK1EX2bxiqfDME2mCsafU2RVHWpi4VoeFwKtjbZdE6r8tNUn": {
+        "dependencies": [
+          "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d",
+          "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+          "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+        ],
+        "evidence": [
+          "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d",
+          "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+          "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d"
+            ],
+            "evidence": [
+              "526278e92f0b5e5a42c989e64620a6f1178eaf3bab76044ee87bd7be90a29f5d"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+            ],
+            "evidence": [
+              "f4d197a681cd28e8aecbf7dc728d2973510448ba1d4c4d4d8bc09ac2eba4ee18"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979"
+            ],
+            "evidence": [
+              "91354abc310a96093e7929489f086eb4d376e9c4193c8ff00c4a7c906f8ee979"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "3oypg4t8STL1mr24xA6ATkJKy3BU84UpAMURS7zXGXcx9rBYUVc9bFzJNSKHPB4hGMpxZtvsC8CX2sft1P6hGkLo": {
+        "dependencies": [
+          "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56"
+            ],
+            "evidence": [
+              "032fa57956ec67382b1db6434b6b933e6d5aa810b447f4c71fcd11d8d0736f56"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "3zKWmaasoiBZN4RVDCbAYKhREL1D2jBUwPGjw1cKKPgPmpU6afMPUvQhFijhYoZ27EdgiatFjrYW2T85ouVAuviS": {
+        "dependencies": [
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+          "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916"
+        ],
+        "evidence": [
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+          "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916"
+            ],
+            "evidence": [
+              "f442689a69d626256dcdfe5b17f56f209986f08d6ba867f049a3a38c46c36916"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "44z84CWn4d1JydpYnuyi21gR7a33o2g8TvkNtioPazXesduD5DjuuSJDFQCLVdSSxzKN4WqXKpMZ6aHn5wT1R2BT": {
+        "dependencies": [
+          "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b"
+            ],
+            "evidence": [
+              "43de7d1ac7947a19ecc0e7e2f9278ba7f918220cbcd41bbb88e00f807d39622b"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "4JRRGwafoWW5TmZrfoS9dZVwMRvbxihJHMVU4ropuqhELxmY5mbYtRpXdYWX1N7G4BnF6hRNUojVgxLoT3Ttx9Qg": {
+        "dependencies": [
+          "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181"
+            ],
+            "evidence": [
+              "6fd613e4c49083b453be90c49f4cbd58d8ff001e568db3d1d5409edbff68d181"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "4ME1U6UxSAJgFnhUit3otZdGqFsXnRUNvAX9qxKqUm2cd4zPYKU5YGUGWnJibZ7hWeiAc1YkaotzAZd76DMwbCN5": {
+        "dependencies": [
+          "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688"
+            ],
+            "evidence": [
+              "8799a8582a8b30c90862f2aec7e0315eabb0a43d828da7a28039100b0c2b4688"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "4RAZ2W9UHMLppyn7K6UotX5x9KXP1NUvzdsVgPZ9bnZbCiERzt9Mj3tZMkXsM6qBFDxEfgBMBCrZNgSTAqeB56oD": {
+        "dependencies": [
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+          "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a"
+        ],
+        "evidence": [
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5",
+          "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a"
+            ],
+            "evidence": [
+              "d0778386c45ee13fa5b0e6b635d1ff1cbb5f250a32ec9f3e66f1ace3fbc2e96a"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "4iRzZkwUMoscY8gzvM5i2a1XSspyBBGFVdx2bcsqYi4igoqYdW7hF89y2K7e1dGyLqPmC8iK18VpEDVW7Rj15wet": {
+        "dependencies": [
+          "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84"
+            ],
+            "evidence": [
+              "9a93194d1bb1f053350d4f05b4002cddef007193c158e672062154bc90db9d84"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "5JzqoERMsbtcn8xGNytmvi6Q8NHiMBTVTR2T67EDj9yxe2WkmGeGACJ3YnAs7huVmmyCyVhKhTqLKTG6seVGFD3C": {
+        "dependencies": [
+          "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621"
+            ],
+            "evidence": [
+              "879b06ab7b4a7b57c71f1ca94b298e9743edf74673593666b06589a1be27e621"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      },
+      "kvtUXKohGe9NhnmQHvrtm4vyjExqSYCNkkX5DXgZayHFM7fNhL55z7YwPfjNzGRiR6eiuzfVWPEMdDR3ZxmRjQJ": {
+        "dependencies": [
+          "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "evidence": [
+          "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2",
+          "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+        ],
+        "reason": "Every selected and linked native version must support the same wallet economic signer.",
+        "scope": "Current archived system-account identity and selected supported economic signers only",
+        "state": "PASS",
+        "versions": [
+          {
+            "dependencies": [
+              "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2"
+            ],
+            "evidence": [
+              "0faf51d849b9b24698d933c1ef97442af6c2b1932234898fb8f5abbf71099bd2"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          },
+          {
+            "dependencies": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "evidence": [
+              "c1fc533c6f4edc2322edf5f4dab3b3e5f07eab9946239bedfc07b3ec8ef285d5"
+            ],
+            "raw_paths": [
+              "transaction.message.accountKeys",
+              "transaction.message.header",
+              "meta.loadedAddresses"
+            ],
+            "reason": "Selected economic wallet is an outer signer in this native version.",
+            "scope": "Current archived system-account identity and selected supported economic signers only",
+            "state": "PASS"
+          }
+        ]
+      }
+    },
+    "version": "wallet-identity-evidence-v1"
+  },
+  "linked_record_count": 184,
+  "original_input_sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4",
+  "product_ready": false,
+  "provider_requests": 0,
+  "request_sha256": "9663e32ba0a8d1dea45b79bcc872999ca5a52977e7bfe5d7712df8eb036d85dd",
+  "response_sha256": "feabb86540e5c606f765d034aa523643e4c469744e4d2ef684e2b1e04c673ebd",
+  "scope": "Retained genuine selected-record identity only; no new source collection, wallet population or B3 acceptance.",
+  "selected_record_count": 87,
+  "source_hashes": {
+    "scanner/wallet_identity.py": "88879737774cabcdd48540a42a6aec8a3d16ae3a72c1f37f0445a7adb61d1ac9",
+    "tests/test_wallet_identity.py": "cb071d53c7061933d21453ba36785b1ccf8db7f20bd04577fdfb664e865cce98"
+  }
+}

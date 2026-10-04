@@ -1,0 +1,95 @@
+{
+  "kind": "read-only-exact-candidate-publisher-review",
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "scope": "Read-only publisher/assembler guard review and independent actual final-gate evidence binding. No publisher, assembler, provider, GitHub API or new application validation executed by reviewer.",
+  "script": "/workspace/outputs/metric-completion-publication/publish_exact_candidate.py",
+  "script_sha256": "847f66ca404c2f41ca4a44b7470459e58c9266ba8b94d24d5393dc95a957ecac",
+  "script_bytes": 13085,
+  "expected": {
+    "repository": "vermilion1992/solana-wallet-scanner",
+    "branch": "codex/product-completion",
+    "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+    "application_source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+    "PRODUCT_READY": false
+  },
+  "previous_review": "evidence/metric-completion-batch/ci/PUBLISHER_READ_ONLY_REVIEW_INITIAL_BLOCKED.json",
+  "resolved_findings": {
+    "PUB-GUARD-01": "Explicit application/source pins now checked against both final gates and the validated manifest.",
+    "PUB-GUARD-02": "Exact HEAD captured before audit. Fail-closed HEAD/branch/clean/source/receipt-byte checks run before audit, after fresh audit and before branch mutation. Fresh audit head/branch must match. Exact private destination is reverified just before object writes and ref mutation."
+  },
+  "checks": {
+    "static_python_parse": "PASS",
+    "fixed_exact_application_source_pins": "PASS",
+    "fresh_full_history_and_secret_audit_before_API_writes": "PASS_STATIC",
+    "stable_candidate_binding_at_pre_and_post_audit_and_pre_ref": "PASS_STATIC",
+    "private_exact_destination_reverified_before_writes": "PASS_STATIC",
+    "all_local_history_preserved_or_fail_closed": "PASS_STATIC",
+    "exact_Git_tree_commit_SHAs_and_parent_order": "PASS_STATIC",
+    "force_false_and_ancestor_guard": "PASS_STATIC",
+    "implementation_branch_only_no_main_or_settings_mutation": "PASS_STATIC",
+    "explicit_PRODUCT_READY_false_guard": "PASS_STATIC",
+    "provider_requests_and_production_credentials_unused": "PASS_STATIC",
+    "restricted_write_endpoints": "PASS_STATIC",
+    "publisher_reproduction_matches_reviewed_script": "PASS",
+    "actual_final_gate_source_locks_runtime_raw_evidence_binding": "PASS"
+  },
+  "API_write_sites": [
+    {
+      "method": "POST",
+      "endpoint_expression": "'repos/' + REPO + '/git/blobs'",
+      "line": 100
+    },
+    {
+      "method": "POST",
+      "endpoint_expression": "'repos/' + REPO + '/git/trees'",
+      "line": 147
+    },
+    {
+      "method": "POST",
+      "endpoint_expression": "'repos/' + REPO + '/git/commits'",
+      "line": 184
+    },
+    {
+      "method": "PATCH",
+      "endpoint_expression": "'repos/' + REPO + '/git/refs/heads/' + BRANCH",
+      "line": 245
+    },
+    {
+      "method": "POST",
+      "endpoint_expression": "'repos/' + REPO + '/git/refs'",
+      "line": 250
+    }
+  ],
+  "final_gates_receipt": {
+    "path": "evidence/metric-completion-batch/FINAL_GATES.json",
+    "exists_at_review": true,
+    "sha256": "ea68178993f6051279976061e02889b5828fa570b54f32932e2e3ea06aca3326",
+    "bytes": 5822,
+    "binding_review": "PASS",
+    "independent_review": "evidence/metric-completion-batch/ci/FINAL_EVIDENCE_READ_ONLY_REVIEW.json",
+    "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+    "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+    "PRODUCT_READY": false
+  },
+  "necessary_fixes": [],
+  "executed_checks": [
+    "Read complete corrected publisher",
+    "Read complete tools/repository_audit.py",
+    "AST parse and literal guard assertions; enumerate five Git Database write sites",
+    "Read local HEAD/branch/source manifest and tracked status"
+  ],
+  "network_requests": 0,
+  "provider_requests": 0,
+  "publisher_executed": false,
+  "audit_executed": false,
+  "API_mutations": 0,
+  "application_source_changes": false,
+  "PRODUCT_READY": false,
+  "publisher_reproduction": {
+    "path": "evidence/metric-completion-batch/ci/PUBLISH_EXACT_CANDIDATE_REPRO.py",
+    "sha256": "847f66ca404c2f41ca4a44b7470459e58c9266ba8b94d24d5393dc95a957ecac",
+    "bytes": 13085,
+    "verbatim": true,
+    "role": "Preparation/procedural evidence only; not tested application source. This script performs approved GitHub publication when explicitly executed; it was not executed by this review."
+  }
+}

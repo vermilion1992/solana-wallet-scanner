@@ -1,0 +1,38 @@
+{
+  "kind": "distinct-composition-focused-controls",
+  "command": [
+    "/workspace/solana-wallet-scanner/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_production_evidence_composition.py",
+    "tests/test_research_disposal_scopes.py",
+    "tests/test_metric_evidence.py",
+    "tests/test_real_evidence_adapter.py",
+    "tests/test_archive_input.py",
+    "tests/test_wallet_identity.py",
+    "tests/test_report_view.py"
+  ],
+  "exit_code": 0,
+  "source_hashes_before": {
+    "scanner/app.py": "36139c678151382fb6f199a60b7078d005950da2266ebe2b49febc166557f3ef",
+    "scanner/archive_input.py": "3d0642ce0c8e4a31d4b961b07d425373e6bcc14734d39e3106d81a2cadcb67cb",
+    "scanner/metric_evidence.py": "5542169fe916a63bc6f543889abf6b6ae2c38edce5640a58adfc66c53fe3d298",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/report_view.py": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb",
+    "tests/test_production_evidence_composition.py": "8d83f554d0c00ad098af9700238701f029b6edf58277c11bf3a290bce90412d5",
+    "tests/test_research_disposal_scopes.py": "1119bd77425b533db64b286cf117cd614a1d3ac27ccfb500813b000e3d085515"
+  },
+  "source_hashes_after": {
+    "scanner/app.py": "36139c678151382fb6f199a60b7078d005950da2266ebe2b49febc166557f3ef",
+    "scanner/archive_input.py": "3d0642ce0c8e4a31d4b961b07d425373e6bcc14734d39e3106d81a2cadcb67cb",
+    "scanner/metric_evidence.py": "5542169fe916a63bc6f543889abf6b6ae2c38edce5640a58adfc66c53fe3d298",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/report_view.py": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb",
+    "tests/test_production_evidence_composition.py": "8d83f554d0c00ad098af9700238701f029b6edf58277c11bf3a290bce90412d5",
+    "tests/test_research_disposal_scopes.py": "1119bd77425b533db64b286cf117cd614a1d3ac27ccfb500813b000e3d085515"
+  },
+  "reviewed_source_unchanged": true,
+  "scope": "Root-owned changed source and neighbouring current archive, identity and report presentation tests. Not full candidate acceptance.",
+  "raw_log": "evidence/metric-completion-batch/review-composition/FOCUSED_REVIEW_ACCEPTED.log"
+}

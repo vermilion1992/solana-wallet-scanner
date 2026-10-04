@@ -1,0 +1,73 @@
+{
+  "kind": "read-only-exact-candidate-publisher-review",
+  "state": "BLOCKED_PENDING_GUARD_CORRECTIONS",
+  "scope": "Static source review and local metadata reads only; publisher, audit and API requests were not executed. No application acceptance claim.",
+  "script": "/workspace/outputs/metric-completion-publication/publish_exact_candidate.py",
+  "script_sha256": "14ed294e0d49a54323abbd680c9b39deec31686319d008eff5dc5d2055833c22",
+  "script_bytes": 11805,
+  "expected": {
+    "repository": "vermilion1992/solana-wallet-scanner",
+    "branch": "codex/product-completion",
+    "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+    "application_source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+    "PRODUCT_READY": false
+  },
+  "observed": {
+    "head": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+    "branch": "codex/product-completion",
+    "source_manifest_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+    "source_manifest_file_sha256": "848879de0461b87b07e45eebc2ed746f80b254b335909ec7ba321a3c12b12b54",
+    "FINAL_GATES_exists": false
+  },
+  "checks": {
+    "static_python_parse": "PASS",
+    "fresh_full_history_secret_audit_precedes_first_object_write": "PASS_STATIC",
+    "fixed_private_repository_verified_initially_and_before_ref_update": "PASS_STATIC",
+    "fixed_implementation_branch_only": "PASS_STATIC",
+    "existing_history_SHA_preserving_import": "PASS_STATIC",
+    "non_fast_forward_update_rejected_and_force_false": "PASS_STATIC",
+    "PRODUCT_READY_false_required": "PASS_STATIC",
+    "no_provider_methods_or_credential_reads": "PASS_STATIC",
+    "exact_requested_application_and_source_pins": "MISSING_GUARD",
+    "audit_candidate_binding_and_pre_mutation_rechecks": "MISSING_GUARD",
+    "final_gate_receipt_present_and_binding_reviewed": "BLOCKED_ABSENT"
+  },
+  "necessary_fixes": [
+    {
+      "id": "PUB-GUARD-01",
+      "finding": "The script reads gates.application_commit and expected source hash from local files without pinning the exact requested application commit and source digest. Internally coherent substituted receipt files can pass these guards.",
+      "recommendation": "Require application_commit equal the full reviewed 7e4769922ad8055b8c290f7625401d8a42fd183b SHA and expected_source.sha256 equal 578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2; require the actual full gate receipts to bind that candidate and explicitly pass scoped acceptance."
+    },
+    {
+      "id": "PUB-GUARD-02",
+      "finding": "The initial candidate/source/clean checks precede a long audit. HEAD is captured after audit without verifying audit.head, current source or immutable gate bytes still match. Candidate-change detection currently follows GitHub object writes and branch update.",
+      "recommendation": "Capture the planned exact evidence HEAD and gate/manifest file digests before audit. After audit, and immediately before the ref mutation, verify same HEAD, branch, clean tracked state, current source and unchanged gate/manifest bytes; verify fresh audit.head/branch and all tracked audit file hashes. Reverify destination private/write permission immediately before first object writes."
+    }
+  ],
+  "remaining_prerequisites": [
+    {
+      "path": "evidence/metric-completion-batch/FINAL_GATES.json",
+      "state": "ABSENT_AT_REVIEW",
+      "meaning": "The prepared publisher currently fails closed before API writes; actual consolidated gate binding has not yet been inspected."
+    }
+  ],
+  "history_notes": [
+    "Exact tree and commit SHA checks bind names, modes, all parent SHAs, authors, dates and messages; unsupported headers/timezones abort instead of rewriting history.",
+    "All local refs must be ancestors of HEAD. The importer walks complete HEAD ancestry in topological order and verifies old baseline/probe commit availability after ref publication.",
+    "No main/default-branch settings write is present; existing branch update uses force:false and an ancestor check. Cached SHA-verified immutable Git objects are reused, while the secret audit itself is fresh each invocation."
+  ],
+  "executed_checks": [
+    "AST parse without importing or executing the publisher",
+    "Read tools/repository_audit.py and publisher source",
+    "Read source manifest and verify expected source digest",
+    "Read local HEAD, branch and tracked status"
+  ],
+  "network_requests": 0,
+  "provider_requests": 0,
+  "publisher_executed": false,
+  "audit_executed": false,
+  "API_mutations": 0,
+  "application_source_changes": false,
+  "PRODUCT_READY": false,
+  "binding_note": "This initial guard finding binds the original script read and hashed before root applied corrections. Its earlier evidence-write step reread the script after root had changed it; the binding was corrected here to the actual reviewed original bytes."
+}

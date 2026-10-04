@@ -1,0 +1,10 @@
+........................................................................ [ 41%]
+........................................................................ [ 82%]
+...............................                       [100%]
+=============================== warnings summary ===============================
+tests/test_wallet_identity.py::test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired]
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+175 passed, 1 warning, 19 subtests passed in 2.61s

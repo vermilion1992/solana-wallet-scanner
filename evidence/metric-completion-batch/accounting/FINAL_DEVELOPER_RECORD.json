@@ -1,0 +1,143 @@
+{
+  "version": "accounting-cohort-development-final-v1",
+  "state": "PASS_IN_DECLARED_SCOPE",
+  "application_acceptance": false,
+  "genuine_B3_acceptance": false,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "methods": {
+    "fifo": "fifo-v4",
+    "wallet": "wallet-raw-evidence-v7",
+    "selected_cohort": "selected-cohort-observations-v1"
+  },
+  "files": {
+    "scanner/accounting.py": {
+      "sha256": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+      "bytes": 45500
+    },
+    "scanner/wallet_evidence.py": {
+      "sha256": "a5801477a149ef88fae20280a83bdd89ed734285ad9dc557bfcd3a5f4022b36d",
+      "bytes": 116949
+    },
+    "tests/test_accounting_metric_isolation.py": {
+      "sha256": "e7e4293e0975beffd4c1075eaa55bca4d04b0f4ff53c80f7de128b53738561c4",
+      "bytes": 19350
+    },
+    "tests/test_selected_cohort_observations.py": {
+      "sha256": "7e3fbb6bf0107c9ef67662081dea4d47dc72934f871a3c6327ff22cd26ea31e0",
+      "bytes": 33273
+    }
+  },
+  "logs": {
+    "FOCUSED_INITIAL.log": {
+      "sha256": "3e0c78702d0534c8e7b6dabed5a673bde73f4cfa0ea933fe6d8b89eb6a35807b",
+      "bytes": 3795
+    },
+    "FOCUSED_SECOND.log": {
+      "sha256": "12e20eac8dc381ab935f4dd2e7bd36d1f4ee38dc31ae01a7d80136142c25cdf8",
+      "bytes": 818
+    },
+    "NEW_MATRIX.log": {
+      "sha256": "b3715fc503e30e1d283cc43ad5bfe9fd409c73f40f3dd41029d4c0ea57769ae1",
+      "bytes": 610
+    },
+    "COMPOSED_MATRIX.log": {
+      "sha256": "30fc3ac003d659e1b18560bd5e86e13d574682b5f87b3ec3228dbc73873d1930",
+      "bytes": 862
+    },
+    "FINAL_FOCUSED.log": {
+      "sha256": "85c135f8550e313a118ed9dc0a61bdef701197187f4a7bfc3b768d5b03addf25",
+      "bytes": 691
+    },
+    "SAME_SECOND_REPRO.log": {
+      "sha256": "eb1017d2b0b5cc9b03744e02db66d0c10d5e535a45401def7c2ea76e1bcb502f",
+      "bytes": 12094
+    },
+    "REVIEW_FIXES_INTERIM.log": {
+      "sha256": "cdd3e7366e5d8abf301e77b491859f1b9093e1f0ff401057e25a9bc8f22c4493",
+      "bytes": 691
+    },
+    "REVIEW_FIXES_MATRIX.log": {
+      "sha256": "f7a406182c9bf5d9a28b4c65cdab9d9e4a7b6dd8b9fa9bc376ff7b3a4f19a173",
+      "bytes": 771
+    },
+    "REVIEW_FIXES_FINAL.log": {
+      "sha256": "97672f86a55efad842efa59dccd81ccb26e094c32ae24d5e6d44a68777ca8d60",
+      "bytes": 771
+    },
+    "REVIEW_FIXES_TOPUP.log": {
+      "sha256": "e76c3bc297daddb579231730492af08d6b4f17b6b849f68c715843abb0c92263",
+      "bytes": 771
+    },
+    "FINAL_IMPACTED.log": {
+      "sha256": "9f01f3ce3925d1e5f4182767624bcaac4bb485261145e7ff1e360b14718d87ce",
+      "bytes": 2754
+    },
+    "NATIVE_ENVELOPE_MATRIX.log": {
+      "sha256": "6f4633e136e50d7923176b14ede45bf2de606190771effb64e409b39af36a069",
+      "bytes": 771
+    },
+    "FINAL_STABLE_IMPACTED.log": {
+      "sha256": "9cd22d3fbd6ac495416f2eef2e43b7a3d7fbd7bde518dcfc8f358aac660784cf",
+      "bytes": 912
+    },
+    "ORDERED_TRANSFER_FINAL.log": {
+      "sha256": "933808674acaedbb5b4028d02e91af7d1e08d0cef2af295605ec41a46c7c3960",
+      "bytes": 771
+    }
+  },
+  "final_checks": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_accounting.py tests/test_research.py tests/test_research_source_roles.py tests/test_retained_protocol_funding.py tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py tests/test_wallet_evidence.py tests/test_wallet_identity.py",
+      "log": "FINAL_STABLE_IMPACTED.log",
+      "exit": 0,
+      "passed": 302,
+      "subtests_passed": 193,
+      "scope": "Final expanded affected suite before last transfer-isolation predicate and two controls."
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py tests/test_wallet_evidence.py tests/test_wallet_identity.py",
+      "log": "ORDERED_TRANSFER_FINAL.log",
+      "exit": 0,
+      "passed": 195,
+      "subtests_passed": 155,
+      "scope": "Final owned source and last selected/alternative/API/transfer controls."
+    },
+    {
+      "command": "git diff --check -- scanner/accounting.py scanner/wallet_evidence.py tests/test_accounting_metric_isolation.py tests/test_selected_cohort_observations.py",
+      "exit": 0
+    }
+  ],
+  "retained_failures": [
+    {
+      "log": "FOCUSED_INITIAL.log",
+      "state": "REPRODUCED_THEN_FIXED",
+      "failed": 2,
+      "passed": 163,
+      "explanation": "Missing raw fee forced buy into transfer-interrupted interpretation despite existing independent raw quantity witness; new export control initially used nonexistent URL and was corrected to existing endpoint."
+    },
+    {
+      "log": "FINAL_IMPACTED.log",
+      "state": "MOVING_SOURCE_RUN_NOT_ACCEPTANCE",
+      "failed": 1,
+      "passed": 250,
+      "explanation": "Python cached wallet_identity before a concurrently introduced helper while a later test imported updated helper-dependent test module. Fresh process on source-stable inputs passes. This is not presented as source-bound acceptance."
+    }
+  ],
+  "review_fixes": [
+    "Surviving acquisition refs bind remaining cost only to surviving FIFO lots, retaining required ownership/origin/chronology; consumed unknown acquisition money still blocks its disposed results.",
+    "Every new internal monetary/cohort parse accepts bounded 512-character values produced by 192-digit FIFO arithmetic; positive partial/final three-unit rational expectations verify conservation without treating valid precision as UNKNOWN.",
+    "Exact internally derived acquisition/closure order binds independent same-second close/re-entry, top-up and transfer paths; unsupported or absent clock order cannot prove disjointness.",
+    "Opening zero applies only to the actual initial ordered acquisition; later ordered same-second top-ups require supported continuity rather than a second zero origin.",
+    "New account-source roles and aliases retain their own identity dependency while preserving independent selected fees. Readable native bodies inside retained byte envelopes are semantically extracted before any role-based disjointness; conflicting, unreadable and removed alternatives remain negative dependencies.",
+    "Per-sale projection binds existing research FIFO values to source signature, raw hash, quantity, timestamp and lot proof; unknown later exit consideration does not erase independently supported earlier disposal, but aggregate remains UNKNOWN.",
+    "Normal import/rebuild/export tests preserve source bytes and saved parents and assert provider/credential/transport counters zero."
+  ],
+  "counting": "Runs overlap. Full root acceptance must report actual unique ordinary nodes once; subtests remain separately reported.",
+  "limitations": [
+    "Selected cohorts are conditional named-account/selected-record views, not historical wallet or eligible-asset populations.",
+    "PRODUCT_READY remains false; this record is scoped developer validation, not final candidate acceptance or genuine B3 closure.",
+    "Wallet-wide mixed open/closed position completeness remains a distinct missing implementation item; existing all-closed positions predicate is not closed by these selected views.",
+    "Root owns distinct independent read-only review, full final frozen-source gates and private publication."
+  ]
+}

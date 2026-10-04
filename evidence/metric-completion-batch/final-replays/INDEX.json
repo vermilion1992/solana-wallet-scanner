@@ -1,0 +1,78 @@
+{
+  "PRODUCT_READY": false,
+  "commands": [
+    {
+      "checks": {
+        "cases_explicitly_passing": true,
+        "credential_lookups_zero": true,
+        "exact_commit_after": false,
+        "exact_commit_before": true,
+        "exact_source_after": false,
+        "exact_source_before": true,
+        "expected_exit": true,
+        "kind": true,
+        "oracle_frozen_before_application": true,
+        "original_archive_identity": true,
+        "original_inputs_unchanged": true,
+        "parent_unchanged": true,
+        "product_ready_false": true,
+        "provider_requests_zero": true,
+        "real_acceptance_blocked": true,
+        "receipt_object": true,
+        "state": true,
+        "usage_unchanged": true
+      },
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "/workspace/solana-wallet-scanner/tools/check_genuine_collection.py",
+        "--output",
+        "/workspace/solana-wallet-scanner/evidence/metric-completion-batch/final-replays/genuine-development",
+        "--input",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+        "--input-freeze",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+        "--worked-expectations",
+        "/workspace/solana-wallet-scanner/evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "finished_at": "2026-10-04T13:35:18.538349+00:00",
+      "log": "evidence/metric-completion-batch/final-replays/genuine-development.log",
+      "log_bytes": 273,
+      "log_sha256": "f17a33ac3d9bc7d41fe4f278ebc2896341e494c5f9e9dd00d456b95f921bb05d",
+      "name": "genuine-development",
+      "real_acceptance_state": "BLOCKED",
+      "receipt": "evidence/metric-completion-batch/final-replays/genuine-development/result.json",
+      "receipt_bytes": 728677,
+      "receipt_sha256": "63f2e3196dc5cec9c3fa75756ad9f29ebbb19cd0f8fc4ac605686923b7ea6cdc",
+      "receipt_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED",
+      "seconds": 119.17571,
+      "started_at": "2026-10-04T13:33:19.391760+00:00",
+      "state": "FAILED"
+    }
+  ],
+  "commit": "ce8fbb7a5a55290627234fa3febb5629c9a4ed73",
+  "finished_at": "2026-10-04T13:35:48.258111+00:00",
+  "inputs_before": {
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json": {
+      "bytes": 2783,
+      "sha256": "25f752be59154d13e8d57a15b7afcc2191582a4665f4c886ef12e22d7d0284f7"
+    },
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    }
+  },
+  "interrupted_after_source_change": true,
+  "interruption": "Browser harness source changed during first frozen command; first receipt retained, second automatically started before the notification boundary and was terminated. No subsequent product commands executed.",
+  "kind": "four-frozen-offline-entrypoints",
+  "scope": "Development workflow validation and explicit real-acceptance blockage; no full product-readiness claim.",
+  "source_file_count": 235,
+  "source_sha256": "72b5903eb79142b79e9e61fce9a49b1400f75911fa537dfc786d1cbd2b5d36bd",
+  "started_at": "2026-10-04T13:33:19.391562+00:00",
+  "state": "FAILED"
+}

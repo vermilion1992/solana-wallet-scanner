@@ -1,0 +1,315 @@
+{
+  "positions": [
+    {
+      "id": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:1",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "classification": "unknown",
+      "status": "unresolved",
+      "in_window": true,
+      "start": "2026-09-21T15:13:20+00:00",
+      "cohort_quantity_status": "unknown",
+      "monetary_status": "known",
+      "first_sale_status": "unknown",
+      "first_sale_observation_status": "known",
+      "acquisition_basis_status": "known",
+      "known_basis_sol": "1.000005",
+      "known_matched_basis_sol": "1.000005",
+      "remaining_basis_status": "known",
+      "remaining_basis_sol": "0",
+      "end": "2026-09-21T15:13:20+00:00",
+      "quantity_raw": "0",
+      "acquired_raw": "100",
+      "sold_raw": "100",
+      "decimals": 6,
+      "buy_count": 1,
+      "sell_count": 1,
+      "basis_sol": "1.000005",
+      "matched_basis_sol": "1.000005",
+      "proceeds_sol": "1",
+      "exit_fees_sol": "0.000005",
+      "pnl_sol": "-0.00001",
+      "roi_pct": "-0.000999995000024999875000624996875015624921875390623046884765576172119139404302978485107574462127689361553192234038829805850970745146274268628656856715716421417892910535447322763386183069084654577",
+      "hold_hours": "0",
+      "first_sale_hours": "0",
+      "sold_50_pct_hours": "0",
+      "sold_90_pct_hours": "0",
+      "evidence": [
+        "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+        "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2"
+      ]
+    },
+    {
+      "id": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:2",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "classification": "unknown",
+      "status": "unresolved",
+      "in_window": true,
+      "start": "2026-09-21T15:13:20+00:00",
+      "cohort_quantity_status": "unknown",
+      "monetary_status": "known",
+      "first_sale_status": "unknown",
+      "first_sale_observation_status": "known",
+      "acquisition_basis_status": "known",
+      "known_basis_sol": "1.000005",
+      "known_matched_basis_sol": "1.000005",
+      "remaining_basis_status": "known",
+      "remaining_basis_sol": "0",
+      "end": "2026-09-21T15:13:20+00:00",
+      "quantity_raw": "0",
+      "acquired_raw": "100",
+      "sold_raw": "100",
+      "decimals": 6,
+      "buy_count": 1,
+      "sell_count": 1,
+      "basis_sol": "1.000005",
+      "matched_basis_sol": "1.000005",
+      "proceeds_sol": "1",
+      "exit_fees_sol": "0.000005",
+      "pnl_sol": "-0.00001",
+      "roi_pct": "-0.000999995000024999875000624996875015624921875390623046884765576172119139404302978485107574462127689361553192234038829805850970745146274268628656856715716421417892910535447322763386183069084654577",
+      "hold_hours": "0",
+      "first_sale_hours": "0",
+      "sold_50_pct_hours": "0",
+      "sold_90_pct_hours": "0",
+      "evidence": [
+        "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+        "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+      ]
+    }
+  ],
+  "lots": [
+    {
+      "id": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:1",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "accounts": [
+        "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR"
+      ],
+      "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+      "fifo_bounds": {
+        "start": "2026-09-21T15:13:20+00:00",
+        "end": "2026-09-21T15:13:20+00:00"
+      },
+      "monetary_state": "UNKNOWN",
+      "timing_state": "UNKNOWN",
+      "cost_basis_state": "UNKNOWN",
+      "remaining_cost_basis_state": "UNKNOWN",
+      "quantity_state": "PASS",
+      "remaining_quantity_state": "UNKNOWN",
+      "origin_state": "UNKNOWN",
+      "chronology_state": "PASS",
+      "classification_state": "UNKNOWN",
+      "wallet_population_state": "UNKNOWN",
+      "qualification": false,
+      "observed_closed": true,
+      "observed_open": false,
+      "fifo_status": "unresolved",
+      "acquired_raw": "100",
+      "disposed_raw": "100",
+      "remaining_raw": "0",
+      "buy_count": 1,
+      "sell_count": 1,
+      "conditional_basis_sol": null,
+      "conditional_matched_basis_sol": null,
+      "conditional_proceeds_sol": null,
+      "conditional_exit_fees_sol": null,
+      "conditional_lot_profit_sol": null,
+      "conditional_lot_roi_pct": null,
+      "conditional_remaining_basis_sol": null,
+      "conditional_first_sale_hours": null,
+      "conditional_exit_50_hours": null,
+      "conditional_exit_90_hours": null,
+      "observed_start": null,
+      "observed_end": null,
+      "conditional_hold_hours": null,
+      "required_signatures": [
+        "buy-1",
+        "buy-2",
+        "sale-1",
+        "sale-2"
+      ],
+      "disjoint_signatures": [],
+      "disposal_signatures": [
+        "sale-1",
+        "sale-2"
+      ],
+      "closing_signatures": [
+        "sale-1",
+        "sale-2"
+      ],
+      "evidence": [
+        "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+        "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+        "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2",
+        "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+      ],
+      "retained_account_funding": [],
+      "gaps": [],
+      "assumptions": [
+        "No hidden earlier same-mint holdings or unobserved intervening changes are established.",
+        "Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN."
+      ]
+    },
+    {
+      "id": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:2",
+      "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+      "accounts": [
+        "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR"
+      ],
+      "scope": "Conditional selected named-account FIFO lot; hidden same-mint holdings and unobserved intervening activity remain unproved",
+      "fifo_bounds": {
+        "start": "2026-09-21T15:13:20+00:00",
+        "end": "2026-09-21T15:13:20+00:00"
+      },
+      "monetary_state": "UNKNOWN",
+      "timing_state": "UNKNOWN",
+      "cost_basis_state": "UNKNOWN",
+      "remaining_cost_basis_state": "UNKNOWN",
+      "quantity_state": "PASS",
+      "remaining_quantity_state": "UNKNOWN",
+      "origin_state": "UNKNOWN",
+      "chronology_state": "PASS",
+      "classification_state": "UNKNOWN",
+      "wallet_population_state": "UNKNOWN",
+      "qualification": false,
+      "observed_closed": true,
+      "observed_open": false,
+      "fifo_status": "unresolved",
+      "acquired_raw": "100",
+      "disposed_raw": "100",
+      "remaining_raw": "0",
+      "buy_count": 1,
+      "sell_count": 1,
+      "conditional_basis_sol": null,
+      "conditional_matched_basis_sol": null,
+      "conditional_proceeds_sol": null,
+      "conditional_exit_fees_sol": null,
+      "conditional_lot_profit_sol": null,
+      "conditional_lot_roi_pct": null,
+      "conditional_remaining_basis_sol": null,
+      "conditional_first_sale_hours": null,
+      "conditional_exit_50_hours": null,
+      "conditional_exit_90_hours": null,
+      "observed_start": null,
+      "observed_end": null,
+      "conditional_hold_hours": null,
+      "required_signatures": [
+        "buy-1",
+        "buy-2",
+        "sale-1",
+        "sale-2"
+      ],
+      "disjoint_signatures": [],
+      "disposal_signatures": [
+        "sale-1",
+        "sale-2"
+      ],
+      "closing_signatures": [
+        "sale-1",
+        "sale-2"
+      ],
+      "evidence": [
+        "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+        "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+        "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2",
+        "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+      ],
+      "retained_account_funding": [],
+      "gaps": [],
+      "assumptions": [
+        "No hidden earlier same-mint holdings or unobserved intervening changes are established.",
+        "Separately located protocol-account funding is excluded from the quoted-trade lot; its future refund/economic value remains UNKNOWN."
+      ]
+    }
+  ],
+  "cohort": {
+    "scope": "Selected named-account episodes whose strict-zero close is in this interval",
+    "candidate_count": 2,
+    "candidate_lot_ids": [
+      "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:1",
+      "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:2"
+    ],
+    "population_state": "UNKNOWN",
+    "monetary_state": "UNKNOWN",
+    "timing_state": "UNKNOWN",
+    "conditional_profit_sol": null,
+    "conditional_win_rate_pct": null,
+    "conditional_median_roi_pct": null,
+    "conditional_median_hold_hours": null,
+    "conditional_first_sale_hours": null,
+    "conditional_exit_50_hours": null,
+    "conditional_exit_90_hours": null,
+    "checks": {
+      "population": {
+        "state": "UNKNOWN",
+        "scope": "Selected named-account episodes whose strict-zero close is in this interval",
+        "reason": "The complete declared selected closing cohort needs every candidate physical/origin/clock proof; open stock is separate.",
+        "evidence": [
+          "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+          "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+          "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2",
+          "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "chronology_state",
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "origin_state",
+          "quantity_state",
+          "selected_native_activity"
+        ]
+      },
+      "monetary": {
+        "state": "UNKNOWN",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every selected closed-cohort candidate needs supported acquisition/disposal costs; losing and breakeven candidates remain included.",
+        "evidence": [
+          "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+          "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+          "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2",
+          "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "chronology_state",
+          "linked_native_source_inventory",
+          "monetary_state",
+          "named_lot_inspection",
+          "origin_state",
+          "quantity_state",
+          "selected_native_activity"
+        ]
+      },
+      "timing": {
+        "state": "UNKNOWN",
+        "scope": "Selected archived records only; hidden accounts and intervening records are unproved",
+        "reason": "Every selected closed-cohort candidate needs supported start/closing clocks independently of monetary costs and valuation.",
+        "evidence": [
+          "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+          "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+          "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2",
+          "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+        ],
+        "raw_paths": [],
+        "dependencies": [
+          "chronology_state",
+          "linked_native_source_inventory",
+          "named_lot_inspection",
+          "origin_state",
+          "quantity_state",
+          "selected_native_activity",
+          "timing_state"
+        ]
+      }
+    },
+    "evidence": [
+      "08556022cc94be4d0544c67bc460592b218d5cd07a6d398db0ea609e319dab51",
+      "171ec7fe7c62f8e5a0c59d92446594dd6f0db253dc1ede5b296c48e6c5809899",
+      "2310f5ca789a0d48450def05d063b2d77ff1b509adb1a7c7612f6996a9f859a2",
+      "383fa1d06513cfb5c0f3686d57332ef88d8b12f73f0d8a43d216b71fdd98a559"
+    ],
+    "wallet_population_state": "UNKNOWN",
+    "classification_state": "UNKNOWN",
+    "qualification": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "kind": "distinct-reproduction-replay",
+  "id": "REVIEW-SAME-SECOND-DISJOINT-TRANSFER",
+  "state": "PASS",
+  "positive": {
+    "first_lot_money": "PASS",
+    "first_lot_profit": "-0.00001",
+    "later_lot_money": "UNKNOWN",
+    "whole_cohort": "UNKNOWN"
+  },
+  "ambiguous_order": "UNKNOWN",
+  "original_sha256": "8cacd1f91adae2b3c1419c5952a2e671615344cc60e02a013a954d7150b0c982",
+  "source_hashes": {
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/wallet_evidence.py": "a5801477a149ef88fae20280a83bdd89ed734285ad9dc557bfcd3a5f4022b36d"
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

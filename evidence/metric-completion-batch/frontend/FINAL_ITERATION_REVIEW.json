@@ -1,0 +1,91 @@
+{
+  "kind": "frontend-final-iteration-read-only-review",
+  "state": "PASS",
+  "application_acceptance": false,
+  "time_utc": "2026-10-04T13:18:41.032778+00:00",
+  "source_hashes": {
+    "frontend/src/SelectedCohorts.tsx": "d2358486d015a4fa025a0148b69091e21bdb53d7c5ddcffa5419e13d7786ba74",
+    "frontend/src/report.tsx": "bc7d5066c0d4d05a3ebb11569822f839dee9471630567f112943e2686053f6cb",
+    "frontend/src/types.ts": "c1218d562ae8ee2044e2bdd194904ce773277b83d88eafea4099841e090c4ee3",
+    "frontend/src/styles.css": "1545a734b1999f7cd76f2708aac40dad27087ae8e2c3744d51d4f2bef79c01bf",
+    "frontend/scripts/check-discovery.mjs": "5ac7ed88603fed6b263e5e82b7e1cf4850d2ec26dbafa38606d3e0b95237822a",
+    "tools/product_browser.py": "094bec0916f1f0a5b5ff1b680ff9f746f98e5ea146945686f5f7fbb28338a331"
+  },
+  "source_unchanged_during_checks": true,
+  "checks": [
+    {
+      "name": "final-discovery",
+      "command": [
+        "npm",
+        "run",
+        "check:discovery"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "raw_log": "evidence/metric-completion-batch/frontend/final-discovery.log",
+      "log_sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9"
+    },
+    {
+      "name": "final-format",
+      "command": [
+        "npm",
+        "run",
+        "check:format"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "raw_log": "evidence/metric-completion-batch/frontend/final-format.log",
+      "log_sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+    },
+    {
+      "name": "final-browser-syntax",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-m",
+        "py_compile",
+        "tools/product_browser.py"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "raw_log": "evidence/metric-completion-batch/frontend/final-browser-syntax.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "frontend/src/SelectedCohorts.tsx",
+        "frontend/src/report.tsx",
+        "frontend/src/types.ts",
+        "frontend/src/styles.css",
+        "frontend/scripts/check-discovery.mjs",
+        "tools/product_browser.py"
+      ],
+      "exit_code": 0,
+      "state": "PASS",
+      "raw_log": "evidence/metric-completion-batch/frontend/final-diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "One existing frontend discovery runner plus format controls; subassertions are not unique backend tests",
+  "reviewed_contracts": [
+    "Wallet/history/FIFO/research method freshness",
+    "Independent exact report/28/90 intervals and common open-stock end",
+    "Metric-specific quantity/cost/timing isolation",
+    "Losing, breakeven, partial and reentry UI observations preserved",
+    "Missing/malformed/stale states and unsupported method bodies cannot render supported zero",
+    "Independently cited checksum-shaped source selectors",
+    "Immutable saved report rendering",
+    "Responsive wrapping of new panels and expanded browser capture assertions"
+  ],
+  "confirmed_remaining_review_findings": [],
+  "browser_execution": "Not executed by frontend agent; root exact-source candidate browser run required",
+  "compiled_assets": "Root final build required; this agent did not change compiled assets",
+  "supersedes_iteration_records_for_current_source": [
+    "ITERATION.json",
+    "DIFF_REVIEW.json"
+  ]
+}

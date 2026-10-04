@@ -1,0 +1,5 @@
+{"name": "genuine-development", "exit_code": 0, "receipt_state": "WORKFLOW_PASS_REAL_ACCEPTANCE_BLOCKED", "real_acceptance_state": "BLOCKED", "state": "PASS", "seconds": 115.592156}
+{"name": "genuine-real-acceptance", "exit_code": 2, "receipt_state": "BLOCKED", "real_acceptance_state": "BLOCKED", "state": "PASS_EXPECTED_REAL_BLOCK", "seconds": 112.369002}
+{"name": "product-development", "exit_code": 0, "receipt_state": "DEVELOPMENT_PASS", "real_acceptance_state": "BLOCKED", "state": "PASS", "seconds": 17.291727}
+{"name": "product-real-acceptance", "exit_code": 2, "receipt_state": "BLOCKED", "real_acceptance_state": "BLOCKED", "state": "PASS_EXPECTED_REAL_BLOCK", "seconds": 17.648096}
+{"state": "PASS", "source_unchanged": true, "original_inputs_unchanged": true, "PRODUCT_READY": false, "index": "evidence/metric-completion-batch/final-replays-accepted/INDEX.json"}

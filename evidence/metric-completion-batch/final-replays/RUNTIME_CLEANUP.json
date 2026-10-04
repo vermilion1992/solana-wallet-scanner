@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-04T13:38:12.434352+00:00",
+  "records": [
+    {
+      "bytes": 452581840,
+      "file_count": 106,
+      "owned_by": "Terminated old frozen-entrypoint validation run; generated runtime state only",
+      "path": "evidence/metric-completion-batch/final-replays/genuine-development/data",
+      "removed": true,
+      "tree_manifest_sha256": "000a0d2ad226c629d60c1cf2f3a4f1d2225b70af751323b18d326539d8094357"
+    },
+    {
+      "bytes": 264623463,
+      "file_count": 107,
+      "owned_by": "Terminated old frozen-entrypoint validation run; generated runtime state only",
+      "path": "evidence/metric-completion-batch/final-replays/genuine-real-acceptance/data",
+      "removed": true,
+      "tree_manifest_sha256": "19e09a486692dd25650bdf269baef8b857be9357d6e12c621577df77952207c5"
+    }
+  ],
+  "scope": "Removed only own newly generated disposable runtime/data directories; retained all flat original toolreceipts, reportexports, rawlogs, acquisition inputs and workedoracle. No user state or historical evidence cleanup."
+}

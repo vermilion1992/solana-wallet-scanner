@@ -1,0 +1,12 @@
+{
+  "kind": "delivery-evidence-assembler-schema-correction",
+  "state": "PASS_REPLAY",
+  "time": "2026-10-04T13:52:08.291227+00:00",
+  "source_changed": false,
+  "reason": "check_genuine_collection exports EXPECTED_WORKED.json with json.dumps(indent=2), including default Unicode escaping. Receipt worked_expectations_sha256 correctly binds those exported bytes, not the separately preserved input pretty/Unicode bytes. Final assembler now verifies both actual exported-byte hash and exact parsed-value equality to frozen original input, whose raw hash remains independently verified. EXPECTED_RAW.json is also independently hash checked.",
+  "original_worked_input_sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba",
+  "normalized_worked_export_sha256": "21aa1e1548b409b46824443157c6b4698bbfcc7c813d6d8ca98ede766a0107ad",
+  "initial_log": "FINAL_GATES_ASSEMBLY_INITIAL_FAILED.log",
+  "application_acceptance_changed": false,
+  "final_log": "FINAL_GATES_ASSEMBLY.log"
+}

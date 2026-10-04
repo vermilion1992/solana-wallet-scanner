@@ -1,0 +1,139 @@
+{
+  "kind": "consolidated-review",
+  "state": "PASS",
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "source_files": 235,
+  "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "created_at": "2026-10-04T13:40:25.566848+00:00",
+  "matrix_review_complete": true,
+  "matrix_spec_requirements": 48,
+  "findings": [
+    {
+      "id": "ACC-01",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Quantity/money and positive-sale evidence isolated in shared FIFO; retained regressions."
+    },
+    {
+      "id": "CAP-COHORT",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Selected closed/disposed/open observations; independent interval scope, not full wallet proof."
+    },
+    {
+      "id": "REV-REMAINING-COST",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Surviving acquisition dependencies independent of consumed unknown-cost lots."
+    },
+    {
+      "id": "REV-FRACTION",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Current-engine long fractions remain usable; no precision truncation."
+    },
+    {
+      "id": "REV-ORDER",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Same-second acquisition/re-entry/transfer ordering used only when raw chronology proves it."
+    },
+    {
+      "id": "REV-ACCOUNT-ROLES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Account aliases and enclosed native conflicts retain independent negative dependencies."
+    },
+    {
+      "id": "REV-COMP-INTERVAL",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Native/archive bounds normalized; partial passing population null reason structured."
+    },
+    {
+      "id": "REV-COMP-FEES",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Shared fee projection excludes only proved out-of-window records; unknown/zero remain separate."
+    },
+    {
+      "id": "UI-FRESHNESS",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Wallet/research/quantity freshness; immutable parents and compact summary semantics retained."
+    },
+    {
+      "id": "CI-01",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Six disjoint offline receipts; native hosted execution separately pending."
+    },
+    {
+      "id": "BROWSER-HARNESS-SCOPE",
+      "status": "VERIFIED_IN_SCOPE",
+      "blocking": false,
+      "scope": "Synthetic demo asserts unqualified state and absence of live-only panel; genuine assertions retained. Actual repaired browser receipt separately PASS."
+    }
+  ],
+  "review_evidence": [
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/FINAL_READ_ONLY_REVIEW.json",
+      "sha256": "6cf6976f5dcd937f13ada659f0ccc943d1ba61d76b7c1a43bc695e130ddb2235",
+      "bytes": 44612
+    },
+    {
+      "path": "evidence/metric-completion-batch/frontend/FINAL_ITERATION_REVIEW.json",
+      "sha256": "dc8aea2472c1f8f4bc0f762b1b90e8a8e2e8863299262b1894d41d3597256383",
+      "bytes": 3584
+    },
+    {
+      "path": "evidence/metric-completion-batch/accounting/FINAL_DEVELOPER_RECORD.json",
+      "sha256": "bb73159cb8e8177215db04668070a04603fefe530f624a1a3111060784452de2",
+      "bytes": 7219
+    },
+    {
+      "path": "evidence/metric-completion-batch/identity/genuine-api-replay.json",
+      "sha256": "d6c8772745a6addfed165d0d419d5f583ae7051a298b4b02ad2ce85510a8c55c",
+      "bytes": 3065
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRESH_SOURCE_EXTRACTION.json",
+      "sha256": "18e45e67dd40a520bf285f0f5dd6291717c090f440cc88ea0a98ec374dd8e1e7",
+      "bytes": 69935
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/HARNESS_READ_ONLY_REVIEW.json",
+      "sha256": "bfce1d697a3df3d1699de047aa508d9b85da72d2f07fec8092cf7e0af265e014",
+      "bytes": 45942
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/result.json",
+      "sha256": "e3af79c5d253b2ca4ea6e5dd7f1e380ad4a7c56c12213c943f64075ce2f50b82",
+      "bytes": 10043
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRESH_SOURCE_EXTRACTION_7e47699.json",
+      "bytes": 155602,
+      "sha256": "4fd571901aef8ba0e679f4099f2b3630bdaaaf3bfdb77d7f80cb8a742c2bf1a6"
+    }
+  ],
+  "product_readiness": {
+    "PRODUCT_READY": false,
+    "B1": "HISTORICAL_COVERAGE_UNRESOLVED",
+    "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+    "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED"
+  },
+  "remaining_missing_implementation": [
+    "CAP-HIST",
+    "CAP-ORIGIN",
+    "CAP-ROUTES",
+    "CAP-CLASS",
+    "CAP-VALUATION",
+    "CAP-POSITIONS"
+  ],
+  "scope": "Distinct read-only full batch and consolidated source/matrix review. Full candidate gates separately required; not claimed here.",
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "supersedes_review": "REVIEW_ACCEPTANCE_ce8fbb7.json",
+  "source_delta": "Only tools/product_browser.py changed:9 lines correct synthetic-panel absence; other234 source bytes and all modes unchanged."
+}

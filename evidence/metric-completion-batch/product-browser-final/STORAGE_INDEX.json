@@ -1,0 +1,11 @@
+{
+  "kind": "lossless-flat-json-storage-index",
+  "state": "PASS",
+  "time_utc": "2026-10-04T13:42:05.120019+00:00",
+  "threshold_bytes": 2097152,
+  "compression": "Deterministic gzip (mtime0); each .json.gz independently extracts byte-identical original JSON. Originals retained locally.",
+  "entries": [],
+  "original_bytes": 0,
+  "compressed_bytes": 0,
+  "preserved_browser_receipt_sha256": "d8a9a8690b26bb5684d09a0bc66b628c590437b2ebb87bbe916e418a0873845b"
+}

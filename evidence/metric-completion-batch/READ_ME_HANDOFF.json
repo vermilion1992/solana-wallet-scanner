@@ -1,0 +1,255 @@
+{
+  "kind": "current-private-git-batch-index",
+  "state": "SCOPED_PASS_REAL_ACCEPTANCE_BLOCKED",
+  "repository": "vermilion1992/solana-wallet-scanner",
+  "private": true,
+  "branch": "codex/product-completion",
+  "baseline_head": "1bfc75222fce863313e6be333832a1b381d1cda4",
+  "baseline_tested_application": "394904460c0473f07a25ed6324736421e0db1544",
+  "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "source_manifest": "SOURCE_MANIFEST.json",
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "source_files": 235,
+  "application_files_changed": [
+    {
+      "status": "M",
+      "paths": [
+        ".github/workflows/offline-focused.yml"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "ACCEPTANCE.md"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "CODEX_TASK.md"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "ISSUES.md"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "docs/ACCEPTANCE_MATRIX.json"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "docs/BLUEPRINT_ALIGNMENT.md"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "docs/CONTRACT.md"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "docs/R1_SOURCE_DECISION.md"
+      ]
+    },
+    {
+      "status": "R092",
+      "paths": [
+        "frontend/dist/assets/index-J2-LWOXg.css",
+        "frontend/dist/assets/index-3ME0teVe.css"
+      ]
+    },
+    {
+      "status": "R069",
+      "paths": [
+        "frontend/dist/assets/index-vMLERUXl.js",
+        "frontend/dist/assets/index-IpmeptTY.js"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "frontend/dist/index.html"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "frontend/scripts/check-discovery.mjs"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "frontend/src/SelectedCohorts.tsx"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "frontend/src/report.tsx"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "frontend/src/styles.css"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "frontend/src/types.ts"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/accounting.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/app.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/archive_input.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/metric_evidence.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/report_view.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/research.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "scanner/wallet_evidence.py"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "scanner/wallet_identity.py"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "tests/test_accounting_metric_isolation.py"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "tests/test_production_evidence_composition.py"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "tests/test_research_disposal_scopes.py"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "tests/test_selected_cohort_observations.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "tests/test_validation_gates.py"
+      ]
+    },
+    {
+      "status": "A",
+      "paths": [
+        "tests/test_wallet_identity.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "tools/product_browser.py"
+      ]
+    },
+    {
+      "status": "M",
+      "paths": [
+        "tools/validate.py"
+      ]
+    }
+  ],
+  "source_commits": [
+    "3fc7d66ddfc55dcd05e97a565665f14fb11c0451",
+    "ce8fbb7a5a55290627234fa3febb5629c9a4ed73",
+    "7e4769922ad8055b8c290f7625401d8a42fd183b"
+  ],
+  "checks": {
+    "full_candidate": "gate-a-accepted/result.json",
+    "raw_full_backend": "gate-a-accepted/backend.log",
+    "genuine_and_product_modes": "final-replays-accepted/INDEX.json",
+    "actual_product_browser": "product-browser-repaired/result.json",
+    "consolidated_review": "REVIEW_ACCEPTANCE.json",
+    "distinct_final_review": "distinct-review/HARNESS_READ_ONLY_REVIEW.json",
+    "fresh_source_extraction": "FRESH_SOURCE_EXTRACTION_7e47699.json"
+  },
+  "failed_evidence": {
+    "gate-a-final": "Earlier sourcece8 run failed exact-source/review binding after one tool-only harness change; backend/browser checks ran, acceptance not claimed.",
+    "product-browser-final": "Actual synthetic-only harness selector mismatch, retained and corrected with no UI source change.",
+    "final-replays": "Superseded/explicitly terminated during candidate identity change; never accepted as new source."
+  },
+  "reproduction_dependencies": [
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip",
+    "evidence/genuine-wallet-batch/checker-inputs/FINAL_INPUT_FREEZE.json",
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json",
+    "retained original63file cached replay corpus",
+    "current application source/locks/fixtures/tools"
+  ],
+  "storage": "Each STORAGE_INDEX.json binds bulky flat JSON original bytes to independent .json.gz; originalbytes remain locally. Private disposable testdata/DBs excluded; removed only newly created completed test runtime via hash/catalog cleanup receipts.",
+  "PRODUCT_READY": false,
+  "B1": "HISTORICAL_COVERAGE_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "remaining_missing_implementation": [
+    "CAP-HIST",
+    "CAP-ORIGIN",
+    "CAP-ROUTES",
+    "CAP-CLASS",
+    "CAP-VALUATION",
+    "CAP-POSITIONS"
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "supported_observations": "Original87 inputs remain partial; selectedperiod fees0.000158868SOL and independently worked namedlot loss-0.013270924SOL/holding529seconds are not complete-wallet acceptance.",
+  "final_gates": "FINAL_GATES.json",
+  "full_backend_unique_nodes": 3007,
+  "subtests_separately_reported": 440,
+  "matrix_requirements": 86
+}

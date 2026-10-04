@@ -1,0 +1,106 @@
+{
+  "kind": "distinct-read-only-review",
+  "state": "PASS_IN_REVIEWED_SCOPE",
+  "baseline_commit": "1bfc75222fce863313e6be333832a1b381d1cda4",
+  "application_files_reviewed": {
+    ".github/workflows/offline-focused.yml": "1beacb419b2e5be47d50f86b74c2c3df501f307cadfd509ce92477b6d7317065",
+    "ACCEPTANCE.md": "86edddcf282771246b4dadd1ad8e10b2bae33bd7646b70f3ccf74db291e446eb",
+    "CODEX_TASK.md": "e7a3cf15825260a799cbdddfc95893d16a7f91bd8fbafe2d55621e46bd5df335",
+    "ISSUES.md": "bc66ad07659d2b7b92baf8fbbaa891474ee03d47a4560a1af959a14ac2984f27",
+    "docs/ACCEPTANCE_MATRIX.json": "8f9a41e0812dc8e2455faf77cc4c3cc9442641215cfb1de3d035fd500995d2ff",
+    "docs/BLUEPRINT_ALIGNMENT.md": "e7fbf25f4142e9d664525325cfef7a0360e7f1e590d8f1484a47e9dc8ecba2ed",
+    "docs/CONTRACT.md": "7e08e556b0dee7a8de8d24d0705bbe7bfe2d36f0ed872fc8d50edb2594bf9a54",
+    "docs/R1_SOURCE_DECISION.md": "0d3c98c775a2076cf763b0f2dcaf4b64449b40da6ab097b3c34ca5cc52941ecf",
+    "frontend/dist/assets/index-3ME0teVe.css": "7d496d607eca1f75591b9d0914380711495ae269a3ff861314bbc87d1ee67a9f",
+    "frontend/dist/assets/index-IpmeptTY.js": "08713429af94b02951d61952173792c2284b09c416a67076b57d3bf7bda018c9",
+    "frontend/dist/index.html": "ef9bc1238fd177ed0eef88ff4d8f34015a24413b54aa420ae599aa1c15dd2738",
+    "frontend/scripts/check-discovery.mjs": "5ac7ed88603fed6b263e5e82b7e1cf4850d2ec26dbafa38606d3e0b95237822a",
+    "frontend/src/SelectedCohorts.tsx": "d2358486d015a4fa025a0148b69091e21bdb53d7c5ddcffa5419e13d7786ba74",
+    "frontend/src/report.tsx": "bc7d5066c0d4d05a3ebb11569822f839dee9471630567f112943e2686053f6cb",
+    "frontend/src/styles.css": "1545a734b1999f7cd76f2708aac40dad27087ae8e2c3744d51d4f2bef79c01bf",
+    "frontend/src/types.ts": "c1218d562ae8ee2044e2bdd194904ce773277b83d88eafea4099841e090c4ee3",
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/app.py": "b437ab3dc61a49c261949fb2b003957ccf5278337e38da09840161448940a3f6",
+    "scanner/archive_input.py": "825252529cd2b42f2fe3a9fc98e28c7b4b72b63dcaf9e6ba65204faa26c9f375",
+    "scanner/metric_evidence.py": "1760c72620442d7781786e1cd297210128cd8e3b8433cbfe6a9fb06cfb5fca65",
+    "scanner/report_view.py": "e809083c2fee60dd2da0c8db9f8f5fd4040df8740c10fb2145469c76a62a9bdb",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db",
+    "scanner/wallet_evidence.py": "a5801477a149ef88fae20280a83bdd89ed734285ad9dc557bfcd3a5f4022b36d",
+    "scanner/wallet_identity.py": "f58f5b18599e5ae3da2fe3f972015184d1921a5753ed1369881d90b3db69f98a",
+    "tests/test_accounting_metric_isolation.py": "e7e4293e0975beffd4c1075eaa55bca4d04b0f4ff53c80f7de128b53738561c4",
+    "tests/test_production_evidence_composition.py": "1476554193e1b3ef1ad72f1e7c8e3d71ea007a9ee1903160f91ee7080d1b3ed3",
+    "tests/test_research_disposal_scopes.py": "1119bd77425b533db64b286cf117cd614a1d3ac27ccfb500813b000e3d085515",
+    "tests/test_selected_cohort_observations.py": "7e3fbb6bf0107c9ef67662081dea4d47dc72934f871a3c6327ff22cd26ea31e0",
+    "tests/test_validation_gates.py": "436b6b06f53befd38d9183bb59a4b5730f8fbc73ba952c8192df6c5e0d2513f7",
+    "tests/test_wallet_identity.py": "fb86c10623cd8b52007c4b404d864c4587dc58322a2680ac3dabc198122698a3",
+    "tools/product_browser.py": "094bec0916f1f0a5b5ff1b680ff9f746f98e5ea146945686f5f7fbb28338a331",
+    "tools/validate.py": "a8b16e473b09ac2d3fcf3bc11277aeb8c0a00e4c813fe4bfbf0b8baec4bedcec"
+  },
+  "current_source_sha256": "2812a118042e31cb314df1b0903e028bed9b29f6a4b970569018a2d61148e567",
+  "review_method": "Separate read-only full-batch diff review, shared-source reasoning, five independently worked synthetic reproductions and exact replays; no source edits by reviewer.",
+  "scope": [
+    "Existing FIFO cost/quantity/positive-sale isolation and arithmetic undefined domains",
+    "Named closed cohorts/disposal rows/open-stock dependency projection; exact independent report/28/90-day scopes",
+    "Raw identity current-account request/context/original-byte checks; outer economic signer and all linked alternatives",
+    "Caller-role/byte-envelope native association; frozen source loss/restoration",
+    "Normal/archive import source/chronology/decode/FIFO/immutable saved report/export/rebuild wiring",
+    "UI frozen methodology/interval/null/zero boundary handling and source controls",
+    "Secret-free CI bounded allowlist and exact focused partition/source/command/receipt union",
+    "New acceptance matrix mappings and current issue/source-decision scope"
+  ],
+  "findings": [
+    {
+      "id": "REVIEW-REMAINING-COST",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "receipt": "REMAINING_COST_REPRODUCTION.json"
+    },
+    {
+      "id": "REVIEW-FIFO-PRECISION",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "receipt": "FIFO_PRECISION_REPRODUCTION.json"
+    },
+    {
+      "id": "REVIEW-ACCOUNT-ROLE-ISOLATION",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "receipt": "ACCOUNT_ROLE_ISOLATION_REPRODUCTION.json"
+    },
+    {
+      "id": "REVIEW-SAME-SECOND-TOPUP",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "receipt": "SAME_SECOND_TOPUP_REPRODUCTION.json"
+    },
+    {
+      "id": "REVIEW-SAME-SECOND-DISJOINT-TRANSFER",
+      "blocking": true,
+      "status": "VERIFIED_IN_SCOPE",
+      "receipt": "SAME_SECOND_DISJOINT_TRANSFER_REPRODUCTION.json"
+    }
+  ],
+  "shared_boundary_finding": {
+    "id": "NATIVE-IN-ACCOUNT-BYTE-ENVELOPE",
+    "status": "VERIFIED_IN_SCOPE",
+    "before_evidence": "../identity/native-envelope-api-before-fix.txt",
+    "after_evidence": "NATIVE_ENVELOPE_REPLAY.log",
+    "actual_targeted_nodes": 9,
+    "acceptance_scope": "Overlapping targeted replay only; never add to full-suite totals"
+  },
+  "replay_receipts": [
+    "REPRODUCTION_REPLAY.json",
+    "ORDERED_TRANSFER_REPLAY.json"
+  ],
+  "remaining_product_gaps": [
+    "Historical source/population admission still unproved",
+    "Real wallet-wide position contract still requires complete implementation; current observed_positions requires all FIFO lots closed",
+    "Acquisition/origin/route/eligibility/valuation implementation and accepted source contracts remain incomplete",
+    "B3 genuine whole-wallet acceptance absent; original87 selected dataset remains partial"
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "full_suite_executed_by_reviewer": false,
+  "product_ready": false,
+  "source_finalization_note": "Bind final app identity only after root freezes/builds and verifies no semantic difference from these reviewed hashes."
+}

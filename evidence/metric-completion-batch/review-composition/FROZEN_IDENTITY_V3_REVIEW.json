@@ -1,0 +1,45 @@
+{
+  "kind": "distinct-frozen-v3-review-controls",
+  "state": "PASS",
+  "scope": "Unsigned synthetic development archive on real interface; current-account identity only, never historical population or B3.",
+  "cases": [
+    {
+      "variant": "duplicate",
+      "inventory_rejected": true,
+      "current_account": "UNKNOWN",
+      "frozen_dependency_retained": true
+    },
+    {
+      "variant": "missing-field",
+      "inventory_rejected": true,
+      "current_account": "UNKNOWN",
+      "frozen_dependency_retained": true
+    },
+    {
+      "variant": "malformed",
+      "inventory_rejected": true,
+      "current_account": "UNKNOWN",
+      "frozen_dependency_retained": true
+    },
+    {
+      "variant": "extra-trusted-field",
+      "inventory_rejected": true,
+      "current_account": "UNKNOWN",
+      "frozen_dependency_retained": true
+    },
+    {
+      "variant": "inventory-body-loss-restoration",
+      "lost": "UNKNOWN",
+      "restored": "PASS",
+      "parent_object_unchanged": true
+    }
+  ],
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "source_hashes": {
+    "scanner/archive_input.py": "f70bdf8d9ffd0c0f93445a0b724a1f537fd2123eecf1e039aa895f37acac0d03",
+    "scanner/app.py": "36139c678151382fb6f199a60b7078d005950da2266ebe2b49febc166557f3ef",
+    "scanner/wallet_evidence.py": "fa415523394f53fc6e7b80fa9b0288dfa2318dae42475fb5edddf0943373c29e",
+    "scanner/wallet_identity.py": "88879737774cabcdd48540a42a6aec8a3d16ae3a72c1f37f0445a7adb61d1ac9"
+  }
+}

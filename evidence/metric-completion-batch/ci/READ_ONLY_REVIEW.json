@@ -1,0 +1,45 @@
+{
+  "kind": "CI-resume-read-only-review",
+  "state": "PASS",
+  "scope": "Review of the three owned CI/validator files only. Full candidate validation and native Actions execution remain separate.",
+  "files": {
+    ".github/workflows/offline-focused.yml": "1beacb419b2e5be47d50f86b74c2c3df501f307cadfd509ce92477b6d7317065",
+    "tools/validate.py": "a8b16e473b09ac2d3fcf3bc11277aeb8c0a00e4c813fe4bfbf0b8baec4bedcec",
+    "tests/test_validation_gates.py": "436b6b06f53befd38d9183bb59a4b5730f8fbc73ba952c8192df6c5e0d2513f7"
+  },
+  "changes": [
+    "Six disjoint focused batches; retained original 30 selectors and added five batch regression modules exactly once.",
+    "Receipt union requires exact current source, Git identity, locks and Python/Node runtime, zero-exit PASS gates and unchanged raw log hashes.",
+    "Separate offline-development producer validates actual product receipt, preserves product-ready false/real acceptance blocked, and exposes only safe assertions.",
+    "Fixed bounded diagnostic artifacts exclude private product archives, reports, databases and session state; interrupted/missing groups cannot imply a passing union."
+  ],
+  "reviewed_siblings": [
+    "group receipt loss, corruption, duplicate/unknown group, stale selection/source/runtime/locks/commit and backend command mismatch",
+    "development receipt/command/parent/provider/credential assertions and numeric-one versus exact boolean True",
+    "all matrix group selectors, upload allowlists, workflow pins, network isolation, root privilege drop and always-run summary"
+  ],
+  "new_confirmed_defects": [],
+  "checks": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_validation_gates.py",
+      "result": "114 passed in 0.34 seconds; repeated after selector extension; executions overlap and are not additional unique tests.",
+      "evidence": "VALIDATOR_RESUMED.log, VALIDATOR_EXTENDED.log"
+    },
+    {
+      "command": "PYTHONPATH=. python3 evidence/metric-completion-batch/ci/CHECK_WORKFLOW_STATIC.py",
+      "result": "PASS: exact baseline partition retention, 35 selectors, nine Bash scripts, two embedded Python scripts and bounded artifact scope.",
+      "evidence": "WORKFLOW_STATIC_CONTRACT.json"
+    },
+    {
+      "command": ".venv/bin/python tools/validate.py --profile focused-summary --output evidence/metric-completion-batch/ci/missing-summary-smoke",
+      "result": "Actual INCOMPLETE/exit 2, expected fail-closed control passed.",
+      "evidence": "MISSING_SUMMARY_CONTROL.json"
+    }
+  ],
+  "not_run": [
+    "New native GitHub Actions run (requires published final candidate).",
+    "Full candidate suite and product/frontend profile on final frozen source (owned by parent)."
+  ],
+  "provider_calls": 0,
+  "credential_reads": 0
+}

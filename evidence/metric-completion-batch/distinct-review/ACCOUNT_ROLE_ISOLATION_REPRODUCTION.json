@@ -1,0 +1,271 @@
+{
+  "kind": "distinct-read-only-reproduction",
+  "id": "REVIEW-ACCOUNT-ROLE-ISOLATION",
+  "state": "REPRODUCED",
+  "blocking": true,
+  "scope": "Unsigned synthetic interface control; not B3",
+  "work": "New wallet_identity_dependencies explicitly admits wallet-account-source alias and validates paired current-account bytes, but ordinary raw_native_dependencies fails to recognize alias as nontransaction source, invents unassignable native dependency and revokes independent nativefees/selectedidentity despite identical body.",
+  "expected": {
+    "wallet-account-source": {
+      "native_fee": "PASS",
+      "selected_identity": "PASS",
+      "current_account": "PASS"
+    }
+  },
+  "actual": [
+    {
+      "kind": "wallet-account-info",
+      "native_fee": "PASS",
+      "selected_identity": "PASS",
+      "current_account": "PASS",
+      "source_set": {
+        "state": "PASS",
+        "complete": true,
+        "raw_reference_count": 1,
+        "authenticated_reference_count": 1,
+        "unique_link_count": 1,
+        "unique_hash_count": 1,
+        "invalid_link_count": 0,
+        "unauthenticated_link_count": 0,
+        "omitted_link_count": 0,
+        "invalid_authenticated_link_count": 0,
+        "inspected_hash_count": 1,
+        "omitted_hash_count": 0,
+        "budget": {
+          "max_unique_hashes": 40000
+        },
+        "omitted_scope": null,
+        "reason": "The authenticated link set is fully enumerated and every distinct archive had an inspection attempt within the fixed budget. Usable contents and metric dependencies are assessed separately.",
+        "evidence": [
+          "af566f3da6c741a90bbd3b369a8110f0494176bda94ed5436da2d68d74f03f57"
+        ]
+      }
+    },
+    {
+      "kind": "wallet-account-source",
+      "native_fee": "UNKNOWN",
+      "selected_identity": "UNKNOWN",
+      "current_account": "PASS",
+      "source_set": {
+        "state": "UNKNOWN",
+        "complete": false,
+        "raw_reference_count": 2,
+        "authenticated_reference_count": 2,
+        "unique_link_count": 1,
+        "unique_hash_count": 1,
+        "invalid_link_count": 1,
+        "unauthenticated_link_count": 0,
+        "omitted_link_count": 0,
+        "invalid_authenticated_link_count": 1,
+        "inspected_hash_count": 1,
+        "omitted_hash_count": 0,
+        "budget": {
+          "max_unique_hashes": 40000
+        },
+        "omitted_scope": "entire-source-set",
+        "reason": "Malformed source links leave their relevance unresolved.; The authenticated universe contains an unassignable source link.",
+        "evidence": [
+          "af566f3da6c741a90bbd3b369a8110f0494176bda94ed5436da2d68d74f03f57"
+        ]
+      }
+    }
+  ],
+  "raw_inputs": {
+    "transaction": {
+      "slot": 100,
+      "blockTime": 1790003600,
+      "version": 0,
+      "transaction": {
+        "signatures": [
+          "dev-buy"
+        ],
+        "message": {
+          "accountKeys": [
+            "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+            "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+            "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+            "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF"
+          ],
+          "instructions": [
+            {
+              "programId": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "accounts": [
+                "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+                "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+                "YMN9Qj5jPNp7j14VPcML1B6xGgcPWVZUGLFU3Mnyfaf",
+                "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                "So11111111111111111111111111111111111111112",
+                "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+                "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                "cGfHiC6Kgg3FpFZvgwGcswsCRtp4aBP2fzuXRQPizuN",
+                "gBxS1f6uyyGPuW5MzGBukidSb71jdsCb5fZaoSzULE5",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "11111111111111111111111111111111"
+              ],
+              "data": [
+                "ZgY9EgHa6+oAAAAAAAAAAAAAAAAAAAAA",
+                "base64"
+              ]
+            }
+          ]
+        }
+      },
+      "meta": {
+        "err": null,
+        "fee": 5000,
+        "preBalances": [
+          10000000000,
+          2000000,
+          1002000000,
+          2000000,
+          2000000
+        ],
+        "postBalances": [
+          9999995000,
+          2000000,
+          2000000,
+          2000000,
+          1002000000
+        ],
+        "preTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000000",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          }
+        ],
+        "postTokenBalances": [
+          {
+            "accountIndex": 1,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "100",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 2,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 9
+            }
+          },
+          {
+            "accountIndex": 3,
+            "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6
+            }
+          },
+          {
+            "accountIndex": 4,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "US517G5965aydkZ46HS38QLi7UQiSojurfbQfKCELFx",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "1000000000",
+              "decimals": 9
+            }
+          }
+        ],
+        "innerInstructions": [
+          {
+            "index": 0,
+            "instructions": [
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "LbUiWL3xVV8hTFYBVdbTNrpDo41NKS6o3LHHuDzjfcY",
+                    "destination": "8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR",
+                    "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                    "tokenAmount": {
+                      "amount": "100",
+                      "decimals": 6
+                    }
+                  }
+                }
+              },
+              {
+                "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "parsed": {
+                  "type": "transferChecked",
+                  "info": {
+                    "source": "GgBaCs3NCBuZN12kCJgAW63ydqohFkHEdfdEXBPzLHq",
+                    "destination": "QWmroo4YnnMqYW3cnxWkFdaTxGD3P7vMSzwMHGbUzwF",
+                    "mint": "So11111111111111111111111111111111111111112",
+                    "tokenAmount": {
+                      "amount": "1000000000",
+                      "decimals": 9
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "account_source": {
+      "version": "wallet-account-info-source-v1",
+      "request_hash": "eb445e004a4de046ac1ca3a644fd86987afcaddc5c683ce399f62eaeaf9c4169",
+      "request_base64": "ewogICJqc29ucnBjIjogIjIuMCIsCiAgImlkIjogNywKICAibWV0aG9kIjogImdldEFjY291bnRJbmZvIiwKICAicGFyYW1zIjogWwogICAgIjR2SjlKVTFiSkpFOTZGV1NKS3ZIc21tRkFEQ2c0Z3BaUWZmNFAzYmtMS2kiLAogICAgewogICAgICAiZW5jb2RpbmciOiAianNvblBhcnNlZCIsCiAgICAgICJjb21taXRtZW50IjogImZpbmFsaXplZCIsCiAgICAgICJtaW5Db250ZXh0U2xvdCI6IDk5OQogICAgfQogIF0KfQo=",
+      "response_hash": "5e64e15b736a2bac2277d3494897df56fcb8f19ea9fc24789443a42d7551cf77",
+      "response_base64": "ewogImpzb25ycGMiOiAiMi4wIiwKICJpZCI6IDcsCiAicmVzdWx0IjogewogICJjb250ZXh0IjogewogICAic2xvdCI6IDEwMDAKICB9LAogICJ2YWx1ZSI6IHsKICAgIm93bmVyIjogIjExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExIiwKICAgImV4ZWN1dGFibGUiOiBmYWxzZSwKICAgImxhbXBvcnRzIjogMTAwMCwKICAgImRhdGEiOiBbCiAgICAiIiwKICAgICJiYXNlNjQiCiAgIF0sCiAgICJyZW50RXBvY2giOiAxODQ0Njc0NDA3MzcwOTU1MTYxNQogIH0KIH0KfQo="
+    }
+  },
+  "source_hashes": {
+    "scanner/wallet_evidence.py": "5a5fd10de1a14f700f4abb808aea8cefc9e8dd6ab73e59d60db17afec3b57d8e",
+    "scanner/wallet_identity.py": "88879737774cabcdd48540a42a6aec8a3d16ae3a72c1f37f0445a7adb61d1ac9"
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

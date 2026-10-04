@@ -1,0 +1,67 @@
+........................................................................ [ 67%]
+................FFFF..............                                       [100%]
+=================================== FAILURES ===================================
+_ test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes0] _
+
+hashes = [{}]
+
+    @pytest.mark.parametrize('hashes', [[{}], ['bad'], ['a' * 64, 'a' * 64], 'a' * 64])
+    def test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes(hashes):
+>       with pytest.raises(ValueError, match='query dependency'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'query dependency'
+E         Actual message: 'Frozen source dependency inventory is malformed or exceeds its bound'
+
+tests/test_real_coverage.py:571: AssertionError
+_ test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes1] _
+
+hashes = ['bad']
+
+    @pytest.mark.parametrize('hashes', [[{}], ['bad'], ['a' * 64, 'a' * 64], 'a' * 64])
+    def test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes(hashes):
+>       with pytest.raises(ValueError, match='query dependency'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'query dependency'
+E         Actual message: 'Frozen source dependency inventory is malformed or exceeds its bound'
+
+tests/test_real_coverage.py:571: AssertionError
+_ test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes2] _
+
+hashes = ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa']
+
+    @pytest.mark.parametrize('hashes', [[{}], ['bad'], ['a' * 64, 'a' * 64], 'a' * 64])
+    def test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes(hashes):
+>       with pytest.raises(ValueError, match='query dependency'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'query dependency'
+E         Actual message: 'Frozen source dependency inventory is malformed or exceeds its bound'
+
+tests/test_real_coverage.py:571: AssertionError
+_ test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] _
+
+hashes = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+    @pytest.mark.parametrize('hashes', [[{}], ['bad'], ['a' * 64, 'a' * 64], 'a' * 64])
+    def test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes(hashes):
+>       with pytest.raises(ValueError, match='query dependency'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'query dependency'
+E         Actual message: 'Frozen source dependency inventory is malformed or exceeds its bound'
+
+tests/test_real_coverage.py:571: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes0]
+FAILED tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes1]
+FAILED tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes2]
+FAILED tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]
+4 failed, 102 passed, 1 warning in 9.90s

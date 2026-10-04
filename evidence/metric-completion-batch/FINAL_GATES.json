@@ -1,0 +1,150 @@
+{
+  "kind": "final-scoped-candidate-gates",
+  "state": "SCOPED_PASS_REAL_ACCEPTANCE_BLOCKED",
+  "created_at": "2026-10-04T13:52:08.402486+00:00",
+  "application_commit": "7e4769922ad8055b8c290f7625401d8a42fd183b",
+  "source_sha256": "578029f5d9a608e62b1336889b52e90025831732aeec2cea087a1dd8d57d7ee2",
+  "source_files": 235,
+  "source_unchanged": true,
+  "locks": {
+    "requirements.txt": "88c60cc55ec1816e90411d64aae1d444ae60aaf45b4cbe6235a4cdaca402ff44",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "ccb03e6cad489b756e0be84bdf9e947eb868a2ce690f8fb9a3243a5823cde598",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "node": "24.19.0"
+  },
+  "gate_A": "ACCEPTED_IN_SCOPE",
+  "gate_A_gates": {
+    "runtime": "PASS",
+    "node-runtime": "PASS",
+    "backend": "PASS",
+    "pip-check": "PASS",
+    "shell-syntax": "PASS",
+    "matrix": "PASS",
+    "frontend-locked-install": "PASS",
+    "frontend-check-format": "PASS",
+    "frontend-check-discovery": "PASS",
+    "frontend-build": "PASS",
+    "clean-locked-install": "PASS",
+    "launcher-browser-rebuild": "PASS",
+    "consolidated-review": "PASS"
+  },
+  "full_backend_unique_nodes": 3007,
+  "subtests_separately_reported": 440,
+  "backend_seconds": 486.54,
+  "matrix_requirements": 86,
+  "product_browser_cases": 7,
+  "product_browser_captures": 16,
+  "original_inputs_unchanged": true,
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "PRODUCT_READY": false,
+  "B1": "HISTORICAL_COVERAGE_UNRESOLVED",
+  "B2": "COMPLETE_REAL_ACCOUNTING_OPEN",
+  "B3": "COMPLETE_GENUINE_ACCEPTANCE_BLOCKED",
+  "candidate_classification": [
+    "scoped-valid",
+    "development-functional",
+    "real-acceptance-blocked"
+  ],
+  "remaining_missing_implementation": [
+    "CAP-HIST",
+    "CAP-ORIGIN",
+    "CAP-ROUTES",
+    "CAP-CLASS",
+    "CAP-VALUATION",
+    "CAP-POSITIONS"
+  ],
+  "scope": "Actual final Linux candidate, browser and four workflow-mode checks. Test/subtest/browser totals are separate; targeted or earlier runs not added. Synthetic and selected genuine evidence cannot close wallet-wide readiness. Native hosted CI is separate, not claimed here.",
+  "evidence": [
+    {
+      "path": "evidence/metric-completion-batch/SOURCE_MANIFEST.json",
+      "bytes": 35906,
+      "sha256": "848879de0461b87b07e45eebc2ed746f80b254b335909ec7ba321a3c12b12b54"
+    },
+    {
+      "path": "evidence/metric-completion-batch/FROZEN_CANDIDATE.json",
+      "bytes": 675,
+      "sha256": "36922d9001f4dc7d47dc22003844b46008881813b328818d17c0aef35084abdb"
+    },
+    {
+      "path": "evidence/metric-completion-batch/REVIEW_ACCEPTANCE.json",
+      "bytes": 5133,
+      "sha256": "d094ef9184ef3f0f86887680b3723bb4fc0dcdff360ff701117c0ddd95e6b700"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/result.json",
+      "bytes": 322516,
+      "sha256": "0bd2cb9634ec98ed0628dd6eafa7ba7713fd7a8b5b57d81549ce4988441b7ac1"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/backend.log",
+      "bytes": 3907,
+      "sha256": "56e1491ab884b2cdb86c48e3e9afd7702fae7ca5ca5a17086d6a456ec2c6e7f4"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/matrix.json",
+      "bytes": 247861,
+      "sha256": "21d411c1a42d9628f212819166b9de54f4de44f4078eef1a2b2a4f2ec3428d13"
+    },
+    {
+      "path": "evidence/metric-completion-batch/gate-a-accepted/browser/result.json",
+      "bytes": 3029,
+      "sha256": "e41bf54ec8d9da1f50503b7a7d9847f2f50167a186a8c9268b9b3c89b134caf0"
+    },
+    {
+      "path": "evidence/metric-completion-batch/CANDIDATE_ACCEPTED_COMMAND.log",
+      "bytes": 637,
+      "sha256": "9b985abeedf7ff2d32b71bb25dad6e17f91ea06f4015decad4170e1af1773a36"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired/result.json",
+      "bytes": 10043,
+      "sha256": "e3af79c5d253b2ca4ea6e5dd7f1e380ad4a7c56c12213c943f64075ce2f50b82"
+    },
+    {
+      "path": "evidence/metric-completion-batch/product-browser-repaired-command/COMMAND.json",
+      "bytes": 4076,
+      "sha256": "f7af10dcca1bf615c246d8d42bb94ef04d3e5a3ce7bcf9b7c328f985c7e15fe5"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/INDEX.json",
+      "bytes": 9672,
+      "sha256": "f2f4bb9735f8cde253d4ba2c756548db9f3e3a541b30740c58066afbd001e28c"
+    },
+    {
+      "path": "evidence/metric-completion-batch/FRESH_SOURCE_EXTRACTION_7e47699.json",
+      "bytes": 155602,
+      "sha256": "4fd571901aef8ba0e679f4099f2b3630bdaaaf3bfdb77d7f80cb8a742c2bf1a6"
+    },
+    {
+      "path": "evidence/metric-completion-batch/distinct-review/HARNESS_READ_ONLY_REVIEW.json",
+      "bytes": 45942,
+      "sha256": "bfce1d697a3df3d1699de047aa508d9b85da72d2f07fec8092cf7e0af265e014"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-development/result.json",
+      "bytes": 728677,
+      "sha256": "b879bdacf1b130c91f81449dd1e1d551570773b3b17431bdf35b76e1779a7354"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/genuine-real-acceptance/result.json",
+      "bytes": 728647,
+      "sha256": "ac1dd02dcfc93a46cd7882d66ce0e19b8a69247a26b88ceb9ee9f32585824276"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-development/result.json",
+      "bytes": 3279,
+      "sha256": "b9fe0a1f806ba96ebb49a098f815ae32edac8cc7eefadf4b6b550d8d2d7e701a"
+    },
+    {
+      "path": "evidence/metric-completion-batch/final-replays-accepted/product-real-acceptance/result.json",
+      "bytes": 3269,
+      "sha256": "94847e20a3eb97e4ba49ad1769e3ec4b29fd984320b815617eb341272196c8eb"
+    }
+  ]
+}

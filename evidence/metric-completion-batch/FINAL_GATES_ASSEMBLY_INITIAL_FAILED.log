@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/outputs/metric-completion-publication/assemble_final_gates.py", line 42, in <module>
+    assert receipt['usage_unchanged'] is True and receipt['PRODUCT_READY'] is False and receipt['oracle_frozen_before_application'] is True and receipt['archive_sha256']==f['preserved_genuine_inputs']['evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip']['sha256'] and receipt['worked_expectations_sha256']==f['preserved_genuine_inputs']['evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json']['sha256']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

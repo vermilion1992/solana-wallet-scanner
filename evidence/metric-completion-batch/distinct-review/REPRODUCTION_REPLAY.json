@@ -1,0 +1,35 @@
+{
+  "kind": "distinct-reproduction-replay",
+  "state": "PASS",
+  "checks": [
+    {
+      "reproduction": "REMAINING_COST_REPRODUCTION.json",
+      "state": "PASS",
+      "old_receipt_sha256": "44f33fb6c8648fcd2f231e9737ebe0dc56db77bae9c0d38287037a0be246b77f"
+    },
+    {
+      "reproduction": "FIFO_PRECISION_REPRODUCTION.json",
+      "state": "PASS",
+      "old_receipt_sha256": "0f64dd567769bb89da051c2b5500d55294ab29e2ac4b21f93d75661abfebd1c5"
+    },
+    {
+      "reproduction": "ACCOUNT_ROLE_ISOLATION_REPRODUCTION.json",
+      "state": "PASS",
+      "old_receipt_sha256": "cae10242c5d6185cea13250a9d5279d157e3d06d28bfa260d05834f094792fe0"
+    },
+    {
+      "reproduction": "SAME_SECOND_TOPUP_REPRODUCTION.json",
+      "state": "PASS",
+      "old_receipt_sha256": "451ddfc4ae51d68a9af8b92d47b05308fb641a15e836c3e75e310a35e449ebe1"
+    }
+  ],
+  "source_hashes": {
+    "scanner/accounting.py": "a13eb82cc65bd7eaafd51963566fc9a27b3827e9afb7896d8e13a7764902f85f",
+    "scanner/wallet_evidence.py": "894c140973b1af905d302a5b053c34462d26a26acc66aedb9b15c9836959857a",
+    "scanner/wallet_identity.py": "88879737774cabcdd48540a42a6aec8a3d16ae3a72c1f37f0445a7adb61d1ac9",
+    "scanner/research.py": "d93c3a7c4e71cfe89fb8bc357a40d4c59a79d2bebbb20b89981c20d05546c6db"
+  },
+  "provider_requests": 0,
+  "credential_lookups": 0,
+  "scope": "Four independent synthetic implementation controls only, no complete suite or B3 claim"
+}

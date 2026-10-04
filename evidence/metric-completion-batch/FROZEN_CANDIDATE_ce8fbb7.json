@@ -1,0 +1,18 @@
+{
+  "application_commit": "ce8fbb7a5a55290627234fa3febb5629c9a4ed73",
+  "source_sha256": "72b5903eb79142b79e9e61fce9a49b1400f75911fa537dfc786d1cbd2b5d36bd",
+  "source_files": 235,
+  "preserved_genuine_inputs": {
+    "evidence/genuine-wallet-batch/checker-inputs/final-indexed-input.zip": {
+      "bytes": 156832,
+      "sha256": "eec702fdd821066897710d2085bf5c39380e303e8426249e22fb6379b7ccf1b4"
+    },
+    "evidence/genuine-wallet-batch/WORKED_REAL_EXPECTATIONS_FINAL.json": {
+      "bytes": 177454,
+      "sha256": "97c9f92202398aef69ef0e2ce78f3d81ef67814187ca233ce5c36f8363cde9ba"
+    }
+  },
+  "product_ready": false,
+  "provider_requests": 0,
+  "credential_lookups": 0
+}

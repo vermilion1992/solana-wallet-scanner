@@ -1,0 +1,58 @@
+{
+  "kind": "frontend-iteration-controls",
+  "state": "PASS",
+  "timestamp_utc": "2026-10-04T13:16:15.656703+00:00",
+  "scope": "Existing frontend runner and formatting controls; current backend browser integration not executed in this record; no application acceptance claimed.",
+  "source_hashes": {
+    "frontend/src/SelectedCohorts.tsx": "e7ff0d9135b773ff0c4ae4251f877746d706430c7abad852c58330f376794f7d",
+    "frontend/src/types.ts": "c1218d562ae8ee2044e2bdd194904ce773277b83d88eafea4099841e090c4ee3",
+    "frontend/src/report.tsx": "bc7d5066c0d4d05a3ebb11569822f839dee9471630567f112943e2686053f6cb",
+    "frontend/src/styles.css": "1545a734b1999f7cd76f2708aac40dad27087ae8e2c3744d51d4f2bef79c01bf",
+    "frontend/scripts/check-discovery.mjs": "35f9fcc27ee8e224cd6a8709bb9fa878dc41180075e4a5209c6b555cebebe792",
+    "tools/product_browser.py": "798921f546332914578f044cf8edf020a4d066250d91565f8536fcdb3a9432dc"
+  },
+  "source_unchanged": true,
+  "checks": [
+    {
+      "name": "discovery",
+      "command": [
+        "npm",
+        "run",
+        "check:discovery"
+      ],
+      "cwd": "/workspace/solana-wallet-scanner/frontend",
+      "exit_code": 0,
+      "state": "PASS",
+      "log": "evidence/metric-completion-batch/frontend/discovery.log",
+      "sha256": "b7667c1e4275b0064701f64bc363c0824d6226bcc0504375ff6a80ffcc38a2f9"
+    },
+    {
+      "name": "format",
+      "command": [
+        "npm",
+        "run",
+        "check:format"
+      ],
+      "cwd": "/workspace/solana-wallet-scanner/frontend",
+      "exit_code": 0,
+      "state": "PASS",
+      "log": "evidence/metric-completion-batch/frontend/format.log",
+      "sha256": "bf8e067a02c8b358e1ae272580092c62542273b7dfb3f5748a1c581b2b8049c6"
+    },
+    {
+      "name": "browser-syntax",
+      "command": [
+        "/workspace/solana-wallet-scanner/.venv/bin/python",
+        "-m",
+        "py_compile",
+        "tools/product_browser.py"
+      ],
+      "cwd": "/workspace/solana-wallet-scanner",
+      "exit_code": 0,
+      "state": "PASS",
+      "log": "evidence/metric-completion-batch/frontend/browser-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "node": "v24.19.0"
+}

@@ -1,0 +1,158 @@
+.....................................FFFFFF.....F..                      [100%]
+=================================== FAILURES ===================================
+_ test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes0] _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a802509e0>, <fastapi.applications.FastAPI object at 0x7f1a8033b7d0>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_state_summary_recomputes_0/data'))
+changes = {}
+
+    @pytest.mark.parametrize('changes', [{}, {'methodology': 'fifo-v1'}, {'evidence_status': 'partial'}, {'preview': True}, {'preview': None}, {'preview': 0}])
+    def test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress(session, changes):
+        client, app, _ = session
+        original = rich_report(app.state.store, **changes)
+        store_linked_cohort(app.state.store, [original])
+        before = saved_payload(app.state.store, original['id'])
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        assert_summary_equal(summary['reports'][0], full['reports'][0])
+        for key in ('discovery_cohorts', 'candidate_universe', 'scans', 'usage'):
+            assert summary[key] == full[key], key
+        assert summary['reports'][0]['report_view']['view'] == 'summary'
+>       assert 'positions' not in summary['reports'][0] and 'wallet_evidence' not in summary['reports'][0]['coverage']
+E       AssertionError: assert ('positions' not in {'id': 'view-report', 'scan_id': 'scan-view-report', 'address': '11111111111111111111111111111111', 'label': 'Review candidate', ...} and 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...})
+
+tests/test_report_view.py:85: AssertionError
+_ test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes1] _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a80339340>, <fastapi.applications.FastAPI object at 0x7f1a7f94e090>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_state_summary_recomputes_1/data'))
+changes = {'methodology': 'fifo-v1'}
+
+    @pytest.mark.parametrize('changes', [{}, {'methodology': 'fifo-v1'}, {'evidence_status': 'partial'}, {'preview': True}, {'preview': None}, {'preview': 0}])
+    def test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress(session, changes):
+        client, app, _ = session
+        original = rich_report(app.state.store, **changes)
+        store_linked_cohort(app.state.store, [original])
+        before = saved_payload(app.state.store, original['id'])
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        assert_summary_equal(summary['reports'][0], full['reports'][0])
+        for key in ('discovery_cohorts', 'candidate_universe', 'scans', 'usage'):
+            assert summary[key] == full[key], key
+        assert summary['reports'][0]['report_view']['view'] == 'summary'
+>       assert 'positions' not in summary['reports'][0] and 'wallet_evidence' not in summary['reports'][0]['coverage']
+E       AssertionError: assert ('positions' not in {'id': 'view-report', 'scan_id': 'scan-view-report', 'address': '11111111111111111111111111111111', 'label': 'Review candidate', ...} and 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...})
+
+tests/test_report_view.py:85: AssertionError
+_ test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes2] _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a7f9489e0>, <fastapi.applications.FastAPI object at 0x7f1a7f94a510>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_state_summary_recomputes_2/data'))
+changes = {'evidence_status': 'partial'}
+
+    @pytest.mark.parametrize('changes', [{}, {'methodology': 'fifo-v1'}, {'evidence_status': 'partial'}, {'preview': True}, {'preview': None}, {'preview': 0}])
+    def test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress(session, changes):
+        client, app, _ = session
+        original = rich_report(app.state.store, **changes)
+        store_linked_cohort(app.state.store, [original])
+        before = saved_payload(app.state.store, original['id'])
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        assert_summary_equal(summary['reports'][0], full['reports'][0])
+        for key in ('discovery_cohorts', 'candidate_universe', 'scans', 'usage'):
+            assert summary[key] == full[key], key
+        assert summary['reports'][0]['report_view']['view'] == 'summary'
+>       assert 'positions' not in summary['reports'][0] and 'wallet_evidence' not in summary['reports'][0]['coverage']
+E       AssertionError: assert ('positions' not in {'id': 'view-report', 'scan_id': 'scan-view-report', 'address': '11111111111111111111111111111111', 'label': 'Review candidate', ...} and 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...})
+
+tests/test_report_view.py:85: AssertionError
+_ test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes3] _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a7f95af90>, <fastapi.applications.FastAPI object at 0x7f1a7f9e8710>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_state_summary_recomputes_3/data'))
+changes = {'preview': True}
+
+    @pytest.mark.parametrize('changes', [{}, {'methodology': 'fifo-v1'}, {'evidence_status': 'partial'}, {'preview': True}, {'preview': None}, {'preview': 0}])
+    def test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress(session, changes):
+        client, app, _ = session
+        original = rich_report(app.state.store, **changes)
+        store_linked_cohort(app.state.store, [original])
+        before = saved_payload(app.state.store, original['id'])
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        assert_summary_equal(summary['reports'][0], full['reports'][0])
+        for key in ('discovery_cohorts', 'candidate_universe', 'scans', 'usage'):
+            assert summary[key] == full[key], key
+        assert summary['reports'][0]['report_view']['view'] == 'summary'
+>       assert 'positions' not in summary['reports'][0] and 'wallet_evidence' not in summary['reports'][0]['coverage']
+E       AssertionError: assert ('positions' not in {'id': 'view-report', 'scan_id': 'scan-view-report', 'address': '11111111111111111111111111111111', 'label': 'Review candidate', ...} and 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...})
+
+tests/test_report_view.py:85: AssertionError
+_ test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes4] _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a7f98fe90>, <fastapi.applications.FastAPI object at 0x7f1a7f98faa0>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_state_summary_recomputes_4/data'))
+changes = {'preview': None}
+
+    @pytest.mark.parametrize('changes', [{}, {'methodology': 'fifo-v1'}, {'evidence_status': 'partial'}, {'preview': True}, {'preview': None}, {'preview': 0}])
+    def test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress(session, changes):
+        client, app, _ = session
+        original = rich_report(app.state.store, **changes)
+        store_linked_cohort(app.state.store, [original])
+        before = saved_payload(app.state.store, original['id'])
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        assert_summary_equal(summary['reports'][0], full['reports'][0])
+        for key in ('discovery_cohorts', 'candidate_universe', 'scans', 'usage'):
+            assert summary[key] == full[key], key
+        assert summary['reports'][0]['report_view']['view'] == 'summary'
+>       assert 'positions' not in summary['reports'][0] and 'wallet_evidence' not in summary['reports'][0]['coverage']
+E       AssertionError: assert ('positions' not in {'id': 'view-report', 'scan_id': 'scan-view-report', 'address': '11111111111111111111111111111111', 'label': 'Review candidate', ...} and 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...})
+
+tests/test_report_view.py:85: AssertionError
+_ test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes5] _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a7f847440>, <fastapi.applications.FastAPI object at 0x7f1a7f948440>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_state_summary_recomputes_5/data'))
+changes = {'preview': 0}
+
+    @pytest.mark.parametrize('changes', [{}, {'methodology': 'fifo-v1'}, {'evidence_status': 'partial'}, {'preview': True}, {'preview': None}, {'preview': 0}])
+    def test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress(session, changes):
+        client, app, _ = session
+        original = rich_report(app.state.store, **changes)
+        store_linked_cohort(app.state.store, [original])
+        before = saved_payload(app.state.store, original['id'])
+        full = client.get('/api/state').json()
+        summary = client.get('/api/state?report_view=summary').json()
+        assert_summary_equal(summary['reports'][0], full['reports'][0])
+        for key in ('discovery_cohorts', 'candidate_universe', 'scans', 'usage'):
+            assert summary[key] == full[key], key
+        assert summary['reports'][0]['report_view']['view'] == 'summary'
+>       assert 'positions' not in summary['reports'][0] and 'wallet_evidence' not in summary['reports'][0]['coverage']
+E       AssertionError: assert ('positions' not in {'id': 'view-report', 'scan_id': 'scan-view-report', 'address': '11111111111111111111111111111111', 'label': 'Review candidate', ...} and 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...})
+
+tests/test_report_view.py:85: AssertionError
+_ test_transient_helpers_never_edit_nested_original_and_summary_of_full_is_compact _
+
+session = (<starlette.testclient.TestClient object at 0x7f1a7f9a0050>, <fastapi.applications.FastAPI object at 0x7f1a7f93b8f0>, PosixPath('/tmp/pytest-of-agent/pytest-399/test_transient_helpers_never_e0/data'))
+
+    def test_transient_helpers_never_edit_nested_original_and_summary_of_full_is_compact(session):
+        _, app, _ = session
+        original = rich_report(app.state.store)
+        frozen = deepcopy(original)
+        display = display_view(original)
+        summary = summary_view(original)
+        assert original == frozen
+>       assert 'wallet_evidence' not in summary['coverage']
+E       AssertionError: assert 'wallet_evidence' not in {'history_evidence': {'version': 'history-evidence-v11'}, 'position_evidence': {'version': 'account-position-evidence-v13'}, 'wallet_evidence': {'version': 'wallet-test'}, 'history_scope_complete': True, ...}
+
+tests/test_report_view.py:153: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_report_view.py::test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes0]
+FAILED tests/test_report_view.py::test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes1]
+FAILED tests/test_report_view.py::test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes2]
+FAILED tests/test_report_view.py::test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes3]
+FAILED tests/test_report_view.py::test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes4]
+FAILED tests/test_report_view.py::test_state_summary_recomputes_exact_full_qualification_review_and_candidate_progress[changes5]
+FAILED tests/test_report_view.py::test_transient_helpers_never_edit_nested_original_and_summary_of_full_is_compact
+7 failed, 44 passed, 1 warning in 0.82s

@@ -1,0 +1,1385 @@
+{
+  "kind": "independent-composition-reproduction",
+  "dataset": "synthetic-development-only",
+  "scope": "Current normal archive accounting path; missing one native fee with physical inventory, classification and interval proofs retained.",
+  "original_fixture_sha256": "c4405cad84cdefcf7e9423d72092e35eaecebc2197292720b2aa710ee46ee343",
+  "changed": "One selected meta.fee set to null; exact hash references updated; no source omitted.",
+  "source_hashes": {
+    "scanner/archive_input.py": "32328939a6a0de29a2b805aa45da333bef3c26ed1d3bf82c316f45db9d508d86",
+    "scanner/accounting.py": "febfdf22a3b3ecc840ef596653823c805063a38fbb933e3e17e2c6a98ac233ea",
+    "scanner/metric_evidence.py": "5542169fe916a63bc6f543889abf6b6ae2c38edce5640a58adfc66c53fe3d298"
+  },
+  "quantity_population_state": "PASS",
+  "independently_retained_quantity_holds": [
+    "24",
+    "24",
+    "24",
+    "696",
+    "72"
+  ],
+  "metrics": {
+    "profit_sol": {
+      "value": null,
+      "unit": "SOL",
+      "status": "unknown",
+      "population": "In-window meme disposals less matched basis, exit costs and trading overhead",
+      "reason": "classification: Each traded asset needs one available development classification.; acquisition_basis: Supported origins and cost roles require the financial source scope.; economic_costs: Supported origins and cost roles require the financial source scope.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v1",
+        "state": "UNKNOWN",
+        "interval": "report_period",
+        "scope": "report_period",
+        "dependencies": [
+          "historical_population",
+          "interval_records",
+          "event_ownership",
+          "quantity_continuity",
+          "chronology",
+          "classification",
+          "acquisition_basis",
+          "economic_costs"
+        ],
+        "unresolved_dependencies": [
+          "classification",
+          "acquisition_basis",
+          "economic_costs",
+          "metric_observation"
+        ],
+        "reason": "classification: Each traded asset needs one available development classification.; acquisition_basis: Supported origins and cost roles require the financial source scope.; economic_costs: Supported origins and cost roles require the financial source scope.; metric_observation: Incomplete basis, chronology, classification or interrupted eligible episode",
+        "evidence": [
+          "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+          "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+          "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+          "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+          "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+        ],
+        "component_scopes": {
+          "historical_population": "synthetic finite world; development only",
+          "interval_records": "synthetic finite world; development only",
+          "event_ownership": "synthetic finite world; development only",
+          "quantity_continuity": "synthetic finite world; development only",
+          "chronology": "synthetic finite world; development only",
+          "classification": "synthetic finite world; development only",
+          "acquisition_basis": "synthetic finite world; development only",
+          "economic_costs": "synthetic finite world; development only"
+        },
+        "checks": {
+          "historical_population": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "interval_records": {
+            "state": "PASS",
+            "reason": "Finite world independently spans this interval.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "event_ownership": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "quantity_continuity": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "chronology": {
+            "state": "PASS",
+            "reason": "Shared raw chronology must support the finite-world ordering.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "classification": {
+            "state": "UNKNOWN",
+            "reason": "Each traded asset needs one available development classification.",
+            "evidence": [
+              "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+              "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+              "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+              "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "acquisition_basis": {
+            "state": "UNKNOWN",
+            "reason": "Supported origins and cost roles require the financial source scope.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "economic_costs": {
+            "state": "UNKNOWN",
+            "reason": "Supported origins and cost roles require the financial source scope.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          }
+        }
+      }
+    },
+    "median_hold_hours": {
+      "value": null,
+      "unit": "hours",
+      "status": "unknown",
+      "population": "First acquisition to final sale; strict-zero closes inside reporting window",
+      "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v1",
+        "state": "UNKNOWN",
+        "interval": "report_period",
+        "scope": "report_period",
+        "dependencies": [
+          "historical_population",
+          "interval_records",
+          "event_ownership",
+          "quantity_continuity",
+          "chronology",
+          "classification",
+          "positions"
+        ],
+        "unresolved_dependencies": [
+          "classification",
+          "metric_observation"
+        ],
+        "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+        "evidence": [
+          "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+          "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+          "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+          "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+          "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+        ],
+        "component_scopes": {
+          "historical_population": "synthetic finite world; development only",
+          "interval_records": "synthetic finite world; development only",
+          "event_ownership": "synthetic finite world; development only",
+          "quantity_continuity": "synthetic finite world; development only",
+          "chronology": "synthetic finite world; development only",
+          "classification": "synthetic finite world; development only",
+          "positions": "synthetic finite world; development only"
+        },
+        "checks": {
+          "historical_population": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "interval_records": {
+            "state": "PASS",
+            "reason": "Finite world independently spans this interval.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "event_ownership": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "quantity_continuity": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "chronology": {
+            "state": "PASS",
+            "reason": "Shared raw chronology must support the finite-world ordering.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "classification": {
+            "state": "UNKNOWN",
+            "reason": "Each traded asset needs one available development classification.",
+            "evidence": [
+              "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+              "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+              "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+              "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "positions": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          }
+        }
+      }
+    },
+    "completed_positions": {
+      "value": null,
+      "unit": "positions",
+      "status": "unknown",
+      "population": "Strict-zero completed episodes closing in report window",
+      "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v1",
+        "state": "UNKNOWN",
+        "interval": "report_period",
+        "scope": "report_period",
+        "dependencies": [
+          "historical_population",
+          "interval_records",
+          "event_ownership",
+          "quantity_continuity",
+          "chronology",
+          "classification",
+          "positions"
+        ],
+        "unresolved_dependencies": [
+          "classification",
+          "metric_observation"
+        ],
+        "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+        "evidence": [
+          "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+          "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+          "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+          "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+          "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+        ],
+        "component_scopes": {
+          "historical_population": "synthetic finite world; development only",
+          "interval_records": "synthetic finite world; development only",
+          "event_ownership": "synthetic finite world; development only",
+          "quantity_continuity": "synthetic finite world; development only",
+          "chronology": "synthetic finite world; development only",
+          "classification": "synthetic finite world; development only",
+          "positions": "synthetic finite world; development only"
+        },
+        "checks": {
+          "historical_population": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "interval_records": {
+            "state": "PASS",
+            "reason": "Finite world independently spans this interval.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "event_ownership": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "quantity_continuity": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "chronology": {
+            "state": "PASS",
+            "reason": "Shared raw chronology must support the finite-world ordering.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "classification": {
+            "state": "UNKNOWN",
+            "reason": "Each traded asset needs one available development classification.",
+            "evidence": [
+              "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+              "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+              "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+              "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "positions": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          }
+        }
+      }
+    },
+    "completed_positions_90d": {
+      "value": null,
+      "unit": "positions",
+      "status": "unknown",
+      "population": "Strict-zero completed episodes closing in 90 days ending at report end",
+      "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v1",
+        "state": "UNKNOWN",
+        "interval": "verification_90d",
+        "scope": "verification_90d",
+        "dependencies": [
+          "historical_population",
+          "interval_records",
+          "event_ownership",
+          "quantity_continuity",
+          "chronology",
+          "classification",
+          "positions"
+        ],
+        "unresolved_dependencies": [
+          "classification",
+          "metric_observation"
+        ],
+        "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+        "evidence": [
+          "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+          "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+          "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+          "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+          "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+        ],
+        "component_scopes": {
+          "historical_population": "synthetic finite world; development only",
+          "interval_records": "synthetic finite world; development only",
+          "event_ownership": "synthetic finite world; development only",
+          "quantity_continuity": "synthetic finite world; development only",
+          "chronology": "synthetic finite world; development only",
+          "classification": "synthetic finite world; development only",
+          "positions": "synthetic finite world; development only"
+        },
+        "checks": {
+          "historical_population": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "interval_records": {
+            "state": "PASS",
+            "reason": "Finite world independently spans this interval.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "event_ownership": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "quantity_continuity": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "chronology": {
+            "state": "PASS",
+            "reason": "Shared raw chronology must support the finite-world ordering.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "classification": {
+            "state": "UNKNOWN",
+            "reason": "Each traded asset needs one available development classification.",
+            "evidence": [
+              "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+              "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+              "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+              "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "positions": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          }
+        }
+      }
+    },
+    "avg_buys": {
+      "value": null,
+      "unit": "buys/episode",
+      "status": "unknown",
+      "population": "Buy events per strict-zero completed episode",
+      "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v1",
+        "state": "UNKNOWN",
+        "interval": "report_period",
+        "scope": "report_period",
+        "dependencies": [
+          "historical_population",
+          "interval_records",
+          "event_ownership",
+          "quantity_continuity",
+          "chronology",
+          "classification",
+          "positions"
+        ],
+        "unresolved_dependencies": [
+          "classification",
+          "metric_observation"
+        ],
+        "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+        "evidence": [
+          "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+          "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+          "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+          "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+          "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+        ],
+        "component_scopes": {
+          "historical_population": "synthetic finite world; development only",
+          "interval_records": "synthetic finite world; development only",
+          "event_ownership": "synthetic finite world; development only",
+          "quantity_continuity": "synthetic finite world; development only",
+          "chronology": "synthetic finite world; development only",
+          "classification": "synthetic finite world; development only",
+          "positions": "synthetic finite world; development only"
+        },
+        "checks": {
+          "historical_population": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "interval_records": {
+            "state": "PASS",
+            "reason": "Finite world independently spans this interval.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "event_ownership": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "quantity_continuity": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "chronology": {
+            "state": "PASS",
+            "reason": "Shared raw chronology must support the finite-world ordering.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "classification": {
+            "state": "UNKNOWN",
+            "reason": "Each traded asset needs one available development classification.",
+            "evidence": [
+              "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+              "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+              "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+              "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "positions": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          }
+        }
+      }
+    },
+    "avg_sells": {
+      "value": null,
+      "unit": "sells/episode",
+      "status": "unknown",
+      "population": "Sale events per strict-zero completed episode",
+      "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "02a2f33e4c75eb340f7cef115637d2cbcf19de45d4d5d6c3c2d7afae73b4ed74",
+        "03bbe4e651b74d2bff8b8e75c2615a2f9cf5b76c96e8c78468689bf10c77fd41",
+        "1376b2c76f8f3e40d5a385e129a1484ff886852955c9266936705c9ce8ef76ad",
+        "2cce942f3a0dbbec5bdb3ec2ea3b153652323400515b9f8d95313d661a7a9cae",
+        "340e75994b78f6c66b504a97eb8f453e6f00c152c4e6d39be91b48621d70701b",
+        "3df2ef007c3d8d2c0b5f0987e686158904d9370812789a7a8a6386b84ba8f190",
+        "788853650d3236b9bdf4114e82767337e89047d540dd9981f22016a42c1094cf",
+        "8df2e48ebbecfb5fbb64600cb26f5a15c67245cb7595e76ab000f0e45b7199fb",
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b30d78160e2fce3c357b44a671872a6d5b8d6541bcd560daf724859a87b71b95",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "bd28382f2fd3a0e565ed08442a477333c01191e31d39041698d47172f10ace51",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03",
+        "e58005be8563aab601d6fa9352731d4bfc77263a869faf9cab09984ab3fa0c99"
+      ],
+      "evidence_decision": {
+        "version": "metric-evidence-v1",
+        "state": "UNKNOWN",
+        "interval": "report_period",
+        "scope": "report_period",
+        "dependencies": [
+          "historical_population",
+          "interval_records",
+          "event_ownership",
+          "quantity_continuity",
+          "chronology",
+          "classification",
+          "positions"
+        ],
+        "unresolved_dependencies": [
+          "classification",
+          "metric_observation"
+        ],
+        "reason": "classification: Each traded asset needs one available development classification.; metric_observation: Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+        "evidence": [
+          "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+          "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+          "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+          "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+          "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+        ],
+        "component_scopes": {
+          "historical_population": "synthetic finite world; development only",
+          "interval_records": "synthetic finite world; development only",
+          "event_ownership": "synthetic finite world; development only",
+          "quantity_continuity": "synthetic finite world; development only",
+          "chronology": "synthetic finite world; development only",
+          "classification": "synthetic finite world; development only",
+          "positions": "synthetic finite world; development only"
+        },
+        "checks": {
+          "historical_population": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "interval_records": {
+            "state": "PASS",
+            "reason": "Finite world independently spans this interval.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "event_ownership": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "quantity_continuity": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "chronology": {
+            "state": "PASS",
+            "reason": "Shared raw chronology must support the finite-world ordering.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "classification": {
+            "state": "UNKNOWN",
+            "reason": "Each traded asset needs one available development classification.",
+            "evidence": [
+              "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+              "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+              "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+              "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+            ],
+            "scope": "synthetic finite world; development only"
+          },
+          "positions": {
+            "state": "PASS",
+            "reason": "Validated finite-world quantity population.",
+            "evidence": [
+              "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+            ],
+            "scope": "synthetic finite world; development only"
+          }
+        }
+      }
+    }
+  },
+  "dependency_only": {
+    "profit_sol": {
+      "version": "metric-evidence-v1",
+      "state": "UNKNOWN",
+      "interval": "report_period",
+      "scope": "report_period",
+      "dependencies": [
+        "historical_population",
+        "interval_records",
+        "event_ownership",
+        "quantity_continuity",
+        "chronology",
+        "classification",
+        "acquisition_basis",
+        "economic_costs"
+      ],
+      "unresolved_dependencies": [
+        "classification",
+        "acquisition_basis",
+        "economic_costs"
+      ],
+      "reason": "classification: Each traded asset needs one available development classification.; acquisition_basis: Supported origins and cost roles require the financial source scope.; economic_costs: Supported origins and cost roles require the financial source scope.",
+      "evidence": [
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+      ],
+      "component_scopes": {
+        "historical_population": "synthetic finite world; development only",
+        "interval_records": "synthetic finite world; development only",
+        "event_ownership": "synthetic finite world; development only",
+        "quantity_continuity": "synthetic finite world; development only",
+        "chronology": "synthetic finite world; development only",
+        "classification": "synthetic finite world; development only",
+        "acquisition_basis": "synthetic finite world; development only",
+        "economic_costs": "synthetic finite world; development only"
+      },
+      "checks": {
+        "historical_population": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "interval_records": {
+          "state": "PASS",
+          "reason": "Finite world independently spans this interval.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "event_ownership": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "quantity_continuity": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "chronology": {
+          "state": "PASS",
+          "reason": "Shared raw chronology must support the finite-world ordering.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "classification": {
+          "state": "UNKNOWN",
+          "reason": "Each traded asset needs one available development classification.",
+          "evidence": [
+            "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+            "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+            "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+            "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "acquisition_basis": {
+          "state": "UNKNOWN",
+          "reason": "Supported origins and cost roles require the financial source scope.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "economic_costs": {
+          "state": "UNKNOWN",
+          "reason": "Supported origins and cost roles require the financial source scope.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        }
+      }
+    },
+    "median_hold_hours": {
+      "version": "metric-evidence-v1",
+      "state": "UNKNOWN",
+      "interval": "report_period",
+      "scope": "report_period",
+      "dependencies": [
+        "historical_population",
+        "interval_records",
+        "event_ownership",
+        "quantity_continuity",
+        "chronology",
+        "classification",
+        "positions"
+      ],
+      "unresolved_dependencies": [
+        "classification"
+      ],
+      "reason": "classification: Each traded asset needs one available development classification.",
+      "evidence": [
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+      ],
+      "component_scopes": {
+        "historical_population": "synthetic finite world; development only",
+        "interval_records": "synthetic finite world; development only",
+        "event_ownership": "synthetic finite world; development only",
+        "quantity_continuity": "synthetic finite world; development only",
+        "chronology": "synthetic finite world; development only",
+        "classification": "synthetic finite world; development only",
+        "positions": "synthetic finite world; development only"
+      },
+      "checks": {
+        "historical_population": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "interval_records": {
+          "state": "PASS",
+          "reason": "Finite world independently spans this interval.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "event_ownership": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "quantity_continuity": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "chronology": {
+          "state": "PASS",
+          "reason": "Shared raw chronology must support the finite-world ordering.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "classification": {
+          "state": "UNKNOWN",
+          "reason": "Each traded asset needs one available development classification.",
+          "evidence": [
+            "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+            "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+            "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+            "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "positions": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        }
+      }
+    },
+    "completed_positions": {
+      "version": "metric-evidence-v1",
+      "state": "UNKNOWN",
+      "interval": "report_period",
+      "scope": "report_period",
+      "dependencies": [
+        "historical_population",
+        "interval_records",
+        "event_ownership",
+        "quantity_continuity",
+        "chronology",
+        "classification",
+        "positions"
+      ],
+      "unresolved_dependencies": [
+        "classification"
+      ],
+      "reason": "classification: Each traded asset needs one available development classification.",
+      "evidence": [
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+      ],
+      "component_scopes": {
+        "historical_population": "synthetic finite world; development only",
+        "interval_records": "synthetic finite world; development only",
+        "event_ownership": "synthetic finite world; development only",
+        "quantity_continuity": "synthetic finite world; development only",
+        "chronology": "synthetic finite world; development only",
+        "classification": "synthetic finite world; development only",
+        "positions": "synthetic finite world; development only"
+      },
+      "checks": {
+        "historical_population": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "interval_records": {
+          "state": "PASS",
+          "reason": "Finite world independently spans this interval.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "event_ownership": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "quantity_continuity": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "chronology": {
+          "state": "PASS",
+          "reason": "Shared raw chronology must support the finite-world ordering.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "classification": {
+          "state": "UNKNOWN",
+          "reason": "Each traded asset needs one available development classification.",
+          "evidence": [
+            "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+            "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+            "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+            "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "positions": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        }
+      }
+    },
+    "completed_positions_90d": {
+      "version": "metric-evidence-v1",
+      "state": "UNKNOWN",
+      "interval": "verification_90d",
+      "scope": "verification_90d",
+      "dependencies": [
+        "historical_population",
+        "interval_records",
+        "event_ownership",
+        "quantity_continuity",
+        "chronology",
+        "classification",
+        "positions"
+      ],
+      "unresolved_dependencies": [
+        "classification"
+      ],
+      "reason": "classification: Each traded asset needs one available development classification.",
+      "evidence": [
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+      ],
+      "component_scopes": {
+        "historical_population": "synthetic finite world; development only",
+        "interval_records": "synthetic finite world; development only",
+        "event_ownership": "synthetic finite world; development only",
+        "quantity_continuity": "synthetic finite world; development only",
+        "chronology": "synthetic finite world; development only",
+        "classification": "synthetic finite world; development only",
+        "positions": "synthetic finite world; development only"
+      },
+      "checks": {
+        "historical_population": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "interval_records": {
+          "state": "PASS",
+          "reason": "Finite world independently spans this interval.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "event_ownership": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "quantity_continuity": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "chronology": {
+          "state": "PASS",
+          "reason": "Shared raw chronology must support the finite-world ordering.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "classification": {
+          "state": "UNKNOWN",
+          "reason": "Each traded asset needs one available development classification.",
+          "evidence": [
+            "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+            "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+            "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+            "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "positions": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        }
+      }
+    },
+    "avg_buys": {
+      "version": "metric-evidence-v1",
+      "state": "UNKNOWN",
+      "interval": "report_period",
+      "scope": "report_period",
+      "dependencies": [
+        "historical_population",
+        "interval_records",
+        "event_ownership",
+        "quantity_continuity",
+        "chronology",
+        "classification",
+        "positions"
+      ],
+      "unresolved_dependencies": [
+        "classification"
+      ],
+      "reason": "classification: Each traded asset needs one available development classification.",
+      "evidence": [
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+      ],
+      "component_scopes": {
+        "historical_population": "synthetic finite world; development only",
+        "interval_records": "synthetic finite world; development only",
+        "event_ownership": "synthetic finite world; development only",
+        "quantity_continuity": "synthetic finite world; development only",
+        "chronology": "synthetic finite world; development only",
+        "classification": "synthetic finite world; development only",
+        "positions": "synthetic finite world; development only"
+      },
+      "checks": {
+        "historical_population": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "interval_records": {
+          "state": "PASS",
+          "reason": "Finite world independently spans this interval.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "event_ownership": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "quantity_continuity": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "chronology": {
+          "state": "PASS",
+          "reason": "Shared raw chronology must support the finite-world ordering.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "classification": {
+          "state": "UNKNOWN",
+          "reason": "Each traded asset needs one available development classification.",
+          "evidence": [
+            "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+            "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+            "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+            "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "positions": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        }
+      }
+    },
+    "avg_sells": {
+      "version": "metric-evidence-v1",
+      "state": "UNKNOWN",
+      "interval": "report_period",
+      "scope": "report_period",
+      "dependencies": [
+        "historical_population",
+        "interval_records",
+        "event_ownership",
+        "quantity_continuity",
+        "chronology",
+        "classification",
+        "positions"
+      ],
+      "unresolved_dependencies": [
+        "classification"
+      ],
+      "reason": "classification: Each traded asset needs one available development classification.",
+      "evidence": [
+        "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+        "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+        "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+        "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b",
+        "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+      ],
+      "component_scopes": {
+        "historical_population": "synthetic finite world; development only",
+        "interval_records": "synthetic finite world; development only",
+        "event_ownership": "synthetic finite world; development only",
+        "quantity_continuity": "synthetic finite world; development only",
+        "chronology": "synthetic finite world; development only",
+        "classification": "synthetic finite world; development only",
+        "positions": "synthetic finite world; development only"
+      },
+      "checks": {
+        "historical_population": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "interval_records": {
+          "state": "PASS",
+          "reason": "Finite world independently spans this interval.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "event_ownership": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "quantity_continuity": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "chronology": {
+          "state": "PASS",
+          "reason": "Shared raw chronology must support the finite-world ordering.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "classification": {
+          "state": "UNKNOWN",
+          "reason": "Each traded asset needs one available development classification.",
+          "evidence": [
+            "9b63d9e184b4e6a9120a6fb11f95a9ea16900bf0e9c79c5e3ea101fafe66312d",
+            "b4924c74e3548bd5721cbdcdf09b2bbb6f568928d92829d6a4b039ccc5ab5035",
+            "c36587f67f46f6d36ae90ac16ef473488fef5c6d246a6c3ce8df21411eaca65d",
+            "d82eddcabd3310270c6f43de5bf30a55b3ddbf683c403a5301307efb9592ad03"
+          ],
+          "scope": "synthetic finite world; development only"
+        },
+        "positions": {
+          "state": "PASS",
+          "reason": "Validated finite-world quantity population.",
+          "evidence": [
+            "cf33e84837f9430287508843d8d6e14b9c7835ba530c528c485d73d7a2be7d7b"
+          ],
+          "scope": "synthetic finite world; development only"
+        }
+      }
+    }
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "title": "History scope remains partial",
+      "detail": "Observed events are retained; financial and episode populations remain unresolved until ownership and history scope are established."
+    },
+    {
+      "severity": "warning",
+      "title": "Unsupported or incomplete activity",
+      "detail": "Missing or invalid network fee",
+      "evidence": [
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a"
+      ]
+    },
+    {
+      "severity": "warning",
+      "title": "Unsupported or incomplete activity",
+      "detail": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+      "evidence": [
+        "c7d7b88cedec805226f51c543751269eea050a0b8cbb7d9c805f2a32a6599d4a"
+      ]
+    }
+  ]
+}

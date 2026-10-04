@@ -1,0 +1,69 @@
+......................................F...                               [100%]
+=================================== FAILURES ===================================
+_ test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired-alias] _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-407/test_saved_archive_identity_lo1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8564f943e0>
+variant = 'paired-alias'
+
+    @pytest.mark.parametrize('variant', ['paired', 'paired-alias', 'store-wrapper', 'conflicting', 'malformed'])
+    def test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope(tmp_path, monkeypatch, variant):
+        import httpx
+        from fastapi.testclient import TestClient
+        from types import SimpleNamespace
+        import scanner.app as app_module
+        from scanner.archive_input import VERSION as ARCHIVE_VERSION, pack_bytes
+    
+        calls = []
+        async def denied(*args, **kwargs):
+            calls.append('provider')
+            raise AssertionError('Offline identity replay cannot dispatch a provider request')
+        monkeypatch.setattr(httpx.AsyncClient, 'get', denied)
+        monkeypatch.setattr(httpx.AsyncClient, 'post', denied)
+        monkeypatch.setattr(app_module, 'Credentials', lambda *_: SimpleNamespace(key=None, storage='none', backend=None))
+        row = record()
+        raw_payloads = {row['evidence_hash']: row['raw']}
+        wrapper = account() if variant == 'store-wrapper' else paired()[0]
+        good = source(wrapper, 'wallet-account-source' if variant == 'paired-alias' else 'wallet-account-info')
+        accounts = [good]
+        if variant == 'conflicting':
+            accounts.append(source(account(owner=address(31)), 'wallet-account-info'))
+        elif variant == 'malformed':
+            accounts.append(source({'state': 'PASS'}, 'wallet-account-info'))
+        raw_payloads.update({item['hash']: item['payload'] for item in accounts})
+        manifest = {'version': ARCHIVE_VERSION, 'dataset': 'real', 'address': WALLET,
+            'window': {'start': START, 'end': START + 86400},
+            'transactions': [{'signature': row['signature'], 'hash': row['evidence_hash']}],
+            'evidence': [{'kind': item['kind'], 'hash': item['hash']} for item in accounts]}
+        # These are unsigned development records in the real input route. They can
+        # exercise identity schema, but cannot establish genuine B3 provenance.
+        app = app_module.create_app(tmp_path, 'identity-test-token')
+        with TestClient(app, base_url='http://127.0.0.1:8765') as client:
+            csrf = client.get('/api/bootstrap', headers={'X-Launch-Token': 'identity-test-token'}).json()['csrf']
+            client.headers['X-CSRF-Token'] = csrf
+            initial_usage = client.get('/api/usage').json()
+            response = client.post('/api/archives/import', content=pack_bytes({'manifest': manifest, 'payloads': raw_payloads}),
+                                   headers={'content-type': 'application/zip'})
+            assert response.status_code == 200, response.text
+            identifier = response.json()['report_id']
+            original = client.get(f'/api/export/reports/{identifier}.json').content
+            report = json.loads(original)
+            expected = 'UNKNOWN' if variant in ('conflicting', 'malformed') else 'PASS'
+            identity = report['coverage']['wallet_evidence']['wallet_identity']
+            assert identity['state'] == expected
+            assert identity['historical_population_state'] == 'UNKNOWN'
+            assert report['qualification']['qualified'] is False
+            assert report['metrics']['profit_sol']['status'] == 'unknown'
+>           assert report['metrics']['observed_network_fees_sol']['value'] == '0.000005'
+E           AssertionError: assert None == '0.000005'
+
+tests/test_wallet_identity.py:347: AssertionError
+=============================== warnings summary ===============================
+tests/test_wallet_identity.py::test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired]
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_wallet_identity.py::test_saved_archive_identity_loss_restore_preserves_parent_fees_and_offline_scope[paired-alias]
+1 failed, 41 passed, 1 warning in 1.32s
