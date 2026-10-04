@@ -1,4 +1,30 @@
-# Active assignment — supported wallet-report product milestone
+# Active assignment — CAP-01 offline real-evidence adapter batch
+
+Continue only from private `vermilion1992/solana-wallet-scanner`, branch
+`codex/product-completion`, reviewed HEAD
+`4daa77816fc98908ae1b0663a2a5bfd6fa7c409a`. That evidence-only HEAD binds application
+candidate `d42f83a7a68dc639ddf3f610f347a70f33400b31`. Do not switch to or merge from
+bootstrap `main`. Preserve accepted PROC-03/ARC-02 and all retained regressions.
+
+The current slice derives raw ownership/lifecycle, observed mint aggregates,
+supported acquisition/cost/FIFO precursors and independent metric dependencies
+in the existing native/archive report, source inspection/export and immutable
+rebuild paths. It does not authenticate imported source declarations or promote
+a selected/synthetic dataset to complete real-wallet evidence. One issue register,
+source decision, acceptance matrix and validation entry point remain authoritative.
+
+B1 remains blocked on actual plan, billing-cycle start/end, at least 100 remaining
+credits, disabled automatic spending and explicit execution approval. No Helius
+probe, Helius credential use, credits, retries, purchases or upgrades are authorised by
+this implementation batch. B2 complete real accounting remains OPEN; synthetic
+interface tests cannot close genuine B3. PRODUCT_READY remains false. Finish a
+distinct read-only full diff review and applicable exact-source gates; use coherent
+Git commits and no new release ZIP.
+
+The earlier active assignment and completed stabilisation assignment follow as
+history and retained constraints.
+
+# Prior assignment — supported wallet-report product milestone
 
 The active assignment below supplements the completed stabilisation assignment preserved afterward. Start from source `96fb1eb` / evidence commit `4e08331`; preserve the historical `evidence/FINAL_GATES.json`. The same branch and issue register continue.
 

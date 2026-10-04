@@ -31,7 +31,7 @@ from .chronology_evidence import assess_chronology, assess_interval_membership
 from .storage import EvidenceError, now
 
 VERSION = 'archived-wallet-input-v1'
-METHOD = 'archive-ledger-v2'
+METHOD = 'archive-ledger-v3'
 MAX_UPLOAD = 20 * 1024 * 1024
 MAX_ENTRY = 32 * 1024 * 1024
 MAX_TOTAL = 256 * 1024 * 1024
@@ -227,6 +227,13 @@ def load_archive(store, digest):
             'classifications': classifications, 'valuation': valuation, 'receipts': receipts,
             'consistency': consistency, 'chronology': chronology, 'clock_sources': clock_sources,
             'clock_payloads': {row['hash']: cache[row['hash']] for row in clock_sources},
+            'raw_sources': [{'hash': ref['hash'], 'kind': ref['kind'], 'signature': ref.get('signature'),
+                            'payload': cache.get(ref['hash'])}
+                            for ref in manifest.get('evidence', [])]
+                + [{'hash': h, 'kind': 'classification', 'payload': cache.get(h)}
+                   for h in manifest.get('classification_hashes', [])]
+                + ([{'hash': manifest['valuation_hash'], 'kind': 'valuation',
+                     'payload': valuation}] if manifest.get('valuation_hash') else []),
             'input_hash': digest}
 
 
@@ -263,7 +270,8 @@ def _safe_decoder_container(raw):
 
 
 def decode_archive(loaded):
-    records, address = loaded['records'], loaded['manifest']['address']
+    from .wallet_evidence import with_derived_order
+    records, address = with_derived_order(loaded['records'], loaded['chronology']), loaded['manifest']['address']
     swaps = decode_supported_swaps(records, address)
     supported = {e['signature'] for e in swaps['events'] if e['kind'] in ('buy', 'sell')}
     decoded = decode_transactions([r for r in records if r['signature'] not in supported], address)
@@ -423,10 +431,16 @@ def _valuation_inputs(loaded, boundaries, scope):
 
 
 def analyze_archive(loaded, events):
-    """Use FIFO with derived development scope; real imports remain uncertified."""
+    """Use the shared FIFO and explicit, interval-specific raw evidence gates."""
+    from .wallet_evidence import derive_wallet_evidence
+    from .metric_evidence import compose_metric_decisions, apply_metric_decisions
     manifest = loaded['manifest']
     scope, points, boundaries, gaps = _world_scope(loaded)
     events = deepcopy(events)
+    adapter = derive_wallet_evidence(loaded['records'], all_records=loaded['all_records'],
+        wallet=manifest['address'], window=manifest['window'], events=events,
+        source_consistency=loaded['consistency'], chronology=loaded['chronology'],
+        source_receipts=loaded['receipts'], raw_sources=loaded.get('raw_sources', []))
     native_rows = loaded['consistency']['transactions'].values()
     financial_scope = scope and all(all(r['native'].get(k, {}).get('state') == 'PASS'
         for k in ('wallet_network_fees_sol', 'native_wallet_delta_sol')) for r in native_rows)
@@ -505,9 +519,26 @@ def analyze_archive(loaded, events):
                 # zero under every possible interval placement.
                 zero_exclusions.append(signature)
         membership[signature] = receipt
-    fee_ok = all(row['state'] == 'PASS' or signature in zero_exclusions for signature, row in membership.items()) and all(
+    # The raw adapter also inspects transaction-shaped linked sources whose
+    # caller role label is unsupported. Their contradictions cannot disappear
+    # when the ordinary typed fee projection is assembled.
+    adapter_membership = adapter['intervals']['report_period'].get('selected_record_membership', {})
+    for signature, receipt in adapter_membership.items():
+        current = membership.get(signature)
+        if current is None:
+            continue
+        current['evidence'] = sorted(set(current['evidence'] + receipt.get('evidence', [])))
+        if receipt.get('state') != 'PASS' or receipt.get('member') != current.get('member'):
+            current.update(state='UNKNOWN', member=None,
+                reason='A linked raw source leaves reporting-window membership unresolved or conflicting.')
+        fee = adapter['transactions'].get(signature, {}).get('network_fee', {})
+        if current['state'] != 'PASS' and fee.get('check', {}).get('state') == 'PASS' and fee.get('lamports') == '0':
+            zero_exclusions.append(signature)
+    zero_exclusions = sorted(set(zero_exclusions))
+    window_known = all(row['state'] == 'PASS' or signature in zero_exclusions for signature, row in membership.items())
+    fee_ok = window_known and all(
         native_groups.get(r['signature'], {}).get('native', {}).get('wallet_network_fees_sol', {}).get('state') == 'PASS' for r in relevant)
-    fee_ok = fee_ok and all(e.get('amount_sol') is not None for e in fee_rows)
+    fee_ok = fee_ok and adapter['components']['native_fee']['state'] == 'PASS' and all(e.get('amount_sol') is not None for e in fee_rows)
     fees = canonical(sum((decimal(e['amount_sol']) for e in fee_rows if e.get('amount_sol') is not None), Decimal(0)))
     result['metrics']['observed_network_fees_sol'] = {'value': fees if fee_ok else None, 'status': 'known' if fee_ok else 'unknown',
         'unit': 'SOL', 'population': 'Selected in-window records with an independently supported wallet fee payer; not all interval costs',
@@ -521,23 +552,37 @@ def analyze_archive(loaded, events):
         if metric['status'] == 'known' and metric is not result['metrics']['observed_network_fees_sol']:
             metric['evidence'] = sorted(set(metric.get('evidence', []) + ([manifest['world_hash']] if scope else [])
                 + ([manifest['valuation_hash']] if metric is result['metrics']['economic_pnl_sol'] and economic else [])))
-    requirements = {}
-    for key, metric in result['metrics'].items():
-        required = ['historical_population', 'event_ownership', 'quantity_continuity', 'chronology', 'classification']
-        if key in ('profit_sol', 'realised_roi_pct', 'median_roi_pct', 'win_rate_pct', 'largest_contribution_pct', 'positive_weeks'):
-            required += ['acquisition_basis', 'economic_costs']
-        if key == 'economic_pnl_sol':
-            required = ['historical_population', 'boundary_inventory', 'historical_marks', 'valued_external_flows']
-        if key == 'observed_network_fees_sol':
-            required = ['selected_record_identity', 'native_fee', 'wallet_payer', 'linked_fee_alternatives', 'nonzero_fee_window_membership']
-        if key == 'positive_weeks':
-            required.append('independent_28_days')
-        if key == 'completed_positions_90d':
-            required.append('independent_90_days')
-        requirements[key] = {'state': 'PASS' if metric['status'] == 'known' else 'UNKNOWN', 'dependencies': required,
-                             'scope': 'synthetic finite world' if manifest['dataset'] == 'synthetic' else metric.get('population'),
-                             'reason': metric.get('reason'), 'evidence': sorted(set(metric.get('evidence', []) +
-                                 ([loaded['input_hash']] if metric['status'] == 'known' else [])))}
+    components = deepcopy(adapter['components'])
+    interval_checks = deepcopy(adapter['intervals'])
+    if manifest['dataset'] == 'synthetic':
+        # These are outputs of the existing finite-world validator, never
+        # imported completion declarations and never accepted for real data.
+        def development_check(known, reason, evidence):
+            return {'state': 'PASS' if known else 'UNKNOWN', 'scope': 'synthetic finite world; development only',
+                    'reason': reason, 'evidence': sorted(set(evidence))}
+        world_evidence = [manifest['world_hash']] if manifest.get('world_hash') else []
+        for name in ('historical_population', 'event_ownership', 'quantity_continuity', 'positions'):
+            components[name] = development_check(scope, '; '.join(gaps) or 'Validated finite-world quantity population.', world_evidence)
+        components['chronology'] = development_check(scope and loaded['chronology']['state'] == 'PASS',
+            'Shared raw chronology must support the finite-world ordering.', world_evidence)
+        classified = bool(classes) and all(len(classes[e.get('mint')]) == 1
+            for e in events if e['kind'] in ('buy', 'sell', 'transfer_in', 'transfer_out'))
+        components['classification'] = development_check(classified, 'Each traded asset needs one available development classification.',
+            manifest.get('classification_hashes', []))
+        for name in ('acquisition_basis', 'economic_costs'):
+            components[name] = development_check(financial_scope, 'Supported origins and cost roles require the financial source scope.', world_evidence)
+        valuation_evidence = [manifest['valuation_hash']] if manifest.get('valuation_hash') else []
+        for name in ('boundary_inventory', 'historical_marks', 'valued_external_flows'):
+            components[name] = development_check(bool(economic), economic_gap or 'Validated finite-world boundary valuation and flows.', valuation_evidence)
+        interval_checks = {name: development_check(row['status'] == 'complete',
+            row['reason'] or 'Finite world independently spans this interval.', row['evidence'])
+            for name, row in intervals.items()}
+    fee_evidence = result['metrics']['observed_network_fees_sol']['evidence']
+    components['fee_window'] = {'state': 'PASS' if window_known else 'UNKNOWN', 'evidence': sorted(set(fee_evidence)),
+        'scope': 'selected in-window wallet-paid native fees',
+        'reason': None if window_known else 'Shared linked-clock checks leave selected reporting-window membership unresolved.'}
+    requirements = compose_metric_decisions(components, interval_checks, metric_observations=result['metrics'])
+    result = apply_metric_decisions(result, requirements)
     return result, events, {'version': METHOD, 'dataset': manifest['dataset'],
         'scope': 'Synthetic enumerated finite world; development only' if manifest['dataset'] == 'synthetic' else 'Imported selected native records; historical wallet completeness unproved',
         'real_acceptance': 'NOT_APPLICABLE_SYNTHETIC' if manifest['dataset'] == 'synthetic' else 'BLOCKED',
@@ -546,6 +591,7 @@ def analyze_archive(loaded, events):
         'fee_interval_membership': membership, 'proved_zero_fee_exclusions': zero_exclusions,
         'account_quantity_points': points, 'quantity_episodes': _quantity_episodes(points, supported=scope, world_hash=manifest.get('world_hash')),
         'boundary_inventory': boundaries, 'metric_requirements': requirements,
+        'wallet_evidence': adapter, 'component_checks': components, 'interval_checks': interval_checks,
         'input_hash': loaded['input_hash'], 'provider_requests': 0, 'credential_lookups': 0}
 
 

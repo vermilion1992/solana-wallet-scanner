@@ -256,6 +256,27 @@
         "tests/test_repository_audit.py::*",
         "tests/test_private_publication.py::*"
       ]
+    },
+    {
+      "id": "real-raw-evidence-adapter",
+      "axis": "Ownership/quantity/cost source contract; development controls only",
+      "selectors": [
+        "tests/test_wallet_evidence.py::*"
+      ]
+    },
+    {
+      "id": "metric-specific-derived-gates",
+      "axis": "Dependency isolation and independent intervals",
+      "selectors": [
+        "tests/test_metric_evidence.py::*"
+      ]
+    },
+    {
+      "id": "real-adapter-normal-offline-workflow",
+      "axis": "Saved source inspection/export/rebuild; development controls only",
+      "selectors": [
+        "tests/test_real_evidence_adapter.py::*"
+      ]
     }
   ],
   "browser_required": [

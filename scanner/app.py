@@ -29,6 +29,78 @@ def _secret_equal(candidate, expected):
     return isinstance(candidate, str) and len(candidate) <= 512 and secrets.compare_digest(candidate.encode("utf-8"), expected.encode("utf-8"))
 
 
+def _wallet_adapter_inputs(store, collected, *, address=None, window=None):
+    """Read every linked raw alternative; do not trust cached interpreted rows."""
+    from .archive_input import _safe_decoder_container
+    from .source_consistency import SOURCE_HASH_LIMIT, merge_source_manifests
+    selected, refs = set(), []
+    rows = collected.get('transactions', [])
+    for row in rows if isinstance(rows, list) else [None]:
+        if not isinstance(row, dict):
+            refs.append(None)
+            continue
+        signature, digest = row.get('signature'), row.get('evidence_hash')
+        if isinstance(signature, str) and isinstance(digest, str):
+            selected.add((signature, digest))
+        refs.append({'kind': 'transaction', 'signature': signature, 'hash': digest})
+    cp = collected.get('checkpoint', {})
+    cp = cp if isinstance(cp, dict) else {}
+    persisted = {}
+    # Rebuild inputs are already frozen by load_report_inputs. Later collector
+    # state must not expand their reference universe; this is not a population
+    # or authenticity certificate.
+    if (address is not None and window is not None
+            and not collected.get('frozen_input_hash') and not collected.get('frozen_report_id')):
+        from .accounting import utc
+        identifier = hashlib.sha256(f"{address}:{int(utc(window['start']).timestamp())}:{int(utc(window['end']).timestamp())}".encode()).hexdigest()
+        persisted = store.get('collector_checkpoints', identifier, {})
+        persisted = persisted if isinstance(persisted, dict) else {}
+    refs += merge_source_manifests(collected.get('evidence', []), cp.get('evidence', []), persisted.get('evidence', []))
+    hashes = {ref.get('hash') for ref in refs if isinstance(ref, dict)
+              and isinstance(ref.get('hash'), str) and re.fullmatch(r'[a-f0-9]{64}', ref['hash'])}
+    if len(hashes) > SOURCE_HASH_LIMIT:
+        # No arbitrary prefix may become a supported source set.
+        return [], [], [], [{'state': 'UNKNOWN', 'reason': 'Raw adapter source set exceeds the fixed inspection budget.'}]
+    cache, records, sources, receipts, seen = {}, [], [], [], set()
+    for ref in refs:
+        if (not isinstance(ref, dict) or not isinstance(ref.get('hash'), str) or ref['hash'] not in hashes
+                or not isinstance(ref.get('kind'), str)
+                or ref.get('signature') is not None and (not isinstance(ref['signature'], str) or not ref['signature'])
+                or ref.get('kind') in ('transaction', 'getTransaction') and not ref.get('signature')):
+            signature = ref.get('signature') if isinstance(ref, dict) else None
+            signature = signature if isinstance(signature, str) and signature else None
+            digest = ref.get('hash') if isinstance(ref, dict) else None
+            digest = digest if isinstance(digest, str) else None
+            receipts.append({'hash': digest, 'signature': signature, 'state': 'UNKNOWN',
+                             'reason': 'Malformed linked raw adapter source leaves its relevance unresolved.'})
+            records.append({'signature': signature, 'evidence_hash': digest, 'raw': None})
+            continue
+        digest = ref['hash']
+        if digest not in cache:
+            try:
+                cache[digest] = store.evidence(digest)
+            except (EvidenceError, ValueError, OSError):
+                cache[digest] = None
+            receipts.append({'hash': digest, 'role': ref.get('kind'),
+                'state': 'PASS' if cache[digest] is not None else 'UNKNOWN',
+                'reason': 'Checksum-verified raw bytes; authenticity and population remain separate.'
+                    if cache[digest] is not None else 'Still-linked raw source is unavailable.'})
+        identity = (ref.get('kind'), ref.get('signature'), digest)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        payload = cache[digest]
+        if ref.get('kind') in ('transaction', 'getTransaction'):
+            raw = payload.get('result') if isinstance(payload, dict) and 'result' in payload else payload
+            records.append({'signature': ref.get('signature'), 'evidence_hash': digest,
+                            'raw': raw if _safe_decoder_container(raw) else None})
+        else:
+            sources.append({'hash': digest, 'kind': ref.get('kind'),
+                            'signature': ref.get('signature'), 'payload': payload})
+    primary = [row for row in records if (row['signature'], row['evidence_hash']) in selected]
+    return primary, records, sources, receipts
+
+
 def create_app(data_dir, launch_token=None):
     store = Store(data_dir)
     launch_token = launch_token or secrets.token_urlsafe(32)
@@ -173,20 +245,38 @@ def create_app(data_dir, launch_token=None):
         evidence_verified = all(history_evidence["evidence_gates"].get(gate) == "PASS"
                                 for gate in ("history", "identity", "basis", "positions", "fees", "classification", "valuation", "findings"))
         collection_input_hash = freeze_report_inputs(store, address, scan["window"], collected)
-        records = collected.get("transactions", [])
+        from .wallet_evidence import with_derived_order
+        records = with_derived_order(collected.get("transactions", []),
+            archive_loaded['chronology'] if archive_loaded is not None else history_evidence['paging']['chronology'])
         swaps = decode_supported_swaps(records, address)
         supported = {event["signature"] for event in swaps["events"] if event["kind"] in ("buy", "sell")}
         # A supported transaction replaces the entire generic interpretation,
         # including its fee. Unrecognized transactions retain transfers and gaps.
         decoded = decode_transactions([record for record in records if record.get("signature") not in supported], address)
         events = decoded["events"] + [event for event in swaps["events"] if event.get("signature") in supported]
-        result = analyze(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete,
-                         interval_coverage={name: history_evidence["intervals"][name]
-                                            for name in ("report_period", "four_weeks", "verification_90d")})
+        from .wallet_evidence import derive_wallet_evidence
+        from .metric_evidence import compose_metric_decisions, apply_metric_decisions
         archive_accounting = None
         if archive_loaded is not None:
             from .archive_input import analyze_archive
             result, events, archive_accounting = analyze_archive(archive_loaded, events)
+            wallet_evidence = archive_accounting['wallet_evidence']
+            derived_decisions = archive_accounting['metric_requirements']
+        else:
+            primary, linked, raw_sources, raw_receipts = _wallet_adapter_inputs(store, collected, address=address, window=scan['window'])
+            wallet_evidence = derive_wallet_evidence(primary, all_records=linked, wallet=address,
+                window=scan['window'], events=events, raw_sources=raw_sources, source_receipts=raw_receipts,
+                source_consistency=history_evidence['source_consistency'],
+                chronology=history_evidence['paging']['chronology'])
+            derived_decisions = compose_metric_decisions(wallet_evidence['components'], wallet_evidence['intervals'])
+            # Current native sources still lack population/class/valuation
+            # proofs; narrow observations cannot activate those prerequisites.
+            history_complete = (wallet_evidence['components']['historical_population']['state'] == 'PASS'
+                                and wallet_evidence['intervals']['report_period']['state'] == 'PASS')
+            result = analyze(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete,
+                             interval_coverage={name: history_evidence["intervals"][name]
+                                                for name in ("report_period", "four_weeks", "verification_90d")})
+            result = apply_metric_decisions(result, derived_decisions)
         research = summarize_research(events, scan["window"]["start"], scan["window"]["end"], history_complete=history_complete)
         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
         mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
@@ -228,7 +318,8 @@ def create_app(data_dir, launch_token=None):
                   "window": scan["window"], "methodology": METHODOLOGY, "preset": scan["preset"], "evidence_status": "verified" if evidence_verified else "partial", **result, **evaluated,
                   "collection_input_hash": collection_input_hash,
                   "events": events, "coverage": {**collected.get("coverage", {}), "history_evidence": history_evidence,
-                                                  "position_evidence": position_evidence, "swap_reconstruction": swaps["coverage"]},
+                                                  "position_evidence": position_evidence, "swap_reconstruction": swaps["coverage"],
+                                                  "wallet_evidence": wallet_evidence, "metric_dependencies": derived_decisions},
                   "evidence": collected.get("evidence", []) + risk_evidence + [{"hash": collection_input_hash, "kind": "saved-rebuild-inputs"}],
                   "research": research, "token_risk": token_risk,
                   "findings": result.get("findings", []) + decoded.get("findings", []) + swaps.get("findings", []),
