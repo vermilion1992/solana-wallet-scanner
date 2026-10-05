@@ -1,0 +1,176 @@
+{
+  "schema_version": "mass-search-receipt-v1",
+  "run_id": "ee7c645a3a7b499bb150b1ac84b96ced",
+  "corpus_kind": "SYNTHETIC",
+  "application": {
+    "commit": "559b45c74182c29892521e18308b9154ea02ac0e",
+    "source_sha256": "2c4d31f940a8ab21cd5e2e7dd2d255664d5e0582d56c3ecc80bd0d2e10249757",
+    "dirty": false,
+    "lock_sha256": {
+      "requirements.txt": "4d156880231cc05817d3e616ab2fbd3032373e61cb85aea51a7fbb8814e99b13",
+      "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+      "pyproject.toml": "e62d540d019457ffbe3a6e886752500d1fd0ee355eda0d26b2596adcab10d5c4",
+      "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+    }
+  },
+  "execution": {
+    "started_at": "2026-10-05T08:30:13.331401+00:00",
+    "ended_at": "2026-10-05T08:30:22Z",
+    "status": "COMPLETE",
+    "exit_code": 0
+  },
+  "selection": {
+    "plan_frozen_at": "2026-10-05T08:30:13.331401+00:00",
+    "as_of": "2026-10-05T08:30:13.331401+00:00",
+    "universe_sealed_at": "2026-10-05T08:30:14.829561+00:00",
+    "cohort_frozen_at": null,
+    "plan_sha256": "8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5",
+    "universe_sha256": "3c02e998ff1a9d01347a665ca77aee2452b16fef8bb5423c43e92fc7e78abe5e",
+    "cohort_sha256": null,
+    "strategy_id": "fixed-entry-first-sale-v1"
+  },
+  "universe": {
+    "raw_rows": 10000,
+    "unique_candidates": 10000,
+    "duplicate_rows": 0,
+    "invalid_rows": 0
+  },
+  "stages": [
+    {
+      "name": "triage",
+      "input": 10000,
+      "promoted": 200,
+      "rejected": 0,
+      "deferred": 9800,
+      "pending": 0
+    },
+    {
+      "name": "behaviour",
+      "input": 200,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 200,
+      "pending": 0
+    },
+    {
+      "name": "reconstruct",
+      "input": 0,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0
+    },
+    {
+      "name": "forward_select",
+      "input": 0,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0
+    }
+  ],
+  "budget": {
+    "live_authorized": false,
+    "authorization_sha256": null,
+    "paid_spend_usd": "0",
+    "paid_limit_usd": "0",
+    "providers": []
+  },
+  "measurements": {
+    "cached_rows": 10000,
+    "refilter_external_requests": 0,
+    "refilter_p95_ms": 309.1835019999962,
+    "cold_live_seconds": null,
+    "raw_history_wallets": 1,
+    "decoded_transactions": 3,
+    "supported_trades": 3
+  },
+  "analytics": {
+    "reports_populated": 1,
+    "reports_reconciled": 1,
+    "min_closed_observed_episodes_per_report": 1,
+    "control_case_included": true,
+    "profitable_candidates": 0
+  },
+  "forward": {
+    "state": "NOT_RUN",
+    "selection_frozen_before_observation": false,
+    "started_at": null,
+    "signal_count": 0,
+    "quote_count": 0,
+    "closed_positions": 0,
+    "monitoring_gaps": 0,
+    "valuations_complete": false
+  },
+  "artifacts": [
+    {
+      "path": "g4_local_10k.json",
+      "sha256": "5a06b319cb0430e1e55219223793ec8505d214bb13f21b9f8230e2d04fddbfce",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "candidate_snapshot",
+        "decisions",
+        "test_results"
+      ]
+    },
+    {
+      "path": "synthetic_1000_acquire.json",
+      "sha256": "ca8f70e3488b9d3a6fd9291cf4f9901e00388d61eca718abf6169edcaad7b449",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "candidate_snapshot",
+        "decisions"
+      ]
+    },
+    {
+      "path": "synthetic_vertical_slice.json",
+      "sha256": "fa3c43862e12a94d046e8eb927367ea6ded58a30cbdcb529fa2b20b1e3cb1713",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "wallet_reports",
+        "reconciliation"
+      ]
+    },
+    {
+      "path": "source_manifest.json",
+      "sha256": "599b599d3358654502cf847e335a17cf2d1b4bf84b5b836b1315e35b098dfac8",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "source_manifest",
+        "selection_manifest"
+      ]
+    },
+    {
+      "path": "budget_ledger.json",
+      "sha256": "e1a0eb70544823b33399e6df183437afb4358233cb305dbed0e5f88637d9570b",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "budget_ledger",
+        "requests"
+      ]
+    },
+    {
+      "path": "test_index.json",
+      "sha256": "3139aca001ee7bbc8a381e7be3025789f2d0fd0f26d5926b4ca3f21d01f1d91f",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "forward_signals",
+        "forward_quotes",
+        "forward_positions"
+      ]
+    }
+  ],
+  "claims": {
+    "mass_search_proven": false,
+    "analytics_demonstrated": false,
+    "forward_operational_proven": false,
+    "strict_full_wallet_ready": false
+  },
+  "notes": [
+    "Synthetic/local development receipt. Contract validation is not a live search, genuine analytics, or full-wallet proof.",
+    "G4 used the normal MassSearchService.local_scale_benchmark path: 5 warmup + 20 measured refilter+50-row page cycles against the ordinary SQLite store.",
+    "The 1,000-row acquire and vertical slice in sibling artifacts are synthetic. They do not satisfy G1/G2/G3.",
+    "Independent FIFO/material-exit worksheet for the package dust-tail fixture is recorded beside the production reconstruction.",
+    "No live authorization, no additional paid spend, and no setup-pilot reset."
+  ]
+}

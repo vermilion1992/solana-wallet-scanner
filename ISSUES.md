@@ -9,12 +9,12 @@ Continue from `codex/screening-forward-research` at
 
 | ID | Category / family | Status | Reproduction and preservation | Next evidence |
 | --- | --- | --- | --- | --- |
-| MS-SOFT | Implementation; staged funnel software | IN_PROGRESS | Source-to-report path, immutable stage decisions, Mass research v1 plan, 10k local capacity and receipt checker are added beside existing screening. | Affected pytest, frontend checks and an honest gate matrix |
+| MS-SOFT | Implementation; staged funnel software | DONE (offline) | Source-to-report path, immutable stage decisions, Mass research v1 plan, 10k local capacity and receipt checker are added beside existing screening. Tested application `559b45c74182c29892521e18308b9154ea02ac0e`. | Live gates remain independently blocked |
 | MS-LIVE | External permission; Birdeye/Helius live collection | BLOCKED | `config/live_authorization.example.json` is disabled. No remaining-quota confirmation exists. Setup-pilot ledger must not be reset. | One named authorization: provider, operation, purpose, call/credit ceiling, duration |
 | MS-G1 | Genuine vertical slice | BLOCKED | Offline synthetic slice can persist trades, subset P&L and median hold. That is not live acquisition. | Authorized page + targeted native buy/sell |
-| MS-G2 | Genuine 1,000-candidate search | BLOCKED | Fixture acquisition can freeze 1,000 synthetic rows. G2 requires real source requests. | Authorized Birdeye pages under a confirmed remaining quota |
+| MS-G2 | Genuine 1,000-candidate search | BLOCKED | Fixture acquisition froze 1,000 synthetic rows in 0.1508 s with 0 provider calls. G2 requires real source requests. | Authorized Birdeye pages under a confirmed remaining quota |
 | MS-G3 | Three genuine reconciled analytics reports | BLOCKED | Independent worksheet exists for the package dust-tail fixture. No three genuine 10-episode reports. | Authorized history for at least three wallets including a loss/unresolved control |
-| MS-G4 | Local 10,000-row performance | IN_PROGRESS | Local refilter/pagination path is implemented against the normal store. | Measured 5 warmup / 20 iteration timings on recorded hardware |
+| MS-G4 | Local 10,000-row performance | PASS | Official 5 warmup / 20 measured refilter+page on the normal store: median 287.97 ms, p95 309.18 ms, max 312.42 ms, 0 external requests. Receipt `evidence/mass-wallet-funnel/ee7c645a3a7b499bb150b1ac84b96ced/`. | Not 10,000 live scans |
 | MS-G5 | Genuine forward operation | BLOCKED | Quote-only helpers reuse the existing first-sale strategy. Zero-signal subscription remains incomplete. | Genuine eligible entry and exit path with two delayed quotes |
 | MS-G6 | Prospective financial research | NOT_RUN | Comparison arms can be frozen. No 14-day authorized observation. | Frozen cohort + authorized quote budget |
 | DATA-01 / B1 | Historical source decision | BLOCKED | Unchanged. Full-wallet PRODUCT_READY stays false. | Existing R1 contract |
