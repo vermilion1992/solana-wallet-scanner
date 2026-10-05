@@ -234,6 +234,11 @@ export function reportPickerLabel(item: { source?: string; label?: string; addre
   return `${prefix}${item.label || shorten(item.address)} · ${dateTime(item.created_at)}`;
 }
 
+export function screeningPickerLabel(item: { source?: string; address: string; current_label?: string; label?: string; created_at?: string }) {
+  const prefix = item.source === "mass-search" ? "subset · " : item.source === "demo" ? "SYNTHETIC · " : "";
+  return `${prefix}${shorten(item.address)} · ${item.current_label ?? item.label ?? "Saved assessment"} · ${dateTime(item.created_at)}`;
+}
+
 export function ResearchView({ state, busy, run, open, navigate, refresh, showEvidence }: Actions & { showEvidence: (hash: string) => void }) {
   const narrow = useNarrowViewport();
   const screenings = state.screenings ?? [];
@@ -306,7 +311,7 @@ export function ResearchView({ state, busy, run, open, navigate, refresh, showEv
     <section className="panel" ref={screeningPanelRef}>
       <SectionHeading title="Saved screenings" subtitle={`${count(screenings.length)} immutable assessments · Every result retains its reasons and collection limits.`} />
       {screening ? <>
-        <div className="research-action-row"><label className="research-report-picker">Assessment<select aria-label="Saved screening assessment" value={screening.id} onChange={(event) => void reopen("screenings", event.target.value)}>{screenings.map((item) => <option key={item.id} value={item.id}>{shorten(item.address)} · {item.current_label ?? item.label} · {dateTime(item.created_at)}</option>)}</select></label><Button variant="secondary" disabled={!!busy} onClick={() => reopen("screenings", screening.id)}>Reopen saved assessment</Button><a className="button secondary" href={`/api/screenings/${encodeURIComponent(screening.id)}/export`} download><Download size={15} /> Export screening</a></div>
+        <div className="research-action-row"><label className="research-report-picker">Assessment<select aria-label="Saved screening assessment" value={screening.id} onChange={(event) => void reopen("screenings", event.target.value)}>{screenings.map((item) => <option key={item.id} value={item.id}>{screeningPickerLabel(item)}</option>)}</select></label><Button variant="secondary" disabled={!!busy} onClick={() => reopen("screenings", screening.id)}>Reopen saved assessment</Button><a className="button secondary" href={`/api/screenings/${encodeURIComponent(screening.id)}/export`} download><Download size={15} /> Export screening</a></div>
         <p className="mono research-address">{screening.address}</p>
         <ScreeningDetail screening={screening} showEvidence={showEvidence} />
         <div className="research-action-row"><label>Additional transaction budget<input type="number" aria-label="Continue investigation transaction budget" min={1} max={screening.continuation?.budget?.max_transactions ?? 20} value={transactionLimit} onChange={(event) => setTransactionLimit(Number(event.target.value))} /></label><Button icon={RefreshCw} variant="secondary" disabled={!!busy || !screening.continuation?.recommended || !Number.isInteger(transactionLimit) || transactionLimit < 1} busy={busy === "screen-continue"} onClick={() => run("screen-continue", `/screenings/${encodeURIComponent(screening.id)}/continue`, { transaction_limit: transactionLimit }, "POST", "Budgeted continuation queued. The saved assessment stays unchanged.")}>Continue investigation</Button><Button icon={Star} variant="secondary" disabled={!!busy || !!watched} busy={busy === "research-shortlist"} onClick={() => run("research-shortlist", "/watchlist", { address: screening.address, label: "Research shortlist" }, "POST", "Wallet shortlisted. This is not a profit or safety endorsement.")}>{watched ? "Shortlisted" : "Save to shortlist"}</Button></div>

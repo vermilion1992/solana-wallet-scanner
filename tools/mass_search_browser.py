@@ -255,11 +255,24 @@ def run(args):
         assert detail["strict_qualification"]["financial_policy"] == "UNRESOLVED"
         assert detail["current_eligibility"]["can_start_observation"] is False
         expect_subset_screening()
+        expect(page.get_by_label("Saved screening assessment")).to_contain_text("subset ·")
         capture("10-reopened-screening-after-restart")
         page.set_viewport_size({"width": 360, "height": 640})
         page.wait_for_timeout(350)
         expect_subset_screening()
+        expect(page.get_by_label("Saved screening assessment")).to_contain_text("subset ·")
         page.set_viewport_size({"width": 1440, "height": 1000})
+        with page.expect_download() as download:
+            page.get_by_role("link", name="Export screening", exact=False).click()
+        dest = out / "screening-export.json"
+        shutil.copyfile(download.value.path(), dest)
+        exported_screening = json.loads(dest.read_text())
+        assert exported_screening["id"] == screening_id
+        assert exported_screening["source"] == "mass-search"
+        assert exported_screening["result"] == "insufficient_evidence"
+        assert exported_screening["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        assert exported_screening["strict_qualification"]["qualified"] is False
+        assert exported_screening["current_eligibility"]["can_start_observation"] is False
         result["cases"].append({
             "case": "restart-reopen-screening",
             "state": "PASS",
@@ -267,6 +280,7 @@ def run(args):
             "screening_id": screening_id,
             "result": detail["result"],
             "observation_started": False,
+            "export": "screening-export.json",
         })
 
         assert not errors, errors

@@ -59,7 +59,7 @@ try {
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
-  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, reportPickerLabel, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
+  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, reportPickerLabel, screeningPickerLabel, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
@@ -2080,6 +2080,9 @@ try {
   assert.ok(subsetResearchScreenHtml.includes("reconstructed subset"));
   assert.ok(subsetResearchScreenHtml.includes("not a wallet-wide MATCH"));
   assert.ok(subsetResearchScreenHtml.includes("UNRESOLVED"));
+  assert.equal(screeningPickerLabel(subsetScreening).startsWith("subset · "), true);
+  assert.ok(subsetResearchScreenHtml.includes("subset · "));
+  assert.ok(screeningPickerLabel(subsetScreening).includes("Insufficient evidence"));
   const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },
