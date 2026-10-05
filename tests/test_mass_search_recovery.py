@@ -257,13 +257,37 @@ def test_g1_archive_saves_retrievable_application_report_offline(tmp_path, monke
     decoded = decode_supported_swaps(_wrap_records(sanitize_transaction_records(records)["records"]), G1_ADDRESS)
     mint_events = _ordered_inventory_rows(g1_mint_events(decoded))
     expected_hold = mint_events[-1]["seconds_from_start"] - mint_events[0]["seconds_from_start"]
-    assert report["material_exit"]["final_hold_seconds"] == expected_hold
-    assert report["material_exit"]["final_hold_seconds"] != mint_events[-1]["seconds_from_start"]
+    sale_window_offset = mint_events[-1]["seconds_from_start"]
+    exit_diag = report["material_exit"]
+    assert exit_diag["method_version"] == "material-exit-v2"
+    assert exit_diag["final_hold_seconds"] == expected_hold
+    assert exit_diag["first_sale_seconds"] == expected_hold
+    assert exit_diag["exit_50_seconds"] == expected_hold
+    assert exit_diag["exit_90_seconds"] == expected_hold
+    assert Decimal(str(exit_diag["quantity_weighted_exit_seconds"])) == Decimal(expected_hold)
+    assert exit_diag["final_hold_seconds"] != sale_window_offset
+    assert exit_diag["exit_90_window_offset_seconds"] == sale_window_offset
     assert Decimal(str(closed[0]["hold_hours"])) * Decimal("3600") == Decimal(expected_hold)
+    from scanner.mass_search.service import _metrics_map
+    from scanner.mass_search.triage import evaluate_behaviour, evaluate_forward_select
+    from scanner.mass_search.plan import load_default_plan
+    stored = _metrics_map(store, saved["run_id"])[f"solana:{G1_ADDRESS}"]
+    assert stored["material_exit_t90_seconds"]["value"] == str(expected_hold)
+    assert stored["material_exit_t90_seconds"]["method_version"] == "material-exit-v2"
+    assert stored["material_exit_t90_seconds"]["value"] != str(sale_window_offset)
+    plan = load_default_plan()
+    candidate = {"candidate_id": f"solana:{G1_ADDRESS}", "address": G1_ADDRESS}
+    behaviour = evaluate_behaviour(candidate, stored, plan)
+    assert behaviour["result"] == "PROMOTED"
+    assert "material_exit_observed" in behaviour["reason_codes"]
+    assert evaluate_forward_select(candidate, stored, plan)["result"] == "PROMOTED"
     shifted = material_exit_v1([
         {**row, "seconds_from_start": row["seconds_from_start"] + 86_400} for row in mint_events
     ])
     assert shifted["final_hold_seconds"] == expected_hold
+    assert shifted["first_sale_seconds"] == expected_hold
+    assert shifted["exit_90_seconds"] == expected_hold
+    assert Decimal(str(shifted["quantity_weighted_exit_seconds"])) == Decimal(expected_hold)
     store.close()
 
     monkeypatch.delenv("HELIUS_API_KEY", raising=False)
@@ -431,6 +455,72 @@ def test_position_hold_is_window_shift_invariant():
     shifted = material_exit_v1([
         {**row, "seconds_from_start": row["seconds_from_start"] + 50_000} for row in events
     ])
-    assert first["final_hold_seconds"] == 598
-    assert shifted["final_hold_seconds"] == 598
-    assert first["quantity_weighted_exit_seconds"] != shifted["quantity_weighted_exit_seconds"]
+    for key in ("first_sale_seconds", "exit_50_seconds", "exit_90_seconds", "final_hold_seconds"):
+        assert first[key] == 598
+        assert shifted[key] == 598
+    assert Decimal(str(first["quantity_weighted_exit_seconds"])) == Decimal("598")
+    assert Decimal(str(shifted["quantity_weighted_exit_seconds"])) == Decimal("598")
+    assert first["exit_90_window_offset_seconds"] != shifted["exit_90_window_offset_seconds"]
+
+
+def test_dust_tail_t90_stays_opening_relative_not_final_hold():
+    events = [
+        {"kind": "buy", "units": "100", "seconds_from_start": 0, "mint": "MintA"},
+        {"kind": "sell", "units": "90", "seconds_from_start": 30, "mint": "MintA"},
+        {"kind": "sell", "units": "10", "seconds_from_start": 172800, "mint": "MintA"},
+    ]
+    timing = material_exit_v1(events)
+    assert timing["exit_90_seconds"] == 30
+    assert timing["final_hold_seconds"] == 172800
+    assert timing["first_sale_seconds"] == 30
+
+
+def test_interleaved_mints_and_repeated_positions_keep_own_exit_milestones():
+    events = [
+        {"kind": "buy", "units": "100", "seconds_from_start": 1000, "mint": "MintA", "signature": "a1"},
+        {"kind": "buy", "units": "10", "seconds_from_start": 50, "mint": "MintB", "signature": "b1"},
+        {"kind": "sell", "units": "100", "seconds_from_start": 1598, "mint": "MintA", "signature": "a1s"},
+        {"kind": "sell", "units": "9", "seconds_from_start": 80, "mint": "MintB", "signature": "b1s"},
+        {"kind": "sell", "units": "1", "seconds_from_start": 50 + 172800, "mint": "MintB", "signature": "b1d"},
+        {"kind": "buy", "units": "10", "seconds_from_start": 5000, "mint": "MintA", "signature": "a2"},
+        {"kind": "sell", "units": "10", "seconds_from_start": 5030, "mint": "MintA", "signature": "a2s"},
+    ]
+    timing = material_exit_v1(events)
+    by_key = {(row["mint"], row["position_index"]): row for row in timing["positions"]}
+    first_a = by_key[("MintA", 0)]
+    second_a = by_key[("MintA", 1)]
+    only_b = by_key[("MintB", 0)]
+    assert first_a["first_sale_seconds"] == first_a["exit_90_seconds"] == first_a["final_hold_seconds"] == 598
+    assert first_a["acquired_units"] == "100"
+    assert second_a["exit_90_seconds"] == second_a["final_hold_seconds"] == 30
+    assert only_b["exit_90_seconds"] == 30
+    assert only_b["final_hold_seconds"] == 172800
+    assert only_b["acquired_units"] == "10"
+    assert timing["aggregation_method"] == "median"
+    assert timing["sample_count"] == 3
+
+
+def test_missing_opening_or_unresolved_quantities_do_not_substitute_window_offsets():
+    missing_open = material_exit_v1([
+        {"kind": "buy", "units": "1", "seconds_from_start": None, "mint": "MintA", "timestamp_missing": True},
+        {"kind": "sell", "units": "1", "seconds_from_start": 2263932, "mint": "MintA"},
+    ])
+    assert missing_open["state"] == "UNKNOWN"
+    assert missing_open["exit_90_seconds"] is None
+    assert missing_open["first_sale_seconds"] is None
+    assert missing_open["final_hold_seconds"] is None
+    assert "missing_opening_time" in missing_open["missing_dependencies"]
+    ambiguous = material_exit_v1([
+        {"kind": "buy", "units": "1", "seconds_from_start": 10, "mint": "MintA", "unresolved_order": True},
+        {"kind": "sell", "units": "1", "seconds_from_start": 20, "mint": "MintA"},
+    ])
+    assert ambiguous["state"] == "UNKNOWN"
+    assert ambiguous["exit_90_seconds"] is None
+    assert "ambiguous_order" in ambiguous["missing_dependencies"]
+    bad_qty = material_exit_v1([
+        {"kind": "buy", "units": "not-a-quantity", "seconds_from_start": 0, "mint": "MintA"},
+        {"kind": "sell", "units": "1", "seconds_from_start": 20, "mint": "MintA"},
+    ])
+    assert bad_qty["state"] == "UNKNOWN"
+    assert bad_qty["exit_90_seconds"] is None
+    assert "unresolved_quantities" in bad_qty["missing_dependencies"]

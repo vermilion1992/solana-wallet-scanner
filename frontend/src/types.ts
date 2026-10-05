@@ -321,6 +321,12 @@ export type Report = {
     exit_90_seconds?: number | null;
     final_hold_seconds?: number | null;
     quantity_weighted_exit_seconds?: string | null;
+    method_version?: string | null;
+    aggregation_method?: string | null;
+    sample_count?: number | null;
+    quantity_weighted_exit_note?: string | null;
+    first_sale_window_offset_seconds?: number | null;
+    exit_90_window_offset_seconds?: number | null;
   } | null;
   market_observations?: Record<string, unknown>[];
   market_observation_scope?: string;

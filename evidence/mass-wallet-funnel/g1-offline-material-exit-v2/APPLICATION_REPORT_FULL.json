@@ -1,0 +1,659 @@
+{
+  "id": "9ddda11ce5464109a40798c1895d187a",
+  "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+  "label": "Mass-search subset \u00b7 GENUINE_REPLAY",
+  "source": "mass-search",
+  "corpus_kind": "GENUINE_REPLAY",
+  "created_at": "2026-10-05T12:11:35.382917Z",
+  "window": {
+    "start": "2026-09-05T12:11:35.382917Z",
+    "end": "2026-10-05T12:11:35.382917Z"
+  },
+  "methodology": null,
+  "policy": "UNRESOLVED",
+  "evidence_status": "partial",
+  "metrics": {
+    "profit_sol": {
+      "value": null,
+      "unit": "SOL",
+      "status": "unknown",
+      "population": "In-window meme disposals less matched basis, exit costs and trading overhead",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "realised_roi_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Period net realised profit / disposed acquisition cost",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "median_roi_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Whole-episode net ROI; strict-zero completed cohort",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "win_rate_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Net-positive strict-zero completed episodes / all completed episodes (breakeven included)",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "median_hold_hours": {
+      "value": null,
+      "unit": "hours",
+      "status": "unknown",
+      "population": "First acquisition to final sale; strict-zero closes inside reporting window",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "completed_positions": {
+      "value": null,
+      "unit": "positions",
+      "status": "unknown",
+      "population": "Strict-zero completed episodes closing in report window",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "completed_positions_90d": {
+      "value": null,
+      "unit": "positions",
+      "status": "unknown",
+      "population": "Strict-zero completed episodes closing in 90 days ending at report end",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "traded_mints": {
+      "value": null,
+      "unit": "mints",
+      "status": "unknown",
+      "population": "Distinct meme mint IDs traded in reporting window; settlement assets excluded",
+      "reason": "Classification or scope unresolved",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "rapid_sale_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Completed episodes with first positive economic sale within five minutes",
+      "reason": "Incomplete eligible episode population or first positive sale consideration",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "avg_buys": {
+      "value": null,
+      "unit": "buys/episode",
+      "status": "unknown",
+      "population": "Buy events per strict-zero completed episode",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "avg_sells": {
+      "value": null,
+      "unit": "sells/episode",
+      "status": "unknown",
+      "population": "Sale events per strict-zero completed episode",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "positive_weeks": {
+      "value": null,
+      "unit": "weeks",
+      "status": "unknown",
+      "population": "Four independent consecutive seven-day periods over [report end - 28 days, report end)",
+      "reason": "Independent four-week history, matched basis or costs remain unresolved",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "largest_contribution_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Highest positive aggregate realised P&L for one mint / positive net period P&L",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    },
+    "economic_pnl_sol": {
+      "value": null,
+      "unit": "SOL",
+      "status": "unknown",
+      "population": "Closing equity - opening equity - external deposits + withdrawals",
+      "reason": "Boundary equity and valued external flows must all be reconciled",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    }
+  },
+  "checks": [],
+  "counts": {
+    "closed": 1,
+    "open": 0,
+    "interrupted": 0,
+    "unresolved": 0
+  },
+  "positions": [
+    {
+      "id": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump:1",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "classification": "meme",
+      "status": "closed",
+      "in_window": true,
+      "start": "2026-10-01T16:53:49.382917+00:00",
+      "cohort_quantity_status": "unknown",
+      "monetary_status": "known",
+      "first_sale_status": "unknown",
+      "first_sale_observation_status": "known",
+      "acquisition_basis_status": "known",
+      "known_basis_sol": "7.90026",
+      "known_matched_basis_sol": "7.90026",
+      "remaining_basis_status": "known",
+      "remaining_basis_sol": "0",
+      "end": "2026-10-01T17:03:47.382917+00:00",
+      "start_order": 0,
+      "end_order": 4,
+      "remaining_lots": [],
+      "quantity_raw": "0",
+      "acquired_raw": "13032346709725",
+      "sold_raw": "13032346709725",
+      "decimals": 0,
+      "buy_count": 4,
+      "sell_count": 1,
+      "basis_sol": "7.90026",
+      "matched_basis_sol": "7.90026",
+      "proceeds_sol": "7.732599474",
+      "exit_fees_sol": "0.000065",
+      "pnl_sol": "-0.167725526",
+      "roi_pct": "-2.12303805191221554733641677615673408216944758780090781822370402999394956621680805441846217719416829319541382182358555288053810887236622592167852703581907430894679415614169660239030107869867574",
+      "hold_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+      "first_sale_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+      "sold_50_pct_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+      "sold_90_pct_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-01T16:53:49.382917Z",
+      "order": 0,
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "quantity_raw": "5957395455887",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "SaiC2d5YUSoSHZxmsojrjnEnt23kXBndKdPkDknrtvhjsLBBW2Y69Qi5U6MesNtUmnSR7gJLNy3nzg3oFYcYHNV",
+      "path": "instructions.6",
+      "evidence": [
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668"
+      ],
+      "amount_sol": "3.2",
+      "fee_sol": "0.000065",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-01T17:00:50.382917Z",
+      "order": 1,
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "quantity_raw": "2212022914716",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "2mztKUMb1F6C9ogvszaPxu3RqwVZz6arZrXv2dffDNzb3nMaZTRpu2N2RLpcThgtKHQApFNz9HczHESjyMSP6H5W",
+      "path": "instructions.6",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3"
+      ],
+      "amount_sol": "1.4",
+      "fee_sol": "0.000065",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-01T17:00:53.382917Z",
+      "order": 2,
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "quantity_raw": "2306993863643",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "5cVeGPWURhoBAwtspk4zVLJ8KFZVegZiA23uAZxFnxuBAamTu3CKTvgpZciEZwRpue4TKZiiUB5MUhk84wHXjd7t",
+      "path": "instructions.6",
+      "evidence": [
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862"
+      ],
+      "amount_sol": "1.5",
+      "fee_sol": "0.000065",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-01T17:01:06.382917Z",
+      "order": 3,
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "quantity_raw": "2555934475479",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "2AgUpNVUF42UXWpCFfB4egw5bXNZvkE7SsZn4SwfjGk3avJt1kcY74NgF6TbqwdRC8q2jo6Ssh36ksw8ywqrPho2",
+      "path": "instructions.6",
+      "evidence": [
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be"
+      ],
+      "amount_sol": "1.8",
+      "fee_sol": "0.000065",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "sell",
+      "timestamp": "2026-10-01T17:03:47.382917Z",
+      "order": 4,
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "quantity_raw": "13032346709725",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c",
+      "path": "instructions.4",
+      "evidence": [
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ],
+      "amount_sol": "7.732599474",
+      "fee_sol": "0.000065",
+      "paid_by_wallet": true
+    }
+  ],
+  "findings": [],
+  "coverage": {},
+  "research": {
+    "version": "supported-subset-research-v5-origin-scopes",
+    "scope": "supported spot swaps in fetched subset",
+    "history_complete": false,
+    "wallet_profit_verified": false,
+    "opening_inventory_verified_mints": [],
+    "observed_profit_sol": null,
+    "known_matched_profit_sol": null,
+    "conditional_observed_lot_profit_sol": "-0.167725526",
+    "conditional_profit_population": "In-window sales fully matched to fetched purchase lots, less supplied wallet-paid overhead; unresolved sales excluded",
+    "supported_swaps": 5,
+    "sales": 1,
+    "matched_sales": 0,
+    "observed_matched_sales": 1,
+    "unresolved_basis_sales": 1,
+    "observed_unmatched_sales": 0,
+    "closed_episodes": 1,
+    "verified_closed_episodes": 0,
+    "strategy_population": "Observed strict-zero episodes closing in the selected window; boundaries remain conditional on undiscovered inventory",
+    "conditional_median_hold_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    "conditional_first_sale_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    "conditional_exit_50_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    "conditional_exit_90_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    "conditional_rapid_sale_pct": "0",
+    "wallet_fees_paid_sol": "0.000325",
+    "unallocated_fees_sol": "0",
+    "unresolved_transactions": 0,
+    "chronology_unknown": false,
+    "scoped_chronology_unknown": false,
+    "episodes": [
+      {
+        "id": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump:1",
+        "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+        "status": "closed",
+        "in_window": true,
+        "cohort_quantity_status": "unknown",
+        "monetary_status": "known",
+        "first_sale_status": "unknown",
+        "first_sale_observation_status": "known",
+        "acquisition_basis_status": "known",
+        "known_basis_sol": "7.90026",
+        "known_matched_basis_sol": "7.90026",
+        "remaining_basis_status": "known",
+        "remaining_basis_sol": "0",
+        "start_order": 0,
+        "end_order": 4,
+        "remaining_lots": [],
+        "quantity_raw": "0",
+        "acquired_raw": "13032346709725",
+        "sold_raw": "13032346709725",
+        "decimals": 0,
+        "buy_count": 4,
+        "sell_count": 1,
+        "basis_sol": "7.90026",
+        "matched_basis_sol": "7.90026",
+        "proceeds_sol": "7.732599474",
+        "exit_fees_sol": "0.000065",
+        "pnl_sol": "-0.167725526",
+        "roi_pct": "-2.12303805191221554733641677615673408216944758780090781822370402999394956621680805441846217719416829319541382182358555288053810887236622592167852703581907430894679415614169660239030107869867574",
+        "hold_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+        "first_sale_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+        "sold_50_pct_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+        "sold_90_pct_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+        "evidence": [
+          "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+          "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+          "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+          "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+          "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+        ],
+        "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+        "attributable": false,
+        "conditional": true,
+        "monetary_state": "PASS",
+        "quantity_state": "PASS",
+        "timing_state": "PASS",
+        "observed_start": "2026-10-01T16:53:49.382917+00:00",
+        "observed_end": "2026-10-01T17:03:47.382917+00:00"
+      }
+    ],
+    "sales_detail": [
+      {
+        "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+        "signature": "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c",
+        "fifo_episode": {
+          "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+          "ordinal": 1
+        },
+        "timestamp": "2026-10-01T17:03:47.382917+00:00",
+        "quantity_raw": "13032346709725",
+        "conditional_matched_basis_sol": "7.90026",
+        "conditional_profit_sol": "-0.167725526",
+        "conditional_proceeds_sol": "7.732599474",
+        "conditional_exit_fees_sol": "0.000065",
+        "cost_basis_state": "PASS",
+        "monetary_state": "PASS",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      }
+    ],
+    "historical_sales_detail": [
+      {
+        "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+        "signature": "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c",
+        "fifo_episode": {
+          "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+          "ordinal": 1
+        },
+        "timestamp": "2026-10-01T17:03:47.382917+00:00",
+        "quantity_raw": "13032346709725",
+        "conditional_matched_basis_sol": "7.90026",
+        "conditional_profit_sol": "-0.167725526",
+        "conditional_proceeds_sol": "7.732599474",
+        "conditional_exit_fees_sol": "0.000065",
+        "cost_basis_state": "PASS",
+        "monetary_state": "PASS",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      }
+    ],
+    "evidence": [
+      "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+      "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+      "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+      "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+      "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+    ],
+    "risk_findings": [
+      {
+        "severity": "warning",
+        "title": "Opening inventory is not inferred from fetched buys",
+        "detail": "A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.",
+        "evidence": [
+          "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3",
+          "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be",
+          "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668",
+          "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862",
+          "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+        ]
+      }
+    ],
+    "limitations": [
+      "Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.",
+      "Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.",
+      "Episode duration, first sale and 50%/90% exits describe fetched observed quantities; undiscovered acquisitions or transfers may change those boundaries.",
+      "Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.",
+      "Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns."
+    ]
+  },
+  "worksheet": {
+    "sale_fifo_basis_sol": [
+      "7.90026"
+    ],
+    "sale_net_profit_sol": [
+      "-0.167725526"
+    ],
+    "total_profit_sol": "-0.167725526"
+  },
+  "material_exit": {
+    "state": "KNOWN",
+    "first_sale_seconds": 598,
+    "exit_50_seconds": 598,
+    "exit_90_seconds": 598,
+    "final_hold_seconds": 598,
+    "position_opened_seconds": 2263334,
+    "position_closed_seconds": 2263932,
+    "position_hold_seconds": 598,
+    "quantity_weighted_exit_seconds": "598",
+    "first_sale_window_offset_seconds": 2263932,
+    "exit_50_window_offset_seconds": 2263932,
+    "exit_90_window_offset_seconds": 2263932,
+    "quantity_weighted_exit_window_offset_seconds": "2263932",
+    "sold_units": "13032346709725",
+    "acquired_units": "13032346709725",
+    "open_units": "0",
+    "method_version": "material-exit-v2",
+    "quantity_weighted_exit_note": "quantity_weighted_exit_seconds is the sold-unit-weighted time from that position's first acquisition to each sale. It is not quantity-weighted lot holding time (each lot's own open-to-close duration).",
+    "aggregation_method": "single",
+    "sample_count": 1,
+    "positions": [
+      {
+        "state": "KNOWN",
+        "missing_dependencies": [],
+        "first_sale_seconds": 598,
+        "exit_50_seconds": 598,
+        "exit_90_seconds": 598,
+        "final_hold_seconds": 598,
+        "position_opened_seconds": 2263334,
+        "position_closed_seconds": 2263932,
+        "position_hold_seconds": 598,
+        "quantity_weighted_exit_seconds": "598",
+        "first_sale_window_offset_seconds": 2263932,
+        "exit_50_window_offset_seconds": 2263932,
+        "exit_90_window_offset_seconds": 2263932,
+        "quantity_weighted_exit_window_offset_seconds": "2263932",
+        "sold_units": "13032346709725",
+        "acquired_units": "13032346709725",
+        "open_units": "0",
+        "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+        "position_index": 0,
+        "completed": true,
+        "method_version": "material-exit-v2",
+        "quantity_weighted_exit_note": "quantity_weighted_exit_seconds is the sold-unit-weighted time from that position's first acquisition to each sale. It is not quantity-weighted lot holding time (each lot's own open-to-close duration)."
+      }
+    ],
+    "missing_dependencies": []
+  },
+  "evidence": [
+    {
+      "hash": "23d7ad31328abd13bc542d83e16dab2837b3bd4d919ad2ca72e4cda90cbdbb6c",
+      "kind": "mass-search-reconstruction"
+    }
+  ],
+  "strict_preset": {
+    "name": "Strict research",
+    "version": "strict-v0.3",
+    "window_days": 30,
+    "verification_days": 90,
+    "min_profit_sol": "5",
+    "min_realised_roi_pct": "10",
+    "min_median_roi_pct": "5",
+    "min_win_rate_pct": "50",
+    "max_win_rate_pct": "85",
+    "min_hold_hours": "1",
+    "max_hold_hours": "72",
+    "min_positions": 50,
+    "min_positions_90d": 100,
+    "min_mints": 20,
+    "max_mints": 100,
+    "max_rapid_sale_pct": "10",
+    "min_avg_buys": "1",
+    "max_avg_buys": "2",
+    "min_avg_sells": "1",
+    "max_avg_sells": "3",
+    "min_positive_weeks": 3,
+    "max_contribution_pct": "25",
+    "require_positive_economic_pnl": true
+  },
+  "notes": [
+    "Subset reconstruction through the existing accounting/research functions.",
+    "Does not establish complete historical ownership or PRODUCT_READY."
+  ],
+  "independent_worksheet": {
+    "sale_fifo_basis_sol": [
+      "7.90026000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ],
+    "sale_net_profit_sol": [
+      "-0.16772552600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ],
+    "total_profit_sol": "-0.16772552600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "oracle": "independent-g1-fifo-v1"
+  },
+  "worksheet_reconciliation": {
+    "production_worksheet": {
+      "sale_fifo_basis_sol": [
+        "7.90026"
+      ],
+      "sale_net_profit_sol": [
+        "-0.167725526"
+      ],
+      "total_profit_sol": "-0.167725526"
+    },
+    "independent_worksheet": {
+      "sale_fifo_basis_sol": [
+        "7.90026000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "sale_net_profit_sol": [
+        "-0.16772552600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "total_profit_sol": "-0.16772552600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "oracle": "independent-g1-fifo-v1"
+    },
+    "production_total_profit_sol": "-0.167725526",
+    "independent_total_profit_sol": "-0.167725526",
+    "difference_sol": "0",
+    "status": "AGREE"
+  },
+  "declared_mints": [
+    "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump"
+  ],
+  "source_integrity": {
+    "status": "SOURCE_RECORDS_INTACT",
+    "records": 100,
+    "intact": 100,
+    "damaged": 0,
+    "malformed": 0,
+    "integrity_failure": false,
+    "all_unsupported": false
+  },
+  "offline_replay": true,
+  "PRODUCT_READY": false,
+  "not_ranked_wallet_pipeline_proof": true
+}

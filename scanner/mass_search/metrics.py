@@ -221,71 +221,329 @@ def fifo_sale_results(events):
         }
 
 
-def material_exit_v1(events, *, total_acquired=None, transfers_unknown=False):
-    """Retrospective cumulative sold / total acquired. Additional buys move the milestone."""
-    if transfers_unknown:
-        return {
-            "state": "UNKNOWN",
-            "missing_dependencies": ["transfer_or_unknown_quantity"],
-            "first_sale_seconds": None,
-            "exit_50_seconds": None,
-            "exit_90_seconds": None,
-            "final_hold_seconds": None,
-        }
-    acquired = Decimal("0")
-    sold = Decimal("0")
-    first_sale = None
-    t50 = t90 = final = None
-    opened = None
-    closed = None
-    weighted = Decimal("0")
-    if total_acquired is None:
-        total_acquired = sum((Decimal(str(event["units"])) for event in events if event["kind"] == "buy"), Decimal("0"))
-    else:
-        total_acquired = Decimal(str(total_acquired))
-    if total_acquired <= 0:
-        return {"state": "UNKNOWN", "missing_dependencies": ["acquired_units"]}
-    for event in events:
+MATERIAL_EXIT_VERSION = "material-exit-v2"
+QUANTITY_WEIGHTED_EXIT_NOTE = (
+    "quantity_weighted_exit_seconds is the sold-unit-weighted time from that "
+    "position's first acquisition to each sale. It is not quantity-weighted lot "
+    "holding time (each lot's own open-to-close duration)."
+)
+
+
+def _event_seconds(event):
+    if event.get("timestamp_missing") or event.get("unresolved_order"):
+        return None
+    value = event.get("seconds_from_start")
+    if value is None or value == "":
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _event_units(event):
+    if "units" not in event or event.get("units") in (None, ""):
+        return None
+    try:
         units = Decimal(str(event["units"]))
-        seconds = int(event["seconds_from_start"])
+    except (ArithmeticError, ValueError, TypeError):
+        return None
+    if not units.is_finite() or units <= 0:
+        return None
+    return units
+
+
+def _unknown_material_exit(*, missing, mint=None, position_index=None):
+    return {
+        "state": "UNKNOWN",
+        "missing_dependencies": list(missing),
+        "first_sale_seconds": None,
+        "exit_50_seconds": None,
+        "exit_90_seconds": None,
+        "final_hold_seconds": None,
+        "position_opened_seconds": None,
+        "position_closed_seconds": None,
+        "position_hold_seconds": None,
+        "quantity_weighted_exit_seconds": None,
+        "first_sale_window_offset_seconds": None,
+        "exit_50_window_offset_seconds": None,
+        "exit_90_window_offset_seconds": None,
+        "quantity_weighted_exit_window_offset_seconds": None,
+        "sold_units": None,
+        "acquired_units": None,
+        "open_units": None,
+        "mint": mint,
+        "position_index": position_index,
+        "method_version": MATERIAL_EXIT_VERSION,
+        "quantity_weighted_exit_note": QUANTITY_WEIGHTED_EXIT_NOTE,
+    }
+
+
+def _position_material_exit(events, *, mint, position_index, completed, total_acquired=None):
+    """Opening-relative timings for one mint-scoped flat-to-flat (or still-open) episode."""
+    dated = []
+    for event in events:
+        if event.get("kind") not in ("buy", "sell"):
+            continue
+        seconds = _event_seconds(event)
+        units = _event_units(event)
+        if seconds is None:
+            return _unknown_material_exit(
+                missing=["missing_opening_time" if event.get("kind") == "buy" else "ambiguous_order"],
+                mint=mint, position_index=position_index,
+            )
+        if units is None:
+            return _unknown_material_exit(
+                missing=["unresolved_quantities"], mint=mint, position_index=position_index,
+            )
+        dated.append({**event, "seconds_from_start": seconds, "units": units})
+    dated.sort(key=lambda row: (row["seconds_from_start"], row.get("signature") or ""))
+    if total_acquired is None:
+        total_acquired = sum((row["units"] for row in dated if row["kind"] == "buy"), Decimal("0"))
+    else:
+        try:
+            total_acquired = Decimal(str(total_acquired))
+        except (ArithmeticError, ValueError, TypeError):
+            return _unknown_material_exit(
+                missing=["unresolved_quantities"], mint=mint, position_index=position_index,
+            )
+    if total_acquired <= 0:
+        return _unknown_material_exit(
+            missing=["acquired_units"], mint=mint, position_index=position_index,
+        )
+    opened = None
+    first_sale_abs = t50_abs = t90_abs = closed = None
+    sold = Decimal("0")
+    weighted_abs = Decimal("0")
+    for event in dated:
+        seconds = event["seconds_from_start"]
         if event["kind"] == "buy":
             if opened is None:
                 opened = seconds
-            acquired += units
             continue
-        if event["kind"] != "sell":
-            continue
-        if first_sale is None:
-            first_sale = seconds
+        if opened is None:
+            return _unknown_material_exit(
+                missing=["missing_opening_time"], mint=mint, position_index=position_index,
+            )
         previous = sold
-        sold += units
-        weighted += units * seconds
+        sold += event["units"]
+        weighted_abs += event["units"] * seconds
+        if first_sale_abs is None:
+            first_sale_abs = seconds
         ratio_before = previous / total_acquired
         ratio_after = sold / total_acquired
-        if t50 is None and ratio_after >= Decimal("0.5") and ratio_before < Decimal("0.5"):
-            t50 = seconds
-        if t90 is None and ratio_after >= Decimal("0.9") and ratio_before < Decimal("0.9"):
-            t90 = seconds
+        if t50_abs is None and ratio_after >= Decimal("0.5") and ratio_before < Decimal("0.5"):
+            t50_abs = seconds
+        if t90_abs is None and ratio_after >= Decimal("0.9") and ratio_before < Decimal("0.9"):
+            t90_abs = seconds
         if sold == total_acquired:
             closed = seconds
-            # Position hold is close − open, not the sale's report-window offset.
-            final = None if opened is None else seconds - opened
+    if opened is None:
+        return _unknown_material_exit(
+            missing=["missing_opening_time"], mint=mint, position_index=position_index,
+        )
+    if first_sale_abs is None:
+        payload = _unknown_material_exit(
+            missing=["no_supported_sale"], mint=mint, position_index=position_index,
+        )
+        payload["position_opened_seconds"] = opened
+        payload["acquired_units"] = format_decimal(total_acquired)
+        payload["sold_units"] = "0"
+        payload["open_units"] = format_decimal(total_acquired)
+        payload["completed"] = bool(completed)
+        return payload
+
+    def _rel(absolute):
+        return None if absolute is None else absolute - opened
+
+    final = None if closed is None else closed - opened
     return {
-        "state": "KNOWN" if first_sale is not None else "UNKNOWN",
-        "first_sale_seconds": first_sale,
-        "exit_50_seconds": t50,
-        "exit_90_seconds": t90,
+        "state": "KNOWN",
+        "missing_dependencies": [],
+        "first_sale_seconds": _rel(first_sale_abs),
+        "exit_50_seconds": _rel(t50_abs),
+        "exit_90_seconds": _rel(t90_abs),
         "final_hold_seconds": final,
         "position_opened_seconds": opened,
         "position_closed_seconds": closed,
         "position_hold_seconds": final,
-        "quantity_weighted_exit_seconds": format_decimal(weighted / sold) if sold else None,
+        "quantity_weighted_exit_seconds": format_decimal((weighted_abs / sold) - opened) if sold else None,
+        "first_sale_window_offset_seconds": first_sale_abs,
+        "exit_50_window_offset_seconds": t50_abs,
+        "exit_90_window_offset_seconds": t90_abs,
+        "quantity_weighted_exit_window_offset_seconds": format_decimal(weighted_abs / sold) if sold else None,
         "sold_units": format_decimal(sold),
         "acquired_units": format_decimal(total_acquired),
         "open_units": format_decimal(total_acquired - sold),
-        "method_version": "material-exit-v1",
-        "missing_dependencies": [] if first_sale is not None else ["no_supported_sale"],
+        "mint": mint,
+        "position_index": position_index,
+        "completed": bool(completed),
+        "method_version": MATERIAL_EXIT_VERSION,
+        "quantity_weighted_exit_note": QUANTITY_WEIGHTED_EXIT_NOTE,
     }
+
+
+def split_material_exit_positions(events):
+    """Mint-scoped flat-to-flat episodes. Distinct mints and episodes stay separate."""
+    grouped = {}
+    for event in events or []:
+        if event.get("kind") not in ("buy", "sell"):
+            continue
+        grouped.setdefault(event.get("mint"), []).append(event)
+    positions = []
+    for mint, rows in grouped.items():
+        if any(_event_seconds(row) is None or _event_units(row) is None for row in rows):
+            missing = []
+            if any(_event_units(row) is None for row in rows):
+                missing.append("unresolved_quantities")
+            if any(row.get("kind") == "buy" and _event_seconds(row) is None for row in rows):
+                missing.append("missing_opening_time")
+            if any(row.get("kind") == "sell" and _event_seconds(row) is None for row in rows) or any(
+                row.get("unresolved_order") or row.get("timestamp_missing") for row in rows
+            ):
+                missing.append("ambiguous_order")
+            positions.append({
+                "mint": mint,
+                "position_index": 0,
+                "events": rows,
+                "completed": False,
+                "unresolved": True,
+                "missing": missing or ["ambiguous_order"],
+            })
+            continue
+        dated = sorted(rows, key=lambda row: (_event_seconds(row), row.get("signature") or ""))
+        inventory = Decimal("0")
+        current = []
+        opened = False
+        index = 0
+        for row in dated:
+            units = _event_units(row)
+            current.append(row)
+            if row["kind"] == "buy":
+                inventory += units
+                opened = True
+                continue
+            inventory -= units
+            if inventory < 0:
+                positions.append({
+                    "mint": mint, "position_index": index, "events": current,
+                    "completed": False, "unresolved": True, "missing": ["unresolved_quantities"],
+                })
+                current, opened, inventory, index = [], False, Decimal("0"), index + 1
+                continue
+            if opened and inventory == 0:
+                positions.append({
+                    "mint": mint, "position_index": index, "events": current,
+                    "completed": True, "unresolved": False, "missing": [],
+                })
+                current, opened, inventory, index = [], False, Decimal("0"), index + 1
+        if current:
+            positions.append({
+                "mint": mint, "position_index": index, "events": current,
+                "completed": False, "unresolved": False, "missing": [],
+            })
+    return positions
+
+
+def _median_int_or_decimal(values):
+    if not values:
+        return None
+    if len(values) == 1:
+        return values[0]
+    mid = median(values)
+    if isinstance(mid, Decimal):
+        return mid
+    if isinstance(mid, float) and mid.is_integer():
+        return int(mid)
+    if isinstance(mid, (int,)):
+        return mid
+    return mid
+
+
+def material_exit_v2(events, *, total_acquired=None, transfers_unknown=False):
+    """Per-position opening-relative material exit. Never pool raw units across mints."""
+    if transfers_unknown:
+        payload = _unknown_material_exit(missing=["transfer_or_unknown_quantity"])
+        payload["aggregation_method"] = None
+        payload["sample_count"] = 0
+        payload["positions"] = []
+        return payload
+    explicit_total = total_acquired
+    positions = split_material_exit_positions(events)
+    if explicit_total is not None and len(positions) == 1 and not positions[0].get("unresolved"):
+        computed = [_position_material_exit(
+            positions[0]["events"], mint=positions[0]["mint"],
+            position_index=positions[0]["position_index"], completed=positions[0]["completed"],
+            total_acquired=explicit_total,
+        )]
+    else:
+        computed = []
+        for position in positions:
+            if position.get("unresolved"):
+                computed.append(_unknown_material_exit(
+                    missing=position.get("missing") or ["ambiguous_order"],
+                    mint=position.get("mint"), position_index=position.get("position_index"),
+                ))
+                continue
+            computed.append(_position_material_exit(
+                position["events"], mint=position.get("mint"),
+                position_index=position.get("position_index"), completed=position.get("completed"),
+            ))
+    known = [row for row in computed if row.get("state") == "KNOWN"]
+    if not known:
+        missing = []
+        for row in computed:
+            missing.extend(row.get("missing_dependencies") or [])
+        payload = _unknown_material_exit(missing=missing or ["no_supported_sale"])
+        payload["aggregation_method"] = None
+        payload["sample_count"] = 0
+        payload["positions"] = computed
+        return payload
+
+    def _collect(key, *, numeric=True):
+        values = [row[key] for row in known if row.get(key) is not None]
+        if not values:
+            return None
+        if not numeric:
+            return values[0] if len(values) == 1 else None
+        if key == "quantity_weighted_exit_seconds":
+            numbers = [Decimal(str(item)) for item in values]
+            return format_decimal(_median_int_or_decimal(numbers))
+        return _median_int_or_decimal(values)
+
+    single = known[0] if len(known) == 1 else None
+    payload = {
+        "state": "KNOWN",
+        "first_sale_seconds": _collect("first_sale_seconds"),
+        "exit_50_seconds": _collect("exit_50_seconds"),
+        "exit_90_seconds": _collect("exit_90_seconds"),
+        "final_hold_seconds": _collect("final_hold_seconds"),
+        "position_opened_seconds": single["position_opened_seconds"] if single else None,
+        "position_closed_seconds": single["position_closed_seconds"] if single else None,
+        "position_hold_seconds": _collect("final_hold_seconds"),
+        "quantity_weighted_exit_seconds": _collect("quantity_weighted_exit_seconds"),
+        "first_sale_window_offset_seconds": single["first_sale_window_offset_seconds"] if single else None,
+        "exit_50_window_offset_seconds": single["exit_50_window_offset_seconds"] if single else None,
+        "exit_90_window_offset_seconds": single["exit_90_window_offset_seconds"] if single else None,
+        "quantity_weighted_exit_window_offset_seconds": (
+            single["quantity_weighted_exit_window_offset_seconds"] if single else None
+        ),
+        "sold_units": single["sold_units"] if single else None,
+        "acquired_units": single["acquired_units"] if single else None,
+        "open_units": single["open_units"] if single else None,
+        "method_version": MATERIAL_EXIT_VERSION,
+        "quantity_weighted_exit_note": QUANTITY_WEIGHTED_EXIT_NOTE,
+        "aggregation_method": "single" if len(known) == 1 else "median",
+        "sample_count": len(known),
+        "positions": computed,
+        "missing_dependencies": [],
+    }
+    return payload
+
+
+def material_exit_v1(events, *, total_acquired=None, transfers_unknown=False):
+    """Compatibility entry point. Semantics are material-exit-v2 (opening-relative)."""
+    return material_exit_v2(events, total_acquired=total_acquired, transfers_unknown=transfers_unknown)
 
 
 def earliest_quote_request_seconds(*, notification_receipt_seconds, decode_completed_seconds, reaction_delay_seconds):

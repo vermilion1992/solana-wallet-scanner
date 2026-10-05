@@ -90,7 +90,7 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
           <strong>{independent?.total_profit_sol ? `${decimal(independent.total_profit_sol, 4)} SOL` : (worksheet?.total_profit_sol ? `${decimal(worksheet.total_profit_sol, 4)} SOL` : "unknown")}</strong>
         </div>
         <div>
-          <span>Material-exit t90</span>
+          <span>Material-exit t90 (from open)</span>
           <strong>{exit?.exit_90_seconds != null ? `${exit.exit_90_seconds} seconds` : "unknown"}</strong>
         </div>
         <div>
@@ -98,6 +98,15 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
           <strong>{subsetHoldText(exit?.final_hold_seconds)}</strong>
         </div>
       </div>
+      {exit?.method_version && (
+        <p className="subset-worksheet-note" data-material-exit-version={exit.method_version}>
+          Exit timings are opening-relative ({exit.method_version}
+          {exit.aggregation_method ? ` · ${exit.aggregation_method}` : ""}
+          {exit.sample_count != null ? ` n=${exit.sample_count}` : ""}).
+          {exit.first_sale_seconds != null ? ` First sale ${exit.first_sale_seconds}s.` : ""}
+          {exit.quantity_weighted_exit_seconds != null ? ` Quantity-weighted exit time ${exit.quantity_weighted_exit_seconds}s (not lot holding time).` : ""}
+        </p>
+      )}
       {reconciliation?.status && (
         <p className="subset-worksheet-note" data-worksheet-reconciliation={reconciliation.status}>
           Worksheet reconciliation: {reconciliation.status}

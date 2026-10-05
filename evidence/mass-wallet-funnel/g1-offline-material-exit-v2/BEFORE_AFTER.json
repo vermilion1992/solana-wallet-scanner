@@ -1,0 +1,27 @@
+{
+  "metric_version_before": "material-exit-v1",
+  "metric_version_after": "material-exit-v2",
+  "prior_artifact": "evidence/mass-wallet-funnel/g1-offline-repair-replay/APPLICATION_REPORT.json",
+  "prior_report_id": "e39eb74c1498472088dad1bce52f64d4",
+  "new_report_id": "9ddda11ce5464109a40798c1895d187a",
+  "before": {
+    "first_sale_seconds": 2263932,
+    "exit_50_seconds": 2263932,
+    "exit_90_seconds": 2263932,
+    "quantity_weighted_exit_seconds": "2263932",
+    "final_hold_seconds": 598,
+    "note": "first_sale / t50 / t90 / QW were report-window offsets; only final_hold was opening-relative"
+  },
+  "after": {
+    "first_sale_seconds": 598,
+    "exit_50_seconds": 598,
+    "exit_90_seconds": 598,
+    "quantity_weighted_exit_seconds": "598",
+    "final_hold_seconds": 598,
+    "first_sale_window_offset_seconds": 2263932,
+    "exit_90_window_offset_seconds": 2263932,
+    "quantity_weighted_exit_window_offset_seconds": "2263932",
+    "screening_material_exit_t90_seconds": "598",
+    "note": "durations are opening-relative; window offsets retained under separate names"
+  }
+}

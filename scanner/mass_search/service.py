@@ -32,7 +32,8 @@ from .metrics import (
     earliest_quote_request_seconds,
     fifo_sale_results,
     format_decimal,
-    material_exit_v1,
+    MATERIAL_EXIT_VERSION,
+    material_exit_v2,
     median_hold_hours,
     unavailable_exit,
 )
@@ -405,10 +406,18 @@ class MassSearchService:
             {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol", "mint")}
             for event in events if event.get("kind") in ("buy", "sell")
         ]) if any(event.get("kind") in ("buy", "sell") for event in events) else None
-        exit_diag = material_exit_v1([
-            {"kind": event["kind"], "units": event["units"], "seconds_from_start": event.get("seconds_from_start", 0)}
+        exit_diag = material_exit_v2([
+            {
+                "kind": event["kind"],
+                "units": event.get("units"),
+                "seconds_from_start": event.get("seconds_from_start"),
+                "mint": event.get("mint") or mint,
+                "signature": event.get("signature"),
+                "unresolved_order": event.get("unresolved_order"),
+                "timestamp_missing": event.get("timestamp_missing"),
+            }
             for event in events
-            if event.get("kind") in ("buy", "sell") and not event.get("timestamp_missing")
+            if event.get("kind") in ("buy", "sell")
         ], transfers_unknown=any(event.get("origin") == "transfer" for event in events))
         holds = []
         for position in analysis.get("positions") or []:
@@ -471,19 +480,44 @@ class MassSearchService:
                 t90 = build_metric(
                     metric_key="material_exit_t90_seconds", candidate_id=candidate_id,
                     value=str(exit_diag["exit_90_seconds"]), unit="seconds", state="KNOWN",
-                    basis="RAW_DERIVED_SUBSET", window=window, population="completed_observed_episode",
-                    population_count=1, observed_at=observed, evidence_sha256=[evidence],
-                    missing_dependencies=[], source_provider="local-reconstruction",
-                    notes=["material-exit-v1; long final hold does not hide a fast t90."],
+                    basis="RAW_DERIVED_SUBSET", window=window,
+                    population="per_position_opening_relative",
+                    population_count=int(exit_diag.get("sample_count") or 1),
+                    method_version=MATERIAL_EXIT_VERSION, observed_at=observed,
+                    evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
+                    notes=[
+                        note for note in (
+                            "material-exit-v2; t90 is opening-relative per completed position.",
+                            "Long final hold does not hide a fast t90.",
+                            exit_diag.get("quantity_weighted_exit_note"),
+                        ) if note
+                    ],
+                )
+                _insert_metric(self.store, run_id, t90)
+            elif (exit_diag.get("state") == "UNKNOWN") or exit_diag.get("missing_dependencies"):
+                t90 = build_metric(
+                    metric_key="material_exit_t90_seconds", candidate_id=candidate_id,
+                    value=None, unit="seconds", state="UNKNOWN",
+                    basis="RAW_DERIVED_SUBSET", window=window,
+                    population="per_position_opening_relative",
+                    population_count=0, method_version=MATERIAL_EXIT_VERSION,
+                    observed_at=observed, evidence_sha256=[evidence],
+                    missing_dependencies=list(exit_diag.get("missing_dependencies") or ["material_exit_unavailable"]),
+                    source_provider="local-reconstruction",
+                    notes=["material-exit-v2; opening-relative t90 unavailable; no window-offset substitution."],
                 )
                 _insert_metric(self.store, run_id, t90)
             if exit_diag.get("final_hold_seconds") is not None:
                 final = build_metric(
                     metric_key="final_hold_seconds", candidate_id=candidate_id,
                     value=str(exit_diag["final_hold_seconds"]), unit="seconds", state="KNOWN",
-                    basis="RAW_DERIVED_SUBSET", window=window, population="completed_observed_episode",
-                    population_count=1, observed_at=observed, evidence_sha256=[evidence],
-                    missing_dependencies=[], source_provider="local-reconstruction",
+                    basis="RAW_DERIVED_SUBSET", window=window,
+                    population="per_position_opening_relative",
+                    population_count=int(exit_diag.get("sample_count") or 1),
+                    method_version=MATERIAL_EXIT_VERSION, observed_at=observed,
+                    evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
                 )
                 _insert_metric(self.store, run_id, final)
         report = {
