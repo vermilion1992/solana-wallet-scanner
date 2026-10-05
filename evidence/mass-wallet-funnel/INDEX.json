@@ -1,7 +1,7 @@
 {
   "kind": "mass-wallet-funnel-index-v1",
-  "tested_application_commit": "2dd8215056e452bbd69a3e87e67d637b87dbd17d",
-  "prior_tested_application_commit": "379ab4ebd2d89e39d0e40533ad56490ab3de633e",
+  "tested_application_commit": "e8f63dda5effaf086a14f4e6e29eb0b551d81450",
+  "prior_tested_application_commit": "2dd8215056e452bbd69a3e87e67d637b87dbd17d",
   "base_commit": "fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69",
   "delivery": "DELIVERY.md",
   "official_g4_receipt": "ee7c645a3a7b499bb150b1ac84b96ced/receipt.json",
@@ -10,6 +10,7 @@
   "offline_research_screen_browser": "ui-offline-browser/09-research-screen-subset-desktop.png",
   "offline_research_reopen_browser": "ui-offline-browser/10-reopened-screening-after-restart-desktop.png",
   "offline_screening_export": "ui-offline-browser/screening-export.json",
+  "offline_shortlist_browser": "ui-offline-browser/11-watchlist-shortlist-subset-desktop.png",
   "outcomes": {
     "MASS_SEARCH_SOFTWARE": "implemented_offline",
     "REAL_SEARCH_BENCHMARK": "not_demonstrated",

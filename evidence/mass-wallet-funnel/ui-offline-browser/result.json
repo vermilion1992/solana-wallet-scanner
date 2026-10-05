@@ -12,8 +12,8 @@
     {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "6515cb10982c4bd996847fc83af97ec2",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45"
+      "run_id": "6949de7ba1cc4a62885a807e31c4ba3d",
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf"
     },
     {
       "case": "export-run",
@@ -22,39 +22,46 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45"
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf"
     },
     {
       "case": "restart-reopen-worksheet",
       "state": "PASS",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45"
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf"
     },
     {
       "case": "results-subset-pnl",
       "state": "PASS",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45"
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf"
     },
     {
       "case": "compare-subset-pnl",
       "state": "PASS",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45"
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf"
     },
     {
       "case": "research-screen-subset",
       "state": "PASS",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45",
-      "screening_id": "fcd35b1fec7d4088bb590459f80cfdc2",
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf",
+      "screening_id": "f9ce7699a353419fa372aa424bbd7169",
       "result": "insufficient_evidence",
       "observation_started": false
     },
     {
       "case": "restart-reopen-screening",
       "state": "PASS",
-      "report_id": "3880bdb54f854062abbe5f2a28c14f45",
-      "screening_id": "fcd35b1fec7d4088bb590459f80cfdc2",
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf",
+      "screening_id": "f9ce7699a353419fa372aa424bbd7169",
       "result": "insufficient_evidence",
       "observation_started": false,
       "export": "screening-export.json"
+    },
+    {
+      "case": "shortlist-subset-watchlist-results",
+      "state": "PASS",
+      "report_id": "3658b28a83e44a6bbede987ea620b3bf",
+      "screening_id": "f9ce7699a353419fa372aa424bbd7169",
+      "observation_started": false
     }
   ],
   "limitations": [
@@ -212,6 +219,38 @@
       "scrollWidth": 360,
       "overflow": false,
       "nodes": []
+    },
+    {
+      "name": "11-watchlist-shortlist-subset",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-watchlist-shortlist-subset",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-results-after-shortlist",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-results-after-shortlist",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
     }
   ],
   "javascript_errors": [],
@@ -244,22 +283,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/6515cb10982c4bd996847fc83af97ec2",
+      "path": "/api/mass-search/runs/6949de7ba1cc4a62885a807e31c4ba3d",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/6515cb10982c4bd996847fc83af97ec2/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/6949de7ba1cc4a62885a807e31c4ba3d/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/6515cb10982c4bd996847fc83af97ec2/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/6949de7ba1cc4a62885a807e31c4ba3d/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/3880bdb54f854062abbe5f2a28c14f45?view=display",
+      "path": "/api/reports/3658b28a83e44a6bbede987ea620b3bf?view=display",
       "status": 200
     },
     {
@@ -279,22 +318,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/6515cb10982c4bd996847fc83af97ec2",
+      "path": "/api/mass-search/runs/6949de7ba1cc4a62885a807e31c4ba3d",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/6515cb10982c4bd996847fc83af97ec2/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/6949de7ba1cc4a62885a807e31c4ba3d/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/6515cb10982c4bd996847fc83af97ec2/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/6949de7ba1cc4a62885a807e31c4ba3d/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/3880bdb54f854062abbe5f2a28c14f45?view=display",
+      "path": "/api/reports/3658b28a83e44a6bbede987ea620b3bf?view=display",
       "status": 200
     },
     {
@@ -319,7 +358,17 @@
     },
     {
       "method": "GET",
-      "path": "/api/screenings/fcd35b1fec7d4088bb590459f80cfdc2",
+      "path": "/api/screenings/f9ce7699a353419fa372aa424bbd7169",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/watchlist",
       "status": 200
     },
     {
