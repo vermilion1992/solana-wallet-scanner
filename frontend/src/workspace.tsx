@@ -703,6 +703,7 @@ export function Results({
             <option value="all">All sources</option>
             <option value="live">Live records</option>
             <option value="demo">Synthetic demo</option>
+            <option value="mass-search">Mass-search subset</option>
           </select>
           <select
             aria-label="Sort results"
@@ -792,7 +793,7 @@ export function CompareView({
               <span>
                 <strong>{report.label || shorten(report.address)}</strong>
                 <small>
-                  {report.source === "demo" ? "Synthetic demo" : "Live records"}{" "}
+                  {report.source === "demo" ? "Synthetic demo" : report.source === "mass-search" ? "Mass-search subset" : "Live records"}{" "}
                   · {date(report.window.end)}
                 </small>
               </span>

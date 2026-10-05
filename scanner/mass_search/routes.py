@@ -1,6 +1,8 @@
 """Authenticated mass-search HTTP routes. Existing session/CSRF/host guards apply."""
 from __future__ import annotations
 
+import json
+
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse, Response
 
@@ -149,11 +151,24 @@ def install_mass_search_routes(app, store):
         except Exception as exc:
             _error(exc)
 
+    @app.get("/api/mass-search/runs/{run_id}/reports")
+    async def linked_reports(run_id: str):
+        try:
+            return {"reports": _service(store).linked_reports(run_id)}
+        except Exception as exc:
+            _error(exc)
+
     @app.get("/api/mass-search/runs/{run_id}/export")
     async def export_run(run_id: str):
         try:
             exported = _service(store).export_run(run_id)
-            return JSONResponse(exported["payload"])
+            body = json.dumps(exported["payload"], indent=2, allow_nan=False)
+            filename = f"mass-search-{run_id[:12]}.json"
+            return Response(
+                body,
+                media_type="application/json",
+                headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+            )
         except Exception as exc:
             _error(exc)
 

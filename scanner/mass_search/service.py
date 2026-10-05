@@ -488,6 +488,7 @@ class MassSearchService:
         report = {
             "id": uuid.uuid4().hex,
             "address": candidate_id.split(":", 1)[1],
+            "label": f"Mass-search subset · {kind}",
             "source": "mass-search",
             "corpus_kind": kind,
             "created_at": observed,
@@ -495,7 +496,13 @@ class MassSearchService:
             "methodology": analysis.get("methodology"),
             "policy": analysis.get("policy") or "UNRESOLVED",
             "evidence_status": "partial",
-            "metrics": analysis.get("metrics"),
+            "metrics": analysis.get("metrics") or {},
+            "checks": analysis.get("checks") or [],
+            "counts": analysis.get("counts") or {},
+            "positions": analysis.get("positions") or [],
+            "events": analysis.get("events") or [],
+            "findings": [],
+            "coverage": analysis.get("coverage") or {},
             "research": research,
             "worksheet": worksheet,
             "material_exit": exit_diag,
@@ -527,7 +534,57 @@ class MassSearchService:
     def page_candidates(self, run_id, **kwargs):
         data_run = _data_run_id(self.store, run_id)
         query_run = run_id if kwargs.get("stage") else data_run
-        return page_summaries(self.store, query_run, data_run_id=data_run, **kwargs)
+        page = page_summaries(self.store, query_run, data_run_id=data_run, **kwargs)
+        return self._attach_candidate_details(run_id, page)
+
+    def _attach_candidate_details(self, run_id, page):
+        items = page.get("items") or []
+        if not items:
+            return page
+        data_run = _data_run_id(self.store, run_id)
+        ids = [item["candidate_id"] for item in items]
+        placeholders = ",".join("?" * len(ids))
+        with self.store.lock:
+            links = self.store.db.execute(
+                f"SELECT candidate_id, report_id FROM report_links WHERE run_id IN (?, ?) AND candidate_id IN ({placeholders})",
+                (run_id, data_run, *ids),
+            ).fetchall()
+            extras = self.store.db.execute(
+                f"SELECT candidate_id, metric_key, value, unit, state FROM metric_snapshots "
+                f"WHERE run_id=? AND candidate_id IN ({placeholders}) AND metric_key IN (?,?,?)",
+                (data_run, *ids, "subset_realised_pnl_sol", "median_observed_hold_hours",
+                 "material_exit_t90_seconds"),
+            ).fetchall()
+        link_map = {row[0]: row[1] for row in links}
+        extra_map = {}
+        for ident, key, value, unit, state in extras:
+            extra_map.setdefault(ident, {})[key] = {"value": value, "unit": unit, "state": state}
+        for item in items:
+            ident = item["candidate_id"]
+            item["report_id"] = link_map.get(ident)
+            metrics = extra_map.get(ident, {})
+            item["subset_pnl"] = metrics.get("subset_realised_pnl_sol")
+            item["median_hold"] = metrics.get("median_observed_hold_hours")
+            item["material_exit_t90"] = metrics.get("material_exit_t90_seconds")
+        return page
+
+    def linked_reports(self, run_id):
+        data_run = _data_run_id(self.store, run_id)
+        with self.store.lock:
+            rows = self.store.db.execute(
+                "SELECT candidate_id, report_id FROM report_links WHERE run_id IN (?, ?) ORDER BY created_at, report_id",
+                (run_id, data_run),
+            ).fetchall()
+        reports = []
+        seen = set()
+        for ident, report_id in rows:
+            if report_id in seen:
+                continue
+            seen.add(report_id)
+            report = self.store.get("reports", report_id)
+            if report:
+                reports.append({**report, "candidate_id": ident})
+        return reports
 
     def pause(self, run_id):
         return self._set_status(run_id, "PAUSED", allowed=("CREATED", "UNIVERSE_SEALED", "RUNNING"))

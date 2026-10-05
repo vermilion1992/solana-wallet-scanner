@@ -5074,7 +5074,13 @@ pre {
 .mass-search-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .mass-search-table th, .mass-search-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
 .mass-search-funnel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mass-search-cards { display: none; list-style: none; margin: 0; padding: 0; }
+.mass-search-cards li { display: grid; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.mass-search-saved { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.mass-search-saved li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 @media (max-width: 400px) {
   .mass-search-funnel { grid-template-columns: 1fr; }
   .mass-search .research-action-row { flex-wrap: wrap; }
+  .mass-search-table-wrap { display: none; }
+  .mass-search-cards { display: grid; }
 }

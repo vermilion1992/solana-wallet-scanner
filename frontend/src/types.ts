@@ -239,7 +239,8 @@ export type Report = {
   scan_id?: string;
   address: string;
   label?: string;
-  source: "demo" | "live";
+  source: "demo" | "live" | "mass-search";
+  corpus_kind?: string;
   created_at: string;
   window: { start: string; end: string };
   methodology: string;
@@ -681,6 +682,11 @@ export type MassSearchRun = {
   legacy_limits?: Record<string, number>;
   bulk_capacity?: number;
 };
+export type MassSearchMetric = {
+  value?: string | null;
+  unit?: string | null;
+  state?: string | null;
+};
 export type MassSearchCandidate = {
   candidate_id: string;
   address: string;
@@ -689,4 +695,8 @@ export type MassSearchCandidate = {
   sort_value?: string | null;
   unit?: string | null;
   metric_state?: string | null;
+  report_id?: string | null;
+  subset_pnl?: MassSearchMetric | null;
+  median_hold?: MassSearchMetric | null;
+  material_exit_t90?: MassSearchMetric | null;
 };
