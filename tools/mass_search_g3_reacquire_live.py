@@ -35,6 +35,7 @@ def main():
         type=Path,
         default=ROOT / "evidence" / "mass-wallet-funnel" / "g3-integrity-reacquire-rank1-live",
     )
+    parser.add_argument("--overlay", type=Path, default=None, help="Optional local signature overlay JSON")
     args = parser.parse_args()
     grant_path = args.grant.resolve()
     if grant_path == GRANT_PATH.resolve():
@@ -75,8 +76,10 @@ def main():
             store,
             allow_live=True,
             grant=grant,
+            overlay_path=args.overlay,
             evidence_dir=args.evidence,
             credentials={"helius": bool(os.environ.get("HELIUS_API_KEY") or os.environ.get("HELIUS_KEY"))},
+            attach_live_http=True,
         )
     finally:
         store.close()

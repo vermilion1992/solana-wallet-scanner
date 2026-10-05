@@ -50,7 +50,7 @@ Secure-box inspection: `g3-ranked100-history-live-2026-10-06/SOURCE_RECORDS_CACH
 
 This revision repairs the code path offline (schema-aware sanitize, v2 cache keys that do not overwrite v1, integrity ≠ unsupported, window/episode/pagination fixes). G3 remains **INCOMPLETE** and is **not re-passed**. Do not silently reacquire. Notes: `DATA_INTEGRITY_RECOVERY.md`, `g3-ranked100-history-live-2026-10-06/CORRECTION.md`.
 
-A later named grant `live-g3-integrity-reacquire-rank1-2026-10-06-mitch` was prepared offline for rank-1 pages 0/1 only. Surviving metadata is **STOP_NO_SEGMENT** (signatures not in the PR). That grant is a different id and must not reuse this leftover 15/150 budget. See `G3_INTEGRITY_REACQUIRE_RANK1.md`.
+A later named grant `live-g3-integrity-reacquire-rank1-2026-10-06-mitch` was prepared for rank-1 pages 0/1 only. Box extract is **EXTRACT_OK** (100+100 signatures + pagination tokens). That grant is a different id and must not reuse this leftover 15/150 budget. See `G3_INTEGRITY_REACQUIRE_RANK1.md`.
 
 ## What was prepared (offline)
 

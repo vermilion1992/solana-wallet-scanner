@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--live", action="store_true", help="Refused: this tool is offline-only")
     parser.add_argument("--extract-local-signatures", type=Path, default=None)
     parser.add_argument("--extract-out", type=Path, default=None)
+    parser.add_argument("--overlay", type=Path, default=None, help="Optional local signature overlay JSON")
     args = parser.parse_args()
     if args.live:
         print(json.dumps({
@@ -66,7 +67,12 @@ def main():
     args.data_dir.mkdir(parents=True, exist_ok=True)
     store = Store(args.data_dir)
     try:
-        result = run_reacquire(store, evidence_dir=args.evidence, allow_live=False)
+        result = run_reacquire(
+            store,
+            evidence_dir=args.evidence,
+            allow_live=False,
+            overlay_path=args.overlay,
+        )
     finally:
         store.close()
     print(json.dumps({

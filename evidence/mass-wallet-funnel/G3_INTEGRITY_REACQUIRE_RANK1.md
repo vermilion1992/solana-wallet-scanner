@@ -13,16 +13,17 @@ Leftover `live-g3-ranked100-history-2026-10-06-mitch` (15/150) must not be reuse
 Application commit: `2b8dd944ddfe970d3b5070f38b008aa7cd6179ed`.
 Offline tests: 178 passed. Receipt: `g3-integrity-reacquire-rank1/OFFLINE_PREP_RECEIPT.json`.
 
-## Segment status: STOP_NO_SEGMENT
+## Segment status: EXTRACT_OK
 
-Surviving PR metadata froze query encoding, historical windows, and page-level
-hashes. It did **not** freeze the original 200 signatures or pagination tokens.
-Newest-first `getTransactionsForAddress` now would substitute current/latest
-history. Live dispatch is therefore blocked (`STOP_NO_SEGMENT`) even if a local
-grant copy is armed.
+Box-local extract recovered the original 100+100 signatures and pagination
+tokens (`452802642:577`, `452554670:596`). Page hashes match the damaged G3
+run. Token balances remain `SOURCE_RECORDS_DAMAGED`. Live still requires a
+local armed grant plus Helius quota confirm on the secure box. Returned
+signatures must match the frozen manifest; mismatch stops the run.
 
-See `g3-integrity-reacquire-rank1/OPERATOR_REPORT.md` and
-`g3-integrity-reacquire-rank1/FROZEN_SEGMENTS.json`.
+See `g3-integrity-reacquire-rank1/OPERATOR_REPORT.md`,
+`g3-integrity-reacquire-rank1/FROZEN_SEGMENTS.json`,
+`g3-integrity-reacquire-rank1/rank1-signature-overlay.json`.
 
 ## Offline how-to
 
@@ -31,5 +32,6 @@ See `g3-integrity-reacquire-rank1/OPERATOR_REPORT.md` and
 .venv/bin/python tools/mass_search_g3_reacquire_offline.py --data-dir /tmp/g3-reacquire-offline
 ```
 
-The offline CLI refuses `--live`. The live CLI on the secure box also refuses
-dispatch while the freeze is `STOP_NO_SEGMENT`.
+The offline CLI refuses `--live`. The live CLI attaches Helius only on the
+secure box after a local armed grant and quota confirm. Signature mismatch
+stops the run. Cloud agents must not call Helius.
