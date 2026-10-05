@@ -5263,6 +5263,8 @@ pre {
 .mass-search-cards li { display: grid; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; min-width: 0; }
 .mass-search-saved { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .mass-search-saved li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; overflow-wrap: anywhere; }
+.research-profile { display: grid; gap: 10px; margin-top: 12px; }
+.mass-search-budget .button[disabled] { opacity: 0.55; }
 @media (max-width: 480px) {
   .results-panel .table-scroll,
   .compare-panel .table-scroll {

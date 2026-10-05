@@ -62,10 +62,15 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
   const independent = report.independent_worksheet;
   const reconciliation = report.worksheet_reconciliation;
   const exit = report.material_exit;
-  const sales = worksheet?.sale_net_profit_sol || [];
+  const settlement = worksheet?.settlement_asset || (worksheet?.total_profit_usdc ? "USDC" : "SOL");
+  const sales = settlement === "USDC" ? (worksheet?.sale_net_profit_usdc || []) : (worksheet?.sale_net_profit_sol || []);
   const observations = report.observations || [];
   const trades = (report.events || []).filter((row) => row.kind === "buy" || row.kind === "sell");
   const closedPositions = (report.positions || []).filter((row) => row.status === "closed" || row.end);
+  const productionPnl = settlement === "USDC" ? worksheet?.total_profit_usdc : worksheet?.total_profit_sol;
+  const independentPnl = settlement === "USDC"
+    ? (independent?.total_profit_usdc || worksheet?.total_profit_usdc)
+    : (independent?.total_profit_sol || worksheet?.total_profit_sol);
   return (
     <section className="panel subset-worksheet" data-subset-worksheet="independent">
       <SectionHeading
@@ -83,11 +88,11 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
       <div className="subset-worksheet-metrics">
         <div>
           <span>Production subset P&amp;L</span>
-          <strong>{worksheet?.total_profit_sol ? `${decimal(worksheet.total_profit_sol, 4)} SOL` : "unknown"}</strong>
+          <strong>{productionPnl ? `${decimal(productionPnl, 4)} ${settlement}` : "unknown"}</strong>
         </div>
         <div>
           <span>Independent subset P&amp;L</span>
-          <strong>{independent?.total_profit_sol ? `${decimal(independent.total_profit_sol, 4)} SOL` : (worksheet?.total_profit_sol ? `${decimal(worksheet.total_profit_sol, 4)} SOL` : "unknown")}</strong>
+          <strong>{independentPnl ? `${decimal(independentPnl, 4)} ${settlement}` : "unknown"}</strong>
         </div>
         <div>
           <span>Material-exit t90 (from open)</span>
@@ -110,6 +115,7 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
       {reconciliation?.status && (
         <p className="subset-worksheet-note" data-worksheet-reconciliation={reconciliation.status}>
           Worksheet reconciliation: {reconciliation.status}
+          {reconciliation.difference_usdc != null ? ` · difference ${reconciliation.difference_usdc} USDC` : ""}
           {reconciliation.difference_sol != null ? ` · difference ${reconciliation.difference_sol} SOL` : ""}
           {reconciliation.note ? ` — ${reconciliation.note}` : ""}
         </p>
@@ -131,7 +137,7 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
               <tr key={`${String(row.signature || index)}-${index}`}>
                 <td>{String(row.kind)}</td>
                 <td>{shorten(String(row.mint || ""), 6)}</td>
-                <td>{row.amount_sol != null ? `${decimal(String(row.amount_sol), 4)} SOL` : "unknown"}</td>
+                <td>{row.amount_usdc != null ? `${decimal(String(row.amount_usdc), 4)} USDC` : row.amount_sol != null ? `${decimal(String(row.amount_sol), 4)} SOL` : "unknown"}</td>
                 <td>{row.fee_sol != null ? `${decimal(String(row.fee_sol), 9)} SOL` : "unknown"}</td>
                 <td>{row.signature ? shorten(String(row.signature), 6) : "—"}</td>
               </tr>
@@ -148,8 +154,11 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
       )}
       {!!sales.length && (
         <p className="subset-worksheet-sales">
-          Sale nets {sales.map((value) => `${decimal(value, 4)} SOL`).join(" · ")}
-          {worksheet?.sale_fifo_basis_sol?.length
+          Sale nets {sales.map((value) => `${decimal(value, 4)} ${settlement}`).join(" · ")}
+          {settlement === "USDC" && worksheet?.sale_fifo_basis_usdc?.length
+            ? ` · FIFO basis ${worksheet.sale_fifo_basis_usdc.map((value) => `${decimal(value, 4)} USDC`).join(" · ")}`
+            : ""}
+          {settlement !== "USDC" && worksheet?.sale_fifo_basis_sol?.length
             ? ` · FIFO basis ${worksheet.sale_fifo_basis_sol.map((value) => `${decimal(value, 4)} SOL`).join(" · ")}`
             : ""}
         </p>
@@ -166,7 +175,55 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
           ))}
         </ul>
       )}
+      <ResearchProfilePanel report={report} />
     </section>
+  );
+}
+
+function funnelState(funnel: Record<string, unknown> | null | undefined, key: string) {
+  const stage = funnel?.[key];
+  if (!stage || typeof stage !== "object") return "unknown";
+  return String((stage as { state?: string }).state || "unknown");
+}
+
+export function ResearchProfilePanel({ report }: { report: Report }) {
+  const profile = report.research_profile || {};
+  const funnel = report.funnel || {};
+  if (!report.research_profile && !report.funnel) return null;
+  const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
+  return (
+    <div className="research-profile" data-research-profile="local">
+      <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds do not pass. Not safe to copy." />
+      <div className="research-metrics mass-search-funnel">
+        <div>
+          <span>Funnel A</span>
+          <strong>{funnelState(funnel, "A")}</strong>
+          <small>worth investigating</small>
+        </div>
+        <div>
+          <span>Funnel B</span>
+          <strong>{funnelState(funnel, "B")}</strong>
+          <small>evidence establishes results</small>
+        </div>
+        <div>
+          <span>Funnel C</span>
+          <strong>{funnelState(funnel, "C")}</strong>
+          <small>meets research criteria</small>
+        </div>
+        <div>
+          <span>Scoped P&amp;L</span>
+          <strong>{profile.scoped_pnl ? `${decimal(String(profile.scoped_pnl), 4)} ${String(profile.scoped_pnl_unit || "")}` : "unknown"}</strong>
+        </div>
+      </div>
+      <p className="subset-worksheet-note">
+        Completed known-cost {String(profile.completed_known_cost_positions ?? 0)}
+        {profile.hold_t90_seconds != null ? ` · t90 ${String(profile.hold_t90_seconds)}s` : ""}
+        {profile.final_hold_seconds != null ? ` · hold ${String(profile.final_hold_seconds)}s` : ""}
+        {profile.unresolved_basis_sales != null ? ` · unresolved basis ${String(profile.unresolved_basis_sales)}` : ""}
+        {` · market ${String(market.market_swaps ?? 0)} / holder-fee ${String(market.holder_fee_distributions ?? 0)}`}
+        . Rewards and fees are not profitability. PRODUCT_READY remains false.
+      </p>
+    </div>
   );
 }
 

@@ -32,6 +32,7 @@ from .accounting import canonical, raw_quantity, decimal
 from .decoder import SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, TOKEN_IDS, MEMO_IDS
 
 WSOL = 'So11111111111111111111111111111111111111112'
+USDC = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
 PUMP = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
 PUMP_SWAP = 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
@@ -56,7 +57,7 @@ RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v7-native-flow-roles'
+DECODER_VERSION = 'spot-v8-usdc-route-v2'
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -72,6 +73,12 @@ _RAW_FIXTURE_ROUTES = {
         'signature': '24sJMsaocWhShDJ7EtBpvyRXV8ieAgpPNBjgGGFfscVckF39QRopdfKiQhbasf2ZrCQzRkdsoBY11gFkpBFnHhFs',
         'raw_hash': '25271562a99c96879c6d5f347792340320a6f55c12497a0ba3602db86eca6b4a',
         'scope': 'One successful sell with exact owned quantities, persistent wSOL proceeds and wallet-paid fee; earlier nonzero inventory cost remains unknown',
+    },
+    (JUPITER, 'route_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'fixture': 'tests/fixtures/retained_protocol_funding/jupiter-route-v2.json',
+        'discriminator': 'bb64facc31c4af14',
+        'scope': 'Official route_v2 accounts and discriminator; executed wallet deltas prove fills; USDC settlement stays USDC',
     },
 }
 
@@ -157,6 +164,10 @@ def _route(instruction, keys):
                 name = candidate
                 authority, owned_positions = (2, (3, 6)) if shared else (1, (2, 3))
                 break
+        if name is None and payload[:8] == _anchor('route_v2'):
+            if len(payload) < 28 or len(accounts) < 10:
+                raise ValueError('Jupiter route_v2 layout is absent or truncated')
+            name, authority, owned_positions = 'route_v2', 0, (1, 2)
     elif program in (PUMP, PUMP_SWAP):
         names = ('buy', 'sell', 'buy_exact_sol_in') if program == PUMP else ('buy', 'sell', 'buy_exact_quote_in')
         for candidate in names:
@@ -649,8 +660,8 @@ def decode_supported_swaps(transactions, address):
                     inner[outer].append((f'innerInstructions.{outer}.{index}', instruction))
             flat = []
             for index, instruction in enumerate(instructions):
-                flat.append((index, f'instructions.{index}', instruction, False))
-                flat.extend((index, path, nested, True) for path, nested in inner[index])
+                flat.append((index, f'instructions.{index}', dict(instruction), False))
+                flat.extend((index, path, dict(nested), True) for path, nested in inner[index])
             flow = defaultdict(int)
             rent_funders, closures, allowed_wrapped = {}, {}, set()
             outside_native = []
@@ -663,6 +674,19 @@ def decode_supported_swaps(transactions, address):
                 parsed = instruction.get('parsed')
                 kind = parsed.get('type') if isinstance(parsed, dict) else None
                 info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+                if kind is None and instruction.get('data') is not None and program in (SYSTEM_ID, ASSOCIATED_ID, *TOKEN_IDS):
+                    try:
+                        from .compiled_instructions import CompiledInstructionError, normalize_instruction
+                        viewed = normalize_instruction(
+                            instruction, keys, inner=nested, path=path,
+                        )
+                        parsed = viewed['instruction'].get('parsed')
+                        kind = parsed.get('type') if isinstance(parsed, dict) else None
+                        info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+                        instruction['parsed'] = parsed
+                        instruction['programId'] = viewed['instruction'].get('programId', program)
+                    except (CompiledInstructionError, ValueError, KeyError, IndexError, TypeError):
+                        pass
                 if program in (COMPUTE_ID, *MEMO_IDS):
                     continue
                 if program == ASSOCIATED_ID:
@@ -705,6 +729,10 @@ def decode_supported_swaps(transactions, address):
                             rent_funders[account] = address
                         elif address in (info.get('source'), account):
                             raise ValueError('Unresolved native account funding')
+                    elif kind in ('allocate', 'assign'):
+                        # Official System allocate/assign layouts. Lifecycle only;
+                        # native conservation and owned-account reconciliation still apply.
+                        continue
                     else:
                         raise ValueError('Unsupported system operation within swap transaction')
                     continue
@@ -825,6 +853,58 @@ def decode_supported_swaps(transactions, address):
                     group_index = next(index for index, group in enumerate(meta['innerInstructions']) if group['index'] == int(outer))
                     role['raw_paths'] = [f'meta.innerInstructions.{group_index}.instructions.{ordinal}']
             assets = [(mint, delta) for mint, delta in deltas.items() if delta]
+            usdc_delta = next((delta for mint, delta in assets if mint == USDC), 0)
+            other_assets = [(mint, delta) for mint, delta in assets if mint != USDC]
+            usdc_settled = (
+                not settlement
+                and usdc_delta
+                and len(other_assets) == 1
+                and (other_assets[0][1] > 0) != (usdc_delta > 0)
+            )
+            if settlement and usdc_delta and other_assets:
+                raise ValueError('SOL and USDC both moved; cross-settlement remains unresolved and is not converted')
+            if usdc_settled:
+                mint, quantity = other_assets[0]
+                kind = 'buy' if quantity > 0 else 'sell'
+                if route['expected_kind'] and route['expected_kind'] != kind:
+                    raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
+                usdc_decimals = decimals.get(USDC)
+                if usdc_decimals is None:
+                    raise ValueError('USDC settlement is missing event-time decimals')
+                with localcontext() as context:
+                    context.prec = 192
+                    amount_usdc = canonical(Decimal(abs(usdc_delta)) / (Decimal(10) ** usdc_decimals))
+                allocate_fee = paid and not outside_native and not native_roles
+                emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
+                     decimals=decimals[mint], amount_sol=None, amount_usdc=amount_usdc,
+                     classification='market',
+                     source=route['program'], venue=route['program'], instruction=route['instruction'],
+                     owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
+                     settlement_mint=USDC, settlement_asset='USDC',
+                     native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
+                     unresolved_native_roles=native_roles,
+                     retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
+                     observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
+                     observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
+                     observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
+                     reason='Verified route_v2 and reconciled wallet USDC/token deltas; SOL fee stays SOL and is not USDC P&L')
+                if allocate_fee:
+                    fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
+                    fee_event['allocated_trade_path'] = route['path']
+                    fee_event['settlement_note'] = 'Network fee is SOL; not converted into USDC consideration'
+                supported += 1
+                administration.extend(nonce_administration)
+                for role in native_roles:
+                    info = role['facts']
+                    lamports = info.get('lamports') if role['kind'] in ('transfer', 'createAccount', 'createAccountWithSeed') else None
+                    amount = canonical(Decimal(lamports) / LAMPORTS) if type(lamports) is int else None
+                    direction = 'withdrawal' if info.get('source') in {address, *owned, *wsol_accounts} else 'deposit'
+                    uncertain_cash(role['reason'], role['path'], amount=amount, direction=direction, facts=info)
+                for movement in outside_native:
+                    uncertain_cash('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved',
+                        movement['path'], amount=canonical(Decimal(movement['lamports']) / LAMPORTS),
+                        direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
+                continue
             if len(assets) != 1:
                 raise ValueError('Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved')
             mint, quantity = assets[0]
@@ -871,7 +951,7 @@ def decode_supported_swaps(transactions, address):
                 'supported_transactions': supported, 'failed_transactions': failed,
                 'unresolved_transactions': len({issue['signature'] for issue in unresolved}),
                 'unrecognized_transactions': no_swap, 'complete': False, 'history_complete': False,
-                'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL settlement',
+                'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement',
                 'classification': 'UNKNOWN', 'route_fixtures_independently_verified': False,
                 'non_economic_instructions': administration,
                 'fixture_validation': [{'program': program, 'instruction': instruction,

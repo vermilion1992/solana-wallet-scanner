@@ -292,23 +292,40 @@ export type Report = {
   notes: string[];
   worksheet?: {
     total_profit_sol?: string | null;
+    total_profit_usdc?: string | null;
     sale_fifo_basis_sol?: string[];
+    sale_fifo_basis_usdc?: string[];
     sale_net_profit_sol?: string[];
+    sale_net_profit_usdc?: string[];
+    settlement_asset?: string | null;
+    unresolved_basis_sales?: number;
     oracle?: string | null;
   } | null;
   independent_worksheet?: {
     total_profit_sol?: string | null;
+    total_profit_usdc?: string | null;
     sale_fifo_basis_sol?: string[];
+    sale_fifo_basis_usdc?: string[];
     sale_net_profit_sol?: string[];
+    sale_net_profit_usdc?: string[];
+    settlement_asset?: string | null;
+    unresolved_basis_sales?: number;
     oracle?: string | null;
   } | null;
   worksheet_reconciliation?: {
     status?: string | null;
     production_total_profit_sol?: string | null;
     independent_total_profit_sol?: string | null;
+    production_total_profit_usdc?: string | null;
+    independent_total_profit_usdc?: string | null;
     difference_sol?: string | null;
+    difference_usdc?: string | null;
+    settlement_asset?: string | null;
     note?: string | null;
   } | null;
+  research_profile?: Record<string, unknown> | null;
+  funnel?: Record<string, unknown> | null;
+  next_candidates?: Record<string, unknown>[] | null;
   observations?: { kind?: string; detail?: string; reason?: string; signature?: string; count?: number }[];
   g3_status?: string | null;
   source_integrity?: { status?: string; damaged?: number; intact?: number } | null;
@@ -700,6 +717,38 @@ export type MassSearchState = {
   legacy_candidate_cap?: number;
   legacy_deep_audit_cap?: number;
   live_default?: boolean;
+  budget_enabled?: boolean;
+  ranked_workflow?: boolean;
+  note?: string;
+};
+export type RankedWorkflowRow = {
+  address: string;
+  provider_rank: number;
+  trade_count?: number | null;
+  shortlisted?: boolean;
+  capture_available?: boolean;
+  report_id?: string | null;
+  can_open_report?: boolean;
+  funnel?: {
+    A?: { state?: string };
+    B?: { state?: string; scoped_pnl?: string | null; scoped_pnl_unit?: string | null };
+    C?: { state?: string };
+    next_action?: { code?: string; detail?: string };
+    holder_fee_heavy?: boolean;
+  } | null;
+  research_profile?: {
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+    completed_known_cost_positions?: number;
+  } | null;
+};
+export type RankedWorkflowView = {
+  rows?: RankedWorkflowRow[];
+  ranked_count?: number;
+  visible_count?: number;
+  budget_enabled?: boolean;
+  live_enabled?: boolean;
+  filters?: { thresholds?: Record<string, string | null> };
   note?: string;
 };
 export type MassSearchStageCounts = {

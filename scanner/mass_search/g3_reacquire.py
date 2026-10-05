@@ -909,10 +909,11 @@ def _summarize_page(page, freeze, *, decode=None):
     worksheet = None
     if counted["wallet_completed_episodes"] >= 1:
         try:
+            from .settlement import independent_settlement_worksheet
             usable = []
             for mint in sorted(by_mint):
                 usable.extend([row for row in by_mint[mint] if not row.get("timestamp_missing")])
-            worksheet = independent_fifo_worksheet(usable)
+            worksheet = independent_settlement_worksheet(usable)
         except ValueError:
             worksheet = None
     return {

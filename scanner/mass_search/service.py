@@ -402,10 +402,22 @@ class MassSearchService:
             research = summarize_research(accounting_events, start, end, history_complete=False)
         except (ValueError, TypeError, KeyError) as error:
             raise ValueError(f"Research integration failed: {error}") from error
-        worksheet = fifo_sale_results([
-            {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol", "mint")}
-            for event in events if event.get("kind") in ("buy", "sell")
-        ]) if any(event.get("kind") in ("buy", "sell") for event in events) else None
+        from .settlement import USDC, settlement_aware_worksheet, settlement_of
+
+        trade_events = [event for event in events if event.get("kind") in ("buy", "sell")]
+        settlements = {settlement_of(event) for event in trade_events} if trade_events else set()
+        if settlements == {USDC}:
+            try:
+                worksheet = settlement_aware_worksheet(trade_events)
+            except ValueError:
+                worksheet = None
+        elif USDC in settlements:
+            worksheet = None
+        else:
+            worksheet = fifo_sale_results([
+                {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol", "mint")}
+                for event in trade_events
+            ]) if trade_events else None
         exit_diag = material_exit_v2([
             {
                 "kind": event["kind"],
@@ -433,11 +445,17 @@ class MassSearchService:
             holds = [format_decimal(Decimal(exit_diag["final_hold_seconds"]) / Decimal("3600"))]
         hold_metric = median_hold_hours(holds)
         profit = None
+        profit_unit = "SOL"
         profit_metric = (analysis.get("metrics") or {}).get("profit_sol")
         if isinstance(profit_metric, dict) and profit_metric.get("value") is not None and profit_metric.get("status") == "known":
             profit = profit_metric["value"]
-        elif worksheet:
+            profit_unit = "SOL"
+        elif worksheet and worksheet.get("total_profit_usdc") not in (None, ""):
+            profit = worksheet["total_profit_usdc"]
+            profit_unit = "USDC"
+        elif worksheet and worksheet.get("total_profit_sol") not in (None, ""):
             profit = worksheet["total_profit_sol"]
+            profit_unit = "SOL"
         window = {"start_inclusive": start, "end_exclusive": end}
         observed = self.clock()
         with self.store.lock, self.store.db:
@@ -448,6 +466,25 @@ class MassSearchService:
                     population_count=0, observed_at=observed, evidence_sha256=[evidence],
                     missing_dependencies=["supported_fifo_basis"], source_provider="local-reconstruction",
                     notes=["Subset P&L unknown; independent fees remain visible where supported."],
+                )
+            elif profit_unit == "USDC":
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_usdc", candidate_id=candidate_id, value=profit, unit="USDC",
+                    state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=len(holds) or len(events),
+                    observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
+                    notes=["USDC-settled subset; SOL P&L is not converted. Not a wallet-wide MATCH."],
+                )
+                _insert_metric(self.store, run_id, pnl)
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
+                    state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=0,
+                    observed_at=observed, evidence_sha256=[evidence],
+                    missing_dependencies=["usdc_settlement_not_converted"],
+                    source_provider="local-reconstruction",
+                    notes=["USDC-settled subset; no fake FX into SOL."],
                 )
             else:
                 pnl = build_metric(
@@ -856,8 +893,16 @@ def events_to_accounting(events, *, mint, start):
             "signature": event.get("signature") or f"synthetic-{index}",
             "path": event.get("path") or "fixture",
             "evidence": event.get("evidence") or ["fixture-hash"],
+            "seconds_from_start": event.get("seconds_from_start"),
+            "units": str(event.get("units") or "0"),
         }
-        if "consideration_sol" in event:
+        from .settlement import USDC, settlement_of
+        if settlement_of(event) == USDC:
+            row["amount_usdc"] = str(event.get("consideration_usdc") or event.get("amount_usdc") or "0")
+            row["settlement_mint"] = USDC
+            row["settlement_asset"] = "USDC"
+            row["market_classification"] = event.get("classification") or "market"
+        elif "consideration_sol" in event:
             row["amount_sol"] = event["consideration_sol"]
         elif event.get("amount_sol") is not None:
             row["amount_sol"] = event["amount_sol"]

@@ -46,6 +46,7 @@ JUPITER_REVIEWED = (
     "shared_accounts_route",
     "shared_accounts_route_with_token_ledger",
     "shared_accounts_exact_out_route",
+    "route_v2",
 )
 PUMPSWAP_REVIEWED = ("buy", "sell", "buy_exact_quote_in")
 LAMPORTS = Decimal(1_000_000_000)

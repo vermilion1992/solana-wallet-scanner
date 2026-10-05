@@ -86,7 +86,12 @@ def test_unwrapped_gta_is_missing_raw_wrapped_is_not():
     reasons = {row.get("reason") for row in wrapped.get("unresolved") or []}
     assert "Missing raw transaction result" not in reasons
     assert wrapped["coverage"]["failed_transactions"] == 19
-    assert wrapped["coverage"]["decoded_swaps"] == 0
+    assert wrapped["coverage"]["decoded_swaps"] == 6
+    swaps = [row for row in wrapped["events"] if row.get("kind") in ("buy", "sell")]
+    assert len(swaps) == 6
+    assert all(row.get("settlement_mint") == "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" for row in swaps)
+    assert all(row.get("amount_sol") is None for row in swaps)
+    assert all(row.get("classification") == "market" for row in swaps)
 
 
 def test_summarize_page_uses_shared_wrap():
@@ -94,8 +99,8 @@ def test_summarize_page_uses_shared_wrap():
     summary = _summarize_page({"records": records, "integrity": {"status": "SOURCE_RECORDS_INTACT"}}, {"windows": WINDOWS})
     reasons = {row.get("reason") for row in summary["decoded"].get("unresolved") or []}
     assert "Missing raw transaction result" not in reasons
-    assert summary["counted"]["wallet_completed_episodes"] == 0
-    assert summary["visible_report"] is False
+    assert summary["counted"]["wallet_completed_episodes"] == 1
+    assert summary["visible_report"] is True
     assert any("distribute_fee_to_holders is not a spot swap" in (row.get("reason") or "") for row in summary["decoded"].get("unresolved") or [])
 
 
@@ -108,7 +113,8 @@ def test_classify_every_tx_independently_of_swap_reconstruction():
     assert counts.get("pump_bonding_curve_swap_candidate", 0) == 0
     assert counts["failed_on_chain"] == 19
     assert counts["pump_holder_fee_distribution"] == 61
-    assert counts["unreviewed_jupiter_discriminator"] == 6
+    assert counts.get("unreviewed_jupiter_discriminator", 0) == 0
+    assert counts["reviewed_jupiter_route"] == 6
     assert counts["inner_pumpswap_without_reviewed_outer"] == 2
     assert counts["unsupported_transaction_version"] == 1
     assert counts["wallet_absent_from_account_keys"] == 5
@@ -163,11 +169,12 @@ def test_runner_stubbed_capture_persists_before_validate_and_skips_page1(store, 
     assert calls[0]["signature_lte"] == PAGE0_SIGNATURE_LTE
     assert result["page_integrity"][0]["signature_match"] is True
     assert result["page_integrity"][0]["integrity"] == "SOURCE_RECORDS_INTACT"
-    assert result["status"] == "INCOMPLETE"
-    assert result["stop_reason"] == "page1_not_for_episode_count_or_pnl"
-    assert result["page1_gate"]["allowed"] is False
+    assert result["status"] == "PASS_VISIBLE_POSITION"
+    assert result["stop_reason"] == "one_completed_position_reconciled"
+    assert result.get("pages_fetched") == [0]
+    assert result.get("page1_gate") is None
     assert result["external_requests"] == 1
-    assert result["wallet_completed_episodes"] == 0
+    assert result["wallet_completed_episodes"] == 1
 
 
 def test_replay_saves_honest_partial_report(store):
@@ -189,19 +196,28 @@ def test_replay_saves_honest_partial_report(store):
     assert report["window"]["start"] == WINDOWS["report_start_inclusive"]
     assert report["window"]["end"] == WINDOWS["report_end_exclusive"]
     assert report["evidence_status"] == "partial"
-    assert report["checks"] == []
-    assert report["g3_status"] == "PARTIAL_NO_SUPPORTED_SOL_SWAPS"
-    assert report["worksheet"] is None
+    assert report["g3_status"] == "PARTIAL_USDC_KNOWN_COST"
+    assert report["worksheet"]["total_profit_usdc"] == "376.028087"
+    assert report["worksheet"]["settlement_asset"] == "USDC"
+    assert report["worksheet"]["total_profit_sol"] is None
+    assert report["independent_worksheet"]["total_profit_usdc"] == "376.028087"
+    assert report["worksheet_reconciliation"]["status"] == "AGREE"
     assert report["PRODUCT_READY"] is False
-    assert report["shortlist_rank"] == 1
+    assert report["wallet_completed_episodes"] == 1
     assert any(item.get("kind") == "tx_classification" for item in report["observations"])
     assert report["classification"]["counts"]["pump_holder_fee_distribution"] == 61
+    assert report["classification"]["counts"]["reviewed_jupiter_route"] == 6
     assert report["classification"]["fee_totals"]["not_pnl"] is True
     assert report["classification"]["fee_totals"]["fee_lamports"] > 0
     assert any(item.get("kind") == "fees" for item in report["observations"])
-    assert report["coverage"]["decoded_swaps"] == 0
+    assert report["coverage"]["decoded_swaps"] == 6
     assert report["coverage"]["failed_transactions"] == 19
     assert report["coverage"]["not_pnl"] is True
-    assert report["findings"]
-    assert result["visible_report"] is False
+    assert report["research_profile"]["scoped_pnl"] == "376.028087"
+    assert report["research_profile"]["not_safe_to_copy"] is True
+    assert report["funnel"]["A"]["state"] == "YES"
+    assert report["funnel"]["B"]["state"] == "PARTIAL"
+    assert report["funnel"]["C"]["state"] == "NOT_EVALUATED"
+    assert report["funnel"]["holder_fee_heavy"] is True
+    assert result["visible_report"] is True
     assert result["external_requests"] == 0

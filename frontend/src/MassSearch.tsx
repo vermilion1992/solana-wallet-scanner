@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Download, Play, RefreshCw, Search } from "lucide-react";
 import type { Actions } from "./App";
-import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, Report } from "./types";
+import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedWorkflowRow, RankedWorkflowView, Report } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
 import { count, decimal, label, shorten } from "./format";
@@ -39,6 +39,10 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [stage, setStage] = useState<(typeof STAGES)[number]>("triage");
   const [selectedId, setSelectedId] = useState<string>("");
   const [blocker, setBlocker] = useState<string>("Live collection is blocked until a named authorization exists.");
+  const [ranked, setRanked] = useState<RankedWorkflowView | null>(null);
+  const [compareLeft, setCompareLeft] = useState<string>("");
+  const [compareRight, setCompareRight] = useState<string>("");
+  const [compareResult, setCompareResult] = useState<string>("");
   const narrow = useNarrowViewport();
   const summary = state.mass_search;
   const runs = summary?.runs || [];
@@ -47,6 +51,12 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const savedReports = state.reports.filter((report) => report.source === "mass-search");
   const empty = massSearchEmptyReason(detail, candidates.filter((row) => row.report_id).length + savedReports.length);
 
+  const loadRanked = () => {
+    api("/mass-search/ranked-workflow")
+      .then((value) => setRanked(value as RankedWorkflowView))
+      .catch(() => undefined);
+  };
+
   useEffect(() => {
     api("/mass-search/access-blocker")
       .then((value) => {
@@ -54,6 +64,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         setBlocker(`${body.birdeye?.provider || "birdeye"}: ${body.birdeye?.purpose || "authorization required"}`);
       })
       .catch(() => undefined);
+    loadRanked();
   }, []);
 
   useEffect(() => {
@@ -130,6 +141,115 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         </Button>
       </div>
       <p className="research-note">{blocker} Additional spend stays $0. The example authorization file is not a grant.</p>
+      <section className="research-subpanel mass-search-budget" data-budget-enabled="false">
+        <SectionHeading title="Budget / live collection" subtitle="Disabled without live approval" />
+        <p className="research-note">
+          Budget view stays off. Consumed grants stay consumed. Cached ranked-100 browse and report reopen make zero provider calls.
+        </p>
+        <Button variant="secondary" disabled>Request live spend</Button>
+      </section>
+      <section className="research-subpanel" data-ranked-workflow="cached">
+        <SectionHeading title="Ranked-100 cached shortlist" subtitle="Provider rank is not verification" />
+        <p className="research-note">
+          {count(ranked?.ranked_count ?? 0)} ranked wallets from the saved discovery page.
+          Open a captured wallet to reconstruct market trades. Other rows stay browse-only until a future grant.
+        </p>
+        <div className="research-action-row">
+          <Button
+            icon={Play}
+            disabled={!!busy}
+            onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", {}, "POST", "Cached rank-1 capture reconstructed offline.").then((value) => {
+              const body = value as { report_id?: string };
+              loadRanked();
+              if (body?.report_id) void inspect(body.report_id);
+            })}
+          >
+            Analyse strongest cached wallet
+          </Button>
+          <Button variant="secondary" disabled={!!busy} onClick={() => loadRanked()}>Refresh cached list</Button>
+        </div>
+        {!!ranked?.rows?.length && (
+          <>
+            {!narrow && (
+              <div className="mass-search-table-wrap">
+                <table className="mass-search-table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Address</th>
+                      <th>A / B / C</th>
+                      <th>Provider trades</th>
+                      <th>Scoped P&amp;L</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(ranked.rows || []).slice(0, 20).map((row) => (
+                      <RankedRow key={row.address} row={row} busy={!!busy} onOpen={(id) => void inspect(id)} onReplay={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
+                        const body = value as { report_id?: string };
+                        loadRanked();
+                        if (body?.report_id) void inspect(body.report_id);
+                      })} />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <ul className="mass-search-cards" data-ranked-cards="true">
+              {(ranked.rows || []).slice(0, 20).map((row) => (
+                <li key={`ranked-${row.address}`}>
+                  <strong className="mono">{shorten(row.address)}</strong>
+                  <p>Provider rank {row.provider_rank} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
+                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : "no history capture"}</p>
+                  <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
+                  {row.report_id
+                    ? <Button variant="secondary" disabled={!!busy} onClick={() => void inspect(row.report_id!)}>Open report</Button>
+                    : row.capture_available
+                      ? <Button variant="secondary" disabled={!!busy} onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
+                          const body = value as { report_id?: string };
+                          loadRanked();
+                          if (body?.report_id) void inspect(body.report_id);
+                        })}>Analyse</Button>
+                      : null}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {!!savedReports.length && (
+          <div className="research-action-row">
+            <label>
+              Compare left
+              <select aria-label="Compare left report" value={compareLeft} onChange={(event) => setCompareLeft(event.target.value)}>
+                <option value="">Select report</option>
+                {savedReports.map((report) => (
+                  <option key={`left-${report.id}`} value={report.id}>{shorten(report.address)} · {report.id.slice(0, 8)}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Compare right
+              <select aria-label="Compare right report" value={compareRight} onChange={(event) => setCompareRight(event.target.value)}>
+                <option value="">Select report</option>
+                {savedReports.map((report) => (
+                  <option key={`right-${report.id}`} value={report.id}>{shorten(report.address)} · {report.id.slice(0, 8)}</option>
+                ))}
+              </select>
+            </label>
+            <Button
+              variant="secondary"
+              disabled={!compareLeft || !compareRight || !!busy}
+              onClick={() => api("/mass-search/research-compare", "POST", { left_id: compareLeft, right_id: compareRight }).then((value) => {
+                const body = value as { fields?: { key: string; left: unknown; right: unknown }[] };
+                setCompareResult((body.fields || []).map((field) => `${field.key}: ${String(field.left ?? "—")} vs ${String(field.right ?? "—")}`).join(" · "));
+              }).catch((error: Error) => setCompareResult(error.message))}
+            >
+              Compare saved reports
+            </Button>
+          </div>
+        )}
+        {compareResult && <p className="research-note" data-research-compare="true">{compareResult}</p>}
+      </section>
       {!runs.length && <Empty title="Not scanned" detail={empty.action} />}
       {!!runs.length && (
         <label className="research-report-picker">
@@ -250,5 +370,34 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
       )}
       <Button variant="secondary" onClick={() => refresh()}>Refresh workspace</Button>
     </div>
+  );
+}
+
+function RankedRow({
+  row,
+  busy,
+  onOpen,
+  onReplay,
+}: {
+  row: RankedWorkflowRow;
+  busy: boolean;
+  onOpen: (id: string) => void;
+  onReplay: () => void;
+}) {
+  return (
+    <tr>
+      <td>{row.provider_rank}</td>
+      <td className="mono">{shorten(row.address)}</td>
+      <td>{row.funnel?.A?.state || "—"} / {row.funnel?.B?.state || "—"} / {row.funnel?.C?.state || "—"}</td>
+      <td>{row.trade_count ?? "unknown"}</td>
+      <td>{row.funnel?.B?.scoped_pnl ? `${row.funnel.B.scoped_pnl} ${row.funnel.B.scoped_pnl_unit || ""}` : "unverified"}</td>
+      <td>
+        {row.report_id
+          ? <Button variant="secondary" disabled={busy} onClick={() => onOpen(row.report_id!)}>Open report</Button>
+          : row.capture_available
+            ? <Button variant="secondary" disabled={busy} onClick={onReplay}>Analyse</Button>
+            : "cached browse"}
+      </td>
+    </tr>
   );
 }

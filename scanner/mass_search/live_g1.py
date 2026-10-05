@@ -112,6 +112,86 @@ def independent_fifo_worksheet(events):
         }
 
 
+def _usdc_amount(value):
+    text = format(value, "f")
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+    return text or "0"
+
+
+def independent_usdc_fifo_worksheet(events):
+    """Independent USDC FIFO. Uses remaining-cost lots. SOL fees never enter USDC cost."""
+    from scanner.mass_search.settlement import USDC
+
+    indexed = [event for event in events if event.get("kind") in ("buy", "sell")]
+    mints = {event.get("mint") for event in indexed if event.get("mint")}
+    if len(mints) > 1:
+        basis = []
+        profits = []
+        total = Decimal("0")
+        used = []
+        for mint in sorted(mints):
+            part = independent_usdc_fifo_worksheet([event for event in indexed if event.get("mint") == mint])
+            basis.extend(part["sale_fifo_basis_usdc"])
+            profits.extend(part["sale_net_profit_usdc"])
+            if part.get("total_profit_usdc") not in (None, ""):
+                total += Decimal(str(part["total_profit_usdc"]))
+                used.append(mint)
+        return {
+            "sale_fifo_basis_usdc": basis,
+            "sale_net_profit_usdc": profits,
+            "total_profit_usdc": _usdc_amount(total) if used else None,
+            "total_profit_sol": None,
+            "settlement_mint": USDC,
+            "settlement_asset": "USDC",
+            "oracle": "independent-usdc-fifo-v1",
+            "sol_fees_not_converted": True,
+            "not_fx": True,
+            "declared_mints": used,
+        }
+    with localcontext() as ctx:
+        ctx.prec = 192
+        lots = []
+        sales = []
+        for event in indexed:
+            units = Decimal(str(event["units"]))
+            if event["kind"] == "buy":
+                paid = Decimal(str(event["consideration_usdc"]))
+                lots.append({"remaining_units": units, "remaining_cost": paid})
+            elif event["kind"] == "sell":
+                remaining = units
+                basis = Decimal("0")
+                while remaining > 0:
+                    if not lots:
+                        raise ValueError("Sale exceeds supported USDC-settled inventory")
+                    lot = lots[0]
+                    take = remaining if remaining <= lot["remaining_units"] else lot["remaining_units"]
+                    share = lot["remaining_cost"] * take / lot["remaining_units"]
+                    basis += share
+                    lot["remaining_cost"] -= share
+                    lot["remaining_units"] -= take
+                    remaining -= take
+                    if lot["remaining_units"] == 0:
+                        lots.pop(0)
+                proceeds = Decimal(str(event["consideration_usdc"]))
+                sales.append({
+                    "basis": _usdc_amount(basis),
+                    "net_profit": _usdc_amount(proceeds - basis),
+                })
+        total = sum((Decimal(sale["net_profit"]) for sale in sales), Decimal("0"))
+        return {
+            "sale_fifo_basis_usdc": [sale["basis"] for sale in sales],
+            "sale_net_profit_usdc": [sale["net_profit"] for sale in sales],
+            "total_profit_usdc": _usdc_amount(total) if sales else None,
+            "total_profit_sol": None,
+            "settlement_mint": USDC,
+            "settlement_asset": "USDC",
+            "oracle": "independent-usdc-fifo-v1",
+            "sol_fees_not_converted": True,
+            "not_fx": True,
+        }
+
+
 def decoder_events_to_subset(decoded, *, address, window_start):
     events = [row for row in (decoded.get("events") or []) if row.get("kind") in ("buy", "sell")]
     by_mint = {}

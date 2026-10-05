@@ -1,0 +1,35 @@
+{
+  "kind": "pinned-official-instruction-layout-v1",
+  "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+  "instruction": "route_v2",
+  "discriminator_hex": "bb64facc31c4af14",
+  "discriminator_bytes": [187, 100, 250, 204, 49, 196, 175, 20],
+  "anchor_preimage": "global:route_v2",
+  "accounts": [
+    {"index": 0, "name": "user_transfer_authority", "signer": true},
+    {"index": 1, "name": "user_source_token_account", "writable": true},
+    {"index": 2, "name": "user_destination_token_account", "writable": true},
+    {"index": 3, "name": "source_mint"},
+    {"index": 4, "name": "destination_mint"},
+    {"index": 5, "name": "source_token_program"},
+    {"index": 6, "name": "destination_token_program"},
+    {"index": 7, "name": "destination_token_account", "optional": true, "writable": true},
+    {"index": 8, "name": "event_authority", "optional": true},
+    {"index": 9, "name": "program"}
+  ],
+  "authority_index": 0,
+  "owned_token_account_indexes": [1, 2],
+  "sources": [
+    {
+      "repository": "jup-ag/instruction-parser",
+      "document": "src/idl/jupiter.ts",
+      "note": "Jupiter program IDL; route_v2 discriminator is sha256(global:route_v2)[:8]"
+    },
+    {
+      "crate": "jupiter-solana-client",
+      "document": "generated/instructions/route_v2.rs",
+      "constant": "ROUTE_V2_DISCRIMINATOR = [187, 100, 250, 204, 49, 196, 175, 20]"
+    }
+  ],
+  "settlement_note": "Executed wallet token deltas prove consideration. Instruction in_amount/quoted_out_amount are limits, not fills. USDC settlement stays USDC; it is not converted to SOL."
+}

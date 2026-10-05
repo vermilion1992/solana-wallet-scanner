@@ -551,7 +551,7 @@ def test_failed_reconciliation_does_not_set_visible_report(monkeypatch):
     def boom(_events):
         raise ValueError("Sale exceeds supported inventory")
 
-    monkeypatch.setattr("scanner.mass_search.g3_reacquire.independent_fifo_worksheet", boom)
+    monkeypatch.setattr("scanner.mass_search.settlement.independent_settlement_worksheet", boom)
     summary = _summarize_page({"records": [{}], "integrity": {"status": "SOURCE_RECORDS_INTACT"}}, freeze, decode=decode)
     assert summary["counted"]["wallet_completed_episodes"] >= 1
     assert summary["worksheet"] is None

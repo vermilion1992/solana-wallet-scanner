@@ -21,8 +21,8 @@ from .evidence_integrity import (
     PAGE_KIND_V2,
     sanitize_transaction_records,
 )
-from .live_g1 import independent_fifo_worksheet
 from .service import MassSearchService
+from .settlement import independent_settlement_worksheet
 
 HELIUS_METHOD = "getTransactionsForAddress"
 HELIUS_ENDPOINT = "https://mainnet.helius-rpc.com/"
@@ -396,6 +396,14 @@ def visible_report_allowed(*, worksheet, completed_positions):
     return bool(worksheet) and int(completed_positions or 0) >= 1
 
 
+def _visible_completed_positions(episodes, worksheet):
+    counted = int((episodes or {}).get("wallet_completed_episodes") or 0)
+    sales = 0
+    if worksheet:
+        sales = len(worksheet.get("sale_net_profit_usdc") or worksheet.get("sale_net_profit_sol") or [])
+    return max(counted, 1 if sales else 0)
+
+
 def reconcile_worksheets(production, independent):
     """Keep both worksheets. Never replace production with independent to hide a difference."""
     from .metrics import format_decimal
@@ -408,8 +416,42 @@ def reconcile_worksheets(production, independent):
         payload["status"] = "INCOMPLETE"
         payload["note"] = "One worksheet is missing; both results are retained when present."
         return payload
-    production_total = Decimal(str(production["total_profit_sol"]))
-    independent_total = Decimal(str(independent["total_profit_sol"]))
+    prod_usdc = production.get("total_profit_usdc")
+    indep_usdc = independent.get("total_profit_usdc")
+    prod_sol = production.get("total_profit_sol")
+    indep_sol = independent.get("total_profit_sol")
+    if prod_usdc not in (None, "") or indep_usdc not in (None, "") or production.get("settlement_asset") == "USDC":
+        if (prod_usdc in (None, "") and prod_sol not in (None, "")) or (indep_usdc in (None, "") and indep_sol not in (None, "")):
+            payload["status"] = "CONFLICT"
+            payload["note"] = "Worksheets use different settlement assets; no FX conversion is applied."
+            return payload
+        if prod_usdc in (None, "") or indep_usdc in (None, ""):
+            payload["status"] = "INCOMPLETE"
+            payload["note"] = "USDC worksheet total is missing; both results are retained when present."
+            payload["production_total_profit_usdc"] = prod_usdc
+            payload["independent_total_profit_usdc"] = indep_usdc
+            return payload
+        production_total = Decimal(str(prod_usdc))
+        independent_total = Decimal(str(indep_usdc))
+        payload["production_total_profit_usdc"] = format_decimal(production_total)
+        payload["independent_total_profit_usdc"] = format_decimal(independent_total)
+        payload["difference_usdc"] = format_decimal(independent_total - production_total)
+        payload["settlement_asset"] = "USDC"
+        if production_total == independent_total:
+            payload["status"] = "AGREE"
+            return payload
+        payload["status"] = "CONFLICT"
+        payload["note"] = (
+            "Worksheets disagree. The report keeps the production worksheet; "
+            "the independent result is retained separately and is not substituted."
+        )
+        return payload
+    if prod_sol in (None, "") or indep_sol in (None, ""):
+        payload["status"] = "INCOMPLETE"
+        payload["note"] = "One worksheet is missing; both results are retained when present."
+        return payload
+    production_total = Decimal(str(prod_sol))
+    independent_total = Decimal(str(indep_sol))
     payload["production_total_profit_sol"] = format_decimal(production_total)
     payload["independent_total_profit_sol"] = format_decimal(independent_total)
     payload["difference_sol"] = format_decimal(independent_total - production_total)
@@ -479,10 +521,11 @@ def _partial_findings(classification, decoded):
     return [
         {
             "severity": "info",
-            "title": "No supported SOL-settled swaps on this captured page",
+            "title": "No supported market swaps with known-cost settlement on this captured page",
             "detail": (
                 "Holder-fee distributions, failed transactions, and unreviewed Jupiter/PumpSwap "
-                "inners stay visible. Raw SOL delta is not treated as profit."
+                "inners stay visible. Rewards and fees are not treated as profit. "
+                "Absence of a SOL swap is not proof the wallet is not a trader."
             ),
         },
         {
@@ -513,6 +556,7 @@ def replay_cached_history_to_report(
     """Exact shared path: cache → decoder → accounting → saved application report."""
     from .g3_history import (
         _ordered_inventory_rows,
+        completed_episodes,
         declared_subset_events,
         decoder_events_by_mint,
         persist_page,
@@ -553,14 +597,17 @@ def replay_cached_history_to_report(
         events = _ordered_inventory_rows(by_mint.get(mint) or [])
         report_mint = mint
         try:
-            worksheet = independent_fifo_worksheet(events) if events else None
+            worksheet = independent_settlement_worksheet(events) if events else None
         except ValueError:
             worksheet = None
     else:
         events = declared_subset_events(by_mint)
         report_mint = "declared-supported-subset"
         from .g3_history import declared_subset_worksheet
-        worksheet = declared_subset_worksheet(by_mint)
+        try:
+            worksheet = declared_subset_worksheet(by_mint)
+        except ValueError:
+            worksheet = None
     observations = _classification_observations(classification, decoded)
     if not events:
         report = {
@@ -595,14 +642,15 @@ def replay_cached_history_to_report(
                 "pump_idl_pin": classification["pump_idl_pin"],
             },
             "research": {
-                "scope": "Fetched sample; recognized single spot routes with SOL/wSOL settlement",
+                "scope": "Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement",
                 "history_complete": False,
                 "supported_swaps": int((decoded.get("coverage") or {}).get("decoded_swaps") or 0),
             },
             "notes": [
-                "Honest partial report. No independently reconciled SOL-settled completed position on this captured page.",
+                "Honest partial report. No independently reconciled completed known-cost position on this captured page.",
                 "Holder-fee distributions, failed transactions, and unreviewed Jupiter/PumpSwap inners stay visible.",
-                "Raw SOL delta is not P&L. PRODUCT_READY remains false.",
+                "Rewards and fees are not trading P&L. No SOL swap is not proof the wallet is not a trader.",
+                "PRODUCT_READY remains false.",
             ],
             "offline_replay": True,
             "PRODUCT_READY": False,
@@ -625,6 +673,7 @@ def replay_cached_history_to_report(
             "PRODUCT_READY": False,
             "not_match": True,
         }
+    episodes = completed_episodes(by_mint)
     reconstructed = service.reconstruct_candidate(
         run["run_id"], f"solana:{address}", events,
         corpus_kind=corpus_kind, mint=report_mint,
@@ -652,6 +701,34 @@ def replay_cached_history_to_report(
     report["offline_replay"] = True
     report["PRODUCT_READY"] = False
     report["not_ranked_wallet_pipeline_proof"] = True
+    report["wallet_completed_episodes"] = episodes["wallet_completed_episodes"]
+    report["completed_episode_detail"] = episodes
+    if worksheet and worksheet.get("settlement_asset") == "USDC":
+        report["g3_status"] = "PARTIAL_USDC_KNOWN_COST"
+        report["research"] = {
+            **(report.get("research") or {}),
+            "scope": "Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement",
+            "history_complete": False,
+            "supported_swaps": int((decoded.get("coverage") or {}).get("decoded_swaps") or 0),
+            "settlement_asset": "USDC",
+        }
+        report["notes"] = [
+            "USDC-settled Jupiter route_v2 subset. SOL fees stay SOL and are not converted.",
+            "Holder-fee distributions are rewards, not trading P&L.",
+            "Leading/unbacked sells stay unresolved_basis. PRODUCT_READY remains false.",
+        ]
+    from .research_profile import build_research_profile, default_filters
+    report["research_profile"] = build_research_profile(
+        report, filters=default_filters(), classification=classification,
+    )
+    from .funnel_abc import classify_candidate
+    report["funnel"] = classify_candidate(
+        provider_rank=1,
+        capture_available=True,
+        profile=report["research_profile"],
+        classification=classification,
+        worksheet=production or worksheet,
+    )
     store.put("reports", report["id"], report)
     return {
         "run_id": run["run_id"],
@@ -662,7 +739,7 @@ def replay_cached_history_to_report(
         "worksheet_reconciliation": report["worksheet_reconciliation"],
         "visible_report": visible_report_allowed(
             worksheet=production or worksheet,
-            completed_positions=1 if (production or worksheet) else 0,
+            completed_positions=_visible_completed_positions(episodes, production or worksheet),
         ),
         "external_requests": 0,
         "truncated_before_acquisition_support": truncated,

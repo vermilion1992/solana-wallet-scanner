@@ -12,9 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from playwright.sync_api import sync_playwright, expect
-from scanner.mass_search.canonical_records import gta_records_from_capture
 from scanner.mass_search.g3_reacquire import ALLOWED_WALLET
-from scanner.mass_search.history_ingest import replay_cached_history_to_report
+from scanner.mass_search.workflow import replay_captured_wallet
 from scanner.storage import Store, now
 from tools.screening_browser import Launcher
 
@@ -22,12 +21,6 @@ OUT = Path("/tmp/ranked-shared-boundary-ui")
 if OUT.exists():
     shutil.rmtree(OUT)
 OUT.mkdir(parents=True)
-CAPTURE = ROOT / "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json"
-WINDOWS = {
-    "report_start_inclusive": "2026-09-05T13:29:27Z",
-    "report_end_exclusive": "2026-10-05T13:29:27Z",
-    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z",
-}
 
 
 def _open_nav(page, name, *, exact=False):
@@ -51,18 +44,7 @@ def _open_search(page):
 data = OUT / "data"
 data.mkdir()
 store = Store(data)
-records = gta_records_from_capture(json.loads(CAPTURE.read_text()))
-replay = replay_cached_history_to_report(
-    store,
-    address=ALLOWED_WALLET,
-    records=records,
-    window_start=WINDOWS["report_start_inclusive"],
-    window_end=WINDOWS["report_end_exclusive"],
-    acquisition_start=WINDOWS["acquisition_support_start_inclusive"],
-    corpus_kind="GENUINE_REPLAY",
-    authorization_id="live-ranked100-anchored-validation-2026-10-06-mitch",
-    source_id="ranked100-anchored-offline-replay",
-)
+replay = replay_captured_wallet(store)
 store.put(
     "watchlist",
     ALLOWED_WALLET,
@@ -116,8 +98,9 @@ try:
     page.get_by_role("button", name="Latest report").click()
     page.get_by_text("Reconstructed subset / independent worksheet", exact=True).wait_for(timeout=15000)
     expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
-    expect(page.get_by_text("PARTIAL_NO_SUPPORTED_SOL_SWAPS")).to_be_visible()
-    expect(page.get_by_text("Visible transaction fees are not profit")).to_be_visible()
+    expect(page.get_by_text("376.0281 USDC")).to_be_visible()
+    expect(page.get_by_text("Research profile")).to_be_visible()
+    expect(page.get_by_text("PARTIAL_USDC_KNOWN_COST")).to_be_visible()
     page.screenshot(path=str(OUT / "01-report-desktop.png"), full_page=True)
     page.set_viewport_size({"width": 360, "height": 640})
     page.screenshot(path=str(OUT / "01-report-mobile.png"), full_page=True)
@@ -141,7 +124,10 @@ try:
     page.goto(launcher.url)
     _open_watchlist(page)
     page.get_by_role("button", name="Latest report").click()
-    expect(page.get_by_text("PARTIAL_NO_SUPPORTED_SOL_SWAPS")).to_be_visible()
+    expect(page.get_by_text("376.0281 USDC")).to_be_visible()
+    _open_search(page)
+    expect(page.get_by_text("Ranked-100 cached shortlist")).to_be_visible()
+    expect(page.get_by_text("Budget view stays off")).to_be_visible()
     page.screenshot(path=str(OUT / "02-reopen-mobile.png"), full_page=True)
     page.set_viewport_size({"width": 1440, "height": 1000})
     page.screenshot(path=str(OUT / "02-reopen-desktop.png"), full_page=True)

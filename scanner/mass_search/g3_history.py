@@ -34,6 +34,7 @@ from .evidence_integrity import (
     sanitize_transaction_records,
 )
 from .live_g1 import _count_method, _wrap_records, independent_fifo_worksheet
+from .settlement import USDC, isolate_known_cost_events, map_decoder_trade, settlement_of
 from .history_ingest import build_historical_gta_options
 from .service import MassSearchService
 
@@ -342,24 +343,15 @@ def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, a
             role = "timestamp_missing"
             window_qualified = False
             unresolved_order = True
-        mapped = {
-            "kind": row["kind"],
-            "units": str(row.get("quantity_raw") or "0"),
-            "consideration_sol": str(row.get("amount_sol") or "0"),
-            "wallet_fee_sol": str(row.get("fee_sol") or "0"),
-            "seconds_from_start": seconds,
-            "timestamp_missing": timestamp_missing,
-            "window_qualified": window_qualified,
-            "role": role,
-            "unresolved_order": unresolved_order,
-            "signature": row.get("signature"),
-            "mint": mint,
-            "address": address,
-            "path": row.get("path"),
-            "evidence": row.get("evidence") or [],
-        }
-        if "paid_by_wallet" in row:
-            mapped["paid_by_wallet"] = row["paid_by_wallet"]
+        mapped = map_decoder_trade(
+            row,
+            address=address,
+            seconds=seconds,
+            timestamp_missing=timestamp_missing,
+            role=role,
+            window_qualified=window_qualified,
+            unresolved_order=unresolved_order,
+        )
         by_mint.setdefault(mint, []).append(mapped)
     return by_mint, truncated_before_window
 
@@ -420,6 +412,25 @@ def completed_episodes(by_mint):
     for mint, rows in by_mint.items():
         usable = [row for row in rows if not row.get("timestamp_missing")]
         kinds = {row["kind"] for row in usable}
+        if usable and settlement_of(usable[0]) == USDC:
+            known, unresolved = isolate_known_cost_events(usable)
+            known_kinds = {row["kind"] for row in known}
+            if "buy" not in known_kinds or "sell" not in known_kinds:
+                per_mint[mint] = 0
+                per_mint_detail[mint] = {
+                    "completed_episodes": 0,
+                    "sale_count": sum(1 for row in usable if row["kind"] == "sell"),
+                    "open": any(row["kind"] == "buy" for row in known),
+                    "unresolved_basis_sales": len(unresolved),
+                }
+                continue
+            counted = completed_position_episodes(known)
+            counted["unresolved_basis_sales"] = len(unresolved)
+            per_mint[mint] = counted["completed_episodes"]
+            per_mint_detail[mint] = counted
+            total += counted["completed_episodes"]
+            sales += counted["sale_count"]
+            continue
         if "buy" not in kinds or "sell" not in kinds:
             per_mint[mint] = 0
             per_mint_detail[mint] = {"completed_episodes": 0, "sale_count": 0, "open": False}
@@ -459,12 +470,38 @@ def declared_subset_events(by_mint):
 def declared_subset_worksheet(by_mint):
     from decimal import Decimal
 
+    from .settlement import independent_settlement_worksheet
+
+    used = []
+    usdc_rows = []
+    sol_rows = []
+    for mint in sorted(by_mint):
+        rows = _ordered_inventory_rows(by_mint[mint])
+        if not rows:
+            continue
+        if settlement_of(rows[0]) == USDC:
+            usdc_rows.extend(rows)
+            used.append(mint)
+        else:
+            sol_rows.extend(rows)
+            used.append(mint)
+    if usdc_rows and sol_rows:
+        raise ValueError("SOL and USDC consideration cannot share one worksheet; no FX")
+    if usdc_rows:
+        worksheet = independent_settlement_worksheet(usdc_rows)
+        if not worksheet:
+            return None
+        worksheet["declared_mints"] = used
+        worksheet["population"] = "declared_supported_subset"
+        return worksheet
+    if not sol_rows:
+        return None
     basis = []
     profits = []
     total = Decimal("0")
-    used = []
-    for mint in sorted(by_mint):
-        rows = _ordered_inventory_rows(by_mint[mint])
+    used_sol = []
+    for mint in sorted({row.get("mint") for row in sol_rows}):
+        rows = [row for row in sol_rows if row.get("mint") == mint]
         kinds = {row["kind"] for row in rows}
         if "buy" not in kinds or "sell" not in kinds:
             continue
@@ -475,15 +512,15 @@ def declared_subset_worksheet(by_mint):
         basis.extend(part["sale_fifo_basis_sol"])
         profits.extend(part["sale_net_profit_sol"])
         total += Decimal(str(part["total_profit_sol"]))
-        used.append(mint)
-    if not used:
+        used_sol.append(mint)
+    if not used_sol:
         return None
     return {
         "sale_fifo_basis_sol": basis,
         "sale_net_profit_sol": profits,
         "total_profit_sol": format(total, "f"),
         "oracle": "independent-g1-fifo-v1",
-        "declared_mints": used,
+        "declared_mints": used_sol,
         "population": "declared_supported_subset",
     }
 

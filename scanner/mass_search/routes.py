@@ -42,7 +42,9 @@ def mass_search_state(store):
         "legacy_candidate_cap": LIMITS["candidate_cap"],
         "legacy_deep_audit_cap": LIMITS["deep_audit_cap"],
         "live_default": False,
-        "note": "Paginated candidate rows are served from /api/mass-search/runs/{id}/candidates.",
+        "budget_enabled": False,
+        "ranked_workflow": True,
+        "note": "Paginated candidate rows are served from /api/mass-search/runs/{id}/candidates. Ranked-100 browse is cached and offline.",
     }
 
 
@@ -204,3 +206,43 @@ def install_mass_search_routes(app, store):
     @app.get("/api/mass-search/access-blocker")
     async def blocker():
         return {"birdeye": access_blocker("birdeye-traders"), "helius": access_blocker("helius-history")}
+
+    @app.get("/api/mass-search/ranked-workflow")
+    async def ranked_workflow():
+        from .workflow import ranked_workflow_view
+        return ranked_workflow_view(store)
+
+    @app.post("/api/mass-search/ranked-workflow/replay")
+    async def ranked_workflow_replay(payload: dict | None = None):
+        from .g3_reacquire import ALLOWED_WALLET
+        from .workflow import replay_captured_wallet
+        body = payload or {}
+        try:
+            return replay_captured_wallet(store, body.get("address") or ALLOWED_WALLET)
+        except Exception as exc:
+            _error(exc)
+
+    @app.get("/api/mass-search/research-filters")
+    async def get_research_filters():
+        from .research_profile import load_filters
+        return load_filters(store)
+
+    @app.put("/api/mass-search/research-filters")
+    async def put_research_filters(payload: dict | None = None):
+        from .research_profile import save_filters
+        body = payload or {}
+        return save_filters(store, body.get("thresholds") or body)
+
+    @app.post("/api/mass-search/research-compare")
+    async def research_compare(payload: dict | None = None):
+        from .workflow import compare_reports
+        body = payload or {}
+        try:
+            return compare_reports(store, body.get("left_id"), body.get("right_id"))
+        except Exception as exc:
+            _error(exc)
+
+    @app.get("/api/mass-search/acquisition-policy")
+    async def get_acquisition_policy():
+        from .workflow import acquisition_policy
+        return acquisition_policy()
