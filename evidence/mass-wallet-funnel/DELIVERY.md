@@ -7,7 +7,8 @@ A local Search funnel now runs offline from an authorised-or-fixture candidate s
 - Repository: `vermilion1992/solana-wallet-scanner`
 - Branch: `cursor/mass-wallet-funnel-v1-1055` (reversible; named for the cloud agent policy; equivalent intent to `codex/mass-wallet-funnel-v1`)
 - Base: `codex/screening-forward-research` `fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69` (PR #1 left unmerged; PR #2 merged into this base at `ce3d0739` covering through `bbe9aa85`)
-- Tested application SHA: `ba66f9dbf6b45fc1c4cd9834aa6e963b8ce9abba`
+- Tested application SHA: `ce857347efdaffa9ce2bf33c8574bd2cc7d637f4`
+- Results/Compare 360 SHA: `ba66f9dbf6b45fc1c4cd9834aa6e963b8ce9abba`
 - Compare SHA: `d7f8ed27cae20553fc8ad13be3f04a473a1609e4`
 - Results list SHA: `3fb460c15149d122e0c7ac000c8bc8e2a3bb1ee1`
 - Browser locator follow-up: `73191b514fe6905ebc2ce47847835bbd5e7d4ded`
@@ -31,7 +32,7 @@ Changed application files (purpose):
 ## Gate matrix
 | Gate | State | Evidence | Remaining dependency |
 |---|---|---|---|
-| G0 Baseline/safety/software | PASS (software) | Strict `strict-v0.3` unchanged; caps 20/5 retained; 10k local capacity separate; 206 mass-search/gates/report-view tests this batch; frontend `check:discovery` and `npm run build`; receipt development CONTRACT_VALID; synthetic Chromium Search/Results/Compare UI PASS at 1440 and 360 with overflow false | None for offline software |
+| G0 Baseline/safety/software | PASS (software) | Strict `strict-v0.3` unchanged; caps 20/5 retained; 10k local capacity separate; 206 mass-search/gates/report-view tests this batch; frontend `check:discovery` and `npm run build`; receipt development CONTRACT_VALID; synthetic Chromium Search/Results/Compare/Research UI PASS at 1440 and 360 with overflow false | None for offline software |
 | G1 Genuine vertical slice | BLOCKED | Synthetic slice persists FIFO worksheet `total_profit_sol=0.575`, `t90=30s`, final hold `172800s` | Named live-research-authorization-v1 for Birdeye page + Helius targeted history |
 | G2 Genuine 1,000-candidate search | BLOCKED | Synthetic 1,000 unique acquire in 0.1508 s, 0 external requests; triage 200 promoted / 800 deferred | Birdeye `GET /trader/gainers-losers`, call ceiling 10, credit ceiling 250 CU, remaining quota confirmed, duration under 5 minutes if entitled |
 | G3 Three genuine reconciled analytics reports | BLOCKED | Independent worksheet matches package dust-tail fixture; one synthetic report only | Helius `getTransactionsForAddress`, call ceiling 20, credit ceiling 600, without resetting setup-pilot; three genuine ≥10-episode reports including a loss/unresolved control |
@@ -67,8 +68,9 @@ Synthetic vertical slice (1 address): reconstructed through `accounting.analyze`
 - Search run export now includes `reports[].worksheet` / `material_exit` with the same values and UNRESOLVED policy.
 - Results list for Data source = Mass-search subset shows 0.575 SOL with a Reconstructed subset label and sorts from that worksheet value. Full-wallet profit remains unknown. Cards at 360px; table at 1440. Evidence `ui-offline-browser/06-results-subset-pnl-desktop.png`, `06-results-subset-pnl-mobile.png`.
 - Compare shows the same 0.575 SOL reconstructed-subset P&L, header RECONSTRUCTED SUBSET, policy UNRESOLVED, and the not-MATCH note. Cards at 360px; table at 1440. Evidence `ui-offline-browser/07-compare-subset-pnl-desktop.png`, `07-compare-subset-pnl-mobile.png`.
+- Research paper observation list and position tables use the same 1440-table / ≤480-card pattern. Seeded stopped quote-only runs; sell-quote-unavailable stays visible. Mass-search picker prefix is `subset ·`, with an explicit not-MATCH note. Evidence `ui-offline-browser/08-research-paper-tables-desktop.png`, `08-research-paper-tables-mobile.png`, `research-result.json`.
 
 ## Next action
-Offline: make Research observation/paper tables readable at 360px. They still use `.report-table` and were outside this Results/Compare card pass. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
+Offline: after a Search slice, let Research screen the mass-search subset report without implying MATCH or starting live observation. Keep UNRESOLVED / reconstructed-subset labels. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
 
 Independent outcomes: MASS_SEARCH_SOFTWARE = implemented offline. REAL_SEARCH_BENCHMARK, REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED, RESEARCH_OUTCOME = not demonstrated. Legacy PRODUCT_READY remains false.
