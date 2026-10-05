@@ -31,7 +31,8 @@ QUARANTINE_KIND = "mass_search_source_quarantine"
 
 HISTORICAL_ANCHOR_REQUIRED = "HISTORICAL_ANCHOR_REQUIRED"
 SIGNATURE_MISMATCH = "SIGNATURE_MISMATCH"
-HISTORICAL_ANCHOR_KEYS = frozenset({"paginationToken", "until"})
+UNSUPPORTED_UNTIL = "UNSUPPORTED_UNTIL"
+HISTORICAL_ANCHOR_KEYS = frozenset({"paginationToken"})
 
 EXACT_HELIUS_OPTIONS = {
     "transactionDetails": "full",
@@ -57,24 +58,60 @@ def authorised_cache_key(authorization_id, address, page_index):
     return f"{CACHE_KEY_PREFIX_V2}{authorization_id}:{address}:page:{page_index}"
 
 
-def assert_gta_options_not_widened(options):
-    """Frozen GTA encoding plus historical-anchor keys only. `until` is not widening."""
+def signature_lte(options):
+    filters = (options or {}).get("filters") if isinstance((options or {}).get("filters"), dict) else {}
+    bound = filters.get("signature") if isinstance(filters.get("signature"), dict) else {}
+    value = bound.get("lte")
+    return value if isinstance(value, str) and value else None
+
+
+def assert_no_unsupported_until(options):
+    """Top-level until is not a documented getTransactionsForAddress bound."""
+    if isinstance(options, dict) and "until" in options:
+        raise SourceError(
+            UNSUPPORTED_UNTIL,
+            "Top-level until is not a documented getTransactionsForAddress bound; use filters.signature.lte",
+        )
+    return True
+
+
+def _base_gta_options(options):
+    """Strip paginationToken and documented signature bound for encoding compare."""
     compare = {k: v for k, v in (options or {}).items() if k not in HISTORICAL_ANCHOR_KEYS}
+    filters = dict(compare.get("filters") or {})
+    filters.pop("signature", None)
+    compare["filters"] = filters
+    return compare
+
+
+def assert_gta_options_not_widened(options):
+    """Frozen GTA encoding plus paginationToken and filters.signature.lte only."""
+    assert_no_unsupported_until(options)
+    compare = _base_gta_options(options)
     if compare != EXACT_HELIUS_OPTIONS:
         raise SourceError("UNAUTHORIZED", "Query options drifted from the frozen GTA encoding")
     extra = set((options or {}).keys()) - set(EXACT_HELIUS_OPTIONS) - HISTORICAL_ANCHOR_KEYS
     if extra:
         raise SourceError("UNAUTHORIZED", "Query widening is forbidden")
+    filters = (options or {}).get("filters") if isinstance((options or {}).get("filters"), dict) else {}
+    extra_filters = set(filters) - {"status", "tokenAccounts", "signature"}
+    if extra_filters:
+        raise SourceError("UNAUTHORIZED", "Query widening is forbidden")
+    bound = filters.get("signature")
+    if bound is not None:
+        if not isinstance(bound, dict) or set(bound) != {"lte"} or not isinstance(bound.get("lte"), str) or not bound.get("lte"):
+            raise SourceError("UNAUTHORIZED", "filters.signature must be {lte: <signature>}")
     return True
 
 
 def assert_historical_request_anchored(options, *, expected_signatures=None):
     """Reject unanchored newest-first before any provider dispatch."""
+    assert_no_unsupported_until(options)
     expected = list(expected_signatures or [])
     if not expected:
         return True
     sort = (options or {}).get("sortOrder")
-    has_anchor = bool((options or {}).get("paginationToken") or (options or {}).get("until"))
+    has_anchor = bool((options or {}).get("paginationToken") or signature_lte(options))
     if sort == "desc" and not has_anchor:
         raise SourceError(
             HISTORICAL_ANCHOR_REQUIRED,
@@ -83,23 +120,70 @@ def assert_historical_request_anchored(options, *, expected_signatures=None):
     return True
 
 
+def documented_gta_contract(options):
+    """Local interpretation of the documented GTA shape. Does not prove server behaviour."""
+    assert_gta_options_not_widened(options)
+    bound = signature_lte(options)
+    token = (options or {}).get("paginationToken")
+    return {
+        "method": HELIUS_METHOD,
+        "sort_order": (options or {}).get("sortOrder"),
+        "inclusive_newest_signature": bound,
+        "boundary_inclusive": True if bound else None,
+        "continuation_token": token,
+        "is_unanchored_newest_first": (options or {}).get("sortOrder") == "desc" and not bound and not token,
+        "until_present": isinstance(options, dict) and "until" in options,
+        "server_behaviour_not_proven": True,
+        "note": (
+            "filters.signature.lte is the documented inclusive newest-signature bound. "
+            "sortOrder=desc treats the first returned record as newest. "
+            "Continuation uses paginationToken. Top-level until is unsupported. "
+            "This local contract does not prove Helius accepted or applied the bound."
+        ),
+    }
+
+
+def evaluate_response_against_gta_contract(options, signatures):
+    """Check a candidate page against the documented request shape, not a live mock."""
+    contract = documented_gta_contract(options)
+    bound = contract["inclusive_newest_signature"]
+    sigs = list(signatures or [])
+    return {
+        **contract,
+        "boundary_included": bool(bound) and bound in sigs,
+        "first_is_treated_as_newest": contract["sort_order"] == "desc",
+        "first_signature": sigs[0] if sigs else None,
+        "matches_intended_newest": bool(bound) and bool(sigs) and sigs[0] == bound,
+        "continuation": bool(contract["continuation_token"]),
+        "server_behaviour_not_proven": True,
+    }
+
+
 def build_historical_gta_options(
     *,
     page_index=0,
     expected_signatures=None,
     pagination_token=None,
     until=None,
+    signature_lte_bound=None,
     historical_target=None,
 ):
-    """Construct a GTA page. Historical targets must name until or paginationToken."""
-    options = dict(EXACT_HELIUS_OPTIONS)
+    """Construct a GTA page. Historical page 0 uses filters.signature.lte, not until."""
+    if until is not None:
+        raise SourceError(
+            UNSUPPORTED_UNTIL,
+            "Top-level until is not a documented getTransactionsForAddress bound; use filters.signature.lte",
+        )
+    options = {
+        **EXACT_HELIUS_OPTIONS,
+        "filters": dict(EXACT_HELIUS_OPTIONS["filters"]),
+    }
     expected = list(expected_signatures or [])
     required = bool(expected) if historical_target is None else bool(historical_target)
-    bound = until
+    bound = signature_lte_bound
     token = pagination_token
     if required:
         if page_index == 0 and not bound and not token and expected:
-            # Newest signature of the frozen desc page is the historical tip.
             bound = expected[0]
         if page_index >= 1 and not token:
             raise SourceError(
@@ -109,7 +193,7 @@ def build_historical_gta_options(
     if token:
         options["paginationToken"] = token
     if bound:
-        options["until"] = bound
+        options["filters"] = {**options["filters"], "signature": {"lte": bound}}
     if required:
         assert_historical_request_anchored(options, expected_signatures=expected)
     assert_gta_options_not_widened(options)
@@ -122,16 +206,17 @@ def proposed_sanitised_historical_request(
     page_index=0,
     expected_signatures=None,
     pagination_token=None,
-    until=None,
+    signature_lte_bound=None,
 ):
     """Credential-free outgoing request that would be proposed for later live historical work."""
     options = build_historical_gta_options(
         page_index=page_index,
         expected_signatures=expected_signatures,
         pagination_token=pagination_token,
-        until=until,
+        signature_lte_bound=signature_lte_bound,
     )
     expected = list(expected_signatures or [])
+    bound = signature_lte(options)
     return {
         "jsonrpc": "2.0",
         "id": 1,
@@ -142,19 +227,22 @@ def proposed_sanitised_historical_request(
         "headers": {},
         "secrets": False,
         "historical_anchor": {
-            "until": options.get("until"),
+            "filters.signature.lte": bound,
             "paginationToken": options.get("paginationToken"),
             "sortOrder": options.get("sortOrder"),
             "page_index": page_index,
             "expected_newest_signature": expected[0] if expected else None,
             "expected_signature_count": len(expected),
+            "boundary_inclusive": True if bound else None,
             "note": (
-                "until binds a desc page-0 request to the frozen newest signature so "
-                "newest-first-now cannot substitute current chain-tip history. "
-                "Later pages use the frozen paginationToken."
+                "filters.signature.lte is the documented inclusive newest-signature bound "
+                "so newest-first-now cannot substitute current chain-tip history. "
+                "Later pages use the frozen paginationToken. Top-level until is rejected."
             ),
         },
         "PRODUCT_READY": False,
+        "not_a_dispatched_request": True,
+        "not_a_guarantee_of_exact_signature_match": True,
     }
 
 
@@ -281,7 +369,7 @@ def ingest_fetched_historical_page(
             "options": {k: v for k, v in options.items() if k not in HISTORICAL_ANCHOR_KEYS},
         },
         "request_pagination_token": options.get("paginationToken"),
-        "request_until": options.get("until"),
+        "request_signature_lte": signature_lte(options),
         "records": sanitized["records"],
         "signatures": actual,
         "signature_match": True,
@@ -305,6 +393,34 @@ def ingest_fetched_historical_page(
 def visible_report_allowed(*, worksheet, completed_positions):
     """Independent worksheet must succeed. Episode count alone is not a visible report."""
     return bool(worksheet) and int(completed_positions or 0) >= 1
+
+
+def reconcile_worksheets(production, independent):
+    """Keep both worksheets. Never replace production with independent to hide a difference."""
+    from .metrics import format_decimal
+
+    payload = {
+        "production_worksheet": production,
+        "independent_worksheet": independent,
+    }
+    if not production or not independent:
+        payload["status"] = "INCOMPLETE"
+        payload["note"] = "One worksheet is missing; both results are retained when present."
+        return payload
+    production_total = Decimal(str(production["total_profit_sol"]))
+    independent_total = Decimal(str(independent["total_profit_sol"]))
+    payload["production_total_profit_sol"] = format_decimal(production_total)
+    payload["independent_total_profit_sol"] = format_decimal(independent_total)
+    payload["difference_sol"] = format_decimal(independent_total - production_total)
+    if production_total == independent_total:
+        payload["status"] = "AGREE"
+        return payload
+    payload["status"] = "CONFLICT"
+    payload["note"] = (
+        "Worksheets disagree. The report keeps the production worksheet; "
+        "the independent result is retained separately and is not substituted."
+    )
+    return payload
 
 
 def replay_cached_history_to_report(
@@ -386,14 +502,10 @@ def replay_cached_history_to_report(
     report = reconstructed["report"]
     report["source"] = "mass-search"
     report["policy"] = report.get("policy") or "UNRESOLVED"
-    reconciled = reconstructed.get("worksheet") or report.get("worksheet")
-    if worksheet and reconciled:
-        if Decimal(str(worksheet["total_profit_sol"])) == Decimal(str(reconciled["total_profit_sol"])):
-            report["worksheet"] = {**reconciled, "oracle": worksheet.get("oracle") or reconciled.get("oracle")}
-        else:
-            report["worksheet"] = worksheet
-    else:
-        report["worksheet"] = worksheet or reconciled
+    production = reconstructed.get("worksheet") or report.get("worksheet")
+    report["worksheet"] = production
+    report["independent_worksheet"] = worksheet
+    report["worksheet_reconciliation"] = reconcile_worksheets(production, worksheet)
     report["declared_mints"] = [mint] if mint else sorted(by_mint)
     report["source_integrity"] = sanitized["integrity"]
     report["offline_replay"] = True
@@ -405,9 +517,11 @@ def replay_cached_history_to_report(
         "report_id": report["id"],
         "report": report,
         "worksheet": report.get("worksheet"),
+        "independent_worksheet": worksheet,
+        "worksheet_reconciliation": report["worksheet_reconciliation"],
         "visible_report": visible_report_allowed(
-            worksheet=report.get("worksheet"),
-            completed_positions=1 if report.get("worksheet") else 0,
+            worksheet=production or worksheet,
+            completed_positions=1 if (production or worksheet) else 0,
         ),
         "external_requests": 0,
         "truncated_before_acquisition_support": truncated,

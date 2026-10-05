@@ -5187,9 +5187,27 @@ pre {
 }
 .subset-worksheet-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   padding: 0 23px 18px;
+}
+.subset-worksheet-trades {
+  width: calc(100% - 46px);
+  margin: 0 23px 18px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.subset-worksheet-trades caption {
+  text-align: left;
+  color: #63766b;
+  font-size: 11px;
+  padding-bottom: 8px;
+}
+.subset-worksheet-trades th,
+.subset-worksheet-trades td {
+  text-align: left;
+  padding: 6px 8px 6px 0;
+  overflow-wrap: anywhere;
 }
 .subset-worksheet-metrics > div { display: grid; gap: 6px; min-width: 0; }
 .subset-worksheet-metrics span { color: #63766b; font-size: 11px; }

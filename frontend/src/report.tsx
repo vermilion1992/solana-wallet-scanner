@@ -59,9 +59,13 @@ export function subsetWorksheetVisible(report: Pick<Report, "worksheet" | "mater
 export function SubsetWorksheetPanel({ report }: { report: Report }) {
   if (!subsetWorksheetVisible(report)) return null;
   const worksheet = report.worksheet;
+  const independent = report.independent_worksheet;
+  const reconciliation = report.worksheet_reconciliation;
   const exit = report.material_exit;
   const sales = worksheet?.sale_net_profit_sol || [];
   const observations = report.observations || [];
+  const trades = (report.events || []).filter((row) => row.kind === "buy" || row.kind === "sell");
+  const closedPositions = (report.positions || []).filter((row) => row.status === "closed" || row.end);
   return (
     <section className="panel subset-worksheet" data-subset-worksheet="independent">
       <SectionHeading
@@ -71,23 +75,68 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
       <p className="subset-worksheet-note">
         Independently reconciled subset from reconstructed buy/sell events.
         Standard report cards stay on full-wallet evidence and may remain unknown.
+        Policy remains {report.policy || "UNRESOLVED"}.
         {report.g3_status ? ` G3 status: ${report.g3_status}.` : ""}
         {report.source_integrity?.status ? ` Source integrity: ${report.source_integrity.status}.` : ""}
+        {report.research?.supported_swaps != null ? ` Supported swaps: ${report.research.supported_swaps}.` : ""}
       </p>
       <div className="subset-worksheet-metrics">
         <div>
-          <span>Realised subset P&amp;L</span>
+          <span>Production subset P&amp;L</span>
           <strong>{worksheet?.total_profit_sol ? `${decimal(worksheet.total_profit_sol, 4)} SOL` : "unknown"}</strong>
+        </div>
+        <div>
+          <span>Independent subset P&amp;L</span>
+          <strong>{independent?.total_profit_sol ? `${decimal(independent.total_profit_sol, 4)} SOL` : (worksheet?.total_profit_sol ? `${decimal(worksheet.total_profit_sol, 4)} SOL` : "unknown")}</strong>
         </div>
         <div>
           <span>Material-exit t90</span>
           <strong>{exit?.exit_90_seconds != null ? `${exit.exit_90_seconds} seconds` : "unknown"}</strong>
         </div>
         <div>
-          <span>Final hold</span>
+          <span>Position hold</span>
           <strong>{subsetHoldText(exit?.final_hold_seconds)}</strong>
         </div>
       </div>
+      {reconciliation?.status && (
+        <p className="subset-worksheet-note" data-worksheet-reconciliation={reconciliation.status}>
+          Worksheet reconciliation: {reconciliation.status}
+          {reconciliation.difference_sol != null ? ` · difference ${reconciliation.difference_sol} SOL` : ""}
+          {reconciliation.note ? ` — ${reconciliation.note}` : ""}
+        </p>
+      )}
+      {!!trades.length && (
+        <table className="subset-worksheet-trades" data-subset-trades={String(trades.length)}>
+          <caption>Supported subset trades ({trades.length})</caption>
+          <thead>
+            <tr>
+              <th>Kind</th>
+              <th>Mint</th>
+              <th>Amount</th>
+              <th>Fee</th>
+              <th>Signature</th>
+            </tr>
+          </thead>
+          <tbody>
+            {trades.map((row, index) => (
+              <tr key={`${String(row.signature || index)}-${index}`}>
+                <td>{String(row.kind)}</td>
+                <td>{shorten(String(row.mint || ""), 6)}</td>
+                <td>{row.amount_sol != null ? `${decimal(String(row.amount_sol), 4)} SOL` : "unknown"}</td>
+                <td>{row.fee_sol != null ? `${decimal(String(row.fee_sol), 9)} SOL` : "unknown"}</td>
+                <td>{row.signature ? shorten(String(row.signature), 6) : "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {!!closedPositions.length && (
+        <p className="subset-worksheet-sales" data-subset-positions={String(closedPositions.length)}>
+          Declared completed positions {closedPositions.length}
+          {closedPositions[0]?.hold_hours != null ? ` · hold ${closedPositions[0].hold_hours} hours` : ""}
+          {closedPositions[0]?.pnl_sol != null ? ` · position P&L ${decimal(String(closedPositions[0].pnl_sol), 4)} SOL` : ""}
+        </p>
+      )}
       {!!sales.length && (
         <p className="subset-worksheet-sales">
           Sale nets {sales.map((value) => `${decimal(value, 4)} SOL`).join(" · ")}

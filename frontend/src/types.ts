@@ -294,6 +294,20 @@ export type Report = {
     total_profit_sol?: string | null;
     sale_fifo_basis_sol?: string[];
     sale_net_profit_sol?: string[];
+    oracle?: string | null;
+  } | null;
+  independent_worksheet?: {
+    total_profit_sol?: string | null;
+    sale_fifo_basis_sol?: string[];
+    sale_net_profit_sol?: string[];
+    oracle?: string | null;
+  } | null;
+  worksheet_reconciliation?: {
+    status?: string | null;
+    production_total_profit_sol?: string | null;
+    independent_total_profit_sol?: string | null;
+    difference_sol?: string | null;
+    note?: string | null;
   } | null;
   observations?: { kind?: string; detail?: string; reason?: string; signature?: string; count?: number }[];
   g3_status?: string | null;

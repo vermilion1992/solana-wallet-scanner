@@ -342,7 +342,7 @@ def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, a
             role = "timestamp_missing"
             window_qualified = False
             unresolved_order = True
-        by_mint.setdefault(mint, []).append({
+        mapped = {
             "kind": row["kind"],
             "units": str(row.get("quantity_raw") or "0"),
             "consideration_sol": str(row.get("amount_sol") or "0"),
@@ -355,8 +355,12 @@ def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, a
             "signature": row.get("signature"),
             "mint": mint,
             "address": address,
+            "path": row.get("path"),
             "evidence": row.get("evidence") or [],
-        })
+        }
+        if "paid_by_wallet" in row:
+            mapped["paid_by_wallet"] = row["paid_by_wallet"]
+        by_mint.setdefault(mint, []).append(mapped)
     return by_mint, truncated_before_window
 
 

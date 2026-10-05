@@ -48,10 +48,16 @@ from scanner.mass_search.history_ingest import (
     HISTORICAL_ANCHOR_REQUIRED,
     QUARANTINE_KIND,
     SOURCE_CAPTURE_KIND,
+    UNSUPPORTED_UNTIL,
+    assert_gta_options_not_widened,
     assert_historical_request_anchored,
     authorised_cache_key,
+    build_historical_gta_options,
     dispatch_historical_transport,
+    documented_gta_contract,
+    evaluate_response_against_gta_contract,
     quarantine_key,
+    signature_lte,
 )
 from scanner.storage import Store
 
@@ -141,9 +147,14 @@ def test_overlay_freeze_is_extract_ok_with_100_plus_100():
     assert request_pagination_token(freeze, 0) is None
     assert request_pagination_token(freeze, 1) == "452802642:577"
     proposed = proposed_historical_requests(freeze)
-    assert proposed["page0"]["params"][1]["until"] == freeze["pages"][0]["signatures"][0]
-    assert "paginationToken" not in proposed["page0"]["params"][1]
+    page0_options = proposed["page0"]["params"][1]
+    assert "until" not in page0_options
+    assert page0_options["filters"]["signature"]["lte"] == freeze["pages"][0]["signatures"][0]
+    assert page0_options["filters"]["status"] == "any"
+    assert page0_options["filters"]["tokenAccounts"] == "all"
+    assert "paginationToken" not in page0_options
     assert proposed["page1"]["params"][1]["paginationToken"] == "452802642:577"
+    assert "until" not in proposed["page1"]["params"][1]
     assert proposed["page0"]["secrets"] is False
     assert "api-key" not in json.dumps(proposed).lower()
     assert freeze["pages"][0]["signatures"][0] == overlay["pages"]["page0"]["signatures"][0]
@@ -297,7 +308,50 @@ def test_unanchored_newest_first_rejected_before_dispatch():
         ))
     assert dispatched.value.state == HISTORICAL_ANCHOR_REQUIRED
     assert calls["n"] == 0
-    assert_options_not_widened({**unanchored, "until": expected[0]})
+    with pytest.raises(SourceError) as until_error:
+        assert_gta_options_not_widened({**unanchored, "until": expected[0]})
+    assert until_error.value.state == UNSUPPORTED_UNTIL
+    anchored = build_historical_gta_options(page_index=0, expected_signatures=expected)
+    assert_options_not_widened(anchored)
+    assert signature_lte(anchored) == expected[0]
+    assert "until" not in anchored
+
+
+def test_documented_gta_contract_rejects_until_and_requires_inclusive_bound():
+    freeze = load_freeze()
+    newest = freeze["pages"][0]["signatures"][0]
+    options = build_historical_gta_options(page_index=0, expected_signatures=frozen_signatures(freeze, 0))
+    assert options == {
+        "transactionDetails": "full",
+        "limit": 100,
+        "sortOrder": "desc",
+        "commitment": "finalized",
+        "maxSupportedTransactionVersion": 1,
+        "filters": {
+            "status": "any",
+            "tokenAccounts": "all",
+            "signature": {"lte": newest},
+        },
+    }
+    contract = documented_gta_contract(options)
+    assert contract["inclusive_newest_signature"] == newest
+    assert contract["boundary_inclusive"] is True
+    assert contract["until_present"] is False
+    assert contract["server_behaviour_not_proven"] is True
+    included = evaluate_response_against_gta_contract(options, [newest, *frozen_signatures(freeze, 0)[1:]])
+    assert included["boundary_included"] is True
+    assert included["matches_intended_newest"] is True
+    assert included["first_is_treated_as_newest"] is True
+    omitted = evaluate_response_against_gta_contract(options, ["otherSig111111111111111111111111111111111111111111111111111"])
+    assert omitted["boundary_included"] is False
+    page1 = build_historical_gta_options(
+        page_index=1,
+        expected_signatures=frozen_signatures(freeze, 1),
+        pagination_token="452802642:577",
+    )
+    continuation = documented_gta_contract(page1)
+    assert continuation["continuation_token"] == "452802642:577"
+    assert continuation["is_unanchored_newest_first"] is False
 
 
 def test_signature_mismatch_stops_without_page1(store, tmp_path):
@@ -310,6 +364,7 @@ def test_signature_mismatch_stops_without_page1(store, tmp_path):
             "page_index": page_index,
             "token": options.get("paginationToken"),
             "until": options.get("until"),
+            "signature_lte": ((options.get("filters") or {}).get("signature") or {}).get("lte"),
         })
         newer = ["newerTipSig111111111111111111111111111111111111111111111111111"]
         return {"records": _records(newer + frozen_signatures(freeze, page_index)[1:]), "http_status": 200}
@@ -328,7 +383,8 @@ def test_signature_mismatch_stops_without_page1(store, tmp_path):
     assert result["stop_reason"] == SIGNATURE_MISMATCH
     assert [row["page_index"] for row in calls] == [0]
     assert calls[0]["token"] is None
-    assert calls[0]["until"] == freeze["pages"][0]["signatures"][0]
+    assert calls[0]["until"] is None
+    assert calls[0]["signature_lte"] == freeze["pages"][0]["signatures"][0]
     assert result["helius_requests_used"] == 1
     assert result["helius_units_used"] == 10
     assert store.usage("helius", "setup-pilot", 200)["used"] == 0

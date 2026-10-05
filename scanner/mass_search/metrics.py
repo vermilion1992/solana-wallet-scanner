@@ -236,6 +236,8 @@ def material_exit_v1(events, *, total_acquired=None, transfers_unknown=False):
     sold = Decimal("0")
     first_sale = None
     t50 = t90 = final = None
+    opened = None
+    closed = None
     weighted = Decimal("0")
     if total_acquired is None:
         total_acquired = sum((Decimal(str(event["units"])) for event in events if event["kind"] == "buy"), Decimal("0"))
@@ -247,6 +249,8 @@ def material_exit_v1(events, *, total_acquired=None, transfers_unknown=False):
         units = Decimal(str(event["units"]))
         seconds = int(event["seconds_from_start"])
         if event["kind"] == "buy":
+            if opened is None:
+                opened = seconds
             acquired += units
             continue
         if event["kind"] != "sell":
@@ -263,13 +267,18 @@ def material_exit_v1(events, *, total_acquired=None, transfers_unknown=False):
         if t90 is None and ratio_after >= Decimal("0.9") and ratio_before < Decimal("0.9"):
             t90 = seconds
         if sold == total_acquired:
-            final = seconds
+            closed = seconds
+            # Position hold is close − open, not the sale's report-window offset.
+            final = None if opened is None else seconds - opened
     return {
         "state": "KNOWN" if first_sale is not None else "UNKNOWN",
         "first_sale_seconds": first_sale,
         "exit_50_seconds": t50,
         "exit_90_seconds": t90,
         "final_hold_seconds": final,
+        "position_opened_seconds": opened,
+        "position_closed_seconds": closed,
+        "position_hold_seconds": final,
         "quantity_weighted_exit_seconds": format_decimal(weighted / sold) if sold else None,
         "sold_units": format_decimal(sold),
         "acquired_units": format_decimal(total_acquired),

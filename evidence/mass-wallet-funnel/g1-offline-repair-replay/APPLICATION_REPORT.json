@@ -2,8 +2,8 @@
   "kind": "mass-search-application-report-snapshot-v1",
   "source": "offline G1 archive through MassSearchService.reconstruct_candidate",
   "archive": "evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/archives/helius_gta_survivor_desc100.json.gz",
-  "run_id": "67ddc998e5cf48caa4d6a96109088be0",
-  "report_id": "6dd6158643574069844752e9c14fa2fe",
+  "run_id": "1939a537876340fcb974f5e3fc95e5ad",
+  "report_id": "e39eb74c1498472088dad1bce52f64d4",
   "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
   "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
   "corpus_kind": "GENUINE_REPLAY",
@@ -15,15 +15,34 @@
     "sale_net_profit_sol": [
       "-0.167725526"
     ],
-    "total_profit_sol": "-0.167725526",
+    "total_profit_sol": "-0.167725526"
+  },
+  "independent_worksheet": {
+    "sale_fifo_basis_sol": [
+      "7.90026000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ],
+    "sale_net_profit_sol": [
+      "-0.16772552600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ],
+    "total_profit_sol": "-0.16772552600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "oracle": "independent-g1-fifo-v1"
+  },
+  "worksheet_reconciliation": {
+    "status": "AGREE",
+    "production_total_profit_sol": "-0.167725526",
+    "independent_total_profit_sol": "-0.167725526",
+    "difference_sol": "0",
+    "note": null
   },
   "material_exit": {
     "state": "KNOWN",
     "first_sale_seconds": 2263932,
     "exit_50_seconds": 2263932,
     "exit_90_seconds": 2263932,
-    "final_hold_seconds": 2263932,
+    "final_hold_seconds": 598,
+    "position_opened_seconds": 2263334,
+    "position_closed_seconds": 2263932,
+    "position_hold_seconds": 598,
     "quantity_weighted_exit_seconds": "2263932",
     "sold_units": "13032346709725",
     "acquired_units": "13032346709725",
@@ -52,6 +71,29 @@
     "integrity_failure": false,
     "all_unsupported": false
   },
+  "research": {
+    "supported_swaps": 5,
+    "closed_episodes": 1,
+    "scope": "supported spot swaps in fetched subset",
+    "observed_profit_sol": null
+  },
+  "counts": {
+    "closed": 1,
+    "open": 0,
+    "interrupted": 0,
+    "unresolved": 0
+  },
+  "trade_kinds": [
+    "buy",
+    "buy",
+    "buy",
+    "buy",
+    "sell"
+  ],
+  "trade_count": 5,
+  "closed_position_count": 1,
+  "position_hold_hours": "0.166111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+  "position_hold_seconds": 598,
   "offline_replay": true,
   "external_requests": 0,
   "PRODUCT_READY": false,

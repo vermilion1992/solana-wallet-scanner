@@ -35,8 +35,9 @@ from scanner.mass_search.g3_history import (
     persist_page,
     run_g3_history,
 )
-from scanner.mass_search.history_ingest import replay_cached_history_to_report
-from scanner.mass_search.service import MassSearchService
+from scanner.mass_search.history_ingest import reconcile_worksheets, replay_cached_history_to_report
+from scanner.mass_search.metrics import material_exit_v1
+from scanner.mass_search.service import MassSearchService, events_to_accounting
 from scanner.mass_search.live_g1 import _wrap_records, independent_fifo_worksheet
 from scanner.storage import Store
 
@@ -241,6 +242,28 @@ def test_g1_archive_saves_retrievable_application_report_offline(tmp_path, monke
     assert report["policy"] == "UNRESOLVED"
     assert report["PRODUCT_READY"] is False
     assert Decimal(report["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    trades = [row for row in report["events"] if row.get("kind") in ("buy", "sell")]
+    assert [row["kind"] for row in trades] == ["buy", "buy", "buy", "buy", "sell"]
+    assert all(row.get("mint") == G1_MINT for row in trades)
+    closed = [row for row in report["positions"] if row.get("status") == "closed"]
+    assert len(closed) == 1
+    assert closed[0]["mint"] == G1_MINT
+    assert closed[0]["buy_count"] == 4
+    assert closed[0]["sell_count"] == 1
+    assert report["research"]["supported_swaps"] == 5
+    assert report["counts"]["closed"] == 1
+    assert report["worksheet_reconciliation"]["status"] == "AGREE"
+    assert Decimal(report["independent_worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    decoded = decode_supported_swaps(_wrap_records(sanitize_transaction_records(records)["records"]), G1_ADDRESS)
+    mint_events = _ordered_inventory_rows(g1_mint_events(decoded))
+    expected_hold = mint_events[-1]["seconds_from_start"] - mint_events[0]["seconds_from_start"]
+    assert report["material_exit"]["final_hold_seconds"] == expected_hold
+    assert report["material_exit"]["final_hold_seconds"] != mint_events[-1]["seconds_from_start"]
+    assert Decimal(str(closed[0]["hold_hours"])) * Decimal("3600") == Decimal(expected_hold)
+    shifted = material_exit_v1([
+        {**row, "seconds_from_start": row["seconds_from_start"] + 86_400} for row in mint_events
+    ])
+    assert shifted["final_hold_seconds"] == expected_hold
     store.close()
 
     monkeypatch.delenv("HELIUS_API_KEY", raising=False)
@@ -318,3 +341,96 @@ def test_visible_below_g3_and_export_reopen_make_zero_provider_calls(tmp_path, m
         assert payload["reports"][0]["worksheet"]
         refilter = client.post(f"/api/mass-search/runs/{result['search_run_id']}/refilter", json={})
         assert refilter.status_code in (200, 400, 409)
+
+
+def test_events_to_accounting_preserves_evidenced_payer_and_does_not_blanket_true():
+    start = G1_WINDOW_START
+    sponsored = events_to_accounting([
+        {"kind": "buy", "units": "1", "consideration_sol": "1", "wallet_fee_sol": "0.001",
+         "seconds_from_start": 0, "mint": "MintA", "signature": "buy-s", "paid_by_wallet": False},
+        {"kind": "sell", "units": "1", "consideration_sol": "1", "wallet_fee_sol": "0",
+         "seconds_from_start": 10, "mint": "MintA", "signature": "sell-s", "paid_by_wallet": False},
+    ], mint="MintA", start=start)
+    trades = [row for row in sponsored if row["kind"] in ("buy", "sell")]
+    assert all(row["paid_by_wallet"] is False for row in trades)
+    assert all(row["kind"] != "fee" for row in sponsored)
+
+    evidenced = events_to_accounting([
+        {"kind": "buy", "units": "1", "consideration_sol": "1", "wallet_fee_sol": "0.001",
+         "seconds_from_start": 0, "mint": "MintA", "signature": "buy-e", "paid_by_wallet": True,
+         "path": "swap/0", "evidence": ["a" * 64]},
+        {"kind": "sell", "units": "1", "consideration_sol": "1.1", "wallet_fee_sol": "0.001",
+         "seconds_from_start": 10, "mint": "MintA", "signature": "sell-e", "paid_by_wallet": True,
+         "path": "swap/0", "evidence": ["b" * 64]},
+    ], mint="MintA", start=start)
+    buy = next(row for row in evidenced if row["kind"] == "buy")
+    fee = next(row for row in evidenced if row["kind"] == "fee" and row["signature"] == "buy-e")
+    assert buy["paid_by_wallet"] is True
+    assert fee["paid_by_wallet"] is True
+    assert fee["allocated_trade_path"] == buy["path"]
+
+
+def test_accounting_integration_error_is_not_swallowed(tmp_path):
+    store = Store(tmp_path / "data")
+    service = MassSearchService(store, clock=lambda: G1_WINDOW_END)
+    plan = service.preview_plan()["plan"]
+    plan["live_enabled"] = False
+    run = service.create_run(plan, source_id="payer-mismatch", corpus_kind="SYNTHETIC")
+    with pytest.raises(ValueError, match="Accounting integration failed"):
+        service.reconstruct_candidate(
+            run["run_id"], "solana:Addr111111111111111111111111111111111111111",
+            [
+                {"kind": "buy", "units": "not-a-quantity", "consideration_sol": "1",
+                 "seconds_from_start": 0, "mint": "MintA", "signature": "buy-bad",
+                 "paid_by_wallet": True, "evidence": ["a" * 64]},
+                {"kind": "sell", "units": "1", "consideration_sol": "1",
+                 "seconds_from_start": 10, "mint": "MintA", "signature": "sell-bad",
+                 "paid_by_wallet": True, "evidence": ["b" * 64]},
+            ],
+            mint="MintA",
+        )
+    store.close()
+
+
+def test_multi_mint_fifo_keeps_separate_inventories_and_costs():
+    events = [
+        {"kind": "buy", "units": "10", "consideration_sol": "10", "wallet_fee_sol": "0",
+         "seconds_from_start": 0, "mint": "MintA", "signature": "a-buy"},
+        {"kind": "buy", "units": "2", "consideration_sol": "20", "wallet_fee_sol": "0",
+         "seconds_from_start": 1, "mint": "MintB", "signature": "b-buy"},
+        {"kind": "sell", "units": "10", "consideration_sol": "11", "wallet_fee_sol": "0",
+         "seconds_from_start": 2, "mint": "MintA", "signature": "a-sell"},
+        {"kind": "sell", "units": "2", "consideration_sol": "18", "wallet_fee_sol": "0",
+         "seconds_from_start": 3, "mint": "MintB", "signature": "b-sell"},
+    ]
+    from scanner.mass_search.metrics import fifo_sale_results
+    worksheet = fifo_sale_results(events)
+    assert worksheet["declared_mints"] == ["MintA", "MintB"]
+    assert Decimal(worksheet["sale_fifo_basis_sol"][0]) == Decimal("10")
+    assert Decimal(worksheet["sale_fifo_basis_sol"][1]) == Decimal("20")
+    assert Decimal(worksheet["total_profit_sol"]) == Decimal("-1")
+
+
+def test_worksheet_disagreement_is_a_conflict_not_a_substitution():
+    production = {"total_profit_sol": "-0.10", "sale_net_profit_sol": ["-0.10"], "sale_fifo_basis_sol": ["1"]}
+    independent = {"total_profit_sol": "-0.167725526", "sale_net_profit_sol": ["-0.167725526"], "sale_fifo_basis_sol": ["7.90026"]}
+    result = reconcile_worksheets(production, independent)
+    assert result["status"] == "CONFLICT"
+    assert result["production_worksheet"] == production
+    assert result["independent_worksheet"] == independent
+    assert result["production_total_profit_sol"] == "-0.1"
+    assert Decimal(result["independent_total_profit_sol"]) == Decimal("-0.167725526")
+
+
+def test_position_hold_is_window_shift_invariant():
+    events = [
+        {"kind": "buy", "units": "1", "consideration_sol": "1", "wallet_fee_sol": "0", "seconds_from_start": 1000},
+        {"kind": "sell", "units": "1", "consideration_sol": "1", "wallet_fee_sol": "0", "seconds_from_start": 1598},
+    ]
+    first = material_exit_v1(events)
+    shifted = material_exit_v1([
+        {**row, "seconds_from_start": row["seconds_from_start"] + 50_000} for row in events
+    ])
+    assert first["final_hold_seconds"] == 598
+    assert shifted["final_hold_seconds"] == 598
+    assert first["quantity_weighted_exit_seconds"] != shifted["quantity_weighted_exit_seconds"]

@@ -6,7 +6,10 @@ through the shared history → cache → decoder → accounting →
 
 - Wallet `GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee`
 - Mint `4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump`
-- Subset P&L **−0.167725526 SOL**
+- Supported trades: four buys + one sell
+- One declared completed observed position
+- Production and independent subset P&L both **−0.167725526 SOL** (AGREE)
+- Position hold recomputed as close − open (598 s); not the report-window offset
 - Archive: `evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/archives/helius_gta_survivor_desc100.json.gz`
 
 This does **not** prove the ranked-wallet / G3 pipeline.

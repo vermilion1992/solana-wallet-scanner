@@ -395,14 +395,14 @@ class MassSearchService:
         })
         try:
             analysis = analyze(accounting_events, start, end, history_complete=False)
-        except (ValueError, TypeError, KeyError):
-            analysis = {"metrics": {}, "positions": [], "policy": "UNRESOLVED", "methodology": None}
+        except (ValueError, TypeError, KeyError) as error:
+            raise ValueError(f"Accounting integration failed: {error}") from error
         try:
             research = summarize_research(accounting_events, start, end, history_complete=False)
-        except (ValueError, TypeError, KeyError):
-            research = {"supported_swaps": 0, "notes": ["Research summary unavailable for these events."]}
+        except (ValueError, TypeError, KeyError) as error:
+            raise ValueError(f"Research integration failed: {error}") from error
         worksheet = fifo_sale_results([
-            {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol")}
+            {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol", "mint")}
             for event in events if event.get("kind") in ("buy", "sell")
         ]) if any(event.get("kind") in ("buy", "sell") for event in events) else None
         exit_diag = material_exit_v1([
@@ -501,7 +501,7 @@ class MassSearchService:
             "checks": analysis.get("checks") or [],
             "counts": analysis.get("counts") or {},
             "positions": analysis.get("positions") or [],
-            "events": analysis.get("events") or [],
+            "events": [row for row in accounting_events if row.get("kind") in ("buy", "sell")],
             "findings": [],
             "coverage": analysis.get("coverage") or {},
             "research": research,
@@ -774,6 +774,16 @@ class MassSearchService:
                             seed=plan["exploration_audit"]["selection_seed"], authorised_slots=slots)
 
 
+def evidenced_paid_by_wallet(event):
+    """Carry explicit payer evidence. Do not invent paid_by_wallet=True on every trade."""
+    if "paid_by_wallet" in event:
+        paid = event["paid_by_wallet"]
+        if not isinstance(paid, bool):
+            raise ValueError("paid_by_wallet must be boolean")
+        return paid
+    return None
+
+
 def events_to_accounting(events, *, mint, start):
     start_dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
     rows = []
@@ -791,7 +801,7 @@ def events_to_accounting(events, *, mint, start):
                 "decimals": 0,
                 "classification": "meme",
                 "signature": event.get("signature") or f"synthetic-transfer-{index}",
-                "path": "fixture",
+                "path": event.get("path") or "fixture",
                 "evidence": event.get("evidence") or ["fixture-hash"],
                 "origin": "transfer",
             })
@@ -799,6 +809,8 @@ def events_to_accounting(events, *, mint, start):
         if event.get("kind") not in ("buy", "sell", "fee"):
             continue
         when = start_dt + timedelta(seconds=int(event.get("seconds_from_start") or 0))
+        paid = evidenced_paid_by_wallet(event)
+        fee_amount = event.get("wallet_fee_sol") if event.get("wallet_fee_sol") not in (None, "") else event.get("fee_sol")
         row = {
             "kind": event["kind"],
             "timestamp": when.isoformat().replace("+00:00", "Z"),
@@ -808,20 +820,34 @@ def events_to_accounting(events, *, mint, start):
             "decimals": 0,
             "classification": "meme",
             "signature": event.get("signature") or f"synthetic-{index}",
-            "path": "fixture",
+            "path": event.get("path") or "fixture",
             "evidence": event.get("evidence") or ["fixture-hash"],
         }
         if "consideration_sol" in event:
             row["amount_sol"] = event["consideration_sol"]
-        if event.get("wallet_fee_sol"):
-            row["fee_sol"] = event["wallet_fee_sol"]
+        elif event.get("amount_sol") is not None:
+            row["amount_sol"] = event["amount_sol"]
+        if fee_amount not in (None, ""):
+            row["fee_sol"] = str(fee_amount)
+        if paid is True:
+            row["paid_by_wallet"] = True
+        elif paid is False:
+            row["paid_by_wallet"] = False
+        elif fee_amount not in (None, "", "0"):
+            # wallet_fee_sol / fee_sol on a mass-search trade is evidenced wallet spend.
+            row["paid_by_wallet"] = True
+            paid = True
         rows.append(row)
-        if event.get("wallet_fee_sol") and event["kind"] in ("buy", "sell"):
+        if (
+            event["kind"] in ("buy", "sell")
+            and fee_amount not in (None, "", "0")
+            and row.get("paid_by_wallet") is True
+        ):
             rows.append({
                 "kind": "fee",
                 "timestamp": row["timestamp"],
                 "order": index + 1000,
-                "amount_sol": event["wallet_fee_sol"],
+                "amount_sol": str(fee_amount),
                 "paid_by_wallet": True,
                 "signature": row["signature"],
                 "path": "meta.fee",
