@@ -7,7 +7,8 @@ A local Search funnel now runs offline from an authorised-or-fixture candidate s
 - Repository: `vermilion1992/solana-wallet-scanner`
 - Branch: `cursor/mass-wallet-funnel-v1-1055` (reversible; named for the cloud agent policy; equivalent intent to `codex/mass-wallet-funnel-v1`)
 - Base: `codex/screening-forward-research` `fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69` (PR #1 left unmerged; PR #2 merged into this base at `ce3d0739` covering through `bbe9aa85`)
-- Tested application SHA: `baa9993d1b7206ce6ed3a55fd4a98dba5c7f5f71`
+- Tested application SHA: `0414f6d15060aa1295faaf8baf3854ec16aa0fc6`
+- Prior Search-UI SHA: `baa9993d1b7206ce6ed3a55fd4a98dba5c7f5f71`
 - Prior tested application SHA: `559b45c74182c29892521e18308b9154ea02ac0e`
 - Lock SHA-256: see `ee7c645a3a7b499bb150b1ac84b96ced/source_manifest.json`
 - Published SHA: same branch tip after this evidence commit
@@ -57,9 +58,9 @@ Synthetic vertical slice (1 address): reconstructed through `accounting.analyze`
 - Independent reconciliation: dust-tail buy 100 @ 1.01 SOL, sales 50/45/5 worked by hand to 0.505/0.4545/0.0505 basis and 0.575 total; helper and fixture match those numbers. Later-buy scaling-in moves t90; unknown transfer revokes material-exit.
 - Live HTTP, source removal/restoration on genuine pages, and full screening-forward validate profile: not run in this batch
 - Failed/blocked/not-run: G1/G2/G3/G5 live paths BLOCKED; G6 NOT_RUN; live-search receipt profile exit 2; full `tools/validate.py --profile screening-forward` not executed end-to-end here
-- Opened standard report cards still show insufficient-evidence dashes; subset 0.575 SOL / 48 h / t90 30 s is visible on the Search shortlist and in the JSON export/API worksheet
+- Opened report shows a labeled reconstructed-subset / independent worksheet: 0.575 SOL, t90 30 seconds, final hold 48 hours (172800 seconds). Standard full-wallet cards stay on insufficient-evidence dashes. Policy remains UNRESOLVED / not MATCH. Evidence `ui-offline-browser/03-opened-report-desktop.png`.
 
 ## Next action
-Offline: show the independent subset worksheet on the opened report panel without promoting it to a wallet-wide MATCH. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
+Offline: after launcher restart, reopen the saved report and confirm the independent worksheet is unchanged. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
 
 Independent outcomes: MASS_SEARCH_SOFTWARE = implemented offline. REAL_SEARCH_BENCHMARK, REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED, RESEARCH_OUTCOME = not demonstrated. Legacy PRODUCT_READY remains false.
