@@ -68,4 +68,6 @@ Do not merge solely on G1 or this ranked-100 pilot. Do not start full G2 (1,000 
 
 **RANKED_100_DISCOVERY_PILOT PASS** on a separate secure box (not this VM). Grant `live-g2-ranked100-discovery-2026-10-05-mitch`. Exact Birdeye `GET /trader/gainers-losers` solana `type=30d` `sort_by=trader_score` `sort_type=desc` `offset=0` `limit=100`. 100 raw / 100 unique; shortlist 20 (not padded); 80 below ceiling. Spend: Birdeye 1 request, documented estimate 30 CU (no CU billing headers; ratelimit 100/99); Helius 0; setup-pilot untouched; $0 extra. `last_active` unknown on all rows. `evidence_sha256` `03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4`. Receipt `ranked100-discovery-pilot-2026-10-05/`. Notes: `RANKED_100_DISCOVERY_PILOT.md`.
 
-Repo grant template stays `enabled: false` (ceiling amended 25→30 CU to match current Birdeye docs). No keys on this VM. PRODUCT_READY stays false.
+Repo ranked-100 grant template stays `enabled: false` (ceiling amended 25→30 CU to match current Birdeye docs). No keys on this VM. PRODUCT_READY stays false.
+
+Mitch separately approved `live-g3-ranked100-history-2026-10-06-mitch` (2026-10-05T14:19:00Z). This cloud run is **G3 offline prep only**: grant file stays `enabled: false`, freeze of shortlist ranks 1/3/5 + reserves 6/7, no live Helius. Notes: `G3_RANKED100_HISTORY.md`. Live still blocked until Helius pricing/entitlement/remaining quota are confirmed on the box — a present key or the G1 pass is not enough.

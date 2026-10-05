@@ -44,6 +44,11 @@ def test_g1_grant_enabled_and_non_grants_stay_disabled():
     assert draft["enabled"] is False
     assert ranked100["enabled"] is False
     assert ranked100.get("authorization_id") == "live-g2-ranked100-discovery-2026-10-05-mitch"
+    g3 = validate_live_authorization(json.loads(
+        (ROOT / "config/live_authorization.g3-ranked100-history-granted.json").read_text()
+    ))
+    assert g3["enabled"] is False
+    assert g3.get("authorization_id") == "live-g3-ranked100-history-2026-10-06-mitch"
 
 
 def test_independent_fifo_oracle_does_not_import_production_helper():
