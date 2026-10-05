@@ -10,8 +10,8 @@ at `2026-10-06 02:07` Australia/Adelaide (`2026-10-05T15:37:00Z`).
 Leftover `live-g3-ranked100-history-2026-10-06-mitch` (15/150) must not be reused.
 `PRODUCT_READY` stays false. Not full G2. Not MATCH.
 
-Application commit: `2b8dd944ddfe970d3b5070f38b008aa7cd6179ed`.
-Offline tests: 178 passed. Receipt: `g3-integrity-reacquire-rank1/OFFLINE_PREP_RECEIPT.json`.
+Application commit: `0fa9f9a8bd5b0178579f4185e0bbcc9589fbccc3`.
+Offline tests: 184 passed. Overlay: `g3-integrity-reacquire-rank1/rank1-signature-overlay.json`.
 
 ## Segment status: EXTRACT_OK
 

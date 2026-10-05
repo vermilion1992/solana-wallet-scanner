@@ -4,6 +4,10 @@
 frozen from the box-local extract (zero provider calls). Token balances remain
 **SOURCE_RECORDS_DAMAGED** and are not intact economics.
 
+Application commit: `0fa9f9a8bd5b0178579f4185e0bbcc9589fbccc3`
+(descendant of `fe6a398a40c59d1e1afcb3788c3ccba00d936779`).
+Offline tests: **184 passed**. Live not run from the cloud.
+
 Live is still **box-only** after Helius quota confirm + a local uncommitted
 armed grant. Do not call Helius from the cloud agent. Do not merge PR #4.
 Repo grant template stays `enabled: false`. `PRODUCT_READY` stays false.
