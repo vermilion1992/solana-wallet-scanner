@@ -138,6 +138,11 @@ def run(args):
 
         page.get_by_role("button", name="Open report", exact=True).first.click()
         expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
+        expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_be_visible()
+        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+        expect(page.get_by_text("30 seconds", exact=False).first).to_be_visible()
+        expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
         capture("03-opened-report")
         result["cases"].append({"case": "open-subset-report", "state": "PASS", "report_id": report_id})
 

@@ -49,6 +49,9 @@ try {
     SourceConsistencySection,
     CoverageDetails,
     sourceSetComplete,
+    SubsetWorksheetPanel,
+    subsetHoldText,
+    subsetWorksheetVisible,
   } = require(join(output, "report.js"));
   const { SelectedCohortSection, selectedCohortFreshness } = require(join(output, "SelectedCohorts.js"));
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
@@ -1948,6 +1951,39 @@ try {
   assert.ok(searchHtml.includes("Export JSON"));
   assert.ok(searchHtml.includes("Stage shortlist"));
   assert.ok(searchHtml.includes("No rows on this page"));
+  assert.equal(subsetHoldText(172800), "48 hours (172800 seconds)");
+  assert.equal(subsetWorksheetVisible({}), false);
+  const subsetReport = {
+    ...searchState.reports[0],
+    source: "mass-search",
+    policy: "UNRESOLVED",
+    metrics: {},
+    checks: [],
+    coverage: {},
+    positions: [],
+    events: [],
+    findings: [],
+    notes: ["Subset reconstruction through the existing accounting/research functions."],
+    evidence: [],
+    counts: { closed: 0, open: 0, interrupted: 0, unresolved: 0 },
+    worksheet: {
+      total_profit_sol: "0.575",
+      sale_fifo_basis_sol: ["0.505", "0.4545", "0.0505"],
+      sale_net_profit_sol: ["0.29", "0.2605", "0.0245"],
+    },
+    material_exit: { exit_90_seconds: 30, final_hold_seconds: 172800 },
+  };
+  const subsetHtml = renderToStaticMarkup(React.createElement(ReportView, {
+    ...actions, state: searchState, report: subsetReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined,
+  }));
+  assert.ok(subsetHtml.includes("Reconstructed subset / independent worksheet"));
+  assert.ok(subsetHtml.includes("Not a wallet-wide MATCH"));
+  assert.ok(subsetHtml.includes("0.575 SOL"));
+  assert.ok(subsetHtml.includes("30 seconds"));
+  assert.ok(subsetHtml.includes("48 hours (172800 seconds)"));
+  assert.ok(subsetHtml.includes("Insufficient evidence"));
+  assert.ok(subsetHtml.includes('data-subset-worksheet="independent"'));
+  assert.ok(renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, { report: searchState.reports[0] })) === "");
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

@@ -5069,6 +5069,35 @@ pre {
     padding-inline: 20px;
   }
 }
+.subset-worksheet { margin-bottom: 18px; }
+.subset-worksheet-note {
+  color: #657a70;
+  font-size: 12px;
+  line-height: 1.65;
+  padding: 0 23px 10px;
+  overflow-wrap: anywhere;
+}
+.subset-worksheet-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 23px 18px;
+}
+.subset-worksheet-metrics > div { display: grid; gap: 6px; min-width: 0; }
+.subset-worksheet-metrics span { color: #63766b; font-size: 11px; }
+.subset-worksheet-metrics strong { font-size: 20px; overflow-wrap: anywhere; }
+.subset-worksheet-sales {
+  color: #657a70;
+  font-size: 12px;
+  line-height: 1.65;
+  padding: 0 23px 18px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .subset-worksheet-metrics { grid-template-columns: minmax(0, 1fr); padding-inline: 20px; }
+  .subset-worksheet-note,
+  .subset-worksheet-sales { padding-inline: 20px; }
+}
 .mass-search {
   display: flex;
   flex-direction: column;

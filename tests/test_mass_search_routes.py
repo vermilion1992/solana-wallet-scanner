@@ -107,7 +107,11 @@ def test_slice_report_can_be_reopened_and_exported(session):
     assert opened.status_code == 200
     assert opened.json()["id"] == report_id
     assert opened.json()["source"] == "mass-search"
+    assert opened.json()["policy"] == "UNRESOLVED"
     assert opened.json()["worksheet"]["total_profit_sol"] == "0.575"
+    assert opened.json()["material_exit"]["exit_90_seconds"] == 30
+    assert opened.json()["material_exit"]["final_hold_seconds"] == 172800
+    assert opened.json()["metrics"].get("profit_sol", {}).get("status") != "known"
     linked = client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"]
     assert linked[0]["id"] == report_id
     page = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50").json()
@@ -119,6 +123,8 @@ def test_slice_report_can_be_reopened_and_exported(session):
     report_export = client.get(f"/api/export/reports/{report_id}.json")
     assert report_export.status_code == 200
     assert report_export.json()["id"] == report_id
+    assert report_export.json()["worksheet"]["total_profit_sol"] == "0.575"
+    assert report_export.json()["policy"] == "UNRESOLVED"
     restarted = Store(data_dir)
     try:
         assert restarted.get("reports", report_id)["id"] == report_id

@@ -290,6 +290,19 @@ export type Report = {
   };
   counts_population?: string;
   notes: string[];
+  worksheet?: {
+    total_profit_sol?: string | null;
+    sale_fifo_basis_sol?: string[];
+    sale_net_profit_sol?: string[];
+  } | null;
+  material_exit?: {
+    state?: string | null;
+    first_sale_seconds?: number | null;
+    exit_50_seconds?: number | null;
+    exit_90_seconds?: number | null;
+    final_hold_seconds?: number | null;
+    quantity_weighted_exit_seconds?: string | null;
+  } | null;
   market_observations?: Record<string, unknown>[];
   market_observation_scope?: string;
   market_observation_note?: string;
