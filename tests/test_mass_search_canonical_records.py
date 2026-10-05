@@ -186,6 +186,10 @@ def test_replay_saves_honest_partial_report(store):
     assert result["report_id"]
     report = store.get("reports", result["report_id"])
     assert report["source"] == "mass-search"
+    assert report["window"]["start"] == WINDOWS["report_start_inclusive"]
+    assert report["window"]["end"] == WINDOWS["report_end_exclusive"]
+    assert report["evidence_status"] == "partial"
+    assert report["checks"] == []
     assert report["g3_status"] == "PARTIAL_NO_SUPPORTED_SOL_SWAPS"
     assert report["worksheet"] is None
     assert report["PRODUCT_READY"] is False

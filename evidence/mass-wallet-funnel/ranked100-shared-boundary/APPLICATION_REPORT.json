@@ -1,12 +1,19 @@
 {
-  "id": "ranked-partial-25865JdB-bd3a0a58",
+  "id": "ranked-partial-25865JdB-58b0c6e5",
   "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
   "label": "Mass-search subset \u00b7 GENUINE_REPLAY",
   "source": "mass-search",
   "corpus_kind": "GENUINE_REPLAY",
   "created_at": "2026-10-05T13:29:27Z",
+  "window": {
+    "start": "2026-09-05T13:29:27Z",
+    "end": "2026-10-05T13:29:27Z"
+  },
+  "methodology": null,
   "policy": "UNRESOLVED",
+  "evidence_status": "partial",
   "metrics": {},
+  "checks": [],
   "findings": [
     {
       "severity": "info",

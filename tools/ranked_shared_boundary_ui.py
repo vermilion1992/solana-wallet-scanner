@@ -114,6 +114,7 @@ try:
     page.goto(launcher.url)
     _open_watchlist(page)
     page.get_by_role("button", name="Latest report").click()
+    page.get_by_text("Reconstructed subset / independent worksheet", exact=True).wait_for(timeout=15000)
     expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
     expect(page.get_by_text("PARTIAL_NO_SUPPORTED_SOL_SWAPS")).to_be_visible()
     expect(page.get_by_text("Visible transaction fees are not profit")).to_be_visible()
