@@ -34,7 +34,7 @@ Spend used: Birdeye **25 / 250 CU** (1 call); Helius **130 / 600 credits** (13 G
 | G0 Baseline/safety/software | PASS | Offline staged funnel, strict-v0.3 unchanged, caps 20/5 retained | None for offline software |
 | G1 Genuine vertical slice | **PASS** | Live grant + real Birdeye acquire + Helius history → supported closed buy+sell on `GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee`; worksheet `1bffe2ac21854424aa3fe3b8bf6a22ae/WORKSHEET.json`; spend 25/250 CU and 130/600 credits; setup-pilot untouched | None for G1. Real-specimen UI screenshots optional / not taken this pass |
 | G2 Genuine 1,000-candidate search | BLOCKED | Not in this grant | Separate authorization after G1 |
-| G3 Three genuine reconciled analytics reports | BLOCKED | One genuine subset report only | After G2 |
+| G3 Three genuine reconciled analytics reports | **INCOMPLETE** | Live grant on frozen ranks 1/3/5 + 6/7: 0 qualifying reports / target 3; 0 decoded_swaps on 1000 fetched txs; receipt `g3-ranked100-history-live-2026-10-06/` | Decoder coverage on these programs/discriminators; do not invent profitability |
 | G4 Local 10,000-row performance | PASS | Official 5/20 p95 309.18 ms, receipt `ee7c645a3a7b499bb150b1ac84b96ced/` | None |
 | G5 Genuine forward operation | BLOCKED | Out of grant | Authorized delayed quotes after frozen genuine cohort |
 | G6 Prospective financial research | NOT_RUN | Out of grant | After G5 |
@@ -64,10 +64,12 @@ Genuine G1:
 Synthetic idea sequence (unchanged): `ui-offline-browser/` screenshots with 0.575 SOL fixture.
 
 ## Next action
-Do not merge solely on G1 or this ranked-100 pilot. Do not start full G2 (1,000 wallets) from this evidence.
+Do not merge solely on G1, ranked-100, or this G3 history attempt. Do not start full G2 (1,000 wallets) from this evidence. Do not invent profitability.
 
 **RANKED_100_DISCOVERY_PILOT PASS** on a separate secure box (not this VM). Grant `live-g2-ranked100-discovery-2026-10-05-mitch`. Exact Birdeye `GET /trader/gainers-losers` solana `type=30d` `sort_by=trader_score` `sort_type=desc` `offset=0` `limit=100`. 100 raw / 100 unique; shortlist 20 (not padded); 80 below ceiling. Spend: Birdeye 1 request, documented estimate 30 CU (no CU billing headers; ratelimit 100/99); Helius 0; setup-pilot untouched; $0 extra. `last_active` unknown on all rows. `evidence_sha256` `03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4`. Receipt `ranked100-discovery-pilot-2026-10-05/`. Notes: `RANKED_100_DISCOVERY_PILOT.md`.
 
 Repo ranked-100 grant template stays `enabled: false` (ceiling amended 25→30 CU to match current Birdeye docs). No keys on this VM. PRODUCT_READY stays false.
 
-Mitch separately approved `live-g3-ranked100-history-2026-10-06-mitch` (2026-10-05T14:19:00Z). This cloud run is **G3 offline prep only**: grant file stays `enabled: false`, freeze of shortlist ranks 1/3/5 + reserves 6/7, no live Helius. Notes: `G3_RANKED100_HISTORY.md`. Live still blocked until Helius pricing/entitlement/remaining quota are confirmed on the box — a present key or the G1 pass is not enough.
+**G3_RANKED100_HISTORY INCOMPLETE** on a separate secure box (not this VM). Grant `live-g3-ranked100-history-2026-10-06-mitch` ran under ceilings. Investigated frozen ranks 1, 3, 5 + reserves 6, 7 (2 pages each). Qualifying reports (≥10 supported closed episodes): **0 / target 3**. Decoder `spot-v7-native-flow-roles` fetched txs (HTTP 200) but produced **0 decoded_swaps / 0 supported closed pairs** on these pages (unsupported programs/discriminators / transfers-without-reviewed-swap). Do not invent profitability. Spend: Helius 10 requests / ~100 documented-estimate credits (ceilings 15/150); Birdeye 0; setup-pilot untouched; $0 extra. Stop: `wallet_investigation_cap`. Receipt `g3-ranked100-history-live-2026-10-06/`. Decoder coverage: `g3-ranked100-history-live-2026-10-06/DECODER_COVERAGE.json`. Notes: `G3_RANKED100_HISTORY.md`.
+
+Repo G3 grant template stays `enabled: false`. No keys on this VM. PRODUCT_READY stays false.

@@ -1,10 +1,46 @@
-# G3_RANKED100_HISTORY — offline prep
+# G3_RANKED100_HISTORY — live INCOMPLETE + offline prep
 
 Bounded history verification from the ranked-100 shortlist. **Not** full G2.
-`PRODUCT_READY` stays false. G1 and ranked-100 grants must not be reused.
-Setup-pilot must not be reset. No winner requirement.
+`PRODUCT_READY` stays false. G1 and ranked-100 grants were not reused.
+Setup-pilot was not reset. No winner requirement. Do not invent profitability.
 
-## What was prepared (offline only)
+## Live result (secure box, 2026-10-05) — INCOMPLETE
+
+Evidence: `evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/`
+Decoder coverage: `g3-ranked100-history-live-2026-10-06/DECODER_COVERAGE.json`
+
+Grant `live-g3-ranked100-history-2026-10-06-mitch` ran on a secure box under ceilings.
+Repo template `config/live_authorization.g3-ranked100-history-granted.json` stays **`enabled: false`**.
+The box used a local armed override that was **not** committed.
+
+| Item | Result |
+| --- | --- |
+| Status | **INCOMPLETE** (honest) |
+| Qualifying reports (≥10 supported closed episodes) | **0 / target 3** |
+| Visible below G3 | 0 (no supported closed pairs) |
+| Investigated | frozen ranks 1, 3, 5 + reserves 6, 7 (2 pages each) |
+| Per-wallet status | all `NO_SUPPORTED_CLOSED_PAIR`; 200 records / 0 episodes |
+| Decoder | `spot-v7-native-flow-roles`: txs fetched HTTP 200; **0 decoded_swaps / 0 supported_transactions** on these pages |
+| Decoder gaps | unsupported programs/discriminators; transfers-without-reviewed-swap; wallet absent from account keys; unsupported tx version |
+| Helius | 10 requests / ~100 documented-estimate credits (ceilings 15/150) |
+| Birdeye | 0 |
+| setup-pilot | untouched (0 / 200) |
+| Extra spend | $0; no retries, page enlarge, or endpoint switch |
+| Stop | `wallet_investigation_cap` |
+| Application SHA | `c3a3ffe5d910823f1113ea5b4f8912c3cf47dfce` |
+
+Documented 10 credits/GTA is an **estimate**, not a confirmed dashboard receipt. Responses had no billing headers.
+
+Page-0 `evidence_sha256`:
+- rank 1 `b0fa9cb76a9e9531b5654f4fa22b0e9b7ef9a81ab61fa21bc16a649de0fb492d`
+- rank 3 `9c249add35a7871c0aa5019181abb6f8c3e7cad2920039da414736d454965d8a`
+- rank 5 `6c8b7f4c11d99d1189665ea0b78e5cf7ec213684d7e9b68193d6c2733a75c23c`
+- rank 6 `8d159468e192e516dc8692416d981ce17264ef2443f8f7c78988d5d85860fa9d`
+- rank 7 `f28b652f292994892f8bcf01cab35be19f7f2d1e680d0826491693fde964b749`
+
+Zero qualifying reports is an honest outcome. Do not invent profitability, copyability, MATCH, full G2, or PRODUCT_READY.
+
+## What was prepared (offline)
 
 - Disabled grant: `config/live_authorization.g3-ranked100-history-granted.json`
   - id `live-g3-ranked100-history-2026-10-06-mitch`
@@ -29,37 +65,11 @@ Setup-pilot must not be reset. No winner requirement.
 .venv/bin/python tools/mass_search_g3_ranked100_offline.py --data-dir /tmp/g3-ranked100-offline
 ```
 
-## What still blocks live (operator / box — not this cloud VM)
-
-A present `HELIUS_API_KEY` or the prior G1 pass is **not** enough. Before arming:
-
-1. Confirm Helius **pricing** (documented 10 credits per GTA ≤100 full txs is an estimate until the dashboard is read).
-2. Confirm **entitlement** for `getTransactionsForAddress` on the existing plan (`existing_plan_confirmed=true`).
-3. Confirm **remaining quota** (`remaining_quota_confirmed_at`) so 15 requests / 150 credits fit with $0 extra spend.
-4. Set `enabled: true` only in a separate secure runtime that already holds the key. Do not paste keys into git or this VM.
-5. Grant must still be unexpired. Do not reuse G1 or ranked-100 grants. Do not reset setup-pilot.
-6. No new discovery, page enlarge, endpoint switch, auto-retry, or additional addresses.
-
-## Exact live query (implemented; not dispatched here)
+## Exact query that was dispatched on the box
 
 Helius `getTransactionsForAddress`  
 `transactionDetails=full`; `limit=100`; `sortOrder=desc`; `commitment=finalized`; `filters.status=any`; `filters.tokenAccounts=all`.
 
-First page per initial candidate if no equivalent cache. Further pages need a recorded evidence-based reason (`insufficient_episodes_pagination_token_present`). Reserves 6, 7 only if three qualifying reports are not yet in hand. Every dispatched attempt counts, including fail/timeout.
-
-## What to report after a later live run
-
-| Field | Why |
-| --- | --- |
-| Freeze SHA + addresses actually investigated | No additional live addresses |
-| Per-wallet pages, reasons, pagination tokens | Prove adaptive paging was evidence-based |
-| Raw/redacted GTA pages + `evidence_sha256` | No invented history |
-| Unique supported closed episodes per report | G3 bar is ≥10; smaller reports stay visible |
-| Independently reconciled subset worksheet | Not MATCH, not wallet-wide |
-| Qualifying report count (target 3) | Zero or fewer than 3 is honest |
-| Helius requests / credits: documented 10 vs dashboard | Estimate vs confirmed billing |
-| Birdeye requests | Must be 0 |
-| setup-pilot before/after | Must be unchanged |
-| Truncation / coverage | 90-day floor and missing timestamps stay unknown |
+First page per candidate: `first_page_no_equivalent_cache`. Second page: `insufficient_episodes_pagination_token_present`. No third page. All 10 HTTP 200. No auth/entitlement/quota/rate-limit/schema/accounting failures.
 
 Do not claim profitability, copyability, MATCH, full G2, or PRODUCT_READY.

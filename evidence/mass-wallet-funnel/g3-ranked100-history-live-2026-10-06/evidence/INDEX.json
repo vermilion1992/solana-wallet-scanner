@@ -1,0 +1,11 @@
+{
+  "outcome_label": "G3_RANKED100_HISTORY",
+  "status": "INCOMPLETE",
+  "authorization_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "qualifying_reports": 0,
+  "external_requests": 10,
+  "blocker": null,
+  "result": "G3_RESULT.json",
+  "not_full_g2": true,
+  "PRODUCT_READY": false
+}
