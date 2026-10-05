@@ -150,5 +150,12 @@
     "retained": true,
     "address": "GatgyE2 retained as SOL regression only",
     "material_exit": "material-exit-v2"
+  },
+  "ui_captures": {
+    "desktop_report": "evidence/mass-wallet-funnel/product-completion-v1/ui/01-report-desktop.png",
+    "mobile_report": "evidence/mass-wallet-funnel/product-completion-v1/ui/01-report-mobile.png",
+    "mobile_reopen": "evidence/mass-wallet-funnel/product-completion-v1/ui/02-reopen-mobile.png",
+    "search_refilter": "evidence/mass-wallet-funnel/product-completion-v1/ui/03-refilter-desktop.png",
+    "external_requests": 0
   }
 }
