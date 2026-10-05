@@ -110,6 +110,6 @@ Live blockers unchanged:
 - DATA-01 / B1 NO_GO_CURRENT_SOURCE; legacy PRODUCT_READY remains false
 
 ## Next action
-Proof of idea, not polish: see `PROOF_BRIEF.md`. Genuine-replay hunt (`GENUINE_REPLAY_HUNT.json`) found `evidence/runs/real-cache` but no supported closed buy+sell; do not fabricate archives. Disabled grant draft is `config/live_authorization.proof-grant-draft.json` (not a grant). First live unlock after a real operator `live-research-authorization-v1`: G1 vertical slice only, then G2, then G3. Ceilings Birdeye ≤10 / ~250 CU, Helius ≤20 / ~600 credits, $0 extra, no overages, no setup-pilot reset.
+G1 grant is enabled (`config/live_authorization.g1-granted.json`, id `live-g1-vertical-slice-2026-10-05-mitch`). Official attempt `138e499f181844a7bf867a3b6748c070` is BLOCKED on missing `BIRDEYE_API_KEY` and `HELIUS_API_KEY` after freeze; spend 0/250 CU and 0/600 credits; setup-pilot untouched. Do not start G2. See `PROOF_BRIEF.md`.
 
 Independent outcomes: MASS_SEARCH_SOFTWARE = implemented offline. REAL_SEARCH_BENCHMARK, REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED, RESEARCH_OUTCOME = not demonstrated. Legacy PRODUCT_READY remains false.

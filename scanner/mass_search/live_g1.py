@@ -481,14 +481,21 @@ def _blocked(store, grant, evidence_dir, run_id, code, detail, application_sha, 
     return result
 
 
+def _public_receipt(result):
+    """Keep operational G1 fields. Never persist API-key values."""
+    payload = json.loads(json.dumps(result, default=str))
+    return payload
+
+
 def _write_receipt(evidence_dir, result):
     path = Path(evidence_dir) / "G1_RESULT.json"
-    path.write_text(json.dumps(redact_secrets(result), indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(_public_receipt(result), indent=2) + "\n", encoding="utf-8")
     (Path(evidence_dir) / "INDEX.json").write_text(json.dumps({
         "run_id": result.get("run_id"),
         "gate": "G1",
         "status": result.get("status"),
         "authorization_id": result.get("authorization_id"),
+        "blocker": result.get("blocker"),
         "result": "G1_RESULT.json",
         "freeze": "PRE_RUN_FREEZE.json",
     }, indent=2) + "\n", encoding="utf-8")
