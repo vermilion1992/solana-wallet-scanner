@@ -169,7 +169,7 @@ def run(args):
         capture("05-reopened-report-after-restart")
         result["cases"].append({"case": "restart-reopen-worksheet", "state": "PASS", "report_id": report_id})
 
-        page.get_by_role("button", name="Results", exact=True).click()
+        page.get_by_role("button", name="Back to results", exact=True).click()
         page.get_by_label("Data source").select_option("mass-search")
         page.get_by_label("Sort results").select_option("profit_desc")
         expect(page.locator('[data-list-profit="reconstructed-subset"]')).to_contain_text("0.575")
