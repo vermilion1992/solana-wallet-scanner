@@ -12,8 +12,8 @@
     {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
-      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b"
+      "run_id": "a547ad32f6a9499fb8edc25633a2d3d9",
+      "report_id": "ca7873733fa4400ab5189b603e103d4f"
     },
     {
       "case": "export-run",
@@ -22,12 +22,17 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b"
+      "report_id": "ca7873733fa4400ab5189b603e103d4f"
     },
     {
       "case": "restart-reopen-worksheet",
       "state": "PASS",
-      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b"
+      "report_id": "ca7873733fa4400ab5189b603e103d4f"
+    },
+    {
+      "case": "results-subset-pnl",
+      "state": "PASS",
+      "report_id": "ca7873733fa4400ab5189b603e103d4f"
     }
   ],
   "limitations": [
@@ -113,6 +118,14 @@
       "scrollWidth": 360,
       "overflow": false,
       "nodes": []
+    },
+    {
+      "name": "06-results-subset-pnl",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
     }
   ],
   "javascript_errors": [],
@@ -145,22 +158,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6",
+      "path": "/api/mass-search/runs/a547ad32f6a9499fb8edc25633a2d3d9",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a547ad32f6a9499fb8edc25633a2d3d9/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a547ad32f6a9499fb8edc25633a2d3d9/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/9ed73ba9eb8c42bcb60ab5145fec017b?view=display",
+      "path": "/api/reports/ca7873733fa4400ab5189b603e103d4f?view=display",
       "status": 200
     },
     {
@@ -180,22 +193,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6",
+      "path": "/api/mass-search/runs/a547ad32f6a9499fb8edc25633a2d3d9",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a547ad32f6a9499fb8edc25633a2d3d9/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a547ad32f6a9499fb8edc25633a2d3d9/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/9ed73ba9eb8c42bcb60ab5145fec017b?view=display",
+      "path": "/api/reports/ca7873733fa4400ab5189b603e103d4f?view=display",
       "status": 200
     }
   ],
