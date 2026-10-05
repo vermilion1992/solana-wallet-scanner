@@ -6,6 +6,7 @@
   "delivery": "DELIVERY.md",
   "official_g4_receipt": "ee7c645a3a7b499bb150b1ac84b96ced/receipt.json",
   "offline_search_browser": "ui-offline-browser/result.json",
+  "offline_research_browser": "ui-offline-browser/research-result.json",
   "outcomes": {
     "MASS_SEARCH_SOFTWARE": "implemented_offline",
     "REAL_SEARCH_BENCHMARK": "not_demonstrated",

@@ -22,7 +22,7 @@ A local Search funnel now runs offline from an authorised-or-fixture candidate s
 Changed application files (purpose):
 - `scanner/mass_search/*` — additive funnel: schema, plan, adapters, metrics, triage, universe, service, routes, quote-only forward helpers
 - `scanner/app.py`, `scanner/storage.py`, `pyproject.toml` — install routes, ensure schema, package the module
-- `frontend/src/MassSearch.tsx`, `App.tsx`, `types.ts`, `styles.css`, `format.ts`, `components.tsx`, `workspace.tsx`, `scripts/check-discovery.mjs` — Search view, 360px cards, Results subset P&L, discovery assertions
+- `frontend/src/MassSearch.tsx`, `App.tsx`, `Research.tsx`, `types.ts`, `styles.css`, `format.ts`, `components.tsx`, `workspace.tsx`, `scripts/check-discovery.mjs` — Search/Results/Compare/Research 360px cards, subset labels, discovery assertions
 - `scanner/report_view.py` — summary list extracts `worksheet` / `material_exit` / `corpus_kind` without inventing them
 - `tests/test_mass_search_*.py`, `tests/test_validation_gates.py`, `tools/validate.py` — focused/screening-forward selectors, hand-worked dust-tail worksheet, G4 receipt profiles
 - `tools/mass_search_browser.py` — offline launcher/Chromium check (1440 and 360)
