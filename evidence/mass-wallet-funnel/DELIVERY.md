@@ -110,6 +110,6 @@ Live blockers unchanged:
 - DATA-01 / B1 NO_GO_CURRENT_SOURCE; legacy PRODUCT_READY remains false
 
 ## Next action
-G1 grant is enabled (`config/live_authorization.g1-granted.json`, id `live-g1-vertical-slice-2026-10-05-mitch`). Official attempt `138e499f181844a7bf867a3b6748c070` is BLOCKED on missing `BIRDEYE_API_KEY` and `HELIUS_API_KEY` after freeze; spend 0/250 CU and 0/600 credits; setup-pilot untouched. Do not start G2. See `PROOF_BRIEF.md`.
+G1 PASS on grant `live-g1-vertical-slice-2026-10-05-mitch`. Official receipt `evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/`. Candidate `GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee`, subset P&L −0.167725526 SOL, hold 598 s, UNRESOLVED / not MATCH. Spend Birdeye 25/250 CU, Helius 130/600 credits; setup-pilot untouched. G2–G6 not approved. See `PROOF_BRIEF.md`.
 
 Independent outcomes: MASS_SEARCH_SOFTWARE = implemented offline. REAL_SEARCH_BENCHMARK, REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED, RESEARCH_OUTCOME = not demonstrated. Legacy PRODUCT_READY remains false.
