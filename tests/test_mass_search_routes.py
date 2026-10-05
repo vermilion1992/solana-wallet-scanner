@@ -224,6 +224,7 @@ def test_offline_loop_survives_process_restart(tmp_path):
         body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
         report_id = body["reconstruction"]["report"]["id"]
         address = body["reconstruction"]["report"]["address"]
+        run_id = body["run"]["run_id"]
         screening_id = client.post("/api/screenings", json={"report_id": report_id}).json()["id"]
         assert client.post("/api/watchlist", json={"address": address, "label": "Research shortlist"}).status_code == 200
     second = create_app(data_dir, LAUNCH_TOKEN)
@@ -246,6 +247,11 @@ def test_offline_loop_survives_process_restart(tmp_path):
         opened = client.get(f"/api/reports/{report_id}?view=display").json()
         assert opened["worksheet"]["total_profit_sol"] == "0.575"
         assert opened["policy"] == "UNRESOLVED"
+        exported = client.get(f"/api/mass-search/runs/{run_id}/export").json()
+        assert exported["reports"][0]["id"] == report_id
+        assert exported["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
+        assert exported["reports"][0]["policy"] == "UNRESOLVED"
+        assert exported["reports"][0]["source"] == "mass-search"
         assert second.state.store.usage("helius", "setup-pilot", 200)["used"] == 0
 
 

@@ -334,9 +334,24 @@ def run(args):
         page.wait_for_timeout(350)
         expect_watchlist_subset()
         page.set_viewport_size({"width": 1440, "height": 1000})
+        page.get_by_role("button", name="Latest report", exact=True).click()
+        expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect_worksheet()
+        capture("13-watchlist-latest-report-after-restart")
         page.get_by_label("Main navigation").get_by_role("button", name="Results").click()
         expect_results_subset()
         capture("12-results-after-restart")
+        page.get_by_label("Main navigation").get_by_role("button", name="Search", exact=True).click()
+        with page.expect_download() as download:
+            page.get_by_role("link", name="Export run", exact=False).click()
+        dest = out / "mass-search-export-after-restart.json"
+        shutil.copyfile(download.value.path(), dest)
+        exported_run = json.loads(dest.read_text())
+        assert exported_run["run"]["run_id"] == run_id
+        assert exported_run["reports"][0]["id"] == report_id
+        assert exported_run["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
+        assert exported_run["reports"][0]["policy"] == "UNRESOLVED"
+        assert exported_run["reports"][0]["source"] == "mass-search"
         page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
         expect(page.get_by_role("button", name="Shortlisted", exact=True)).to_be_visible(timeout=15000)
         expect_subset_screening()
@@ -346,8 +361,9 @@ def run(args):
             "state": "PASS",
             "report_id": report_id,
             "screening_id": screening_id,
-            "loop": ["slice", "screen", "reopen-screening", "shortlist", "restart", "watchlist", "results", "research"],
+            "loop": ["slice", "screen", "reopen-screening", "shortlist", "restart", "watchlist", "latest-report", "results", "export", "research"],
             "observation_started": False,
+            "export": "mass-search-export-after-restart.json",
         })
 
         assert not errors, errors
