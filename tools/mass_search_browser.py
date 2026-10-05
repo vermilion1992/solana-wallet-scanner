@@ -201,6 +201,39 @@ def run(args):
         page.set_viewport_size({"width": 1440, "height": 1000})
         result["cases"].append({"case": "compare-subset-pnl", "state": "PASS", "report_id": report_id})
 
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect(page.get_by_text("reconstructed subset, not a wallet-wide MATCH", exact=False)).to_be_visible()
+        expect(page.get_by_label("Report to screen")).to_be_visible()
+        with page.expect_response(lambda response: response.request.method == "POST" and response.url.endswith("/api/screenings")) as screened:
+            page.get_by_role("button", name="Screen and save assessment", exact=True).click()
+        assert screened.value.status == 200, screened.value.text()
+        screening = screened.value.json()
+        assert screening["source"] == "mass-search"
+        assert screening["result"] == "insufficient_evidence"
+        assert screening["strict_qualification"]["qualified"] is False
+        assert screening["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        assert screening["current_eligibility"]["can_start_observation"] is False
+        expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible(timeout=15000)
+        expect(page.locator('[data-screening-corpus="reconstructed-subset"]').first).to_be_visible()
+        expect(page.get_by_text("UNRESOLVED reconstructed subset", exact=False)).to_be_visible()
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
+        capture("09-research-screen-subset")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect(page.locator('[data-screening-corpus="reconstructed-subset"]').first).to_be_visible()
+        expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible()
+        expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        result["cases"].append({
+            "case": "research-screen-subset",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening["id"],
+            "result": screening["result"],
+            "observation_started": False,
+        })
+
         assert not errors, errors
         assert not external, external
         overflowed = [row for row in result.get("overflow", []) if row["overflow"]]

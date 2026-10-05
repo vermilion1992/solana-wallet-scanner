@@ -19,6 +19,7 @@ try {
       "src/EvidenceAudit.tsx",
       "src/MassSearch.tsx",
       "src/workspace.tsx",
+      "src/Research.tsx",
       "--target",
       "ES2022",
       "--module",
@@ -2047,6 +2048,38 @@ try {
   assert.ok(researchSubsetHtml.includes("reconstructed subset, not a wallet-wide MATCH"));
   assert.ok(researchSubsetHtml.includes("research-cards"));
   assert.ok(researchSubsetHtml.includes("Paper P&amp;L including open exposure") || researchSubsetHtml.includes("Paper P&L including open exposure"));
+  const subsetScreening = {
+    id: "mass-search-screen", version: "wallet-screening-v1", created_at: cohort.created_at,
+    report_id: subsetReport.id, address, source: "mass-search",
+    result: "insufficient_evidence", label: "Insufficient evidence",
+    reason: "Mass-search reconstructed-subset reports cannot establish a live wallet screening result or MATCH.",
+    reasons: [{ key: "live_source", state: "UNKNOWN", reason: "Mass-search reconstructed-subset reports cannot establish a live wallet screening result or MATCH.", evidence: [] }],
+    trading_evidence: { supported_swaps: 1, matched_sales: 1, unmatched_sales: 0, conditional_matched_lot_profit_sol: null, open_exposure: [] },
+    risk_observations: [],
+    collection: { stop_reason: "Subset reconstruction finished" },
+    strict_qualification: { qualified: false, financial_policy: "UNRESOLVED", reason: "Demo, synthetic and preview reports do not qualify as live wallet matches." },
+    current_result: "insufficient_evidence", current_label: "Insufficient evidence",
+    current_reason: "Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH.",
+    current_eligibility: { can_start_observation: false, reason: "Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH." },
+  };
+  assert.equal(canObserveScreening(subsetScreening), false);
+  assert.equal(canObserveScreening({ ...subsetScreening, current_eligibility: { can_start_observation: true, reason: "should stay blocked" } }), false);
+  const subsetScreenHtml = renderToStaticMarkup(React.createElement(ScreeningDetail, { screening: subsetScreening, showEvidence: () => undefined }));
+  assert.ok(subsetScreenHtml.includes("Insufficient evidence"));
+  assert.ok(subsetScreenHtml.includes("reconstructed subset"));
+  assert.ok(subsetScreenHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(subsetScreenHtml.includes("UNRESOLVED"));
+  assert.ok(subsetScreenHtml.includes('data-screening-corpus="reconstructed-subset"'));
+  assert.ok(!subsetScreenHtml.includes("Worth observing</span>") && !subsetScreenHtml.includes(">MATCH<"));
+  const subsetResearchScreenHtml = renderToStaticMarkup(React.createElement(ResearchView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport], screenings: [subsetScreening] },
+    showEvidence: () => undefined,
+  }));
+  assert.ok(button(subsetResearchScreenHtml, "Start quote-only observation").includes("disabled="));
+  assert.ok(subsetResearchScreenHtml.includes("reconstructed subset"));
+  assert.ok(subsetResearchScreenHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(subsetResearchScreenHtml.includes("UNRESOLVED"));
   const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },

@@ -548,6 +548,7 @@ export type Screening = {
   created_at: string;
   report_id: string;
   address: string;
+  source?: "demo" | "live" | "mass-search" | string;
   preset_snapshot?: Preset;
   identity?: { state: string; reason: string; evidence: string[] };
   current_source_availability?: { state: string; missing: (string | null)[] };

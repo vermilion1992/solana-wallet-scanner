@@ -179,6 +179,51 @@ def test_display_reopen_after_process_restart_keeps_independent_worksheet(tmp_pa
         assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
 
 
+def test_slice_report_can_be_screened_without_match_or_observation(session):
+    client, app, _ = session
+    body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
+    report_id = body["reconstruction"]["report"]["id"]
+    listed = next(row for row in client.get("/api/state?report_view=summary").json()["reports"] if row["id"] == report_id)
+    assert listed["source"] == "mass-search"
+    assert listed["policy"] == "UNRESOLVED"
+    assert listed["worksheet"]["total_profit_sol"] == "0.575"
+    screened = client.post("/api/screenings", json={"report_id": report_id})
+    assert screened.status_code == 200, screened.text
+    assessment = screened.json()
+    assert assessment["source"] == "mass-search"
+    assert assessment["result"] == "insufficient_evidence"
+    assert assessment["label"] == "Insufficient evidence"
+    assert assessment["current_result"] in {"insufficient_evidence"}
+    assert assessment["current_eligibility"]["can_start_observation"] is False
+    assert "reconstructed-subset" in assessment["current_eligibility"]["reason"]
+    assert "MATCH" in assessment["current_eligibility"]["reason"]
+    live = next(row for row in assessment["reasons"] if isinstance(row, dict) and row.get("key") == "live_source")
+    assert live["state"] == "UNKNOWN"
+    assert live["actual"] == "mass-search"
+    assert "reconstructed-subset" in live["reason"]
+    assert assessment["strict_qualification"]["qualified"] is False
+    assert assessment["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+    assert assessment["result"] != "worth_observing"
+    observed = client.post("/api/observations", json={"screening_id": assessment["id"]})
+    assert observed.status_code == 409
+    assert "reconstructed-subset" in observed.json()["detail"]
+    opened = client.get(f"/api/reports/{report_id}?view=display").json()
+    assert opened["id"] == report_id
+    assert opened["source"] == "mass-search"
+    assert opened["policy"] == "UNRESOLVED"
+    assert opened["worksheet"]["total_profit_sol"] == "0.575"
+    assert opened["material_exit"]["exit_90_seconds"] == 30
+    assert opened["material_exit"]["final_hold_seconds"] == 172800
+    listed_after = next(row for row in client.get("/api/state?report_view=summary").json()["reports"] if row["id"] == report_id)
+    assert listed_after["policy"] == "UNRESOLVED"
+    assert listed_after["worksheet"]["total_profit_sol"] == "0.575"
+    saved = next(row for row in client.get("/api/state?report_view=summary").json()["screenings"] if row["id"] == assessment["id"])
+    assert saved["source"] == "mass-search"
+    assert saved["current_eligibility"]["can_start_observation"] is False
+    assert app.state.store.get("reports", report_id)["policy"] == "UNRESOLVED"
+    assert app.state.store.usage("helius", "setup-pilot", 200)["used"] == 0
+
+
 def test_pause_resume_cancel_and_offline_acquire_guards(session):
     client, _, _ = session
     created = client.post("/api/mass-search/runs", json={"corpus_kind": "SYNTHETIC"}).json()

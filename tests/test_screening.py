@@ -168,6 +168,26 @@ def test_missing_collection_reason_is_visible_and_negative_conditional_results_c
     assert build_screening(report)["result"] == "insufficient_evidence"
 
 
+def test_mass_search_subset_cannot_become_worth_observing_or_match():
+    report = sample()
+    report["source"] = "mass-search"
+    report["policy"] = "UNRESOLVED"
+    identity = {"state": "PASS", "reason": "Rechecked imported native and current-account sources",
+                "evidence": [HASH], "address": "sample-wallet"}
+    value = build_screening(report, identity=identity)
+    assert value["result"] == "insufficient_evidence"
+    assert value["label"] == "Insufficient evidence"
+    assert value["source"] == "mass-search"
+    live = next(row for row in value["reasons"] if row["key"] == "live_source")
+    assert live["state"] == "UNKNOWN"
+    assert live["actual"] == "mass-search"
+    assert "reconstructed-subset" in live["reason"]
+    assert "MATCH" in live["reason"]
+    assert value["strict_qualification"]["qualified"] is False
+    assert value["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+    assert value["result"] != "worth_observing"
+
+
 @pytest.mark.parametrize("preset", [{"unknown": True}, {"min_supported_swaps": True}, {"max_rapid_sale_pct": "101"},
                                     {"exclude_active_mint_authority": 1}, {"continuation_max_credits": 0}])
 def test_invalid_screening_or_unbounded_budget_settings_are_rejected(preset):

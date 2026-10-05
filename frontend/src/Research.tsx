@@ -84,6 +84,7 @@ export function screeningReviewKey(screening: Screening): string {
 
 export function canObserveScreening(screening: Screening | undefined): boolean {
   if (!screening) return false;
+  if (screening.source === "mass-search" || screening.source === "demo") return false;
   if (screening.current_eligibility) return screening.current_eligibility.can_start_observation === true;
   return screening.identity?.state === "PASS" && screening.result !== "excluded_by_preset";
 }
@@ -104,7 +105,9 @@ export function ScreeningDetail({ screening, showEvidence }: { screening: Screen
       <p>{screening.current_reason ?? screening.reason}</p>
       <small>Saved assessment: {screening.label} · {dateTime(screening.created_at)} UTC</small>
       <small>Worth observing describes research eligibility. Conditional observations do not establish verified wallet profit.</small>
+      {screening.source === "mass-search" && <small data-screening-corpus="reconstructed-subset">UNRESOLVED reconstructed subset · not a wallet-wide MATCH.</small>}
     </div>
+    {screening.source === "mass-search" && <div className="inline-info" role="status" data-screening-corpus="reconstructed-subset"><strong>Reconstructed subset</strong><p>This assessment is from a mass-search reconstructed subset, not a wallet-wide MATCH. Saved report policy stays UNRESOLVED. Quote-only observation cannot start from this sample.</p></div>}
     {sourcesMissing && <div className="inline-alert" role="status"><TriangleAlert size={18} /><div><strong>Current screening evidence unavailable</strong><p>Required cited archives are missing or unreadable. The saved assessment is retained, but its original positive result cannot support a current observation decision.</p><EvidenceLinks evidence={screening.current_source_availability?.missing.filter((hash): hash is string => typeof hash === "string")} showEvidence={showEvidence} /></div></div>}
     {screening.current_identity && <div className={identityMissing ? "inline-alert" : "inline-info"} role="status"><Badge value={screening.current_identity.state}>Current native identity: {label(screening.current_identity.state)}</Badge><div><p>{screening.current_identity.reason}</p><EvidenceLinks evidence={screening.current_identity.evidence} showEvidence={showEvidence} /></div></div>}
     <details className="research-subpanel"><summary>Original saved assessment and settings</summary><pre>{detail(savedSnapshot)}</pre></details>
