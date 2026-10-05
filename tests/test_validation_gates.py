@@ -316,13 +316,18 @@ def test_hosted_matrix_and_union_require_the_new_screening_paths():
     receipt_groups = re.findall(r'--group-record "\$CI_RECEIPTS/focused-([^/]+)/result.json"', workflow)
     assert len(receipt_groups) == len(set(receipt_groups))
     assert set(receipt_groups) == set(hosted_groups)
+    mass_search = {
+        'tests/test_mass_search_funnel.py', 'tests/test_mass_search_routes.py',
+        'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py',
+    }
     assert set(VALIDATOR.FOCUSED_GROUPS['screening']) == {
         'tests/test_screening.py', 'tests/test_screening_routes.py',
         'tests/test_public_sample_budget.py', 'tests/test_paper.py',
         'tests/test_observer.py', 'tests/test_candidate_import.py',
-        'tests/test_mass_search_funnel.py', 'tests/test_mass_search_routes.py',
-        'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py',
+        *mass_search,
     }
+    assert mass_search <= set(VALIDATOR.SCREENING_FORWARD)
+    assert mass_search <= set(VALIDATOR.FOCUSED)
 
 
 @pytest.mark.parametrize('change', ['duplicate', 'missing', 'extra', 'directory-overlap'])

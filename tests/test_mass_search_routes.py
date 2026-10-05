@@ -94,3 +94,81 @@ def test_live_run_without_authorization_is_blocked(session):
     capability = client.get("/api/mass-search/capability").json()
     assert capability["sources"]["birdeye-traders"]["role_decision"] == "NO_GO"
     assert capability["setup_pilot"]["cap"] == 200
+
+
+def test_slice_report_can_be_reopened_and_exported(session):
+    client, _, data_dir = session
+    body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
+    run_id = body["run"]["run_id"]
+    report_id = body["reconstruction"]["report"]["id"]
+    listed = client.get("/api/state?report_view=summary").json()["reports"]
+    assert any(row["id"] == report_id and row["source"] == "mass-search" for row in listed)
+    opened = client.get(f"/api/reports/{report_id}?view=display")
+    assert opened.status_code == 200
+    assert opened.json()["id"] == report_id
+    assert opened.json()["source"] == "mass-search"
+    assert opened.json()["policy"] == "UNRESOLVED"
+    assert opened.json()["worksheet"]["total_profit_sol"] == "0.575"
+    assert opened.json()["material_exit"]["exit_90_seconds"] == 30
+    assert opened.json()["material_exit"]["final_hold_seconds"] == 172800
+    assert opened.json()["metrics"].get("profit_sol", {}).get("status") != "known"
+    linked = client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"]
+    assert linked[0]["id"] == report_id
+    page = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50").json()
+    assert page["items"][0]["report_id"] == report_id
+    assert page["items"][0]["subset_pnl"]["value"] == "0.575"
+    assert page["items"][0]["material_exit_t90"]["value"] == "30"
+    exported = client.get(f"/api/mass-search/runs/{run_id}/export")
+    assert 'attachment; filename="mass-search-' in exported.headers["content-disposition"]
+    report_export = client.get(f"/api/export/reports/{report_id}.json")
+    assert report_export.status_code == 200
+    assert report_export.json()["id"] == report_id
+    assert report_export.json()["worksheet"]["total_profit_sol"] == "0.575"
+    assert report_export.json()["policy"] == "UNRESOLVED"
+    restarted = Store(data_dir)
+    try:
+        assert restarted.get("reports", report_id)["id"] == report_id
+        assert restarted.usage("helius", "setup-pilot", 200)["used"] == 0
+    finally:
+        restarted.close()
+
+
+def test_pause_resume_cancel_and_offline_acquire_guards(session):
+    client, _, _ = session
+    created = client.post("/api/mass-search/runs", json={"corpus_kind": "SYNTHETIC"}).json()
+    run_id = created["run_id"]
+    assert client.post(f"/api/mass-search/runs/{run_id}/acquire", json={}).status_code == 400
+    pages = [[{"address": synthetic_address(3), "realized_pnl": "4", "trade_count": 22}]]
+    assert client.post(f"/api/mass-search/runs/{run_id}/acquire", json={"pages": pages, "target_unique": 1}).status_code == 200
+    paused = client.post(f"/api/mass-search/runs/{run_id}/pause")
+    assert paused.status_code == 200
+    assert paused.json()["status"] == "PAUSED"
+    resumed = client.post(f"/api/mass-search/runs/{run_id}/resume")
+    assert resumed.json()["status"] == "RUNNING"
+    cancelled = client.post(f"/api/mass-search/runs/{run_id}/cancel")
+    assert cancelled.json()["status"] == "CANCELLED"
+    assert client.get("/api/mass-search/access-blocker").json()["birdeye"]["max_additional_spend_usd"] == "0"
+
+
+def test_empty_run_pages_and_stage_filter_stay_local(session):
+    client, _, _ = session
+    created = client.post("/api/mass-search/runs", json={"corpus_kind": "SYNTHETIC"}).json()
+    run_id = created["run_id"]
+    empty = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50")
+    assert empty.status_code == 200
+    assert empty.json()["items"] == []
+    assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"] == []
+    pages = [[{"address": synthetic_address(i), "realized_pnl": str(100 - i), "trade_count": 22} for i in range(60)]]
+    acquired = client.post(f"/api/mass-search/runs/{run_id}/acquire", json={"pages": pages, "target_unique": 60})
+    assert acquired.status_code == 200
+    assert client.post(f"/api/mass-search/runs/{run_id}/stages/triage").status_code == 200
+    first = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50").json()
+    assert len(first["items"]) == 50
+    assert first["next_cursor"]
+    second = client.get(
+        f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50&cursor={first['next_cursor']}"
+    ).json()
+    assert len(second["items"]) == 10
+    reconstruct = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=reconstruct&limit=50").json()
+    assert reconstruct["items"] == []
+    assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"] == []

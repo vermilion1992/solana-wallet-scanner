@@ -49,13 +49,16 @@ try {
     SourceConsistencySection,
     CoverageDetails,
     sourceSetComplete,
+    SubsetWorksheetPanel,
+    subsetHoldText,
+    subsetWorksheetVisible,
   } = require(join(output, "report.js"));
   const { SelectedCohortSection, selectedCohortFreshness } = require(join(output, "SelectedCohorts.js"));
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
   const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
-  const { massSearchCorpusLabel, massSearchEmptyReason } = require(join(output, "MassSearch.js"));
+  const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -1920,6 +1923,67 @@ try {
   assert.equal(massSearchCorpusLabel("GENUINE_LIVE"), "Genuine live collection");
   assert.equal(massSearchEmptyReason(null).state, "not_scanned");
   assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 0 } }).state, "empty_universe");
+  assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 }, stages: { triage: { input: 1, promoted: 1, rejected: 0, deferred: 0, pending: 0 } } }, 0).state, "no_reconstruction");
+  assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 } }, 1).state, "synthetic");
+  assert.equal(massSearchMetricText({ value: "0.575", unit: "SOL", state: "KNOWN" }), "0.575 SOL");
+  const searchState = {
+    ...state,
+    mass_search: {
+      runs: [{ run_id: "aabbccdd", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC" }],
+      legacy_candidate_cap: 20,
+      bulk_capacity: 10000,
+    },
+    reports: [{
+      id: "rep1", address, source: "mass-search", corpus_kind: "SYNTHETIC", created_at: cohort.created_at,
+      policy: "UNRESOLVED", evidence_status: "partial", methodology: "fifo-v4",
+      window: report.window, metrics: {}, checks: [], coverage: {}, positions: [], events: [], findings: [], notes: [],
+    }],
+  };
+  const emptySearchHtml = renderToStaticMarkup(React.createElement(MassSearchView, { ...actions, state: { ...state, mass_search: { runs: [], legacy_candidate_cap: 20, bulk_capacity: 10000 } } }));
+  assert.ok(emptySearchHtml.includes("Not scanned"));
+  assert.ok(emptySearchHtml.includes("Run offline slice"));
+  assert.ok(emptySearchHtml.includes("Create a Search run"));
+  const searchHtml = renderToStaticMarkup(React.createElement(MassSearchView, { ...actions, state: searchState }));
+  assert.ok(searchHtml.includes("Run offline slice"));
+  assert.ok(searchHtml.includes("/api/mass-search/runs/aabbccdd/export"));
+  assert.ok(searchHtml.includes("Reopen report"));
+  assert.ok(searchHtml.includes("Saved subset reports"));
+  assert.ok(searchHtml.includes("Export JSON"));
+  assert.ok(searchHtml.includes("Stage shortlist"));
+  assert.ok(searchHtml.includes("No rows on this page"));
+  assert.equal(subsetHoldText(172800), "48 hours (172800 seconds)");
+  assert.equal(subsetWorksheetVisible({}), false);
+  const subsetReport = {
+    ...searchState.reports[0],
+    source: "mass-search",
+    policy: "UNRESOLVED",
+    metrics: {},
+    checks: [],
+    coverage: {},
+    positions: [],
+    events: [],
+    findings: [],
+    notes: ["Subset reconstruction through the existing accounting/research functions."],
+    evidence: [],
+    counts: { closed: 0, open: 0, interrupted: 0, unresolved: 0 },
+    worksheet: {
+      total_profit_sol: "0.575",
+      sale_fifo_basis_sol: ["0.505", "0.4545", "0.0505"],
+      sale_net_profit_sol: ["0.29", "0.2605", "0.0245"],
+    },
+    material_exit: { exit_90_seconds: 30, final_hold_seconds: 172800 },
+  };
+  const subsetHtml = renderToStaticMarkup(React.createElement(ReportView, {
+    ...actions, state: searchState, report: subsetReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined,
+  }));
+  assert.ok(subsetHtml.includes("Reconstructed subset / independent worksheet"));
+  assert.ok(subsetHtml.includes("Not a wallet-wide MATCH"));
+  assert.ok(subsetHtml.includes("0.575 SOL"));
+  assert.ok(subsetHtml.includes("30 seconds"));
+  assert.ok(subsetHtml.includes("48 hours (172800 seconds)"));
+  assert.ok(subsetHtml.includes("Insufficient evidence"));
+  assert.ok(subsetHtml.includes('data-subset-worksheet="independent"'));
+  assert.ok(renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, { report: searchState.reports[0] })) === "");
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

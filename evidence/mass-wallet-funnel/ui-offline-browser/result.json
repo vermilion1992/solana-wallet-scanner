@@ -1,0 +1,194 @@
+{
+  "kind": "actual-launcher-offline-synthetic-mass-search-browser",
+  "state": "PASS",
+  "software_functionality": "PASS_IN_SYNTHETIC_BROWSER_SCOPE",
+  "genuine_live_evidence": "NOT_RUN_IN_OFFLINE_BROWSER",
+  "PRODUCT_READY": false,
+  "cases": [
+    {
+      "case": "empty-not-scanned",
+      "state": "PASS"
+    },
+    {
+      "case": "offline-slice-populated",
+      "state": "PASS",
+      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4"
+    },
+    {
+      "case": "export-run",
+      "state": "PASS"
+    },
+    {
+      "case": "open-subset-report",
+      "state": "PASS",
+      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4"
+    },
+    {
+      "case": "restart-reopen",
+      "state": "PASS"
+    }
+  ],
+  "limitations": [
+    "Synthetic fixture slice validates Search UI mechanics, not live acquisition or profitable wallets."
+  ],
+  "overflow": [
+    {
+      "name": "01-empty",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "01-empty",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "02-populated-slice",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "02-populated-slice",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "03-opened-report",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "03-opened-report",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "04-reopen-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "04-reopen-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    }
+  ],
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "api_trace": [
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/access-blocker",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/vertical-slice",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/abb7df9e4ce841c5a26ad6b950d5bec4?view=display",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/access-blocker",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "status": 200
+    }
+  ],
+  "overflowed": [],
+  "actual_launcher": "/workspace/run.sh",
+  "browser": "Chromium 148.0.7778.96",
+  "launcher_stopped": true
+}

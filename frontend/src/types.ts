@@ -239,7 +239,8 @@ export type Report = {
   scan_id?: string;
   address: string;
   label?: string;
-  source: "demo" | "live";
+  source: "demo" | "live" | "mass-search";
+  corpus_kind?: string;
   created_at: string;
   window: { start: string; end: string };
   methodology: string;
@@ -289,6 +290,19 @@ export type Report = {
   };
   counts_population?: string;
   notes: string[];
+  worksheet?: {
+    total_profit_sol?: string | null;
+    sale_fifo_basis_sol?: string[];
+    sale_net_profit_sol?: string[];
+  } | null;
+  material_exit?: {
+    state?: string | null;
+    first_sale_seconds?: number | null;
+    exit_50_seconds?: number | null;
+    exit_90_seconds?: number | null;
+    final_hold_seconds?: number | null;
+    quantity_weighted_exit_seconds?: string | null;
+  } | null;
   market_observations?: Record<string, unknown>[];
   market_observation_scope?: string;
   market_observation_note?: string;
@@ -681,6 +695,11 @@ export type MassSearchRun = {
   legacy_limits?: Record<string, number>;
   bulk_capacity?: number;
 };
+export type MassSearchMetric = {
+  value?: string | null;
+  unit?: string | null;
+  state?: string | null;
+};
 export type MassSearchCandidate = {
   candidate_id: string;
   address: string;
@@ -689,4 +708,8 @@ export type MassSearchCandidate = {
   sort_value?: string | null;
   unit?: string | null;
   metric_state?: string | null;
+  report_id?: string | null;
+  subset_pnl?: MassSearchMetric | null;
+  median_hold?: MassSearchMetric | null;
+  material_exit_t90?: MassSearchMetric | null;
 };
