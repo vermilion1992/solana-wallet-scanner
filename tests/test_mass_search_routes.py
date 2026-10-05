@@ -215,6 +215,40 @@ def test_shortlist_from_mass_search_screening_stays_unresolved_subset(session):
         restarted.close()
 
 
+def test_offline_loop_survives_process_restart(tmp_path):
+    data_dir = tmp_path / "data"
+    first = create_app(data_dir, LAUNCH_TOKEN)
+    with TestClient(first, base_url=BASE_URL) as client:
+        boot = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        client.headers["x-csrf-token"] = boot.json()["csrf"]
+        body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
+        report_id = body["reconstruction"]["report"]["id"]
+        address = body["reconstruction"]["report"]["address"]
+        screening_id = client.post("/api/screenings", json={"report_id": report_id}).json()["id"]
+        assert client.post("/api/watchlist", json={"address": address, "label": "Research shortlist"}).status_code == 200
+    second = create_app(data_dir, LAUNCH_TOKEN)
+    with TestClient(second, base_url=BASE_URL) as client:
+        boot = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        client.headers["x-csrf-token"] = boot.json()["csrf"]
+        state = client.get("/api/state?report_view=summary").json()
+        watched = next(row for row in state["watchlist"] if row["address"] == address)
+        assert watched["source"] == "mass-search"
+        assert watched["label"] == "Research shortlist"
+        report = next(row for row in state["reports"] if row["id"] == report_id)
+        assert report["source"] == "mass-search"
+        assert report["policy"] == "UNRESOLVED"
+        assert report["worksheet"]["total_profit_sol"] == "0.575"
+        assessment = next(row for row in state["screenings"] if row["id"] == screening_id)
+        assert assessment["source"] == "mass-search"
+        assert assessment["result"] == "insufficient_evidence"
+        assert assessment["current_eligibility"]["can_start_observation"] is False
+        assert client.post("/api/observations", json={"screening_id": screening_id}).status_code == 409
+        opened = client.get(f"/api/reports/{report_id}?view=display").json()
+        assert opened["worksheet"]["total_profit_sol"] == "0.575"
+        assert opened["policy"] == "UNRESOLVED"
+        assert second.state.store.usage("helius", "setup-pilot", 200)["used"] == 0
+
+
 def test_screening_reopen_after_process_restart_stays_unresolved_subset(tmp_path):
     data_dir = tmp_path / "data"
     first = create_app(data_dir, LAUNCH_TOKEN)
