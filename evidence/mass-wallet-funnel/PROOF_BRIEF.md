@@ -13,7 +13,7 @@ Mitch can run the local Search funnel offline today: fixture acquire → frozen 
 - Branch: `cursor/mass-wallet-funnel-v1-1055`
 - Base: `codex/screening-forward-research` `fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69`
 - Prior tested application SHA: `f7ac05742b9079b2532593698ef3d2a35b89c6b4`
-- This turn: proof brief, genuine-replay hunt receipt, disabled grant draft, grant-draft test
+- Proof-brief / hunt / grant-draft SHA: `5d0ff5d3820615f5c324b406facc76270dd3e277`
 - Follow-up PR: https://github.com/vermilion1992/solana-wallet-scanner/pull/4 — draft vs `codex/screening-forward-research`; not merged, not deployed
 
 Changed files this turn:

@@ -6,6 +6,7 @@
   "live_grant_draft": "config/live_authorization.proof-grant-draft.json",
   "usable_genuine_replay": false,
   "tested_application_commit": "f7ac05742b9079b2532593698ef3d2a35b89c6b4",
+  "proof_brief_commit": "5d0ff5d3820615f5c324b406facc76270dd3e277",
   "prior_tested_application_commit": "a1082c65ef5870d75c034f77d939f6d9d8313726",
   "base_commit": "fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69",
   "delivery": "DELIVERY.md",
