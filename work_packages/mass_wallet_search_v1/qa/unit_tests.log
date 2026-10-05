@@ -1,0 +1,50 @@
+test_manually_specified_fee_and_tail_expectations (test_receipt_contract.FixtureArithmeticTests.test_manually_specified_fee_and_tail_expectations) ... ok
+test_median_expectation (test_receipt_contract.FixtureArithmeticTests.test_median_expectation) ... ok
+test_weekly_expectation (test_receipt_contract.FixtureArithmeticTests.test_weekly_expectation) ... ok
+test_authorisation_hash_required (test_receipt_contract.ReceiptContractTests.test_authorisation_hash_required) ... ok
+test_booleans_are_not_counts (test_receipt_contract.ReceiptContractTests.test_booleans_are_not_counts) ... ok
+test_cohort_cannot_precede_universe_sealing (test_receipt_contract.ReceiptContractTests.test_cohort_cannot_precede_universe_sealing) ... ok
+test_cohort_hash_and_timestamp_required_together (test_receipt_contract.ReceiptContractTests.test_cohort_hash_and_timestamp_required_together) ... ok
+test_dirty_source_rejected (test_receipt_contract.ReceiptContractTests.test_dirty_source_rejected) ... ok
+test_duplicate_artifact_rejected (test_receipt_contract.ReceiptContractTests.test_duplicate_artifact_rejected) ... ok
+test_duplicate_json_keys_rejected (test_receipt_contract.ReceiptContractTests.test_duplicate_json_keys_rejected) ... ok
+test_example_top_level_fields_match_json_schema (test_receipt_contract.ReceiptContractTests.test_example_top_level_fields_match_json_schema) ... ok
+test_forward_contract_minimums (test_receipt_contract.ReceiptContractTests.test_forward_contract_minimums) ... ok
+test_forward_early_start_invalid (test_receipt_contract.ReceiptContractTests.test_forward_early_start_invalid) ... ok
+test_full_wallet_claim_forbidden (test_receipt_contract.ReceiptContractTests.test_full_wallet_claim_forbidden) ... ok
+test_late_selection_rejected (test_receipt_contract.ReceiptContractTests.test_late_selection_rejected) ... ok
+test_live_candidate_target_not_met (test_receipt_contract.ReceiptContractTests.test_live_candidate_target_not_met) ... ok
+test_live_label_structure_can_pass_but_disclaimer_required (test_receipt_contract.ReceiptContractTests.test_live_label_structure_can_pass_but_disclaimer_required) ... ok
+test_live_reports_need_minimum_population (test_receipt_contract.ReceiptContractTests.test_live_reports_need_minimum_population) ... ok
+test_missing_artifact_rejected (test_receipt_contract.ReceiptContractTests.test_missing_artifact_rejected) ... ok
+test_no_paid_spend_in_v1 (test_receipt_contract.ReceiptContractTests.test_no_paid_spend_in_v1) ... ok
+test_nonfinite_json_constant_rejected (test_receipt_contract.ReceiptContractTests.test_nonfinite_json_constant_rejected) ... ok
+test_nonfinite_timing_rejected (test_receipt_contract.ReceiptContractTests.test_nonfinite_timing_rejected) ... ok
+test_oversubscribed_budget (test_receipt_contract.ReceiptContractTests.test_oversubscribed_budget) ... ok
+test_paid_spend_over_cap (test_receipt_contract.ReceiptContractTests.test_paid_spend_over_cap) ... ok
+test_path_traversal_rejected (test_receipt_contract.ReceiptContractTests.test_path_traversal_rejected) ... ok
+test_pending_allowed_in_partial (test_receipt_contract.ReceiptContractTests.test_pending_allowed_in_partial) ... ok
+test_pending_cannot_be_complete (test_receipt_contract.ReceiptContractTests.test_pending_cannot_be_complete) ... ok
+test_plan_freeze_is_not_cohort_freeze (test_receipt_contract.ReceiptContractTests.test_plan_freeze_is_not_cohort_freeze) ... ok
+test_refilter_no_external_requests (test_receipt_contract.ReceiptContractTests.test_refilter_no_external_requests) ... ok
+test_replay_does_not_prove_fresh_acquisition (test_receipt_contract.ReceiptContractTests.test_replay_does_not_prove_fresh_acquisition) ... ok
+test_short_git_hash_rejected (test_receipt_contract.ReceiptContractTests.test_short_git_hash_rejected) ... ok
+test_stage_conservation_mismatch (test_receipt_contract.ReceiptContractTests.test_stage_conservation_mismatch) ... ok
+test_stage_input_must_equal_previous_promoted (test_receipt_contract.ReceiptContractTests.test_stage_input_must_equal_previous_promoted) ... ok
+test_stage_order_is_fixed (test_receipt_contract.ReceiptContractTests.test_stage_order_is_fixed) ... ok
+test_symlink_escape_rejected (test_receipt_contract.ReceiptContractTests.test_symlink_escape_rejected) ... ok
+test_synthetic_development_contract_valid (test_receipt_contract.ReceiptContractTests.test_synthetic_development_contract_valid) ... ok
+test_synthetic_is_incomplete_for_forward (test_receipt_contract.ReceiptContractTests.test_synthetic_is_incomplete_for_forward) ... ok
+test_synthetic_is_incomplete_for_live (test_receipt_contract.ReceiptContractTests.test_synthetic_is_incomplete_for_live) ... ok
+test_synthetic_positive_live_claim_invalid (test_receipt_contract.ReceiptContractTests.test_synthetic_positive_live_claim_invalid) ... ok
+test_tampered_artifact_rejected (test_receipt_contract.ReceiptContractTests.test_tampered_artifact_rejected) ... ok
+test_timezone_required (test_receipt_contract.ReceiptContractTests.test_timezone_required) ... ok
+test_unauthorised_units (test_receipt_contract.ReceiptContractTests.test_unauthorised_units) ... ok
+test_universe_count_mismatch (test_receipt_contract.ReceiptContractTests.test_universe_count_mismatch) ... ok
+test_unknown_fields_rejected (test_receipt_contract.ReceiptContractTests.test_unknown_fields_rejected) ... ok
+test_zero_signal_cannot_claim_operational_success (test_receipt_contract.ReceiptContractTests.test_zero_signal_cannot_claim_operational_success) ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 0.045s
+
+OK

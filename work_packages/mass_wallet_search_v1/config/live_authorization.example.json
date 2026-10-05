@@ -1,0 +1,32 @@
+{
+  "schema_version": "live-research-authorization-v1",
+  "enabled": false,
+  "authorization_id": null,
+  "authorized_by_user_at": null,
+  "expires_at": null,
+  "purpose": "Bounded read-only source probe and/or preregistered live benchmark",
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "allow_paid_upgrade": false,
+  "allow_signing_or_submission": false,
+  "providers": [],
+  "provider_entry_required_fields": [
+    "provider_id",
+    "allowed_operations",
+    "billing_unit",
+    "existing_plan_confirmed",
+    "remaining_quota_confirmed_at",
+    "cycle_start",
+    "cycle_end_exclusive",
+    "max_requests",
+    "max_units",
+    "max_concurrency",
+    "max_duration_seconds"
+  ],
+  "notes": [
+    "Template only. Filling this file is not a substitute for actual user authorisation.",
+    "Do not put API-key values or signing secrets here.",
+    "A credential existing in the environment is not authority for an unbounded run.",
+    "Existing exhausted ledgers and hard application/provider caps remain in force."
+  ]
+}

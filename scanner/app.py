@@ -878,6 +878,7 @@ def create_app(data_dir, launch_token=None):
         from .real_coverage import historical_source_decision
         from .paper import list_runs
         from .screening_routes import observation_view, screening_views
+        from .mass_search.routes import mass_search_state as _mass_search_state
         disk = store.stats()
         disk["warnings"] = []
         if disk["evidence_bytes"] >= 10 * 1024 ** 3:
@@ -898,7 +899,8 @@ def create_app(data_dir, launch_token=None):
                 "scans": store.list("scans"), "discovery_cohorts": cohorts, "reports": saved_reports,
                 "screenings": screening_views(store), "observations": [observation_view(store, run) for run in list_runs(store)],
                 "candidate_universe": aggregate_candidate_universe(cohorts, saved_reports, candidate_cap=settings()["limits"]["candidate_cap"]),
-                "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk})
+                "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk,
+                "mass_search": _mass_search_state(store)})
 
     @app.get("/api/usage")
     async def get_usage():
@@ -1318,6 +1320,8 @@ def create_app(data_dir, launch_token=None):
     from .screening_routes import install_research_routes
     install_research_routes(app, store, body, observer, build_report=build_report, queue_scan=queue_scan,
                             wake=wake, research_busy=research_busy, settings=settings, preset=preset)
+    from .mass_search.routes import install_mass_search_routes
+    install_mass_search_routes(app, store)
     app.state.observer = observer
 
     dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"

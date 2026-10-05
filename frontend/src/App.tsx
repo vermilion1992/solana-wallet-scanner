@@ -36,6 +36,7 @@ import { DiscoveryView } from "./Discovery";
 import { EvidenceAuditView } from "./EvidenceAudit";
 import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
 import { ResearchView } from "./Research";
+import { MassSearchView } from "./MassSearch";
 
 export type View =
   | "overview"
@@ -47,7 +48,8 @@ export type View =
   | "watchlist"
   | "settings"
   | "evidence"
-  | "research";
+  | "research"
+  | "search";
 export type Actions = {
   state: State;
   busy: string | null;
@@ -67,6 +69,7 @@ export type Actions = {
 };
 const nav: { view: View; label: string; icon: typeof Compass }[] = [
   { view: "discover", label: "Discover", icon: Search },
+  { view: "search", label: "Search", icon: Compass },
   { view: "research", label: "Research", icon: Activity },
   { view: "overview", label: "Overview", icon: LayoutDashboard },
   { view: "results", label: "Results", icon: ListFilter },
@@ -83,6 +86,12 @@ const pages: Record<
     eyebrow: "WALLET DISCOVERY",
     description:
       "Discover or paste public wallets, check identity, then screen a bounded sample.",
+  },
+  search: {
+    title: "Mass wallet search",
+    eyebrow: "STAGED FUNNEL",
+    description:
+      "Acquire a frozen universe, apply successive shortlists, and inspect supported subset trades without raising legacy credit caps.",
   },
   research: {
     title: "Would following the signals have worked?",
@@ -490,6 +499,7 @@ export default function App() {
           )}
           {view === "overview" && <Overview {...actions} />}
           {view === "discover" && <DiscoveryView {...actions} />}
+          {view === "search" && <MassSearchView {...actions} />}
           {view === "research" && <ResearchView {...actions} showEvidence={showEvidence} />}
           {view === "scan" && <ScanView {...actions} />}
           {view === "results" && (

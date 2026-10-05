@@ -1,0 +1,52 @@
+{
+  "kind": "codex-work-package-self-checks",
+  "checked_at": "2026-10-05T07:02:01.521568+00:00",
+  "scope": "Package receipt checker and manually specified synthetic vector arithmetic only. NOT scanner application validation.",
+  "python_version": "3.13.5",
+  "unit_tests": {
+    "command": "python -m unittest discover -s tests -v",
+    "exit_code": 0,
+    "test_nodes": 45,
+    "seconds": 0.045
+  },
+  "receipt_profiles": [
+    {
+      "profile": "development",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "state": "CONTRACT_VALID"
+    },
+    {
+      "profile": "live-search",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "state": "INCOMPLETE"
+    },
+    {
+      "profile": "forward-operation",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "state": "INCOMPLETE"
+    }
+  ],
+  "json_schemas_checked": [
+    "benchmark_receipt.schema.json",
+    "metric_record.schema.json",
+    "source_capability.schema.json"
+  ],
+  "synthetic_example_schema_validation": "PASS",
+  "checker_sha256": "4dab2d7b8d5abe5e79c6e920a9a02823f43f2695f76a22a7843cf7a6641552b3",
+  "checker_tests_sha256": "4868411239c1e88632cadb825295a96d743c84f42783b5530cd61803ff42f454",
+  "scanner_tests_run": false,
+  "genuine_wallets_scanned": 0,
+  "blockchain_provider_calls": 0,
+  "repository_modified_or_pushed": false,
+  "apk_built": false,
+  "deployed": false,
+  "prior_repository_inspection_ref": "fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69",
+  "limitations": [
+    "Contract checks do not authenticate source provenance or verify report arithmetic.",
+    "Live source entitlement, app performance and profitable following remain to be demonstrated by Codex.",
+    "Documentation lookup and repository reads are separate from blockchain collection."
+  ]
+}

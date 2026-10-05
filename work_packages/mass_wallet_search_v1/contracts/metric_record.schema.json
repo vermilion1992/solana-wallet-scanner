@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gmgn:mass-search:metric:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "metric_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "KNOWN",
+        "UNKNOWN",
+        "CONFLICT",
+        "STALE"
+      ]
+    },
+    "basis": {
+      "enum": [
+        "PROVIDER_REPORTED",
+        "RAW_DERIVED_SUBSET",
+        "INDEPENDENTLY_RECONCILED_SUBSET",
+        "STRICT_WALLET",
+        "FORWARD_QUOTE_MODEL"
+      ]
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_inclusive": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_exclusive": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "start_inclusive",
+        "end_exclusive"
+      ]
+    },
+    "population": {
+      "type": "string",
+      "minLength": 1
+    },
+    "population_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "method_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidence_sha256": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      },
+      "minItems": 0
+    },
+    "missing_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "source_provider": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "is_wallet_wide_verified": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    }
+  },
+  "required": [
+    "metric_key",
+    "candidate_id",
+    "value",
+    "unit",
+    "state",
+    "basis",
+    "window",
+    "population",
+    "population_count",
+    "method_version",
+    "observed_at",
+    "evidence_sha256",
+    "missing_dependencies",
+    "source_provider",
+    "is_wallet_wide_verified",
+    "notes"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "KNOWN"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "evidence_sha256": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "UNKNOWN",
+              "CONFLICT"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "null"
+          },
+          "missing_dependencies": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "basis": {
+            "not": {
+              "const": "STRICT_WALLET"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "is_wallet_wide_verified": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "is_wallet_wide_verified": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "basis": {
+            "const": "STRICT_WALLET"
+          },
+          "state": {
+            "const": "KNOWN"
+          },
+          "missing_dependencies": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}
