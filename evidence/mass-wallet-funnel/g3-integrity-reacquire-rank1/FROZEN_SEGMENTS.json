@@ -1,0 +1,141 @@
+{
+  "kind": "g3-integrity-reacquire-rank1-freeze-v1",
+  "outcome_label": "G3_INTEGRITY_REACQUIRE_RANK1",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "do_not_reuse_authorization_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "parent_recovery_commit": "fe6a398a40c59d1e1afcb3788c3ccba00d936779",
+  "parent_g3_live_application_sha": "c3a3ffe5d910823f1113ea5b4f8912c3cf47dfce",
+  "parent_ranked100_commit": "159639b1bc4fd20d6504026f8d58247f1b2e42c9",
+  "source_shortlist": "evidence/mass-wallet-funnel/ranked100-discovery-pilot-2026-10-05/SHORTLIST.json",
+  "source_g3_live": "evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/",
+  "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+  "discovery_cutoff": "2026-10-05T13:29:27Z",
+  "allowed_wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "shortlist_rank": 1,
+  "no_additional_live_addresses": true,
+  "max_pages": 2,
+  "page_indexes_allowed": [0, 1],
+  "windows": {
+    "report_window_days": 30,
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_days": 90,
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z",
+    "acquisition_support_end_exclusive": "2026-10-05T13:29:27Z",
+    "timestamp_semantics": "Discovery cutoff is the ranked-100 fetch timestamp 2026-10-05T13:29:27Z. Report window is 30 days ending at cutoff (exclusive end). Acquisition-support records may start 90 days before cutoff. Do not substitute a later cutoff or current/latest history."
+  },
+  "encoding_and_version": {
+    "helius_method": "getTransactionsForAddress",
+    "transactionDetails": "full",
+    "limit": 100,
+    "sortOrder": "desc",
+    "commitment": "finalized",
+    "maxSupportedTransactionVersion": 1,
+    "filters": {
+      "status": "any",
+      "tokenAccounts": "all"
+    },
+    "documented_units_per_request": 10,
+    "decoder_version_observed_on_damaged_run": "spot-v7-native-flow-roles",
+    "sanitize_version_required": "schema-aware-v2",
+    "cache_key_prefix_required": "g3-history-v2:",
+    "legacy_v1_cache_is": "SOURCE_RECORDS_DAMAGED",
+    "newest_first_now_would_substitute_current_history": true
+  },
+  "helius_query": {
+    "method": "getTransactionsForAddress",
+    "params": {
+      "transactionDetails": "full",
+      "limit": 100,
+      "sortOrder": "desc",
+      "commitment": "finalized",
+      "maxSupportedTransactionVersion": 1,
+      "filters": {
+        "status": "any",
+        "tokenAccounts": "all"
+      }
+    },
+    "silent_fallback_forbidden": true,
+    "page_enlarge_forbidden": true,
+    "retry_forbidden": true,
+    "current_latest_history_forbidden": true
+  },
+  "pages": [
+    {
+      "page_index": 0,
+      "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      "records": 100,
+      "http_status": 200,
+      "fetched_at": "2026-10-05T14:35:32Z",
+      "evidence_sha256": "b0fa9cb76a9e9531b5654f4fa22b0e9b7ef9a81ab61fa21bc16a649de0fb492d",
+      "original_reason": "first_page_no_equivalent_cache",
+      "has_pagination_token_in_options": false,
+      "pagination_token_present": true,
+      "pagination_token": null,
+      "pagination_token_status": "REDACTED_IN_SURVIVING_EVIDENCE",
+      "signature_count_frozen": 0,
+      "signatures": []
+    },
+    {
+      "page_index": 1,
+      "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      "records": 100,
+      "http_status": 200,
+      "fetched_at": "2026-10-05T14:35:33Z",
+      "evidence_sha256": "2cdb237a8adbca04ee4f9e04abd469a525ce499beca1def7e39a3a908244a0fd",
+      "original_reason": "insufficient_episodes_pagination_token_present",
+      "original_reason_not_sufficient_for_this_grant": true,
+      "has_pagination_token_in_options": true,
+      "pagination_token_present": true,
+      "pagination_token": null,
+      "pagination_token_status": "REDACTED_IN_SURVIVING_EVIDENCE",
+      "signature_count_frozen": 0,
+      "signatures": []
+    }
+  ],
+  "signature_manifest": {
+    "status": "STOP_NO_SEGMENT",
+    "original_segments_identified": false,
+    "page0_signature_count": 0,
+    "page1_signature_count": 0,
+    "expected_signatures_if_original_pages": 200,
+    "pagination_tokens_recoverable_from_pr_evidence": false,
+    "unmodified_original_bodies_in_repo": false,
+    "damaged_sqlite_exported_to_repo": false,
+    "do_not_substitute_current_latest_history": true,
+    "hunted_paths": [
+      "evidence/mass-wallet-funnel/g3-ranked100-history/FROZEN_CANDIDATES.json",
+      "evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/DECODER_COVERAGE.json",
+      "evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/TRANSPORT_META.json",
+      "evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/evidence/G3_RESULT.json",
+      "evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/SOURCE_RECORDS_CACHE_INSPECT.json",
+      "evidence/mass-wallet-funnel/g3-ranked100-history-live-2026-10-06/OPERATOR_REPORT.json"
+    ],
+    "reason": "Surviving PR/evidence metadata identifies the rank-1 wallet, page indexes 0 and 1, page-level evidence_sha256 values, fetched_at timestamps, record counts (100+100), query encoding, and historical windows. It does not contain the original 200 transaction signatures or usable pagination tokens (tokens are [REDACTED]). The damaged box sqlite was not exported. A newest-first getTransactionsForAddress call now would fetch current/latest history, which is forbidden."
+  },
+  "page1_policy": {
+    "allowed_reasons": [
+      "missing_earlier_acquisition_boundary",
+      "missing_open_position_boundary"
+    ],
+    "requires_page0_source_preservation_and_integrity": true,
+    "requires_mint_signature_and_reason": true,
+    "forbidden_reasons": [
+      "insufficient_episodes_pagination_token_present",
+      "below_g3_bar",
+      "better_pnl",
+      "fewer_than_10_episodes"
+    ],
+    "stop_once_one_completed_position_independently_reconciled": true
+  },
+  "report_rules": {
+    "target_independently_reconciled_completed_positions": 1,
+    "g3_min_supported_completed_observed_episodes": 10,
+    "smaller_reports_visible_but_do_not_pass_g3": true,
+    "not_wallet_wide_match": true,
+    "not_full_g2": true,
+    "winners_not_required": true,
+    "PRODUCT_READY": false
+  },
+  "PRODUCT_READY": false
+}

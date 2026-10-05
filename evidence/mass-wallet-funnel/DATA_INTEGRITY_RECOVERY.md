@@ -69,7 +69,10 @@ be needed after this code fix; that grant is out of scope here.
 - Recovering those five wallets needs a future, separately approved minimal
   reacquire of intact `getTransactionsForAddress` pages. Unused old-grant
   allowance must not be reused automatically.
-- Full G2, live Helius/Birdeye, grant activation, merge, APK, wallet-v2,
+- Rank-1 reacquire grant `live-g3-integrity-reacquire-rank1-2026-10-06-mitch`
+  is encoded and stays `enabled: false`. Surviving metadata is
+  `STOP_NO_SEGMENT` (0/0 original signatures). Do not fetch current history.
+- Full G2, live Helius/Birdeye from this cloud tree, leftover G3 reuse, merge, APK, wallet-v2,
   profitability claims, and `PRODUCT_READY` remain out of scope.
 
 ## What is not claimed

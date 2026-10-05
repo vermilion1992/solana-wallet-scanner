@@ -42,6 +42,7 @@ G1_GRANT_PATH = ROOT / "config" / "live_authorization.g1-granted.json"
 RANKED100_GRANT_PATH = ROOT / "config" / "live_authorization.g2-ranked100-discovery-granted.json"
 EXAMPLE_PATH = ROOT / "work_packages" / "mass_wallet_search_v1" / "config" / "live_authorization.example.json"
 DRAFT_PATH = ROOT / "config" / "live_authorization.proof-grant-draft.json"
+REACQUIRE_GRANT_PATH = ROOT / "config" / "live_authorization.g3-integrity-reacquire-rank1-draft.json"
 FREEZE_PATH = ROOT / "evidence" / "mass-wallet-funnel" / "g3-ranked100-history" / "FROZEN_CANDIDATES.json"
 SHORTLIST_PATH = ROOT / "evidence" / "mass-wallet-funnel" / "ranked100-discovery-pilot-2026-10-05" / "SHORTLIST.json"
 
@@ -117,13 +118,15 @@ def assert_non_grants_stay_disabled():
     draft = validate_live_authorization(json.loads(DRAFT_PATH.read_text(encoding="utf-8")))
     ranked = validate_live_authorization(json.loads(RANKED100_GRANT_PATH.read_text(encoding="utf-8")))
     g3 = validate_live_authorization(json.loads(GRANT_PATH.read_text(encoding="utf-8")))
-    if example.get("enabled") or draft.get("enabled") or ranked.get("enabled") or g3.get("enabled"):
-        raise ValueError("Example, draft, ranked-100, or G3 grant file is enabled in this offline-prep tree")
+    reacquire = validate_live_authorization(json.loads(REACQUIRE_GRANT_PATH.read_text(encoding="utf-8")))
+    if any(row.get("enabled") for row in (example, draft, ranked, g3, reacquire)):
+        raise ValueError("Example, draft, ranked-100, leftover G3, or reacquire grant file is enabled in this offline-prep tree")
     return {
         "example_enabled": False,
         "draft_enabled": False,
         "ranked100_enabled": False,
         "g3_enabled": False,
+        "reacquire_enabled": False,
         "g1_not_reused": True,
         "ranked100_not_reused": True,
     }
