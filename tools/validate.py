@@ -27,6 +27,7 @@ SCREENING_FORWARD = [
     'tests/test_inventory_evidence.py',
     'tests/test_mass_search_funnel.py', 'tests/test_mass_search_routes.py',
     'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py',
+    'tests/test_mass_search_g1.py',
 ]
 FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruction_schema.py',
            'tests/test_instruction_contract_matrix.py', 'tests/test_source_role_matrix.py', 'tests/test_validation_gates.py',
@@ -50,7 +51,8 @@ FOCUSED = ['tests/review_v039', 'tests/review_v0310', 'tests/test_token_instruct
            'tests/test_public_sample_budget.py', 'tests/test_paper.py',
            'tests/test_observer.py', 'tests/test_candidate_import.py',
            'tests/test_mass_search_funnel.py', 'tests/test_mass_search_routes.py',
-           'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py']
+           'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py',
+           'tests/test_mass_search_g1.py']
 
 # Retain all 35 baseline selectors (original 30 plus five metric regressions) and
 # include the retained development-contract/performance modules, inventory admission
@@ -88,7 +90,8 @@ FOCUSED_GROUPS = {
                   'tests/test_public_sample_budget.py', 'tests/test_paper.py',
                   'tests/test_observer.py', 'tests/test_candidate_import.py',
                   'tests/test_mass_search_funnel.py', 'tests/test_mass_search_routes.py',
-                  'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py'],
+                  'tests/test_mass_search_scale.py', 'tests/test_mass_search_receipt.py',
+                  'tests/test_mass_search_g1.py'],
 }
 
 
