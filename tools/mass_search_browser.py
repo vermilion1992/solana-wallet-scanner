@@ -180,7 +180,7 @@ def run(args):
         capture("06-results-subset-pnl", desktop_only=True)
         result["cases"].append({"case": "results-subset-pnl", "state": "PASS", "report_id": report_id})
 
-        page.get_by_role("button", name="Compare", exact=True).click()
+        page.get_by_label("Main navigation").get_by_role("button", name="Compare", exact=True).click()
         page.locator(".compare-choice").first.click()
         expect(page.locator('[data-list-profit="reconstructed-subset"]')).to_contain_text("0.575")
         expect(page.get_by_text("Reconstructed subset", exact=False).first).to_be_visible()
