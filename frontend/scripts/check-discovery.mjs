@@ -63,7 +63,7 @@ try {
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
-  const { CompareView, Results, WatchlistView, resultsEmptyCopy, watchlistEmptyCopy } = require(join(output, "workspace.js"));
+  const { CompareView, Results, WatchlistView, resultsEmptyCopy, watchlistEmptyCopy, compareEmptyCopy } = require(join(output, "workspace.js"));
   const { ReportTable } = require(join(output, "components.js"));
   const { compareDecimal, listRealisedProfit } = require(join(output, "format.js"));
   const {
@@ -2124,6 +2124,32 @@ try {
   assert.ok(emptyResultsHtml.includes("reconstructed subset"));
   assert.ok(emptyResultsHtml.includes("not a wallet-wide MATCH"));
   assert.ok(resultsEmptyCopy("mass-search", 0).detail.includes("not wallet-wide MATCH"));
+  assert.equal(compareEmptyCopy([], 0).kind, "compare-none");
+  assert.ok(compareEmptyCopy([], 0).detail.includes("not a wallet-wide MATCH comparison"));
+  assert.equal(compareEmptyCopy([subsetReport], 0).kind, "compare-none-selected");
+  assert.ok(compareEmptyCopy([subsetReport], 0).detail.includes("reconstructed subset"));
+  assert.ok(compareEmptyCopy([subsetReport], 0).detail.includes("not a wallet-wide MATCH comparison"));
+  assert.equal(compareEmptyCopy([{ source: "live" }], 0).kind, "compare-none-selected");
+  assert.equal(compareEmptyCopy([subsetReport], 1), null);
+  const emptyCompareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.ok(emptyCompareHtml.includes('data-empty-kind="compare-none"'));
+  assert.ok(emptyCompareHtml.includes("not a wallet-wide MATCH comparison"));
+  const unselectedCompareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.ok(unselectedCompareHtml.includes('data-empty-kind="compare-none-selected"'));
+  assert.ok(unselectedCompareHtml.includes("Mass-search subset"));
+  assert.ok(unselectedCompareHtml.includes("reconstructed subset"));
+  assert.ok(unselectedCompareHtml.includes("not a wallet-wide MATCH comparison"));
+  assert.ok(!unselectedCompareHtml.includes("data-list-profit"));
   const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },

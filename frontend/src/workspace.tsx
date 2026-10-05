@@ -661,6 +661,30 @@ export function watchlistEmptyCopy() {
       "Save a public address above or use the star button on a wallet report. An empty list is not a MATCH shortlist and does not start quote-only observation.",
   };
 }
+export function compareEmptyCopy(
+  reports: { source?: string }[],
+  selectedCount: number,
+) {
+  if (!reports.length) {
+    return {
+      kind: "compare-none",
+      title: "No reports to compare",
+      detail:
+        "Run an offline Search slice or another investigation first. Subset rows, when they appear, are not a wallet-wide MATCH comparison.",
+    };
+  }
+  if (selectedCount === 0) {
+    const subset = reports.some((report) => report.source === "mass-search");
+    return {
+      kind: "compare-none-selected",
+      title: "No reports selected",
+      detail: subset
+        ? "Select two to four reports. Mass-search rows are a reconstructed subset, not a wallet-wide MATCH comparison."
+        : "Select two to four reports with the same window, source, and methodology. This view does not promote a MATCH.",
+    };
+  }
+  return null;
+}
 export function Results({
   state,
   open,
@@ -788,12 +812,18 @@ export function CompareView({
         r.methodology === reports[0].methodology &&
         r.source === reports[0].source,
     );
+  const empty = compareEmptyCopy(state.reports, selected.length);
+  const hasSubset = state.reports.some((report) => report.source === "mass-search");
   return (
     <>
       <section className="panel">
         <SectionHeading
           title="Choose up to four reports"
-          subtitle="Comparisons require identical windows, methodology, and data source."
+          subtitle={
+            hasSubset
+              ? "Comparisons require identical windows, methodology, and data source. Mass-search rows are a reconstructed subset, not a MATCH comparison."
+              : "Comparisons require identical windows, methodology, and data source."
+          }
         />
         <div className="compare-picker">
           {state.reports.slice(0, 100).map((report) => (
@@ -819,13 +849,7 @@ export function CompareView({
             </button>
           ))}
         </div>
-        {!state.reports.length && (
-          <Empty
-            title="Choose reports to compare"
-            detail="Complete an investigation first, then select two to four wallet reports."
-            icon={GitCompareArrows}
-          />
-        )}
+        {empty && <Empty {...empty} icon={GitCompareArrows} />}
       </section>
       {reports.length > 0 && (
         <section className="panel compare-panel">
