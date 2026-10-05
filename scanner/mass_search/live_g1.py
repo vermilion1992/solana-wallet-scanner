@@ -318,26 +318,10 @@ def _count_method(store, provider, cycle, method):
 
 
 def _wrap_records(records):
-    wrapped = []
-    for item in records:
-        raw = item
-        if isinstance(item, dict) and "transaction" in item:
-            raw = item
-        signature = None
-        if isinstance(raw, dict):
-            tx = raw.get("transaction") or {}
-            sigs = tx.get("signatures") if isinstance(tx, dict) else None
-            if isinstance(sigs, list) and sigs:
-                signature = sigs[0]
-            signature = raw.get("signature") or signature
-        encoded = json.dumps(raw, sort_keys=True, separators=(",", ":"), default=str).encode()
-        wrapped.append({
-            "signature": signature,
-            "raw": raw,
-            "evidence_hash": hashlib.sha256(encoded).hexdigest(),
-            "transaction_index": raw.get("transactionIndex") if isinstance(raw, dict) else None,
-        })
-    return wrapped
+    """Shared canonical decode wrappers. Already-wrapped records are not wrapped again."""
+    from .canonical_records import canonical_decode_records
+
+    return canonical_decode_records(records)
 
 
 async def run_g1(store, *, evidence_dir, application_sha, hardware=None, transports=None, grant_path=None):

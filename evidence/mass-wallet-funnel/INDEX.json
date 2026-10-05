@@ -110,5 +110,15 @@
   "ranked100_anchored_live_helius_requests": 1,
   "ranked100_anchored_live_helius_credits_documented": 10,
   "ranked100_anchored_local_armed_copy_consumed": true,
-  "ranked100_anchored_single_use_approval_consumed": "2026-10-06 08:08 ACDT approval; consumed 2026-10-05T21:41:25Z by page 0"
+  "ranked100_anchored_single_use_approval_consumed": "2026-10-06 08:08 ACDT approval; consumed 2026-10-05T21:41:25Z by page 0",
+  "ranked100_shared_boundary": "ranked100-shared-boundary/",
+  "ranked100_shared_boundary_status": "HONEST_PARTIAL_NO_SUPPORTED_SOL_SWAPS",
+  "ranked100_shared_boundary_supported_sol_swaps": 0,
+  "ranked100_shared_boundary_completed_positions": 0,
+  "ranked100_shared_boundary_capture": "ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json",
+  "ranked100_shared_boundary_capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "ranked100_shared_boundary_report": "ranked100-shared-boundary/APPLICATION_REPORT.json",
+  "ranked100_shared_boundary_next_data": "ranked100-shared-boundary/NEXT_DATA_MANIFEST.json",
+  "ranked100_shared_boundary_visible_fee_sol": "0.005654729",
+  "ranked100_shared_boundary_not_pnl": true
 }

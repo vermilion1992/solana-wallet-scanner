@@ -893,7 +893,9 @@ def _base_receipt(grant, freeze, checked, blockers, non_grants):
 def _summarize_page(page, freeze, *, decode=None):
     windows = freeze.get("windows") or {}
     decode = decode or decode_supported_swaps
-    decoded = decode(page.get("records") or [], ALLOWED_WALLET)
+    from .canonical_records import canonical_decode_records
+
+    decoded = decode(canonical_decode_records(page.get("records") or []), ALLOWED_WALLET)
     if not isinstance(decoded, dict):
         decoded = {"events": []}
     by_mint, truncated = decoder_events_by_mint(

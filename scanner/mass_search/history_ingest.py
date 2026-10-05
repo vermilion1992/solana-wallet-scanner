@@ -7,6 +7,7 @@ authorised v2 cache → decoder → accounting → MassSearchService.reconstruct
 from __future__ import annotations
 
 import json
+from collections import Counter
 from copy import deepcopy
 from decimal import Decimal
 from pathlib import Path
@@ -20,7 +21,7 @@ from .evidence_integrity import (
     PAGE_KIND_V2,
     sanitize_transaction_records,
 )
-from .live_g1 import _wrap_records, independent_fifo_worksheet
+from .live_g1 import independent_fifo_worksheet
 from .service import MassSearchService
 
 HELIUS_METHOD = "getTransactionsForAddress"
@@ -423,6 +424,78 @@ def reconcile_worksheets(production, independent):
     return payload
 
 
+def _classification_observations(classification, decoded):
+    observations = []
+    counts = classification.get("counts") or {}
+    if counts:
+        observations.append({
+            "kind": "tx_classification",
+            "detail": ", ".join(f"{name}={count}" for name, count in sorted(counts.items())),
+            "count": classification.get("transactions"),
+        })
+    coverage = decoded.get("coverage") or {}
+    observations.append({
+        "kind": "decoder_coverage",
+        "detail": (
+            f"decoded_swaps={coverage.get('decoded_swaps')} "
+            f"failed={coverage.get('failed_transactions')} "
+            f"unresolved={coverage.get('unresolved_transactions')}"
+        ),
+        "count": coverage.get("transactions"),
+    })
+    fees = classification.get("fee_totals") or {}
+    if fees:
+        observations.append({
+            "kind": "fees",
+            "detail": (
+                f"visible_fee_sol={fees.get('fee_sol')} "
+                f"failed_fee_sol={fees.get('failed_fee_sol')} "
+                f"(not P&L; integer lamports {fees.get('fee_lamports')})"
+            ),
+            "count": fees.get("transactions_with_integer_fee"),
+        })
+    reasons = Counter(row.get("reason") for row in (decoded.get("unresolved") or []) if row.get("reason"))
+    for reason, count in reasons.most_common(8):
+        observations.append({"kind": "unresolved", "reason": reason, "count": count})
+    return observations
+
+
+def _decoder_coverage(decoded, classification):
+    coverage = dict(decoded.get("coverage") or {})
+    fees = classification.get("fee_totals") or {}
+    coverage.update({
+        "visible_fee_lamports": fees.get("fee_lamports"),
+        "visible_fee_sol": fees.get("fee_sol"),
+        "failed_fee_lamports": fees.get("failed_fee_lamports"),
+        "failed_fee_sol": fees.get("failed_fee_sol"),
+        "not_pnl": True,
+    })
+    return coverage
+
+
+def _partial_findings(classification, decoded):
+    fees = classification.get("fee_totals") or {}
+    coverage = decoded.get("coverage") or {}
+    return [
+        {
+            "severity": "info",
+            "title": "No supported SOL-settled swaps on this captured page",
+            "detail": (
+                "Holder-fee distributions, failed transactions, and unreviewed Jupiter/PumpSwap "
+                "inners stay visible. Raw SOL delta is not treated as profit."
+            ),
+        },
+        {
+            "severity": "info",
+            "title": "Visible transaction fees are not profit",
+            "detail": (
+                f"{fees.get('fee_sol')} SOL fees across {fees.get('transactions_with_integer_fee')} txs; "
+                f"{fees.get('failed_fee_sol')} SOL on {coverage.get('failed_transactions')} failed txs."
+            ),
+        },
+    ]
+
+
 def replay_cached_history_to_report(
     store,
     *,
@@ -464,7 +537,11 @@ def replay_cached_history_to_report(
         "external_requests": 0,
     }
     persist_page(store, authorization_id, address, 0, page)
-    decoded = decode_supported_swaps(_wrap_records(sanitized["records"]), address)
+    from .canonical_records import canonical_decode_records, classify_normalised_records
+
+    wrapped = canonical_decode_records(sanitized["records"])
+    decoded = decode_supported_swaps(wrapped, address)
+    classification = classify_normalised_records(wrapped, address)
     by_mint, truncated = decoder_events_by_mint(
         decoded,
         address=address,
@@ -484,16 +561,65 @@ def replay_cached_history_to_report(
         report_mint = "declared-supported-subset"
         from .g3_history import declared_subset_worksheet
         worksheet = declared_subset_worksheet(by_mint)
+    observations = _classification_observations(classification, decoded)
     if not events:
+        report = {
+            "id": f"ranked-partial-{address[:8]}-{run['run_id'][:8]}",
+            "address": address,
+            "label": f"Mass-search subset · {corpus_kind}",
+            "source": "mass-search",
+            "corpus_kind": corpus_kind,
+            "created_at": window_end,
+            "policy": "UNRESOLVED",
+            "metrics": {},
+            "findings": _partial_findings(classification, decoded),
+            "evidence": [],
+            "coverage": _decoder_coverage(decoded, classification),
+            "g3_status": "PARTIAL_NO_SUPPORTED_SOL_SWAPS",
+            "source_integrity": sanitized["integrity"],
+            "observations": observations,
+            "worksheet": None,
+            "independent_worksheet": worksheet,
+            "worksheet_reconciliation": reconcile_worksheets(None, worksheet),
+            "events": [],
+            "positions": [],
+            "counts": {"closed": 0, "open": 0, "interrupted": 0, "unresolved": classification["transactions"]},
+            "classification": {
+                "counts": classification["counts"],
+                "transactions": classification["transactions"],
+                "fee_totals": classification.get("fee_totals"),
+                "pump_idl_pin": classification["pump_idl_pin"],
+            },
+            "research": {
+                "scope": "Fetched sample; recognized single spot routes with SOL/wSOL settlement",
+                "history_complete": False,
+                "supported_swaps": int((decoded.get("coverage") or {}).get("decoded_swaps") or 0),
+            },
+            "notes": [
+                "Honest partial report. No independently reconciled SOL-settled completed position on this captured page.",
+                "Holder-fee distributions, failed transactions, and unreviewed Jupiter/PumpSwap inners stay visible.",
+                "Raw SOL delta is not P&L. PRODUCT_READY remains false.",
+            ],
+            "offline_replay": True,
+            "PRODUCT_READY": False,
+            "not_match": True,
+            "not_ranked_wallet_pipeline_proof": True,
+            "shortlist_rank": 1,
+        }
+        store.put("reports", report["id"], report)
         return {
             "run_id": run["run_id"],
-            "report_id": None,
-            "report": None,
-            "worksheet": worksheet,
+            "report_id": report["id"],
+            "report": report,
+            "worksheet": None,
+            "independent_worksheet": worksheet,
+            "worksheet_reconciliation": report["worksheet_reconciliation"],
             "visible_report": False,
+            "classification": classification,
             "external_requests": 0,
             "truncated_before_acquisition_support": truncated,
             "PRODUCT_READY": False,
+            "not_match": True,
         }
     reconstructed = service.reconstruct_candidate(
         run["run_id"], f"solana:{address}", events,
@@ -508,6 +634,17 @@ def replay_cached_history_to_report(
     report["worksheet_reconciliation"] = reconcile_worksheets(production, worksheet)
     report["declared_mints"] = [mint] if mint else sorted(by_mint)
     report["source_integrity"] = sanitized["integrity"]
+    report["observations"] = observations
+    report["classification"] = {
+        "counts": classification["counts"],
+        "transactions": classification["transactions"],
+        "fee_totals": classification.get("fee_totals"),
+        "pump_idl_pin": classification["pump_idl_pin"],
+    }
+    report["coverage"] = {
+        **(report.get("coverage") or {}),
+        **_decoder_coverage(decoded, classification),
+    }
     report["offline_replay"] = True
     report["PRODUCT_READY"] = False
     report["not_ranked_wallet_pipeline_proof"] = True

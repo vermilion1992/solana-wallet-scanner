@@ -35,6 +35,23 @@ WSOL = 'So11111111111111111111111111111111111111112'
 JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
 PUMP = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
 PUMP_SWAP = 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
+PUMP_REVIEWED_NON_SWAP = (
+    'distribute_fee_to_holders',
+    'claim_cashback',
+    'claim_cashback_v2',
+    'collect_creator_fee',
+    'collect_creator_fee_v2',
+    'create',
+    'create_v2',
+    'migrate',
+    'migrate_v2',
+    'init_user_volume_accumulator',
+    'sync_user_volume_accumulator',
+    'close_user_volume_accumulator',
+    'buy_v2',
+    'sell_v2',
+    'buy_exact_quote_in_v2',
+)
 RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
@@ -148,6 +165,12 @@ def _route(instruction, keys):
                 authority, owned_positions = (6, (5,)) if program == PUMP else (1, (5, 6))
                 expected = 'sell' if candidate == 'sell' else 'buy'
                 break
+        if name is None and program == PUMP:
+            for candidate in PUMP_REVIEWED_NON_SWAP:
+                if payload[:8] == _anchor(candidate):
+                    raise ValueError(
+                        f'Reviewed Pump instruction {candidate} is not a spot swap'
+                    )
     elif program == RAYDIUM_CPMM:
         for candidate in ('swap_base_input', 'swap_base_output'):
             if payload[:8] == _anchor(candidate) and len(payload) == 24 and len(accounts) >= 13:

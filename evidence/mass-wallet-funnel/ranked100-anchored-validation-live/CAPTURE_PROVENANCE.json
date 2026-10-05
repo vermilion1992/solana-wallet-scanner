@@ -1,0 +1,8 @@
+{
+  "source_path": "/workspace/ranked100-anchored-validation-live/evidence/SOURCE_RESPONSE_page0.json",
+  "sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "bytes": 2403585,
+  "secret_needle_hits": [],
+  "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "note": "exact copy of credential-free SOURCE_RESPONSE_page0; provenance only; not spending authority"
+}

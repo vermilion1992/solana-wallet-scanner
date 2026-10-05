@@ -1,0 +1,1600 @@
+{
+  "kind": "ranked-capture-classification-v1",
+  "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "transactions": 100,
+  "counts": {
+    "pump_holder_fee_distribution": 61,
+    "wallet_absent_from_account_keys": 5,
+    "inner_pumpswap_without_reviewed_outer": 2,
+    "no_reviewed_outer_spot_swap": 6,
+    "unreviewed_jupiter_discriminator": 6,
+    "failed_on_chain": 19,
+    "unsupported_transaction_version": 1
+  },
+  "fee_totals": {
+    "transactions_with_integer_fee": 100,
+    "failed_transactions_with_integer_fee": 19,
+    "fee_lamports": 5654729,
+    "failed_fee_lamports": 171000,
+    "fee_sol": "0.005654729",
+    "failed_fee_sol": "0.000171",
+    "not_pnl": true,
+    "note": "Visible transaction fees only. Raw SOL delta is not profit."
+  },
+  "pump_idl_pin": {
+    "repository": "pump-fun/pump-public-docs",
+    "commit": "e0687ae9b7e064a0f54efc7297c65eecfbba3a8f",
+    "document": "idl/pump.json",
+    "local_fixture": "tests/fixtures/retained_protocol_funding/pump-native.json",
+    "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b"
+  },
+  "PRODUCT_READY": false,
+  "rows": [
+    {
+      "signature": "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4LuEQJLvfqPrmywpYeAmL4Q4bT7Ek3hC8wkKyTiYHrrL1XVLfZoJH1EukbKsYvjFVCuzjr3gPXFMqdvHzPTn2q5c",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "GQk5sEyHtgppkodNeyRyWBUtEa88kvrjCKzb76A1Qi7FqGJhiaaRsp4PkooXdJgbKcWaVDxj3Dc8uo29JEudhzz",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4UMufpREVSSEsSyvN8W2n8V9WYP4fsDpGwRd6eQaUJxTmBEwsVDQ8826onhyg4qv7G16p5A5z2UFYjfk8NfjeFzy",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2KMQL5GpT5KvZzhdhMdGhz53AjMUGotjTvJmYL6xf7sSAFVGsjutR6fRFc76wfbj1ksHXoYUyQLXLngBARdncQoP",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "5RJGwRTMJRRepfRDRyX5tqKEyxWUUq8oszixRijRtc3HZiaGa44p3Cf4xmz6KsBpzyLiEo8UNiTq1QgD7EkQoWYi",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3JoheJccgtfhYaaSi5hnzHRWyJPoYJHvKyKWR2p77Qj5JmQ5LW5GfWeZvnMu5esfEZjTJYTVNzZc2m4F3PeU6tWq",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "PrrH9iBrDMQ1ofXNTFj3PQLH3Z3kpQczJj5VQtNSvmXm1H4nb2astiiLQfdNDWjArvQcT85kkfSiS3ddeZkg9uU",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "pnbg11kDNC7ydnjb7e5Lky3bgku86CuTK71fByJhNq17cYS6v7EUiWqoqFYVevMdRR6KTzWG6J1avNR1nnygDFt",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2nirYVtV8iKDcJmuLr4MKY1F1po3qj9Rx5EMFSMBw2RYy5RKghCe7PUu7cyu3XxX7BoZMmdvvDCNGuQGfNykRCkB",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3X6PvJfBr3Tce7r4Pq4vQHiFZEZpPZucHB3Hs13dQ6KLdwRm4Ntw7x4UWfg6yYS3F4eEn8fbZeN3NfWbNEAF3k2o",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3UwRgKwikJHJ3JgwrbTiiytUzG64LbLk9MG5KpTGLyEkisAcGnyJnt4AwVZmWsv4YVMo5wLB6Lk9tJ2KJwVxinnr",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2w9TAVffHxsWHpByybP5ABBKAho9Jm8nfSeqWS7GTY9RonCsYpHd7HeS98ugJqudx49ACQ789BvfGX5BFcdpyoCe",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3zLACoQNnSLupXRULncdLLySCJsxCeoNJyEYgAQKAnvzGcS327ttqrUQnEhRSZQdsactsj5a4aCrjNn8M9R17FPX",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "SBHwbaDUGVNrYvnE5ZGkWWkjrbSWAUbkVQTjC9zbk4aib3Lan7HuXCtteAGRCww1AhhfKc9TXPosvkGcbTtoc7b",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3M3RkeXrR268uuU8bbXJ65UMMbTezzQr7cUgoWEVERynBAqrpdVUzif4YQpCSQhCkFHGRekSnSyu3VMx3UyExNz5",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2aAdzRmrwwW2qsX8i7ba2Ues8nxL7PdPJ2GeKtpDC3YUEkag1wgjMonHD2FyFjEdELYZX7ttisf3DpSki45nYNau",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 28250,
+      "wallet_in_keys": false,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "wallet_absent_from_account_keys",
+      "reason": "Investigated wallet is absent from transaction account keys"
+    },
+    {
+      "signature": "5ztYjxroQr45de4kj4woCfUdD4cB3nPHHLQbpDeCUoTQydsstuhZZPRx5fSJEFpzLMyRYP9WvBTBAPGpHChnJVyh",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2XRM62ozTKR9XQhwPATKDSVtRihTuGs4FnhSmZ1HLeGNJKuq3z7fSwbbgLR5iYrfToH4rT7JA1UHbtK7wGezNbsm",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2B3tF1QCp8235rVGiQVa9Dz5fuuTPCG5oM8SMwn5RAESbJY8rUFKgv1CPZWAEYWw5LCu74t5UgjK35v7q9GhGbE",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "mpgvia2u73448fq1yDzDH5smg6DVYfgoxpb4HriiB18ZqwmxBz7vB65MN9jQDTDTgY5AtAw7iLYjMeDRkfwtcB8",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 5837,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy"
+        },
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "f945a4da9667548a"
+        }
+      ],
+      "class": "inner_pumpswap_without_reviewed_outer",
+      "reason": "PumpSwap buy/sell appears only as an inner instruction under an unreviewed outer",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy"
+        }
+      ]
+    },
+    {
+      "signature": "5zJtJ7xm7TAPZxQzsPg2mrrH75o15gs3qLpqAm9bLssYVCfCfkewxzUhYnP3GK78WmCBebyeu89D9r9RSBFxm2bW",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "VTdX2RiEm5TxvJVwcxh3DwjL3FE1G2fKHKpQW2918KyocD7yM7o17oFrjqZr6xCwm8MmG2aH73ZZxbJ5dMf1Coj",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "PLHfSbwSUPC9ppTrDQsWNyQiX2AFj5jxwssZo1DdpjwXhy4m5rUpbb6B17pG7ciZJYzBszCGCns3uioHPJPf7tr",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 5050,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "no_reviewed_outer_spot_swap",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading"
+    },
+    {
+      "signature": "5azFe5idXZrvoAYSiZEQ4Us4LmkkwN7pBostNUFfLud8RsAr7Udj5rL1HLvq3vwcX9YFa9NqtYFUq5ZsDR29okau",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 5050,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "no_reviewed_outer_spot_swap",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading"
+    },
+    {
+      "signature": "bhq8CTWfWnqHQ5tpXb8BsGjstJrFQYbknGRzAnJMuxPWjwZm4wNCaxT5iJFJVB1NBX1WyNHZxgywU8hT9bQUmgY",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 5050,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "no_reviewed_outer_spot_swap",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading"
+    },
+    {
+      "signature": "hkTYAzD2SztBkNDVqxEJ6B9FoZupS81qc3XbvmHUtWiEG5bUmDbWuKGnQ5LYVRBfnEJbRduW8EnP6KwNCb6cJZU",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 5050,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "no_reviewed_outer_spot_swap",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading"
+    },
+    {
+      "signature": "3zhUfwAPSQrM7KbLosVma2ewiAvZaZAqjipCPCiAGoJUMRVU4p22AgHQXewLKibpuQwzq3pe1hxokz3w5hMWcRpy",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 79938,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "no_reviewed_outer_spot_swap",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading"
+    },
+    {
+      "signature": "jf1b4EdcE9MgA5bLgKqGZQXhH31LnJYDUQiXkJH6rpbJBMzcSXV2VaaaTBVTDWwynjXQdqg3Nnyx96FP2HEoHVq",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4vSGuT3y8JUorMmJqPeA85RkX2cyzzbC2pLJ9fZB4h4WyF58Cdv39G6T4rvwicVZRxnr6tpQueuSMoE8WziyCAKV",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "rRpptATXR8a4Xubuxci1AAgwp1sbmRQw9sNUiAuHuFx1NubdzS6vQ4hAttQXGFa5mgDoBRUpC94YjUUCHo4fzMb",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "Ryrony8B6vCyc8fJ4KSWqEZ5nPUGn78TEdfFGtf7q9z2WHVU5CjdBK8CahkELfiMzcd4Dw128gtDxBthZ7mRZFa",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4A9fsBZ8tKkxxN49R7YpMXsaxVNCKJSTYXBswTLBTp4depbJ9BnS45i88UJqx1pAaMxupNumuuihTAkuhPjnmqbV",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3vp9rhXu8QcBxNHcmopJAcywVGmBPVnCkvpEjJKJBEtyxi6JNCGeffXucQrS2f1Vjra6LFH1dDkVdoFzC5Uwh8EP",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "fNShk3SFxNmN5FUH9xEah2tMLEmQxuScDK7M1Sh3qSTapCSa3Pr2Vw1KpYS7QwYPcyMYqX8P9TFwYzbHCCidzrZ",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2seGL2oxxaCT4UFpPUjbU5B8nGa1g77fNKFCZArGeaiFKBbZmyk5BfEct9YUeoDKMrcPw6Atd4R7YwahxJ4iJNKj",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2NMyKw1ET8Cr4VvWhS5XEtjeAFBz3DKNQBvCmgsRvP1TA3ZeBaKRtcii9Bmjsq5KZmvtkLnuYsWR1Xpm6kG6DVB6",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "wiT7h9neaxdx7WJrTtNg9kD4GzohixHtL6HRvRmgdhPCaXUkKHSzvuwsD8bJp2sYNhQx72hkSTo5u6qjwJ29GVV",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4qGL5pTv3CVemxkJ5gBtaL8FWCRAVFMgZ67w99es6nVgksmUnstXQr6a9E58E2M1n5iPQA6qrHGfqRVZsdzURjcZ",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4v6pinwfqh3T72TZ4mQv9a3jCQnW2GE391EUZhtdFWrcKDqTXC1tmemwG5gUnDeSDxGtN5qBNXejven2ckMsWkMF",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "5ehLBDE6CiWeJ7kQrJskv8gJHhuPRxEUmV9vvaDJoNRsX7FAxAySk8Ebd31VaGbXnvqwyJScxfAYF6Css3CrXut6",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 81592,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy"
+        },
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "f945a4da9667548a"
+        }
+      ],
+      "class": "inner_pumpswap_without_reviewed_outer",
+      "reason": "PumpSwap buy/sell appears only as an inner instruction under an unreviewed outer",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy"
+        }
+      ]
+    },
+    {
+      "signature": "3NHy2Y7Pwidbx2qXa7otBVDR7LrKxVYm88BzvthN9WNDKF1qHqgUN8sSGpS2Hh1jiuTtVopEP3cro2VkYnCq1Tk7",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2fXq7jeUDietg2EYZf6fsT3cJ8VQFhph6id4CHEdGG9GmmKe61B2JJDWvX7qKUf6HMShNmoH7hUN3C1LdX9stWsD",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4dK7hdbcRPCLcRTjBxS9rp9UFg8VU4jmEbvVGUBkV1kY28qJMP42bb3V8gB5PnEyx8wxEBwu4hN3XAU39RCX8xo3",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "KFJNknUfMxKFya1g3vDAhNt95ojFQsDvYHfzy8HGwJ8UKzoU1rigbmGCKMoCS1rLtXuX39wndvuisnhahMi7MCx",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2WNHKXuqH1Nod8gwsJQBUN96w8Bkou5aSrGVwqeVVuPtyXJpBMQcv9HH3k4N1zrywrregq2TJdQ3r5JECPKh9bZ7",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "51Kvmc8zr8XrsRcwkt9SUr4UFpnnmtNw2JbhcvK7pPv6YPKfe3n7nN8ZJ5qgP2UGsueqchM9snH7NkQRKSK85eUX",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 1410000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "bb64facc31c4af14"
+        }
+      ],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        },
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "f945a4da9667548a"
+        }
+      ],
+      "class": "unreviewed_jupiter_discriminator",
+      "reason": "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        }
+      ]
+    },
+    {
+      "signature": "3UHaHeEC6Z87TPNzuErHWFRG9GhjxdCFDY588V2TjnZK1UHMr3kDHWFrpQ5zkCUtJLVtZ9QX7TM7zM1ooB5xDxgi",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3chsMBDLsKpsGbVwLiMXDbJyr6D19h4LCx4pygLCwTBN6BKQssqiD49F1rHFhG7oH4h8SakW4zSqaKW1eA2qdEAj",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "xFsZtJZbFgGTPfzp8XFtzQUrKYrMkNftgv6RttFVfsmh7XtVJMqgn2brZq5jq9WrxZAj8Ph6PwzdekRuDHpnpwq",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "pweNPfzNPsXsC8yiXp2DfixceLBPJ1R1LFd4uzGbsuaBbfjyabawTiQzpsYvxgRQEmrJW4KKTA2sAwR3AzTorsa",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 1381750,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "bb64facc31c4af14"
+        }
+      ],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        },
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "f945a4da9667548a"
+        }
+      ],
+      "class": "unreviewed_jupiter_discriminator",
+      "reason": "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        }
+      ]
+    },
+    {
+      "signature": "5pDaKmgS478G3DRiFtM1zTkz3gm56TTkabuYESjp3XPQhLqwhYJPq2dGWtTPjxKoKMCg6Sycg322b1vtqYJjKePF",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 14750,
+      "wallet_in_keys": false,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "wallet_absent_from_account_keys",
+      "reason": "Investigated wallet is absent from transaction account keys"
+    },
+    {
+      "signature": "4Kg5mSUZGnyAzqfSah1jMTy1ess3tn1cK6ptPeWmtqKpRm9DeeHcpbnKEH1JRENZngrv5H79WQvLsro2iqWCX34M",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 1410000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "bb64facc31c4af14"
+        }
+      ],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        },
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "f945a4da9667548a"
+        }
+      ],
+      "class": "unreviewed_jupiter_discriminator",
+      "reason": "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        }
+      ]
+    },
+    {
+      "signature": "2tKPqeoPyXdZgr9HW5B4Zgt4UzqjtC39ZoLqkbXxXgaQ273krLPZHXuLn998YHXdHJ16HtXexkz3Z8fkCrvdUBZA",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 5000,
+      "wallet_in_keys": false,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "wallet_absent_from_account_keys",
+      "reason": "Investigated wallet is absent from transaction account keys"
+    },
+    {
+      "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 323330,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "bb64facc31c4af14"
+        }
+      ],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell"
+        }
+      ],
+      "class": "unreviewed_jupiter_discriminator",
+      "reason": "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell"
+        }
+      ]
+    },
+    {
+      "signature": "3DtzbxA9X4K3JAexWxUHfRWEVG5fyAaoE9jEvVMHvn7fTiu9hj18WUtxQkFxjxDezghhwruFahigGJTTAgUN831y",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4jE6bvE8MqV7L9CsSxp94ZwR1pMZ7Aj5K4STJh1i2dKhSjZYMzskqZibFiprjY82hPzufQjNzRQLidjLAsufMbnK",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "fntdTnQFF56H1Kt3dDxXUwa6FFH4KhBbJHfEG35uMVDxxyauGwwHaFzppy5L3gjX1gzK39i1XziMmEYY6u1yXfx",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "EJEeQT8RbbvMrKQbphKBi2rhHnHNpKouAyWD5g3xmCvaPvTYVGy9ydrpjfrWnmXh1KCxLBwPGztsup4oDwRqXTd",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "4FrJwiaeGLyhXsiqztyCtkZDFcEKAXAsY3JM52n1i3Ri9LPaPQVfMfHnbkFMTueVub2gZLhSHXAp19iJHpWQD2pB",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 5000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "no_reviewed_outer_spot_swap",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading"
+    },
+    {
+      "signature": "59K92otieTG53v2uDYJiEhPP5bYXpKtvZALmi4K3uDM86PtNG7U8BuhYEdHpvfydmPnZpKebbve3qkzrZLh2kQ6d",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 14903,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "bb64facc31c4af14"
+        }
+      ],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        },
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "f945a4da9667548a"
+        }
+      ],
+      "class": "unreviewed_jupiter_discriminator",
+      "reason": "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy_exact_quote_in"
+        }
+      ]
+    },
+    {
+      "signature": "6v6c8GvY7tiFFbW3LPu8QAFEeYNQVPSwSL4Ty44G5C3oeYjqo7qYn1AjjDpxiegPKra1Tat3zxaK1PAeaLcxfdW",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 28250,
+      "wallet_in_keys": false,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "wallet_absent_from_account_keys",
+      "reason": "Investigated wallet is absent from transaction account keys"
+    },
+    {
+      "signature": "3U6bi4nBjfB4azUfT7zt8EsJ6tZrEW69atgC98A2bmXTSufn99k3Y8NFj4K354CH4dZC2Q4tCPRxjoWP3sskRLhW",
+      "version": 1,
+      "failed": false,
+      "fee_lamports": 5000,
+      "wallet_in_keys": false,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "unsupported_transaction_version",
+      "reason": "Unsupported transaction version"
+    },
+    {
+      "signature": "Cbca8Uowk983QB1XTDAkcpTV7c6xifQkcJVjfSEBKiC383yPrwbY1drVccXYcM4pZNz1bWjxrJaxR6zP5PdyA16",
+      "version": "legacy",
+      "failed": false,
+      "fee_lamports": 27250,
+      "wallet_in_keys": false,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "wallet_absent_from_account_keys",
+      "reason": "Investigated wallet is absent from transaction account keys"
+    },
+    {
+      "signature": "4UAE8RXr1DsdA5Lf9nARhUCJRG51VXAjihLznU6XHh91j5s2uLkvcBdF7TtCb2wzJ2jL7wQNZdmxrA2svARbKnXr",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 93679,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "bb64facc31c4af14"
+        }
+      ],
+      "inner_venues": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell"
+        }
+      ],
+      "class": "unreviewed_jupiter_discriminator",
+      "reason": "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap",
+      "inner_pumpswap_swaps": [
+        {
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "sell"
+        }
+      ]
+    },
+    {
+      "signature": "4XzGoeBBxHoEnc1s48yGeJrXuXWuFizoG2t4sLq9gYWQG3y2QkE6wxDFKGEiwUMNmWdjEd5yQphzMx3NxD45qhKu",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "4AoMvaLexaj4wtGMbsPFpLT9VWiwG1tvxcCky5HQHdRPcaj3riX15zEDt8YM28HczCmeHGTwFbwR5GQ6Hw9dz2UT",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "5faAgBzfLsQAzT3q3M1k4dWaoR7353MzdZR5ron8oTc9WDY9CUMuPAfnsavy1rMU4zUqXqx9B1eT6k5CebPzkVmS",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3efPhDHCFGL8fRpCNfrZyd1ma3bx2VGzmetWpQm4mFDZj33NwVDkcKSFyjzXEUt5gQf45B5uhsrtZwc4xPm9EEhM",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2BuuqczGxS6WNyFCan1UTCp1itFEQH6qRP4jBgqKRNbpgeMneMBiSF1H7TykTcWUybbRTXywiJmS5bsGMpCmA6aC",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "5czjZuUpB4pwEPJYc2ov3B4ERUfZDJcDcZCr6ctLjvzo58Pim7jfoQkXU928zh8hqXxJbCYkBvTttrJG1tkFhkUc",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2Wx1gL2LjDtgchds5dPQWytj8mM7TUe23Y3ZznfwXnE78KeMscmRjRYj46N3XuNdr723xCSRb3TtJy6dom5GSqky",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2Qb2xmZoYSj5WBrSQTNEJh93cgK3tAdEGtrQSfLXKjJLujuFPb255Kh6HCmxcu3Khp9RWzKZx4DW4kHEpYnYDhFE",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2eiUKQ1UZBe7SB2ZV5bR9DQ5sMSKB6oGLcSRSUNU35foPyoZwHLd6ASYD3g6jjVgoKvVy7Fjf5brztMZVk8jMGTm",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2V5cScwVquchApwM3djRwUHCEmUqkBNo3oC71PhH8riSRvmEM8WLugQAVW2Vw4r4VWpprwBksVw4YWVxiHS9JFu1",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "5G8Ah7c8tkeLBgwgqr3EHbwNPLehv3txY8RvhyBa4iTJyTiUnXkiwAa3Vjd3rNVpi7JebMBicy8HcVTuQ5Z8b9S5",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "5VPkBJAjAY2vejeEqqa8sTKY6vrvBahDtfT13A1ihDUusY61VC4D51EvDzVX8mdwfuQq9PRHku7bMD2AojL1EMHr",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2JLZyPVnLk2vFKFbCbkTRySJRB1DJuSheGjtj2giWCtzNfR4Q9AyazKeHuBdq5fP6fML6cZTVUcYu68JaWGkKZ9R",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3mCqYHgojxiaowMk58tVXkfimuMCTd2HavX2ez6PNvWtfphDFguoV2MRuV74eRs2nEwWvQzm3rqFMbzGaG3oC75v",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "3KmmHxJPuWGePSWyBXVjEa1ynJFWbNfiuK4NCkYtxbJsgm5NWfraNN63erTzbp96UapePGDHrEiPf95xQsxJmj8s",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "455TR6kADpptQcqcL4ZFoAv4SBYqYqDtmc8iFifoSLFEoDxQdPJJUQesrvnb7uKqV3ehQbxsp6QZd8VL77ALGRv1",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "41q43j7v8pPXb5LWCVoceLVz3iSUTpgCESoU7vr6jHuhzHN4i89h1gzuWSQ8pp2Qu43QZMSpLPoVVUEoqBVBQLPp",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "yDRB37AK5QqVL7hDJQJ1GPQs4LF7GW2oWUt8Cq35wSVsE8zUQQ55nBCUbefoGZeekeE73g3rCFLq4suFhmQBvYN",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2uyrHZb7KQeAyAMZM34Q5cVWdyvWR8tY67ypS8BJiZ5p9dWzyEvrQAGRfEC8hZWGPBSzUaH9dgSQeL4CLL7SPfpF",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "5yrUiHA639FYhfmW1QoBmkHc7vwrg594md1TFYPkHrkH4xzLnHxZefgdb78rz728aucwUA73GXwsgjGRNWB4LUmb",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "22s6RcabBueQ7CPm8BXPCpS3yoXWeGNgKjKGAFdpKFSH41SEn6NcUY5KG1YiYL9MztW7HCGUGBwuMPtdiZ64vuW8",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2LBxSUDeUTsKHURRn7t2J29vk7d6Kfp9epjeNsnPJNZSCeTbEnSJvK7PryA6b9YnP75wiymp6ZH727gdH1wV3c6m",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "brUGWbhV3wJLqL57SVcbvEM24HH3RH58mNFeyAdTyMTcj67frPS4XCccz7GoyqJ6UH221QpbXyPitQC8q87eNES",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "3otvtcu4hkB68PPboYSnaFDbcCcwEZuUbzsHdu4UadduorMVdFYAmxVkEWV3ryNtzH3Zz5pGwxh3qcdcq4QCbxKQ",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2yqBgLYuchRWGyCCXWGcn32gLbVr7jqTxk2BLxvvUuXjEvBVUWXZFKcANcnERdeui4kwiXpxemnpVG4X1Nkt65iN",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2zLRLYdohXhz212b9A8LKt9sjtAPKDy1x9mEXexMYUyCaXWLGogzZBfMMRGWfBkN1WvFeENaCNovfcyEsPY9nSK",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2kK8WhWYBByfnxXYN93q98kGVDNSEXJUvf6aA91Dk8ZRJsW2iLoB2r7fecyFNnLT7PSPnMndW1YkcxdpvGvBmHJA",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2kRHf15xG8wUqtXQjLDNRiCgFqKHhZGR3PL7KnAkjwrQTSWb1WDKodotHCHetZiYytEqeqDUzVa234LdH4BBY87v",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "39bnFQXAnkWwxWvQKHduM1rw1g1dD3PhEfrc2jKe2Hp9p5dGQTwPPjmZZokhzHbQe9qcYRF1t4BoAHt2EkNq9ST8",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "2KNJX6w6UNA6iNvNWNsXjenyZQGq5PmQGCU7J48xzE2zf9RxH1cdnushTNzUEDJ9oVqRvCcpN9BeNfgWXz5D9u9e",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "5bZ2cW7f6onhDtEar6HHP6KhhyKgA86KYi7ZUvtDJi86hE898LvL9LTwH4LdVHkuSGedu5j8Rp65rh7JKwa4KQpE",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "39EaEAgNDuNcxXicJoq1sMmj5Rz7SULR9NaxYePEqvKYBvbLa17YnvdaFMW25CL1TWuHiVhmuA3NqX2eXnxXt4YP",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "5UzeU77g59AVMsiCYGVmUtCsMBLupjYgxMChM5yCaA4DzK9zfUbPzTCbEdzfKBfmbWwYxi2LA5vdJrDwKz1iYfmH",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    },
+    {
+      "signature": "54WiTJHgDYhScb4c5Dz4Z9FshNEiGVtibddn4UFgJ4X8Mobi6ACyxW8qHM4HvmCUNSh1VaUqnUq9qcZYubhDon6a",
+      "version": 0,
+      "failed": true,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [],
+      "inner_venues": [],
+      "class": "failed_on_chain",
+      "reason": "On-chain failure; fees stay visible and no trade is reconstructed",
+      "fee_payer": "HckQ93Xqjjo8mwt5pNPWvyCTZXQZ858rvzmm7ZRrZg9t"
+    },
+    {
+      "signature": "2jzBnCwEvyQkNuR2qFdso41sPMQH1HWhyBqXVADmVQUQEJGMf5wRh2XzhpCBRKczQauATmRvJtdsqdWL8FsBycVg",
+      "version": 0,
+      "failed": false,
+      "fee_lamports": 9000,
+      "wallet_in_keys": true,
+      "outer_venues": [
+        {
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "instruction": "distribute_fee_to_holders"
+        }
+      ],
+      "inner_venues": [],
+      "class": "pump_holder_fee_distribution",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap"
+    }
+  ]
+}
