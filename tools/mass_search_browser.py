@@ -84,6 +84,14 @@ def run(args):
             expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
             expect(page.get_by_text("A conclusion needs more evidence", exact=False)).to_be_visible()
 
+        def expect_subset_screening():
+            expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible()
+            expect(page.locator('[data-screening-corpus="reconstructed-subset"]').first).to_be_visible()
+            expect(page.get_by_text("UNRESOLVED reconstructed subset", exact=False)).to_be_visible()
+            expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+            expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
+            expect(page.get_by_role("button", name="Continue investigation", exact=True)).to_be_disabled()
+
         def capture(name, *, desktop_only=False):
             page.evaluate(
                 """message => {let b=document.getElementById('synthetic-browser-test-banner');if(!b){b=document.createElement('div');b.id='synthetic-browser-test-banner';b.style.cssText='position:sticky;top:0;z-index:9999;padding:12px;background:#571a21;color:#fff;text-align:center;font:700 14px sans-serif;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box';document.body.prepend(b)}b.textContent=message}""",
@@ -214,16 +222,11 @@ def run(args):
         assert screening["strict_qualification"]["financial_policy"] == "UNRESOLVED"
         assert screening["current_eligibility"]["can_start_observation"] is False
         expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible(timeout=15000)
-        expect(page.locator('[data-screening-corpus="reconstructed-subset"]').first).to_be_visible()
-        expect(page.get_by_text("UNRESOLVED reconstructed subset", exact=False)).to_be_visible()
-        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
-        expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
+        expect_subset_screening()
         capture("09-research-screen-subset")
         page.set_viewport_size({"width": 360, "height": 640})
         page.wait_for_timeout(350)
-        expect(page.locator('[data-screening-corpus="reconstructed-subset"]').first).to_be_visible()
-        expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible()
-        expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
+        expect_subset_screening()
         page.set_viewport_size({"width": 1440, "height": 1000})
         result["cases"].append({
             "case": "research-screen-subset",
@@ -231,6 +234,38 @@ def run(args):
             "report_id": report_id,
             "screening_id": screening["id"],
             "result": screening["result"],
+            "observation_started": False,
+        })
+
+        screening_id = screening["id"]
+        launcher.stop()
+        launcher.start()
+        page.goto(launcher.url)
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect(page.get_by_role("button", name="Reopen saved assessment", exact=True)).to_be_visible(timeout=15000)
+        capture("10-reopen-screening-button-after-restart", desktop_only=True)
+        with page.expect_response(lambda response: response.request.method == "GET" and response.url.rstrip("/").endswith("/api/screenings/" + screening_id)) as reopened:
+            page.get_by_role("button", name="Reopen saved assessment", exact=True).click()
+        assert reopened.value.status == 200, reopened.value.text()
+        detail = reopened.value.json()
+        assert detail["id"] == screening_id
+        assert detail["source"] == "mass-search"
+        assert detail["result"] == "insufficient_evidence"
+        assert detail["strict_qualification"]["qualified"] is False
+        assert detail["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        assert detail["current_eligibility"]["can_start_observation"] is False
+        expect_subset_screening()
+        capture("10-reopened-screening-after-restart")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect_subset_screening()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        result["cases"].append({
+            "case": "restart-reopen-screening",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening_id,
+            "result": detail["result"],
             "observation_started": False,
         })
 

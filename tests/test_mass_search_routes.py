@@ -179,6 +179,55 @@ def test_display_reopen_after_process_restart_keeps_independent_worksheet(tmp_pa
         assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
 
 
+def test_screening_reopen_after_process_restart_stays_unresolved_subset(tmp_path):
+    data_dir = tmp_path / "data"
+    first = create_app(data_dir, LAUNCH_TOKEN)
+    with TestClient(first, base_url=BASE_URL) as client:
+        boot = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        client.headers["x-csrf-token"] = boot.json()["csrf"]
+        body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
+        report_id = body["reconstruction"]["report"]["id"]
+        screened = client.post("/api/screenings", json={"report_id": report_id})
+        assert screened.status_code == 200, screened.text
+        screening_id = screened.json()["id"]
+        assert screened.json()["result"] == "insufficient_evidence"
+        assert screened.json()["source"] == "mass-search"
+    second = create_app(data_dir, LAUNCH_TOKEN)
+    with TestClient(second, base_url=BASE_URL) as client:
+        boot = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        client.headers["x-csrf-token"] = boot.json()["csrf"]
+        listed = next(row for row in client.get("/api/state?report_view=summary").json()["screenings"] if row["id"] == screening_id)
+        assert listed["source"] == "mass-search"
+        assert listed["result"] == "insufficient_evidence"
+        assert listed["label"] == "Insufficient evidence"
+        assert listed["current_result"] == "insufficient_evidence"
+        assert listed["current_eligibility"]["can_start_observation"] is False
+        assert "reconstructed-subset" in listed["current_eligibility"]["reason"]
+        assert "MATCH" in listed["current_eligibility"]["reason"]
+        assert listed["strict_qualification"]["qualified"] is False
+        assert listed["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        opened = client.get(f"/api/screenings/{screening_id}")
+        assert opened.status_code == 200
+        assessment = opened.json()
+        assert assessment["id"] == screening_id
+        assert assessment["source"] == "mass-search"
+        assert assessment["result"] == "insufficient_evidence"
+        assert assessment["current_eligibility"]["can_start_observation"] is False
+        assert "reconstructed-subset" in assessment["current_eligibility"]["reason"]
+        live = next(row for row in assessment["reasons"] if isinstance(row, dict) and row.get("key") == "live_source")
+        assert live["state"] == "UNKNOWN"
+        exported = client.get(f"/api/screenings/{screening_id}/export")
+        assert exported.status_code == 200
+        assert exported.json() == assessment
+        observed = client.post("/api/observations", json={"screening_id": screening_id})
+        assert observed.status_code == 409
+        report = next(row for row in client.get("/api/state?report_view=summary").json()["reports"] if row["id"] == report_id)
+        assert report["source"] == "mass-search"
+        assert report["policy"] == "UNRESOLVED"
+        assert report["worksheet"]["total_profit_sol"] == "0.575"
+        assert second.state.store.usage("helius", "setup-pilot", 200)["used"] == 0
+
+
 def test_slice_report_can_be_screened_without_match_or_observation(session):
     client, app, _ = session
     body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
