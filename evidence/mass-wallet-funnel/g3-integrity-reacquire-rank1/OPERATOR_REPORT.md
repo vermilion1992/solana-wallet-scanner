@@ -3,6 +3,11 @@
 **STOP_NO_SEGMENT.** Original rank-1 page 0/1 transaction signatures are **not**
 in surviving PR / evidence metadata. Zero provider calls from this prep.
 
+Application commit: `2b8dd944ddfe970d3b5070f38b008aa7cd6179ed`
+(descendant of `fe6a398a40c59d1e1afcb3788c3ccba00d936779`).
+Offline tests: **178 passed** (`test_mass_search_g3_reacquire.py` + G3 + G1 + validation gates).
+Receipt: `g3-integrity-reacquire-rank1/OFFLINE_PREP_RECEIPT.json`.
+
 `PRODUCT_READY` stays false. Repo grant template stays `enabled: false`.
 Do not merge PR #4. Do not reuse leftover `live-g3-ranked100-history-2026-10-06-mitch`.
 

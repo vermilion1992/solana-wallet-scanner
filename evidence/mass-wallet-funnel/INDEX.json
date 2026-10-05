@@ -51,6 +51,7 @@
   "g1_blocker": null,
   "g1_run_id": "1bffe2ac21854424aa3fe3b8bf6a22ae",
   "usable_genuine_replay": false,
+  "g3_reacquire_application_commit": "2b8dd944ddfe970d3b5070f38b008aa7cd6179ed",
   "tested_application_commit": "462cfa4843f3e288554380046aec09533c306fbd",
   "proof_brief_commit": "5d0ff5d3820615f5c324b406facc76270dd3e277",
   "prior_tested_application_commit": "a1082c65ef5870d75c034f77d939f6d9d8313726",

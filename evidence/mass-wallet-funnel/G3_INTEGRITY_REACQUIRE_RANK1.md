@@ -10,6 +10,9 @@ at `2026-10-06 02:07` Australia/Adelaide (`2026-10-05T15:37:00Z`).
 Leftover `live-g3-ranked100-history-2026-10-06-mitch` (15/150) must not be reused.
 `PRODUCT_READY` stays false. Not full G2. Not MATCH.
 
+Application commit: `2b8dd944ddfe970d3b5070f38b008aa7cd6179ed`.
+Offline tests: 178 passed. Receipt: `g3-integrity-reacquire-rank1/OFFLINE_PREP_RECEIPT.json`.
+
 ## Segment status: STOP_NO_SEGMENT
 
 Surviving PR metadata froze query encoding, historical windows, and page-level
