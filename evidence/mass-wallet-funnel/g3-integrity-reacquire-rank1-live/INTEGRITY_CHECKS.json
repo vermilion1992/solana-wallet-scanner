@@ -1,0 +1,74 @@
+{
+  "kind": "g3-integrity-reacquire-rank1-integrity-checks-v1",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "generated_at": "2026-10-05T16:39:03Z",
+  "tip_sha": "79e8e81b348a4a80f858d79f87f6587e1e8a06bf",
+  "checks": [
+    {
+      "name": "exact_tip",
+      "pass": true,
+      "detail": "HEAD=79e8e81b348a4a80f858d79f87f6587e1e8a06bf"
+    },
+    {
+      "name": "parent_recovery_ancestor",
+      "pass": true,
+      "detail": "fe6a398a40c59d1e1afcb3788c3ccba00d936779 is ancestor of tip"
+    },
+    {
+      "name": "helius_key_present",
+      "pass": true,
+      "detail": "HELIUS_KEY_SET=True (value not printed)"
+    },
+    {
+      "name": "repo_template_enabled_false",
+      "pass": true,
+      "detail": "config/live_authorization.g3-integrity-reacquire-rank1-draft.json remains enabled:false"
+    },
+    {
+      "name": "armed_grant_outside_git",
+      "pass": true,
+      "detail": "/workspace/g3-integrity-reacquire/live_authorization.g3-integrity-reacquire-rank1-armed.json not committed"
+    },
+    {
+      "name": "leftover_g3_not_reused",
+      "pass": true,
+      "detail": "authorization_id is live-g3-integrity-reacquire-rank1-2026-10-06-mitch"
+    },
+    {
+      "name": "page0_dispatch",
+      "pass": true,
+      "detail": "exactly 1 getTransactionsForAddress; documented 10 credits"
+    },
+    {
+      "name": "signature_match_page0",
+      "pass": false,
+      "detail": "SIGNATURE_MISMATCH; runner STOP; page1 not fired"
+    },
+    {
+      "name": "balance_integrity_after_sanitize",
+      "pass": null,
+      "detail": "NOT_EVALUATED_AFTER_MISMATCH"
+    },
+    {
+      "name": "reconstruction_episodes",
+      "pass": null,
+      "detail": "NOT_EVALUATED_AFTER_MISMATCH"
+    },
+    {
+      "name": "page1_not_manually_enlarged",
+      "pass": true,
+      "detail": "no second manual call; runner stopped"
+    },
+    {
+      "name": "PRODUCT_READY",
+      "pass": true,
+      "detail": "remains false"
+    },
+    {
+      "name": "no_merge",
+      "pass": true,
+      "detail": "no merge performed"
+    }
+  ],
+  "PRODUCT_READY": false
+}

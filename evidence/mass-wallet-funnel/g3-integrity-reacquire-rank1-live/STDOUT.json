@@ -1,0 +1,18 @@
+{
+  "outcome_label": "G3_INTEGRITY_REACQUIRE_RANK1",
+  "status": "BLOCKED",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "blocker": "SIGNATURE_MISMATCH",
+  "stop_reason": "SIGNATURE_MISMATCH",
+  "detail": "Returned signatures do not match the frozen original segment",
+  "signature_manifest_status": "EXTRACT_OK",
+  "original_segments_identified": true,
+  "page0_signature_count": 100,
+  "page1_signature_count": 100,
+  "external_requests": 1,
+  "helius_requests_used": 1,
+  "arming_blockers": [],
+  "application_commit": "79e8e81b348a4a80f858d79f87f6587e1e8a06bf",
+  "PRODUCT_READY": false,
+  "note": null
+}
