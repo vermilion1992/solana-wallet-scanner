@@ -1,6 +1,6 @@
 {
   "version": "wallet-screening-v1",
-  "report_id": "3880bdb54f854062abbe5f2a28c14f45",
+  "report_id": "9bf7c14c6b2f48e69bb523f4f583ba47",
   "address": "11111111111111111111111111111113",
   "source": "mass-search",
   "result": "insufficient_evidence",
@@ -57,13 +57,13 @@
     "reason": "Native signer and current system account evidence must be checked."
   },
   "strict_qualification": {
-    "report_id": "3880bdb54f854062abbe5f2a28c14f45",
+    "report_id": "9bf7c14c6b2f48e69bb523f4f583ba47",
     "preset_version": null,
     "preset_snapshot": {},
     "methodology": null,
     "window": {
-      "start": "2026-09-05T09:41:51.860452Z",
-      "end": "2026-10-05T09:41:51.860452Z"
+      "start": "2026-09-05T09:55:52.423853Z",
+      "end": "2026-10-05T09:55:52.423853Z"
     },
     "financial_policy": "UNRESOLVED",
     "evidence_status": "partial",
@@ -477,8 +477,8 @@
     },
     "scope": "Current supported research needs an immutable rebuild",
     "window": {
-      "start": "2026-09-05T09:41:51.860452Z",
-      "end": "2026-10-05T09:41:51.860452Z"
+      "start": "2026-09-05T09:55:52.423853Z",
+      "end": "2026-10-05T09:55:52.423853Z"
     },
     "conditional": true,
     "wallet_profit_verified": false,
@@ -568,8 +568,8 @@
     "pages": null,
     "credits": null,
     "requested_range": {
-      "start": "2026-09-05T09:41:51.860452Z",
-      "end": "2026-10-05T09:41:51.860452Z"
+      "start": "2026-09-05T09:55:52.423853Z",
+      "end": "2026-10-05T09:55:52.423853Z"
     },
     "fetched_range": null,
     "terminal_evidence": [],
@@ -595,8 +595,8 @@
     "Risk observations describe evidence and token capabilities without alleging intent or common control.",
     "Strict financial qualification and full historical acceptance remain separate."
   ],
-  "id": "fcd35b1fec7d4088bb590459f80cfdc2",
-  "created_at": "2026-10-05T09:41:59.943090+00:00",
+  "id": "f1c37c4ed553438d8b44b3c75b0f9524",
+  "created_at": "2026-10-05T09:56:00.392923+00:00",
   "report_input_hash": null,
   "source_availability": {
     "state": "PASS",
