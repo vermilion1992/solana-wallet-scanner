@@ -12,8 +12,8 @@
     {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "a90607bfb8f2483aa05a7ab990bcb661",
-      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
+      "run_id": "468c6ba6ee09484abe99b384a8ec4df4",
+      "report_id": "27cd202d73bd486d96de3ed6d9f5edbb"
     },
     {
       "case": "export-run",
@@ -22,22 +22,30 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
+      "report_id": "27cd202d73bd486d96de3ed6d9f5edbb"
     },
     {
       "case": "restart-reopen-worksheet",
       "state": "PASS",
-      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
+      "report_id": "27cd202d73bd486d96de3ed6d9f5edbb"
     },
     {
       "case": "results-subset-pnl",
       "state": "PASS",
-      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
+      "report_id": "27cd202d73bd486d96de3ed6d9f5edbb"
     },
     {
       "case": "compare-subset-pnl",
       "state": "PASS",
-      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
+      "report_id": "27cd202d73bd486d96de3ed6d9f5edbb"
+    },
+    {
+      "case": "research-screen-subset",
+      "state": "PASS",
+      "report_id": "27cd202d73bd486d96de3ed6d9f5edbb",
+      "screening_id": "85cadef686584b558db2c907de21cac2",
+      "result": "insufficient_evidence",
+      "observation_started": false
     }
   ],
   "limitations": [
@@ -155,6 +163,22 @@
       "scrollWidth": 360,
       "overflow": false,
       "nodes": []
+    },
+    {
+      "name": "09-research-screen-subset",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "09-research-screen-subset",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
     }
   ],
   "javascript_errors": [],
@@ -187,22 +211,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661",
+      "path": "/api/mass-search/runs/468c6ba6ee09484abe99b384a8ec4df4",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/468c6ba6ee09484abe99b384a8ec4df4/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/468c6ba6ee09484abe99b384a8ec4df4/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/f1a6a5f9d7914090a2ddfe93512ffa7b?view=display",
+      "path": "/api/reports/27cd202d73bd486d96de3ed6d9f5edbb?view=display",
       "status": 200
     },
     {
@@ -222,22 +246,32 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661",
+      "path": "/api/mass-search/runs/468c6ba6ee09484abe99b384a8ec4df4",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/468c6ba6ee09484abe99b384a8ec4df4/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/468c6ba6ee09484abe99b384a8ec4df4/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/f1a6a5f9d7914090a2ddfe93512ffa7b?view=display",
+      "path": "/api/reports/27cd202d73bd486d96de3ed6d9f5edbb?view=display",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/screenings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
       "status": 200
     }
   ],

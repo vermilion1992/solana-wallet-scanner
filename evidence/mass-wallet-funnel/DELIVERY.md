@@ -1,13 +1,15 @@
 # Codex final handoff template
 
 ## Actual outcome
-A local Search funnel now runs offline from an authorised-or-fixture candidate source through a frozen universe, cheap triage, targeted reconstruction, subset P&L / median hold / material-exit worksheet, and a saved export. The Search UI path is usable end-to-end offline: empty states, fixture slice, 360px card shortlist, export, open report with the independent subset worksheet visible, reopen after launcher restart, and Results/Compare display of the reconstructed-subset P&L (0.575 SOL) as a table at 1440 and Search-style cards at 360 without promoting it to a wallet-wide MATCH. One synthetic source-to-report slice and a 1,000-unique fixture acquire work. The official local 10,000-row refilter (5 warmup / 20 measured, normal SQLite store) met the 500 ms p95 target. Live Birdeye acquisition, genuine multi-wallet analytics, and forward observation remain blocked: there is no enabled `live-research-authorization-v1`, and `config/live_authorization.example.json` is not a grant.
+A local Search funnel now runs offline from an authorised-or-fixture candidate source through a frozen universe, cheap triage, targeted reconstruction, subset P&L / median hold / material-exit worksheet, and a saved export. The Search UI path is usable end-to-end offline: empty states, fixture slice, 360px card shortlist, export, open report with the independent subset worksheet visible, reopen after launcher restart, Results/Compare display of the reconstructed-subset P&L (0.575 SOL), and Research screening of that subset report as insufficient evidence — not MATCH, not an observation start. One synthetic source-to-report slice and a 1,000-unique fixture acquire work. The official local 10,000-row refilter (5 warmup / 20 measured, normal SQLite store) met the 500 ms p95 target. Live Birdeye acquisition, genuine multi-wallet analytics, and forward observation remain blocked: there is no enabled `live-research-authorization-v1`, and `config/live_authorization.example.json` is not a grant.
 
 ## Source and changes
 - Repository: `vermilion1992/solana-wallet-scanner`
 - Branch: `cursor/mass-wallet-funnel-v1-1055` (reversible; named for the cloud agent policy; equivalent intent to `codex/mass-wallet-funnel-v1`)
 - Base: `codex/screening-forward-research` `fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69` (PR #1 left unmerged; PR #2 merged into this base at `ce3d0739` covering through `bbe9aa85`)
-- Tested application SHA: `ce857347efdaffa9ce2bf33c8574bd2cc7d637f4`
+- Tested application SHA: `58d7d3a66d3ba9ee6f415b18675c51927f531f74`
+- Research-screen SHA: `58d7d3a66d3ba9ee6f415b18675c51927f531f74`
+- Prior Research 360 SHA: `ce857347efdaffa9ce2bf33c8574bd2cc7d637f4`
 - Results/Compare 360 SHA: `ba66f9dbf6b45fc1c4cd9834aa6e963b8ce9abba`
 - Compare SHA: `d7f8ed27cae20553fc8ad13be3f04a473a1609e4`
 - Results list SHA: `3fb460c15149d122e0c7ac000c8bc8e2a3bb1ee1`
@@ -22,7 +24,8 @@ A local Search funnel now runs offline from an authorised-or-fixture candidate s
 Changed application files (purpose):
 - `scanner/mass_search/*` — additive funnel: schema, plan, adapters, metrics, triage, universe, service, routes, quote-only forward helpers
 - `scanner/app.py`, `scanner/storage.py`, `pyproject.toml` — install routes, ensure schema, package the module
-- `frontend/src/MassSearch.tsx`, `App.tsx`, `Research.tsx`, `types.ts`, `styles.css`, `format.ts`, `components.tsx`, `workspace.tsx`, `scripts/check-discovery.mjs` — Search/Results/Compare/Research 360px cards, subset labels, discovery assertions
+- `scanner/screening.py`, `scanner/screening_routes.py` — mass-search live_source UNKNOWN; observation eligibility false; POST `/api/observations` 409
+- `frontend/src/MassSearch.tsx`, `App.tsx`, `Research.tsx`, `types.ts`, `styles.css`, `format.ts`, `components.tsx`, `workspace.tsx`, `scripts/check-discovery.mjs` — Search/Results/Compare/Research 360px cards, subset labels, discovery assertions; ScreeningDetail reconstructed-subset / not-MATCH copy
 - `scanner/report_view.py` — summary list extracts `worksheet` / `material_exit` / `corpus_kind` without inventing them
 - `tests/test_mass_search_*.py`, `tests/test_validation_gates.py`, `tools/validate.py` — focused/screening-forward selectors, hand-worked dust-tail worksheet, G4 receipt profiles
 - `tools/mass_search_browser.py` — offline launcher/Chromium check (1440 and 360)
@@ -32,7 +35,7 @@ Changed application files (purpose):
 ## Gate matrix
 | Gate | State | Evidence | Remaining dependency |
 |---|---|---|---|
-| G0 Baseline/safety/software | PASS (software) | Strict `strict-v0.3` unchanged; caps 20/5 retained; 10k local capacity separate; 206 mass-search/gates/report-view tests this batch; frontend `check:discovery` and `npm run build`; receipt development CONTRACT_VALID; synthetic Chromium Search/Results/Compare/Research UI PASS at 1440 and 360 with overflow false | None for offline software |
+| G0 Baseline/safety/software | PASS (software) | Strict `strict-v0.3` unchanged; caps 20/5 retained; 10k local capacity separate; this batch: 178 screening/mass-search/gates tests plus 18 screening-route tests; frontend `check:discovery` and `npm run build`; receipt development CONTRACT_VALID; synthetic Chromium Search/Results/Compare/Research UI PASS at 1440 and 360 with overflow false, including Research screen of a subset report | None for offline software |
 | G1 Genuine vertical slice | BLOCKED | Synthetic slice persists FIFO worksheet `total_profit_sol=0.575`, `t90=30s`, final hold `172800s` | Named live-research-authorization-v1 for Birdeye page + Helius targeted history |
 | G2 Genuine 1,000-candidate search | BLOCKED | Synthetic 1,000 unique acquire in 0.1508 s, 0 external requests; triage 200 promoted / 800 deferred | Birdeye `GET /trader/gainers-losers`, call ceiling 10, credit ceiling 250 CU, remaining quota confirmed, duration under 5 minutes if entitled |
 | G3 Three genuine reconciled analytics reports | BLOCKED | Independent worksheet matches package dust-tail fixture; one synthetic report only | Helius `getTransactionsForAddress`, call ceiling 20, credit ceiling 600, without resetting setup-pilot; three genuine ≥10-episode reports including a loss/unresolved control |
@@ -55,12 +58,13 @@ Synthetic vertical slice (1 address): reconstructed through `accounting.analyze`
 - Cold live seconds: not run.
 
 ## Validation and evidence
-- `.venv/bin/python -m pytest -q tests/test_mass_search_funnel.py tests/test_mass_search_routes.py tests/test_mass_search_receipt.py tests/test_validation_gates.py tests/test_report_view.py -k "not execute_main"` → 206 passed
+- `.venv/bin/python -m pytest -q tests/test_screening.py tests/test_mass_search_routes.py tests/test_validation_gates.py -k "not execute_main"` → 178 passed
+- `.venv/bin/python -m pytest -q tests/test_screening_routes.py` → 18 passed
 - `frontend` `npm run check:discovery` → exit 0
 - `frontend` `npm run build` → exit 0
 - Receipt checker on recorded G4 receipt: development → exit 0 CONTRACT_VALID; live-search → exit 2 INCOMPLETE (required)
 - `tools/validate.py` FOCUSED / FOCUSED_GROUPS['screening'] / SCREENING_FORWARD include the four mass-search modules as an exact partition
-- Browser: `.venv/bin/python tools/mass_search_browser.py --output /tmp/mass-search-browser --chromium /usr/local/bin/google-chrome` → PASS. Cases: empty-not-scanned, offline-slice-populated, export-run, open-subset-report, restart-reopen-worksheet, results-subset-pnl, compare-subset-pnl. All recorded overflow checks false at 1440 and 360, including Results/Compare; 0 JS errors; 0 external requests. Evidence `ui-offline-browser/`.
+- Browser: `.venv/bin/python tools/mass_search_browser.py --output /tmp/mass-search-browser --chromium /usr/local/bin/google-chrome` → PASS. Cases: empty-not-scanned, offline-slice-populated, export-run, open-subset-report, restart-reopen-worksheet, results-subset-pnl, compare-subset-pnl, research-screen-subset. All recorded overflow checks false at 1440 and 360; 0 JS errors; 0 external requests. Evidence `ui-offline-browser/`.
 - Independent reconciliation: dust-tail buy 100 @ 1.01 SOL, sales 50/45/5 worked by hand to 0.505/0.4545/0.0505 basis and 0.575 total; helper and fixture match those numbers. Later-buy scaling-in moves t90; unknown transfer revokes material-exit.
 - Live HTTP, source removal/restoration on genuine pages, and full screening-forward validate profile: not run in this batch
 - Failed/blocked/not-run: G1/G2/G3/G5 live paths BLOCKED; G6 NOT_RUN; live-search receipt profile exit 2; full `tools/validate.py --profile screening-forward` not executed end-to-end here
@@ -69,8 +73,9 @@ Synthetic vertical slice (1 address): reconstructed through `accounting.analyze`
 - Results list for Data source = Mass-search subset shows 0.575 SOL with a Reconstructed subset label and sorts from that worksheet value. Full-wallet profit remains unknown. Cards at 360px; table at 1440. Evidence `ui-offline-browser/06-results-subset-pnl-desktop.png`, `06-results-subset-pnl-mobile.png`.
 - Compare shows the same 0.575 SOL reconstructed-subset P&L, header RECONSTRUCTED SUBSET, policy UNRESOLVED, and the not-MATCH note. Cards at 360px; table at 1440. Evidence `ui-offline-browser/07-compare-subset-pnl-desktop.png`, `07-compare-subset-pnl-mobile.png`.
 - Research paper observation list and position tables use the same 1440-table / ≤480-card pattern. Seeded stopped quote-only runs; sell-quote-unavailable stays visible. Mass-search picker prefix is `subset ·`, with an explicit not-MATCH note. Evidence `ui-offline-browser/08-research-paper-tables-desktop.png`, `08-research-paper-tables-mobile.png`, `research-result.json`.
+- After a Search slice, Research → Screen and save assessment produces `insufficient_evidence` for `source=mass-search`. Report policy stays UNRESOLVED with worksheet 0.575 SOL. ScreeningDetail shows reconstructed subset / not a wallet-wide MATCH. Start quote-only observation is disabled; POST `/api/observations` is 409. Evidence `ui-offline-browser/09-research-screen-subset-desktop.png`, `09-research-screen-subset-mobile.png`, `result.json` case `research-screen-subset`.
 
 ## Next action
-Offline: after a Search slice, let Research screen the mass-search subset report without implying MATCH or starting live observation. Keep UNRESOLVED / reconstructed-subset labels. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
+Offline: after launcher restart, reopen the saved screening and confirm it still reads insufficient evidence / UNRESOLVED reconstructed subset / not MATCH, with Start quote-only observation still disabled. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
 
 Independent outcomes: MASS_SEARCH_SOFTWARE = implemented offline. REAL_SEARCH_BENCHMARK, REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED, RESEARCH_OUTCOME = not demonstrated. Legacy PRODUCT_READY remains false.
