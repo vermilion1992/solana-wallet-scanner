@@ -1,9 +1,11 @@
 {
   "kind": "mass-wallet-funnel-index-v1",
-  "tested_application_commit": "559b45c74182c29892521e18308b9154ea02ac0e",
+  "tested_application_commit": "baa9993d1b7206ce6ed3a55fd4a98dba5c7f5f71",
+  "prior_tested_application_commit": "559b45c74182c29892521e18308b9154ea02ac0e",
   "base_commit": "fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69",
   "delivery": "DELIVERY.md",
   "official_g4_receipt": "ee7c645a3a7b499bb150b1ac84b96ced/receipt.json",
+  "offline_search_browser": "ui-offline-browser/result.json",
   "outcomes": {
     "MASS_SEARCH_SOFTWARE": "implemented_offline",
     "REAL_SEARCH_BENCHMARK": "not_demonstrated",
