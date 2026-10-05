@@ -23,6 +23,7 @@ from .capability import (
     utc_now,
     validate_live_authorization,
 )
+from .evidence_integrity import sanitize_jsonrpc_body
 from .plan import load_default_plan
 from .service import MassSearchService
 from .universe import ingest_page, seal_universe
@@ -279,9 +280,16 @@ async def _helius_gta(store, grant, address, *, limit, pagination_token=None):
             data = result
         if not isinstance(data, list):
             data = []
-        raw_bytes = json.dumps(redact_secrets(body), sort_keys=True, separators=(",", ":")).encode()
+        cleaned = sanitize_jsonrpc_body(body)
+        cleaned_result = cleaned.get("result") or {}
+        cleaned_data = cleaned_result.get("data") if isinstance(cleaned_result, dict) else None
+        if cleaned_data is None and isinstance(cleaned_result, list):
+            cleaned_data = cleaned_result
+        if not isinstance(cleaned_data, list):
+            cleaned_data = data
+        raw_bytes = json.dumps(cleaned, sort_keys=True, separators=(",", ":")).encode()
         return {
-            "records": data,
+            "records": cleaned_data,
             "pagination_token": result.get("paginationToken") if isinstance(result, dict) else None,
             "evidence_sha256": hashlib.sha256(raw_bytes).hexdigest(),
             "units": HELIUS_UNITS_PER_GTA,

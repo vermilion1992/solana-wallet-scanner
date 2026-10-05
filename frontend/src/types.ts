@@ -295,6 +295,11 @@ export type Report = {
     sale_fifo_basis_sol?: string[];
     sale_net_profit_sol?: string[];
   } | null;
+  observations?: { kind?: string; detail?: string; reason?: string; signature?: string; count?: number }[];
+  g3_status?: string | null;
+  source_integrity?: { status?: string; damaged?: number; intact?: number } | null;
+  declared_mints?: string[];
+  wallet_completed_episodes?: number;
   material_exit?: {
     state?: string | null;
     first_sale_seconds?: number | null;

@@ -407,7 +407,8 @@ class MassSearchService:
         ]) if any(event.get("kind") in ("buy", "sell") for event in events) else None
         exit_diag = material_exit_v1([
             {"kind": event["kind"], "units": event["units"], "seconds_from_start": event.get("seconds_from_start", 0)}
-            for event in events if event.get("kind") in ("buy", "sell")
+            for event in events
+            if event.get("kind") in ("buy", "sell") and not event.get("timestamp_missing")
         ], transfers_unknown=any(event.get("origin") == "transfer" for event in events))
         holds = []
         for position in analysis.get("positions") or []:
@@ -685,6 +686,12 @@ class MassSearchService:
                 "worksheet": report.get("worksheet"),
                 "material_exit": report.get("material_exit"),
                 "notes": report.get("notes"),
+                "observations": report.get("observations") or [],
+                "g3_status": report.get("g3_status"),
+                "source_integrity": report.get("source_integrity"),
+                "declared_mints": report.get("declared_mints") or [],
+                "wallet_completed_episodes": report.get("wallet_completed_episodes"),
+                "events": report.get("events") or [],
             })
         payload = {"run": view, "decisions": decisions, "report_links": links, "reports": reports, "exported_at": self.clock()}
         digest = self.store.archive(payload)
@@ -771,13 +778,15 @@ def events_to_accounting(events, *, mint, start):
     start_dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
     rows = []
     for index, event in enumerate(events):
+        if event.get("timestamp_missing"):
+            continue
         if event.get("kind") == "transfer":
             when = start_dt + timedelta(seconds=int(event.get("seconds_from_start") or 0))
             rows.append({
                 "kind": "transfer",
                 "timestamp": when.isoformat().replace("+00:00", "Z"),
                 "order": index,
-                "mint": mint,
+                "mint": event.get("mint") or mint,
                 "quantity_raw": str(event["units"]),
                 "decimals": 0,
                 "classification": "meme",
@@ -794,7 +803,7 @@ def events_to_accounting(events, *, mint, start):
             "kind": event["kind"],
             "timestamp": when.isoformat().replace("+00:00", "Z"),
             "order": index,
-            "mint": mint,
+            "mint": event.get("mint") or mint,
             "quantity_raw": str(event.get("units") or "0"),
             "decimals": 0,
             "classification": "meme",

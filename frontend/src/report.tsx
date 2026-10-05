@@ -52,8 +52,8 @@ export function subsetHoldText(seconds?: number | null) {
   return `${seconds} seconds`;
 }
 
-export function subsetWorksheetVisible(report: Pick<Report, "worksheet" | "material_exit">) {
-  return Boolean(report.worksheet || report.material_exit);
+export function subsetWorksheetVisible(report: Pick<Report, "worksheet" | "material_exit" | "observations" | "g3_status">) {
+  return Boolean(report.worksheet || report.material_exit || report.observations?.length || report.g3_status);
 }
 
 export function SubsetWorksheetPanel({ report }: { report: Report }) {
@@ -61,15 +61,18 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
   const worksheet = report.worksheet;
   const exit = report.material_exit;
   const sales = worksheet?.sale_net_profit_sol || [];
+  const observations = report.observations || [];
   return (
     <section className="panel subset-worksheet" data-subset-worksheet="independent">
       <SectionHeading
         title="Reconstructed subset / independent worksheet"
-        subtitle="Supported closed trades only. Not a wallet-wide MATCH."
+        subtitle="Supported closed trades and unresolved observations. Not a wallet-wide MATCH. Below-G3 reports stay visible."
       />
       <p className="subset-worksheet-note">
         Independently reconciled subset from reconstructed buy/sell events.
         Standard report cards stay on full-wallet evidence and may remain unknown.
+        {report.g3_status ? ` G3 status: ${report.g3_status}.` : ""}
+        {report.source_integrity?.status ? ` Source integrity: ${report.source_integrity.status}.` : ""}
       </p>
       <div className="subset-worksheet-metrics">
         <div>
@@ -92,6 +95,18 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
             ? ` · FIFO basis ${worksheet.sale_fifo_basis_sol.map((value) => `${decimal(value, 4)} SOL`).join(" · ")}`
             : ""}
         </p>
+      )}
+      {!!observations.length && (
+        <ul className="subset-worksheet-observations" data-g3-observations="unresolved">
+          {observations.slice(0, 12).map((item, index) => (
+            <li key={`${item.kind || "obs"}-${index}`}>
+              {item.kind || "observation"}
+              {item.reason ? `: ${item.reason}` : ""}
+              {item.detail ? ` — ${item.detail}` : ""}
+              {item.signature ? ` (${item.signature.slice(0, 8)}…)` : ""}
+            </li>
+          ))}
+        </ul>
       )}
     </section>
   );

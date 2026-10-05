@@ -163,7 +163,27 @@ def combined_economics(*, closed_net, known_open):
 
 
 def fifo_sale_results(events):
-    """Independent worksheet for the package's buy/sell fee fixture. Not a second engine."""
+    """Independent worksheet for the package's buy/sell fee fixture. Not a second engine.
+
+    Distinct mints keep separate inventories. Mixing them would invent a cross-mint lot.
+    """
+    indexed = [event for event in events if event.get("kind") in ("buy", "sell")]
+    mints = {event.get("mint") for event in indexed if event.get("mint")}
+    if len(mints) > 1:
+        basis = []
+        profits = []
+        total = Decimal("0")
+        for mint in sorted(mints):
+            part = fifo_sale_results([event for event in events if event.get("mint") == mint])
+            basis.extend(part["sale_fifo_basis_sol"])
+            profits.extend(part["sale_net_profit_sol"])
+            total += decimal_value(part["total_profit_sol"])
+        return {
+            "sale_fifo_basis_sol": basis,
+            "sale_net_profit_sol": profits,
+            "total_profit_sol": format_decimal(total),
+            "declared_mints": sorted(mints),
+        }
     with localcontext() as ctx:
         ctx.prec = 192
         lots = []

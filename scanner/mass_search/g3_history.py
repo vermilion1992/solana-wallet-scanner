@@ -6,11 +6,11 @@ G1 and ranked-100 grants must not be reused. Setup-pilot must not be reset.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import os
+import uuid
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 from scanner.investigation import decode_supported_swaps
@@ -23,8 +23,17 @@ from .capability import (
     utc_now,
     validate_live_authorization,
 )
+from .evidence_integrity import (
+    CACHE_KEY_PREFIX_V1,
+    CACHE_KEY_PREFIX_V2,
+    PAGE_KIND_V1,
+    PAGE_KIND_V2,
+    SOURCE_RECORDS_DAMAGED,
+    classify_decoded_sample,
+    classify_records,
+    sanitize_transaction_records,
+)
 from .live_g1 import _count_method, _wrap_records, independent_fifo_worksheet
-from .plan import canonical_json, sha256_json
 from .service import MassSearchService
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -179,8 +188,9 @@ def assert_address_frozen(freeze, address):
         raise SourceError("UNAUTHORIZED", "Address is not on the frozen G3 candidate list")
 
 
-def page_cache_key(authorization_id, address, page_index):
-    return f"g3-history:{authorization_id}:{address}:page:{page_index}"
+def page_cache_key(authorization_id, address, page_index, *, version=2):
+    prefix = CACHE_KEY_PREFIX_V2 if version == 2 else CACHE_KEY_PREFIX_V1
+    return f"{prefix}{authorization_id}:{address}:page:{page_index}"
 
 
 def wallet_log_key(authorization_id, address):
@@ -190,13 +200,33 @@ def wallet_log_key(authorization_id, address):
 def load_cached_page(store, authorization_id, address, page_index):
     if store is None:
         return None
-    return store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index))
+    current = store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=2))
+    if current:
+        return current
+    legacy = store.get(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=1))
+    if not legacy:
+        return None
+    marked = deepcopy(legacy)
+    marked["integrity"] = {
+        "status": SOURCE_RECORDS_DAMAGED,
+        "reason": "legacy_substring_redaction_v1",
+        "records": len(legacy.get("records") or []),
+        "intact": 0,
+        "damaged": len(legacy.get("records") or []),
+        "integrity_failure": True,
+        "all_unsupported": False,
+    }
+    marked["legacy_cache"] = True
+    marked["kind"] = marked.get("kind") or PAGE_KIND_V1
+    return marked
 
 
 def persist_page(store, authorization_id, address, page_index, payload):
     if store is None:
         return payload
-    store.put(CACHE_KIND, page_cache_key(authorization_id, address, page_index), payload)
+    if payload.get("kind") == PAGE_KIND_V1 or payload.get("legacy_cache"):
+        return payload
+    store.put(CACHE_KIND, page_cache_key(authorization_id, address, page_index, version=2), payload)
     return payload
 
 
@@ -242,7 +272,16 @@ def used_helius_units(store, grant):
     return int(store.usage("helius", entry["cycle_start"], entry["max_units"])["used"])
 
 
-def further_page_allowed(first_page, episodes, *, recorded_reason):
+def further_page_allowed(first_page, episodes, *, recorded_reason, classification=None):
+    classification = classification or {}
+    if classification.get("integrity_failure") or classification.get("status") == SOURCE_RECORDS_DAMAGED:
+        return False, "corrupted_inputs_do_not_justify_another_page"
+    if classification.get("classification") in {
+        SOURCE_RECORDS_DAMAGED, "MALFORMED", "UNSUPPORTED", "TRANSFERS_WITHOUT_REVIEWED_SWAP", "INACTIVITY",
+    }:
+        return False, classification.get("reason") or "unsupported_semantics_do_not_justify_another_page"
+    if classification.get("justifies_further_page") is False:
+        return False, classification.get("reason") or "sample_does_not_justify_another_page"
     if not recorded_reason:
         return False, "further_page_requires_recorded_evidence_reason"
     if not first_page.get("pagination_token"):
@@ -252,6 +291,9 @@ def further_page_allowed(first_page, episodes, *, recorded_reason):
     allowed = {
         "insufficient_episodes_pagination_token_present",
         "page_truncated_below_g3_episode_bar",
+        "insufficient_sample",
+        "missing_acquisition_may_need_earlier_page",
+        "insufficient_episodes_on_intact_sample",
     }
     if recorded_reason not in allowed:
         return False, "further_page_reason_not_evidence_based"
@@ -275,19 +317,37 @@ def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, a
         if not mint:
             continue
         timestamp = row.get("timestamp")
+        order = row.get("order")
+        unresolved_order = isinstance(row.get("slot"), int) and order is None
         if isinstance(timestamp, (int, float)) and not isinstance(timestamp, bool):
             if acq_unix is not None and timestamp < acq_unix:
                 truncated_before_window += 1
                 continue
+            if end_unix is not None and timestamp >= end_unix:
+                continue
             seconds = int(timestamp - start_unix)
+            timestamp_missing = False
+            if acq_unix is not None and timestamp < start_unix:
+                role = "acquisition_support"
+            else:
+                role = "in_report"
+            window_qualified = role == "in_report"
         else:
-            seconds = 0
+            seconds = None
+            timestamp_missing = True
+            role = "timestamp_missing"
+            window_qualified = False
+            unresolved_order = True
         by_mint.setdefault(mint, []).append({
             "kind": row["kind"],
             "units": str(row.get("quantity_raw") or "0"),
             "consideration_sol": str(row.get("amount_sol") or "0"),
             "wallet_fee_sol": str(row.get("fee_sol") or "0"),
             "seconds_from_start": seconds,
+            "timestamp_missing": timestamp_missing,
+            "window_qualified": window_qualified,
+            "role": role,
+            "unresolved_order": unresolved_order,
             "signature": row.get("signature"),
             "mint": mint,
             "address": address,
@@ -296,24 +356,128 @@ def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, a
     return by_mint, truncated_before_window
 
 
+def _ordered_inventory_rows(rows):
+    dated = [row for row in rows if not row.get("timestamp_missing") and row.get("seconds_from_start") is not None]
+    return sorted(dated, key=lambda row: (row["seconds_from_start"], row.get("signature") or ""))
+
+
+def completed_position_episodes(rows):
+    """Count genuine flat-to-flat position episodes. Partial exits are not completed episodes."""
+    from decimal import Decimal
+
+    inventory = Decimal("0")
+    opened = False
+    complete = 0
+    sales = 0
+    for event in _ordered_inventory_rows(rows):
+        units = Decimal(str(event["units"]))
+        if event["kind"] == "buy":
+            inventory += units
+            opened = True
+        elif event["kind"] == "sell":
+            sales += 1
+            if inventory <= 0:
+                return {
+                    "completed_episodes": 0,
+                    "sale_count": sales,
+                    "open": False,
+                    "unsupported_sale_exceeds_inventory": True,
+                }
+            inventory -= units
+            if inventory < 0:
+                return {
+                    "completed_episodes": 0,
+                    "sale_count": sales,
+                    "open": True,
+                    "unsupported_sale_exceeds_inventory": True,
+                }
+            if opened and inventory == 0:
+                if event.get("role") == "in_report" or event.get("window_qualified"):
+                    complete += 1
+                opened = False
+    return {
+        "completed_episodes": complete,
+        "sale_count": sales,
+        "open": inventory > 0,
+        "unsupported_sale_exceeds_inventory": False,
+    }
+
+
 def completed_episodes(by_mint):
-    """Count supported FIFO sales per mint. Missing stays unknown; do not invent."""
+    """Completed episodes are flat-to-flat closes, not FIFO sale counts."""
     total = 0
+    sales = 0
     per_mint = {}
+    per_mint_detail = {}
     for mint, rows in by_mint.items():
-        kinds = {row["kind"] for row in rows}
+        usable = [row for row in rows if not row.get("timestamp_missing")]
+        kinds = {row["kind"] for row in usable}
         if "buy" not in kinds or "sell" not in kinds:
             per_mint[mint] = 0
+            per_mint_detail[mint] = {"completed_episodes": 0, "sale_count": 0, "open": False}
             continue
         try:
-            worksheet = independent_fifo_worksheet(rows)
+            independent_fifo_worksheet(usable)
         except ValueError:
             per_mint[mint] = 0
+            per_mint_detail[mint] = {
+                "completed_episodes": 0,
+                "sale_count": sum(1 for row in usable if row["kind"] == "sell"),
+                "open": True,
+                "unsupported_sale_exceeds_inventory": True,
+            }
             continue
-        count = len(worksheet.get("sale_net_profit_sol") or [])
-        per_mint[mint] = count
-        total += count
-    return {"wallet_completed_episodes": total, "per_mint": per_mint}
+        counted = completed_position_episodes(usable)
+        per_mint[mint] = counted["completed_episodes"]
+        per_mint_detail[mint] = counted
+        total += counted["completed_episodes"]
+        sales += counted["sale_count"]
+    return {
+        "wallet_completed_episodes": total,
+        "wallet_sale_count": sales,
+        "per_mint": per_mint,
+        "per_mint_detail": per_mint_detail,
+    }
+
+
+def declared_subset_events(by_mint):
+    """Wallet declared subset is every supported dated event, not the best mint alone."""
+    declared = []
+    for mint in sorted(by_mint):
+        declared.extend(_ordered_inventory_rows(by_mint[mint]))
+    return declared
+
+
+def declared_subset_worksheet(by_mint):
+    from decimal import Decimal
+
+    basis = []
+    profits = []
+    total = Decimal("0")
+    used = []
+    for mint in sorted(by_mint):
+        rows = _ordered_inventory_rows(by_mint[mint])
+        kinds = {row["kind"] for row in rows}
+        if "buy" not in kinds or "sell" not in kinds:
+            continue
+        try:
+            part = independent_fifo_worksheet(rows)
+        except ValueError:
+            continue
+        basis.extend(part["sale_fifo_basis_sol"])
+        profits.extend(part["sale_net_profit_sol"])
+        total += Decimal(str(part["total_profit_sol"]))
+        used.append(mint)
+    if not used:
+        return None
+    return {
+        "sale_fifo_basis_sol": basis,
+        "sale_net_profit_sol": profits,
+        "total_profit_sol": format(total, "f"),
+        "oracle": "independent-g1-fifo-v1",
+        "declared_mints": used,
+        "population": "declared_supported_subset",
+    }
 
 
 def best_mint(by_mint, episode_counts):
@@ -361,18 +525,19 @@ async def fetch_helius_page(store, grant, address, *, page_index, reason, transp
             raise SourceError("UNAUTHORIZED", "Live HTTP transport is not attached; collection remains blocked")
         result = await transport(address, options=options, page_index=page_index)
         store.settle(reservation, charge=True)
-        records = result.get("records") or []
-        raw_bytes = json.dumps(redact_secrets({"records": records, "options": options}),
-                               sort_keys=True, separators=(",", ":"), default=str).encode()
+        sanitized = sanitize_transaction_records(result.get("records") or [])
         page = {
-            "kind": "g3-history-page-v1",
+            "kind": PAGE_KIND_V2,
             "address": address,
             "page_index": page_index,
             "reason": reason,
             "query": {"method": HELIUS_METHOD, "options": {k: v for k, v in options.items() if k != "paginationToken"}},
-            "records": redact_secrets(records),
+            "records": sanitized["records"],
             "pagination_token": result.get("pagination_token"),
-            "evidence_sha256": result.get("evidence_sha256") or hashlib.sha256(raw_bytes).hexdigest(),
+            "evidence_sha256": result.get("evidence_sha256") or sanitized["source_body_sha256"],
+            "source_body_sha256": sanitized["source_body_sha256"],
+            "normalized_sha256": sanitized["normalized_sha256"],
+            "integrity": sanitized["integrity"],
             "units": DOCUMENTED_HELIUS_UNITS,
             "external_requests": 1,
             "http_status": result.get("http_status", 200),
@@ -398,16 +563,19 @@ async def fetch_helius_page(store, grant, address, *, page_index, reason, transp
 
 
 def _fixture_page(address, records, *, page_index=0, pagination_token=None, reason="fixture_first_page"):
-    raw_bytes = json.dumps(redact_secrets({"records": records}), sort_keys=True, separators=(",", ":"), default=str).encode()
+    sanitized = sanitize_transaction_records(records)
     return {
-        "kind": "g3-history-page-v1",
+        "kind": PAGE_KIND_V2,
         "address": address,
         "page_index": page_index,
         "reason": reason,
         "query": {"method": HELIUS_METHOD, "options": dict(EXACT_HELIUS_OPTIONS)},
-        "records": records,
+        "records": sanitized["records"],
         "pagination_token": pagination_token,
-        "evidence_sha256": hashlib.sha256(raw_bytes).hexdigest(),
+        "evidence_sha256": sanitized["source_body_sha256"],
+        "source_body_sha256": sanitized["source_body_sha256"],
+        "normalized_sha256": sanitized["normalized_sha256"],
+        "integrity": sanitized["integrity"],
         "units": 0,
         "external_requests": 0,
         "http_status": 200,
@@ -441,9 +609,73 @@ async def acquire_or_cache_page(store, grant, address, *, page_index, reason, tr
 def _summarize_candidate(store, grant, freeze, service, candidate, page, *, decode=None):
     address = candidate["address"]
     windows = freeze["windows"]
+    integrity = page.get("integrity") or classify_records(page.get("records") or [])
+    observations = []
+    if integrity.get("integrity_failure") or integrity.get("status") == SOURCE_RECORDS_DAMAGED:
+        classification = {
+            "classification": SOURCE_RECORDS_DAMAGED,
+            "justifies_further_page": False,
+            "reason": "corrupted_inputs_do_not_justify_another_page",
+        }
+        observations.append({
+            "kind": SOURCE_RECORDS_DAMAGED,
+            "detail": "Required token balance arrays were destroyed or never stored intact. Integrity failure is not an unsupported trade.",
+        })
+        report = {
+            "id": f"g3-damaged-{address[:8]}-{page.get('page_index') or 0}",
+            "address": address,
+            "source": "mass-search",
+            "policy": "UNRESOLVED",
+            "g3_status": SOURCE_RECORDS_DAMAGED,
+            "source_integrity": integrity,
+            "observations": observations,
+            "worksheet": None,
+            "events": [],
+            "notes": ["SOURCE_RECORDS_DAMAGED. Do not invent profitability. Do not silently reacquire."],
+        }
+        store.put("reports", report["id"], report)
+        run_id = getattr(service, "_g3_run_id", None)
+        if run_id:
+            with store.lock, store.db:
+                store.db.execute(
+                    "INSERT INTO report_links VALUES (?,?,?,?,?,?)",
+                    (uuid.uuid4().hex, run_id, f"solana:{address}", report["id"],
+                     json.dumps({"source_integrity": integrity, "observations": observations}),
+                     utc_now()),
+                )
+        return {
+            "address": address,
+            "shortlist_rank": candidate["shortlist_rank"],
+            "role": candidate["role"],
+            "status": SOURCE_RECORDS_DAMAGED,
+            "g3_qualifying": False,
+            "wallet_completed_episodes": 0,
+            "wallet_sale_count": 0,
+            "per_mint_episodes": {},
+            "per_mint_drilldown": {},
+            "declared_mints": [],
+            "report_mint": None,
+            "report_id": report["id"],
+            "policy": "UNRESOLVED",
+            "not_wallet_wide_match": True,
+            "worksheet": None,
+            "observations": observations,
+            "classification": classification,
+            "integrity": integrity,
+            "truncated_before_acquisition_support": 0,
+            "coverage_note": "Damaged source records are not a venue-coverage measurement.",
+            "page_evidence_sha256": page.get("evidence_sha256"),
+            "source_body_sha256": page.get("source_body_sha256"),
+            "normalized_sha256": page.get("normalized_sha256"),
+            "from_cache": bool(page.get("from_cache")),
+            "external_requests": int(page.get("external_requests") or 0),
+            "label": candidate.get("label"),
+            "pagination_token_present": bool(page.get("pagination_token")),
+        }
     decode = decode or decode_supported_swaps
     records = _wrap_records(page.get("records") or [])
     decoded = decode(records, address)
+    classification = classify_decoded_sample(decoded, integrity)
     by_mint, truncated = decoder_events_by_mint(
         decoded, address=address,
         window_start=windows["report_start_inclusive"],
@@ -451,31 +683,52 @@ def _summarize_candidate(store, grant, freeze, service, candidate, page, *, deco
         acquisition_start=windows["acquisition_support_start_inclusive"],
     )
     episodes = completed_episodes(by_mint)
-    mint = best_mint(by_mint, episodes)
+    declared_events = declared_subset_events(by_mint)
+    worksheet = declared_subset_worksheet(by_mint)
+    mint = None if not by_mint else "declared-supported-subset"
     report = None
-    worksheet = None
     corpus = "SYNTHETIC" if page.get("units_are") == "fixture" else "GENUINE_LIVE"
-    if mint and by_mint[mint]:
-        subset_events = by_mint[mint]
-        try:
-            worksheet = independent_fifo_worksheet(subset_events)
-        except ValueError:
-            worksheet = None
+    unresolved = list((decoded.get("unresolved") or [])[:20])
+    observations.extend({
+        "kind": "unsupported" if row.get("reason") else "observation",
+        "signature": row.get("signature"),
+        "reason": row.get("reason"),
+        "path": row.get("path"),
+    } for row in unresolved)
+    missing = [row for rows in by_mint.values() for row in rows if row.get("timestamp_missing")]
+    if missing:
+        observations.append({
+            "kind": "timestamp_missing",
+            "count": len(missing),
+            "detail": "Missing timestamps stay missing and do not qualify hold-time or the report window.",
+        })
+    if declared_events:
         reconstructed = service.reconstruct_candidate(
-            service._g3_run_id, f"solana:{address}", subset_events,
+            service._g3_run_id, f"solana:{address}", declared_events,
             corpus_kind=corpus, mint=mint,
         )
         report = reconstructed["report"]
         report["source"] = "mass-search"
         report["policy"] = report.get("policy") or "UNRESOLVED"
+        report["worksheet"] = worksheet or report.get("worksheet")
+        report["g3_status"] = "DECLARED_SUBSET"
+        report["source_integrity"] = integrity
+        report["declared_mints"] = sorted(by_mint)
+        report["per_mint_drilldown"] = episodes.get("per_mint_detail") or {}
+        report["observations"] = observations
+        report["wallet_completed_episodes"] = episodes["wallet_completed_episodes"]
         store.put("reports", report["id"], report)
     qualifying = bool(worksheet) and episodes["wallet_completed_episodes"] >= 10
-    if worksheet and not qualifying:
+    if integrity.get("integrity_failure"):
+        status = SOURCE_RECORDS_DAMAGED
+    elif worksheet and not qualifying:
         status = "VISIBLE_BELOW_G3"
     elif qualifying:
         status = "QUALIFYING"
     else:
-        status = "NO_SUPPORTED_CLOSED_PAIR"
+        status = classification.get("classification") or "NO_SUPPORTED_CLOSED_PAIR"
+        if status == "SUPPORTED_ACTIVITY":
+            status = "NO_SUPPORTED_CLOSED_PAIR"
     return {
         "address": address,
         "shortlist_rank": candidate["shortlist_rank"],
@@ -483,15 +736,23 @@ def _summarize_candidate(store, grant, freeze, service, candidate, page, *, deco
         "status": status,
         "g3_qualifying": qualifying,
         "wallet_completed_episodes": episodes["wallet_completed_episodes"],
+        "wallet_sale_count": episodes.get("wallet_sale_count") or 0,
         "per_mint_episodes": episodes["per_mint"],
+        "per_mint_drilldown": episodes.get("per_mint_detail") or {},
+        "declared_mints": sorted(by_mint),
         "report_mint": mint,
         "report_id": None if report is None else report["id"],
         "policy": None if report is None else report.get("policy"),
         "not_wallet_wide_match": True,
         "worksheet": worksheet,
+        "observations": observations,
+        "classification": classification,
+        "integrity": integrity,
         "truncated_before_acquisition_support": truncated,
-        "coverage_note": "Honest truncation: events before the 90-day acquisition-support start were excluded; missing timestamps stay unknown.",
+        "coverage_note": "Honest truncation: events before the 90-day acquisition-support start were excluded; missing timestamps stay unknown. Exclusive report-end is enforced. Declared subset matches qualification.",
         "page_evidence_sha256": page.get("evidence_sha256"),
+        "source_body_sha256": page.get("source_body_sha256"),
+        "normalized_sha256": page.get("normalized_sha256"),
         "from_cache": bool(page.get("from_cache")),
         "external_requests": int(page.get("external_requests") or 0),
         "label": candidate.get("label"),
@@ -610,6 +871,7 @@ async def run_g3_history_async(
             result["external_requests"] += int(summary.get("external_requests") or 0)
             ok, why = further_page_allowed(
                 page, summary["wallet_completed_episodes"], recorded_reason=further_page_reason,
+                classification={**(summary.get("integrity") or {}), **(summary.get("classification") or {})},
             )
             if not summary["g3_qualifying"] and ok and (allow_live or transport is not None):
                 extra = await acquire_or_cache_page(

@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from copy import deepcopy
 from datetime import datetime, timezone
 
+from .evidence_integrity import redact_secrets
 from .plan import canonical_json, sha256_json
 
 CAPABILITY_VERSION = "mass-search-capability-v1"
@@ -256,16 +256,8 @@ def authorization_sha256(payload):
     return sha256_json(sanitized)
 
 
-def redact_secrets(value):
-    """Remove key-like fields from exported evidence. Never log raw secrets."""
-    blocked = re.compile(r"(api[_-]?key|authorization|secret|token|password|credential)", re.I)
-    if isinstance(value, dict):
-        return {key: "[REDACTED]" if blocked.search(str(key)) else redact_secrets(item) for key, item in value.items()}
-    if isinstance(value, list):
-        return [redact_secrets(item) for item in value]
-    if isinstance(value, str) and len(value) >= 8 and blocked.search(value):
-        return "[REDACTED]"
-    return value
+# redact_secrets is the schema-aware implementation in evidence_integrity.
+# Do not restore substring matching of "token" on transaction evidence.
 
 
 def access_blocker(source_id="birdeye-traders"):

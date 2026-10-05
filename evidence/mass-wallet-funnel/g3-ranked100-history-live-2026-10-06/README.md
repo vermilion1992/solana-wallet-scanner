@@ -28,3 +28,5 @@ Not full G2. `PRODUCT_READY` is false. Do not invent profitability.
 - Birdeye: 0; setup-pilot untouched; $0 extra
 - Stop: `wallet_investigation_cap`
 - Application SHA at run: `c3a3ffe5d910823f1113ea5b4f8912c3cf47dfce`
+
+Correction (not a re-pass): `CORRECTION.md`, `SOURCE_RECORDS_CACHE_INSPECT.json` (**SOURCE_RECORDS_DAMAGED**), `redaction_reproduction_result.json`. See `../DATA_INTEGRITY_RECOVERY.md`.

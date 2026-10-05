@@ -40,6 +40,16 @@ Page-0 `evidence_sha256`:
 
 Zero qualifying reports is an honest outcome. Do not invent profitability, copyability, MATCH, full G2, or PRODUCT_READY.
 
+## Correction (offline, after the live run) — not a re-pass
+
+The live zero-swap result is an observation of the **old cache/redaction pipeline**, not a clean venue-coverage measurement.
+
+Secure-box inspection: `g3-ranked100-history-live-2026-10-06/SOURCE_RECORDS_CACHE_INSPECT.json` — 10 pages / 1000 txs, `intact_preTokenBalances_arrays=0`, `damaged_preTokenBalances=1000`, no unmodified originals. Classification: **SOURCE_RECORDS_DAMAGED**.
+
+`g3_history.fetch_helius_page` stored `redact_secrets(records)`. Substring matching of `token` destroyed `preTokenBalances`, `postTokenBalances`, `uiTokenAmount`, `tokenAmount` and public `Tokenkeg…` ids. Standalone result: `DESTRUCTIVE_REDACTION_REPRODUCED` in `g3-ranked100-history-live-2026-10-06/redaction_reproduction_result.json`.
+
+This revision repairs the code path offline (schema-aware sanitize, v2 cache keys that do not overwrite v1, integrity ≠ unsupported, window/episode/pagination fixes). G3 remains **INCOMPLETE** and is **not re-passed**. Do not silently reacquire. Notes: `DATA_INTEGRITY_RECOVERY.md`, `g3-ranked100-history-live-2026-10-06/CORRECTION.md`.
+
 ## What was prepared (offline)
 
 - Disabled grant: `config/live_authorization.g3-ranked100-history-granted.json`

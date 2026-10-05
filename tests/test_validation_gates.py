@@ -322,6 +322,7 @@ def test_hosted_matrix_and_union_require_the_new_screening_paths():
         'tests/test_mass_search_g1.py',
         'tests/test_mass_search_ranked100.py',
         'tests/test_mass_search_g3.py',
+        'tests/test_mass_search_recovery.py',
     }
     assert set(VALIDATOR.FOCUSED_GROUPS['screening']) == {
         'tests/test_screening.py', 'tests/test_screening_routes.py',
