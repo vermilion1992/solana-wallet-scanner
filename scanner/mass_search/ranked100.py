@@ -46,7 +46,7 @@ CACHE_KIND = "mass_search_cache"
 CACHE_RECORD_KIND = "ranked100-discovery-cache-v1"
 SHORTLIST_RECORD_KIND = "ranked100-discovery-shortlist-v1"
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
-DOCUMENTED_BIRDEYE_UNITS = 25
+DOCUMENTED_BIRDEYE_UNITS = 30
 
 EXACT_QUERY = {
     "provider": "birdeye",
@@ -154,8 +154,8 @@ def arming_blockers(grant, *, credentials=None):
                 "code": "remaining_quota_unconfirmed",
                 "detail": "Operator must confirm remaining Birdeye quota/CU on the billing dashboard before arming",
             })
-        if birdeye.get("max_requests") != 1 or birdeye.get("max_units") != 25:
-            blockers.append({"code": "birdeye_ceiling_mismatch", "detail": "Birdeye must be 1 request / 25 CU"})
+        if birdeye.get("max_requests") != 1 or birdeye.get("max_units") != 30:
+            blockers.append({"code": "birdeye_ceiling_mismatch", "detail": "Birdeye must be 1 request / 30 CU"})
     helius = _provider(grant, "helius")
     if helius is not None and (helius.get("max_requests") != 0 or helius.get("max_units") != 0):
         blockers.append({"code": "helius_must_be_zero", "detail": "This pilot forbids Helius"})

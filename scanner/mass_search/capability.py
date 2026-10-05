@@ -89,9 +89,9 @@ def documented_birdeye_traders():
         "offset_plus_limit_maximum": 10000,
         "cost_model": {
             "billing_unit": "birdeye_compute_unit",
-            "documented_units_per_request": 25,
+            "documented_units_per_request": 30,
             "tested": False,
-            "note": "Documented compute units are not a measured dashboard receipt.",
+            "note": "Birdeye documents GET /trader/gainers-losers as 30 CU fixed (2026-10-05). The older repo figure of 25 was stale. Documented CU is not a dashboard receipt.",
         },
         "rate_limit": "unknown-until-probe",
         "known_floors": [

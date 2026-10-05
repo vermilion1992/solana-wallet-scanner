@@ -58,7 +58,7 @@ def test_committed_ranked100_grant_is_disabled_and_not_g1():
     assert grant["exact_query"]["params"] == EXACT_QUERY["params"]
     birdeye = next(entry for entry in grant["providers"] if entry["provider_id"] == "birdeye")
     helius = next(entry for entry in grant["providers"] if entry["provider_id"] == "helius")
-    assert birdeye["max_requests"] == 1 and birdeye["max_units"] == 25
+    assert birdeye["max_requests"] == 1 and birdeye["max_units"] == 30
     assert helius["max_requests"] == 0 and helius["max_units"] == 0
     assert helius["allowed_operations"] == []
     assert birdeye["existing_plan_confirmed"] is False
@@ -262,7 +262,7 @@ def test_one_request_boundary_and_failed_attempt_consumes_ledger(store):
     with pytest.raises(SourceError, match="timed out"):
         asyncio.run(_first())
     assert calls["n"] == 1
-    assert store.usage("birdeye", grant["providers"][0]["cycle_start"], 25)["used"] == 25
+    assert store.usage("birdeye", grant["providers"][0]["cycle_start"], 30)["used"] == 30
 
     async def _second():
         return await acquire_ranked100_page(store, grant, transport=boom, allow_live=False)

@@ -1,0 +1,1026 @@
+{
+  "evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+  "fetched_at": "2026-10-05T13:29:27Z",
+  "query": {
+    "provider": "birdeye",
+    "method": "GET",
+    "host": "public-api.birdeye.so",
+    "path": "/trader/gainers-losers",
+    "chain": "solana",
+    "params": {
+      "type": "30d",
+      "sort_by": "trader_score",
+      "sort_type": "desc",
+      "offset": 0,
+      "limit": 100
+    }
+  },
+  "raw_page": {
+    "data": {
+      "items": [
+        {
+          "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+          "pnl": 38628.68836267154,
+          "realized_pnl": 46042.61814189257,
+          "unrealized_pnl": -7413.9297792210255,
+          "volume": 465648.65926934034,
+          "trade_count": 161,
+          "score": 88.91080080813859,
+          "network": "solana"
+        },
+        {
+          "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "pnl": 50795.156253587134,
+          "realized_pnl": 50968.45079018403,
+          "unrealized_pnl": -173.29453659689565,
+          "volume": 1311499.1672004845,
+          "trade_count": 1022,
+          "score": 88.89059734315495,
+          "network": "solana"
+        },
+        {
+          "address": "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+          "pnl": 44754.250580256376,
+          "realized_pnl": 44764.687490925964,
+          "unrealized_pnl": -10.436910669585608,
+          "volume": 115813.54517671376,
+          "trade_count": 282,
+          "score": 87.32196813931452,
+          "network": "solana"
+        },
+        {
+          "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "pnl": 30269.017447544706,
+          "realized_pnl": 30269.017447544706,
+          "unrealized_pnl": 0,
+          "volume": 1878747.7643230588,
+          "trade_count": 1494,
+          "score": 87.14424916414869,
+          "network": "solana"
+        },
+        {
+          "address": "3g8KsJE1yhJvBo6kvqvxLnoSXQ9suqQnHMqGFs3LFckM",
+          "pnl": 136402.64167695353,
+          "realized_pnl": 143711.23124818518,
+          "unrealized_pnl": -7308.589571231658,
+          "volume": 503935.20075364434,
+          "trade_count": 150,
+          "score": 86.81750728576282,
+          "network": "solana"
+        },
+        {
+          "address": "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+          "pnl": 9980.522463847905,
+          "realized_pnl": 18459.09616764307,
+          "unrealized_pnl": -8478.573703795166,
+          "volume": 163087.5436970443,
+          "trade_count": 304,
+          "score": 86.7504603886932,
+          "network": "solana"
+        },
+        {
+          "address": "B4HUfUDVzVuVgd3xqEm4wfCmBofuHh4h5NqjV3EzKAzi",
+          "pnl": 28776.329278533012,
+          "realized_pnl": 31471.529096013423,
+          "unrealized_pnl": -2695.199817480411,
+          "volume": 1501713.9223056552,
+          "trade_count": 121,
+          "score": 86.6049239241208,
+          "network": "solana"
+        },
+        {
+          "address": "C74ibw78fok9zA9ywd9SjVz2bbjHc1AVysnjk2e9fL4X",
+          "pnl": 38082.958152420324,
+          "realized_pnl": 38082.958152420324,
+          "unrealized_pnl": 3.6642130006609535e-13,
+          "volume": 48577.48149198465,
+          "trade_count": 192,
+          "score": 86.06103949509217,
+          "network": "solana"
+        },
+        {
+          "address": "6yDW8qprBCZhFdCuS1G1vbsS3R3tWYHYuYB9iek5GFr3",
+          "pnl": 33316.11347711303,
+          "realized_pnl": 47383.679624924,
+          "unrealized_pnl": -14067.566147810967,
+          "volume": 570498.0158410387,
+          "trade_count": 280,
+          "score": 85.96091612880156,
+          "network": "solana"
+        },
+        {
+          "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+          "pnl": 28102.55161975498,
+          "realized_pnl": 27958.52582312082,
+          "unrealized_pnl": 144.0257966341584,
+          "volume": 2189982.1703960653,
+          "trade_count": 400,
+          "score": 85.73090057392145,
+          "network": "solana"
+        },
+        {
+          "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+          "pnl": 43440.51992951831,
+          "realized_pnl": 43440.51942878488,
+          "unrealized_pnl": 0.0005007334303244836,
+          "volume": 52979.98526182245,
+          "trade_count": 317,
+          "score": 85.67288265899055,
+          "network": "solana"
+        },
+        {
+          "address": "GMemhV1EBnyUiNT3GJKKULs74SZzEaCTidL7JZHKUbAZ",
+          "pnl": 46983.897878758784,
+          "realized_pnl": 46967.40768690407,
+          "unrealized_pnl": 16.490191854708442,
+          "volume": 94172.65204591758,
+          "trade_count": 107,
+          "score": 85.54848831596075,
+          "network": "solana"
+        },
+        {
+          "address": "FNvuekiK1cCXN6cPfhbMf2Ha2Nmv3ejZ3THA7i6zotoQ",
+          "pnl": 130089.153444282,
+          "realized_pnl": 130089.153444282,
+          "unrealized_pnl": 0,
+          "volume": 353227.7227755919,
+          "trade_count": 194,
+          "score": 85.36585256834314,
+          "network": "solana"
+        },
+        {
+          "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+          "pnl": 31394.93055682437,
+          "realized_pnl": 36451.86730001378,
+          "unrealized_pnl": -5056.936743189409,
+          "volume": 506047.69218792935,
+          "trade_count": 334,
+          "score": 85.29518513883178,
+          "network": "solana"
+        },
+        {
+          "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+          "pnl": 93781.95111186375,
+          "realized_pnl": 94025.06568430352,
+          "unrealized_pnl": -243.114572439774,
+          "volume": 505612.36154133186,
+          "trade_count": 656,
+          "score": 85.28088180079027,
+          "network": "solana"
+        },
+        {
+          "address": "HLmW94XWhZkusu1MRgReP3Zgyw5NPZoxBmye9JJZ2HNJ",
+          "pnl": 22456.21515812994,
+          "realized_pnl": 22487.907787812495,
+          "unrealized_pnl": -31.69262968255437,
+          "volume": 399348.47666159115,
+          "trade_count": 239,
+          "score": 85.1947935849529,
+          "network": "solana"
+        },
+        {
+          "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+          "pnl": -183180.6325234492,
+          "realized_pnl": 171191.98459895264,
+          "unrealized_pnl": -354372.61712240183,
+          "volume": 836578.3546175736,
+          "trade_count": 599,
+          "score": 85.16860059716437,
+          "network": "solana"
+        },
+        {
+          "address": "3nptjNHuusLfyduYekcXS3143FTmPsWhqFidGBZYbUpf",
+          "pnl": 62395.53150835054,
+          "realized_pnl": 64328.97839337166,
+          "unrealized_pnl": -1933.4468850211224,
+          "volume": 1018806.337239055,
+          "trade_count": 164,
+          "score": 85.08148432890526,
+          "network": "solana"
+        },
+        {
+          "address": "C4DKn6oqmJE8cZgPDU3X8N2S9MPFSjFSnUjv7WJCGxHh",
+          "pnl": 133727.2483248646,
+          "realized_pnl": 292767.2648874106,
+          "unrealized_pnl": -159040.01656254602,
+          "volume": 1836993.69794734,
+          "trade_count": 235,
+          "score": 84.9757737211922,
+          "network": "solana"
+        },
+        {
+          "address": "5DAubjPGgeDtEoULeHgfCaaoECUjLAg5YBup78QNaM45",
+          "pnl": 47984.15969127547,
+          "realized_pnl": 43281.36632440854,
+          "unrealized_pnl": 4702.793366866927,
+          "volume": 947347.7528874462,
+          "trade_count": 227,
+          "score": 84.94251846024567,
+          "network": "solana"
+        },
+        {
+          "address": "AgmCQu5Q3YUBHNpbTU6iFzmKboe81v15SPyZw2413Xu4",
+          "pnl": 47382.490947705075,
+          "realized_pnl": 47486.79417899807,
+          "unrealized_pnl": -104.30323129299508,
+          "volume": 781611.2752499796,
+          "trade_count": 123,
+          "score": 84.84775884572062,
+          "network": "solana"
+        },
+        {
+          "address": "EP87qz6X1NgyTbaZ3CKccEJJD5fJExHXzbkMZ3Lzu4ia",
+          "pnl": 69716.86272879713,
+          "realized_pnl": 69716.86272879713,
+          "unrealized_pnl": 0,
+          "volume": 75763.77987545296,
+          "trade_count": 130,
+          "score": 84.7042337880603,
+          "network": "solana"
+        },
+        {
+          "address": "HBH4dSdaMvAxQqshkGmu4XoSBW2trkH94CtBfJaoDwFW",
+          "pnl": 103850.810735858,
+          "realized_pnl": 103850.810735858,
+          "unrealized_pnl": 0,
+          "volume": 106177.00662589772,
+          "trade_count": 180,
+          "score": 84.63995816273624,
+          "network": "solana"
+        },
+        {
+          "address": "5LR2DWZQhAJzdACR9z2Hkovvf8cL497Hc4ZVTJjBHABa",
+          "pnl": 117111.83912503699,
+          "realized_pnl": 117111.83912503699,
+          "unrealized_pnl": 0,
+          "volume": 120263.26721417208,
+          "trade_count": 160,
+          "score": 84.6345050151079,
+          "network": "solana"
+        },
+        {
+          "address": "FcmBRmQbmpMcsZgHtXfrbi15LKFUSJASNkEpYkYfgZsb",
+          "pnl": 96854.63131252052,
+          "realized_pnl": 96854.63131252052,
+          "unrealized_pnl": 0,
+          "volume": 116702.12887973468,
+          "trade_count": 181,
+          "score": 84.62288355294918,
+          "network": "solana"
+        },
+        {
+          "address": "BfaeMdw7XfzAqqJ87a6jPV1bQvFeUUgcBCwBPURPQmtp",
+          "pnl": 94048.60243750713,
+          "realized_pnl": 94048.60243750713,
+          "unrealized_pnl": 0,
+          "volume": 100001.3719557111,
+          "trade_count": 192,
+          "score": 84.61506141495771,
+          "network": "solana"
+        },
+        {
+          "address": "AMpC1dD2WSwogBYTom6CpUzBpNxPWqyAH1NrhnxNmDsS",
+          "pnl": 57855.39768992162,
+          "realized_pnl": 57855.39768992162,
+          "unrealized_pnl": 0,
+          "volume": 62166.86953203695,
+          "trade_count": 160,
+          "score": 84.61501671702634,
+          "network": "solana"
+        },
+        {
+          "address": "3Yy21zwBwMEGrdtGTLW2zxuzX4pmMJRjN7pX9xXaTUQf",
+          "pnl": 29521.5238268358,
+          "realized_pnl": 37564.996982846744,
+          "unrealized_pnl": -8043.473156010945,
+          "volume": 486177.4780360648,
+          "trade_count": 303,
+          "score": 84.61148558044735,
+          "network": "solana"
+        },
+        {
+          "address": "CYoMnp11dhVoUF9rj4w9PVrQJK1DKyCD3pZHyy91iV5S",
+          "pnl": 96187.75690492829,
+          "realized_pnl": 96187.75690492829,
+          "unrealized_pnl": 0,
+          "volume": 103300.60621720532,
+          "trade_count": 170,
+          "score": 84.58703581198262,
+          "network": "solana"
+        },
+        {
+          "address": "HaKf1QLWSr8wUy1KwmoV1AeN4cL2LYUu83eL5XTfzZtj",
+          "pnl": 86285.81201915481,
+          "realized_pnl": 86285.81201915481,
+          "unrealized_pnl": 0,
+          "volume": 89260.44293615322,
+          "trade_count": 179,
+          "score": 84.53536500330765,
+          "network": "solana"
+        },
+        {
+          "address": "96d9GKPQ7h3FTX1oBBW983rVPHFJdYZLzNqmCgLigL3D",
+          "pnl": 22446.650929694424,
+          "realized_pnl": 23642.61997322545,
+          "unrealized_pnl": -1195.969043531025,
+          "volume": 144519.139904113,
+          "trade_count": 90,
+          "score": 84.53487332606247,
+          "network": "solana"
+        },
+        {
+          "address": "C1jsvnoujd7iy1XfZun3AFADXppgYxSHtnqRqBCKuqxF",
+          "pnl": 84279.46865008665,
+          "realized_pnl": 84279.46865008665,
+          "unrealized_pnl": 0,
+          "volume": 90311.89391155964,
+          "trade_count": 182,
+          "score": 84.52982245981656,
+          "network": "solana"
+        },
+        {
+          "address": "7XXz1Ub4N1FxjGGBrRfaycybZnLnWV1LbdQq2GHkMzt4",
+          "pnl": 102518.27815775276,
+          "realized_pnl": 102518.27815775276,
+          "unrealized_pnl": 0,
+          "volume": 105655.92067875712,
+          "trade_count": 138,
+          "score": 84.52481629150203,
+          "network": "solana"
+        },
+        {
+          "address": "GJsQuN9H5N1qqP3R2XNVRPnSahX56yScPFkuLDq79b5Y",
+          "pnl": 88044.24022687488,
+          "realized_pnl": 88044.24022687488,
+          "unrealized_pnl": 0,
+          "volume": 103851.93252741109,
+          "trade_count": 162,
+          "score": 84.52021240456993,
+          "network": "solana"
+        },
+        {
+          "address": "J2utYZFvr4xyQgzee7mWFAApRwNFrH6qz84ZPCU6Snfk",
+          "pnl": 79792.28281516363,
+          "realized_pnl": 79792.28281516363,
+          "unrealized_pnl": 0,
+          "volume": 95229.45247517125,
+          "trade_count": 185,
+          "score": 84.51516153832401,
+          "network": "solana"
+        },
+        {
+          "address": "4677U9uiM2fXcPX9GgaRgHD75mnXN6FtxVF2iymZ8Fae",
+          "pnl": 94020.97018770581,
+          "realized_pnl": 94020.97018770581,
+          "unrealized_pnl": 0,
+          "volume": 111526.23570420755,
+          "trade_count": 144,
+          "score": 84.51051295346052,
+          "network": "solana"
+        },
+        {
+          "address": "J6xXD2k2o1tUwAxAvfBePMjswDTWT4a6D4uPQrZr48MD",
+          "pnl": 77616.59128061013,
+          "realized_pnl": 77616.59128061013,
+          "unrealized_pnl": 0,
+          "volume": 84715.11659175315,
+          "trade_count": 198,
+          "score": 84.49902558509592,
+          "network": "solana"
+        },
+        {
+          "address": "F6N9Dnuns1B1NfwHKECrhY7cKfKG8zJC2M41bUB89JMR",
+          "pnl": 83954.4639673694,
+          "realized_pnl": 83954.4639673694,
+          "unrealized_pnl": 0,
+          "volume": 103862.01205478604,
+          "trade_count": 161,
+          "score": 84.48874506087859,
+          "network": "solana"
+        },
+        {
+          "address": "Bnbib7wwASnkkhLoMTo6v46tDJDyvUTVwaR5m3b8S4ig",
+          "pnl": 82982.05670364908,
+          "realized_pnl": 82982.05670364908,
+          "unrealized_pnl": 0,
+          "volume": 103189.52982229184,
+          "trade_count": 158,
+          "score": 84.47216212833669,
+          "network": "solana"
+        },
+        {
+          "address": "GL8wZsFXwm9mr6Yjtts91sS3P8zAUYEuDK2wvXLvMREP",
+          "pnl": 93338.80805339321,
+          "realized_pnl": 93338.80805339321,
+          "unrealized_pnl": 0,
+          "volume": 98267.4329584812,
+          "trade_count": 134,
+          "score": 84.4633566358549,
+          "network": "solana"
+        },
+        {
+          "address": "ExcDjyySRUK8ZPMk7ZziXgcakTG7x2ECoR2V1r27eUdE",
+          "pnl": 85441.49718437997,
+          "realized_pnl": 85441.49718437997,
+          "unrealized_pnl": 0,
+          "volume": 92747.04281855524,
+          "trade_count": 150,
+          "score": 84.45696483166759,
+          "network": "solana"
+        },
+        {
+          "address": "9GZfeE2zs5qdUPKDiaYWy9bVDywBQySUDVetRG2YTWfS",
+          "pnl": 79279.79274192401,
+          "realized_pnl": 79279.79274192401,
+          "unrealized_pnl": 0,
+          "volume": 83267.32120333597,
+          "trade_count": 163,
+          "score": 84.44918739160751,
+          "network": "solana"
+        },
+        {
+          "address": "7meYKsazWvACvyAeRPHi21WesfiedhWVJHc6RRMerdMV",
+          "pnl": 93340.43909688137,
+          "realized_pnl": 93340.43909688137,
+          "unrealized_pnl": 0,
+          "volume": 113714.7176860418,
+          "trade_count": 127,
+          "score": 84.4457009529599,
+          "network": "solana"
+        },
+        {
+          "address": "2EJsEMASVaoj96cEZ9pQXdd8ogr3PmZ2Zs3kSDcMDPED",
+          "pnl": 77379.07742988235,
+          "realized_pnl": 77379.07742988235,
+          "unrealized_pnl": 0,
+          "volume": 97392.57698940265,
+          "trade_count": 147,
+          "score": 84.39930450018772,
+          "network": "solana"
+        },
+        {
+          "address": "2apSyUwJKPHZ3iDcY4cb3P6HQqCwhsaGLDUVbJ6SjnJh",
+          "pnl": 83173.11089399294,
+          "realized_pnl": 83173.11089399294,
+          "unrealized_pnl": 0,
+          "volume": 87900.42308315374,
+          "trade_count": 129,
+          "score": 84.3727092310168,
+          "network": "solana"
+        },
+        {
+          "address": "B8wZgcJAMuZs1NR6vaKhcQsGdPp7cpaPoh4GTquMCTdW",
+          "pnl": 42371.00498220873,
+          "realized_pnl": 42661.29594914605,
+          "unrealized_pnl": -290.2909669373169,
+          "volume": 428122.8962077951,
+          "trade_count": 181,
+          "score": 84.37150238686954,
+          "network": "solana"
+        },
+        {
+          "address": "AUn7v7iApbJfBUr6JBERQdeet8tmxouNZcn1hhQaq2Ca",
+          "pnl": 37340.11825279547,
+          "realized_pnl": 40450.79175554162,
+          "unrealized_pnl": -3110.6735027461477,
+          "volume": 749553.4168568668,
+          "trade_count": 159,
+          "score": 84.35255046396453,
+          "network": "solana"
+        },
+        {
+          "address": "5tgFxTE8rBpYJc4opKsrve4iTdyhAnWFrNVRQRhNwSFP",
+          "pnl": 73390.43868608604,
+          "realized_pnl": 73390.43868608604,
+          "unrealized_pnl": 0,
+          "volume": 93096.20271380224,
+          "trade_count": 141,
+          "score": 84.34647154529688,
+          "network": "solana"
+        },
+        {
+          "address": "zb3bt9MdyeYLdMPPgZZs6FBzuZwEXy92N9xtWyQbVep",
+          "pnl": 68062.32986919623,
+          "realized_pnl": 68062.32986919623,
+          "unrealized_pnl": 0,
+          "volume": 82350.1775257274,
+          "trade_count": 162,
+          "score": 84.33596753142264,
+          "network": "solana"
+        },
+        {
+          "address": "DtQA6dqMsXWchvhaon96s8PsMuNxnyBwJLG7qs6LfWZv",
+          "pnl": 72383.74356125556,
+          "realized_pnl": 72383.74356125556,
+          "unrealized_pnl": 0,
+          "volume": 92752.32114249739,
+          "trade_count": 140,
+          "score": 84.33015680034329,
+          "network": "solana"
+        },
+        {
+          "address": "BGuR7NfZMJ8Ris7m2GJvtBqeUr9mzJgj72v2GeLJhZtB",
+          "pnl": 23203.18251178735,
+          "realized_pnl": 23203.366338194166,
+          "unrealized_pnl": -0.1838264068187391,
+          "volume": 24464.3195915783,
+          "trade_count": 65,
+          "score": 84.32148540165562,
+          "network": "solana"
+        },
+        {
+          "address": "AvABNaxrqNoX2H7aT7v9yezeDjNWAEu5XPL1dhtAzUc8",
+          "pnl": 65797.83790894547,
+          "realized_pnl": 65797.83790894547,
+          "unrealized_pnl": 0,
+          "volume": 69760.7635799889,
+          "trade_count": 167,
+          "score": 84.31151776295793,
+          "network": "solana"
+        },
+        {
+          "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+          "pnl": 184558.4201786157,
+          "realized_pnl": 186473.0427607518,
+          "unrealized_pnl": -1914.6225821361018,
+          "volume": 1899288.8870403483,
+          "trade_count": 338,
+          "score": 84.29931522769127,
+          "network": "solana"
+        },
+        {
+          "address": "BoUhz27x1s2ggkAz7MxbRWW5GPL1rjgfRnvkbpXpdmw7",
+          "pnl": 63640.65458080444,
+          "realized_pnl": 63640.65458080444,
+          "unrealized_pnl": 0,
+          "volume": 71527.71061038751,
+          "trade_count": 158,
+          "score": 84.26628345640164,
+          "network": "solana"
+        },
+        {
+          "address": "BgGcLYSfUPq9R9JSCKniMqNakSpzh3Eg7j9G38dCPZTS",
+          "pnl": -7437.9671341252615,
+          "realized_pnl": 32133.996166748293,
+          "unrealized_pnl": -39571.963300873555,
+          "volume": 470792.90934883617,
+          "trade_count": 213,
+          "score": 84.247376231428,
+          "network": "solana"
+        },
+        {
+          "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+          "pnl": 69867.33847340362,
+          "realized_pnl": 71095.26607074008,
+          "unrealized_pnl": -1227.9275973364638,
+          "volume": 456513.15090972703,
+          "trade_count": 395,
+          "score": 84.23566537340652,
+          "network": "solana"
+        },
+        {
+          "address": "rQnGUGo5DExwDu8TgRKwhFXwBCFabz2teaVWGM8hoff",
+          "pnl": 66450.44531150135,
+          "realized_pnl": 66450.44531150135,
+          "unrealized_pnl": 0,
+          "volume": 86156.94163971877,
+          "trade_count": 131,
+          "score": 84.231955445102,
+          "network": "solana"
+        },
+        {
+          "address": "F4e7MMWZdr9kHwKprUpcmoVuzgUwwJJt1n4ketEFQqHX",
+          "pnl": 32134.82410226443,
+          "realized_pnl": 32135.113226065416,
+          "unrealized_pnl": -0.28912380098797436,
+          "volume": 34939.93331683833,
+          "trade_count": 47,
+          "score": 84.228424308523,
+          "network": "solana"
+        },
+        {
+          "address": "E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK",
+          "pnl": 26009.764680369026,
+          "realized_pnl": 26019.534190447157,
+          "unrealized_pnl": -9.769510078131203,
+          "volume": 80245.82987754638,
+          "trade_count": 157,
+          "score": 84.21751801326634,
+          "network": "solana"
+        },
+        {
+          "address": "H4wX4pKTkMftK2YUb1EHLCGDkYt4m7WLixiJVu8fXfuA",
+          "pnl": 64133.80866062354,
+          "realized_pnl": 64133.80866062354,
+          "unrealized_pnl": 0,
+          "volume": 69268.69487125005,
+          "trade_count": 138,
+          "score": 84.21202016770664,
+          "network": "solana"
+        },
+        {
+          "address": "4Gbhd8qDwMPyJZEgtWTE94GvsdQniNtHnp4gyUUiE2TZ",
+          "pnl": 67523.74433247991,
+          "realized_pnl": 67523.74433247991,
+          "unrealized_pnl": 0,
+          "volume": 79691.61883013458,
+          "trade_count": 125,
+          "score": 84.20451091523485,
+          "network": "solana"
+        },
+        {
+          "address": "EXg87AL89LRUUJmG4zQqqsDSqGwVbVQNNxgFrZnaPg3X",
+          "pnl": 59877.62821638577,
+          "realized_pnl": 59877.62821638577,
+          "unrealized_pnl": 0,
+          "volume": 67493.13674877246,
+          "trade_count": 158,
+          "score": 84.20442151937209,
+          "network": "solana"
+        },
+        {
+          "address": "4SDP8AbV8gAQzP9dhdJZHd4KkyYZ4JUFGkayCkgrEBHY",
+          "pnl": 55285.89092343683,
+          "realized_pnl": 55285.89092343683,
+          "unrealized_pnl": 0,
+          "volume": 75100.73701785768,
+          "trade_count": 180,
+          "score": 84.19852139242995,
+          "network": "solana"
+        },
+        {
+          "address": "HoxYx4LFTRgtpmDkA6f9Csqtiz27bYZuaKbW1mu1EMyN",
+          "pnl": 61017.40713473069,
+          "realized_pnl": 61017.40713473069,
+          "unrealized_pnl": 0,
+          "volume": 72225.83160937496,
+          "trade_count": 141,
+          "score": 84.18394986680016,
+          "network": "solana"
+        },
+        {
+          "address": "GFz7g4sXCf8BLLm3pZ9dsWqCF4vM33jwqVRT62UxMNXf",
+          "pnl": 14513.375519983369,
+          "realized_pnl": 15033.311298520515,
+          "unrealized_pnl": -519.9357785371469,
+          "volume": 115513.32500462717,
+          "trade_count": 164,
+          "score": 84.16835028874864,
+          "network": "solana"
+        },
+        {
+          "address": "5D9Fd1W8FXLoVhFc4MRgjVMienwjcyy34JEjCfQZACuE",
+          "pnl": 54388.040173822825,
+          "realized_pnl": 54388.040173822825,
+          "unrealized_pnl": 0,
+          "volume": 66586.88113329807,
+          "trade_count": 182,
+          "score": 84.1653555273462,
+          "network": "solana"
+        },
+        {
+          "address": "E5RD6v5ttCtoxZqmou1yxekBrJJhjjikpmYPi7vsFa3v",
+          "pnl": 63677.85914420227,
+          "realized_pnl": 63677.85914420227,
+          "unrealized_pnl": 0,
+          "volume": 66334.67181436851,
+          "trade_count": 127,
+          "score": 84.15739929556061,
+          "network": "solana"
+        },
+        {
+          "address": "4NXky8gm84ZMS2bmFzjs9iijDsPi2YFDuHSdvnqTyjpC",
+          "pnl": 64282.38830590851,
+          "realized_pnl": 64282.38830590851,
+          "unrealized_pnl": 0,
+          "volume": 69012.07921490453,
+          "trade_count": 124,
+          "score": 84.1521249396578,
+          "network": "solana"
+        },
+        {
+          "address": "4oYw9BPYPw9PFtzsDATVF38xX7AndZjMstjbiCHR8Tfi",
+          "pnl": 64998.49607843846,
+          "realized_pnl": 64998.49607843846,
+          "unrealized_pnl": 0,
+          "volume": 67363.34153269701,
+          "trade_count": 123,
+          "score": 84.15105218930468,
+          "network": "solana"
+        },
+        {
+          "address": "51my5XWE27WFMH1SPgS4f4hAdpdXELYddU2RfYiGBARM",
+          "pnl": 63439.95753928168,
+          "realized_pnl": 63439.95753928168,
+          "unrealized_pnl": 0,
+          "volume": 66567.48828143935,
+          "trade_count": 126,
+          "score": 84.1468058858236,
+          "network": "solana"
+        },
+        {
+          "address": "8UHmWAtpZbjYLsk17tXvGsbRotuMpytxgQbqJtvyTjbF",
+          "pnl": 73355.76338889172,
+          "realized_pnl": 73355.76338889172,
+          "unrealized_pnl": 0,
+          "volume": 76372.38884289046,
+          "trade_count": 105,
+          "score": 84.12566376428099,
+          "network": "solana"
+        },
+        {
+          "address": "FyF4z1TAge7JHzvh5B3WBK7KRuscgXfQ2mZyNEEjSJus",
+          "pnl": 68666.51077907397,
+          "realized_pnl": 68666.51077907397,
+          "unrealized_pnl": 0,
+          "volume": 71575.15951376618,
+          "trade_count": 104,
+          "score": 84.06263968103556,
+          "network": "solana"
+        },
+        {
+          "address": "8a2iCJbr42NSevrznVE859G3fEre9bmaVDcpEVbvSpWs",
+          "pnl": 67772.94771861596,
+          "realized_pnl": 67772.94771861596,
+          "unrealized_pnl": 0,
+          "volume": 73590.24518839303,
+          "trade_count": 104,
+          "score": 84.05700774168172,
+          "network": "solana"
+        },
+        {
+          "address": "GY49UiLGfKgzt6GkrKqqu7rPyBQDNM5xvrGHUAwYJ6sm",
+          "pnl": 55348.70091414092,
+          "realized_pnl": 55348.70091414092,
+          "unrealized_pnl": 0,
+          "volume": 57391.71568220512,
+          "trade_count": 138,
+          "score": 84.05191217750443,
+          "network": "solana"
+        },
+        {
+          "address": "4h4qaaQuiv3x5X6UW2SeSiRh3jhBL16omX19GEtTt3G7",
+          "pnl": 61478.4969808899,
+          "realized_pnl": 61478.4969808899,
+          "unrealized_pnl": 0,
+          "volume": 69620.18259720645,
+          "trade_count": 113,
+          "score": 84.04896211403337,
+          "network": "solana"
+        },
+        {
+          "address": "7spcmCMVtKKg2wrn7Fp3moQWhhASvgaEzMyZNzM2Xewe",
+          "pnl": 71618.21084065585,
+          "realized_pnl": 71618.21084065585,
+          "unrealized_pnl": 0,
+          "volume": 75820.11495964439,
+          "trade_count": 99,
+          "score": 84.03868158981602,
+          "network": "solana"
+        },
+        {
+          "address": "5aKH8HNhRG1fZdF6Nh6BLrwikk46cR2u8dcBKmFVhVNu",
+          "pnl": 57067.21051503081,
+          "realized_pnl": 57067.21051503081,
+          "unrealized_pnl": 0,
+          "volume": 76679.19740353577,
+          "trade_count": 113,
+          "score": 83.99005024047486,
+          "network": "solana"
+        },
+        {
+          "address": "hJLYZjUmymjUcAeWKCxfEtTQgqS42phT5J3DWJh6x82",
+          "pnl": 73301.46498789931,
+          "realized_pnl": 73301.46498789931,
+          "unrealized_pnl": 0,
+          "volume": 78090.52949639769,
+          "trade_count": 91,
+          "score": 83.96931040031468,
+          "network": "solana"
+        },
+        {
+          "address": "2jHGqQ5CBwZ9bvpyaScEKFKikLkUQGRG94zjezS8h7mT",
+          "pnl": 54806.50900505971,
+          "realized_pnl": 54806.50900505971,
+          "unrealized_pnl": 0,
+          "volume": 58772.68356119146,
+          "trade_count": 119,
+          "score": 83.95594571883214,
+          "network": "solana"
+        },
+        {
+          "address": "5yiy3h1RbSCkF1YiTXeqRvhnx5veRgnEKZc4TA7shzMY",
+          "pnl": 40725.98351187323,
+          "realized_pnl": 40725.98351187323,
+          "unrealized_pnl": -5.059365963660811e-13,
+          "volume": 53662.94193341209,
+          "trade_count": 131,
+          "score": 83.93909459870197,
+          "network": "solana"
+        },
+        {
+          "address": "94Wf2ppK824Nt49ST5PzZAAiFPMdh2H6omydK4UEMBvD",
+          "pnl": 49757.226972355886,
+          "realized_pnl": 49757.226972355886,
+          "unrealized_pnl": 0,
+          "volume": 51676.706286228204,
+          "trade_count": 149,
+          "score": 83.93641272281918,
+          "network": "solana"
+        },
+        {
+          "address": "CndX3Cod99yG8n7HuRXSB8iDFh1rhK2RS4JAXztAMKVX",
+          "pnl": 48882.8119798982,
+          "realized_pnl": 48882.8119798982,
+          "unrealized_pnl": 0,
+          "volume": 52721.77060803153,
+          "trade_count": 150,
+          "score": 83.9222881765032,
+          "network": "solana"
+        },
+        {
+          "address": "ALwz3HSMSWsaysaxFV2E8KWU75ze8TRBTpocwmxELvEs",
+          "pnl": 60173.408527097374,
+          "realized_pnl": 60173.408527097374,
+          "unrealized_pnl": 0,
+          "volume": 64443.76040994381,
+          "trade_count": 99,
+          "score": 83.89198297902773,
+          "network": "solana"
+        },
+        {
+          "address": "J9mC9PSKN5SdzrFXQ1vL8LRF9cZk1EwEP6Yg3U4wz18C",
+          "pnl": 60866.24099662106,
+          "realized_pnl": 60866.24099662106,
+          "unrealized_pnl": 0,
+          "volume": 63001.41693782808,
+          "trade_count": 98,
+          "score": 83.88755788382115,
+          "network": "solana"
+        },
+        {
+          "address": "EPp7rZC8n9FHSXTPp8YfrLQorKAA37MJnkp3NWB9oAXX",
+          "pnl": 57071.970295538245,
+          "realized_pnl": 57071.970295538245,
+          "unrealized_pnl": 0,
+          "volume": 64208.8437963752,
+          "trade_count": 102,
+          "score": 83.88273050723213,
+          "network": "solana"
+        },
+        {
+          "address": "2ox4iGYCMi7F7Payjpw7BvaNXBo9ftHvKjy7ct2ZT4ho",
+          "pnl": 48723.75663471515,
+          "realized_pnl": 48723.75663471515,
+          "unrealized_pnl": 0,
+          "volume": 61717.35999694054,
+          "trade_count": 130,
+          "score": 83.8823282258497,
+          "network": "solana"
+        },
+        {
+          "address": "3zhf7akVTiqCx6thZX61EXu4ViL9C3wxBK9jLeYEY7o1",
+          "pnl": 63398.67747826648,
+          "realized_pnl": 63398.67747826648,
+          "unrealized_pnl": 0,
+          "volume": 67561.78231897921,
+          "trade_count": 92,
+          "score": 83.87347803543652,
+          "network": "solana"
+        },
+        {
+          "address": "4TVy2m92tPRPrgBHpsKnn1gqLW8znp91C1vpK5ScYX1q",
+          "pnl": 65714.4021758063,
+          "realized_pnl": 65714.4021758063,
+          "unrealized_pnl": 0,
+          "volume": 69897.92553728662,
+          "trade_count": 90,
+          "score": 83.8658346891706,
+          "network": "solana"
+        },
+        {
+          "address": "GnDVZMfXzWPGAcGvYnXqkWPyTcZpHdjR1bCB4qPbeiYo",
+          "pnl": 50480.268871028326,
+          "realized_pnl": 50488.301863346205,
+          "unrealized_pnl": -8.032992317880973,
+          "volume": 110342.2334256563,
+          "trade_count": 238,
+          "score": 83.8644937512292,
+          "network": "solana"
+        },
+        {
+          "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+          "pnl": 32317.651215747082,
+          "realized_pnl": 33848.519461199096,
+          "unrealized_pnl": -1530.8682454520138,
+          "volume": 2137879.421957688,
+          "trade_count": 422,
+          "score": 83.85689510289464,
+          "network": "solana"
+        },
+        {
+          "address": "7YCxdautjNyisxrvRjL3v9wCc9QeKihU72HwhbTYJ5VU",
+          "pnl": 63299.90545579643,
+          "realized_pnl": 63299.90545579643,
+          "unrealized_pnl": 0,
+          "volume": 65381.45787594205,
+          "trade_count": 90,
+          "score": 83.83177486545924,
+          "network": "solana"
+        },
+        {
+          "address": "G6tL9tQa1677TUwZwL1dL4wXRUXdoZFMJmhiDtWLwFzt",
+          "pnl": 54470.883628901065,
+          "realized_pnl": 54470.883628901065,
+          "unrealized_pnl": 0,
+          "volume": 57302.28955207798,
+          "trade_count": 103,
+          "score": 83.82109205985948,
+          "network": "solana"
+        },
+        {
+          "address": "GCGoRXVx6fSrR9CgKxRmF4qQQP75MnUST5varKCYpXJY",
+          "pnl": 49337.2369388399,
+          "realized_pnl": 49337.2369388399,
+          "unrealized_pnl": 0,
+          "volume": 88686.1841670496,
+          "trade_count": 109,
+          "score": 83.81528132878012,
+          "network": "solana"
+        },
+        {
+          "address": "7sfJDi2wihg6Xfkq8DVHQ7hxHEvMoMFCUE89UPmWEL2y",
+          "pnl": 56312.37739738751,
+          "realized_pnl": 56312.37739738751,
+          "unrealized_pnl": 0,
+          "volume": 59431.529581028866,
+          "trade_count": 98,
+          "score": 83.80880012873004,
+          "network": "solana"
+        },
+        {
+          "address": "5apm3cMveyvVaGykX6KG9i9Rn3PPnbj28XbSaE8MF4dM",
+          "pnl": 23178.86006825621,
+          "realized_pnl": 23181.381674225286,
+          "unrealized_pnl": -2.521605969076224,
+          "volume": 24007.90721444152,
+          "trade_count": 74,
+          "score": 83.8046879190431,
+          "network": "solana"
+        },
+        {
+          "address": "DG3xxir3ZiwtAjcVftJwzU6UD6xQ6hAM32ZwVKLdzCZt",
+          "pnl": 48816.76457159725,
+          "realized_pnl": 48816.76457159725,
+          "unrealized_pnl": 0,
+          "volume": 50357.90233228613,
+          "trade_count": 122,
+          "score": 83.79717866657131,
+          "network": "solana"
+        },
+        {
+          "address": "G6SeWJ9fwmVLcWLLkesCeKUsb9A3mvGMUgrsAtr6ATVL",
+          "pnl": 15641.928756355317,
+          "realized_pnl": 16021.391027332065,
+          "unrealized_pnl": -379.46227097674847,
+          "volume": 261839.1516137363,
+          "trade_count": 230,
+          "score": 83.7903845810016,
+          "network": "solana"
+        },
+        {
+          "address": "BwcPJmnrEmeUJ182jGKU5sexC6FgQxm4ya7jMcc6v9fo",
+          "pnl": 51333.18503242261,
+          "realized_pnl": 51333.18503242261,
+          "unrealized_pnl": 0,
+          "volume": 56317.59560928847,
+          "trade_count": 106,
+          "score": 83.78095331748048,
+          "network": "solana"
+        },
+        {
+          "address": "3RbxEPSFx4m4R9ab3BVSZheLyXJaCWNEDbhzqCksjJqE",
+          "pnl": 50650.133186211664,
+          "realized_pnl": 50650.133186211664,
+          "unrealized_pnl": 0,
+          "volume": 53231.00651689426,
+          "trade_count": 106,
+          "score": 83.75467093382919,
+          "network": "solana"
+        },
+        {
+          "address": "EjQcq7rx7EtKfvmNeUPAoYL6zsQVZc6SqHvKnNFJcTXU",
+          "pnl": 54723.51004017691,
+          "realized_pnl": 54723.51004017691,
+          "unrealized_pnl": 0,
+          "volume": 57847.88397237334,
+          "trade_count": 96,
+          "score": 83.75037993241673,
+          "network": "solana"
+        }
+      ]
+    },
+    "success": true
+  },
+  "raw_count": 100
+}

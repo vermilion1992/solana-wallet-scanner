@@ -1,0 +1,24 @@
+{
+  "response_headers_filtered": {
+    "x-ratelimit-limit": "100",
+    "x-ratelimit-remaining": "99",
+    "x-ratelimit-reset": "1791206968"
+  },
+  "http_status": 200,
+  "all_header_names": [
+    "access-control-allow-origin",
+    "access-control-expose-headers",
+    "cf-cache-status",
+    "cf-ray",
+    "connection",
+    "content-encoding",
+    "content-type",
+    "date",
+    "server",
+    "transfer-encoding",
+    "x-powered-by",
+    "x-ratelimit-limit",
+    "x-ratelimit-remaining",
+    "x-ratelimit-reset"
+  ]
+}

@@ -1,61 +1,53 @@
-# RANKED_100_DISCOVERY_PILOT — offline prep notes
+# RANKED_100_DISCOVERY_PILOT
 
 This is **not** full G2 (1,000-wallet). Outcome label: `RANKED_100_DISCOVERY_PILOT`.
-`PRODUCT_READY` stays false. G1 grant `live-g1-vertical-slice-2026-10-05-mitch` must not be reused.
-Setup-pilot must not be reset.
+`PRODUCT_READY` stays false. G1 grant `live-g1-vertical-slice-2026-10-05-mitch` was not reused.
+Setup-pilot was not reset.
 
-## What was prepared (offline only)
+## Live result (secure box, 2026-10-05) — PASS
 
-- Dedicated preset: candidate target 100, local shortlist ceiling 20, Helius/live enrichment 0.
-- Exact future query (support implemented; **not dispatched from this cloud VM**):
-  - Birdeye `GET /trader/gainers-losers`
-  - Solana; `type=30d`; `sort_by=trader_score`; `sort_type=desc`; `offset=0`; `limit=100`
-  - No silent fallback to another sort, window, or source
-  - Fewer than 100 unique valid wallets = honest incomplete acquisition
-- `trader_score` is mapped as a **provider-reported rank**, kept separate from evidence status
-- Candidate label: `Provider-ranked candidate — profitability and copyability not independently verified.`
-- Trade-count proxy is **not** relabelled “completed profitable trades”
-- One-request + 25 CU ceiling persists in the store ledger across restarts; a failed or timed-out dispatched request consumes the attempt
-- Cached raw page + query + source order + scores + shortlist decisions: reopen / export / local filter changes make zero provider calls
-- Grant file: `config/live_authorization.g2-ranked100-discovery-granted.json` (`enabled: false`)
+Evidence: `evidence/mass-wallet-funnel/ranked100-discovery-pilot-2026-10-05/`
 
-## How to run the offline pilot
+| Item | Result |
+| --- | --- |
+| Status | **PASS** |
+| Query | Birdeye `GET /trader/gainers-losers` solana `type=30d` `sort_by=trader_score` `sort_type=desc` `offset=0` `limit=100` |
+| Raw / unique valid | 100 / 100 (acquisition complete) |
+| Shortlist | 20 (not padded); 80 excluded below ceiling |
+| Birdeye | 1 request; documented estimate **30 CU** (no CU billing headers; ratelimit 100 remaining 99) |
+| Helius | 0 / 0 |
+| setup-pilot | untouched (0 / 200) |
+| Extra spend | $0; no retries, second page, or refresh |
+| `last_active` | missing on all 100 rows (unknown) |
+| `evidence_sha256` | `03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4` |
+
+Documented 30 CU is an **estimate**, not a confirmed dashboard receipt. Provider response had no CU billing headers.
+
+Every shortlisted row is labeled: *Provider-ranked candidate — profitability and copyability not independently verified.* Trade-count remains a proxy. This is not MATCH, not profitability proof, and not 1,000-wallet G2.
+
+Repo grant `config/live_authorization.g2-ranked100-discovery-granted.json` stays **`enabled: false`**. Mitch amended the ceiling to 1 request / 30 CU (current Birdeye docs; older repo 25 was stale). The box used a local armed override that was **not** committed.
+
+## Offline software (still usable)
 
 ```bash
 .venv/bin/python -m pytest -q tests/test_mass_search_ranked100.py
 .venv/bin/python tools/mass_search_ranked100_offline.py --data-dir /tmp/ranked100-offline
 ```
 
-The offline CLI never sends Birdeye/Helius HTTP, even if `--live` is passed.
+The offline CLI never sends Birdeye/Helius HTTP, even if `--live` is passed. This cloud VM has no API keys.
 
-## What still blocks a live run (operator / box — not this cloud VM)
+## After a live run — report checklist (this pass)
 
-Arming requires **all** of:
-
-1. Confirm remaining Birdeye quota and that 25 documented CU is acceptable on the **existing** plan (`existing_plan_confirmed=true`, `remaining_quota_confirmed_at` set). Documented 25 CU is an **estimate**, not a confirmed dashboard receipt until the operator reads the billing page after the call.
-2. Set `enabled: true` on the ranked-100 grant in a **separate secure runtime** that already holds `BIRDEYE_API_KEY`. Do not paste keys into git or this VM.
-3. Grant still unexpired (`expires_at` 2026-10-06T13:01:00Z = 24h after Mitch’s ~23:31 Australia/Adelaide approval).
-4. Do **not** enable or reuse the G1 grant for this query. Do **not** reset setup-pilot.
-5. Helius stays 0/0. No retries, second page, automatic refresh, paid upgrade, or $ additional spend.
-
-This cloud VM has no API keys and the grant stays disabled.
-
-## What to report after a later live run
-
-Write a receipt under `evidence/mass-wallet-funnel/<run_id>/` including:
-
-| Field | Why it matters |
+| Field | This run |
 | --- | --- |
-| Raw page (redacted) + `evidence_sha256` | Prove the exact response, no invented wallets |
-| Exact query params actually sent | Must match `type=30d` / `sort_by=trader_score` / `sort_type=desc` / `offset=0` / `limit=100` |
-| Source order and provider scores | Rank is the provider’s, not our evidence status |
-| Unique valid wallets | If `< 100`, label **honest incomplete acquisition** |
-| Shortlist count (0–20) and per-row inclusion / exclusion / uncertainty reasons | Zero qualifiers is honest; do not pad |
-| Available metrics census (`trader_score`, `realized_pnl`+unit, `trade_count` proxy, `last_active`) | Missing stays unknown |
-| Requests / CU: **documented estimate vs confirmed billing** | 1 request / 25 CU documented; confirm dashboard after the call |
-| Helius requests/credits | Must be 0 / 0 |
-| Setup-pilot usage before and after | Must be unchanged |
-| Evidence path | Receipt + cache + shortlist JSON |
-| Candidate label on every shortlisted row | Not independently verified profit/copyability |
+| Raw page + `evidence_sha256` | `RAW.json` / `03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4` |
+| Exact query | matched; no fallback |
+| Unique valid wallets | 100 |
+| Shortlist count + reasons | 20 shortlisted; 80 below ceiling |
+| Available metrics | `trader_score` 100, `realized_pnl` 100, `trade_count` 100, `last_active` 0 |
+| Requests / CU estimate vs confirmed | 1 request / 30 CU documented estimate; dashboard CU not in headers |
+| Helius | 0 / 0 |
+| setup-pilot before/after | 0 / 200 both |
+| Evidence path | `ranked100-discovery-pilot-2026-10-05/` |
 
 Do not claim profitability, copyability, MATCH, full G2, or PRODUCT_READY from this pilot.

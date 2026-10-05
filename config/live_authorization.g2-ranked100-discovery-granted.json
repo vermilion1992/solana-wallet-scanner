@@ -49,10 +49,10 @@
       "cycle_start": "2026-10-05T13:01:00Z",
       "cycle_end_exclusive": "2026-10-06T13:01:00Z",
       "max_requests": 1,
-      "max_units": 25,
+      "max_units": 30,
       "max_concurrency": 1,
       "max_duration_seconds": 60,
-      "purpose": "RANKED_100_DISCOVERY_PILOT: exactly one GET /trader/gainers-losers page. Documented 25 CU/request is an estimate until dashboard confirmation. No retries, no second page, no refresh."
+      "purpose": "RANKED_100_DISCOVERY_PILOT: exactly one GET /trader/gainers-losers page. Documented cost is 30 CU fixed for this endpoint (older repo figure of 25 was stale). Still an estimate until dashboard confirmation. No retries, no second page, no refresh."
     },
     {
       "provider_id": "helius",
@@ -71,7 +71,7 @@
   ],
   "notes": [
     "Named grant for RANKED_100_DISCOVERY_PILOT only. authorization_id live-g2-ranked100-discovery-2026-10-05-mitch.",
-    "enabled is false until operator confirms remaining Birdeye quota/CU on the billing dashboard and sets remaining_quota_confirmed_at plus existing_plan_confirmed=true.",
+    "enabled stays false in this repository. Mitch raised the ceiling to 1 request / 30 CU to match current Birdeye docs (GET /trader/gainers-losers is 30 CU fixed; older repo 25 was stale). Live one-shot ran on a separate secure box; do not arm this file on the cloud VM.",
     "Do not reuse config/live_authorization.g1-granted.json. Do not reset setup-pilot.",
     "work_packages/mass_wallet_search_v1/config/live_authorization.example.json and config/live_authorization.proof-grant-draft.json remain disabled and are not this grant.",
     "Do not put API keys, tokens, or signing secrets in this file.",

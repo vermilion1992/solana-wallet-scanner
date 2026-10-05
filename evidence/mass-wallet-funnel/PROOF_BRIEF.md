@@ -64,8 +64,8 @@ Genuine G1:
 Synthetic idea sequence (unchanged): `ui-offline-browser/` screenshots with 0.575 SOL fixture.
 
 ## Next action
-Do not merge solely on G1. Do not start full G2 (1,000 wallets) from this prep.
+Do not merge solely on G1 or this ranked-100 pilot. Do not start full G2 (1,000 wallets) from this evidence.
 
-Mitch approved `live-g2-ranked100-discovery-2026-10-05-mitch` for a **RANKED_100_DISCOVERY_PILOT** (one Birdeye `trader_score` page, local shortlist ≤20). This cloud run is **offline prep only**: grant file stays `enabled: false`, no live Birdeye/Helius calls, no keys on this VM. Offline tests: `tests/test_mass_search_ranked100.py`. Notes: `RANKED_100_DISCOVERY_PILOT.md`.
+**RANKED_100_DISCOVERY_PILOT PASS** on a separate secure box (not this VM). Grant `live-g2-ranked100-discovery-2026-10-05-mitch`. Exact Birdeye `GET /trader/gainers-losers` solana `type=30d` `sort_by=trader_score` `sort_type=desc` `offset=0` `limit=100`. 100 raw / 100 unique; shortlist 20 (not padded); 80 below ceiling. Spend: Birdeye 1 request, documented estimate 30 CU (no CU billing headers; ratelimit 100/99); Helius 0; setup-pilot untouched; $0 extra. `last_active` unknown on all rows. `evidence_sha256` `03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4`. Receipt `ranked100-discovery-pilot-2026-10-05/`. Notes: `RANKED_100_DISCOVERY_PILOT.md`.
 
-Live still blocked until Mitch/box confirms remaining Birdeye quota/CU, arms the ranked-100 grant in a separate secure runtime, and keeps G1 unused / setup-pilot untouched. Grant expires 2026-10-06T13:01:00Z (24h after ~23:31 Australia/Adelaide). PRODUCT_READY stays false.
+Repo grant template stays `enabled: false` (ceiling amended 25→30 CU to match current Birdeye docs). No keys on this VM. PRODUCT_READY stays false.
