@@ -131,18 +131,54 @@ def test_stage_conservation_and_budget_deferral():
 
 
 def test_dust_tail_fifo_and_material_exit_independent_of_production_helpers():
+    from decimal import Decimal
+
     fixture = case("fees_and_dust_tail")
+    unit_cost = (Decimal("1") + Decimal("0.01")) / Decimal("100")
+    hand_basis = [
+        format(Decimal("50") * unit_cost, "f").rstrip("0").rstrip("."),
+        format(Decimal("45") * unit_cost, "f").rstrip("0").rstrip("."),
+        format(Decimal("5") * unit_cost, "f").rstrip("0").rstrip("."),
+    ]
+    hand_nets = [
+        format(Decimal("0.8") - Decimal(hand_basis[0]) - Decimal("0.005"), "f").rstrip("0").rstrip("."),
+        format(Decimal("0.72") - Decimal(hand_basis[1]) - Decimal("0.005"), "f").rstrip("0").rstrip("."),
+        format(Decimal("0.08") - Decimal(hand_basis[2]) - Decimal("0.005"), "f").rstrip("0").rstrip("."),
+    ]
+    hand_total = format(sum((Decimal(item) for item in hand_nets), Decimal("0")), "f").rstrip("0").rstrip(".")
+    assert hand_basis == ["0.505", "0.4545", "0.0505"]
+    assert hand_nets == ["0.29", "0.2605", "0.0245"]
+    assert hand_total == "0.575"
     worksheet = fifo_sale_results(fixture["inputs"]["events"])
     timing = material_exit_v1(fixture["inputs"]["events"])
-    assert worksheet["sale_fifo_basis_sol"] == fixture["expected"]["sale_fifo_basis_sol"]
-    assert worksheet["sale_net_profit_sol"] == fixture["expected"]["sale_net_profit_sol"]
-    assert worksheet["total_profit_sol"] == fixture["expected"]["total_profit_sol"]
-    assert timing["first_sale_seconds"] == fixture["expected"]["first_sale_seconds"]
-    assert timing["exit_50_seconds"] == fixture["expected"]["exit_50_seconds"]
-    assert timing["exit_90_seconds"] == fixture["expected"]["exit_90_seconds"]
-    assert timing["final_hold_seconds"] == fixture["expected"]["final_hold_seconds"]
+    assert worksheet["sale_fifo_basis_sol"] == hand_basis == fixture["expected"]["sale_fifo_basis_sol"]
+    assert worksheet["sale_net_profit_sol"] == hand_nets == fixture["expected"]["sale_net_profit_sol"]
+    assert worksheet["total_profit_sol"] == hand_total == fixture["expected"]["total_profit_sol"]
+    assert timing["first_sale_seconds"] == 20 == fixture["expected"]["first_sale_seconds"]
+    assert timing["exit_50_seconds"] == 20 == fixture["expected"]["exit_50_seconds"]
+    assert timing["exit_90_seconds"] == 30 == fixture["expected"]["exit_90_seconds"]
+    assert timing["final_hold_seconds"] == 172800 == fixture["expected"]["final_hold_seconds"]
     assert timing["quantity_weighted_exit_seconds"] == fixture["expected"]["quantity_weighted_exit_seconds"]
     assert timing["exit_90_seconds"] < timing["final_hold_seconds"]
+
+
+def test_later_buy_moves_material_exit_and_unknown_transfer_revokes_it():
+    first_leg = [
+        {"kind": "buy", "seconds_from_start": 0, "units": "100", "consideration_sol": "1", "wallet_fee_sol": "0"},
+        {"kind": "sell", "seconds_from_start": 10, "units": "90", "consideration_sol": "1", "wallet_fee_sol": "0"},
+    ]
+    scaled = first_leg + [
+        {"kind": "buy", "seconds_from_start": 20, "units": "100", "consideration_sol": "1", "wallet_fee_sol": "0"},
+    ]
+    without_scale = material_exit_v1(first_leg)
+    with_scale = material_exit_v1(scaled)
+    assert without_scale["exit_90_seconds"] == 10
+    assert with_scale["exit_90_seconds"] is None
+    assert with_scale["acquired_units"] == "200"
+    unknown = material_exit_v1(first_leg, transfers_unknown=True)
+    assert unknown["state"] == "UNKNOWN"
+    assert unknown["exit_90_seconds"] is None
+    assert "transfer_or_unknown_quantity" in unknown["missing_dependencies"]
 
 
 def test_unknown_transfer_basis_keeps_sale_and_fee():

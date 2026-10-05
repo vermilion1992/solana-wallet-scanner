@@ -1939,6 +1939,7 @@ try {
   const emptySearchHtml = renderToStaticMarkup(React.createElement(MassSearchView, { ...actions, state: { ...state, mass_search: { runs: [], legacy_candidate_cap: 20, bulk_capacity: 10000 } } }));
   assert.ok(emptySearchHtml.includes("Not scanned"));
   assert.ok(emptySearchHtml.includes("Run offline slice"));
+  assert.ok(emptySearchHtml.includes("Create a Search run"));
   const searchHtml = renderToStaticMarkup(React.createElement(MassSearchView, { ...actions, state: searchState }));
   assert.ok(searchHtml.includes("Run offline slice"));
   assert.ok(searchHtml.includes("/api/mass-search/runs/aabbccdd/export"));
@@ -1946,6 +1947,7 @@ try {
   assert.ok(searchHtml.includes("Saved subset reports"));
   assert.ok(searchHtml.includes("Export JSON"));
   assert.ok(searchHtml.includes("Stage shortlist"));
+  assert.ok(searchHtml.includes("No rows on this page"));
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

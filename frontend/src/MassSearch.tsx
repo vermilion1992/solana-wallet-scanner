@@ -31,6 +31,19 @@ export function massSearchMetricText(metric?: MassSearchMetric | null, fallback?
   return metric?.state || "unknown";
 }
 
+function useNarrowSearch(maxWidth = 480) {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia(`(max-width: ${maxWidth}px)`);
+    const apply = () => setNarrow(query.matches);
+    apply();
+    query.addEventListener("change", apply);
+    return () => query.removeEventListener("change", apply);
+  }, [maxWidth]);
+  return narrow;
+}
+
 export function MassSearchView({ state, busy, run, navigate, refresh, open }: Actions) {
   const [detail, setDetail] = useState<MassSearchRun | null>(null);
   const [candidates, setCandidates] = useState<MassSearchCandidate[]>([]);
@@ -38,6 +51,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [stage, setStage] = useState<(typeof STAGES)[number]>("triage");
   const [selectedId, setSelectedId] = useState<string>("");
   const [blocker, setBlocker] = useState<string>("Live collection is blocked until a named authorization exists.");
+  const narrow = useNarrowSearch();
   const summary = state.mass_search;
   const runs = summary?.runs || [];
   const newestId = runs[0]?.run_id;
@@ -182,7 +196,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         {!candidates.length && <Empty title="No rows on this page" detail="Change stage or run the offline slice. Filter changes here do not call providers." />}
         {!!candidates.length && (
           <>
-            <div className="mass-search-table-wrap">
+            {!narrow && <div className="mass-search-table-wrap">
               <table className="mass-search-table">
                 <thead>
                   <tr>
@@ -215,7 +229,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div>}
             <ul className="mass-search-cards">
               {candidates.map((row) => (
                 <li key={`card-${row.candidate_id}`}>

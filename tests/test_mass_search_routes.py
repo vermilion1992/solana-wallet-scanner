@@ -142,3 +142,27 @@ def test_pause_resume_cancel_and_offline_acquire_guards(session):
     cancelled = client.post(f"/api/mass-search/runs/{run_id}/cancel")
     assert cancelled.json()["status"] == "CANCELLED"
     assert client.get("/api/mass-search/access-blocker").json()["birdeye"]["max_additional_spend_usd"] == "0"
+
+
+def test_empty_run_pages_and_stage_filter_stay_local(session):
+    client, _, _ = session
+    created = client.post("/api/mass-search/runs", json={"corpus_kind": "SYNTHETIC"}).json()
+    run_id = created["run_id"]
+    empty = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50")
+    assert empty.status_code == 200
+    assert empty.json()["items"] == []
+    assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"] == []
+    pages = [[{"address": synthetic_address(i), "realized_pnl": str(100 - i), "trade_count": 22} for i in range(60)]]
+    acquired = client.post(f"/api/mass-search/runs/{run_id}/acquire", json={"pages": pages, "target_unique": 60})
+    assert acquired.status_code == 200
+    assert client.post(f"/api/mass-search/runs/{run_id}/stages/triage").status_code == 200
+    first = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50").json()
+    assert len(first["items"]) == 50
+    assert first["next_cursor"]
+    second = client.get(
+        f"/api/mass-search/runs/{run_id}/candidates?stage=triage&limit=50&cursor={first['next_cursor']}"
+    ).json()
+    assert len(second["items"]) == 10
+    reconstruct = client.get(f"/api/mass-search/runs/{run_id}/candidates?stage=reconstruct&limit=50").json()
+    assert reconstruct["items"] == []
+    assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"] == []
