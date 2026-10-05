@@ -82,6 +82,8 @@ CREATE TABLE IF NOT EXISTS metric_snapshots (
 );
 CREATE INDEX IF NOT EXISTS metrics_run_key_sort
   ON metric_snapshots(run_id, metric_key, value_nanos, candidate_id);
+CREATE INDEX IF NOT EXISTS metrics_run_candidate_key
+  ON metric_snapshots(run_id, candidate_id, metric_key);
 CREATE TABLE IF NOT EXISTS stage_decisions (
   decision_id TEXT PRIMARY KEY,
   run_id TEXT NOT NULL,

@@ -1,17 +1,16 @@
 """Mass-search orchestrator: acquire, decide, reconstruct, refilter, recover."""
 from __future__ import annotations
 
-import hashlib
 import json
 import statistics
 import time
 import uuid
 from copy import deepcopy
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from scanner.accounting import analyze
-from scanner.config import LIMITS, STRICT
+from scanner.config import LIMITS
 from scanner.research import summarize_research
 from scanner.storage import now
 
@@ -76,23 +75,54 @@ def _load_run(store, run_id):
     return dict(row)
 
 
+def _data_run_id(store, run_id):
+    """Refilter children reuse the parent's frozen memberships and metrics."""
+    run = _load_run(store, run_id)
+    parent = run.get("parent_run_id")
+    if not parent:
+        return run_id
+    with store.lock:
+        own = store.db.execute(
+            "SELECT 1 FROM candidate_memberships WHERE run_id=? LIMIT 1", (run_id,)
+        ).fetchone()
+    return run_id if own else parent
+
+
+def _metric_record(row):
+    return {
+        "metric_key": row[1], "value": row[2], "unit": row[3], "state": row[4], "basis": row[5],
+        "window": {"start_inclusive": row[6], "end_exclusive": row[7]}, "population": row[8],
+        "population_count": row[9], "method_version": row[10], "observed_at": row[11],
+        "evidence_sha256": json.loads(row[12]), "missing_dependencies": json.loads(row[13]),
+        "source_provider": row[14], "is_wallet_wide_verified": bool(row[15]), "notes": json.loads(row[16]),
+    }
+
+
+def _metrics_map(store, run_id):
+    with store.lock:
+        rows = store.db.execute(
+            "SELECT candidate_id, metric_key, value, unit, state, basis, window_start, window_end, population, "
+            "population_count, method_version, observed_at, evidence_json, missing_json, source_provider, "
+            "is_wallet_wide_verified, notes_json FROM metric_snapshots WHERE run_id=?",
+            (run_id,),
+        ).fetchall()
+    metrics = {}
+    for row in rows:
+        metrics.setdefault(row[0], {})[row[1]] = _metric_record(row)
+    return metrics
+
+
 def _metrics_for(store, run_id, candidate_id):
     with store.lock:
         rows = store.db.execute(
-            "SELECT metric_key, value, unit, state, basis, window_start, window_end, population, population_count, "
-            "method_version, observed_at, evidence_json, missing_json, source_provider, is_wallet_wide_verified, notes_json "
-            "FROM metric_snapshots WHERE run_id=? AND candidate_id=?",
+            "SELECT candidate_id, metric_key, value, unit, state, basis, window_start, window_end, population, "
+            "population_count, method_version, observed_at, evidence_json, missing_json, source_provider, "
+            "is_wallet_wide_verified, notes_json FROM metric_snapshots WHERE run_id=? AND candidate_id=?",
             (run_id, candidate_id),
         ).fetchall()
     metrics = {}
     for row in rows:
-        metrics[row[0]] = {
-            "metric_key": row[0], "value": row[1], "unit": row[2], "state": row[3], "basis": row[4],
-            "window": {"start_inclusive": row[5], "end_exclusive": row[6]}, "population": row[7],
-            "population_count": row[8], "method_version": row[9], "observed_at": row[10],
-            "evidence_sha256": json.loads(row[11]), "missing_dependencies": json.loads(row[12]),
-            "source_provider": row[13], "is_wallet_wide_verified": bool(row[14]), "notes": json.loads(row[15]),
-        }
+        metrics[row[1]] = _metric_record(row)
     return metrics
 
 
@@ -110,15 +140,16 @@ def _insert_metric(store, run_id, metric):
 
 def _save_decisions(store, run_id, stage_id, decisions, source_hashes):
     timestamp = now()
+    source = json.dumps(source_hashes)
+    rows = [
+        (uuid.uuid4().hex, run_id, stage_id, row["candidate_id"], row["result"],
+         json.dumps(row["reason_codes"]), row["policy_version"], row["metric_versions"],
+         source, row.get("next_capability"), timestamp)
+        for row in decisions
+    ]
     with store.lock, store.db:
         store.db.execute("DELETE FROM stage_decisions WHERE run_id=? AND stage_id=?", (run_id, stage_id))
-        for row in decisions:
-            store.db.execute(
-                "INSERT INTO stage_decisions VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                (uuid.uuid4().hex, run_id, stage_id, row["candidate_id"], row["result"],
-                 json.dumps(row["reason_codes"]), row["policy_version"], row["metric_versions"],
-                 json.dumps(source_hashes), row.get("next_capability"), timestamp),
-            )
+        store.db.executemany("INSERT INTO stage_decisions VALUES (?,?,?,?,?,?,?,?,?,?,?)", rows)
         store.db.execute("UPDATE search_runs SET updated_at=? WHERE run_id=?", (timestamp, run_id))
 
 
@@ -141,8 +172,19 @@ class MassSearchService:
         self.store = store
         self.clock = clock or now
         self.external_requests = 0
+        self._capability_cache = None
+        self._plan_cache = {}
+        self._member_cache = {}
+        self._metrics_cache = {}
 
     def capability_bundle(self):
+        if self._capability_cache is None:
+            self._capability_cache = self._build_capability_bundle()
+        result = deepcopy(self._capability_cache)
+        result["setup_pilot"] = self.store.usage("helius", "setup-pilot", 200)
+        return result
+
+    def _build_capability_bundle(self):
         auth = live_authorization_from_store(self.store)
         birdeye = documented_birdeye_traders()
         if not auth or not auth.get("enabled"):
@@ -150,7 +192,7 @@ class MassSearchService:
                 birdeye, state="UNAUTHORIZED", role="NO_GO",
                 limitations=["No enabled live authorization. Offline implementation continues."],
             )
-        return {
+        bundle = {
             "strict_preset": assert_strict_preset_unchanged(),
             "legacy_limits": dict(LIMITS),
             "bulk_universe_capacity": MASS_UNIVERSE_CAPACITY,
@@ -163,18 +205,24 @@ class MassSearchService:
             },
             "access_blocker": access_blocker("birdeye-traders"),
             "helius_blocker": access_blocker("helius-history"),
-            "setup_pilot": self.store.usage("helius", "setup-pilot", 200),
         }
+        return bundle
+
+    def _validated_plan(self, plan=None):
+        key = "default" if plan is None else sha256_json(plan)
+        if key not in self._plan_cache:
+            self._plan_cache[key] = validate_mass_plan(plan)
+        return deepcopy(self._plan_cache[key])
 
     def preview_plan(self, plan=None):
-        validated = validate_mass_plan(plan)
+        validated = self._validated_plan(plan)
         return {"plan": validated, "plan_sha256": sha256_json(validated), "strict_preset": assert_strict_preset_unchanged()}
 
     def create_run(self, plan=None, *, source_id="fixture-traders", corpus_kind="SYNTHETIC",
                    parent_run_id=None, authorization=None):
         if corpus_kind not in ("SYNTHETIC", "GENUINE_REPLAY", "GENUINE_LIVE"):
             raise ValueError("Unsupported corpus kind")
-        validated = validate_mass_plan(plan)
+        validated = self._validated_plan(plan)
         if validated["live_enabled"] and corpus_kind == "GENUINE_LIVE":
             auth = authorization or live_authorization_from_store(self.store)
             if not auth or not auth.get("enabled"):
@@ -199,7 +247,7 @@ class MassSearchService:
 
     def run_view(self, run_id):
         run = _load_run(self.store, run_id)
-        counts = universe_counts(self.store, run_id)
+        counts = universe_counts(self.store, _data_run_id(self.store, run_id))
         stages = {stage: stage_summary(self.store, run_id, stage) for stage in STAGES}
         return {
             "run_id": run["run_id"],
@@ -266,10 +314,13 @@ class MassSearchService:
         plan = json.loads(run["plan_json"])
         if stage_id not in STAGES:
             raise ValueError("Unsupported stage")
+        data_run = _data_run_id(self.store, run_id)
         if stage_id == "triage":
-            with self.store.lock:
-                ids = [row[0] for row in self.store.db.execute(
-                    "SELECT DISTINCT candidate_id FROM candidate_memberships WHERE run_id=?", (run_id,)).fetchall()]
+            if data_run not in self._member_cache:
+                with self.store.lock:
+                    self._member_cache[data_run] = [row[0] for row in self.store.db.execute(
+                        "SELECT DISTINCT candidate_id FROM candidate_memberships WHERE run_id=?", (data_run,)).fetchall()]
+            ids = self._member_cache[data_run]
             cap = plan["stage_workload_maxima_not_permissions"]["summary_enrichment"]
             evaluator = evaluate_triage
         else:
@@ -284,10 +335,13 @@ class MassSearchService:
             cap = plan["stage_workload_maxima_not_permissions"][cap_key]
             evaluator = {"behaviour": evaluate_behaviour, "reconstruct": evaluate_reconstruct,
                          "forward_select": evaluate_forward_select}[stage_id]
+        if data_run not in self._metrics_cache:
+            self._metrics_cache[data_run] = _metrics_map(self.store, data_run)
+        metric_index = self._metrics_cache[data_run]
         decisions = []
         for ident in ids:
             address = ident.split(":", 1)[1]
-            metrics = _metrics_for(self.store, run_id, ident)
+            metrics = metric_index.get(ident, {})
             candidate = {"candidate_id": ident, "address": address,
                          "_priority": priority_tuple({"candidate_id": ident}, metrics)}
             extra = {}
@@ -309,36 +363,20 @@ class MassSearchService:
     def refilter(self, run_id, plan=None):
         """New decision snapshot against the frozen universe. Zero provider calls."""
         before = self.external_requests
-        parent = self.run_view(run_id)
-        child = self.create_run(plan or json.loads(_load_run(self.store, run_id)["plan_json"]),
+        parent = _load_run(self.store, run_id)
+        child = self.create_run(plan or json.loads(parent["plan_json"]),
                                 source_id=parent["source_id"], corpus_kind=parent["corpus_kind"],
                                 parent_run_id=run_id)
+        sealed_at = parent["universe_sealed_at"] or now()
+        sealed_hash = parent["universe_sha256"] or sha256_json({"parent_run_id": run_id})
         with self.store.lock, self.store.db:
-            memberships = self.store.db.execute(
-                "SELECT * FROM candidate_memberships WHERE run_id=?", (run_id,)).fetchall()
-            metrics = self.store.db.execute(
-                "SELECT * FROM metric_snapshots WHERE run_id=?", (run_id,)).fetchall()
-            for row in memberships:
-                values = list(row)
-                values[0] = uuid.uuid4().hex
-                values[1] = child["run_id"]
-                self.store.db.execute(
-                    "INSERT INTO candidate_memberships VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", values)
-            for row in metrics:
-                values = list(row)
-                values[0] = uuid.uuid4().hex
-                values[1] = child["run_id"]
-                self.store.db.execute(
-                    "INSERT INTO metric_snapshots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values)
             self.store.db.execute(
                 "UPDATE search_runs SET universe_sealed_at=?, universe_sha256=?, status=?, updated_at=? WHERE run_id=?",
-                (parent["universe_sealed_at"] or now(), parent["universe_sha256"] or sha256_json(parent["universe"]),
-                 "UNIVERSE_SEALED", now(), child["run_id"]),
+                (sealed_at, sealed_hash, "UNIVERSE_SEALED", now(), child["run_id"]),
             )
         if self.external_requests != before:
             raise RuntimeError("Refilter issued external requests")
-        for stage in STAGES:
-            self.evaluate_stage(child["run_id"], stage)
+        self.evaluate_stage(child["run_id"], "triage")
         if self.external_requests != before:
             raise RuntimeError("Refilter issued external requests")
         return self.run_view(child["run_id"])
@@ -487,7 +525,9 @@ class MassSearchService:
         return None if row is None else self.store.get("reports", row[0])
 
     def page_candidates(self, run_id, **kwargs):
-        return page_summaries(self.store, run_id, **kwargs)
+        data_run = _data_run_id(self.store, run_id)
+        query_run = run_id if kwargs.get("stage") else data_run
+        return page_summaries(self.store, query_run, data_run_id=data_run, **kwargs)
 
     def pause(self, run_id):
         return self._set_status(run_id, "PAUSED", allowed=("CREATED", "UNIVERSE_SEALED", "RUNNING"))
@@ -634,8 +674,10 @@ class MassSearchService:
                 "SELECT candidate_id FROM stage_decisions WHERE run_id=? AND stage_id='triage' AND result='PROMOTED'",
                 (run_id,),
             ).fetchall()
+        data_run = _data_run_id(self.store, run_id)
+        metric_index = _metrics_map(self.store, data_run)
         for (ident,) in rows:
-            metrics = _metrics_for(self.store, run_id, ident)
+            metrics = metric_index.get(ident, {})
             cached = self._report_link(run_id, ident) is not None
             promoted.append((priority_tuple({"candidate_id": ident}, metrics, cached=cached), ident))
         promoted.sort()

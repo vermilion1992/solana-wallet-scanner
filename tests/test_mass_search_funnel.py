@@ -336,6 +336,10 @@ def test_vertical_slice_and_refilter_zero_network(store):
     child = service.refilter(result["run"]["run_id"])
     assert child["parent_run_id"] == result["run"]["run_id"]
     assert child["stages"]["triage"]["input"] == 1
+    assert child["universe"]["unique_candidates"] == 1
+    child_page = service.page_candidates(child["run_id"], stage="triage", limit=10)
+    assert child_page["total"] == 1
+    assert child_page["items"][0]["sort_value"] is not None
     assert store.usage("helius", "setup-pilot", 200)["used"] == 200
     assert STRICT["min_profit_sol"] == "5"
 

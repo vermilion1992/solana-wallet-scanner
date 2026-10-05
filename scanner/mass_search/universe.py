@@ -156,15 +156,14 @@ def _insert_metric(store, run_id, metric):
 
 def universe_counts(store, run_id):
     with store.lock:
-        memberships = store.db.execute(
-            "SELECT candidate_id, raw_row_json FROM candidate_memberships WHERE run_id=?",
+        raw, unique = store.db.execute(
+            "SELECT COUNT(*), COUNT(DISTINCT candidate_id) FROM candidate_memberships WHERE run_id=?",
             (run_id,),
-        ).fetchall()
-    unique = {row[0] for row in memberships}
+        ).fetchone()
     return {
-        "raw_rows": len(memberships),
-        "unique_candidates": len(unique),
-        "duplicate_rows": len(memberships) - len(unique),
+        "raw_rows": raw,
+        "unique_candidates": unique,
+        "duplicate_rows": raw - unique,
         "invalid_rows": 0,
     }
 
@@ -186,33 +185,49 @@ def seal_universe(store, run_id, *, extra=None):
 
 
 def page_summaries(store, run_id, *, stage=None, sort_metric="provider_realized_pnl",
-                   cursor=None, limit=50, descending=True):
+                   cursor=None, limit=50, descending=True, data_run_id=None):
     if type(limit) is not int or not 1 <= limit <= 200:
         raise ValueError("Page size must be between 1 and 200")
+    metric_run = data_run_id or run_id
     with store.lock:
         if stage:
             rows = store.db.execute(
                 """SELECT d.candidate_id, d.result, d.reason_codes, u.address, m.value, m.value_nanos, m.unit, m.state
                    FROM stage_decisions d
                    JOIN candidate_universe u ON u.candidate_id = d.candidate_id
-                   LEFT JOIN metric_snapshots m ON m.run_id = d.run_id AND m.candidate_id = d.candidate_id
+                   LEFT JOIN metric_snapshots m ON m.run_id = ? AND m.candidate_id = d.candidate_id
                         AND m.metric_key = ?
                    WHERE d.run_id=? AND d.stage_id=?""",
-                (sort_metric, run_id, stage),
+                (metric_run, sort_metric, run_id, stage),
             ).fetchall()
         else:
             rows = store.db.execute(
                 """SELECT DISTINCT mem.candidate_id, NULL, NULL, u.address, m.value, m.value_nanos, m.unit, m.state
                    FROM candidate_memberships mem
                    JOIN candidate_universe u ON u.candidate_id = mem.candidate_id
-                   LEFT JOIN metric_snapshots m ON m.run_id = mem.run_id AND m.candidate_id = mem.candidate_id
+                   LEFT JOIN metric_snapshots m ON m.run_id = ? AND m.candidate_id = mem.candidate_id
                         AND m.metric_key = ?
                    WHERE mem.run_id=?""",
-                (sort_metric, run_id),
+                (metric_run, sort_metric, run_id),
             ).fetchall()
-    items = []
+    ranked = []
     for row in rows:
-        items.append({
+        ranked.append((row[5], row[0], row))
+    ranked.sort(key=lambda item: (
+        item[0] is None,
+        (-item[0] if descending else item[0] or 0) if item[0] is not None else 0,
+        item[1],
+    ))
+    start = 0
+    if cursor:
+        for index, item in enumerate(ranked):
+            if item[1] == cursor:
+                start = index + 1
+                break
+    page_rows = ranked[start:start + limit]
+    page = []
+    for _nanos, _ident, row in page_rows:
+        page.append({
             "candidate_id": row[0],
             "result": row[1],
             "reason_codes": json.loads(row[2]) if row[2] else [],
@@ -222,20 +237,8 @@ def page_summaries(store, run_id, *, stage=None, sort_metric="provider_realized_
             "unit": row[6],
             "metric_state": row[7],
         })
-    items.sort(key=lambda item: (
-        item["sort_nanos"] is None,
-        (-item["sort_nanos"] if descending else item["sort_nanos"] or 0) if item["sort_nanos"] is not None else 0,
-        item["candidate_id"],
-    ))
-    start = 0
-    if cursor:
-        for index, item in enumerate(items):
-            if item["candidate_id"] == cursor:
-                start = index + 1
-                break
-    page = items[start:start + limit]
-    next_cursor = page[-1]["candidate_id"] if len(page) == limit and start + limit < len(items) else None
-    return {"items": page, "next_cursor": next_cursor, "total": len(items), "limit": limit}
+    next_cursor = page[-1]["candidate_id"] if len(page) == limit and start + limit < len(ranked) else None
+    return {"items": page, "next_cursor": next_cursor, "total": len(ranked), "limit": limit}
 
 
 def detect_cursor_loop(seen_offsets, offset):

@@ -93,10 +93,10 @@ export function MassSearchView({ state, busy, run, navigate, refresh }: Actions)
         </Button>
       </div>
       <p className="research-note">{blocker} Additional spend stays $0. The example authorization file is not a grant.</p>
-      {!summary?.runs?.length && <Empty title="Not scanned" body={empty.action} />}
+      {!summary?.runs?.length && <Empty title="Not scanned" detail={empty.action} />}
       {detail && (
         <section className="research-subpanel">
-          <SectionHeading title="Search run" eyebrow={massSearchCorpusLabel(detail.corpus_kind)} />
+          <SectionHeading title="Search run" subtitle={massSearchCorpusLabel(detail.corpus_kind)} />
           <div className="research-metrics mass-search-funnel">
             {STAGES.map((name) => {
               const counts = detail.stages?.[name];
@@ -120,7 +120,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh }: Actions)
         </section>
       )}
       <section className="research-subpanel">
-        <SectionHeading title="Stage shortlist" eyebrow="Cached rows only" />
+        <SectionHeading title="Stage shortlist" subtitle="Cached rows only" />
         <div className="research-action-row">
           <label>
             Stage
@@ -131,7 +131,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh }: Actions)
             </select>
           </label>
         </div>
-        {!candidates.length && <Empty title="No rows on this page" body="Change stage or run the offline slice. Filter changes here do not call providers." />}
+        {!candidates.length && <Empty title="No rows on this page" detail="Change stage or run the offline slice. Filter changes here do not call providers." />}
         {!!candidates.length && (
           <div className="mass-search-table-wrap">
             <table className="mass-search-table">
@@ -147,7 +147,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh }: Actions)
                 {candidates.map((row) => (
                   <tr key={row.candidate_id}>
                     <td className="mono">{shorten(row.address)}</td>
-                    <td><Badge>{label(row.result || "pending")}</Badge></td>
+                    <td><Badge value={row.result || "pending"}>{label(row.result || "pending")}</Badge></td>
                     <td>{row.sort_value ? `${decimal(row.sort_value, 2)} ${row.unit || ""}` : row.metric_state || "unknown"}</td>
                     <td>{(row.reason_codes || []).join(", ") || "—"}</td>
                   </tr>
