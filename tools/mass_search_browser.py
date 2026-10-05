@@ -76,6 +76,14 @@ def run(args):
         page.goto(launcher.url)
         page.get_by_role("button", name="Search", exact=True).wait_for()
 
+        def expect_worksheet():
+            expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
+            expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_be_visible()
+            expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+            expect(page.get_by_text("30 seconds", exact=False).first).to_be_visible()
+            expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
+            expect(page.get_by_text("A conclusion needs more evidence", exact=False)).to_be_visible()
+
         def capture(name):
             page.evaluate(
                 """message => {let b=document.getElementById('synthetic-browser-test-banner');if(!b){b=document.createElement('div');b.id='synthetic-browser-test-banner';b.style.cssText='position:sticky;top:0;z-index:9999;padding:12px;background:#571a21;color:#fff;text-align:center;font:700 14px sans-serif;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box';document.body.prepend(b)}b.textContent=message}""",
@@ -138,11 +146,7 @@ def run(args):
 
         page.get_by_role("button", name="Open report", exact=True).first.click()
         expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
-        expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
-        expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_be_visible()
-        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
-        expect(page.get_by_text("30 seconds", exact=False).first).to_be_visible()
-        expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
+        expect_worksheet()
         capture("03-opened-report")
         result["cases"].append({"case": "open-subset-report", "state": "PASS", "report_id": report_id})
 
@@ -153,8 +157,12 @@ def run(args):
         page.goto(launcher.url)
         page.get_by_role("button", name="Search", exact=True).click()
         expect(page.get_by_role("button", name="Reopen report", exact=True)).to_be_visible(timeout=15000)
-        capture("04-reopen-after-restart")
-        result["cases"].append({"case": "restart-reopen", "state": "PASS"})
+        capture("04-reopen-button-after-restart")
+        page.get_by_role("button", name="Reopen report", exact=True).click()
+        expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect_worksheet()
+        capture("05-reopened-report-after-restart")
+        result["cases"].append({"case": "restart-reopen-worksheet", "state": "PASS", "report_id": report_id})
 
         assert not errors, errors
         assert not external, external

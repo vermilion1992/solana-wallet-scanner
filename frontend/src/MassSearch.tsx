@@ -94,8 +94,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   }, [activeId, stage, detail?.status, busy]);
 
   const inspect = async (reportId: string) => {
-    const listed = savedReports.find((report) => report.id === reportId);
-    await open((listed || await reportDisplay(reportId)) as Report);
+    await open(await reportDisplay(reportId));
   };
 
   const loadMore = async () => {

@@ -127,10 +127,40 @@ def test_slice_report_can_be_reopened_and_exported(session):
     assert report_export.json()["policy"] == "UNRESOLVED"
     restarted = Store(data_dir)
     try:
-        assert restarted.get("reports", report_id)["id"] == report_id
+        saved = restarted.get("reports", report_id)
+        assert saved["id"] == report_id
+        assert saved["worksheet"]["total_profit_sol"] == "0.575"
+        assert saved["material_exit"]["final_hold_seconds"] == 172800
+        assert saved["policy"] == "UNRESOLVED"
         assert restarted.usage("helius", "setup-pilot", 200)["used"] == 0
     finally:
         restarted.close()
+
+
+def test_display_reopen_after_process_restart_keeps_independent_worksheet(tmp_path):
+    data_dir = tmp_path / "data"
+    first = create_app(data_dir, LAUNCH_TOKEN)
+    with TestClient(first, base_url=BASE_URL) as client:
+        boot = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        client.headers["x-csrf-token"] = boot.json()["csrf"]
+        body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
+        report_id = body["reconstruction"]["report"]["id"]
+        run_id = body["run"]["run_id"]
+    second = create_app(data_dir, LAUNCH_TOKEN)
+    with TestClient(second, base_url=BASE_URL) as client:
+        boot = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        client.headers["x-csrf-token"] = boot.json()["csrf"]
+        listed = next(row for row in client.get("/api/state?report_view=summary").json()["reports"] if row["id"] == report_id)
+        assert listed["source"] == "mass-search"
+        assert listed["policy"] == "UNRESOLVED"
+        assert listed.get("worksheet") is None
+        opened = client.get(f"/api/reports/{report_id}?view=display").json()
+        assert opened["worksheet"]["total_profit_sol"] == "0.575"
+        assert opened["material_exit"]["exit_90_seconds"] == 30
+        assert opened["material_exit"]["final_hold_seconds"] == 172800
+        assert opened["policy"] == "UNRESOLVED"
+        assert opened["metrics"].get("profit_sol", {}).get("status") != "known"
+        assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
 
 
 def test_pause_resume_cancel_and_offline_acquire_guards(session):
