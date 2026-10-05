@@ -12,8 +12,8 @@
     {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "9c1d9c5e9d3a46f293b03fc6d900638d",
-      "report_id": "16374d422d354c41acb170ad293e81c8"
+      "run_id": "a90607bfb8f2483aa05a7ab990bcb661",
+      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
     },
     {
       "case": "export-run",
@@ -22,22 +22,22 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "16374d422d354c41acb170ad293e81c8"
+      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
     },
     {
       "case": "restart-reopen-worksheet",
       "state": "PASS",
-      "report_id": "16374d422d354c41acb170ad293e81c8"
+      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
     },
     {
       "case": "results-subset-pnl",
       "state": "PASS",
-      "report_id": "16374d422d354c41acb170ad293e81c8"
+      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
     },
     {
       "case": "compare-subset-pnl",
       "state": "PASS",
-      "report_id": "16374d422d354c41acb170ad293e81c8"
+      "report_id": "f1a6a5f9d7914090a2ddfe93512ffa7b"
     }
   ],
   "limitations": [
@@ -133,10 +133,26 @@
       "nodes": []
     },
     {
+      "name": "06-results-subset-pnl",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
       "name": "07-compare-subset-pnl",
       "label": "desktop",
       "innerWidth": 1440,
       "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "07-compare-subset-pnl",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
       "overflow": false,
       "nodes": []
     }
@@ -171,22 +187,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/9c1d9c5e9d3a46f293b03fc6d900638d",
+      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/9c1d9c5e9d3a46f293b03fc6d900638d/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/9c1d9c5e9d3a46f293b03fc6d900638d/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/16374d422d354c41acb170ad293e81c8?view=display",
+      "path": "/api/reports/f1a6a5f9d7914090a2ddfe93512ffa7b?view=display",
       "status": 200
     },
     {
@@ -206,22 +222,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/9c1d9c5e9d3a46f293b03fc6d900638d",
+      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/9c1d9c5e9d3a46f293b03fc6d900638d/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/9c1d9c5e9d3a46f293b03fc6d900638d/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/a90607bfb8f2483aa05a7ab990bcb661/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/16374d422d354c41acb170ad293e81c8?view=display",
+      "path": "/api/reports/f1a6a5f9d7914090a2ddfe93512ffa7b?view=display",
       "status": 200
     }
   ],
