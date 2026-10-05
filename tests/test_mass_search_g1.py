@@ -54,6 +54,13 @@ def test_g1_grant_enabled_and_non_grants_stay_disabled():
     ))
     assert reacquire["enabled"] is False
     assert reacquire.get("authorization_id") == "live-g3-integrity-reacquire-rank1-2026-10-06-mitch"
+    anchored = validate_live_authorization(json.loads(
+        (ROOT / "config/live_authorization.ranked100-anchored-validation-draft.json").read_text()
+    ))
+    assert anchored["enabled"] is False
+    assert anchored.get("authorization_id") == "live-ranked100-anchored-validation-2026-10-06-mitch"
+    assert anchored.get("authorized_by_user_at") is None
+    assert anchored.get("expires_at") is None
 
 
 def test_independent_fifo_oracle_does_not_import_production_helper():

@@ -65,11 +65,16 @@ from .history_ingest import (
 
 ROOT = Path(__file__).resolve().parents[2]
 GRANT_PATH = ROOT / "config" / "live_authorization.g3-integrity-reacquire-rank1-draft.json"
+ANCHORED_VALIDATION_GRANT_PATH = ROOT / "config" / "live_authorization.ranked100-anchored-validation-draft.json"
 FREEZE_PATH = ROOT / "evidence" / "mass-wallet-funnel" / "g3-integrity-reacquire-rank1" / "FROZEN_SEGMENTS.json"
 OVERLAY_PATH = ROOT / "evidence" / "mass-wallet-funnel" / "g3-integrity-reacquire-rank1" / "rank1-signature-overlay.json"
 
 OUTCOME_LABEL = "G3_INTEGRITY_REACQUIRE_RANK1"
 AUTHORIZATION_ID = "live-g3-integrity-reacquire-rank1-2026-10-06-mitch"
+ANCHORED_VALIDATION_AUTHORIZATION_ID = "live-ranked100-anchored-validation-2026-10-06-mitch"
+ANCHORED_VALIDATION_OUTCOME = "RANKED100_ANCHORED_VALIDATION"
+PAGE0_SIGNATURE_LTE = "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG"
+PAGE1_PAGINATION_TOKEN = "452802642:577"
 ALLOWED_WALLET = "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL"
 PARENT_RECOVERY_COMMIT = "fe6a398a40c59d1e1afcb3788c3ccba00d936779"
 HELIUS_KEY_ENV = "HELIUS_API_KEY"
@@ -116,9 +121,14 @@ def _provider(grant, provider_id):
     return None
 
 
+def accepted_historical_authorization_ids():
+    """Shared ingest/dispatch accepts the named historical grants only."""
+    return frozenset({AUTHORIZATION_ID, ANCHORED_VALIDATION_AUTHORIZATION_ID})
+
+
 def assert_grant_ceilings(grant):
-    if grant.get("authorization_id") != AUTHORIZATION_ID:
-        raise ValueError("Reacquire grant authorization_id mismatch")
+    if grant.get("authorization_id") not in accepted_historical_authorization_ids():
+        raise ValueError("Historical grant authorization_id is not bound to the shared execution path")
     if grant.get("max_additional_spend_usd") != "0":
         raise ValueError("Reacquire grant forbids additional spend")
     if grant.get("do_not_reset_setup_pilot") is not True:
@@ -157,6 +167,24 @@ def assert_grant_ceilings(grant):
     leftover = grant.get("g3_leftover_authorization_id_forbidden")
     if leftover != G3_LEFTOVER_AUTHORIZATION_ID:
         raise ValueError("Grant must explicitly forbid leftover G3_RANKED100_HISTORY reuse")
+    if grant.get("no_retries") is not True or int(grant.get("retries") or 0) != 0:
+        if grant.get("authorization_id") == ANCHORED_VALIDATION_AUTHORIZATION_ID:
+            raise ValueError("Anchored-validation grant must forbid retries")
+    if grant.get("authorization_id") == ANCHORED_VALIDATION_AUTHORIZATION_ID:
+        if grant.get("reacquire_authorization_id_forbidden") != AUTHORIZATION_ID:
+            raise ValueError("Anchored-validation grant must not reuse the reacquire authorization_id")
+        if grant.get("authorized_by_user_at") not in (None, "") or grant.get("expires_at") not in (None, ""):
+            if grant.get("enabled") is True:
+                pass
+            elif grant.get("draft_status") == "DISABLED; NOT AUTHORISED":
+                raise ValueError("Disabled anchored-validation draft must not carry approval_time/expiry")
+        anchor = grant.get("historical_anchor") or {}
+        if anchor.get("page0_filters_signature_lte") != PAGE0_SIGNATURE_LTE:
+            raise ValueError("Anchored-validation page0 filters.signature.lte does not match the frozen newest signature")
+        if anchor.get("page1_pagination_token") != PAGE1_PAGINATION_TOKEN:
+            raise ValueError("Anchored-validation page1 paginationToken does not match the frozen token")
+        if anchor.get("top_level_until_forbidden") is not True:
+            raise ValueError("Anchored-validation grant must forbid top-level until")
     return True
 
 
@@ -168,11 +196,33 @@ def load_reacquire_grant(path=None):
         G1_AUTHORIZATION_ID,
         RANKED100_AUTHORIZATION_ID,
         G3_LEFTOVER_AUTHORIZATION_ID,
+        ANCHORED_VALIDATION_AUTHORIZATION_ID,
     }
     if payload.get("authorization_id") in forbidden:
-        raise ValueError("G1, ranked-100, and leftover G3 grants must not be reused for reacquire")
+        raise ValueError("G1, ranked-100, leftover G3, and anchored-validation grants must not be reused for reacquire")
     if payload.get("authorization_id") != AUTHORIZATION_ID:
         raise ValueError("This runner only accepts live-g3-integrity-reacquire-rank1-2026-10-06-mitch")
+    assert_grant_ceilings(payload)
+    return payload
+
+
+def load_anchored_validation_grant(path=None):
+    """Bind the new named grant to the shared historical ingest path."""
+    payload = json.loads(Path(path or ANCHORED_VALIDATION_GRANT_PATH).read_text(encoding="utf-8"))
+    if payload.get("schema_version") != LIVE_AUTH_SCHEMA:
+        raise ValueError("Grant must use live-research-authorization-v1")
+    forbidden = {
+        G1_AUTHORIZATION_ID,
+        RANKED100_AUTHORIZATION_ID,
+        G3_LEFTOVER_AUTHORIZATION_ID,
+        AUTHORIZATION_ID,
+    }
+    if payload.get("authorization_id") in forbidden:
+        raise ValueError("Prior grants must not be reused for ranked-100 anchored validation")
+    if payload.get("authorization_id") != ANCHORED_VALIDATION_AUTHORIZATION_ID:
+        raise ValueError("This binding only accepts live-ranked100-anchored-validation-2026-10-06-mitch")
+    if payload.get("enabled") is True:
+        raise ValueError("Repo anchored-validation template must stay enabled:false")
     assert_grant_ceilings(payload)
     return payload
 
@@ -299,17 +349,20 @@ def assert_non_grants_stay_disabled():
     ranked = validate_live_authorization(json.loads(RANKED100_GRANT_PATH.read_text(encoding="utf-8")))
     leftover = validate_live_authorization(json.loads(G3_LEFTOVER_GRANT_PATH.read_text(encoding="utf-8")))
     reacquire = validate_live_authorization(json.loads(GRANT_PATH.read_text(encoding="utf-8")))
-    if any(row.get("enabled") for row in (example, draft, ranked, leftover, reacquire)):
-        raise ValueError("Example, proof-draft, ranked-100, leftover G3, or reacquire grant is enabled")
+    anchored = validate_live_authorization(json.loads(ANCHORED_VALIDATION_GRANT_PATH.read_text(encoding="utf-8")))
+    if any(row.get("enabled") for row in (example, draft, ranked, leftover, reacquire, anchored)):
+        raise ValueError("Example, proof-draft, ranked-100, leftover G3, reacquire, or anchored-validation grant is enabled")
     return {
         "example_enabled": False,
         "draft_enabled": False,
         "ranked100_enabled": False,
         "g3_leftover_enabled": False,
         "reacquire_enabled": False,
+        "anchored_validation_enabled": False,
         "g1_not_reused": True,
         "ranked100_not_reused": True,
         "g3_leftover_not_reused": True,
+        "reacquire_not_reused": True,
     }
 
 
@@ -433,12 +486,22 @@ def arming_blockers(grant, *, credentials=None, freeze=None):
             "detail": "G1, ranked-100, and leftover G3 grants must not be reused",
         })
         return blockers
-    if grant.get("authorization_id") != AUTHORIZATION_ID:
+    if grant.get("authorization_id") not in accepted_historical_authorization_ids():
         blockers.append({"code": "unexpected_authorization_id", "detail": grant.get("authorization_id")})
+    if grant.get("authorization_id") == ANCHORED_VALIDATION_AUTHORIZATION_ID and grant.get("enabled") is True and grant.get("reacquire_authorization_id_forbidden") != AUTHORIZATION_ID:
+        blockers.append({
+            "code": "prior_grant_reuse_forbidden",
+            "detail": "Anchored validation must not reuse the reacquire authorization_id",
+        })
     if grant.get("enabled") is not True:
         blockers.append({
             "code": "grant_disabled",
-            "detail": "Repo reacquire template stays enabled:false; arm only a local uncommitted copy on the secure box",
+            "detail": "Repo historical-grant template stays enabled:false; arm only a local uncommitted copy on the secure box",
+        })
+    if grant.get("authorization_id") == ANCHORED_VALIDATION_AUTHORIZATION_ID and not grant.get("authorized_by_user_at"):
+        blockers.append({
+            "code": "not_authorised",
+            "detail": "DISABLED; NOT AUTHORISED until Mitch explicitly approves and sets approval_time/expiry",
         })
     expires = grant.get("expires_at")
     if isinstance(expires, str) and expires and expires <= utc_now():
@@ -490,11 +553,15 @@ def armed_test_grant(base=None):
     """In-memory grant for tests. Never writes enabled=true to disk."""
     payload = deepcopy(base or json.loads(GRANT_PATH.read_text(encoding="utf-8")))
     payload["enabled"] = True
+    payload["authorized_by_user_at"] = payload.get("authorized_by_user_at") or "2099-01-01T00:00:00Z"
     payload["expires_at"] = "2099-01-01T00:00:00Z"
+    payload.pop("draft_status", None)
     for entry in payload["providers"]:
         if entry["provider_id"] == "helius":
             entry["existing_plan_confirmed"] = True
             entry["remaining_quota_confirmed_at"] = payload["authorized_by_user_at"]
+            entry["cycle_start"] = entry.get("cycle_start") or payload["authorized_by_user_at"]
+            entry["cycle_end_exclusive"] = entry.get("cycle_end_exclusive") or payload["expires_at"]
     return validate_live_authorization(payload)
 
 
@@ -788,7 +855,7 @@ async def fetch_reacquire_page(store, grant, freeze, address, *, page_index, rea
 
 def _base_receipt(grant, freeze, checked, blockers, non_grants):
     return {
-        "outcome_label": OUTCOME_LABEL,
+        "outcome_label": grant.get("outcome_label") or OUTCOME_LABEL,
         "authorization_id": grant.get("authorization_id"),
         "grant_enabled": bool(checked.get("enabled")),
         "repo_template_enabled": False,
