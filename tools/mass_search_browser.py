@@ -92,13 +92,39 @@ def run(args):
             expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
             expect(page.get_by_role("button", name="Continue investigation", exact=True)).to_be_disabled()
 
+        def expect_watchlist_pnl_grouped():
+            measured = page.evaluate(
+                """() => {
+                  const profit = document.querySelector('[data-list-profit="reconstructed-subset"]');
+                  const meta = document.querySelector('.watch-report-meta');
+                  const button = [...document.querySelectorAll('button')].find((el) => el.textContent.trim() === 'Latest report');
+                  if (!profit || !meta || !button) return { ok: false, reason: 'missing-nodes' };
+                  const p = profit.getBoundingClientRect();
+                  const m = meta.getBoundingClientRect();
+                  const b = button.getBoundingClientRect();
+                  const grouped = p.left >= m.left - 2 && p.right <= m.right + 2 && p.top >= m.top - 2 && p.bottom <= m.bottom + 2;
+                  const notUnderButton = p.right <= b.left + 2 || p.bottom <= b.top + 2;
+                  return {
+                    ok: grouped && notUnderButton,
+                    grouped,
+                    notUnderButton,
+                    innerWidth: innerWidth,
+                    profit: { left: p.left, right: p.right, top: p.top, bottom: p.bottom },
+                    meta: { left: m.left, right: m.right, top: m.top, bottom: m.bottom },
+                    button: { left: b.left, right: b.right, top: b.top, bottom: b.bottom },
+                  };
+                }"""
+            )
+            assert measured["ok"], measured
+
         def expect_watchlist_subset():
             expect(page.locator('[data-watch-source="mass-search"]').first).to_be_visible()
             expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
-            expect(page.locator(".subset-list-label").first).to_have_text("Reconstructed subset")
+            expect(page.locator(".watch-report-meta .subset-list-label").first).to_have_text("Reconstructed subset")
             expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
             expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
             expect(page.get_by_text("not started from this list", exact=False)).to_be_visible()
+            expect_watchlist_pnl_grouped()
 
         def expect_results_subset():
             page.get_by_label("Data source").select_option("mass-search")
@@ -147,6 +173,25 @@ def run(args):
         expect(page.get_by_text("Not scanned", exact=True)).to_be_visible()
         capture("01-empty")
         result["cases"].append({"case": "empty-not-scanned", "state": "PASS"})
+
+        page.get_by_label("Main navigation").get_by_role("button", name="Watchlist").click()
+        expect(page.locator('[data-empty-kind="watchlist-none"]')).to_be_visible()
+        expect(page.get_by_text("not a MATCH shortlist", exact=False)).to_be_visible()
+        expect(page.get_by_text("does not start quote-only observation", exact=False)).to_be_visible()
+        capture("14-watchlist-empty")
+        page.get_by_label("Main navigation").get_by_role("button", name="Results").click()
+        expect(page.locator('[data-empty-kind="results-none"]')).to_be_visible()
+        expect(page.get_by_text("reconstructed subset", exact=False).first).to_be_visible()
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        page.get_by_label("Data source").select_option("mass-search")
+        expect(page.locator('[data-empty-kind="results-no-subset"]')).to_be_visible()
+        expect(page.get_by_text("No reconstructed-subset reports", exact=True)).to_be_visible()
+        expect(page.get_by_text("not wallet-wide MATCH", exact=False).first).to_be_visible()
+        capture("14-results-empty")
+        result["cases"].append({"case": "empty-watchlist-results", "state": "PASS"})
+
+        page.get_by_label("Main navigation").get_by_role("button", name="Search", exact=True).click()
+        expect(page.get_by_text("Not scanned", exact=True)).to_be_visible()
 
         with page.expect_response(lambda response: response.request.method == "POST" and response.url.endswith("/api/mass-search/vertical-slice")) as sliced:
             page.get_by_role("button", name="Run offline slice", exact=True).click()
@@ -352,6 +397,11 @@ def run(args):
         assert exported_run["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
         assert exported_run["reports"][0]["policy"] == "UNRESOLVED"
         assert exported_run["reports"][0]["source"] == "mass-search"
+        page.get_by_role("button", name="Reopen report", exact=True).click()
+        expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect_worksheet()
+        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+        capture("15-reopen-after-export")
         page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
         expect(page.get_by_role("button", name="Shortlisted", exact=True)).to_be_visible(timeout=15000)
         expect_subset_screening()
@@ -361,7 +411,7 @@ def run(args):
             "state": "PASS",
             "report_id": report_id,
             "screening_id": screening_id,
-            "loop": ["slice", "screen", "reopen-screening", "shortlist", "restart", "watchlist", "latest-report", "results", "export", "research"],
+            "loop": ["slice", "screen", "reopen-screening", "shortlist", "restart", "watchlist", "latest-report", "results", "export", "reopen-export", "research"],
             "observation_started": False,
             "export": "mass-search-export-after-restart.json",
         })

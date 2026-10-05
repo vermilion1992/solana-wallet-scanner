@@ -1673,10 +1673,10 @@ select:focus {
   font-size: 10px;
 }
 .watchlist-list .watch-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 13px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(132px, max-content) auto;
+  align-items: start;
+  gap: 12px 16px;
   padding: 20px 23px;
   border-top: 1px solid #edf1e8;
   min-width: 0;
@@ -1685,10 +1685,20 @@ select:focus {
   display: grid;
   gap: 4px;
   min-width: 0;
+  max-width: 220px;
   overflow-wrap: anywhere;
+  justify-items: start;
+}
+.watch-report-meta .subset-list-profit {
+  align-items: flex-start;
+}
+.watch-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .watch-wallet {
-  flex: 1;
   min-width: 0;
 }
 .watch-wallet strong {
@@ -1703,10 +1713,12 @@ select:focus {
   margin-top: 6px;
   overflow-wrap: anywhere;
 }
+.watch-actions > .button,
 .watch-row > .button {
   font-size: 9px;
   min-height: 32px;
   padding: 7px 10px;
+  white-space: nowrap;
 }
 .watch-row > .muted {
   font-size: 10px;
@@ -2677,11 +2689,11 @@ pre {
     grid-column: 1/-1;
     justify-self: end;
   }
-  .watch-row {
-    flex-wrap: wrap;
+  .watchlist-list .watch-row {
+    grid-template-columns: auto minmax(0, 1fr) minmax(120px, max-content) auto;
   }
   .watch-wallet {
-    min-width: calc(100% - 55px);
+    min-width: 0;
   }
 }
 @media (max-width: 950px) {
@@ -3182,6 +3194,16 @@ pre {
   .watchlist-list .watch-row {
     padding: 20px;
     gap: 10px;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .watch-wallet {
+    grid-column: 2;
+  }
+  .watch-report-meta,
+  .watch-row > .muted,
+  .watch-actions {
+    grid-column: 1 / -1;
+    max-width: none;
   }
   .watch-wallet small {
     font-size: 8px;

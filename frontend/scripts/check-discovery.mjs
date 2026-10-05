@@ -63,7 +63,7 @@ try {
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
-  const { CompareView, Results, WatchlistView } = require(join(output, "workspace.js"));
+  const { CompareView, Results, WatchlistView, resultsEmptyCopy, watchlistEmptyCopy } = require(join(output, "workspace.js"));
   const { ReportTable } = require(join(output, "components.js"));
   const { compareDecimal, listRealisedProfit } = require(join(output, "format.js"));
   const {
@@ -2098,6 +2098,32 @@ try {
   assert.ok(watchlistHtml.includes('data-watch-source="mass-search"'));
   assert.ok(watchlistHtml.includes("0.575"));
   assert.ok(watchlistHtml.includes("not started from this list"));
+  assert.ok(watchlistHtml.includes("watch-report-meta"));
+  assert.ok(watchlistHtml.includes("watch-actions"));
+  assert.ok(watchlistHtml.indexOf("watch-report-meta") < watchlistHtml.indexOf("watch-actions"));
+  assert.ok(watchlistHtml.indexOf("data-list-profit=\"reconstructed-subset\"") < watchlistHtml.indexOf("Latest report"));
+  const emptyWatchlistHtml = renderToStaticMarkup(React.createElement(WatchlistView, {
+    ...actions,
+    state: { ...searchState, reports: [], watchlist: [] },
+  }));
+  assert.equal(watchlistEmptyCopy().kind, "watchlist-none");
+  assert.ok(emptyWatchlistHtml.includes('data-empty-kind="watchlist-none"'));
+  assert.ok(emptyWatchlistHtml.includes("not a MATCH shortlist"));
+  assert.ok(emptyWatchlistHtml.includes("does not start quote-only observation"));
+  const emptyResultsHtml = renderToStaticMarkup(React.createElement(Results, {
+    ...actions,
+    state: { ...searchState, reports: [] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.equal(resultsEmptyCopy("all", 0).kind, "results-none");
+  assert.equal(resultsEmptyCopy("mass-search", 0).kind, "results-no-subset");
+  assert.equal(resultsEmptyCopy("mass-search", 1).kind, "results-no-subset");
+  assert.equal(resultsEmptyCopy("all", 1).kind, "results-filtered");
+  assert.ok(emptyResultsHtml.includes('data-empty-kind="results-none"'));
+  assert.ok(emptyResultsHtml.includes("reconstructed subset"));
+  assert.ok(emptyResultsHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(resultsEmptyCopy("mass-search", 0).detail.includes("not wallet-wide MATCH"));
   const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },

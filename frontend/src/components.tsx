@@ -56,14 +56,16 @@ export function Empty({
   detail,
   icon: Icon = Search,
   action,
+  kind,
 }: {
   title: string;
   detail: string;
   icon?: LucideIcon;
   action?: ReactNode;
+  kind?: string;
 }) {
   return (
-    <div className="empty">
+    <div className="empty" data-empty-kind={kind}>
       <div className="empty-icon">
         <Icon size={25} />
       </div>
@@ -199,7 +201,13 @@ export const metricDefinitions: {
     hint: "Equity change adjusted for external flows",
   },
 ];
-export function ListRealisedProfitCell({ report }: { report: Report }) {
+export function ListRealisedProfitCell({
+  report,
+  hideLabel = false,
+}: {
+  report: Report;
+  hideLabel?: boolean;
+}) {
   const listed = listRealisedProfit(report);
   if (listed.basis === "reconstructed-subset" && listed.value != null) {
     return (
@@ -210,7 +218,7 @@ export function ListRealisedProfitCell({ report }: { report: Report }) {
       >
         {decimal(listed.value, 4)}
         <small> SOL</small>
-        <small className="subset-list-label">Reconstructed subset</small>
+        {!hideLabel && <small className="subset-list-label">Reconstructed subset</small>}
       </span>
     );
   }

@@ -629,6 +629,38 @@ export function ScanView({ state, busy, run, navigate, manualAddresses, refresh,
 function ListPreset() {
   return <Layers3 size={15} />;
 }
+export function resultsEmptyCopy(source: string, totalReports: number) {
+  if (source === "mass-search") {
+    return {
+      kind: "results-no-subset",
+      title: "No reconstructed-subset reports",
+      detail:
+        "This filter shows mass-search subset worksheets only. They are not wallet-wide MATCH rows. Run an offline Search slice, or choose another source.",
+    };
+  }
+  if (!totalReports) {
+    return {
+      kind: "results-none",
+      title: "No reports yet",
+      detail:
+        "Run a small scan, load the offline demonstration, or run an offline Search slice. Mass-search rows are a reconstructed subset, not a wallet-wide MATCH.",
+    };
+  }
+  return {
+    kind: "results-filtered",
+    title: "No reports for these filters",
+    detail:
+      "Adjust the filters to inspect your saved reports. Policy thresholds remain unchanged. Mass-search rows, when present, stay a reconstructed subset.",
+  };
+}
+export function watchlistEmptyCopy() {
+  return {
+    kind: "watchlist-none",
+    title: "A place for wallets worth revisiting",
+    detail:
+      "Save a public address above or use the star button on a wallet report. An empty list is not a MATCH shortlist and does not start quote-only observation.",
+  };
+}
 export function Results({
   state,
   open,
@@ -721,18 +753,7 @@ export function Results({
           onSelect={onSelect}
         />
       ) : (
-        <Empty
-          title={
-            state.reports.length
-              ? "No reports for these filters"
-              : "No reports yet"
-          }
-          detail={
-            state.reports.length
-              ? "Adjust the filters to inspect your saved reports. Policy thresholds remain unchanged."
-              : "Run a small scan or load the offline demonstration to inspect how reports are evaluated."
-          }
-        />
+        <Empty {...resultsEmptyCopy(source, state.reports.length)} />
       )}
       <div className="result-footer">
         <span>
@@ -1030,17 +1051,21 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                     <small className="mono">{item.address}</small>
                   </div>
                   {report ? (
-                    <>
-                      <div className="watch-report-meta">
-                        <Badge value={report.policy} />
-                        {subset && (
-                          <>
-                            <small className="subset-list-label">Reconstructed subset</small>
-                            <small>not a wallet-wide MATCH</small>
-                            <ListRealisedProfitCell report={report} />
-                          </>
-                        )}
-                      </div>
+                    <div className="watch-report-meta">
+                      <Badge value={report.policy} />
+                      {subset && (
+                        <>
+                          <small className="subset-list-label">Reconstructed subset</small>
+                          <small>not a wallet-wide MATCH</small>
+                          <ListRealisedProfitCell report={report} hideLabel />
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="muted">{subset ? "Reconstructed subset · no live MATCH" : "No report yet"}</span>
+                  )}
+                  <div className="watch-actions">
+                    {report && (
                       <Button
                         variant="secondary"
                         onClick={() => open(report)}
@@ -1048,36 +1073,30 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                       >
                         Latest report
                       </Button>
-                    </>
-                  ) : (
-                    <span className="muted">{subset ? "Reconstructed subset · no live MATCH" : "No report yet"}</span>
-                  )}
-                  <button
-                    className="icon-button"
-                    disabled={busy === `watch-remove-${item.address}`}
-                    aria-label={`Remove ${item.label || item.address} from watchlist`}
-                    onClick={() =>
-                      run(
-                        `watch-remove-${item.address}`,
-                        `/watchlist/${item.address}`,
-                        undefined,
-                        "DELETE",
-                        "Wallet removed from the watchlist.",
-                      )
-                    }
-                  >
-                    <Trash2 size={17} />
-                  </button>
+                    )}
+                    <button
+                      className="icon-button"
+                      disabled={busy === `watch-remove-${item.address}`}
+                      aria-label={`Remove ${item.label || item.address} from watchlist`}
+                      onClick={() =>
+                        run(
+                          `watch-remove-${item.address}`,
+                          `/watchlist/${item.address}`,
+                          undefined,
+                          "DELETE",
+                          "Wallet removed from the watchlist.",
+                        )
+                      }
+                    >
+                      <Trash2 size={17} />
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <Empty
-            title="A place for wallets worth revisiting"
-            detail="Save a public address above or use the star button on a wallet report."
-            icon={Star}
-          />
+          <Empty {...watchlistEmptyCopy()} icon={Star} />
         )}
       </section>
     </>
