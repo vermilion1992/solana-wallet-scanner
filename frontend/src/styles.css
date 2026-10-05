@@ -5128,9 +5128,24 @@ pre {
   align-items: flex-start;
 }
 .report-cards .button,
-.compare-cards .button {
+.compare-cards .button,
+.research-cards .button {
   width: 100%;
   white-space: normal;
+}
+.research-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.research-cards li {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 .subset-worksheet { margin-bottom: 18px; }
 .subset-worksheet-note {
@@ -5206,8 +5221,18 @@ pre {
     display: none;
   }
   .report-cards,
-  .compare-cards {
+  .compare-cards,
+  .research-cards {
     display: grid;
+  }
+  .research-table-wrap {
+    display: none;
+  }
+  .research-report-picker,
+  .research-report-picker select,
+  .research-action-row {
+    max-width: 100%;
+    min-width: 0;
   }
   .compare-picker {
     grid-template-columns: minmax(0, 1fr);

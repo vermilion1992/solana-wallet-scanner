@@ -58,7 +58,7 @@ try {
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
-  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
+  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, reportPickerLabel, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
@@ -651,6 +651,8 @@ try {
   assert.ok(paperHtml.includes("Frozen at run creation"));
   assert.ok(paperHtml.includes("Quotes do not guarantee execution"));
   assert.ok(paperHtml.includes("counted once"), "Pool/provider fees are not modeled a second time");
+  assert.ok(paperHtml.includes("research-cards"));
+  assert.ok(paperHtml.includes("research-table-wrap"));
   const reconnectingHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
     ...paper, status: "running", stop_reason: undefined,
     observer: { status: "reconnecting", notifications: 3, transactions: 2,
@@ -2035,6 +2037,16 @@ try {
   assert.ok(resultsHtml.includes("Reconstructed subset"));
   assert.ok(resultsHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(resultsHtml.includes("Mass-search subset"));
+  assert.equal(reportPickerLabel({ source: "mass-search", label: "Mass-search subset · SYNTHETIC", address, created_at: cohort.created_at }).startsWith("subset · "), true);
+  const researchSubsetHtml = renderToStaticMarkup(React.createElement(ResearchView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport], observations: [paper, { ...paper, id: "paper-2" }] },
+    showEvidence: () => undefined,
+  }));
+  assert.ok(researchSubsetHtml.includes("subset · "));
+  assert.ok(researchSubsetHtml.includes("reconstructed subset, not a wallet-wide MATCH"));
+  assert.ok(researchSubsetHtml.includes("research-cards"));
+  assert.ok(researchSubsetHtml.includes("Paper P&amp;L including open exposure") || researchSubsetHtml.includes("Paper P&L including open exposure"));
   const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },
