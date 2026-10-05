@@ -10,14 +10,14 @@
       "state": "PASS"
     },
     {
-      "case": "empty-watchlist-results",
+      "case": "empty-watchlist-results-compare",
       "state": "PASS"
     },
     {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6"
+      "run_id": "1e8befe44e8e4d7b9225852d4a11a468",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
       "case": "export-run",
@@ -26,36 +26,41 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6"
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
       "case": "restart-reopen-worksheet",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6"
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
       "case": "results-subset-pnl",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6"
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
+    },
+    {
+      "case": "compare-unselected-subset",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
       "case": "compare-subset-pnl",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6"
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
       "case": "research-screen-subset",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6",
-      "screening_id": "de2d227bd4434e0586a972da4625806b",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
       "result": "insufficient_evidence",
       "observation_started": false
     },
     {
       "case": "restart-reopen-screening",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6",
-      "screening_id": "de2d227bd4434e0586a972da4625806b",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
       "result": "insufficient_evidence",
       "observation_started": false,
       "export": "screening-export.json"
@@ -63,15 +68,15 @@
     {
       "case": "shortlist-subset-watchlist-results",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6",
-      "screening_id": "de2d227bd4434e0586a972da4625806b",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
       "observation_started": false
     },
     {
       "case": "restart-shortlist-loop",
       "state": "PASS",
-      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6",
-      "screening_id": "de2d227bd4434e0586a972da4625806b",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
       "loop": [
         "slice",
         "screen",
@@ -142,6 +147,22 @@
       "nodes": []
     },
     {
+      "name": "16-compare-empty",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-empty",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
       "name": "02-populated-slice",
       "label": "desktop",
       "innerWidth": 1440,
@@ -215,6 +236,22 @@
     },
     {
       "name": "06-results-subset-pnl",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-unselected-subset",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-unselected-subset",
       "label": "mobile",
       "innerWidth": 360,
       "scrollWidth": 360,
@@ -417,22 +454,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/78fc91bd5dcb49739ddae9bef766e9d6?view=display",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
       "status": 200
     },
     {
@@ -452,22 +489,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/78fc91bd5dcb49739ddae9bef766e9d6?view=display",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
       "status": 200
     },
     {
@@ -492,7 +529,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/screenings/de2d227bd4434e0586a972da4625806b",
+      "path": "/api/screenings/da562c00322a4543882e0d1bc2a74d51",
       "status": 200
     },
     {
@@ -522,7 +559,7 @@
     },
     {
       "method": "GET",
-      "path": "/api/reports/78fc91bd5dcb49739ddae9bef766e9d6?view=display",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
       "status": 200
     },
     {
@@ -532,22 +569,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/7e19f332218c40d4ac6e2d0b520f0e83/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/78fc91bd5dcb49739ddae9bef766e9d6?view=display",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
       "status": 200
     }
   ],
