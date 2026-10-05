@@ -1,6 +1,6 @@
 {
   "run": {
-    "run_id": "d1c2b86d85c34005996754f234fb1b43",
+    "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
     "parent_run_id": null,
     "status": "UNIVERSE_SEALED",
     "source_id": "fixture-traders",
@@ -107,16 +107,16 @@
       }
     },
     "plan_sha256": "8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5",
-    "plan_frozen_at": "2026-10-05T09:55:52.423853+00:00",
-    "window_start": "2026-09-05T09:55:52.423853Z",
-    "window_end": "2026-10-05T09:55:52.423853Z",
+    "plan_frozen_at": "2026-10-05T10:02:24.710335+00:00",
+    "window_start": "2026-09-05T10:02:24.710335Z",
+    "window_end": "2026-10-05T10:02:24.710335Z",
     "universe": {
       "raw_rows": 1,
       "unique_candidates": 1,
       "duplicate_rows": 0,
       "invalid_rows": 0
     },
-    "universe_sealed_at": "2026-10-05T09:55:52.430084+00:00",
+    "universe_sealed_at": "2026-10-05T10:02:24.719684+00:00",
     "universe_sha256": "9207655a687369d82df3c915b5c1841b27cc4c1f5a6d61725ca4ec6188be7c67",
     "cohort_frozen_at": null,
     "cohort_sha256": null,
@@ -172,8 +172,8 @@
   },
   "decisions": [
     {
-      "decision_id": "6d804dd76a44439c90bc05dbd0878644",
-      "run_id": "d1c2b86d85c34005996754f234fb1b43",
+      "decision_id": "038aff99c5e54adbb18cffecff4f4179",
+      "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
       "stage_id": "behaviour",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -182,11 +182,11 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "targeted_history",
-      "decided_at": "2026-10-05T09:55:52.439678+00:00"
+      "decided_at": "2026-10-05T10:02:24.740597+00:00"
     },
     {
-      "decision_id": "79634f1fefc64865849dae1103ab5cb7",
-      "run_id": "d1c2b86d85c34005996754f234fb1b43",
+      "decision_id": "7e6f06b5dda1499d9fd4bdb8751644c5",
+      "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
       "stage_id": "forward_select",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -195,11 +195,11 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "quote_observation",
-      "decided_at": "2026-10-05T09:55:52.441701+00:00"
+      "decided_at": "2026-10-05T10:02:24.743488+00:00"
     },
     {
-      "decision_id": "14fe0c2a91a145f0aac9031f99456c53",
-      "run_id": "d1c2b86d85c34005996754f234fb1b43",
+      "decision_id": "61f7c0cfefd340d3b93a04eefabeb0fb",
+      "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
       "stage_id": "reconstruct",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -208,11 +208,11 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "forward_observation",
-      "decided_at": "2026-10-05T09:55:52.440709+00:00"
+      "decided_at": "2026-10-05T10:02:24.742151+00:00"
     },
     {
-      "decision_id": "0dbd341c80ff46e1a88715312ad9f6d6",
-      "run_id": "d1c2b86d85c34005996754f234fb1b43",
+      "decision_id": "08459c3bc0a74980a6e464ccc417d79a",
+      "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
       "stage_id": "triage",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -221,22 +221,22 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "behaviour_history",
-      "decided_at": "2026-10-05T09:55:52.438591+00:00"
+      "decided_at": "2026-10-05T10:02:24.737830+00:00"
     }
   ],
   "report_links": [
     {
-      "link_id": "223925f2b16b4fd1a45c7ffa4affd51a",
-      "run_id": "d1c2b86d85c34005996754f234fb1b43",
+      "link_id": "11ef89a81a144647ae88bb396ea62c4f",
+      "run_id": "7e19f332218c40d4ac6e2d0b520f0e83",
       "candidate_id": "solana:11111111111111111111111111111113",
-      "report_id": "9bf7c14c6b2f48e69bb523f4f583ba47",
-      "reconciliation_json": "{\"worksheet\": {\"sale_fifo_basis_sol\": [\"0.505\", \"0.4545\", \"0.0505\"], \"sale_net_profit_sol\": [\"0.29\", \"0.2605\", \"0.0245\"], \"total_profit_sol\": \"0.575\"}, \"material_exit\": {\"state\": \"KNOWN\", \"first_sale_seconds\": 20, \"exit_50_seconds\": 20, \"exit_90_seconds\": 30, \"final_hold_seconds\": 172800, \"quantity_weighted_exit_seconds\": \"8663.5\", \"sold_units\": \"100\", \"acquired_units\": \"100\", \"open_units\": \"0\", \"method_version\": \"material-exit-v1\", \"missing_dependencies\": []}, \"evidence\": \"a4e4a764a21e193d25f556db94fedf5a19245a9f1f364b92a95118264a387db4\"}",
-      "created_at": "2026-10-05T09:55:52.434912+00:00"
+      "report_id": "78fc91bd5dcb49739ddae9bef766e9d6",
+      "reconciliation_json": "{\"worksheet\": {\"sale_fifo_basis_sol\": [\"0.505\", \"0.4545\", \"0.0505\"], \"sale_net_profit_sol\": [\"0.29\", \"0.2605\", \"0.0245\"], \"total_profit_sol\": \"0.575\"}, \"material_exit\": {\"state\": \"KNOWN\", \"first_sale_seconds\": 20, \"exit_50_seconds\": 20, \"exit_90_seconds\": 30, \"final_hold_seconds\": 172800, \"quantity_weighted_exit_seconds\": \"8663.5\", \"sold_units\": \"100\", \"acquired_units\": \"100\", \"open_units\": \"0\", \"method_version\": \"material-exit-v1\", \"missing_dependencies\": []}, \"evidence\": \"27e8ed71dda6af0de51f606cc86a8b3ec35a3475037891cd69bb29488f9691f2\"}",
+      "created_at": "2026-10-05T10:02:24.730497+00:00"
     }
   ],
   "reports": [
     {
-      "id": "9bf7c14c6b2f48e69bb523f4f583ba47",
+      "id": "78fc91bd5dcb49739ddae9bef766e9d6",
       "candidate_id": "solana:11111111111111111111111111111113",
       "address": "11111111111111111111111111111113",
       "source": "mass-search",
@@ -275,5 +275,5 @@
       ]
     }
   ],
-  "exported_at": "2026-10-05T09:56:11.889426+00:00"
+  "exported_at": "2026-10-05T10:02:44.406214+00:00"
 }
