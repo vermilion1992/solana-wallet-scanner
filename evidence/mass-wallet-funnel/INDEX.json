@@ -1,5 +1,10 @@
 {
   "kind": "mass-wallet-funnel-index-v1",
+  "priority": "proof-of-idea",
+  "proof_brief": "PROOF_BRIEF.md",
+  "genuine_replay_hunt": "GENUINE_REPLAY_HUNT.json",
+  "live_grant_draft": "config/live_authorization.proof-grant-draft.json",
+  "usable_genuine_replay": false,
   "tested_application_commit": "f7ac05742b9079b2532593698ef3d2a35b89c6b4",
   "prior_tested_application_commit": "a1082c65ef5870d75c034f77d939f6d9d8313726",
   "base_commit": "fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69",
@@ -20,6 +25,14 @@
   "offline_reopen_after_export_browser": "ui-offline-browser/15-reopen-after-export-desktop.png",
   "offline_compare_empty_browser": "ui-offline-browser/16-compare-empty-desktop.png",
   "offline_compare_unselected_browser": "ui-offline-browser/16-compare-unselected-subset-desktop.png",
+  "idea_sequence_synthetic": {
+    "corpus_kind": "SYNTHETIC",
+    "search_populated": "ui-offline-browser/02-populated-slice-desktop.png",
+    "results_subset_pnl": "ui-offline-browser/06-results-subset-pnl-desktop.png",
+    "compare_subset_pnl": "ui-offline-browser/07-compare-subset-pnl-desktop.png",
+    "research_worksheet": "ui-offline-browser/09-research-screen-subset-desktop.png",
+    "shortlist": "ui-offline-browser/11-watchlist-shortlist-subset-desktop.png"
+  },
   "outcomes": {
     "MASS_SEARCH_SOFTWARE": "implemented_offline",
     "REAL_SEARCH_BENCHMARK": "not_demonstrated",

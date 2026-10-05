@@ -1,5 +1,7 @@
 # Codex final handoff template
 
+Mitch proof priority (5 October 2026): see `PROOF_BRIEF.md`. This file remains the software-loop ledger. Synthetic offline is not real-trader proof.
+
 ## Actual outcome
 A local Search funnel now runs offline from an authorised-or-fixture candidate source through a frozen universe, cheap triage, targeted reconstruction, subset P&L / median hold / material-exit worksheet, and a saved export. The Search UI path is usable end-to-end offline: empty states, fixture slice, 360px card shortlist, export, open report with the independent subset worksheet visible, reopen after launcher restart, Results/Compare display of the reconstructed-subset P&L (0.575 SOL), Research screening of that subset report as insufficient evidence — not MATCH, not an observation start — and the shortlisted Watchlist row still reads reconstructed subset / Unresolved / 0.575 SOL after a process restart, with export integrity intact. One synthetic source-to-report slice and a 1,000-unique fixture acquire work. The official local 10,000-row refilter (5 warmup / 20 measured, normal SQLite store) met the 500 ms p95 target. Live Birdeye acquisition, genuine multi-wallet analytics, and forward observation remain blocked: there is no enabled `live-research-authorization-v1`, and `config/live_authorization.example.json` is not a grant.
 
@@ -108,6 +110,6 @@ Live blockers unchanged:
 - DATA-01 / B1 NO_GO_CURRENT_SOURCE; legacy PRODUCT_READY remains false
 
 ## Next action
-Stop offline UI micro-polish. Live remains blocked until one named `live-research-authorization-v1` (not the example file) confirms remaining quota and cycle dates: Birdeye `GET /trader/gainers-losers` (page 100, offset+limit ≤ 10000, ceiling 10 calls / 250 CU, purpose G2 1,000 unique candidates, $0 extra spend) and, separately, Helius `getTransactionsForAddress` for surviving wallets only (ceiling 20 calls / 600 credits, purpose G1/G3 targeted history, do not reset setup-pilot).
+Proof of idea, not polish: see `PROOF_BRIEF.md`. Genuine-replay hunt (`GENUINE_REPLAY_HUNT.json`) found `evidence/runs/real-cache` but no supported closed buy+sell; do not fabricate archives. Disabled grant draft is `config/live_authorization.proof-grant-draft.json` (not a grant). First live unlock after a real operator `live-research-authorization-v1`: G1 vertical slice only, then G2, then G3. Ceilings Birdeye ≤10 / ~250 CU, Helius ≤20 / ~600 credits, $0 extra, no overages, no setup-pilot reset.
 
 Independent outcomes: MASS_SEARCH_SOFTWARE = implemented offline. REAL_SEARCH_BENCHMARK, REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED, RESEARCH_OUTCOME = not demonstrated. Legacy PRODUCT_READY remains false.
