@@ -18,6 +18,7 @@ try {
       "src/report.tsx",
       "src/EvidenceAudit.tsx",
       "src/MassSearch.tsx",
+      "src/workspace.tsx",
       "--target",
       "ES2022",
       "--module",
@@ -61,6 +62,9 @@ try {
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
+  const { Results } = require(join(output, "workspace.js"));
+  const { ReportTable } = require(join(output, "components.js"));
+  const { compareDecimal, listRealisedProfit } = require(join(output, "format.js"));
   const {
     parseRawEvidenceBundle,
     EvidenceAuditResult,
@@ -1984,6 +1988,52 @@ try {
   assert.ok(subsetHtml.includes("Insufficient evidence"));
   assert.ok(subsetHtml.includes('data-subset-worksheet="independent"'));
   assert.ok(renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, { report: searchState.reports[0] })) === "");
+  assert.deepEqual(
+    listRealisedProfit({ source: "mass-search", metrics: {}, worksheet: { total_profit_sol: "0.575" } }),
+    { value: "0.575", basis: "reconstructed-subset" },
+  );
+  assert.deepEqual(
+    listRealisedProfit({
+      source: "live",
+      metrics: { profit_sol: { status: "known", value: "2" } },
+      worksheet: { total_profit_sol: "0.575" },
+    }),
+    { value: "2", basis: "wallet" },
+  );
+  assert.deepEqual(
+    listRealisedProfit({ source: "mass-search", metrics: { profit_sol: { status: "unknown", value: null } } }),
+    { value: null, basis: "wallet" },
+  );
+  const ranked = [
+    { source: "live", metrics: { profit_sol: { status: "known", value: "0.1" } } },
+    { source: "mass-search", metrics: {}, worksheet: { total_profit_sol: "0.575" } },
+    { source: "live", metrics: { profit_sol: { status: "unknown", value: null } } },
+  ].sort((a, b) => {
+    const x = listRealisedProfit(a).value;
+    const y = listRealisedProfit(b).value;
+    if (x == null) return y == null ? 0 : 1;
+    if (y == null) return -1;
+    return compareDecimal(x, y) * -1;
+  });
+  assert.equal(listRealisedProfit(ranked[0]).value, "0.575");
+  const tableHtml = renderToStaticMarkup(React.createElement(ReportTable, {
+    reports: [subsetReport],
+    onOpen: () => undefined,
+  }));
+  assert.ok(tableHtml.includes("0.575"));
+  assert.ok(tableHtml.includes("Reconstructed subset"));
+  assert.ok(tableHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(tableHtml.includes(">subset<"));
+  const resultsHtml = renderToStaticMarkup(React.createElement(Results, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.ok(resultsHtml.includes("0.575"));
+  assert.ok(resultsHtml.includes("Reconstructed subset"));
+  assert.ok(resultsHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(resultsHtml.includes("Mass-search subset"));
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

@@ -40,6 +40,7 @@ import {
   count,
   date,
   label,
+  listRealisedProfit,
   parseAddresses,
   shorten,
   validAddress,
@@ -649,14 +650,8 @@ export function Results({
     );
     if (sort !== "recent")
       result.sort((a, b) => {
-        const x =
-            a.metrics.profit_sol?.status === "known"
-              ? a.metrics.profit_sol.value
-              : null,
-          y =
-            b.metrics.profit_sol?.status === "known"
-              ? b.metrics.profit_sol.value
-              : null;
+        const x = listRealisedProfit(a).value,
+          y = listRealisedProfit(b).value;
         if (x === null || x === undefined)
           return y === null || y === undefined ? 0 : 1;
         if (y === null || y === undefined) return -1;

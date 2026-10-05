@@ -84,12 +84,13 @@ def run(args):
             expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
             expect(page.get_by_text("A conclusion needs more evidence", exact=False)).to_be_visible()
 
-        def capture(name):
+        def capture(name, *, desktop_only=False):
             page.evaluate(
                 """message => {let b=document.getElementById('synthetic-browser-test-banner');if(!b){b=document.createElement('div');b.id='synthetic-browser-test-banner';b.style.cssText='position:sticky;top:0;z-index:9999;padding:12px;background:#571a21;color:#fff;text-align:center;font:700 14px sans-serif;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box';document.body.prepend(b)}b.textContent=message}""",
                 BANNER,
             )
-            for width, height, label in ((1440, 1000, "desktop"), (360, 640, "mobile")):
+            sizes = ((1440, 1000, "desktop"),) if desktop_only else ((1440, 1000, "desktop"), (360, 640, "mobile"))
+            for width, height, label in sizes:
                 page.set_viewport_size({"width": width, "height": height})
                 page.evaluate("scrollTo(0,0)")
                 page.wait_for_timeout(200)
@@ -167,6 +168,17 @@ def run(args):
         expect_worksheet()
         capture("05-reopened-report-after-restart")
         result["cases"].append({"case": "restart-reopen-worksheet", "state": "PASS", "report_id": report_id})
+
+        page.get_by_role("button", name="Results", exact=True).click()
+        page.get_by_label("Data source").select_option("mass-search")
+        page.get_by_label("Sort results").select_option("profit_desc")
+        expect(page.locator('[data-list-profit="reconstructed-subset"]')).to_contain_text("0.575")
+        expect(page.locator(".subset-list-label")).to_have_text("Reconstructed subset")
+        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+        expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
+        expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_have_count(0)
+        capture("06-results-subset-pnl", desktop_only=True)
+        result["cases"].append({"case": "results-subset-pnl", "state": "PASS", "report_id": report_id})
 
         assert not errors, errors
         assert not external, external

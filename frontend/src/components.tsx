@@ -8,7 +8,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import type { Metric, Report } from "./types";
-import { dateTime, decimal, label, shorten } from "./format";
+import { dateTime, decimal, label, listRealisedProfit, shorten } from "./format";
 
 export function Button({
   children,
@@ -198,6 +198,23 @@ export const metricDefinitions: {
     hint: "Equity change adjusted for external flows",
   },
 ];
+function ListRealisedProfitCell({ report }: { report: Report }) {
+  const listed = listRealisedProfit(report);
+  if (listed.basis === "reconstructed-subset" && listed.value != null) {
+    return (
+      <span
+        className="subset-list-profit"
+        data-list-profit="reconstructed-subset"
+        title="Reconstructed subset. Not a wallet-wide MATCH."
+      >
+        {decimal(listed.value, 4)}
+        <small> SOL</small>
+        <small className="subset-list-label">Reconstructed subset</small>
+      </span>
+    );
+  }
+  return <MetricValue metric={report.metrics.profit_sol} suffix="SOL" />;
+}
 export function ReportTable({
   reports,
   onOpen,
@@ -251,12 +268,15 @@ export function ReportTable({
                       {report.source === "demo" && (
                         <span className="demo-inline">SYNTHETIC</span>
                       )}
+                      {report.source === "mass-search" && (
+                        <span className="demo-inline">subset</span>
+                      )}
                     </small>
                   </span>
                 </button>
               </td>
               <td className="numeric">
-                <MetricValue metric={report.metrics.profit_sol} suffix="SOL" />
+                <ListRealisedProfitCell report={report} />
               </td>
               <td className="numeric">
                 <MetricValue

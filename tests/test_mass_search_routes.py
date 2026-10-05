@@ -103,7 +103,13 @@ def test_slice_report_can_be_reopened_and_exported(session):
     run_id = body["run"]["run_id"]
     report_id = body["reconstruction"]["report"]["id"]
     listed = client.get("/api/state?report_view=summary").json()["reports"]
-    assert any(row["id"] == report_id and row["source"] == "mass-search" for row in listed)
+    listed_row = next(row for row in listed if row["id"] == report_id)
+    assert listed_row["source"] == "mass-search"
+    assert listed_row["policy"] == "UNRESOLVED"
+    assert listed_row["worksheet"]["total_profit_sol"] == "0.575"
+    assert listed_row["material_exit"]["exit_90_seconds"] == 30
+    assert listed_row["material_exit"]["final_hold_seconds"] == 172800
+    assert listed_row.get("metrics", {}).get("profit_sol", {}).get("status") != "known"
     opened = client.get(f"/api/reports/{report_id}?view=display")
     assert opened.status_code == 200
     assert opened.json()["id"] == report_id
@@ -160,7 +166,10 @@ def test_display_reopen_after_process_restart_keeps_independent_worksheet(tmp_pa
         listed = next(row for row in client.get("/api/state?report_view=summary").json()["reports"] if row["id"] == report_id)
         assert listed["source"] == "mass-search"
         assert listed["policy"] == "UNRESOLVED"
-        assert listed.get("worksheet") is None
+        assert listed["worksheet"]["total_profit_sol"] == "0.575"
+        assert listed["material_exit"]["exit_90_seconds"] == 30
+        assert listed["material_exit"]["final_hold_seconds"] == 172800
+        assert listed.get("metrics", {}).get("profit_sol", {}).get("status") != "known"
         opened = client.get(f"/api/reports/{report_id}?view=display").json()
         assert opened["worksheet"]["total_profit_sol"] == "0.575"
         assert opened["material_exit"]["exit_90_seconds"] == 30

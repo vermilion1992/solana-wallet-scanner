@@ -52,6 +52,21 @@ export function decimal(value: string | null | undefined, places = 2): string {
   return `${negative && rounded !== 0n ? "-" : ""}${integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${significant ? `.${significant}` : ""}`;
 }
 // Values stay decimal strings. This comparator never uses binary floating point.
+export function listRealisedProfit(report: {
+  source?: string;
+  metrics?: { profit_sol?: { status?: string; value?: string | null } | null };
+  worksheet?: { total_profit_sol?: string | null } | null;
+}): { value: string | null; basis: "wallet" | "reconstructed-subset" } {
+  const subset = report.worksheet?.total_profit_sol;
+  if (report.source === "mass-search" && subset) {
+    return { value: subset, basis: "reconstructed-subset" };
+  }
+  const metric = report.metrics?.profit_sol;
+  if (metric?.status === "known" && metric.value != null && metric.value !== "") {
+    return { value: metric.value, basis: "wallet" };
+  }
+  return { value: null, basis: "wallet" };
+}
 export function compareDecimal(a?: string | null, b?: string | null): number {
   if (a === null || a === undefined)
     return b === null || b === undefined ? 0 : 1;
