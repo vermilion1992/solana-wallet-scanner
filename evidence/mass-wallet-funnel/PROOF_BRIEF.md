@@ -64,4 +64,8 @@ Genuine G1:
 Synthetic idea sequence (unchanged): `ui-offline-browser/` screenshots with 0.575 SOL fixture.
 
 ## Next action
-Do not merge solely on G1. Do not start G2 without a new grant. Optional: take real-specimen Search/Results/Research screenshots from this candidate. This PASS package is on PR #4.
+Do not merge solely on G1. Do not start full G2 (1,000 wallets) from this prep.
+
+Mitch approved `live-g2-ranked100-discovery-2026-10-05-mitch` for a **RANKED_100_DISCOVERY_PILOT** (one Birdeye `trader_score` page, local shortlist ≤20). This cloud run is **offline prep only**: grant file stays `enabled: false`, no live Birdeye/Helius calls, no keys on this VM. Offline tests: `tests/test_mass_search_ranked100.py`. Notes: `RANKED_100_DISCOVERY_PILOT.md`.
+
+Live still blocked until Mitch/box confirms remaining Birdeye quota/CU, arms the ranked-100 grant in a separate secure runtime, and keeps G1 unused / setup-pilot untouched. Grant expires 2026-10-06T13:01:00Z (24h after ~23:31 Australia/Adelaide). PRODUCT_READY stays false.

@@ -67,7 +67,20 @@ def documented_birdeye_traders():
         "requested_chain": "solana",
         "window_param": "type",
         "supported_windows": ["yesterday", "today", "1W", "30d", "90d"],
-        "sort_fields": ["PnL", "realized_pnl", "unrealized_pnl"],
+        "sort_fields": ["PnL", "realized_pnl", "unrealized_pnl", "trader_score"],
+        "sort_compatibility": {
+            "trader_score": {
+                "supported": True,
+                "silent_fallback_to_pnl_sort": False,
+                "is_not": [
+                    "independently_verified_profit",
+                    "copyability",
+                    "normalized_evidence_status",
+                    "completed_profitable_trades",
+                ],
+                "note": "Provider ranking score only. Keep separate from evidence status. Capability previously listed P&L sorts only; trader_score is now an explicit supported sort.",
+            }
+        },
         "currency": "USD",
         "accounting_definition": "PROVIDER_REPORTED",
         "timestamp_meaning": "provider ranking snapshot, not an atomic as-of universe",
@@ -92,8 +105,15 @@ def documented_birdeye_traders():
         "field_map": {
             "address": {"path": ["address"], "required": True},
             "realized_pnl": {"path": ["realized_pnl", "pnl"], "unit": "USD", "basis": "PROVIDER_REPORTED"},
-            "trade_count": {"path": ["trade_count", "tx_counts"], "unit": "count", "proxy": True},
+            "trade_count": {"path": ["trade_count", "tx_counts"], "unit": "count", "proxy": True, "is_not": "completed_profitable_trades"},
             "last_active": {"path": ["last_trade_unix_time", "last_active"], "unit": "unix_seconds"},
+            "trader_score": {
+                "path": ["trader_score", "score"],
+                "unit": "provider_score",
+                "basis": "PROVIDER_REPORTED",
+                "evidence_status": "not_independent_verification",
+                "note": "Provider ranking score only. Not profitability or copyability evidence.",
+            },
         },
         "state": "DOCUMENTED_NOT_TESTED",
         "role_decision": "NO_GO",
@@ -102,6 +122,7 @@ def documented_birdeye_traders():
             "User entitlement and remaining quota are unconfirmed.",
             "USD ranking floors cannot prove SOL strict thresholds.",
             "Moving offset pages are not an atomic historical universe.",
+            "trader_score is a provider rank, not independently verified profitability or copyability.",
         ],
         "sanitized_response_evidence": None,
         "notes": [
@@ -210,12 +231,16 @@ def validate_live_authorization(payload):
     for entry in providers:
         if not isinstance(entry, dict) or any(field not in entry for field in REQUIRED_PROVIDER_FIELDS):
             raise ValueError("Each provider budget is missing required fields")
+        if type(entry.get("max_requests")) is not int or type(entry.get("max_units")) is not int:
+            raise ValueError("Provider max_requests and max_units must be integers")
+        if entry["max_requests"] == 0 and entry["max_units"] == 0:
+            if entry.get("allowed_operations"):
+                raise ValueError("A zero-budget provider cannot allowlist operations")
+            continue
+        if entry["max_requests"] < 1 or entry["max_units"] < 1:
+            raise ValueError("Provider max_requests and max_units must be positive, or both 0 when the provider is forbidden")
         if entry.get("existing_plan_confirmed") is not True or not entry.get("remaining_quota_confirmed_at"):
             raise ValueError("Remaining quota must be operator-confirmed before live collection")
-        if type(entry.get("max_requests")) is not int or entry["max_requests"] < 1:
-            raise ValueError("Provider max_requests must be a positive integer")
-        if type(entry.get("max_units")) is not int or entry["max_units"] < 1:
-            raise ValueError("Provider max_units must be a positive integer")
         if not isinstance(entry.get("allowed_operations"), list) or not entry["allowed_operations"]:
             raise ValueError("Provider allowed_operations must be a non-empty list")
         if any(not isinstance(item, str) or "sign" in item.lower() or "swap" == item.lower() for item in entry["allowed_operations"]):

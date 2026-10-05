@@ -1,0 +1,82 @@
+{
+  "schema_version": "live-research-authorization-v1",
+  "enabled": false,
+  "authorization_id": "live-g2-ranked100-discovery-2026-10-05-mitch",
+  "authorized_by_user_at": "2026-10-05T13:01:00Z",
+  "authorized_by_user_at_local": "2026-10-05T23:31:00+10:30",
+  "approval_timezone": "Australia/Adelaide",
+  "expires_at": "2026-10-06T13:01:00Z",
+  "purpose": "Operator-approved RANKED_100_DISCOVERY_PILOT only: one Birdeye GET /trader/gainers-losers page (Solana, type=30d, sort_by=trader_score, sort_type=desc, offset=0, limit=100) then local shortlist up to 20. Not full G2. Not G1 reuse. Not G3/G5/G6. No Helius enrichment.",
+  "first_live_target_after_grant": "RANKED_100_DISCOVERY_PILOT",
+  "outcome_label": "RANKED_100_DISCOVERY_PILOT",
+  "not_full_g2": true,
+  "do_not_reuse_g1_grant": true,
+  "g1_authorization_id_forbidden": "live-g1-vertical-slice-2026-10-05-mitch",
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "allow_paid_upgrade": false,
+  "allow_signing_or_submission": false,
+  "do_not_reset_setup_pilot": true,
+  "no_retries": true,
+  "no_second_page": true,
+  "no_automatic_refresh": true,
+  "reopen_export_or_local_filter_makes_zero_provider_calls": true,
+  "failed_or_timed_out_dispatched_request_consumes_attempt": true,
+  "exact_query": {
+    "provider": "birdeye",
+    "method": "GET",
+    "host": "public-api.birdeye.so",
+    "path": "/trader/gainers-losers",
+    "chain": "solana",
+    "params": {
+      "type": "30d",
+      "sort_by": "trader_score",
+      "sort_type": "desc",
+      "offset": 0,
+      "limit": 100
+    },
+    "silent_fallback_forbidden": true,
+    "second_page_forbidden": true,
+    "retry_forbidden": true
+  },
+  "providers": [
+    {
+      "provider_id": "birdeye",
+      "allowed_operations": ["trader_gainers_losers"],
+      "billing_unit": "birdeye_compute_unit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": "2026-10-05T13:01:00Z",
+      "cycle_end_exclusive": "2026-10-06T13:01:00Z",
+      "max_requests": 1,
+      "max_units": 25,
+      "max_concurrency": 1,
+      "max_duration_seconds": 60,
+      "purpose": "RANKED_100_DISCOVERY_PILOT: exactly one GET /trader/gainers-losers page. Documented 25 CU/request is an estimate until dashboard confirmation. No retries, no second page, no refresh."
+    },
+    {
+      "provider_id": "helius",
+      "allowed_operations": [],
+      "billing_unit": "helius_credit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": "2026-10-05T13:01:00Z",
+      "cycle_end_exclusive": "2026-10-06T13:01:00Z",
+      "max_requests": 0,
+      "max_units": 0,
+      "max_concurrency": 0,
+      "max_duration_seconds": 0,
+      "purpose": "Forbidden for this grant. Discovery-only; zero Helius enrichment."
+    }
+  ],
+  "notes": [
+    "Named grant for RANKED_100_DISCOVERY_PILOT only. authorization_id live-g2-ranked100-discovery-2026-10-05-mitch.",
+    "enabled is false until operator confirms remaining Birdeye quota/CU on the billing dashboard and sets remaining_quota_confirmed_at plus existing_plan_confirmed=true.",
+    "Do not reuse config/live_authorization.g1-granted.json. Do not reset setup-pilot.",
+    "work_packages/mass_wallet_search_v1/config/live_authorization.example.json and config/live_authorization.proof-grant-draft.json remain disabled and are not this grant.",
+    "Do not put API keys, tokens, or signing secrets in this file.",
+    "Approval time is Mitch's 2026-10-05 ~23:31 Australia/Adelaide message (2026-10-05T13:01:00Z). Expires 24h later at 2026-10-06T13:01:00Z.",
+    "Fewer than 100 unique valid wallets is honest incomplete acquisition. Do not pad the shortlist to 20.",
+    "Zero extra spend. No overages. No paid upgrade. No G1 reuse. Not full 1,000-wallet G2."
+  ]
+}
