@@ -3133,9 +3133,6 @@ pre {
   .result-footer > span:last-child {
     font-size: 7px;
   }
-  .report-table {
-    min-width: 800px;
-  }
   .report-table th {
     font-size: 8px;
     padding-inline: 12px;
@@ -5087,6 +5084,53 @@ pre {
   font-size: 12px;
   line-height: 1.55;
   padding: 0 23px 12px;
+  overflow-wrap: anywhere;
+}
+.results-panel,
+.compare-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+.report-cards,
+.compare-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0 18px 12px;
+}
+.report-cards li,
+.compare-cards li {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.report-card-compare {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #657a70;
+}
+.report-card-profit {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.report-card-profit > span {
+  color: #63766b;
+  font-size: 11px;
+}
+.report-cards .subset-list-profit,
+.compare-cards .subset-list-profit {
+  align-items: flex-start;
+}
+.report-cards .button,
+.compare-cards .button {
+  width: 100%;
+  white-space: normal;
 }
 .subset-worksheet { margin-bottom: 18px; }
 .subset-worksheet-note {
@@ -5157,6 +5201,34 @@ pre {
 .mass-search-saved { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .mass-search-saved li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 480px) {
+  .results-panel .table-scroll,
+  .compare-panel .table-scroll {
+    display: none;
+  }
+  .report-cards,
+  .compare-cards {
+    display: grid;
+  }
+  .compare-picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .comparison-table th,
+  .comparison-table th:first-child {
+    min-width: 0;
+  }
+  .segmented {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .results-filters,
+  .results-filters > select,
+  .search-input {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .results-filters > select {
+    width: 100%;
+  }
   .mass-search-funnel { grid-template-columns: minmax(0, 1fr); }
   .mass-search .research-action-row,
   .mass-search-saved li {

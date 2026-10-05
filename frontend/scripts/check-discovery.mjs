@@ -2024,6 +2024,7 @@ try {
   assert.ok(tableHtml.includes("Reconstructed subset"));
   assert.ok(tableHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(tableHtml.includes(">subset<"));
+  assert.ok(tableHtml.includes("report-cards"));
   const resultsHtml = renderToStaticMarkup(React.createElement(Results, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },
@@ -2046,6 +2047,7 @@ try {
   assert.ok(compareHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(compareHtml.includes("not a wallet-wide MATCH"));
   assert.ok(compareHtml.includes("not wallet-wide MATCH"));
+  assert.ok(compareHtml.includes("compare-cards"));
   const liveCompare = {
     ...subsetReport,
     id: "live-row",

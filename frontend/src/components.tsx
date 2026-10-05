@@ -9,6 +9,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import type { Metric, Report } from "./types";
 import { dateTime, decimal, label, listRealisedProfit, shorten } from "./format";
+import { useNarrowViewport } from "./useNarrow";
 
 export function Button({
   children,
@@ -226,93 +227,145 @@ export function ReportTable({
   selected?: string[];
   onSelect?: (id: string) => void;
 }) {
+  const narrow = useNarrowViewport();
+  const rows = reports.slice(0, 200);
   return (
-    <div className="table-scroll">
-      <table className="report-table">
-        <thead>
-          <tr>
-            {onSelect && <th className="checkbox-cell">Compare</th>}
-            <th>Wallet</th>
-            <th>Realised profit</th>
-            <th>Median hold</th>
-            <th>Positions</th>
-            <th>Policy fit</th>
-            <th>Data status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {reports.slice(0, 200).map((report) => (
-            <tr key={report.id}>
-              {onSelect && (
-                <td className="checkbox-cell">
-                  <input
-                    type="checkbox"
-                    aria-label={`Compare ${report.label || shorten(report.address)}`}
-                    checked={selected?.includes(report.id) ?? false}
-                    onChange={() => onSelect(report.id)}
-                  />
-                </td>
-              )}
-              <td>
-                <button className="wallet-cell" onClick={() => onOpen(report)}>
-                  <span
-                    className={`wallet-avatar ${report.source === "demo" ? "demo-avatar" : ""}`}
-                  >
-                    {(report.label || report.address).slice(0, 2).toUpperCase()}
-                  </span>
-                  <span>
-                    <strong>{report.label || shorten(report.address)}</strong>
-                    <small className="mono">
-                      {shorten(report.address, 5)}{" "}
-                      {report.source === "demo" && (
-                        <span className="demo-inline">SYNTHETIC</span>
-                      )}
-                      {report.source === "mass-search" && (
-                        <span className="demo-inline">subset</span>
-                      )}
-                    </small>
-                  </span>
-                </button>
-              </td>
-              <td className="numeric">
-                <ListRealisedProfitCell report={report} />
-              </td>
-              <td className="numeric">
-                <MetricValue
-                  metric={report.metrics.median_hold_hours}
-                  suffix="h"
+    <>
+      {!narrow && (
+        <div className="table-scroll">
+          <table className="report-table">
+            <thead>
+              <tr>
+                {onSelect && <th className="checkbox-cell">Compare</th>}
+                <th>Wallet</th>
+                <th>Realised profit</th>
+                <th>Median hold</th>
+                <th>Positions</th>
+                <th>Policy fit</th>
+                <th>Data status</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((report) => (
+                <tr key={report.id}>
+                  {onSelect && (
+                    <td className="checkbox-cell">
+                      <input
+                        type="checkbox"
+                        aria-label={`Compare ${report.label || shorten(report.address)}`}
+                        checked={selected?.includes(report.id) ?? false}
+                        onChange={() => onSelect(report.id)}
+                      />
+                    </td>
+                  )}
+                  <td>
+                    <button className="wallet-cell" onClick={() => onOpen(report)}>
+                      <span
+                        className={`wallet-avatar ${report.source === "demo" ? "demo-avatar" : ""}`}
+                      >
+                        {(report.label || report.address).slice(0, 2).toUpperCase()}
+                      </span>
+                      <span>
+                        <strong>{report.label || shorten(report.address)}</strong>
+                        <small className="mono">
+                          {shorten(report.address, 5)}{" "}
+                          {report.source === "demo" && (
+                            <span className="demo-inline">SYNTHETIC</span>
+                          )}
+                          {report.source === "mass-search" && (
+                            <span className="demo-inline">subset</span>
+                          )}
+                        </small>
+                      </span>
+                    </button>
+                  </td>
+                  <td className="numeric">
+                    <ListRealisedProfitCell report={report} />
+                  </td>
+                  <td className="numeric">
+                    <MetricValue
+                      metric={report.metrics.median_hold_hours}
+                      suffix="h"
+                    />
+                  </td>
+                  <td className="numeric">
+                    <MetricValue metric={report.metrics.completed_positions} />
+                  </td>
+                  <td>
+                    <Badge value={report.policy} />
+                  </td>
+                  <td>
+                    <Badge value={report.evidence_status} />
+                  </td>
+                  <td>
+                    <button
+                      className="icon-button"
+                      aria-label={`Open ${report.label || report.address}`}
+                      onClick={() => onOpen(report)}
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <ul className="report-cards">
+        {rows.map((report) => (
+          <li key={`card-${report.id}`}>
+            {onSelect && (
+              <label className="report-card-compare">
+                <input
+                  type="checkbox"
+                  aria-label={`Compare ${report.label || shorten(report.address)}`}
+                  checked={selected?.includes(report.id) ?? false}
+                  onChange={() => onSelect(report.id)}
                 />
-              </td>
-              <td className="numeric">
-                <MetricValue metric={report.metrics.completed_positions} />
-              </td>
-              <td>
-                <Badge value={report.policy} />
-              </td>
-              <td>
-                <Badge value={report.evidence_status} />
-              </td>
-              <td>
-                <button
-                  className="icon-button"
-                  aria-label={`Open ${report.label || report.address}`}
-                  onClick={() => onOpen(report)}
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                Compare
+              </label>
+            )}
+            <strong>{report.label || shorten(report.address)}</strong>
+            <small className="mono">
+              {shorten(report.address, 5)}{" "}
+              {report.source === "demo" && (
+                <span className="demo-inline">SYNTHETIC</span>
+              )}
+              {report.source === "mass-search" && (
+                <span className="demo-inline">subset</span>
+              )}
+            </small>
+            <div className="report-card-profit">
+              <span>Realised profit</span>
+              <ListRealisedProfitCell report={report} />
+            </div>
+            <p>
+              Hold <MetricValue metric={report.metrics.median_hold_hours} suffix="h" />
+              {" · "}
+              Positions <MetricValue metric={report.metrics.completed_positions} />
+            </p>
+            <p>
+              <Badge value={report.policy} />{" "}
+              <Badge value={report.evidence_status} />
+            </p>
+            <Button
+              variant="secondary"
+              onClick={() => onOpen(report)}
+            >
+              Open report
+            </Button>
+          </li>
+        ))}
+      </ul>
       {reports.length > 200 && (
         <p className="table-note">
           Showing the first 200 results. Refine your filters to inspect a
           smaller set.
         </p>
       )}
-    </div>
+    </>
   );
 }
 export function WindowLabel({ report }: { report: Report }) {

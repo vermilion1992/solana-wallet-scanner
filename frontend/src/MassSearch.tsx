@@ -5,6 +5,7 @@ import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, Report } fro
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
 import { count, decimal, label, shorten } from "./format";
+import { useNarrowViewport } from "./useNarrow";
 
 const STAGES = ["triage", "behaviour", "reconstruct", "forward_select"] as const;
 
@@ -31,19 +32,6 @@ export function massSearchMetricText(metric?: MassSearchMetric | null, fallback?
   return metric?.state || "unknown";
 }
 
-function useNarrowSearch(maxWidth = 480) {
-  const [narrow, setNarrow] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
-    const query = window.matchMedia(`(max-width: ${maxWidth}px)`);
-    const apply = () => setNarrow(query.matches);
-    apply();
-    query.addEventListener("change", apply);
-    return () => query.removeEventListener("change", apply);
-  }, [maxWidth]);
-  return narrow;
-}
-
 export function MassSearchView({ state, busy, run, navigate, refresh, open }: Actions) {
   const [detail, setDetail] = useState<MassSearchRun | null>(null);
   const [candidates, setCandidates] = useState<MassSearchCandidate[]>([]);
@@ -51,7 +39,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [stage, setStage] = useState<(typeof STAGES)[number]>("triage");
   const [selectedId, setSelectedId] = useState<string>("");
   const [blocker, setBlocker] = useState<string>("Live collection is blocked until a named authorization exists.");
-  const narrow = useNarrowSearch();
+  const narrow = useNarrowViewport();
   const summary = state.mass_search;
   const runs = summary?.runs || [];
   const newestId = runs[0]?.run_id;

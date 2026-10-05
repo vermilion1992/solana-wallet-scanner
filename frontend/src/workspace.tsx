@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { useNarrowViewport } from "./useNarrow";
 import {
   Activity,
   ArrowDown,
@@ -756,6 +757,7 @@ export function CompareView({
   const reports = state.reports.filter((report) =>
     selected.includes(report.id),
   );
+  const narrow = useNarrowViewport();
   const sameWindows =
     reports.length < 2 ||
     reports.every(
@@ -830,69 +832,105 @@ export function CompareView({
               </span>
             </div>
           )}
-          <div className="table-scroll">
-            <table className="comparison-table">
-              <thead>
-                <tr>
-                  <th>Research measure</th>
-                  {reports.map((report) => (
-                    <th key={report.id}>
-                      <button
-                        className="text-button"
-                        onClick={() => open(report)}
-                      >
-                        {report.label || shorten(report.address)}
-                        <ArrowRight size={14} />
-                      </button>
-                      <WindowLabel report={report} />
-                      {report.source === "demo" && (
-                        <small className="demo-inline">SYNTHETIC DEMO</small>
-                      )}
-                      {report.source === "mass-search" && (
-                        <small className="demo-inline">RECONSTRUCTED SUBSET</small>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Policy fit</td>
-                  {reports.map((r) => (
-                    <td key={r.id}>
-                      <Badge value={r.policy} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td>Evidence status</td>
-                  {reports.map((r) => (
-                    <td key={r.id}>
-                      <Badge value={r.evidence_status} />
-                    </td>
-                  ))}
-                </tr>
-                {sameWindows &&
-                  metricDefinitions.map((metric) => (
-                    <tr key={metric.key}>
-                      <td title={metric.hint}>{metric.name}</td>
-                      {reports.map((r) => (
-                        <td key={r.id} className="numeric">
-                          {metric.key === "profit_sol" ? (
-                            <ListRealisedProfitCell report={r} />
-                          ) : (
-                            <MetricValue
-                              metric={r.metrics[metric.key]}
-                              suffix={metric.suffix}
-                            />
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          {!narrow && (
+            <div className="table-scroll">
+              <table className="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Research measure</th>
+                    {reports.map((report) => (
+                      <th key={report.id}>
+                        <button
+                          className="text-button"
+                          onClick={() => open(report)}
+                        >
+                          {report.label || shorten(report.address)}
+                          <ArrowRight size={14} />
+                        </button>
+                        <WindowLabel report={report} />
+                        {report.source === "demo" && (
+                          <small className="demo-inline">SYNTHETIC DEMO</small>
+                        )}
+                        {report.source === "mass-search" && (
+                          <small className="demo-inline">RECONSTRUCTED SUBSET</small>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Policy fit</td>
+                    {reports.map((r) => (
+                      <td key={r.id}>
+                        <Badge value={r.policy} />
+                      </td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Evidence status</td>
+                    {reports.map((r) => (
+                      <td key={r.id}>
+                        <Badge value={r.evidence_status} />
+                      </td>
+                    ))}
+                  </tr>
+                  {sameWindows &&
+                    metricDefinitions.map((metric) => (
+                      <tr key={metric.key}>
+                        <td title={metric.hint}>{metric.name}</td>
+                        {reports.map((r) => (
+                          <td key={r.id} className="numeric">
+                            {metric.key === "profit_sol" ? (
+                              <ListRealisedProfitCell report={r} />
+                            ) : (
+                              <MetricValue
+                                metric={r.metrics[metric.key]}
+                                suffix={metric.suffix}
+                              />
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <ul className="compare-cards">
+            {reports.map((report) => (
+              <li key={`compare-card-${report.id}`}>
+                <strong>{report.label || shorten(report.address)}</strong>
+                {report.source === "demo" && (
+                  <small className="demo-inline">SYNTHETIC DEMO</small>
+                )}
+                {report.source === "mass-search" && (
+                  <small className="demo-inline">RECONSTRUCTED SUBSET</small>
+                )}
+                <div className="report-card-profit">
+                  <span>Realised profit</span>
+                  <ListRealisedProfitCell report={report} />
+                </div>
+                <p>
+                  Hold{" "}
+                  <MetricValue
+                    metric={report.metrics.median_hold_hours}
+                    suffix="h"
+                  />
+                  {" · "}
+                  Positions{" "}
+                  <MetricValue metric={report.metrics.completed_positions} />
+                </p>
+                <p>
+                  <Badge value={report.policy} />{" "}
+                  <Badge value={report.evidence_status} />
+                </p>
+                <Button variant="secondary" onClick={() => open(report)}>
+                  Open report
+                </Button>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
     </>

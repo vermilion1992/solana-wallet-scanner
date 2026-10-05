@@ -93,7 +93,7 @@ def run(args):
             for width, height, label in sizes:
                 page.set_viewport_size({"width": width, "height": height})
                 page.evaluate("scrollTo(0,0)")
-                page.wait_for_timeout(200)
+                page.wait_for_timeout(350)
                 measured = page.evaluate(
                     """() => {
                       const vw = innerWidth;
@@ -172,22 +172,33 @@ def run(args):
         page.get_by_role("button", name="Back to results", exact=True).click()
         page.get_by_label("Data source").select_option("mass-search")
         page.get_by_label("Sort results").select_option("profit_desc")
-        expect(page.locator('[data-list-profit="reconstructed-subset"]')).to_contain_text("0.575")
-        expect(page.locator(".subset-list-label")).to_have_text("Reconstructed subset")
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.locator(".subset-list-label").first).to_have_text("Reconstructed subset")
         expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
         expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
         expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_have_count(0)
-        capture("06-results-subset-pnl", desktop_only=True)
+        capture("06-results-subset-pnl")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect(page.locator(".report-cards").first).to_be_visible()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        page.set_viewport_size({"width": 1440, "height": 1000})
         result["cases"].append({"case": "results-subset-pnl", "state": "PASS", "report_id": report_id})
 
         page.get_by_label("Main navigation").get_by_role("button", name="Compare", exact=True).click()
         page.locator(".compare-choice").first.click()
-        expect(page.locator('[data-list-profit="reconstructed-subset"]')).to_contain_text("0.575")
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
         expect(page.get_by_text("Reconstructed subset", exact=False).first).to_be_visible()
         expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
         expect(page.get_by_text("RECONSTRUCTED SUBSET", exact=False).first).to_be_visible()
         expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
-        capture("07-compare-subset-pnl", desktop_only=True)
+        capture("07-compare-subset-pnl")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect(page.locator(".compare-cards").first).to_be_visible()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        page.set_viewport_size({"width": 1440, "height": 1000})
         result["cases"].append({"case": "compare-subset-pnl", "state": "PASS", "report_id": report_id})
 
         assert not errors, errors
