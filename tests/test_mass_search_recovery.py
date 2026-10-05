@@ -35,6 +35,8 @@ from scanner.mass_search.g3_history import (
     persist_page,
     run_g3_history,
 )
+from scanner.mass_search.history_ingest import replay_cached_history_to_report
+from scanner.mass_search.service import MassSearchService
 from scanner.mass_search.live_g1 import _wrap_records, independent_fifo_worksheet
 from scanner.storage import Store
 
@@ -212,6 +214,63 @@ def test_g1_archive_survives_sanitize_cache_real_decoder_and_worksheet(tmp_path)
     destroyed = legacy_substring_redact(records[0])
     assert validate_transaction_record(destroyed)["code"] == SOURCE_RECORDS_DAMAGED
     restarted.close()
+
+
+def test_g1_archive_saves_retrievable_application_report_offline(tmp_path, monkeypatch):
+    records = load_g1_records()
+    store = Store(tmp_path / "data")
+    saved = replay_cached_history_to_report(
+        store,
+        address=G1_ADDRESS,
+        records=records,
+        window_start=G1_WINDOW_START,
+        window_end=G1_WINDOW_END,
+        acquisition_start=G1_ACQ_START,
+        mint=G1_MINT,
+        clock=lambda: G1_WINDOW_END,
+        corpus_kind="GENUINE_REPLAY",
+        source_id="g1-archive-offline-replay",
+    )
+    assert saved["external_requests"] == 0
+    assert saved["report_id"]
+    assert saved["visible_report"] is True
+    assert Decimal(saved["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    report = store.get("reports", saved["report_id"])
+    assert report["address"] == G1_ADDRESS
+    assert report["source"] == "mass-search"
+    assert report["policy"] == "UNRESOLVED"
+    assert report["PRODUCT_READY"] is False
+    assert Decimal(report["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    store.close()
+
+    monkeypatch.delenv("HELIUS_API_KEY", raising=False)
+    monkeypatch.delenv("BIRDEYE_API_KEY", raising=False)
+    import httpx
+
+    async def forbidden(*args, **kwargs):
+        raise AssertionError("G1 report reopen must not contact a provider")
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", forbidden)
+    monkeypatch.setattr(httpx.AsyncClient, "get", forbidden)
+    restarted = Store(tmp_path / "data")
+    reopened = restarted.get("reports", saved["report_id"])
+    assert reopened["id"] == saved["report_id"]
+    assert Decimal(reopened["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    service = MassSearchService(restarted, clock=lambda: G1_WINDOW_END)
+    linked = service.linked_reports(saved["run_id"])
+    assert any(row["id"] == saved["report_id"] for row in linked)
+    restarted.close()
+
+    app = create_app(tmp_path / "data", LAUNCH_TOKEN)
+    with TestClient(app, base_url=BASE_URL) as client:
+        bootstrap = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        assert bootstrap.status_code == 200
+        client.headers["x-csrf-token"] = bootstrap.json()["csrf"]
+        listed = client.get(f"/api/mass-search/runs/{saved['run_id']}/reports")
+        assert listed.status_code == 200
+        found = next(item for item in listed.json()["reports"] if item["id"] == saved["report_id"])
+        assert Decimal(found["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+        assert found["address"] == G1_ADDRESS
 
 
 def test_visible_below_g3_and_export_reopen_make_zero_provider_calls(tmp_path, monkeypatch):

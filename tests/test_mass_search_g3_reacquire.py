@@ -21,11 +21,13 @@ from scanner.mass_search.g3_reacquire import (
     PARENT_RECOVERY_COMMIT,
     SIGNATURE_MISMATCH,
     STOP_NO_SEGMENT,
+    _summarize_page,
     apply_overlay,
     armed_test_grant,
     arming_blockers,
     assert_grant_ceilings,
     assert_non_grants_stay_disabled,
+    assert_options_not_widened,
     assert_page_in_scope,
     assert_wallet_in_scope,
     compare_signatures,
@@ -36,9 +38,20 @@ from scanner.mass_search.g3_reacquire import (
     load_reacquire_grant,
     load_signature_overlay,
     page1_allowed,
+    proposed_historical_requests,
     request_pagination_token,
     run_reacquire,
     should_stop_after_visible_position,
+    source_capture_key,
+)
+from scanner.mass_search.history_ingest import (
+    HISTORICAL_ANCHOR_REQUIRED,
+    QUARANTINE_KIND,
+    SOURCE_CAPTURE_KIND,
+    assert_historical_request_anchored,
+    authorised_cache_key,
+    dispatch_historical_transport,
+    quarantine_key,
 )
 from scanner.storage import Store
 
@@ -127,6 +140,12 @@ def test_overlay_freeze_is_extract_ok_with_100_plus_100():
     assert freeze["pages"][1]["pagination_token"] == "452554670:596"
     assert request_pagination_token(freeze, 0) is None
     assert request_pagination_token(freeze, 1) == "452802642:577"
+    proposed = proposed_historical_requests(freeze)
+    assert proposed["page0"]["params"][1]["until"] == freeze["pages"][0]["signatures"][0]
+    assert "paginationToken" not in proposed["page0"]["params"][1]
+    assert proposed["page1"]["params"][1]["paginationToken"] == "452802642:577"
+    assert proposed["page0"]["secrets"] is False
+    assert "api-key" not in json.dumps(proposed).lower()
     assert freeze["pages"][0]["signatures"][0] == overlay["pages"]["page0"]["signatures"][0]
     assert freeze["pages"][1]["signatures"][-1] == overlay["pages"]["page1"]["signatures"][-1]
     assert freeze["pages"][0]["evidence_sha256"] == "b0fa9cb76a9e9531b5654f4fa22b0e9b7ef9a81ab61fa21bc16a649de0fb492d"
@@ -251,13 +270,49 @@ def test_disabled_grant_does_not_attach_or_call_transport(store, monkeypatch):
     assert result["external_requests"] == 0
 
 
-def test_signature_mismatch_stops_without_page1(store):
+def test_unanchored_newest_first_rejected_before_dispatch():
     freeze = load_freeze()
-    calls = []
+    expected = frozen_signatures(freeze, 0)
+    unanchored = {
+        "transactionDetails": "full",
+        "limit": 100,
+        "sortOrder": "desc",
+        "commitment": "finalized",
+        "maxSupportedTransactionVersion": 1,
+        "filters": {"status": "any", "tokenAccounts": "all"},
+    }
+    with pytest.raises(SourceError) as error:
+        assert_historical_request_anchored(unanchored, expected_signatures=expected)
+    assert error.value.state == HISTORICAL_ANCHOR_REQUIRED
+    calls = {"n": 0}
 
     async def transport(address, *, options, page_index):
-        calls.append({"page_index": page_index, "token": options.get("paginationToken")})
-        return {"records": _records(["mismatchSig11111111111111111111111111111111111111111111111111"]), "http_status": 200}
+        calls["n"] += 1
+        return {"records": [], "http_status": 200}
+
+    import asyncio
+    with pytest.raises(SourceError) as dispatched:
+        asyncio.run(dispatch_historical_transport(
+            transport, ALLOWED_WALLET, unanchored, 0, expected_signatures=expected,
+        ))
+    assert dispatched.value.state == HISTORICAL_ANCHOR_REQUIRED
+    assert calls["n"] == 0
+    assert_options_not_widened({**unanchored, "until": expected[0]})
+
+
+def test_signature_mismatch_stops_without_page1(store, tmp_path):
+    freeze = load_freeze()
+    calls = []
+    evidence_dir = tmp_path / "mismatch-capture"
+
+    async def transport(address, *, options, page_index):
+        calls.append({
+            "page_index": page_index,
+            "token": options.get("paginationToken"),
+            "until": options.get("until"),
+        })
+        newer = ["newerTipSig111111111111111111111111111111111111111111111111111"]
+        return {"records": _records(newer + frozen_signatures(freeze, page_index)[1:]), "http_status": 200}
 
     result = run_reacquire(
         store,
@@ -266,15 +321,28 @@ def test_signature_mismatch_stops_without_page1(store):
         freeze=freeze,
         credentials={"helius": True},
         transport=transport,
+        evidence_dir=evidence_dir,
     )
     assert result["status"] == "BLOCKED"
     assert result["blocker"] == SIGNATURE_MISMATCH
     assert result["stop_reason"] == SIGNATURE_MISMATCH
     assert [row["page_index"] for row in calls] == [0]
     assert calls[0]["token"] is None
+    assert calls[0]["until"] == freeze["pages"][0]["signatures"][0]
     assert result["helius_requests_used"] == 1
     assert result["helius_units_used"] == 10
     assert store.usage("helius", "setup-pilot", 200)["used"] == 0
+    capture = store.get(SOURCE_CAPTURE_KIND, source_capture_key(AUTHORIZATION_ID, ALLOWED_WALLET, 0))
+    assert capture is not None
+    assert capture["credential_free"] is True
+    assert capture["signatures"][0].startswith("newerTipSig")
+    quarantined = store.get(QUARANTINE_KIND, quarantine_key(AUTHORIZATION_ID, ALLOWED_WALLET, 0))
+    assert quarantined is not None
+    assert quarantined["analysed"] is False
+    assert quarantined["authorised_cache_written"] is False
+    assert store.get("mass_search_cache", authorised_cache_key(AUTHORIZATION_ID, ALLOWED_WALLET, 0)) is None
+    assert (evidence_dir / "SOURCE_RESPONSE_page0.json").is_file()
+    assert (evidence_dir / "QUARANTINE_page0.json").is_file()
 
 
 def test_page1_uses_frozen_token_and_skips_episode_count_reason(store):
@@ -403,3 +471,32 @@ def test_leftover_g3_loader_rejects_reacquire_id():
     from scanner.mass_search.g3_history import load_g3_grant
     with pytest.raises(ValueError, match="only accepts"):
         load_g3_grant(GRANT_PATH)
+
+
+def test_failed_reconciliation_does_not_set_visible_report(monkeypatch):
+    freeze = {
+        "windows": {
+            "report_start_inclusive": "2026-09-05T13:29:27Z",
+            "report_end_exclusive": "2026-10-05T13:29:27Z",
+            "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z",
+        }
+    }
+    start = 1_789_862_400
+    end = start + 3_600
+
+    def decode(_records, _address):
+        return {"events": [
+            {"kind": "buy", "timestamp": start, "quantity_raw": "1", "amount_sol": "1",
+             "fee_sol": "0", "mint": "MintA", "signature": "buy-a"},
+            {"kind": "sell", "timestamp": end, "quantity_raw": "1", "amount_sol": "1",
+             "fee_sol": "0", "mint": "MintA", "signature": "sell-a"},
+        ]}
+
+    def boom(_events):
+        raise ValueError("Sale exceeds supported inventory")
+
+    monkeypatch.setattr("scanner.mass_search.g3_reacquire.independent_fifo_worksheet", boom)
+    summary = _summarize_page({"records": [{}], "integrity": {"status": "SOURCE_RECORDS_INTACT"}}, freeze, decode=decode)
+    assert summary["counted"]["wallet_completed_episodes"] >= 1
+    assert summary["worksheet"] is None
+    assert summary["visible_report"] is False

@@ -49,6 +49,19 @@ from .g3_history import (
     decoder_events_by_mint,
     independent_fifo_worksheet,
 )
+from .history_ingest import (
+    HISTORICAL_ANCHOR_REQUIRED,
+    assert_gta_options_not_widened,
+    assert_historical_request_anchored,
+    build_historical_gta_options,
+    dispatch_historical_transport,
+    ingest_fetched_historical_page,
+    persist_credential_free_source,
+    proposed_sanitised_historical_request,
+    replay_cached_history_to_report,
+    source_capture_key as ingest_source_capture_key,
+    visible_report_allowed,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 GRANT_PATH = ROOT / "config" / "live_authorization.g3-integrity-reacquire-rank1-draft.json"
@@ -335,6 +348,26 @@ def request_pagination_token(freeze, page_index):
         explicit = pages[1].get("request_pagination_token") if len(pages) > 1 else None
         return explicit or (pages[0].get("pagination_token") if pages else None)
     return None
+
+
+def proposed_historical_requests(freeze=None):
+    """Sanitised outgoing requests for any later live historical work. No secrets."""
+    freeze = freeze if freeze is not None else load_freeze()
+    page0 = frozen_signatures(freeze, 0)
+    page1 = frozen_signatures(freeze, 1)
+    return {
+        "page0": proposed_sanitised_historical_request(
+            ALLOWED_WALLET, page_index=0, expected_signatures=page0,
+        ),
+        "page1": proposed_sanitised_historical_request(
+            ALLOWED_WALLET,
+            page_index=1,
+            expected_signatures=page1,
+            pagination_token=request_pagination_token(freeze, 1),
+        ),
+        "PRODUCT_READY": False,
+        "not_a_live_grant": True,
+    }
 
 
 def page1_allowed(page0, *, recorded_reason, mint=None, signature=None, classification=None):
@@ -624,17 +657,11 @@ def page_cache_key(authorization_id, address, page_index):
 
 
 def source_capture_key(authorization_id, address, page_index):
-    return f"g3-reacquire-source:{authorization_id}:{address}:page:{page_index}"
+    return ingest_source_capture_key(authorization_id, address, page_index)
 
 
 def assert_options_not_widened(options):
-    compare = {k: v for k, v in (options or {}).items() if k != "paginationToken"}
-    if compare != EXACT_HELIUS_OPTIONS:
-        raise SourceError("UNAUTHORIZED", "Query options drifted from the frozen GTA encoding")
-    extra = set((options or {}).keys()) - set(EXACT_HELIUS_OPTIONS) - {"paginationToken"}
-    if extra:
-        raise SourceError("UNAUTHORIZED", "Query widening is forbidden")
-    return True
+    return assert_gta_options_not_widened(options)
 
 
 async def helius_gta_http(address, *, options, page_index):
@@ -692,32 +719,12 @@ async def helius_gta_http(address, *, options, page_index):
 
 
 def persist_source_capture(store, evidence_dir, authorization_id, address, page_index, capture):
-    payload = {
-        "kind": "g3-reacquire-source-response-v1",
-        "authorization_id": authorization_id,
-        "address": address,
-        "page_index": page_index,
-        "http_status": capture.get("http_status"),
-        "evidence_sha256": capture.get("evidence_sha256"),
-        "pagination_token": capture.get("pagination_token"),
-        "record_count": len(capture.get("records") or []),
-        "signatures": record_signatures(capture.get("records") or []),
-        "cleaned_body": capture.get("cleaned_body"),
-        "fetched_at": utc_now(),
-        "credential_free": True,
-        "PRODUCT_READY": False,
-    }
-    if store is not None:
-        store.put(SOURCE_CAPTURE_KIND, source_capture_key(authorization_id, address, page_index), payload)
-    if evidence_dir is not None:
-        Path(evidence_dir).mkdir(parents=True, exist_ok=True)
-        (Path(evidence_dir) / f"SOURCE_RESPONSE_page{page_index}.json").write_text(
-            json.dumps({k: v for k, v in payload.items() if k != "cleaned_body"} | {
-                "cleaned_body": capture.get("cleaned_body"),
-            }, indent=2) + "\n",
-            encoding="utf-8",
-        )
-    return payload
+    payload = dict(capture)
+    if "signatures" not in payload:
+        payload["signatures"] = record_signatures(payload.get("records") or [])
+    return persist_credential_free_source(
+        store, evidence_dir, authorization_id, address, page_index, payload,
+    )
 
 
 async def fetch_reacquire_page(store, grant, freeze, address, *, page_index, reason, transport, evidence_dir=None):
@@ -730,53 +737,39 @@ async def fetch_reacquire_page(store, grant, freeze, address, *, page_index, rea
         raise SourceError("RATE_LIMITED", "Helius reacquire request ceiling reached")
     if used_helius_units(store, grant) + DOCUMENTED_HELIUS_UNITS > entry["max_units"]:
         raise SourceError("RATE_LIMITED", "Helius reacquire credit ceiling reached")
-    options = dict(EXACT_HELIUS_OPTIONS)
-    token = request_pagination_token(freeze, page_index)
-    if token:
-        options["paginationToken"] = token
-    assert_options_not_widened(options)
+    expected = frozen_signatures(freeze, page_index)
+    options = build_historical_gta_options(
+        page_index=page_index,
+        expected_signatures=expected,
+        pagination_token=request_pagination_token(freeze, page_index),
+    )
+    assert_historical_request_anchored(options, expected_signatures=expected)
     reservation = store.reserve("helius", HELIUS_METHOD, DOCUMENTED_HELIUS_UNITS,
                                 entry["cycle_start"], entry["max_units"])
     try:
         store.dispatch(reservation)
         if transport is None:
             raise SourceError("UNAUTHORIZED", "Live HTTP transport is not attached; collection remains blocked")
-        result = await transport(address, options=options, page_index=page_index)
-        store.settle(reservation, charge=True)
-        actual = record_signatures(result.get("records") or [])
-        expected = frozen_signatures(freeze, page_index)
-        matched, mismatch = compare_signatures(actual, expected)
-        if not matched:
-            raise SourceError(SIGNATURE_MISMATCH, "Returned signatures do not match the frozen original segment")
-        persist_source_capture(
-            store, evidence_dir, grant.get("authorization_id"), address, page_index, result,
+        result = await dispatch_historical_transport(
+            transport, address, options, page_index, expected_signatures=expected,
         )
-        sanitized = sanitize_transaction_records(result.get("records") or [])
-        page = {
-            "kind": PAGE_KIND_V2,
-            "address": address,
-            "page_index": page_index,
-            "reason": reason,
-            "query": {"method": HELIUS_METHOD, "options": {k: v for k, v in options.items() if k != "paginationToken"}},
-            "request_pagination_token": token,
-            "records": sanitized["records"],
-            "signatures": actual,
-            "signature_match": True,
-            "mismatch": mismatch,
-            "pagination_token": result.get("pagination_token"),
-            "evidence_sha256": result.get("evidence_sha256") or sanitized["source_body_sha256"],
-            "source_body_sha256": sanitized["source_body_sha256"],
-            "normalized_sha256": sanitized["normalized_sha256"],
-            "integrity": sanitized["integrity"],
-            "units": DOCUMENTED_HELIUS_UNITS,
-            "external_requests": 1,
-            "http_status": result.get("http_status", 200),
-            "fetched_at": utc_now(),
-            "units_are": "documented_estimate_not_confirmed_dashboard_receipt",
-        }
-        if store is not None:
-            store.put(CACHE_KIND, page_cache_key(grant.get("authorization_id"), address, page_index), page)
-        return page
+        store.settle(reservation, charge=True)
+
+        def persist_authorised(page):
+            page["units"] = DOCUMENTED_HELIUS_UNITS
+            page["units_are"] = "documented_estimate_not_confirmed_dashboard_receipt"
+            if store is not None:
+                store.put(CACHE_KIND, page_cache_key(grant.get("authorization_id"), address, page_index), page)
+
+        return ingest_fetched_historical_page(
+            store, evidence_dir, grant.get("authorization_id"), address, page_index, result,
+            expected_signatures=expected,
+            options=options,
+            reason=reason,
+            record_signatures=record_signatures,
+            compare_signatures=compare_signatures,
+            persist_authorised_page=persist_authorised,
+        )
     except SourceError:
         try:
             store.settle(reservation, charge=True)
@@ -845,26 +838,46 @@ def _summarize_page(page, freeze, *, decode=None):
     )
     counted = completed_episodes(by_mint)
     worksheet = None
-    visible = False
     if counted["wallet_completed_episodes"] >= 1:
         try:
             usable = []
             for mint in sorted(by_mint):
                 usable.extend([row for row in by_mint[mint] if not row.get("timestamp_missing")])
             worksheet = independent_fifo_worksheet(usable)
-            visible = True
         except ValueError:
             worksheet = None
-            visible = counted["wallet_completed_episodes"] >= 1
     return {
         "decoded": decoded,
         "by_mint": by_mint,
         "truncated_before_acquisition_support": truncated,
         "counted": counted,
         "worksheet": worksheet,
-        "visible_report": visible,
+        "visible_report": visible_report_allowed(
+            worksheet=worksheet,
+            completed_positions=counted["wallet_completed_episodes"],
+        ),
         "integrity": (page or {}).get("integrity") or {},
     }
+
+
+def _save_reacquire_application_report(store, grant, freeze, page, summary):
+    """Success is a saved retrievable report on the normal application path."""
+    windows = freeze.get("windows") or {}
+    saved = replay_cached_history_to_report(
+        store,
+        address=ALLOWED_WALLET,
+        records=page.get("records") or [],
+        window_start=windows.get("report_start_inclusive"),
+        window_end=windows.get("report_end_exclusive"),
+        acquisition_start=windows.get("acquisition_support_start_inclusive"),
+        corpus_kind="GENUINE_REPLAY",
+        authorization_id=grant.get("authorization_id"),
+        source_id="reacquire-history-replay",
+    )
+    if saved.get("report") and summary.get("worksheet"):
+        saved["report"]["worksheet"] = summary["worksheet"]
+        store.put("reports", saved["report"]["id"], saved["report"])
+    return saved
 
 
 async def run_reacquire_live(store, grant, freeze, *, transport, evidence_dir=None, decode=None, page1_request=None):
@@ -882,6 +895,13 @@ async def run_reacquire_live(store, grant, freeze, *, transport, evidence_dir=No
         receipt["wallet_completed_episodes"] = summary["counted"]["wallet_completed_episodes"]
         receipt["visible_report"] = summary["visible_report"]
         receipt["worksheet"] = summary["worksheet"]
+        if summary["visible_report"]:
+            saved = _save_reacquire_application_report(store, grant, freeze, page0, summary)
+            receipt["report_id"] = saved.get("report_id")
+            receipt["search_run_id"] = saved.get("run_id")
+            if not saved.get("report_id"):
+                receipt["visible_report"] = False
+                summary["visible_report"] = False
         stop, why = should_stop_after_visible_position(
             completed_positions=summary["counted"]["wallet_completed_episodes"],
             visible_report=summary["visible_report"],
@@ -919,6 +939,13 @@ async def run_reacquire_live(store, grant, freeze, *, transport, evidence_dir=No
         receipt["wallet_completed_episodes"] = summary["counted"]["wallet_completed_episodes"]
         receipt["visible_report"] = summary["visible_report"]
         receipt["worksheet"] = summary["worksheet"]
+        if summary["visible_report"]:
+            saved = _save_reacquire_application_report(store, grant, freeze, merged, summary)
+            receipt["report_id"] = saved.get("report_id")
+            receipt["search_run_id"] = saved.get("run_id")
+            if not saved.get("report_id"):
+                receipt["visible_report"] = False
+                summary["visible_report"] = False
         stop, why = should_stop_after_visible_position(
             completed_positions=summary["counted"]["wallet_completed_episodes"],
             visible_report=summary["visible_report"],

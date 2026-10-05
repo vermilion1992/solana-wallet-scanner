@@ -34,6 +34,7 @@ from .evidence_integrity import (
     sanitize_transaction_records,
 )
 from .live_g1 import _count_method, _wrap_records, independent_fifo_worksheet
+from .history_ingest import build_historical_gta_options
 from .service import MassSearchService
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -503,7 +504,8 @@ def armed_test_grant(base=None):
     return validate_live_authorization(payload)
 
 
-async def fetch_helius_page(store, grant, address, *, page_index, reason, transport=None, pagination_token=None):
+async def fetch_helius_page(store, grant, address, *, page_index, reason, transport=None, pagination_token=None,
+                            expected_signatures=None):
     entry = _provider(grant, "helius")
     if entry is None or HELIUS_METHOD not in (entry.get("allowed_operations") or []):
         raise SourceError("UNAUTHORIZED", "Grant does not allow getTransactionsForAddress")
@@ -513,9 +515,11 @@ async def fetch_helius_page(store, grant, address, *, page_index, reason, transp
         raise SourceError("RATE_LIMITED", "Helius G3 credit ceiling reached")
     if wallet_request_count(store, grant.get("authorization_id"), address) >= int(entry.get("max_requests_per_wallet") or 3):
         raise SourceError("RATE_LIMITED", "Per-wallet G3 request ceiling reached")
-    options = dict(EXACT_HELIUS_OPTIONS)
-    if pagination_token:
-        options["paginationToken"] = pagination_token
+    options = build_historical_gta_options(
+        page_index=page_index,
+        expected_signatures=expected_signatures,
+        pagination_token=pagination_token,
+    )
     reservation = store.reserve("helius", HELIUS_METHOD, DOCUMENTED_HELIUS_UNITS,
                                 entry["cycle_start"], entry["max_units"])
     try:

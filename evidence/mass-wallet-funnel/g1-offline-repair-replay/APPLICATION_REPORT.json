@@ -1,0 +1,67 @@
+{
+  "kind": "mass-search-application-report-snapshot-v1",
+  "source": "offline G1 archive through MassSearchService.reconstruct_candidate",
+  "archive": "evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/archives/helius_gta_survivor_desc100.json.gz",
+  "run_id": "67ddc998e5cf48caa4d6a96109088be0",
+  "report_id": "6dd6158643574069844752e9c14fa2fe",
+  "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+  "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+  "corpus_kind": "GENUINE_REPLAY",
+  "policy": "UNRESOLVED",
+  "worksheet": {
+    "sale_fifo_basis_sol": [
+      "7.90026"
+    ],
+    "sale_net_profit_sol": [
+      "-0.167725526"
+    ],
+    "total_profit_sol": "-0.167725526",
+    "oracle": "independent-g1-fifo-v1"
+  },
+  "material_exit": {
+    "state": "KNOWN",
+    "first_sale_seconds": 2263932,
+    "exit_50_seconds": 2263932,
+    "exit_90_seconds": 2263932,
+    "final_hold_seconds": 2263932,
+    "quantity_weighted_exit_seconds": "2263932",
+    "sold_units": "13032346709725",
+    "acquired_units": "13032346709725",
+    "open_units": "0",
+    "method_version": "material-exit-v1",
+    "missing_dependencies": []
+  },
+  "window": {
+    "start": "2026-09-05T12:11:35.382917Z",
+    "end": "2026-10-05T12:11:35.382917Z"
+  },
+  "label": "Mass-search subset \u00b7 GENUINE_REPLAY",
+  "notes": [
+    "Subset reconstruction through the existing accounting/research functions.",
+    "Does not establish complete historical ownership or PRODUCT_READY."
+  ],
+  "declared_mints": [
+    "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump"
+  ],
+  "source_integrity": {
+    "status": "SOURCE_RECORDS_INTACT",
+    "records": 100,
+    "intact": 100,
+    "damaged": 0,
+    "malformed": 0,
+    "integrity_failure": false,
+    "all_unsupported": false
+  },
+  "offline_replay": true,
+  "external_requests": 0,
+  "PRODUCT_READY": false,
+  "not_ranked_wallet_pipeline_proof": true,
+  "not_match": true,
+  "g3_status": "G1 control only \u2014 does not prove ranked-wallet / G3 pipeline",
+  "prior_gates_preserved": {
+    "G3_RANKED100_HISTORY": "INCOMPLETE",
+    "SOURCE_RECORDS_DAMAGED": true,
+    "SIGNATURE_MISMATCH_page0": true,
+    "PRODUCT_READY": false
+  }
+}
