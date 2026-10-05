@@ -1,0 +1,221 @@
+{
+  "schema_version": "mass-research-adversarial-vectors-v1",
+  "corpus_kind": "SYNTHETIC",
+  "purpose": "Independent, manually specified test expectations; integrate with actual application tests. These identifiers are not Solana addresses.",
+  "cases": [
+    {
+      "id": "fees_and_dust_tail",
+      "inputs": {
+        "opening_units": "0",
+        "events": [
+          {
+            "kind": "buy",
+            "seconds_from_start": 0,
+            "units": "100",
+            "consideration_sol": "1",
+            "wallet_fee_sol": "0.01"
+          },
+          {
+            "kind": "sell",
+            "seconds_from_start": 20,
+            "units": "50",
+            "consideration_sol": "0.8",
+            "wallet_fee_sol": "0.005"
+          },
+          {
+            "kind": "sell",
+            "seconds_from_start": 30,
+            "units": "45",
+            "consideration_sol": "0.72",
+            "wallet_fee_sol": "0.005"
+          },
+          {
+            "kind": "sell",
+            "seconds_from_start": 172800,
+            "units": "5",
+            "consideration_sol": "0.08",
+            "wallet_fee_sol": "0.005"
+          }
+        ],
+        "all_inventory_cost_and_time_facts_supported": true
+      },
+      "expected": {
+        "sale_fifo_basis_sol": [
+          "0.505",
+          "0.4545",
+          "0.0505"
+        ],
+        "sale_net_profit_sol": [
+          "0.29",
+          "0.2605",
+          "0.0245"
+        ],
+        "total_profit_sol": "0.575",
+        "first_sale_seconds": 20,
+        "exit_50_seconds": 20,
+        "exit_90_seconds": 30,
+        "final_hold_seconds": 172800,
+        "quantity_weighted_exit_seconds": "8663.5",
+        "long_final_hold_does_not_erase_material_fast_exit": true
+      }
+    },
+    {
+      "id": "unknown_transfer_basis",
+      "inputs": {
+        "received_units": "100",
+        "origin": "transfer",
+        "basis_sol": null,
+        "sale_proceeds_sol": "2",
+        "fee_sol": "0.01"
+      },
+      "expected": {
+        "sale_visible": true,
+        "realised_pnl_sol": null,
+        "wallet_fee_sol": "0.01",
+        "zero_basis_assumed": false
+      }
+    },
+    {
+      "id": "closed_winners_open_losses",
+      "inputs": {
+        "closed_net_profit_sol": "5",
+        "known_open_pnl_sol": "-8",
+        "all_other_flows_and_costs_resolved": true
+      },
+      "expected": {
+        "combined_pnl_sol": "-3",
+        "positive_closed_total_is_not_positive_total_economics": true
+      }
+    },
+    {
+      "id": "median_not_average",
+      "inputs": {
+        "eligible_closed_hold_hours": [
+          "0.5",
+          "2",
+          "48"
+        ]
+      },
+      "expected": {
+        "median_hold_hours": "2",
+        "population_count": 3
+      }
+    },
+    {
+      "id": "stage_conservation",
+      "inputs": {
+        "input": 1000,
+        "promoted": 200,
+        "rejected": 650,
+        "deferred": 100,
+        "pending": 50
+      },
+      "expected": {
+        "valid_count_conservation": true,
+        "next_stage_input": 200,
+        "run_complete": false
+      }
+    },
+    {
+      "id": "currency_mismatch",
+      "inputs": {
+        "provider_realised_pnl": {
+          "value": "1000",
+          "unit": "USD"
+        },
+        "strict_threshold": {
+          "value": "5",
+          "unit": "SOL"
+        }
+      },
+      "expected": {
+        "strict_comparison_state": "UNKNOWN",
+        "convert_at_current_price_to_prove_strict": false
+      }
+    },
+    {
+      "id": "causal_delay",
+      "inputs": {
+        "chain_time_seconds": 0,
+        "notification_receipt_seconds": 3,
+        "decode_completed_seconds": 4,
+        "reaction_delay_seconds": 60
+      },
+      "expected": {
+        "earliest_quote_request_seconds": 64,
+        "quote_at_chain_time_plus_delay_is_too_early": true
+      }
+    },
+    {
+      "id": "unavailable_exit",
+      "inputs": {
+        "open_units": "50",
+        "exit_quote_available": false,
+        "last_mark_sol": "1"
+      },
+      "expected": {
+        "closed_units": "0",
+        "open_units": "50",
+        "supported_liquidation_value_sol": null,
+        "use_last_mark_as_realized_exit": false
+      }
+    },
+    {
+      "id": "provider_count_proxy",
+      "inputs": {
+        "provider_trade_count": 20,
+        "strict_completed_positions_required": 50,
+        "mapping_proved": false
+      },
+      "expected": {
+        "strict_position_count_state": "UNKNOWN",
+        "can_use_as_preliminary_queue_priority": true
+      }
+    },
+    {
+      "id": "weekly_consistency",
+      "inputs": {
+        "complete_independent_week_net_sol": [
+          "1",
+          "-1",
+          "2",
+          "3"
+        ]
+      },
+      "expected": {
+        "positive_weeks": 3,
+        "four_week_net_sol": "5",
+        "overlapping_7_30_90_windows_used": false
+      }
+    },
+    {
+      "id": "largest_winner_stress",
+      "inputs": {
+        "per_mint_net_profit_sol": [
+          "10",
+          "1",
+          "-4"
+        ]
+      },
+      "expected": {
+        "net_profit_sol": "7",
+        "net_without_largest_winner_sol": "-3",
+        "largest_winner_share_of_net_expression": "10/7*100",
+        "largest_winner_share_of_gross_positive_expression": "10/11*100",
+        "denominators_interchangeable": false
+      }
+    },
+    {
+      "id": "synthetic_cannot_be_live",
+      "inputs": {
+        "corpus_kind": "SYNTHETIC",
+        "unique_candidates": 10000,
+        "test_status": "PASS"
+      },
+      "expected": {
+        "real_search_benchmark_state": "INCOMPLETE",
+        "profitable_wallets_established": 0
+      }
+    }
+  ]
+}

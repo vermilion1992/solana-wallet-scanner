@@ -1,0 +1,132 @@
+{
+  "schema_version": "mass-search-receipt-v1",
+  "run_id": "synthetic-contract-example",
+  "corpus_kind": "SYNTHETIC",
+  "application": {
+    "commit": "0000000000000000000000000000000000000000",
+    "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "dirty": false,
+    "lock_sha256": {
+      "synthetic-lock": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "execution": {
+    "started_at": "2026-01-01T00:00:00Z",
+    "ended_at": "2026-01-01T00:01:00Z",
+    "status": "COMPLETE",
+    "exit_code": 0
+  },
+  "selection": {
+    "plan_frozen_at": "2025-12-31T23:59:59Z",
+    "as_of": "2025-12-31T23:59:00Z",
+    "universe_sealed_at": "2026-01-01T00:00:30Z",
+    "cohort_frozen_at": null,
+    "plan_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "universe_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "cohort_sha256": null,
+    "strategy_id": "fixed-entry-first-sale-v1"
+  },
+  "universe": {
+    "raw_rows": 1020,
+    "unique_candidates": 1000,
+    "duplicate_rows": 15,
+    "invalid_rows": 5
+  },
+  "stages": [
+    {
+      "name": "triage",
+      "input": 1000,
+      "promoted": 200,
+      "rejected": 700,
+      "deferred": 100,
+      "pending": 0
+    },
+    {
+      "name": "behaviour",
+      "input": 200,
+      "promoted": 50,
+      "rejected": 100,
+      "deferred": 50,
+      "pending": 0
+    },
+    {
+      "name": "reconstruct",
+      "input": 50,
+      "promoted": 20,
+      "rejected": 10,
+      "deferred": 20,
+      "pending": 0
+    },
+    {
+      "name": "forward_select",
+      "input": 20,
+      "promoted": 5,
+      "rejected": 10,
+      "deferred": 5,
+      "pending": 0
+    }
+  ],
+  "budget": {
+    "live_authorized": false,
+    "authorization_sha256": null,
+    "paid_spend_usd": "0",
+    "paid_limit_usd": "0",
+    "providers": []
+  },
+  "measurements": {
+    "cached_rows": 10000,
+    "refilter_external_requests": 0,
+    "refilter_p95_ms": null,
+    "cold_live_seconds": null,
+    "raw_history_wallets": 3,
+    "decoded_transactions": 60,
+    "supported_trades": 60
+  },
+  "analytics": {
+    "reports_populated": 3,
+    "reports_reconciled": 3,
+    "min_closed_observed_episodes_per_report": 10,
+    "control_case_included": true,
+    "profitable_candidates": 0
+  },
+  "forward": {
+    "state": "NOT_RUN",
+    "selection_frozen_before_observation": false,
+    "started_at": null,
+    "signal_count": 0,
+    "quote_count": 0,
+    "closed_positions": 0,
+    "monitoring_gaps": 0,
+    "valuations_complete": false
+  },
+  "artifacts": [
+    {
+      "path": "synthetic_run_evidence.json",
+      "sha256": "6f36ef1a1e9bfea1d1c5e9279634e3e92841f5609ff60b1e716074f7163c735b",
+      "corpus_kind": "SYNTHETIC",
+      "roles": [
+        "candidate_snapshot",
+        "decisions",
+        "requests",
+        "budget_ledger",
+        "source_manifest",
+        "wallet_reports",
+        "reconciliation",
+        "test_results",
+        "selection_manifest",
+        "forward_signals",
+        "forward_quotes",
+        "forward_positions"
+      ]
+    }
+  ],
+  "claims": {
+    "mass_search_proven": false,
+    "analytics_demonstrated": false,
+    "forward_operational_proven": false,
+    "strict_full_wallet_ready": false
+  },
+  "notes": [
+    "Every count, identity and timestamp in this example is synthetic input to a contract test, not a measurement or scanner result."
+  ]
+}

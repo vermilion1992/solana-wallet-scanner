@@ -1,4 +1,22 @@
-# Active assignment — wallet screening and forward copy research, 4 October 2026
+# Active assignment — mass wallet search funnel v1, 5 October 2026
+
+Continue from private `vermilion1992/solana-wallet-scanner`, branch
+`codex/screening-forward-research`, published HEAD
+`fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69`. Do not merge PR #1, reset
+newer work, or replace historical evidence. Implement Mass Wallet Search v1
+on a reversible branch. Offline mode is the default.
+
+Deliver independently named outcomes: MASS_SEARCH_SOFTWARE, REAL_SEARCH_BENCHMARK,
+REAL_ANALYTICS_DEMONSTRATED, FORWARD_OPERATION_DEMONSTRATED and RESEARCH_OUTCOME.
+Legacy PRODUCT_READY remains false and is governed by B1/B2/B3. Preserve the
+named Strict research preset, setup-pilot ledger, session/CSRF guards and the
+legacy 20/5 discovery caps. Bulk-universe capacity is a separate local limit.
+
+Do not fabricate profitable wallets, reset exhausted credits, buy subscriptions,
+trade, or claim completion from synthetic fixtures. If live access is missing,
+block only the live workstream and continue offline implementation.
+
+# Prior assignment — wallet screening and forward copy research, 4 October 2026
 
 The user's current delivery target supersedes historical full-wallet accounting as
 a prerequisite for useful sampled research. Preserve the existing engine, strict

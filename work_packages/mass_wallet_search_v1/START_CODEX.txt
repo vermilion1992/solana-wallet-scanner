@@ -1,0 +1,9 @@
+Implement the attached Mass Wallet Search v1 work package in vermilion1992/solana-wallet-scanner. Read the repository's AGENTS.md first, then this package's CODEX_TASK.md and read-order documents. This is an implementation assignment, not another planning or APK task.
+
+Inspect the current checkout and upstream PR before choosing a base. The inspected reference is codex/screening-forward-research at fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69; do not reset newer work. Use a separate implementation branch and preserve existing evidence, strict filters, authentication and quota guards.
+
+Build one real-data vertical slice before broadening it: authorised candidate source -> frozen universe -> cheap triage -> targeted history -> genuine trades and supported P&L/median hold -> saved report/export. Then implement the staged 1,000-candidate benchmark, local 10,000-row refilter benchmark and separate forward-observation comparison.
+
+Do not claim completion from synthetic fixtures, an acknowledged subscription, zero-signal observation, empty analytics, hand-picked winners or passing CI alone. Do not invent three profitable wallets, weaken thresholds, add subscriptions, reset exhausted credits, or trade. If provider access or budget approval is missing, report the exact missing capability and a bounded approval request; block only that live workstream and continue offline implementation.
+
+Keep commits small and tested. Return the actual changed files, exact tested commit, executed versus blocked gates, real-versus-synthetic evidence, benchmark counts/timings/costs, remaining defects and the next concrete action using docs/08_DELIVERY_TEMPLATE.md. Publishing a private feature branch requires existing repository authorisation; do not merge or deploy without explicit approval.

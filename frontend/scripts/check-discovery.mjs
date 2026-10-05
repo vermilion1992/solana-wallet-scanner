@@ -17,6 +17,7 @@ try {
       "src/Discovery.tsx",
       "src/report.tsx",
       "src/EvidenceAudit.tsx",
+      "src/MassSearch.tsx",
       "--target",
       "ES2022",
       "--module",
@@ -54,6 +55,7 @@ try {
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
   const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
+  const { massSearchCorpusLabel, massSearchEmptyReason } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -1914,6 +1916,10 @@ try {
     "Current source limits stay visible in a real report without erasing independent observations");
   assert.equal(renderToStaticMarkup(React.createElement(HistoricalSourceNotice, { decision: undefined })), "",
     "Older state responses remain compatible when the source-decision field is absent");
+  assert.equal(massSearchCorpusLabel("SYNTHETIC"), "Synthetic / development");
+  assert.equal(massSearchCorpusLabel("GENUINE_LIVE"), "Genuine live collection");
+  assert.equal(massSearchEmptyReason(null).state, "not_scanned");
+  assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 0 } }).state, "empty_universe");
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

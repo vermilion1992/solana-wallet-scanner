@@ -1,0 +1,99 @@
+{
+  "schema_version": "mass-search-plan-v1",
+  "status": "PROPOSED_CONFIGURATION_NOT_LIVE_AUTHORIZATION",
+  "name": "Mass research v1",
+  "chain": "solana",
+  "live_enabled": false,
+  "strict_preset_reference": "config/strict_preset.snapshot.json",
+  "selection": {
+    "report_window_days": 30,
+    "verification_window_days": 90,
+    "freeze_as_of_before_acquisition": true,
+    "atomic_provider_snapshot_required_for_exact_asof_claim": true,
+    "address_order_tie_break": "chain_then_address",
+    "preserve_source_memberships": true,
+    "universe_target_unique": 1000,
+    "local_universe_capacity": 10000,
+    "target_positive_candidates": 3,
+    "force_target_count": false,
+    "auto_relax_filters": false
+  },
+  "stage_workload_maxima_not_permissions": {
+    "summary_enrichment": 200,
+    "behaviour_history": 50,
+    "detailed_reconstruction": 20,
+    "forward_watch_candidates": 5,
+    "legacy_route_and_approved_budget_caps_still_apply": true
+  },
+  "preliminary_ranking": {
+    "provider_reported_metrics_only_for_queue_priority": true,
+    "prefer_positive_reported_realised_pnl": true,
+    "prefer_recent_activity_within_days": 7,
+    "prefer_provider_trade_count_at_least": 20,
+    "original_currency_and_population_required": true,
+    "missing_metric_outcome": "DEFERRED",
+    "hard_fail_never_inferred_from_incompatible_proxy": true,
+    "no_opaque_safety_score": true
+  },
+  "exploration_audit": {
+    "enabled": true,
+    "share_of_authorised_deep_work_pct": "5",
+    "sampling": "deterministic_hash_stratified_by_reason",
+    "selection_seed": "mass-research-v1",
+    "minimum_spend_override": false,
+    "note": "Floor fractional allocations; no minimum request that overrides an insufficient budget."
+  },
+  "provisional_following_model": {
+    "execution": "QUOTE_ONLY_NO_SIGNING",
+    "baseline_strategy": "fixed-entry-first-sale-v1",
+    "secondary_strategy": "fixed-entry-proportional-exit-v1",
+    "primary_reaction_delay_seconds": 60,
+    "stress_reaction_delay_seconds": [
+      15,
+      60,
+      180
+    ],
+    "detection_and_decoding_latency_added_separately": true,
+    "initial_simulated_capital_sol": "10",
+    "fixed_simulated_entry_sol": "0.1",
+    "max_open_positions": 5,
+    "extra_execution_cost_sol_per_leg": null,
+    "adverse_quote_haircut_bps": null,
+    "unset_cost_inputs_block_economic_run": true,
+    "missing_exit_action": "RETAIN_OPEN_UNPRICED",
+    "quotes_are_fills": false
+  },
+  "benchmarks": {
+    "genuine_unique_candidates_min": 1000,
+    "genuine_reconciled_reports_min": 3,
+    "supported_closed_observed_episodes_per_report_min": 10,
+    "cached_rows": 10000,
+    "warmups": 5,
+    "measured_iterations": 20,
+    "cached_refilter_p95_target_ms": 500,
+    "summary_page_size": 50,
+    "summary_api_p95_target_ms": 750,
+    "fresh_acquisition_objective_seconds": 300,
+    "fresh_objective_is_guaranteed_sla": false,
+    "forward_operational_min_signals": 2,
+    "forward_operational_min_quotes": 2,
+    "forward_operational_min_closed_positions": 1
+  },
+  "financial_study_proposal": {
+    "days": 14,
+    "minimum_closed_positions": 100,
+    "minimum_distinct_wallets": 3,
+    "minimum_distinct_mints": 5,
+    "authorisation_required": true,
+    "horizon_or_sample_alone_proves_edge": false,
+    "budget_stop_result": "INCOMPLETE"
+  },
+  "network_policy": {
+    "maximum_additional_spend_usd": "0",
+    "paid_upgrade_allowed": false,
+    "overages_allowed": false,
+    "per_provider_budgets_must_be_explicit": true,
+    "offline_refilter_external_requests": 0,
+    "max_concurrency_must_not_exceed_existing_route_caps": true
+  }
+}

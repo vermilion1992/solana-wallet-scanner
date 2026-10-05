@@ -500,6 +500,7 @@ export type State = {
   evidence_audits?: EvidenceAudit[];
   screenings?: Screening[];
   observations?: PaperObservation[];
+  mass_search?: MassSearchState;
   reports: Report[];
   watchlist: { address: string; label: string; added_at?: string }[];
   usage: {
@@ -645,4 +646,47 @@ export type PaperObservation = {
     [key: string]: unknown;
   };
   [key: string]: unknown;
+};
+export type MassSearchRunSummary = {
+  run_id: string;
+  status: string;
+  source_id: string;
+  corpus_kind: string;
+  created_at?: string;
+};
+export type MassSearchState = {
+  runs?: MassSearchRunSummary[];
+  bulk_capacity?: number;
+  legacy_candidate_cap?: number;
+  legacy_deep_audit_cap?: number;
+  live_default?: boolean;
+  note?: string;
+};
+export type MassSearchStageCounts = {
+  input: number;
+  promoted: number;
+  rejected: number;
+  deferred: number;
+  pending: number;
+};
+export type MassSearchRun = {
+  run_id: string;
+  status: string;
+  source_id: string;
+  corpus_kind: string;
+  live_authorized: boolean;
+  plan_frozen_at?: string;
+  universe?: { raw_rows?: number; unique_candidates?: number; duplicate_rows?: number; invalid_rows?: number };
+  stages?: Record<string, MassSearchStageCounts>;
+  legacy_limits?: Record<string, number>;
+  bulk_capacity?: number;
+};
+export type MassSearchCandidate = {
+  candidate_id: string;
+  address: string;
+  result?: string | null;
+  reason_codes?: string[];
+  sort_value?: string | null;
+  unit?: string | null;
+  metric_state?: string | null;
 };

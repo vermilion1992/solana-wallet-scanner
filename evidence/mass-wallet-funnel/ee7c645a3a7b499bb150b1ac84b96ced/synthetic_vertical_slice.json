@@ -1,0 +1,112 @@
+{
+  "kind": "synthetic-vertical-slice-v1",
+  "corpus_kind": "SYNTHETIC",
+  "application_commit": "559b45c74182c29892521e18308b9154ea02ac0e",
+  "run_id": "8c9f114117494f3685e174b2b8d6d432",
+  "universe": {
+    "raw_rows": 1,
+    "unique_candidates": 1,
+    "duplicate_rows": 0,
+    "invalid_rows": 0
+  },
+  "stages": {
+    "triage": {
+      "input": 1,
+      "promoted": 1,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 1,
+      "run_complete": true
+    },
+    "behaviour": {
+      "input": 1,
+      "promoted": 1,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 1,
+      "run_complete": true
+    },
+    "reconstruct": {
+      "input": 1,
+      "promoted": 1,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 1,
+      "run_complete": true
+    },
+    "forward_select": {
+      "input": 1,
+      "promoted": 1,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 1,
+      "run_complete": true
+    }
+  },
+  "external_requests": 0,
+  "worksheet": {
+    "sale_fifo_basis_sol": [
+      "0.505",
+      "0.4545",
+      "0.0505"
+    ],
+    "sale_net_profit_sol": [
+      "0.29",
+      "0.2605",
+      "0.0245"
+    ],
+    "total_profit_sol": "0.575"
+  },
+  "material_exit": {
+    "state": "KNOWN",
+    "first_sale_seconds": 20,
+    "exit_50_seconds": 20,
+    "exit_90_seconds": 30,
+    "final_hold_seconds": 172800,
+    "quantity_weighted_exit_seconds": "8663.5",
+    "sold_units": "100",
+    "acquired_units": "100",
+    "open_units": "0",
+    "method_version": "material-exit-v1",
+    "missing_dependencies": []
+  },
+  "independent_worksheet": {
+    "sale_fifo_basis_sol": [
+      "0.505",
+      "0.4545",
+      "0.0505"
+    ],
+    "sale_net_profit_sol": [
+      "0.29",
+      "0.2605",
+      "0.0245"
+    ],
+    "total_profit_sol": "0.575"
+  },
+  "independent_material_exit": {
+    "state": "KNOWN",
+    "first_sale_seconds": 20,
+    "exit_50_seconds": 20,
+    "exit_90_seconds": 30,
+    "final_hold_seconds": 172800,
+    "quantity_weighted_exit_seconds": "8663.5",
+    "sold_units": "100",
+    "acquired_units": "100",
+    "open_units": "0",
+    "method_version": "material-exit-v1",
+    "missing_dependencies": []
+  },
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "export_path_basename": "mass-search-8c9f11411749.json",
+  "cannot_claim_genuine_slice": true
+}

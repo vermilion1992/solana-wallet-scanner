@@ -1,0 +1,17 @@
+{
+  "kind": "budget-ledger-v1",
+  "live_authorized": false,
+  "paid_spend_usd": "0",
+  "paid_limit_usd": "0",
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "providers": [],
+  "notes": [
+    "No live provider units reserved or used. Setup-pilot remaining is the existing exhausted ledger, not a reset."
+  ]
+}

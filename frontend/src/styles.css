@@ -5069,3 +5069,12 @@ pre {
     padding-inline: 20px;
   }
 }
+.mass-search { align-items: stretch; }
+.mass-search-table-wrap { overflow-x: auto; max-width: 100%; }
+.mass-search-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.mass-search-table th, .mass-search-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.mass-search-funnel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 400px) {
+  .mass-search-funnel { grid-template-columns: 1fr; }
+  .mass-search .research-action-row { flex-wrap: wrap; }
+}

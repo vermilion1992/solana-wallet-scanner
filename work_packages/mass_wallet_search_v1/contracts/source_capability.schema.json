@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gmgn:mass-search:capability:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "provider_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "documentation_url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "documentation_revision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "read_only": {
+      "const": true
+    },
+    "auth_mode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "access_state": {
+      "enum": [
+        "DOCUMENTED_NOT_TESTED",
+        "AUTHORIZED_AVAILABLE",
+        "UNAUTHORIZED",
+        "ENTITLEMENT_BLOCKED",
+        "RATE_LIMITED",
+        "INCOMPLETE_SCOPE",
+        "UNSUPPORTED_SCHEMA",
+        "UNAVAILABLE"
+      ]
+    },
+    "role_decision": {
+      "enum": [
+        "GO",
+        "GO_LIMITED",
+        "NO_GO",
+        "NOT_TESTED"
+      ]
+    },
+    "field_mapping": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "billing_unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cost_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page_limit": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "cursor_semantics": {
+      "type": "string",
+      "minLength": 1
+    },
+    "window_semantics": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accounting_method": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "history_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ownership_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "retention_and_terms": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actual_response_hashes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      },
+      "minItems": 0
+    },
+    "unresolved_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "authorization_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "provider_id",
+    "operation",
+    "checked_at",
+    "documentation_url",
+    "documentation_revision",
+    "read_only",
+    "auth_mode",
+    "access_state",
+    "role_decision",
+    "field_mapping",
+    "billing_unit",
+    "cost_model",
+    "page_limit",
+    "cursor_semantics",
+    "window_semantics",
+    "accounting_method",
+    "currency",
+    "history_scope",
+    "ownership_scope",
+    "retention_and_terms",
+    "actual_response_hashes",
+    "unresolved_limitations",
+    "authorization_id"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "role_decision": {
+            "enum": [
+              "GO",
+              "GO_LIMITED"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "actual_response_hashes": {
+            "minItems": 1
+          },
+          "authorization_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "access_state": {
+            "enum": [
+              "AUTHORIZED_AVAILABLE",
+              "INCOMPLETE_SCOPE"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

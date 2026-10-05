@@ -1,0 +1,98 @@
+{
+  "kind": "local-10k-refilter-v1",
+  "corpus_kind": "SYNTHETIC",
+  "application_commit": "559b45c74182c29892521e18308b9154ea02ac0e",
+  "hardware": {
+    "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "peak_rss_kb": 83300
+  },
+  "warmups": 5,
+  "measured": 20,
+  "page_size": 50,
+  "result": {
+    "run_id": "ee7c645a3a7b499bb150b1ac84b96ced",
+    "rows": 10000,
+    "unique_candidates": 10000,
+    "external_requests": 0,
+    "warmups": 5,
+    "measured": 20,
+    "median_ms": 287.9680764999648,
+    "p95_ms": 309.1835019999962,
+    "max_ms": 312.42474200007564,
+    "legacy_candidate_cap": 20
+  },
+  "timings_ms": [
+    246.90099800000098,
+    258.2069259997297,
+    264.11200000029567,
+    267.7432499999668,
+    269.6557969998139,
+    279.30761500010703,
+    280.6875329997638,
+    281.9371420000607,
+    282.43806099999347,
+    284.99955799998133,
+    290.9365949999483,
+    292.76879000008194,
+    293.29922899978556,
+    296.12786899997445,
+    301.0299950001354,
+    301.5733000002001,
+    304.63598100004674,
+    306.5734679998968,
+    309.1835019999962,
+    312.42474200007564
+  ],
+  "wall_seconds": 8.78,
+  "universe": {
+    "raw_rows": 10000,
+    "unique_candidates": 10000,
+    "duplicate_rows": 0,
+    "invalid_rows": 0
+  },
+  "stages": {
+    "triage": {
+      "input": 10000,
+      "promoted": 200,
+      "rejected": 0,
+      "deferred": 9800,
+      "pending": 0,
+      "next_stage_input": 200,
+      "run_complete": true
+    },
+    "behaviour": {
+      "input": 200,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 200,
+      "pending": 0,
+      "next_stage_input": 0,
+      "run_complete": true
+    },
+    "reconstruct": {
+      "input": 0,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 0,
+      "run_complete": true
+    },
+    "forward_select": {
+      "input": 0,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 0,
+      "run_complete": true
+    }
+  },
+  "page_total": 10000,
+  "page_items": 50,
+  "external_requests": 0,
+  "legacy_candidate_cap": 20
+}

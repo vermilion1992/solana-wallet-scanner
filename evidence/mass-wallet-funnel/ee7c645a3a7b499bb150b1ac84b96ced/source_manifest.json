@@ -1,0 +1,15 @@
+{
+  "kind": "mass-search-source-manifest-v1",
+  "commit": "559b45c74182c29892521e18308b9154ea02ac0e",
+  "source_sha256": "2c4d31f940a8ab21cd5e2e7dd2d255664d5e0582d56c3ecc80bd0d2e10249757",
+  "source_file_count": 318,
+  "locks": {
+    "requirements.txt": "4d156880231cc05817d3e616ab2fbd3032373e61cb85aea51a7fbb8814e99b13",
+    "requirements-build.in": "a4434fb606b91b289fc2d031ecd14783c4be5e280b344a0c818c80521eadb68e",
+    "pyproject.toml": "e62d540d019457ffbe3a6e886752500d1fd0ee355eda0d26b2596adcab10d5c4",
+    "frontend/package-lock.json": "3b3f2d8db8320ca27446cedb67fd4c916af3fac4b738d2bdfa709c81126e1870"
+  },
+  "dirty": false,
+  "live_authorization": null,
+  "example_authorization_is_grant": false
+}
