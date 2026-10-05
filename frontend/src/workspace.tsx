@@ -29,6 +29,7 @@ import {
   Button,
   Empty,
   EvidenceHint,
+  ListRealisedProfitCell,
   MetricValue,
   ReportTable,
   SectionHeading,
@@ -809,10 +810,17 @@ export function CompareView({
             title="A shared view of the details"
             subtitle={
               sameWindows
-                ? "The selected reports use the same window, source, and methodology."
+                ? reports.some((report) => report.source === "mass-search")
+                  ? "Mass-search realised P&L is reconstructed subset, not a wallet-wide MATCH."
+                  : "The selected reports use the same window, source, and methodology."
                 : "These reports have different windows, data sources, or methodology. Their metrics cannot be compared like for like."
             }
           />
+          {reports.some((report) => report.source === "mass-search") && (
+            <p className="subset-compare-note">
+              Supported closed trades only. Reconstructed subset P&amp;L is not wallet-wide MATCH.
+            </p>
+          )}
           {!sameWindows && (
             <div className="inline-alert">
               <CircleHelp size={18} />
@@ -839,6 +847,9 @@ export function CompareView({
                       <WindowLabel report={report} />
                       {report.source === "demo" && (
                         <small className="demo-inline">SYNTHETIC DEMO</small>
+                      )}
+                      {report.source === "mass-search" && (
+                        <small className="demo-inline">RECONSTRUCTED SUBSET</small>
                       )}
                     </th>
                   ))}
@@ -867,10 +878,14 @@ export function CompareView({
                       <td title={metric.hint}>{metric.name}</td>
                       {reports.map((r) => (
                         <td key={r.id} className="numeric">
-                          <MetricValue
-                            metric={r.metrics[metric.key]}
-                            suffix={metric.suffix}
-                          />
+                          {metric.key === "profit_sol" ? (
+                            <ListRealisedProfitCell report={r} />
+                          ) : (
+                            <MetricValue
+                              metric={r.metrics[metric.key]}
+                              suffix={metric.suffix}
+                            />
+                          )}
                         </td>
                       ))}
                     </tr>

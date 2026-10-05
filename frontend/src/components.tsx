@@ -198,7 +198,7 @@ export const metricDefinitions: {
     hint: "Equity change adjusted for external flows",
   },
 ];
-function ListRealisedProfitCell({ report }: { report: Report }) {
+export function ListRealisedProfitCell({ report }: { report: Report }) {
   const listed = listRealisedProfit(report);
   if (listed.basis === "reconstructed-subset" && listed.value != null) {
     return (

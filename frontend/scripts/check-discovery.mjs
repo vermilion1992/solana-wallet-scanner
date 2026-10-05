@@ -62,7 +62,7 @@ try {
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
-  const { Results } = require(join(output, "workspace.js"));
+  const { CompareView, Results } = require(join(output, "workspace.js"));
   const { ReportTable } = require(join(output, "components.js"));
   const { compareDecimal, listRealisedProfit } = require(join(output, "format.js"));
   const {
@@ -2034,6 +2034,34 @@ try {
   assert.ok(resultsHtml.includes("Reconstructed subset"));
   assert.ok(resultsHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(resultsHtml.includes("Mass-search subset"));
+  const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport] },
+    selected: [subsetReport.id],
+    onSelect: () => undefined,
+  }));
+  assert.ok(compareHtml.includes("0.575"));
+  assert.ok(compareHtml.includes("Reconstructed subset"));
+  assert.ok(compareHtml.includes("RECONSTRUCTED SUBSET"));
+  assert.ok(compareHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(compareHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(compareHtml.includes("not wallet-wide MATCH"));
+  const liveCompare = {
+    ...subsetReport,
+    id: "live-row",
+    source: "live",
+    label: "Live control",
+    metrics: { profit_sol: { status: "known", value: "2.00" } },
+  };
+  const liveCompareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [liveCompare] },
+    selected: [liveCompare.id],
+    onSelect: () => undefined,
+  }));
+  assert.ok(liveCompareHtml.includes("2"));
+  assert.ok(!liveCompareHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(!liveCompareHtml.includes("RECONSTRUCTED SUBSET"));
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );
