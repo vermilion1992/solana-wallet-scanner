@@ -1,0 +1,464 @@
+{
+  "export_version": "quote-paper-v1",
+  "exported_at": "2026-10-04T23:08:31.331601+00:00",
+  "run": {
+    "version": "quote-paper-v1",
+    "strategy": "fixed-entry-first-sale-v1",
+    "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "settings": {
+      "capital_sol": "2",
+      "entry_sol": "0.1",
+      "max_open_positions": 5,
+      "reaction_delay_seconds": 1,
+      "adverse_bps": 100,
+      "execution_fee_sol": "0.00001",
+      "max_price_impact_pct": "5",
+      "max_events": 5,
+      "max_quotes": 5,
+      "max_duration_minutes": 2
+    },
+    "started_at": "2026-10-04T23:08:18.666125+00:00",
+    "screening_id": "7f4d4ec228fd49eca3bda1dee0bfee8d",
+    "copy_research_preset_snapshot": {
+      "name": "Forward quote copy research",
+      "version": "forward-copy-preset-v1",
+      "exclude_after_leader_exits_before_entry": 2,
+      "minimum_closed_positions_for_disadvantage": 3,
+      "exclude_negative_aggregate_closed_pnl": true,
+      "require_available_exits_and_known_open_valuation": true
+    },
+    "id": "d0e5d3c71b884edc9624312b2c7b7b56",
+    "settings_snapshot_hash": "53926dcaed3ced71ef40e10097c0e1c0d797d6211b7b8b372518e0a9f9c68bde",
+    "status": "stopped",
+    "stop_reason": "user_stopped",
+    "deadline_at": "2026-10-04T23:10:18.666125+00:00",
+    "initial_cash_lamports": "2000000000",
+    "cash_lamports": "1978388000",
+    "signals": [
+      {
+        "signature": "111111111111111111111111111111111111111111111111111111111111112nW",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "side": "buy",
+        "decimals": 6,
+        "raw_quantity": "100000000",
+        "block_time": 1791155288,
+        "evidence_hash": "3fb504e45aa1d53a54db8181d69001dacd3176165aee1ce04766315c128221f7",
+        "notification_evidence_hash": "00db2d0664b030f0fceb50176d87c256abeaadf07c2d1c6fc767b1aab872565b",
+        "reason": null,
+        "leader_cash_role_state": "PASS",
+        "id": "111111111111111111111111111111111111111111111111111111111111112nW:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:buy",
+        "detected_at": "2026-10-04T23:08:18.977644+00:00",
+        "decoded_at": "2026-10-04T23:08:19.199338+00:00",
+        "observed_at": "2026-10-04T23:08:19.199348+00:00",
+        "eligible": true,
+        "decision": "hypothetical_entry",
+        "quote_request_id": "d25d13af8c6b4ddab7e92526fce4f1c6"
+      },
+      {
+        "signature": "111111111111111111111111111111111111111111111111111111111111112nX",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "side": "sell",
+        "decimals": 6,
+        "raw_quantity": "100000000",
+        "block_time": 1791155298,
+        "evidence_hash": "3cea2beb69f08cfb185a46c3796b044bd828cb47eeee1bfab7182c449d495783",
+        "notification_evidence_hash": "91b0f223d1d3238a54d14756654b1cf49685f4e0bb6beba8a249f484fa45f392",
+        "reason": null,
+        "leader_cash_role_state": "PASS",
+        "id": "111111111111111111111111111111111111111111111111111111111111112nX:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:sell",
+        "detected_at": "2026-10-04T23:08:29.031861+00:00",
+        "decoded_at": "2026-10-04T23:08:29.168775+00:00",
+        "observed_at": "2026-10-04T23:08:29.168786+00:00",
+        "eligible": true,
+        "decision": "hypothetical_exit",
+        "quote_request_id": "09976327bf1749deb12e1aef01131f26"
+      }
+    ],
+    "quote_requests": [
+      {
+        "id": "d25d13af8c6b4ddab7e92526fce4f1c6",
+        "action": "entry",
+        "status": "available",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "signal_id": "111111111111111111111111111111111111111111111111111111111111112nW:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:buy",
+        "position_id": "e92c301d30f34993b6fab375bd5a4cbc",
+        "input_mint": "So11111111111111111111111111111111111111112",
+        "output_mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "input_amount": "100000000",
+        "due_at": "2026-10-04T23:08:20.199338+00:00",
+        "created_at": "2026-10-04T23:08:19.199348+00:00",
+        "request_started_at": "2026-10-04T23:08:20.217114+00:00",
+        "quote_evidence_hash": "40844b1198f4c3bcce7b2ee4c82d9660e4efbeb0a712969bb80cc976784a70de",
+        "quote": {
+          "provider": "Jupiter Swap V2 (quote only)",
+          "evidence_hash": "8269f52af7ff0a506f7a529f8b2299e433a2ef0b02773bf1870124df160b11b1",
+          "request_started_at": "2026-10-04T23:08:20.218843+00:00",
+          "received_at": "2026-10-04T23:08:20.219545+00:00",
+          "input_mint": "So11111111111111111111111111111111111111112",
+          "output_mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "status": "available",
+          "in_amount": "100000000",
+          "out_amount": "10000000000",
+          "price_impact_pct": "-0.1",
+          "quote_fees_included": true,
+          "observed_metadata": {
+            "feeBps": 10,
+            "feeMint": "So11111111111111111111111111111111111111112",
+            "platformFee": {
+              "feeBps": 10,
+              "feeMint": "So11111111111111111111111111111111111111112"
+            },
+            "signatureFeeLamports": 0,
+            "prioritizationFeeLamports": 0,
+            "rentFeeLamports": 0,
+            "slippageBps": 0,
+            "otherAmountThreshold": "10000000000",
+            "router": "metis",
+            "expireAt": null,
+            "requestId": "synthetic-browser-quote-10"
+          }
+        },
+        "received_at": "2026-10-04T23:08:20.219545+00:00",
+        "quoted_output_units": "10000000000",
+        "modeled_adverse_units": "100000000",
+        "adjusted_output_units": "9900000000",
+        "modeled_execution_fee_lamports": "10000",
+        "observed_price_impact_pct": "0.1"
+      },
+      {
+        "id": "3f6db54c94e24bad84dccb062eea1864",
+        "action": "mark",
+        "status": "available",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "signal_id": null,
+        "position_id": "e92c301d30f34993b6fab375bd5a4cbc",
+        "input_mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "input_amount": "9900000000",
+        "due_at": "2026-10-04T23:08:23.177003+00:00",
+        "created_at": "2026-10-04T23:08:23.177008+00:00",
+        "request_started_at": "2026-10-04T23:08:23.182301+00:00",
+        "quote_evidence_hash": "aca6bbbb17b3eaad7f198ec22625f3fba248977757f9074fa4a52e4407c6be6e",
+        "quote": {
+          "provider": "Jupiter Swap V2 (quote only)",
+          "evidence_hash": "7e0b0d72ae6fce8091f8bbf5aeca3ff2b8bc7b83aade91e2ff4cfcb164f248be",
+          "request_started_at": "2026-10-04T23:08:23.185058+00:00",
+          "received_at": "2026-10-04T23:08:23.186061+00:00",
+          "input_mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "output_mint": "So11111111111111111111111111111111111111112",
+          "status": "available",
+          "in_amount": "9900000000",
+          "out_amount": "79200000",
+          "price_impact_pct": "-0.1",
+          "quote_fees_included": true,
+          "observed_metadata": {
+            "feeBps": 10,
+            "feeMint": "So11111111111111111111111111111111111111112",
+            "platformFee": {
+              "feeBps": 10,
+              "feeMint": "So11111111111111111111111111111111111111112"
+            },
+            "signatureFeeLamports": 0,
+            "prioritizationFeeLamports": 0,
+            "rentFeeLamports": 0,
+            "slippageBps": 0,
+            "otherAmountThreshold": "79200000",
+            "router": "metis",
+            "expireAt": null,
+            "requestId": "synthetic-browser-quote-11"
+          }
+        },
+        "received_at": "2026-10-04T23:08:23.186061+00:00",
+        "quoted_output_units": "79200000",
+        "modeled_adverse_units": "792000",
+        "adjusted_output_units": "78408000",
+        "modeled_execution_fee_lamports": "10000",
+        "observed_price_impact_pct": "0.1"
+      },
+      {
+        "id": "09976327bf1749deb12e1aef01131f26",
+        "action": "exit",
+        "status": "available",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "signal_id": "111111111111111111111111111111111111111111111111111111111111112nX:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:sell",
+        "position_id": "e92c301d30f34993b6fab375bd5a4cbc",
+        "input_mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "input_amount": "9900000000",
+        "due_at": "2026-10-04T23:08:30.168775+00:00",
+        "created_at": "2026-10-04T23:08:29.168786+00:00",
+        "request_started_at": "2026-10-04T23:08:30.196470+00:00",
+        "quote_evidence_hash": "3ec79239eb7152955956178836abca9f043ea7a0bfe6610e7fca8def67666b55",
+        "quote": {
+          "provider": "Jupiter Swap V2 (quote only)",
+          "evidence_hash": "90a23e18415d64d22b08ad3feaae722d980c84d2be1177da2fb4a8f30b2bf325",
+          "request_started_at": "2026-10-04T23:08:30.200749+00:00",
+          "received_at": "2026-10-04T23:08:30.201329+00:00",
+          "input_mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "output_mint": "So11111111111111111111111111111111111111112",
+          "status": "available",
+          "in_amount": "9900000000",
+          "out_amount": "79200000",
+          "price_impact_pct": "-0.1",
+          "quote_fees_included": true,
+          "observed_metadata": {
+            "feeBps": 10,
+            "feeMint": "So11111111111111111111111111111111111111112",
+            "platformFee": {
+              "feeBps": 10,
+              "feeMint": "So11111111111111111111111111111111111111112"
+            },
+            "signatureFeeLamports": 0,
+            "prioritizationFeeLamports": 0,
+            "rentFeeLamports": 0,
+            "slippageBps": 0,
+            "otherAmountThreshold": "79200000",
+            "router": "metis",
+            "expireAt": null,
+            "requestId": "synthetic-browser-quote-13"
+          }
+        },
+        "received_at": "2026-10-04T23:08:30.201329+00:00",
+        "quoted_output_units": "79200000",
+        "modeled_adverse_units": "792000",
+        "adjusted_output_units": "78408000",
+        "modeled_execution_fee_lamports": "10000",
+        "observed_price_impact_pct": "0.1"
+      }
+    ],
+    "positions": [
+      {
+        "id": "e92c301d30f34993b6fab375bd5a4cbc",
+        "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "decimals": 6,
+        "status": "closed",
+        "raw_units": "0",
+        "cost_lamports": "100010000",
+        "entry_signal_id": "111111111111111111111111111111111111111111111111111111111111112nW:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:buy",
+        "entry_request_id": "d25d13af8c6b4ddab7e92526fce4f1c6",
+        "opened_at": "2026-10-04T23:08:20.219545+00:00",
+        "mark": null,
+        "exit_unavailable": false,
+        "exit_signal_id": "111111111111111111111111111111111111111111111111111111111111112nX:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:sell",
+        "exit_detected_at": "2026-10-04T23:08:29.031861+00:00",
+        "closed_at": "2026-10-04T23:08:30.201329+00:00",
+        "exit_request_id": "09976327bf1749deb12e1aef01131f26",
+        "net_exit_lamports": "78398000",
+        "realised_pnl_lamports": "-21612000"
+      }
+    ],
+    "gaps": [
+      {
+        "id": "c7e470843fb64aca843cbd47329eee5b",
+        "reason": "Connecting/reconnecting interval; activity was not replayed",
+        "start_at": "2026-10-04T23:08:18.666125+00:00",
+        "end_at": "2026-10-04T23:08:18.675274+00:00",
+        "backfilled": false
+      },
+      {
+        "id": "9eab7261b29c4b31815594e8a2b9d55c",
+        "reason": "Observation stopped; future/missed activity is not replayed",
+        "start_at": "2026-10-04T23:08:31.195510+00:00",
+        "end_at": "2026-10-04T23:08:31.195515+00:00",
+        "backfilled": false
+      }
+    ],
+    "budgets": {
+      "events_used": 2,
+      "quotes_used": 3
+    },
+    "checkpoint": {
+      "last_signal_id": "111111111111111111111111111111111111111111111111111111111111112nX:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8:sell",
+      "last_detected_at": "2026-10-04T23:08:29.031861+00:00"
+    },
+    "updated_at": "2026-10-04T23:08:31.328206+00:00",
+    "summary": {
+      "initial_capital_sol": "2",
+      "cash_sol": "1.978388",
+      "realised_pnl_sol": "-0.021612",
+      "open_positions": 0,
+      "closed_positions": 1,
+      "open_cost_sol": "0",
+      "marked_open_value_sol": "0",
+      "known_marked_open_value_sol": "0",
+      "economic_pnl_sol": "-0.021612",
+      "supported_economic_pnl_sol": "-0.021612",
+      "source_availability": {
+        "state": "KNOWN",
+        "required_sources": 11,
+        "available_sources": 11,
+        "missing_sources": [],
+        "reason": "Required original settings, signal and quote archives remain available."
+      },
+      "supported_performance_state": "INCOMPLETE",
+      "open_pnl_sol": "0",
+      "valuation_status": "known",
+      "valuation_reason": null,
+      "valuation_times": [],
+      "signal_count": 2,
+      "quote_count": 3,
+      "unavailable_quotes": 0,
+      "unavailable_exits": 0,
+      "monitoring_gaps": 2,
+      "complete_observation": false,
+      "result_label": "Quote-based paper results",
+      "price_basis": "Quotes obtained after detection, decoding and reaction delay; quotes are not execution guarantees.",
+      "fees": {
+        "observed": "Provider/pool fees are already included in quoted output and are not deducted again.",
+        "modeled": "Adverse output haircut plus one additional SOL execution cost per hypothetical entry or exit."
+      }
+    },
+    "risk_observations": [
+      {
+        "key": "follower_disadvantage",
+        "state": "OBSERVED",
+        "historical_state": "OBSERVED",
+        "reason": "The defined follower strategy has negative aggregate closed paper outcomes after its recorded costs. This does not establish leader intent.",
+        "actual": {
+          "closed_positions": 1,
+          "losing_positions": 1,
+          "realised_pnl_sol": "-0.021612"
+        },
+        "evidence": [
+          "40844b1198f4c3bcce7b2ee4c82d9660e4efbeb0a712969bb80cc976784a70de",
+          "3ec79239eb7152955956178836abca9f043ea7a0bfe6610e7fca8def67666b55"
+        ],
+        "response": "investigate"
+      }
+    ],
+    "copyability": {
+      "status": "insufficient_evidence",
+      "reasons": [
+        "Monitoring gaps remain; missed periods were not reconstructed as followed activity."
+      ],
+      "preset_snapshot": {
+        "name": "Forward quote copy research",
+        "version": "forward-copy-preset-v1",
+        "exclude_after_leader_exits_before_entry": 2,
+        "minimum_closed_positions_for_disadvantage": 3,
+        "exclude_negative_aggregate_closed_pnl": true,
+        "require_available_exits_and_known_open_valuation": true
+      },
+      "scope": "Defined hypothetical follower strategy; this does not qualify leader profit or establish trader intent or future safety."
+    },
+    "stopped_at": "2026-10-04T23:08:31.205700+00:00",
+    "observer": {
+      "run_id": "d0e5d3c71b884edc9624312b2c7b7b56",
+      "status": "stopped",
+      "scope": "Address mentions only; beneficial-wallet activity completeness is not established",
+      "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+      "limits": {
+        "max_transactions": 100,
+        "max_notifications": 1000,
+        "max_minutes": 2
+      },
+      "version": "forward-observer-v1",
+      "started_at": "2026-10-04T23:08:18.670731+00:00",
+      "notifications": 2,
+      "transactions": 2,
+      "stop_reason": "operator_stop",
+      "completeness": false,
+      "monitoring_gap_started_at": null,
+      "updated_at": "2026-10-04T23:08:31.205046+00:00",
+      "connected_at": "2026-10-04T23:08:18.676646+00:00",
+      "subscription": 5,
+      "last_detection_at": "2026-10-04T23:08:29.031861+00:00",
+      "last_signature": "111111111111111111111111111111111111111111111111111111111111112nX",
+      "last_slot": 103,
+      "stopped_at": "2026-10-04T23:08:31.205025+00:00"
+    },
+    "notifications": [
+      {
+        "id": "d0e5d3c71b884edc9624312b2c7b7b56:111111111111111111111111111111111111111111111111111111111111112nX",
+        "run_id": "d0e5d3c71b884edc9624312b2c7b7b56",
+        "signature": "111111111111111111111111111111111111111111111111111111111111112nX",
+        "detected_at": "2026-10-04T23:08:29.031861+00:00",
+        "notification_slot": 103,
+        "notification_hash": "91b0f223d1d3238a54d14756654b1cf49685f4e0bb6beba8a249f484fa45f392",
+        "status": "decoded",
+        "updated_at": "2026-10-04T23:08:29.170158+00:00",
+        "reason": null,
+        "retrieval_started_at": "2026-10-04T23:08:29.149112+00:00",
+        "decoded_at": "2026-10-04T23:08:29.168775+00:00",
+        "signal": {
+          "signature": "111111111111111111111111111111111111111111111111111111111111112nX",
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "side": "sell",
+          "eligible": true,
+          "decimals": 6,
+          "raw_quantity": "100000000",
+          "detected_at": "2026-10-04T23:08:29.031861+00:00",
+          "decoded_at": "2026-10-04T23:08:29.168775+00:00",
+          "block_time": 1791155298,
+          "evidence_hash": "3cea2beb69f08cfb185a46c3796b044bd828cb47eeee1bfab7182c449d495783",
+          "reason": null,
+          "notification_evidence_hash": "91b0f223d1d3238a54d14756654b1cf49685f4e0bb6beba8a249f484fa45f392",
+          "leader_cash_role_state": "PASS"
+        },
+        "transaction_hash": "3cea2beb69f08cfb185a46c3796b044bd828cb47eeee1bfab7182c449d495783"
+      },
+      {
+        "id": "d0e5d3c71b884edc9624312b2c7b7b56:111111111111111111111111111111111111111111111111111111111111112nW",
+        "run_id": "d0e5d3c71b884edc9624312b2c7b7b56",
+        "signature": "111111111111111111111111111111111111111111111111111111111111112nW",
+        "detected_at": "2026-10-04T23:08:18.977644+00:00",
+        "notification_slot": 102,
+        "notification_hash": "00db2d0664b030f0fceb50176d87c256abeaadf07c2d1c6fc767b1aab872565b",
+        "status": "decoded",
+        "updated_at": "2026-10-04T23:08:19.200378+00:00",
+        "reason": null,
+        "retrieval_started_at": "2026-10-04T23:08:19.180190+00:00",
+        "decoded_at": "2026-10-04T23:08:19.199338+00:00",
+        "signal": {
+          "signature": "111111111111111111111111111111111111111111111111111111111111112nW",
+          "mint": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+          "side": "buy",
+          "eligible": true,
+          "decimals": 6,
+          "raw_quantity": "100000000",
+          "detected_at": "2026-10-04T23:08:18.977644+00:00",
+          "decoded_at": "2026-10-04T23:08:19.199338+00:00",
+          "block_time": 1791155288,
+          "evidence_hash": "3fb504e45aa1d53a54db8181d69001dacd3176165aee1ce04766315c128221f7",
+          "reason": null,
+          "notification_evidence_hash": "00db2d0664b030f0fceb50176d87c256abeaadf07c2d1c6fc767b1aab872565b",
+          "leader_cash_role_state": "PASS"
+        },
+        "transaction_hash": "3fb504e45aa1d53a54db8181d69001dacd3176165aee1ce04766315c128221f7"
+      }
+    ]
+  },
+  "scope": "Forward quote-only paper observation; no signed transaction, actual fill or verified leader profit.",
+  "settings_evidence": {
+    "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "copy_research_preset_snapshot": {
+      "exclude_after_leader_exits_before_entry": 2,
+      "exclude_negative_aggregate_closed_pnl": true,
+      "minimum_closed_positions_for_disadvantage": 3,
+      "name": "Forward quote copy research",
+      "require_available_exits_and_known_open_valuation": true,
+      "version": "forward-copy-preset-v1"
+    },
+    "screening_id": "7f4d4ec228fd49eca3bda1dee0bfee8d",
+    "settings": {
+      "adverse_bps": 100,
+      "capital_sol": "2",
+      "entry_sol": "0.1",
+      "execution_fee_sol": "0.00001",
+      "max_duration_minutes": 2,
+      "max_events": 5,
+      "max_open_positions": 5,
+      "max_price_impact_pct": "5",
+      "max_quotes": 5,
+      "reaction_delay_seconds": 1
+    },
+    "started_at": "2026-10-04T23:08:18.666125+00:00",
+    "strategy": "fixed-entry-first-sale-v1",
+    "version": "quote-paper-v1"
+  },
+  "settings_evidence_availability": {
+    "state": "KNOWN",
+    "hash": "53926dcaed3ced71ef40e10097c0e1c0d797d6211b7b8b372518e0a9f9c68bde",
+    "reason": "Original settings archive is readable."
+  }
+}

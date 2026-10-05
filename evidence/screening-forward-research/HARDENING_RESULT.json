@@ -1,0 +1,52 @@
+{
+  "kind": "screening-forward-operational-hardening",
+  "application_commit": "35b450783754bc006940e82e04bc226912d7e2f7",
+  "source_sha256": "b53bd5bb9851172b92143ea752130d5d927049d6bbd09ce1fec0aaba971d3340",
+  "SCREENING_FORWARD_SOFTWARE_READY": true,
+  "PRODUCT_READY": false,
+  "software_functionality": "PASS",
+  "backend_unique_nodes_final_execution": 645,
+  "backend_subtests_final_execution": 49,
+  "backend_seconds": 62.74,
+  "source_unchanged": true,
+  "browser": "Actual guarded launcher/API/Chromium, explicit synthetic transport, desktop/mobile, stop/reopen/restart/export; no external traffic",
+  "genuine_live_evidence": "Bounded native wallet sample and genuinely acknowledged address subscription; prior genuine Jupiter quote remains a separate adapter receipt",
+  "genuine_sample": {
+    "requested_transactions": 20,
+    "captured_transactions": 9,
+    "supported_swaps": 6,
+    "matched_sales": 0,
+    "default_screening": "excluded_by_preset",
+    "original_http_failure_code": "NOT_RETAINED_BY_PREVIOUS_ADAPTER",
+    "pending_references": 11
+  },
+  "live_observation": {
+    "preset": "Explicit transport-validation preset disabling token control exclusions; original default exclusion retained",
+    "assessment": "insufficient_evidence",
+    "subscription": "PASS",
+    "restart_persistence": "PASS",
+    "signals": 0,
+    "quotes": 0,
+    "copied_performance_demonstrated": false
+  },
+  "review": "Distinct peer read-only review with15 grouped controls, zero providers/credentials; no independent browser/full suite claim",
+  "hosted_ci": "Read the private PR current check runs for the exact published candidate. Earlier run37242196612 failed4 cases now repaired; offline receipts do not claim a hosted rerun outcome.",
+  "full_historical_acceptance": {
+    "B1": "NO_GO_CURRENT_SOURCE",
+    "B2": "OPEN",
+    "B3": "BLOCKED",
+    "PRODUCT_READY": false
+  },
+  "receipts": {
+    "software": "hardening-final-checks/result.json",
+    "live": "hardening-live-workflow/result.json",
+    "review": "hardening-read-only-review/result.json",
+    "prior_missing_fixture_attempt": "hardening-incomplete-fixture-checks/result.json"
+  },
+  "limits": [
+    "Quote research is hypothetical, not actual copied fills",
+    "No profitable candidate or exhaustive historical ownership demonstration",
+    "The live run observed no trading signals and supports no follower performance conclusion",
+    "Address subscriptions do not certify complete beneficial wallet activity"
+  ]
+}

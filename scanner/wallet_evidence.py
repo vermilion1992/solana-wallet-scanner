@@ -26,7 +26,7 @@ from .source_consistency import (assess_source_consistency, source_archive_recei
 from .chronology_evidence import assess_chronology, assess_interval_membership
 from .transaction_format import supported_transaction_format
 
-VERSION = 'wallet-raw-evidence-v11'
+VERSION = 'wallet-raw-evidence-v12'
 HASH = re.compile(r'^[a-f0-9]{64}$')
 MAX_RECORDS = SOURCE_HASH_LIMIT
 MAX_ACCOUNT_STEPS = 100_000
@@ -649,6 +649,38 @@ def _mint_metadata(payload):
     """
     if not isinstance(payload, dict):
         return False
+    from .wallet_identity import ACCOUNT_SOURCE_VERSION, account_source_bytes
+    if payload.get('version') == ACCOUNT_SOURCE_VERSION:
+        from .json_boundary import parse_json
+        try:
+            original = account_source_bytes(payload)
+            request = parse_json(original['request'], max_nodes=1_000_000)
+            response = parse_json(original['response'], max_nodes=1_000_000)
+            if (not isinstance(request, dict) or set(request) != {'jsonrpc', 'id', 'method', 'params'}
+                or request.get('jsonrpc') != '2.0' or request.get('method') != 'getAccountInfo'
+                or not (type(request.get('id')) is int or isinstance(request.get('id'), str))
+                or not isinstance(response, dict) or set(response) != {'jsonrpc', 'id', 'result'}
+                or response.get('jsonrpc') != '2.0' or type(response.get('id')) is not type(request['id'])
+                or response.get('id') != request['id']):
+                return False
+            params = request['params']
+            if not isinstance(params, list) or len(params) != 2 or not _valid_account(params[0]):
+                return False
+            options = params[1]
+            if (not isinstance(options, dict) or set(options) - {'encoding', 'commitment', 'minContextSlot'}
+                or options.get('encoding') != 'jsonParsed' or options.get('commitment') != 'finalized'
+                or 'minContextSlot' in options and (type(options['minContextSlot']) is not int
+                    or not 0 <= options['minContextSlot'] <= 2**64 - 1)):
+                return False
+            result = response['result']
+            context = result.get('context') if isinstance(result, dict) else None
+            slot = context.get('slot') if isinstance(context, dict) else None
+            if type(slot) is not int or not options.get('minContextSlot', 0) <= slot <= 2**64 - 1:
+                return False
+            return _mint_metadata({'method': 'getAccountInfo', 'address': params[0],
+                'commitment': 'finalized', 'result': result})
+        except (ValueError, TypeError, KeyError, UnicodeError, OverflowError):
+            return False
     result = payload.get('result')
     context = result.get('context') if isinstance(result, dict) else None
     slot = context.get('slot') if isinstance(context, dict) else None

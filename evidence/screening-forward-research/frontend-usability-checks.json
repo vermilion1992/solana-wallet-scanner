@@ -1,0 +1,64 @@
+{
+  "scope": "Frontend usability changes and actual guarded-launcher offline synthetic mechanics",
+  "frontend_source_sha256": {
+    "frontend/src/SelectedCohorts.tsx": "014f27b672052701c79cd2f48690d649930ebd3d9a29ec27bc9076897a5ecbda",
+    "frontend/src/workspace.tsx": "423b0f733d2df23e67b0160f6700a3d9ff3583115fde40dada27d6f106de044b",
+    "frontend/src/Research.tsx": "4c1b1a161f823dbea5f10d99b44d8ddc4d6c8ab6b65429234b82af76775a1bc7",
+    "frontend/src/InventoryObservations.tsx": "4418c10f54fc222427d24034f080c87fdd759fa4ef032a31664fc3f6e8f6f73c",
+    "frontend/src/EvidenceAudit.tsx": "425cd30173daf782ee0d898dbb7a2466b4ee7aed1c38d03908e840b0ed5934f2",
+    "frontend/src/styles.css": "bca8eb2a0a22df47fa8ba0bf0cbb29169e791b074b6f28116e231e49a3badf2e",
+    "frontend/src/NativeCashObservations.tsx": "9b7d33d5ebf8bd8f978816b87ee39425f56e932f77459a8fb2979f457558a2b9",
+    "frontend/src/types.ts": "4245723f43326f66cae5fbe46be7f8a78a5cc3ad687f78a01c0f20364d1ff6ce",
+    "frontend/src/HistoricalSourceNotice.tsx": "62a7c4170db4b645c608d323aa74b2dc79e9b9e752ba90d1bd6785674527830a",
+    "frontend/src/api.ts": "5c92b727c4b00beb0121eab976fd1bc9b9b73bc12746d7c27f70699e491f18d1",
+    "frontend/src/components.tsx": "7a07f1824f300b00fe7d26cfa817257996d66671428c99d01d7d471d954bf0ce",
+    "frontend/src/Discovery.tsx": "1015302070270658becd4b98d30b6d4b75348f40ae469cbdc553c2d083f84070",
+    "frontend/src/format.ts": "3870844c09c8c3bd90fd175e16d6ec3fc999d8530c029d4b1b05d6a7dee345e5",
+    "frontend/src/main.tsx": "41431cb94a112ca05f90ca6037229d09d4bb8ecc1c27ae3bb3740ace8f01d2a6",
+    "frontend/src/App.tsx": "d04ea1d93f5370e9e65de78879755c00a50ad74744a10d930677393414da6bb2",
+    "frontend/src/settings.tsx": "5988a6af7c2bd6eb4948393b4a113e0d66646478af1cfd775c32d0a7d118bf50",
+    "frontend/src/report.tsx": "c30312d9f7dbb0b26bb425f915961a8e1aba0f2cdc0a497ab00890b22d5602af",
+    "frontend/scripts/check-discovery.mjs": "4ae5ea2b6b331d79987e5146c70fb487fbc432202509223e851d25944b0f4035"
+  },
+  "checks": [
+    {
+      "command": "npm run build",
+      "cwd": "frontend",
+      "exit_status": 0
+    },
+    {
+      "command": "npm run check:discovery",
+      "cwd": "frontend",
+      "exit_status": 0
+    },
+    {
+      "command": "npm run check:format",
+      "cwd": "frontend",
+      "exit_status": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_status": 0
+    }
+  ],
+  "defects": [
+    {
+      "finding": "Running paper run hid reconnecting observer state and retrieval omissions",
+      "reproduction": "frontend-reconnecting-reproduction-20261004/result.json",
+      "correction": "frontend-reconnecting-fixed-20261004/result.json"
+    },
+    {
+      "finding": "Paper configuration HTML allowed bounds rejected by the existing engine",
+      "correction": "Duration 480 minutes, positions 25, adverse execution 5000 bps, integer-second delay, exact decimal capital-fit validation"
+    }
+  ],
+  "browser": "frontend-frozen-workflow-20261004/result.json",
+  "first_run": "Top paste action opens and focuses import, optional Helius remains closed; shortlist setup and new-run result jumps verified in browser",
+  "software_functionality": "PASS_IN_DECLARED_SYNTHETIC_BROWSER_SCOPE",
+  "genuine_live_evidence": "NOT_RUN_BY_FRONTEND_AGENT",
+  "full_historical_acceptance": "UNCHANGED_BLOCKED",
+  "limitations": [
+    "Synthetic provider transport validates mechanics, not actual wallet identity or copied fills.",
+    "Earlier failed reconnecting probe was a harness state-refresh timing failure; preserved separately in frontend-reconnecting-baseline-20261004."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "targeted-test-index-v1",
+  "commands": [
+    {
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_mass_search_funnel.py",
+        "tests/test_mass_search_routes.py",
+        "tests/test_mass_search_receipt.py",
+        "tests/test_mass_search_scale.py"
+      ],
+      "exit_code": 0,
+      "passed": 31,
+      "note": "Executed after 559b45c refilter reuse; 31 passed in 4.86s"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check:discovery"
+      ],
+      "cwd": "frontend",
+      "exit_code": 0
+    }
+  ]
+}

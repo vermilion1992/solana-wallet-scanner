@@ -17,6 +17,7 @@ try {
       "src/Discovery.tsx",
       "src/report.tsx",
       "src/EvidenceAudit.tsx",
+      "src/MassSearch.tsx",
       "--target",
       "ES2022",
       "--module",
@@ -48,11 +49,16 @@ try {
     SourceConsistencySection,
     CoverageDetails,
     sourceSetComplete,
+    SubsetWorksheetPanel,
+    subsetHoldText,
+    subsetWorksheetVisible,
   } = require(join(output, "report.js"));
   const { SelectedCohortSection, selectedCohortFreshness } = require(join(output, "SelectedCohorts.js"));
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
+  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
+  const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
   const {
@@ -125,6 +131,8 @@ try {
   assert.ok(initial.includes('type="password"'));
   assert.ok(initial.includes("Discovery leads are not recommendations"));
   assert.ok(initial.includes("third-party sample is not 30-day accounting"));
+  assert.ok(button(initial, "Paste public wallets"));
+  assert.ok(initial.includes("Optional: connect deeper historical collection"));
 
   assert.deepEqual(auditableCandidates(cohort), []);
   const plannedCohort = { ...cohort, candidates: [verified], audit_plan: { selected_addresses: [], deferred: [], excluded: [] } };
@@ -603,7 +611,7 @@ try {
   });
   assert.ok(listedHtml.includes("Listed public addresses"));
   assert.ok(
-    listedHtml.includes("Imported public list · no chain observation supplied"),
+    listedHtml.includes("Imported public list · identity unresolved"),
   );
   assert.ok(listedHtml.includes("No wallet qualifies yet"));
   assert.ok(listedHtml.includes("Saved candidate universe"));
@@ -613,6 +621,123 @@ try {
   assert.ok(listedHtml.includes("History reconstructed"));
   assert.ok(listedHtml.includes("Not established"));
   assert.ok(!listedHtml.includes("Signer verified"));
+  assert.ok(listedHtml.includes("Check native identity"));
+  const checkedImport = { ...qualifiedLead, source: "user-list" };
+  assert.deepEqual(auditableCandidates({ ...cohort, candidates: [checkedImport] }), [checkedImport],
+    "An imported address needs the same native identity proof as a discovered candidate");
+  assert.deepEqual(qualifiedCandidates({ ...cohort, candidates: [checkedImport] }, [qualifiedReport], strictPreset, state.methodology), [checkedImport],
+    "Import provenance alone cannot permanently exclude a fully evidenced native wallet");
+  assert.deepEqual(auditableCandidates({ ...cohort, candidates: [{ ...checkedImport, validation: { ...checkedImport.validation, identity_verified: false } }] }), [],
+    "Import alone never supplies native identity");
+  const paper = {
+    id: "paper-synthetic", address, strategy: "fixed-entry-first-sale-v1", status: "stopped",
+    settings: { ...defaultPaperSettings }, started_at: cohort.created_at, updated_at: cohort.created_at,
+    stop_reason: "Stopped by owner", signals: [], quote_requests: [],
+    positions: [{ id: "open-loss", mint: address, status: "open", cost_lamports: "100010000", opened_at: cohort.created_at,
+      mark: { net_value_lamports: "40000000" }, exit_unavailable: true }],
+    gaps: [{ reason: "subscription disconnected" }],
+    summary: { initial_capital_sol: "10", cash_sol: "9.89999", realised_pnl_sol: "0.02", open_positions: 1,
+      closed_positions: 1, open_cost_sol: "0.10001", marked_open_value_sol: "0.04", economic_pnl_sol: "-0.04001",
+      valuation_status: "known", signal_count: 4, quote_count: 3, unavailable_quotes: 1, complete_observation: false },
+  };
+  const paperHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: paper }));
+  assert.ok(paperHtml.includes("-0.04001"), "Open losses remain in overall paper outcomes");
+  assert.ok(paperHtml.includes("sell quote unavailable"));
+  assert.ok(paperHtml.includes("subscription disconnected"));
+  assert.ok(paperHtml.includes("Frozen at run creation"));
+  assert.ok(paperHtml.includes("Quotes do not guarantee execution"));
+  assert.ok(paperHtml.includes("counted once"), "Pool/provider fees are not modeled a second time");
+  const reconnectingHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, status: "running", stop_reason: undefined,
+    observer: { status: "reconnecting", notifications: 3, transactions: 2,
+      limits: { max_notifications: 1000, max_transactions: 100 },
+      last_error: { code: "proxy_access_denied", message: "The configured proxy denied the read-only connection.", http_status: 403, at: cohort.created_at } },
+    notifications: [{ id: "missed", status: "missed", signature: "synthetic", reason: "Transaction unavailable at confirmed commitment" }],
+    quote_requests: [{ id: "denied", status: "unavailable", action: "exit", mint: address, reason: "access_denied" }],
+  } }));
+  assert.ok(reconnectingHtml.includes("Reconnecting"));
+  assert.ok(reconnectingHtml.includes("Monitoring is not connected"));
+  assert.ok(reconnectingHtml.includes("The configured proxy denied the read-only connection"));
+  assert.ok(reconnectingHtml.includes("Transaction retrieval allowance"));
+  assert.ok(reconnectingHtml.includes("Transaction unavailable at confirmed commitment"));
+  assert.ok(reconnectingHtml.includes("The quote provider denied read-only access"));
+  const recoveredHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, status: "running", stop_reason: undefined, observer: { status: "listening",
+      last_error: { code: "connection_timeout", message: "A prior connection timed out", at: cohort.created_at } },
+  } }));
+  assert.ok(recoveredHtml.includes("Listening for address mentions"));
+  assert.ok(recoveredHtml.includes("Prior connection failure · now reconnected"));
+  assert.ok(!recoveredHtml.includes("Monitoring is not connected"));
+  const emptyResearchHtml = renderToStaticMarkup(React.createElement(ResearchView, { ...actions, showEvidence: () => undefined }));
+  assert.ok(emptyResearchHtml.includes('max="25"'), "UI open-position cap matches the bounded paper contract");
+  assert.ok(emptyResearchHtml.includes('max="480"'), "UI duration cannot request a run beyond its eight-hour cap");
+  assert.ok(emptyResearchHtml.includes("Whole seconds after detection and decoding"));
+  const unknownPaperHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, summary: { ...paper.summary, economic_pnl_sol: null, marked_open_value_sol: null, valuation_status: "unknown" },
+  } }));
+  assert.ok(unknownPaperHtml.includes("Incomplete valuation"));
+  assert.ok(unknownPaperHtml.includes("Open value unavailable"));
+  const missingPaperSourceHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
+    ...paper, summary: { ...paper.summary, source_availability: { state: "UNKNOWN", reason: "Quote source archive unavailable" }, supported_economic_pnl_sol: null },
+    copyability: { status: "insufficient_evidence", reasons: ["Quote source archive unavailable"], preset_snapshot: { name: "Forward quote research" } },
+  } }));
+  assert.ok(missingPaperSourceHtml.includes("Unsupported source evidence"));
+  assert.ok(missingPaperSourceHtml.includes("cannot support a complete positive copying conclusion"));
+  assert.ok(missingPaperSourceHtml.includes("Quote source archive unavailable"));
+  assert.equal(paperSolFromLamports("-100000001"), "-0.100000001");
+  assert.equal(paperSolFromLamports("9007199254740993000001"), "9007199254740.993000001");
+  assert.equal(paperSolFromLamports(100), undefined);
+  const screenHtml = renderToStaticMarkup(React.createElement(ScreeningDetail, { screening: {
+    id: "synthetic-screen", version: "wallet-screening-v1", report_id: "report", address,
+    result: "insufficient_evidence", label: "Insufficient evidence", reason: "Budget stopped collection",
+    reasons: [{ key: "identity", state: "UNKNOWN", reason: "Native evidence missing", evidence: [] }],
+    trading_evidence: { supported_swaps: 2, matched_sales: 1, unmatched_sales: 3, conditional_matched_lot_profit_sol: "0.5", open_exposure: [], early_exits: {} },
+    risk_observations: [{ key: "creator_relationship", state: "UNKNOWN", reason: "No reviewed relationship proof", evidence: [] }],
+    collection: { stop_reason: "Transaction budget exhausted", transactions: 20 },
+  }, showEvidence: () => undefined }));
+  assert.ok(screenHtml.includes("Transaction budget exhausted"));
+  assert.ok(screenHtml.includes("Native evidence missing"));
+  assert.ok(screenHtml.includes("3 unmatched or basis-unresolved sales"));
+  assert.ok(screenHtml.includes("No reviewed relationship proof"));
+  assert.ok(screenHtml.includes("Strict financial qualification"));
+  const lostScreen = {
+    id: "source-dependent-screen", version: "wallet-screening-v1", created_at: cohort.created_at,
+    report_id: "report", address, result: "worth_observing", label: "Worth observing", reason: "Frozen matched-lot observations met this preset",
+    identity: { state: "PASS", reason: "Saved native proof", evidence: ["a".repeat(64)] },
+    trading_evidence: { supported_swaps: 2, matched_sales: 1, unmatched_sales: 0, conditional_matched_lot_profit_sol: "0.5", open_exposure: [] },
+    risk_observations: [{ key: "mint_controls", state: "PASS", reason: "Saved original mint observation", evidence: ["a".repeat(64)] }],
+    strict_qualification: { ...qualification }, collection: { stop_reason: "Sample tranche completed" },
+    current_source_availability: { state: "UNKNOWN", missing: ["a".repeat(64)] },
+    current_result: "insufficient_evidence", current_label: "Insufficient current evidence", current_reason: "Required archive is unavailable",
+    current_identity: { state: "UNKNOWN", reason: "Native proof archive unavailable", evidence: ["a".repeat(64)] },
+    current_eligibility: { can_start_observation: false, reason: "Restore the missing original sources" },
+  };
+  const frozenScreenBefore = structuredClone(lostScreen);
+  const lostScreenHtml = renderToStaticMarkup(React.createElement(ScreeningDetail, { screening: lostScreen, showEvidence: () => undefined }));
+  assert.ok(lostScreenHtml.includes("Insufficient current evidence"));
+  assert.ok(lostScreenHtml.includes("Current screening evidence unavailable"));
+  assert.ok(lostScreenHtml.includes("Current source evidence unavailable"));
+  assert.ok(lostScreenHtml.includes("Saved assessment: Worth observing"));
+  assert.ok(lostScreenHtml.includes("Current evidence does not support the saved qualification"));
+  assert.equal(canObserveScreening(lostScreen), false);
+  assert.deepEqual(lostScreen, frozenScreenBefore, "Reading current source loss never rewrites the frozen original assessment");
+  const restoredScreen = { ...lostScreen,
+    current_source_availability: { state: "PASS", missing: [] }, current_result: "worth_observing", current_label: "Worth observing",
+    current_reason: lostScreen.reason, current_identity: lostScreen.identity,
+    current_eligibility: { can_start_observation: true, reason: "Current original sources and native proof remain available" },
+  };
+  assert.equal(canObserveScreening(restoredScreen), true);
+  assert.notEqual(screeningReviewKey(restoredScreen), screeningReviewKey(lostScreen), "A state refresh invalidates cached current support after source loss or restoration");
+  assert.equal(canObserveScreening({ ...restoredScreen, current_identity: lostScreen.current_identity,
+    current_eligibility: { can_start_observation: false, reason: "Current identity is unresolved" } }), false);
+  const lostResearchHtml = renderToStaticMarkup(React.createElement(ResearchView, { ...actions, state: { ...state, screenings: [lostScreen] }, showEvidence: () => undefined }));
+  assert.ok(button(lostResearchHtml, "Start quote-only observation").includes("disabled="));
+  assert.ok(lostResearchHtml.includes("Restore the missing original sources"));
+  const newlyOpenedRun = { ...paper, updated_at: "2026-10-04T18:00:01+00:00" };
+  assert.equal(newerObservationState({ ...paper, updated_at: "2026-10-04T18:00:00+00:00" }, newlyOpenedRun), false,
+    "An older workspace list cannot discard a fresh source-loss detail read");
+  assert.equal(newerObservationState({ ...paper, updated_at: "2026-10-04T18:00:02+00:00" }, newlyOpenedRun), true,
+    "A later workspace refresh replaces older opened observation support");
   const intervals = {
     four_weeks: {
       start: "2026-09-04T00:00:00+00:00",
@@ -1794,6 +1919,71 @@ try {
     "Current source limits stay visible in a real report without erasing independent observations");
   assert.equal(renderToStaticMarkup(React.createElement(HistoricalSourceNotice, { decision: undefined })), "",
     "Older state responses remain compatible when the source-decision field is absent");
+  assert.equal(massSearchCorpusLabel("SYNTHETIC"), "Synthetic / development");
+  assert.equal(massSearchCorpusLabel("GENUINE_LIVE"), "Genuine live collection");
+  assert.equal(massSearchEmptyReason(null).state, "not_scanned");
+  assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 0 } }).state, "empty_universe");
+  assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 }, stages: { triage: { input: 1, promoted: 1, rejected: 0, deferred: 0, pending: 0 } } }, 0).state, "no_reconstruction");
+  assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 } }, 1).state, "synthetic");
+  assert.equal(massSearchMetricText({ value: "0.575", unit: "SOL", state: "KNOWN" }), "0.575 SOL");
+  const searchState = {
+    ...state,
+    mass_search: {
+      runs: [{ run_id: "aabbccdd", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC" }],
+      legacy_candidate_cap: 20,
+      bulk_capacity: 10000,
+    },
+    reports: [{
+      id: "rep1", address, source: "mass-search", corpus_kind: "SYNTHETIC", created_at: cohort.created_at,
+      policy: "UNRESOLVED", evidence_status: "partial", methodology: "fifo-v4",
+      window: report.window, metrics: {}, checks: [], coverage: {}, positions: [], events: [], findings: [], notes: [],
+    }],
+  };
+  const emptySearchHtml = renderToStaticMarkup(React.createElement(MassSearchView, { ...actions, state: { ...state, mass_search: { runs: [], legacy_candidate_cap: 20, bulk_capacity: 10000 } } }));
+  assert.ok(emptySearchHtml.includes("Not scanned"));
+  assert.ok(emptySearchHtml.includes("Run offline slice"));
+  assert.ok(emptySearchHtml.includes("Create a Search run"));
+  const searchHtml = renderToStaticMarkup(React.createElement(MassSearchView, { ...actions, state: searchState }));
+  assert.ok(searchHtml.includes("Run offline slice"));
+  assert.ok(searchHtml.includes("/api/mass-search/runs/aabbccdd/export"));
+  assert.ok(searchHtml.includes("Reopen report"));
+  assert.ok(searchHtml.includes("Saved subset reports"));
+  assert.ok(searchHtml.includes("Export JSON"));
+  assert.ok(searchHtml.includes("Stage shortlist"));
+  assert.ok(searchHtml.includes("No rows on this page"));
+  assert.equal(subsetHoldText(172800), "48 hours (172800 seconds)");
+  assert.equal(subsetWorksheetVisible({}), false);
+  const subsetReport = {
+    ...searchState.reports[0],
+    source: "mass-search",
+    policy: "UNRESOLVED",
+    metrics: {},
+    checks: [],
+    coverage: {},
+    positions: [],
+    events: [],
+    findings: [],
+    notes: ["Subset reconstruction through the existing accounting/research functions."],
+    evidence: [],
+    counts: { closed: 0, open: 0, interrupted: 0, unresolved: 0 },
+    worksheet: {
+      total_profit_sol: "0.575",
+      sale_fifo_basis_sol: ["0.505", "0.4545", "0.0505"],
+      sale_net_profit_sol: ["0.29", "0.2605", "0.0245"],
+    },
+    material_exit: { exit_90_seconds: 30, final_hold_seconds: 172800 },
+  };
+  const subsetHtml = renderToStaticMarkup(React.createElement(ReportView, {
+    ...actions, state: searchState, report: subsetReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined,
+  }));
+  assert.ok(subsetHtml.includes("Reconstructed subset / independent worksheet"));
+  assert.ok(subsetHtml.includes("Not a wallet-wide MATCH"));
+  assert.ok(subsetHtml.includes("0.575 SOL"));
+  assert.ok(subsetHtml.includes("30 seconds"));
+  assert.ok(subsetHtml.includes("48 hours (172800 seconds)"));
+  assert.ok(subsetHtml.includes("Insufficient evidence"));
+  assert.ok(subsetHtml.includes('data-subset-worksheet="independent"'));
+  assert.ok(renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, { report: searchState.reports[0] })) === "");
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

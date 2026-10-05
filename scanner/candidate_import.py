@@ -92,7 +92,7 @@ def import_candidate_cohort(addresses, *, candidate_cap=20, cohort_id=None, crea
                        "unresolved": len(rows), "rejected": 0, "leads_observed": 0, "leads_deferred": max(0, len(unique) - candidate_cap),
                        "native_transaction_lookups": 0, "native_account_checks": 0},
             "limitations": ["An imported identifier is a research lead, not evidence of observed trading, a verified wallet identity, or profitability.",
-                            "Imported members remain ineligible for the cohort audit route until native identity is verified; the existing manually calibrated address workflow remains separate.",
+                            "Imported members enter the common screening and cohort audit route only after their own native identity evidence is verified.",
                             "The candidate cap retains the first unique addresses; omitted addresses are counted and can be imported in another bounded batch."]}
 
 

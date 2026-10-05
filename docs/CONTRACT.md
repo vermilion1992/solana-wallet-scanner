@@ -397,11 +397,19 @@ movement does not prove capital, tip, purchase, fee or payment semantics. Failed
 execution has zero committed transfer movement; separately proved fees remain
 usable. Unknown CPI scope cannot establish a complete observed transfer set.
 
-`asset-classification-evidence-v1` revalidates original native asset identities.
+`asset-classification-evidence-v2` revalidates original native asset identities.
 Canonical legacy WSOL with nine decimals can prove settlement exclusion. Other
 assets require accepted time-relevant meme and nonspam evidence. Gross asset
 activity cannot disappear because endpoint quantities cancel. Current mint
 authorities/extensions are exact-source observations, not historical eligibility.
+
+New `wallet-raw-evidence-v12` receipts preserve all declared classification-source
+dependencies even when their source role is not yet accepted. Classification's
+optional 10,000-source projection budget does not reduce the native archive
+capacity: exceeding it yields an explicit incomplete classification receipt and
+retains the cited sources, while independently supported fees and bounded current
+mint controls remain usable. Existing saved reports retain their original methods;
+adopting these changed interpretations requires a new immutable child report.
 
 `economic-raw-observations-v1` preserves raw native/token phases and protocol
 WSOL denomination independently of fees or unrelated price gaps. Transaction

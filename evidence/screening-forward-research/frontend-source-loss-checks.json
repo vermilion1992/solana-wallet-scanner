@@ -1,0 +1,43 @@
+{
+  "scope": "Current screening source availability and native identity presentation; immutable saved assessment remains unchanged",
+  "source_sha256": {
+    "frontend/src/Research.tsx": "0a02425033184d3150939e44b3786429809f37f3bba4c26ab71a22d84e99b4dd",
+    "frontend/src/types.ts": "0296482a742565d9edaf87e0b721cb4f96928d595100965dcd1a5b9c5cb5c7e1",
+    "frontend/scripts/check-discovery.mjs": "cf018d814c3628a637c880f9530b3e5a79a247a8e4764d192cf8662f9aed316d",
+    "frontend/dist/index.html": "27c3d9ba771653061fd89426b9306d422bdc1ee13070d408526e26fc8b71041c"
+  },
+  "checks": [
+    {
+      "command": "npm run build",
+      "cwd": "frontend",
+      "exit_status": 0
+    },
+    {
+      "command": "npm run check:discovery",
+      "cwd": "frontend",
+      "exit_status": 0
+    },
+    {
+      "command": "npm run check:format",
+      "cwd": "frontend",
+      "exit_status": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_status": 0
+    }
+  ],
+  "coverage": [
+    "Current source loss blocks positive current screening and conditional P&L presentation",
+    "Original saved result and settings remain inspectable without mutation",
+    "Current observation eligibility controls start button",
+    "Current native identity loss remains visible independently of original proof",
+    "Loss/restoration invalidates prior current-review cache",
+    "Older observation list cannot discard newly opened missing-source evidence"
+  ],
+  "browser": "Not rerun for this focused correction; root final affected gate covers current source",
+  "assets": [
+    "frontend/dist/assets/index-Ner752Zw.js",
+    "frontend/dist/assets/index-DUJQNO6u.css"
+  ]
+}

@@ -351,6 +351,18 @@ def plan_candidate_audits(store, cohort, *, reports=(), preset=None, audit_cap=5
             check("current_account", "FAIL", "The signer is executable or program-owned and is excluded from wallet research candidates.", (account_hash,))
         else:
             check("current_account", "PASS", "The archived current account is a non-executable system-owned signer; this is not a historical ownership certificate.", (account_hash,))
+        # User lists have no public pool-provider association to reconstruct.
+        # Their selected native signer and current account must pass exactly the
+        # same byte/alternative checks above; import provenance grants nothing.
+        if cohort.get("source") == "user-list" and candidate.get("origin_type", candidate.get("source")) == "user-list":
+            check("imported_native_association", "PASS",
+                  "This imported lead has an archived native signer with owned token movement; a public pool-provider sample is not required.",
+                  (native_hash, account_hash))
+            receipts.append({"signature": signature, "kind": "native-owned-token-movement",
+                             "evidence": [native_hash, account_hash],
+                             "paths": ["transaction.message.accountKeys", "meta.preTokenBalances", "meta.postTokenBalances"]})
+            activity_counts["signatures"] = 1
+            return checks, receipts, activity_counts
         seen_activity = set()
         for activity in candidate.get("sampled_activity", []) if isinstance(candidate.get("sampled_activity"), list) else []:
             if not isinstance(activity, dict) or not _signature(activity.get("signature")):

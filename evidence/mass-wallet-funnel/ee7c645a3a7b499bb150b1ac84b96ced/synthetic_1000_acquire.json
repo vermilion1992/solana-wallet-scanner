@@ -1,0 +1,53 @@
+{
+  "kind": "synthetic-1000-acquire-v1",
+  "corpus_kind": "SYNTHETIC",
+  "application_commit": "559b45c74182c29892521e18308b9154ea02ac0e",
+  "acquire_seconds": 0.1508,
+  "external_requests": 0,
+  "pages": 10,
+  "universe": {
+    "raw_rows": 1000,
+    "unique_candidates": 1000,
+    "duplicate_rows": 0,
+    "invalid_rows": 0
+  },
+  "stages": {
+    "triage": {
+      "input": 1000,
+      "promoted": 200,
+      "rejected": 0,
+      "deferred": 800,
+      "pending": 0,
+      "next_stage_input": 200,
+      "run_complete": true
+    },
+    "behaviour": {
+      "input": 200,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 200,
+      "pending": 0,
+      "next_stage_input": 0,
+      "run_complete": true
+    },
+    "reconstruct": {
+      "input": 0,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 0,
+      "run_complete": true
+    },
+    "forward_select": {
+      "input": 0,
+      "promoted": 0,
+      "rejected": 0,
+      "deferred": 0,
+      "pending": 0,
+      "next_stage_input": 0,
+      "run_complete": true
+    }
+  },
+  "cannot_claim_real_search_benchmark": true
+}

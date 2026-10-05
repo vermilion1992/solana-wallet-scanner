@@ -1,0 +1,100 @@
+{
+  "reviewed_at": "2026-10-04T23:18:17.643624+00:00",
+  "application_commit": "35b450783754bc006940e82e04bc226912d7e2f7",
+  "hosted_prior_candidate": {
+    "run_id": 37242196612,
+    "head_sha": "38eed4d7b3fcdd258daf60fff52f4644851367b9",
+    "url": "https://github.com/vermilion1992/solana-wallet-scanner/actions/runs/37242196612",
+    "state": "FAIL",
+    "offline_development": "PASS",
+    "focused_groups_passed": 8,
+    "focused_groups_failed": [
+      "archives",
+      "indexed-coverage"
+    ],
+    "focused_union": "FAIL_EXPECTED_FAILED_GROUPS"
+  },
+  "hosted_defects": [
+    {
+      "group": "archives",
+      "tests": [
+        "tests/test_wallet_evidence.py::test_unaccepted_classification_valuation_sources_remain_dependencies_and_do_not_erase_fees",
+        "tests/test_real_evidence_adapter.py::test_existing_archive_alternative_capacity_is_preserved"
+      ],
+      "reproduced_locally": true,
+      "fix": "Asset-classification-v2 retains original declared dependencies and explicit bounded UNKNOWN projection without rejecting old native archive capacity."
+    },
+    {
+      "group": "indexed-coverage",
+      "tests": [
+        "tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-owned-accounts]",
+        "tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-native-balance]"
+      ],
+      "fix_owner": "screening",
+      "fix": "Optional live mint enrichment requires active authorized collection; cached native reports retain unknown controls without provider/credential lookup."
+    }
+  ],
+  "changes": [
+    "Eleven hosted disjoint groups, including all six new screening/forward/import modules exactly once; strict aggregate requires new screening receipt.",
+    "Final narrower profile includes asset classification, raw wallet evidence, actual archive adapter and inventory regressions.",
+    "README first-run route uses keyless identity/investigation, saved screening and separate quote research; optional provider setup remains separate.",
+    "Typed current mint byte envelopes must prove semantic finalized getAccountInfo exclusion; malformed/error/native-shaped siblings cannot certify fee independence."
+  ],
+  "local_check_receipts": [
+    {
+      "file": "/workspace/scratch/ci-validation-gates.log",
+      "result": "154 passed in 3.59s"
+    },
+    {
+      "file": "/workspace/scratch/ci-37242196612/local-reproduction.log",
+      "result": "2 existing hosted failures reproduced in 18.10s"
+    },
+    {
+      "file": "/workspace/scratch/ci-37242196612/classification-fixed-2.log",
+      "result": "92 passed in 23.91s"
+    },
+    {
+      "file": "/workspace/scratch/ci-37242196612/shared-guard-and-ci-controls.log",
+      "result": "158 passed in 3.58s"
+    },
+    {
+      "file": "/workspace/scratch/ci-37242196612/classification-final-compact.log",
+      "result": "20 passed in 0.29s"
+    },
+    {
+      "file": "result.json",
+      "result": "15 grouped independent offline peer controls passed"
+    }
+  ],
+  "setup_scope": {
+    "hosted_linux_locked_python_and_npm_install": "PASS",
+    "existing_local_pip_check": "PASS",
+    "fresh_local_install_run": false,
+    "windows_or_macos_install_run": false
+  },
+  "owned_source_sha256": {
+    ".github/workflows/offline-focused.yml": "d4f9942dbb2d02cc57e746486dc5d3da973baf18db588cecdb4a164219272fa0",
+    "README.md": "b7a0c45d0f670728e3d23e275db2b2253de7c3fd463f059e56509ea94f8c31a8",
+    "tools/validate.py": "82a96b7ee88252ae46909520beadba2a324f8cc65416a1b6928b11394a355394",
+    "tests/test_validation_gates.py": "e5966d5d0fb369097793fa2ef954bac91f3a4fbb6ed6161a3a74e305f82b5c9d",
+    "scanner/asset_classification.py": "52592e1508f11e98d1aa9ca3cce335247d1da894fae4ae52d06125b29f792c9f",
+    "scanner/wallet_evidence.py": "5003b1624e19ae5f53607693825893e2e981b42d09abf9a7d4381047a73122b5",
+    "tests/test_asset_classification.py": "543849e53e5296a3aceae2da867c16dac0bd1b2189965da1402265bdf4e35304"
+  },
+  "diagnostics": {
+    "focused-archives": {
+      "result.json": "7c7e79004eaab53abcee76274d86f293ae4e1a34bca0a35b96cd86fcd77ba462",
+      "runtime.log": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210",
+      "node-runtime.log": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04",
+      "backend.log": "01743e6100f037f45280b29985fdc18f435a54d7cf28bbbed279a37018862a52",
+      "DIAGNOSTIC_STATUS.json": "8d3af463da3328d4bff1ddfe0b2860743111702146f106977596598b226ebb60"
+    },
+    "focused-indexed-coverage": {
+      "result.json": "a269dc97f647bb99e706a5e2452d38fb077b96686174785add68afd9abdfa70d",
+      "runtime.log": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210",
+      "node-runtime.log": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04",
+      "backend.log": "9916c0d66953c4bd5c11e97c72079233e60c3d2c0b1561ef19e7e382523d3f4e",
+      "DIAGNOSTIC_STATUS.json": "89c1b0de6005bbf01f246a50bec0fd63080bec00e8c46a4c63bac288cc51c94f"
+    }
+  }
+}

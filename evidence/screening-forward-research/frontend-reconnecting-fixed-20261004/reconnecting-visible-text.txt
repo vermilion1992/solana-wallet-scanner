@@ -1,0 +1,349 @@
+OFFLINE SYNTHETIC TEST TRANSPORT · No genuine wallet collection or fills
+Wallet Atlas.
+SOLANA RESEARCH
+LOCAL WORKSPACE
+Discover
+Research
+Overview
+Results
+1
+Compare
+Watchlist
+Settings
+Setup pilot allowance
+Public samples available
+Keyless bounded research
+Manage data access
+Saved on this computer
+FREE LOCAL EDITION · V0.3.11
+Workspace
+Research
+Local & private
+Read-only
+WA
+SCREENING & FORWARD RESEARCH
+Would following the signals have worked?
+
+Saved trading evidence, risk observations, and quote-based paper portfolios with realistic delays and costs.
+
+Discover / paste
+Native identity
+Screen & inspect
+Shortlist
+Observe & compare
+Save a screening assessment
+
+A bounded sample can be useful while full historical qualification remains unresolved.
+
+Discover or paste wallets
+Saved report
+4vJ9JU…3bkLKi · Oct 4, 2026, 23:06:40
+Screen and save assessment
+Inspect original report
+Adjust sampled screening preset
+Saved screenings
+
+1 immutable assessments · Every result retains its reasons and collection limits.
+
+Assessment
+4vJ9JU…3bkLKi · Insufficient Evidence · Oct 4, 2026, 23:06:42
+Reopen saved assessment
+Export screening
+
+4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi
+
+Insufficient Evidence
+
+Observed 0 evidenced matched sales; this screening preset requires at least 1.
+
+Worth observing describes research eligibility. Conditional observations do not establish verified wallet profit.
+Identity · PASS · Saved native signer, token movement and system account sources agree.
+Source af49f…8ba05
+Source dc846…32c8c
+Supported Activity · PASS · Supported buys and sales meet the sample minimum in this saved window.
+Source 49532…35a89
+Source dc846…32c8c
+Matched Lots · UNKNOWN · Observed 0 evidenced matched sales; this screening preset requires at least 1.
+Supported swaps
+2
+1 buys · 1 sells
+Conditional matched-lot P&L
+Unknown
+Assumes no undiscovered earlier inventory or intervening flows.
+Observed matched sales
+0
+1 unmatched or basis-unresolved sales
+Observed open exposure
+
+No open exposure identified in the supported sample. Complete wallet inventory remains unknown.
+
+Early exits
+
+Inspect the 90% exit alongside the final holding time. A small remainder can make the final hold look longer than most of the exposure.
+
+Observed exit timing and checks
+Strict financial qualification
+
+The original historical evidence and preset requirements remain separate.
+
+Unresolved
+
+Required financial or evidence checks remain unresolved.
+
+0 failed · 23 unknown checks · Saved preset strict-v0.3
+Frozen sampled screening preset
+Collection scope and stop reason
+Collection stopped because
+Public wallet-address query ended; historical owned-account population remains unknown.
+Records examined
+2 transactions · 2 pages · 5 credits
+Scope
+supported spot swaps in fetched subset
+Saved window (UTC)
+Sep 4, 2026, 23:06:37 → Oct 4, 2026, 23:06:37
+
+This wallet-address sample has ended or has no live checkpoint. Missing historical ownership needs different primary evidence; more of this query cannot establish it.
+
+Evidence-backed risk observations
+
+Capabilities and observed behavior; missing evidence stays unknown. These observations do not infer intent.
+
+Mint Authority
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Freeze Authority
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Token Extensions
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Current Liquidity
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Liquidity Control
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Holder Concentration
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Historical Sellability
+Unknown
+Mint CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8
+
+Linked primary evidence is missing or this observation is unresolved.
+
+Unknown / not supplied
+Long Tail Holds
+Unknown
+
+Completed episodes with evidenced final and 90% exit timings are needed.
+
+Unknown / not supplied
+Rapid First Sales
+Unknown
+
+All eligible episode first-sale timings and chronology are needed for this subset comparison.
+
+Unknown / not supplied
+Follower Exploitation
+Unknown
+
+Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.
+
+Unknown / not supplied
+Creator Links
+Unknown
+
+Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.
+
+Unknown / not supplied
+Liquidity Withdrawal
+Unknown
+
+Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.
+
+Unknown / not supplied
+Direct Transfer Links
+Unknown
+
+No supported direct native transfer link in this selected scope; unseen relationships remain unknown.
+
+Unknown / not supplied
+Forward Copy Outcomes
+Unknown
+
+Start a separate forward quote-based paper observation to measure follower outcomes.
+
+Unknown / not supplied
+Additional transaction budget
+Continue investigation
+Save to shortlist
+Each continuation retains the prior report and spends only its explicit collection budget. Inspect and screen the new report when it completes.
+Start forward quote-based paper observation
+
+Fixed entry, first leader sale · Strategy fixed-entry-first-sale-v1
+
+Enter a fixed hypothetical SOL amount on an eligible observed buy while not holding that mint. Exit the full paper position on the first subsequent eligible leader sale. Additional buys and excluded signals are retained. Quotes are requested after detection, decoding and your reaction delay.
+
+Simulated capital (SOL)
+Known starting cash; no initial token holdings.
+Fixed entry (SOL)
+Amount for each eligible first buy.
+Maximum open positions
+Additional entries are excluded at this limit.
+Reaction delay (seconds)
+Starts after detection and decoding, not the leader's trade.
+Adverse execution (basis points)
+Modeled reduction to quoted proceeds; 100 bps = 1%.
+Modeled execution cost (SOL)
+Separate cost per hypothetical entry or exit.
+Maximum quote price impact (%)
+Quotes exceeding this limit cannot supply a paper fill.
+Signal budget
+Maximum events retained in this run.
+Quote budget
+Includes entry, exit and open-position mark requests.
+Observation duration (minutes)
+Stops collection when the time budget is exhausted.
+Start quote-only observation
+
+For 4vJ9JU…3bkLKi · settings are saved with this run.
+
+Read-only research: no transaction is built, signed or submitted. Monitoring notifications do not prove complete wallet activity; gaps remain recorded and are not reconstructed with hindsight.
+
+Saved paper observations
+
+Reopen a run to inspect its frozen settings, retained signals, quotes and unresolved exposure.
+
+Observation
+4vJ9JU…3bkLKi · Running · Oct 4, 2026, 23:06:42
+Reopen saved observation
+Export paper observation
+Stop observation
+Resume observation
+Request current open-position quotes
+Running
+
+Paper run started; check the monitoring connection below before relying on signal capture.
+
+Started Oct 4, 2026, 23:06:42 · Updated Oct 4, 2026, 23:06:42 UTC
+Monitoring connection
+
+Notifications mention this address; they do not prove complete wallet activity.
+
+Reconnecting
+
+Monitoring is not connected. New signals cannot supply paper entries while the connection is unavailable. Unobserved intervals remain gaps.
+
+Connection issue
+
+The notification connection failed.
+
+Connection Failed · Oct 4, 2026, 23:06:42 UTC
+Notification allowance
+0 / 1000
+Transaction retrieval allowance
+0 / 100
+Connection attempts
+Not recorded
+Current unobserved interval began Oct 4, 2026, 23:06:42 UTC.
+Simulated cash
+10 SOL
+Started with 10 SOL
+Recorded realised paper P&L
+0 SOL
+0 closed paper positions
+Paper P&L including open exposure
+Incomplete valuation
+Valuation Known
+Open position cost
+0 SOL
+0 open paper positions
+Open liquidation quote value
+0 SOL
+Current quote after modeled execution costs.
+Captured signals / quotes
+0 / 0
+0 unavailable quotes · 0 recorded monitoring gaps
+
+This observation is incomplete. Unavailable quotes, unvalued exposure and monitoring gaps remain part of the result.
+
+Signal and quote source availability · KNOWN
+Copy-research preset result
+
+Defined observed follower behavior; this result does not imply trader intent.
+
+Insufficient Evidence
+No eligible forward strategy signal has been observed yet.
+Frozen copy-research preset
+Original run settings
+
+Frozen at run creation. New settings require a new run.
+
+Simulated capital (SOL)
+10
+Fixed entry (SOL)
+0.1
+Maximum open positions
+5
+Reaction delay (seconds)
+5
+Adverse execution (basis points)
+100
+Modeled execution cost (SOL)
+0.00001
+Maximum quote price impact (%)
+5
+Signal budget
+1000
+Quote budget
+500
+Observation duration (minutes)
+60
+Paper positions
+
+Open losses and unavailable exits remain visible. Quote-based results are hypothetical, not actual fills.
+
+No paper entries yet. Excluded and additional leader signals are retained below.
+
+Detected signals and exclusions
+
+Detection, decode time and the selected delay determine the earliest eligible quote time.
+
+No signals detected during this run.
+
+Captured quotes and modeled costs
+
+Observed quote responses are retained separately from adverse-execution and network-cost assumptions. Quotes do not guarantee execution.
+
+Provider and pool fees already included in quote output are counted once. The adverse output haircut and one additional SOL execution cost per paper entry or exit are modeled.
+
+0 quote records, including unavailable requests
+Complete saved observation
+Built for investigation. Every conclusion needs a source.
+Wallet Atlas · V0.3.11
+Forward quote-based paper observation started with frozen settings.

@@ -1,0 +1,84 @@
+{
+  "kind": "verified-screening-forward-release",
+  "application_commit": "94dcbba81b498cfa44f883408618a23654658bc3",
+  "source_sha256": "995a6d9ab8247a9bcb7ff8ce083a3e3f680d0d09818fa6723f052b019a45322f",
+  "SCREENING_FORWARD_SOFTWARE_READY": true,
+  "PRODUCT_READY": false,
+  "software_functionality": "PASS",
+  "backend_unique_nodes": 645,
+  "backend_subtests": 49,
+  "backend_seconds": 62.7,
+  "source_unchanged": true,
+  "browser": {
+    "state": "PASS",
+    "scope": "Actual guarded launcher, API and Chromium at desktop/mobile widths with explicitly synthetic provider transports",
+    "cases": [
+      {
+        "case": "import-address-is-not-identity",
+        "state": "PASS",
+        "cohort_id": "c6687b31c44a43da88c81e43f1d02dbf"
+      },
+      {
+        "case": "source-backed-native-identity-with-test-fixtures",
+        "state": "PASS"
+      },
+      {
+        "case": "bounded-native-sample-report",
+        "state": "PASS",
+        "report_id": "dbde2c5a197b4adb9401e699146c6040",
+        "strict_qualified": false
+      },
+      {
+        "case": "saved-screening-inspect-shortlist-export",
+        "state": "PASS",
+        "screening_id": "05d1631e33a148cca57e9c99d34d49dc",
+        "result": "insufficient_evidence"
+      },
+      {
+        "case": "delayed-quotes-open-loss-first-sale-exit-stop-reopen-export",
+        "state": "PASS",
+        "run_id": "2d88b430e7684413a129b960d36e5d6e",
+        "signal_count": 2,
+        "quote_count": 3,
+        "realised_pnl_sol": "-0.021612",
+        "frozen_settings": true,
+        "duplicate_events_deduped": true
+      },
+      {
+        "case": "actual-launcher-restart-persistence",
+        "state": "PASS",
+        "settings_frozen": true
+      }
+    ],
+    "external_browser_requests": [],
+    "javascript_errors": [],
+    "archived_fixture_count": 20
+  },
+  "genuine_live_evidence": {
+    "receipt": "hardening-live-workflow/result.json",
+    "runtime_equivalence_receipt": "ci-loopback-repair/runtime-equivalence.json",
+    "scope": "Prior genuinely acknowledged wallet address subscription and bounded native sample; actual runtime and provider adapters unchanged",
+    "live_signals": 0,
+    "live_quotes": 0,
+    "copied_performance_demonstrated": false,
+    "separate_quote_adapter_receipt": "live-adapters/RESULT.json"
+  },
+  "ci_isolation_repair": {
+    "receipt": "ci-loopback-repair/RECEIPT.json",
+    "baseline": "Fresh isolated network namespace localhost connection failed with errno101",
+    "repair": "Enable only loopback, retain no routed interface and drop privileges before tests",
+    "positive_validation": "Both real local WebSocket transport tests pass inside otherwise isolated network namespace"
+  },
+  "hosted_ci": "Read exact published-head check runs on private PR#1; this prepublication receipt does not claim their outcome.",
+  "full_historical_acceptance": {
+    "B1": "NO_GO_CURRENT_SOURCE",
+    "B2": "OPEN",
+    "B3": "BLOCKED",
+    "PRODUCT_READY": false
+  },
+  "receipts": {
+    "software": "verified-release-checks/result.json",
+    "previous_software": "hardening-final-checks/result.json",
+    "peer_review": "ci-loopback-repair/REVIEW.md"
+  }
+}

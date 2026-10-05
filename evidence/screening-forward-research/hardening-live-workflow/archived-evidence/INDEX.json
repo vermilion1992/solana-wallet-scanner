@@ -1,0 +1,95 @@
+{
+  "classification": "genuine retained native evidence + genuine public subscription capture",
+  "files": [
+    {
+      "file": "0342dffcba99617595f03e3d659f43be108abbad8a9d25acd4cae4e2378cd0e3.json.gz",
+      "compressed_sha256": "c8d395588be5eae53f9f3b490adb46a42cafbfbbd9c97038480dfb9dc5536e55",
+      "bytes": 1668
+    },
+    {
+      "file": "0aebe6f7e90fc19f1f315c641ba6952d0e750950ffd8109833ad90a6e5c5fb90.json.gz",
+      "compressed_sha256": "b93ead034bc4c4175876aaf8ca2464241a0f1bad7c461a731cd5e88b02773b94",
+      "bytes": 4017
+    },
+    {
+      "file": "13084a266027ccf3b31196e2b3bac8763b1bb0792cf4f720eabadc2c47b47475.json.gz",
+      "compressed_sha256": "e08d3654b73c4289e5941ea092edde56a6165dadbf9637c2e0e668443af5f2f5",
+      "bytes": 1912
+    },
+    {
+      "file": "17eb1bf3a46a87c0222e971876bbfe53772f34b14faf5220ca4ca030c2c554b0.json.gz",
+      "compressed_sha256": "0b5cc182c76118cba15079b27a1bec54008757ee781739399047bd347c1011f1",
+      "bytes": 4357
+    },
+    {
+      "file": "1b555e566afa06ee2a593afeac225bcdef77e2c7f9f34fb266e29fa8abca6487.json.gz",
+      "compressed_sha256": "e38cb7db58a457055998d961e307b6d7b2a1d85cfaf1f8a2a8cb9cac69413312",
+      "bytes": 4377
+    },
+    {
+      "file": "306635d05e57d96e64a9f5c754faf44c9eabb6972c9376079e5bd7661c944771.json.gz",
+      "compressed_sha256": "b0ac67098fd832068c73c4110c8c5bb524557f3c584169ccb6a0b472fce0487a",
+      "bytes": 1642
+    },
+    {
+      "file": "386c0398e023b11ea73a92bbc6620959cd4e931aee9429f44d1013542d2c192e.json.gz",
+      "compressed_sha256": "5c3635bd7e8249379bb5c8fa07ce379e6ec10e1d0658d9c071e715e94977af5b",
+      "bytes": 898
+    },
+    {
+      "file": "51f8f864a3e89766913e82502d5e683da9f68ad85d6ee86778c11aa16d572d4c.json.gz",
+      "compressed_sha256": "10e0d4b5ac31c8d386389b16a1761fb50acdc24862cfdca384c0e104a25a1f20",
+      "bytes": 4301
+    },
+    {
+      "file": "879dfe0e9dbd2bb27b7ffd670f98496c58bf3bbe8b9771de7bce1dfaba01c1d4.json.gz",
+      "compressed_sha256": "7ddbeff785a9c1cdbdcc07b54dc99d844cfc25b45186923d986db383e7d72cb5",
+      "bytes": 7684
+    },
+    {
+      "file": "8c1893eefa9816cb446ce52fa53d05779e4817e91627abd12395f0ca5470009b.json.gz",
+      "compressed_sha256": "d60934781e87752adec41559cf47ff90db9d0a7fe23687f32ede5d1158c87574",
+      "bytes": 566
+    },
+    {
+      "file": "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc.json.gz",
+      "compressed_sha256": "206dacad62cfa926ba7303c8906d09f711554ea629b985625fa179e767c5b4c2",
+      "bytes": 295
+    },
+    {
+      "file": "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea.json.gz",
+      "compressed_sha256": "f9ffbf15c12c6ffd678e9922d8e8aafa470fc2652df6f05b0083ebc4710caef1",
+      "bytes": 4009
+    },
+    {
+      "file": "a14d97c6d73f1308ef7e0b6e515de786ec781d0154f63d19e0971d01fd6c2ff6.json.gz",
+      "compressed_sha256": "5718dcc83479922b064a7443cf92c3d6ef4b0652c40eedea7e9bff51cfc254fa",
+      "bytes": 4002
+    },
+    {
+      "file": "a3d2ebc2b6fb368ef96644e0da1ffb1e3e13c7b3a202b9b33b334cfa7ca93f68.json.gz",
+      "compressed_sha256": "51f5df1cec03331498ce36be72b51a02360b8735ee3d4e0b2a33bebb0df56097",
+      "bytes": 4304
+    },
+    {
+      "file": "b565a6624eec6aaf21c33be74013ede31460034e2cda034d6c9034a8beae6ecc.json.gz",
+      "compressed_sha256": "07392a8dbf562b9fbe2df927630a0e63ad5a0498ae1dc5ac16f0d7112bac7a78",
+      "bytes": 4016
+    },
+    {
+      "file": "ccf98a5d7d671962052ffaae1a5035c58674c116294766c28e267d69fdc84875.json.gz",
+      "compressed_sha256": "c6b757d519c9fcc1966f144b2a8d8104f3f70ff24547f7151222df4d113ca2a8",
+      "bytes": 729
+    },
+    {
+      "file": "dedbe5e380f009a721ba46b89817bf3cefdd059fa70cfb600814852dd625dd69.json.gz",
+      "compressed_sha256": "72b4ba66f19063b975ede6a8ca4718c524294218c69c464d579a870d7a0c9a1a",
+      "bytes": 493
+    },
+    {
+      "file": "ea137908f61a3bcc27505eef6dec67f67c486d4506f90e4824df5c28d1c3350f.json.gz",
+      "compressed_sha256": "7a7518bd3e600aadf87fb7f0245ee3fac936542fd5c666049388123c276e5011",
+      "bytes": 369
+    }
+  ]
+}

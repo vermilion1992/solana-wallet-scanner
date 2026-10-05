@@ -45,6 +45,58 @@ import { InventoryObservations } from "./InventoryObservations";
 import { NativeCashObservations } from "./NativeCashObservations";
 import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
 
+export function subsetHoldText(seconds?: number | null) {
+  if (seconds === null || seconds === undefined) return "unknown";
+  const hours = seconds / 3600;
+  if (Number.isInteger(hours) && hours > 0) return `${hours} hours (${seconds} seconds)`;
+  return `${seconds} seconds`;
+}
+
+export function subsetWorksheetVisible(report: Pick<Report, "worksheet" | "material_exit">) {
+  return Boolean(report.worksheet || report.material_exit);
+}
+
+export function SubsetWorksheetPanel({ report }: { report: Report }) {
+  if (!subsetWorksheetVisible(report)) return null;
+  const worksheet = report.worksheet;
+  const exit = report.material_exit;
+  const sales = worksheet?.sale_net_profit_sol || [];
+  return (
+    <section className="panel subset-worksheet" data-subset-worksheet="independent">
+      <SectionHeading
+        title="Reconstructed subset / independent worksheet"
+        subtitle="Supported closed trades only. Not a wallet-wide MATCH."
+      />
+      <p className="subset-worksheet-note">
+        Independently reconciled subset from reconstructed buy/sell events.
+        Standard report cards stay on full-wallet evidence and may remain unknown.
+      </p>
+      <div className="subset-worksheet-metrics">
+        <div>
+          <span>Realised subset P&amp;L</span>
+          <strong>{worksheet?.total_profit_sol ? `${decimal(worksheet.total_profit_sol, 4)} SOL` : "unknown"}</strong>
+        </div>
+        <div>
+          <span>Material-exit t90</span>
+          <strong>{exit?.exit_90_seconds != null ? `${exit.exit_90_seconds} seconds` : "unknown"}</strong>
+        </div>
+        <div>
+          <span>Final hold</span>
+          <strong>{subsetHoldText(exit?.final_hold_seconds)}</strong>
+        </div>
+      </div>
+      {!!sales.length && (
+        <p className="subset-worksheet-sales">
+          Sale nets {sales.map((value) => `${decimal(value, 4)} SOL`).join(" · ")}
+          {worksheet?.sale_fifo_basis_sol?.length
+            ? ` · FIFO basis ${worksheet.sale_fifo_basis_sol.map((value) => `${decimal(value, 4)} SOL`).join(" · ")}`
+            : ""}
+        </p>
+      )}
+    </section>
+  );
+}
+
 export function currentHistoryState(
   report: Report,
   currentMethodology?: string,
@@ -1005,6 +1057,20 @@ export function ReportView({
           <ArrowLeft size={15} /> Back to results
         </button>
         <div>
+          {!report.preview && (
+            <Button
+              variant="secondary"
+              icon={Search}
+              disabled={!!busy}
+              busy={busy === "report-screen"}
+              onClick={async () => {
+                const assessment = await run("report-screen", "/screenings", { report_id: report.id }, "POST", "Screening assessment saved. Inspect its reasons in Research.");
+                if (assessment) navigate("research");
+              }}
+            >
+              Screen and save assessment
+            </Button>
+          )}
           {(report.source === "live" || report.archive_input_hash) && !report.preview && (
             <Button
               variant="secondary"
@@ -1219,6 +1285,7 @@ export function ReportView({
       </p>
       {tab === "overview" && (
         <>
+          <SubsetWorksheetPanel report={report} />
           {report.source === "live" && report.copy_review && (
             <section className="panel copy-review-panel">
               <SectionHeading

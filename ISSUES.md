@@ -1,5 +1,52 @@
 # Single issue register — initialise from v0.3.11
 
+## Mass wallet search funnel v1 — 5 October 2026
+
+Continue from `codex/screening-forward-research` at
+`fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69`. Work package lives in
+`work_packages/mass_wallet_search_v1/`. Implementation receipts belong in
+`evidence/mass-wallet-funnel/`. Do not overwrite historical acceptance.
+
+| ID | Category / family | Status | Reproduction and preservation | Next evidence |
+| --- | --- | --- | --- | --- |
+| MS-SOFT | Implementation; staged funnel software | DONE (offline) | Source-to-report path, immutable stage decisions, Mass research v1 plan, 10k local capacity and receipt checker are added beside existing screening. Search UI fixture→freeze→triage→reconstruct→export/reopen is usable offline. Tested application `baa9993d1b7206ce6ed3a55fd4a98dba5c7f5f71`. | Live gates remain independently blocked |
+| MS-UI | Implementation; Search view 360px/desktop | VERIFIED_IN_SCOPE (synthetic browser) | Actual `run.sh` launcher + Chromium: empty, populated slice, export, open report with independent worksheet, restart-reopen. 1440 and 360: scrollWidth==innerWidth; 0 external requests. Opened report shows 0.575 SOL / t90 30 s / 48 h (172800 s) labeled reconstructed subset; standard cards remain unknown; policy stays UNRESOLVED. Tested application `0414f6d15060aa1295faaf8baf3854ec16aa0fc6`. | After restart, reopen the report panel and confirm the worksheet is unchanged |
+| MS-LIVE | External permission; Birdeye/Helius live collection | BLOCKED | `config/live_authorization.example.json` is disabled. No remaining-quota confirmation exists. Setup-pilot ledger must not be reset. | One named authorization: provider, operation, purpose, call/credit ceiling, duration |
+| MS-G1 | Genuine vertical slice | BLOCKED | Offline synthetic slice can persist trades, subset P&L and median hold. That is not live acquisition. | Authorized page + targeted native buy/sell |
+| MS-G2 | Genuine 1,000-candidate search | BLOCKED | Fixture acquisition froze 1,000 synthetic rows in 0.1508 s with 0 provider calls. G2 requires real source requests. | Authorized Birdeye pages under a confirmed remaining quota |
+| MS-G3 | Three genuine reconciled analytics reports | BLOCKED | Independent worksheet exists for the package dust-tail fixture. No three genuine 10-episode reports. | Authorized history for at least three wallets including a loss/unresolved control |
+| MS-G4 | Local 10,000-row performance | PASS | Official 5 warmup / 20 measured refilter+page on the normal store: median 287.97 ms, p95 309.18 ms, max 312.42 ms, 0 external requests. Receipt `evidence/mass-wallet-funnel/ee7c645a3a7b499bb150b1ac84b96ced/`. | Not 10,000 live scans |
+| MS-G5 | Genuine forward operation | BLOCKED | Quote-only helpers reuse the existing first-sale strategy. Zero-signal subscription remains incomplete. | Genuine eligible entry and exit path with two delayed quotes |
+| MS-G6 | Prospective financial research | NOT_RUN | Comparison arms can be frozen. No 14-day authorized observation. | Frozen cohort + authorized quote budget |
+| DATA-01 / B1 | Historical source decision | BLOCKED | Unchanged. Full-wallet PRODUCT_READY stays false. | Existing R1 contract |
+
+## Screening and observation operational hardening — 4 October 2026
+
+Continue from the private draft PR candidate `38eed4d7b3fcdd258daf60fff52f4644851367b9`.
+The user requests a usable product with reproduced failures repaired, rather than
+another candidate handoff. Final software receipts belong in
+`evidence/screening-forward-research/verified-release-checks/`; the preceding
+`hardening-final-checks/` receipt retains its source identity. Bounded live
+workflow evidence is separate at `hardening-live-workflow/` under that prefix.
+
+| Reproduced issue | Repair scope | Validation obligation |
+| --- | --- | --- |
+| Failed native identity recheck erased valid dated proof | Retain prior proof on interruption, preserve newly linked contradictions and precise failed-provider captures | Native identity, API and durable sample controls |
+| Saved screening hid later source loss | Show current source/identity support separately from the immutable recorded conclusion across detail, lists and exports | Source loss/restoration and browser-cache controls |
+| Monitoring connection and excluded notifications hidden in UI | Display connecting/listening/reconnecting status, safe failure reasons and retrieval budgets; expose the paste-wallet entry | Actual launcher browser at desktop/mobile widths |
+| Paper cash, gap and terminal-budget boundaries | Prevent unfunded entries/marks, preserve exhausted runs, exclude gap-crossing signals and persist expiry; export recorded history when original settings are missing with explicit dependency | Delayed paper, loss, concurrency and restart controls |
+| WebSocket destination redirects and malformed response metadata | Fixed notification destination, verified TLS/proxy retained, strict JSON and captured subscription acknowledgement | Real loopback transport plus bounded public subscription |
+| Hosted archive classification regressions | Asset classification v2 / wallet receipts v12 preserve unaccepted declared source dependencies and supported native archive capacity, keeping independent fees and bounded mint controls | Existing failing wallet/archive controls plus classification siblings |
+| Cached report build initialized unavailable live provider | Reuse valid cached controls; optional current mint refresh requires an active authorized collection | Existing initial-native inventory and offline build/rebuild controls |
+| New tests absent from hosted CI | One disjoint screening group in the existing guarded matrix and strict union | Validator bindings and exact published-candidate CI |
+| Network-isolated CI also disabled localhost | Enable only loopback before dropping privileges; retain no routed interfaces | Reproduced unreachable-loopback baseline, real WebSocket tests in the isolated namespace and explicit no-outbound-route check |
+
+The live default screening legitimately excluded the sampled wallet under token
+control rules. A separately named transport-validation preset may disable those
+screening exclusions while retaining their observations; it remains insufficient
+evidence and cannot qualify the wallet financially. No winner is required.
+B1 remains NO_GO_CURRENT_SOURCE, B2 OPEN, B3 BLOCKED and PRODUCT_READY=false.
+
 ## Current mixed refunds and retained phase prices — 4 October 2026
 
 Continue private `vermilion1992/solana-wallet-scanner`, branch
@@ -294,3 +341,13 @@ No new baseline arithmetic defect is asserted. Distinct read-only review correct
 in the new adapters and their small regressions are recorded in the batch review.
 Installation/host/provider limits remain separate from application findings.
 PRODUCT_READY=false; development-functional, real-acceptance-blocked.
+
+
+## Screening and forward research delivery
+
+The current user assignment changes the delivery target: exhaustive historical
+ownership remains blocked and strict qualification stays unchanged. The new
+sampled screening and quote-only observer reuse the existing engine. Record final
+software/browser acceptance and genuine adapter evidence separately under
+`evidence/screening-forward-research/`; no old acceptance receipt is superseded by
+synthetic checks. Full historical R1/B1/B2/B3 blockers remain as documented.

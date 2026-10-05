@@ -1,0 +1,228 @@
+{
+  "id": "ec35c575e71a4ece8309c90f9a7dfd54",
+  "version": "public-address-import-v1",
+  "created_at": "2026-10-04T23:05:10.804719+00:00",
+  "cohort_date": "2026-10-04",
+  "source": "user-list",
+  "status": "completed",
+  "stage": "Public addresses imported",
+  "reason": "Public identifiers saved; no provider request or audit was performed.",
+  "universe": [],
+  "candidates": [
+    {
+      "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+      "source": "user-list",
+      "origin_type": "user-list",
+      "status": "candidate",
+      "signatures": [],
+      "pools": [],
+      "evidence": [
+        "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea",
+        "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc"
+      ],
+      "observed_buys": 0,
+      "observed_sells": 0,
+      "states": {
+        "observed": false,
+        "identity_checked": true,
+        "sample_audited": false,
+        "history_reconstructed": false
+      },
+      "stage": "identity_checked",
+      "reason": "Native signer with owned token movement and current system account checked.",
+      "validation": {
+        "identity_verified": true,
+        "account_type": "system-owned signer",
+        "signature": "xDL52tXvCB8XiER1XsMxTfKKaM9s6FrP2WWcaX744YYefZUZakP3dKqc4u679i9v42ynbdjBFrDd3va8YoTDSqk",
+        "economic_signers": [
+          "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ"
+        ],
+        "token_flows": [
+          {
+            "mint": "9LdFxvn2cMY2T6NDj3naThMhRUg7punCg6hAK5uXpump",
+            "raw_delta": "-1181193721923",
+            "decimals": 6
+          }
+        ],
+        "transaction_evidence_hash": "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea",
+        "account_evidence_hash": "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc"
+      },
+      "qualification": {
+        "qualified": false,
+        "financial_policy": "NOT_AUDITED",
+        "profit_sol": null,
+        "preset_version": null,
+        "evidence_status": "unknown",
+        "failed_checks": [],
+        "unknown_checks": [],
+        "reason": "A native identity check is a research lead. Historical accounting and all PDF evidence gates must be audited."
+      },
+      "sample_report_ids": [],
+      "history_report_ids": []
+    }
+  ],
+  "rejected_leads": [],
+  "evidence": [
+    {
+      "kind": "transaction",
+      "signature": "xDL52tXvCB8XiER1XsMxTfKKaM9s6FrP2WWcaX744YYefZUZakP3dKqc4u679i9v42ynbdjBFrDd3va8YoTDSqk",
+      "hash": "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea"
+    },
+    {
+      "kind": "wallet-account-info",
+      "hash": "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc"
+    }
+  ],
+  "misses": [],
+  "sample": {
+    "network": "solana",
+    "universe": "User-supplied public address list",
+    "candidate_cap": 20,
+    "native_validation_cap": 0,
+    "provider_requests": 0,
+    "history_window": null
+  },
+  "counts": {
+    "input_rows": 1,
+    "unique_addresses": 1,
+    "duplicate_rows": 0,
+    "omitted_addresses": 0,
+    "candidates": 1,
+    "candidate": 0,
+    "unresolved": 1,
+    "rejected": 0,
+    "leads_observed": 0,
+    "leads_deferred": 0,
+    "native_transaction_lookups": 0,
+    "native_account_checks": 0
+  },
+  "limitations": [
+    "An imported identifier is a research lead, not evidence of observed trading, a verified wallet identity, or profitability.",
+    "Imported members enter the common screening and cohort audit route only after their own native identity evidence is verified.",
+    "The candidate cap retains the first unique addresses; omitted addresses are counted and can be imported in another bounded batch."
+  ],
+  "audit_plan": {
+    "version": "evidence-linked-audit-plan-v2",
+    "cohort_id": "ec35c575e71a4ece8309c90f9a7dfd54",
+    "selected_addresses": [
+      "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ"
+    ],
+    "selected": [
+      {
+        "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+        "identity_state": "PASS",
+        "action": "audit_wallet",
+        "reason": "Verified sampled identity has no saved live report; collect one bounded wallet report under the existing quota.",
+        "activity": {
+          "buys": 0,
+          "sells": 0,
+          "signatures": 1
+        },
+        "report_id": null,
+        "financial_policy": "NOT_AUDITED",
+        "evidence_status": "unknown",
+        "qualified": false,
+        "saved_qualification": null,
+        "preset_current": false,
+        "copy_risks_unknown": true,
+        "evidence": [
+          "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc",
+          "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea"
+        ],
+        "proof_address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ"
+      }
+    ],
+    "deferred": [],
+    "excluded": [],
+    "research_order": [
+      {
+        "address": "4drEkXDZhjun3vjZmz1g7pQGM7kxANQbDuD9jtPZwzJZ",
+        "identity_state": "PASS",
+        "action": "audit_wallet",
+        "reason": "Verified sampled identity has no saved live report; collect one bounded wallet report under the existing quota.",
+        "source_checks": [
+          {
+            "key": "native_identity",
+            "state": "PASS",
+            "reason": "The archived transaction proves a signer with event-time owned token movement.",
+            "evidence": [
+              "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea"
+            ],
+            "paths": [
+              "transaction.signatures[0]",
+              "transaction.message.accountKeys",
+              "meta.preTokenBalances",
+              "meta.postTokenBalances"
+            ]
+          },
+          {
+            "key": "current_account",
+            "state": "PASS",
+            "reason": "The archived current account is a non-executable system-owned signer; this is not a historical ownership certificate.",
+            "evidence": [
+              "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc"
+            ],
+            "paths": []
+          },
+          {
+            "key": "imported_native_association",
+            "state": "PASS",
+            "reason": "This imported lead has an archived native signer with owned token movement; a public pool-provider sample is not required.",
+            "evidence": [
+              "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc",
+              "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea"
+            ],
+            "paths": []
+          }
+        ],
+        "source_receipts": [
+          {
+            "signature": "xDL52tXvCB8XiER1XsMxTfKKaM9s6FrP2WWcaX744YYefZUZakP3dKqc4u679i9v42ynbdjBFrDd3va8YoTDSqk",
+            "kind": "native-owned-token-movement",
+            "evidence": [
+              "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea",
+              "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc"
+            ],
+            "paths": [
+              "transaction.message.accountKeys",
+              "meta.preTokenBalances",
+              "meta.postTokenBalances"
+            ]
+          }
+        ],
+        "activity": {
+          "buys": 0,
+          "sells": 0,
+          "signatures": 1
+        },
+        "report_id": null,
+        "financial_policy": "NOT_AUDITED",
+        "evidence_status": "unknown",
+        "qualified": false,
+        "saved_qualification": null,
+        "preset_current": false,
+        "copy_review": null,
+        "copy_risks_unknown": true,
+        "evidence": [
+          "8c4d198409ef969c753038e1b4395fae43bed726a6c4ee651436f458906505dc",
+          "925da435bbd888ad645eac916df3e988e69b88afae72372cd98e26f50bb8ddea"
+        ]
+      }
+    ],
+    "counts": {
+      "candidates": 1,
+      "selected": 1,
+      "deferred": 0,
+      "excluded": 0
+    },
+    "audit_cap": 5,
+    "provider_requests": 0,
+    "scope": "Evidence-linked bounded research priorities; financial policy, evidence scope and specific findings remain separate.",
+    "limitations": [
+      "Provider buy/sell activity only orders new research effort; it is not profit or a safe-copying score.",
+      "Missing archived identity evidence revokes selection until exact sources are restored.",
+      "Current partial reports are not automatically retried; source/basis/coverage gaps require an explicit next source decision.",
+      "A qualifying saved report does not prove legitimacy, follower intent, copied fills or future returns."
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "version": "quote-paper-v1",
+  "strategy": "fixed-entry-first-sale-v1",
+  "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+  "settings": {
+    "capital_sol": "10",
+    "entry_sol": "0.1",
+    "max_open_positions": 5,
+    "reaction_delay_seconds": 5,
+    "adverse_bps": 100,
+    "execution_fee_sol": "0.00001",
+    "max_price_impact_pct": "5",
+    "max_events": 1000,
+    "max_quotes": 500,
+    "max_duration_minutes": 60
+  },
+  "started_at": "2026-10-04T23:05:15.587909+00:00",
+  "screening_id": "9f971f2ec5d94492954f1b3e95636c45",
+  "copy_research_preset_snapshot": {
+    "name": "Forward quote copy research",
+    "version": "forward-copy-preset-v1",
+    "exclude_after_leader_exits_before_entry": 2,
+    "minimum_closed_positions_for_disadvantage": 3,
+    "exclude_negative_aggregate_closed_pnl": true,
+    "require_available_exits_and_known_open_valuation": true
+  },
+  "id": "7a281e3425fd48b78cef41f2701d92d6",
+  "settings_snapshot_hash": "34693fd2a2b0747ded8ec33f6768b6beb23b33f32729659836f4983d48e94699",
+  "status": "running",
+  "stop_reason": null,
+  "deadline_at": "2026-10-05T00:05:15.587909+00:00",
+  "initial_cash_lamports": "10000000000",
+  "cash_lamports": "10000000000",
+  "signals": [],
+  "quote_requests": [],
+  "positions": [],
+  "gaps": [],
+  "budgets": {
+    "events_used": 0,
+    "quotes_used": 0
+  },
+  "checkpoint": {
+    "last_signal_id": null,
+    "last_detected_at": null
+  },
+  "updated_at": "2026-10-04T23:05:15.608494+00:00",
+  "summary": {
+    "initial_capital_sol": "10",
+    "cash_sol": "10",
+    "realised_pnl_sol": "0",
+    "open_positions": 0,
+    "closed_positions": 0,
+    "open_cost_sol": "0",
+    "marked_open_value_sol": "0",
+    "known_marked_open_value_sol": "0",
+    "economic_pnl_sol": "0",
+    "supported_economic_pnl_sol": null,
+    "source_availability": {
+      "state": "KNOWN",
+      "required_sources": 1,
+      "available_sources": 1,
+      "missing_sources": [],
+      "reason": "Required original settings, signal and quote archives remain available."
+    },
+    "supported_performance_state": "INCOMPLETE",
+    "open_pnl_sol": "0",
+    "valuation_status": "known",
+    "valuation_times": [],
+    "signal_count": 0,
+    "quote_count": 0,
+    "unavailable_quotes": 0,
+    "unavailable_exits": 0,
+    "monitoring_gaps": 0,
+    "complete_observation": false,
+    "result_label": "Quote-based paper results",
+    "price_basis": "Quotes obtained after detection, decoding and reaction delay; quotes are not execution guarantees.",
+    "fees": {
+      "observed": "Provider/pool fees are already included in quoted output and are not deducted again.",
+      "modeled": "Adverse output haircut plus one additional SOL execution cost per hypothetical entry or exit."
+    }
+  },
+  "risk_observations": [],
+  "copyability": {
+    "status": "insufficient_evidence",
+    "reasons": [
+      "No eligible forward strategy signal has been observed yet."
+    ],
+    "preset_snapshot": {
+      "name": "Forward quote copy research",
+      "version": "forward-copy-preset-v1",
+      "exclude_after_leader_exits_before_entry": 2,
+      "minimum_closed_positions_for_disadvantage": 3,
+      "exclude_negative_aggregate_closed_pnl": true,
+      "require_available_exits_and_known_open_valuation": true
+    },
+    "scope": "Defined hypothetical follower strategy; this does not qualify leader profit or establish trader intent or future safety."
+  },
+  "observer": {
+    "run_id": "7a281e3425fd48b78cef41f2701d92d6",
+    "status": "reconnecting",
+    "scope": "Address mentions only; beneficial-wallet activity completeness is not established",
+    "address": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "limits": {
+      "max_transactions": 100,
+      "max_notifications": 1000,
+      "max_minutes": 60
+    },
+    "version": "forward-observer-v1",
+    "started_at": "2026-10-04T23:05:15.591069+00:00",
+    "notifications": 0,
+    "transactions": 0,
+    "stop_reason": null,
+    "completeness": false,
+    "monitoring_gap_started_at": "2026-10-04T23:05:15.587909+00:00",
+    "updated_at": "2026-10-04T23:05:15.594478+00:00"
+  },
+  "notifications": []
+}

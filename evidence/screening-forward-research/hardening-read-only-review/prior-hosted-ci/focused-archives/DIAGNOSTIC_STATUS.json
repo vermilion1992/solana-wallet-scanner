@@ -1,0 +1,29 @@
+{
+  "scope": "Fixed validator text/JSON allowlist only; no application state.",
+  "records": [
+    {
+      "name": "result.json",
+      "state": "COPIED",
+      "bytes": 46687,
+      "sha256": "7c7e79004eaab53abcee76274d86f293ae4e1a34bca0a35b96cd86fcd77ba462"
+    },
+    {
+      "name": "runtime.log",
+      "state": "COPIED",
+      "bytes": 51,
+      "sha256": "524015197c280d1d3ca2893cbf3c32bda39297f5723c23b812f37a4d44bd7210"
+    },
+    {
+      "name": "node-runtime.log",
+      "state": "COPIED",
+      "bytes": 9,
+      "sha256": "f2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04"
+    },
+    {
+      "name": "backend.log",
+      "state": "COPIED",
+      "bytes": 69263,
+      "sha256": "01743e6100f037f45280b29985fdc18f435a54d7cf28bbbed279a37018862a52"
+    }
+  ]
+}

@@ -239,7 +239,8 @@ export type Report = {
   scan_id?: string;
   address: string;
   label?: string;
-  source: "demo" | "live";
+  source: "demo" | "live" | "mass-search";
+  corpus_kind?: string;
   created_at: string;
   window: { start: string; end: string };
   methodology: string;
@@ -289,6 +290,19 @@ export type Report = {
   };
   counts_population?: string;
   notes: string[];
+  worksheet?: {
+    total_profit_sol?: string | null;
+    sale_fifo_basis_sol?: string[];
+    sale_net_profit_sol?: string[];
+  } | null;
+  material_exit?: {
+    state?: string | null;
+    first_sale_seconds?: number | null;
+    exit_50_seconds?: number | null;
+    exit_90_seconds?: number | null;
+    final_hold_seconds?: number | null;
+    quantity_weighted_exit_seconds?: string | null;
+  } | null;
   market_observations?: Record<string, unknown>[];
   market_observation_scope?: string;
   market_observation_note?: string;
@@ -498,6 +512,9 @@ export type State = {
   discovery_cohorts?: DiscoveryCohort[];
   candidate_universe?: CandidateUniverse;
   evidence_audits?: EvidenceAudit[];
+  screenings?: Screening[];
+  observations?: PaperObservation[];
+  mass_search?: MassSearchState;
   reports: Report[];
   watchlist: { address: string; label: string; added_at?: string }[];
   usage: {
@@ -523,4 +540,176 @@ export type State = {
     cycle_end?: string;
   };
   storage: Record<string, unknown>;
+};
+
+export type Screening = {
+  id: string;
+  version: string;
+  created_at: string;
+  report_id: string;
+  address: string;
+  preset_snapshot?: Preset;
+  identity?: { state: string; reason: string; evidence: string[] };
+  current_source_availability?: { state: string; missing: (string | null)[] };
+  current_result?: string;
+  current_label?: string;
+  current_reason?: string;
+  current_identity?: { state: string; reason: string; evidence: string[] };
+  current_eligibility?: { can_start_observation: boolean; reason: string };
+  result: string;
+  label: string;
+  reason: string;
+  reasons?: (string | { key: string; state: string; reason: string; actual?: unknown; evidence?: string[] })[];
+  strict_qualification?: Qualification;
+  trading_evidence: {
+    supported_swaps?: number;
+    buy_signals?: number;
+    sell_signals?: number;
+    matched_sales?: number;
+    unmatched_sales?: number;
+    unresolved_basis_sales?: number;
+    conditional_matched_lot_profit_sol?: string | null;
+    open_exposure?: unknown;
+    early_exits?: unknown;
+    scope?: unknown;
+    window?: { start: string; end: string };
+  };
+  risk_observations: {
+    key: string;
+    state: string;
+    reason: string;
+    actual?: unknown;
+    evidence?: string[];
+    mint?: string;
+    relationship?: unknown;
+  }[];
+  collection: {
+    stop_reason?: string;
+    scope?: unknown;
+    transactions?: number;
+    pages?: number;
+    credits?: number;
+    gaps?: unknown[];
+    terminal_evidence?: unknown;
+  };
+  continuation?: {
+    recommended?: boolean;
+    action?: string;
+    reason?: string;
+    budget?: { max_transactions?: number; max_credits?: number; max_accounts?: number };
+    checkpoint_required?: boolean;
+  };
+};
+
+export type PaperSettings = {
+  capital_sol: string;
+  entry_sol: string;
+  max_open_positions: number;
+  reaction_delay_seconds: number;
+  adverse_bps: number;
+  execution_fee_sol: string;
+  max_price_impact_pct: string;
+  max_events: number;
+  max_quotes: number;
+  max_duration_minutes: number;
+};
+export type PaperObservation = {
+  id: string;
+  address: string;
+  screening_id?: string;
+  strategy: string;
+  status: string;
+  settings: PaperSettings;
+  started_at: string;
+  updated_at: string;
+  stop_reason?: string;
+  signals: Record<string, unknown>[];
+  quote_requests: Record<string, unknown>[];
+  positions: Record<string, unknown>[];
+  gaps: Record<string, unknown>[];
+  observer?: {
+    status?: string;
+    stop_reason?: string;
+    connected_at?: string;
+    updated_at?: string;
+    connection_attempts?: number;
+    notifications?: number;
+    transactions?: number;
+    limits?: { max_notifications?: number; max_transactions?: number; max_minutes?: number };
+    last_error?: { code: string; message: string; http_status?: number; at: string };
+    monitoring_gap_started_at?: string | null;
+    scope?: string;
+  };
+  notifications?: Record<string, unknown>[];
+  risk_observations?: Screening["risk_observations"];
+  copyability?: { status: string; reasons: string[]; preset_snapshot?: unknown };
+  summary: {
+    initial_capital_sol: string;
+    cash_sol: string;
+    realised_pnl_sol: string;
+    open_positions: number;
+    closed_positions: number;
+    open_cost_sol: string;
+    marked_open_value_sol: string | null;
+    economic_pnl_sol: string | null;
+    valuation_status: string;
+    signal_count: number;
+    quote_count: number;
+    unavailable_quotes: number;
+    complete_observation: boolean;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+export type MassSearchRunSummary = {
+  run_id: string;
+  status: string;
+  source_id: string;
+  corpus_kind: string;
+  created_at?: string;
+};
+export type MassSearchState = {
+  runs?: MassSearchRunSummary[];
+  bulk_capacity?: number;
+  legacy_candidate_cap?: number;
+  legacy_deep_audit_cap?: number;
+  live_default?: boolean;
+  note?: string;
+};
+export type MassSearchStageCounts = {
+  input: number;
+  promoted: number;
+  rejected: number;
+  deferred: number;
+  pending: number;
+};
+export type MassSearchRun = {
+  run_id: string;
+  status: string;
+  source_id: string;
+  corpus_kind: string;
+  live_authorized: boolean;
+  plan_frozen_at?: string;
+  universe?: { raw_rows?: number; unique_candidates?: number; duplicate_rows?: number; invalid_rows?: number };
+  stages?: Record<string, MassSearchStageCounts>;
+  legacy_limits?: Record<string, number>;
+  bulk_capacity?: number;
+};
+export type MassSearchMetric = {
+  value?: string | null;
+  unit?: string | null;
+  state?: string | null;
+};
+export type MassSearchCandidate = {
+  candidate_id: string;
+  address: string;
+  result?: string | null;
+  reason_codes?: string[];
+  sort_value?: string | null;
+  unit?: string | null;
+  metric_state?: string | null;
+  report_id?: string | null;
+  subset_pnl?: MassSearchMetric | null;
+  median_hold?: MassSearchMetric | null;
+  material_exit_t90?: MassSearchMetric | null;
 };

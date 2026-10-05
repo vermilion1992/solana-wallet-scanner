@@ -1,0 +1,77 @@
+{
+  "scope": "Independent read-only source review and offline synthetic deterministic controls",
+  "provider_calls": 0,
+  "credential_lookups": 0,
+  "independent_browser_run": false,
+  "full_suite_run": false,
+  "results": [
+    {
+      "control": "quote_source_loss_and_exact_restoration",
+      "status": "PASS",
+      "retained_pnl": "0.2",
+      "missing_supported_pnl": null,
+      "missing_complete": false,
+      "restored_complete": true
+    },
+    {
+      "control": "observation_export_wrapper_shape",
+      "status": "PASS"
+    },
+    {
+      "control": "ineligible_only_has_no_supported_performance",
+      "status": "PASS"
+    },
+    {
+      "control": "deadline_receipt_cannot_spend_cash",
+      "status": "PASS",
+      "request_status": "cancelled"
+    },
+    {
+      "control": "independently_worked_costs_once",
+      "status": "PASS",
+      "expected_pnl": "-0.129",
+      "expected_cash": "1.871"
+    },
+    {
+      "control": "initial_and_reconnect_intervals_include_waits",
+      "status": "PASS",
+      "spans_seconds": [
+        5.0,
+        7.0
+      ]
+    },
+    {
+      "control": "selected_continuation_preserves_other_wallet_checkpoint",
+      "status": "PASS"
+    },
+    {
+      "control": "cross_cohort_same_slot_conflict_is_dependency",
+      "status": "PASS"
+    },
+    {
+      "control": "same_cohort_newer_current_snapshot_preserves_old_dependency",
+      "status": "PASS"
+    },
+    {
+      "control": "malformed_native_account_owner_is_unknown",
+      "status": "PASS",
+      "owner_cases": [
+        "null",
+        "object",
+        "array",
+        "number"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "scanner/paper.py": "b06d42f0c96cde259335d7fe3f85fc09a4f8839ff84f1386ddd21f6e663d6107",
+    "scanner/observer.py": "39df9c03c8ec98886a2a2efb89d545e200d49e0f783ec1a1abc197dad096cb9f",
+    "scanner/screening.py": "f4a67f7c384490fb679e88e5c7cb29cd1c12a5799931f04c50750b0d288bd3ff",
+    "scanner/screening_routes.py": "a91cc0d072d4abc7689b35af19146878abbe9fcd329474e8c17750b7efd936be",
+    "scanner/app.py": "d21976490b63bf71febcf3fc779bd515518cd27c746ac9cc7c483a962c58202a",
+    "scanner/discovery.py": "28d24bab2021e2a4053cb9a2e34ab173b83a19a1ecdee41ef81aadfdf2447425",
+    "scanner/candidate_import.py": "a8e45ef311bb4608fe4a1e61e26dd773eb98070667b0c277f17f33bd6e9d6ab2",
+    "frontend/src/Research.tsx": "362d8a58a33e6b0a3e123cbf1b3bf5a2b97b9365b5046874ac6e3f1dd0a488e1",
+    "frontend/src/Discovery.tsx": "a1ed93d8f682f92c7d4b2cc34874c519ca5f5e5f93ef720ec56d71caaa4379cd"
+  }
+}

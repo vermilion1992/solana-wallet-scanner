@@ -1,0 +1,13 @@
+{
+  "checker": "mass-search-receipt-v1",
+  "profile": "development",
+  "state": "CONTRACT_VALID",
+  "exit_code": 0,
+  "missing_profile_conditions": [],
+  "declaration_conditions": {
+    "mass_search_proven": false,
+    "analytics_demonstrated": false,
+    "forward_operational_proven": false
+  },
+  "disclaimer": "Contract/integrity checks only; genuine provenance, independent arithmetic and financial usefulness require separate review."
+}

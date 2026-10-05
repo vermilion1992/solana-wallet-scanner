@@ -1,0 +1,81 @@
+{
+  "url": "https://api.jup.ag/swap/v2/order?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000000",
+  "request_started_at": "2026-10-04T22:36:37.943282+00:00",
+  "response_received_at": "2026-10-04T22:36:38.606848+00:00",
+  "elapsed_seconds": 0.6635719100000017,
+  "status": 200,
+  "response_headers": {
+    "content-type": "application/json",
+    "content-length": "1347",
+    "access-control-allow-credentials": "true",
+    "vary": "Origin",
+    "date": "Sun, 04 Oct 2026 22:36:38 GMT",
+    "timing-allow-origin": "https://jup.ag",
+    "x-api-gateway-request-id": "BOOnAIrFYkxRJLu8sHnpUNnTf0aTg0I4-35YtwLe-tdXHNIYJPkoxw==",
+    "x-ratelimit-remaining": "4",
+    "x-ratelimit-current": "1",
+    "x-ratelimit-reset": "1791153408",
+    "x-cache": "Miss from cloudfront",
+    "via": "1.1 982e409bbddc0ecf3e1a17b6ffb8b102.cloudfront.net (CloudFront)",
+    "x-amz-cf-pop": "DFW59-P6",
+    "x-amz-cf-id": "BOOnAIrFYkxRJLu8sHnpUNnTf0aTg0I4-35YtwLe-tdXHNIYJPkoxw==",
+    "x-envoy-upstream-service-time": "486",
+    "server": "envoy",
+    "connection": "close"
+  },
+  "authorization": "No API key, no taker; GET quote only",
+  "raw_body": "{\"inputMint\":\"So11111111111111111111111111111111111111112\",\"outputMint\":\"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\",\"inAmount\":\"10000000\",\"outAmount\":\"1219412\",\"otherAmountThreshold\":\"1219412\",\"swapMode\":\"ExactIn\",\"slippageBps\":0,\"priceImpactPct\":\"-0.00022674100336355564\",\"routePlan\":[{\"percent\":100,\"bps\":10000,\"usdValue\":1.2193476252182063,\"swapInfo\":{\"ammKey\":\"7rhxnLV8C77o6d8oz26AgK8x8m5ePsdeRawjqvojbjnQ\",\"label\":\"JupiterZ\",\"inputMint\":\"So11111111111111111111111111111111111111112\",\"outputMint\":\"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\",\"inAmount\":\"10000000\",\"outAmount\":\"1219412\"}}],\"feeMint\":\"So11111111111111111111111111111111111111112\",\"feeBps\":2,\"transaction\":null,\"gasless\":true,\"jitOptimized\":false,\"signatureFeeLamports\":0,\"signatureFeePayer\":null,\"prioritizationFeeLamports\":0,\"prioritizationFeePayer\":null,\"rentFeeLamports\":0,\"rentFeePayer\":null,\"requestId\":\"01a1090f-e2a1-7643-a525-166da9cbc81c\",\"swapType\":\"rfq\",\"router\":\"jupiterz\",\"guaranteedPrice\":true,\"quoteId\":\"0efb0636-7a0a-50a3-bea4-4d504efb5847\",\"maker\":\"7rhxnLV8C77o6d8oz26AgK8x8m5ePsdeRawjqvojbjnQ\",\"taker\":null,\"platformFee\":{\"feeBps\":2,\"feeMint\":\"So11111111111111111111111111111111111111112\"},\"inUsdValue\":1.2196241640248837,\"outUsdValue\":1.2193476252182063,\"swapUsdValue\":1.2193476252182063,\"priceImpact\":-0.022674100336355564,\"mode\":\"ultra\",\"totalTime\":110}",
+  "body": {
+    "inputMint": "So11111111111111111111111111111111111111112",
+    "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "inAmount": "10000000",
+    "outAmount": "1219412",
+    "otherAmountThreshold": "1219412",
+    "swapMode": "ExactIn",
+    "slippageBps": 0,
+    "priceImpactPct": "-0.00022674100336355564",
+    "routePlan": [
+      {
+        "percent": 100,
+        "bps": 10000,
+        "usdValue": 1.2193476252182063,
+        "swapInfo": {
+          "ammKey": "7rhxnLV8C77o6d8oz26AgK8x8m5ePsdeRawjqvojbjnQ",
+          "label": "JupiterZ",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inAmount": "10000000",
+          "outAmount": "1219412"
+        }
+      }
+    ],
+    "feeMint": "So11111111111111111111111111111111111111112",
+    "feeBps": 2,
+    "transaction": null,
+    "gasless": true,
+    "jitOptimized": false,
+    "signatureFeeLamports": 0,
+    "signatureFeePayer": null,
+    "prioritizationFeeLamports": 0,
+    "prioritizationFeePayer": null,
+    "rentFeeLamports": 0,
+    "rentFeePayer": null,
+    "requestId": "01a1090f-e2a1-7643-a525-166da9cbc81c",
+    "swapType": "rfq",
+    "router": "jupiterz",
+    "guaranteedPrice": true,
+    "quoteId": "0efb0636-7a0a-50a3-bea4-4d504efb5847",
+    "maker": "7rhxnLV8C77o6d8oz26AgK8x8m5ePsdeRawjqvojbjnQ",
+    "taker": null,
+    "platformFee": {
+      "feeBps": 2,
+      "feeMint": "So11111111111111111111111111111111111111112"
+    },
+    "inUsdValue": 1.2196241640248837,
+    "outUsdValue": 1.2193476252182063,
+    "swapUsdValue": 1.2193476252182063,
+    "priceImpact": -0.022674100336355564,
+    "mode": "ultra",
+    "totalTime": 110
+  }
+}

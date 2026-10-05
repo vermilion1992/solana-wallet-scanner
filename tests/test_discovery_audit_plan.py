@@ -83,6 +83,49 @@ def development_cohort(store, addresses=None, *, two_way=()):
     return cohort
 
 
+def imported_native_cohort(store):
+    from scanner.candidate_import import import_candidate_cohort
+    verified = development_cohort(store)
+    candidate = verified['candidates'][0]
+    cohort = import_candidate_cohort([candidate['address']], cohort_id='d'*32, created_at=TIME)
+    cohort['candidates'][0].update(status='candidate', evidence=candidate['evidence'][:2],
+                                   validation=deepcopy(candidate['validation']))
+    cohort['evidence'] = deepcopy(verified['evidence'][:2])
+    return cohort
+
+
+def test_import_can_enter_common_audit_route_after_its_own_raw_native_identity_check(store):
+    cohort = imported_native_cohort(store)
+    before = deepcopy(cohort)
+    plan = plan_candidate_audits(store, cohort)
+    assert plan['selected_addresses'] == [cohort['candidates'][0]['address']]
+    row = plan['research_order'][0]
+    assert row['identity_state'] == 'PASS'
+    assert row['activity'] == {'buys': 0, 'sells': 0, 'signatures': 1}
+    assert any(check['key'] == 'imported_native_association' and check['state'] == 'PASS' for check in row['source_checks'])
+    assert cohort == before
+
+
+def test_imported_native_route_keeps_negative_source_loss_and_conflict_dependencies(store):
+    cohort = imported_native_cohort(store)
+    candidate = cohort['candidates'][0]
+    digest = candidate['validation']['account_evidence_hash']
+    file = store.path/'evidence'/(digest+'.json.gz')
+    raw_bytes = file.read_bytes()
+    file.unlink()
+    assert not plan_candidate_audits(store, cohort)['selected_addresses']
+    file.write_bytes(raw_bytes)
+    assert plan_candidate_audits(store, cohort)['selected_addresses'] == [candidate['address']]
+    native = deepcopy(store.evidence(candidate['validation']['transaction_evidence_hash']))
+    native['meta']['postTokenBalances'][0]['uiTokenAmount']['amount'] = '25'
+    alternative = store.archive(native)
+    candidate['evidence'].append(alternative)
+    cohort['evidence'].append({'hash': alternative, 'kind': 'transaction', 'signature': candidate['validation']['signature']})
+    plan = plan_candidate_audits(store, cohort)
+    assert not plan['selected_addresses']
+    assert any(check['key'] == 'linked_native_identity' and check['state'] == 'UNKNOWN' for check in plan['research_order'][0]['source_checks'])
+
+
 def financial_snapshot(candidate, *, partial=False, identifier='saved-report'):
     report = {'id': identifier, 'address': candidate['address'], 'source': 'live', 'methodology': METHODOLOGY, 'preset': dict(STRICT),
               'research': {'version': RESEARCH_VERSION},

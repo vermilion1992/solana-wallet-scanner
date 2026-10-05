@@ -1,0 +1,6 @@
+{
+  "corpus_kind": "SYNTHETIC",
+  "purpose": "Placeholder evidence for receipt-contract tests only. No provider calls, genuine wallets, actual timings or real profits.",
+  "contains_real_transactions": false,
+  "contains_scanner_execution_evidence": false
+}

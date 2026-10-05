@@ -13,6 +13,7 @@ dependencies = [
   "httpx==0.28.1",
   "uvicorn==0.34.2",
   "keyring==25.6.0",
+  "websockets==16.0",
 ]
 
 [project.optional-dependencies]
@@ -22,7 +23,7 @@ dev = ["pytest==9.1.1"]
 solana-wallet-scanner = "scanner.__main__:main"
 
 [tool.setuptools]
-packages = ["scanner"]
+packages = ["scanner", "scanner.mass_search"]
 
 [tool.setuptools.package-data]
 scanner = ["examples/*.json"]

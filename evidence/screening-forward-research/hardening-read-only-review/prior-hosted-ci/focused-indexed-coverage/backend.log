@@ -1,0 +1,366 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /home/runner/work/solana-wallet-scanner/solana-wallet-scanner/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/work/solana-wallet-scanner/solana-wallet-scanner
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 169 items
+
+tests/test_real_coverage.py::test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies[valid-unicode-page] PASSED [  0%]
+tests/test_real_coverage.py::test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies[valid-unicode-native] PASSED [  1%]
+tests/test_real_coverage.py::test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies[malformed-surrogate-page] PASSED [  1%]
+tests/test_real_coverage.py::test_unicode_raw_preimage_load_query_and_lot_recovery_keep_negative_dependencies[malformed-surrogate-native] PASSED [  2%]
+tests/test_real_coverage.py::test_malformed_unicode_page_keeps_a_supported_native_sibling_and_order_independence PASSED [  2%]
+tests/test_real_coverage.py::test_malformed_unicode_wrapper_normal_api_rebuild_export_and_restoration_remain_offline[page] PASSED [  3%]
+tests/test_real_coverage.py::test_malformed_unicode_wrapper_normal_api_rebuild_export_and_restoration_remain_offline[native] PASSED [  4%]
+tests/test_real_coverage.py::test_current_historical_source_decision_binds_primary_bytes_and_separates_capabilities PASSED [  4%]
+tests/test_real_coverage.py::test_returned_source_decision_mutation_cannot_promote_a_future_query_or_capability PASSED [  5%]
+tests/test_real_coverage.py::test_terminal_original_query_derives_coverage_without_promoting_wallet_population PASSED [  5%]
+tests/test_real_coverage.py::test_query_rejects_incomplete_or_filtered_inputs_without_erasing_independent_fee[nonterminal] PASSED [  6%]
+tests/test_real_coverage.py::test_query_rejects_incomplete_or_filtered_inputs_without_erasing_independent_fee[missing-predecessor] PASSED [  7%]
+tests/test_real_coverage.py::test_query_rejects_incomplete_or_filtered_inputs_without_erasing_independent_fee[selective-status] PASSED [  7%]
+tests/test_real_coverage.py::test_query_rejects_incomplete_or_filtered_inputs_without_erasing_independent_fee[current-accounts] PASSED [  8%]
+tests/test_real_coverage.py::test_query_rejects_incomplete_or_filtered_inputs_without_erasing_independent_fee[unsupported-record] PASSED [  8%]
+tests/test_real_coverage.py::test_returned_unselected_record_cannot_be_discarded_to_complete_the_query PASSED [  9%]
+tests/test_real_coverage.py::test_selected_native_variant_can_use_the_retained_original_linked_accounting_path PASSED [ 10%]
+tests/test_real_coverage.py::test_alternative_selection_keeps_linked_negative_facts_and_exact_restoration[missing] PASSED [ 10%]
+tests/test_real_coverage.py::test_alternative_selection_keeps_linked_negative_facts_and_exact_restoration[malformed] PASSED [ 11%]
+tests/test_real_coverage.py::test_alternative_selection_keeps_linked_negative_facts_and_exact_restoration[unsupported] PASSED [ 11%]
+tests/test_real_coverage.py::test_alternative_selection_keeps_linked_negative_facts_and_exact_restoration[fee-conflict] PASSED [ 12%]
+tests/test_real_coverage.py::test_alternative_selection_keeps_linked_negative_facts_and_exact_restoration[clock-conflict] PASSED [ 13%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[original-absent] PASSED [ 13%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[original-missing] PASSED [ 14%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[original-hash] PASSED [ 14%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[selected-unlinked] PASSED [ 15%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[selected-hash] PASSED [ 15%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[selected-missing] PASSED [ 16%]
+tests/test_real_coverage.py::test_alternative_selection_needs_exact_original_and_selected_frozen_links[selected-wrong-signature] PASSED [ 17%]
+tests/test_real_coverage.py::test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record PASSED [ 17%]
+tests/test_real_coverage.py::test_linked_page_loss_or_malformed_record_revokes_query_and_exact_restoration_recovers[missing] PASSED [ 18%]
+tests/test_real_coverage.py::test_linked_page_loss_or_malformed_record_revokes_query_and_exact_restoration_recovers[checksum-mismatch] PASSED [ 18%]
+tests/test_real_coverage.py::test_linked_page_loss_or_malformed_record_revokes_query_and_exact_restoration_recovers[unassignable-record] PASSED [ 19%]
+tests/test_real_coverage.py::test_complete_independent_narrow_query_survives_broken_older_wide_query PASSED [ 20%]
+tests/test_real_coverage.py::test_multiple_cursor_pages_and_input_permutations_use_every_original_record PASSED [ 20%]
+tests/test_real_coverage.py::test_caller_passing_assessments_and_completion_flags_cannot_promote_raw_scope PASSED [ 21%]
+tests/test_real_coverage.py::test_losing_selected_lots_use_existing_fifo_and_do_not_become_wallet_profit PASSED [ 21%]
+tests/test_real_coverage.py::test_missing_acquisition_cost_blocks_conditional_money_while_native_fee_remains_usable PASSED [ 22%]
+tests/test_real_coverage.py::test_known_fee_conflict_only_revokes_supported_record_fields_that_depend_on_it PASSED [ 23%]
+tests/test_real_coverage.py::test_unverified_page_variant_cannot_claim_disjoint_scope_to_hide_a_linked_loss PASSED [ 23%]
+tests/test_real_coverage.py::test_empty_terminal_query_is_a_query_observation_not_a_wallet_certificate PASSED [ 24%]
+tests/test_real_coverage.py::test_fractional_end_requires_the_integer_boundary_transaction_in_query_scope PASSED [ 24%]
+tests/test_real_coverage.py::test_integer_end_proves_boundary_transaction_is_outside_even_with_wider_query PASSED [ 25%]
+tests/test_real_coverage.py::test_duplicate_selected_records_are_idempotent_but_conflicting_versions_are_permutation_independent PASSED [ 26%]
+tests/test_real_coverage.py::test_query_affinity_is_derived_from_exact_original_bytes_under_misleading_roles[bad-version] PASSED [ 26%]
+tests/test_real_coverage.py::test_query_affinity_is_derived_from_exact_original_bytes_under_misleading_roles[nested-wrapper] PASSED [ 27%]
+tests/test_real_coverage.py::test_query_affinity_is_derived_from_exact_original_bytes_under_misleading_roles[malformed-version] PASSED [ 27%]
+tests/test_real_coverage.py::test_affinity_inspection_budget_retains_an_uninspected_source_as_negative PASSED [ 28%]
+tests/test_real_coverage.py::test_frozen_query_affinity_loss_and_restoration_preserve_original_manifest_and_independent_fees PASSED [ 28%]
+tests/test_real_coverage.py::test_legacy_native_inventory_does_not_rewrite_parent_or_create_new_query_completion PASSED [ 29%]
+tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes0] PASSED [ 30%]
+tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes1] PASSED [ 30%]
+tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[hashes2] PASSED [ 31%]
+tests/test_real_coverage.py::test_malformed_frozen_query_inventory_is_rejected_without_unhashable_crashes[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] PASSED [ 31%]
+tests/test_real_coverage.py::test_native_history_query_only_role_loss_does_not_erase_independently_proved_fee_receipts PASSED [ 32%]
+tests/test_real_coverage.py::test_negative_query_role_cannot_hide_readable_native_fee_conflicts[classification] PASSED [ 33%]
+tests/test_real_coverage.py::test_negative_query_role_cannot_hide_readable_native_fee_conflicts[query-affinity] PASSED [ 33%]
+tests/test_real_coverage.py::test_missing_negative_query_only_bytes_preserve_independent_native_and_timing_facts PASSED [ 34%]
+tests/test_real_coverage.py::test_exact_duplicate_query_declarations_do_not_consume_distinct_page_budget PASSED [ 34%]
+tests/test_real_coverage.py::test_original_and_frozen_query_roles_share_page_budget_but_invalid_variants_remain_dependencies PASSED [ 35%]
+tests/test_real_coverage.py::test_archive_manifest_rejects_caller_supplied_internal_dependency_roles[query-affinity] PASSED [ 36%]
+tests/test_real_coverage.py::test_archive_manifest_rejects_caller_supplied_internal_dependency_roles[archive-native-dependencies] PASSED [ 36%]
+tests/test_real_coverage.py::test_native_alternative_loss_retains_previously_frozen_query_affinity_dependencies PASSED [ 37%]
+tests/test_real_coverage.py::test_direct_adapter_native_loss_replays_required_frozen_links_and_negative_signature_hints PASSED [ 37%]
+tests/test_real_coverage.py::test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[malformed_signature0] PASSED [ 38%]
+tests/test_real_coverage.py::test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[malformed_signature1] PASSED [ 39%]
+tests/test_real_coverage.py::test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[] PASSED [ 39%]
+tests/test_real_coverage.py::test_recovered_page_record_signature_shape_cannot_crash_after_a_sibling_hash_rejection[7] PASSED [ 40%]
+tests/test_historical_membership.py::test_both_token_programs_outer_and_inner_owner_changes_are_operation_specific[False-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 40%]
+tests/test_historical_membership.py::test_both_token_programs_outer_and_inner_owner_changes_are_operation_specific[False-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 41%]
+tests/test_historical_membership.py::test_both_token_programs_outer_and_inner_owner_changes_are_operation_specific[True-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 42%]
+tests/test_historical_membership.py::test_both_token_programs_outer_and_inner_owner_changes_are_operation_specific[True-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 42%]
+tests/test_historical_membership.py::test_creation_zero_is_not_owned_token_membership_before_initialization[False-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 43%]
+tests/test_historical_membership.py::test_creation_zero_is_not_owned_token_membership_before_initialization[False-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 43%]
+tests/test_historical_membership.py::test_creation_zero_is_not_owned_token_membership_before_initialization[True-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 44%]
+tests/test_historical_membership.py::test_creation_zero_is_not_owned_token_membership_before_initialization[True-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 44%]
+tests/test_historical_membership.py::test_close_removes_membership_and_does_not_confuse_close_authority_with_owner PASSED [ 45%]
+tests/test_historical_membership.py::test_close_authority_change_does_not_change_token_owner_membership PASSED [ 46%]
+tests/test_historical_membership.py::test_failed_owner_change_is_only_an_attempt_and_keeps_committed_membership PASSED [ 46%]
+tests/test_historical_membership.py::test_transient_wallet_ownership_neither_endpoint_is_not_disjoint[False-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 47%]
+tests/test_historical_membership.py::test_transient_wallet_ownership_neither_endpoint_is_not_disjoint[False-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 47%]
+tests/test_historical_membership.py::test_transient_wallet_ownership_neither_endpoint_is_not_disjoint[True-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 48%]
+tests/test_historical_membership.py::test_transient_wallet_ownership_neither_endpoint_is_not_disjoint[True-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 49%]
+tests/test_historical_membership.py::test_linked_alternative_gaps_and_restoration_revoke_dependent_membership[missing] PASSED [ 49%]
+tests/test_historical_membership.py::test_linked_alternative_gaps_and_restoration_revoke_dependent_membership[checksum] PASSED [ 50%]
+tests/test_historical_membership.py::test_linked_alternative_gaps_and_restoration_revoke_dependent_membership[unsupported] PASSED [ 50%]
+tests/test_historical_membership.py::test_linked_alternative_gaps_and_restoration_revoke_dependent_membership[owner-conflict] PASSED [ 51%]
+tests/test_historical_membership.py::test_linked_alternative_gaps_and_restoration_revoke_dependent_membership[operation-conflict] PASSED [ 52%]
+tests/test_historical_membership.py::test_linked_alternative_gaps_and_restoration_revoke_dependent_membership[malformed] PASSED [ 52%]
+tests/test_historical_membership.py::test_conflicting_clock_rejects_external_placement_without_erasing_instruction_membership_or_fees PASSED [ 53%]
+tests/test_historical_membership.py::test_missing_fee_does_not_revoke_valid_owner_and_lifecycle_facts PASSED [ 53%]
+tests/test_historical_membership.py::test_malformed_lifecycle_does_not_erase_independently_proved_network_fee PASSED [ 54%]
+tests/test_historical_membership.py::test_sibling_disjoint_lifecycle_and_raw_record_permutations_preserve_supported_account PASSED [ 55%]
+tests/test_historical_membership.py::test_matching_sparse_checkpoints_never_certify_intervening_owner_interval PASSED [ 55%]
+tests/test_historical_membership.py::test_same_slot_without_archived_order_cannot_make_ordered_checkpoint_link PASSED [ 56%]
+tests/test_historical_membership.py::test_exact_indexed_native_alternative_and_preserved_negative_affinity_loss PASSED [ 56%]
+tests/test_historical_membership.py::test_completed_query_and_caller_complete_flags_do_not_prove_historical_population PASSED [ 57%]
+tests/test_historical_membership.py::test_invalid_wallet_or_unassignable_selected_record_is_rejected PASSED [ 57%]
+tests/test_historical_membership.py::test_checksum_boundaries_are_immutable_and_cited_in_accepted_membership PASSED [ 58%]
+tests/test_historical_membership.py::test_transfer_membership_uses_its_instruction_position_relative_to_owner_change[False-False] PASSED [ 59%]
+tests/test_historical_membership.py::test_transfer_membership_uses_its_instruction_position_relative_to_owner_change[False-True] PASSED [ 59%]
+tests/test_historical_membership.py::test_transfer_membership_uses_its_instruction_position_relative_to_owner_change[True-False] PASSED [ 60%]
+tests/test_historical_membership.py::test_transfer_membership_uses_its_instruction_position_relative_to_owner_change[True-True] PASSED [ 60%]
+tests/test_historical_membership.py::test_same_endpoints_with_different_transfer_owner_interleaving_are_conflicting PASSED [ 61%]
+tests/test_historical_membership.py::test_outer_and_inner_equivalent_lifecycle_versions_do_not_conflict_merely_by_representation PASSED [ 62%]
+tests/test_historical_membership.py::test_invalid_prior_owner_is_not_admitted_by_a_matching_caller_authority_string PASSED [ 62%]
+tests/test_historical_membership.py::test_same_account_token_program_conflict_cannot_be_relabelled_as_agreeing_owner_facts PASSED [ 63%]
+tests/test_historical_membership.py::test_indexed_pointer_requires_both_original_pointer_bytes_and_original_page_bytes PASSED [ 63%]
+tests/test_historical_membership.py::test_account_inspection_budget_has_no_arbitrary_certified_prefix PASSED [ 64%]
+tests/test_historical_membership.py::test_execution_conflict_keeps_owner_endpoints_but_revokes_committed_event_membership PASSED [ 65%]
+tests/test_historical_membership.py::test_unrelated_explicit_signature_record_does_not_erase_selected_operation_membership PASSED [ 65%]
+tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[False-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 66%]
+tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[False-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 66%]
+tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[True-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA] PASSED [ 67%]
+tests/test_historical_membership.py::test_compiled_owner_bytes_use_shared_normalizer_and_cite_original_fields[True-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb] PASSED [ 68%]
+tests/test_historical_membership.py::test_account_union_alternative_cartesian_budget_admits_no_prefix_and_keeps_fees PASSED [ 68%]
+tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-unsupported-version] PASSED [ 69%]
+tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-missing-meta] PASSED [ 69%]
+tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[False-malformed-authority] PASSED [ 70%]
+tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-unsupported-version] PASSED [ 71%]
+tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-missing-meta] PASSED [ 71%]
+tests/test_historical_membership.py::test_unassignable_source_revokes_membership_census_without_erasing_independent_accounts[True-malformed-authority] PASSED [ 72%]
+tests/test_inventory_evidence.py::test_genuine_original_component_observations_remain_distinct_from_report_boundaries PASSED [ 72%]
+tests/test_inventory_evidence.py::test_unsigned_same_slot_aggregate_uses_raw_multiaccount_quantities_and_never_values_account_lamports PASSED [ 73%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[missing] PASSED [ 73%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[corrupt-wrapper] PASSED [ 74%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[malformed-row] PASSED [ 75%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[wrong-program] PASSED [ 75%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[wrong-owner] PASSED [ 76%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[duplicate-account] PASSED [ 76%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[bad-mint] PASSED [ 77%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[bad-decimals] PASSED [ 78%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[bad-raw-units] PASSED [ 78%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[bad-native-mode] PASSED [ 79%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[bool-lamports] PASSED [ 79%]
+tests/test_inventory_evidence.py::test_required_program_failures_revoke_that_component_preserve_independent_native_and_restore[caller-pass] PASSED [ 80%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[request-id] PASSED [ 81%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[response-id-type] PASSED [ 81%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[unfinalized] PASSED [ 82%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[bool-floor] PASSED [ 82%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[under-floor] PASSED [ 83%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[mint-filter] PASSED [ 84%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[data-slice] PASSED [ 84%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[wrong-wallet] PASSED [ 85%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[caller-request-flags] PASSED [ 85%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[response-error] PASSED [ 86%]
+tests/test_inventory_evidence.py::test_strict_rpc_request_response_contract_rejects_flags_filters_and_context_shortcuts[duplicate-json-key] PASSED [ 86%]
+tests/test_inventory_evidence.py::test_same_slot_disagreement_cannot_be_outvoted_and_required_conflict_loss_cannot_promote PASSED [ 87%]
+tests/test_inventory_evidence.py::test_same_slot_native_disagreement_and_cross_program_identity_do_not_create_equity PASSED [ 88%]
+tests/test_inventory_evidence.py::test_enumeration_permutation_and_duplicate_source_declarations_are_independent_of_amount_display_fields PASSED [ 88%]
+tests/test_inventory_evidence.py::test_mislabelled_nested_inventory_dependency_is_frozen_and_remains_negative_after_loss PASSED [ 89%]
+tests/test_inventory_evidence.py::test_invalid_containing_checksum_cannot_supply_convenient_disjoint_wallet_scope PASSED [ 89%]
+tests/test_inventory_evidence.py::test_internal_affinity_is_only_a_negative_selector_and_public_manifest_role_is_rejected PASSED [ 90%]
+tests/test_inventory_evidence.py::test_forged_frozen_request_cannot_turn_missing_required_original_into_foreign_exclusion PASSED [ 91%]
+tests/test_inventory_evidence.py::test_normal_genuine_archive_inspection_exports_immutable_rebuild_loss_and_restoration PASSED [ 91%]
+tests/test_inventory_evidence.py::test_public_internal_affinity_payload_cannot_be_smuggled_under_another_role PASSED [ 92%]
+tests/test_inventory_evidence.py::test_genuine87_augmented_normal_report_preserves_exact_fee_losing_lot_and_current_only_inventory PASSED [ 92%]
+tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[inventory-source] PASSED [ 93%]
+tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[owned-accounts] PASSED [ 94%]
+tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[classification] PASSED [ 94%]
+tests/test_inventory_evidence.py::test_native_original_byte_presence_loss_restoration_preserves_fee_and_frozen_inputs PASSED [ 95%]
+tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[legacy-parent-owned-accounts] PASSED [ 95%]
+tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[legacy-parent-native-balance] PASSED [ 96%]
+tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-owned-accounts] FAILED [ 97%]
+tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-native-balance] FAILED [ 97%]
+tests/test_native_inventory_capture.py::test_capture_keeps_exact_success_bodies_and_existing_allowlist PASSED [ 98%]
+tests/test_native_inventory_capture.py::test_captured_projection_cannot_disagree_with_original_request_or_result PASSED [ 98%]
+tests/test_native_inventory_capture.py::test_native_selector_union_is_bounded_before_archiving_and_replays_at_exact_cap PASSED [ 99%]
+tests/test_native_inventory_capture.py::test_native_collection_and_two_offline_generations_keep_snapshot_dependencies PASSED [100%]
+
+=================================== FAILURES ===================================
+_ test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-owned-accounts] _
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'owned-accounts', origin = 'initial-native'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_initial_and_legacy_native2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff9bd2427b0>
+
+    @pytest.mark.parametrize('role',['owned-accounts','native-balance'])
+    @pytest.mark.parametrize('origin',['legacy-parent','initial-native'])
+    def test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing(builder,role,origin,tmp_path,monkeypatch):
+        import inspect
+        import sys
+        import httpx
+        from types import SimpleNamespace
+        from fastapi.testclient import TestClient
+        import scanner.app as application
+        from tests.review_v037.review_helpers import pb
+        from tests.test_review_v037_independent import role_source, seed_actual_report
+        role_source(builder,role,'agreeing')
+        calls={'provider':0,'credential':0,'transport':0}
+        monkeypatch.delenv('HELIUS_API_KEY',raising=False)
+        def denied_credential(*args,**kwargs):
+            calls['credential']+=1;raise AssertionError('Offline native rebuild must not read credentials')
+        async def denied_provider(*args,**kwargs):
+            calls['provider']+=1;raise AssertionError('Offline native rebuild must not dispatch a provider')
+        async def denied_transport(*args,**kwargs):
+            calls['transport']+=1;raise AssertionError('Offline native rebuild must not use external transport')
+        monkeypatch.setitem(sys.modules,'keyring',SimpleNamespace(get_keyring=lambda:object(),get_password=denied_credential))
+        monkeypatch.setattr('scanner.providers.Gateway.rpc',denied_provider)
+        monkeypatch.setattr(httpx.AsyncHTTPTransport,'handle_async_request',denied_transport)
+        app=application.create_app(tmp_path/'app','native-inventory-scope-test')
+        with TestClient(app,base_url='http://127.0.0.1:8765') as client:
+            client.headers['X-CSRF-Token']=client.get('/api/bootstrap',headers={'X-Launch-Token':'native-inventory-scope-test'}).json()['csrf']
+            store=app.state.store
+            original,checkpoint=seed_actual_report(builder,store,role,'agreeing')
+            if origin=='initial-native':
+                # Use the same production builder invoked by the collection worker;
+                # every record is already archived and all provider dispatch is
+                # guarded. No parallel calculation or fake completion receipt.
+                endpoint=next(route.endpoint for route in app.routes if getattr(route,'path',None)=='/api/reports/{identifier}/rebuild')
+                implementation=inspect.getclosurevars(endpoint).nonlocals['_rebuild_report']
+                build=inspect.getclosurevars(implementation).nonlocals['build_report']
+                scan=store.get('scans',original['scan_id'])
+                collected={'transactions':builder.records,'checkpoint':deepcopy(checkpoint),
+                           'evidence':deepcopy(checkpoint['evidence']),'snapshot':deepcopy(checkpoint['snapshot']),
+                           'coverage':{'status':'partial'}}
+>               original=client.portal.call(build,scan,pb.WALLET,collected)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:530: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/anyio/from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+.venv/lib/python3.12/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/app.py:358: in build_report
+    return await _build_report(scan, address, collected, rebuilt_from=rebuilt_from,
+scanner/app.py:456: in _build_report
+    async with gateway(scan.get("budget_mode", "monthly"), sample_scan_id=scan['id'], sample_address=address) as native:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mode = 'setup-pilot', sample_scan_id = 'synthetic-R12-scan'
+sample_address = '4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi'
+
+    def gateway(mode="monthly", *, sample_scan_id=None, sample_address=None):
+        if mode == "public-sample":
+            from .screening_routes import PublicSampleRPC
+            return PublicSampleRPC(store, sample_scan_id, sample_address)
+        from .providers import Gateway
+        if mode == "setup-pilot":
+            if not credentials.key:
+>               raise HTTPException(409, "A Helius key is required for native wallet investigation")
+E               fastapi.exceptions.HTTPException: 409: A Helius key is required for native wallet investigation
+
+scanner/app.py:350: HTTPException
+_ test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-native-balance] _
+
+builder = <tests.test_position_evidence.PositionEvidenceTests testMethod=runTest>
+role = 'native-balance', origin = 'initial-native'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_initial_and_legacy_native3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff9bd241370>
+
+    @pytest.mark.parametrize('role',['owned-accounts','native-balance'])
+    @pytest.mark.parametrize('origin',['legacy-parent','initial-native'])
+    def test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing(builder,role,origin,tmp_path,monkeypatch):
+        import inspect
+        import sys
+        import httpx
+        from types import SimpleNamespace
+        from fastapi.testclient import TestClient
+        import scanner.app as application
+        from tests.review_v037.review_helpers import pb
+        from tests.test_review_v037_independent import role_source, seed_actual_report
+        role_source(builder,role,'agreeing')
+        calls={'provider':0,'credential':0,'transport':0}
+        monkeypatch.delenv('HELIUS_API_KEY',raising=False)
+        def denied_credential(*args,**kwargs):
+            calls['credential']+=1;raise AssertionError('Offline native rebuild must not read credentials')
+        async def denied_provider(*args,**kwargs):
+            calls['provider']+=1;raise AssertionError('Offline native rebuild must not dispatch a provider')
+        async def denied_transport(*args,**kwargs):
+            calls['transport']+=1;raise AssertionError('Offline native rebuild must not use external transport')
+        monkeypatch.setitem(sys.modules,'keyring',SimpleNamespace(get_keyring=lambda:object(),get_password=denied_credential))
+        monkeypatch.setattr('scanner.providers.Gateway.rpc',denied_provider)
+        monkeypatch.setattr(httpx.AsyncHTTPTransport,'handle_async_request',denied_transport)
+        app=application.create_app(tmp_path/'app','native-inventory-scope-test')
+        with TestClient(app,base_url='http://127.0.0.1:8765') as client:
+            client.headers['X-CSRF-Token']=client.get('/api/bootstrap',headers={'X-Launch-Token':'native-inventory-scope-test'}).json()['csrf']
+            store=app.state.store
+            original,checkpoint=seed_actual_report(builder,store,role,'agreeing')
+            if origin=='initial-native':
+                # Use the same production builder invoked by the collection worker;
+                # every record is already archived and all provider dispatch is
+                # guarded. No parallel calculation or fake completion receipt.
+                endpoint=next(route.endpoint for route in app.routes if getattr(route,'path',None)=='/api/reports/{identifier}/rebuild')
+                implementation=inspect.getclosurevars(endpoint).nonlocals['_rebuild_report']
+                build=inspect.getclosurevars(implementation).nonlocals['build_report']
+                scan=store.get('scans',original['scan_id'])
+                collected={'transactions':builder.records,'checkpoint':deepcopy(checkpoint),
+                           'evidence':deepcopy(checkpoint['evidence']),'snapshot':deepcopy(checkpoint['snapshot']),
+                           'coverage':{'status':'partial'}}
+>               original=client.portal.call(build,scan,pb.WALLET,collected)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_inventory_evidence.py:530: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/anyio/from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+.venv/lib/python3.12/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+scanner/app.py:358: in build_report
+    return await _build_report(scan, address, collected, rebuilt_from=rebuilt_from,
+scanner/app.py:456: in _build_report
+    async with gateway(scan.get("budget_mode", "monthly"), sample_scan_id=scan['id'], sample_address=address) as native:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mode = 'setup-pilot', sample_scan_id = 'synthetic-R12-scan'
+sample_address = '4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi'
+
+    def gateway(mode="monthly", *, sample_scan_id=None, sample_address=None):
+        if mode == "public-sample":
+            from .screening_routes import PublicSampleRPC
+            return PublicSampleRPC(store, sample_scan_id, sample_address)
+        from .providers import Gateway
+        if mode == "setup-pilot":
+            if not credentials.key:
+>               raise HTTPException(409, "A Helius key is required for native wallet investigation")
+E               fastapi.exceptions.HTTPException: 409: A Helius key is required for native wallet investigation
+
+scanner/app.py:350: HTTPException
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/runner/work/solana-wallet-scanner/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+9.13s call     tests/test_inventory_evidence.py::test_genuine87_augmented_normal_report_preserves_exact_fee_losing_lot_and_current_only_inventory
+4.56s call     tests/test_real_coverage.py::test_genuine_compiled_and_native_parsed_selection_retains_every_original_query_record
+0.69s call     tests/test_native_inventory_capture.py::test_native_collection_and_two_offline_generations_keep_snapshot_dependencies
+0.64s call     tests/test_real_coverage.py::test_malformed_unicode_wrapper_normal_api_rebuild_export_and_restoration_remain_offline[page]
+0.61s call     tests/test_inventory_evidence.py::test_normal_genuine_archive_inspection_exports_immutable_rebuild_loss_and_restoration
+0.55s call     tests/test_real_coverage.py::test_malformed_unicode_wrapper_normal_api_rebuild_export_and_restoration_remain_offline[native]
+0.44s call     tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[legacy-parent-owned-accounts]
+0.44s call     tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[legacy-parent-native-balance]
+0.26s setup    tests/test_real_coverage.py::test_malformed_unicode_wrapper_normal_api_rebuild_export_and_restoration_remain_offline[page]
+0.25s call     tests/test_inventory_evidence.py::test_inventory_byte_envelope_cannot_hide_a_native_fee_alternative_by_source_label[owned-accounts]
+=========================== short test summary info ============================
+FAILED tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-owned-accounts]
+FAILED tests/test_inventory_evidence.py::test_initial_and_legacy_native_rebuild_preserve_snapshot_refs_fees_and_timing[initial-native-native-balance]
+================== 2 failed, 167 passed, 1 warning in 24.37s ===================

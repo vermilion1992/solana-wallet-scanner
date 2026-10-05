@@ -1,0 +1,77 @@
+{
+  "schema_version": "source-register-v1",
+  "reviewed_on": "2026-10-05",
+  "live_provider_calls_made_for_package": 0,
+  "repository_reads_and_public_documentation_only": true,
+  "sources": [
+    {
+      "id": "R1",
+      "type": "private_repository",
+      "title": "Inspected repository and PR #1",
+      "url": "https://github.com/vermilion1992/solana-wallet-scanner/pull/1",
+      "ref": "fa9f1307b2ee6b8e4d4288b5ee55b0d220404f69",
+      "paths": [
+        "AGENTS.md",
+        "ACCEPTANCE.md",
+        "scanner/config.py",
+        "scanner/storage.py",
+        "scanner/discovery.py",
+        "scanner/screening.py",
+        "scanner/research.py",
+        "tools/validate.py"
+      ],
+      "note": "Live repository read plus same-ref content in the project conversation. No application tests rerun for this package."
+    },
+    {
+      "id": "S1",
+      "type": "official_provider_documentation",
+      "title": "Birdeye trader gainers/losers",
+      "url": "https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-trader-gainers-losers",
+      "note": "Bulk discovery candidate. Documented pagination, USD floors and compute metering do not prove user entitlement or universe completeness."
+    },
+    {
+      "id": "S2",
+      "type": "official_provider_documentation",
+      "title": "Birdeye wallet PnL summary",
+      "url": "https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-pnl-summary",
+      "note": "Use provider accounting/population definitions; do not equate summaries with independent raw reconstruction."
+    },
+    {
+      "id": "S3",
+      "type": "official_provider_documentation",
+      "title": "GMGN Agent API",
+      "url": "https://docs.gmgn.ai/index/gmgn-agent-api",
+      "note": "Query-only capability candidate. Do not follow trading/key/skill installation instructions; validate endpoint access and terms separately."
+    },
+    {
+      "id": "S4",
+      "type": "official_provider_documentation",
+      "title": "Helius getTransactionsForAddress",
+      "url": "https://www.helius.dev/docs/rpc/gettransactionsforaddress",
+      "note": "Evaluate history filtering, pagination and returned native records; transaction-version and ownership support must be independently tested."
+    },
+    {
+      "id": "S5",
+      "type": "official_provider_documentation",
+      "title": "Helius credits",
+      "url": "https://www.helius.dev/docs/billing/credits",
+      "note": "Recheck actual method billing and plan access at implementation; keep units and existing remaining quota explicit."
+    },
+    {
+      "id": "S6",
+      "type": "official_provider_documentation",
+      "title": "Jupiter quote documentation",
+      "url": "https://developers.jup.ag/docs/swap/v1/get-quote",
+      "note": "Quote data is not a fill. Revalidate the supported query-only endpoint and its current authentication before integration."
+    },
+    {
+      "id": "S7",
+      "type": "official_product_documentation",
+      "title": "Codex AGENTS.md instructions",
+      "url": "https://developers.openai.com/codex/guides/agents-md/",
+      "resolved_url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
+      "note": "Read existing repository/scoped instructions. Do not replace repository rules with this work package."
+    }
+  ],
+  "disclaimer": "Documentation and prior validation claims are not current user entitlement, live benchmark results, chain provenance or profitable candidates."
+}

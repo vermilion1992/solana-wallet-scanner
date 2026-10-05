@@ -51,6 +51,8 @@ class Store:
         CREATE INDEX IF NOT EXISTS quota_cycle ON reservations(provider,cycle);
         """)
         self.db.commit()
+        from .mass_search.schema import ensure_schema
+        ensure_schema(self.db)
         try:
             os.chmod(self.path / "scanner.sqlite", 0o600)
         except OSError:

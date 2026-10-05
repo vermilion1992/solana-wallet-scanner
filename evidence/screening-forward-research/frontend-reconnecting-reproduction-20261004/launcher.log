@@ -1,0 +1,57 @@
+INFO:     Started server process [7681]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready: http://127.0.0.1:43917/#session=[redacted]
+Press Ctrl+C to stop.
+
+INFO:     127.0.0.1:42756 - "GET /api/state HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:42772 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42784 - "GET /assets/index-DWJWoVTP.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42772 - "GET /assets/index-CR-pm_pb.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42772 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42784 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42784 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "POST /api/discovery/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/discovery/bdea58dc42244e92a91ead8fd1cba655 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "POST /api/discovery/bdea58dc42244e92a91ead8fd1cba655/identity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "POST /api/discovery/bdea58dc42244e92a91ead8fd1cba655/audit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "POST /api/screenings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "POST /api/observations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42756 - "GET /api/observations/7a281e3425fd48b78cef41f2701d92d6 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/observations/7a281e3425fd48b78cef41f2701d92d6 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "POST /api/observations/7a281e3425fd48b78cef41f2701d92d6/stop HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42798 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7681]

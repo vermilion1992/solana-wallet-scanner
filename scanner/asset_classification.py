@@ -22,7 +22,7 @@ from .json_boundary import canonical_bytes, parse_json
 from .providers import TOKEN_PROGRAM, TOKEN_2022_PROGRAM
 from .wallet_identity import ACCOUNT_SOURCE_VERSION, account_source_bytes
 
-VERSION = 'asset-classification-evidence-v1'
+VERSION = 'asset-classification-evidence-v2'
 MAX_SOURCES = 10_000
 MAX_NODES = 1_000_000
 HASH = re.compile(r'^[a-f0-9]{64}$')
@@ -208,21 +208,36 @@ def project_asset_classification(*, selected, raw_versions, transactions, clocks
     if end <= start:
         raise ValueError('Classification requires a positive report interval')
     raw_sources = list(raw_sources)
-    if len(raw_sources) > MAX_SOURCES:
-        raise ValueError('Classification source budget exceeded')
-    bodies = _source_bodies(raw_sources)
-    from .wallet_positions import _verified_records
-    checked = _verified_records([record for versions in raw_versions.values() for record in versions], raw_sources)
-    verified = {(row.get('signature'), row.get('evidence_hash')): row.get('raw') for row in checked}
-    from .indexed_input import IndexedResolver
-    def read(digest, role=None):
-        payloads = bodies.get(digest, [])
-        return payloads[0] if payloads and all(payload is not None and payload == payloads[0] for payload in payloads) else None
-    resolver, candidates = IndexedResolver(read, address=wallet), {}
+    budget_exceeded = len(raw_sources) > MAX_SOURCES
+    source_hashes = [row.get('hash') for row in raw_sources if isinstance(row, dict)]
+    declared_sources = {
+        row['hash']: _check(False,
+            'Declared classification bytes are retained but no accepted historical meme/nonspam source contract exists.',
+            [row['hash']], dependencies=['accepted_historical_asset_classification'])
+        for row in raw_sources if isinstance(row, dict) and _hash(row.get('hash'))
+        and row.get('kind') == 'classification'}
+    if not budget_exceeded:
+        bodies = _source_bodies(raw_sources)
+        from .wallet_positions import _verified_records
+        checked = _verified_records([record for versions in raw_versions.values() for record in versions], raw_sources)
+        verified = {(row.get('signature'), row.get('evidence_hash')): row.get('raw') for row in checked}
+        from .indexed_input import IndexedResolver
+        def read(digest, role=None):
+            payloads = bodies.get(digest, [])
+            return payloads[0] if payloads and all(payload is not None and payload == payloads[0] for payload in payloads) else None
+        resolver, candidates = IndexedResolver(read, address=wallet), {}
     records, interval_checks = {}, {}
     for signature in sorted(selected):
         rows, assets = [], []
         versions = raw_versions.get(signature, [])
+        if budget_exceeded:
+            # Optional classification inspection must not reduce the native
+            # archive capacity or erase independently supported fee results.
+            records[signature] = {'signature': signature, 'assets': {},
+                'check': _check(False, 'Classification source inspection budget exceeded; no convenient prefix is accepted.',
+                    [row.get('evidence_hash') for row in versions],
+                    dependencies=['complete_classification_source_inspection'])}
+            continue
         for record in versions:
             facts, check = _record_assets(record, wallet, bodies, resolver, candidates, verified)
             assets.append(facts)
@@ -248,9 +263,14 @@ def project_asset_classification(*, selected, raw_versions, transactions, clocks
     source_check = _check(source_set.get('state') == 'PASS',
         'The complete frozen native source inventory remains represented.', source_set.get('evidence', []),
         dependencies=['linked_native_source_inventory'])
+    source_checks = [source_check]
+    if budget_exceeded:
+        source_checks.append(_check(False,
+            'Classification source inspection budget exceeded; the full retained source set remains a dependency.',
+            source_hashes, dependencies=['complete_classification_source_inspection']))
     for name, begin in (('report_period', start), ('four_weeks', end - timedelta(days=28)),
                         ('verification_90d', end - timedelta(days=90))):
-        checks, memberships = [source_check], {}
+        checks, memberships = list(source_checks), {}
         for signature, row in records.items():
             membership = assess_interval_membership(clocks, signature, begin, end)
             memberships[signature] = membership
@@ -260,9 +280,17 @@ def project_asset_classification(*, selected, raw_versions, transactions, clocks
         if not records:
             checks.append(_check(False, 'No raw selected population supports this interval.', source_set.get('evidence', [])))
         interval_checks[name] = {**_combine(checks,
-            'Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.'),
+            'Every selected in-scope asset is classified or proved settlement; historical wallet population remains separate.',
+            evidence=declared_sources),
             'interval': name, 'start': begin.isoformat(), 'end': end.isoformat(), 'memberships': memberships}
-    snapshots = derive_mint_snapshots(raw_sources)
+    # Current mint controls have their own source set. Retain every declaration
+    # of each candidate hash so filtering cannot hide a corrupt alternative.
+    mint_hashes = {row['hash'] for row in raw_sources if isinstance(row, dict) and _hash(row.get('hash'))
+        and (row.get('kind') == 'current-mint-controls' or isinstance(row.get('payload'), dict)
+             and row['payload'].get('version') == ACCOUNT_SOURCE_VERSION)}
+    mint_sources = [row for row in raw_sources if isinstance(row, dict) and _hash(row.get('hash'))
+                    and row['hash'] in mint_hashes]
+    snapshots = derive_mint_snapshots(mint_sources) if len(mint_sources) <= MAX_SOURCES else []
     snapshot_hashes = {digest for row in snapshots for digest in row['evidence']}
     snapshot_sources = {
         row['hash']: _check(row['hash'] in snapshot_hashes,
@@ -273,7 +301,12 @@ def project_asset_classification(*, selected, raw_versions, transactions, clocks
         and (row.get('kind') == 'current-mint-controls' or row['hash'] in snapshot_hashes)}
     return {'version': VERSION, 'scope': SCOPE, 'records': records,
         'classification_by_interval': interval_checks, 'mint_snapshots': snapshots,
+        'declared_classification_sources': dict(sorted(declared_sources.items())),
         'mint_snapshot_sources': dict(sorted(snapshot_sources.items())),
+        'inspection_budget': {'max_sources': MAX_SOURCES, 'source_count': len(raw_sources),
+            'state': 'UNKNOWN' if budget_exceeded else 'PASS',
+            'mint_source_count': len(mint_sources),
+            'mint_state': 'UNKNOWN' if len(mint_sources) > MAX_SOURCES else 'PASS'},
         'historical_eligibility_state': 'UNKNOWN', 'wallet_population_state': 'UNKNOWN', 'qualification': False,
         'limitations': ['Canonical wrapped SOL exclusion does not establish a meme cohort.',
             'Current or same-slot account controls are not event-time historical classification.',

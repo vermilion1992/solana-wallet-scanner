@@ -1,0 +1,12 @@
+{
+  "original_harness_result": "FAILED at direct POST without CSRF header after successful native import/identity/screen/export; app guard behaved correctly",
+  "requested_transaction_tranche": 20,
+  "captured_transactions": 9,
+  "supported_swaps": 6,
+  "matched_sales": 0,
+  "provider_attempts_charged": 14,
+  "remaining_pending_references": 11,
+  "sample_stop": "Public RPC request unavailable (original HTTP code not retained by prior adapter)",
+  "default_preset_result": "excluded_by_preset",
+  "copying_performance_demonstrated": false
+}

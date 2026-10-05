@@ -1,0 +1,6 @@
+{
+  "original_output_directory": "/workspace/solana-wallet-scanner/evidence/screening-forward-research/hardening-final-checks",
+  "preserved_at": "/workspace/solana-wallet-scanner/evidence/screening-forward-research/hardening-incomplete-fixture-checks",
+  "reason": "Sparse checkout omitted original fixtures required by newly added inventory module. Exact existing Git blobs restored without source changes.",
+  "raw_receipts_unchanged": true
+}

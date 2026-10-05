@@ -1,0 +1,31 @@
+{
+  "milestone": "Sampled wallet screening and forward quote-only research v1",
+  "acceptance": "Separate from wallet-wide PRODUCT_READY",
+  "software_result_receipt": "evidence/screening-forward-research/verified-release-checks/result.json",
+  "prior_software_result_receipts": [
+    "evidence/screening-forward-research/hardening-final-checks/result.json",
+    "evidence/screening-forward-research/release-checks/result.json"
+  ],
+  "software_status": "Read the passing source-bound software receipt; implemented code alone is not acceptance",
+  "genuine_evidence_receipt": "evidence/screening-forward-research/live-adapters/RESULT.json",
+  "genuine_live_workflow_receipt": "evidence/screening-forward-research/hardening-live-workflow/result.json",
+  "live_runtime_equivalence_receipt": "evidence/screening-forward-research/ci-loopback-repair/runtime-equivalence.json",
+  "genuine_evidence_scope": "Selected native PumpSwap transaction and keyless Jupiter quote, plus bounded native screening and address subscription through the ordinary launcher; no genuine profitable-wallet or copied-outcome demonstration",
+  "full_historical_acceptance": {
+    "B1": "NO_GO_CURRENT_SOURCE",
+    "B2": "OPEN",
+    "B3": "BLOCKED",
+    "PRODUCT_READY": false
+  },
+  "strategy": "fixed-entry-first-sale-v1",
+  "accounting_guards": [
+    "Known initial simulated SOL cash and no inventory",
+    "After detection and decoding plus reaction delay",
+    "Quote outputs include provider fees; extra modeled costs once",
+    "Open loss/unpriced exposure and unavailable first-sale exits retained",
+    "Source loss suppresses supported copying conclusions without rewriting recorded historical amounts",
+    "Settings fixed per run; duplicate events idempotent; interrupted periods not backfilled"
+  ],
+  "command": "./.venv/bin/python tools/validate.py --profile screening-forward --browser-python .venv/bin/python --output <new-directory>",
+  "not_required": "Finding a profitable candidate"
+}

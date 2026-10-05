@@ -1,0 +1,127 @@
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+.................................... [ 40%]
+........................................................... [ 53%]
+........................................................................ [ 69%]
+........................................................................ [ 85%]
+..................................................F..............FF      [100%]
+=================================== FAILURES ===================================
+_ test_retained_genuine_compiled_account_creation_admits_exact_funding_without_completeness _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-30/test_retained_genuine_compiled0')
+
+    def test_retained_genuine_compiled_account_creation_admits_exact_funding_without_completeness(tmp_path):
+        from scanner.archive_input import import_archive, load_archive
+        from scanner.storage import Store
+        from scanner.wallet_evidence import derive_wallet_evidence
+    
+        root = Path(__file__).resolve().parents[1]
+        source = root / 'evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip'
+        signature = '5aQQmDSXeVhmReZuDuHHthRkdjPgDmCSEty8FJLByX7hKaeB9NEo1SjsYbcGs9Fq82maTQNsSG56NbfdkjYePWDV'
+        with closing(Store(tmp_path)) as store:
+>           loaded = load_archive(store, import_archive(store, source.read_bytes()))
+                                                               ^^^^^^^^^^^^^^^^^^^
+
+tests/test_cost_flow_evidence.py:210: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_ test_genuine_mixed_buy_retains_only_disjoint_reserve_marks_and_required_sources _
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-30/test_genuine_mixed_buy_retains0')
+
+    def test_genuine_mixed_buy_retains_only_disjoint_reserve_marks_and_required_sources(tmp_path):
+>       row, sources, receipts = genuine_mixed_buy(tmp_path)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_historical_reserve_marks.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_historical_reserve_marks.py:58: in genuine_mixed_buy
+    loaded = load_archive(store, import_archive(store, source.read_bytes()))
+                                                       ^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+____ test_disjoint_admin_requires_exact_layout_and_all_pool_reference_roles ____
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-30/test_disjoint_admin_requires_e0')
+
+    def test_disjoint_admin_requires_exact_layout_and_all_pool_reference_roles(tmp_path):
+        from scanner.historical_reserve_marks import _points
+>       row, _, _ = genuine_mixed_buy(tmp_path)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_historical_reserve_marks.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_historical_reserve_marks.py:58: in genuine_mixed_buy
+    loaded = load_archive(store, import_archive(store, source.read_bytes()))
+                                                       ^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solana-wallet-scanner/evidence/genuine-report-speed-batch/checker-inputs/genuine87-inventory-input.zip'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/solana-wallet-scanner/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_cost_flow_evidence.py::test_retained_genuine_compiled_account_creation_admits_exact_funding_without_completeness
+FAILED tests/test_historical_reserve_marks.py::test_genuine_mixed_buy_retains_only_disjoint_reserve_marks_and_required_sources
+FAILED tests/test_historical_reserve_marks.py::test_disjoint_admin_requires_exact_layout_and_all_pool_reference_roles
+3 failed, 447 passed, 1 warning, 49 subtests passed in 9.81s

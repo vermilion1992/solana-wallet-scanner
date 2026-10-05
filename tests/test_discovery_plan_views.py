@@ -78,9 +78,12 @@ def test_positive_cohort_flags_do_not_replace_sources_and_default_partial_audits
     plan = client.get('/api/state?report_view=summary').json()['discovery_cohorts'][0]['audit_plan']
     assert plan['selected_addresses'] == [] and plan['deferred'][0]['action'] == 'resolve_report_dependencies'
     assert client.post('/api/discovery/' + cohort['id'] + '/audit', json={}).status_code == 422
-    # Explicit deferred selection passes evidence eligibility and reaches the independent key prerequisite.
+    # Explicit evidence-backed selection now permits a bounded keyless sample;
+    # the default remains deferred and forged evidence is still rejected below.
     explicit = client.post('/api/discovery/' + cohort['id'] + '/audit', json={'addresses': [WALLET]})
-    assert explicit.status_code == 409 and 'Helius key' in explicit.json()['detail']
+    assert explicit.status_code == 200 and explicit.json()['budget_mode'] == 'public-sample'
+    queued = app.state.store.get('scans', explicit.json()['scan_id'])
+    assert queued['limits']['transaction_limit'] == 20 and queued['limits']['wallet_credit_limit'] == 50
     forged = deepcopy(cohort)
     forged['evidence'] = []
     forged['candidates'][0]['evidence'] = []
@@ -88,7 +91,7 @@ def test_positive_cohort_flags_do_not_replace_sources_and_default_partial_audits
     rejected = client.get('/api/state?report_view=summary').json()['discovery_cohorts'][0]['audit_plan']
     assert rejected['selected_addresses'] == [] and rejected['excluded'][0]['identity_state'] == 'UNKNOWN'
     assert client.post('/api/discovery/' + cohort['id'] + '/audit', json={'addresses': [WALLET]}).status_code == 422
-    assert app.state.store.list('scans') == []
+    assert [scan['id'] for scan in app.state.store.list('scans')] == [explicit.json()['scan_id']]
     assert client.get('/api/usage').json()['used'] == 0
 
 

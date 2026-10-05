@@ -1,0 +1,16 @@
+{
+  "state": "PASS",
+  "scope": "Local verified TLS via automatic environment HTTP proxy",
+  "observations": [
+    {
+      "proxy_method": "CONNECT"
+    },
+    {
+      "subscription": "logsSubscribe"
+    }
+  ],
+  "loopback_socket_attempts": 2,
+  "external_requests": 0,
+  "external_sockets_guarded": true,
+  "tls_verification_enabled": true
+}

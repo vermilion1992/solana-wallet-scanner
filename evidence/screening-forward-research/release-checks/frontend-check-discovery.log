@@ -1,0 +1,5 @@
+
+> solana-wallet-scanner-ui@0.3.11 check:discovery
+> node scripts/check-discovery.mjs
+
+Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).

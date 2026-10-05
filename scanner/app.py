@@ -201,6 +201,8 @@ def create_app(data_dir, launch_token=None):
     closing = False
     network_lock = asyncio.Lock()
     enrichment_lock = asyncio.Lock()
+    from .observer import ObserverService
+    observer = ObserverService(store)
     active_scan_id = None
     active_discovery_id = None
     pilot_cap = 200
@@ -338,7 +340,10 @@ def create_app(data_dir, launch_token=None):
             raise HTTPException(409, "Provider cycle expired; confirm the current billing cycle in Settings") from error
         return info
 
-    def gateway(mode="monthly"):
+    def gateway(mode="monthly", *, sample_scan_id=None, sample_address=None):
+        if mode == "public-sample":
+            from .screening_routes import PublicSampleRPC
+            return PublicSampleRPC(store, sample_scan_id, sample_address)
         from .providers import Gateway
         if mode == "setup-pilot":
             if not credentials.key:
@@ -434,6 +439,8 @@ def create_app(data_dir, launch_token=None):
                                           history_complete=history_complete, wallet_evidence=wallet_evidence)
         token_risk = deepcopy(rebuilt_from.get("token_risk", [])) if rebuilt_from else []
         mints = [] if rebuilt_from or archive_loaded is not None else list(dict.fromkeys(event["mint"] for event in events if event.get("mint")))[:3]
+        mint_refresh_available = scan.get('status') == 'running' and (
+            scan.get('budget_mode') == 'public-sample' or bool(credentials.key))
         risk_evidence = []
         from .providers import ProviderError
         for mint in mints:
@@ -447,8 +454,10 @@ def create_app(data_dir, launch_token=None):
                         raise EvidenceError("Current mint observation identity is inconsistent")
                     raw = observation.get("result")
                 else:
+                    if not mint_refresh_available:
+                        raise EvidenceError('Optional current mint controls are unavailable; cached report construction performs no provider or credential lookup.')
                     async with network_lock:
-                        async with gateway(scan.get("budget_mode", "monthly")) as native:
+                        async with gateway(scan.get("budget_mode", "monthly"), sample_scan_id=scan['id'], sample_address=address) as native:
                             raw = await native.rpc("getAccountInfo", [mint, {"encoding": "jsonParsed", "commitment": "finalized", "minContextSlot": minimum_slot}])
                     observed_at = now()
                     observation = {"method": "getAccountInfo", "address": mint, "commitment": "finalized", "observed_at": observed_at, "result": raw}
@@ -465,8 +474,13 @@ def create_app(data_dir, launch_token=None):
                 inspected = inspect_token_risk(raw, {"pools": pools, "evidence": hashes})
                 token_risk.append({"mint": mint, **inspected, "observed_at": cached["observed_at"], "context_slot": context["slot"], "pool_observations": pools, "evidence": hashes})
                 risk_evidence.append({"hash": cached["hash"], "kind": "current-mint-controls", "mint": mint})
-            except (ProviderError, QuotaExceeded, EvidenceError):
+            except (ProviderError, QuotaExceeded, EvidenceError, HTTPException):
                 token_risk.append({"mint": mint, **inspect_token_risk(None), "evidence": []})
+        if scan.get('budget_mode') == 'public-sample':
+            sample_cp = store.get('public_sample_checkpoints', scan['id'] + ':' + address, {})
+            collected.setdefault('coverage', {}).update(
+                credits=sample_cp.get('requests_used', 0), requests_used=sample_cp.get('requests_used', 0),
+                tranche_request_limit=sample_cp.get('tranche_request_limit', 0))
         evaluated = evaluate_policy(result["metrics"], scan["preset"],
                                     evidence_verified=production_evidence['evidence_gates'])
         report = {"id": uuid.uuid4().hex, "scan_id": scan["id"], "address": address, "label": "", "source": "live", "created_at": now(),
@@ -507,6 +521,10 @@ def create_app(data_dir, launch_token=None):
                                    "retained_window": True, "retained_preset": True, "mint_observations_refreshed": False})
             report["notes"].append("Rebuilt locally from saved primary records. The earlier report is unchanged; missing history and old mint observation dates remain explicit.")
         report = decorate_report(report)
+        report['collection'] = {'stop_reason': collected.get('coverage', {}).get('collection_stop_reason') or scan.get('reason'),
+                                'scope': collected.get('coverage', {}).get('scope'),
+                                'scan_id': scan['id'], 'budget_mode': scan.get('budget_mode'),
+                                'limits': deepcopy(scan.get('limits', {}))}
         store.put("reports", report["id"], report)
         if scan.get("discovery_cohort_id"):
             cohort = store.get("discovery_cohorts", scan["discovery_cohort_id"])
@@ -522,6 +540,13 @@ def create_app(data_dir, launch_token=None):
         return report
 
     async def run_scan(scan):
+        if scan.get('budget_mode') == 'public-sample':
+            from .screening_routes import collect_public_sample
+            scan.update(status='running', stage='Collecting bounded public wallet-address sample')
+            store.put('scans', scan['id'], scan)
+            await collect_public_sample(store, scan, build_report,
+                lambda: closing or store.get('scans', scan['id'], {}).get('status') == 'paused')
+            return
         from .collector import collect_wallet, CollectionPaused
         addresses = scan["audit_addresses"]
         scan["status"] = "running"
@@ -560,6 +585,8 @@ def create_app(data_dir, launch_token=None):
                     return
             except CollectionPaused as error:
                 scan = store.get("scans", scan["id"], scan)
+                if getattr(error, 'partial', None):
+                    error.partial.setdefault('coverage', {})['collection_stop_reason'] = error.reason
                 # A setup pilot deliberately samples every selected wallet. Its
                 # per-wallet history remains partial and every cursor is retained.
                 bounded_stop = error.reason.startswith(("Transaction limit reached", "Wallet credit limit reached", "Unsupported transaction version"))
@@ -694,6 +721,7 @@ def create_app(data_dir, launch_token=None):
     @asynccontextmanager
     async def lifespan(app):
         nonlocal worker_task, schedule_task, closing
+        observer.recover()
         for scan in store.list("scans"):
             changed = False
             if scan.get("budget_mode") == "setup-pilot":
@@ -724,6 +752,7 @@ def create_app(data_dir, launch_token=None):
             wake.set()
         yield
         closing = True
+        await observer.shutdown()
         worker_task.cancel()
         schedule_task.cancel()
         try:
@@ -847,6 +876,9 @@ def create_app(data_dir, launch_token=None):
         from .wallet_evidence import VERSION as WALLET_METHODOLOGY
         from .candidate_import import aggregate_candidate_universe
         from .real_coverage import historical_source_decision
+        from .paper import list_runs
+        from .screening_routes import observation_view, screening_views
+        from .mass_search.routes import mass_search_state as _mass_search_state
         disk = store.stats()
         disk["warnings"] = []
         if disk["evidence_bytes"] >= 10 * 1024 ** 3:
@@ -865,8 +897,10 @@ def create_app(data_dir, launch_token=None):
                 "historical_source_decision": historical_source_decision(),
                 "settings": settings(), "preset": preset(), "provider": provider(), "usage": usage(),
                 "scans": store.list("scans"), "discovery_cohorts": cohorts, "reports": saved_reports,
+                "screenings": screening_views(store), "observations": [observation_view(store, run) for run in list_runs(store)],
                 "candidate_universe": aggregate_candidate_universe(cohorts, saved_reports, candidate_cap=settings()["limits"]["candidate_cap"]),
-                "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk})
+                "evidence_audits": store.list("evidence_audits"), "watchlist": store.list("watchlist"), "storage": disk,
+                "mass_search": _mass_search_state(store)})
 
     @app.get("/api/usage")
     async def get_usage():
@@ -1031,12 +1065,15 @@ def create_app(data_dir, launch_token=None):
         addresses = list(dict.fromkeys(validate_address(address) for address in addresses))
         if any(address not in eligible for address in addresses):
             raise ValueError("Every audited address must have a verified native signer identity in this cohort")
-        mode = research_mode()
-        if not credentials.key:
-            raise HTTPException(409, "Connect a Helius key to investigate candidate wallets")
-        if usage()["remaining"] < 1:
+        mode = research_mode() if credentials.key else 'public-sample'
+        if mode != 'public-sample' and usage()["remaining"] < 1:
             raise HTTPException(409, "The research credit cap has been reached; saved evidence remains available")
         scan_id = queue_scan(addresses, preset()["window_days"], "automatic-discovery", mode, identifier)
+        if mode == 'public-sample':
+            sample_scan = store.get('scans', scan_id)
+            sample_scan['limits'].update(transaction_limit=20, wallet_credit_limit=50)
+            sample_scan['reason'] = 'Initial 20-transaction public wallet-address sample; native ownership completeness remains unknown.'
+            store.put('scans', scan_id, sample_scan)
         cohort.setdefault("audit_scan_ids", []).append(scan_id)
         cohort['last_queued_audit_plan'] = {**audit_plan, 'queued_addresses': addresses,
                                           'explicit_selection': 'addresses' in data,
@@ -1108,6 +1145,17 @@ def create_app(data_dir, launch_token=None):
                 raise HTTPException(409, "Connect a Helius key before resuming the setup pilot")
             if store.usage("helius", "setup-pilot", pilot_cap)["remaining"] < 1:
                 raise HTTPException(409, "The 200-credit setup pilot is exhausted; saved evidence remains available")
+        elif mode == 'public-sample':
+            from .screening_routes import saved_identity
+            if any(saved_identity(store, address)['state'] != 'PASS' for address in scan['audit_addresses']):
+                raise HTTPException(409, 'Restore native identity evidence before continuing the sample')
+            if research_busy():
+                raise HTTPException(409, 'Another batch is active')
+            scan['limits']['transaction_limit'] = min(settings()['limits']['transaction_limit'], scan['limits']['transaction_limit'] + 20)
+            scan.update(status='queued', reason='Continue another bounded public sample tranche; original report window is retained.')
+            store.put('scans', identifier, scan)
+            wake.set()
+            return {'ok': True}
         else:
             require_provider()
         if research_busy():
@@ -1268,6 +1316,13 @@ def create_app(data_dir, launch_token=None):
         dest = store.path / "exports" / f"{identifier}.{extension}"
         dest.write_text(content, encoding="utf-8")
         return Response(content, media_type=media, headers={"Content-Disposition": f'attachment; filename="wallet-report-{identifier[:12]}.{extension}"'})
+
+    from .screening_routes import install_research_routes
+    install_research_routes(app, store, body, observer, build_report=build_report, queue_scan=queue_scan,
+                            wake=wake, research_busy=research_busy, settings=settings, preset=preset)
+    from .mass_search.routes import install_mass_search_routes
+    install_mass_search_routes(app, store)
+    app.state.observer = observer
 
     dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"
     if (dist / "assets").exists():

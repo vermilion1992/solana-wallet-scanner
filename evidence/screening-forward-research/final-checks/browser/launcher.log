@@ -1,0 +1,140 @@
+INFO:     Started server process [4387]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready: http://127.0.0.1:46799/#session=[redacted]
+Press Ctrl+C to stop.
+
+INFO:     127.0.0.1:48874 - "GET /api/state HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:48882 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48884 - "GET /assets/index-DWJWoVTP.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48882 - "GET /assets/index-CR-pm_pb.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48882 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48884 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48884 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48882 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/discovery/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/discovery/4afc74609b7d4e6b925a0950eb9cc040 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/discovery/4afc74609b7d4e6b925a0950eb9cc040/identity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/discovery/4afc74609b7d4e6b925a0950eb9cc040 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/discovery/4afc74609b7d4e6b925a0950eb9cc040/audit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/reports/2b65dc65540d4761ab5385ad533007da HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/screenings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/screenings/0f0b55d994bf49ebaebfbcc8b9d2c456/export HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/reports/2b65dc65540d4761ab5385ad533007da?view=display HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/evidence/8497e8d13d3ab3f3a8d878193e7070699713121d58de89b6fbf05b73059a5fec HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/screenings/0f0b55d994bf49ebaebfbcc8b9d2c456 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/observations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe/mark HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "POST /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe/stop HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48874 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59642 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe/export HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4387]
+INFO:     Started server process [4573]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready: http://127.0.0.1:47957/#session=[redacted]
+Press Ctrl+C to stop.
+
+INFO:     127.0.0.1:36250 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36258 - "GET /assets/index-DWJWoVTP.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36250 - "GET /assets/index-CR-pm_pb.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36250 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36258 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36250 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36250 - "GET /api/screenings/0f0b55d994bf49ebaebfbcc8b9d2c456 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36250 - "GET /api/screenings/0f0b55d994bf49ebaebfbcc8b9d2c456 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36258 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36250 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36264 - "GET /api/observations/1d0ed4ca03e34a7bbe3af7f2212ccafe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36264 - "GET /api/screenings/0f0b55d994bf49ebaebfbcc8b9d2c456 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4573]

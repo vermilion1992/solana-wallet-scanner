@@ -1,0 +1,555 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gmgn:mass-search:receipt:v1",
+  "title": "Mass search receipt transport contract (not provenance proof)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "mass-search-receipt-v1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$"
+    },
+    "corpus_kind": {
+      "enum": [
+        "SYNTHETIC",
+        "GENUINE_REPLAY",
+        "GENUINE_LIVE"
+      ]
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "dirty": {
+          "const": false
+        },
+        "lock_sha256": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "required": [
+        "commit",
+        "source_sha256",
+        "dirty",
+        "lock_sha256"
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "BLOCKED",
+            "RUNNING"
+          ]
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "started_at",
+        "ended_at",
+        "status",
+        "exit_code"
+      ]
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "plan_frozen_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "universe_sealed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "cohort_frozen_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "plan_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "universe_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "cohort_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "strategy_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "plan_frozen_at",
+        "as_of",
+        "universe_sealed_at",
+        "cohort_frozen_at",
+        "plan_sha256",
+        "universe_sha256",
+        "cohort_sha256",
+        "strategy_id"
+      ]
+    },
+    "universe": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "raw_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unique_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "invalid_rows": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "raw_rows",
+        "unique_candidates",
+        "duplicate_rows",
+        "invalid_rows"
+      ]
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "enum": [
+              "triage",
+              "behaviour",
+              "reconstruct",
+              "forward_select"
+            ]
+          },
+          "input": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "promoted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rejected": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "deferred": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pending": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "input",
+          "promoted",
+          "rejected",
+          "deferred",
+          "pending"
+        ]
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "live_authorized": {
+          "type": "boolean"
+        },
+        "authorization_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "paid_spend_usd": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "paid_limit_usd": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "billing_unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "used": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reserved": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "id",
+              "billing_unit",
+              "used",
+              "reserved",
+              "limit"
+            ]
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "live_authorized",
+        "authorization_sha256",
+        "paid_spend_usd",
+        "paid_limit_usd",
+        "providers"
+      ]
+    },
+    "measurements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cached_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "refilter_external_requests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "refilter_p95_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cold_live_seconds": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "raw_history_wallets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "decoded_transactions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "supported_trades": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "cached_rows",
+        "refilter_external_requests",
+        "refilter_p95_ms",
+        "cold_live_seconds",
+        "raw_history_wallets",
+        "decoded_transactions",
+        "supported_trades"
+      ]
+    },
+    "analytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reports_populated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reports_reconciled": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_closed_observed_episodes_per_report": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "control_case_included": {
+          "type": "boolean"
+        },
+        "profitable_candidates": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "reports_populated",
+        "reports_reconciled",
+        "min_closed_observed_episodes_per_report",
+        "control_case_included",
+        "profitable_candidates"
+      ]
+    },
+    "forward": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "NOT_RUN",
+            "RUNNING",
+            "COMPLETE",
+            "BLOCKED"
+          ]
+        },
+        "selection_frozen_before_observation": {
+          "type": "boolean"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "signal_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quote_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "closed_positions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "monitoring_gaps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "valuations_complete": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "state",
+        "selection_frozen_before_observation",
+        "started_at",
+        "signal_count",
+        "quote_count",
+        "closed_positions",
+        "monitoring_gaps",
+        "valuations_complete"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "corpus_kind": {
+            "enum": [
+              "SYNTHETIC",
+              "GENUINE_REPLAY",
+              "GENUINE_LIVE"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "candidate_snapshot",
+                "decisions",
+                "requests",
+                "budget_ledger",
+                "source_manifest",
+                "wallet_reports",
+                "reconciliation",
+                "test_results",
+                "selection_manifest",
+                "forward_signals",
+                "forward_quotes",
+                "forward_positions"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "corpus_kind",
+          "roles"
+        ]
+      },
+      "minItems": 1
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mass_search_proven": {
+          "type": "boolean"
+        },
+        "analytics_demonstrated": {
+          "type": "boolean"
+        },
+        "forward_operational_proven": {
+          "type": "boolean"
+        },
+        "strict_full_wallet_ready": {
+          "const": false
+        }
+      },
+      "required": [
+        "mass_search_proven",
+        "analytics_demonstrated",
+        "forward_operational_proven",
+        "strict_full_wallet_ready"
+      ]
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "corpus_kind",
+    "application",
+    "execution",
+    "selection",
+    "universe",
+    "stages",
+    "budget",
+    "measurements",
+    "analytics",
+    "forward",
+    "artifacts",
+    "claims",
+    "notes"
+  ]
+}

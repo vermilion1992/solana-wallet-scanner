@@ -2,7 +2,7 @@
 
 A local, read-only research application built from the supplied v0.3 blueprint. It runs a React interface and Python API on `127.0.0.1`, stores reports and compressed evidence locally, and never connects a signing wallet or submits transactions.
 
-Start with **Discovery**: the app samples current public Solana pool trades, checks candidate wallet identities against native RPC evidence, and investigates selected wallets within a small budget. Reports retain the evidence, conditional observations, current token-control findings, and missing coverage. Full-history profitability and copy-trading safety remain unknown when the evidence cannot establish them.
+Start with **Discovery**: find or paste public wallet addresses, check native identity, and investigate a small sample. In **Research**, inspect and save a separate screening assessment, shortlist a wallet, and observe a defined hypothetical following strategy using quotes requested after detection, decoding and your selected reaction delay. Saved reports and observation runs retain their settings, evidence, costs, open exposure, exclusions and monitoring gaps. Keyless public access is available for this sampled workflow; provider refusals and exhausted budgets stay visible.
 
 The release also includes saved candidate cohorts and offline public-address import, manual scans, a clearly labeled offline demonstration, FIFO accounting, editable research filters, optional watchlist monitoring, current token metadata enrichment, report exports, quota reservations, and verified backups. Broad market coverage, automatic meme-token classification, complete historical ownership, and reconciled whole-wallet equity are not established. Strict historical meme-policy `MATCH` remains unavailable for incomplete live evidence.
 
@@ -10,7 +10,7 @@ This revision responds to the v0.3.10 independent review. R15 corrects the RPC t
 
 ## Start locally
 
-Install **Python 3.11+**. The source ZIP includes compiled interface assets, so Node.js is optional. Extract the ZIP into a regular local folder, open a terminal there, and run:
+Install **Python 3.11+**. The repository includes compiled interface assets, so Node.js is optional when using this checkout. Check out the private branch or extract its source bundle into a regular local folder, open a terminal there, and run:
 
 **macOS / Linux**
 
@@ -32,7 +32,7 @@ If Windows blocks local PowerShell scripts, use a process-scoped policy for this
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-Setup downloads the complete hash-locked Python dependency set into `.venv`, installs the local source without fetching an unlocked build environment, and checks dependency compatibility. Internet access is needed for setup. The ZIP is a portable source distribution, not a native installer. To rebuild the interface after editing it, install **Node.js 22.12+** with npm and run `./setup.sh` or `.\setup.ps1` without the skip option; this also runs `npm ci` and `npm run build` in `frontend`.
+Setup downloads the complete hash-locked Python dependency set into `.venv`, installs the local source without fetching an unlocked build environment, and checks dependency compatibility. Internet access is needed for setup. This is a source distribution, not a native installer. To rebuild the interface after editing it, install **Node.js 22.12+** with npm and run `./setup.sh` or `.\setup.ps1` without the skip option; this also runs `npm ci` and `npm run build` in `frontend`.
 
 The launcher opens your browser after the API is ready and prints a session URL. Treat that URL as a local login link. Each process gets a fresh random token in the URL fragment; the frontend exchanges it for a session cookie and a CSRF token. Press **Ctrl+C** in the terminal to stop the app. An ordinary bookmark without the session fragment will need the fresh URL printed by the launcher.
 
@@ -46,13 +46,13 @@ Windows accepts the same flags after `.\run.ps1`. The host is always `127.0.0.1`
 
 ## Use the scanner
 
-1. Open **Discovery** and choose **Find wallet candidates**. The app samples up to three current trending pools, prioritizing SOL-quote pools, and keeps up to 20 leads. It considers at most the latest 300 returned trades per pool within a 24-hour window. Observed buying and selling determines research priority; it does not measure historical profit.
-2. Connect your Helius key on the Discovery screen to enable native identity checks and wallet investigation. Without a key, the public sample still works and identities remain unresolved. After connecting a key, run discovery again to validate up to eight leads using sampled transaction signers, owned token movements, and current system-account identity. Repeated public observations use the 15-minute cache.
-3. Select up to five eligible native-verified candidates and choose **Audit candidates**. If your actual provider billing cycle is unknown, the app uses a persistent **200-credit setup pilot** in this data directory. Each selected wallet starts with a collection tranche of at most 20 transactions and 30 native credits. Current token-control queries also consume the shared setup budget. Reaching a bound retains partial reports and evidence; it does not certify the wallet's complete history.
-4. Review the report's strict financial qualification, separate copy-behavior observations, research subset, current token-control findings, and source evidence. Recognized direct spot instruction formats produce buys or sells only when wallet identity and SOL/wSOL consideration reconcile. Unsupported wrappers, crossquotes, missing provenance, and ambiguous movements remain unresolved. A completed job means its bounded work finished, not that historical profit or safety was established.
-5. Save useful public addresses to the watchlist, export JSON or CSV, and create a local backup. Cached filter previews make no provider calls and do not rewrite saved reports. The offline demonstration remains available to explore the interface with visibly synthetic reports and zero provider calls.
+1. Open **Discovery** and choose **Find wallet candidates**, or paste addresses with **Import a public candidate list**. Public discovery samples up to three current trending pools and retains at most 20 leads. Recent buying and selling sets investigation priority; importing an address establishes no trust.
+2. Select a small set and choose **Check native identity**. The bounded public RPC check examines transaction signers, owned token movement and the current system account. A Helius key is optional for this sampled route. Identity failures, unavailable sources and provider refusals retain their reasons.
+3. Choose **Investigate** for eligible native-checked candidates. Initial keyless samples collect at most 20 transactions within 50 conservative request attempts per wallet, including current mint-risk queries, under the shared public daily cap. A configured Helius source retains its existing setup-pilot or confirmed free-plan limits. Reaching a cap preserves the sample and checkpoint. **Continue investigation** adds only the selected wallet's explicit saved budget.
+4. Open **Research**, select a saved report, adjust the screening preset if useful, and save the assessment. Inspect supported trades, conditional matched lots, unmatched sales, open exposure, early exits, token controls and collection stop reasons. **Worth observing** is separate from strict financial qualification and verified wallet profit.
+5. Shortlist a wallet and start **quote-based paper observation**. Choose simulated capital, fixed entry size, reaction delay, costs and limits. Inspect dated quote outcomes, open losses, unavailable exits and gaps; stop or resume the run, reopen it and export JSON. Each run keeps its original settings. The application must remain running to observe future signals; missed periods are never replayed as followed activity.
 
-Use **Import a public candidate list** to save a dated list without provider calls. Up to 1,000 input identifiers are validated, duplicates are removed and at most the configured 20 unique leads are retained; omissions stay counted. Imported addresses remain identity-unresolved and cannot use the cohort audit route until separately verified. The saved candidate view deduplicates addresses across dated cohorts while preserving their pool memberships and evidence. **Candidate observed**, **identity checked**, **sample audited** and **history reconstructed** are separate stages. Job completion, import or a sampled signer check never establishes complete history.
+Import saves a dated list without provider calls. Up to 1,000 input identifiers are validated, duplicates are removed and at most the configured 20 unique leads are retained; omissions stay counted. Imported addresses enter the common investigation route after their own native identity sources pass. The saved candidate view preserves dated memberships and evidence. **Candidate observed**, **identity checked**, **sample audited** and **history reconstructed** remain separate stages. Job completion, import or a sampled signer check never establishes complete history.
 
 For larger manual scans, confirm your actual free plan and current provider billing-cycle dates in Settings, then run an address-specific capability test. Do not invent cycle dates to unlock a larger budget; the cycle end date is exclusive. This enables the monthly application limits and manual-address workflow.
 
@@ -171,3 +171,56 @@ Keep the one issue register (`ISSUES.md`), acceptance matrix (`docs/ACCEPTANCE_M
 The current completion batch adds source-backed discovery audit planning and terminal indexed-query replay from genuine archived records. The separate bounded collection operator is documented by its explicit plans and durable request/credit receipts; it does not broaden the production provider allowlist. Existing public Solana addresses can be inspected without connecting Phantom or another wallet. Never provide a seed phrase or signing key.
 
 Current source feasibility and supported coverage are recorded in `docs/R1_SOURCE_DECISION.md`. Genuine inputs, independently worked raw calculations, source loss/restoration and final candidate evidence are under `evidence/genuine-wallet-batch/`. Indexed query completion is distinct from exhaustive historical wallet ownership and financial qualification. PRODUCT_READY remains false while those required proofs are absent; no paid plan is required by the implemented local/offline workflow.
+
+
+## Sampled screening and forward copy research
+
+Start with `./setup.sh` and `./run.sh` (or the existing Windows launcher). Open the
+private launch URL. Discovery accepts pasted public addresses as well as public
+pool leads. **Check native identity**, then **Investigate** to collect a bounded
+sample. Keyless public native RPC is available for this sampled route; configured
+Helius retains its existing accounting and free-plan quotas. A public endpoint
+can refuse or rate-limit access; the saved reason and checkpoint stay visible.
+
+Open **Research**, screen a saved report, inspect the evidence, save the assessment
+and shortlist the wallet. Screening has its own adjustable preset and labels:
+insufficient evidence, excluded by this preset, or worth observing. Conditional
+matched-lot results describe only the supported fetched sample. Strict financial
+qualification remains separately visible and unchanged. Continue investigation
+uses the saved assessment's transaction/request allowance; it does not establish
+exhaustive historical ownership. Initial public samples use at most 20 transactions
+and 50 conservative wallet request attempts, including mint-risk reads. Failed
+attempts and restarts do not reset that allowance. Explicit continuation can add
+at most the saved preset allowance, while the shared public RPC cap is 1,000/day.
+
+Start a **quote-based paper observation** with simulated SOL capital, fixed entry,
+position limit, reaction delay, adverse output adjustment, modeled execution cost,
+price-impact limit and event/quote/time budgets. The named strategy enters on an
+eligible observed buy only while not holding that mint, and exits on the first
+eligible subsequent observed leader sale. Additional buys and excluded events are
+retained. Each run freezes its settings; changing a filter cannot rewrite it.
+
+The observer subscribes to one wallet address per Solana logs subscription,
+retrieves and decodes newly detected transactions and requests Jupiter Swap V2
+quotes after decoding plus the selected delay. It omits `taker` and never requests
+an executable transaction. Provider/pool fees are included in quote outputs;
+modeled adverse execution and the additional SOL execution cost are applied once.
+Quotes are observations, not execution guarantees. The app must stay running to
+monitor; stop, disconnect, restart and missing-period gaps remain explicit and are
+never filled using hindsight. These subscriptions do not prove complete wallet
+activity. The older 15-minute watchlist refresh is separate.
+
+Run details retain cash, closed outcomes, open losses or unknown exposure,
+unavailable exits, exact timing, captured sources and evidence-backed strategy
+exclusions. Stop/resume preserves the portfolio and settings with an explicit gap.
+Request a current sell quote to mark remaining exposure within the original budget.
+Expired or unavailable marks cannot support a current positive portfolio conclusion.
+Reopen saved runs and export JSON from Research. Exports include excluded
+notifications, observer checkpoints, source references and the frozen strategy.
+No honest-wallet, intent or safe-to-copy score is produced.
+
+Software workflow acceptance, genuinely captured adapter evidence and historical
+full-wallet acceptance are recorded separately in
+`docs/SCREENING_FORWARD_ACCEPTANCE.json`. `PRODUCT_READY` remains false.
+
+Run the separate checkpoint with `.venv/bin/python tools/validate.py --profile screening-forward --browser-python .venv/bin/python --output <new-directory>`. It runs affected checks, the frontend build and the actual launcher browser workflow; it does not run or claim the historical full-wallet gates. Browser verification requires the test-only Playwright package and Chromium.
