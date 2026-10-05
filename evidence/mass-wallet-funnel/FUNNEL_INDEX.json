@@ -120,5 +120,12 @@
   "ranked100_shared_boundary_report": "ranked100-shared-boundary/APPLICATION_REPORT.json",
   "ranked100_shared_boundary_next_data": "ranked100-shared-boundary/NEXT_DATA_MANIFEST.json",
   "ranked100_shared_boundary_visible_fee_sol": "0.005654729",
-  "ranked100_shared_boundary_not_pnl": true
+  "ranked100_shared_boundary_not_pnl": true,
+  "ranked100_shared_boundary_ui": "ranked100-shared-boundary/UI_RESULT.json",
+  "ranked100_shared_boundary_ui_desktop": "ranked100-shared-boundary/01-report-desktop.png",
+  "ranked100_shared_boundary_ui_mobile": "ranked100-shared-boundary/01-report-mobile.png",
+  "ranked100_shared_boundary_ui_reopen": "ranked100-shared-boundary/02-reopen-desktop.png",
+  "ranked100_shared_boundary_ui_refilter": "ranked100-shared-boundary/03-refilter-desktop.png",
+  "ranked100_shared_boundary_ui_export": "ranked100-shared-boundary/UI_EXPORT.json",
+  "ranked100_shared_boundary_ui_external_calls": 0
 }

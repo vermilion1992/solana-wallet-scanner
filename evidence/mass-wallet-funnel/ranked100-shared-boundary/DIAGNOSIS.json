@@ -1,6 +1,7 @@
 {
   "kind": "ranked100-shared-boundary-diagnosis-v1",
-  "tested_application_commit_pending_tip": true,
+  "tested_application_commit": "3948e6aaf2abbcac85522f1bc8fd5daa9f96ab58",
+  "tested_application_commit_pending_tip": false,
   "capture_path": "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json",
   "capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
   "capture_bytes": 2403585,

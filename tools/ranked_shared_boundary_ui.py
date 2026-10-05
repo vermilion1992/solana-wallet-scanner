@@ -30,22 +30,22 @@ WINDOWS = {
 }
 
 
-def _open_watchlist(page):
+def _open_nav(page, name, *, exact=False):
     page.get_by_role("button", name="Search", exact=True).wait_for()
+    if page.viewport_size and page.viewport_size["width"] <= 700:
+        opener = page.get_by_role("button", name="Open navigation")
+        if opener.count():
+            opener.click()
     nav = page.get_by_label("Main navigation")
-    if not nav.is_visible():
-        page.get_by_role("button", name="Open navigation").click()
-        nav = page.get_by_label("Main navigation")
-    nav.get_by_role("button", name="Watchlist").click()
+    nav.get_by_role("button", name=name, exact=exact).click()
+
+
+def _open_watchlist(page):
+    _open_nav(page, "Watchlist")
 
 
 def _open_search(page):
-    page.get_by_role("button", name="Search", exact=True).wait_for()
-    nav = page.get_by_label("Main navigation")
-    if not nav.is_visible():
-        page.get_by_role("button", name="Open navigation").click()
-        nav = page.get_by_label("Main navigation")
-    nav.get_by_role("button", name="Search", exact=True).click()
+    _open_nav(page, "Search", exact=True)
 
 
 data = OUT / "data"

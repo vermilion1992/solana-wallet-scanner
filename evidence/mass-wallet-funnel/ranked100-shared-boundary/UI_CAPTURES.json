@@ -1,0 +1,35 @@
+{
+  "kind": "ranked100-shared-boundary-ui-v1",
+  "zero_external_provider_calls": true,
+  "PRODUCT_READY": false,
+  "files": {
+    "01-report-desktop.png": {
+      "sha256": "0f5470e9cccf7489897c232736cd6fd0b05bd13658a8a4118900eee1997e7428",
+      "bytes": 344967
+    },
+    "01-report-mobile.png": {
+      "sha256": "2cee445450e1dd1f5afe68596a84294b83a0553ab3f68525bb5668c5ea52ca7c",
+      "bytes": 280142
+    },
+    "02-reopen-desktop.png": {
+      "sha256": "6c66d57b5546ed29eeef5a9cfb6c5a77c22484298aa8aba37ef7189b84be0e21",
+      "bytes": 346310
+    },
+    "02-reopen-mobile.png": {
+      "sha256": "73d8b0e302394fea860cd96596a7bf3a43b01f21c90e576fb34e23b0fcb8eb8e",
+      "bytes": 281448
+    },
+    "03-refilter-desktop.png": {
+      "sha256": "ad03b628d7da9900655033fc909bbe396002d946065dba5b03150e2aee7104f8",
+      "bytes": 164694
+    },
+    "UI_EXPORT.json": {
+      "sha256": "a1fd1dd91cb0680523157c12de1a03cd4d420b5d7bafa44bf4ae358288d1c3a6",
+      "bytes": 21993
+    },
+    "UI_RESULT.json": {
+      "sha256": "09f2be4de58ff7971ef2b44c0502ca0933d84384655a0c72d1a660465651d13f",
+      "bytes": 277
+    }
+  }
+}

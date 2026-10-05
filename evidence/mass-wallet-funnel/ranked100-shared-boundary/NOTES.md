@@ -20,5 +20,8 @@ Visible integer fees: 0.005654729 SOL (5654729 lamports) across 100 txs; failed-
 ## Report
 Saved application report is an honest partial: fees/failed/holder-fee/unresolved visible; P&L unknown; no forced winner. G1 archive control is unchanged (−0.167725526 AGREE, 4 buys + 1 sell, 598s timings).
 
+## Phone / desktop UI
+Offline Playwright + real `run.sh`. Zero provider calls. Watchlist → Latest report shows the honest partial (unknown P&L, PARTIAL_NO_SUPPORTED_SOL_SWAPS, fees/failed/holder-fee/unresolved). Export 200. Cached refilter issues no provider calls. Restart/reopen on 360px and 1440px still shows the same report. Screenshots: `01-report-desktop.png`, `01-report-mobile.png`, `02-reopen-desktop.png`, `02-reopen-mobile.png`, `03-refilter-desktop.png`.
+
 ## Next data (only if a later grant is separately approved)
 See NEXT_DATA_MANIFEST.json. A page whose outer instruction is a reviewed Pump buy/sell/buy_exact_sol_in or a reviewed Jupiter route with SOL/wSOL settlement. This page does not contain that. Do not reuse leftover units.
