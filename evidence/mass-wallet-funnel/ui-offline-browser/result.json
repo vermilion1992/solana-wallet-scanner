@@ -12,8 +12,8 @@
     {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
-      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4"
+      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
+      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b"
     },
     {
       "case": "export-run",
@@ -22,11 +22,12 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4"
+      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b"
     },
     {
-      "case": "restart-reopen",
-      "state": "PASS"
+      "case": "restart-reopen-worksheet",
+      "state": "PASS",
+      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b"
     }
   ],
   "limitations": [
@@ -82,7 +83,7 @@
       "nodes": []
     },
     {
-      "name": "04-reopen-after-restart",
+      "name": "04-reopen-button-after-restart",
       "label": "desktop",
       "innerWidth": 1440,
       "scrollWidth": 1440,
@@ -90,7 +91,23 @@
       "nodes": []
     },
     {
-      "name": "04-reopen-after-restart",
+      "name": "04-reopen-button-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "05-reopened-report-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "05-reopened-report-after-restart",
       "label": "mobile",
       "innerWidth": 360,
       "scrollWidth": 360,
@@ -128,32 +145,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/abb7df9e4ce841c5a26ad6b950d5bec4?view=display",
-      "status": 200
-    },
-    {
-      "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
-      "status": 200
-    },
-    {
-      "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/reports/9ed73ba9eb8c42bcb60ab5145fec017b?view=display",
       "status": 200
     },
     {
@@ -173,17 +180,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/2d250935bd4040f3ad243d1f7c6cb3a6/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/9ed73ba9eb8c42bcb60ab5145fec017b?view=display",
       "status": 200
     }
   ],

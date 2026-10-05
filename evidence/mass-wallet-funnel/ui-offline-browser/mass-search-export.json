@@ -1,6 +1,6 @@
 {
   "run": {
-    "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+    "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
     "parent_run_id": null,
     "status": "UNIVERSE_SEALED",
     "source_id": "fixture-traders",
@@ -107,16 +107,16 @@
       }
     },
     "plan_sha256": "8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5",
-    "plan_frozen_at": "2026-10-05T09:00:01.709802+00:00",
-    "window_start": "2026-09-05T09:00:01.709802Z",
-    "window_end": "2026-10-05T09:00:01.709802Z",
+    "plan_frozen_at": "2026-10-05T09:03:33.099804+00:00",
+    "window_start": "2026-09-05T09:03:33.099804Z",
+    "window_end": "2026-10-05T09:03:33.099804Z",
     "universe": {
       "raw_rows": 1,
       "unique_candidates": 1,
       "duplicate_rows": 0,
       "invalid_rows": 0
     },
-    "universe_sealed_at": "2026-10-05T09:00:01.715548+00:00",
+    "universe_sealed_at": "2026-10-05T09:03:33.109556+00:00",
     "universe_sha256": "9207655a687369d82df3c915b5c1841b27cc4c1f5a6d61725ca4ec6188be7c67",
     "cohort_frozen_at": null,
     "cohort_sha256": null,
@@ -172,8 +172,8 @@
   },
   "decisions": [
     {
-      "decision_id": "a3e3b77f88ba481e9773264c61b7495d",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+      "decision_id": "802342e707f1444b85e640d2410406e8",
+      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
       "stage_id": "behaviour",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -182,11 +182,11 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "targeted_history",
-      "decided_at": "2026-10-05T09:00:01.727401+00:00"
+      "decided_at": "2026-10-05T09:03:33.122360+00:00"
     },
     {
-      "decision_id": "01994f3bb237479695d71fcee2e08add",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+      "decision_id": "0c7b18a641ce42349d610ec87d66b6ac",
+      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
       "stage_id": "forward_select",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -195,11 +195,11 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "quote_observation",
-      "decided_at": "2026-10-05T09:00:01.730745+00:00"
+      "decided_at": "2026-10-05T09:03:33.124276+00:00"
     },
     {
-      "decision_id": "f27d5c8dbb4a49d5b071e29074990bca",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+      "decision_id": "1c3063b96e4540ab941d0fb2086ea9f5",
+      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
       "stage_id": "reconstruct",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -208,11 +208,11 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "forward_observation",
-      "decided_at": "2026-10-05T09:00:01.729598+00:00"
+      "decided_at": "2026-10-05T09:03:33.123517+00:00"
     },
     {
-      "decision_id": "e68f042b928e4ef7a68fbd2a4aa4f38f",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+      "decision_id": "35b7375a40374c10abfb42a81687098a",
+      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
       "stage_id": "triage",
       "candidate_id": "solana:11111111111111111111111111111113",
       "result": "PROMOTED",
@@ -221,18 +221,59 @@
       "metric_versions": "mass-search-decision-v1",
       "source_hashes": "[\"8574ea635ed0202f72621ef73cc70e3ccb5fcc7dbc7209f78171e605090b67c5\"]",
       "next_capability": "behaviour_history",
-      "decided_at": "2026-10-05T09:00:01.725245+00:00"
+      "decided_at": "2026-10-05T09:03:33.121389+00:00"
     }
   ],
   "report_links": [
     {
-      "link_id": "174b914a81294cd299f425fcbebd4d76",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
+      "link_id": "51211ef1452b4e5c81aa4f51741a5ef2",
+      "run_id": "2d250935bd4040f3ad243d1f7c6cb3a6",
       "candidate_id": "solana:11111111111111111111111111111113",
-      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4",
-      "reconciliation_json": "{\"worksheet\": {\"sale_fifo_basis_sol\": [\"0.505\", \"0.4545\", \"0.0505\"], \"sale_net_profit_sol\": [\"0.29\", \"0.2605\", \"0.0245\"], \"total_profit_sol\": \"0.575\"}, \"material_exit\": {\"state\": \"KNOWN\", \"first_sale_seconds\": 20, \"exit_50_seconds\": 20, \"exit_90_seconds\": 30, \"final_hold_seconds\": 172800, \"quantity_weighted_exit_seconds\": \"8663.5\", \"sold_units\": \"100\", \"acquired_units\": \"100\", \"open_units\": \"0\", \"method_version\": \"material-exit-v1\", \"missing_dependencies\": []}, \"evidence\": \"a993245d26c3f3ee2d0ab8585e60f4855ed2eb964727c9c237f0cdfe366e77f3\"}",
-      "created_at": "2026-10-05T09:00:01.722535+00:00"
+      "report_id": "9ed73ba9eb8c42bcb60ab5145fec017b",
+      "reconciliation_json": "{\"worksheet\": {\"sale_fifo_basis_sol\": [\"0.505\", \"0.4545\", \"0.0505\"], \"sale_net_profit_sol\": [\"0.29\", \"0.2605\", \"0.0245\"], \"total_profit_sol\": \"0.575\"}, \"material_exit\": {\"state\": \"KNOWN\", \"first_sale_seconds\": 20, \"exit_50_seconds\": 20, \"exit_90_seconds\": 30, \"final_hold_seconds\": 172800, \"quantity_weighted_exit_seconds\": \"8663.5\", \"sold_units\": \"100\", \"acquired_units\": \"100\", \"open_units\": \"0\", \"method_version\": \"material-exit-v1\", \"missing_dependencies\": []}, \"evidence\": \"1cc2807c4072d009ddb0fd45f400b8a0744289e652598e359af69994f5448632\"}",
+      "created_at": "2026-10-05T09:03:33.117204+00:00"
     }
   ],
-  "exported_at": "2026-10-05T09:00:02.510998+00:00"
+  "reports": [
+    {
+      "id": "9ed73ba9eb8c42bcb60ab5145fec017b",
+      "candidate_id": "solana:11111111111111111111111111111113",
+      "address": "11111111111111111111111111111113",
+      "source": "mass-search",
+      "corpus_kind": "SYNTHETIC",
+      "policy": "UNRESOLVED",
+      "label": "Mass-search subset \u00b7 SYNTHETIC",
+      "worksheet": {
+        "sale_fifo_basis_sol": [
+          "0.505",
+          "0.4545",
+          "0.0505"
+        ],
+        "sale_net_profit_sol": [
+          "0.29",
+          "0.2605",
+          "0.0245"
+        ],
+        "total_profit_sol": "0.575"
+      },
+      "material_exit": {
+        "state": "KNOWN",
+        "first_sale_seconds": 20,
+        "exit_50_seconds": 20,
+        "exit_90_seconds": 30,
+        "final_hold_seconds": 172800,
+        "quantity_weighted_exit_seconds": "8663.5",
+        "sold_units": "100",
+        "acquired_units": "100",
+        "open_units": "0",
+        "method_version": "material-exit-v1",
+        "missing_dependencies": []
+      },
+      "notes": [
+        "Subset reconstruction through the existing accounting/research functions.",
+        "Does not establish complete historical ownership or PRODUCT_READY."
+      ]
+    }
+  ],
+  "exported_at": "2026-10-05T09:03:33.866579+00:00"
 }
