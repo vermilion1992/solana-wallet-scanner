@@ -30,7 +30,7 @@ Changed application files (purpose):
 ## Gate matrix
 | Gate | State | Evidence | Remaining dependency |
 |---|---|---|---|
-| G0 Baseline/safety/software | PASS (software) | Strict `strict-v0.3` unchanged; caps 20/5 retained; 10k local capacity separate; 206 mass-search/gates/report-view tests this batch; frontend `check:discovery` and `npm run build`; receipt development CONTRACT_VALID; synthetic Chromium Search UI PASS including Results subset P&L at 1440 | None for offline software |
+| G0 Baseline/safety/software | PASS (software) | Strict `strict-v0.3` unchanged; caps 20/5 retained; 10k local capacity separate; 206 mass-search/gates/report-view tests this batch; frontend `check:discovery` and `npm run build`; receipt development CONTRACT_VALID; synthetic Chromium Search UI PASS including Results and Compare subset P&L at 1440 | None for offline software |
 | G1 Genuine vertical slice | BLOCKED | Synthetic slice persists FIFO worksheet `total_profit_sol=0.575`, `t90=30s`, final hold `172800s` | Named live-research-authorization-v1 for Birdeye page + Helius targeted history |
 | G2 Genuine 1,000-candidate search | BLOCKED | Synthetic 1,000 unique acquire in 0.1508 s, 0 external requests; triage 200 promoted / 800 deferred | Birdeye `GET /trader/gainers-losers`, call ceiling 10, credit ceiling 250 CU, remaining quota confirmed, duration under 5 minutes if entitled |
 | G3 Three genuine reconciled analytics reports | BLOCKED | Independent worksheet matches package dust-tail fixture; one synthetic report only | Helius `getTransactionsForAddress`, call ceiling 20, credit ceiling 600, without resetting setup-pilot; three genuine ≥10-episode reports including a loss/unresolved control |
