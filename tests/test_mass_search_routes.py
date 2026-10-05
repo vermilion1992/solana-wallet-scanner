@@ -80,6 +80,7 @@ def test_vertical_slice_export_and_cached_refilter(session):
     exported = client.get(f"/api/mass-search/runs/{run_id}/export")
     assert exported.status_code == 200
     assert exported.json()["run"]["run_id"] == run_id
+    assert exported.json()["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
     refiltered = client.post(f"/api/mass-search/runs/{run_id}/refilter", json={})
     assert refiltered.status_code == 200
     assert refiltered.json()["parent_run_id"] == run_id
@@ -120,6 +121,12 @@ def test_slice_report_can_be_reopened_and_exported(session):
     assert page["items"][0]["material_exit_t90"]["value"] == "30"
     exported = client.get(f"/api/mass-search/runs/{run_id}/export")
     assert 'attachment; filename="mass-search-' in exported.headers["content-disposition"]
+    exported_body = exported.json()
+    assert exported_body["reports"][0]["id"] == report_id
+    assert exported_body["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
+    assert exported_body["reports"][0]["material_exit"]["exit_90_seconds"] == 30
+    assert exported_body["reports"][0]["material_exit"]["final_hold_seconds"] == 172800
+    assert exported_body["reports"][0]["policy"] == "UNRESOLVED"
     report_export = client.get(f"/api/export/reports/{report_id}.json")
     assert report_export.status_code == 200
     assert report_export.json()["id"] == report_id

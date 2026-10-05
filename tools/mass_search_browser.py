@@ -142,6 +142,10 @@ def run(args):
         shutil.copyfile(download.value.path(), dest)
         exported = json.loads(dest.read_text())
         assert exported["run"]["run_id"] == run_id
+        assert exported["reports"][0]["id"] == report_id
+        assert exported["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
+        assert exported["reports"][0]["material_exit"]["final_hold_seconds"] == 172800
+        assert exported["reports"][0]["policy"] == "UNRESOLVED"
         result["cases"].append({"case": "export-run", "state": "PASS"})
 
         page.get_by_role("button", name="Open report", exact=True).first.click()

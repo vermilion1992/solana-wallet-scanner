@@ -671,8 +671,22 @@ class MassSearchService:
         view = self.run_view(run_id)
         with self.store.lock:
             decisions = [dict(row) for row in self.store.db.execute("SELECT * FROM stage_decisions WHERE run_id=?", (run_id,)).fetchall()]
-            reports = [dict(row) for row in self.store.db.execute("SELECT * FROM report_links WHERE run_id=?", (run_id,)).fetchall()]
-        payload = {"run": view, "decisions": decisions, "report_links": reports, "exported_at": self.clock()}
+            links = [dict(row) for row in self.store.db.execute("SELECT * FROM report_links WHERE run_id=?", (run_id,)).fetchall()]
+        reports = []
+        for report in self.linked_reports(run_id):
+            reports.append({
+                "id": report.get("id"),
+                "candidate_id": report.get("candidate_id"),
+                "address": report.get("address"),
+                "source": report.get("source"),
+                "corpus_kind": report.get("corpus_kind"),
+                "policy": report.get("policy"),
+                "label": report.get("label"),
+                "worksheet": report.get("worksheet"),
+                "material_exit": report.get("material_exit"),
+                "notes": report.get("notes"),
+            })
+        payload = {"run": view, "decisions": decisions, "report_links": links, "reports": reports, "exported_at": self.clock()}
         digest = self.store.archive(payload)
         dest = self.store.path / "exports" / f"mass-search-{run_id[:12]}.json"
         dest.write_text(json.dumps(payload, indent=2), encoding="utf-8")
