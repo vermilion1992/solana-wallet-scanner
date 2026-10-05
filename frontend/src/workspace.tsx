@@ -1010,14 +1010,18 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
           title="Saved wallets"
           subtitle={`${state.watchlist.length} wallet${state.watchlist.length !== 1 ? "s" : ""} · ${state.settings.refresh_minutes ? `refresh every ${state.settings.refresh_minutes} minutes while app runs` : "manual refresh"}`}
         />
+        {state.watchlist.some((item) => item.source === "mass-search" || state.reports.some((report) => report.address === item.address && report.source === "mass-search")) && (
+          <p className="research-note">Mass-search shortlist entries are a reconstructed subset, not a wallet-wide MATCH. Quote-only observation is not started from this list.</p>
+        )}
         {state.watchlist.length ? (
           <div className="watchlist-list">
             {state.watchlist.map((item) => {
               const report = state.reports.find(
                 (r) => r.address === item.address,
               );
+              const subset = item.source === "mass-search" || report?.source === "mass-search";
               return (
-                <div className="watch-row" key={item.address}>
+                <div className="watch-row" key={item.address} data-watch-source={item.source ?? report?.source ?? "unknown"}>
                   <span className="wallet-avatar">
                     <Star size={20} />
                   </span>
@@ -1027,7 +1031,16 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                   </div>
                   {report ? (
                     <>
-                      <Badge value={report.policy} />
+                      <div className="watch-report-meta">
+                        <Badge value={report.policy} />
+                        {subset && (
+                          <>
+                            <small className="subset-list-label">Reconstructed subset</small>
+                            <small>not a wallet-wide MATCH</small>
+                            <ListRealisedProfitCell report={report} />
+                          </>
+                        )}
+                      </div>
                       <Button
                         variant="secondary"
                         onClick={() => open(report)}
@@ -1037,7 +1050,7 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                       </Button>
                     </>
                   ) : (
-                    <span className="muted">No report yet</span>
+                    <span className="muted">{subset ? "Reconstructed subset · no live MATCH" : "No report yet"}</span>
                   )}
                   <button
                     className="icon-button"

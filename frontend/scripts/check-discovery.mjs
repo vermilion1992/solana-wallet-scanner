@@ -63,7 +63,7 @@ try {
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
-  const { CompareView, Results } = require(join(output, "workspace.js"));
+  const { CompareView, Results, WatchlistView } = require(join(output, "workspace.js"));
   const { ReportTable } = require(join(output, "components.js"));
   const { compareDecimal, listRealisedProfit } = require(join(output, "format.js"));
   const {
@@ -2083,6 +2083,21 @@ try {
   assert.equal(screeningPickerLabel(subsetScreening).startsWith("subset · "), true);
   assert.ok(subsetResearchScreenHtml.includes("subset · "));
   assert.ok(screeningPickerLabel(subsetScreening).includes("Insufficient evidence"));
+  const watchlistHtml = renderToStaticMarkup(React.createElement(WatchlistView, {
+    ...actions,
+    state: {
+      ...searchState,
+      reports: [subsetReport],
+      watchlist: [{ address, label: "Research shortlist", source: "mass-search" }],
+    },
+  }));
+  assert.ok(watchlistHtml.includes("Unresolved") || watchlistHtml.includes("UNRESOLVED"));
+  assert.ok(watchlistHtml.includes("badge unresolved"));
+  assert.ok(watchlistHtml.includes("Reconstructed subset"));
+  assert.ok(watchlistHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(watchlistHtml.includes('data-watch-source="mass-search"'));
+  assert.ok(watchlistHtml.includes("0.575"));
+  assert.ok(watchlistHtml.includes("not started from this list"));
   const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
     ...actions,
     state: { ...searchState, reports: [subsetReport] },

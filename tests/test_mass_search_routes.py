@@ -179,6 +179,42 @@ def test_display_reopen_after_process_restart_keeps_independent_worksheet(tmp_pa
         assert client.get(f"/api/mass-search/runs/{run_id}/reports").json()["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
 
 
+def test_shortlist_from_mass_search_screening_stays_unresolved_subset(session):
+    client, app, data_dir = session
+    body = client.post("/api/mass-search/vertical-slice", json={"corpus_kind": "SYNTHETIC"}).json()
+    report_id = body["reconstruction"]["report"]["id"]
+    address = body["reconstruction"]["report"]["address"]
+    screened = client.post("/api/screenings", json={"report_id": report_id})
+    assert screened.status_code == 200, screened.text
+    screening_id = screened.json()["id"]
+    watched = client.post("/api/watchlist", json={"address": address, "label": "Research shortlist"})
+    assert watched.status_code == 200, watched.text
+    entry = app.state.store.get("watchlist", address)
+    assert entry["source"] == "mass-search"
+    assert entry["label"] == "Research shortlist"
+    state = client.get("/api/state?report_view=summary").json()
+    listed = next(row for row in state["watchlist"] if row["address"] == address)
+    assert listed["source"] == "mass-search"
+    report = next(row for row in state["reports"] if row["id"] == report_id)
+    assert report["source"] == "mass-search"
+    assert report["policy"] == "UNRESOLVED"
+    assert report["worksheet"]["total_profit_sol"] == "0.575"
+    assessment = next(row for row in state["screenings"] if row["id"] == screening_id)
+    assert assessment["result"] == "insufficient_evidence"
+    assert assessment["current_eligibility"]["can_start_observation"] is False
+    assert client.post("/api/observations", json={"screening_id": screening_id}).status_code == 409
+    assert app.state.store.usage("helius", "setup-pilot", 200)["used"] == 0
+    restarted = Store(data_dir)
+    try:
+        saved = restarted.get("watchlist", address)
+        assert saved["source"] == "mass-search"
+        assert saved["label"] == "Research shortlist"
+        assert restarted.get("reports", report_id)["policy"] == "UNRESOLVED"
+        assert restarted.usage("helius", "setup-pilot", 200)["used"] == 0
+    finally:
+        restarted.close()
+
+
 def test_screening_reopen_after_process_restart_stays_unresolved_subset(tmp_path):
     data_dir = tmp_path / "data"
     first = create_app(data_dir, LAUNCH_TOKEN)

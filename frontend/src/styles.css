@@ -1674,10 +1674,18 @@ select:focus {
 }
 .watchlist-list .watch-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 13px;
   padding: 20px 23px;
   border-top: 1px solid #edf1e8;
+  min-width: 0;
+}
+.watch-report-meta {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .watch-wallet {
   flex: 1;

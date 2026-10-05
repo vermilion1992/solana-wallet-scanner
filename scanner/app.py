@@ -705,7 +705,7 @@ def create_app(data_dir, launch_token=None):
                 continue
             if usage()["used"] + usage()["reserved"] >= settings()["limits"]["discovery_pause"]:
                 continue
-            addresses = [w["address"] for w in store.list("watchlist") if w.get("source") != "demo"]
+            addresses = [w["address"] for w in store.list("watchlist") if w.get("source") not in ("demo", "mass-search")]
             if not addresses:
                 continue
             try:
@@ -1255,8 +1255,14 @@ def create_app(data_dir, launch_token=None):
         label = data.get("label", "")
         if not isinstance(label, str) or len(label) > 100:
             raise ValueError("Label must be at most 100 characters")
-        synthetic = any(r["address"] == address and r["source"] == "demo" for r in store.list("reports"))
-        store.put("watchlist", address, {"address": address, "label": label, "added_at": now(), "source": "demo" if synthetic else "live"})
+        reports = [row for row in store.list("reports") if row.get("address") == address]
+        if any(row.get("source") == "mass-search" for row in reports):
+            source = "mass-search"
+        elif any(row.get("source") == "demo" or row.get("preview") is True for row in reports):
+            source = "demo"
+        else:
+            source = "live"
+        store.put("watchlist", address, {"address": address, "label": label, "added_at": now(), "source": source})
         return {"ok": True}
 
     @app.delete("/api/watchlist/{address}")

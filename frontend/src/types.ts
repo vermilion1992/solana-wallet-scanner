@@ -516,7 +516,7 @@ export type State = {
   observations?: PaperObservation[];
   mass_search?: MassSearchState;
   reports: Report[];
-  watchlist: { address: string; label: string; added_at?: string }[];
+  watchlist: { address: string; label: string; added_at?: string; source?: "demo" | "live" | "mass-search" }[];
   usage: {
     used: number;
     reserved: number;

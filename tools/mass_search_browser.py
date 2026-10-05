@@ -283,6 +283,40 @@ def run(args):
             "export": "screening-export.json",
         })
 
+        with page.expect_response(lambda response: response.request.method == "POST" and response.url.endswith("/api/watchlist")) as shortlisted:
+            page.get_by_role("button", name="Save to shortlist", exact=True).click()
+        assert shortlisted.value.status == 200, shortlisted.value.text()
+        expect(page.get_by_role("button", name="Shortlisted", exact=True)).to_be_visible()
+        expect_subset_screening()
+        page.get_by_label("Main navigation").get_by_role("button", name="Watchlist").click()
+        expect(page.locator('[data-watch-source="mass-search"]').first).to_be_visible(timeout=15000)
+        expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
+        expect(page.locator(".subset-list-label").first).to_have_text("Reconstructed subset")
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.get_by_text("not started from this list", exact=False)).to_be_visible()
+        capture("11-watchlist-shortlist-subset")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect(page.locator('[data-watch-source="mass-search"]').first).to_be_visible()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.get_by_label("Main navigation").get_by_role("button", name="Results").click()
+        page.get_by_label("Data source").select_option("mass-search")
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.locator(".subset-list-label").first).to_have_text("Reconstructed subset")
+        expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
+        capture("11-results-after-shortlist")
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect_subset_screening()
+        result["cases"].append({
+            "case": "shortlist-subset-watchlist-results",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening_id,
+            "observation_started": False,
+        })
+
         assert not errors, errors
         assert not external, external
         overflowed = [row for row in result.get("overflow", []) if row["overflow"]]
