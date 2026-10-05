@@ -1,0 +1,58 @@
+{
+  "kind": "ranked100-anchored-validation-reopen-check-v1",
+  "checked_at": "2026-10-05T21:42:28Z",
+  "network_blocked": true,
+  "provider_keys_unset": true,
+  "provider_calls_during_reopen": 0,
+  "cache_page_present": true,
+  "source_capture_present": true,
+  "source_capture_credential_free": true,
+  "old_reacquire_capture_untouched_absent_in_this_store": true,
+  "signature_match_on_reopen": true,
+  "match_info": {
+    "matched": 100
+  },
+  "integrity_on_reopen": {
+    "status": "SOURCE_RECORDS_INTACT",
+    "records": 100,
+    "intact": 100,
+    "damaged": 0,
+    "malformed": 0,
+    "integrity_failure": false,
+    "all_unsupported": false
+  },
+  "pagination_token_on_reopen": "452802642:577",
+  "evidence_sha256": "153cfdd2e24b870c55c291925e42b52045329708868966801b51ab2a00d8436b",
+  "wallet_completed_episodes_on_reopen": 0,
+  "visible_report_on_reopen": false,
+  "saved_application_reports_in_store": 0,
+  "helius_usage_this_grant_cycle": {
+    "used": 10,
+    "reserved": 0,
+    "cap": 20,
+    "remaining": 10,
+    "cycle_start": "2026-10-05T21:38:00Z"
+  },
+  "helius_requests_this_grant_cycle": 1,
+  "reservation_rows": [
+    [
+      "f8aa796ef0824583930699779ec8be90",
+      "helius",
+      "getTransactionsForAddress",
+      "10",
+      "2026-10-05T21:38:00Z",
+      "settled",
+      "1",
+      "2026-10-05T21:41:25.567132+00:00",
+      "2026-10-05T21:41:25.837620+00:00"
+    ]
+  ],
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "PRODUCT_READY": false
+}

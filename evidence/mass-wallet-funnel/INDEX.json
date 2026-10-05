@@ -55,7 +55,7 @@
   "g3_reacquire_application_commit": "0fa9f9a8bd5b0178579f4185e0bbcc9589fbccc3",
   "live_grant_ranked100_anchored": "config/live_authorization.ranked100-anchored-validation-draft.json",
   "ranked100_anchored_authorization_id": "live-ranked100-anchored-validation-2026-10-06-mitch",
-  "ranked100_anchored_status": "OFFLINE_PREP",
+  "ranked100_anchored_status": "LIVE_INCOMPLETE_PAGE0_MATCH_ZERO_DECODABLE",
   "ranked100_anchored_grant_enabled": false,
   "ranked100_anchored_not_authorised": true,
   "ranked100_anchored_evidence": "ranked100-anchored-validation/",
@@ -104,5 +104,11 @@
   "g1_address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
   "g1_mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
   "g1_subset_realised_pnl_sol": "-0.167725526",
-  "g1_episode_hold_seconds": 598
+  "g1_episode_hold_seconds": 598,
+  "ranked100_anchored_live_evidence": "ranked100-anchored-validation-live/",
+  "ranked100_anchored_live_application_commit": "2f45759811f6b1a2ea2301c7fd75a2a926a7f140",
+  "ranked100_anchored_live_helius_requests": 1,
+  "ranked100_anchored_live_helius_credits_documented": 10,
+  "ranked100_anchored_local_armed_copy_consumed": true,
+  "ranked100_anchored_single_use_approval_consumed": "2026-10-06 08:08 ACDT approval; consumed 2026-10-05T21:41:25Z by page 0"
 }

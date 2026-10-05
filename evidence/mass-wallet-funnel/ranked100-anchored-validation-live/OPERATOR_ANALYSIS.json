@@ -1,0 +1,115 @@
+{
+  "kind": "ranked100-anchored-validation-operator-analysis-v1",
+  "authorization_id": "live-ranked100-anchored-validation-2026-10-06-mitch",
+  "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "external_requests_for_analysis": 0,
+  "runner_decode": {
+    "path": "g3_reacquire._summarize_page (unwrapped GTA records)",
+    "coverage": {
+      "decoder_version": "spot-v7-native-flow-roles",
+      "transactions": 100,
+      "decoded_swaps": 0,
+      "supported_transactions": 0,
+      "failed_transactions": 0,
+      "unresolved_transactions": 1,
+      "unrecognized_transactions": 0,
+      "complete": false,
+      "history_complete": false,
+      "scope": "Fetched sample; recognized single spot routes with SOL/wSOL settlement",
+      "classification": "UNKNOWN",
+      "route_fixtures_independently_verified": false,
+      "non_economic_instructions": [],
+      "fixture_validation": []
+    },
+    "unresolved_reasons": {
+      "Missing raw transaction result": 100
+    }
+  },
+  "runner_defect": "g3_reacquire._summarize_page passes raw GTA records to decode_supported_swaps without live_g1._wrap_records, so every record is reported as \"Missing raw transaction result\". history_ingest.replay_cached_history_to_report and g3_history do wrap. Outcome unchanged here (see corrected_offline_decode) but must be fixed before any further live run.",
+  "corrected_offline_decode": {
+    "path": "same page via _wrap_records -> decode_supported_swaps (offline, zero calls)",
+    "coverage": {
+      "decoder_version": "spot-v7-native-flow-roles",
+      "transactions": 100,
+      "decoded_swaps": 0,
+      "supported_transactions": 0,
+      "failed_transactions": 19,
+      "unresolved_transactions": 81,
+      "unrecognized_transactions": 8,
+      "complete": false,
+      "history_complete": false,
+      "scope": "Fetched sample; recognized single spot routes with SOL/wSOL settlement",
+      "classification": "UNKNOWN",
+      "route_fixtures_independently_verified": false,
+      "non_economic_instructions": [],
+      "fixture_validation": []
+    },
+    "event_kinds": {
+      "fee": 99,
+      "unsupported": 81
+    },
+    "unresolved_reasons": {
+      "No reviewed spot swap instruction for this program and discriminator": 67,
+      "Investigated wallet is absent from transaction account keys": 5,
+      "No reviewed outer spot swap; transfers and balances alone do not prove trading": 8,
+      "Unsupported transaction version": 1
+    },
+    "wallet_completed_episodes": 0,
+    "by_mint": {},
+    "inferred_missing_boundary": null,
+    "visible_report": false
+  },
+  "top_level_programs_by_tx_count": [
+    [
+      "ComputeBudget111111111111111111111111111111",
+      97
+    ],
+    [
+      "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      80
+    ],
+    [
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      9
+    ],
+    [
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      7
+    ],
+    [
+      "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+      6
+    ],
+    [
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      5
+    ],
+    [
+      "11111111111111111111111111111111",
+      4
+    ],
+    [
+      "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+      2
+    ],
+    [
+      "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+      2
+    ]
+  ],
+  "program_note": "80/100 transactions invoke 6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P (Pump.fun bonding curve). The decoder has no reviewed Pump.fun buy/sell discriminator, so zero swaps are supported; 19 transactions failed on-chain (meta.err).",
+  "page1_gate": {
+    "allowed": false,
+    "reason": "page1_not_for_episode_count_or_pnl",
+    "detail": "No decoded sale exists, so no named missing earlier-acquisition / open-position boundary (mint+signature) can be recorded. Page 1 (token 452802642:577) was not dispatched. Page 1 would also be Pump.fun-dominated and equally undecodable."
+  },
+  "trades_positions": {
+    "decoded_trades": 0,
+    "completed_positions": 0,
+    "reconciled_positions": 0
+  },
+  "pnl": null,
+  "pnl_note": "No reconciled position; no P&L is reported. Raw wallet lamport delta across the 100 records (+14,444,363 lamports, incl. fees and failed txs) is NOT P&L.",
+  "hold_t90": null,
+  "PRODUCT_READY": false
+}

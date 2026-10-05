@@ -1,0 +1,43 @@
+{
+  "kind": "ranked100-anchored-validation-credits-ledger-v1",
+  "authorization_id": "live-ranked100-anchored-validation-2026-10-06-mitch",
+  "generated_at": "2026-10-05T21:42:28Z",
+  "providers": {
+    "helius": {
+      "method": "getTransactionsForAddress",
+      "requests_used": 1,
+      "documented_units_per_request": 10,
+      "documented_units_used": 10,
+      "tariff_basis": "10 credits per 100 full txs returned (100 returned -> 10)",
+      "ceiling_requests": 2,
+      "ceiling_units": 20,
+      "max_units_per_call": 10,
+      "remaining_under_grant_forfeited": {
+        "requests": 1,
+        "units": 10
+      },
+      "retries": 0,
+      "reservation": "1 row, settled, charge=1, 2026-10-05T21:41:25Z",
+      "units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+      "dashboard_confirmed_units": null
+    },
+    "birdeye": {
+      "requests_used": 0,
+      "units_used": 0
+    }
+  },
+  "wall_seconds": 0.44,
+  "max_duration_seconds": 300,
+  "max_additional_spend_usd": "0",
+  "usd_spent": "0",
+  "overages_enabled": false,
+  "leftover_grants_not_reused": [
+    "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+    "live-g3-ranked100-history-2026-10-06-mitch",
+    "live-g2-ranked100-discovery-2026-10-05-mitch",
+    "live-g1-vertical-slice-2026-10-05-mitch"
+  ],
+  "fresh_data_dir": true,
+  "setup_pilot_untouched": true,
+  "PRODUCT_READY": false
+}
