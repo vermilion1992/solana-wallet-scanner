@@ -1,0 +1,621 @@
+{
+  "version": "wallet-screening-v1",
+  "report_id": "3880bdb54f854062abbe5f2a28c14f45",
+  "address": "11111111111111111111111111111113",
+  "source": "mass-search",
+  "result": "insufficient_evidence",
+  "label": "Insufficient evidence",
+  "reason": "Native signer and current system account evidence must be checked.",
+  "reasons": [
+    {
+      "key": "identity",
+      "state": "UNKNOWN",
+      "evidence": [],
+      "reason": "Native signer and current system account evidence must be checked.",
+      "actual": "11111111111111111111111111111113"
+    },
+    {
+      "key": "supported_activity",
+      "state": "UNKNOWN",
+      "actual": 0,
+      "expected": 2,
+      "evidence": [],
+      "reason": "Observed 0 supported swaps; this screening preset requires at least 2."
+    },
+    {
+      "key": "matched_lots",
+      "state": "UNKNOWN",
+      "actual": null,
+      "expected": 1,
+      "evidence": [],
+      "reason": "Rebuild the saved report to obtain current sampled research observations."
+    },
+    {
+      "key": "live_source",
+      "state": "UNKNOWN",
+      "reason": "Mass-search reconstructed-subset reports cannot establish a live wallet screening result or MATCH.",
+      "actual": "mass-search",
+      "evidence": []
+    }
+  ],
+  "preset_snapshot": {
+    "name": "Sampled wallet screening",
+    "min_supported_swaps": 2,
+    "min_matched_sales": 1,
+    "max_rapid_sale_pct": "50",
+    "require_positive_conditional_profit": false,
+    "exclude_active_mint_authority": true,
+    "exclude_active_freeze_authority": true,
+    "exclude_restrictive_extensions": true,
+    "continuation_max_transactions": 20,
+    "continuation_max_credits": 100,
+    "continuation_max_accounts": 10
+  },
+  "identity": {
+    "state": "UNKNOWN",
+    "evidence": [],
+    "reason": "Native signer and current system account evidence must be checked."
+  },
+  "strict_qualification": {
+    "report_id": "3880bdb54f854062abbe5f2a28c14f45",
+    "preset_version": null,
+    "preset_snapshot": {},
+    "methodology": null,
+    "window": {
+      "start": "2026-09-05T09:41:51.860452Z",
+      "end": "2026-10-05T09:41:51.860452Z"
+    },
+    "financial_policy": "UNRESOLVED",
+    "evidence_status": "partial",
+    "profit_sol": null,
+    "qualified": false,
+    "failed_checks": [],
+    "unknown_checks": [
+      {
+        "key": "evidence_history",
+        "label": "Evidence history",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_identity",
+        "label": "Evidence identity",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_basis",
+        "label": "Evidence basis",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_positions",
+        "label": "Evidence positions",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_fees",
+        "label": "Evidence fees",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_classification",
+        "label": "Evidence classification",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_valuation",
+        "label": "Evidence valuation",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_findings",
+        "label": "Evidence findings",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "profit_sol",
+        "label": "Profit sol",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "realised_roi_pct",
+        "label": "Realised roi pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "median_roi_pct",
+        "label": "Median roi pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "win_rate_pct",
+        "label": "Win rate pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "median_hold_hours",
+        "label": "Median hold hours",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "completed_positions",
+        "label": "Completed positions",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "completed_positions_90d",
+        "label": "Completed positions 90d",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "traded_mints",
+        "label": "Traded mints",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "rapid_sale_pct",
+        "label": "Rapid sale pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "avg_buys",
+        "label": "Avg buys",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "avg_sells",
+        "label": "Avg sells",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "positive_weeks",
+        "label": "Positive weeks",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "largest_contribution_pct",
+        "label": "Largest contribution pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "economic_pnl_sol",
+        "label": "Economic pnl sol",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "methodology",
+        "label": "Current accounting methodology",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "fifo-v4",
+        "reason": "Rebuild this saved report from source evidence using the current accounting methodology."
+      },
+      {
+        "key": "history_methodology",
+        "label": "Current account receipt methodology",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "history-evidence-v11",
+        "reason": "Rebuild from saved records to reconcile account-specific receipts under the current methodology."
+      },
+      {
+        "key": "position_methodology",
+        "label": "Current account position methodology",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "account-position-evidence-v13",
+        "reason": "Rebuild from saved records to evaluate all position chronology dependencies under the current methodology."
+      },
+      {
+        "key": "strict_profit_value",
+        "label": "Strict profit value",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "A known strict profit metric is required; conditional research P&L cannot substitute."
+      }
+    ],
+    "checks": [
+      {
+        "key": "evidence_history",
+        "label": "Evidence history",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_identity",
+        "label": "Evidence identity",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_basis",
+        "label": "Evidence basis",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_positions",
+        "label": "Evidence positions",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_fees",
+        "label": "Evidence fees",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_classification",
+        "label": "Evidence classification",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_valuation",
+        "label": "Evidence valuation",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "evidence_findings",
+        "label": "Evidence findings",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "profit_sol",
+        "label": "Profit sol",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "realised_roi_pct",
+        "label": "Realised roi pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "median_roi_pct",
+        "label": "Median roi pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "win_rate_pct",
+        "label": "Win rate pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "median_hold_hours",
+        "label": "Median hold hours",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "completed_positions",
+        "label": "Completed positions",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "completed_positions_90d",
+        "label": "Completed positions 90d",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "traded_mints",
+        "label": "Traded mints",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "rapid_sale_pct",
+        "label": "Rapid sale pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "avg_buys",
+        "label": "Avg buys",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "avg_sells",
+        "label": "Avg sells",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "positive_weeks",
+        "label": "Positive weeks",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "largest_contribution_pct",
+        "label": "Largest contribution pct",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "economic_pnl_sol",
+        "label": "Economic pnl sol",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "Required saved-policy check is missing or repeated."
+      },
+      {
+        "key": "methodology",
+        "label": "Current accounting methodology",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "fifo-v4",
+        "reason": "Rebuild this saved report from source evidence using the current accounting methodology."
+      },
+      {
+        "key": "history_methodology",
+        "label": "Current account receipt methodology",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "history-evidence-v11",
+        "reason": "Rebuild from saved records to reconcile account-specific receipts under the current methodology."
+      },
+      {
+        "key": "position_methodology",
+        "label": "Current account position methodology",
+        "state": "UNKNOWN",
+        "actual": null,
+        "expected": "account-position-evidence-v13",
+        "reason": "Rebuild from saved records to evaluate all position chronology dependencies under the current methodology."
+      },
+      {
+        "key": "strict_profit_value",
+        "label": "Strict profit value",
+        "state": "UNKNOWN",
+        "actual": null,
+        "reason": "A known strict profit metric is required; conditional research P&L cannot substitute."
+      }
+    ],
+    "reason": "Demo, synthetic and preview reports do not qualify as live wallet matches.",
+    "notes": [
+      "Qualification applies to this saved preset and reporting window.",
+      "Financial qualification does not certify trader intent, copied fills, or future safety."
+    ]
+  },
+  "trading_evidence": {
+    "supported_swaps": 0,
+    "buy_signals": 0,
+    "sell_signals": 0,
+    "matched_sales": null,
+    "unmatched_sales": null,
+    "unresolved_basis_sales": null,
+    "conditional_matched_lot_profit_sol": null,
+    "open_exposure": [],
+    "early_exits": {
+      "long_tail_holds": {
+        "state": "UNKNOWN",
+        "detail": "Completed episodes with evidenced final and 90% exit timings are needed.",
+        "actual": null,
+        "evidence": [],
+        "conditional": true
+      },
+      "rapid_first_sales": {
+        "state": "UNKNOWN",
+        "detail": "All eligible episode first-sale timings and chronology are needed for this subset comparison.",
+        "actual": null,
+        "evidence": [],
+        "conditional": true
+      }
+    },
+    "scope": "Current supported research needs an immutable rebuild",
+    "window": {
+      "start": "2026-09-05T09:41:51.860452Z",
+      "end": "2026-10-05T09:41:51.860452Z"
+    },
+    "conditional": true,
+    "wallet_profit_verified": false,
+    "evidence": []
+  },
+  "risk_observations": [
+    {
+      "key": "long_tail_holds",
+      "state": "UNKNOWN",
+      "reason": "Completed episodes with evidenced final and 90% exit timings are needed.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "rapid_first_sales",
+      "state": "UNKNOWN",
+      "reason": "All eligible episode first-sale timings and chronology are needed for this subset comparison.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "follower_exploitation",
+      "state": "UNKNOWN",
+      "reason": "Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "creator_links",
+      "state": "UNKNOWN",
+      "reason": "Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "liquidity_withdrawal",
+      "state": "UNKNOWN",
+      "reason": "Independent reviewed primary evidence is required; absence of a detected finding does not establish this check.",
+      "actual": null,
+      "evidence": [],
+      "conditional": true
+    },
+    {
+      "key": "mint_authority",
+      "state": "UNKNOWN",
+      "reason": "Current token controls have not been observed.",
+      "actual": null,
+      "evidence": []
+    },
+    {
+      "key": "freeze_authority",
+      "state": "UNKNOWN",
+      "reason": "Current token controls have not been observed.",
+      "actual": null,
+      "evidence": []
+    },
+    {
+      "key": "token_extensions",
+      "state": "UNKNOWN",
+      "reason": "Current token controls have not been observed.",
+      "actual": null,
+      "evidence": []
+    },
+    {
+      "key": "direct_transfer_links",
+      "state": "UNKNOWN",
+      "reason": "Current raw-derived direct transfer observations are unavailable.",
+      "actual": null,
+      "evidence": []
+    },
+    {
+      "key": "forward_copy_outcomes",
+      "state": "UNKNOWN",
+      "reason": "Start a separate forward quote-based paper observation to measure follower outcomes.",
+      "actual": null,
+      "evidence": []
+    }
+  ],
+  "collection": {
+    "stop_reason": "Collection stop reason was not retained in this saved report.",
+    "scope": null,
+    "transactions": null,
+    "pages": null,
+    "credits": null,
+    "requested_range": {
+      "start": "2026-09-05T09:41:51.860452Z",
+      "end": "2026-10-05T09:41:51.860452Z"
+    },
+    "fetched_range": null,
+    "terminal_evidence": [],
+    "gaps": [],
+    "historical_ownership_verified": false,
+    "provider_stop": null,
+    "interruptions": []
+  },
+  "continuation": {
+    "recommended": false,
+    "action": "inspect_scope",
+    "reason": "This wallet-address sample has ended or has no live checkpoint. Missing historical ownership needs different primary evidence; more of this query cannot establish it.",
+    "budget": {
+      "max_transactions": 20,
+      "max_credits": 100,
+      "max_accounts": 10
+    },
+    "checkpoint_required": true
+  },
+  "notes": [
+    "Worth observing is a sampled research decision, not verified profitability or a promise of safe copying.",
+    "Conditional matched-lot profit excludes unmatched sales; open exposure and missing valuations remain visible.",
+    "Risk observations describe evidence and token capabilities without alleging intent or common control.",
+    "Strict financial qualification and full historical acceptance remain separate."
+  ],
+  "id": "fcd35b1fec7d4088bb590459f80cfdc2",
+  "created_at": "2026-10-05T09:41:59.943090+00:00",
+  "report_input_hash": null,
+  "source_availability": {
+    "state": "PASS",
+    "missing": []
+  },
+  "current_source_availability": {
+    "state": "PASS",
+    "missing": []
+  },
+  "current_identity": {
+    "state": "UNKNOWN",
+    "reason": "Native signer and current system account evidence must be checked.",
+    "evidence": []
+  },
+  "current_result": "insufficient_evidence",
+  "current_label": "Insufficient current evidence",
+  "current_reason": "Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH.",
+  "current_eligibility": {
+    "can_start_observation": false,
+    "reason": "Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH."
+  }
+}
