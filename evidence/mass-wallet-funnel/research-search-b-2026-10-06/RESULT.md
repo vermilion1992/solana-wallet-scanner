@@ -182,9 +182,9 @@ gtfo fee-audit totals: network **5.107154156** (was 5.107533156; only `meta.fee`
 
 ## Suite / build on this exact commit
 
-- Keys unset: **3672 passed**, 440 subtests, EXIT 0 (8 min 58 s)
-- Keys set (dummy, never dispatched): **3672 passed**, 440 subtests, EXIT 0 (8 min 59 s)
-- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-CYNwzjEW.js`
+- Keys unset: **3673 passed**, 440 subtests, EXIT 0 (9 min 12 s)
+- Keys set (dummy, never dispatched): **3673 passed**, 440 subtests, EXIT 0 (9 min 07 s)
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-CDumZ6B9.js`
 - Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = 401
 - Screenshot paths: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/phone-01-ranked-list.png`, `phone-02-research-screen-qualification-levels.png`, `phone-03-report-CccS.png`, `phone-04-report-CccS-detail.png`, `phone-03-report-A6PS.png`, `phone-04-report-A6PS-detail.png`, `phone-03-report-58PW.png`, `phone-04-report-58PW-detail.png`, `phone-03-report-BVZt.png`, `phone-04-report-BVZt-detail.png`, `phone-05-compare.png`
 

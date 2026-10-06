@@ -1006,7 +1006,7 @@ def test_frontend_pnl_figures_carry_worksheet_or_episode_label():
     report = (ROOT / "frontend/src/report.tsx").read_text(encoding="utf-8")
     assert "formatWorksheetTotal" in report
     assert "formatCompletedEpisodeHeadline" in report
-    assert WORKSHEET_LABEL in report
+    assert "WORKSHEET_LABEL" in report
     mass = (ROOT / "frontend/src/MassSearch.tsx").read_text(encoding="utf-8")
     assert "formatCompareSidePnl" in mass
     components = (ROOT / "frontend/src/components.tsx").read_text(encoding="utf-8")

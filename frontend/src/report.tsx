@@ -79,7 +79,21 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
   const observations = report.observations || [];
   const trades = (report.events || []).filter((row) => row.kind === "buy" || row.kind === "sell");
   const closedPositions = (report.positions || []).filter((row) => row.status === "closed" || row.end);
-  const productionPnl = settlement === "USDC" ? worksheet?.total_profit_usdc : worksheet?.total_profit_sol;
+  const audit = (report.independent_audit || {}) as {
+    worksheet_total?: string | null;
+    worksheet_total_unit?: string | null;
+  };
+  const profile = (report.research_profile || {}) as {
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+  };
+  const productionPnl = audit.worksheet_total
+    || profile.scoped_pnl
+    || worksheet?.total_profit_usdc
+    || (settlement === "USDC" ? worksheet?.total_profit_usdc : worksheet?.total_profit_sol);
+  const productionUnit = audit.worksheet_total_unit
+    || profile.scoped_pnl_unit
+    || (worksheet?.total_profit_usdc ? "USDC" : settlement === "mixed" ? "USDC" : settlement);
   const independentPnl = settlement === "USDC"
     ? (independent?.total_profit_usdc || worksheet?.total_profit_usdc)
     : (independent?.total_profit_sol || worksheet?.total_profit_sol);
@@ -100,14 +114,14 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
       <div className="subset-worksheet-metrics">
         <div data-worksheet-total="true">
           <span>{WORKSHEET_LABEL}</span>
-          <strong>{productionPnl ? `${decimal(productionPnl, 4)} ${settlement}` : "unknown"}</strong>
-          <small>{formatWorksheetTotal(productionPnl ? String(productionPnl) : null, settlement) || WORKSHEET_LABEL}</small>
+          <strong>{productionPnl ? `${decimal(String(productionPnl), 4)} ${productionUnit}` : "unknown"}</strong>
+          <small>{formatWorksheetTotal(productionPnl ? String(productionPnl) : null, productionUnit) || WORKSHEET_LABEL}</small>
         </div>
         {independentPnl && String(independentPnl) !== String(productionPnl || "") ? (
           <div data-worksheet-total="true">
             <span>{WORKSHEET_LABEL}</span>
-            <strong>{`${decimal(independentPnl, 4)} ${settlement}`}</strong>
-            <small>{formatWorksheetTotal(String(independentPnl), settlement)}</small>
+            <strong>{`${decimal(String(independentPnl), 4)} ${productionUnit}`}</strong>
+            <small>{formatWorksheetTotal(String(independentPnl), productionUnit)}</small>
           </div>
         ) : null}
         {(() => {
@@ -254,6 +268,14 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
   if (!report.research_profile && !report.funnel) return null;
   const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
   const completedKnown = Number(profile.completed_known_cost_positions ?? 0);
+  const audit = (report.independent_audit || profile.independent_audit || {}) as {
+    worksheet_total?: string | null;
+    worksheet_total_unit?: string | null;
+  };
+  const worksheetFigure = (profile.scoped_pnl as string | null | undefined) || audit.worksheet_total;
+  const worksheetUnit = audit.worksheet_total_unit
+    || (profile.scoped_pnl_unit && profile.scoped_pnl_unit !== "mixed" ? String(profile.scoped_pnl_unit) : "")
+    || "";
   return (
     <div className="research-profile" data-research-profile="local">
       <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds are not applied. Not safe to copy." />
@@ -276,14 +298,14 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         <div>
           <span>{completedKnown >= 1 ? "Scoped P&L" : "Matched fragments"}</span>
           <strong>{
-            completedKnown >= 1 && profile.scoped_pnl
-              ? `${decimal(String(profile.scoped_pnl), 4)} ${String(profile.scoped_pnl_unit || "")}`
+            completedKnown >= 1 && worksheetFigure
+              ? `${decimal(String(worksheetFigure), 4)} ${worksheetUnit}`
               : (profile.matched_fragment_pnl
                 ? `${decimal(String(profile.matched_fragment_pnl), 4)} ${String(profile.matched_fragment_unit || "")} (not a completed-episode net)`
                 : "unknown")
           }</strong>
-          {completedKnown >= 1 && profile.scoped_pnl
-            ? <small>worksheet total, partial coverage, not independently audited</small>
+          {completedKnown >= 1 && worksheetFigure
+            ? <small>{WORKSHEET_LABEL}</small>
             : null}
         </div>
         {(() => {
