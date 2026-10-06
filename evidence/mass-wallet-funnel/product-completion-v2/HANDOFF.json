@@ -38,5 +38,10 @@
   "browser_emulation_not_physical_phone": true,
   "remote_preview": "proposal only; not deployed",
   "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
-  "pr_draft": true
+  "pr_draft": true,
+  "independent_reviews": {
+    "accounting": "ACCEPT_WITH_NITS (numbers accurate; runtime import graph is not process-isolated)",
+    "app_security": "ACCEPT_WITH_NITS (no live-spend or auth break; visible_report persist and window-test coverage are latent)",
+    "material_findings": 0
+  }
 }

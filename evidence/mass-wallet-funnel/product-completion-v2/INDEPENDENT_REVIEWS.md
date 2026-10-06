@@ -19,6 +19,14 @@ checklist tracks (b) and (d).
 
 Verdict: **ACCEPT**. No material accounting defect. No correction to +376.028087.
 
+Separate reviewer [Accounting provenance review](bc-473f3e95-da35-5fc2-be86-b3cb8bb44d9a) returned **ACCEPT_WITH_NITS** on the same numbers:
+
+| Finding | Severity | Resolution |
+| --- | --- | --- |
+| Tool AST is clean; runtime still loads accounting via `investigation` / `capture_catalog` → `g3_reacquire` → `history_ingest` | minor | Accepted as algorithm independence, not process isolation. FIFO `_fifo` does not call settlement. No number change. |
+| APP_VS lists standalone lots; app lots live in product-completion-v1 APPLICATION_REPORT | minor | Totals AGREE; same signatures/qty/3000/3376.028087. Optional self-containment only. |
+| Partial-match sell would drop consumed inventory then mark the whole sale unresolved | latent | Not on these tapes (leading unbacked sell; G1 full close). |
+
 ## (ii) App / security — ACCEPT_WITH_NITS
 
 Scope: acquisition gate, batch, cache, token routes, LAN, draft grant,
@@ -41,6 +49,15 @@ compare mismatches, checklist tracks (a) and (c).
 
 Verdict: **ACCEPT_WITH_NITS**. Nits recorded; no application change required for this freeze.
 
+Separate reviewer [App security review](bc-fb99d3b0-0af2-52bd-9273-ebc6a756d33f) returned **ACCEPT_WITH_NITS**:
+
+| Finding | Severity | Resolution |
+| --- | --- | --- |
+| `visible_report` is on the replay result, not copied onto the saved report; cache hit defaults missing to True | minor | Accepted for current fixtures (rank-1 visible; no-history writes no report; SYNTH_BAD is error). Persist if a no-event capture is added. Rank-1 compare still flags unresolved basis. |
+| Compare test name includes window; pair shares the same window so only currency/corpus assert | minor | Implementation flags differing windows. G1 windows differ if the name must stay literal. |
+| `create_batch` inflight check and put are separate lock sections | minor | Sequential refuse works. Accepted for this local single-user app. |
+| No `/api/jobs` route; job/progress is `/api/state` + scans | none | Enumerator still 401s every `/api` except bootstrap. |
+
 ## Material findings requiring a code fix
 
-None. No re-run of app gates required. Final HEAD may differ from tested SHA by evidence files only.
+None from either reviewer. No re-run of app gates. Final HEAD may differ from tested SHA `c0128f2` by evidence files only.
