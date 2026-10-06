@@ -81,6 +81,12 @@ def wallet_row(address, report):
     net = profile.get("scoped_pnl")
     unit = profile.get("scoped_pnl_unit")
     by_quote = profile.get("scoped_pnl_by_quote_asset") or {}
+    audit = report.get("independent_audit") or {}
+    audited_net = audit.get("independently_audited_episode_net")
+    audited_unit = audit.get("independently_audited_episode_net_unit")
+    worksheet_total = audit.get("worksheet_total")
+    worksheet_unit = audit.get("worksheet_total_unit")
+    worksheet_audited = audit.get("worksheet_total_independently_audited")
     if completed < 1:
         net_text = None
         fragment = profile.get("matched_fragment_pnl")
@@ -89,6 +95,14 @@ def wallet_row(address, report):
         net_text = f"{net} {unit}" if net not in (None, "") else None
         if net_text is None and by_quote:
             net_text = "; ".join(f"{amount} {asset}" for asset, amount in by_quote.items() if amount not in (None, ""))
+    if audit.get("independently_audited") and audited_net not in (None, "") and worksheet_audited is False:
+        worksheet_part = ""
+        if worksheet_total not in (None, ""):
+            worksheet_part = (
+                f"; worksheet {worksheet_total} {worksheet_unit or ''} "
+                f"(not independently audited)"
+            )
+        net_text = f"{audited_net} {audited_unit} (audited episode net){worksheet_part}"
     judged = labels["coverage_status_detail"]
     return {
         "label": LABELS[address],

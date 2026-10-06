@@ -91,7 +91,7 @@ def _venue_notes_from_auditor(independent):
                 "Independently reconstructed; FIFO leaves opening inventory / leftover "
                 "so this mint is not a clean completed episode."
             )
-        notes[f"{mint[:4]}_sales"] = note
+        notes[f"{mint}_sales"] = note
     return notes or None
 
 
@@ -315,8 +315,9 @@ def compare_wallet(address, pages, tmp):
         "auditor_clean_episodes": independent.get("clean_episodes"),
         "status": status,
         "independently_audited": status == "independently_audited",
-        "independently_audited_episode_net": episode_net if status == "independently_audited" else None,
-        "independently_audited_episode_net_unit": episode_unit if status == "independently_audited" else None,
+        "independently_audited_episode_net": episode_net if status == "independently_audited" and episode_unit != "mixed" else None,
+        "independently_audited_episode_net_unit": episode_unit if status == "independently_audited" and episode_unit != "mixed" else None,
+        "independently_audited_episode_nets_by_unit": independent.get("independently_audited_episode_nets_by_unit"),
         "worksheet_total": worksheet_total,
         "worksheet_total_unit": worksheet_unit,
         "worksheet_total_independently_audited": bool(worksheet_matches_episodes) if status == "independently_audited" else False,

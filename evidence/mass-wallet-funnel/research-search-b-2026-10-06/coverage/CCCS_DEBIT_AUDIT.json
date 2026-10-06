@@ -7,7 +7,7 @@
   "current_swap_adjacent_sensitivity_sol": "0.296680516",
   "current_full_wallet_unresolved_sol": "0.296680516",
   "current_full_wallet_verified_tips_sol": "1.131401016",
-  "current_full_wallet_network_plus_priority_sol": "0.853338766",
+  "current_full_wallet_network_plus_priority_sol": "0.831368801",
   "why_0_134_became_1_428": "The 0.134 SOL figure counted only network fees plus a narrow verified-tip set (Jito, and sometimes a handful of swap-adjacent transfers already treated as tips). Item 8 then enumerated every native SOL withdrawal. Vanity recipients resembling Astralane / Nozomi / Node1 / NextBlock plus wyvPk\u2026 and soyastP\u2026 were previously bundled into 'fees+tips' or ignored. At aa2ef2d those non-Jito withdrawals were moved to unverified outside debits, producing 1.428081532 SOL. Under that sensitivity +0.242261753 \u2212 1.428081532 \u2248 \u22121.186 SOL, so the sign flips.",
   "why_figures_changed_again_after_published_lists": "This pass pins published tip-account lists (coverage/PUBLISHED_TIP_ACCOUNTS.json). Recipients that match Nozomi, Astralane, NextBlock or Node1 published accounts are verified tips and are deducted from net. Recipients that only resemble those names (wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF, soyastP66xyYC8XADXZjdMM5BAVGD2YRvz8dwtLsqb8) stay unverified. Failed-transaction transfers are excluded (only meta.fee executed). Executed full-wallet unresolved is 0.296680516 SOL, equal to swap-adjacent sensitivity; executed full-wallet verified tips are 1.131401016 SOL; scoped net is 0.120294936 SOL. 0.120 \u2212 0.297 < 0, so CccS still cannot be a provisional_research_lead.",
   "failed_transactions_excluded": "Failed transactions contribute only meta.fee. Transfers in those transactions did not execute and are omitted from verified tips and unresolved debits.",
@@ -462,7 +462,7 @@
     }
   ],
   "gtfo_totals_sol": {
-    "network_plus_priority": "5.107533156",
+    "network_plus_priority": "5.107154156",
     "verified_tips": "3.303280298",
     "unresolved_debits_sensitivity": "0.0547"
   },

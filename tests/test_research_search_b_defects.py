@@ -307,7 +307,8 @@ def test_d10_a6ps_biggest_token_net_of_fees_vs_raw_sol_delta(tmp_path):
     assert residual != 0
     store, result = _replay(tmp_path, A6PS)
     assert result["report"].get("residual_sol_note") == (
-        "explained by identified program-account funding, excluded from swap consideration"
+        "explained by identified new-account rent on buys in the report window, "
+        "excluded from swap consideration"
     )
     worksheet = result["report"]["worksheet"]
     assert worksheet.get("total_gross_profit_sol") not in (None, "")

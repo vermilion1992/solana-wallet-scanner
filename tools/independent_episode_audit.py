@@ -631,6 +631,25 @@ def _fifo(trades):
     return episodes, unresolved, known_sales
 
 
+def episode_net_totals(episodes):
+    """Sum episode nets per currency. Refuse a mixed-unit total.
+
+    SOL and USDC are not additive. A mixed set returns net=None, unit='mixed',
+    and the per-currency map only.
+    """
+    if not episodes:
+        return None, None, None
+    by_unit = {}
+    for item in episodes:
+        unit = item.get("settlement_asset") or "SOL"
+        by_unit[unit] = by_unit.get(unit, Decimal("0")) + Decimal(item["net_profit_sol"])
+    canonical = {unit: _canonical(value) for unit, value in by_unit.items()}
+    if len(canonical) == 1:
+        unit = next(iter(canonical))
+        return canonical[unit], unit, canonical
+    return None, "mixed", canonical
+
+
 def audit_address(address, pages):
     records = _load_pages(address, pages)
     trades = []
@@ -658,12 +677,7 @@ def audit_address(address, pages):
             "clean_completed_episode": mint in episode_mints,
         })
     reconstructed_mints.sort(key=lambda row: row["mint"])
-    episode_unit = None
-    episode_net = None
-    if episodes:
-        units = {item.get("settlement_asset") or "SOL" for item in episodes}
-        episode_unit = next(iter(units)) if len(units) == 1 else "mixed"
-        episode_net = _canonical(sum(Decimal(item["net_profit_sol"]) for item in episodes))
+    episode_net, episode_unit, episode_nets_by_unit = episode_net_totals(episodes)
     return {
         "address": address,
         "records": len(records),
@@ -671,6 +685,7 @@ def audit_address(address, pages):
         "clean_episodes": len(episodes),
         "independently_audited_episode_net": episode_net,
         "independently_audited_episode_net_unit": episode_unit,
+        "independently_audited_episode_nets_by_unit": episode_nets_by_unit,
         "episode_win_rate": _canonical(Decimal(wins) / Decimal(len(episodes))) if episodes else None,
         "unresolved_basis_sales": unresolved,
         "known_cost_sales": known_sales,

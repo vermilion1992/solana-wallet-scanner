@@ -28,6 +28,12 @@ Named regressions:
   - `test_compare_tolerance_is_two_lamports`
   - `test_venue_notes_are_computed_from_auditor_decode`
   - `test_history_ingest_has_no_wallet_specific_residual_constant`
+  - `test_jupiter_route_v2_usdc_version1_decodes_real_signatures`
+  - `test_outer_ata_still_requires_message_signer`
+  - `test_auditor_refuses_mixed_unit_episode_net_sum`
+  - `test_fee_audit_recomputes_cccs_current_figures_from_captures`
+  - `test_fee_audit_counts_only_wallet_paid_network_fees`
+  - `test_a6ps_residual_is_in_window_new_account_rent_on_buys`
   - `test_astziy6_is_unverified_outside_debit_not_a_tip`
   - `test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead`
   - `test_item11_label_tables_cannot_disagree`

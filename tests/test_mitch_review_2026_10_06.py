@@ -726,14 +726,22 @@ def test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed():
     by_address = {row["address"]: row for row in payload["wallets"]}
     bvzt = by_address["BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"]
     dq7n = by_address["DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"]
-    assert bvzt["app_completed_episodes"] == 0
+    assert bvzt["app_completed_episodes"] == 2
     assert bvzt["auditor_clean_episodes"] == 5
     assert bvzt["status"] == "not_independently_audited"
     assert bvzt["independently_audited"] is False
-    assert dq7n["app_completed_episodes"] == 0
+    assert dq7n["app_completed_episodes"] == 2
     assert dq7n["auditor_clean_episodes"] == 4
     assert dq7n["status"] == "not_independently_audited"
     assert "no_completed_episodes" not in {bvzt["status"], dq7n["status"]}
+    table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
+    for label in ("BVZt", "DQ7n"):
+        wallet = next(item for item in table["wallets"] if item["label"] == label)
+        assert wallet["qualification_level"] != "provisional_research_lead"
+        assert wallet["qualification_level"] != "stronger_research_shortlist"
+        assert wallet["coverage_status"] == "coverage_blocked"
+        assert wallet["independently_audited"] is False
+        assert wallet["completed"] == 2
 
 
 def test_58pw_independently_audited_sits_next_to_episode_net():
@@ -749,21 +757,143 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     assert wallet["independently_audited"] is True
     assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("5614.586672")
     assert wallet["worksheet_total_independently_audited"] is False
+    assert wallet["net_display"] != "51148.756609023 USDC"
+    assert "5614.586672" in str(wallet["net_display"])
+    assert "audited episode net" in str(wallet["net_display"])
+    assert "not independently audited" in str(wallet["net_display"])
 
 
 def test_venue_notes_are_computed_from_auditor_decode():
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     row = next(item for item in payload["wallets"] if item["address"] == W58)
     notes = row["venue_notes"]
-    assert notes["pump_sales"]["computed_from_auditor_decode"] is True
-    assert notes["CARD_sales"]["computed_from_auditor_decode"] is True
-    assert notes["BPxx_sales"]["clean_completed_episode"] is False
-    assert notes["BPxx_sales"]["reconstructed_as_trades"] is True
+    pump = "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
+    cards = "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp"
+    bpxx = "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy"
+    assert notes[f"{pump}_sales"]["computed_from_auditor_decode"] is True
+    assert notes[f"{cards}_sales"]["computed_from_auditor_decode"] is True
+    assert notes[f"{bpxx}_sales"]["clean_completed_episode"] is False
+    assert notes[f"{bpxx}_sales"]["reconstructed_as_trades"] is True
+    assert notes[f"{pump}_sales"]["mint"] == pump
     source = (ROOT / "tools/independent_episode_compare.py").read_text(encoding="utf-8")
     assert 'if address.startswith("58PW")' not in source
+    assert 'mint[:4]' not in source
 
 
 def test_history_ingest_has_no_wallet_specific_residual_constant():
     source = (ROOT / "scanner/mass_search/history_ingest.py").read_text(encoding="utf-8")
     assert "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot" not in source
     assert "0.001513840" not in source
+
+
+BVZT = "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"
+DQ7N = "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"
+JUPITER_V1_BVZT_59WF = "59WFoNAWa2qfEDaSoiZNyv8cRQrtXwgwkuQkT71SML2v9oWAfGuQ2vjdqhtjSRsmdejbDjFyZGmrPF45PXMUcC2U"
+JUPITER_V1_BVZT_3R5E = "3R5ejVQSpZ8uohbam48gqfXhJN7dYhKDbqCoZrMMqnVn6sjzWbH7JTCk3hEJeUYF3wnyxZBLnkxwRyXrXqYwVbEv"
+JUPITER_V1_DQ7N_GDWS = "gdWSJsaGoLc3nD2J5tCRMz4qbApqmFsTiwK2kpotjvrYrurHNkb2LznF55a1XCoEzMHbSFVeJWwfBcjHKBjLYUv"
+
+
+def test_jupiter_route_v2_usdc_version1_decodes_real_signatures():
+    from tools.independent_episode_audit import _unwrap
+
+    cases = (
+        (BVZT, JUPITER_V1_BVZT_59WF),
+        (BVZT, JUPITER_V1_BVZT_3R5E),
+        (DQ7N, JUPITER_V1_DQ7N_GDWS),
+    )
+    for address, signature in cases:
+        record = _record_by_signature(address, signature)
+        raw = _unwrap(record)
+        assert raw.get("version") == 1, signature
+        assert raw.get("meta", {}).get("err") is None, signature
+        decoded = decode_supported_swaps(canonical_decode_records([record]), address)
+        trades = [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
+        assert len(trades) == 1, (signature, [row.get("reason") for row in decoded["events"]])
+        trade = trades[0]
+        assert trade.get("venue") == JUPITER or trade.get("source") == JUPITER
+        assert trade.get("instruction") == "route_v2"
+        assert trade.get("settlement_asset") == "USDC"
+        assert trade.get("owner") == address
+        unsupported = [
+            row for row in decoded["events"]
+            if "Unparsed associated account administration" in str(row.get("reason") or row.get("detail") or "")
+        ]
+        assert unsupported == [], signature
+
+
+def test_outer_ata_still_requires_message_signer():
+    from tools.independent_episode_audit import _unwrap
+    from scanner.compiled_instructions import CompiledInstructionError, normalize_instruction, ASSOCIATED_ID
+
+    record = _record_by_signature(BVZT, JUPITER_V1_BVZT_59WF)
+    raw = _unwrap(record)
+    message = raw["transaction"]["message"]
+    keys = list(message["accountKeys"])
+    instruction = next(
+        item for item in message["instructions"]
+        if (item.get("programId") or (keys[item["programIdIndex"]] if isinstance(item.get("programIdIndex"), int) else None)) == ASSOCIATED_ID
+        or (isinstance(item.get("programIdIndex"), int) and keys[item["programIdIndex"]] == ASSOCIATED_ID)
+    )
+    try:
+        normalize_instruction(instruction, keys, inner=False, path="ix", signers=set())
+    except CompiledInstructionError as error:
+        assert error.code == "missing-required-signer"
+    else:
+        raise AssertionError("ATA without a message signer must still be rejected")
+
+
+def test_auditor_refuses_mixed_unit_episode_net_sum():
+    from tools.independent_episode_audit import episode_net_totals
+
+    mixed = episode_net_totals([
+        {"settlement_asset": "SOL", "net_profit_sol": "1.5"},
+        {"settlement_asset": "USDC", "net_profit_sol": "10"},
+    ])
+    assert mixed[0] is None
+    assert mixed[1] == "mixed"
+    assert Decimal(mixed[2]["SOL"]) == Decimal("1.5")
+    assert Decimal(mixed[2]["USDC"]) == Decimal("10")
+    assert Decimal("1.5") + Decimal("10") != Decimal(mixed[2]["SOL"])
+    same = episode_net_totals([
+        {"settlement_asset": "USDC", "net_profit_sol": "1"},
+        {"settlement_asset": "USDC", "net_profit_sol": "2.5"},
+    ])
+    assert Decimal(same[0]) == Decimal("3.5")
+    assert same[1] == "USDC"
+    empty = episode_net_totals([])
+    assert empty == (None, None, None)
+
+
+def test_fee_audit_recomputes_cccs_current_figures_from_captures():
+    source = (ROOT / "tools/fee_audit.py").read_text(encoding="utf-8")
+    assert 'existing.get("current_scoped_net_sol"' not in source
+    assert 'existing.get("current_swap_adjacent_sensitivity_sol"' not in source
+    assert "current_cccs_figures_from_captures" in source
+
+
+def test_fee_audit_counts_only_wallet_paid_network_fees():
+    from tools.fee_audit import audit_wallet
+
+    gtfo = audit_wallet(GTFO)
+    assert Decimal(gtfo["totals_sol"]["network_plus_priority"]) == Decimal("5.107154156")
+    assert all(
+        item.get("fee_payer") == GTFO
+        for item in gtfo["largest_charges"]
+        if item["economic_role"] == "network_plus_priority_fee"
+    )
+
+
+def test_a6ps_residual_is_in_window_new_account_rent_on_buys():
+    import tempfile
+    from scanner.mass_search.workflow import replay_captured_wallet
+    from scanner.storage import Store
+
+    tmp = Path(tempfile.mkdtemp(prefix="a6ps-residual-"))
+    store = Store(tmp / A6PS)
+    result = replay_captured_wallet(store, A6PS, force=True)
+    store.close()
+    report = result["report"]
+    assert Decimal(str(report["residual_sol"])) == Decimal("0.01203452")
+    assert "new-account rent on buys" in report["residual_sol_note"]
+    assert "program-account funding" not in report["residual_sol_note"]
+    assert report.get("residual_sol_scope") == "in_window_buys"

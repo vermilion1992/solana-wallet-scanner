@@ -11,6 +11,9 @@
       "independently_audited": true,
       "independently_audited_episode_net": "5614.586672",
       "independently_audited_episode_net_unit": "USDC",
+      "independently_audited_episode_nets_by_unit": {
+        "USDC": "5614.586672"
+      },
       "worksheet_total": "51148.756609023",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
@@ -187,7 +190,7 @@
         }
       ],
       "venue_notes": {
-        "A7bd_sales": {
+        "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS_sales": {
           "mint": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -198,7 +201,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "BPxx_sales": {
+        "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy_sales": {
           "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2 / shared_accounts_route_v2",
@@ -209,7 +212,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "CARD_sales": {
+        "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp_sales": {
           "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2 / shared_accounts_route_v2",
@@ -217,7 +220,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "DEW9_sales": {
+        "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP_sales": {
           "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -228,7 +231,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "Dz9m_sales": {
+        "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk_sales": {
           "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
           "program": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
           "venue": "RFQ_Fill",
@@ -239,7 +242,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "METv_sales": {
+        "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL_sales": {
           "mint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
           "program": [
             "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
@@ -256,7 +259,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "pump_sales": {
+        "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn_sales": {
           "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
           "program": [
             "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
@@ -285,6 +288,9 @@
       "independently_audited": true,
       "independently_audited_episode_net": "283.399579447",
       "independently_audited_episode_net_unit": "SOL",
+      "independently_audited_episode_nets_by_unit": {
+        "SOL": "283.399579447"
+      },
       "worksheet_total": "283.399579449",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -699,7 +705,7 @@
         }
       ],
       "venue_notes": {
-        "2RSs_sales": {
+        "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH_sales": {
           "mint": "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH",
           "program": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
           "venue": "Meteora DAMM v2 swap",
@@ -707,7 +713,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "3PG5_sales": {
+        "3PG51QJF37MigcPqYEQWXyWJXeju5Mt9yQesgTbtpump_sales": {
           "mint": "3PG51QJF37MigcPqYEQWXyWJXeju5Mt9yQesgTbtpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -718,7 +724,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "3VkU_sales": {
+        "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump_sales": {
           "mint": "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -726,7 +732,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "6pnE_sales": {
+        "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump_sales": {
           "mint": "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump buy_exact_quote_in_v2 / sell_v2",
@@ -734,7 +740,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "75gG_sales": {
+        "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump_sales": {
           "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -742,7 +748,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "88oN_sales": {
+        "88oNFQZTqo7yBxu4HT22uiuaEErbgJxA8iKpT7SmF5Ek_sales": {
           "mint": "88oNFQZTqo7yBxu4HT22uiuaEErbgJxA8iKpT7SmF5Ek",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -753,7 +759,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "8EZq_sales": {
+        "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump_sales": {
           "mint": "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -761,7 +767,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "AdSF_sales": {
+        "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB_sales": {
           "mint": "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -769,7 +775,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "BDbS_sales": {
+        "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M_sales": {
           "mint": "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -777,7 +783,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "DYo3_sales": {
+        "DYo3mP726hCA1NjfTUFvhkUdum6GEP6EKysQX11Lpump_sales": {
           "mint": "DYo3mP726hCA1NjfTUFvhkUdum6GEP6EKysQX11Lpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell_v2",
@@ -788,7 +794,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "EkFR_sales": {
+        "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump_sales": {
           "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -811,6 +817,7 @@
       "independently_audited": false,
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "independently_audited_episode_nets_by_unit": null,
       "worksheet_total": null,
       "worksheet_total_unit": null,
       "worksheet_total_independently_audited": false,
@@ -833,6 +840,9 @@
       "independently_audited": true,
       "independently_audited_episode_net": "174.657978611",
       "independently_audited_episode_net_unit": "SOL",
+      "independently_audited_episode_nets_by_unit": {
+        "SOL": "174.657978611"
+      },
       "worksheet_total": "174.65797861",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -1268,7 +1278,7 @@
         }
       ],
       "venue_notes": {
-        "2BFG_sales": {
+        "2BFGrFF78rDebruUG9PBjSszi67oV7ZzVMGEjAfWpump_sales": {
           "mint": "2BFGrFF78rDebruUG9PBjSszi67oV7ZzVMGEjAfWpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1279,7 +1289,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "2w4q_sales": {
+        "2w4qUD546C9a1ECUMDEXn66eiV6332AF4ZtvqCs2pump_sales": {
           "mint": "2w4qUD546C9a1ECUMDEXn66eiV6332AF4ZtvqCs2pump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1290,7 +1300,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "3EMe_sales": {
+        "3EMec5v2dTVrHDGoLEzoyzFrBWx6eq4mqYAqoohTpump_sales": {
           "mint": "3EMec5v2dTVrHDGoLEzoyzFrBWx6eq4mqYAqoohTpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1301,7 +1311,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "55z3_sales": {
+        "55z3QZQnbqWe6ksCyYipHm6RGWupzoEBGNHWXgtNpump_sales": {
           "mint": "55z3QZQnbqWe6ksCyYipHm6RGWupzoEBGNHWXgtNpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1312,7 +1322,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "57yW_sales": {
+        "57yWMyhKfE1aQBH8hgToJav38BKssMTxSbZF3ETNpump_sales": {
           "mint": "57yWMyhKfE1aQBH8hgToJav38BKssMTxSbZF3ETNpump",
           "program": [
             "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -1326,7 +1336,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "5A8R_sales": {
+        "5A8RauxZ9Yri23ty7Ufmp3EvUAZoJ16cZ2217J2kpump_sales": {
           "mint": "5A8RauxZ9Yri23ty7Ufmp3EvUAZoJ16cZ2217J2kpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1337,7 +1347,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "5TNn_sales": {
+        "5TNnGwUgkTe5B1C1bTF7zujKWtPstiz3rREVVmkgpump_sales": {
           "mint": "5TNnGwUgkTe5B1C1bTF7zujKWtPstiz3rREVVmkgpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1348,7 +1358,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "76di_sales": {
+        "76diVD3xvxDvwm3XyHgyFUf4QZ7MFrQPoKiMogYQpump_sales": {
           "mint": "76diVD3xvxDvwm3XyHgyFUf4QZ7MFrQPoKiMogYQpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1359,7 +1369,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "78Nq_sales": {
+        "78NqvnmmQ8ZYELuVrT5M8YrsPm8KheLdGbw6oUvFpump_sales": {
           "mint": "78NqvnmmQ8ZYELuVrT5M8YrsPm8KheLdGbw6oUvFpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1370,7 +1380,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "7i2k_sales": {
+        "7i2ksAsM8XHb39QuS46gGwPjQVpbzPj9JGKjo5xzpump_sales": {
           "mint": "7i2ksAsM8XHb39QuS46gGwPjQVpbzPj9JGKjo5xzpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1381,7 +1391,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "87Tb_sales": {
+        "87TbQkkv6fZ58U4acLHYgKso6spfj699AGZrzoPppump_sales": {
           "mint": "87TbQkkv6fZ58U4acLHYgKso6spfj699AGZrzoPppump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1392,7 +1402,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "8LNP_sales": {
+        "8LNPFjcui375VSZpNqeziti2w4ykiErkrnDgLtwvpump_sales": {
           "mint": "8LNPFjcui375VSZpNqeziti2w4ykiErkrnDgLtwvpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1403,7 +1413,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "8eba_sales": {
+        "8ebaPFTifhpkkf8EmmCBBPGDfUdzrGMyPWXh7mvupump_sales": {
           "mint": "8ebaPFTifhpkkf8EmmCBBPGDfUdzrGMyPWXh7mvupump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1414,7 +1424,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "9miy_sales": {
+        "9miyM7XKKdtqn4GRwvJGpQry1zVxaLkWwAnMzZYBpump_sales": {
           "mint": "9miyM7XKKdtqn4GRwvJGpQry1zVxaLkWwAnMzZYBpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1425,7 +1435,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "AJAa_sales": {
+        "AJAaGdG3rV1Awsd9asSPj6PYECE2avZPN3M54wp7pump_sales": {
           "mint": "AJAaGdG3rV1Awsd9asSPj6PYECE2avZPN3M54wp7pump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1436,7 +1446,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "ALd1_sales": {
+        "ALd1KJ72HyfcHJcH2fSkWGEKc2xDHuhvWtyTR1Etpump_sales": {
           "mint": "ALd1KJ72HyfcHJcH2fSkWGEKc2xDHuhvWtyTR1Etpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1447,7 +1457,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "BM7e_sales": {
+        "BM7esH4rAfkTyDctWiVRVSpjvxrABzLBDwcekr9Ypump_sales": {
           "mint": "BM7esH4rAfkTyDctWiVRVSpjvxrABzLBDwcekr9Ypump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1458,7 +1468,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "BwNv_sales": {
+        "BwNvw53Uvmmrmsr3owHz3Qw3b8LrBJ4MWWCCTNz1pump_sales": {
           "mint": "BwNvw53Uvmmrmsr3owHz3Qw3b8LrBJ4MWWCCTNz1pump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1469,7 +1479,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "DJGs_sales": {
+        "DJGsptd7CEMEKrHdmVPastxKcPNSqGJT5K7HWcn5pump_sales": {
           "mint": "DJGsptd7CEMEKrHdmVPastxKcPNSqGJT5K7HWcn5pump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1480,7 +1490,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "DhQF_sales": {
+        "DhQFJXJEBKqRB56AcvCMYKjRQP6p3gvGYP5dpHuPpump_sales": {
           "mint": "DhQFJXJEBKqRB56AcvCMYKjRQP6p3gvGYP5dpHuPpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1491,7 +1501,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "EoHT_sales": {
+        "EoHTB4ZG8kLDy7MLfWGZXkhYzHhjRszXHEXdBtC1pump_sales": {
           "mint": "EoHTB4ZG8kLDy7MLfWGZXkhYzHhjRszXHEXdBtC1pump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1502,7 +1512,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "Epjc_sales": {
+        "EpjcvRPPkTEsokgNVKiB9MvFamgvBuFAhXecyVcopump_sales": {
           "mint": "EpjcvRPPkTEsokgNVKiB9MvFamgvBuFAhXecyVcopump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1513,7 +1523,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "FfTs_sales": {
+        "FfTsHtKp57vF38Que4A8q4QhLjGcL2fKc9VhggvYpump_sales": {
           "mint": "FfTsHtKp57vF38Que4A8q4QhLjGcL2fKc9VhggvYpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1524,7 +1534,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "Fvyz_sales": {
+        "FvyzVzV7nz767apCoh7JwV4MxPkVNG54LH8EJ69kpump_sales": {
           "mint": "FvyzVzV7nz767apCoh7JwV4MxPkVNG54LH8EJ69kpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1535,7 +1545,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "GVHu_sales": {
+        "GVHuvtuh8Dhv5rVwmXGjVMCqUNy9E4yH1QgEqwaapump_sales": {
           "mint": "GVHuvtuh8Dhv5rVwmXGjVMCqUNy9E4yH1QgEqwaapump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1546,7 +1556,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "GaGo_sales": {
+        "GaGoBQFrgCGo3VjkSVNfK4up5Pz3VGLECvvfxx4Wpump_sales": {
           "mint": "GaGoBQFrgCGo3VjkSVNfK4up5Pz3VGLECvvfxx4Wpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1557,7 +1567,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "HiSg_sales": {
+        "HiSgD1Ami2b6btYxpB2JGV5QUFAuKiZJVhboswPUpump_sales": {
           "mint": "HiSgD1Ami2b6btYxpB2JGV5QUFAuKiZJVhboswPUpump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1568,7 +1578,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "J2Eu_sales": {
+        "J2EuZcNMmxCw3jiug5h2JCkwSFxAravdLZyMXUUepump_sales": {
           "mint": "J2EuZcNMmxCw3jiug5h2JCkwSFxAravdLZyMXUUepump",
           "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "venue": "Pump sell",
@@ -1594,6 +1604,7 @@
       "independently_audited": false,
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "independently_audited_episode_nets_by_unit": null,
       "worksheet_total": null,
       "worksheet_total_unit": null,
       "worksheet_total_independently_audited": false,
@@ -1610,17 +1621,59 @@
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
       "records": 200,
       "independently_reconstructed_trades": 32,
-      "app_completed_episodes": 0,
+      "app_completed_episodes": 2,
       "auditor_clean_episodes": 5,
       "status": "not_independently_audited",
       "independently_audited": false,
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
-      "worksheet_total": "-2413.398216681",
+      "independently_audited_episode_nets_by_unit": {
+        "USDC": "-886.097516888"
+      },
+      "worksheet_total": "-445.94638304",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
-      "episodes": [],
+      "episodes": [
+        {
+          "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "close_signature": "3R5ejVQSpZ8uohbam48gqfXhJN7dYhKDbqCoZrMMqnVn6sjzWbH7JTCk3hEJeUYF3wnyxZBLnkxwRyXrXqYwVbEv",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "24284.086575000",
+            "proceeds": "27492.194746000",
+            "verified_costs": "0",
+            "net": "3208.108171000"
+          },
+          "auditor": {
+            "basis": "24284.086575",
+            "proceeds": "27492.194746",
+            "verified_costs": "0",
+            "net": "3208.108171"
+          },
+          "match": true
+        },
+        {
+          "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+          "close_signature": "3qgS53GLmKQ72AEMkieEk1bRidTbpL2yusdjHt14kGz8woPUZmRmj5hErPLdTfWZv8myQG2rF9rojYRSDLqymxPh",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "26222.888961000",
+            "proceeds": "23955.273649000",
+            "verified_costs": "0",
+            "net": "-2267.615312000"
+          },
+          "auditor": {
+            "basis": "26222.888961",
+            "proceeds": "23955.273649",
+            "verified_costs": "0",
+            "net": "-2267.615312"
+          },
+          "match": true
+        }
+      ],
       "auditor_only_episodes": [
         {
           "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
@@ -1769,7 +1822,7 @@
         }
       ],
       "venue_notes": {
-        "7Ver_sales": {
+        "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump_sales": {
           "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2 / shared_accounts_route_v2",
@@ -1777,7 +1830,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "Ai66_sales": {
+        "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump_sales": {
           "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -1785,7 +1838,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "CTPo_sales": {
+        "CTPoyCwkjMvoJwU4xvZZqoD8tiYk6yDchySiN5gGpump_sales": {
           "mint": "CTPoyCwkjMvoJwU4xvZZqoD8tiYk6yDchySiN5gGpump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -1796,7 +1849,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "DEW9_sales": {
+        "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP_sales": {
           "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2 / shared_accounts_route_v2",
@@ -1807,7 +1860,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "Dz9m_sales": {
+        "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk_sales": {
           "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
           "program": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
           "venue": "RFQ_Fill",
@@ -1815,7 +1868,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "Xsc9_sales": {
+        "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh_sales": {
           "mint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
           "program": [
             "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
@@ -1847,6 +1900,7 @@
       "independently_audited": false,
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "independently_audited_episode_nets_by_unit": null,
       "worksheet_total": null,
       "worksheet_total_unit": null,
       "worksheet_total_independently_audited": false,
@@ -1884,7 +1938,7 @@
         }
       ],
       "venue_notes": {
-        "6GmA_sales": {
+        "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx_sales": {
           "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter shared_accounts_route_v2",
@@ -1895,7 +1949,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "pump_sales": {
+        "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn_sales": {
           "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter shared_accounts_route_v2",
@@ -1921,6 +1975,9 @@
       "independently_audited": true,
       "independently_audited_episode_net": "0.120294936",
       "independently_audited_episode_net_unit": "SOL",
+      "independently_audited_episode_nets_by_unit": {
+        "SOL": "0.120294936"
+      },
       "worksheet_total": "0.120294936",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -2322,7 +2379,7 @@
         }
       ],
       "venue_notes": {
-        "3Dgw_sales": {
+        "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump_sales": {
           "mint": "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2333,7 +2390,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "5wW9_sales": {
+        "5wW9mhbwq1HTFh341iimpmrqBB4mfxdXiYhdYBL7hUnp_sales": {
           "mint": "5wW9mhbwq1HTFh341iimpmrqBB4mfxdXiYhdYBL7hUnp",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2344,7 +2401,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "6hTL_sales": {
+        "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump_sales": {
           "mint": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2355,7 +2412,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "7bC8_sales": {
+        "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq_sales": {
           "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2363,7 +2420,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "8nPo_sales": {
+        "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC_sales": {
           "mint": "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2374,7 +2431,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "8nna_sales": {
+        "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF_sales": {
           "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2382,7 +2439,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "9Zmk_sales": {
+        "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv_sales": {
           "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2390,7 +2447,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "9dSM_sales": {
+        "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd_sales": {
           "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2398,7 +2455,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "BXoH_sales": {
+        "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump_sales": {
           "mint": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2406,7 +2463,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "CBLx_sales": {
+        "CBLx6CRcCTtbmgTdxpqnF2dP1MpWbMUjngtNbFTApump_sales": {
           "mint": "CBLx6CRcCTtbmgTdxpqnF2dP1MpWbMUjngtNbFTApump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2417,7 +2474,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "DAem_sales": {
+        "DAemPFNc3RtibBDKkUA4eL2Ns11q9VRdbpptmqm8DGqN_sales": {
           "mint": "DAemPFNc3RtibBDKkUA4eL2Ns11q9VRdbpptmqm8DGqN",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2428,7 +2485,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "F5Wv_sales": {
+        "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs_sales": {
           "mint": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2436,7 +2493,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "GAwh_sales": {
+        "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H_sales": {
           "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2447,7 +2504,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "gL9Q_sales": {
+        "gL9Q3xjXM1BdopmHn1R7Kb3Eim5NAQ1eWGNaTj3pump_sales": {
           "mint": "gL9Q3xjXM1BdopmHn1R7Kb3Eim5NAQ1eWGNaTj3pump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / sell",
@@ -2467,17 +2524,59 @@
       "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
       "records": 200,
       "independently_reconstructed_trades": 17,
-      "app_completed_episodes": 0,
+      "app_completed_episodes": 2,
       "auditor_clean_episodes": 4,
       "status": "not_independently_audited",
       "independently_audited": false,
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
-      "worksheet_total": null,
+      "independently_audited_episode_nets_by_unit": {
+        "USDC": "54.96316"
+      },
+      "worksheet_total": "-149.107753",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
-      "episodes": [],
+      "episodes": [
+        {
+          "mint": "2BcRevrDhP4MgCw2KyqByFZ4S7mpsi1vY8ZypXwepump",
+          "close_signature": "5SiSZP7QYaERWHUFnW8AdK9PqWRs4CP8pvdjg7fnmxDK8GLLrHAof9mzV5SdiGGgaodaoiUvMPov5heBsj77Zy3F",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "200",
+            "proceeds": "223.848511",
+            "verified_costs": "0",
+            "net": "23.848511"
+          },
+          "auditor": {
+            "basis": "200",
+            "proceeds": "223.848511",
+            "verified_costs": "0",
+            "net": "23.848511"
+          },
+          "match": true
+        },
+        {
+          "mint": "FiJ4gnd4dhqNeBKfS4E8wnERMEpjMPdUfJhu8foipump",
+          "close_signature": "fFaTSLaSscC2XAcr37CPn5gJtMYjT2FExkdpbKt2DD3oTTU62onbvtLoUMewmNM8G5dYRsR4hwy3rzD4Zn9oMJH",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "400",
+            "proceeds": "227.043736",
+            "verified_costs": "0",
+            "net": "-172.956264"
+          },
+          "auditor": {
+            "basis": "400",
+            "proceeds": "227.043736",
+            "verified_costs": "0",
+            "net": "-172.956264"
+          },
+          "match": true
+        }
+      ],
       "auditor_only_episodes": [
         {
           "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
@@ -2655,7 +2754,7 @@
         }
       ],
       "venue_notes": {
-        "26Zi_sales": {
+        "26ZixeXtGBQe3DBrN4448oZaY5rnhwPrZNhAjZPopump_sales": {
           "mint": "26ZixeXtGBQe3DBrN4448oZaY5rnhwPrZNhAjZPopump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2666,7 +2765,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "2BcR_sales": {
+        "2BcRevrDhP4MgCw2KyqByFZ4S7mpsi1vY8ZypXwepump_sales": {
           "mint": "2BcRevrDhP4MgCw2KyqByFZ4S7mpsi1vY8ZypXwepump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2674,7 +2773,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "4WPn_sales": {
+        "4WPn1oGVE7rza6PjFJwYpEXZn6qtjwxEKkCV9EtAxhUU_sales": {
           "mint": "4WPn1oGVE7rza6PjFJwYpEXZn6qtjwxEKkCV9EtAxhUU",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2682,7 +2781,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "8nPo_sales": {
+        "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC_sales": {
           "mint": "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2693,7 +2792,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "98kf_sales": {
+        "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump_sales": {
           "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2704,7 +2803,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "Ai66_sales": {
+        "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump_sales": {
           "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2715,7 +2814,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "DEW9_sales": {
+        "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP_sales": {
           "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2 / shared_accounts_route_v2",
@@ -2723,7 +2822,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "FiJ4_sales": {
+        "FiJ4gnd4dhqNeBKfS4E8wnERMEpjMPdUfJhu8foipump_sales": {
           "mint": "FiJ4gnd4dhqNeBKfS4E8wnERMEpjMPdUfJhu8foipump",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2",
@@ -2731,7 +2830,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "HcRL_sales": {
+        "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR_sales": {
           "mint": "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR",
           "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "venue": "Jupiter route_v2 / shared_accounts_route_v2",
@@ -2757,6 +2856,9 @@
       "independently_audited": true,
       "independently_audited_episode_net": "2.03064584",
       "independently_audited_episode_net_unit": "SOL",
+      "independently_audited_episode_nets_by_unit": {
+        "SOL": "2.03064584"
+      },
       "worksheet_total": "2.030645839",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -3577,7 +3679,7 @@
         }
       ],
       "venue_notes": {
-        "2AF7_sales": {
+        "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump_sales": {
           "mint": "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3585,7 +3687,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "2c1K_sales": {
+        "2c1KjiyQow66QfsnCtoyuqfo3AuxgpBMEoAq5oiiXqdu_sales": {
           "mint": "2c1KjiyQow66QfsnCtoyuqfo3AuxgpBMEoAq5oiiXqdu",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3596,7 +3698,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "5Vnb_sales": {
+        "5VnbrKp28Qs9CAH6PyZdxBNvLxZcbeX3YBsozgWnpump_sales": {
           "mint": "5VnbrKp28Qs9CAH6PyZdxBNvLxZcbeX3YBsozgWnpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3607,7 +3709,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "6d82_sales": {
+        "6d82cCtC1LktWWgjUz5h3vMenFj5EDHLMBFvcpmvrRi_sales": {
           "mint": "6d82cCtC1LktWWgjUz5h3vMenFj5EDHLMBFvcpmvrRi",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3615,7 +3717,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "6hTL_sales": {
+        "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump_sales": {
           "mint": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3626,7 +3728,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "7GUn_sales": {
+        "7GUnr7krtQhJwd6ASY2VUprd9t4c64zcgCsjdmZepump_sales": {
           "mint": "7GUnr7krtQhJwd6ASY2VUprd9t4c64zcgCsjdmZepump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3637,7 +3739,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "7bC8_sales": {
+        "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq_sales": {
           "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3645,7 +3747,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "89Nk_sales": {
+        "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd_sales": {
           "mint": "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3653,7 +3755,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "9Zmk_sales": {
+        "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv_sales": {
           "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3661,7 +3763,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "9dSM_sales": {
+        "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd_sales": {
           "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3672,7 +3774,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "9w2d_sales": {
+        "9w2dXDKxQbHcAG8XdHaNKgLaBof4hhaiiUG7v2QBpump_sales": {
           "mint": "9w2dXDKxQbHcAG8XdHaNKgLaBof4hhaiiUG7v2QBpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3683,7 +3785,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "BHS8_sales": {
+        "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump_sales": {
           "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3691,7 +3793,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "BJUi_sales": {
+        "BJUiNooYiZ4ojatPVeJAUXGEd3dcGzQ1ApWDoVTzpump_sales": {
           "mint": "BJUiNooYiZ4ojatPVeJAUXGEd3dcGzQ1ApWDoVTzpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3702,7 +3804,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "BbJJ_sales": {
+        "BbJJUTuGV2B7tJ99YeryiCBFLG39Hoc4RTzEwchtpump_sales": {
           "mint": "BbJJUTuGV2B7tJ99YeryiCBFLG39Hoc4RTzEwchtpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3713,7 +3815,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "CvUX_sales": {
+        "CvUX4G2tzq7J3ECmNvWZLayZYV6KpgQp6SJ5K8Uvsu5g_sales": {
           "mint": "CvUX4G2tzq7J3ECmNvWZLayZYV6KpgQp6SJ5K8Uvsu5g",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3721,7 +3823,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "EkFR_sales": {
+        "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump_sales": {
           "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3729,7 +3831,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "GQz5_sales": {
+        "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump_sales": {
           "mint": "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3737,7 +3839,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "GY9m_sales": {
+        "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump_sales": {
           "mint": "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3745,7 +3847,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "H7Tu_sales": {
+        "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas_sales": {
           "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3753,7 +3855,7 @@
           "reconstructed": true,
           "computed_from_auditor_decode": true
         },
-        "HHf2_sales": {
+        "HHf2VfXSPUVqQth6tXypfdUX2vawCiVKfkbAX4CJpump_sales": {
           "mint": "HHf2VfXSPUVqQth6tXypfdUX2vawCiVKfkbAX4CJpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy",
@@ -3764,7 +3866,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "JCsK_sales": {
+        "JCsKWhELRJ8MhEZjUDdCL49mntw8fx27bKAgCMgSGhcQ_sales": {
           "mint": "JCsKWhELRJ8MhEZjUDdCL49mntw8fx27bKAgCMgSGhcQ",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",
@@ -3775,7 +3877,7 @@
           "clean_completed_episode": false,
           "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
         },
-        "V9zC_sales": {
+        "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump_sales": {
           "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump",
           "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "venue": "PumpSwap buy / buy_exact_quote_in",

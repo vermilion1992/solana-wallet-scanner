@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 from copy import deepcopy
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -769,8 +770,20 @@ def replay_cached_history_to_report(
         })
         report["visible_report"] = False
     residual = Decimal("0")
+    start_unix = datetime.fromisoformat(window_start.replace("Z", "+00:00")).timestamp()
+    end_unix = (
+        datetime.fromisoformat(window_end.replace("Z", "+00:00")).timestamp()
+        if window_end else None
+    )
     for event in decoded.get("events") or []:
-        if event.get("kind") not in ("buy", "sell"):
+        if event.get("kind") != "buy":
+            continue
+        timestamp = event.get("timestamp")
+        if not isinstance(timestamp, (int, float)) or isinstance(timestamp, bool):
+            continue
+        if timestamp < start_unix:
+            continue
+        if end_unix is not None and timestamp >= end_unix:
             continue
         funding = event.get("excluded_funding_sol")
         if funding not in (None, ""):
@@ -783,8 +796,10 @@ def replay_cached_history_to_report(
         quantized = residual.quantize(Decimal("0.000000001"))
         report["residual_sol"] = format(quantized, "f")
         report["residual_sol_note"] = (
-            "explained by identified program-account funding, excluded from swap consideration"
+            "explained by identified new-account rent on buys in the report window, "
+            "excluded from swap consideration"
         )
+        report["residual_sol_scope"] = "in_window_buys"
     sensitivity = Decimal("0")
     verified_tips = Decimal("0")
     for event in decoded.get("events") or []:

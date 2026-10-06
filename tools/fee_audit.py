@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import gzip
 import json
+import tempfile
 from collections import Counter
 from decimal import Decimal
 from pathlib import Path
@@ -44,7 +45,7 @@ def audit_wallet(address):
         fee = meta.get("fee") if isinstance(meta.get("fee"), int) else 0
         payer = keys[0] if keys else None
         failed = meta.get("err") is not None
-        if fee:
+        if fee and payer == address:
             charges.append({
                 "signature": signature,
                 "recipient": "network_fee_burn",
@@ -154,6 +155,29 @@ def _debit_row(item):
     }
 
 
+def current_cccs_figures_from_captures():
+    """Replay CccS captures. Do not copy scoped net or sensitivity from a prior file."""
+    from scanner.mass_search.workflow import replay_captured_wallet
+    from scanner.storage import Store
+
+    address = "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU"
+    tmp = Path(tempfile.mkdtemp(prefix="cccs-current-"))
+    store = Store(tmp / address)
+    try:
+        result = replay_captured_wallet(store, address, force=True)
+        report = result["report"]
+        profile = report.get("research_profile") or {}
+        scoped = profile.get("scoped_pnl")
+        if scoped in (None, ""):
+            raise ValueError("CccS scoped net missing from capture replay")
+        sensitivity = report.get("sensitivity_unverified_debits_sol")
+        if sensitivity in (None, ""):
+            raise ValueError("CccS swap-adjacent sensitivity missing from capture replay")
+        return str(scoped), str(sensitivity)
+    finally:
+        store.close()
+
+
 def write_cccs_debit_audit(payload):
     """Regenerate CccS debit rows and full-wallet totals from executed charges only."""
     cccs = payload["wallets"]["CccS"]
@@ -162,13 +186,14 @@ def write_cccs_debit_audit(payload):
     if CCCS_OUT.is_file():
         existing = json.loads(CCCS_OUT.read_text(encoding="utf-8"))
     bridge = existing.get("run39_to_current_bridge")
+    scoped_net, swap_adjacent = current_cccs_figures_from_captures()
     body = {
         "kind": "cccs-debit-audit-v1",
         "earlier_fees_plus_tips_sol": existing.get("earlier_fees_plus_tips_sol", "0.134"),
         "aa2ef2d_unverified_outside_debits_sol": existing.get("aa2ef2d_unverified_outside_debits_sol", "1.428081532"),
         "aa2ef2d_scoped_net_sol": existing.get("aa2ef2d_scoped_net_sol", "0.242261753"),
-        "current_scoped_net_sol": existing.get("current_scoped_net_sol", "0.120294936"),
-        "current_swap_adjacent_sensitivity_sol": existing.get("current_swap_adjacent_sensitivity_sol", "0.296680516"),
+        "current_scoped_net_sol": scoped_net,
+        "current_swap_adjacent_sensitivity_sol": swap_adjacent,
         "current_full_wallet_unresolved_sol": cccs["totals_sol"]["unresolved_debits_sensitivity"],
         "current_full_wallet_verified_tips_sol": cccs["totals_sol"]["verified_tips"],
         "current_full_wallet_network_plus_priority_sol": cccs["totals_sol"]["network_plus_priority"],

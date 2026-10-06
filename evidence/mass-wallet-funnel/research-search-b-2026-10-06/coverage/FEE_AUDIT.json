@@ -443,12 +443,12 @@
         }
       ],
       "totals_lamports": {
-        "network_plus_priority": 5107533156,
+        "network_plus_priority": 5107154156,
         "verified_tips": 3303280298,
         "unresolved_debits_sensitivity": 54700000
       },
       "totals_sol": {
-        "network_plus_priority": "5.107533156",
+        "network_plus_priority": "5.107154156",
         "verified_tips": "3.303280298",
         "unresolved_debits_sensitivity": "0.0547"
       },
@@ -1210,12 +1210,12 @@
         }
       ],
       "totals_lamports": {
-        "network_plus_priority": 853338766,
+        "network_plus_priority": 831368801,
         "verified_tips": 1131401016,
         "unresolved_debits_sensitivity": 296680516
       },
       "totals_sol": {
-        "network_plus_priority": "0.853338766",
+        "network_plus_priority": "0.831368801",
         "verified_tips": "1.131401016",
         "unresolved_debits_sensitivity": "0.296680516"
       },

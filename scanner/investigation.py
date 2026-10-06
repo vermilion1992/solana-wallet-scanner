@@ -153,6 +153,25 @@ def _keys(message, meta):
     return result
 
 
+def _message_signers(message, keys):
+    """Message signers from parsed flags or header.numRequiredSignatures.
+
+    Does not invent signers. Outer ATA still requires the funding source to be
+    one of these keys; that check stays in normalize_instruction.
+    """
+    entries = message.get('accountKeys')
+    if isinstance(entries, list) and entries and all(isinstance(item, dict) for item in entries):
+        flagged = [item.get('pubkey') for item in entries if item.get('signer') is True]
+        if flagged and all(isinstance(key, str) and key for key in flagged):
+            return set(flagged)
+        return set()
+    header = message.get('header') if isinstance(message.get('header'), dict) else {}
+    required = header.get('numRequiredSignatures')
+    if type(required) is not int or isinstance(required, bool) or not 1 <= required <= len(keys):
+        return set()
+    return set(keys[:required])
+
+
 def _program(instruction, keys):
     program = instruction.get('programId')
     if isinstance(program, str):
@@ -655,6 +674,7 @@ def decode_supported_swaps(transactions, address):
             if not isinstance(meta, dict) or not isinstance(message, dict) or 'err' not in meta:
                 raise ValueError('Missing transaction metadata or success state')
             keys = _keys(message, meta)
+            signers = _message_signers(message, keys)
             fee = _integer(meta.get('fee'))
             paid = keys[0] == address
             fee_sol = canonical(Decimal(fee) / LAMPORTS)
@@ -755,6 +775,7 @@ def decode_supported_swaps(transactions, address):
                         from .compiled_instructions import CompiledInstructionError, normalize_instruction
                         viewed = normalize_instruction(
                             instruction, keys, inner=nested, path=path,
+                            signers=signers,
                         )
                         parsed = viewed['instruction'].get('parsed')
                         kind = parsed.get('type') if isinstance(parsed, dict) else None
