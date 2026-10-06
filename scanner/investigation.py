@@ -57,6 +57,9 @@ OKX_DEX_ROUTER = 'proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u'
 METEORA_DAMM_V2 = 'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'
 DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
 RFQ_FILL = '61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH'
+TOKEN_2022_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+# Exact observed RFQ Fill top-level fee recipient. Not a general fee sink.
+RFQ_FEE_FILL_ACCOUNT = '9PnYDCTJ5B4mJJMPvjCZ97L6ZBcti48CYgxv5QU1mV5G'
 OKX_SWAPTOC = bytes.fromhex('bbc9d433109bec3c')
 OKX_SWAPTOB = bytes.fromhex('aa2955b184501f35')
 RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
@@ -66,7 +69,15 @@ REVIEWED_OUTER_VENUES = (
     METEORA_DAMM_V2, RFQ_FILL,
 )
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v10-reviewed-venues-coverage-v1'
+DECODER_VERSION = 'spot-v11-token2022-fee-rfq-fee-fill-v1'
+SWAPTOB_UNSUPPORTED_REASON = (
+    'proVF4p SwapTob stays unsupported: discriminator aa2955b184501f35 and a '
+    '61-byte payload are observed, but the official account layout and '
+    'user/authority indices are not established from bytes. Logs name '
+    'SwapTob and nested DEX hops; logs and the instruction name are not '
+    'authority, and 95+ remaining accounts are not a reviewed layout. '
+    'Balance changes alone do not prove a swap.'
+)
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -151,6 +162,29 @@ def _keys(message, meta):
         if any(not isinstance(key, str) or not key for key in result):
             raise ValueError('Malformed loaded account address')
     return result
+
+
+def token_2022_ceiling_fee(amount, bps):
+    """Token-2022 transfer fee: ceil(amount * bps / 10_000), no max-fee cap."""
+    if bps <= 0:
+        return 0
+    return (int(amount) * int(bps) + 9999) // 10000
+
+
+def infer_token_2022_fee_bps(gross_amounts, withheld):
+    """Recover the execution-time transfer-fee bps from observed withheld.
+
+    The mint account bytes are not in GTA captures. The fee that actually
+    withheld is the config that was valid at execution; it must match the
+    published Token-2022 ceiling formula for an integer bps in 0..10000.
+    """
+    withheld = int(withheld)
+    if withheld < 0 or not gross_amounts:
+        return None
+    for bps in range(0, 10001):
+        if sum(token_2022_ceiling_fee(amount, bps) for amount in gross_amounts) == withheld:
+            return bps
+    return None
 
 
 def _header_counts(header, static_len):
@@ -766,7 +800,7 @@ def decode_supported_swaps(transactions, address):
                 raise ValueError('Incomplete native balance evidence')
             pre_lamports = [_integer(value) for value in pre_lamports]
             post_lamports = [_integer(value) for value in post_lamports]
-            pre, post, identities = {}, {}, {}
+            pre, post, identities, token_programs = {}, {}, {}, {}
             for field, target in (('preTokenBalances', pre), ('postTokenBalances', post)):
                 balances = meta.get(field)
                 if not isinstance(balances, list):
@@ -787,6 +821,8 @@ def decode_supported_swaps(transactions, address):
                     if account in target:
                         raise ValueError('Duplicate token account balance')
                     identities[account] = identity
+                    if balance.get('programId'):
+                        token_programs[account] = balance.get('programId')
                     target[account] = raw_quantity(token['amount'])
             owned = {account: value for account, value in identities.items() if value['owner'] == address}
             inner = defaultdict(list)
@@ -813,6 +849,9 @@ def decode_supported_swaps(transactions, address):
             outside_native = []
             outside_native_delta = 0
             nonce_administration = []
+            rfq_platform_fees = []
+            token_2022_inbound = defaultdict(list)
+            token_2022_fees = []
             for outer, path, instruction, nested in flat:
                 if 'parsed' in instruction and any(key in instruction for key in ('accounts', 'data')):
                     raise ValueError('Parsed and opaque instruction representations conflict')
@@ -899,19 +938,38 @@ def decode_supported_swaps(transactions, address):
                         elif account in owned or account in allowed_wrapped:
                             raise ValueError('Token account closes to another recipient')
                         continue
-                    if kind not in ('transfer', 'transferChecked'):
+                    if kind not in ('transfer', 'transferChecked', 'transferCheckedWithFee'):
                         raise ValueError('Unsupported token permission, extension, mint or burn operation')
                     source, destination = info.get('source'), info.get('destination')
-                    checked = info.get('tokenAmount') if kind == 'transferChecked' else None
+                    checked = info.get('tokenAmount') if kind in ('transferChecked', 'transferCheckedWithFee') else None
                     quantity = raw_quantity(checked['amount'] if checked else info.get('amount'))
                     for account in (source, destination):
                         identity = identities.get(account)
                         if identity and checked and (_integer(checked.get('decimals')) != identity['decimals'] or info.get('mint') != identity['mint']):
                             raise ValueError('Parsed transfer disagrees with token identity')
+                    rfq_fee_fill = (
+                        route['program'] == RFQ_FILL
+                        and not nested
+                        and outer != route['index']
+                        and destination == RFQ_FEE_FILL_ACCOUNT
+                        and source in owned
+                    )
                     if outer != route['index'] and any(account in owned for account in (source, destination)):
-                        raise ValueError('Unrelated token transfer prevents swap quantity attribution')
+                        if not rfq_fee_fill:
+                            raise ValueError('Unrelated token transfer prevents swap quantity attribution')
+                        declared = info.get('fee')
+                        rfq_platform_fees.append({
+                            'destination': destination,
+                            'source': source,
+                            'quantity': quantity,
+                            'mint': (identities.get(source) or {}).get('mint') or info.get('mint'),
+                            'path': path,
+                            'declared_fee': raw_quantity(declared) if declared not in (None, '') else quantity,
+                        })
                     flow[source] -= quantity
                     flow[destination] += quantity
+                    if program == TOKEN_2022_ID and destination in owned:
+                        token_2022_inbound[destination].append(quantity)
                     continue
                 if outer != route['index']:
                     raise ValueError('Unreviewed outer program may bundle other economic activity')
@@ -967,7 +1025,29 @@ def decode_supported_swaps(transactions, address):
                                 position for position, row in enumerate(flat) if row[1] == route['path'])):
                         raise ValueError('Missing wrapped SOL opening token balance requires primary wallet-funded creation and initialization; ATA idempotence is not proof')
                 if mint != WSOL and delta != flow[account]:
-                    raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                    inbound = token_2022_inbound.get(account) or []
+                    withheld = flow[account] - delta
+                    bps = infer_token_2022_fee_bps(inbound, withheld) if (
+                        token_programs.get(account) == TOKEN_2022_ID and inbound
+                    ) else None
+                    if bps is None:
+                        raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                    token_2022_fees.append({
+                        'account': account,
+                        'mint': mint,
+                        'gross': flow[account],
+                        'inbound_gross_amounts': list(inbound),
+                        'net_received': delta,
+                        'withheld': withheld,
+                        'transfer_fee_basis_points': bps,
+                        'source': 'token-2022-ceiling-fee-at-execution',
+                        'note': (
+                            'Mint account bytes are absent from GTA captures. '
+                            'The withheld amount is the transferFeeConfig that '
+                            'executed; it matches ceil(gross * bps / 10000).'
+                        ),
+                    })
+                    flow[account] = delta
                 if mint in decimals and decimals[mint] != identity['decimals']:
                     raise ValueError('Conflicting decimals across owned accounts for one mint')
                 decimals[mint] = identity['decimals']
@@ -1042,12 +1122,31 @@ def decode_supported_swaps(transactions, address):
                 allocate_fee = paid and not outside_native and not native_roles
                 excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding)
                 excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
+                t22_fee = token_2022_fees[-1] if token_2022_fees else None
+                rfq_fee = None
+                platform_fee_usdc = None
+                if rfq_platform_fees:
+                    fee_qty = sum(item['quantity'] for item in rfq_platform_fees)
+                    fee_mint = rfq_platform_fees[0].get('mint')
+                    rfq_fee = {
+                        'recipient': RFQ_FEE_FILL_ACCOUNT,
+                        'pattern': 'rfq_fill_separate_top_level_transfer_checked',
+                        'quantity_raw': str(fee_qty),
+                        'mint': fee_mint,
+                        'counted_in_wallet_delta': True,
+                        'not_subtracted_again': True,
+                    }
+                    if fee_mint == USDC:
+                        platform_fee_usdc = canonical(Decimal(fee_qty) / (Decimal(10) ** usdc_decimals))
                 emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                      decimals=decimals[mint], amount_sol=None, amount_usdc=amount_usdc,
                      classification='market',
                      source=route['program'], venue=route['program'], instruction=route['instruction'],
                      owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
                      settlement_mint=USDC, settlement_asset='USDC',
+                     token_2022_transfer_fee=t22_fee,
+                     rfq_platform_fee=rfq_fee,
+                     platform_fee_usdc=platform_fee_usdc,
                      excluded_funding_sol=excluded_funding_sol,
                      native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
                      unresolved_native_roles=native_roles,

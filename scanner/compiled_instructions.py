@@ -417,6 +417,27 @@ def _token(data, accounts, signers, inner, path, program):
                                       'authorityType': authority,
                                       'newAuthority': None if data[2] == 0 else _base58_encode(data[3:35])}
         required = _signer_fields(info, accounts, 1, 'authority', signers, inner, path, program)
+    elif tag == 26 and program == TOKEN_2022_ID:
+        if len(data) < 2:
+            _reject('unsupported-layout', 'Token-2022 transfer-fee extension is truncated', path + '.data')
+        sub = data[1]
+        if sub == 1:
+            # TransferCheckedWithFee: amount u64, decimals u8, fee u64
+            _exact(data, 19, path)
+            if len(accounts) < 4:
+                _reject('unsupported-account-arity', 'transferCheckedWithFee is missing required account roles', path + '.accounts')
+            amount, decimals = int.from_bytes(data[2:10], 'little'), data[10]
+            fee = int.from_bytes(data[11:19], 'little')
+            digits = str(amount).rjust(decimals + 1, '0')
+            ui = (digits[:-decimals] + '.' + digits[-decimals:]).rstrip('0').rstrip('.') if decimals else digits
+            kind, info = 'transferCheckedWithFee', {
+                'source': accounts[0], 'mint': accounts[1], 'destination': accounts[2],
+                'tokenAmount': {'amount': str(amount), 'decimals': decimals, 'uiAmountString': ui},
+                'fee': str(fee),
+            }
+            required = _signer_fields(info, accounts, 3, 'authority', signers, inner, path, program)
+        else:
+            _reject('unsupported-opcode', 'Token-2022 transfer-fee sub-instruction has no reviewed layout', path + '.data')
     elif tag in (0, 20):
         if len(data) < 35 or data[34] not in (0, 1):
             _reject('unsupported-layout', 'Malformed mint authority option', path + '.data')

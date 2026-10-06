@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from scanner.investigation import (decode_supported_swaps, inspect_token_risk,
-                                  PUMP_SWAP, PUMP, JUPITER, WSOL)
+                                  PUMP_SWAP, PUMP, JUPITER, WSOL, DECODER_VERSION)
 from scanner.decoder import TOKEN_IDS, SYSTEM_ID
 
 WALLET, TOKEN = 'synthetic-wallet', 'synthetic-mint'
@@ -90,7 +90,7 @@ def test_verified_spot_route_collapses_exact_owned_exchange():
     assert result['events'][0]['allocation'] == 'buy_basis'
     assert result['events'][0]['allocated_trade_path'] == event['path']
     assert result['events'][0]['signature'] == event['signature']
-    assert result['coverage']['decoder_version'] == 'spot-v10-reviewed-venues-coverage-v1'
+    assert result['coverage']['decoder_version'] == DECODER_VERSION
     assert result['coverage']['complete'] is False
     assert result['coverage']['history_complete'] is False
 

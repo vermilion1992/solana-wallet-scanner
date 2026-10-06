@@ -292,3 +292,103 @@ def test_synthetic_cases_never_count_as_genuine_research_wallets():
     assert profile["corpus_kind"] == "SYNTHETIC"
     assert profile["not_a_genuine_research_wallet"] is True
     assert profile["synthetic"] is True
+
+
+BVZT = "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"
+DQ7N = "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"
+TOKEN_2022_BUYS = {
+    BVZT: (
+        "4YAVTERNvutrxh2YMCriQgNaS5NwkFewLNTTVKf8htmdvyG2gk1s4kEFdEW17qjbDgVzXrGHVVGK6Fnqb6cscr7H",
+        "46LTwehRd9gqRxEQvQCrvHqRPtAAYFmmXucozRpYWnhFkfnV2eZcs7GR5XZQ4brYVmEJkkdMFZVKBdaE5BP1c8L9",
+        "5gsBEZxKDdo35atprX2LEqZeeF8dk1ZKVE5hkUAjH9RMeFgZZh3MgAPk6GsWiN99Q2J1Fx2diyxzMs3cWr8MTZEg",
+    ),
+    DQ7N: (
+        "1Y1QbF3ECkgRd91MVVEV4TZW7fmS86e5sgiMDecHKyyap31FxPRt8DMMgbrQiXtjyxZZdW5UKLCVeGS1YpyqKLR",
+        "3m8Mv7ubyP6Pw1SPwf2YTchbfU677txE7zzC2iBr4LTi76t6VFHxEgoh7RHNWMD7eyab4zq8yo9kq3vhrfFuFmak",
+        "4iEHb4sFwBkibDreePFFNa6Uh2xw4qJ7Jp6dsQGF1sP3bfRPxTm8xYLLkAP92CUwfj23fcpVH3GbCQscWzPsT8iL",
+    ),
+}
+RFQ_SALES = (
+    "3otd93M7i4qzYUaXTWWaBnmmhBHisZhW533B9Hiqg1JcmqFrMD5KowYZYDYLFFe37KsJ6RC2ExKjMn1r7c3oCJqd",
+    "3kkiuPNLnfD8nMSgaJrHYQPgpB5vwkjpoxbgUcuteEyUwtrJj5GUhw5afAkrQ3Nn1eSkyPB2Rfytv1hQhLsNBEFc",
+    "2cdzEPn6uaQr7kzifKhS2RWaJxu84FbvsJxCr4Gi6E1HptX9yuHpQ7W1krBj7rkZpVrQ8EehBW1TJAFHd6Tc9asf",
+)
+RFQ_FEE_ACCOUNT = "9PnYDCTJ5B4mJJMPvjCZ97L6ZBcti48CYgxv5QU1mV5G"
+SWAPTOB = "3uXPRZpMS7LAkhw3q4LXuwXKuxgS7aLfoYw3WGSXALHR5MUFh5ufaSwGi9gueNPHqwk99pTyAXMf56SEnfRakA9e"
+
+
+def _decode_signature(address, signature):
+    from scanner.investigation import decode_supported_swaps
+    from scanner.mass_search.canonical_records import canonical_decode_records
+    from scanner.mass_search.capture_catalog import catalog_by_address, load_capture_records
+    from tools.independent_episode_audit import _unwrap
+
+    records, _ = load_capture_records(catalog_by_address()[address])
+    for record in records:
+        raw = _unwrap(record)
+        found = record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0]
+        if found == signature:
+            return decode_supported_swaps(canonical_decode_records([record]), address)
+    raise AssertionError(f"missing {signature} for {address}")
+
+
+def test_token_2022_transfer_fee_bvzt_dq7n_jupiter_buys():
+    from scanner.investigation import infer_token_2022_fee_bps, token_2022_ceiling_fee
+
+    assert token_2022_ceiling_fee(109308768417, 100) == 1093087685
+    assert infer_token_2022_fee_bps([109308768417, 212654447298], 3219632158) == 100
+    for address, signatures in TOKEN_2022_BUYS.items():
+        for signature in signatures:
+            decoded = _decode_signature(address, signature)
+            buys = [row for row in decoded["events"] if row.get("kind") == "buy"]
+            assert buys, (address, signature, [row.get("reason") for row in decoded.get("unresolved") or []][:3])
+            fee = buys[0].get("token_2022_transfer_fee")
+            assert fee, (address, signature, buys[0])
+            assert fee["gross"] > fee["net_received"]
+            assert fee["withheld"] == fee["gross"] - fee["net_received"]
+            assert infer_token_2022_fee_bps(fee["inbound_gross_amounts"], fee["withheld"]) == fee["transfer_fee_basis_points"]
+            assert str(buys[0].get("quantity_raw")) == str(fee["net_received"])
+
+
+def test_rfq_fee_fill_bvzt_three_sales():
+    from scanner.investigation import RFQ_FEE_FILL_ACCOUNT
+
+    assert RFQ_FEE_FILL_ACCOUNT == RFQ_FEE_ACCOUNT
+    for signature in RFQ_SALES:
+        decoded = _decode_signature(BVZT, signature)
+        sells = [row for row in decoded["events"] if row.get("kind") == "sell"]
+        assert sells, (signature, [row.get("reason") for row in decoded.get("unresolved") or []][:3])
+        fee = sells[0].get("rfq_platform_fee")
+        assert fee, sells[0]
+        assert fee["recipient"] == RFQ_FEE_ACCOUNT
+        assert fee["pattern"] == "rfq_fill_separate_top_level_transfer_checked"
+        assert fee["not_subtracted_again"] is True
+        assert sells[0].get("platform_fee_usdc") not in (None, "", "0")
+
+
+def test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer():
+    from scanner.investigation import RFQ_FILL, RFQ_FEE_FILL_ACCOUNT
+
+    # The RFQ exception is destination-and-venue specific. A different
+    # recipient on a non-RFQ route must still trip the general guard.
+    assert RFQ_FEE_FILL_ACCOUNT.startswith("9PnYDC")
+    assert RFQ_FILL.startswith("61DFfeTK")
+
+
+def test_swaptob_remains_unsupported_after_bounded_investigation():
+    from scanner.investigation import OKX_SWAPTOB, SWAPTOB_UNSUPPORTED_REASON, decode_supported_swaps
+    from scanner.mass_search.canonical_records import canonical_decode_records
+    from scanner.mass_search.capture_catalog import catalog_by_address, load_capture_records
+    from tools.independent_episode_audit import _unwrap
+
+    assert OKX_SWAPTOB.hex() == "aa2955b184501f35"
+    assert "95+" in SWAPTOB_UNSUPPORTED_REASON or "95" in SWAPTOB_UNSUPPORTED_REASON
+    records, _ = load_capture_records(catalog_by_address()[BVZT])
+    record = next(
+        item for item in records
+        if (item.get("signature") or ((_unwrap(item).get("transaction") or {}).get("signatures") or [None])[0]) == SWAPTOB
+    )
+    decoded = decode_supported_swaps(canonical_decode_records([record]), BVZT)
+    reasons = [row.get("reason") for row in decoded.get("unresolved") or []]
+    assert any("No reviewed outer spot swap" in (reason or "") for reason in reasons)
+    assert not [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
