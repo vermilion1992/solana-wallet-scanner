@@ -231,9 +231,25 @@ def reports_by_address(store):
 def _attach_research(store, result, *, address, filters=None, ranked_row=None, entry=None):
     report = result["report"]
     filters = filters or load_filters(store)
-    audit = load_committed_independent_audit(address)
-    if audit:
+    from scanner.mass_search.qualification_gates import (
+        bindable_independent_audit,
+        compute_audit_fingerprint,
+    )
+    from scanner.mass_search.research_profile import _episode_ledger_from_report
+    fingerprint = compute_audit_fingerprint(
+        report,
+        entry=entry,
+        episodes=_episode_ledger_from_report(report),
+    )
+    report["audit_fingerprint"] = fingerprint
+    audit = load_committed_independent_audit(address, fingerprint)
+    if audit and bindable_independent_audit(audit, fingerprint):
         report["independent_audit"] = audit
+    elif report.get("independent_audit"):
+        attached = report["independent_audit"]
+        if attached.get("content_fingerprint") or attached.get("fingerprint"):
+            if not bindable_independent_audit(attached, fingerprint):
+                report["independent_audit"] = None
     profile = build_research_profile(
         report,
         filters=filters,
@@ -585,41 +601,59 @@ def ranked_workflow_view(store, *, filters=None):
 
 
 def coverage_eligibility(report, profile=None):
-    """Item 12: >=99% eligible, 95-99% watchlist, <95% or dependency blocked."""
+    """Item 12: shared count-AND-value gate. 99% eligible, 95-99% watchlist, else blocked."""
     from decimal import Decimal
 
-    breakdown = (report or {}).get("record_breakdown") or {}
-    shares = []
-    swap_share = (breakdown.get("unsupported_swap_share_in_window") or (profile or {}).get("unsupported_swap_share_in_window") or {})
-    if swap_share.get("by_count") not in (None, ""):
-        shares.append(Decimal(str(swap_share["by_count"])))
-    for value in (swap_share.get("by_consideration") or {}).values():
-        shares.append(Decimal(str(value)))
+    from scanner.mass_search.qualification_gates import CROSS_CURRENCY_SENSITIVITY, mandatory_coverage_gate
+    from scanner.mass_search.research_profile import sensitivity_sign_flips
+
+    gate = mandatory_coverage_gate(report, profile)
     unresolved = (profile or {}).get("unresolved_basis_sales")
     if unresolved in (None, ""):
         unresolved = ((report or {}).get("worksheet") or {}).get("unresolved_basis_sales")
-    from scanner.mass_search.research_profile import sensitivity_sign_flips
     cost_dependency = sensitivity_sign_flips(report, profile or {})
-    dependency = int(unresolved or 0) > 0 or cost_dependency
-    if not shares:
+    dependency = int(unresolved or 0) > 0 or bool(cost_dependency)
+    count_share = Decimal(str(gate["count_share"])) if gate.get("count_share") not in (None, "") else None
+    value_share = Decimal(str(gate["value_share"])) if gate.get("value_share") not in (None, "") else None
+    if count_share is None and value_share is None:
         status = "blocked_unknown_denominator"
     else:
-        resolved = Decimal("1") - max(shares)
-        if resolved >= Decimal("0.99") and not dependency:
+        # Watchlist/block bands still use the worse of the two shares, including
+        # unsupported suspected trading in the denominator. Lead eligibility
+        # requires the mandatory conjunction (count AND value).
+        parts = [share for share in (count_share, value_share) if share is not None]
+        resolved = min(parts) if parts and value_share is not None and count_share is not None else (
+            min(parts) if parts else None
+        )
+        if resolved is None:
+            status = "blocked_unknown_denominator"
+        elif gate["passed"] and not dependency:
             status = "provisional_eligible"
-        elif resolved >= Decimal("0.99") and dependency:
+        elif gate["passed"] and dependency:
             status = "coverage_eligibility_pending_reassessment"
         elif resolved >= Decimal("0.95"):
             status = "watchlist_incomplete_evidence"
         else:
             status = "coverage_blocked"
+        if value_share is None or count_share is None:
+            if resolved is not None and resolved >= Decimal("0.99"):
+                status = "blocked_unknown_denominator"
     if dependency and status in ("provisional_eligible", "watchlist_incomplete_evidence"):
         status = "coverage_eligibility_pending_reassessment"
+    if cost_dependency == CROSS_CURRENCY_SENSITIVITY and status == "provisional_eligible":
+        status = "coverage_eligibility_pending_reassessment"
+        dependency = True
     return {
         "status": status,
         "dependency_unresolved_basis": int(unresolved or 0) > 0,
         "dependency_unresolved_costs": bool(cost_dependency),
-        "note": "A missing purchase or unresolved adjacent cost that could change the decision blocks regardless of percentage.",
+        "coverage_gate": gate,
+        "note": (
+            "A missing purchase or unresolved adjacent cost that could change "
+            "the decision blocks regardless of percentage. Count and value "
+            "coverage are both required; the denominator includes unsupported "
+            "suspected trading."
+        ),
     }
 
 

@@ -802,16 +802,76 @@ def replay_cached_history_to_report(
         report["residual_sol_scope"] = "in_window_buys"
     sensitivity = Decimal("0")
     verified_tips = Decimal("0")
+    platform_fees = Decimal("0")
+    failed_fees = Decimal("0")
+    charges = []
     for event in decoded.get("events") or []:
         if event.get("unverified_debits_sol") not in (None, ""):
             sensitivity += Decimal(str(event["unverified_debits_sol"]))
         if event.get("tips_sol") not in (None, ""):
             verified_tips += Decimal(str(event["tips_sol"]))
+        if event.get("platform_fee_sol") not in (None, ""):
+            platform_fees += Decimal(str(event["platform_fee_sol"]))
+        if event.get("kind") == "fee" and event.get("failed") and event.get("paid_by_wallet"):
+            failed_fees += Decimal(str(event.get("amount_sol") or event.get("network_fee_sol") or 0))
+            charges.append({
+                "signature": event.get("signature"),
+                "economic_role": "network_plus_priority_fee",
+                "sol": event.get("amount_sol") or event.get("network_fee_sol"),
+                "transaction_failed": True,
+                "allocate_to": "failed_attempts",
+            })
+        elif event.get("kind") == "tip":
+            charges.append({
+                "signature": event.get("signature"),
+                "economic_role": "verified_tip",
+                "sol": event.get("tips_sol"),
+                "separate_successful_transaction": True,
+                "allocate_to": "other_activity",
+            })
+        elif event.get("kind") in ("buy", "sell"):
+            if event.get("network_fee_sol") not in (None, "", "0"):
+                charges.append({
+                    "signature": event.get("signature"),
+                    "economic_role": "network_plus_priority_fee",
+                    "sol": event.get("network_fee_sol"),
+                    "episode_closed": True,
+                    "allocate_to": "closed_episodes",
+                })
+            if event.get("tips_sol") not in (None, "", "0"):
+                charges.append({
+                    "signature": event.get("signature"),
+                    "economic_role": "verified_tip",
+                    "sol": event.get("tips_sol"),
+                    "episode_closed": True,
+                    "allocate_to": "closed_episodes",
+                })
+            if event.get("platform_fee_sol") not in (None, "", "0"):
+                charges.append({
+                    "signature": event.get("signature"),
+                    "economic_role": "proven_router_or_platform_fee",
+                    "sol": event.get("platform_fee_sol"),
+                    "episode_closed": True,
+                    "allocate_to": "closed_episodes",
+                })
+            if event.get("unverified_debits_sol") not in (None, "", "0"):
+                charges.append({
+                    "signature": event.get("signature"),
+                    "economic_role": "unexplained_transfer",
+                    "sol": event.get("unverified_debits_sol"),
+                })
+    from scanner.mass_search.qualification_gates import allocate_verified_costs
+    allocation = allocate_verified_costs(charges)
     report["verified_tips_sol"] = str(verified_tips)
+    report["proven_platform_fees_sol"] = str(platform_fees)
+    report["failed_attempt_expenses_sol"] = str(failed_fees)
+    report["unallocated_verified_costs_sol"] = allocation.get("other_activity_sol")
+    report["cost_allocation"] = allocation
     report["sensitivity_unverified_debits_sol"] = str(sensitivity)
     report["sensitivity_unverified_debits_note"] = (
-        "Arbitrary outside SOL withdrawals are not tips. This labelled sensitivity "
-        "figure is excluded from net P&L."
+        "Unexplained transfers stay in sensitivity and are never called fees. "
+        "Proven router or platform fees and published-list tips are costs. "
+        "Wallet-paid network fees on failed transactions are charged; their transfers are excluded."
     )
     report["record_breakdown"] = breakdown
     report["unsupported_swaps_in_window"] = breakdown["counts"]["unsupported_swap"]

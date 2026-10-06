@@ -84,9 +84,25 @@ export function formatCompletedEpisodeHeadline(input: {
   let text = `${headline} (completed-episode net)`;
   if (input.independentlyAudited && input.auditorNet != null && input.auditorNet !== "") {
     const auditor = joinAmount(input.auditorNet, input.auditorUnit || input.appUnit);
-    text += `; auditor confirms within 2 lamports: ${auditor}`;
+    const unit = input.auditorUnit || input.appUnit || "SOL";
+    const confirm =
+      unit === "USDC"
+        ? `auditor confirms within 2 USDC base units: ${auditor}`
+        : `auditor confirms within 2 lamports: ${auditor}`;
+    text += `; ${confirm}`;
   }
   return text;
+}
+
+export function formatWorksheetEpisodeBridge(input: {
+  worksheet?: string | null;
+  episode?: string | null;
+  bridge?: string | null;
+  unit?: string | null;
+} | null | undefined): string | null {
+  if (!input || input.bridge == null || input.bridge === "") return null;
+  const unit = input.unit || "";
+  return `worksheet-vs-completed-episode bridge ${input.bridge}${unit ? ` ${unit}` : ""} (worksheet ${input.worksheet || "—"} − episode ${input.episode || "—"}; worksheet is not the qualifying value)`;
 }
 
 export function completedEpisodeFields(source?: {

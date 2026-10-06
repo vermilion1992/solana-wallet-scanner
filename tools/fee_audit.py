@@ -134,7 +134,13 @@ def audit_wallet(address):
             "verified_tips": str(Decimal(verified) / Decimal(1_000_000_000)),
             "unresolved_debits_sensitivity": str(Decimal(unresolved) / Decimal(1_000_000_000)),
         },
-        "note": "Net P&L uses verified costs only. Unresolved debits are a labelled sensitivity figure. Verified only if the recipient is on a published tip-account list.",
+        "note": (
+            "Net P&L uses verified costs only: wallet-paid network fees (including "
+            "failed transactions), published-list tips (including tips in separate "
+            "successful transactions), and proven router or platform fees even when "
+            "the recipient is not a tip account. Unexplained transfers stay in "
+            "sensitivity and are never called fees. Failed-tx transfers are excluded."
+        ),
     }
 
 

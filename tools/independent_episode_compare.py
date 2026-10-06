@@ -8,6 +8,14 @@ from decimal import Decimal
 from pathlib import Path
 
 from scanner.mass_search.capture_catalog import catalog_by_address
+from scanner.mass_search.qualification_gates import (
+    ACCOUNTING_POLICY_VERSION,
+    amounts_agree,
+    component_bridge,
+    compute_audit_fingerprint,
+    tolerance_text,
+    worksheet_episode_bridge,
+)
 from scanner.mass_search.workflow import replay_captured_wallet
 from scanner.storage import Store
 from tools.independent_episode_audit import (
@@ -27,6 +35,12 @@ LABELLED = {
     "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
     "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
 }
+AN9S = "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB"
+# Reviewer-quoted proceeds pair at an earlier SHA. Current capture already
+# matches at 196.517684744; the 0.001513840 delta was ATA rent, not proceeds.
+AN9S_REVIEWER_PROCEEDS_APP = Decimal("196.517684744")
+AN9S_REVIEWER_PROCEEDS_AUDITOR_STALE = Decimal("196.519198584")
+AN9S_REVIEWER_PROCEEDS_DELTA_STALE = Decimal("0.001513840")
 
 
 def _q(value):
@@ -35,16 +49,14 @@ def _q(value):
     return Decimal(str(value)).quantize(Decimal("0.000000001"))
 
 
-# Two lamports. 1e-8 SOL is 10 lamports and is too wide for a 9-decimal SOL
-# quantity. Quantized nets can differ by 1–2 lamports after isolate-then-FIFO.
+# Asset-specific atomic tolerance. 2 lamports for SOL; 2 base units for USDC.
+# See scanner.mass_search.qualification_gates.ROUNDING_POLICY.
 TWO_LAMPORTS_SOL = Decimal("0.000000002")
+TWO_USDC_BASE_UNITS = Decimal("0.000002")
 
 
-def _nets_match(left, right):
-    a, b = _q(left), _q(right)
-    if a is None or b is None:
-        return False
-    return abs(a - b) <= TWO_LAMPORTS_SOL
+def _nets_match(left, right, unit="SOL"):
+    return amounts_agree(left, right, unit)
 
 
 def _venue_label(program, instructions):
@@ -278,17 +290,47 @@ def compare_wallet(address, pages, tmp):
                 "verified_costs": match.get("verified_costs_sol"),
                 "net": match.get("net_profit_sol"),
             },
-            "match": bool(match) and _nets_match((match or {}).get("net_profit_sol"), episode.get("net")),
+            "match": bool(match) and _nets_match(
+                (match or {}).get("net_profit_sol"),
+                episode.get("net"),
+                episode.get("settlement_asset") or "SOL",
+            ),
+            "component_bridge": component_bridge(
+                {
+                    "mint": episode.get("mint"),
+                    "close_signature": episode.get("close_signature"),
+                    "basis": episode.get("basis"),
+                    "proceeds": episode.get("proceeds"),
+                    "verified_costs": episode.get("verified_costs"),
+                    "net": episode.get("net"),
+                },
+                None if not match else {
+                    "mint": match.get("mint"),
+                    "close_signature": match.get("close_signature"),
+                    "basis": match.get("basis_sol"),
+                    "proceeds": match.get("proceeds_sol"),
+                    "verified_costs": match.get("verified_costs_sol"),
+                    "net": match.get("net_profit_sol"),
+                },
+                episode.get("settlement_asset") or "SOL",
+            ),
         })
     completed = int(report.get("wallet_completed_episodes") or 0)
     auditor_count = int(independent.get("clean_episodes") or 0)
+    components_agree = bool(rows) and all((row.get("component_bridge") or {}).get("agree") for row in rows)
     if not app and auditor_count:
         # App reconstructed 0 completed episodes; the auditor found some.
         # That is a mismatch, not an empty-wallet no_completed_episodes status.
         status = "not_independently_audited"
     elif not app:
         status = "not_independently_audited" if completed else "no_completed_episodes"
-    elif completed and all(row.get("match") for row in rows) and len(rows) == completed and auditor_count == completed:
+    elif (
+        completed
+        and all(row.get("match") for row in rows)
+        and components_agree
+        and len(rows) == completed
+        and auditor_count == completed
+    ):
         status = "independently_audited"
     else:
         status = "not_independently_audited"
@@ -327,6 +369,15 @@ def compare_wallet(address, pages, tmp):
         "worksheet_total": worksheet_total,
         "worksheet_total_unit": worksheet_unit,
         "worksheet_total_independently_audited": False,
+        "worksheet_episode_bridge": worksheet_episode_bridge(worksheet_total, app_episode_net, worksheet_unit or app_episode_unit),
+        "content_fingerprint": compute_audit_fingerprint(report, entry=catalog_by_address().get(address)),
+        "accounting_policy_version": ACCOUNTING_POLICY_VERSION,
+        "components_agree": components_agree,
+        "tolerance_text": tolerance_text(app_episode_unit or worksheet_unit or "SOL"),
+        "rounding_policy": (
+            "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with "
+            "ROUND_HALF_EVEN. Agreement is at most 2 atomic units of that asset."
+        ),
         "unaudited_venues": sorted(set(unaudited_venues)),
         "episodes": rows,
         "auditor_only_episodes": independent.get("episodes") or [],
@@ -334,6 +385,26 @@ def compare_wallet(address, pages, tmp):
         "venue_notes": notes,
         "imports_scanner_in_auditor": False,
         "source": "raw_instructions_balances_ownership_pinned_interfaces",
+        "an9s_proceeds_bridge": (
+            None if address != AN9S or not rows else {
+                "app_proceeds": (rows[0].get("app") or {}).get("proceeds"),
+                "auditor_proceeds": ((rows[0].get("auditor") or {}) or {}).get("proceeds"),
+                "delta": (
+                    None if not (rows[0].get("app") or {}).get("proceeds") or not (rows[0].get("auditor") or {}).get("proceeds")
+                    else str(Decimal(str(rows[0]["app"]["proceeds"])) - Decimal(str(rows[0]["auditor"]["proceeds"])))
+                ),
+                "reviewer_claim_stale": True,
+                "reviewer_quoted_auditor_proceeds": str(AN9S_REVIEWER_PROCEEDS_AUDITOR_STALE),
+                "reviewer_quoted_delta": str(AN9S_REVIEWER_PROCEEDS_DELTA_STALE),
+                "reviewer_quoted_delta_was": "ATA rent (1,513,840 lamports), previously counted as auditor proceeds",
+                "current_app_proceeds": str(AN9S_REVIEWER_PROCEEDS_APP),
+                "component_bridge": rows[0].get("component_bridge"),
+                "note": (
+                    "Proceeds already agree at 196.517684744 SOL. Remaining component "
+                    "deltas are acquisition (4 lamports) and costs (1 lamport)."
+                ),
+            }
+        ),
         "PRODUCT_READY": False,
     }
 

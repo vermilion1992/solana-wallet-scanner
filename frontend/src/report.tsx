@@ -44,6 +44,7 @@ import {
   dateTime,
   decimal,
   formatCompletedEpisodeHeadline,
+  formatWorksheetEpisodeBridge,
   formatWorksheetTotal,
   joinAmount,
   label,
@@ -132,6 +133,25 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
               <span>completed-episode net</span>
               <strong>{headline.split("; auditor confirms")[0]}</strong>
               <small>{headline}</small>
+            </div>
+          );
+        })()}
+        {(() => {
+          const profile = (report.research_profile || {}) as {
+            worksheet_episode_bridge?: { worksheet_total?: string; completed_episode_net?: string; bridge?: string; unit?: string };
+            completed_episode_net_vector?: Record<string, string>;
+          };
+          const audit = (report.independent_audit || {}) as {
+            worksheet_episode_bridge?: { worksheet_total?: string; completed_episode_net?: string; bridge?: string; unit?: string };
+          };
+          const bridge = profile.worksheet_episode_bridge || audit.worksheet_episode_bridge;
+          const text = formatWorksheetEpisodeBridge(bridge);
+          if (!text) return null;
+          return (
+            <div data-worksheet-episode-bridge="true">
+              <span>worksheet-vs-completed-episode bridge</span>
+              <strong>{bridge?.bridge} {bridge?.unit || ""}</strong>
+              <small>{text}</small>
             </div>
           );
         })()}
@@ -355,6 +375,42 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
             return ` Headline is the app completed-episode sum. ${headline}.${worksheetNote}`;
           }
           return worksheetNote;
+        })()}
+        {(() => {
+          const bridge = (profile.worksheet_episode_bridge || (report.independent_audit as { worksheet_episode_bridge?: { bridge?: string; unit?: string } } | undefined)?.worksheet_episode_bridge) as { worksheet_total?: string; completed_episode_net?: string; bridge?: string; unit?: string } | undefined;
+          const text = formatWorksheetEpisodeBridge(bridge);
+          return text ? ` · ${text}` : "";
+        })()}
+        {(() => {
+          const vector = (profile.completed_episode_net_vector || {}) as Record<string, string>;
+          const keys = Object.keys(vector);
+          if (keys.length < 2) return "";
+          return ` · result vector ${keys.map((unit) => `${vector[unit]} ${unit}`).join(" + ")}`;
+        })()}
+        {(() => {
+          const exposure = (profile.exposure_outside_completed_episodes || {}) as Record<string, unknown>;
+          const parts = [
+            exposure.known_cost_open_inventory != null ? `known-cost open inventory ${String(exposure.known_cost_open_inventory)}` : "",
+            exposure.inventory_of_unknown_cost != null ? `unknown-cost inventory ${String(exposure.inventory_of_unknown_cost)}` : "",
+            exposure.failed_attempt_expenses != null ? `failed-attempt expenses ${String(exposure.failed_attempt_expenses)} SOL` : "",
+            exposure.unallocated_verified_costs != null ? `unallocated verified costs ${String(exposure.unallocated_verified_costs)} SOL` : "",
+          ].filter(Boolean);
+          return parts.length ? ` · exposure outside completed episodes: ${parts.join("; ")}` : "";
+        })()}
+        {(() => {
+          const interval = (profile.requested_history_interval || {}) as { requested_history_interval_actually_traversed?: { start?: string; end?: string; hours?: number } };
+          const traversed = interval.requested_history_interval_actually_traversed;
+          if (!traversed) return "";
+          return ` · requested history interval actually traversed ${String(traversed.start || "")} → ${String(traversed.end || "")}${traversed.hours != null ? ` (${String(traversed.hours)} h)` : ""}`;
+        })()}
+        {(() => {
+          const holds = (profile.hold_time_stats || {}) as { completed_episodes?: { median_seconds?: number; sample_count?: number }; open_positions?: { median_age_seconds?: number; sample_count?: number } };
+          const completed = holds.completed_episodes || {};
+          const open = holds.open_positions || {};
+          const bits = [];
+          if (completed.median_seconds != null) bits.push(`completed-episode median hold ${completed.median_seconds}s n=${completed.sample_count ?? 0}`);
+          if (open.median_age_seconds != null) bits.push(`open-position median age ${open.median_age_seconds}s n=${open.sample_count ?? 0}`);
+          return bits.length ? ` · ${bits.join(" · ")}` : "";
         })()}
         {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.

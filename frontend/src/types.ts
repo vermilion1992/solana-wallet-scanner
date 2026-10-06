@@ -358,6 +358,13 @@ export type Report = {
     worksheet_total?: string | null;
     worksheet_total_unit?: string | null;
     worksheet_total_independently_audited?: boolean;
+    worksheet_episode_bridge?: {
+      worksheet_total?: string | null;
+      completed_episode_net?: string | null;
+      bridge?: string | null;
+      unit?: string | null;
+    } | null;
+    content_fingerprint?: Record<string, unknown> | null;
     note?: string;
   } | null;
   verified_tips_sol?: string;

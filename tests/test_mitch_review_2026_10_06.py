@@ -166,12 +166,25 @@ def test_item7_a6ps_concentration_label():
             "total_profit_sol": "287.384074822",
             "settlement_asset": "SOL",
         },
+        "completed_episode_ledger": [
+            {"net": "291.976998225", "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump", "day": "2026-09-20", "unit": "SOL"},
+            {"net": "-4.592923403", "mint": "OtherMint111111111111111111111111111111111", "day": "2026-09-21", "unit": "SOL"},
+        ],
+        "completed_episode_net": "287.384074822",
+        "completed_episode_net_unit": "SOL",
         "events": [],
         "wallet_completed_episodes": 2,
+        "synthetic": True,
+        "corpus_kind": "SYNTHETIC",
+        "label": "SYNTHETIC — A6PS concentration fixture, not a genuine research wallet",
     }
     profile = build_research_profile(report, filters=default_filters())
     detail = profile["concentration_detail"]
     assert detail["label"] == "positive subset; highly concentrated; negative excluding largest winner"
+    assert detail["source"] == "completed_episode_ledger"
+    assert detail["largest_episode_dependence"]["sign_depends_on_largest_episode"] is True
+    assert profile["synthetic"] is True
+    assert profile["not_a_genuine_research_wallet"] is True
 
 
 def test_item10_sol_buy_usdc_sell_is_not_split_into_two_fifos():
@@ -269,6 +282,8 @@ def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
         "events": [],
         "corpus_kind": "GENUINE_REPLAY",
         "sensitivity_unverified_debits_sol": "1.428081532",
+        "completed_episode_net": "0.242261753",
+        "completed_episode_net_unit": "SOL",
         "worksheet": {"total_profit_sol": "0.242261753", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
         "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
@@ -760,7 +775,10 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     assert wallet["net_display"] != "51148.756609023 USDC"
     assert "5614.586672" in str(wallet["net_display"])
     assert "completed-episode net" in str(wallet["net_display"])
-    assert "auditor confirms within 2 lamports" in str(wallet["net_display"])
+    assert (
+        "auditor confirms within 2 USDC base units" in str(wallet["net_display"])
+        or "auditor confirms within 2 lamports" in str(wallet["net_display"])
+    )
     assert "not independently audited" in str(wallet["net_display"])
     assert "worksheet total, partial coverage, not independently audited" in str(wallet["net_display"])
 
@@ -928,7 +946,10 @@ def test_every_wallet_worksheet_figure_is_labelled_partial_coverage():
             )
             assert "completed-episode net" in str(display), (name, wallet["label"], display)
             if wallet.get("independently_audited"):
-                assert "auditor confirms within 2 lamports" in str(display), (name, wallet["label"], display)
+                assert (
+                    "auditor confirms within 2 lamports" in str(display)
+                    or "auditor confirms within 2 USDC base units" in str(display)
+                ), (name, wallet["label"], display)
             unit = wallet.get("worksheet_total_unit") or wallet.get("scoped_pnl_unit") or ""
             for figure in figures:
                 assert str(display).strip() != f"{figure} {unit}".strip(), (name, wallet["label"], display)
@@ -1033,5 +1054,8 @@ def test_frontend_pnl_figures_carry_worksheet_or_episode_label():
         assert wallet["completed_episode_net"] == row["app_completed_episode_net"]
         assert "completed-episode net" in str(wallet["net_display"])
         if wallet.get("independently_audited"):
-            assert "auditor confirms within 2 lamports" in str(wallet["net_display"])
+            assert (
+                "auditor confirms within 2 lamports" in str(wallet["net_display"])
+                or "auditor confirms within 2 USDC base units" in str(wallet["net_display"])
+            )
             assert str(row["independently_audited_episode_net"]) in str(wallet["net_display"])

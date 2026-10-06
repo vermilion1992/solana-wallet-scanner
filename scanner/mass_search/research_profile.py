@@ -5,6 +5,27 @@ import json
 from decimal import Decimal
 from pathlib import Path
 
+from scanner.mass_search.qualification_gates import (
+    ACCOUNTING_POLICY_VERSION,
+    CROSS_CURRENCY_SENSITIVITY,
+    bindable_independent_audit,
+    completed_episode_ledger,
+    compute_audit_fingerprint,
+    concentration_from_episodes,
+    coverage_shares,
+    episode_net_from_ledger,
+    exposure_outside_completed_episodes,
+    hold_time_stats,
+    is_synthetic_case,
+    mandatory_coverage_gate,
+    mark_synthetic,
+    qualifying_profit,
+    requested_history_interval,
+    sensitivity_result,
+    stronger_shortlist_activity_ok,
+    trading_activity,
+    worksheet_episode_bridge,
+)
 from scanner.mass_search.settlement import (
     USDC,
     _open_lot_count,
@@ -192,49 +213,129 @@ def _display_decimal(value):
     return text.rstrip("0").rstrip(".") if "." in text else text
 
 
-def _concentration_detail(report, scoped_pnl, known_sells):
+def _episode_day(event):
+    stamp = event.get("timestamp") or event.get("block_time") or event.get("day")
+    if stamp in (None, ""):
+        return None
+    activity = trading_activity([{**event, "kind": event.get("kind") or "sell"}])
+    days = activity.get("active_trading_day_list") or []
+    return days[0] if days else None
+
+
+def _episode_ledger_from_report(report):
+    explicit = completed_episode_ledger(report)
+    if explicit:
+        return explicit
+    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
     worksheet = report.get("worksheet") or {}
-    profits = list(worksheet.get("sale_net_profit_sol") or worksheet.get("sale_net_profit_usdc") or [])
-    values = []
-    for item in profits:
-        amount = _decimal(item)
-        if amount is not None:
-            values.append(amount)
-    largest = max(values) if values else None
-    without = None
-    scoped = _decimal(scoped_pnl)
-    if scoped is not None and largest is not None:
-        without = scoped - largest
-    mints = {row.get("mint") for row in known_sells if row.get("mint")}
-    label = None
-    if scoped is not None and largest is not None and without is not None:
-        if scoped > 0 and without < 0:
-            label = "positive subset; highly concentrated; negative excluding largest winner"
-        elif scoped > 0:
-            label = "positive subset"
-    return {
-        "largest_winner": _display_decimal(largest),
-        "result_excluding_largest_winner": _display_decimal(without),
-        "distinct_tokens": len(mints),
-        "mean_net_per_episode": _display_decimal(sum(values) / len(values)) if values else None,
-        "median_net_per_episode": _display_decimal(sorted(values)[len(values) // 2]) if values else None,
-        "label": label,
-    }
+    sales = []
+    seen = set()
+    sources = [worksheet]
+    sources.extend((worksheet.get("by_quote_asset") or {}).values())
+    for part in sources:
+        if not part:
+            continue
+        for row in part.get("sale_rows") or []:
+            key = (row.get("signature"), row.get("split_part") or "matched", row.get("mint"))
+            if key in seen:
+                continue
+            seen.add(key)
+            sales.append(row)
+    clean = [
+        row for row in sales
+        if not row.get("unresolved_basis") and not row.get("not_clean_episode") and row.get("split_part") != "unresolved"
+    ]
+    sales_by_sig = {}
+    for row in clean:
+        sales_by_sig.setdefault(row.get("signature"), []).append(row)
+    episodes = []
+    by_mint = {}
+    for event in events:
+        mint = event.get("mint")
+        if mint:
+            by_mint.setdefault(mint, []).append(event)
+    for mint, rows in by_mint.items():
+        rows = sorted(rows, key=lambda row: (
+            row.get("seconds_from_start") or 0,
+            row.get("order") if isinstance(row.get("order"), int) else 0,
+            row.get("signature") or "",
+        ))
+        inventory = Decimal("0")
+        opened = False
+        opened_at = None
+        episode_sigs = []
+        for event in rows:
+            units = Decimal(str(event.get("quantity_raw") or event.get("units") or 0))
+            if event.get("kind") == "buy":
+                inventory += units
+                if not opened:
+                    opened_at = event.get("timestamp") or event.get("block_time")
+                opened = True
+                continue
+            if event.get("kind") != "sell" or not opened or inventory <= 0:
+                continue
+            inventory -= units
+            episode_sigs.append(event.get("signature"))
+            if inventory != 0:
+                continue
+            mint_sales = []
+            for signature in episode_sigs:
+                mint_sales.extend(sales_by_sig.get(signature) or [])
+            net = basis = proceeds = costs = None
+            if mint_sales:
+                net = sum(Decimal(str(row.get("net_profit") or 0)) for row in mint_sales)
+                basis = sum(Decimal(str(row.get("basis") or 0)) for row in mint_sales)
+                proceeds = sum(
+                    Decimal(str(row["proceeds"])) if row.get("proceeds") not in (None, "")
+                    else Decimal(str(row.get("basis") or 0)) + Decimal(str(row.get("gross_profit") or 0))
+                    for row in mint_sales
+                )
+                costs = sum(Decimal(str(row.get("fees_and_tips") or 0)) for row in mint_sales)
+            elif event.get("known_cost_pnl") not in (None, ""):
+                net = Decimal(str(event["known_cost_pnl"]))
+            unit = event.get("settlement_asset") or (
+                "USDC" if event.get("amount_usdc") or event.get("consideration_usdc") else "SOL"
+            )
+            episodes.append({
+                "mint": mint,
+                "close_signature": event.get("signature"),
+                "opened_at": opened_at,
+                "closed_at": event.get("timestamp") or event.get("block_time"),
+                "timestamp": event.get("timestamp") or event.get("block_time"),
+                "day": _episode_day(event),
+                "basis": str(basis) if basis is not None else None,
+                "acquisition": str(basis) if basis is not None else None,
+                "proceeds": str(proceeds) if proceeds is not None else None,
+                "costs": str(costs) if costs is not None else None,
+                "verified_costs": str(costs) if costs is not None else None,
+                "net": str(net) if net is not None else None,
+                "unit": unit,
+                "settlement_asset": unit,
+            })
+            opened = False
+            opened_at = None
+            episode_sigs = []
+    return episodes
+
+
+def _concentration_detail(report, scoped_pnl, known_sells):
+    del known_sells
+    episodes = _episode_ledger_from_report(report)
+    unit = (report.get("completed_episode_net_unit")
+            or ((report.get("research_profile") or {}).get("completed_episode_net_unit")))
+    return concentration_from_episodes(episodes, scoped_pnl, unit)
 
 
 def sensitivity_sign_flips(report, profile):
-    """Item 11/12: unresolved adjacent costs that can flip the sign block a lead."""
-    scoped = _decimal(profile.get("scoped_pnl"))
-    if scoped is None:
-        return False
-    sensitivity = _decimal((report or {}).get("sensitivity_unverified_debits_sol"))
-    if sensitivity is None:
-        sensitivity = _decimal(profile.get("sensitivity_unverified_debits_sol"))
-    if sensitivity is None or sensitivity <= 0:
-        return False
-    if profile.get("settlement_asset") not in (None, "SOL"):
-        return False
-    return scoped > 0 and (scoped - sensitivity) <= 0
+    """Item 11/12: unresolved adjacent costs that can flip the sign block a lead.
+
+    A non-SOL settlement returns the cross-currency string and is truthy, so it
+    blocks lead status. Multi-currency results are a vector, not an all-in net.
+    """
+    judged = sensitivity_result(report, profile)
+    if judged.get("reason") == CROSS_CURRENCY_SENSITIVITY:
+        return CROSS_CURRENCY_SENSITIVITY
+    return bool(judged.get("flips"))
 
 
 INDEPENDENT_AUDIT_PATH = (
@@ -243,7 +344,7 @@ INDEPENDENT_AUDIT_PATH = (
 )
 
 
-def load_committed_independent_audit(address):
+def load_committed_independent_audit(address, fingerprint=None):
     if not address or not INDEPENDENT_AUDIT_PATH.is_file():
         return None
     try:
@@ -251,53 +352,63 @@ def load_committed_independent_audit(address):
     except (OSError, json.JSONDecodeError):
         return None
     for row in payload.get("wallets") or []:
-        if row.get("address") == address:
-            status = row.get("status")
-            return {
-                "status": status,
-                "independently_audited": status == "independently_audited" or row.get("independently_audited") is True,
-                "independently_audited_episode_net": row.get("independently_audited_episode_net"),
-                "independently_audited_episode_net_unit": row.get("independently_audited_episode_net_unit"),
-                "app_completed_episode_net": row.get("app_completed_episode_net"),
-                "app_completed_episode_net_unit": row.get("app_completed_episode_net_unit"),
-                "worksheet_total": row.get("worksheet_total"),
-                "worksheet_total_unit": row.get("worksheet_total_unit"),
-                "worksheet_total_independently_audited": row.get("worksheet_total_independently_audited"),
-                "app_completed_episodes": row.get("app_completed_episodes"),
-                "auditor_clean_episodes": row.get("auditor_clean_episodes"),
-                "unaudited_venues": list(row.get("unaudited_venues") or []),
-                "note": (
-                    "Decoder-independent auditor vs app per episode. "
-                    "independently_audited sits next to the audited episode net, "
-                    "not a wallet-level worksheet total. "
-                    "A venue the auditor does not cover keeps the wallet from being a lead."
-                ),
-            }
+        if row.get("address") != address:
+            continue
+        status = row.get("status")
+        loaded = {
+            "status": status,
+            "independently_audited": status == "independently_audited" or row.get("independently_audited") is True,
+            "independently_audited_episode_net": row.get("independently_audited_episode_net"),
+            "independently_audited_episode_net_unit": row.get("independently_audited_episode_net_unit"),
+            "app_completed_episode_net": row.get("app_completed_episode_net"),
+            "app_completed_episode_net_unit": row.get("app_completed_episode_net_unit"),
+            "worksheet_total": row.get("worksheet_total"),
+            "worksheet_total_unit": row.get("worksheet_total_unit"),
+            "worksheet_total_independently_audited": row.get("worksheet_total_independently_audited"),
+            "app_completed_episodes": row.get("app_completed_episodes"),
+            "auditor_clean_episodes": row.get("auditor_clean_episodes"),
+            "unaudited_venues": list(row.get("unaudited_venues") or []),
+            "content_fingerprint": row.get("content_fingerprint") or row.get("fingerprint"),
+            "accounting_policy_version": row.get("accounting_policy_version") or ACCOUNTING_POLICY_VERSION,
+            "component_bridges": list(row.get("component_bridges") or []),
+            "worksheet_episode_bridge": row.get("worksheet_episode_bridge"),
+            "note": (
+                "Decoder-independent auditor vs app per episode. "
+                "independently_audited sits next to the audited episode net, "
+                "not a wallet-level worksheet total. "
+                "A venue the auditor does not cover keeps the wallet from being a lead. "
+                "The badge attaches only when the content fingerprint matches."
+            ),
+        }
+        if fingerprint is not None:
+            return bindable_independent_audit(loaded, fingerprint)
+        return loaded
     return None
 
 
 def independently_audited(report, profile=None):
     audit = (report or {}).get("independent_audit") or (profile or {}).get("independent_audit") or {}
+    fingerprint = (profile or {}).get("audit_fingerprint") or (report or {}).get("audit_fingerprint")
+    stored = audit.get("content_fingerprint") or audit.get("fingerprint")
+    if stored and (not fingerprint or not bindable_independent_audit(audit, fingerprint)):
+        return False
     if audit.get("status") == "not_independently_audited":
         return False
     if audit.get("status") == "independently_audited":
         return True
     if audit.get("independently_audited") is True:
         return True
-    address = (report or {}).get("address") or (profile or {}).get("address")
-    loaded = load_committed_independent_audit(address)
-    if not loaded:
-        return False
-    return loaded.get("independently_audited") is True
+    return False
 
 
 def qualification_level(report, profile):
     completed = int(profile.get("completed_known_cost_positions") or 0)
-    scoped = _decimal(profile.get("scoped_pnl"))
-    coverage = _decimal(profile.get("coverage_count_share"))
+    profit, _unit, _vector = qualifying_profit(profile, report)
+    gate = mandatory_coverage_gate(report, profile)
     unresolved = int(profile.get("unresolved_basis_sales") or 0)
     mints = int((profile.get("concentration_detail") or {}).get("distinct_tokens") or 0)
     cost_dependency = sensitivity_sign_flips(report, profile)
+    activity = profile.get("trading_activity") or trading_activity((report or {}).get("events") or [])
     if (report or {}).get("corpus_kind") == "GENUINE_REPLAY":
         audited = independently_audited(report, profile)
     else:
@@ -307,19 +418,24 @@ def qualification_level(report, profile):
             "level": "insufficient_evidence",
             "label": "insufficient evidence",
             "not": "unprofitable",
+            "qualifying_ledger": "completed_episode_ledger",
         }
-    unresolved_accounting = unresolved > 0 or cost_dependency or not audited
+    unresolved_accounting = unresolved > 0 or bool(cost_dependency) or not audited
     clean = (
         completed >= 3
-        and scoped is not None
-        and scoped > 0
-        and coverage is not None
-        and coverage >= Decimal("0.99")
+        and profit is not None
+        and profit > 0
+        and gate["passed"]
         and unresolved == 0
         and not cost_dependency
         and audited
     )
-    stronger = clean and completed >= 20 and mints >= 3
+    stronger = (
+        clean
+        and completed >= 20
+        and mints >= 3
+        and stronger_shortlist_activity_ok(activity)
+    )
     if stronger:
         level = "stronger_research_shortlist"
     elif clean:
@@ -330,31 +446,30 @@ def qualification_level(report, profile):
         "level": level,
         "label": level.replace("_", " "),
         "clean_episodes": completed,
-        "positive_scoped_net": bool(scoped is not None and scoped > 0),
-        "coverage": _display_decimal(coverage),
+        "positive_completed_episode_net": bool(profit is not None and profit > 0),
+        "positive_scoped_net": bool(profit is not None and profit > 0),
+        "qualifying_ledger": "completed_episode_ledger",
+        "worksheet_is_not_qualifying": True,
+        "coverage": gate.get("coverage_mandatory_share") or gate.get("coverage_count_share"),
+        "coverage_gate": gate,
         "unresolved_accounting": unresolved_accounting,
         "sensitivity_sign_flip": cost_dependency,
         "independently_audited": audited,
+        "active_trading_days": activity.get("active_trading_days"),
+        "span_days": activity.get("span_days"),
     }
 
 
 def _coverage_fields(report):
-    """Item 1: count-based, value-based and historical coverage stay separate."""
-    breakdown = report.get("record_breakdown") or {}
-    shares = breakdown.get("unsupported_swap_share_in_window") or {}
-    by_count = _decimal(shares.get("by_count"))
-    count_share = _display_decimal(Decimal("1") - by_count) if by_count is not None else None
-    value_coverages = []
-    for value in (shares.get("by_consideration") or {}).values():
-        amount = _decimal(value)
-        if amount is not None:
-            value_coverages.append(Decimal("1") - amount)
-    value_share = _display_decimal(min(value_coverages)) if value_coverages else None
+    """Count and value stay separate; the mandatory gate is their conjunction."""
+    shares = coverage_shares(report)
     return {
-        "coverage_count_share": count_share,
-        "coverage_value_share": value_share,
+        "coverage_count_share": shares["coverage_count_share"],
+        "coverage_value_share": shares["coverage_value_share"],
+        "coverage_mandatory_share": shares["coverage_mandatory_share"],
         "coverage_historical_share": None,
-        "decoder_coverage_share": count_share,
+        "decoder_coverage_share": shares["coverage_count_share"],
+        "coverage_denominator_includes_unsupported_suspected_trading": True,
     }
 
 
@@ -439,8 +554,17 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
                 "asset": settlement,
                 "signature": row.get("signature"),
             })
+    ledger = _episode_ledger_from_report(report)
+    episode_net, episode_unit, episode_vector = episode_net_from_ledger(
+        ledger, fallback_unit=settlement if settlement in ("SOL", "USDC") else None
+    )
+    if report.get("completed_episode_net") not in (None, ""):
+        episode_net = _display_decimal(_decimal(report.get("completed_episode_net")))
+        episode_unit = report.get("completed_episode_net_unit") or episode_unit
     if "wallet_completed_episodes" in report and report.get("wallet_completed_episodes") is not None:
         completed = int(report.get("wallet_completed_episodes"))
+    elif ledger:
+        completed = len(ledger)
     elif mapped:
         from scanner.mass_search.g3_history import completed_episodes
         grouped = {}
@@ -545,7 +669,15 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "unsupported_swap_share_in_window": (report.get("record_breakdown") or {}).get("unsupported_swap_share_in_window"),
         **_coverage_fields(report),
         "in_window_span": (report.get("record_breakdown") or {}).get("in_window_span"),
-        "concentration_detail": _concentration_detail(report, scoped_pnl, known_sells),
+        "completed_episode_ledger": ledger,
+        "completed_episode_net": episode_net,
+        "completed_episode_net_unit": episode_unit,
+        "completed_episode_net_vector": episode_vector,
+        "concentration_detail": _concentration_detail(
+            {**report, "completed_episode_ledger": ledger, "completed_episode_net_unit": episode_unit},
+            episode_net,
+            known_sells,
+        ),
         "qualification_level": None,
         "thresholds": filters.get("thresholds") or dict(DEFAULT_THRESHOLDS),
         "threshold_results": {},
@@ -559,9 +691,35 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "notes": [
             "Scoped subset only. Unset thresholds are not applied.",
             "Holder rewards and network fees are not trading P&L.",
-            "Qualification reads the screen on matched trades in the captured window, never account performance.",
+            "Qualification reads the completed-episode ledger in the captured window, never the worksheet total or account performance.",
         ],
     }
+    activity = trading_activity(events)
+    profile["trading_activity"] = activity
+    profile["worksheet_episode_bridge"] = worksheet_episode_bridge(scoped_pnl, episode_net, episode_unit or settlement)
+    profile["exposure_outside_completed_episodes"] = exposure_outside_completed_episodes(report, profile)
+    profile["requested_history_interval"] = requested_history_interval(report)
+    profile["hold_time_stats"] = hold_time_stats(ledger)
+    fingerprint = compute_audit_fingerprint(report, profile=profile, episodes=ledger)
+    profile["audit_fingerprint"] = fingerprint
+    profile["accounting_policy_version"] = ACCOUNTING_POLICY_VERSION
+    attached = (report or {}).get("independent_audit")
+    if attached and bindable_independent_audit(attached, fingerprint):
+        profile["independent_audit"] = attached
+    elif attached and not attached.get("content_fingerprint") and not attached.get("fingerprint"):
+        # Tests and explicit in-memory audits may omit a fingerprint; they still
+        # cannot supply the qualifying headline.
+        profile["independent_audit"] = attached
+    else:
+        loaded = load_committed_independent_audit(report.get("address") if report else None, fingerprint)
+        profile["independent_audit"] = loaded
+        if loaded:
+            report["independent_audit"] = loaded
+        elif (report or {}).get("independent_audit"):
+            report["independent_audit"] = None
+    if is_synthetic_case(report, profile):
+        profile.update(mark_synthetic(profile, reason=report.get("synthetic_reason") or "synthetic regression case"))
+        profile["not_a_genuine_research_wallet"] = True
     results = evaluate_thresholds(profile, filters.get("thresholds") or {})
     profile["threshold_results"] = results["results"]
     profile["criteria_met"] = results["criteria_met"]
@@ -571,12 +729,6 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     profile["qualification_category"] = qualification_category(report, profile)
     profile["qualification_level"] = qualification_level(report, profile)
     profile["candidate_assessment"] = candidate_assessment(report, profile)
-    profile["independent_audit"] = (report or {}).get("independent_audit") or load_committed_independent_audit(
-        report.get("address") if report else None
-    )
-    audit = profile.get("independent_audit") or {}
-    profile["completed_episode_net"] = audit.get("app_completed_episode_net")
-    profile["completed_episode_net_unit"] = audit.get("app_completed_episode_net_unit")
     from scanner.mass_search.labels import wallet_status_fields
     fields = wallet_status_fields(report, profile)
     profile["coverage_status"] = fields["coverage_status"]
@@ -703,8 +855,9 @@ def candidate_assessment(report, profile):
             "note": "Coverage of captured transactions is not completeness of wallet history.",
         },
         "completed_matched_positions": completed,
-        "active_trading_days": None,
-        "active_trading_days_state": "NOT_EVALUATED",
+        "active_trading_days": (profile.get("trading_activity") or trading_activity(events)).get("active_trading_days"),
+        "active_trading_days_state": "EVALUATED_FROM_TRADING_EVENTS",
+        "span_days": (profile.get("trading_activity") or trading_activity(events)).get("span_days"),
         "gross_realised": scoped,
         "net_realised": None,
         "net_realised_reason": (

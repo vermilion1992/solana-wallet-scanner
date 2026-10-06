@@ -153,22 +153,53 @@ def _keys(message, meta):
     return result
 
 
+def _header_counts(header, static_len):
+    """Match compiled_instructions.py:150-185 header bounds."""
+    if not isinstance(header, dict):
+        return None
+    required = header.get('numRequiredSignatures')
+    readonly_signed = header.get('numReadonlySignedAccounts')
+    readonly_unsigned = header.get('numReadonlyUnsignedAccounts')
+    if (any(type(value) is not int or isinstance(value, bool)
+            for value in (required, readonly_signed, readonly_unsigned)) or
+            not 1 <= required <= static_len or not 0 <= readonly_signed < required or
+            not 0 <= readonly_unsigned <= static_len - required):
+        return None
+    return required, readonly_signed, readonly_unsigned
+
+
 def _message_signers(message, keys):
     """Message signers from parsed flags or header.numRequiredSignatures.
 
-    Does not invent signers. Outer ATA still requires the funding source to be
-    one of these keys; that check stays in normalize_instruction.
+    Cross-checks parsed signer/writable flags against the message header the
+    same way compiled_instructions.py:150-185 does. Conflicting flags yield no
+    signers. Does not invent signers. Outer ATA still requires the funding
+    source to be one of these keys; that check stays in normalize_instruction.
     """
     entries = message.get('accountKeys')
+    header = message.get('header') if isinstance(message.get('header'), dict) else {}
+    header_present = bool(header)
     if isinstance(entries, list) and entries and all(isinstance(item, dict) for item in entries):
-        flagged = [item.get('pubkey') for item in entries if item.get('signer') is True]
+        if header_present:
+            counts = _header_counts(header, len(entries))
+            if counts is None:
+                return set()
+            required, readonly_signed, readonly_unsigned = counts
+            for index, entry in enumerate(entries):
+                writable = (index < required - readonly_signed if index < required else
+                            index < len(entries) - readonly_unsigned)
+                if entry.get('signer') is not (index < required) or entry.get('writable') is not writable:
+                    return set()
+            flagged = [entry.get('pubkey') for entry in entries[:required]]
+        else:
+            flagged = [item.get('pubkey') for item in entries if item.get('signer') is True]
         if flagged and all(isinstance(key, str) and key for key in flagged):
             return set(flagged)
         return set()
-    header = message.get('header') if isinstance(message.get('header'), dict) else {}
-    required = header.get('numRequiredSignatures')
-    if type(required) is not int or isinstance(required, bool) or not 1 <= required <= len(keys):
+    counts = _header_counts(header, len(keys))
+    if counts is None:
         return set()
+    required, _readonly_signed, _readonly_unsigned = counts
     return set(keys[:required])
 
 
@@ -704,6 +735,25 @@ def decode_supported_swaps(transactions, address):
                     routes.append(route)
             if not routes:
                 no_swap += 1
+                from scanner.mass_search.verified_costs import is_verified_tip_account
+                for index, instruction in enumerate(instructions):
+                    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+                    info = parsed.get('info') if isinstance(parsed, dict) else None
+                    if not isinstance(info, dict) or parsed.get('type') != 'transfer':
+                        continue
+                    if info.get('source') != address:
+                        continue
+                    dest = info.get('destination')
+                    lamports = info.get('lamports')
+                    if type(lamports) is not int or not is_verified_tip_account(dest):
+                        continue
+                    emit('tip', f'instructions.{index}',
+                         amount_sol=canonical(Decimal(lamports) / LAMPORTS),
+                         tips_sol=canonical(Decimal(lamports) / LAMPORTS),
+                         paid_by_wallet=paid, destination=dest,
+                         economic_role='verified_tip',
+                         separate_successful_transaction=True,
+                         reason='Tip paid in a separate successful transaction; counted as a cost, not swap volume')
                 raise ValueError('No reviewed outer spot swap; transfers and balances alone do not prove trading')
             if len(routes) != 1:
                 raise ValueError('Multiple outer swaps need separate instruction-level economic allocation')
@@ -1028,20 +1078,43 @@ def decode_supported_swaps(transactions, address):
             mint, quantity = assets[0]
             if not settlement or (quantity > 0) == (settlement > 0):
                 raise ValueError('No opposing SOL consideration for the evidenced asset exchange')
-            from scanner.mass_search.verified_costs import is_verified_tip_account
-            verified_tip_lamports = sum(
-                item['lamports'] for item in outside_native
-                if item.get('direction') == 'withdrawal' and is_verified_tip_account(item.get('destination'))
-            )
-            unverified_debit_lamports = sum(
-                item['lamports'] for item in outside_native
-                if item.get('direction') == 'withdrawal' and not is_verified_tip_account(item.get('destination'))
-            )
+            from scanner.mass_search.verified_costs import classify_cost_role
+            platform_accounts = set()
+            if route.get('program') == JUPITER:
+                accounts = route.get('accounts') or []
+                # Official Jupiter route / exact_out_route platform_fee_account is index 6.
+                if route.get('instruction') in (
+                    'route', 'route_with_token_ledger', 'exact_out_route',
+                ) and len(accounts) > 6:
+                    platform_accounts.add(accounts[6])
+            verified_tip_lamports = 0
+            platform_fee_lamports = 0
+            unverified_debit_lamports = 0
+            for item in outside_native:
+                if item.get('direction') != 'withdrawal':
+                    continue
+                role = classify_cost_role(
+                    item.get('destination'),
+                    proven_from_layout=item.get('destination') in platform_accounts,
+                    transfer=True,
+                )
+                item['cost_role'] = role
+                if role == 'verified_tip':
+                    verified_tip_lamports += item['lamports']
+                elif role == 'proven_router_or_platform_fee':
+                    platform_fee_lamports += item['lamports']
+                    item['counted_as_fee'] = True
+                else:
+                    unverified_debit_lamports += item['lamports']
+                    item['counted_as_fee'] = False
             tips_lamports = verified_tip_lamports
             tips_sol = canonical(Decimal(tips_lamports) / LAMPORTS) if tips_lamports else '0'
+            platform_fee_sol = canonical(Decimal(platform_fee_lamports) / LAMPORTS) if platform_fee_lamports else '0'
             unverified_debits_sol = canonical(Decimal(unverified_debit_lamports) / LAMPORTS) if unverified_debit_lamports else '0'
             network_fee_sol = fee_sol if paid else '0'
-            fees_and_tips_sol = canonical(Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)))
+            fees_and_tips_sol = canonical(
+                Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)) + Decimal(str(platform_fee_sol))
+            )
             allocate_fee = paid and not outside_native and not native_roles
             if mint == USDC:
                 usdc_decimals = decimals.get(USDC)
@@ -1075,6 +1148,7 @@ def decode_supported_swaps(transactions, address):
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
                  owner=address, fee_sol=fees_and_tips_sol if allocate_fee else '0',
                  network_fee_sol=network_fee_sol, tips_sol=tips_sol,
+                 platform_fee_sol=platform_fee_sol,
                  fees_and_tips_sol=fees_and_tips_sol,
                  unverified_debits_sol=unverified_debits_sol,
                  sensitivity_unverified_debits_sol=unverified_debits_sol,

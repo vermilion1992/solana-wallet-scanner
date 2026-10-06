@@ -16,7 +16,8 @@ EXPECTED_CAPTURE_SHA = "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d
 RANKED_SNAPSHOT_ID = "ranked100-discovery-pilot-2026-10-05"
 ANALYSIS_VERSION = (
     "analysis-v6-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
-    "sig-keyed-v1+quote-conversion-v1+fees-tips-v1+coverage-v1+mitch-review-v1"
+    "sig-keyed-v1+quote-conversion-v1+fees-tips-v1+coverage-v1+mitch-review-v1+"
+    "chatgpt-review-2026-10-07-v1"
 )
 RESEARCH_SEARCH_DIR = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
 RESEARCH_SEARCH_MANIFEST = RESEARCH_SEARCH_DIR / "CAPTURE_MANIFEST.json"

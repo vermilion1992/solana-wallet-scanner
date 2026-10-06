@@ -5,6 +5,7 @@ Do not write one surface from a different naming scheme than another.
 """
 from __future__ import annotations
 
+from scanner.mass_search.qualification_gates import CROSS_CURRENCY_SENSITIVITY
 from scanner.mass_search.research_profile import (
     RESEARCH_SCREEN_DEFAULTS,
     independently_audited,
@@ -66,8 +67,15 @@ def blocking_reason(report, profile, *, coverage_status, level):
     if unresolved:
         noun = "sale" if unresolved == 1 else "sales"
         reasons.append(f"{unresolved} unresolved-basis {noun}")
-    if (level or {}).get("sensitivity_sign_flip") or sensitivity_sign_flips(report, profile):
+    sensitivity = (level or {}).get("sensitivity_sign_flip") or sensitivity_sign_flips(report, profile)
+    if sensitivity == CROSS_CURRENCY_SENSITIVITY:
+        reasons.append(CROSS_CURRENCY_SENSITIVITY)
+    elif sensitivity:
         reasons.append("unresolved adjacent debits flip the sensitivity net sign")
+    gate = (level or {}).get("coverage_gate") or {}
+    if gate and not gate.get("passed"):
+        if "coverage gate requires count AND value" not in "; ".join(reasons):
+            reasons.append(gate.get("reason") or "coverage gate requires count AND value")
     genuine = (report or {}).get("corpus_kind") == "GENUINE_REPLAY"
     if completed >= 1 and genuine and not independently_audited(report, profile):
         reasons.append("not independently audited")
