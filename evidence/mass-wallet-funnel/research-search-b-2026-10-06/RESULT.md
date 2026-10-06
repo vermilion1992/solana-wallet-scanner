@@ -24,7 +24,8 @@ Branch `cursor/research-search-b-fix-1055`. Draft PR #6 vs `cursor/mass-wallet-f
 - `aa2ef2d` — rebuilt `frontend/dist`, regenerated 2000-record ledger
 - `4a460b9` — D1–D6 handover (auditor tip list, failed-tx fees, 58PW episode net, compare mismatch, 2-lamport tolerance)
 - `393e5fc` — R1–R7 (Jupiter v1 decode, 58PW net_display, mixed-unit refuse, full-mint notes, CccS recompute, wallet-paid fees, in-window residual)
-- this tip — F1 every worksheet figure labelled `worksheet total, partial coverage, not independently audited`; completed-episode net is its own field. F2 auditor no longer counts an opening-inventory flatten as a clean episode (`4dyknEdb…`)
+- `2dd7155` — F1 every worksheet figure labelled `worksheet total, partial coverage, not independently audited`; completed-episode net is its own field. F2 auditor no longer counts an opening-inventory flatten as a clean episode (`4dyknEdb…`)
+- `02df3d6` — 3672-test suite, rebuilt dist (`index-CYNwzjEW.js`), BVZt phone report
 
 ## Per-wallet table (window 2026-09-05T13:29:27Z → 2026-10-05T13:29:27Z exclusive)
 
