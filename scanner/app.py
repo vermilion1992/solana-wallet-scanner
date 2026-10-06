@@ -278,6 +278,11 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
                 'state': state, 'reason': 'Current archived-source interpretation; coverage and qualification remain separate.' if state == 'current' else
                 'Rebuild this archived report offline to apply current source and fee-window checks. Saved values remain unchanged.'}
         if report.get("source") == "mass-search" and not report.get("preview"):
+            from scanner.mass_search.workflow import visible_mass_search_report
+            visible = visible_mass_search_report(report)
+            result["research_profile"] = visible.get("research_profile")
+            result["funnel"] = visible.get("funnel")
+            result["qualification_category"] = visible.get("qualification_category")
             result["mass_search_interpretation"] = {
                 "kind": "mass-search-export-interpretation-v1",
                 "capture_sha256": report.get("capture_sha256"),
@@ -288,8 +293,8 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
                 "visible_report": report.get("visible_report") is True,
                 "visible_report_stored": report.get("visible_report") if "visible_report" in report else None,
                 "result_scope": report.get("result_scope") or "conditional_on_captured_inventory",
-                "evidence_class": (report.get("research_profile") or {}).get("evidence_class"),
-                "candidate_assessment": (report.get("research_profile") or {}).get("candidate_assessment"),
+                "evidence_class": (visible.get("research_profile") or {}).get("evidence_class"),
+                "candidate_assessment": (visible.get("research_profile") or {}).get("candidate_assessment"),
                 "not_safe_to_copy": True,
                 "PRODUCT_READY": False,
                 "sol_fees_not_converted": (report.get("worksheet") or {}).get("sol_fees_not_converted"),

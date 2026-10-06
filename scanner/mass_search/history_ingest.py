@@ -1206,7 +1206,7 @@ def validate_operator_quota_record(record, draft=None):
         return "quota_inconsistent"
     if record.get("overages_enabled") is not False:
         return "overages_not_disabled"
-    if not record.get("operator"):
+    if not str(record.get("operator") or "").strip():
         return "quota_operator_missing"
     confirmed = _parse_aware(record.get("confirmed_at"))
     if confirmed is None:

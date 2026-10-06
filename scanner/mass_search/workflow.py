@@ -498,6 +498,25 @@ def _authoritative_saved_profile(report):
     return reconcile_saved_profile(report, profile)
 
 
+def visible_mass_search_report(report):
+    """Copy whose funnel, category, and profile follow reconciled evidence."""
+    if not report:
+        return report
+    visible = dict(report)
+    profile = _authoritative_saved_profile(visible)
+    if not profile:
+        return visible
+    visible["research_profile"] = profile
+    visible["funnel"] = classify_candidate(
+        capture_available=True,
+        profile=profile,
+        classification=visible.get("classification"),
+        worksheet=visible.get("worksheet"),
+    )
+    visible["qualification_category"] = profile.get("qualification_category")
+    return visible
+
+
 def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     filters = filters or load_filters(store)
     universe = load_ranked_universe()

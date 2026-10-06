@@ -38,6 +38,8 @@ import {
   metricDefinitions,
 } from "./components";
 import {
+  authoritativeCategory,
+  authoritativeFunnel,
   completedEpisodeFields,
   count,
   date,
@@ -285,10 +287,16 @@ function funnelState(funnel: Record<string, unknown> | null | undefined, key: st
 
 export function ResearchProfilePanel({ report }: { report: Report }) {
   const profile = report.research_profile || {};
-  const funnel = (profile.funnel as Record<string, unknown> | undefined) || report.funnel || {};
+  const funnel = authoritativeFunnel(report) as Record<string, unknown>;
+  const category = authoritativeCategory(report);
   if (!report.research_profile && !report.funnel) return null;
   const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
-  const completedKnown = Number(profile.completed_known_cost_positions ?? 0);
+  const displayedLedger = report.completed_episode_ledger
+    ?? (profile.completed_episode_ledger as unknown[] | undefined)
+    ?? null;
+  const completedKnown = Array.isArray(displayedLedger)
+    ? displayedLedger.length
+    : Number(profile.completed_known_cost_positions ?? 0);
   const audit = (report.independent_audit || profile.independent_audit || {}) as {
     worksheet_total?: string | null;
     worksheet_total_unit?: string | null;
@@ -454,8 +462,7 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
       <p className="subset-worksheet-note" data-result-scope="true">
         Results are conditional on captured inventory. Qualifying always reads meets the screen on matched trades in the captured window, never account performance.
         {(() => {
-          const qual = (profile.qualification_category || {}) as { category?: string };
-          return qual.category ? ` Qualification ${String(qual.category).replaceAll("_", " ")} (evidence quality, not a screen pass).` : "";
+          return category.category ? ` Qualification ${String(category.category).replaceAll("_", " ")} (evidence quality, not a screen pass).` : "";
         })()}
         {(() => {
           const evidence = (profile.evidence_class || {}) as { position?: { label?: string }; account?: { label?: string } };

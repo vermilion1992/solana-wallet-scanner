@@ -30,6 +30,16 @@ Mapping: **ID → rule → source enforcement → tests → consumers → eviden
 - Progress missing `response_id`; progress bound to an older response
 - Persist failure before transport
 - Reconcile idempotence on empty-ledger overlay
+- App-side-only component mutation (auditor still matches ledger)
+- Auditor-side-only component mutation (app still matches ledger)
+- Top-level bridges mutated while episode-local copy stays valid
+- Headline unit mismatch on `report.independent_audit` (not only profile)
+- Stale completed count (4) + empty ledger + saved C=MET / class 1
+- Whitespace-only and missing operator on quota record
+- `last_dispatch.status=reserved` cannot re-arm an old page-1 receipt
+- A6PS first page remains allowed; additional page stays unavailable
+- Report GET / export copy via `visible_mass_search_report`
+- Live `ResearchProfilePanel` uses authoritative funnel/category, not saved fields
 
 ## Safety mutants verified to fail the intended test
 

@@ -324,6 +324,8 @@ export type Report = {
     note?: string | null;
   } | null;
   research_profile?: Record<string, unknown> | null;
+  completed_episode_ledger?: Array<Record<string, unknown>>;
+  qualification_category?: { category?: string; evidence_class?: number } | null;
   visible_report?: boolean | null;
   result_scope?: string;
   capture_sha256?: string;

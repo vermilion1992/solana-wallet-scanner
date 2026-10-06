@@ -794,30 +794,32 @@ class MassSearchService:
             decisions = [dict(row) for row in self.store.db.execute("SELECT * FROM stage_decisions WHERE run_id=?", (run_id,)).fetchall()]
             links = [dict(row) for row in self.store.db.execute("SELECT * FROM report_links WHERE run_id=?", (run_id,)).fetchall()]
         reports = []
+        from scanner.mass_search.workflow import visible_mass_search_report
         for report in self.linked_reports(run_id):
+            visible = visible_mass_search_report(report)
             reports.append({
-                "id": report.get("id"),
-                "candidate_id": report.get("candidate_id"),
-                "address": report.get("address"),
-                "source": report.get("source"),
-                "corpus_kind": report.get("corpus_kind"),
-                "policy": report.get("policy"),
-                "label": report.get("label"),
-                "worksheet": report.get("worksheet"),
-                "material_exit": report.get("material_exit"),
-                "notes": report.get("notes"),
-                "observations": report.get("observations") or [],
-                "g3_status": report.get("g3_status"),
-                "source_integrity": report.get("source_integrity"),
-                "declared_mints": report.get("declared_mints") or [],
-                "wallet_completed_episodes": report.get("wallet_completed_episodes"),
-                "events": report.get("events") or [],
-                "research_profile": report.get("research_profile"),
-                "funnel": report.get("funnel"),
-                "analytics": report.get("analytics"),
-                "capture_sha256": report.get("capture_sha256"),
-                "analysis_cache_key": report.get("analysis_cache_key"),
-                "mass_search_interpretation": report.get("mass_search_interpretation"),
+                "id": visible.get("id"),
+                "candidate_id": visible.get("candidate_id"),
+                "address": visible.get("address"),
+                "source": visible.get("source"),
+                "corpus_kind": visible.get("corpus_kind"),
+                "policy": visible.get("policy"),
+                "label": visible.get("label"),
+                "worksheet": visible.get("worksheet"),
+                "material_exit": visible.get("material_exit"),
+                "notes": visible.get("notes"),
+                "observations": visible.get("observations") or [],
+                "g3_status": visible.get("g3_status"),
+                "source_integrity": visible.get("source_integrity"),
+                "declared_mints": visible.get("declared_mints") or [],
+                "wallet_completed_episodes": visible.get("wallet_completed_episodes"),
+                "events": visible.get("events") or [],
+                "research_profile": visible.get("research_profile"),
+                "funnel": visible.get("funnel"),
+                "analytics": visible.get("analytics"),
+                "capture_sha256": visible.get("capture_sha256"),
+                "analysis_cache_key": visible.get("analysis_cache_key"),
+                "mass_search_interpretation": visible.get("mass_search_interpretation"),
             })
         payload = {"run": view, "decisions": decisions, "report_links": links, "reports": reports, "exported_at": self.clock()}
         digest = self.store.archive(payload)

@@ -452,6 +452,10 @@ def independently_audited(report, profile=None):
         return False
     if not certificate_comparison_proof(audit, ledger):
         return False
+    app_unit = (profile or {}).get("completed_episode_net_unit") or audit.get("app_completed_episode_net_unit")
+    auditor_unit = audit.get("independently_audited_episode_net_unit")
+    if app_unit and auditor_unit and app_unit != auditor_unit:
+        return False
     if audit.get("status") == "independently_audited":
         return True
     return audit.get("independently_audited") is True

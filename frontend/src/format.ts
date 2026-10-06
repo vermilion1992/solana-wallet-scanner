@@ -413,8 +413,20 @@ const POSITIVE_CATEGORIES = new Set([
   "profitable_account_performance",
 ]);
 
+function displayedLedger(
+  source?: {
+    completed_episode_ledger?: unknown;
+    research_profile?: Record<string, unknown> | null;
+  } | null,
+): unknown[] | null {
+  const profile = source?.research_profile || {};
+  const ledger = source?.completed_episode_ledger ?? profile.completed_episode_ledger ?? null;
+  return Array.isArray(ledger) ? ledger : null;
+}
+
 export function authoritativeFunnel(source?: {
   funnel?: { A?: { state?: string }; B?: { state?: string }; C?: { state?: string; criteria_met?: boolean } } | null;
+  completed_episode_ledger?: unknown;
   research_profile?: Record<string, unknown> | null;
 } | null) {
   const profile = source?.research_profile || {};
@@ -424,11 +436,16 @@ export function authoritativeFunnel(source?: {
     C?: { state?: string; criteria_met?: boolean };
   } | undefined) || null;
   const funnel = profileFunnel || source?.funnel || {};
-  const completed = Number(profile.completed_known_cost_positions ?? 0);
+  const ledger = displayedLedger(source);
+  const completed = ledger ? ledger.length : Number(profile.completed_known_cost_positions ?? 0);
   const criteriaMet = profile.criteria_met === true;
-  if (funnel.C?.state === "MET" && (completed < 1 || !criteriaMet)) {
+  const stalePositive = completed < 1 || !ledger || ledger.length < 1 || !criteriaMet;
+  if (funnel.C?.state === "MET" && stalePositive) {
     return {
       ...funnel,
+      B: funnel.B?.state === "ESTABLISHED" && (!ledger || ledger.length < 1)
+        ? { ...(funnel.B || {}), state: "NOT_ESTABLISHED" }
+        : funnel.B,
       C: { ...(funnel.C || {}), state: "NOT_MET", criteria_met: false },
     };
   }
@@ -437,6 +454,7 @@ export function authoritativeFunnel(source?: {
 
 export function authoritativeCategory(source?: {
   qualification_category?: { category?: string; evidence_class?: number } | null;
+  completed_episode_ledger?: unknown;
   research_profile?: Record<string, unknown> | null;
 } | null) {
   const profile = source?.research_profile || {};
@@ -445,8 +463,9 @@ export function authoritativeCategory(source?: {
     || (profile.qualification_category as { category?: string; evidence_class?: number } | undefined)
     || {}
   );
-  const completed = Number(profile.completed_known_cost_positions ?? 0);
-  if (completed < 1 && category.category && POSITIVE_CATEGORIES.has(category.category)) {
+  const ledger = displayedLedger(source);
+  const completed = ledger ? ledger.length : Number(profile.completed_known_cost_positions ?? 0);
+  if ((completed < 1 || !ledger || ledger.length < 1) && category.category && POSITIVE_CATEGORIES.has(category.category)) {
     return { ...category, category: "analysed_incomplete" };
   }
   return category;

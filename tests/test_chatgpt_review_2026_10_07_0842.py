@@ -720,6 +720,34 @@ def test_mounted_component_trees_reject_invalid_and_stale_payloads(tmp_path):
             },
         },
         "staleCategoryFunnel": stale,
+        "staleCountAndEmptyLedger": {
+            "address": "SynthStaleCount0842AAAAAAAAAAAAAAAAAAA",
+            "completed_episode_ledger": [],
+            "independent_audit": report["independent_audit"],
+            "research_profile": {
+                **profile,
+                "completed_episode_ledger": [],
+                "completed_known_cost_positions": 4,
+                "criteria_met": True,
+                "qualification_category": {"category": "positive_matched_position_evidence", "evidence_class": 1},
+                "funnel": {"A": {"state": "YES"}, "B": {"state": "ESTABLISHED"}, "C": {"state": "MET", "criteria_met": True}},
+                "independent_audit": report["independent_audit"],
+            },
+            "qualification_category": {"category": "positive_matched_position_evidence"},
+            "funnel": {"A": {"state": "YES"}, "B": {"state": "ESTABLISHED"}, "C": {"state": "MET", "criteria_met": True}},
+            "compare": {
+                "left_funnel": {"C": {"state": "MET", "criteria_met": True}},
+                "right_funnel": {"C": {"state": "MET", "criteria_met": True}},
+                "left_qualification_category": {"category": "positive_matched_position_evidence"},
+                "right_qualification_category": {"category": "positive_matched_position_evidence"},
+                "window_policy": {
+                    "left_sample_size": 0,
+                    "right_sample_size": 0,
+                    "left_independently_audited": False,
+                    "right_independently_audited": False,
+                },
+            },
+        },
     }
     cases_path = tmp_path / "0842-cases.json"
     cases_path.write_text(json.dumps(payload), encoding="utf-8")

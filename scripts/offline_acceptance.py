@@ -27,6 +27,7 @@ MANDATORY = [
     "tests/test_chatgpt_review_2026_10_07_0547.py",
     "tests/test_chatgpt_review_2026_10_07_0714.py",
     "tests/test_chatgpt_review_2026_10_07_0842.py",
+    "tests/test_adversarial_0842_named_counterexamples.py",
     "tests/test_mass_search_mitch_requirements.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
