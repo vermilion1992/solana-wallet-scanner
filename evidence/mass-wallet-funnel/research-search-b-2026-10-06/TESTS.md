@@ -1,9 +1,9 @@
-# Offline suite at the phone-UI evidence commit (cloud agent, 2026-10-06)
+# Offline suite at the independent-audit reconciliation commit (cloud agent, 2026-10-06)
 
-App SHA `d961824` plus this screenshots/TESTS commit. Bundle `frontend/dist/assets/index-Bj4UsG-X.js`.
+App SHA of this evidence commit. Bundle `frontend/dist/assets/index-Bj4UsG-X.js`.
 
-- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_KEY .venv/bin/python -m pytest -q`): **3647 passed**, 440 subtests, 0 failed, 1 warning (9 min 1 s). EXIT 0.
-- Keys set (`HELIUS_API_KEY=dummy-helius-not-live BIRDEYE_API_KEY=dummy-birdeye-not-live HELIUS_KEY=dummy-helius-not-live .venv/bin/python -m pytest -q`): **3647 passed**, 440 subtests, 0 failed, 1 warning (8 min 51 s). EXIT 0.
+- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3653 passed**, 440 subtests, 0 failed, 1 warning (9 min 1 s). EXIT 0.
+- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3653 passed**, 440 subtests, 0 failed, 1 warning (9 min 6 s). EXIT 0.
 - `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-Bj4UsG-X.js`.
 - Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = **401**. Shots in `screenshots/phone-0*.png`.
 - No Helius or Birdeye calls. Dummy keys were never sent.
@@ -12,6 +12,12 @@ App SHA `d961824` plus this screenshots/TESTS commit. Bundle `frontend/dist/asse
 Named regressions:
 
 - `tests/test_mitch_review_2026_10_06.py`
+  - `test_a6ps_75gg_buy_consideration_is_swap_quote_not_wallet_delta`
+  - `test_a6ps_2rss_close_is_meteora_damm_v2_from_raw_bytes`
+  - `test_gtfo_2af7_same_slot_order_closes_missing_episode`
+  - `test_58pw_sales_are_rfq_fill_and_jupiter_usdc`
+  - `test_labelled_wallets_are_independently_audited_in_committed_json`
+  - `test_cccs_scoped_net_bridge_matches_debit_audit`
   - `test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead`
   - `test_item11_label_tables_cannot_disagree`
   - `test_committed_wallet_table_matches_label_function`
