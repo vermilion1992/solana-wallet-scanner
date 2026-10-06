@@ -327,7 +327,7 @@ export function completedEpisodeFields(source?: {
 }
 
 export function rankedPhonePnlText(row: {
-  funnel?: { B?: { scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number } };
+  funnel?: { B?: { scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number } } | null;
   research_profile?: Record<string, unknown> | null;
   completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
   independent_audit?: Record<string, unknown> | null;
@@ -353,7 +353,7 @@ export function rankedPhonePnlText(row: {
 }
 
 export function rankedDesktopPnlText(row: {
-  funnel?: { B?: { scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number } };
+  funnel?: { B?: { scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number } } | null;
   research_profile?: Record<string, unknown> | null;
   completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
   independent_audit?: Record<string, unknown> | null;

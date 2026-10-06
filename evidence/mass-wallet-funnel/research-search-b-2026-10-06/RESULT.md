@@ -1,3 +1,31 @@
+# RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 07:14 re-review
+
+**Outcome: ACCEPT_AS_PROGRESS_ONLY remaining blockers held and fixed. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**
+
+Binding work order: `CHATGPT_REVIEW_2026-10-07_0714_FULL.md` of PR #6 at `5cd05b7`. Gaps 3 and 4 stay closed and were not reopened. gtfo’s labelled six-atomic aggregate bridge stays accepted. DQ7n/BVZt honesty and capture exclusions stay.
+
+## This-review claim status
+
+| Gap | Reviewer required closure | Status |
+| --- | --- | --- |
+| 1 Comparison evidence | Validate unique 1:1 identities, mint/close match, amounts/units/tolerance; reject stale-positive-flag payloads; `completedEpisodeFields()` contradiction + fingerprint + ledger membership; JS half-even assertions | Done. Tests in `tests/test_chatgpt_review_2026_10_07_0714.py`. |
+| 2 Saved-report decisions | Reconcile invalidates/recomputes qualification, audit, filters; fingerprint on membership change; reject missing close; ranked-row assertions | Done. |
+| 3 Decoders | Closed — not reopened | Closed. |
+| 4 Exposure/history | Closed — not reopened | Closed. |
+| Capture enforcement | Reserve-before-transport; persisted timeout consumption; receipt-bound replay; terminal cursor; committed named items + CccS preceding-page rule; operator quota record | Done. Draft `enabled:false`. |
+| Wording | Actual JS rendering of An9s + non-certifying audits; visible “sample/activity filter matches (not certified research leads)” | Done. Physical-phone testing not run. |
+
+## Residual backlog only
+
+- MassSearch desktop “Scoped P&L” header (optional rename to “Captured results”; not a blocker).
+- Open-position ages remain `not_evaluated` (count only).
+- Token-2022 stays observed-only. SwapTob unsupported.
+- Zero leads. Capture draft stays disabled.
+
+## Suite / build (07:14 pass)
+
+See `TESTS.md` on this commit. Keys unset **3722 passed** / 440 subtests / 1 warning (8 min 55 s). Dummy keys **3722 passed** / 440 subtests / 1 warning (8 min 49 s). `npm run build` recorded there (`index-Dgx1_JEr.js`).
+
 # RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 05:47 re-review
 
 **Outcome: ACCEPT_AS_PROGRESS_ONLY remaining blockers held and fixed. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**
