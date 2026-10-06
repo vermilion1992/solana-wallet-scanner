@@ -109,9 +109,16 @@ def wallet_row(address, report):
         if completed_net not in (None, ""):
             parts.append(f"{completed_net} {completed_unit} (completed-episode net)")
             if audit.get("independently_audited") and audited_net not in (None, ""):
-                from scanner.mass_search.qualification_gates import tolerance_text
+                from scanner.mass_search.qualification_gates import format_auditor_confirmation
                 unit = audited_unit or completed_unit or "SOL"
-                parts.append(f"auditor confirms within {tolerance_text(unit)}: {audited_net} {unit}")
+                confirm = (
+                    audit.get("auditor_confirmation")
+                    or format_auditor_confirmation(
+                        completed_net, audited_net, unit, independently_audited=True
+                    )
+                )
+                if confirm:
+                    parts.append(confirm)
         if worksheet_figure not in (None, ""):
             parts.append(f"{worksheet_figure} {worksheet_unit or unit or ''} ({WORKSHEET_LABEL})")
         net_text = "; ".join(parts) if parts else None

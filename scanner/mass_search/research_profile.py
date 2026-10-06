@@ -8,6 +8,8 @@ from pathlib import Path
 from scanner.mass_search.qualification_gates import (
     ACCOUNTING_POLICY_VERSION,
     CROSS_CURRENCY_SENSITIVITY,
+    SENSITIVITY_NOT_ESTABLISHED,
+    amounts_agree,
     bindable_independent_audit,
     completed_episode_ledger,
     compute_audit_fingerprint,
@@ -223,6 +225,8 @@ def _episode_day(event):
 
 
 def _episode_ledger_from_report(report):
+    if report and "completed_episode_ledger" in report:
+        return list(report.get("completed_episode_ledger") or [])
     explicit = completed_episode_ledger(report)
     if explicit:
         return explicit
@@ -360,6 +364,8 @@ def sensitivity_sign_flips(report, profile):
     judged = sensitivity_result(report, profile)
     if judged.get("reason") == CROSS_CURRENCY_SENSITIVITY:
         return CROSS_CURRENCY_SENSITIVITY
+    if judged.get("reason") == SENSITIVITY_NOT_ESTABLISHED or judged.get("evidence_state") == "not_established":
+        return SENSITIVITY_NOT_ESTABLISHED
     return bool(judged.get("flips"))
 
 
@@ -397,6 +403,9 @@ def load_committed_independent_audit(address, fingerprint=None):
             "accounting_policy_version": row.get("accounting_policy_version") or ACCOUNTING_POLICY_VERSION,
             "component_bridges": list(row.get("component_bridges") or []),
             "worksheet_episode_bridge": row.get("worksheet_episode_bridge"),
+            "aggregate_rounding_bridge": row.get("aggregate_rounding_bridge"),
+            "auditor_confirmation": row.get("auditor_confirmation"),
+            "one_to_one_membership": row.get("one_to_one_membership"),
             "note": (
                 "Decoder-independent auditor vs app per episode. "
                 "independently_audited sits next to the audited episode net, "
@@ -412,18 +421,22 @@ def load_committed_independent_audit(address, fingerprint=None):
 
 
 def independently_audited(report, profile=None):
+    """Genuine corpus requires a matching content fingerprint. No bypass."""
     audit = (report or {}).get("independent_audit") or (profile or {}).get("independent_audit") or {}
-    fingerprint = (profile or {}).get("audit_fingerprint") or (report or {}).get("audit_fingerprint")
-    stored = audit.get("content_fingerprint") or audit.get("fingerprint")
-    if stored and (not fingerprint or not bindable_independent_audit(audit, fingerprint)):
+    if not audit:
         return False
     if audit.get("status") == "not_independently_audited":
         return False
+    if audit.get("fingerprintless_not_certifying"):
+        return False
+    fingerprint = (profile or {}).get("audit_fingerprint") or (report or {}).get("audit_fingerprint")
+    if not fingerprint or not bindable_independent_audit(audit, fingerprint):
+        return False
+    if (profile or {}).get("ledger_summary_contradiction"):
+        return False
     if audit.get("status") == "independently_audited":
         return True
-    if audit.get("independently_audited") is True:
-        return True
-    return False
+    return audit.get("independently_audited") is True
 
 
 def qualification_level(report, profile):
@@ -434,10 +447,7 @@ def qualification_level(report, profile):
     mints = int((profile.get("concentration_detail") or {}).get("distinct_tokens") or 0)
     cost_dependency = sensitivity_sign_flips(report, profile)
     activity = profile.get("trading_activity") or trading_activity((report or {}).get("events") or [])
-    if (report or {}).get("corpus_kind") == "GENUINE_REPLAY":
-        audited = independently_audited(report, profile)
-    else:
-        audited = True
+    audited = independently_audited(report, profile)
     if completed < 1:
         return {
             "level": "insufficient_evidence",
@@ -583,21 +593,17 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     episode_net, episode_unit, episode_vector = episode_net_from_ledger(
         ledger, fallback_unit=settlement if settlement in ("SOL", "USDC") else None
     )
-    if report.get("completed_episode_net") not in (None, ""):
-        episode_net = _display_decimal(_decimal(report.get("completed_episode_net")))
-        episode_unit = report.get("completed_episode_net_unit") or episode_unit
-    if "wallet_completed_episodes" in report and report.get("wallet_completed_episodes") is not None:
-        completed = int(report.get("wallet_completed_episodes"))
-    elif ledger:
-        completed = len(ledger)
-    elif mapped:
-        from scanner.mass_search.g3_history import completed_episodes
-        grouped = {}
-        for row in mapped:
-            grouped.setdefault(row.get("mint") or "", []).append(row)
-        completed = int(completed_episodes(grouped)["wallet_completed_episodes"])
-    else:
-        completed = 0
+    completed = len(ledger)
+    summary_net = report.get("completed_episode_net")
+    summary_count = report.get("wallet_completed_episodes")
+    ledger_contradiction = False
+    if summary_net not in (None, "") and episode_net is not None:
+        if not amounts_agree(summary_net, episode_net, episode_unit or "SOL"):
+            ledger_contradiction = True
+    elif summary_net not in (None, "") and episode_net is None:
+        ledger_contradiction = True
+    if summary_count not in (None, "") and int(summary_count) != completed:
+        ledger_contradiction = True
     matched_fragment_pnl = None
     matched_fragment_unit = None
     if completed < 1 and scoped_pnl not in (None, ""):
@@ -698,6 +704,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "completed_episode_net": episode_net,
         "completed_episode_net_unit": episode_unit,
         "completed_episode_net_vector": episode_vector,
+        "ledger_summary_contradiction": ledger_contradiction,
         "concentration_detail": _concentration_detail(
             {**report, "completed_episode_ledger": ledger, "completed_episode_net_unit": episode_unit},
             episode_net,
@@ -721,20 +728,34 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     }
     activity = trading_activity(events)
     profile["trading_activity"] = activity
+    if "sensitivity_unverified_debits_sol" in (report or {}):
+        profile["sensitivity_unverified_debits_sol"] = report.get("sensitivity_unverified_debits_sol")
+        profile["sensitivity_evidence_state"] = "measured" if report.get("sensitivity_unverified_debits_sol") not in (None, "") else "not_established"
+    else:
+        profile["sensitivity_evidence_state"] = "not_established"
     profile["worksheet_episode_bridge"] = worksheet_episode_bridge(scoped_pnl, episode_net, episode_unit or settlement)
     profile["exposure_outside_completed_episodes"] = exposure_outside_completed_episodes(report, profile)
     profile["requested_history_interval"] = requested_history_interval(report)
-    profile["hold_time_stats"] = hold_time_stats(ledger)
+    analytics_open = ((report.get("analytics") or {}).get("open_positions"))
+    open_positions = analytics_open if isinstance(analytics_open, list) else None
+    profile["hold_time_stats"] = hold_time_stats(ledger, open_positions)
     fingerprint = compute_audit_fingerprint(report, profile=profile, episodes=ledger)
     profile["audit_fingerprint"] = fingerprint
     profile["accounting_policy_version"] = ACCOUNTING_POLICY_VERSION
     attached = (report or {}).get("independent_audit")
-    if attached and bindable_independent_audit(attached, fingerprint):
+    if ledger_contradiction:
+        profile["independent_audit"] = None
+        if (report or {}).get("independent_audit"):
+            report["independent_audit"] = None
+    elif attached and bindable_independent_audit(attached, fingerprint):
         profile["independent_audit"] = attached
-    elif attached and not attached.get("content_fingerprint") and not attached.get("fingerprint"):
-        # Tests and explicit in-memory audits may omit a fingerprint; they still
-        # cannot supply the qualifying headline.
-        profile["independent_audit"] = attached
+    elif attached and is_synthetic_case(report):
+        # Explicit synthetic marker only. Fingerprintless audits never certify.
+        profile["independent_audit"] = {
+            **attached,
+            "not_a_genuine_research_wallet": True,
+            "fingerprintless_not_certifying": True,
+        }
     else:
         loaded = load_committed_independent_audit(report.get("address") if report else None, fingerprint)
         profile["independent_audit"] = loaded
@@ -757,6 +778,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     from scanner.mass_search.labels import wallet_status_fields
     fields = wallet_status_fields(report, profile)
     profile["coverage_status"] = fields["coverage_status"]
+    profile["coverage_status_display"] = fields.get("coverage_status_display") or fields["coverage_status"]
     profile["blocking_reason"] = fields["blocking_reason"]
     return profile
 

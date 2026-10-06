@@ -138,9 +138,16 @@ def test_d3_zero_episodes_is_zero_and_a6ps_shows_six(tmp_path):
     assert analytics["win_rate"]["denominator_is"] == "completed_known_cost_positions"
     empty = deepcopy(report)
     empty["wallet_completed_episodes"] = 0
+    empty["completed_episode_ledger"] = []
+    empty["completed_episode_net"] = None
     from scanner.mass_search.research_profile import build_research_profile, default_filters
     zero = build_research_profile(empty, filters=default_filters())
     assert zero["completed_known_cost_positions"] == 0
+    contradict = deepcopy(report)
+    contradict["wallet_completed_episodes"] = 0
+    contradicted = build_research_profile(contradict, filters=default_filters())
+    assert contradicted["completed_known_cost_positions"] == 8
+    assert contradicted["ledger_summary_contradiction"] is True
     store.close()
 
 

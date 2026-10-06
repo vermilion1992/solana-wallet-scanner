@@ -316,7 +316,7 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
           <small>meets research criteria</small>
         </div>
         <div>
-          <span>{completedKnown >= 1 ? "Scoped P&L" : "Matched fragments"}</span>
+          <span>{completedKnown >= 1 ? "Worksheet total" : "Matched fragments"}</span>
           <strong>{
             completedKnown >= 1 && worksheetFigure
               ? `${decimal(String(worksheetFigure), 4)} ${worksheetUnit}`
@@ -390,38 +390,53 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {(() => {
           const exposure = (profile.exposure_outside_completed_episodes || {}) as Record<string, unknown>;
           const parts = [
-            exposure.known_cost_open_inventory != null ? `known-cost open inventory ${String(exposure.known_cost_open_inventory)}` : "",
-            exposure.inventory_of_unknown_cost != null ? `unknown-cost inventory ${String(exposure.inventory_of_unknown_cost)}` : "",
+            exposure.known_cost_open_inventory != null ? `known-cost open inventory ${String(exposure.known_cost_open_inventory)}${exposure.known_cost_open_inventory_unit ? ` ${String(exposure.known_cost_open_inventory_unit)}` : ""}` : "",
+            exposure.inventory_of_unknown_cost != null
+              ? `unknown-cost inventory ${String(exposure.inventory_of_unknown_cost)}${exposure.inventory_of_unknown_cost_unit ? ` ${String(exposure.inventory_of_unknown_cost_unit)}` : ""}`
+              : (exposure.inventory_of_unknown_cost_status === "unknown" ? "unknown-cost inventory not established" : ""),
+            exposure.open_lots != null ? `open lots ${String(exposure.open_lots)} lots` : "",
             exposure.failed_attempt_expenses != null ? `failed-attempt expenses ${String(exposure.failed_attempt_expenses)} SOL` : "",
             exposure.unallocated_verified_costs != null ? `unallocated verified costs ${String(exposure.unallocated_verified_costs)} SOL` : "",
           ].filter(Boolean);
           return parts.length ? ` · exposure outside completed episodes: ${parts.join("; ")}` : "";
         })()}
         {(() => {
-          const interval = (profile.requested_history_interval || {}) as { requested_history_interval_actually_traversed?: { start?: string; end?: string; hours?: number } };
+          const interval = (profile.requested_history_interval || {}) as { requested_history_interval_actually_traversed?: { start?: string; end?: string; hours?: number; status?: string } };
           const traversed = interval.requested_history_interval_actually_traversed;
           if (!traversed) return "";
-          return ` · requested history interval actually traversed ${String(traversed.start || "")} → ${String(traversed.end || "")}${traversed.hours != null ? ` (${String(traversed.hours)} h)` : ""}`;
+          if (traversed.status === "not_evaluated" || !traversed.start || !traversed.end) {
+            return " · requested history interval actually traversed not evaluated";
+          }
+          return ` · requested history interval actually traversed ${String(traversed.start)} → ${String(traversed.end)}${traversed.hours != null ? ` (${String(traversed.hours)} h)` : ""}`;
         })()}
         {(() => {
-          const holds = (profile.hold_time_stats || {}) as { completed_episodes?: { median_seconds?: number; sample_count?: number }; open_positions?: { median_age_seconds?: number; sample_count?: number } };
+          const holds = (profile.hold_time_stats || {}) as { completed_episodes?: { median_seconds?: number; sample_count?: number }; open_positions?: { median_age_seconds?: number; sample_count?: number; status?: string } };
           const completed = holds.completed_episodes || {};
           const open = holds.open_positions || {};
           const bits = [];
           if (completed.median_seconds != null) bits.push(`completed-episode median hold ${completed.median_seconds}s n=${completed.sample_count ?? 0}`);
-          if (open.median_age_seconds != null) bits.push(`open-position median age ${open.median_age_seconds}s n=${open.sample_count ?? 0}`);
+          if (open.status === "not_evaluated") bits.push("open-position ages not evaluated");
+          else if (open.median_age_seconds != null) bits.push(`open-position median age ${open.median_age_seconds}s n=${open.sample_count ?? 0}`);
           return bits.length ? ` · ${bits.join(" · ")}` : "";
         })()}
         {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
       </p>
       <p className="subset-worksheet-note" data-verified-sensitivity="true">
-        Verified costs {String(report.verified_tips_sol || "0")} SOL tips
-        {` · sensitivity unverified debits ${String(report.sensitivity_unverified_debits_sol ?? "0")} SOL`}
+        Verified tips {String(report.verified_tips_sol || "0")} SOL
+        {report.proven_platform_fees_sol != null ? ` · network/platform costs ${String(report.proven_platform_fees_sol)} SOL` : ""}
+        {` · sensitivity unverified debits ${
+          report.sensitivity_unverified_debits_sol == null
+          && (profile as { sensitivity_evidence_state?: string }).sensitivity_evidence_state === "not_established"
+            ? "not established"
+            : report.sensitivity_unverified_debits_sol == null
+              ? "not established"
+              : `${String(report.sensitivity_unverified_debits_sol)} SOL`
+        }`}
         {` · ${String(report.sensitivity_unverified_debits_note || "Arbitrary outside SOL withdrawals are not tips.")}`}
         {(() => {
           const level = (profile.qualification_level || {}) as { level?: string; label?: string };
-          const coverage = String(profile.coverage_status || report.coverage_status || "");
+          const coverage = String(profile.coverage_status_display || profile.coverage_status || report.coverage_status || "");
           const reason = String(profile.blocking_reason || report.blocking_reason || "");
           return `${level.level ? ` qualification_level ${level.level}.` : ""}${coverage ? ` coverage_status ${coverage}.` : ""}${reason ? ` blocking_reason ${reason}.` : ""}`;
         })()}

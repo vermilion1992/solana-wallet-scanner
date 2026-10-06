@@ -65,7 +65,7 @@ try {
   const { replaceActiveReport } = require(join(output, "App.js"));
   const { CompareView, Results, WatchlistView, resultsEmptyCopy, watchlistEmptyCopy, compareEmptyCopy } = require(join(output, "workspace.js"));
   const { ReportTable } = require(join(output, "components.js"));
-  const { compareDecimal, formatCompareSidePnl, formatCompletedEpisodeHeadline, formatWorksheetTotal, listRealisedProfit, WORKSHEET_LABEL } = require(join(output, "format.js"));
+  const { compareDecimal, formatCompareSidePnl, formatCompletedEpisodeHeadline, formatWorksheetEpisodeBridge, formatWorksheetTotal, listRealisedProfit, WORKSHEET_LABEL } = require(join(output, "format.js"));
   const {
     parseRawEvidenceBundle,
     EvidenceAuditResult,
@@ -1954,6 +1954,24 @@ try {
     worksheet: "0.120294936",
     worksheetUnit: "SOL",
   }).includes(WORKSHEET_LABEL));
+  assert.equal(
+    formatWorksheetEpisodeBridge({
+      worksheet_total: "50386.378661746",
+      completed_episode_net: "5614.586672",
+      bridge: "44771.791989746",
+      unit: "USDC",
+    }),
+    "worksheet-vs-completed-episode bridge 44771.791989746 USDC (worksheet 50386.378661746 − episode 5614.586672; worksheet is not the qualifying value)",
+  );
+  assert.ok(
+    formatCompletedEpisodeHeadline({
+      appNet: "2.030645834",
+      appUnit: "SOL",
+      independentlyAudited: true,
+      auditorNet: "2.030645840",
+      auditorUnit: "SOL",
+    }).includes("aggregate rounding bridge"),
+  );
   const searchState = {
     ...state,
     mass_search: {

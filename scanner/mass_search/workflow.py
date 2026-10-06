@@ -604,7 +604,11 @@ def coverage_eligibility(report, profile=None):
     """Item 12: shared count-AND-value gate. 99% eligible, 95-99% watchlist, else blocked."""
     from decimal import Decimal
 
-    from scanner.mass_search.qualification_gates import CROSS_CURRENCY_SENSITIVITY, mandatory_coverage_gate
+    from scanner.mass_search.qualification_gates import (
+        CROSS_CURRENCY_SENSITIVITY,
+        SENSITIVITY_NOT_ESTABLISHED,
+        mandatory_coverage_gate,
+    )
     from scanner.mass_search.research_profile import sensitivity_sign_flips
 
     gate = mandatory_coverage_gate(report, profile)
@@ -612,7 +616,8 @@ def coverage_eligibility(report, profile=None):
     if unresolved in (None, ""):
         unresolved = ((report or {}).get("worksheet") or {}).get("unresolved_basis_sales")
     cost_dependency = sensitivity_sign_flips(report, profile or {})
-    dependency = int(unresolved or 0) > 0 or bool(cost_dependency)
+    coverage_cost = cost_dependency not in (None, False, SENSITIVITY_NOT_ESTABLISHED)
+    dependency = int(unresolved or 0) > 0 or bool(coverage_cost)
     count_share = Decimal(str(gate["count_share"])) if gate.get("count_share") not in (None, "") else None
     value_share = Decimal(str(gate["value_share"])) if gate.get("value_share") not in (None, "") else None
     if count_share is None and value_share is None:
@@ -646,7 +651,7 @@ def coverage_eligibility(report, profile=None):
     return {
         "status": status,
         "dependency_unresolved_basis": int(unresolved or 0) > 0,
-        "dependency_unresolved_costs": bool(cost_dependency),
+        "dependency_unresolved_costs": bool(coverage_cost),
         "coverage_gate": gate,
         "note": (
             "A missing purchase or unresolved adjacent cost that could change "

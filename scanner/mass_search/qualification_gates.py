@@ -12,7 +12,10 @@ from datetime import datetime, timezone
 from decimal import Decimal, ROUND_HALF_EVEN
 from statistics import median
 
-ACCOUNTING_POLICY_VERSION = "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1"
+ACCOUNTING_POLICY_VERSION = (
+    "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1+"
+    "audit-1to1-v1"
+)
 
 # Asset-specific atomic units. Tolerances are integer atomics, then converted.
 # Rounding policy: quantize to the asset quantum with ROUND_HALF_EVEN (banker's
@@ -39,6 +42,8 @@ STRONGER_MIN_MINTS = 3
 STRONGER_MIN_ACTIVE_DAYS = 3
 STRONGER_MIN_SPAN_DAYS = 7
 CROSS_CURRENCY_SENSITIVITY = "cross-currency sensitivity not established"
+SENSITIVITY_NOT_ESTABLISHED = "sensitivity not established"
+REQUIRED_EPISODE_COMPONENTS = ("acquisition", "proceeds", "costs", "net")
 CONCENTRATED_LABEL = "positive subset; highly concentrated; negative excluding largest winner"
 POSITIVE_SUBSET_LABEL = "positive subset"
 SYNTHETIC_CORPUS = "SYNTHETIC"
@@ -148,10 +153,10 @@ def ordered_transaction_ids(report):
 
 def completed_episode_ledger(report, profile=None):
     """The explicit qualifying ledger: completed flat-to-flat episodes only."""
-    if report and report.get("completed_episode_ledger"):
-        return list(report["completed_episode_ledger"])
-    if profile and profile.get("completed_episode_ledger"):
-        return list(profile["completed_episode_ledger"])
+    if report and "completed_episode_ledger" in report:
+        return list(report.get("completed_episode_ledger") or [])
+    if profile and "completed_episode_ledger" in profile:
+        return list(profile.get("completed_episode_ledger") or [])
     episodes = []
     for item in (report or {}).get("completed_episode_pnls") or []:
         if isinstance(item, dict):
@@ -367,15 +372,27 @@ def stronger_shortlist_activity_ok(activity):
 
 
 def qualifying_profit(profile, report=None):
-    """Completed-episode ledger net only. Worksheet totals are never used."""
-    unit = (
-        (profile or {}).get("completed_episode_net_unit")
-        or (report or {}).get("completed_episode_net_unit")
-    )
+    """Completed-episode ledger net only. Worksheet totals are never used.
+
+    Report-level completed_episode_net / wallet_completed_episodes summaries
+    are not a fallback. Those fields can contradict the bound ledger.
+    """
+    ledger = completed_episode_ledger(report, profile)
+    if ledger:
+        unit = (profile or {}).get("completed_episode_net_unit")
+        amount = _decimal((profile or {}).get("completed_episode_net"))
+        vector = (profile or {}).get("completed_episode_net_vector") or {}
+        if amount is None or not vector:
+            derived_net, derived_unit, derived_vector = episode_net_from_ledger(
+                ledger, fallback_unit=unit
+            )
+            amount = amount if amount is not None else _decimal(derived_net)
+            unit = unit or derived_unit
+            vector = vector or derived_vector
+        return amount, unit, vector
+    unit = (profile or {}).get("completed_episode_net_unit")
     amount = _decimal((profile or {}).get("completed_episode_net"))
-    if amount is None:
-        amount = _decimal((report or {}).get("completed_episode_net"))
-    vector = (profile or {}).get("completed_episode_net_vector") or (report or {}).get("completed_episode_net_vector")
+    vector = (profile or {}).get("completed_episode_net_vector") or {}
     return amount, unit, vector
 
 
@@ -413,17 +430,52 @@ def sensitivity_result(report, profile):
             "vector": vector or ({unit: _display_decimal(amount)} if unit and amount is not None else {}),
         }
     if amount is None:
-        return {"flips": False, "blocks_lead": False, "reason": None, "vector": vector or {}}
-    sensitivity = _decimal((report or {}).get("sensitivity_unverified_debits_sol"))
+        return {
+            "flips": False,
+            "blocks_lead": True,
+            "reason": SENSITIVITY_NOT_ESTABLISHED,
+            "evidence_state": "not_established",
+            "vector": vector or {},
+        }
+    present = False
+    raw = None
+    if report and "sensitivity_unverified_debits_sol" in report:
+        present = True
+        raw = report.get("sensitivity_unverified_debits_sol")
+    elif profile and "sensitivity_unverified_debits_sol" in profile:
+        present = True
+        raw = profile.get("sensitivity_unverified_debits_sol")
+    if not present:
+        return {
+            "flips": False,
+            "blocks_lead": True,
+            "reason": SENSITIVITY_NOT_ESTABLISHED,
+            "evidence_state": "not_established",
+            "vector": {"SOL": _display_decimal(amount)},
+        }
+    sensitivity = _decimal(raw)
     if sensitivity is None:
-        sensitivity = _decimal((profile or {}).get("sensitivity_unverified_debits_sol"))
-    if sensitivity is None or sensitivity <= 0:
-        return {"flips": False, "blocks_lead": False, "reason": None, "vector": {"SOL": _display_decimal(amount)}}
+        return {
+            "flips": False,
+            "blocks_lead": True,
+            "reason": SENSITIVITY_NOT_ESTABLISHED,
+            "evidence_state": "not_established",
+            "vector": {"SOL": _display_decimal(amount)},
+        }
+    if sensitivity <= 0:
+        return {
+            "flips": False,
+            "blocks_lead": False,
+            "reason": None,
+            "evidence_state": "measured_zero",
+            "vector": {"SOL": _display_decimal(amount)},
+        }
     flips = amount > 0 and (amount - sensitivity) <= 0
     return {
         "flips": flips,
         "blocks_lead": flips,
         "reason": "unresolved adjacent debits flip the sensitivity net sign" if flips else None,
+        "evidence_state": "measured",
         "vector": {"SOL": _display_decimal(amount)},
     }
 
@@ -520,8 +572,16 @@ def component_bridge(app, auditor, unit):
     for name, keys in fields:
         app_value = next((app.get(key) for key in keys if app and app.get(key) not in (None, "")), None)
         auditor_value = next((auditor.get(key) for key in keys if auditor and auditor.get(key) not in (None, "")), None)
-        if app_value in (None, "") and auditor_value in (None, ""):
-            components[name] = None
+        if app_value in (None, "") or auditor_value in (None, ""):
+            components[name] = {
+                "app": None if app_value in (None, "") else str(app_value),
+                "auditor": None if auditor_value in (None, "") else str(auditor_value),
+                "delta": None,
+                "agree": False,
+                "tolerance": tolerance_text(unit),
+                "reason": "required component missing; missing-on-both is not auto-agree",
+            }
+            all_agree = False
             continue
         app_q = quantize_asset(app_value, unit)
         auditor_q = quantize_asset(auditor_value, unit)
@@ -538,12 +598,18 @@ def component_bridge(app, auditor, unit):
         }
     membership = None
     if app and auditor:
-        app_key = (app.get("mint"), app.get("close_signature") or app.get("close"))
-        auditor_key = (auditor.get("mint"), auditor.get("close_signature") or auditor.get("close"))
+        app_close = app.get("close_signature") or app.get("close")
+        auditor_close = auditor.get("close_signature") or auditor.get("close")
+        app_mint = app.get("mint")
+        auditor_mint = auditor.get("mint")
+        exact = bool(app_mint and auditor_mint and app_close and auditor_close
+                     and app_mint == auditor_mint and app_close == auditor_close)
         membership = {
-            "app": {"mint": app_key[0], "close_signature": app_key[1]},
-            "auditor": {"mint": auditor_key[0], "close_signature": auditor_key[1]},
-            "agree": app_key == auditor_key or (app_key[0] and app_key[0] == auditor_key[0]),
+            "app": {"mint": app_mint, "close_signature": app_close},
+            "auditor": {"mint": auditor_mint, "close_signature": auditor_close},
+            "agree": exact,
+            "one_to_one": exact,
+            "mint_only_fallback": False,
         }
         if not membership["agree"]:
             all_agree = False
@@ -554,7 +620,70 @@ def component_bridge(app, auditor, unit):
         "membership": membership,
         "components": components,
         "agree": all_agree,
+        "required_components": list(REQUIRED_EPISODE_COMPONENTS),
     }
+
+
+def aggregate_rounding_bridge(app_net, auditor_net, unit):
+    """Label aggregate rounding without widening the declared 2-atomic tolerance."""
+    unit = unit or "SOL"
+    app_q = quantize_asset(app_net, unit)
+    auditor_q = quantize_asset(auditor_net, unit)
+    if app_q is None or auditor_q is None:
+        return None
+    delta = app_q - auditor_q
+    within = amounts_agree(app_net, auditor_net, unit)
+    atomics = int(abs(delta) / asset_quantum(unit))
+    return {
+        "app": _display_decimal(app_q),
+        "auditor": _display_decimal(auditor_q),
+        "delta": _display_decimal(delta),
+        "delta_atomics": atomics,
+        "unit": unit,
+        "within_declared_tolerance": within,
+        "tolerance": tolerance_text(unit),
+        "rounding_policy": ROUNDING_POLICY,
+        "note": (
+            "Aggregate agrees within the declared 2-atomic tolerance."
+            if within else
+            "Aggregate differs by more than the declared 2-atomic tolerance. "
+            "Do not print 'within 2'. Per-episode components may still agree. "
+            "Tolerance is not widened."
+        ),
+    }
+
+
+def format_auditor_confirmation(app_net, auditor_net, unit, *, independently_audited=False):
+    """Confirmation text for the audited completed-episode scope only."""
+    if not independently_audited or auditor_net in (None, ""):
+        return None
+    unit = unit or "SOL"
+    bridge = aggregate_rounding_bridge(app_net, auditor_net, unit)
+    if not bridge:
+        return None
+    if bridge["within_declared_tolerance"]:
+        return f"auditor confirms within {tolerance_text(unit)}: {bridge['auditor']} {unit}"
+    return (
+        f"aggregate rounding bridge {bridge['delta']} {unit} "
+        f"({bridge['delta_atomics']} atomics, not within {tolerance_text(unit)}; "
+        "per-episode components may still agree)"
+    )
+
+
+def match_auditor_episode(app_episode, auditor_episodes, *, used=None):
+    """Exact one-to-one close-signature + mint. No mint-only fallback."""
+    used = used if used is not None else set()
+    mint = (app_episode or {}).get("mint")
+    close = (app_episode or {}).get("close_signature") or (app_episode or {}).get("close")
+    if not mint or not close:
+        return None
+    for index, row in enumerate(auditor_episodes or []):
+        if index in used:
+            continue
+        if row.get("mint") == mint and (row.get("close_signature") or row.get("close")) == close:
+            used.add(index)
+            return row
+    return None
 
 
 def exposure_outside_completed_episodes(report, profile=None):
@@ -569,16 +698,24 @@ def exposure_outside_completed_episodes(report, profile=None):
         unallocated = _decimal(profile.get("unallocated_verified_costs_sol"))
     return {
         "known_cost_open_inventory": _display_decimal(open_known),
-        "inventory_of_unknown_cost": _display_decimal(open_unknown) if open_unknown is not None else (
-            str(int(profile.get("open_buys_in_sample") or 0)) if int(profile.get("open_buys_in_sample") or 0) else None
+        "known_cost_open_inventory_unit": (
+            (profile.get("completed_episode_net_unit") or (report or {}).get("completed_episode_net_unit"))
+            if open_known is not None else None
+        ),
+        "inventory_of_unknown_cost": _display_decimal(open_unknown) if open_unknown is not None else None,
+        "inventory_of_unknown_cost_status": "known" if open_unknown is not None else "unknown",
+        "inventory_of_unknown_cost_unit": None if open_unknown is None else (
+            profile.get("completed_episode_net_unit") or (report or {}).get("completed_episode_net_unit")
         ),
         "open_lots": int(profile.get("open_buys_in_sample") or 0),
+        "open_lots_unit": "lots",
         "failed_attempt_expenses": _display_decimal(failed),
         "failed_attempt_expenses_unit": "SOL",
         "unallocated_verified_costs": _display_decimal(unallocated),
         "unallocated_verified_costs_unit": "SOL",
         "note": (
             "Exposure left outside the completed-episode ledger. "
+            "Lot counts are not a valuation. Unknown cost stays unknown. "
             "These amounts are not subtracted twice from episode nets."
         ),
     }
@@ -588,20 +725,27 @@ def requested_history_interval(report, entry=None):
     requested = ((entry or {}).get("windows") or {})
     window = _window_bounds(report or {})
     traversed = (report or {}).get("in_window_span") or {}
-    first = traversed.get("first") or traversed.get("first_timestamp") or window.get("start")
-    last = traversed.get("last") or traversed.get("last_timestamp") or window.get("end")
+    first = traversed.get("first") or traversed.get("first_timestamp") or traversed.get("start")
+    last = traversed.get("last") or traversed.get("last_timestamp") or traversed.get("end")
+    hours = traversed.get("hours") if first and last else None
+    observed = bool(first and last)
     return {
         "requested_start": requested.get("report_start_inclusive") or window.get("start"),
         "requested_end": requested.get("report_end_exclusive") or window.get("end"),
-        "traversed_start": first,
-        "traversed_end": last,
-        "hours": traversed.get("hours"),
+        "traversed_start": first if observed else None,
+        "traversed_end": last if observed else None,
+        "hours": hours if observed else None,
         "requested_history_interval_actually_traversed": {
-            "start": first,
-            "end": last,
-            "hours": traversed.get("hours"),
+            "start": first if observed else None,
+            "end": last if observed else None,
+            "hours": hours if observed else None,
             "complete": False,
-            "note": "Coverage of captured transactions is not completeness of wallet history.",
+            "status": "observed" if observed else "not_evaluated",
+            "note": (
+                "Coverage of captured transactions is not completeness of wallet history."
+                if observed else
+                "Traversed interval not established. The requested reporting window is not a substitute."
+            ),
         },
     }
 
@@ -636,9 +780,11 @@ def hold_time_stats(episodes, open_positions=None, *, now=None):
             "max_seconds": max(completed_holds) if completed_holds else None,
         },
         "open_positions": {
-            "ages_seconds": sorted(ages),
-            "sample_count": len(ages),
+            "ages_seconds": sorted(ages) if open_positions is not None else None,
+            "sample_count": len(ages) if open_positions is not None else None,
             "median_age_seconds": int(median(ages)) if ages else None,
+            "status": "observed" if open_positions is not None else "not_evaluated",
+            "note": None if open_positions is not None else "open-position ages not evaluated",
         },
     }
 

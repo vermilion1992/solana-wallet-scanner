@@ -278,12 +278,17 @@ def test_item11_qualification_levels_and_zero_position_is_insufficient_evidence(
 
 def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
     report = {
-        "wallet_completed_episodes": 6,
+        "wallet_completed_episodes": 3,
         "events": [],
         "corpus_kind": "GENUINE_REPLAY",
         "sensitivity_unverified_debits_sol": "1.428081532",
         "completed_episode_net": "0.242261753",
         "completed_episode_net_unit": "SOL",
+        "completed_episode_ledger": [
+            {"net": "0.080753917", "mint": "M1", "unit": "SOL", "close_signature": "sig-a"},
+            {"net": "0.080753918", "mint": "M2", "unit": "SOL", "close_signature": "sig-b"},
+            {"net": "0.080753918", "mint": "M3", "unit": "SOL", "close_signature": "sig-c"},
+        ],
         "worksheet": {"total_profit_sol": "0.242261753", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
         "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
@@ -963,6 +968,7 @@ def test_every_wallet_worksheet_figure_is_labelled_partial_coverage():
                 assert (
                     "auditor confirms within 2 lamports" in str(display)
                     or "auditor confirms within 2 USDC base units" in str(display)
+                    or "aggregate rounding bridge" in str(display)
                 ), (name, wallet["label"], display)
             unit = wallet.get("worksheet_total_unit") or wallet.get("scoped_pnl_unit") or ""
             for figure in figures:
@@ -1068,8 +1074,10 @@ def test_frontend_pnl_figures_carry_worksheet_or_episode_label():
         assert wallet["completed_episode_net"] == row["app_completed_episode_net"]
         assert "completed-episode net" in str(wallet["net_display"])
         if wallet.get("independently_audited"):
+            display = str(wallet["net_display"])
             assert (
-                "auditor confirms within 2 lamports" in str(wallet["net_display"])
-                or "auditor confirms within 2 USDC base units" in str(wallet["net_display"])
+                "auditor confirms within 2 lamports" in display
+                or "auditor confirms within 2 USDC base units" in display
+                or "aggregate rounding bridge" in display
             )
             assert str(row["independently_audited_episode_net"]) in str(wallet["net_display"])

@@ -69,7 +69,7 @@ REVIEWED_OUTER_VENUES = (
     METEORA_DAMM_V2, RFQ_FILL,
 )
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v11-token2022-fee-rfq-fee-fill-v1'
+DECODER_VERSION = 'spot-v12-token2022-observed-rfq-transferchecked-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob stays unsupported: discriminator aa2955b184501f35 and a '
     '61-byte payload are observed, but the official account layout and '
@@ -171,19 +171,31 @@ def token_2022_ceiling_fee(amount, bps):
     return (int(amount) * int(bps) + 9999) // 10000
 
 
-def infer_token_2022_fee_bps(gross_amounts, withheld):
-    """Recover the execution-time transfer-fee bps from observed withheld.
+def infer_token_2022_fee_bps_candidates(gross_amounts, withheld):
+    """Every uncapped ceiling-formula bps that fits the observed withheld.
 
-    The mint account bytes are not in GTA captures. The fee that actually
-    withheld is the config that was valid at execution; it must match the
-    published Token-2022 ceiling formula for an integer bps in 0..10000.
+    This is not TransferFeeConfig. The Token-2022 on-chain fee also applies a
+    maximum-fee cap and selects configuration by epoch. Those fields are not
+    in GTA captures, so a numeric fit is not execution-time mint config.
     """
     withheld = int(withheld)
     if withheld < 0 or not gross_amounts:
-        return None
+        return []
+    matches = []
     for bps in range(0, 10001):
         if sum(token_2022_ceiling_fee(amount, bps) for amount in gross_amounts) == withheld:
-            return bps
+            matches.append(bps)
+    return matches
+
+
+def infer_token_2022_fee_bps(gross_amounts, withheld):
+    """Unique uncapped-ceiling bps, or None if ambiguous / no fit.
+
+    A unique fit is still not TransferFeeConfig or execution-time mint config.
+    """
+    matches = infer_token_2022_fee_bps_candidates(gross_amounts, withheld)
+    if len(matches) == 1:
+        return matches[0]
     return None
 
 
@@ -948,7 +960,8 @@ def decode_supported_swaps(transactions, address):
                         if identity and checked and (_integer(checked.get('decimals')) != identity['decimals'] or info.get('mint') != identity['mint']):
                             raise ValueError('Parsed transfer disagrees with token identity')
                     rfq_fee_fill = (
-                        route['program'] == RFQ_FILL
+                        kind == 'transferChecked'
+                        and route['program'] == RFQ_FILL
                         and not nested
                         and outer != route['index']
                         and destination == RFQ_FEE_FILL_ACCOUNT
@@ -1027,11 +1040,11 @@ def decode_supported_swaps(transactions, address):
                 if mint != WSOL and delta != flow[account]:
                     inbound = token_2022_inbound.get(account) or []
                     withheld = flow[account] - delta
-                    bps = infer_token_2022_fee_bps(inbound, withheld) if (
-                        token_programs.get(account) == TOKEN_2022_ID and inbound
-                    ) else None
-                    if bps is None:
+                    token_2022 = token_programs.get(account) == TOKEN_2022_ID and inbound and withheld > 0
+                    if not token_2022:
                         raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                    candidates = infer_token_2022_fee_bps_candidates(inbound, withheld)
+                    unique = candidates[0] if len(candidates) == 1 else None
                     token_2022_fees.append({
                         'account': account,
                         'mint': mint,
@@ -1039,12 +1052,17 @@ def decode_supported_swaps(transactions, address):
                         'inbound_gross_amounts': list(inbound),
                         'net_received': delta,
                         'withheld': withheld,
-                        'transfer_fee_basis_points': bps,
-                        'source': 'token-2022-ceiling-fee-at-execution',
+                        'observed': True,
+                        'transfer_fee_basis_points': unique,
+                        'inferred_bps_unique': unique is not None,
+                        'inferred_bps_candidates': candidates if len(candidates) <= 8 else candidates[:8] + ['…'],
+                        'source': 'observed_token_2022_withheld',
+                        'execution_time_mint_config_established': False,
+                        'transfer_fee_config_established': False,
                         'note': (
-                            'Mint account bytes are absent from GTA captures. '
-                            'The withheld amount is the transferFeeConfig that '
-                            'executed; it matches ceil(gross * bps / 10000).'
+                            'Observed gross / net received / withheld only. '
+                            'Mint account bytes (max fee, epoch) are absent from GTA. '
+                            'A unique uncapped-ceiling bps fit is not TransferFeeConfig.'
                         ),
                     })
                     flow[account] = delta

@@ -10,9 +10,12 @@ from pathlib import Path
 from scanner.mass_search.capture_catalog import catalog_by_address
 from scanner.mass_search.qualification_gates import (
     ACCOUNTING_POLICY_VERSION,
+    aggregate_rounding_bridge,
     amounts_agree,
     component_bridge,
     compute_audit_fingerprint,
+    format_auditor_confirmation,
+    match_auditor_episode,
     tolerance_text,
     worksheet_episode_bridge,
 )
@@ -275,15 +278,15 @@ def compare_wallet(address, pages, tmp):
     store.close()
     app = _app_episodes(report)
     independent = audit_address(address, pages)
-    indep_by_sig = {row.get("close_signature"): row for row in independent.get("episodes") or []}
-    indep_by_mint = {row.get("mint"): row for row in independent.get("episodes") or []}
     rows = []
     unaudited_venues = []
+    used_auditor = set()
+    auditor_episodes = list(independent.get("episodes") or [])
     for episode in app:
         venue = episode.get("venue")
         if venue and venue not in AUDITED_PROGRAMS:
             unaudited_venues.append(venue)
-        match = indep_by_sig.get(episode.get("close_signature")) or indep_by_mint.get(episode.get("mint"))
+        match = match_auditor_episode(episode, auditor_episodes, used=used_auditor)
         venue = episode.get("venue") or (match or {}).get("venue")
         rows.append({
             "mint": episode.get("mint"),
@@ -327,9 +330,15 @@ def compare_wallet(address, pages, tmp):
                 episode.get("settlement_asset") or "SOL",
             ),
         })
-    completed = int(report.get("wallet_completed_episodes") or 0)
+    completed = len(app)
     auditor_count = int(independent.get("clean_episodes") or 0)
     components_agree = bool(rows) and all((row.get("component_bridge") or {}).get("agree") for row in rows)
+    one_to_one = (
+        bool(rows)
+        and all((row.get("component_bridge") or {}).get("membership", {}).get("one_to_one") for row in rows)
+        and len(used_auditor) == len(rows)
+        and len(used_auditor) == auditor_count
+    )
     if not app and auditor_count:
         # App reconstructed 0 completed episodes; the auditor found some.
         # That is a mismatch, not an empty-wallet no_completed_episodes status.
@@ -340,6 +349,7 @@ def compare_wallet(address, pages, tmp):
         completed
         and all(row.get("match") for row in rows)
         and components_agree
+        and one_to_one
         and len(rows) == completed
         and auditor_count == completed
     ):
@@ -389,6 +399,16 @@ def compare_wallet(address, pages, tmp):
         ),
         "accounting_policy_version": ACCOUNTING_POLICY_VERSION,
         "components_agree": components_agree,
+        "one_to_one_membership": one_to_one,
+        "aggregate_rounding_bridge": aggregate_rounding_bridge(
+            app_episode_net, episode_net, app_episode_unit or episode_unit or "SOL"
+        ),
+        "auditor_confirmation": format_auditor_confirmation(
+            app_episode_net,
+            episode_net if status == "independently_audited" else None,
+            app_episode_unit or episode_unit or "SOL",
+            independently_audited=status == "independently_audited",
+        ),
         "tolerance_text": tolerance_text(app_episode_unit or worksheet_unit or "SOL"),
         "rounding_policy": (
             "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with "

@@ -20,7 +20,7 @@
   "request_ceiling_is_not_a_target": true,
   "max_full_txs_per_call": 100,
   "retries": 0,
-  "observation_window_objective": "One older unconsumed getTransactionsForAddress page for gtfo first (filters.blockTime.lt + committed paginationToken). Offline replay before any further dispatch. Allocate more pages only where that page resolved or approached a named dependency.",
+  "observation_window_objective": "One older unconsumed getTransactionsForAddress page for gtfo first (filters.blockTime.lt + committed paginationToken). Offline replay before any further dispatch. A further page is allowed only when the previous page produced a measurable result on a named sale/lot (unresolved_basis cleared, classified cost role, or opening lot now known-basis) before another page is requested.",
   "excluded_from_this_draft": {
     "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": "forward-observation cohort; separately authorised",
     "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9": "decoder and ledger reconciliation on existing captures, not a capture target",
@@ -47,7 +47,8 @@
       "continue_from_pagination_token": "453531442:371",
       "named_dependency": "cost attribution of the -0.176385580 sensitivity result (unverified adjacent debits)",
       "tests": "Whether one older page classifies the adjacent debits that flip sensitivity. Not profit backfill.",
-      "reason": "Cost-attribution control, not a hunt for more profitable episodes. Dispatch only after the gtfo replay, and only if that replay approached a named dependency or this cost question remains the next named dependency."
+      "shares_global_phase_two_progress_rule": true,
+      "reason": "Cost-attribution control. Shares the single phase-two rule: dispatch only after gtfo replay AND only if the previous page resolved or approached a named sale/lot. Not an exception."
     },
     {
       "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
@@ -61,7 +62,9 @@
       "named_dependency": "whether the ~287.99 SOL largest-winner / concentrated-return hypothesis repeats on older pages or is a one-page burst",
       "hypothesis": "A6PS completed-episode net is concentrated; it goes negative without its largest winner (about 287.99 SOL). Older pages test repeatability of that concentration, not profit backfill.",
       "tests": "Repeatability of the concentrated-return hypothesis. Not bundled with coverage-eligibility pending reassessment.",
-      "reason": "Separately justified repeatability investigation of the concentrated-return hypothesis."
+      "shares_global_stop": true,
+      "separately_authorized_phase_two_start": true,
+      "reason": "Separately justified repeatability investigation. After replay it may start without gtfo's opening-basis progress. It still shares the 20-request ceiling and stop rules and cannot skip replay."
     },
     {
       "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
@@ -72,8 +75,11 @@
       "continue_from_pagination_token": "449587680:614",
       "decoder_first": true,
       "named_dependency": "a specific older-page dependency named by offline Token-2022 / RFQ / worksheet-episode-bridge work (none named yet)",
-      "tests": "No initial capture. Decoder and ledger reconciliation on existing pages first.",
-      "reason": "Decoder and ledger reconciliation first. Zero initial pages."
+      "named_dependency_items": [],
+      "specific_dependency_recorded": false,
+      "executable_allowance": 0,
+      "tests": "No initial capture. Decoder and ledger reconciliation on existing pages first. Zero executable pages until a specific named sale/lot is recorded.",
+      "reason": "Decoder and ledger reconciliation first. Zero executable allowance. No preauthorized unnamed page."
     },
     {
       "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
@@ -124,11 +130,27 @@
           "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
           "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6"
         ],
-        "dispatch_only_if": "phase_1_page_resolved_or_approached_named_dependency",
-        "a6ps": "separately_justified_repeatability_investigation",
-        "further_pages_only_if": "previous_page_resolved_or_approached_named_dependency"
+        "dispatch_only_if": "offline_replay_completed_and_previous_page_resolved_or_approached_named_sale_or_lot",
+        "a6ps": "separately_justified_repeatability_investigation_after_replay_without_requiring_gtfo_opening_basis",
+        "a6ps_shares_global_stop": true,
+        "cccs_shares_global_phase_two_progress_rule": true,
+        "further_pages_only_if": "previous_page_produced_measurable_result_on_named_sale_or_lot"
       }
     ],
+    "named_dependency_progress": {
+      "kind": "named_dependency_progress_v1",
+      "measurable_progress": [
+        "named_sale_or_lot_unresolved_basis_cleared",
+        "named_sale_or_lot_gained_classified_cost_role",
+        "named_opening_lot_now_has_known_basis"
+      ],
+      "requires_observable_result_before_another_page": true,
+      "not_progress": [
+        "wallet_turned_positive",
+        "episode_count_increased_without_touching_named_item",
+        "unrelated_new_mints"
+      ]
+    },
     "never_continue_because_a_wallet_turned_positive": true,
     "never_stop_because_a_wallet_turned_positive": true
   },
@@ -140,7 +162,10 @@
     "conditional_follow_on_max": 7,
     "a6ps_repeatability_investigation_max": 2,
     "controls_max": 2,
-    "reserved_unallocated": 12
+    "reserved_unallocated": 12,
+    "reserved_cannot_override_per_wallet_limits": true,
+    "reserved_is_not_discretionary_spend": true,
+    "usable_before_reserved": 8
   },
   "acquisition_policy": {
     "kind": "acquisition-policy-v1",
@@ -242,6 +267,16 @@
     "BSN5 tests that the unsupported unknown/L2 venue category is stable. AW6P tests that the unreviewed System-opcode block is stable. CccS tests cost attribution of the sensitivity flip.",
     "58PW is decoder-and-ledger-first: zero initial pages.",
     "An9s / BVZt / DQ7n / CRXo are not capture targets in this draft.",
-    "PRODUCT_READY stays false. Do not commit an armed copy. Do not dispatch."
+    "PRODUCT_READY stays false. Do not commit an armed copy. Do not dispatch.",
+    "Fresh approval must bind: execution artifact hash of this file, current remaining quota, overages_enabled=false, approval timestamp, and expiry. This file is not that grant.",
+    "Reserved 12 cannot override a stricter per-wallet limit and is not discretionary spend.",
+    "Serializer test alone is insufficient. evaluate_next_capture_dispatch is the offline dispatch-boundary gate and never calls a transport."
+  ],
+  "fresh_approval_must_bind": [
+    "execution_artifact_hash_of_this_draft",
+    "current_remaining_quota_confirmation",
+    "overages_enabled=false",
+    "approval_timestamp",
+    "expiry"
   ]
 }

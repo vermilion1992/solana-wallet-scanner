@@ -72,24 +72,60 @@ export function formatWorksheetTotal(
   return joined ? `${joined} (${WORKSHEET_LABEL})` : null;
 }
 
+function atomicScale(unit?: string | null): bigint {
+  return unit === "USDC" ? 1_000_000n : 1_000_000_000n;
+}
+
+export function amountsAgreeWithinTolerance(
+  left?: string | null,
+  right?: string | null,
+  unit?: string | null,
+  tolerance = 2n,
+): boolean {
+  if (left == null || right == null || left === "" || right === "") return false;
+  if (!/^-?\d+(?:\.\d+)?$/.test(left) || !/^-?\d+(?:\.\d+)?$/.test(right)) return false;
+  const scale = atomicScale(unit);
+  const toAtomic = (value: string) => {
+    const negative = value.startsWith("-");
+    const [whole, fraction = ""] = value.replace(/^-/, "").split(".");
+    const digits = (whole + fraction.padEnd(Number(scale.toString().length - 1), "0")).slice(
+      0,
+      whole.length + Number(scale.toString().length - 1),
+    );
+    const raw = BigInt(digits || "0");
+    return negative ? -raw : raw;
+  };
+  const delta = toAtomic(left) - toAtomic(right);
+  return (delta < 0n ? -delta : delta) <= tolerance;
+}
+
 export function formatCompletedEpisodeHeadline(input: {
   appNet?: string | null;
   appUnit?: string | null;
   independentlyAudited?: boolean | null;
   auditorNet?: string | null;
   auditorUnit?: string | null;
+  auditorConfirmation?: string | null;
 }): string | null {
   const headline = joinAmount(input.appNet, input.appUnit);
   if (!headline) return null;
   let text = `${headline} (completed-episode net)`;
   if (input.independentlyAudited && input.auditorNet != null && input.auditorNet !== "") {
-    const auditor = joinAmount(input.auditorNet, input.auditorUnit || input.appUnit);
-    const unit = input.auditorUnit || input.appUnit || "SOL";
-    const confirm =
-      unit === "USDC"
-        ? `auditor confirms within 2 USDC base units: ${auditor}`
-        : `auditor confirms within 2 lamports: ${auditor}`;
-    text += `; ${confirm}`;
+    if (input.auditorConfirmation) {
+      text += `; ${input.auditorConfirmation}`;
+    } else {
+      const auditor = joinAmount(input.auditorNet, input.auditorUnit || input.appUnit);
+      const unit = input.auditorUnit || input.appUnit || "SOL";
+      if (amountsAgreeWithinTolerance(input.appNet, input.auditorNet, unit)) {
+        const confirm =
+          unit === "USDC"
+            ? `auditor confirms within 2 USDC base units: ${auditor}`
+            : `auditor confirms within 2 lamports: ${auditor}`;
+        text += `; ${confirm}`;
+      } else {
+        text += `; aggregate rounding bridge (not within 2 ${unit === "USDC" ? "USDC base units" : "lamports"}): app ${headline} vs auditor ${auditor}`;
+      }
+    }
   }
   return text;
 }
@@ -97,15 +133,20 @@ export function formatCompletedEpisodeHeadline(input: {
 export function formatWorksheetEpisodeBridge(input: {
   worksheet?: string | null;
   episode?: string | null;
+  worksheet_total?: string | null;
+  completed_episode_net?: string | null;
   bridge?: string | null;
   unit?: string | null;
 } | null | undefined): string | null {
   if (!input || input.bridge == null || input.bridge === "") return null;
   const unit = input.unit || "";
-  return `worksheet-vs-completed-episode bridge ${input.bridge}${unit ? ` ${unit}` : ""} (worksheet ${input.worksheet || "—"} − episode ${input.episode || "—"}; worksheet is not the qualifying value)`;
+  const worksheet = input.worksheet_total ?? input.worksheet;
+  const episode = input.completed_episode_net ?? input.episode;
+  return `worksheet-vs-completed-episode bridge ${input.bridge}${unit ? ` ${unit}` : ""} (worksheet ${worksheet || "—"} − episode ${episode || "—"}; worksheet is not the qualifying value)`;
 }
 
 export function completedEpisodeFields(source?: {
+  corpus_kind?: string | null;
   research_profile?: Record<string, unknown> | null;
   independent_audit?: {
     independently_audited?: boolean;
@@ -113,6 +154,10 @@ export function completedEpisodeFields(source?: {
     independently_audited_episode_net_unit?: string | null;
     app_completed_episode_net?: string | null;
     app_completed_episode_net_unit?: string | null;
+    content_fingerprint?: unknown;
+    fingerprint?: unknown;
+    fingerprintless_not_certifying?: boolean;
+    auditor_confirmation?: string | null;
   } | null;
 } | null) {
   const profile = source?.research_profile || {};
@@ -122,13 +167,23 @@ export function completedEpisodeFields(source?: {
     independently_audited_episode_net_unit?: string | null;
     app_completed_episode_net?: string | null;
     app_completed_episode_net_unit?: string | null;
+    content_fingerprint?: unknown;
+    fingerprint?: unknown;
+    fingerprintless_not_certifying?: boolean;
+    auditor_confirmation?: string | null;
+    not_a_genuine_research_wallet?: boolean;
   };
+  const hasFingerprint = Boolean(audit.content_fingerprint || audit.fingerprint);
+  const certifying = hasFingerprint && audit.fingerprintless_not_certifying !== true;
   return {
-    appNet: audit.app_completed_episode_net ?? (profile.completed_episode_net as string | null | undefined),
-    appUnit: audit.app_completed_episode_net_unit ?? (profile.completed_episode_net_unit as string | null | undefined),
-    independentlyAudited: Boolean(audit.independently_audited),
-    auditorNet: audit.independently_audited_episode_net,
-    auditorUnit: audit.independently_audited_episode_net_unit,
+    appNet: (profile.completed_episode_net as string | null | undefined)
+      ?? (certifying ? audit.app_completed_episode_net : null),
+    appUnit: (profile.completed_episode_net_unit as string | null | undefined)
+      ?? (certifying ? audit.app_completed_episode_net_unit : null),
+    independentlyAudited: Boolean(audit.independently_audited) && certifying,
+    auditorNet: certifying ? audit.independently_audited_episode_net : null,
+    auditorUnit: certifying ? audit.independently_audited_episode_net_unit : null,
+    auditorConfirmation: certifying ? audit.auditor_confirmation : null,
   };
 }
 

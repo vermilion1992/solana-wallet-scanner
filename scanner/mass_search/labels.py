@@ -5,7 +5,10 @@ Do not write one surface from a different naming scheme than another.
 """
 from __future__ import annotations
 
-from scanner.mass_search.qualification_gates import CROSS_CURRENCY_SENSITIVITY
+from scanner.mass_search.qualification_gates import (
+    CROSS_CURRENCY_SENSITIVITY,
+    SENSITIVITY_NOT_ESTABLISHED,
+)
 from scanner.mass_search.research_profile import (
     RESEARCH_SCREEN_DEFAULTS,
     independently_audited,
@@ -70,6 +73,8 @@ def blocking_reason(report, profile, *, coverage_status, level):
     sensitivity = (level or {}).get("sensitivity_sign_flip") or sensitivity_sign_flips(report, profile)
     if sensitivity == CROSS_CURRENCY_SENSITIVITY:
         reasons.append(CROSS_CURRENCY_SENSITIVITY)
+    elif sensitivity == SENSITIVITY_NOT_ESTABLISHED:
+        reasons.append(SENSITIVITY_NOT_ESTABLISHED)
     elif sensitivity:
         reasons.append("unresolved adjacent debits flip the sensitivity net sign")
     gate = (level or {}).get("coverage_gate") or {}
@@ -104,10 +109,14 @@ def wallet_status_fields(report, profile=None):
     judged = coverage_eligibility(report, profile)
     coverage = judged.get("status")
     reason = blocking_reason(report, profile, coverage_status=coverage, level=level)
+    coverage_display = coverage
+    if coverage == "provisional_eligible":
+        coverage_display = "Coverage gate eligible; not a research lead."
     return {
         "qualification_level": _level_name(level),
         "qualification_level_detail": level if isinstance(level, dict) else {"level": _level_name(level)},
         "coverage_status": coverage,
+        "coverage_status_display": coverage_display,
         "coverage_status_detail": judged,
         "blocking_reason": reason,
     }

@@ -1066,3 +1066,191 @@ def replay_cached_history_to_report(
         "PRODUCT_READY": False,
         "not_match": True,
     }
+
+
+# --- Next-capture dispatch boundary (offline; never a live grant) ---
+
+NAMED_DEPENDENCY_PROGRESS = {
+    "kind": "named_dependency_progress_v1",
+    "measurable_progress": (
+        "named_sale_or_lot_unresolved_basis_cleared",
+        "named_sale_or_lot_gained_classified_cost_role",
+        "named_opening_lot_now_has_known_basis",
+    ),
+    "requires_observable_result_before_another_page": True,
+    "not_progress": (
+        "wallet_turned_positive",
+        "episode_count_increased_without_touching_named_item",
+        "unrelated_new_mints",
+    ),
+}
+
+G1_AUTHORIZATION_ID = "live-g1-vertical-slice-2026-10-05-mitch"
+NEXT_CAPTURE_WRONG_KIND = frozenset({
+    G1_AUTHORIZATION_ID,
+    "live-ranked100-research-search-2026-10-06-mitch",
+    "live-ranked100-g3-history-2026-10-06-mitch",
+    "live-ranked100-g2-discovery-2026-10-05-mitch",
+})
+
+
+def named_dependency_progress(previous_page_result, wallet_entry):
+    """Did the previous page resolve or approach a named sale/lot?"""
+    named_items = list((wallet_entry or {}).get("named_dependency_items") or [])
+    observations = list((previous_page_result or {}).get("named_dependency_observations") or [])
+    if (previous_page_result or {}).get("wallet_turned_positive"):
+        return {
+            "progress": False,
+            "approached": False,
+            "resolved": False,
+            "reason": "wallet_turned_positive_is_not_progress",
+            **NAMED_DEPENDENCY_PROGRESS,
+        }
+    if not named_items:
+        named_text = (wallet_entry or {}).get("named_dependency")
+        if named_text and (previous_page_result or {}).get("approached_named_dependency") is True:
+            return {
+                "progress": True,
+                "approached": True,
+                "resolved": bool((previous_page_result or {}).get("resolved_named_dependency")),
+                "reason": "operator_recorded_named_item_observation",
+                **NAMED_DEPENDENCY_PROGRESS,
+            }
+        return {
+            "progress": False,
+            "approached": False,
+            "resolved": False,
+            "reason": "no_named_sale_or_lot_recorded",
+            **NAMED_DEPENDENCY_PROGRESS,
+        }
+    matched = []
+    for item in named_items:
+        key = item.get("signature") or item.get("mint")
+        for row in observations:
+            if key and key in {row.get("signature"), row.get("mint")}:
+                if row.get("result") in NAMED_DEPENDENCY_PROGRESS["measurable_progress"] or row.get(
+                    "unresolved_basis_cleared"
+                ) or row.get("classified_cost_role"):
+                    matched.append(row)
+    return {
+        "progress": bool(matched),
+        "approached": bool(matched),
+        "resolved": any(row.get("unresolved_basis_cleared") for row in matched),
+        "reason": "named_sale_or_lot_observed" if matched else "named_sale_or_lot_not_observed",
+        "matched": matched,
+        **NAMED_DEPENDENCY_PROGRESS,
+    }
+
+
+def evaluate_next_capture_dispatch(
+    *,
+    draft,
+    requested,
+    grant=None,
+    replay_completed=False,
+    previous_progress=None,
+    requests_used=0,
+    per_wallet_used=None,
+    fake_transport=None,
+):
+    """Offline dispatch boundary. Never invokes a network transport.
+
+    A later live approval must bind this draft's execution artifact, current
+    remaining quota, overages_disabled, approval time, and expiry. This
+    function does not invent that grant.
+    """
+    del fake_transport  # callers may pass a recorder; this path never calls it
+    per_wallet_used = per_wallet_used or {}
+    address = (requested or {}).get("address")
+    phase = (requested or {}).get("phase")
+    cutoff = (requested or {}).get("block_time_lt")
+    cursor = (requested or {}).get("pagination_token")
+    expected_cutoff = next_capture_block_time_lt(draft)
+    excluded = (draft or {}).get("excluded_from_this_draft") or {}
+    allowed = list((draft or {}).get("allowed_wallets") or [])
+    wallet = next((row for row in allowed if row.get("address") == address), None)
+    budget = (draft or {}).get("page_budget") or {}
+    ceiling = int((draft or {}).get("max_dispatched_requests") or budget.get("total_request_ceiling") or 20)
+    reserved = int(budget.get("reserved_unallocated") or 0)
+    usable_ceiling = ceiling - reserved
+    wallet_cap = int((wallet or {}).get("initial_pages") or 0) + int(
+        (wallet or {}).get("max_additional_pages_if_previous_resolved_named_dependency") or 0
+    )
+
+    def refuse(code, detail):
+        return {
+            "allowed": False,
+            "dispatched": False,
+            "code": code,
+            "detail": detail,
+            "not_a_dispatched_request": True,
+            "draft_enabled": bool((draft or {}).get("enabled")),
+            "PRODUCT_READY": False,
+        }
+
+    if (draft or {}).get("enabled") is not False:
+        return refuse("draft_must_stay_disabled", "Repo next-capture draft must stay enabled:false")
+    if grant:
+        if grant.get("enabled") is True:
+            return refuse("grant_enabled", "This evaluator never arms a live grant")
+        if grant.get("consumed") or grant.get("status") == "consumed":
+            return refuse("consumed_grant", "Authorization already consumed")
+        if grant.get("authorization_id") in NEXT_CAPTURE_WRONG_KIND:
+            return refuse("wrong_kind_grant", "g1/other consumed grants are not permission for this capture")
+        if grant.get("authorization_id") != (draft or {}).get("authorization_id"):
+            return refuse("wrong_kind_grant", "Grant authorization_id is not this draft")
+    if address in excluded:
+        return refuse("excluded_wallet", excluded.get(address) or "wallet excluded from this draft")
+    if wallet is None:
+        return refuse("wrong_wallet", "Address is not in allowed_wallets")
+    if cutoff not in (None, expected_cutoff) and int(cutoff) != int(expected_cutoff):
+        return refuse("wrong_cutoff", f"blockTime.lt must be {expected_cutoff}")
+    expected_cursor = wallet.get("continue_from_pagination_token")
+    if cursor and expected_cursor and cursor != expected_cursor and int(per_wallet_used.get(address) or 0) == 0:
+        return refuse("wrong_cursor", "paginationToken is not the frozen continuation for this wallet")
+    if int(phase or 0) >= 2 and not replay_completed:
+        return refuse("phase_two_before_replay", "Phase two requires offline replay of phase one")
+    if int(requests_used or 0) >= usable_ceiling:
+        return refuse("over_budget", "Reserved 12 cannot become discretionary spend or override the usable ceiling")
+    if int(per_wallet_used.get(address) or 0) >= wallet_cap:
+        return refuse("per_wallet_limit", "Reserved budget cannot override a stricter per-wallet limit")
+    if wallet.get("decoder_first") or int(wallet.get("initial_pages") or 0) == 0:
+        recorded = bool(wallet.get("named_dependency_items")) or bool(wallet.get("specific_dependency_recorded"))
+        if not recorded:
+            return refuse(
+                "zero_executable_allowance",
+                "58PW-style decoder-first wallets have zero executable pages until a specific named sale/lot is recorded",
+            )
+    if int(phase or 1) >= 2 and address.startswith("A6PS"):
+        if not replay_completed:
+            return refuse("phase_two_before_replay", "A6PS is separately justified but still requires replay")
+        # A6PS does not require gtfo's opening-basis dependency. It still shares
+        # the global ceiling and must not skip replay.
+    elif int(phase or 1) >= 2:
+        progressed = named_dependency_progress(previous_progress, wallet)
+        phase1 = next((row for row in allowed if row.get("phase") == 1), None)
+        if not progressed.get("progress"):
+            gtfo_progress = named_dependency_progress(previous_progress, phase1 or {})
+            if not gtfo_progress.get("progress"):
+                return refuse(
+                    "named_dependency_not_approached",
+                    "Further pages require an observable result on a named sale/lot before another page",
+                )
+    if requested.get("continue_because_positive") or requested.get("stop_because_positive"):
+        return refuse("outcome_driven", "Never stop or continue because a wallet turned positive")
+    return {
+        "allowed": True,
+        "dispatched": False,
+        "code": "would_serialize_only",
+        "detail": "Boundary passed. Draft stays enabled:false; this is not a live dispatch.",
+        "not_a_dispatched_request": True,
+        "draft_enabled": False,
+        "PRODUCT_READY": False,
+        "fresh_approval_must_bind": [
+            "execution_artifact_hash_of_this_draft",
+            "current_remaining_quota_confirmation",
+            "overages_enabled=false",
+            "approval_timestamp",
+            "expiry",
+        ],
+    }

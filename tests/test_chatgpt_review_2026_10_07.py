@@ -350,6 +350,9 @@ def test_token_2022_transfer_fee_bvzt_dq7n_jupiter_buys():
             assert fee, (address, signature, buys[0])
             assert fee["gross"] > fee["net_received"]
             assert fee["withheld"] == fee["gross"] - fee["net_received"]
+            assert fee.get("observed") is True
+            assert fee.get("transfer_fee_config_established") is False
+            assert fee.get("execution_time_mint_config_established") is False
             assert infer_token_2022_fee_bps(fee["inbound_gross_amounts"], fee["withheld"]) == fee["transfer_fee_basis_points"]
             assert str(buys[0].get("quantity_raw")) == str(fee["net_received"])
 
@@ -370,13 +373,85 @@ def test_rfq_fee_fill_bvzt_three_sales():
         assert sells[0].get("platform_fee_usdc") not in (None, "", "0")
 
 
-def test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer():
-    from scanner.investigation import RFQ_FILL, RFQ_FEE_FILL_ACCOUNT
+def _load_record(address, signature):
+    from scanner.mass_search.canonical_records import canonical_decode_records
+    from scanner.mass_search.capture_catalog import catalog_by_address, load_capture_records
+    from tools.independent_episode_audit import _unwrap
 
-    # The RFQ exception is destination-and-venue specific. A different
-    # recipient on a non-RFQ route must still trip the general guard.
-    assert RFQ_FEE_FILL_ACCOUNT.startswith("9PnYDC")
-    assert RFQ_FILL.startswith("61DFfeTK")
+    records, _ = load_capture_records(catalog_by_address()[address])
+    for record in records:
+        raw = _unwrap(record)
+        found = record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0]
+        if found == signature:
+            return record, raw, canonical_decode_records([record])
+    raise AssertionError(f"missing {signature} for {address}")
+
+
+def _rfq_fee_compiled(decoded_records):
+    from copy import deepcopy
+    from scanner.compiled_instructions import _base58_decode, _base58_encode
+    from scanner.investigation import RFQ_FEE_FILL_ACCOUNT
+
+    clone = deepcopy(decoded_records)
+    raw = clone[0].get("raw") or clone[0]
+    message = ((raw.get("transaction") or {}).get("message") or {})
+    keys = list(message.get("accountKeys") or [])
+    fee_index = keys.index(RFQ_FEE_FILL_ACCOUNT)
+    for ix in message.get("instructions") or []:
+        accounts = list(ix.get("accounts") or [])
+        if fee_index not in accounts:
+            continue
+        data = _base58_decode(ix.get("data") or "", "rfq.fee.data", 16)
+        if data and data[0] == 12:
+            return clone, raw, message, keys, ix, accounts, fee_index, data
+    raise AssertionError("compiled RFQ transferChecked not found")
+
+
+def _assert_rfq_exception_rejected(decoded):
+    from scanner.investigation import decode_supported_swaps
+
+    mutated = decode_supported_swaps(decoded, BVZT)
+    sells = [row for row in mutated["events"] if row.get("kind") == "sell"]
+    reasons = [row.get("reason") or "" for row in mutated.get("unresolved") or []]
+    attributed = bool(sells and sells[0].get("rfq_platform_fee"))
+    assert attributed is False
+    assert (not sells) or any("Unrelated token transfer" in reason for reason in reasons)
+
+
+def test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer():
+    from copy import deepcopy
+    from scanner.compiled_instructions import _base58_encode
+    from scanner.investigation import decode_supported_swaps
+
+    _, _, decoded = _load_record(BVZT, RFQ_SALES[0])
+    baseline = decode_supported_swaps(decoded, BVZT)
+    assert [row for row in baseline["events"] if row.get("kind") == "sell"][0].get("rfq_platform_fee")
+
+    clone, _raw, _message, keys, ix, accounts, fee_index, data = _rfq_fee_compiled(decoded)
+    ix["data"] = _base58_encode(bytes([3]) + data[1:9])
+    ix["accounts"] = [accounts[0], fee_index, accounts[3] if len(accounts) > 3 else accounts[-1]]
+    _assert_rfq_exception_rejected(clone)
+
+    clone, _raw, _message, keys, ix, accounts, fee_index, _data = _rfq_fee_compiled(decoded)
+    keys[fee_index] = "UnrelatedFeeSink11111111111111111111111111"
+    _message = ((clone[0].get("raw") or clone[0]).get("transaction") or {}).get("message") or {}
+    _message["accountKeys"] = keys
+    _assert_rfq_exception_rejected(clone)
+
+    clone, _raw, _message, keys, ix, accounts, fee_index, _data = _rfq_fee_compiled(decoded)
+    ix["accounts"] = [fee_index if slot == accounts[0] else slot for slot in accounts]
+    _assert_rfq_exception_rejected(clone)
+
+    clone, _raw, message, keys, ix, accounts, fee_index, data = _rfq_fee_compiled(decoded)
+    keys.append("UnrelatedOuterDest11111111111111111111111")
+    message["accountKeys"] = keys
+    message["instructions"].append({
+        "programIdIndex": ix.get("programIdIndex"),
+        "accounts": [accounts[0], len(keys) - 1, accounts[1], accounts[3] if len(accounts) > 3 else accounts[-1]],
+        "data": ix.get("data"),
+        "stackHeight": ix.get("stackHeight"),
+    })
+    _assert_rfq_exception_rejected(clone)
 
 
 def test_swaptob_remains_unsupported_after_bounded_investigation():
