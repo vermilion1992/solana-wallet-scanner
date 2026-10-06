@@ -1,6 +1,6 @@
 # Research-search B coverage ledger
 
-Generated 2026-10-06T07:37:21Z. 2000 records / 2000 unique signatures.
+Generated 2026-10-06T08:30:54Z. 2000 records / 2000 unique signatures.
 
 PRODUCT_READY remains false. This ledger is offline over committed genuine pages only.
 
@@ -15,14 +15,14 @@ PRODUCT_READY remains false. This ledger is offline over committed genuine pages
 
 | Rank | Wallet | outside | failed | non_swap | unsupported_swap | decoded_trade | decoded_conversion | unresolved swap share | value share | policy | span h |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2 | gtfo…CgFL | 71 | 4 | 50 | 0 | 75 | 0 | 0 | SOL 0 | eligible_pending_dependency_reassessment | 31.6 |
-| 4 | CccS…y1eU | 170 | 17 | 1 | 0 | 12 | 0 | 0 | SOL 0 | eligible_pending_dependency_reassessment | 4.3 |
-| 10 | BVZt…Y9n9 | 2 | 49 | 107 | 26 | 15 | 1 | 0.619047619 | USDC 0.608983167 | coverage_blocked | 138.7 |
+| 2 | gtfo…CgFL | 71 | 4 | 50 | 0 | 75 | 0 | 0 | SOL 0 | coverage_eligibility_pending_reassessment | 31.6 |
+| 4 | CccS…y1eU | 170 | 17 | 1 | 0 | 12 | 0 | 0 | SOL 0 | provisional_eligible | 4.3 |
+| 10 | BVZt…Y9n9 | 2 | 49 | 107 | 31 | 10 | 1 | 0.738095238 | USDC 0.698452609 | coverage_blocked | 138.7 |
 | 11 | BSN5…BtCM | 0 | 40 | 153 | 7 | 0 | 0 | 1 | SOL 1 | coverage_blocked | 127.7 |
 | 14 | DQ7n…9Cys | 35 | 0 | 150 | 13 | 2 | 0 | 0.866666667 | SOL 1, USDC 0.795095493 | coverage_blocked | 61.1 |
-| 15 | A6PS…vbot | 52 | 4 | 77 | 0 | 66 | 1 | 0 | SOL 0, USDC 0 | eligible_pending_dependency_reassessment | 52.3 |
-| 17 | An9s…LYSB | 0 | 1 | 132 | 0 | 67 | 0 | 0 | SOL 0 | eligible_pending_dependency_reassessment | 38.4 |
-| 53 | 58PW…xvDL | 2 | 0 | 138 | 10 | 48 | 2 | 0.166666667 | SOL 0.015503845, USDC 0.025160995 | coverage_blocked | 294.7 |
+| 15 | A6PS…vbot | 52 | 4 | 77 | 0 | 66 | 1 | 0 | SOL 0, USDC 0 | coverage_eligibility_pending_reassessment | 52.3 |
+| 17 | An9s…LYSB | 0 | 1 | 132 | 0 | 67 | 0 | 0 | SOL 0 | provisional_eligible | 38.4 |
+| 53 | 58PW…xvDL | 2 | 0 | 138 | 13 | 45 | 2 | 0.216666667 | SOL 0.015503845, USDC 0.154307075 | coverage_blocked | 294.7 |
 | 56 | AW6P…MzD6 | 7 | 4 | 115 | 74 | 0 | 0 | 1 | SOL 1 | coverage_blocked | 105.1 |
 | 90 | CRXo…V68U | 0 | 83 | 95 | 22 | 0 | 0 | 1 | USDC 1 | coverage_blocked | 218.6 |
 
@@ -75,7 +75,6 @@ PRODUCT_READY remains false. This ledger is offline over committed genuine pages
 
 - Non-swaps are excluded from the swap denominator and stay on the inventory ledger.
 - Out-of-window records are kept because earlier txs can affect opening basis.
-- Current qualifiers are coverage-eligibility pending reassessment until dependencies are cleared.
-- L2TExMFK… is not identified as a spot venue with confidence and stays unsupported.
-- Fee audit: `FEE_AUDIT.json` (gtfo / CccS largest charges, verified tips vs unresolved debits).
-- Decoder-independent episode audit: `INDEPENDENT_AUDIT.json` (`tools/independent_episode_audit.py`, no `scanner/` imports).
+- Item 12 policy uses both swap-coverage shares and unresolved-basis dependencies.
+- CccS and An9s are coverage provisional_eligible (100% swap coverage, no unresolved-basis sales). gtfo and A6PS stay pending reassessment.
+- L2TExMFK…, OKX, and DFlow stay unsupported unless a later review can name the interface with confidence.

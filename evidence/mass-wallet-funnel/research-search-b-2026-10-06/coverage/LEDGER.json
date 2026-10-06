@@ -1,6 +1,6 @@
 {
   "kind": "research-search-b-coverage-ledger-v1",
-  "generated_at": "2026-10-06T07:37:21Z",
+  "generated_at": "2026-10-06T08:30:54Z",
   "windows": {
     "report_start_inclusive": "2026-09-05T13:29:27Z",
     "report_end_exclusive": "2026-10-05T13:29:27Z",
@@ -40,7 +40,8 @@
         }
       },
       "unresolved_swap_share": "0",
-      "coverage_policy": "eligible_pending_dependency_reassessment",
+      "unresolved_basis_sales": 6,
+      "coverage_policy": "coverage_eligibility_pending_reassessment",
       "unsupported_swaps_by_program": {}
     },
     {
@@ -68,7 +69,8 @@
         }
       },
       "unresolved_swap_share": "0",
-      "coverage_policy": "eligible_pending_dependency_reassessment",
+      "unresolved_basis_sales": 0,
+      "coverage_policy": "provisional_eligible",
       "unsupported_swaps_by_program": {}
     },
     {
@@ -79,8 +81,8 @@
         "outside_window": 2,
         "failed": 49,
         "non_swap": 107,
-        "unsupported_swap": 26,
-        "decoded_trade": 15,
+        "unsupported_swap": 31,
+        "decoded_trade": 10,
         "decoded_conversion": 1
       },
       "in_window_span": {
@@ -90,15 +92,16 @@
         "end": "2026-10-05T06:42:52Z"
       },
       "unsupported_swap_share_in_window": {
-        "by_count": "0.619047619",
+        "by_count": "0.738095238",
         "by_consideration": {
-          "USDC": "0.608983167"
+          "USDC": "0.698452609"
         }
       },
-      "unresolved_swap_share": "0.619047619",
+      "unresolved_swap_share": "0.738095238",
+      "unresolved_basis_sales": 2,
       "coverage_policy": "coverage_blocked",
       "unsupported_swaps_by_program": {
-        "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u": 1,
+        "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u": 6,
         "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4": 21,
         "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH": 3,
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH": 1
@@ -129,6 +132,7 @@
         }
       },
       "unresolved_swap_share": "1",
+      "unresolved_basis_sales": 0,
       "coverage_policy": "coverage_blocked",
       "unsupported_swaps_by_program": {
         "L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95": 6,
@@ -161,6 +165,7 @@
         }
       },
       "unresolved_swap_share": "0.866666667",
+      "unresolved_basis_sales": 2,
       "coverage_policy": "coverage_blocked",
       "unsupported_swaps_by_program": {
         "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4": 12,
@@ -193,7 +198,8 @@
         }
       },
       "unresolved_swap_share": "0",
-      "coverage_policy": "eligible_pending_dependency_reassessment",
+      "unresolved_basis_sales": 3,
+      "coverage_policy": "coverage_eligibility_pending_reassessment",
       "unsupported_swaps_by_program": {}
     },
     {
@@ -221,7 +227,8 @@
         }
       },
       "unresolved_swap_share": "0",
-      "coverage_policy": "eligible_pending_dependency_reassessment",
+      "unresolved_basis_sales": 0,
+      "coverage_policy": "provisional_eligible",
       "unsupported_swaps_by_program": {}
     },
     {
@@ -232,8 +239,8 @@
         "outside_window": 2,
         "failed": 0,
         "non_swap": 138,
-        "unsupported_swap": 10,
-        "decoded_trade": 48,
+        "unsupported_swap": 13,
+        "decoded_trade": 45,
         "decoded_conversion": 2
       },
       "in_window_span": {
@@ -243,17 +250,19 @@
         "end": "2026-10-05T10:42:23Z"
       },
       "unsupported_swap_share_in_window": {
-        "by_count": "0.166666667",
+        "by_count": "0.216666667",
         "by_consideration": {
           "SOL": "0.015503845",
-          "USDC": "0.025160995"
+          "USDC": "0.154307075"
         }
       },
-      "unresolved_swap_share": "0.166666667",
+      "unresolved_swap_share": "0.216666667",
+      "unresolved_basis_sales": 1,
       "coverage_policy": "coverage_blocked",
       "unsupported_swaps_by_program": {
         "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4": 9,
-        "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH": 1
+        "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH": 2,
+        "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u": 2
       }
     },
     {
@@ -281,6 +290,7 @@
         }
       },
       "unresolved_swap_share": "1",
+      "unresolved_basis_sales": 0,
       "coverage_policy": "coverage_blocked",
       "unsupported_swaps_by_program": {
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u": 74
@@ -311,6 +321,7 @@
         }
       },
       "unresolved_swap_share": "1",
+      "unresolved_basis_sales": 0,
       "coverage_policy": "coverage_blocked",
       "unsupported_swaps_by_program": {
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u": 11,
@@ -12818,7 +12829,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -12873,14 +12884,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "buy"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -12890,15 +12901,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
@@ -13358,14 +13362,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "buy"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -13375,15 +13379,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
@@ -13392,14 +13389,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "buy"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -13409,15 +13406,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
@@ -13426,14 +13416,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "buy"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -13443,15 +13433,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
@@ -13761,14 +13744,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "sell"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -13778,15 +13761,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
@@ -14881,7 +14857,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -22919,7 +22895,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -23752,7 +23728,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -40214,14 +40190,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "sell"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
       ],
@@ -40231,15 +40207,8 @@
           "discriminator": "f8c69e91e17587c8"
         }
       ],
-      "affected_assets": [
-        "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP"
-      ],
-      "venues": [
-        {
-          "program": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "instruction": "swap"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
@@ -40388,7 +40357,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -41169,7 +41138,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
@@ -41216,7 +41185,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
@@ -43087,14 +43056,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "sell"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -43104,15 +43073,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
@@ -43121,14 +43083,14 @@
       "version": 0,
       "window_relation": "in_report_window",
       "failed": false,
-      "class": "decoded_trade",
+      "class": "unsupported_swap",
       "swap_candidate": true,
-      "decoded": true,
-      "decode_kinds": [
-        "sell"
+      "decoded": false,
+      "decode_kinds": [],
+      "cash_inventory_capital_resolved": false,
+      "unresolved_reason_codes": [
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
-      "cash_inventory_capital_resolved": true,
-      "unresolved_reason_codes": [],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
       ],
@@ -43138,15 +43100,8 @@
           "discriminator": "aa2955b184501f35"
         }
       ],
-      "affected_assets": [
-        "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx"
-      ],
-      "venues": [
-        {
-          "program": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "instruction": "SwapTob"
-        }
-      ]
+      "affected_assets": [],
+      "venues": []
     },
     {
       "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
@@ -43181,7 +43136,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43268,7 +43223,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43295,7 +43250,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43322,7 +43277,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43349,7 +43304,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43376,7 +43331,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43403,7 +43358,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43430,7 +43385,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43457,7 +43412,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43511,7 +43466,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43558,7 +43513,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43585,7 +43540,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43612,7 +43567,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43639,7 +43594,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43666,7 +43621,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43693,7 +43648,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43720,7 +43675,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43767,7 +43722,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43794,7 +43749,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43821,7 +43776,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43848,7 +43803,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43875,7 +43830,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -43902,7 +43857,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44064,7 +44019,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44151,7 +44106,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44178,7 +44133,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44245,7 +44200,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44332,7 +44287,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44478,7 +44433,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44545,7 +44500,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44619,7 +44574,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44733,7 +44688,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44840,7 +44795,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44867,7 +44822,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -44934,7 +44889,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45021,7 +44976,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45048,7 +45003,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45075,7 +45030,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45102,7 +45057,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45129,7 +45084,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45156,7 +45111,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45283,7 +45238,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45310,7 +45265,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45337,7 +45292,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45384,7 +45339,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45871,7 +45826,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45898,7 +45853,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45925,7 +45880,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45952,7 +45907,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -45979,7 +45934,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46139,7 +46094,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46166,7 +46121,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46193,7 +46148,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46220,7 +46175,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46247,7 +46202,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46333,7 +46288,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46360,7 +46315,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46387,7 +46342,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46414,7 +46369,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46441,7 +46396,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46468,7 +46423,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46795,7 +46750,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46822,7 +46777,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46849,7 +46804,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46896,7 +46851,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46923,7 +46878,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -46950,7 +46905,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47004,7 +46959,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47031,7 +46986,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47058,7 +47013,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47085,7 +47040,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47166,7 +47121,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47193,7 +47148,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47476,7 +47431,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47794,7 +47749,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47821,7 +47776,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unsupported system operation within swap transaction"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -47981,7 +47936,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -48095,7 +48050,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -48182,7 +48137,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -48303,7 +48258,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Token account closes to another recipient"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -48438,7 +48393,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Token account closes to another recipient"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -48512,7 +48467,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -48566,7 +48521,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -48647,7 +48602,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Token account closes to another recipient"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -48832,7 +48787,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -48879,7 +48834,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Token account closes to another recipient"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -48906,7 +48861,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -50065,7 +50020,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -50092,7 +50047,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Token account closes to another recipient"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -50171,7 +50126,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -50602,7 +50557,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Unrelated token transfer prevents swap quantity attribution"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
@@ -50783,7 +50738,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -50810,7 +50765,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
@@ -50857,7 +50812,7 @@
       "decode_kinds": [],
       "cash_inventory_capital_resolved": false,
       "unresolved_reason_codes": [
-        "Associated account creation for another wallet is outside swap scope"
+        "No reviewed outer spot swap; transfers and balances alone do not prove trading"
       ],
       "outer_programs": [
         "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"

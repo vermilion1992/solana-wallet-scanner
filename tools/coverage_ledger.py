@@ -177,6 +177,7 @@ def build_ledger():
         unresolved_share = None
         if swap_den:
             unresolved_share = _display(Decimal(counts["unsupported_swap"]) / Decimal(swap_den))
+        unresolved_basis = _unresolved_basis_sales(address, decoded)
         wallet_summaries.append({
             "address": address,
             "provider_rank": rank,
@@ -185,7 +186,12 @@ def build_ledger():
             "in_window_span": breakdown.get("in_window_span"),
             "unsupported_swap_share_in_window": breakdown.get("unsupported_swap_share_in_window"),
             "unresolved_swap_share": unresolved_share,
-            "coverage_policy": _policy(unresolved_share, breakdown.get("unsupported_swap_share_in_window") or {}),
+            "unresolved_basis_sales": unresolved_basis,
+            "coverage_policy": _policy(
+                unresolved_share,
+                breakdown.get("unsupported_swap_share_in_window") or {},
+                unresolved_basis,
+            ),
             "unsupported_swaps_by_program": breakdown.get("unsupported_swaps_by_program") or {},
         })
     hist_rows = [
@@ -216,7 +222,27 @@ def build_ledger():
     return payload
 
 
-def _policy(unresolved_share, shares):
+def _unresolved_basis_sales(address, decoded):
+    """Unresolved-sale count from decoded events plus opening inventory."""
+    from scanner.mass_search.capture_catalog import WINDOWS
+    from scanner.mass_search.g3_history import decoder_events_by_mint
+    from scanner.mass_search.settlement import isolate_known_cost_events
+
+    by_mint, _ = decoder_events_by_mint(
+        decoded,
+        address=address,
+        window_start=WINDOWS["report_start_inclusive"],
+        window_end=WINDOWS["report_end_exclusive"],
+        acquisition_start=WINDOWS["acquisition_support_start_inclusive"],
+    )
+    rows = []
+    for mint_rows in by_mint.values():
+        rows.extend(mint_rows)
+    _known, unresolved = isolate_known_cost_events(rows)
+    return sum(1 for row in unresolved if row.get("kind") == "sell" and row.get("unresolved_basis"))
+
+
+def _policy(unresolved_share, shares, unresolved_basis_sales=0):
     values = []
     if unresolved_share not in (None, ""):
         values.append(Decimal(str(unresolved_share)))
@@ -226,8 +252,11 @@ def _policy(unresolved_share, shares):
         return "blocked_unknown_denominator"
     worst = max(values)
     resolved = Decimal("1") - worst
-    if resolved >= Decimal("0.99"):
-        return "eligible_pending_dependency_reassessment"
+    dependency = int(unresolved_basis_sales or 0) > 0
+    if resolved >= Decimal("0.99") and not dependency:
+        return "provisional_eligible"
+    if resolved >= Decimal("0.99") and dependency:
+        return "coverage_eligibility_pending_reassessment"
     if resolved >= Decimal("0.95"):
         return "watchlist_incomplete_evidence"
     return "coverage_blocked"
@@ -284,8 +313,9 @@ def write_ledger(payload):
         "",
         "- Non-swaps are excluded from the swap denominator and stay on the inventory ledger.",
         "- Out-of-window records are kept because earlier txs can affect opening basis.",
-        "- Current qualifiers are coverage-eligibility pending reassessment until dependencies are cleared.",
-        "- L2TExMFK… is not identified as a spot venue with confidence and stays unsupported.",
+        "- Item 12 policy uses both swap-coverage shares and unresolved-basis dependencies.",
+        "- CccS and An9s are coverage provisional_eligible (100% swap coverage, no unresolved-basis sales). gtfo and A6PS stay pending reassessment.",
+        "- L2TExMFK…, OKX, and DFlow stay unsupported unless a later review can name the interface with confidence.",
         "",
     ])
     (OUT / "LEDGER.md").write_text("\n".join(lines), encoding="utf-8")
