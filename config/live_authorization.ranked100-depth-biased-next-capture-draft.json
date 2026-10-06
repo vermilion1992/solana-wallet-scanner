@@ -1,85 +1,158 @@
 {
   "schema_version": "live-research-authorization-v1",
   "enabled": false,
-  "draft_status": "DISABLED; NOT AUTHORISED — Mitch approval required before any live dispatch",
+  "draft_status": "DISABLED; NOT AUTHORISED — Mitch approval required before any live dispatch. This file never runs from the repo template.",
   "not_authorised_for_live_spend_in_repo_template": true,
-  "authorization_id": "live-ranked100-depth-biased-next-capture-2026-10-06-mitch-draft",
+  "authorization_id": "live-ranked100-depth-biased-next-capture-2026-10-07-mitch-draft",
   "authorized_by_user_at": null,
   "expires_at": null,
-  "purpose": "DISABLED depth-biased next-capture draft (Mitch item 17). Continue older unconsumed pages with cursor continuity. Provider-side cutoff 2026-10-05T13:29:27Z. Do not dispatch.",
+  "purpose": "DISABLED adaptive next-capture draft. Phase 1 is one gtfo continuation page, then offline replay. Further pages only where the previous page resolved or approached a named dependency. A6PS is a separately justified repeatability investigation. Do not dispatch.",
   "first_live_target_after_grant": "RANKED100_DEPTH_BIASED_NEXT_CAPTURE",
   "outcome_label": "RANKED100_DEPTH_BIASED_NEXT_CAPTURE",
   "do_not_reuse_consumed_grants": true,
   "PRODUCT_READY": false,
   "provider_side_cutoff": "2026-10-05T13:29:27Z",
+  "provider_side_cutoff_unix": 1791206967,
   "cursor_continuity": true,
   "max_wallet_investigations": 6,
-  "max_requests_per_wallet": 4,
+  "max_requests_per_wallet": 3,
   "max_dispatched_requests": 20,
+  "request_ceiling_is_not_a_target": true,
   "max_full_txs_per_call": 100,
   "retries": 0,
-  "observation_window_objective": "Continue older unconsumed getTransactionsForAddress pages from the last committed pagination token. Do not recapture already stored pages.",
+  "observation_window_objective": "One older unconsumed getTransactionsForAddress page for gtfo first (filters.blockTime.lt + committed paginationToken). Offline replay before any further dispatch. Allocate more pages only where that page resolved or approached a named dependency.",
+  "excluded_from_this_draft": {
+    "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": "forward-observation cohort; separately authorised",
+    "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9": "decoder and ledger reconciliation on existing captures, not a capture target",
+    "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys": "decoder and ledger reconciliation on existing captures, not a capture target",
+    "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U": "zero completed episodes; not in this adaptive continuation"
+  },
   "allowed_wallets": [
     {
       "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
       "provider_rank": 2,
-      "additional_pages": 4,
+      "phase": 1,
+      "initial_pages": 1,
+      "max_additional_pages_if_previous_resolved_named_dependency": 2,
       "continue_from_pagination_token": "453163900:357",
-      "reason": "coverage eligibility pending reassessment; deepen opening-basis history"
+      "named_dependency": "opening-basis backfill for the 4 unresolved-basis sales; coverage-eligibility reassessment",
+      "reason": "First continuation. One older page, then offline replay. Further pages only if that page resolved or approached the named dependency."
     },
     {
       "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
       "provider_rank": 4,
-      "additional_pages": 4,
+      "phase": "conditional_after_gtfo_replay",
+      "initial_pages": 1,
+      "max_additional_pages_if_previous_resolved_named_dependency": 0,
       "continue_from_pagination_token": "453531442:371",
-      "reason": "coverage eligibility pending reassessment; deepen opening-basis history"
+      "named_dependency": "cost attribution of the -0.176385580 sensitivity result (unverified adjacent debits)",
+      "tests": "Whether one older page classifies the adjacent debits that flip sensitivity. Not profit backfill.",
+      "reason": "Cost-attribution control, not a hunt for more profitable episodes. Dispatch only after the gtfo replay, and only if that replay approached a named dependency or this cost question remains the next named dependency."
     },
     {
       "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
       "provider_rank": 15,
-      "additional_pages": 4,
+      "phase": "conditional_after_gtfo_replay",
+      "initial_pages": 1,
+      "max_additional_pages_if_previous_resolved_named_dependency": 1,
       "continue_from_pagination_token": "452839073:6",
-      "reason": "coverage eligibility pending reassessment; deepen opening-basis history"
+      "separately_justified": true,
+      "investigation": "repeatability_of_concentrated_return",
+      "named_dependency": "whether the ~287.99 SOL largest-winner / concentrated-return hypothesis repeats on older pages or is a one-page burst",
+      "hypothesis": "A6PS completed-episode net is concentrated; it goes negative without its largest winner (about 287.99 SOL). Older pages test repeatability of that concentration, not profit backfill.",
+      "tests": "Repeatability of the concentrated-return hypothesis. Not bundled with coverage-eligibility pending reassessment.",
+      "reason": "Separately justified repeatability investigation of the concentrated-return hypothesis."
     },
     {
       "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
       "provider_rank": 53,
-      "additional_pages": 4,
+      "phase": "decoder_and_ledger_first",
+      "initial_pages": 0,
+      "max_additional_pages_if_previous_resolved_named_dependency": 1,
       "continue_from_pagination_token": "449587680:614",
-      "reason": "mixed-quote / unsupported-swap watch; deepen captured inventory"
+      "decoder_first": true,
+      "named_dependency": "a specific older-page dependency named by offline Token-2022 / RFQ / worksheet-episode-bridge work (none named yet)",
+      "tests": "No initial capture. Decoder and ledger reconciliation on existing pages first.",
+      "reason": "Decoder and ledger reconciliation first. Zero initial pages."
     },
     {
       "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
       "provider_rank": 11,
-      "additional_pages": 2,
+      "phase": "conditional_after_gtfo_replay",
+      "initial_pages": 1,
+      "max_additional_pages_if_previous_resolved_named_dependency": 0,
       "continue_from_pagination_token": "449760359:1234",
-      "reason": "zero-position control; distinct unresolved-reason category: unsupported unknown/L2 venue"
+      "role": "evidence_negative_control",
+      "named_dependency": "confirm the unsupported unknown/L2 venue category is stable on one older page",
+      "tests": "Unsupported unknown/L2 venue remains a distinct unresolved-reason category. Zero completed episodes is not a missing-page decode miss.",
+      "reason": "Evidence-negative control. One page only, after the gtfo replay, and only if the previous page resolved or approached a named dependency."
     },
     {
       "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
       "provider_rank": 56,
-      "additional_pages": 2,
+      "phase": "conditional_after_gtfo_replay",
+      "initial_pages": 1,
+      "max_additional_pages_if_previous_resolved_named_dependency": 0,
       "continue_from_pagination_token": "452163894:804",
-      "reason": "zero-position control; distinct unresolved-reason category: OKX router reconstruction blocked on unreviewed System opcode"
+      "role": "evidence_negative_control",
+      "named_dependency": "confirm the unreviewed System-opcode block is stable on one older page",
+      "tests": "OKX router reconstruction blocked on an unreviewed System opcode stays unsupported. Zero-position is not 'not enough pages'.",
+      "reason": "Evidence-negative control. One page only, after the gtfo replay, and only if the previous page resolved or approached a named dependency."
     }
   ],
+  "adaptive_plan": {
+    "kind": "adaptive-continuation-v1",
+    "ceiling_requests": 20,
+    "ceiling_is_not_a_target": true,
+    "phases": [
+      {
+        "phase": 1,
+        "name": "gtfo_small_continuation",
+        "wallets": ["gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL"],
+        "initial_pages": 1,
+        "then": "offline_replay_before_further_dispatch",
+        "named_dependency": "opening-basis backfill for the 4 unresolved-basis sales; coverage-eligibility reassessment",
+        "further_pages_only_if": "previous_page_resolved_or_approached_named_dependency"
+      },
+      {
+        "phase": 2,
+        "name": "conditional_follow_on_after_replay",
+        "wallets": [
+          "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+          "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+          "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6"
+        ],
+        "dispatch_only_if": "phase_1_page_resolved_or_approached_named_dependency",
+        "a6ps": "separately_justified_repeatability_investigation",
+        "further_pages_only_if": "previous_page_resolved_or_approached_named_dependency"
+      }
+    ],
+    "never_continue_because_a_wallet_turned_positive": true,
+    "never_stop_because_a_wallet_turned_positive": true
+  },
   "page_budget": {
-    "gtfo_cccs_a6ps": 12,
-    "mixed_58pw": 4,
-    "zero_position_controls": 4,
-    "total_requests": 20,
-    "documented_credits": 200
+    "kind": "adaptive_ceiling_not_target",
+    "total_request_ceiling": 20,
+    "documented_credits_ceiling": 200,
+    "phase_1_gtfo_continuation": 1,
+    "conditional_follow_on_max": 7,
+    "a6ps_repeatability_investigation_max": 2,
+    "controls_max": 2,
+    "reserved_unallocated": 12
   },
   "acquisition_policy": {
     "kind": "acquisition-policy-v1",
     "enabled_for_live": false,
     "applies_only_when_grant_approved": true,
     "max_wallets": 6,
-    "prefer": "depth_biased_cursor_continuity",
-    "exclude": ["already_captured_pages", "consumed_grants"],
+    "prefer": "adaptive_gtfo_first_then_named_dependency",
+    "exclude": ["already_captured_pages", "consumed_grants", "wallets_without_named_dependency"],
     "do_not_dispatch": true
   },
   "max_additional_spend_usd": "0",
+  "zero_usd_claim": "conditional_on_verified_quota_with_overages_disabled",
   "overages_enabled": false,
   "allow_paid_upgrade": false,
   "allow_signing_or_submission": false,
@@ -88,11 +161,15 @@
   "no_billable_preflight_probes": true,
   "never_until_a_winner": true,
   "stop_conditions": [
+    "stop_when_named_objective_reached",
+    "stop_when_page_unproductive",
     "stop_when_budget_exhausted",
-    "stop_when_coverage_objective_reached",
     "never_until_a_winner",
+    "never_stop_because_a_wallet_turned_positive",
+    "never_continue_because_a_wallet_turned_positive",
     "failed_or_timed_out_dispatched_request_consumes_attempt",
-    "provider_side_cutoff_2026-10-05T13:29:27Z"
+    "provider_side_cutoff_via_filters.blockTime.lt=1791206967",
+    "do_not_dispatch_this_draft"
   ],
   "exact_query": {
     "provider": "helius",
@@ -103,19 +180,24 @@
       "sortOrder": "desc",
       "commitment": "finalized",
       "maxSupportedTransactionVersion": 1,
-      "until": "2026-10-05T13:29:27Z",
       "filters": {
         "status": "any",
-        "tokenAccounts": "all"
+        "tokenAccounts": "all",
+        "blockTime": {
+          "lt": 1791206967
+        }
       }
     },
+    "paginationToken": "supplied_per_wallet_from_last_committed_page",
     "documented_units_per_request": 10,
     "silent_fallback_forbidden": true,
     "page_enlarge_forbidden": true,
     "retry_forbidden": true,
     "endpoint_switch_forbidden": true,
     "current_latest_history_forbidden": true,
-    "top_level_until_required": true
+    "top_level_until_forbidden": true,
+    "top_level_iso_until_forbidden": true,
+    "contract": "filters.blockTime.lt + paginationToken; not a top-level ISO until. Helius getTransactionsForAddress current docs (retrieved into evidence/genuine-report-speed-batch/source-feasibility/current-docs/reference/gettransactionsforaddress.md)."
   },
   "providers": [
     {
@@ -130,11 +212,11 @@
       "max_units": 200,
       "max_concurrency": 1,
       "max_duration_seconds": 600,
-      "max_requests_per_wallet": 4,
+      "max_requests_per_wallet": 3,
       "max_wallet_investigations": 6,
       "documented_units_per_request": 10,
       "retries": 0,
-      "purpose": "DISABLED depth-biased next-capture draft. Cursor continuity from committed page-1 pagination tokens. Provider-side cutoff 2026-10-05T13:29:27Z. Do not dispatch."
+      "purpose": "DISABLED adaptive next-capture draft. Phase-1 gtfo continuation uses filters.blockTime.lt=1791206967 and the committed paginationToken. $0 is conditional on verified quota with overages disabled. Do not dispatch."
     },
     {
       "provider_id": "birdeye",
@@ -152,10 +234,14 @@
     }
   ],
   "notes": [
-    "DRAFT — enabled:false. Requires Mitch's fresh approval because it changes B's targets.",
-    "20 requests / 200 documented Helius credits. Balance unconfirmed.",
-    "Continue older unconsumed pages; do not recapture page 0/1 already in the corpus.",
-    "Provider-side cutoff 2026-10-05T13:29:27Z.",
+    "DRAFT — enabled:false. Requires Mitch's fresh approval because it changes B's targets. This file never runs.",
+    "20 requests is a ceiling, not a target. Phase 1 is one gtfo page. Remaining budget stays reserved until a named dependency is approached.",
+    "Helius contract: filters.blockTime.lt (Unix 1791206967 = 2026-10-05T13:29:27Z exclusive) plus paginationToken. Top-level ISO until is not a documented bound and is forbidden.",
+    "$0 additional spend is conditional on verified remaining quota with overages_enabled=false. existing_plan_confirmed stays false until an operator confirms quota.",
+    "A6PS is a separately justified repeatability investigation of the concentrated-return hypothesis, not a coverage-eligibility continuation.",
+    "BSN5 tests that the unsupported unknown/L2 venue category is stable. AW6P tests that the unreviewed System-opcode block is stable. CccS tests cost attribution of the sensitivity flip.",
+    "58PW is decoder-and-ledger-first: zero initial pages.",
+    "An9s / BVZt / DQ7n / CRXo are not capture targets in this draft.",
     "PRODUCT_READY stays false. Do not commit an armed copy. Do not dispatch."
   ]
 }

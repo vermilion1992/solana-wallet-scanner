@@ -35,6 +35,10 @@ HISTORICAL_ANCHOR_REQUIRED = "HISTORICAL_ANCHOR_REQUIRED"
 SIGNATURE_MISMATCH = "SIGNATURE_MISMATCH"
 UNSUPPORTED_UNTIL = "UNSUPPORTED_UNTIL"
 HISTORICAL_ANCHOR_KEYS = frozenset({"paginationToken"})
+DOCUMENTED_BLOCK_TIME_KEYS = frozenset({"gte", "gt", "lte", "lt", "eq"})
+PROVIDER_SIDE_CUTOFF_ISO = "2026-10-05T13:29:27Z"
+PROVIDER_SIDE_CUTOFF_UNIX = 1791206967
+NEXT_CAPTURE_DRAFT_REL = "config/live_authorization.ranked100-depth-biased-next-capture-draft.json"
 
 EXACT_HELIUS_OPTIONS = {
     "transactionDetails": "full",
@@ -72,22 +76,47 @@ def assert_no_unsupported_until(options):
     if isinstance(options, dict) and "until" in options:
         raise SourceError(
             UNSUPPORTED_UNTIL,
-            "Top-level until is not a documented getTransactionsForAddress bound; use filters.signature.lte",
+            "Top-level until is not a documented getTransactionsForAddress bound; "
+            "use filters.blockTime.lt and/or paginationToken",
         )
     return True
 
 
+def iso_to_unix(value):
+    if type(value) is int:
+        return value
+    text = str(value).replace("Z", "+00:00")
+    return int(datetime.fromisoformat(text).timestamp())
+
+
+def provider_side_cutoff_unix(iso=None):
+    return iso_to_unix(iso or PROVIDER_SIDE_CUTOFF_ISO)
+
+
 def _base_gta_options(options):
-    """Strip paginationToken and documented signature bound for encoding compare."""
+    """Strip paginationToken and documented signature/blockTime bounds for encoding compare."""
     compare = {k: v for k, v in (options or {}).items() if k not in HISTORICAL_ANCHOR_KEYS}
     filters = dict(compare.get("filters") or {})
     filters.pop("signature", None)
+    filters.pop("blockTime", None)
     compare["filters"] = filters
     return compare
 
 
+def _assert_documented_block_time(bound):
+    if not isinstance(bound, dict) or not bound:
+        raise SourceError("UNAUTHORIZED", "filters.blockTime must be a non-empty documented comparator object")
+    extra = set(bound) - DOCUMENTED_BLOCK_TIME_KEYS
+    if extra:
+        raise SourceError("UNAUTHORIZED", "filters.blockTime keys must be gte/gt/lte/lt/eq")
+    for key, value in bound.items():
+        if type(value) is not int:
+            raise SourceError("UNAUTHORIZED", f"filters.blockTime.{key} must be a Unix timestamp integer")
+    return True
+
+
 def assert_gta_options_not_widened(options):
-    """Frozen GTA encoding plus paginationToken and filters.signature.lte only."""
+    """Frozen GTA encoding plus paginationToken, filters.signature.lte, filters.blockTime."""
     assert_no_unsupported_until(options)
     compare = _base_gta_options(options)
     if compare != EXACT_HELIUS_OPTIONS:
@@ -96,13 +125,16 @@ def assert_gta_options_not_widened(options):
     if extra:
         raise SourceError("UNAUTHORIZED", "Query widening is forbidden")
     filters = (options or {}).get("filters") if isinstance((options or {}).get("filters"), dict) else {}
-    extra_filters = set(filters) - {"status", "tokenAccounts", "signature"}
+    extra_filters = set(filters) - {"status", "tokenAccounts", "signature", "blockTime"}
     if extra_filters:
         raise SourceError("UNAUTHORIZED", "Query widening is forbidden")
     bound = filters.get("signature")
     if bound is not None:
         if not isinstance(bound, dict) or set(bound) != {"lte"} or not isinstance(bound.get("lte"), str) or not bound.get("lte"):
             raise SourceError("UNAUTHORIZED", "filters.signature must be {lte: <signature>}")
+    block = filters.get("blockTime")
+    if block is not None:
+        _assert_documented_block_time(block)
     return True
 
 
@@ -127,17 +159,22 @@ def documented_gta_contract(options):
     assert_gta_options_not_widened(options)
     bound = signature_lte(options)
     token = (options or {}).get("paginationToken")
+    filters = (options or {}).get("filters") if isinstance((options or {}).get("filters"), dict) else {}
+    block = filters.get("blockTime") if isinstance(filters.get("blockTime"), dict) else {}
     return {
         "method": HELIUS_METHOD,
         "sort_order": (options or {}).get("sortOrder"),
         "inclusive_newest_signature": bound,
         "boundary_inclusive": True if bound else None,
         "continuation_token": token,
+        "block_time": dict(block) if block else None,
+        "block_time_lt": block.get("lt") if block else None,
         "is_unanchored_newest_first": (options or {}).get("sortOrder") == "desc" and not bound and not token,
         "until_present": isinstance(options, dict) and "until" in options,
         "server_behaviour_not_proven": True,
         "note": (
             "filters.signature.lte is the documented inclusive newest-signature bound. "
+            "filters.blockTime.lt is the documented exclusive Unix-time bound. "
             "sortOrder=desc treats the first returned record as newest. "
             "Continuation uses paginationToken. Top-level until is unsupported. "
             "This local contract does not prove Helius accepted or applied the bound."
@@ -169,12 +206,19 @@ def build_historical_gta_options(
     until=None,
     signature_lte_bound=None,
     historical_target=None,
+    block_time=None,
+    block_time_lt=None,
 ):
-    """Construct a GTA page. Historical page 0 uses filters.signature.lte, not until."""
+    """Construct a GTA page. Historical page 0 uses filters.signature.lte, not until.
+
+    Next-capture continuations use paginationToken plus filters.blockTime.lt.
+    A top-level ISO until is rejected.
+    """
     if until is not None:
         raise SourceError(
             UNSUPPORTED_UNTIL,
-            "Top-level until is not a documented getTransactionsForAddress bound; use filters.signature.lte",
+            "Top-level until is not a documented getTransactionsForAddress bound; "
+            "use filters.blockTime.lt and/or paginationToken",
         )
     options = {
         **EXACT_HELIUS_OPTIONS,
@@ -196,6 +240,11 @@ def build_historical_gta_options(
         options["paginationToken"] = token
     if bound:
         options["filters"] = {**options["filters"], "signature": {"lte": bound}}
+    block = dict(block_time) if isinstance(block_time, dict) else {}
+    if block_time_lt is not None:
+        block["lt"] = int(block_time_lt)
+    if block:
+        options["filters"] = {**options["filters"], "blockTime": block}
     if required:
         assert_historical_request_anchored(options, expected_signatures=expected)
     assert_gta_options_not_widened(options)
@@ -239,13 +288,103 @@ def proposed_sanitised_historical_request(
             "note": (
                 "filters.signature.lte is the documented inclusive newest-signature bound "
                 "so newest-first-now cannot substitute current chain-tip history. "
-                "Later pages use the frozen paginationToken. Top-level until is rejected."
+                "Later pages use the frozen paginationToken. "
+                "filters.blockTime.lt is the documented exclusive Unix-time bound. "
+                "Top-level until is rejected."
             ),
         },
         "PRODUCT_READY": False,
         "not_a_dispatched_request": True,
         "not_a_guarantee_of_exact_signature_match": True,
     }
+
+
+def next_capture_draft_path(path=None):
+    if path is not None:
+        return Path(path)
+    return Path(__file__).resolve().parents[2] / NEXT_CAPTURE_DRAFT_REL
+
+
+def load_next_capture_draft(path=None):
+    """Load the disabled next-capture draft. Never treats it as an armed grant."""
+    payload = json.loads(next_capture_draft_path(path).read_text(encoding="utf-8"))
+    if payload.get("enabled") is True:
+        raise SourceError("UNAUTHORIZED", "Repo next-capture draft must stay enabled:false")
+    params = ((payload.get("exact_query") or {}).get("params") or {})
+    if "until" in params:
+        raise SourceError(
+            UNSUPPORTED_UNTIL,
+            "Draft exact_query must not use top-level until; use filters.blockTime.lt",
+        )
+    return payload
+
+
+def next_capture_block_time_lt(draft=None):
+    payload = draft if draft is not None else load_next_capture_draft()
+    filters = ((payload.get("exact_query") or {}).get("params") or {}).get("filters") or {}
+    block = filters.get("blockTime") if isinstance(filters.get("blockTime"), dict) else {}
+    if type(block.get("lt")) is int:
+        return block["lt"]
+    return provider_side_cutoff_unix(payload.get("provider_side_cutoff"))
+
+
+def serialize_next_capture_gta_request(address, *, pagination_token, block_time_lt=None, draft=None):
+    """Box-driver request body for one next-capture continuation. Not dispatched."""
+    cutoff = next_capture_block_time_lt(draft) if block_time_lt is None else int(block_time_lt)
+    if not pagination_token:
+        raise SourceError(
+            HISTORICAL_ANCHOR_REQUIRED,
+            "Next-capture continuation requires the frozen paginationToken",
+        )
+    options = build_historical_gta_options(
+        page_index=1,
+        pagination_token=pagination_token,
+        block_time_lt=cutoff,
+        historical_target=True,
+    )
+    assert_gta_options_not_widened(options)
+    if "until" in options:
+        raise SourceError(UNSUPPORTED_UNTIL, "Serialized next-capture request must not contain top-level until")
+    return {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": HELIUS_METHOD,
+        "params": [address, options],
+        "endpoint": HELIUS_ENDPOINT,
+        "http_method": "POST",
+        "query_string_credentials": "OMITTED",
+        "headers": {},
+        "secrets": False,
+        "not_a_dispatched_request": True,
+        "draft_enabled": False,
+        "PRODUCT_READY": False,
+        "helius_contract": "filters.blockTime.lt + paginationToken; top-level until is unsupported",
+    }
+
+
+def serialize_box_driver_next_capture_first_request(path=None):
+    """Request the box driver would emit for the phase-1 gtfo continuation. Never dispatched."""
+    draft = load_next_capture_draft(path)
+    if draft.get("enabled") is not False:
+        raise SourceError("UNAUTHORIZED", "Next-capture serializer refuses any non-disabled draft")
+    plan = draft.get("adaptive_plan") or {}
+    phases = list(plan.get("phases") or [])
+    phase1 = next((row for row in phases if row.get("phase") == 1), None)
+    if not phase1 or not phase1.get("wallets"):
+        raise SourceError("UNAUTHORIZED", "Adaptive plan must name a phase-1 gtfo continuation")
+    address = phase1["wallets"][0]
+    wallet = next((row for row in draft.get("allowed_wallets") or [] if row.get("address") == address), None)
+    if not wallet:
+        raise SourceError("UNAUTHORIZED", "Phase-1 wallet is missing from allowed_wallets")
+    request = serialize_next_capture_gta_request(
+        address,
+        pagination_token=wallet.get("continue_from_pagination_token"),
+        draft=draft,
+    )
+    request["adaptive_phase"] = 1
+    request["named_dependency"] = wallet.get("named_dependency") or phase1.get("named_dependency")
+    request["then"] = phase1.get("then")
+    return request
 
 
 async def dispatch_historical_transport(transport, address, options, page_index, *, expected_signatures=None):

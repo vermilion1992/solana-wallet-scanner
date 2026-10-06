@@ -432,8 +432,14 @@ def test_item17_next_capture_manifest_is_disabled():
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert payload["enabled"] is False
     assert payload["max_dispatched_requests"] == 20
+    assert payload["request_ceiling_is_not_a_target"] is True
     assert payload["providers"][0]["max_units"] == 200
-    assert payload["exact_query"]["params"]["until"] == "2026-10-05T13:29:27Z" or payload.get("provider_side_cutoff") == "2026-10-05T13:29:27Z"
+    assert payload.get("provider_side_cutoff") == "2026-10-05T13:29:27Z"
+    assert "until" not in payload["exact_query"]["params"]
+    assert payload["exact_query"]["top_level_until_forbidden"] is True
+    assert payload["exact_query"]["params"]["filters"]["blockTime"]["lt"] == 1791206967
+    assert payload["zero_usd_claim"] == "conditional_on_verified_quota_with_overages_disabled"
+    assert payload["overages_enabled"] is False
 
 
 def _record_by_signature(address, signature):

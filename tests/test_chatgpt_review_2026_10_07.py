@@ -5,8 +5,12 @@ research wallet. Zero live provider calls.
 """
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from decimal import Decimal
+from pathlib import Path
+
+import pytest
 
 from scanner.investigation import _message_signers
 from scanner.mass_search.qualification_gates import (
@@ -392,3 +396,71 @@ def test_swaptob_remains_unsupported_after_bounded_investigation():
     reasons = [row.get("reason") for row in decoded.get("unresolved") or []]
     assert any("No reviewed outer spot swap" in (reason or "") for reason in reasons)
     assert not [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
+
+
+def test_next_capture_box_driver_emits_supported_gta_request():
+    from scanner.mass_search.adapters import SourceError
+    from scanner.mass_search.history_ingest import (
+        HELIUS_METHOD,
+        PROVIDER_SIDE_CUTOFF_UNIX,
+        UNSUPPORTED_UNTIL,
+        assert_gta_options_not_widened,
+        build_historical_gta_options,
+        documented_gta_contract,
+        load_next_capture_draft,
+        provider_side_cutoff_unix,
+        serialize_box_driver_next_capture_first_request,
+    )
+
+    assert provider_side_cutoff_unix() == PROVIDER_SIDE_CUTOFF_UNIX == 1791206967
+    draft = load_next_capture_draft()
+    assert draft["enabled"] is False
+    assert draft["PRODUCT_READY"] is False
+    assert "until" not in draft["exact_query"]["params"]
+    assert draft["exact_query"]["top_level_until_forbidden"] is True
+    assert draft["exact_query"]["params"]["filters"]["blockTime"]["lt"] == 1791206967
+    assert draft["request_ceiling_is_not_a_target"] is True
+    assert draft["max_dispatched_requests"] == 20
+    assert draft["zero_usd_claim"] == "conditional_on_verified_quota_with_overages_disabled"
+    assert draft["overages_enabled"] is False
+    assert "stop_when_page_unproductive" in draft["stop_conditions"]
+    assert "never_stop_because_a_wallet_turned_positive" in draft["stop_conditions"]
+    a6ps = next(row for row in draft["allowed_wallets"] if row["address"].startswith("A6PS"))
+    assert a6ps["separately_justified"] is True
+    assert a6ps["investigation"] == "repeatability_of_concentrated_return"
+    assert a6ps["tests"]
+    bsn5 = next(row for row in draft["allowed_wallets"] if row["address"].startswith("BSN5"))
+    aw6p = next(row for row in draft["allowed_wallets"] if row["address"].startswith("AW6P"))
+    cccs = next(row for row in draft["allowed_wallets"] if row["address"].startswith("CccS"))
+    pw58 = next(row for row in draft["allowed_wallets"] if row["address"].startswith("58PW"))
+    assert "Unsupported unknown/L2" in bsn5["tests"]
+    assert "unreviewed System opcode" in aw6p["tests"]
+    assert "Not profit backfill" in cccs["tests"]
+    assert pw58["initial_pages"] == 0
+    assert pw58["decoder_first"] is True
+    request = serialize_box_driver_next_capture_first_request()
+    assert request["not_a_dispatched_request"] is True
+    assert request["draft_enabled"] is False
+    assert request["method"] == HELIUS_METHOD
+    assert request["params"][0].startswith("gtfo")
+    options = request["params"][1]
+    assert "until" not in options
+    assert options["paginationToken"] == "453163900:357"
+    assert options["filters"]["blockTime"] == {"lt": 1791206967}
+    assert_gta_options_not_widened(options)
+    contract = documented_gta_contract(options)
+    assert contract["until_present"] is False
+    assert contract["block_time_lt"] == 1791206967
+    assert contract["continuation_token"] == "453163900:357"
+    built = build_historical_gta_options(
+        page_index=1,
+        pagination_token="453163900:357",
+        block_time_lt=1791206967,
+        historical_target=True,
+    )
+    assert built == options
+    with pytest.raises(SourceError) as error:
+        build_historical_gta_options(until="2026-10-05T13:29:27Z")
+    assert error.value.state == UNSUPPORTED_UNTIL
+    armed = json.loads((Path(__file__).resolve().parents[1] / "config/live_authorization.ranked100-depth-biased-next-capture-draft.json").read_text(encoding="utf-8"))
+    assert armed["enabled"] is False
