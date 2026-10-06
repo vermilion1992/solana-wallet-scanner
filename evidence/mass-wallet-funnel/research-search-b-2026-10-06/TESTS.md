@@ -1,10 +1,10 @@
 # Offline suite at the independent-audit reconciliation commit (cloud agent, 2026-10-06)
 
-App SHA of this evidence commit. Bundle `frontend/dist/assets/index-l9mwD6zR.js`.
+App SHA of this evidence commit. Bundle `frontend/dist/assets/index-CYNwzjEW.js`.
 
-- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3670 passed**, 440 subtests, 0 failed, 1 warning (9 min 16 s). EXIT 0.
-- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3670 passed**, 440 subtests, 0 failed, 1 warning (9 min 6 s). EXIT 0.
-- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-l9mwD6zR.js`.
+- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3672 passed**, 440 subtests, 0 failed, 1 warning (8 min 58 s). EXIT 0.
+- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3672 passed**, 440 subtests, 0 failed, 1 warning (8 min 59 s). EXIT 0.
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-CYNwzjEW.js`.
 - Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = **401**. Shots in `screenshots/phone-0*.png`.
 - No Helius or Birdeye calls. Dummy keys were never sent.
 - `PRODUCT_READY` remains false.
