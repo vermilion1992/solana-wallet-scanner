@@ -264,6 +264,7 @@ def _episode_ledger_from_report(report):
         opened = False
         opened_at = None
         episode_sigs = []
+        buy_consideration = Decimal("0")
         for event in rows:
             units = Decimal(str(event.get("quantity_raw") or event.get("units") or 0))
             if event.get("kind") == "buy":
@@ -271,6 +272,10 @@ def _episode_ledger_from_report(report):
                 if not opened:
                     opened_at = event.get("timestamp") or event.get("block_time")
                 opened = True
+                for key in ("consideration_sol", "amount_sol", "consideration_usdc", "amount_usdc"):
+                    if event.get(key) not in (None, ""):
+                        buy_consideration += Decimal(str(event[key]))
+                        break
                 continue
             if event.get("kind") != "sell" or not opened or inventory <= 0:
                 continue
@@ -291,6 +296,12 @@ def _episode_ledger_from_report(report):
                     for row in mint_sales
                 )
                 costs = sum(Decimal(str(row.get("fees_and_tips") or 0)) for row in mint_sales)
+                # Acquisition is the swap-quote consideration when FIFO
+                # allocation leaves a few-lamport residue (An9s was +4).
+                if buy_consideration and abs(basis - buy_consideration) <= Decimal("0.000000010"):
+                    basis = buy_consideration
+                    if proceeds is not None and costs is not None:
+                        net = proceeds - basis - costs
             elif event.get("known_cost_pnl") not in (None, ""):
                 net = Decimal(str(event["known_cost_pnl"]))
             unit = event.get("settlement_asset") or (
@@ -315,6 +326,7 @@ def _episode_ledger_from_report(report):
             opened = False
             opened_at = None
             episode_sigs = []
+            buy_consideration = Decimal("0")
     return episodes
 
 

@@ -174,6 +174,12 @@ def episode_membership_key(episode):
 
 
 def compute_audit_fingerprint(report=None, *, entry=None, profile=None, episodes=None):
+    if entry is None and (report or {}).get("address"):
+        try:
+            from scanner.mass_search.capture_catalog import catalog_by_address
+            entry = catalog_by_address().get(report.get("address"))
+        except Exception:
+            entry = None
     window = _window_bounds(report or {})
     hashes = raw_capture_hashes(report, entry)
     tx_ids = ordered_transaction_ids(report or {})

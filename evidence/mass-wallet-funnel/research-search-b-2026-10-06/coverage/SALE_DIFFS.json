@@ -2,12 +2,12 @@
   "kind": "sale-level-diff-v1",
   "58PW": {
     "old_usdc_net": "14739.373324196",
-    "new_usdc_net": "51148.756609023",
+    "new_usdc_net": "50386.378661746",
     "old_known_cost_sales": 3,
-    "new_known_cost_sales": 11,
-    "new_unresolved_basis_sales": 3,
-    "new_open_lots": 9,
-    "delta_usdc": "36409.383284827",
+    "new_known_cost_sales": 12,
+    "new_unresolved_basis_sales": 2,
+    "new_open_lots": 10,
+    "delta_usdc": "35647.005337550",
     "newly_decoded_or_matched": [
       {
         "signature": "32FFggBmHFkDCoffrx9DJ2iX6BvJTwSJozd3DLCiPjNaVrHmcMJMj54MZHaUXiu2mBNcYpMRU9kq4gGNAbfqvSLj",
@@ -96,6 +96,19 @@
         "basis": "10625",
         "proceeds": null,
         "net_profit": "2688.699164",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "5125oxVi8HPYPUdyDgnnhJwiQpGZFuj29GSdiVptTdvBbHeT2DX4iNZNRmS5bbhTR1Vr8eMcGJN5GY7RUPHrbhv4",
+        "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "5185.517013277",
+        "proceeds": null,
+        "net_profit": "-762.377947277",
         "old_basis": null,
         "old_proceeds": null,
         "old_net_profit": null

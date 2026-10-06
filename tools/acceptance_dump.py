@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage"
 RECON = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/recon"
 OLD_USDC = Decimal("14739.373324196")
-NEW_USDC = Decimal("51148.756609023")
+NEW_USDC = Decimal("50386.378661746")
 WORKSHEET_LABEL = "worksheet total, partial coverage, not independently audited"
 
 LABELS = {

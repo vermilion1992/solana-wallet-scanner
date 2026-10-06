@@ -16,6 +16,7 @@ from scanner.mass_search.qualification_gates import (
     tolerance_text,
     worksheet_episode_bridge,
 )
+from scanner.mass_search.research_profile import _episode_ledger_from_report
 from scanner.mass_search.workflow import replay_captured_wallet
 from scanner.storage import Store
 from tools.independent_episode_audit import (
@@ -174,11 +175,16 @@ def _app_episodes(report):
         inventory = Decimal("0")
         opened = False
         episode_sigs = []
+        buy_consideration = Decimal("0")
         for event in rows:
             units = _event_units(event)
             if event.get("kind") == "buy":
                 inventory += units
                 opened = True
+                for key in ("consideration_sol", "amount_sol", "consideration_usdc", "amount_usdc"):
+                    if event.get(key) not in (None, ""):
+                        buy_consideration += Decimal(str(event[key]))
+                        break
                 continue
             if event.get("kind") != "sell":
                 continue
@@ -190,6 +196,7 @@ def _app_episodes(report):
                 opened = False
                 episode_sigs = []
                 inventory = Decimal("0")
+                buy_consideration = Decimal("0")
                 continue
             if inventory != 0:
                 continue
@@ -203,6 +210,10 @@ def _app_episodes(report):
                 basis = sum(Decimal(str(row.get("basis") or 0)) for row in mint_sales)
                 proceeds = sum(_sale_proceeds(row) for row in mint_sales)
                 fees = sum(Decimal(str(row.get("fees_and_tips") or 0)) for row in mint_sales)
+                if buy_consideration and abs(basis - buy_consideration) <= Decimal("0.000000010"):
+                    basis = buy_consideration
+                    if proceeds is not None and fees is not None:
+                        net = proceeds - basis - fees
             else:
                 net = basis = proceeds = fees = None
             episodes.append({
@@ -219,6 +230,7 @@ def _app_episodes(report):
             })
             opened = False
             episode_sigs = []
+            buy_consideration = Decimal("0")
     if episodes:
         return episodes
     # Fallback: one row per mint that the worksheet already treated as completed.
@@ -370,7 +382,11 @@ def compare_wallet(address, pages, tmp):
         "worksheet_total_unit": worksheet_unit,
         "worksheet_total_independently_audited": False,
         "worksheet_episode_bridge": worksheet_episode_bridge(worksheet_total, app_episode_net, worksheet_unit or app_episode_unit),
-        "content_fingerprint": compute_audit_fingerprint(report, entry=catalog_by_address().get(address)),
+        "content_fingerprint": compute_audit_fingerprint(
+            report,
+            entry=catalog_by_address().get(address),
+            episodes=_episode_ledger_from_report(report),
+        ),
         "accounting_policy_version": ACCOUNTING_POLICY_VERSION,
         "components_agree": components_agree,
         "tolerance_text": tolerance_text(app_episode_unit or worksheet_unit or "SOL"),
@@ -400,8 +416,11 @@ def compare_wallet(address, pages, tmp):
                 "current_app_proceeds": str(AN9S_REVIEWER_PROCEEDS_APP),
                 "component_bridge": rows[0].get("component_bridge"),
                 "note": (
-                    "Proceeds already agree at 196.517684744 SOL. Remaining component "
-                    "deltas are acquisition (4 lamports) and costs (1 lamport)."
+                    "Reviewer proceeds claim is stale: both sides are 196.517684744 SOL. "
+                    "The quoted Δ 0.001513840 was ATA rent, previously counted as auditor "
+                    "proceeds. Acquisition now uses the buy swap quote 21.849947133 SOL "
+                    "(app FIFO sale-row bases had a 4-lamport residue). Costs agree within "
+                    "1 lamport."
                 ),
             }
         ),

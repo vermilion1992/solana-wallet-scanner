@@ -743,17 +743,24 @@ def test_astziy6_is_unverified_outside_debit_not_a_tip():
 
 
 def test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed():
+    """Former app-2 / auditor-4 mismatch on BVZt and DQ7n is now reconciled.
+
+    Token-2022 transfer fees and the observed RFQ fee-fill closed the two
+    auditor-only episodes on each wallet. They are independently_audited at
+    4/4 and still must not be leads (coverage + cross-currency).
+    """
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     by_address = {row["address"]: row for row in payload["wallets"]}
     bvzt = by_address["BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"]
     dq7n = by_address["DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"]
-    assert bvzt["app_completed_episodes"] == 2
+    assert bvzt["app_completed_episodes"] == 4
     assert bvzt["auditor_clean_episodes"] == 4
-    assert bvzt["status"] == "not_independently_audited"
-    assert bvzt["independently_audited"] is False
-    assert dq7n["app_completed_episodes"] == 2
+    assert bvzt["status"] == "independently_audited"
+    assert bvzt["independently_audited"] is True
+    assert dq7n["app_completed_episodes"] == 4
     assert dq7n["auditor_clean_episodes"] == 4
-    assert dq7n["status"] == "not_independently_audited"
+    assert dq7n["status"] == "independently_audited"
+    assert Decimal(str(dq7n["app_completed_episode_net"])) == Decimal("54.96316")
     assert "no_completed_episodes" not in {bvzt["status"], dq7n["status"]}
     table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
     for label in ("BVZt", "DQ7n"):
@@ -761,8 +768,9 @@ def test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed():
         assert wallet["qualification_level"] != "provisional_research_lead"
         assert wallet["qualification_level"] != "stronger_research_shortlist"
         assert wallet["coverage_status"] == "coverage_blocked"
-        assert wallet["independently_audited"] is False
-        assert wallet["completed"] == 2
+        assert wallet["independently_audited"] is True
+        assert wallet["completed"] == 4
+        assert wallet["sensitivity_sign_flip"] == "cross-currency sensitivity not established"
 
 
 def test_58pw_independently_audited_sits_next_to_episode_net():
@@ -772,13 +780,13 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     assert Decimal(str(row["independently_audited_episode_net"])) == Decimal("5614.586672")
     assert row["independently_audited_episode_net_unit"] == "USDC"
     assert row["worksheet_total_independently_audited"] is False
-    assert Decimal(str(row["worksheet_total"])) == Decimal("51148.756609023")
+    assert Decimal(str(row["worksheet_total"])) == Decimal("50386.378661746")
     table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
     wallet = next(item for item in table["wallets"] if item["address"] == W58)
     assert wallet["independently_audited"] is True
     assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("5614.586672")
     assert wallet["worksheet_total_independently_audited"] is False
-    assert wallet["net_display"] != "51148.756609023 USDC"
+    assert wallet["net_display"] != "50386.378661746 USDC"
     assert "5614.586672" in str(wallet["net_display"])
     assert "completed-episode net" in str(wallet["net_display"])
     assert (
