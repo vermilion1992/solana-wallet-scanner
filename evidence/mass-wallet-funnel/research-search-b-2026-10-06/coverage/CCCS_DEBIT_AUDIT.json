@@ -761,5 +761,54 @@
     "verified_tips": "3.328280298",
     "unresolved_debits_sensitivity": "0.0803"
   },
-  "PRODUCT_READY": false
+  "PRODUCT_READY": false,
+  "run39_to_current_bridge": {
+    "run39_scoped_net_sol": "0.242261753",
+    "current_scoped_net_sol": "0.120294936",
+    "delta_sol": "0.121966817",
+    "sales_unchanged": true,
+    "network_fees_unchanged": true,
+    "reason": "published-list Nozomi/Astralane/NextBlock tips moved from unverified sensitivity to verified costs",
+    "tips_moved_unverified_to_verified": [
+      {
+        "signature": "2HMqvHfyqDyqmpeJN4uiYVrYdRTJrwQtzeacxeSCgNPugzERthBbPuoWJKnuPLzHXm9rSgMTkCpsiVzznMG5wGsE",
+        "recipient": "nozWCyTPppJjRuw2fpzDhhWbW355fzosWSzrrMYB1Qk",
+        "provider": "nozomi",
+        "sol": "0.048462421",
+        "instruction_path": "transaction.message.instructions.1"
+      },
+      {
+        "signature": "y35Ku3QYqKotv5ktb9f8sFxdajxUFnDktW2VP6eJQorqkcwyv78x12kZMi87XvnfyCaQFyjwBdFVgxPCnSEG3Yp",
+        "recipient": "nozWCyTPppJjRuw2fpzDhhWbW355fzosWSzrrMYB1Qk",
+        "provider": "nozomi",
+        "sol": "0.027377935",
+        "instruction_path": "transaction.message.instructions.1"
+      },
+      {
+        "signature": "2CJpi7VXiLuFLX2tL9DEgGt6m8k4vQvu9E7TZHKUFs3NwdhHGzyTcu5637SPYMov2Xkxo2QvEMch78raNsVhUJwm",
+        "recipient": "nozWCyTPppJjRuw2fpzDhhWbW355fzosWSzrrMYB1Qk",
+        "provider": "nozomi",
+        "sol": "0.018425378",
+        "instruction_path": "transaction.message.instructions.1"
+      },
+      {
+        "signature": "Xz1q76iBFFhvaBa47bxs8eWfWZ6hCsCQqVKVXfFgSaY6Sxo89uBQYVVqZ2ygacg2HqBv33HGDk1E8Ywf8GXcg5g",
+        "recipient": "nozWCyTPppJjRuw2fpzDhhWbW355fzosWSzrrMYB1Qk",
+        "provider": "nozomi",
+        "sol": "0.014251873",
+        "instruction_path": "transaction.message.instructions.1"
+      },
+      {
+        "signature": "3kLQK8KBzonTAweD52FqiHRs6SJgaXakMLixnKqUSSFdaSZa4MrHNNJkoxp38TkYKaiKDjLDXcS1yfPLDk2EBJNc",
+        "recipient": "astraRVUuTHjpwEVvNBeQEgwYx9w9CFyfxjYoobCZhL",
+        "provider": "astralane",
+        "sol": "0.01344921",
+        "instruction_path": "transaction.message.instructions.1"
+      }
+    ],
+    "still_unverified": [
+      "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+      "soyastP66xyYC8XADXZjdMM5BAVGD2YRvz8dwtLsqb8"
+    ]
+  }
 }

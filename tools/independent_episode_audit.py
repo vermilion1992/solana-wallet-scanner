@@ -25,13 +25,17 @@ USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 PUMP = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 PUMP_SWAP = "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
 JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+METEORA_DAMM_V2 = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+RFQ_FILL = "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
 SYSTEM = "11111111111111111111111111111111"
 LAMPORTS = Decimal(1_000_000_000)
+USDC_DECIMALS = Decimal(10) ** 6
 REPORT_START = datetime.fromisoformat("2026-09-05T13:29:27+00:00").timestamp()
 REPORT_END = datetime.fromisoformat("2026-10-05T13:29:27+00:00").timestamp()
 ACQUISITION = datetime.fromisoformat("2026-07-07T13:29:27+00:00").timestamp()
 
-# Pinned published discriminators (Pump IDL / Jupiter instruction-parser).
+# Pinned published discriminators (Pump IDL / Jupiter parser / Meteora swap / RFQ Fill).
+# Meteora swap = sha256("global:swap")[:8]; RFQ Fill is the published 8-byte disc.
 PINNED = {
     (PUMP, "33e685a4017f83ad"): ("buy", 6, (5,)),
     (PUMP, "66063d1201daebea"): ("sell", 6, (5,)),
@@ -43,6 +47,8 @@ PINNED = {
     (PUMP_SWAP, "c62e1552b4d9e870"): ("buy_exact_quote_in", 1, (5, 6)),
     (JUPITER, "bb64facc31c4af14"): ("route_v2", 0, (1, 2)),
     (JUPITER, "d19853937cfed8e9"): ("shared_accounts_route_v2", 1, (2, 5)),
+    (METEORA_DAMM_V2, "f8c69e91e17587c8"): ("swap", 8, (2, 3)),
+    (RFQ_FILL, "a860b7a35c0a28a0"): ("Fill", 0, (4,)),
 }
 def _published_tips():
     path = ROOT / "scanner/mass_search/published_tip_accounts.json"
@@ -151,20 +157,179 @@ def _native_delta(raw, address, keys):
     return delta, paid
 
 
-def _verified_tips(raw, keys, address):
-    tips = Decimal("0")
+def _iter_instructions(raw):
     message = (raw.get("transaction") or {}).get("message") or {}
-    for instruction in message.get("instructions") or []:
+    meta = raw.get("meta") or {}
+    for index, instruction in enumerate(message.get("instructions") or []):
+        if isinstance(instruction, dict):
+            yield index, f"transaction.message.instructions.{index}", instruction, False
+    for group in meta.get("innerInstructions") or []:
+        if not isinstance(group, dict):
+            continue
+        outer = group.get("index")
+        for index, instruction in enumerate(group.get("instructions") or []):
+            if isinstance(instruction, dict):
+                yield outer, f"meta.innerInstructions.{outer}.{index}", instruction, True
+
+
+def _system_movements(raw, keys):
+    movements = []
+    for outer, path, instruction, nested in _iter_instructions(raw):
+        if _program(instruction, keys) != SYSTEM:
+            continue
         parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
         info = parsed.get("info") if isinstance(parsed, dict) else None
-        if not isinstance(info, dict) or parsed.get("type") != "transfer":
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        base = {"outer": outer, "nested": nested, "path": path}
+        if isinstance(info, dict) and kind == "transfer":
+            lamports = info.get("lamports")
+            movements.append({
+                **base,
+                "kind": "transfer",
+                "source": info.get("source"),
+                "destination": info.get("destination"),
+                "lamports": lamports if isinstance(lamports, int) else 0,
+            })
             continue
-        if info.get("source") != address:
+        if isinstance(info, dict) and kind in ("createAccount", "createAccountWithSeed"):
+            lamports = info.get("lamports")
+            movements.append({
+                **base,
+                "kind": "create",
+                "source": info.get("source"),
+                "destination": info.get("newAccount"),
+                "lamports": lamports if isinstance(lamports, int) else 0,
+            })
             continue
-        dest = info.get("destination")
-        lamports = info.get("lamports")
-        if dest in PUBLISHED_TIPS and isinstance(lamports, int):
-            tips += Decimal(lamports)
+        payload = _b58decode(instruction.get("data"))
+        accounts = _accounts(instruction, keys)
+        if len(payload) >= 12 and int.from_bytes(payload[:4], "little") == 2:
+            movements.append({
+                **base,
+                "kind": "transfer",
+                "source": accounts[0] if accounts else None,
+                "destination": accounts[1] if len(accounts) > 1 else None,
+                "lamports": int.from_bytes(payload[4:12], "little"),
+            })
+        elif len(payload) >= 20 and int.from_bytes(payload[:4], "little") == 0:
+            movements.append({
+                **base,
+                "kind": "create",
+                "source": accounts[0] if accounts else None,
+                "destination": accounts[1] if len(accounts) > 1 else None,
+                "lamports": int.from_bytes(payload[4:12], "little"),
+            })
+    return movements
+
+
+def _token_accounts(raw, address, keys):
+    meta = raw.get("meta") or {}
+    accounts = {}
+    for field, side in (("preTokenBalances", "pre"), ("postTokenBalances", "post")):
+        for balance in meta.get(field) or []:
+            if not isinstance(balance, dict) or balance.get("owner") != address:
+                continue
+            index = balance.get("accountIndex")
+            if not isinstance(index, int) or index < 0 or index >= len(keys):
+                continue
+            account = keys[index]
+            amount = (balance.get("uiTokenAmount") or {}).get("amount")
+            decimals = (balance.get("uiTokenAmount") or {}).get("decimals")
+            record = accounts.setdefault(account, {
+                "index": index,
+                "mint": balance.get("mint"),
+                "decimals": decimals,
+                "pre": Decimal("0"),
+                "post": Decimal("0"),
+            })
+            if balance.get("mint"):
+                record["mint"] = balance.get("mint")
+            if decimals is not None:
+                record["decimals"] = decimals
+            if amount not in (None, ""):
+                record[side] = Decimal(str(amount))
+    return accounts
+
+
+def _rent_correction(raw, accounts):
+    meta = raw.get("meta") or {}
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    correction = Decimal("0")
+    for info in accounts.values():
+        index = info["index"]
+        if index >= len(pre) or index >= len(post):
+            continue
+        native = Decimal(post[index] - pre[index])
+        token_delta = info["post"] - info["pre"]
+        correction += native - token_delta if info.get("mint") == WSOL else native
+    return correction
+
+
+TOKEN_PROGRAMS = {
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+}
+
+
+def _closed_to_wallet(raw, keys, address):
+    closed = set()
+    for _outer, _path, instruction, _nested in _iter_instructions(raw):
+        if _program(instruction, keys) not in TOKEN_PROGRAMS:
+            continue
+        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        if isinstance(info, dict) and kind == "closeAccount" and info.get("destination") == address:
+            if info.get("account"):
+                closed.add(info["account"])
+            continue
+        payload = _b58decode(instruction.get("data"))
+        accounts = _accounts(instruction, keys)
+        if payload[:1] == b"\x09" and len(accounts) >= 2 and accounts[1] == address:
+            closed.add(accounts[0])
+    return closed
+
+
+def _outside_native(movements, address, wrap_accounts, route_index=None):
+    delta = Decimal("0")
+    for movement in movements:
+        if movement["kind"] != "transfer":
+            continue
+        source, dest = movement["source"], movement["destination"]
+        if address not in (source, dest) or source == dest:
+            continue
+        other = dest if source == address else source
+        if other in wrap_accounts:
+            continue
+        # Quote legs live under the swap (same outer index, often as CPIs).
+        if route_index is not None and movement.get("outer") == route_index:
+            continue
+        lamports = Decimal(movement["lamports"] or 0)
+        delta += -lamports if source == address else lamports
+    return delta
+
+
+def _non_token_creates(movements, address, skip_accounts):
+    extra = Decimal("0")
+    for movement in movements:
+        if movement["kind"] != "create" or movement.get("source") != address:
+            continue
+        if movement.get("destination") in skip_accounts:
+            continue
+        extra += Decimal(movement["lamports"] or 0)
+    return extra
+
+
+def _verified_tips(raw, keys, address):
+    tips = Decimal("0")
+    for movement in _system_movements(raw, keys):
+        if movement["kind"] != "transfer":
+            continue
+        if movement.get("source") != address:
+            continue
+        if movement.get("destination") in PUBLISHED_TIPS:
+            tips += Decimal(movement["lamports"] or 0)
     return tips
 
 
@@ -192,6 +357,7 @@ def _route(raw, address, keys):
             "discriminator": disc,
             "authority": accounts[authority_idx],
             "owned": owned,
+            "index": index,
             "path": f"transaction.message.instructions.{index}",
         }
     return None
@@ -229,33 +395,67 @@ def reconstruct_record(record, address):
     if not route:
         return None
     token_deltas, pre, post = _owned_token_deltas(raw, address)
+    accounts = _token_accounts(raw, address, keys)
     native, paid = _native_delta(raw, address, keys)
     wsol = token_deltas.pop(WSOL, Decimal("0"))
-    settlement = native + wsol
+    movements = _system_movements(raw, keys)
+    wsol_accounts = {account for account, info in accounts.items() if info.get("mint") == WSOL}
+    closed = _closed_to_wallet(raw, keys, address)
+    wrap_accounts = wsol_accounts | set(route.get("owned") or []) | closed
+    rent = _rent_correction(raw, accounts)
+    outside = _outside_native(movements, address, wrap_accounts, route.get("index"))
+    retained = _non_token_creates(movements, address, set(accounts) | wrap_accounts)
+    # Isolate the swap quote: wallet SOL+wSOL minus tips/other transfers, ATA rent,
+    # and program-account funding. Those are costs or residuals, not consideration.
+    settlement = native + wsol + rent - outside + retained
     tips = _verified_tips(raw, keys, address)
     fee = Decimal(meta.get("fee") or 0) if paid else Decimal("0")
-    assets = [(mint, qty) for mint, qty in token_deltas.items() if qty != 0 and mint != USDC]
-    conversions = []
-    if USDC in token_deltas and token_deltas[USDC] != 0 and settlement != 0:
-        conversions.append("usdc_sol")
-    if len(assets) != 1 or settlement == 0 or (assets[0][1] > 0) == (settlement > 0):
-        if conversions:
-            return None
+    usdc_delta = token_deltas.pop(USDC, Decimal("0"))
+    assets = [(mint, qty) for mint, qty in token_deltas.items() if qty != 0]
+    if len(assets) != 1:
         return None
     mint, quantity = assets[0]
+    usdc_settled = settlement == 0 and usdc_delta != 0 and (quantity > 0) != (usdc_delta > 0)
+    sol_settled = settlement != 0 and usdc_delta == 0 and (quantity > 0) != (settlement > 0)
+    if not usdc_settled and not sol_settled:
+        return None
     kind = "buy" if quantity > 0 else "sell"
     signature = record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0]
     timestamp = raw.get("blockTime")
+    usdc_decimals = next((info.get("decimals") for info in accounts.values() if info.get("mint") == USDC), 6)
+    try:
+        usdc_scale = Decimal(10) ** int(usdc_decimals)
+    except (TypeError, ValueError, OverflowError):
+        usdc_scale = USDC_DECIMALS
+    if usdc_settled:
+        consideration_sol = "0"
+        consideration_usdc = _canonical(abs(usdc_delta) / usdc_scale)
+        settlement_asset = "USDC"
+        fees = "0"
+    else:
+        consideration_sol = _canonical(abs(settlement) / LAMPORTS)
+        consideration_usdc = None
+        settlement_asset = "SOL"
+        fees = _canonical((fee + tips) / LAMPORTS)
     return {
         "kind": kind,
         "mint": mint,
         "quantity_raw": str(abs(quantity)),
-        "consideration_sol": _canonical(abs(settlement) / LAMPORTS),
+        "consideration_sol": consideration_sol,
+        "consideration_usdc": consideration_usdc,
+        "settlement_asset": settlement_asset,
         "network_fee_sol": _canonical(fee / LAMPORTS),
         "tips_sol": _canonical(tips / LAMPORTS),
-        "fees_and_tips_sol": _canonical((fee + tips) / LAMPORTS),
+        "fees_and_tips_sol": fees,
         "signature": signature,
         "timestamp": timestamp,
+        "slot": raw.get("slot") if raw.get("slot") is not None else record.get("slot"),
+        "transaction_index": (
+            record.get("transaction_index")
+            if record.get("transaction_index") is not None
+            else raw.get("transactionIndex") if raw.get("transactionIndex") is not None
+            else record.get("transactionIndex")
+        ),
         "program": route["program"],
         "instruction": route["instruction"],
         "discriminator": route["discriminator"],
@@ -316,7 +516,12 @@ def _fifo(trades):
     unresolved = 0
     known_sales = 0
     for mint, rows in by_mint.items():
-        rows = sorted(rows, key=lambda row: (row.get("timestamp") or 0, row.get("signature") or ""))
+        rows = sorted(rows, key=lambda row: (
+            row.get("slot") if isinstance(row.get("slot"), int) else 0,
+            row.get("transaction_index") if isinstance(row.get("transaction_index"), int) else 0,
+            row.get("timestamp") or 0,
+            row.get("signature") or "",
+        ))
         first_buy = next((row for row in rows if row["kind"] == "buy"), None)
         opening = Decimal(str(first_buy["observed_pre_quantity_raw"])) if first_buy else Decimal("0")
         lots = []
@@ -326,10 +531,22 @@ def _fifo(trades):
         episode_basis = Decimal("0")
         episode_proceeds = Decimal("0")
         episode_costs = Decimal("0")
+        episode_asset = None
         for row in rows:
             qty = Decimal(row["quantity_raw"])
-            consideration = Decimal(row["consideration_sol"])
-            fees = Decimal(row.get("fees_and_tips_sol") or 0)
+            asset = row.get("settlement_asset") or "SOL"
+            if asset == "USDC" and row.get("consideration_usdc") not in (None, ""):
+                consideration = Decimal(row["consideration_usdc"])
+                fees = Decimal("0")
+            else:
+                consideration = Decimal(row["consideration_sol"])
+                fees = Decimal(row.get("fees_and_tips_sol") or 0)
+            if episode_asset is None:
+                episode_asset = asset
+            elif asset != episode_asset:
+                # Mixed quote assets on one mint cannot form a clean independent episode.
+                unresolved += 1
+                continue
             if row["kind"] == "buy":
                 if opening > 0 and not lots and inventory == 0:
                     pass
@@ -383,6 +600,7 @@ def _fifo(trades):
                         "close_signature": row["signature"],
                         "venue": row.get("program"),
                         "instruction": row.get("instruction"),
+                        "settlement_asset": episode_asset or row.get("settlement_asset") or "SOL",
                         "basis_sol": _canonical(episode_basis),
                         "proceeds_sol": _canonical(episode_proceeds),
                         "verified_costs_sol": _canonical(episode_costs),
@@ -393,6 +611,7 @@ def _fifo(trades):
                 episode_basis = Decimal("0")
                 episode_proceeds = Decimal("0")
                 episode_costs = Decimal("0")
+                episode_asset = None
         if first_buy and Decimal(str(first_buy["observed_pre_quantity_raw"])) > 0:
             # Opening inventory consumed before captured buys; leftover opening is not a clean episode.
             pass

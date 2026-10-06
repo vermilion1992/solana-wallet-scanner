@@ -4,43 +4,98 @@
     {
       "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
       "records": 200,
-      "independently_reconstructed_trades": 3,
+      "independently_reconstructed_trades": 48,
       "app_completed_episodes": 2,
-      "auditor_clean_episodes": 0,
-      "status": "not_independently_audited",
-      "independently_audited": false,
+      "auditor_clean_episodes": 2,
+      "status": "independently_audited",
+      "independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
-          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
-          "close_signature": "2sBVgDR8yjx7gVZqSQgmmAjwYeynrqagXndDKQMqmYyt9g1ZyuDLtHEhWL5px5KrZzodF12v51H7phf1th6abVcm",
-          "venue": null,
-          "auditor_covers_venue": false,
-          "app": {
-            "basis": "11435",
-            "proceeds": "11617.645237",
-            "verified_costs": "0",
-            "net": "182.645237"
-          },
-          "auditor": null,
-          "match": false
-        },
-        {
           "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
           "close_signature": "Lsw2FKQKbpKQx8J3h6869Si8eshNFMon2HBtJMHqX3trUrB2urudsdFyUUoZ5L8qxssnY7dqrvU2dip7JmZcX86",
-          "venue": null,
-          "auditor_covers_venue": false,
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "auditor_covers_venue": true,
           "app": {
             "basis": "21250",
             "proceeds": "26681.941435",
             "verified_costs": "0",
             "net": "5431.941435"
           },
-          "auditor": null,
-          "match": false
+          "auditor": {
+            "basis": "21250",
+            "proceeds": "26681.941435",
+            "verified_costs": "0",
+            "net": "5431.941435"
+          },
+          "match": true
+        },
+        {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "close_signature": "2sBVgDR8yjx7gVZqSQgmmAjwYeynrqagXndDKQMqmYyt9g1ZyuDLtHEhWL5px5KrZzodF12v51H7phf1th6abVcm",
+          "venue": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "11435",
+            "proceeds": "11617.645237",
+            "verified_costs": "0",
+            "net": "182.645237"
+          },
+          "auditor": {
+            "basis": "11435",
+            "proceeds": "11617.645237",
+            "verified_costs": "0",
+            "net": "182.645237"
+          },
+          "match": true
         }
       ],
-      "auditor_only_episodes": [],
+      "auditor_only_episodes": [
+        {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "close_signature": "2sBVgDR8yjx7gVZqSQgmmAjwYeynrqagXndDKQMqmYyt9g1ZyuDLtHEhWL5px5KrZzodF12v51H7phf1th6abVcm",
+          "venue": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+          "instruction": "Fill",
+          "settlement_asset": "USDC",
+          "basis_sol": "11435",
+          "proceeds_sol": "11617.645237",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "182.645237"
+        },
+        {
+          "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+          "close_signature": "Lsw2FKQKbpKQx8J3h6869Si8eshNFMon2HBtJMHqX3trUrB2urudsdFyUUoZ5L8qxssnY7dqrvU2dip7JmZcX86",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "shared_accounts_route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "21250",
+          "proceeds_sol": "26681.941435",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "5431.941435"
+        }
+      ],
+      "venue_notes": {
+        "pumpCmXq_sales": {
+          "program": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+          "venue": "RFQ_Fill",
+          "settlement": "USDC",
+          "reconstructed": true
+        },
+        "CARDS_sales": {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter shared_accounts_route_v2 / route_v2",
+          "settlement": "USDC",
+          "reconstructed": true
+        },
+        "BPxx_sales": {
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter shared_accounts_route_v2 / route_v2",
+          "settlement": "USDC",
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Captured Jupiter USDC legs reconstruct independently; FIFO leaves opening inventory / leftover so BPxx is not a clean completed episode, same as the app."
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -48,83 +103,31 @@
     {
       "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
       "records": 200,
-      "independently_reconstructed_trades": 73,
+      "independently_reconstructed_trades": 78,
       "app_completed_episodes": 8,
-      "auditor_clean_episodes": 7,
-      "status": "not_independently_audited",
-      "independently_audited": false,
+      "auditor_clean_episodes": 8,
+      "status": "independently_audited",
+      "independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
-          "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump",
-          "close_signature": "49R3wKNH8bFo4zGkGZvcmPzYqhz3np69uFimEBqLZhHs2aoE2f2qEa7Ts2RmmyoLwbu4D7iE6stbmYsHvrQvCFuX",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "30.000000000",
-            "proceeds": "27.598520450",
-            "verified_costs": "1.164069999",
-            "net": "-3.565549549"
-          },
-          "auditor": {
-            "basis": "31.10151384",
-            "proceeds": "27.46252045",
-            "verified_costs": "1.15407",
-            "net": "-4.79306339"
-          },
-          "match": false
-        },
-        {
           "mint": "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH",
           "close_signature": "3kPuFagckPWWvojz2Dvey1BfYEyQkceAA9e4YGwsSzB2vgynWE37nkZExfkTsJVXjNzkRZ7b6tFGJiuGjSoUSE7y",
-          "venue": null,
-          "auditor_covers_venue": false,
+          "venue": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "auditor_covers_venue": true,
           "app": {
             "basis": "10.00",
             "proceeds": "9.193861316",
             "verified_costs": "0.04602500",
             "net": "-0.852163684"
           },
-          "auditor": null,
-          "match": false
-        },
-        {
-          "mint": "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB",
-          "close_signature": "4VtJZV6FPn9VvSeYkztXc6GCuioY29BoM6asZwYpqApA3YnFL1dnstWkCdiNN1oALWdRFBRgQSwL1w4FCzudgncv",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "15.000000",
-            "proceeds": "14.900020227",
-            "verified_costs": "0.040030001",
-            "net": "-0.140009774"
-          },
           "auditor": {
-            "basis": "15.12151384",
-            "proceeds": "14.842020227",
-            "verified_costs": "0.04003",
-            "net": "-0.319523613"
+            "basis": "10",
+            "proceeds": "9.193861316",
+            "verified_costs": "0.046025",
+            "net": "-0.852163684"
           },
-          "match": false
-        },
-        {
-          "mint": "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump",
-          "close_signature": "5TbvuNEUvJ8gDZRpLod4rw73H8wUaTLRuhYPjD5ritCjhXpahV2ttJvAFRLcNjjsyWxkJ7bqu7BCmZEGrmnGfR1h",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "12.0000",
-            "proceeds": "15.752091466",
-            "verified_costs": "0.062030000",
-            "net": "3.690061466"
-          },
-          "auditor": {
-            "basis": "12.12148844",
-            "proceeds": "15.696091466",
-            "verified_costs": "0.05003",
-            "net": "3.524573026"
-          },
-          "match": false
+          "match": true
         },
         {
           "mint": "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump",
@@ -138,50 +141,12 @@
             "net": "-2.598780839"
           },
           "auditor": {
-            "basis": "30.20148844",
-            "proceeds": "27.991249161",
+            "basis": "30",
+            "proceeds": "28.051249161",
             "verified_costs": "0.65003",
-            "net": "-2.860269279"
+            "net": "-2.598780839"
           },
-          "match": false
-        },
-        {
-          "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
-          "close_signature": "3st8wL2Z9pm6B4RV86jD8pQuiJZejcvvSc2zbq3LDFnejpjXeAuQVNKrGpyFXyWCDn3HAobkbT85SppcoN47bmTc",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "50.000000000",
-            "proceeds": "347.931068225",
-            "verified_costs": "4.278069998",
-            "net": "293.652998227"
-          },
-          "auditor": {
-            "basis": "51.52151384",
-            "proceeds": "347.775068225",
-            "verified_costs": "4.27807",
-            "net": "291.975484385"
-          },
-          "match": false
-        },
-        {
-          "mint": "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M",
-          "close_signature": "5ifxePSQLfaB6BnPt5HVqX4VZ8p4VyAoFXQThKLi8Hkzi7jBFhfb2Hog8VP3zkJ5CfGktzUTvh8qdsXboZi1EKkM",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "10.000",
-            "proceeds": "9.999385293",
-            "verified_costs": "0.024030000",
-            "net": "-0.024644707"
-          },
-          "auditor": {
-            "basis": "10.07151384",
-            "proceeds": "9.943385293",
-            "verified_costs": "0.02403",
-            "net": "-0.152158547"
-          },
-          "match": false
+          "match": true
         },
         {
           "mint": "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump",
@@ -195,12 +160,107 @@
             "net": "-6.762331691"
           },
           "auditor": {
-            "basis": "10.12151384",
-            "proceeds": "3.234698309",
+            "basis": "10",
+            "proceeds": "3.290698309",
             "verified_costs": "0.05303",
-            "net": "-6.939845531"
+            "net": "-6.762331691"
           },
-          "match": false
+          "match": true
+        },
+        {
+          "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump",
+          "close_signature": "49R3wKNH8bFo4zGkGZvcmPzYqhz3np69uFimEBqLZhHs2aoE2f2qEa7Ts2RmmyoLwbu4D7iE6stbmYsHvrQvCFuX",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "30.000000000",
+            "proceeds": "27.598520450",
+            "verified_costs": "1.164069999",
+            "net": "-3.565549549"
+          },
+          "auditor": {
+            "basis": "30",
+            "proceeds": "27.59852045",
+            "verified_costs": "1.16407",
+            "net": "-3.56554955"
+          },
+          "match": true
+        },
+        {
+          "mint": "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump",
+          "close_signature": "5TbvuNEUvJ8gDZRpLod4rw73H8wUaTLRuhYPjD5ritCjhXpahV2ttJvAFRLcNjjsyWxkJ7bqu7BCmZEGrmnGfR1h",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "12.0000",
+            "proceeds": "15.752091466",
+            "verified_costs": "0.062030000",
+            "net": "3.690061466"
+          },
+          "auditor": {
+            "basis": "12",
+            "proceeds": "15.752091466",
+            "verified_costs": "0.06203",
+            "net": "3.690061466"
+          },
+          "match": true
+        },
+        {
+          "mint": "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB",
+          "close_signature": "4VtJZV6FPn9VvSeYkztXc6GCuioY29BoM6asZwYpqApA3YnFL1dnstWkCdiNN1oALWdRFBRgQSwL1w4FCzudgncv",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "15.000000",
+            "proceeds": "14.900020227",
+            "verified_costs": "0.040030001",
+            "net": "-0.140009774"
+          },
+          "auditor": {
+            "basis": "15",
+            "proceeds": "14.900020227",
+            "verified_costs": "0.04003",
+            "net": "-0.140009773"
+          },
+          "match": true
+        },
+        {
+          "mint": "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M",
+          "close_signature": "5ifxePSQLfaB6BnPt5HVqX4VZ8p4VyAoFXQThKLi8Hkzi7jBFhfb2Hog8VP3zkJ5CfGktzUTvh8qdsXboZi1EKkM",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "10.000",
+            "proceeds": "9.999385293",
+            "verified_costs": "0.024030000",
+            "net": "-0.024644707"
+          },
+          "auditor": {
+            "basis": "10",
+            "proceeds": "9.999385293",
+            "verified_costs": "0.02403",
+            "net": "-0.024644707"
+          },
+          "match": true
+        },
+        {
+          "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
+          "close_signature": "3st8wL2Z9pm6B4RV86jD8pQuiJZejcvvSc2zbq3LDFnejpjXeAuQVNKrGpyFXyWCDn3HAobkbT85SppcoN47bmTc",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "50.000000000",
+            "proceeds": "347.931068225",
+            "verified_costs": "4.278069998",
+            "net": "293.652998227"
+          },
+          "auditor": {
+            "basis": "50",
+            "proceeds": "347.931068225",
+            "verified_costs": "4.27807",
+            "net": "293.652998225"
+          },
+          "match": true
         }
       ],
       "auditor_only_episodes": [
@@ -209,72 +269,91 @@
           "close_signature": "49R3wKNH8bFo4zGkGZvcmPzYqhz3np69uFimEBqLZhHs2aoE2f2qEa7Ts2RmmyoLwbu4D7iE6stbmYsHvrQvCFuX",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "31.10151384",
-          "proceeds_sol": "27.46252045",
-          "verified_costs_sol": "1.15407",
-          "net_profit_sol": "-4.79306339"
+          "settlement_asset": "SOL",
+          "basis_sol": "30",
+          "proceeds_sol": "27.59852045",
+          "verified_costs_sol": "1.16407",
+          "net_profit_sol": "-3.56554955"
+        },
+        {
+          "mint": "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH",
+          "close_signature": "3kPuFagckPWWvojz2Dvey1BfYEyQkceAA9e4YGwsSzB2vgynWE37nkZExfkTsJVXjNzkRZ7b6tFGJiuGjSoUSE7y",
+          "venue": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "instruction": "swap",
+          "settlement_asset": "SOL",
+          "basis_sol": "10",
+          "proceeds_sol": "9.193861316",
+          "verified_costs_sol": "0.046025",
+          "net_profit_sol": "-0.852163684"
         },
         {
           "mint": "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB",
           "close_signature": "4VtJZV6FPn9VvSeYkztXc6GCuioY29BoM6asZwYpqApA3YnFL1dnstWkCdiNN1oALWdRFBRgQSwL1w4FCzudgncv",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "15.12151384",
-          "proceeds_sol": "14.842020227",
+          "settlement_asset": "SOL",
+          "basis_sol": "15",
+          "proceeds_sol": "14.900020227",
           "verified_costs_sol": "0.04003",
-          "net_profit_sol": "-0.319523613"
+          "net_profit_sol": "-0.140009773"
         },
         {
           "mint": "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump",
           "close_signature": "5TbvuNEUvJ8gDZRpLod4rw73H8wUaTLRuhYPjD5ritCjhXpahV2ttJvAFRLcNjjsyWxkJ7bqu7BCmZEGrmnGfR1h",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "12.12148844",
-          "proceeds_sol": "15.696091466",
-          "verified_costs_sol": "0.05003",
-          "net_profit_sol": "3.524573026"
+          "settlement_asset": "SOL",
+          "basis_sol": "12",
+          "proceeds_sol": "15.752091466",
+          "verified_costs_sol": "0.06203",
+          "net_profit_sol": "3.690061466"
         },
         {
           "mint": "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump",
           "close_signature": "GwqA1eJeEy1AqyPoWHGvBaKqKAQimbRHwax3akferqDtvzPrvUgdGWnscrU46bLkUExg4cY1fvJbN2EbR8uh8AX",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "30.20148844",
-          "proceeds_sol": "27.991249161",
+          "settlement_asset": "SOL",
+          "basis_sol": "30",
+          "proceeds_sol": "28.051249161",
           "verified_costs_sol": "0.65003",
-          "net_profit_sol": "-2.860269279"
+          "net_profit_sol": "-2.598780839"
         },
         {
           "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
           "close_signature": "3st8wL2Z9pm6B4RV86jD8pQuiJZejcvvSc2zbq3LDFnejpjXeAuQVNKrGpyFXyWCDn3HAobkbT85SppcoN47bmTc",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "51.52151384",
-          "proceeds_sol": "347.775068225",
+          "settlement_asset": "SOL",
+          "basis_sol": "50",
+          "proceeds_sol": "347.931068225",
           "verified_costs_sol": "4.27807",
-          "net_profit_sol": "291.975484385"
+          "net_profit_sol": "293.652998225"
         },
         {
           "mint": "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M",
           "close_signature": "5ifxePSQLfaB6BnPt5HVqX4VZ8p4VyAoFXQThKLi8Hkzi7jBFhfb2Hog8VP3zkJ5CfGktzUTvh8qdsXboZi1EKkM",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "10.07151384",
-          "proceeds_sol": "9.943385293",
+          "settlement_asset": "SOL",
+          "basis_sol": "10",
+          "proceeds_sol": "9.999385293",
           "verified_costs_sol": "0.02403",
-          "net_profit_sol": "-0.152158547"
+          "net_profit_sol": "-0.024644707"
         },
         {
           "mint": "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump",
           "close_signature": "5qnq3HUgkkW23g4CvUp4qDWAw7Q7QpC6w3nfqrhfDnKwMydiu7kyRmxeFabZagwfWLhdcAWJZmyKHQH5xLhPn6ta",
           "venue": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "instruction": "sell_v2",
-          "basis_sol": "10.12151384",
-          "proceeds_sol": "3.234698309",
+          "settlement_asset": "SOL",
+          "basis_sol": "10",
+          "proceeds_sol": "3.290698309",
           "verified_costs_sol": "0.05303",
-          "net_profit_sol": "-6.939845531"
+          "net_profit_sol": "-6.762331691"
         }
       ],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -290,6 +369,7 @@
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -316,9 +396,9 @@
             "net": "174.657978610"
           },
           "auditor": {
-            "basis": "21.855460973",
-            "proceeds": "196.519198584",
-            "verified_costs": "0.005759",
+            "basis": "21.849947133",
+            "proceeds": "196.517684744",
+            "verified_costs": "0.009759",
             "net": "174.657978611"
           },
           "match": true
@@ -330,12 +410,14 @@
           "close_signature": "2VB1kpB8vabwtqPB8nf8E14Hdf6aLruLRNdq99tvpKJuEs6fyLqNMcLy3mLNRfb7PmXgRQ7RaCNSufjoFACrivTQ",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "21.855460973",
-          "proceeds_sol": "196.519198584",
-          "verified_costs_sol": "0.005759",
+          "settlement_asset": "SOL",
+          "basis_sol": "21.849947133",
+          "proceeds_sol": "196.517684744",
+          "verified_costs_sol": "0.009759",
           "net_profit_sol": "174.657978611"
         }
       ],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -351,6 +433,7 @@
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -358,14 +441,71 @@
     {
       "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
       "records": 200,
-      "independently_reconstructed_trades": 1,
+      "independently_reconstructed_trades": 32,
       "app_completed_episodes": 0,
-      "auditor_clean_episodes": 0,
+      "auditor_clean_episodes": 5,
       "status": "no_completed_episodes",
       "independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
-      "auditor_only_episodes": [],
+      "auditor_only_episodes": [
+        {
+          "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "close_signature": "4dyknEdboqrVw3kYkFXeKL1aqHKPbrrp5UgWxQHbw9ittrJ29m88dHtxtR4g56s5qQ5pt6wb2vS7zFyQrgQ12P1h",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "7141.628292",
+          "proceeds_sol": "6021.220700112",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "-1120.407591888"
+        },
+        {
+          "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "close_signature": "3R5ejVQSpZ8uohbam48gqfXhJN7dYhKDbqCoZrMMqnVn6sjzWbH7JTCk3hEJeUYF3wnyxZBLnkxwRyXrXqYwVbEv",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "24284.086575",
+          "proceeds_sol": "27492.194746",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "3208.108171"
+        },
+        {
+          "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+          "close_signature": "3qgS53GLmKQ72AEMkieEk1bRidTbpL2yusdjHt14kGz8woPUZmRmj5hErPLdTfWZv8myQG2rF9rojYRSDLqymxPh",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "26222.888961",
+          "proceeds_sol": "23955.273649",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "-2267.615312"
+        },
+        {
+          "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
+          "close_signature": "3otd93M7i4qzYUaXTWWaBnmmhBHisZhW533B9Hiqg1JcmqFrMD5KowYZYDYLFFe37KsJ6RC2ExKjMn1r7c3oCJqd",
+          "venue": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+          "instruction": "Fill",
+          "settlement_asset": "USDC",
+          "basis_sol": "26929.070645",
+          "proceeds_sol": "27992.917531",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "1063.846886"
+        },
+        {
+          "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
+          "close_signature": "HghfNQxdjCKNpTnV1XJzjyh3b4vSmhWY5dWdB73AeDKTY56LPgKPSJCmuv2zAxNgM1KCesVZYgy9Xei5C4ag5fU",
+          "venue": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+          "instruction": "Fill",
+          "settlement_asset": "USDC",
+          "basis_sol": "27992.918631",
+          "proceeds_sol": "26222.888961",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "-1770.02967"
+        }
+      ],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -373,7 +513,7 @@
     {
       "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
       "records": 200,
-      "independently_reconstructed_trades": 0,
+      "independently_reconstructed_trades": 5,
       "app_completed_episodes": null,
       "auditor_clean_episodes": 0,
       "status": "no_completed_episodes",
@@ -381,6 +521,7 @@
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -396,6 +537,44 @@
       "unaudited_venues": [],
       "episodes": [
         {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "close_signature": "4xHrgUtNm4xJ1iZU5LLa86nSzzScHRi2GvdgCfEG29gddzt3x29ZsGpjD6mJJrvqQKX9STyhJvDrCA4BPvUpbQVD",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "2.872287594",
+            "proceeds": "2.810165004",
+            "verified_costs": "0.016581873",
+            "net": "-0.078704463"
+          },
+          "auditor": {
+            "basis": "2.872287594",
+            "proceeds": "2.810165004",
+            "verified_costs": "0.016581873",
+            "net": "-0.078704463"
+          },
+          "match": true
+        },
+        {
+          "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+          "close_signature": "W439JcX4LNLiHm3Lvk1YcnkARfrstboBuTJWKPo7w2kyvDK6CxhWX5eN336ANy7JPuHpmvvzcweR5bERPN4jn6n",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "5.850276954",
+            "proceeds": "5.866153401",
+            "verified_costs": "0.00237",
+            "net": "0.013506447"
+          },
+          "auditor": {
+            "basis": "5.850276954",
+            "proceeds": "5.866153401",
+            "verified_costs": "0.00237",
+            "net": "0.013506447"
+          },
+          "match": true
+        },
+        {
           "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
           "close_signature": "MCNpG1pBXATdVkUYShKj9kHviPEnufykoyfB5YSn23PTv74PLzMc5f2umZkpnHiyXzaoXbH6hBS5e5kYNw6FF5i",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
@@ -407,48 +586,10 @@
             "net": "0.087172382"
           },
           "auditor": {
-            "basis": "2.5269487",
+            "basis": "2.51349949",
             "proceeds": "2.616494142",
-            "verified_costs": "0.00237306",
+            "verified_costs": "0.01582227",
             "net": "0.087172382"
-          },
-          "match": true
-        },
-        {
-          "mint": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
-          "close_signature": "39n417cZwPbBKcFJuSYJomN2LNao7k5G76wvgtFAiqGDpQPc6gWKNg4z5vuZonW2VVJwge8gyS82e6h2uRsV4LDo",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "5.589817646",
-            "proceeds": "5.526899687",
-            "verified_costs": "0.029747935",
-            "net": "-0.092665894"
-          },
-          "auditor": {
-            "basis": "5.617195581",
-            "proceeds": "5.526899687",
-            "verified_costs": "0.00237",
-            "net": "-0.092665894"
-          },
-          "match": true
-        },
-        {
-          "mint": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
-          "close_signature": "9egAfqjWNrVJ9pssmM5QdnjovgZyVULTPpiDpDTbwXRWDTdr1cozq12t81BPqQnshs5ePq5AWgokJviHSuhnaK7",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "9.834464288",
-            "proceeds": "10.168274135",
-            "verified_costs": "0.048632421",
-            "net": "0.285177426"
-          },
-          "auditor": {
-            "basis": "9.882926709",
-            "proceeds": "10.168274135",
-            "verified_costs": "0.00017",
-            "net": "0.285177426"
           },
           "match": true
         },
@@ -464,48 +605,48 @@
             "net": "-0.094190962"
           },
           "auditor": {
-            "basis": "3.750495147",
+            "basis": "3.732069769",
             "proceeds": "3.658634185",
-            "verified_costs": "0.00233",
+            "verified_costs": "0.020755378",
             "net": "-0.094190962"
           },
           "match": true
         },
         {
-          "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
-          "close_signature": "W439JcX4LNLiHm3Lvk1YcnkARfrstboBuTJWKPo7w2kyvDK6CxhWX5eN336ANy7JPuHpmvvzcweR5bERPN4jn6n",
+          "mint": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
+          "close_signature": "9egAfqjWNrVJ9pssmM5QdnjovgZyVULTPpiDpDTbwXRWDTdr1cozq12t81BPqQnshs5ePq5AWgokJviHSuhnaK7",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "auditor_covers_venue": true,
           "app": {
-            "basis": "5.850276954",
-            "proceeds": "5.866153401",
-            "verified_costs": "0.00237",
-            "net": "0.013506447"
+            "basis": "9.834464288",
+            "proceeds": "10.168274135",
+            "verified_costs": "0.048632421",
+            "net": "0.285177426"
           },
           "auditor": {
-            "basis": "5.850276954",
-            "proceeds": "5.866153401",
-            "verified_costs": "0.00237",
-            "net": "0.013506447"
+            "basis": "9.834464288",
+            "proceeds": "10.168274135",
+            "verified_costs": "0.048632421",
+            "net": "0.285177426"
           },
           "match": true
         },
         {
-          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
-          "close_signature": "4xHrgUtNm4xJ1iZU5LLa86nSzzScHRi2GvdgCfEG29gddzt3x29ZsGpjD6mJJrvqQKX9STyhJvDrCA4BPvUpbQVD",
+          "mint": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
+          "close_signature": "39n417cZwPbBKcFJuSYJomN2LNao7k5G76wvgtFAiqGDpQPc6gWKNg4z5vuZonW2VVJwge8gyS82e6h2uRsV4LDo",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "auditor_covers_venue": true,
           "app": {
-            "basis": "2.872287594",
-            "proceeds": "2.810165004",
-            "verified_costs": "0.016581873",
-            "net": "-0.078704463"
+            "basis": "5.589817646",
+            "proceeds": "5.526899687",
+            "verified_costs": "0.029747935",
+            "net": "-0.092665894"
           },
           "auditor": {
-            "basis": "2.886539467",
-            "proceeds": "2.810165004",
-            "verified_costs": "0.00233",
-            "net": "-0.078704463"
+            "basis": "5.589817646",
+            "proceeds": "5.526899687",
+            "verified_costs": "0.029747935",
+            "net": "-0.092665894"
           },
           "match": true
         }
@@ -516,9 +657,10 @@
           "close_signature": "4xHrgUtNm4xJ1iZU5LLa86nSzzScHRi2GvdgCfEG29gddzt3x29ZsGpjD6mJJrvqQKX9STyhJvDrCA4BPvUpbQVD",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "2.886539467",
+          "settlement_asset": "SOL",
+          "basis_sol": "2.872287594",
           "proceeds_sol": "2.810165004",
-          "verified_costs_sol": "0.00233",
+          "verified_costs_sol": "0.016581873",
           "net_profit_sol": "-0.078704463"
         },
         {
@@ -526,9 +668,10 @@
           "close_signature": "39n417cZwPbBKcFJuSYJomN2LNao7k5G76wvgtFAiqGDpQPc6gWKNg4z5vuZonW2VVJwge8gyS82e6h2uRsV4LDo",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "5.617195581",
+          "settlement_asset": "SOL",
+          "basis_sol": "5.589817646",
           "proceeds_sol": "5.526899687",
-          "verified_costs_sol": "0.00237",
+          "verified_costs_sol": "0.029747935",
           "net_profit_sol": "-0.092665894"
         },
         {
@@ -536,9 +679,10 @@
           "close_signature": "9egAfqjWNrVJ9pssmM5QdnjovgZyVULTPpiDpDTbwXRWDTdr1cozq12t81BPqQnshs5ePq5AWgokJviHSuhnaK7",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "9.882926709",
+          "settlement_asset": "SOL",
+          "basis_sol": "9.834464288",
           "proceeds_sol": "10.168274135",
-          "verified_costs_sol": "0.00017",
+          "verified_costs_sol": "0.048632421",
           "net_profit_sol": "0.285177426"
         },
         {
@@ -546,9 +690,10 @@
           "close_signature": "4XZLGnTeMwhHC6vCNFqgHcctNDvxgJjqbQ37Rm4WHbY5cTdKe4CH8aoZU6xJeMv3LMjYXUtTcvf7CozurwbKmCUc",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "3.750495147",
+          "settlement_asset": "SOL",
+          "basis_sol": "3.732069769",
           "proceeds_sol": "3.658634185",
-          "verified_costs_sol": "0.00233",
+          "verified_costs_sol": "0.020755378",
           "net_profit_sol": "-0.094190962"
         },
         {
@@ -556,9 +701,10 @@
           "close_signature": "MCNpG1pBXATdVkUYShKj9kHviPEnufykoyfB5YSn23PTv74PLzMc5f2umZkpnHiyXzaoXbH6hBS5e5kYNw6FF5i",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "2.5269487",
+          "settlement_asset": "SOL",
+          "basis_sol": "2.51349949",
           "proceeds_sol": "2.616494142",
-          "verified_costs_sol": "0.00237306",
+          "verified_costs_sol": "0.01582227",
           "net_profit_sol": "0.087172382"
         },
         {
@@ -566,12 +712,14 @@
           "close_signature": "W439JcX4LNLiHm3Lvk1YcnkARfrstboBuTJWKPo7w2kyvDK6CxhWX5eN336ANy7JPuHpmvvzcweR5bERPN4jn6n",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "5.850276954",
           "proceeds_sol": "5.866153401",
           "verified_costs_sol": "0.00237",
           "net_profit_sol": "0.013506447"
         }
       ],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -579,14 +727,60 @@
     {
       "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
       "records": 200,
-      "independently_reconstructed_trades": 6,
+      "independently_reconstructed_trades": 17,
       "app_completed_episodes": 0,
-      "auditor_clean_episodes": 0,
+      "auditor_clean_episodes": 4,
       "status": "no_completed_episodes",
       "independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
-      "auditor_only_episodes": [],
+      "auditor_only_episodes": [
+        {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "close_signature": "CUbsgMTaA9TvQPGnyDxFV9hsa4uwyLTHYX2XvN3myTSc3ppmdSdqYtxeHfejhU1yd6JneXDrDYC7FpbYbKomGJQ",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "shared_accounts_route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "2500",
+          "proceeds_sol": "2617.121794",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "117.121794"
+        },
+        {
+          "mint": "FiJ4gnd4dhqNeBKfS4E8wnERMEpjMPdUfJhu8foipump",
+          "close_signature": "fFaTSLaSscC2XAcr37CPn5gJtMYjT2FExkdpbKt2DD3oTTU62onbvtLoUMewmNM8G5dYRsR4hwy3rzD4Zn9oMJH",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "400",
+          "proceeds_sol": "227.043736",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "-172.956264"
+        },
+        {
+          "mint": "4WPn1oGVE7rza6PjFJwYpEXZn6qtjwxEKkCV9EtAxhUU",
+          "close_signature": "dD5FUYzzKsjmqzso2ic3Qeys8nS9Ebt3dSCMcrYkkhRi2Po3DA2Ji1Weg9JQwcewAp2wnHBy7pyej1X2fAZL5kg",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "250",
+          "proceeds_sol": "336.949119",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "86.949119"
+        },
+        {
+          "mint": "2BcRevrDhP4MgCw2KyqByFZ4S7mpsi1vY8ZypXwepump",
+          "close_signature": "5SiSZP7QYaERWHUFnW8AdK9PqWRs4CP8pvdjg7fnmxDK8GLLrHAof9mzV5SdiGGgaodaoiUvMPov5heBsj77Zy3F",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "200",
+          "proceeds_sol": "223.848511",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "23.848511"
+        }
+      ],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -596,176 +790,29 @@
       "records": 200,
       "independently_reconstructed_trades": 128,
       "app_completed_episodes": 16,
-      "auditor_clean_episodes": 14,
-      "status": "not_independently_audited",
-      "independently_audited": false,
+      "auditor_clean_episodes": 16,
+      "status": "independently_audited",
+      "independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
-          "mint": "CvUX4G2tzq7J3ECmNvWZLayZYV6KpgQp6SJ5K8Uvsu5g",
-          "close_signature": "34BpHNJW5gQ4ZP5QCf4QhpyvE65AHnx1esvtDd3C9fQm5whDZedwC5WzHEUcm1d9tVrBNY2QL2xVpUFQ1Se1jP15",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "14.65401924",
-            "proceeds": "15.678926163",
-            "verified_costs": "0.272766998",
-            "net": "0.752139926"
-          },
-          "auditor": {
-            "basis": "14.926360717",
-            "proceeds": "15.677726163",
-            "verified_costs": "0.000425521",
-            "net": "0.750939925"
-          },
-          "match": false
-        },
-        {
           "mint": "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump",
           "close_signature": "5ZK4pCwZ4j11TzubuCSHVxK3LhfsZjLf59k78LipoVcCGckcP7umj8RS3sdjS1p9k5UkhWdhModjM3TnuBmYiRwD",
-          "venue": null,
-          "auditor_covers_venue": false,
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
           "app": {
             "basis": "15.395073570",
             "proceeds": "15.142901724",
             "verified_costs": "0.249159899",
             "net": "-0.501331745"
           },
-          "auditor": null,
-          "match": false
-        },
-        {
-          "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
-          "close_signature": "5ztbhkjYE6FsLkawuY8tLmgghA3ViNbvfMmM6geQDGdUZASnxff4j2TCVLbGh38MKqkZW68PqQVzTX2YyibmftWT",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "19.774492197",
-            "proceeds": "18.335547823",
-            "verified_costs": "0.264293695",
-            "net": "-1.703238069"
-          },
           "auditor": {
-            "basis": "8.980732589",
-            "proceeds": "6.943886095",
-            "verified_costs": "0.137696081",
-            "net": "-2.174542575"
+            "basis": "15.39507357",
+            "proceeds": "15.142901724",
+            "verified_costs": "0.249159899",
+            "net": "-0.501331745"
           },
-          "match": false
-        },
-        {
-          "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
-          "close_signature": "4it8jpYgKVpa13DBa1NywcrbkgVWtmoafrq3dGp8PzVULGW3REkys4exQJaWmoQuem91zJ4seoUkdVdNZeF4F4hk",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "22.496350032",
-            "proceeds": "24.025899784",
-            "verified_costs": "0.390304460",
-            "net": "1.139245292"
-          },
-          "auditor": {
-            "basis": "11.794053713",
-            "proceeds": "12.757107211",
-            "verified_costs": "0.245482585",
-            "net": "0.717570913"
-          },
-          "match": false
-        },
-        {
-          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
-          "close_signature": "3rfgkV26iG1mNapyTmi3b3xetWHZuABYRhSjjc1b2WbxVC2j89JDxnwbCgiieipSW68vYYQ5iq5V8TdNuZEgMznb",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "20.616353160",
-            "proceeds": "22.117287562",
-            "verified_costs": "0.333179016",
-            "net": "1.167755390"
-          },
-          "auditor": {
-            "basis": "11.642237946",
-            "proceeds": "12.301768321",
-            "verified_costs": "0.148360681",
-            "net": "0.511169694"
-          },
-          "match": false
-        },
-        {
-          "mint": "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump",
-          "close_signature": "3uhYUXXA4Kmwgg6QLXxmiEKSABypktq9VipY8vU5icmZVX8hcEf6TqhG1Td1TLiz9yKsHhhMFqAEiEUTYFpu8ZX8",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "16.033392988",
-            "proceeds": "18.113687447",
-            "verified_costs": "0.292904170",
-            "net": "1.787390290"
-          },
-          "auditor": {
-            "basis": "16.033392987",
-            "proceeds": "18.112487447",
-            "verified_costs": "0.292904169",
-            "net": "1.786190291"
-          },
-          "match": false
-        },
-        {
-          "mint": "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd",
-          "close_signature": "2fwkwBkEU5AqUgvZW3xMLRjaaM3LPji8pSdueC52QmH7KRe1YtBBD2R4pZgz62zE9RLe3gfHvGBda7EVB9EYRmqh",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "8.564290132",
-            "proceeds": "6.392538909",
-            "verified_costs": "0.178803122",
-            "net": "-2.350554345"
-          },
-          "auditor": {
-            "basis": "8.742983161",
-            "proceeds": "6.392238909",
-            "verified_costs": "0.000110093",
-            "net": "-2.350854345"
-          },
-          "match": false
-        },
-        {
-          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
-          "close_signature": "jdZ2m5UYoAjh2zAusXPtdNyY3VjiDGUPwPH36varFv12P4yCNXDrQaNNPrhd42fyUFFtCMzpCceM3z6kQ7FPE4u",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "31.200605108",
-            "proceeds": "33.063228222",
-            "verified_costs": "0.407899150",
-            "net": "1.454723965"
-          },
-          "auditor": {
-            "basis": "15.802686782",
-            "proceeds": "16.528698878",
-            "verified_costs": "0.000425448",
-            "net": "0.725586648"
-          },
-          "match": false
-        },
-        {
-          "mint": "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump",
-          "close_signature": "3rvFp1JFAd1LCG3htH5fhMb8iXT98cDsS2vNcVYuby3VSV2Pwetmp36u4T6kJH8PxAFMPcBk6A8n2bX8TTX1rMFa",
-          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "auditor_covers_venue": true,
-          "app": {
-            "basis": "14.024976136",
-            "proceeds": "14.821746643",
-            "verified_costs": "0.187524198",
-            "net": "0.609246309"
-          },
-          "auditor": {
-            "basis": "14.212074903",
-            "proceeds": "14.820546643",
-            "verified_costs": "0.00042543",
-            "net": "0.60804631"
-          },
-          "match": false
+          "match": true
         },
         {
           "mint": "6d82cCtC1LktWWgjUz5h3vMenFj5EDHLMBFvcpmvrRi",
@@ -780,11 +827,163 @@
           },
           "auditor": {
             "basis": "11.212608436",
-            "proceeds": "11.240841105",
+            "proceeds": "11.242041105",
             "verified_costs": "0.222620708",
-            "net": "-0.194388039"
+            "net": "-0.193188039"
           },
-          "match": false
+          "match": true
+        },
+        {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "close_signature": "4k9dDgpcJSAdZZ7v6swdqTWu1sQj76dgjrVJz4Ch6cKFa8aiPcHsJqAs9e6VDE3NuBVV7JFNZG6Hm46mMg6mQnVW",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "15.548543444",
+            "proceeds": "16.533329344",
+            "verified_costs": "0.256848582",
+            "net": "0.727937318"
+          },
+          "auditor": {
+            "basis": "15.548543445",
+            "proceeds": "16.533329344",
+            "verified_costs": "0.256848582",
+            "net": "0.727937317"
+          },
+          "match": true
+        },
+        {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "close_signature": "jdZ2m5UYoAjh2zAusXPtdNyY3VjiDGUPwPH36varFv12P4yCNXDrQaNNPrhd42fyUFFtCMzpCceM3z6kQ7FPE4u",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "15.652061664",
+            "proceeds": "16.529898878",
+            "verified_costs": "0.151050568",
+            "net": "0.726786647"
+          },
+          "auditor": {
+            "basis": "15.652061663",
+            "proceeds": "16.529898878",
+            "verified_costs": "0.151050567",
+            "net": "0.726786648"
+          },
+          "match": true
+        },
+        {
+          "mint": "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd",
+          "close_signature": "2fwkwBkEU5AqUgvZW3xMLRjaaM3LPji8pSdueC52QmH7KRe1YtBBD2R4pZgz62zE9RLe3gfHvGBda7EVB9EYRmqh",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "8.564290132",
+            "proceeds": "6.392538909",
+            "verified_costs": "0.178803122",
+            "net": "-2.350554345"
+          },
+          "auditor": {
+            "basis": "8.564290132",
+            "proceeds": "6.392538909",
+            "verified_costs": "0.178803122",
+            "net": "-2.350554345"
+          },
+          "match": true
+        },
+        {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "close_signature": "4CL9SARoKtN85DFU2AXadgKspPM9U8ytHRuaZdGLnT5baN2fgKtZn9Lrw47dg3CpnqmmuHdN4jWYj892Z4BMdBjy",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "11.642237946",
+            "proceeds": "12.302968321",
+            "verified_costs": "0.148360682",
+            "net": "0.512369695"
+          },
+          "auditor": {
+            "basis": "11.642237946",
+            "proceeds": "12.302968321",
+            "verified_costs": "0.148360681",
+            "net": "0.512369694"
+          },
+          "match": true
+        },
+        {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "close_signature": "3rfgkV26iG1mNapyTmi3b3xetWHZuABYRhSjjc1b2WbxVC2j89JDxnwbCgiieipSW68vYYQ5iq5V8TdNuZEgMznb",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "8.974115214",
+            "proceeds": "9.814319241",
+            "verified_costs": "0.184818334",
+            "net": "0.655385695"
+          },
+          "auditor": {
+            "basis": "8.974115214",
+            "proceeds": "9.814319241",
+            "verified_costs": "0.184818333",
+            "net": "0.655385694"
+          },
+          "match": true
+        },
+        {
+          "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
+          "close_signature": "5pRNNF8iZCJb8zATpPqFsMuZZjFvsTfiqFGWZGpFhvPCFzkoNLNoeLC43J1Si6Mx3ujtJqAn4VRUEnYLuEQRHB9t",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "10.793759608",
+            "proceeds": "11.391361728",
+            "verified_costs": "0.126597614",
+            "net": "0.471004506"
+          },
+          "auditor": {
+            "basis": "10.793759607",
+            "proceeds": "11.391361728",
+            "verified_costs": "0.126597614",
+            "net": "0.471004507"
+          },
+          "match": true
+        },
+        {
+          "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
+          "close_signature": "5ztbhkjYE6FsLkawuY8tLmgghA3ViNbvfMmM6geQDGdUZASnxff4j2TCVLbGh38MKqkZW68PqQVzTX2YyibmftWT",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "8.980732589",
+            "proceeds": "6.944186095",
+            "verified_costs": "0.137696081",
+            "net": "-2.174242575"
+          },
+          "auditor": {
+            "basis": "8.980732589",
+            "proceeds": "6.944186095",
+            "verified_costs": "0.137696081",
+            "net": "-2.174242575"
+          },
+          "match": true
+        },
+        {
+          "mint": "CvUX4G2tzq7J3ECmNvWZLayZYV6KpgQp6SJ5K8Uvsu5g",
+          "close_signature": "34BpHNJW5gQ4ZP5QCf4QhpyvE65AHnx1esvtDd3C9fQm5whDZedwC5WzHEUcm1d9tVrBNY2QL2xVpUFQ1Se1jP15",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "14.65401924",
+            "proceeds": "15.678926163",
+            "verified_costs": "0.272766998",
+            "net": "0.752139926"
+          },
+          "auditor": {
+            "basis": "14.654019239",
+            "proceeds": "15.678926163",
+            "verified_costs": "0.272766999",
+            "net": "0.752139925"
+          },
+          "match": true
         },
         {
           "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
@@ -799,11 +998,87 @@
           },
           "auditor": {
             "basis": "21.132594993",
-            "proceeds": "22.114802093",
+            "proceeds": "22.116002093",
             "verified_costs": "0.289131698",
-            "net": "0.693075402"
+            "net": "0.694275402"
           },
-          "match": false
+          "match": true
+        },
+        {
+          "mint": "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump",
+          "close_signature": "3uhYUXXA4Kmwgg6QLXxmiEKSABypktq9VipY8vU5icmZVX8hcEf6TqhG1Td1TLiz9yKsHhhMFqAEiEUTYFpu8ZX8",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "16.033392988",
+            "proceeds": "18.113687447",
+            "verified_costs": "0.292904170",
+            "net": "1.787390290"
+          },
+          "auditor": {
+            "basis": "16.033392987",
+            "proceeds": "18.113687447",
+            "verified_costs": "0.292904169",
+            "net": "1.787390291"
+          },
+          "match": true
+        },
+        {
+          "mint": "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump",
+          "close_signature": "3rvFp1JFAd1LCG3htH5fhMb8iXT98cDsS2vNcVYuby3VSV2Pwetmp36u4T6kJH8PxAFMPcBk6A8n2bX8TTX1rMFa",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "14.024976136",
+            "proceeds": "14.821746643",
+            "verified_costs": "0.187524198",
+            "net": "0.609246309"
+          },
+          "auditor": {
+            "basis": "14.024976136",
+            "proceeds": "14.821746643",
+            "verified_costs": "0.187524197",
+            "net": "0.60924631"
+          },
+          "match": true
+        },
+        {
+          "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
+          "close_signature": "5tRk4YKJzJxCRkvoiLc1VafSf3byFVr5hhsPaUTfcD2AQkzgUwqvcaVC5GY9SpvsksvDKPi4qxi3UMKsr4oGuoC3",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "10.70229632",
+            "proceeds": "11.267592573",
+            "verified_costs": "0.144821874",
+            "net": "0.420474379"
+          },
+          "auditor": {
+            "basis": "10.702296319",
+            "proceeds": "11.267592573",
+            "verified_costs": "0.144821874",
+            "net": "0.42047438"
+          },
+          "match": true
+        },
+        {
+          "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
+          "close_signature": "4it8jpYgKVpa13DBa1NywcrbkgVWtmoafrq3dGp8PzVULGW3REkys4exQJaWmoQuem91zJ4seoUkdVdNZeF4F4hk",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "11.794053712",
+            "proceeds": "12.758307211",
+            "verified_costs": "0.245482586",
+            "net": "0.718770913"
+          },
+          "auditor": {
+            "basis": "11.794053713",
+            "proceeds": "12.758307211",
+            "verified_costs": "0.245482585",
+            "net": "0.718770913"
+          },
+          "match": true
         },
         {
           "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump",
@@ -817,12 +1092,12 @@
             "net": "-0.825818537"
           },
           "auditor": {
-            "basis": "8.885928782",
-            "proceeds": "8.059530557",
-            "verified_costs": "0.000320312",
-            "net": "-0.826718537"
+            "basis": "8.732880431",
+            "proceeds": "8.060430557",
+            "verified_costs": "0.153368663",
+            "net": "-0.825818537"
           },
-          "match": false
+          "match": true
         }
       ],
       "auditor_only_episodes": [
@@ -831,142 +1106,179 @@
           "close_signature": "34BpHNJW5gQ4ZP5QCf4QhpyvE65AHnx1esvtDd3C9fQm5whDZedwC5WzHEUcm1d9tVrBNY2QL2xVpUFQ1Se1jP15",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "14.926360717",
-          "proceeds_sol": "15.677726163",
-          "verified_costs_sol": "0.000425521",
-          "net_profit_sol": "0.750939925"
+          "settlement_asset": "SOL",
+          "basis_sol": "14.654019239",
+          "proceeds_sol": "15.678926163",
+          "verified_costs_sol": "0.272766999",
+          "net_profit_sol": "0.752139925"
+        },
+        {
+          "mint": "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump",
+          "close_signature": "5ZK4pCwZ4j11TzubuCSHVxK3LhfsZjLf59k78LipoVcCGckcP7umj8RS3sdjS1p9k5UkhWdhModjM3TnuBmYiRwD",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "settlement_asset": "SOL",
+          "basis_sol": "15.39507357",
+          "proceeds_sol": "15.142901724",
+          "verified_costs_sol": "0.249159899",
+          "net_profit_sol": "-0.501331745"
         },
         {
           "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
           "close_signature": "5pRNNF8iZCJb8zATpPqFsMuZZjFvsTfiqFGWZGpFhvPCFzkoNLNoeLC43J1Si6Mx3ujtJqAn4VRUEnYLuEQRHB9t",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "10.793759607",
-          "proceeds_sol": "11.390161728",
+          "proceeds_sol": "11.391361728",
           "verified_costs_sol": "0.126597614",
-          "net_profit_sol": "0.469804507"
+          "net_profit_sol": "0.471004507"
         },
         {
           "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
           "close_signature": "5ztbhkjYE6FsLkawuY8tLmgghA3ViNbvfMmM6geQDGdUZASnxff4j2TCVLbGh38MKqkZW68PqQVzTX2YyibmftWT",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "8.980732589",
-          "proceeds_sol": "6.943886095",
+          "proceeds_sol": "6.944186095",
           "verified_costs_sol": "0.137696081",
-          "net_profit_sol": "-2.174542575"
+          "net_profit_sol": "-2.174242575"
         },
         {
           "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
           "close_signature": "5tRk4YKJzJxCRkvoiLc1VafSf3byFVr5hhsPaUTfcD2AQkzgUwqvcaVC5GY9SpvsksvDKPi4qxi3UMKsr4oGuoC3",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "10.702296319",
-          "proceeds_sol": "11.266392573",
+          "proceeds_sol": "11.267592573",
           "verified_costs_sol": "0.144821874",
-          "net_profit_sol": "0.41927438"
+          "net_profit_sol": "0.42047438"
         },
         {
           "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
           "close_signature": "4it8jpYgKVpa13DBa1NywcrbkgVWtmoafrq3dGp8PzVULGW3REkys4exQJaWmoQuem91zJ4seoUkdVdNZeF4F4hk",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "11.794053713",
-          "proceeds_sol": "12.757107211",
+          "proceeds_sol": "12.758307211",
           "verified_costs_sol": "0.245482585",
-          "net_profit_sol": "0.717570913"
+          "net_profit_sol": "0.718770913"
         },
         {
           "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
           "close_signature": "4CL9SARoKtN85DFU2AXadgKspPM9U8ytHRuaZdGLnT5baN2fgKtZn9Lrw47dg3CpnqmmuHdN4jWYj892Z4BMdBjy",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "11.642237946",
-          "proceeds_sol": "12.301768321",
+          "proceeds_sol": "12.302968321",
           "verified_costs_sol": "0.148360681",
-          "net_profit_sol": "0.511169694"
+          "net_profit_sol": "0.512369694"
+        },
+        {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "close_signature": "3rfgkV26iG1mNapyTmi3b3xetWHZuABYRhSjjc1b2WbxVC2j89JDxnwbCgiieipSW68vYYQ5iq5V8TdNuZEgMznb",
+          "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "instruction": "buy",
+          "settlement_asset": "SOL",
+          "basis_sol": "8.974115214",
+          "proceeds_sol": "9.814319241",
+          "verified_costs_sol": "0.184818333",
+          "net_profit_sol": "0.655385694"
         },
         {
           "mint": "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump",
-          "close_signature": "5sEPc2JM6hW839MutGqJnKksCkGeaESDyhYLz5sB6596VNdQiv89AgDPzRWs6SkPvZZcg64FeM6zRhdxmN1y5udw",
+          "close_signature": "3uhYUXXA4Kmwgg6QLXxmiEKSABypktq9VipY8vU5icmZVX8hcEf6TqhG1Td1TLiz9yKsHhhMFqAEiEUTYFpu8ZX8",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "16.033392987",
-          "proceeds_sol": "18.112487447",
+          "proceeds_sol": "18.113687447",
           "verified_costs_sol": "0.292904169",
-          "net_profit_sol": "1.786190291"
+          "net_profit_sol": "1.787390291"
         },
         {
           "mint": "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd",
           "close_signature": "2fwkwBkEU5AqUgvZW3xMLRjaaM3LPji8pSdueC52QmH7KRe1YtBBD2R4pZgz62zE9RLe3gfHvGBda7EVB9EYRmqh",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "8.742983161",
-          "proceeds_sol": "6.392238909",
-          "verified_costs_sol": "0.000110093",
-          "net_profit_sol": "-2.350854345"
+          "settlement_asset": "SOL",
+          "basis_sol": "8.564290132",
+          "proceeds_sol": "6.392538909",
+          "verified_costs_sol": "0.178803122",
+          "net_profit_sol": "-2.350554345"
         },
         {
           "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
           "close_signature": "4k9dDgpcJSAdZZ7v6swdqTWu1sQj76dgjrVJz4Ch6cKFa8aiPcHsJqAs9e6VDE3NuBVV7JFNZG6Hm46mMg6mQnVW",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "15.548543445",
-          "proceeds_sol": "16.532129344",
+          "proceeds_sol": "16.533329344",
           "verified_costs_sol": "0.256848582",
-          "net_profit_sol": "0.726737317"
+          "net_profit_sol": "0.727937317"
         },
         {
           "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
           "close_signature": "jdZ2m5UYoAjh2zAusXPtdNyY3VjiDGUPwPH36varFv12P4yCNXDrQaNNPrhd42fyUFFtCMzpCceM3z6kQ7FPE4u",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "15.802686782",
-          "proceeds_sol": "16.528698878",
-          "verified_costs_sol": "0.000425448",
-          "net_profit_sol": "0.725586648"
+          "settlement_asset": "SOL",
+          "basis_sol": "15.652061663",
+          "proceeds_sol": "16.529898878",
+          "verified_costs_sol": "0.151050567",
+          "net_profit_sol": "0.726786648"
         },
         {
           "mint": "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump",
           "close_signature": "3rvFp1JFAd1LCG3htH5fhMb8iXT98cDsS2vNcVYuby3VSV2Pwetmp36u4T6kJH8PxAFMPcBk6A8n2bX8TTX1rMFa",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "14.212074903",
-          "proceeds_sol": "14.820546643",
-          "verified_costs_sol": "0.00042543",
-          "net_profit_sol": "0.60804631"
+          "settlement_asset": "SOL",
+          "basis_sol": "14.024976136",
+          "proceeds_sol": "14.821746643",
+          "verified_costs_sol": "0.187524197",
+          "net_profit_sol": "0.60924631"
         },
         {
           "mint": "6d82cCtC1LktWWgjUz5h3vMenFj5EDHLMBFvcpmvrRi",
           "close_signature": "vgZJxL6v47S97DVDuvbNLR239VLE7hRLcJcDG4SBYNwabf8FLzoh5sM4sgwQ4Cnz63NxfKLwb6qksbnQZxDC6qV",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "11.212608436",
-          "proceeds_sol": "11.240841105",
+          "proceeds_sol": "11.242041105",
           "verified_costs_sol": "0.222620708",
-          "net_profit_sol": "-0.194388039"
+          "net_profit_sol": "-0.193188039"
         },
         {
           "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
           "close_signature": "64ZFmq8TRp6naTc7T4VUwvPt4jFRArrsN18kJdiafi8QL5ZQd1yTT5MLSJj8wHZo31ziZ2voB8cPeE2AaNoER6nJ",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
+          "settlement_asset": "SOL",
           "basis_sol": "21.132594993",
-          "proceeds_sol": "22.114802093",
+          "proceeds_sol": "22.116002093",
           "verified_costs_sol": "0.289131698",
-          "net_profit_sol": "0.693075402"
+          "net_profit_sol": "0.694275402"
         },
         {
           "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump",
           "close_signature": "5xMVm86NobVYneUrr4Y8yJyRAfyfFAYkinGdQ4imdeMXPtgyMQSVca4kQDDiesbHVaaiVTaCzqo2QEJJWuGgovvK",
           "venue": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "instruction": "buy",
-          "basis_sol": "8.885928782",
-          "proceeds_sol": "8.059530557",
-          "verified_costs_sol": "0.000320312",
-          "net_profit_sol": "-0.826718537"
+          "settlement_asset": "SOL",
+          "basis_sol": "8.732880431",
+          "proceeds_sol": "8.060430557",
+          "verified_costs_sol": "0.153368663",
+          "net_profit_sol": "-0.825818537"
         }
       ],
+      "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false

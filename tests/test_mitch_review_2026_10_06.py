@@ -27,7 +27,14 @@ ROOT = Path(__file__).resolve().parents[1]
 COVERAGE_DIR = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage"
 GTFO = "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL"
 A6PS = "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot"
+W58 = "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL"
 JITO = "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5"
+A6PS_75GG_BUY = "4Rg5Rth4Rq7YYjfzbo35EHmFtKHqRgQcHzsZStkSusJXCGycZHWE2JNMuCWXHApi4ibjW1TCbEFPX6R2mnGFBHD1"
+A6PS_2RSS_CLOSE = "3kPuFagckPWWvojz2Dvey1BfYEyQkceAA9e4YGwsSzB2vgynWE37nkZExfkTsJVXjNzkRZ7b6tFGJiuGjSoUSE7y"
+GTFO_2AF7_CLOSE = "5ZK4pCwZ4j11TzubuCSHVxK3LhfsZjLf59k78LipoVcCGckcP7umj8RS3sdjS1p9k5UkhWdhModjM3TnuBmYiRwD"
+METEORA_DAMM_V2 = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+RFQ_FILL = "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
+JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 
 
 def test_item1_coverage_fields_are_separate_and_90_fails_95_while_96_passes():
@@ -412,3 +419,110 @@ def test_item17_next_capture_manifest_is_disabled():
     assert payload["max_dispatched_requests"] == 20
     assert payload["providers"][0]["max_units"] == 200
     assert payload["exact_query"]["params"]["until"] == "2026-10-05T13:29:27Z" or payload.get("provider_side_cutoff") == "2026-10-05T13:29:27Z"
+
+
+def _record_by_signature(address, signature):
+    from tools.independent_episode_audit import _unwrap
+
+    records, _ = load_capture_records(catalog_by_address()[address])
+    for record in records:
+        raw = _unwrap(record)
+        found = record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0]
+        if found == signature:
+            return record
+    raise AssertionError(f"captured tx {signature} missing for {address}")
+
+
+def test_a6ps_75gg_buy_consideration_is_swap_quote_not_wallet_delta():
+    """Raw 4Rg5Rth4… spends 30 SOL wrap + 1.1 vanity tip + ATA rent. Quote is 30."""
+    from tools.independent_episode_audit import reconstruct_record
+
+    event = reconstruct_record(_record_by_signature(A6PS, A6PS_75GG_BUY), A6PS)
+    assert event is not None
+    assert event["kind"] == "buy"
+    assert event["mint"] == "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump"
+    assert Decimal(event["consideration_sol"]) == Decimal("30")
+    assert event["program"] == "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+    assert Decimal(event["consideration_sol"]) != Decimal("31.10151384")
+
+
+def test_a6ps_2rss_close_is_meteora_damm_v2_from_raw_bytes():
+    """The 8th A6PS episode is Meteora DAMM v2, not Pump. Auditor must reconstruct it."""
+    from tools.independent_episode_audit import reconstruct_record
+
+    event = reconstruct_record(_record_by_signature(A6PS, A6PS_2RSS_CLOSE), A6PS)
+    assert event is not None
+    assert event["kind"] == "sell"
+    assert event["mint"] == "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH"
+    assert event["program"] == METEORA_DAMM_V2
+    assert event["discriminator"] == "f8c69e91e17587c8"
+    assert Decimal(event["consideration_sol"]) == Decimal("2.371239766")
+
+
+def test_gtfo_2af7_same_slot_order_closes_missing_episode():
+    """gtfo 2AF7 close 5ZK4pCwZ… is PumpSwap; same-slot sell-then-buy must not eat the lot."""
+    from tools.independent_episode_audit import reconstruct_record, _fifo
+
+    records, _ = load_capture_records(catalog_by_address()[GTFO])
+    mint = "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump"
+    trades = []
+    for record in records:
+        event = reconstruct_record(record, GTFO)
+        if event and event.get("mint") == mint:
+            trades.append(event)
+    episodes, _unresolved, _known = _fifo(trades)
+    assert len(episodes) == 1
+    assert episodes[0]["close_signature"] == GTFO_2AF7_CLOSE
+    assert episodes[0]["venue"] == "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+    assert abs(Decimal(episodes[0]["net_profit_sol"]) - Decimal("-0.501331745")) <= Decimal("0.00000001")
+
+
+def test_58pw_sales_are_rfq_fill_and_jupiter_usdc():
+    from tools.independent_episode_audit import reconstruct_record
+
+    pump_close = "2sBVgDR8yjx7gVZqSQgmmAjwYeynrqagXndDKQMqmYyt9g1ZyuDLtHEhWL5px5KrZzodF12v51H7phf1th6abVcm"
+    cards_close = "Lsw2FKQKbpKQx8J3h6869Si8eshNFMon2HBtJMHqX3trUrB2urudsdFyUUoZ5L8qxssnY7dqrvU2dip7JmZcX86"
+    pump = reconstruct_record(_record_by_signature(W58, pump_close), W58)
+    cards = reconstruct_record(_record_by_signature(W58, cards_close), W58)
+    assert pump["program"] == RFQ_FILL
+    assert pump["instruction"] == "Fill"
+    assert pump["settlement_asset"] == "USDC"
+    assert pump["mint"] == "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
+    assert Decimal(pump["consideration_usdc"]) == Decimal("11617.645237")
+    assert cards["program"] == JUPITER
+    assert cards["settlement_asset"] == "USDC"
+    assert cards["mint"] == "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp"
+    assert Decimal(cards["consideration_usdc"]) == Decimal("13313.699164")
+
+
+def test_labelled_wallets_are_independently_audited_in_committed_json():
+    payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    by_address = {row["address"]: row for row in payload["wallets"]}
+    expected = {
+        A6PS: (8, 8),
+        GTFO: (16, 16),
+        W58: (2, 2),
+        "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": (6, 6),
+        "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": (1, 1),
+    }
+    for address, (app, auditor) in expected.items():
+        row = by_address[address]
+        assert row["status"] == "independently_audited", address
+        assert row["app_completed_episodes"] == app
+        assert row["auditor_clean_episodes"] == auditor
+        assert all(episode.get("match") for episode in row["episodes"])
+        nets = [abs(Decimal(str(episode["app"]["net"])) - Decimal(str(episode["auditor"]["net"]))) for episode in row["episodes"]]
+        assert all(delta <= Decimal("0.00000001") for delta in nets)
+
+
+def test_cccs_scoped_net_bridge_matches_debit_audit():
+    payload = json.loads((COVERAGE_DIR / "CCCS_DEBIT_AUDIT.json").read_text(encoding="utf-8"))
+    old = Decimal(str(payload["aa2ef2d_scoped_net_sol"]))
+    new = Decimal(str(payload["current_scoped_net_sol"]))
+    assert old == Decimal("0.242261753")
+    assert new == Decimal("0.120294936")
+    assert old - new == Decimal("0.121966817")
+    assert payload["run39_to_current_bridge"]["delta_sol"] == "0.121966817"
+    assert payload["run39_to_current_bridge"]["reason"] == (
+        "published-list Nozomi/Astralane/NextBlock tips moved from unverified sensitivity to verified costs"
+    )
