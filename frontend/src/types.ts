@@ -348,6 +348,16 @@ export type Report = {
   record_breakdown?: Record<string, unknown>;
   residual_sol?: string;
   residual_sol_note?: string;
+  independent_audit?: {
+    status?: string;
+    independently_audited?: boolean;
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    worksheet_total?: string | null;
+    worksheet_total_unit?: string | null;
+    worksheet_total_independently_audited?: boolean;
+    note?: string;
+  } | null;
   verified_tips_sol?: string;
   sensitivity_unverified_debits_sol?: string;
   sensitivity_unverified_debits_note?: string;

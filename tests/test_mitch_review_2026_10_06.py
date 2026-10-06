@@ -434,7 +434,7 @@ def _record_by_signature(address, signature):
 
 
 def test_a6ps_75gg_buy_consideration_is_swap_quote_not_wallet_delta():
-    """Raw 4Rg5Rth4… spends 30 SOL wrap + 1.1 vanity tip + ATA rent. Quote is 30."""
+    """Raw 4Rg5Rth4… spends 30 SOL wrap + 1.1 unverified outside debit to AStZiY6 + ATA rent. Quote is 30."""
     from tools.independent_episode_audit import reconstruct_record
 
     event = reconstruct_record(_record_by_signature(A6PS, A6PS_75GG_BUY), A6PS)
@@ -516,13 +516,254 @@ def test_labelled_wallets_are_independently_audited_in_committed_json():
 
 
 def test_cccs_scoped_net_bridge_matches_debit_audit():
+    """Recompute the run#39→current bridge from raw captures, not committed JSON."""
+    from tools.independent_episode_audit import _unwrap
+    from tools.fee_audit import _keys
+    from scanner.compiled_instructions import CompiledInstructionError, normalize_instruction, SYSTEM_ID
+    from scanner.mass_search.verified_costs import is_verified_tip_account
+
+    CCCS = "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU"
+    expected_tips = {
+        "2HMqvHfyqDyqmpeJN4uiYVrYdRTJrwQtzeacxeSCgNPugzERthBbPuoWJKnuPLzHXm9rSgMTkCpsiVzznMG5wGsE": Decimal("0.048462421"),
+        "y35Ku3QYqKotv5ktb9f8sFxdajxUFnDktW2VP6eJQorqkcwyv78x12kZMi87XvnfyCaQFyjwBdFVgxPCnSEG3Yp": Decimal("0.027377935"),
+        "2CJpi7VXiLuFLX2tL9DEgGt6m8k4vQvu9E7TZHKUFs3NwdhHGzyTcu5637SPYMov2Xkxo2QvEMch78raNsVhUJwm": Decimal("0.018425378"),
+        "Xz1q76iBFFhvaBa47bxs8eWfWZ6hCsCQqVKVXfFgSaY6Sxo89uBQYVVqZ2ygacg2HqBv33HGDk1E8Ywf8GXcg5g": Decimal("0.014251873"),
+        "3kLQK8KBzonTAweD52FqiHRs6SJgaXakMLixnKqUSSFdaSZa4MrHNNJkoxp38TkYKaiKDjLDXcS1yfPLDk2EBJNc": Decimal("0.01344921"),
+    }
+    records, _ = load_capture_records(catalog_by_address()[CCCS])
+    by_sig = {}
+    for record in records:
+        raw = _unwrap(record)
+        signature = record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0]
+        by_sig[signature] = raw
+    recomputed = Decimal("0")
+    for signature, expected in expected_tips.items():
+        raw = by_sig[signature]
+        assert raw["meta"].get("err") is None, signature
+        keys = _keys(raw)
+        found = Decimal("0")
+        message = (raw.get("transaction") or {}).get("message") or {}
+        instructions = list(message.get("instructions") or [])
+        for instruction in instructions:
+            parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+            if parsed is None and instruction.get("data") is not None:
+                program = instruction.get("programId")
+                index = instruction.get("programIdIndex")
+                if program is None and isinstance(index, int) and 0 <= index < len(keys):
+                    program = keys[index]
+                if program == SYSTEM_ID or instruction.get("program") == "system":
+                    try:
+                        viewed = normalize_instruction(instruction, keys, inner=False, path="ix", signers={keys[0]} if keys else set())
+                        parsed = viewed["instruction"].get("parsed")
+                    except (CompiledInstructionError, ValueError, KeyError, IndexError, TypeError):
+                        parsed = None
+            info = parsed.get("info") if isinstance(parsed, dict) else None
+            if not isinstance(info, dict) or parsed.get("type") != "transfer":
+                continue
+            if info.get("source") != CCCS:
+                continue
+            dest = info.get("destination")
+            lamports = info.get("lamports")
+            if not isinstance(lamports, int):
+                continue
+            assert is_verified_tip_account(dest), dest
+            found += Decimal(lamports) / Decimal(1_000_000_000)
+        assert found == expected, (signature, found, expected)
+        recomputed += found
+    old = Decimal("0.242261753")
+    new = Decimal("0.120294936")
+    assert recomputed == Decimal("0.121966817")
+    assert old - recomputed == new
     payload = json.loads((COVERAGE_DIR / "CCCS_DEBIT_AUDIT.json").read_text(encoding="utf-8"))
-    old = Decimal(str(payload["aa2ef2d_scoped_net_sol"]))
-    new = Decimal(str(payload["current_scoped_net_sol"]))
-    assert old == Decimal("0.242261753")
-    assert new == Decimal("0.120294936")
-    assert old - new == Decimal("0.121966817")
     assert payload["run39_to_current_bridge"]["delta_sol"] == "0.121966817"
-    assert payload["run39_to_current_bridge"]["reason"] == (
-        "published-list Nozomi/Astralane/NextBlock tips moved from unverified sensitivity to verified costs"
-    )
+
+
+def test_auditor_owns_tip_list_outside_scanner_and_copies_agree():
+    from tools.independent_episode_audit import AUDITOR_TIP_LIST
+
+    scanner_copy = ROOT / "scanner/mass_search/published_tip_accounts.json"
+    assert AUDITOR_TIP_LIST.is_file()
+    assert "scanner" not in AUDITOR_TIP_LIST.parts
+    auditor = json.loads(AUDITOR_TIP_LIST.read_text(encoding="utf-8"))
+    app = json.loads(scanner_copy.read_text(encoding="utf-8"))
+    auditor_accounts = set()
+    app_accounts = set()
+    auditor_sources = {}
+    for name, body in (auditor.get("providers") or {}).items():
+        auditor_accounts.update(body.get("accounts") or [])
+        auditor_accounts.update(body.get("programs") or [])
+        assert body.get("source", "").startswith("https://"), name
+        auditor_sources[name] = body.get("source")
+    for name, body in (app.get("providers") or {}).items():
+        app_accounts.update(body.get("accounts") or [])
+        app_accounts.update(body.get("programs") or [])
+        assert body.get("source") == auditor_sources[name], name
+    assert auditor_accounts == app_accounts
+    assert len(auditor_accounts) == 58
+
+
+def test_auditor_runs_without_scanner_directory_and_nets_match(tmp_path):
+    import importlib.util
+    import shutil
+
+    dest = tmp_path / "iso"
+    (dest / "tools").mkdir(parents=True)
+    shutil.copy(ROOT / "tools/independent_episode_audit.py", dest / "tools/independent_episode_audit.py")
+    shutil.copy(ROOT / "tools/published_tip_accounts.json", dest / "tools/published_tip_accounts.json")
+    evidence_src = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
+    evidence_dst = dest / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
+    shutil.copytree(evidence_src, evidence_dst, ignore=shutil.ignore_patterns("screenshots", "recon", "*.md"))
+    assert not (dest / "scanner").exists()
+    spec = importlib.util.spec_from_file_location("iso_auditor", dest / "tools/independent_episode_audit.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    manifest = json.loads((evidence_dst / "CAPTURE_MANIFEST.json").read_text(encoding="utf-8"))
+    by_address = {}
+    for entry in (manifest.get("pages") or {}).values():
+        by_address.setdefault(entry["address"], []).append(entry)
+    committed = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    expected = {row["address"]: row for row in committed["wallets"]}
+    labelled = {
+        A6PS, GTFO, W58,
+        "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+        "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+    }
+    for address in labelled:
+        pages = sorted(by_address[address], key=lambda item: item.get("page_index") or 0)
+        isolated = module.audit_address(address, pages)
+        row = expected[address]
+        assert isolated["clean_episodes"] == row["auditor_clean_episodes"]
+        iso_nets = [Decimal(item["net_profit_sol"]) for item in isolated["episodes"]]
+        committed_nets = [Decimal(item["net_profit_sol"]) for item in row["auditor_only_episodes"]]
+        assert iso_nets == committed_nets
+
+
+def test_auditor_fails_loudly_when_tip_list_missing(tmp_path):
+    import importlib.util
+    import shutil
+
+    dest = tmp_path / "missing"
+    (dest / "tools").mkdir(parents=True)
+    shutil.copy(ROOT / "tools/independent_episode_audit.py", dest / "tools/independent_episode_audit.py")
+    spec = importlib.util.spec_from_file_location("missing_tips", dest / "tools/independent_episode_audit.py")
+    module = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(module)
+    except FileNotFoundError as error:
+        assert "published tip list missing" in str(error)
+        return
+    raise AssertionError("auditor imported with a missing tip list")
+
+
+def test_compare_tolerance_is_two_lamports():
+    from tools.independent_episode_compare import TWO_LAMPORTS_SOL, _nets_match
+
+    assert TWO_LAMPORTS_SOL == Decimal("0.000000002")
+    assert _nets_match("1.000000000", "1.000000002") is True
+    assert _nets_match("1.000000000", "0.999999998") is True
+    assert _nets_match("1.000000000", "1.000000003") is False
+    assert _nets_match("1.000000000", "0.999999997") is False
+
+
+def test_failed_transaction_transfers_are_excluded_from_fee_audit_and_app():
+    from tools.fee_audit import audit_wallet
+    from tools.independent_episode_audit import _unwrap
+
+    failed_gtfo = "AHsLSwEqZeYq1FJQZ8n4X3e5Hynp8R11MeTGiTjZJK7tgBemACLAXVx9KJybRs7tSoHHnLQ1i2UgqYqcD66JocA"
+    raw = _unwrap(_record_by_signature(GTFO, failed_gtfo))
+    assert raw["meta"].get("err") is not None
+    gtfo = audit_wallet(GTFO)
+    assert Decimal(gtfo["totals_sol"]["verified_tips"]) == Decimal("3.303280298")
+    assert Decimal(gtfo["totals_sol"]["unresolved_debits_sensitivity"]) == Decimal("0.0547")
+    assert all(item.get("signature") != failed_gtfo or item["economic_role"] == "network_plus_priority_fee" for item in gtfo["largest_charges"])
+    assert all(item.get("signature") != failed_gtfo or item["economic_role"] == "network_plus_priority_fee" for item in gtfo["debits_gt_0_01_sol"])
+    events = decode_supported_swaps(
+        [{"signature": failed_gtfo, "raw": raw, "transaction_index": 0}],
+        GTFO,
+    )["events"]
+    trades = [row for row in events if row.get("kind") in ("buy", "sell")]
+    assert trades == []
+    tips = sum(Decimal(str(row.get("tips_sol") or 0)) for row in events if row.get("kind") != "fee")
+    unverified = sum(Decimal(str(row.get("unverified_debits_sol") or 0)) for row in events)
+    assert tips == 0
+    assert unverified == 0
+
+
+def test_cccs_failed_transaction_debits_are_excluded():
+    from tools.fee_audit import audit_wallet
+    from tools.independent_episode_audit import _unwrap
+
+    CCCS = "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU"
+    records, _ = load_capture_records(catalog_by_address()[CCCS])
+    failed_sigs = []
+    for record in records:
+        raw = _unwrap(record)
+        if (raw.get("meta") or {}).get("err") is not None:
+            failed_sigs.append(record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0])
+    assert failed_sigs
+    audited = audit_wallet(CCCS)
+    transfer_rows = [
+        item for item in audited["debits_gt_0_01_sol"]
+        if item["economic_role"] != "network_plus_priority_fee"
+    ]
+    assert all(item.get("signature") not in failed_sigs for item in transfer_rows)
+    assert all(item.get("transaction_failed") is not True for item in transfer_rows)
+
+
+def test_astziy6_is_unverified_outside_debit_not_a_tip():
+    from tools.independent_episode_audit import reconstruct_record
+
+    assert is_verified_tip_account("AStZiY6EE532nQBBogmvcWemc2bwg2kHuR4Jrd5Cqaq5") is False
+    event = reconstruct_record(_record_by_signature(A6PS, A6PS_75GG_BUY), A6PS)
+    assert Decimal(event["tips_sol"]) == Decimal("0")
+    source = (ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/RESULT.md").read_text(encoding="utf-8")
+    assert "vanity tip" not in source
+    assert "unverified outside debit" in source
+
+
+def test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed():
+    payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    by_address = {row["address"]: row for row in payload["wallets"]}
+    bvzt = by_address["BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"]
+    dq7n = by_address["DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"]
+    assert bvzt["app_completed_episodes"] == 0
+    assert bvzt["auditor_clean_episodes"] == 5
+    assert bvzt["status"] == "not_independently_audited"
+    assert bvzt["independently_audited"] is False
+    assert dq7n["app_completed_episodes"] == 0
+    assert dq7n["auditor_clean_episodes"] == 4
+    assert dq7n["status"] == "not_independently_audited"
+    assert "no_completed_episodes" not in {bvzt["status"], dq7n["status"]}
+
+
+def test_58pw_independently_audited_sits_next_to_episode_net():
+    payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    row = next(item for item in payload["wallets"] if item["address"] == W58)
+    assert row["independently_audited"] is True
+    assert Decimal(str(row["independently_audited_episode_net"])) == Decimal("5614.586672")
+    assert row["independently_audited_episode_net_unit"] == "USDC"
+    assert row["worksheet_total_independently_audited"] is False
+    assert Decimal(str(row["worksheet_total"])) == Decimal("51148.756609023")
+    table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
+    wallet = next(item for item in table["wallets"] if item["address"] == W58)
+    assert wallet["independently_audited"] is True
+    assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("5614.586672")
+    assert wallet["worksheet_total_independently_audited"] is False
+
+
+def test_venue_notes_are_computed_from_auditor_decode():
+    payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    row = next(item for item in payload["wallets"] if item["address"] == W58)
+    notes = row["venue_notes"]
+    assert notes["pump_sales"]["computed_from_auditor_decode"] is True
+    assert notes["CARD_sales"]["computed_from_auditor_decode"] is True
+    assert notes["BPxx_sales"]["clean_completed_episode"] is False
+    assert notes["BPxx_sales"]["reconstructed_as_trades"] is True
+    source = (ROOT / "tools/independent_episode_compare.py").read_text(encoding="utf-8")
+    assert 'if address.startswith("58PW")' not in source
+
+
+def test_history_ingest_has_no_wallet_specific_residual_constant():
+    source = (ROOT / "scanner/mass_search/history_ingest.py").read_text(encoding="utf-8")
+    assert "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot" not in source
+    assert "0.001513840" not in source

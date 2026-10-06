@@ -50,14 +50,27 @@ PINNED = {
     (METEORA_DAMM_V2, "f8c69e91e17587c8"): ("swap", 8, (2, 3)),
     (RFQ_FILL, "a860b7a35c0a28a0"): ("Fill", 0, (4,)),
 }
+AUDITOR_TIP_LIST = Path(__file__).with_name("published_tip_accounts.json")
+
+
 def _published_tips():
-    path = ROOT / "scanner/mass_search/published_tip_accounts.json"
+    """Load the auditor-owned tip list. Fail loudly if the file is missing.
+
+    This copy lives next to the auditor, outside scanner/. A missing file must
+    not silently become an empty tip set — that changes episode nets.
+    """
+    if not AUDITOR_TIP_LIST.is_file():
+        raise FileNotFoundError(
+            f"Auditor published tip list missing: {AUDITOR_TIP_LIST}. "
+            "An empty tip set would change episode nets; refusing to continue."
+        )
+    payload = json.loads(AUDITOR_TIP_LIST.read_text(encoding="utf-8"))
     accounts = set()
-    if path.is_file():
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        for body in (payload.get("providers") or {}).values():
-            accounts.update(body.get("accounts") or [])
-            accounts.update(body.get("programs") or [])
+    for body in (payload.get("providers") or {}).values():
+        accounts.update(body.get("accounts") or [])
+        accounts.update(body.get("programs") or [])
+    if not accounts:
+        raise ValueError(f"Auditor published tip list is empty: {AUDITOR_TIP_LIST}")
     return accounts
 
 
@@ -627,15 +640,42 @@ def audit_address(address, pages):
             trades.append(event)
     episodes, unresolved, known_sales = _fifo(trades)
     wins = sum(1 for item in episodes if Decimal(item["net_profit_sol"]) > 0)
+    episode_mints = {item["mint"] for item in episodes}
+    reconstructed_mints = []
+    by_mint = defaultdict(list)
+    for trade in trades:
+        by_mint[trade["mint"]].append(trade)
+    for mint, mint_trades in by_mint.items():
+        programs = sorted({row.get("program") for row in mint_trades if row.get("program")})
+        instructions = sorted({row.get("instruction") for row in mint_trades if row.get("instruction")})
+        assets = sorted({row.get("settlement_asset") or "SOL" for row in mint_trades})
+        reconstructed_mints.append({
+            "mint": mint,
+            "programs": programs,
+            "instructions": instructions,
+            "settlement_assets": assets,
+            "trade_count": len(mint_trades),
+            "clean_completed_episode": mint in episode_mints,
+        })
+    reconstructed_mints.sort(key=lambda row: row["mint"])
+    episode_unit = None
+    episode_net = None
+    if episodes:
+        units = {item.get("settlement_asset") or "SOL" for item in episodes}
+        episode_unit = next(iter(units)) if len(units) == 1 else "mixed"
+        episode_net = _canonical(sum(Decimal(item["net_profit_sol"]) for item in episodes))
     return {
         "address": address,
         "records": len(records),
         "independently_reconstructed_trades": len(trades),
         "clean_episodes": len(episodes),
+        "independently_audited_episode_net": episode_net,
+        "independently_audited_episode_net_unit": episode_unit,
         "episode_win_rate": _canonical(Decimal(wins) / Decimal(len(episodes))) if episodes else None,
         "unresolved_basis_sales": unresolved,
         "known_cost_sales": known_sales,
         "episodes": episodes,
+        "reconstructed_mints": reconstructed_mints,
         "imports_scanner": False,
         "source": "raw_instructions_balances_ownership_pinned_interfaces",
         "PRODUCT_READY": False,

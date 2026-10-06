@@ -256,6 +256,23 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
                 : "unknown")
           }</strong>
         </div>
+        {(() => {
+          const audit = (report.independent_audit || profile.independent_audit || {}) as {
+            independently_audited?: boolean;
+            independently_audited_episode_net?: string | null;
+            independently_audited_episode_net_unit?: string | null;
+          };
+          if (!audit.independently_audited || audit.independently_audited_episode_net == null) {
+            return null;
+          }
+          return (
+            <div data-independently-audited="true">
+              <span>independently_audited</span>
+              <strong>{`${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}`}</strong>
+              <small>audited episode net</small>
+            </div>
+          );
+        })()}
       </div>
       <p className="subset-worksheet-note">
         Completed known-cost {String(profile.completed_known_cost_positions ?? 0)}
@@ -274,6 +291,24 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
           return detail.label ? ` · concentration ${detail.label}` : "";
         })()}
         {report.residual_sol_note ? ` · residual ${String(report.residual_sol || "")} SOL ${String(report.residual_sol_note)}` : ""}
+        {(() => {
+          const audit = (report.independent_audit || profile.independent_audit || {}) as {
+            independently_audited?: boolean;
+            independently_audited_episode_net?: string | null;
+            independently_audited_episode_net_unit?: string | null;
+            worksheet_total?: string | null;
+            worksheet_total_unit?: string | null;
+            worksheet_total_independently_audited?: boolean;
+          };
+          if (!audit.independently_audited || audit.independently_audited_episode_net == null) {
+            return "";
+          }
+          const episode = ` independently_audited:true next to audited episode net ${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}.`;
+          if (audit.worksheet_total && audit.worksheet_total_independently_audited === false) {
+            return `${episode} Worksheet total ${String(audit.worksheet_total)} ${String(audit.worksheet_total_unit || "")} is not independently audited.`;
+          }
+          return episode;
+        })()}
         {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
       </p>

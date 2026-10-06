@@ -969,12 +969,15 @@ def decode_supported_swaps(transactions, address):
                     context.prec = 192
                     amount_usdc = canonical(Decimal(abs(usdc_delta)) / (Decimal(10) ** usdc_decimals))
                 allocate_fee = paid and not outside_native and not native_roles
+                excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding)
+                excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
                 emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                      decimals=decimals[mint], amount_sol=None, amount_usdc=amount_usdc,
                      classification='market',
                      source=route['program'], venue=route['program'], instruction=route['instruction'],
                      owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
                      settlement_mint=USDC, settlement_asset='USDC',
+                     excluded_funding_sol=excluded_funding_sol,
                      native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
                      unresolved_native_roles=native_roles,
                      retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
@@ -1044,6 +1047,8 @@ def decode_supported_swaps(transactions, address):
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
+            excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding)
+            excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
@@ -1052,6 +1057,7 @@ def decode_supported_swaps(transactions, address):
                  fees_and_tips_sol=fees_and_tips_sol,
                  unverified_debits_sol=unverified_debits_sol,
                  sensitivity_unverified_debits_sol=unverified_debits_sol,
+                 excluded_funding_sol=excluded_funding_sol,
                  paid_by_wallet=paid,
                  settlement_mint=WSOL,
                  native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',

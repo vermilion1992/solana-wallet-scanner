@@ -768,8 +768,20 @@ def replay_cached_history_to_report(
             "detail": worksheet_error,
         })
         report["visible_report"] = False
-    if address == "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot":
-        report["residual_sol"] = "0.001513840"
+    residual = Decimal("0")
+    for event in decoded.get("events") or []:
+        if event.get("kind") not in ("buy", "sell"):
+            continue
+        funding = event.get("excluded_funding_sol")
+        if funding not in (None, ""):
+            residual += Decimal(str(funding))
+        else:
+            for item in event.get("retained_account_funding") or []:
+                if isinstance(item.get("lamports"), int):
+                    residual += Decimal(item["lamports"]) / Decimal(1_000_000_000)
+    if residual != 0:
+        quantized = residual.quantize(Decimal("0.000000001"))
+        report["residual_sol"] = format(quantized, "f")
         report["residual_sol_note"] = (
             "explained by identified program-account funding, excluded from swap consideration"
         )

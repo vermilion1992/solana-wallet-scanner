@@ -256,11 +256,18 @@ def load_committed_independent_audit(address):
             return {
                 "status": status,
                 "independently_audited": status == "independently_audited" or row.get("independently_audited") is True,
+                "independently_audited_episode_net": row.get("independently_audited_episode_net"),
+                "independently_audited_episode_net_unit": row.get("independently_audited_episode_net_unit"),
+                "worksheet_total": row.get("worksheet_total"),
+                "worksheet_total_unit": row.get("worksheet_total_unit"),
+                "worksheet_total_independently_audited": row.get("worksheet_total_independently_audited"),
                 "app_completed_episodes": row.get("app_completed_episodes"),
                 "auditor_clean_episodes": row.get("auditor_clean_episodes"),
                 "unaudited_venues": list(row.get("unaudited_venues") or []),
                 "note": (
                     "Decoder-independent auditor vs app per episode. "
+                    "independently_audited sits next to the audited episode net, "
+                    "not a wallet-level worksheet total. "
                     "A venue the auditor does not cover keeps the wallet from being a lead."
                 ),
             }

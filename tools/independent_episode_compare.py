@@ -10,7 +10,7 @@ from pathlib import Path
 from scanner.mass_search.capture_catalog import catalog_by_address
 from scanner.mass_search.workflow import replay_captured_wallet
 from scanner.storage import Store
-from tools.independent_episode_audit import PINNED, audit_address
+from tools.independent_episode_audit import JUPITER, METEORA_DAMM_V2, PINNED, PUMP, PUMP_SWAP, RFQ_FILL, audit_address
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/INDEPENDENT_AUDIT.json"
@@ -32,11 +32,67 @@ def _q(value):
     return Decimal(str(value)).quantize(Decimal("0.000000001"))
 
 
+# Two lamports. 1e-8 SOL is 10 lamports and is too wide for a 9-decimal SOL
+# quantity. Quantized nets can differ by 1–2 lamports after isolate-then-FIFO.
+TWO_LAMPORTS_SOL = Decimal("0.000000002")
+
+
 def _nets_match(left, right):
     a, b = _q(left), _q(right)
     if a is None or b is None:
         return False
-    return abs(a - b) <= Decimal("0.00000001")
+    return abs(a - b) <= TWO_LAMPORTS_SOL
+
+
+def _venue_label(program, instructions):
+    names = [name for name in (instructions or []) if name]
+    if program == RFQ_FILL:
+        return "RFQ_Fill"
+    if program == JUPITER:
+        return "Jupiter " + " / ".join(names) if names else "Jupiter"
+    if program == PUMP_SWAP:
+        return "PumpSwap " + " / ".join(names) if names else "PumpSwap"
+    if program == PUMP:
+        return "Pump " + " / ".join(names) if names else "Pump"
+    if program == METEORA_DAMM_V2:
+        return "Meteora DAMM v2 " + " / ".join(names) if names else "Meteora DAMM v2"
+    return " / ".join(names) if names else program
+
+
+def _venue_notes_from_auditor(independent):
+    """Compute venue notes from the auditor's own reconstructed mints.
+
+    Not handwritten. A mint that reconstructs but does not FIFO-close is
+    labelled reconstructed_as_trades, not a clean completed episode.
+    """
+    notes = {}
+    for row in independent.get("reconstructed_mints") or []:
+        mint = row.get("mint") or ""
+        if not mint:
+            continue
+        programs = list(row.get("programs") or [])
+        instructions = list(row.get("instructions") or [])
+        assets = list(row.get("settlement_assets") or [])
+        program = programs[0] if len(programs) == 1 else programs
+        note = {
+            "mint": mint,
+            "program": program,
+            "venue": _venue_label(programs[0], instructions) if len(programs) == 1 else [
+                _venue_label(item, instructions) for item in programs
+            ],
+            "settlement": assets[0] if len(assets) == 1 else assets,
+            "reconstructed": True,
+            "computed_from_auditor_decode": True,
+        }
+        if not row.get("clean_completed_episode"):
+            note["reconstructed_as_trades"] = True
+            note["clean_completed_episode"] = False
+            note["reason"] = (
+                "Independently reconstructed; FIFO leaves opening inventory / leftover "
+                "so this mint is not a clean completed episode."
+            )
+        notes[f"{mint[:4]}_sales"] = note
+    return notes or None
 
 
 def _sale_proceeds(row):
@@ -220,36 +276,37 @@ def compare_wallet(address, pages, tmp):
             "match": bool(match) and _nets_match((match or {}).get("net_profit_sol"), episode.get("net")),
         })
     completed = int(report.get("wallet_completed_episodes") or 0)
-    if not app:
+    auditor_count = int(independent.get("clean_episodes") or 0)
+    if not app and auditor_count:
+        # App reconstructed 0 completed episodes; the auditor found some.
+        # That is a mismatch, not an empty-wallet no_completed_episodes status.
+        status = "not_independently_audited"
+    elif not app:
         status = "not_independently_audited" if completed else "no_completed_episodes"
-    elif completed and all(row.get("match") for row in rows) and len(rows) == completed:
+    elif completed and all(row.get("match") for row in rows) and len(rows) == completed and auditor_count == completed:
         status = "independently_audited"
     else:
         status = "not_independently_audited"
-    notes = None
-    if address.startswith("58PW"):
-        notes = {
-            "pumpCmXq_sales": {
-                "program": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
-                "venue": "RFQ_Fill",
-                "settlement": "USDC",
-                "reconstructed": True,
-            },
-            "CARDS_sales": {
-                "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-                "venue": "Jupiter shared_accounts_route_v2 / route_v2",
-                "settlement": "USDC",
-                "reconstructed": True,
-            },
-            "BPxx_sales": {
-                "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-                "venue": "Jupiter shared_accounts_route_v2 / route_v2",
-                "settlement": "USDC",
-                "reconstructed_as_trades": True,
-                "clean_completed_episode": False,
-                "reason": "Captured Jupiter USDC legs reconstruct independently; FIFO leaves opening inventory / leftover so BPxx is not a clean completed episode, same as the app.",
-            },
-        }
+    notes = _venue_notes_from_auditor(independent)
+    episode_net = independent.get("independently_audited_episode_net")
+    episode_unit = independent.get("independently_audited_episode_net_unit")
+    worksheet = report.get("worksheet") or {}
+    by_quote = worksheet.get("by_quote_asset") or {}
+    worksheet_total = None
+    worksheet_unit = None
+    if episode_unit == "USDC":
+        usdc = by_quote.get("USDC") or {}
+        worksheet_total = usdc.get("total_profit_usdc") or worksheet.get("total_profit_usdc")
+        worksheet_unit = "USDC"
+    elif episode_unit == "SOL":
+        sol = by_quote.get("SOL") or {}
+        worksheet_total = sol.get("total_profit_sol") or worksheet.get("total_profit_sol")
+        worksheet_unit = "SOL"
+    worksheet_matches_episodes = (
+        worksheet_total not in (None, "")
+        and episode_net not in (None, "")
+        and _nets_match(worksheet_total, episode_net)
+    )
     return {
         "address": address,
         "records": independent.get("records"),
@@ -258,9 +315,15 @@ def compare_wallet(address, pages, tmp):
         "auditor_clean_episodes": independent.get("clean_episodes"),
         "status": status,
         "independently_audited": status == "independently_audited",
+        "independently_audited_episode_net": episode_net if status == "independently_audited" else None,
+        "independently_audited_episode_net_unit": episode_unit if status == "independently_audited" else None,
+        "worksheet_total": worksheet_total,
+        "worksheet_total_unit": worksheet_unit,
+        "worksheet_total_independently_audited": bool(worksheet_matches_episodes) if status == "independently_audited" else False,
         "unaudited_venues": sorted(set(unaudited_venues)),
         "episodes": rows,
         "auditor_only_episodes": independent.get("episodes") or [],
+        "reconstructed_mints": independent.get("reconstructed_mints") or [],
         "venue_notes": notes,
         "imports_scanner_in_auditor": False,
         "source": "raw_instructions_balances_ownership_pinned_interfaces",

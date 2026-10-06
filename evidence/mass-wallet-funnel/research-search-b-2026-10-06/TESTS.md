@@ -18,6 +18,17 @@ Named regressions:
   - `test_58pw_sales_are_rfq_fill_and_jupiter_usdc`
   - `test_labelled_wallets_are_independently_audited_in_committed_json`
   - `test_cccs_scoped_net_bridge_matches_debit_audit`
+  - `test_auditor_owns_tip_list_outside_scanner_and_copies_agree`
+  - `test_auditor_runs_without_scanner_directory_and_nets_match`
+  - `test_auditor_fails_loudly_when_tip_list_missing`
+  - `test_failed_transaction_transfers_are_excluded_from_fee_audit_and_app`
+  - `test_cccs_failed_transaction_debits_are_excluded`
+  - `test_58pw_independently_audited_sits_next_to_episode_net`
+  - `test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed`
+  - `test_compare_tolerance_is_two_lamports`
+  - `test_venue_notes_are_computed_from_auditor_decode`
+  - `test_history_ingest_has_no_wallet_specific_residual_constant`
+  - `test_astziy6_is_unverified_outside_debit_not_a_tip`
   - `test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead`
   - `test_item11_label_tables_cannot_disagree`
   - `test_committed_wallet_table_matches_label_function`

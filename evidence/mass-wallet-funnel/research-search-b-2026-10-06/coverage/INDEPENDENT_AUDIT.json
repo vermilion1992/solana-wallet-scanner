@@ -9,6 +9,11 @@
       "auditor_clean_episodes": 2,
       "status": "independently_audited",
       "independently_audited": true,
+      "independently_audited_episode_net": "5614.586672",
+      "independently_audited_episode_net_unit": "USDC",
+      "worksheet_total": "51148.756609023",
+      "worksheet_total_unit": "USDC",
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -74,26 +79,196 @@
           "net_profit_sol": "5431.941435"
         }
       ],
+      "reconstructed_mints": [
+        {
+          "mint": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 28,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 3,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
+          "programs": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
+          ],
+          "instructions": [
+            "Fill"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+          "programs": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "Fill",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "programs": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "Fill",
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 9,
+          "clean_completed_episode": true
+        }
+      ],
       "venue_notes": {
-        "pumpCmXq_sales": {
+        "A7bd_sales": {
+          "mint": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "BPxx_sales": {
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2 / shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "CARD_sales": {
+          "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2 / shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "DEW9_sales": {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "Dz9m_sales": {
+          "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
           "program": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
           "venue": "RFQ_Fill",
           "settlement": "USDC",
-          "reconstructed": true
-        },
-        "CARDS_sales": {
-          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "venue": "Jupiter shared_accounts_route_v2 / route_v2",
-          "settlement": "USDC",
-          "reconstructed": true
-        },
-        "BPxx_sales": {
-          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "venue": "Jupiter shared_accounts_route_v2 / route_v2",
-          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
           "reconstructed_as_trades": true,
           "clean_completed_episode": false,
-          "reason": "Captured Jupiter USDC legs reconstruct independently; FIFO leaves opening inventory / leftover so BPxx is not a clean completed episode, same as the app."
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "METv_sales": {
+          "mint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+          "program": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "venue": [
+            "RFQ_Fill",
+            "Jupiter Fill / shared_accounts_route_v2"
+          ],
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "pump_sales": {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "program": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "venue": [
+            "RFQ_Fill",
+            "Jupiter Fill / route_v2 / shared_accounts_route_v2"
+          ],
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
         }
       },
       "imports_scanner_in_auditor": false,
@@ -108,6 +283,11 @@
       "auditor_clean_episodes": 8,
       "status": "independently_audited",
       "independently_audited": true,
+      "independently_audited_episode_net": "283.399579447",
+      "independently_audited_episode_net_unit": "SOL",
+      "worksheet_total": "283.399579449",
+      "worksheet_total_unit": "SOL",
+      "worksheet_total_independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -353,7 +533,270 @@
           "net_profit_sol": "-6.762331691"
         }
       ],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH",
+          "programs": [
+            "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+          ],
+          "instructions": [
+            "swap"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "3PG51QJF37MigcPqYEQWXyWJXeju5Mt9yQesgTbtpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "buy_exact_quote_in_v2",
+            "sell_v2"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 14,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "88oNFQZTqo7yBxu4HT22uiuaEErbgJxA8iKpT7SmF5Ek",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "DYo3mP726hCA1NjfTUFvhkUdum6GEP6EKysQX11Lpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell_v2"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 3,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 14,
+          "clean_completed_episode": true
+        }
+      ],
+      "venue_notes": {
+        "2RSs_sales": {
+          "mint": "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH",
+          "program": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "venue": "Meteora DAMM v2 swap",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "3PG5_sales": {
+          "mint": "3PG51QJF37MigcPqYEQWXyWJXeju5Mt9yQesgTbtpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "3VkU_sales": {
+          "mint": "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "6pnE_sales": {
+          "mint": "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump buy_exact_quote_in_v2 / sell_v2",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "75gG_sales": {
+          "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "88oN_sales": {
+          "mint": "88oNFQZTqo7yBxu4HT22uiuaEErbgJxA8iKpT7SmF5Ek",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "8EZq_sales": {
+          "mint": "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "AdSF_sales": {
+          "mint": "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "BDbS_sales": {
+          "mint": "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "DYo3_sales": {
+          "mint": "DYo3mP726hCA1NjfTUFvhkUdum6GEP6EKysQX11Lpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell_v2",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "EkFR_sales": {
+          "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -366,9 +809,15 @@
       "auditor_clean_episodes": 0,
       "status": "no_completed_episodes",
       "independently_audited": false,
+      "independently_audited_episode_net": null,
+      "independently_audited_episode_net_unit": null,
+      "worksheet_total": null,
+      "worksheet_total_unit": null,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [],
+      "reconstructed_mints": [],
       "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
@@ -382,6 +831,11 @@
       "auditor_clean_episodes": 1,
       "status": "independently_audited",
       "independently_audited": true,
+      "independently_audited_episode_net": "174.657978611",
+      "independently_audited_episode_net_unit": "SOL",
+      "worksheet_total": "174.65797861",
+      "worksheet_total_unit": "SOL",
+      "worksheet_total_independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -417,7 +871,715 @@
           "net_profit_sol": "174.657978611"
         }
       ],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "2BFGrFF78rDebruUG9PBjSszi67oV7ZzVMGEjAfWpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "2w4qUD546C9a1ECUMDEXn66eiV6332AF4ZtvqCs2pump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "3EMec5v2dTVrHDGoLEzoyzFrBWx6eq4mqYAqoohTpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "55z3QZQnbqWe6ksCyYipHm6RGWupzoEBGNHWXgtNpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "57yWMyhKfE1aQBH8hgToJav38BKssMTxSbZF3ETNpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 40,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "5A8RauxZ9Yri23ty7Ufmp3EvUAZoJ16cZ2217J2kpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "5TNnGwUgkTe5B1C1bTF7zujKWtPstiz3rREVVmkgpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "76diVD3xvxDvwm3XyHgyFUf4QZ7MFrQPoKiMogYQpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "78NqvnmmQ8ZYELuVrT5M8YrsPm8KheLdGbw6oUvFpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "7i2ksAsM8XHb39QuS46gGwPjQVpbzPj9JGKjo5xzpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "87TbQkkv6fZ58U4acLHYgKso6spfj699AGZrzoPppump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "8LNPFjcui375VSZpNqeziti2w4ykiErkrnDgLtwvpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "8ebaPFTifhpkkf8EmmCBBPGDfUdzrGMyPWXh7mvupump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "9miyM7XKKdtqn4GRwvJGpQry1zVxaLkWwAnMzZYBpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "AJAaGdG3rV1Awsd9asSPj6PYECE2avZPN3M54wp7pump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "ALd1KJ72HyfcHJcH2fSkWGEKc2xDHuhvWtyTR1Etpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "BM7esH4rAfkTyDctWiVRVSpjvxrABzLBDwcekr9Ypump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "BwNvw53Uvmmrmsr3owHz3Qw3b8LrBJ4MWWCCTNz1pump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "DJGsptd7CEMEKrHdmVPastxKcPNSqGJT5K7HWcn5pump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "DhQFJXJEBKqRB56AcvCMYKjRQP6p3gvGYP5dpHuPpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "EoHTB4ZG8kLDy7MLfWGZXkhYzHhjRszXHEXdBtC1pump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "EpjcvRPPkTEsokgNVKiB9MvFamgvBuFAhXecyVcopump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "FfTsHtKp57vF38Que4A8q4QhLjGcL2fKc9VhggvYpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "FvyzVzV7nz767apCoh7JwV4MxPkVNG54LH8EJ69kpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "GVHuvtuh8Dhv5rVwmXGjVMCqUNy9E4yH1QgEqwaapump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "GaGoBQFrgCGo3VjkSVNfK4up5Pz3VGLECvvfxx4Wpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "HiSgD1Ami2b6btYxpB2JGV5QUFAuKiZJVhboswPUpump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "J2EuZcNMmxCw3jiug5h2JCkwSFxAravdLZyMXUUepump",
+          "programs": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+          ],
+          "instructions": [
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        }
+      ],
+      "venue_notes": {
+        "2BFG_sales": {
+          "mint": "2BFGrFF78rDebruUG9PBjSszi67oV7ZzVMGEjAfWpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "2w4q_sales": {
+          "mint": "2w4qUD546C9a1ECUMDEXn66eiV6332AF4ZtvqCs2pump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "3EMe_sales": {
+          "mint": "3EMec5v2dTVrHDGoLEzoyzFrBWx6eq4mqYAqoohTpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "55z3_sales": {
+          "mint": "55z3QZQnbqWe6ksCyYipHm6RGWupzoEBGNHWXgtNpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "57yW_sales": {
+          "mint": "57yWMyhKfE1aQBH8hgToJav38BKssMTxSbZF3ETNpump",
+          "program": [
+            "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "venue": [
+            "Pump buy / sell",
+            "PumpSwap buy / sell"
+          ],
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "5A8R_sales": {
+          "mint": "5A8RauxZ9Yri23ty7Ufmp3EvUAZoJ16cZ2217J2kpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "5TNn_sales": {
+          "mint": "5TNnGwUgkTe5B1C1bTF7zujKWtPstiz3rREVVmkgpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "76di_sales": {
+          "mint": "76diVD3xvxDvwm3XyHgyFUf4QZ7MFrQPoKiMogYQpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "78Nq_sales": {
+          "mint": "78NqvnmmQ8ZYELuVrT5M8YrsPm8KheLdGbw6oUvFpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "7i2k_sales": {
+          "mint": "7i2ksAsM8XHb39QuS46gGwPjQVpbzPj9JGKjo5xzpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "87Tb_sales": {
+          "mint": "87TbQkkv6fZ58U4acLHYgKso6spfj699AGZrzoPppump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "8LNP_sales": {
+          "mint": "8LNPFjcui375VSZpNqeziti2w4ykiErkrnDgLtwvpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "8eba_sales": {
+          "mint": "8ebaPFTifhpkkf8EmmCBBPGDfUdzrGMyPWXh7mvupump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "9miy_sales": {
+          "mint": "9miyM7XKKdtqn4GRwvJGpQry1zVxaLkWwAnMzZYBpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "AJAa_sales": {
+          "mint": "AJAaGdG3rV1Awsd9asSPj6PYECE2avZPN3M54wp7pump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "ALd1_sales": {
+          "mint": "ALd1KJ72HyfcHJcH2fSkWGEKc2xDHuhvWtyTR1Etpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "BM7e_sales": {
+          "mint": "BM7esH4rAfkTyDctWiVRVSpjvxrABzLBDwcekr9Ypump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "BwNv_sales": {
+          "mint": "BwNvw53Uvmmrmsr3owHz3Qw3b8LrBJ4MWWCCTNz1pump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "DJGs_sales": {
+          "mint": "DJGsptd7CEMEKrHdmVPastxKcPNSqGJT5K7HWcn5pump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "DhQF_sales": {
+          "mint": "DhQFJXJEBKqRB56AcvCMYKjRQP6p3gvGYP5dpHuPpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "EoHT_sales": {
+          "mint": "EoHTB4ZG8kLDy7MLfWGZXkhYzHhjRszXHEXdBtC1pump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "Epjc_sales": {
+          "mint": "EpjcvRPPkTEsokgNVKiB9MvFamgvBuFAhXecyVcopump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "FfTs_sales": {
+          "mint": "FfTsHtKp57vF38Que4A8q4QhLjGcL2fKc9VhggvYpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "Fvyz_sales": {
+          "mint": "FvyzVzV7nz767apCoh7JwV4MxPkVNG54LH8EJ69kpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "GVHu_sales": {
+          "mint": "GVHuvtuh8Dhv5rVwmXGjVMCqUNy9E4yH1QgEqwaapump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "GaGo_sales": {
+          "mint": "GaGoBQFrgCGo3VjkSVNfK4up5Pz3VGLECvvfxx4Wpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "HiSg_sales": {
+          "mint": "HiSgD1Ami2b6btYxpB2JGV5QUFAuKiZJVhboswPUpump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "J2Eu_sales": {
+          "mint": "J2EuZcNMmxCw3jiug5h2JCkwSFxAravdLZyMXUUepump",
+          "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "venue": "Pump sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -430,9 +1592,15 @@
       "auditor_clean_episodes": 0,
       "status": "no_completed_episodes",
       "independently_audited": false,
+      "independently_audited_episode_net": null,
+      "independently_audited_episode_net_unit": null,
+      "worksheet_total": null,
+      "worksheet_total_unit": null,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [],
+      "reconstructed_mints": [],
       "venue_notes": null,
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
@@ -444,8 +1612,13 @@
       "independently_reconstructed_trades": 32,
       "app_completed_episodes": 0,
       "auditor_clean_episodes": 5,
-      "status": "no_completed_episodes",
+      "status": "not_independently_audited",
       "independently_audited": false,
+      "independently_audited_episode_net": null,
+      "independently_audited_episode_net_unit": null,
+      "worksheet_total": "-2413.398216681",
+      "worksheet_total_unit": "USDC",
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [
@@ -505,7 +1678,161 @@
           "net_profit_sol": "-1770.02967"
         }
       ],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 11,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "CTPoyCwkjMvoJwU4xvZZqoD8tiYk6yDchySiN5gGpump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
+          "programs": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
+          ],
+          "instructions": [
+            "Fill"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 7,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+          "programs": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "Fill",
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        }
+      ],
+      "venue_notes": {
+        "7Ver_sales": {
+          "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2 / shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "Ai66_sales": {
+          "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "CTPo_sales": {
+          "mint": "CTPoyCwkjMvoJwU4xvZZqoD8tiYk6yDchySiN5gGpump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "DEW9_sales": {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2 / shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "Dz9m_sales": {
+          "mint": "Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk",
+          "program": "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+          "venue": "RFQ_Fill",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "Xsc9_sales": {
+          "mint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+          "program": [
+            "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH",
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "venue": [
+            "RFQ_Fill",
+            "Jupiter Fill / route_v2"
+          ],
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -518,10 +1845,68 @@
       "auditor_clean_episodes": 0,
       "status": "no_completed_episodes",
       "independently_audited": false,
+      "independently_audited_episode_net": null,
+      "independently_audited_episode_net_unit": null,
+      "worksheet_total": null,
+      "worksheet_total_unit": null,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 3,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        }
+      ],
+      "venue_notes": {
+        "6GmA_sales": {
+          "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "pump_sales": {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -534,6 +1919,11 @@
       "auditor_clean_episodes": 6,
       "status": "independently_audited",
       "independently_audited": true,
+      "independently_audited_episode_net": "0.120294936",
+      "independently_audited_episode_net_unit": "SOL",
+      "worksheet_total": "0.120294936",
+      "worksheet_total_unit": "SOL",
+      "worksheet_total_independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -719,7 +2109,356 @@
           "net_profit_sol": "0.013506447"
         }
       ],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "5wW9mhbwq1HTFh341iimpmrqBB4mfxdXiYhdYBL7hUnp",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 18,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 10,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 3,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "CBLx6CRcCTtbmgTdxpqnF2dP1MpWbMUjngtNbFTApump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "DAemPFNc3RtibBDKkUA4eL2Ns11q9VRdbpptmqm8DGqN",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "gL9Q3xjXM1BdopmHn1R7Kb3Eim5NAQ1eWGNaTj3pump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "sell"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": false
+        }
+      ],
+      "venue_notes": {
+        "3Dgw_sales": {
+          "mint": "3Dgwn5E7H5a8k6iGrz3qirkaJqUaJrKHEZ2xPcLRpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "5wW9_sales": {
+          "mint": "5wW9mhbwq1HTFh341iimpmrqBB4mfxdXiYhdYBL7hUnp",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "6hTL_sales": {
+          "mint": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "7bC8_sales": {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "8nPo_sales": {
+          "mint": "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "8nna_sales": {
+          "mint": "8nnaeWCw8mUypcGAgbmSuzAT85uWx4UN12adDrMhXrGF",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "9Zmk_sales": {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "9dSM_sales": {
+          "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "BXoH_sales": {
+          "mint": "BXoHJddsWJLHtAopeiSbKUSELsu8hSFMs8baGMDkpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "CBLx_sales": {
+          "mint": "CBLx6CRcCTtbmgTdxpqnF2dP1MpWbMUjngtNbFTApump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "DAem_sales": {
+          "mint": "DAemPFNc3RtibBDKkUA4eL2Ns11q9VRdbpptmqm8DGqN",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "F5Wv_sales": {
+          "mint": "F5WvFdG9sCfhv3bVYAMJNWiwpx5e3X2uvpXDtLtdsDJs",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "GAwh_sales": {
+          "mint": "GAwhcphCqCv5bKHmCiN4VDdNWfbXJL4npmkc8L3Q9S9H",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "gL9Q_sales": {
+          "mint": "gL9Q3xjXM1BdopmHn1R7Kb3Eim5NAQ1eWGNaTj3pump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / sell",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -730,8 +2469,13 @@
       "independently_reconstructed_trades": 17,
       "app_completed_episodes": 0,
       "auditor_clean_episodes": 4,
-      "status": "no_completed_episodes",
+      "status": "not_independently_audited",
       "independently_audited": false,
+      "independently_audited_episode_net": null,
+      "independently_audited_episode_net_unit": null,
+      "worksheet_total": null,
+      "worksheet_total_unit": "USDC",
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [],
       "auditor_only_episodes": [
@@ -780,7 +2524,225 @@
           "net_profit_sol": "23.848511"
         }
       ],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "26ZixeXtGBQe3DBrN4448oZaY5rnhwPrZNhAjZPopump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "2BcRevrDhP4MgCw2KyqByFZ4S7mpsi1vY8ZypXwepump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "4WPn1oGVE7rza6PjFJwYpEXZn6qtjwxEKkCV9EtAxhUU",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "FiJ4gnd4dhqNeBKfS4E8wnERMEpjMPdUfJhu8foipump",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR",
+          "programs": [
+            "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+          ],
+          "instructions": [
+            "route_v2",
+            "shared_accounts_route_v2"
+          ],
+          "settlement_assets": [
+            "USDC"
+          ],
+          "trade_count": 3,
+          "clean_completed_episode": false
+        }
+      ],
+      "venue_notes": {
+        "26Zi_sales": {
+          "mint": "26ZixeXtGBQe3DBrN4448oZaY5rnhwPrZNhAjZPopump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "2BcR_sales": {
+          "mint": "2BcRevrDhP4MgCw2KyqByFZ4S7mpsi1vY8ZypXwepump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "4WPn_sales": {
+          "mint": "4WPn1oGVE7rza6PjFJwYpEXZn6qtjwxEKkCV9EtAxhUU",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "8nPo_sales": {
+          "mint": "8nPoBHiBM6pybxMws9PA2JRb9BjkppBfqcZGmot4DMBC",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "98kf_sales": {
+          "mint": "98kfF7rmsg1QDUEoCqNE7g7M1FdrTt92TEp2CLzypump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "Ai66_sales": {
+          "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "DEW9_sales": {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2 / shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "FiJ4_sales": {
+          "mint": "FiJ4gnd4dhqNeBKfS4E8wnERMEpjMPdUfJhu8foipump",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "HcRL_sales": {
+          "mint": "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR",
+          "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "venue": "Jupiter route_v2 / shared_accounts_route_v2",
+          "settlement": "USDC",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
@@ -793,6 +2755,11 @@
       "auditor_clean_episodes": 16,
       "status": "independently_audited",
       "independently_audited": true,
+      "independently_audited_episode_net": "2.03064584",
+      "independently_audited_episode_net_unit": "SOL",
+      "worksheet_total": "2.030645839",
+      "worksheet_total_unit": "SOL",
+      "worksheet_total_independently_audited": true,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -1278,7 +3245,545 @@
           "net_profit_sol": "-0.825818537"
         }
       ],
-      "venue_notes": null,
+      "reconstructed_mints": [
+        {
+          "mint": "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "2c1KjiyQow66QfsnCtoyuqfo3AuxgpBMEoAq5oiiXqdu",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "5VnbrKp28Qs9CAH6PyZdxBNvLxZcbeX3YBsozgWnpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "6d82cCtC1LktWWgjUz5h3vMenFj5EDHLMBFvcpmvrRi",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 20,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "7GUnr7krtQhJwd6ASY2VUprd9t4c64zcgCsjdmZepump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 4,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 10,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 10,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "9w2dXDKxQbHcAG8XdHaNKgLaBof4hhaiiUG7v2QBpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 7,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "BJUiNooYiZ4ojatPVeJAUXGEd3dcGzQ1ApWDoVTzpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 2,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "BbJJUTuGV2B7tJ99YeryiCBFLG39Hoc4RTzEwchtpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "CvUX4G2tzq7J3ECmNvWZLayZYV6KpgQp6SJ5K8Uvsu5g",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 10,
+          "clean_completed_episode": true
+        },
+        {
+          "mint": "HHf2VfXSPUVqQth6tXypfdUX2vawCiVKfkbAX4CJpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 1,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "JCsKWhELRJ8MhEZjUDdCL49mntw8fx27bKAgCMgSGhcQ",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 5,
+          "clean_completed_episode": false
+        },
+        {
+          "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump",
+          "programs": [
+            "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+          ],
+          "instructions": [
+            "buy",
+            "buy_exact_quote_in"
+          ],
+          "settlement_assets": [
+            "SOL"
+          ],
+          "trade_count": 6,
+          "clean_completed_episode": true
+        }
+      ],
+      "venue_notes": {
+        "2AF7_sales": {
+          "mint": "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "2c1K_sales": {
+          "mint": "2c1KjiyQow66QfsnCtoyuqfo3AuxgpBMEoAq5oiiXqdu",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "5Vnb_sales": {
+          "mint": "5VnbrKp28Qs9CAH6PyZdxBNvLxZcbeX3YBsozgWnpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "6d82_sales": {
+          "mint": "6d82cCtC1LktWWgjUz5h3vMenFj5EDHLMBFvcpmvrRi",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "6hTL_sales": {
+          "mint": "6hTLdzZaaCjmqtn7RtaEMQsCbXT5Pg8q76tRViEGpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "7GUn_sales": {
+          "mint": "7GUnr7krtQhJwd6ASY2VUprd9t4c64zcgCsjdmZepump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "7bC8_sales": {
+          "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "89Nk_sales": {
+          "mint": "89NkZ8NNGm8fCwG8iVDkXpDRR66hQommsJATspSUrDd",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "9Zmk_sales": {
+          "mint": "9ZmkKpVR3NdUcCmG5NByMHBzvjuqGnYpCPYu4zSSBtJv",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "9dSM_sales": {
+          "mint": "9dSMwFfPezQ8WPcW1uZV7ns4rcviEj2LssSAg75WBLXd",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "9w2d_sales": {
+          "mint": "9w2dXDKxQbHcAG8XdHaNKgLaBof4hhaiiUG7v2QBpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "BHS8_sales": {
+          "mint": "BHS8LHW11NKxzxyCtqz9NJbTkh3h94WqeMVYgTY5pump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "BJUi_sales": {
+          "mint": "BJUiNooYiZ4ojatPVeJAUXGEd3dcGzQ1ApWDoVTzpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "BbJJ_sales": {
+          "mint": "BbJJUTuGV2B7tJ99YeryiCBFLG39Hoc4RTzEwchtpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "CvUX_sales": {
+          "mint": "CvUX4G2tzq7J3ECmNvWZLayZYV6KpgQp6SJ5K8Uvsu5g",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "EkFR_sales": {
+          "mint": "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "GQz5_sales": {
+          "mint": "GQz5ThKHNcuAvMKA8rCPSdoFUoApk9Fi8qB9m3Gqpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "GY9m_sales": {
+          "mint": "GY9mZfyPpxXxBXBxS2hB2XjhP3kfUsywTvgveozxpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "H7Tu_sales": {
+          "mint": "H7TuvDxEKygh27zGfGcjKG8JGWgrbyKpPtvJEpGosfas",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        },
+        "HHf2_sales": {
+          "mint": "HHf2VfXSPUVqQth6tXypfdUX2vawCiVKfkbAX4CJpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "JCsK_sales": {
+          "mint": "JCsKWhELRJ8MhEZjUDdCL49mntw8fx27bKAgCMgSGhcQ",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true,
+          "reconstructed_as_trades": true,
+          "clean_completed_episode": false,
+          "reason": "Independently reconstructed; FIFO leaves opening inventory / leftover so this mint is not a clean completed episode."
+        },
+        "V9zC_sales": {
+          "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump",
+          "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "venue": "PumpSwap buy / buy_exact_quote_in",
+          "settlement": "SOL",
+          "reconstructed": true,
+          "computed_from_auditor_decode": true
+        }
+      },
       "imports_scanner_in_auditor": false,
       "source": "raw_instructions_balances_ownership_pinned_interfaces",
       "PRODUCT_READY": false
