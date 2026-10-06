@@ -12,8 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from playwright.sync_api import expect, sync_playwright
+from decimal import Decimal
+
+from scanner.mass_search.capture_catalog import G1_ADDRESS, G1_HOLD_SECONDS, G1_PNL
 from scanner.mass_search.g3_reacquire import ALLOWED_WALLET
-from scanner.mass_search.live_g1 import independent_fifo_worksheet
+from scanner.mass_search.workflow import replay_captured_wallet
+from scanner.storage import Store
 from tools.screening_browser import Launcher
 
 OUT = Path(os.environ.get("PRODUCT_PHONE_OUT", "/tmp/product-phone-acceptance"))
@@ -49,8 +53,6 @@ def _shot(page, name):
 
 data = OUT / "data"
 data.mkdir()
-from scanner.storage import Store
-
 store = Store(data)
 store.close()
 
@@ -148,13 +150,24 @@ try:
         expect(page.locator("[data-research-compare]")).to_contain_text("376.028087")
         result["compare_status"] = 200
         _shot(page, "03c-compare-phone")
-    g1 = independent_fifo_worksheet([
-        {"kind": "buy", "units": "100", "consideration_sol": "1", "wallet_fee_sol": "0.01"},
-        {"kind": "sell", "units": "50", "consideration_sol": "0.8", "wallet_fee_sol": "0.005"},
-        {"kind": "sell", "units": "45", "consideration_sol": "0.72", "wallet_fee_sol": "0.005"},
-        {"kind": "sell", "units": "5", "consideration_sol": "0.08", "wallet_fee_sol": "0.005"},
-    ])
-    assert g1["total_profit_sol"].startswith("0.575")
+    g1_store = Store(OUT / "g1-control")
+    g1 = replay_captured_wallet(g1_store, G1_ADDRESS)
+    g1_report = g1["report"]
+    g1_trades = [row for row in g1_report.get("events") or [] if row.get("kind") in ("buy", "sell")]
+    assert [row["kind"] for row in g1_trades] == ["buy", "buy", "buy", "buy", "sell"]
+    assert Decimal(g1_report["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    assert Decimal(g1_report["independent_worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    assert g1_report["worksheet_reconciliation"]["status"] == "AGREE"
+    assert g1_report["material_exit"]["final_hold_seconds"] == G1_HOLD_SECONDS
+    assert g1_report["material_exit"]["method_version"] == "material-exit-v2"
+    assert g1["external_requests"] == 0
+    g1_store.close()
+    result["g1_genuine"] = {
+        "address": G1_ADDRESS,
+        "pnl_sol": G1_PNL,
+        "hold_seconds": G1_HOLD_SECONDS,
+        "synthetic_oracle_0_575_not_used": True,
+    }
     result["cases"]["D_export_and_g1_agree"] = "PASS"
 
     _open_nav(page, "Search", exact=True)

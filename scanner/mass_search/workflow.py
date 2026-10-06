@@ -29,10 +29,10 @@ CAPTURED_ADDRESSES = genuine_captured_addresses()
 USER_SHORTLIST_KIND = "user_shortlist"
 PHONE_ACCESS_BLOCKER = (
     "No permitted remote preview environment is configured in repo CI, docs, or deploy config. "
-    "Phone access is the local authenticated launcher (tools/screening_browser.py or "
-    "tools/ranked_shared_boundary_ui.py) on loopback with a session token. "
-    "The frontend reaches the backend only on that same-origin launcher URL. "
-    "Creating a new public or unauthenticated deployment is forbidden."
+    "Away from the operator's own LAN this app cannot be opened on a phone. "
+    "On the operator's computer, ./run.sh --lan binds the built frontend to that machine's "
+    "LAN IP with a mandatory session token (unauthenticated API stays 401). "
+    "Creating a new public, tunneled, or unauthenticated deployment is forbidden."
 )
 
 
@@ -348,6 +348,7 @@ def replay_captured_wallet(store, address=ALLOWED_WALLET, *, filters=None, force
             window_start=windows["report_start_inclusive"],
             window_end=windows["report_end_exclusive"],
             acquisition_start=windows.get("acquisition_support_start_inclusive"),
+            mint=entry.get("mint"),
             corpus_kind=entry.get("corpus_kind") or "GENUINE_REPLAY",
             authorization_id=entry.get("authorization_id") or "offline-cached-replay",
             source_id=entry.get("source_id") or "ranked100-product-offline-replay",
@@ -362,9 +363,10 @@ def phone_access_status():
     return {
         "preview_available": False,
         "permitted_preview_environment": None,
-        "frontend_reaches_backend": "local_launcher_same_origin_only",
+        "frontend_reaches_backend": "same_origin_launcher_only",
         "blocker": PHONE_ACCESS_BLOCKER,
-        "required_path": "local authenticated launcher on loopback",
+        "required_path": "local authenticated launcher; opt-in ./run.sh --lan on the operator's own Wi-Fi",
+        "away_from_home_blocker": "No permitted remote preview exists.",
         "do_not_create_external_deployment": True,
     }
 

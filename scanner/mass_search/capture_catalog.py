@@ -18,6 +18,9 @@ G1_ARCHIVE = ROOT / (
     "archives/helius_gta_survivor_desc100.json.gz"
 )
 G1_ADDRESS = "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee"
+G1_MINT = "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump"
+G1_PNL = "-0.167725526"
+G1_HOLD_SECONDS = 598
 FIXTURE_DIR = ROOT / "tests/fixtures/synthetic_engineering"
 WINDOWS = {
     "report_start_inclusive": "2026-09-05T13:29:27Z",
@@ -100,6 +103,7 @@ def catalog_entries():
         "authorization_id": "offline-g1-archive-replay",
         "source_id": "g1-product-control-offline-replay",
         "control": True,
+        "mint": G1_MINT,
     }
     return [genuine, control, *_synthetic_entries()]
 
@@ -137,6 +141,7 @@ def evidence_cache_key(entry, *, extra=None):
         str(entry.get("decoder_version") or DECODER_VERSION),
         str((entry.get("windows") or {}).get("report_start_inclusive") or ""),
         str((entry.get("windows") or {}).get("report_end_exclusive") or ""),
+        str(entry.get("mint") or ""),
         str(extra or ""),
     ])
     return hashlib.sha256(material.encode("utf-8")).hexdigest()

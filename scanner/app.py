@@ -14,8 +14,6 @@ import re
 from contextlib import asynccontextmanager
 import uuid
 import hashlib
-from urllib.parse import urlsplit
-
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -190,7 +188,20 @@ def _freeze_native_dependencies(store, collected, *, address, window):
     return frozen, primary, linked, raw_sources, raw_receipts
 
 
-def create_app(data_dir, launch_token=None):
+def allowed_request_host(host, allowed_hosts):
+    """Exact hostname allow-list. Rejects rebinding, IPv6, and junk."""
+    if not isinstance(host, str) or not host or any(char in host for char in "@?#/\\"):
+        return False
+    if host.startswith("["):
+        return False
+    name, sep, port = host.partition(":")
+    if sep:
+        if not port.isdigit() or not 1 <= int(port) <= 65535:
+            return False
+    return name in set(allowed_hosts)
+
+
+def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
     store = Store(data_dir)
     launch_token = launch_token or secrets.token_urlsafe(32)
     cookie_secret, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
@@ -767,18 +778,15 @@ def create_app(data_dir, launch_token=None):
 
     app = FastAPI(title="Solana Wallet Scanner", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.store, app.state.launch_token, app.state.csrf = store, launch_token, csrf
+    app.state.allowed_hosts = tuple(allowed_hosts) if allowed_hosts else ("127.0.0.1", "localhost")
 
     @app.middleware("http")
     async def local_boundary(request, call_next):
         host = request.headers.get("host", "")
-        try:
-            parts = urlsplit("http://" + host)
-            valid_host = bool(re.fullmatch(r"(?:127\.0\.0\.1|localhost)(?::[0-9]{1,5})?", host))
-            _ = parts.port
-        except ValueError:
-            valid_host = False
+        valid_host = allowed_request_host(host, app.state.allowed_hosts)
         if not valid_host:
-            return JSONResponse({"detail": "Loopback Host required"}, 403)
+            loopback_only = set(app.state.allowed_hosts) <= {"127.0.0.1", "localhost"}
+            return JSONResponse({"detail": "Loopback Host required" if loopback_only else "Bound Host required"}, 403)
         origin = request.headers.get("origin")
         if origin and origin != f"http://{host}":
             return JSONResponse({"detail": "Same-origin local access required"}, 403)

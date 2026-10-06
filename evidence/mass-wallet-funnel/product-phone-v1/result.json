@@ -19,9 +19,16 @@
     "G_auth_gate": "PASS",
     "H_zero_provider_calls": "PASS"
   },
+  "g1": {
+    "genuine_archive_pnl_sol": "-0.167725526",
+    "genuine_archive_hold_seconds": 598,
+    "synthetic_oracle_0_575_is_not_the_archive": true
+  },
   "phone_access": {
     "preview_available": false,
-    "blocker": "No permitted remote preview environment is configured in repo CI, docs, or deploy config. Phone access is the local authenticated launcher on loopback with a session token."
+    "lan_opt_in": "./run.sh --lan",
+    "away_from_home_blocker": "No permitted remote preview exists.",
+    "blocker": "No permitted remote preview environment is configured. Away from the operator LAN the app cannot be opened on a phone."
   },
   "local_performance": {
     "dataset": "saved ranked-100 discovery page (100 wallets) + genuine page-0 capture + 3 labelled synthetic engineering fixtures + 1 no-history ranked row",

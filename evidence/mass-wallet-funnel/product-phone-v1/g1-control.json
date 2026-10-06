@@ -1,0 +1,19 @@
+{
+  "genuine_g1_archive": {
+    "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+    "source": "evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/archives/helius_gta_survivor_desc100.json.gz",
+    "pipeline": "replay_captured_wallet / replay_cached_history_to_report",
+    "buys": 4,
+    "sells": 1,
+    "production_fifo_sol": "-0.167725526",
+    "independent_fifo_sol": "-0.167725526",
+    "reconciliation": "AGREE",
+    "hold_seconds": 598,
+    "method_version": "material-exit-v2"
+  },
+  "synthetic_unit_test_oracle": {
+    "test": "test_g1_synthetic_oracle_fifo_is_unchanged",
+    "total_profit_sol": "0.575…",
+    "not": "genuine G1 archive"
+  }
+}

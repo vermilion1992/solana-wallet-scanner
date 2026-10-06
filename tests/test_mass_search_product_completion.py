@@ -151,7 +151,8 @@ def test_mixed_sol_and_usdc_worksheet_is_refused():
         settlement_aware_worksheet(rows)
 
 
-def test_g1_independent_fifo_control_is_unchanged():
+def test_g1_synthetic_oracle_fifo_is_unchanged():
+    """Synthetic unit-test oracle only. Not the genuine G1 archive."""
     events = [
         {"kind": "buy", "units": "100", "consideration_sol": "1", "wallet_fee_sol": "0.01"},
         {"kind": "sell", "units": "50", "consideration_sol": "0.8", "wallet_fee_sol": "0.005"},

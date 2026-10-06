@@ -1,7 +1,20 @@
 """The source launcher permits only one active process per local data directory."""
 import pytest
 
-from scanner.__main__ import InstanceAlreadyRunning, data_directory_lock
+from scanner.__main__ import InstanceAlreadyRunning, data_directory_lock, discover_lan_ipv4
+from scanner.lan_qr import encode_matrix, render_ascii
+
+
+def test_lan_qr_has_finder_patterns_and_is_not_committed_with_a_token():
+    matrix = encode_matrix("http://172.30.0.2:8765/#session=example")
+    n = len(matrix)
+    assert n >= 21
+    assert all(matrix[0][i] for i in range(7))
+    assert all(matrix[i][0] for i in range(7))
+    ascii_qr = render_ascii("http://172.30.0.2:8765/#session=example")
+    assert "█" in ascii_qr
+    ip = discover_lan_ipv4()
+    assert not ip.startswith("127.")
 
 
 def test_second_lock_is_refused_and_release_allows_restart(tmp_path):

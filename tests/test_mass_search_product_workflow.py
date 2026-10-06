@@ -5,6 +5,7 @@ import hashlib
 import json
 import threading
 import time
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -17,7 +18,13 @@ from scanner.mass_search.acquisition_gate import (
     simulate_consume_for_test,
 )
 from scanner.mass_search.batch import HISTORY_REQUIRED, cancel_batch, create_and_run, create_batch, run_batch, step_batch
-from scanner.mass_search.capture_catalog import EXPECTED_CAPTURE_SHA, catalog_by_address
+from scanner.mass_search.capture_catalog import (
+    EXPECTED_CAPTURE_SHA,
+    G1_ADDRESS,
+    G1_HOLD_SECONDS,
+    G1_PNL,
+    catalog_by_address,
+)
 from scanner.mass_search.g3_reacquire import ALLOWED_WALLET
 from scanner.mass_search.instrumentation import provider_call_count, reset_provider_calls
 from scanner.mass_search.research_profile import load_filters, save_filters
@@ -72,6 +79,22 @@ def test_catalog_is_not_rank1_only():
     assert SYNTH_SOL in catalog
     assert SYNTH_BAD in catalog
     assert hashlib.sha256(CAPTURE.read_bytes()).hexdigest() == EXPECTED_CAPTURE_SHA
+
+
+def test_genuine_g1_archive_replays_through_production_pipeline(store):
+    result = replay_captured_wallet(store, G1_ADDRESS)
+    report = result["report"]
+    trades = [row for row in report.get("events") or [] if row.get("kind") in ("buy", "sell")]
+    assert result["external_requests"] == 0
+    assert [row["kind"] for row in trades] == ["buy", "buy", "buy", "buy", "sell"]
+    assert Decimal(report["worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    assert Decimal(report["independent_worksheet"]["total_profit_sol"]) == Decimal(G1_PNL)
+    assert report["worksheet_reconciliation"]["status"] == "AGREE"
+    assert report["material_exit"]["method_version"] == "material-exit-v2"
+    assert report["material_exit"]["final_hold_seconds"] == G1_HOLD_SECONDS
+    assert report["material_exit"]["exit_90_seconds"] == G1_HOLD_SECONDS
+    assert report["corpus_kind"] == "GENUINE_REPLAY"
+    assert report["address"] == G1_ADDRESS
 
 
 def test_no_history_wallet_is_not_analysed(store):

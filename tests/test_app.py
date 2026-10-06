@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import pytest
 from fastapi.testclient import TestClient
 
-from scanner.app import create_app
+from scanner.app import allowed_request_host, create_app
 from scanner.config import LIMITS, STRICT
 from scanner.storage import Store
 
@@ -78,6 +78,21 @@ def test_launch_token_bootstrap_and_private_http_only_cookie(tmp_path):
         assert response.headers["referrer-policy"] == "no-referrer"
         assert response.headers["x-frame-options"] == "DENY"
         assert "connect-src 'self'" in response.headers["content-security-policy"]
+
+
+def test_lan_host_is_opt_in_and_still_requires_the_session(tmp_path):
+    lan = "172.30.0.2"
+    app = create_app(tmp_path / "data", LAUNCH_TOKEN, allowed_hosts=("127.0.0.1", "localhost", lan))
+    with TestClient(app, base_url=f"http://{lan}:8765") as client:
+        assert client.get("/api/state").status_code == 401
+        bootstrap = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        assert bootstrap.status_code == 200
+        client.headers["x-csrf-token"] = bootstrap.json()["csrf"]
+        assert client.get("/api/state").status_code == 200
+        assert client.get("/api/state", headers={"host": "127.0.0.1:8765"}).status_code == 200
+        assert client.get("/api/state", headers={"host": "8.8.8.8:8765"}).status_code == 403
+    assert allowed_request_host("172.30.0.2:8765", (lan,)) is True
+    assert allowed_request_host("8.8.8.8:8765", (lan,)) is False
 
 
 @pytest.mark.parametrize("host", ["attacker.invalid", "127.0.0.1.attacker.invalid:8765", "127.1:8765",
