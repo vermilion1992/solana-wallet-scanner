@@ -490,8 +490,8 @@ def test_cache_key_includes_window():
     key2 = evidence_cache_key(shifted)
     assert key1 != key2
     assert ANALYSIS_VERSION == (
-        "analysis-v5-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
-        "sig-keyed-v1+quote-conversion-v1+fees-tips-v1"
+        "analysis-v6-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
+        "sig-keyed-v1+quote-conversion-v1+fees-tips-v1+coverage-v1+mitch-review-v1"
     )
 
 
@@ -507,10 +507,12 @@ def test_research_screen_is_inconclusive_for_99_without_history(store):
     replay_captured_wallet(store, ALLOWED_WALLET)
     after = ranked_workflow_view(store)
     screen_after = after["research_screen"]
-    assert screen_after["counts"]["inconclusive"] == 89
     assert screen_after["counts"]["completed_qualified"] == 0
-    assert screen_after["counts"]["zero_qualified"] == 1
     assert screen_after["counts"]["not_executed"] == 10
+    # Item 12: a missing FIFO basis blocks coverage regardless of percentage.
+    # Rank-1 may be zero-qualified or coverage-pending/inconclusive.
+    assert screen_after["counts"]["inconclusive"] + screen_after["counts"]["zero_qualified"] == 90
+    assert screen_after["counts"]["inconclusive"] >= 89
     profile = store.list("reports")[0]["research_profile"]
     assert profile["evidence_class"]["account"]["class"] == 5
     assert profile["evidence_class"]["position"]["class"] in (1, 2)

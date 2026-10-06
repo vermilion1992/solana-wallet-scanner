@@ -88,6 +88,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
     min_completed_known_cost?: string;
     min_sample_positions?: string;
     min_coverage_share?: string;
+    min_scoped_pnl_sol?: string;
+    min_scoped_pnl_usdc?: string;
   }) => {
     const body = {
       provider_proxy: {
@@ -101,6 +103,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         min_completed_known_cost: next.min_completed_known_cost ?? minCompleted,
         min_sample_positions: next.min_sample_positions ?? minSample,
         min_coverage_share: next.min_coverage_share ?? minCoverage,
+        min_scoped_pnl_sol: next.min_scoped_pnl_sol,
+        min_scoped_pnl_usdc: next.min_scoped_pnl_usdc,
       },
     };
     const saved = await api("/mass-search/research-filters", "PUT", body);
@@ -391,6 +395,26 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             </label>
           </fieldset>
           <Button type="submit" variant="secondary" disabled={!!busy || batchBusy}>Save filters</Button>
+          <Button
+            type="button"
+            variant="secondary"
+            data-preset="positive-research-shortlist"
+            disabled={!!busy || batchBusy}
+            onClick={() => {
+              setMinCompleted("3");
+              setMinSample("3");
+              setMinCoverage("0.99");
+              void persistFilters({
+                min_completed_known_cost: "3",
+                min_sample_positions: "3",
+                min_coverage_share: "0.99",
+                min_scoped_pnl_sol: "0",
+                min_scoped_pnl_usdc: "0",
+              });
+            }}
+          >
+            Positive research shortlist
+          </Button>
         </form>
         {filterNote && <p className="research-note" data-filters-saved="true">{filterNote}</p>}
         <div className="research-action-row">
@@ -428,6 +452,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             {` · zero-qualified ${count(ranked.research_screen.counts?.zero_qualified ?? 0)}`}
             {` · qualified ${count(ranked.research_screen.counts?.completed_qualified ?? 0)}`}
             . Thresholds were fixed before evaluation. Unknown never passes.
+            {` Coverage policy: ≥99% resolved by count and measurable notional with no unresolved dependency is provisionally eligible; 95–99% with understood dependencies is watchlist / incomplete evidence; below 95%, unknown denominator, material unknown notional, or a decision-changing dependency is coverage blocked.`}
             {` Qualification (evidence quality, not screen pass/fail): not evaluated ${count(ranked.research_screen.counts?.qualification?.not_evaluated ?? 0)} · analysed-incomplete ${count(ranked.research_screen.counts?.qualification?.analysed_incomplete ?? 0)} · matched-position ${count(ranked.research_screen.counts?.qualification?.positive_matched_position_evidence ?? 0)} · net realised ${count(ranked.research_screen.counts?.qualification?.positive_net_realised_over_window ?? 0)} · account performance ${count(ranked.research_screen.counts?.qualification?.profitable_account_performance ?? 0)}.`}
           </p>
         )}
@@ -498,7 +523,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   </label>
                   <strong className="mono">{shorten(row.address)}</strong>
                   <p>Provider rank {row.provider_rank ?? "—"} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
-                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : row.report_id ? "analysed" : "History required — not analysed"}</p>
+                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : row.report_id ? "analysed" : "History required — not analysed"}{row.in_window_span?.hours != null ? ` · in-window ${String(row.in_window_span.hours)} h` : ""}</p>
                   <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id

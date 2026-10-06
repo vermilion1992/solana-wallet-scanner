@@ -918,10 +918,11 @@ def events_to_accounting(events, *, mint, start):
             continue
         if event.get("kind") == "transfer":
             when = start_dt + timedelta(seconds=int(event.get("seconds_from_start") or 0))
+            transfer_order = event.get("order")
             rows.append({
                 "kind": "transfer",
                 "timestamp": when.isoformat().replace("+00:00", "Z"),
-                "order": index,
+                "order": transfer_order if isinstance(transfer_order, int) and not isinstance(transfer_order, bool) else index,
                 "mint": event.get("mint") or mint,
                 "quantity_raw": str(event["units"]),
                 "decimals": 0,
@@ -937,10 +938,11 @@ def events_to_accounting(events, *, mint, start):
         when = start_dt + timedelta(seconds=int(event.get("seconds_from_start") or 0))
         paid = evidenced_paid_by_wallet(event)
         fee_amount = event.get("wallet_fee_sol") if event.get("wallet_fee_sol") not in (None, "") else event.get("fee_sol")
+        event_order = event.get("order")
         row = {
             "kind": event["kind"],
             "timestamp": when.isoformat().replace("+00:00", "Z"),
-            "order": index,
+            "order": event_order if isinstance(event_order, int) and not isinstance(event_order, bool) else index,
             "mint": event.get("mint") or mint,
             "quantity_raw": str(event.get("units") or "0"),
             "decimals": 0,

@@ -507,7 +507,10 @@ def normalize_instruction(instruction, keys, *, signers=None, inner=False, path=
     if program == ASSOCIATED_ID:
         if data not in (b'', b'\0', b'\1'):
             _reject('unsupported-opcode', 'Associated-account opcode has no reviewed creation layout', path + '.data')
-        _arity(resolved, 6, path)
+        if data == b'' and len(resolved) == 7 and resolved[6] == RENT_ID:
+            _arity(resolved, 7, path)
+        else:
+            _arity(resolved, 6, path)
         if resolved[4] != SYSTEM_ID or resolved[5] not in (TOKEN_ID, TOKEN_2022_ID):
             _reject('conflicting-program', 'Associated creation has incompatible System/Token account roles', path + '.accounts')
         if not inner and resolved[0] not in (signers or set()):
@@ -516,6 +519,8 @@ def normalize_instruction(instruction, keys, *, signers=None, inner=False, path=
         kind = 'createIdempotent' if data == b'\1' else 'create'
         info = {'source': resolved[0], 'account': resolved[1], 'wallet': resolved[2],
                 'mint': resolved[3], 'systemProgram': resolved[4], 'tokenProgram': resolved[5]}
+        if len(resolved) == 7:
+            info['rentSysvar'] = resolved[6]
         required = resolved[:1]
     else:
         kind, info, required = (_system(data, resolved, signers or set(), inner, path) if program == SYSTEM_ID else

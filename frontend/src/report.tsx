@@ -265,8 +265,18 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {profile.unresolved_basis_sales != null ? ` · unresolved basis ${String(profile.unresolved_basis_sales)}` : ""}
         {profile.sale_count != null ? ` · sales ${String(profile.sale_count)}` : ""}
         {` · market ${String(market.market_swaps ?? 0)} / holder-fee ${String(market.holder_fee_distributions ?? 0)}`}
-        {report.unsupported_tx_count != null ? ` · unsupported tx ${String(report.unsupported_tx_count)}` : ""}
+        {report.unsupported_swaps_in_window != null
+          ? ` · unsupported swaps in window ${String(report.unsupported_swaps_in_window)} of ${String(report.in_window_swaps ?? 0)}`
+          : report.unsupported_tx_count != null ? ` · unsupported tx ${String(report.unsupported_tx_count)}` : ""}
+        {report.in_window_span?.hours != null ? ` · in-window span ${String(report.in_window_span.hours)} h` : ""}
         {Array.isArray(report.conversions) && report.conversions.length ? ` · conversions ${String(report.conversions.length)}` : ""}
+        {(() => {
+          const detail = (profile.concentration_detail || {}) as { label?: string; largest_winner?: string; result_excluding_largest_winner?: string };
+          return detail.label ? ` · concentration ${detail.label}` : "";
+        })()}
+        {report.residual_sol_note ? ` · residual ${String(report.residual_sol || "")} SOL ${String(report.residual_sol_note)}` : ""}
+        {report.sensitivity_unverified_debits_sol != null ? ` · verified tips ${String(report.verified_tips_sol || "0")} · sensitivity unverified debits ${String(report.sensitivity_unverified_debits_sol)}` : ""}
+        {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
       </p>
       <p className="subset-worksheet-note" data-report-provenance="true">

@@ -14,9 +14,16 @@ from decimal import Decimal
 from pathlib import Path
 
 from scanner.investigation import (
+    DFLOW,
     JUPITER,
+    METEORA_DAMM_V2,
+    OKX_DEX_ROUTER,
     PUMP,
     PUMP_SWAP,
+    RAYDIUM_AMM,
+    RAYDIUM_CPMM,
+    RFQ_FILL,
+    WHIRLPOOL,
     _anchor,
     _data,
     _keys,
@@ -38,7 +45,7 @@ PUMP_IDL_PIN = {
     "local_fixture": "tests/fixtures/retained_protocol_funding/pump-native.json",
     "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b",
 }
-PUMP_SWAP_INSTRUCTIONS = ("buy", "sell", "buy_exact_sol_in")
+PUMP_SWAP_INSTRUCTIONS = ("buy", "sell", "buy_exact_sol_in", "sell_v2", "buy_exact_quote_in_v2", "buy_v2")
 JUPITER_REVIEWED = (
     "route",
     "route_with_token_ledger",
@@ -47,8 +54,13 @@ JUPITER_REVIEWED = (
     "shared_accounts_route_with_token_ledger",
     "shared_accounts_exact_out_route",
     "route_v2",
+    "shared_accounts_route_v2",
 )
 PUMPSWAP_REVIEWED = ("buy", "sell", "buy_exact_quote_in")
+DECODED_OUTER_PROGRAMS = {
+    PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, RFQ_FILL,
+}
 LAMPORTS = Decimal(1_000_000_000)
 
 
@@ -154,7 +166,14 @@ def _named_instruction(program, data, pump_names):
     disc = payload[:8].hex()
     if program == PUMP:
         return pump_names.get(disc) or disc
-    names = PUMPSWAP_REVIEWED if program == PUMP_SWAP else JUPITER_REVIEWED if program == JUPITER else ()
+    if program == PUMP_SWAP:
+        names = PUMPSWAP_REVIEWED
+    elif program == JUPITER:
+        names = JUPITER_REVIEWED
+    elif program == PUMP:
+        names = PUMP_SWAP_INSTRUCTIONS
+    else:
+        names = ()
     for name in names:
         if payload[:8] == _anchor(name):
             return name
@@ -183,7 +202,7 @@ def classify_normalised_transaction(record, address, *, pump_names=None):
         "class": "unclassified",
         "reason": None,
     }
-    if version not in ("legacy", 0):
+    if version not in ("legacy", 0, 1):
         row["class"] = "unsupported_transaction_version"
         row["reason"] = "Unsupported transaction version"
         return row
@@ -215,7 +234,7 @@ def classify_normalised_transaction(record, address, *, pump_names=None):
             program = _program(instruction, keys)
         except (ValueError, TypeError, IndexError):
             continue
-        if program in (PUMP, PUMP_SWAP, JUPITER):
+        if program in DECODED_OUTER_PROGRAMS:
             row["outer_venues"].append({
                 "program": program,
                 "instruction": _named_instruction(program, instruction.get("data"), pump_names),
@@ -247,6 +266,10 @@ def classify_normalised_transaction(record, address, *, pump_names=None):
         row["class"] = "pump_bonding_curve_swap_candidate"
         row["reason"] = "Outer Pump buy/sell/buy_exact_sol_in is present for the existing adapter"
         return row
+    if any(item["program"] == PUMP_SWAP and item["instruction"] in PUMPSWAP_REVIEWED for item in row["outer_venues"]):
+        row["class"] = "pumpswap_spot_swap_candidate"
+        row["reason"] = "Outer PumpSwap buy/sell/buy_exact_quote_in is a reviewed spot swap"
+        return row
     if any(item["program"] == JUPITER for item in row["outer_venues"]):
         reviewed = any(item["instruction"] in JUPITER_REVIEWED for item in row["outer_venues"])
         row["class"] = "reviewed_jupiter_route" if reviewed else "unreviewed_jupiter_discriminator"
@@ -256,6 +279,26 @@ def classify_normalised_transaction(record, address, *, pump_names=None):
             if reviewed
             else "Outer Jupiter discriminator is not a reviewed route; inner PumpSwap is not treated as an outer swap"
         )
+        return row
+    if any(item["program"] in (RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL) for item in row["outer_venues"]):
+        row["class"] = "reviewed_amm_spot_swap_candidate"
+        row["reason"] = "Outer Raydium or Orca instruction is a reviewed spot swap"
+        return row
+    if any(item["program"] == OKX_DEX_ROUTER for item in row["outer_venues"]):
+        row["class"] = "reviewed_okx_router_swap_candidate"
+        row["reason"] = "Outer OKX DEX router SwapTob/SwapToc is a reviewed spot swap"
+        return row
+    if any(item["program"] == METEORA_DAMM_V2 for item in row["outer_venues"]):
+        row["class"] = "reviewed_meteora_damm_v2_swap_candidate"
+        row["reason"] = "Outer Meteora DAMM v2 swap is a reviewed spot swap"
+        return row
+    if any(item["program"] == DFLOW for item in row["outer_venues"]):
+        row["class"] = "reviewed_dflow_swap_candidate"
+        row["reason"] = "Outer DFlow swap is a reviewed spot swap"
+        return row
+    if any(item["program"] == RFQ_FILL for item in row["outer_venues"]):
+        row["class"] = "reviewed_rfq_fill_swap_candidate"
+        row["reason"] = "Outer 61DFfeTK Fill is a reviewed spot swap"
         return row
     if inner_swaps:
         row["class"] = "inner_pumpswap_without_reviewed_outer"

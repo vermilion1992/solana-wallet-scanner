@@ -72,51 +72,120 @@ def _scale_trade(event, *, units, original_units, remainder_of=None):
     return scaled
 
 
+def _split_sale_fragments(event, allocations):
+    """Split one sale into quantity fragments that sum to the original amounts."""
+    fragments = []
+    remaining_event = event
+    remaining_units = Decimal(str(event["units"]))
+    for take, dest, flags in allocations:
+        if take <= 0:
+            continue
+        if take == remaining_units:
+            part = dict(remaining_event)
+            part["units"] = canonical(take)
+        else:
+            part = _scale_trade(remaining_event, units=take, original_units=remaining_units)
+            leftover = _scale_trade(remaining_event, units=remaining_units - take, original_units=remaining_units, remainder_of=part)
+            remaining_event = leftover
+            remaining_units = remaining_units - take
+        part.update(flags)
+        fragments.append((dest, part))
+    return fragments
+
+
 def isolate_known_cost_events(rows):
-    """Keep buys and sells that have inventory. Partial sells split; remainder stays unknown."""
+    """Keep buys and sells that have inventory. Opening unknown-basis is consumed first.
+
+    Inventory is per token. A sale that consumes lots bought in a different
+    quote asset is unconverted: the matched fragment stays visible, P&L is
+    unresolved (never zero), and the episode is not clean.
+    """
     known = []
     unresolved = []
-    inventory = Decimal("0")
+    lots = []
+    opening_unknown = Decimal("0")
     for event in _ordered_rows(rows):
         units = Decimal(str(event["units"]))
+        if event.get("opening_unknown") or event.get("kind") == "opening_unknown":
+            opening_unknown += units
+            continue
         if event["kind"] == "buy":
-            inventory += units
+            lots.append({"units": units, "settlement": settlement_of(event)})
             known.append(event)
             continue
-        if event["kind"] == "sell":
-            if inventory <= 0:
-                unresolved.append({
-                    **event,
-                    "unresolved_basis": True,
-                    "split_part": event.get("split_part") or "unresolved",
-                    "whole_sale_pnl_resolved": False,
-                    "result_scope": "conditional_on_captured_inventory",
-                    "reason": "Sale has no known acquisition cost in this sample",
-                })
-                continue
-            if units <= inventory:
-                inventory -= units
-                tagged = dict(event)
-                tagged["result_scope"] = "conditional_on_captured_inventory"
-                tagged["whole_sale_pnl_resolved"] = True
-                tagged["split_part"] = event.get("split_part") or "matched"
-                known.append(tagged)
-                continue
-            matched = _scale_trade(event, units=inventory, original_units=units)
-            remainder = _scale_trade(event, units=units - inventory, original_units=units, remainder_of=matched)
-            matched["partial_known_cost"] = True
-            matched["split_part"] = "matched"
-            matched["whole_sale_pnl_resolved"] = False
-            matched["result_scope"] = "conditional_on_captured_inventory"
-            remainder["unresolved_basis"] = True
-            remainder["split_part"] = "unresolved"
-            remainder["whole_sale_pnl_resolved"] = False
-            remainder["result_scope"] = "conditional_on_captured_inventory"
-            remainder["reason"] = "Sale remainder has no known acquisition cost in this sample"
-            remainder["unmatched_quantity"] = remainder["units"]
-            known.append(matched)
-            unresolved.append(remainder)
-            inventory = Decimal("0")
+        if event["kind"] != "sell":
+            continue
+        remaining = units
+        opening_take = Decimal("0")
+        if opening_unknown > 0 and remaining > 0:
+            opening_take = opening_unknown if opening_unknown <= remaining else remaining
+            opening_unknown -= opening_take
+            remaining -= opening_take
+        sale_settlement = settlement_of(event)
+        same_take = Decimal("0")
+        cross_take = Decimal("0")
+        while remaining > 0 and lots:
+            lot = lots[0]
+            take = lot["units"] if lot["units"] <= remaining else remaining
+            if lot["settlement"] != sale_settlement:
+                cross_take += take
+            else:
+                same_take += take
+            lot["units"] -= take
+            remaining -= take
+            if lot["units"] == 0:
+                lots.pop(0)
+        leftover_take = remaining
+        dirty = opening_take > 0 or cross_take > 0 or leftover_take > 0
+        allocations = [
+            (same_take, "known", {
+                "result_scope": "conditional_on_captured_inventory",
+                "whole_sale_pnl_resolved": not dirty,
+                "partial_known_cost": dirty,
+                "split_part": event.get("split_part") or "matched",
+                **({"not_clean_episode": True} if dirty else {}),
+            }),
+            (opening_take, "unresolved", {
+                "unresolved_basis": True,
+                "opening_inventory_consumed": True,
+                "split_part": "unresolved",
+                "whole_sale_pnl_resolved": False,
+                "result_scope": "conditional_on_captured_inventory",
+                "reason": "Sale matches pre-capture opening inventory; no verified zero-inventory checkpoint",
+            }),
+            (cross_take, "cross", {
+                "unresolved_basis": True,
+                "cross_currency_unconverted": True,
+                "not_clean_episode": True,
+                "split_part": "unresolved",
+                "whole_sale_pnl_resolved": False,
+                "result_scope": "conditional_on_captured_inventory",
+                "reason": "Unconverted cross-currency sale; inventory is per token; P&L unresolved, never zero",
+            }),
+            (leftover_take, "unresolved", {
+                "unresolved_basis": True,
+                "split_part": "unresolved",
+                "whole_sale_pnl_resolved": False,
+                "result_scope": "conditional_on_captured_inventory",
+                "reason": (
+                    "Sale has no known acquisition cost in this sample"
+                    if leftover_take == units
+                    else "Sale remainder has no known acquisition cost in this sample"
+                ),
+                "unmatched_quantity": canonical(leftover_take),
+            }),
+        ]
+        for dest, part in _split_sale_fragments(event, allocations):
+            if dest == "known":
+                known.append(part)
+            elif dest == "cross":
+                unresolved.append(part)
+                inventory_sell = dict(part)
+                inventory_sell["unresolved_basis"] = False
+                inventory_sell["split_part"] = "matched_inventory_only"
+                known.append(inventory_sell)
+            else:
+                unresolved.append(part)
     return known, unresolved
 
 
@@ -324,16 +393,58 @@ def _single_asset_worksheet(events, *, production):
 
 
 def worksheets_by_quote_asset(events, *, production=True):
-    """Separate SOL and USDC worksheets. Never convert. Excess sales isolate known cost."""
-    usable = [row for row in events if row.get("kind") in ("buy", "sell")]
-    grouped = {USDC: [], WSOL: []}
+    """Separate SOL and USDC worksheets. Never convert. Excess sales isolate known cost.
+
+    A mint bought in one quote and sold in another is kept on one inventory
+    ledger. Its P&L is unconverted/unresolved, never split into two FIFOs and
+    never reported as zero.
+    """
+    usable = [
+        row for row in events
+        if row.get("kind") in ("buy", "sell") and row.get("split_part") != "matched_inventory_only"
+    ]
+    by_mint = {}
     for row in usable:
-        grouped[settlement_of(row)].append(row)
+        by_mint.setdefault(row.get("mint"), []).append(row)
+    grouped = {USDC: [], WSOL: []}
+    cross_currency = []
+    for mint, rows in by_mint.items():
+        settlements = {settlement_of(row) for row in rows}
+        if len(settlements) > 1:
+            cross_currency.extend(rows)
+            continue
+        grouped[next(iter(settlements))].extend(rows)
     by_asset = {}
     if grouped[USDC]:
         by_asset["USDC"] = _single_asset_worksheet(grouped[USDC], production=production)
     if grouped[WSOL]:
         by_asset["SOL"] = _single_asset_worksheet(grouped[WSOL], production=production)
+    cross_sells = sum(1 for row in cross_currency if row.get("kind") == "sell")
+    note = (
+        "Cross-currency inventory is per token; unconverted P&L is unresolved, never zero."
+        if cross_currency else None
+    )
+    attached = False
+    for worksheet in by_asset.values():
+        if worksheet is None:
+            continue
+        worksheet["cross_currency_unconverted_sales"] = cross_sells
+        worksheet["cross_currency_policy"] = "unconverted_unresolved_never_zero"
+        if note:
+            worksheet["cross_currency_note"] = note
+        if not attached and cross_sells:
+            worksheet["unresolved_basis_sales"] = int(worksheet.get("unresolved_basis_sales") or 0) + cross_sells
+            attached = True
+    if cross_currency and not by_asset:
+        sells = sum(1 for row in cross_currency if row.get("kind") == "sell")
+        return {
+            "SOL": {
+                **empty_sol_worksheet(unresolved=sells, known=0),
+                "cross_currency_unconverted_sales": sells,
+                "cross_currency_policy": "unconverted_unresolved_never_zero",
+                "cross_currency_note": note,
+            }
+        }
     return {asset: worksheet for asset, worksheet in by_asset.items() if worksheet}
 
 
@@ -413,6 +524,9 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
         "venue": row.get("venue") or row.get("source"),
         "classification": row.get("classification") or "market",
         "order": row.get("order") if isinstance(row.get("order"), int) else row.get("transaction_index"),
+        "timestamp": row.get("timestamp") or row.get("block_time"),
+        "observed_pre_quantity_raw": row.get("observed_pre_quantity_raw"),
+        "observed_post_quantity_raw": row.get("observed_post_quantity_raw"),
         "network_fee_sol": str(row["network_fee_sol"]) if row.get("network_fee_sol") not in (None, "") else None,
         "tips_sol": str(row["tips_sol"]) if row.get("tips_sol") not in (None, "") else None,
     }

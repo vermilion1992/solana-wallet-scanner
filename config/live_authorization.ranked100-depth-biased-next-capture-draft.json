@@ -1,0 +1,161 @@
+{
+  "schema_version": "live-research-authorization-v1",
+  "enabled": false,
+  "draft_status": "DISABLED; NOT AUTHORISED — Mitch approval required before any live dispatch",
+  "not_authorised_for_live_spend_in_repo_template": true,
+  "authorization_id": "live-ranked100-depth-biased-next-capture-2026-10-06-mitch-draft",
+  "authorized_by_user_at": null,
+  "expires_at": null,
+  "purpose": "DISABLED depth-biased next-capture draft (Mitch item 17). Continue older unconsumed pages with cursor continuity. Provider-side cutoff 2026-10-05T13:29:27Z. Do not dispatch.",
+  "first_live_target_after_grant": "RANKED100_DEPTH_BIASED_NEXT_CAPTURE",
+  "outcome_label": "RANKED100_DEPTH_BIASED_NEXT_CAPTURE",
+  "do_not_reuse_consumed_grants": true,
+  "PRODUCT_READY": false,
+  "provider_side_cutoff": "2026-10-05T13:29:27Z",
+  "cursor_continuity": true,
+  "max_wallet_investigations": 6,
+  "max_requests_per_wallet": 4,
+  "max_dispatched_requests": 20,
+  "max_full_txs_per_call": 100,
+  "retries": 0,
+  "observation_window_objective": "Continue older unconsumed getTransactionsForAddress pages from the last committed pagination token. Do not recapture already stored pages.",
+  "allowed_wallets": [
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "provider_rank": 2,
+      "additional_pages": 4,
+      "continue_from_pagination_token": "453163900:357",
+      "reason": "coverage eligibility pending reassessment; deepen opening-basis history"
+    },
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "provider_rank": 4,
+      "additional_pages": 4,
+      "continue_from_pagination_token": "453531442:371",
+      "reason": "coverage eligibility pending reassessment; deepen opening-basis history"
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "provider_rank": 15,
+      "additional_pages": 4,
+      "continue_from_pagination_token": "452839073:6",
+      "reason": "coverage eligibility pending reassessment; deepen opening-basis history"
+    },
+    {
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "provider_rank": 53,
+      "additional_pages": 4,
+      "continue_from_pagination_token": "449587680:614",
+      "reason": "mixed-quote / unsupported-swap watch; deepen captured inventory"
+    },
+    {
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "provider_rank": 11,
+      "additional_pages": 2,
+      "continue_from_pagination_token": "449760359:1234",
+      "reason": "zero-position control; distinct unresolved-reason category: unsupported unknown/L2 venue"
+    },
+    {
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "provider_rank": 56,
+      "additional_pages": 2,
+      "continue_from_pagination_token": "452163894:804",
+      "reason": "zero-position control; distinct unresolved-reason category: OKX router reconstruction blocked on unreviewed System opcode"
+    }
+  ],
+  "page_budget": {
+    "gtfo_cccs_a6ps": 12,
+    "mixed_58pw": 4,
+    "zero_position_controls": 4,
+    "total_requests": 20,
+    "documented_credits": 200
+  },
+  "acquisition_policy": {
+    "kind": "acquisition-policy-v1",
+    "enabled_for_live": false,
+    "applies_only_when_grant_approved": true,
+    "max_wallets": 6,
+    "prefer": "depth_biased_cursor_continuity",
+    "exclude": ["already_captured_pages", "consumed_grants"],
+    "do_not_dispatch": true
+  },
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "allow_paid_upgrade": false,
+  "allow_signing_or_submission": false,
+  "no_retries": true,
+  "no_automatic_refresh": true,
+  "no_billable_preflight_probes": true,
+  "never_until_a_winner": true,
+  "stop_conditions": [
+    "stop_when_budget_exhausted",
+    "stop_when_coverage_objective_reached",
+    "never_until_a_winner",
+    "failed_or_timed_out_dispatched_request_consumes_attempt",
+    "provider_side_cutoff_2026-10-05T13:29:27Z"
+  ],
+  "exact_query": {
+    "provider": "helius",
+    "method": "getTransactionsForAddress",
+    "params": {
+      "transactionDetails": "full",
+      "limit": 100,
+      "sortOrder": "desc",
+      "commitment": "finalized",
+      "maxSupportedTransactionVersion": 1,
+      "until": "2026-10-05T13:29:27Z",
+      "filters": {
+        "status": "any",
+        "tokenAccounts": "all"
+      }
+    },
+    "documented_units_per_request": 10,
+    "silent_fallback_forbidden": true,
+    "page_enlarge_forbidden": true,
+    "retry_forbidden": true,
+    "endpoint_switch_forbidden": true,
+    "current_latest_history_forbidden": true,
+    "top_level_until_required": true
+  },
+  "providers": [
+    {
+      "provider_id": "helius",
+      "allowed_operations": ["getTransactionsForAddress"],
+      "billing_unit": "helius_credit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
+      "max_requests": 20,
+      "max_units": 200,
+      "max_concurrency": 1,
+      "max_duration_seconds": 600,
+      "max_requests_per_wallet": 4,
+      "max_wallet_investigations": 6,
+      "documented_units_per_request": 10,
+      "retries": 0,
+      "purpose": "DISABLED depth-biased next-capture draft. Cursor continuity from committed page-1 pagination tokens. Provider-side cutoff 2026-10-05T13:29:27Z. Do not dispatch."
+    },
+    {
+      "provider_id": "birdeye",
+      "allowed_operations": [],
+      "billing_unit": "birdeye_compute_unit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
+      "max_requests": 0,
+      "max_units": 0,
+      "max_concurrency": 0,
+      "max_duration_seconds": 0,
+      "purpose": "Forbidden."
+    }
+  ],
+  "notes": [
+    "DRAFT — enabled:false. Requires Mitch's fresh approval because it changes B's targets.",
+    "20 requests / 200 documented Helius credits. Balance unconfirmed.",
+    "Continue older unconsumed pages; do not recapture page 0/1 already in the corpus.",
+    "Provider-side cutoff 2026-10-05T13:29:27Z.",
+    "PRODUCT_READY stays false. Do not commit an armed copy. Do not dispatch."
+  ]
+}

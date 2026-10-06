@@ -501,6 +501,9 @@ def ranked_workflow_view(store, *, filters=None):
             "history_required_label": "History required — not analysed" if not row["capture_available"] and not (report or {}).get("id") else None,
             "can_open_report": bool((report or {}).get("id") or row["capture_available"]),
             "reconstructed_rejected": reconstructed_ok is False,
+            "in_window_span": (report or {}).get("in_window_span") or (profile or {}).get("in_window_span"),
+            "unsupported_swaps_in_window": (report or {}).get("unsupported_swaps_in_window"),
+            "in_window_swaps": (report or {}).get("in_window_swaps"),
         })
     all_classified = []
     for row in universe["rows"]:
@@ -574,6 +577,51 @@ def ranked_workflow_view(store, *, filters=None):
     }
 
 
+def coverage_eligibility(report, profile=None):
+    """Item 12: >=99% eligible, 95-99% watchlist, <95% or dependency blocked."""
+    from decimal import Decimal
+
+    breakdown = (report or {}).get("record_breakdown") or {}
+    shares = []
+    swap_share = (breakdown.get("unsupported_swap_share_in_window") or (profile or {}).get("unsupported_swap_share_in_window") or {})
+    if swap_share.get("by_count") not in (None, ""):
+        shares.append(Decimal(str(swap_share["by_count"])))
+    for value in (swap_share.get("by_consideration") or {}).values():
+        shares.append(Decimal(str(value)))
+    unresolved = (profile or {}).get("unresolved_basis_sales") or (report or {}).get("worksheet", {}).get("unresolved_basis_sales")
+    dependency = int(unresolved or 0) > 0
+    if not shares:
+        status = "blocked_unknown_denominator"
+    else:
+        resolved = Decimal("1") - max(shares)
+        if resolved >= Decimal("0.99") and not dependency:
+            status = "provisional_eligible"
+        elif resolved >= Decimal("0.99") and dependency:
+            status = "coverage_eligibility_pending_reassessment"
+        elif resolved >= Decimal("0.95"):
+            status = "watchlist_incomplete_evidence"
+        else:
+            status = "coverage_blocked"
+    if dependency and status in ("provisional_eligible", "watchlist_incomplete_evidence"):
+        status = "coverage_eligibility_pending_reassessment"
+    return {
+        "status": status,
+        "dependency_unresolved_basis": bool(dependency),
+        "note": "A missing purchase that could be the FIFO basis of a qualifying sale blocks regardless of percentage.",
+    }
+
+
+def _decoder_coverage_block(report, profile):
+    judged = coverage_eligibility(report, profile)
+    if judged["status"] in ("provisional_eligible",):
+        return None
+    if judged["status"] == "coverage_eligibility_pending_reassessment":
+        return "coverage eligibility pending reassessment"
+    if judged["status"] == "watchlist_incomplete_evidence":
+        return "inconclusive: decoder coverage watchlist (95-99%)"
+    return f"inconclusive: decoder coverage ({judged['status']})"
+
+
 def research_screen_run(universe_rows, reports, filters):
     """Evaluate the saved snapshot against thresholds fixed before the run.
 
@@ -616,6 +664,17 @@ def research_screen_run(universe_rows, reports, filters):
                 "qualification_category": qualification_category(report, None),
             })
             continue
+        coverage_block = _decoder_coverage_block(report, profile)
+        if coverage_block:
+            inconclusive += 1
+            rows.append({
+                "address": row["address"],
+                "outcome": "inconclusive",
+                "reason": coverage_block,
+                "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+                "in_window_span": (report.get("in_window_span") or profile.get("in_window_span")),
+            })
+            continue
         judged = evaluate_thresholds(profile, screen)
         if judged["criteria_met"]:
             qualified += 1
@@ -627,12 +686,20 @@ def research_screen_run(universe_rows, reports, filters):
             "address": row["address"],
             "outcome": outcome,
             "reason": (
-                "meets the screen on matched trades in the captured window"
+                (
+                    "meets the sample/activity filters"
+                    if not any(
+                        screen.get(key) not in (None, "")
+                        for key in ("min_scoped_pnl_sol", "min_scoped_pnl_usdc")
+                    )
+                    else "meets the screen on matched trades in the captured window"
+                )
                 if judged["criteria_met"]
                 else "documented screen thresholds not met"
             ),
             "threshold_results": judged["results"],
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+            "in_window_span": (report.get("in_window_span") or profile.get("in_window_span")),
         })
     if qualified:
         run_outcome = "completed"
@@ -682,7 +749,11 @@ def _format_unknown_basis(value):
     quantity = value.get("quantity")
     proceeds = value.get("proceeds")
     unit = value.get("unit") or ""
-    return f"sales {sales} · qty {quantity} · proceeds {proceeds} {unit}".strip()
+    from scanner.mass_search.research_profile import _display_decimal
+
+    return (
+        f"sales {sales} · qty {_display_decimal(quantity)} · proceeds {_display_decimal(proceeds)} {unit}"
+    ).strip()
 
 
 def compare_reports(store, left_id, right_id):

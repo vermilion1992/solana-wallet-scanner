@@ -4,7 +4,7 @@ from __future__ import annotations
 from decimal import Decimal
 from statistics import median
 
-from scanner.mass_search.settlement import USDC, isolate_known_cost_by_mint, settlement_of
+from scanner.mass_search.settlement import USDC, isolate_known_cost_by_mint, settlement_of, _ordered_rows
 
 ANALYTICS_KIND = "wallet-analytics-v1"
 
@@ -37,7 +37,7 @@ def _map_event(row, index=0):
             str(row["wallet_fee_sol"]) if row.get("wallet_fee_sol") not in (None, "") else None
         ),
         "reconciliation_or_exclusion": row.get("unresolved_basis") and "unresolved_basis" or "supported_market_trade",
-        "order": index,
+        "order": row.get("order") if isinstance(row.get("order"), int) and not isinstance(row.get("order"), bool) else index,
     }
 
 
@@ -79,6 +79,50 @@ def _completed_positions(report, profile, fallback):
     return int(fallback or 0)
 
 
+def completed_episode_pnls(known_rows, sale_by_key):
+    """Net P&L of each completed flat-to-flat position. Open-position sales are excluded."""
+    grouped = {}
+    for row in known_rows:
+        if row.get("unresolved_basis"):
+            continue
+        grouped.setdefault(row.get("mint"), []).append(row)
+    pnls = []
+    for rows in grouped.values():
+        inventory = Decimal("0")
+        opened = False
+        episode_pnl = Decimal("0")
+        episode_has_sale = False
+        for event in _ordered_rows(rows):
+            units = Decimal(str(event.get("units") or event.get("quantity") or 0))
+            if event.get("kind") == "buy":
+                inventory += units
+                opened = True
+                continue
+            if event.get("kind") != "sell":
+                continue
+            key = (event.get("signature"), event.get("split_part") or "matched")
+            sale = sale_by_key.get(key)
+            pnl = _decimal((sale or {}).get("net_profit")) if sale else _decimal(event.get("known_cost_pnl") or event.get("net_profit"))
+            if pnl is not None:
+                episode_pnl += pnl
+                episode_has_sale = True
+            inventory -= units
+            if not opened or inventory != 0:
+                continue
+            role = event.get("role")
+            qualified = event.get("window_qualified")
+            if role is None and qualified is None:
+                in_window = True
+            else:
+                in_window = role == "in_report" or bool(qualified)
+            if in_window and episode_has_sale:
+                pnls.append(episode_pnl)
+            opened = False
+            episode_pnl = Decimal("0")
+            episode_has_sale = False
+    return pnls
+
+
 def build_wallet_analytics(report):
     """Attach scoped metrics. Missing basis stays unresolved, not zero."""
     worksheet = report.get("worksheet") or report.get("independent_worksheet") or {}
@@ -96,12 +140,18 @@ def build_wallet_analytics(report):
             "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
             "wallet_fee_sol": row.get("fee_sol") or row.get("wallet_fee_sol"),
             "timestamp": row.get("timestamp") or row.get("block_time"),
+            "order": row.get("order"),
         })
     known, unresolved = isolate_known_cost_by_mint(known_inputs) if known_inputs else ([], [])
     # Trades are the FIFO split rows, not the original unsplit sells.
     split_rows = sorted(
         list(known) + list(unresolved),
-        key=lambda row: (row.get("seconds_from_start") or 0, row.get("signature") or "", row.get("unresolved_basis") is True),
+        key=lambda row: (
+            row.get("seconds_from_start") or 0,
+            row.get("order") if isinstance(row.get("order"), int) and not isinstance(row.get("order"), bool) else 0,
+            row.get("signature") or "",
+            row.get("unresolved_basis") is True,
+        ),
     )
     mapped = [_map_event(row, index) for index, row in enumerate(split_rows)]
     settlement = worksheet.get("settlement_asset")
@@ -145,6 +195,10 @@ def build_wallet_analytics(report):
         if pnl is not None:
             mint = source.get("mint") or item.get("token")
             mint_pnl[mint] = mint_pnl.get(mint, Decimal("0")) + pnl
+    episode_pnls = completed_episode_pnls(
+        [row for row in split_rows if not row.get("unresolved_basis")],
+        sale_by_key,
+    )
     exit_diag = report.get("material_exit") or {}
     sample_count = exit_diag.get("sample_count")
     if sample_count in (None, "") and exit_diag.get("final_hold_seconds") is not None:
@@ -178,8 +232,8 @@ def build_wallet_analytics(report):
     profile = report.get("research_profile") or {}
     if profile.get("open_or_unresolved", {}).get("open_inventory_present") and not open_positions:
         open_positions = int(profile.get("open_buys_in_sample") or 0)
-    positions = _completed_positions(report, profile, len(mint_pnl))
-    wins = sum(1 for value in mint_pnl.values() if value > 0)
+    positions = _completed_positions(report, profile, len(episode_pnls) or len(mint_pnl))
+    wins = sum(1 for value in episode_pnls if value > 0)
     win_rate = None
     if positions:
         win_rate = format(Decimal(wins) / Decimal(positions), "f")

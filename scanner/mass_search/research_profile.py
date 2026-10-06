@@ -3,7 +3,12 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from scanner.mass_search.settlement import USDC, isolate_known_cost_by_mint, settlement_of
+from scanner.mass_search.settlement import (
+    USDC,
+    _open_lot_count,
+    isolate_known_cost_by_mint,
+    settlement_of,
+)
 
 PROFILE_KIND = "research-profile-v1"
 FILTERS_KIND = "research_profile_filters"
@@ -52,6 +57,15 @@ RESEARCH_SCREEN_DEFAULTS = {
     "min_completed_known_cost": "1",
     "min_sample_positions": "3",
     "min_coverage_share": None,
+}
+POSITIVE_RESEARCH_SHORTLIST = {
+    "name": "Positive research shortlist",
+    "min_completed_known_cost": "3",
+    "min_sample_positions": "3",
+    "min_coverage_share": "0.99",
+    "min_scoped_pnl_sol": "0",
+    "min_scoped_pnl_usdc": "0",
+    "note": "Requires positive scoped net P&L plus the evidence gates. Unset fields stay not applied.",
 }
 
 EVIDENCE_CLASS = {
@@ -159,10 +173,124 @@ def _decimal(value):
     return Decimal(str(value))
 
 
+DISPLAY_QUANTUM = Decimal("0.000000001")
+
+
 def _share(part, whole):
     if not whole:
         return None
-    return format(Decimal(part) / Decimal(whole), "f")
+    return _display_decimal(Decimal(part) / Decimal(whole))
+
+
+def _display_decimal(value):
+    if value in (None, ""):
+        return None
+    quantized = Decimal(str(value)).quantize(DISPLAY_QUANTUM)
+    text = format(quantized, "f")
+    return text.rstrip("0").rstrip(".") if "." in text else text
+
+
+def _concentration_detail(report, scoped_pnl, known_sells):
+    worksheet = report.get("worksheet") or {}
+    profits = list(worksheet.get("sale_net_profit_sol") or worksheet.get("sale_net_profit_usdc") or [])
+    values = []
+    for item in profits:
+        amount = _decimal(item)
+        if amount is not None:
+            values.append(amount)
+    largest = max(values) if values else None
+    without = None
+    scoped = _decimal(scoped_pnl)
+    if scoped is not None and largest is not None:
+        without = scoped - largest
+    mints = {row.get("mint") for row in known_sells if row.get("mint")}
+    label = None
+    if scoped is not None and largest is not None and without is not None:
+        if scoped > 0 and without < 0:
+            label = "positive subset; highly concentrated; negative excluding largest winner"
+        elif scoped > 0:
+            label = "positive subset"
+    return {
+        "largest_winner": _display_decimal(largest),
+        "result_excluding_largest_winner": _display_decimal(without),
+        "distinct_tokens": len(mints),
+        "mean_net_per_episode": _display_decimal(sum(values) / len(values)) if values else None,
+        "median_net_per_episode": _display_decimal(sorted(values)[len(values) // 2]) if values else None,
+        "label": label,
+    }
+
+
+def qualification_level(report, profile):
+    completed = int(profile.get("completed_known_cost_positions") or 0)
+    scoped = _decimal(profile.get("scoped_pnl"))
+    coverage = _decimal(profile.get("coverage_count_share"))
+    unresolved = int(profile.get("unresolved_basis_sales") or 0)
+    mints = int((profile.get("concentration_detail") or {}).get("distinct_tokens") or 0)
+    if completed < 1:
+        return {
+            "level": "insufficient_evidence",
+            "label": "insufficient evidence",
+            "not": "unprofitable",
+        }
+    clean = completed >= 3 and scoped is not None and scoped > 0 and coverage is not None and coverage >= Decimal("0.99") and unresolved == 0
+    stronger = clean and completed >= 20 and mints >= 3
+    if stronger:
+        level = "stronger_research_shortlist"
+    elif clean:
+        level = "provisional_research_lead"
+    else:
+        level = "conditional_captured_lot_result"
+    return {
+        "level": level,
+        "label": level.replace("_", " "),
+        "clean_episodes": completed,
+        "positive_scoped_net": bool(scoped is not None and scoped > 0),
+        "coverage": _display_decimal(coverage),
+        "unresolved_accounting": unresolved > 0,
+    }
+
+
+def _coverage_fields(report):
+    """Item 1: count-based, value-based and historical coverage stay separate."""
+    breakdown = report.get("record_breakdown") or {}
+    shares = breakdown.get("unsupported_swap_share_in_window") or {}
+    by_count = _decimal(shares.get("by_count"))
+    count_share = _display_decimal(Decimal("1") - by_count) if by_count is not None else None
+    value_coverages = []
+    for value in (shares.get("by_consideration") or {}).values():
+        amount = _decimal(value)
+        if amount is not None:
+            value_coverages.append(Decimal("1") - amount)
+    value_share = _display_decimal(min(value_coverages)) if value_coverages else None
+    return {
+        "coverage_count_share": count_share,
+        "coverage_value_share": value_share,
+        "coverage_historical_share": None,
+        "decoder_coverage_share": count_share,
+    }
+
+
+def _coverage_share(report):
+    return _coverage_fields(report)["coverage_count_share"]
+
+
+def _mapped_trade_row(row):
+    return {
+        "kind": row["kind"],
+        "units": str(row.get("quantity_raw") or row.get("units") or "0"),
+        "mint": row.get("mint"),
+        "seconds_from_start": row.get("seconds_from_start") or 0,
+        "signature": row.get("signature"),
+        "settlement_mint": row.get("settlement_mint"),
+        "consideration_usdc": row.get("amount_usdc") or row.get("consideration_usdc"),
+        "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
+        "wallet_fee_sol": row.get("fee_sol") or row.get("wallet_fee_sol"),
+        "timestamp": row.get("timestamp") or row.get("block_time"),
+        "timestamp_missing": bool(row.get("timestamp_missing")),
+        "order": row.get("order"),
+        "role": row.get("role"),
+        "window_qualified": row.get("window_qualified"),
+    }
 
 
 def build_research_profile(report, *, filters=None, classification=None, decoded=None):
@@ -172,39 +300,11 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     counts = classification.get("counts") or {}
     worksheet = report.get("worksheet") or report.get("independent_worksheet") or {}
     events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
-    mapped = []
-    for row in events:
-        mapped.append({
-            "kind": row["kind"],
-            "units": str(row.get("quantity_raw") or row.get("units") or "0"),
-            "mint": row.get("mint"),
-            "seconds_from_start": row.get("seconds_from_start") or 0,
-            "signature": row.get("signature"),
-            "settlement_mint": row.get("settlement_mint"),
-            "consideration_usdc": row.get("amount_usdc") or row.get("consideration_usdc"),
-            "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
-            "timestamp_missing": False,
-        })
+    mapped = [_mapped_trade_row(row) for row in events]
     known, unresolved = isolate_known_cost_by_mint(mapped) if mapped else ([], [])
     known_sells = [row for row in known if row["kind"] == "sell"]
     known_buys = [row for row in known if row["kind"] == "buy"]
-    open_buys = []
-    if mapped:
-        remaining_known, _ = isolate_known_cost_by_mint(mapped)
-        inventory = {}
-        from decimal import Decimal as D
-        for row in sorted(remaining_known, key=lambda item: (item.get("seconds_from_start") or 0, item.get("signature") or "")):
-            mint = row.get("mint")
-            inventory.setdefault(mint, D("0"))
-            units = D(str(row["units"]))
-            if row["kind"] == "buy":
-                inventory[mint] += units
-                if inventory[mint] > 0:
-                    open_buys.append(row)
-            else:
-                inventory[mint] -= units
-                if inventory[mint] <= 0:
-                    open_buys = [item for item in open_buys if item.get("mint") != mint]
+    open_lots = _open_lot_count(known) if known else 0
     market_swaps = int((report.get("coverage") or {}).get("decoded_swaps") or len(events))
     holder_fees = int(counts.get("pump_holder_fee_distribution") or 0)
     failed = int(counts.get("failed_on_chain") or (report.get("coverage") or {}).get("failed_transactions") or 0)
@@ -316,7 +416,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "sale_count": sale_count,
         "known_cost_trades": len(known),
         "unresolved_basis_sales": len(unresolved),
-        "open_buys_in_sample": len([row for row in known_buys if row not in known_sells]),
+        "open_buys_in_sample": open_lots,
         "sizes": sizes,
         "hold_t90_seconds": hold_t90,
         "final_hold_seconds": final_hold,
@@ -341,6 +441,11 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         },
         "privileged_or_difficult_follower": privileged + difficult,
         "unresolved_share": unresolved_share,
+        "unsupported_swap_share_in_window": (report.get("record_breakdown") or {}).get("unsupported_swap_share_in_window"),
+        **_coverage_fields(report),
+        "in_window_span": (report.get("record_breakdown") or {}).get("in_window_span"),
+        "concentration_detail": _concentration_detail(report, scoped_pnl, known_sells),
+        "qualification_level": None,
         "thresholds": filters.get("thresholds") or dict(DEFAULT_THRESHOLDS),
         "threshold_results": {},
         "criteria_met": False,
@@ -363,6 +468,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     profile["unset_thresholds"] = results["unset"]
     profile["evidence_class"] = classify_evidence(report, profile)
     profile["qualification_category"] = qualification_category(report, profile)
+    profile["qualification_level"] = qualification_level(report, profile)
     profile["candidate_assessment"] = candidate_assessment(report, profile)
     return profile
 
@@ -469,19 +575,7 @@ def candidate_assessment(report, profile):
     events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
     if events:
         from scanner.mass_search.settlement import isolate_known_cost_by_mint
-        mapped = []
-        for row in events:
-            mapped.append({
-                "kind": row["kind"],
-                "units": str(row.get("quantity_raw") or row.get("units") or "0"),
-                "mint": row.get("mint"),
-                "seconds_from_start": row.get("seconds_from_start") or 0,
-                "signature": row.get("signature"),
-                "settlement_mint": row.get("settlement_mint"),
-                "consideration_usdc": row.get("amount_usdc") or row.get("consideration_usdc"),
-                "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
-                "timestamp_missing": False,
-            })
+        mapped = [_mapped_trade_row(row) for row in events]
         _, unresolved_rows = isolate_known_cost_by_mint(mapped)
         for row in unresolved_rows:
             unknown_qty += Decimal(str(row.get("units") or 0))
@@ -514,8 +608,8 @@ def candidate_assessment(report, profile):
         },
         "unknown_basis_quantity_and_proceeds": {
             "sales": unresolved,
-            "quantity": str(unknown_qty),
-            "proceeds": str(unknown_proceeds) if unknown_qty or unknown_proceeds else None,
+            "quantity": _display_decimal(unknown_qty),
+            "proceeds": _display_decimal(unknown_proceeds) if unknown_qty or unknown_proceeds else None,
             "unit": profile.get("settlement_asset"),
         },
         "open_inventory": (analytics.get("open_positions") or profile.get("open_or_unresolved") or {}),
@@ -538,7 +632,7 @@ def evaluate_thresholds(profile, thresholds):
     comparisons = {
         "min_completed_known_cost": ("completed_known_cost_positions", "min"),
         "min_sample_positions": ("completed_known_cost_positions", "min"),
-        "min_coverage_share": ("unresolved_share", "max"),
+        "min_coverage_share": ("coverage_count_share", "min"),
         "min_scoped_pnl_usdc": ("scoped_pnl", "min", "USDC"),
         "min_scoped_pnl_sol": ("scoped_pnl", "min", "SOL"),
         "max_hold_t90_seconds": ("hold_t90_seconds", "max"),

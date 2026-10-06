@@ -338,6 +338,19 @@ export type Report = {
   wallet_completed_episodes?: number;
   wallet_sale_count?: number;
   unsupported_tx_count?: number;
+  unsupported_swaps_in_window?: number;
+  in_window_swaps?: number;
+  unsupported_swap_share_in_window?: {
+    by_count?: string | null;
+    by_consideration?: Record<string, string>;
+  };
+  in_window_span?: { seconds?: number; hours?: string; start?: string; end?: string } | null;
+  record_breakdown?: Record<string, unknown>;
+  residual_sol?: string;
+  residual_sol_note?: string;
+  verified_tips_sol?: string;
+  sensitivity_unverified_debits_sol?: string;
+  worksheet_error?: string | null;
   unsupported_transactions?: Record<string, unknown>[];
   conversions?: Record<string, unknown>[];
   by_quote_asset?: Record<string, unknown>;
@@ -742,6 +755,7 @@ export type RankedWorkflowRow = {
   user_shortlisted?: boolean;
   history_required?: boolean;
   history_required_label?: string | null;
+  in_window_span?: { seconds?: number; hours?: string; start?: string; end?: string } | null;
   row_kind?: string;
   not_proof?: boolean;
   label?: string;

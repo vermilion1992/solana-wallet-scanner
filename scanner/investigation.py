@@ -49,15 +49,24 @@ PUMP_REVIEWED_NON_SWAP = (
     'init_user_volume_accumulator',
     'sync_user_volume_accumulator',
     'close_user_volume_accumulator',
-    'buy_v2',
-    'sell_v2',
-    'buy_exact_quote_in_v2',
 )
 RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
+OKX_DEX_ROUTER = 'proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u'
+METEORA_DAMM_V2 = 'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'
+DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
+RFQ_FILL = '61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH'
+OKX_SWAPTOC = bytes.fromhex('bbc9d433109bec3c')
+OKX_SWAPTOB = bytes.fromhex('aa2955b184501f35')
+RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
+DFLOW_SWAP_WITH_DESTINATION = bytes.fromhex('a8ac184dc59c8765')
+REVIEWED_OUTER_VENUES = (
+    JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, RFQ_FILL,
+)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v9-quote-conversion-fees-tips-v1'
+DECODER_VERSION = 'spot-v10-reviewed-venues-coverage-v1'
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -79,6 +88,23 @@ _RAW_FIXTURE_ROUTES = {
         'fixture': 'tests/fixtures/retained_protocol_funding/jupiter-route-v2.json',
         'discriminator': 'bb64facc31c4af14',
         'scope': 'Official route_v2 accounts and discriminator; executed wallet deltas prove fills; USDC settlement stays USDC',
+    },
+    (JUPITER, 'shared_accounts_route_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'discriminator': 'd19853937cfed8e9',
+        'scope': 'Official shared_accounts_route_v2 discriminator; authority index 1 and user token accounts 2/5 from genuine ranked pages',
+    },
+    (PUMP, 'sell_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'fixture': 'tests/fixtures/retained_protocol_funding/pump-native.json',
+        'discriminator': '5df6823ce7e940b2',
+        'scope': 'Official Pump sell_v2 accounts; user at 13, associated base/quote user at 14/15',
+    },
+    (PUMP, 'buy_exact_quote_in_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'fixture': 'tests/fixtures/retained_protocol_funding/pump-native.json',
+        'discriminator': 'c2ab1c46684d5b2f',
+        'scope': 'Official Pump buy_exact_quote_in_v2 accounts; user at 13, associated base/quote user at 14/15',
     },
 }
 
@@ -168,6 +194,10 @@ def _route(instruction, keys):
             if len(payload) < 28 or len(accounts) < 10:
                 raise ValueError('Jupiter route_v2 layout is absent or truncated')
             name, authority, owned_positions = 'route_v2', 0, (1, 2)
+        if name is None and payload[:8] == _anchor('shared_accounts_route_v2'):
+            if len(payload) < 28 or len(accounts) < 12:
+                raise ValueError('Jupiter shared_accounts_route_v2 layout is absent or truncated')
+            name, authority, owned_positions = 'shared_accounts_route_v2', 1, (2, 5)
     elif program in (PUMP, PUMP_SWAP):
         names = ('buy', 'sell', 'buy_exact_sol_in') if program == PUMP else ('buy', 'sell', 'buy_exact_quote_in')
         for candidate in names:
@@ -176,6 +206,14 @@ def _route(instruction, keys):
                 authority, owned_positions = (6, (5,)) if program == PUMP else (1, (5, 6))
                 expected = 'sell' if candidate == 'sell' else 'buy'
                 break
+        if name is None and program == PUMP:
+            for candidate in ('sell_v2', 'buy_exact_quote_in_v2', 'buy_v2'):
+                if payload[:8] == _anchor(candidate) and len(payload) >= 24 and len(accounts) > 15:
+                    name = candidate
+                    # Official IDL: associated_quote_user is ignored for legacy SOL quote.
+                    authority, owned_positions = 13, (14,)
+                    expected = 'sell' if candidate == 'sell_v2' else 'buy'
+                    break
         if name is None and program == PUMP:
             for candidate in PUMP_REVIEWED_NON_SWAP:
                 if payload[:8] == _anchor(candidate):
@@ -197,6 +235,20 @@ def _route(instruction, keys):
             name, authority, owned_positions = 'swap', 1, (3, 5)
         elif payload[:8] == _anchor('swap_v2') and len(payload) >= 43 and len(accounts) >= 15:
             name, authority, owned_positions = 'swap_v2', 3, (7, 9)
+    elif program == OKX_DEX_ROUTER:
+        if payload[:8] in (OKX_SWAPTOB, OKX_SWAPTOC) and len(payload) >= 16 and len(accounts) >= 10:
+            name = 'SwapTob' if payload[:8] == OKX_SWAPTOB else 'SwapToc'
+            authority, owned_positions = 0, (1, 2)
+    elif program == METEORA_DAMM_V2:
+        if payload[:8] == _anchor('swap') and len(payload) >= 24 and len(accounts) >= 13:
+            name, authority, owned_positions = 'swap', 8, (2, 3)
+    elif program == DFLOW:
+        if payload[:8] in (_anchor('swap'), DFLOW_SWAP_WITH_DESTINATION) and len(accounts) > 3:
+            name = 'SwapWithDestination' if payload[:8] == DFLOW_SWAP_WITH_DESTINATION else 'swap'
+            authority, owned_positions = 3, ()
+    elif program == RFQ_FILL:
+        if payload[:8] == RFQ_FILL_DISC and len(payload) >= 16 and len(accounts) >= 11:
+            name, authority, owned_positions = 'Fill', 0, (4,)
     if name is None:
         raise ValueError('No reviewed spot swap instruction for this program and discriminator')
     return {'program': program, 'instruction': name, 'authority': accounts[authority],
@@ -493,6 +545,7 @@ def _unresolved_native_roles(flat, owned, wrapped, keys, before, address, route,
 # Outer nonce/authority mutations must not inherit this exception.
 _REVIEWED_LIFECYCLE_OWNERS = frozenset({
     *TOKEN_IDS, PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, RFQ_FILL,
 })
 _REVIEWED_ALLOCATE_SPACES = frozenset({137, 165, 170})
 
@@ -633,7 +686,7 @@ def decode_supported_swaps(transactions, address):
             for index, instruction in enumerate(instructions):
                 if not isinstance(instruction, dict):
                     raise ValueError('Malformed instruction')
-                if _program(instruction, keys) in (JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL):
+                if _program(instruction, keys) in REVIEWED_OUTER_VENUES:
                     route = _route(instruction, keys)
                     route.update(index=index, path=f'instructions.{index}')
                     routes.append(route)
@@ -959,8 +1012,18 @@ def decode_supported_swaps(transactions, address):
             mint, quantity = assets[0]
             if not settlement or (quantity > 0) == (settlement > 0):
                 raise ValueError('No opposing SOL consideration for the evidenced asset exchange')
-            tips_lamports = sum(item['lamports'] for item in outside_native if item.get('direction') == 'withdrawal')
+            from scanner.mass_search.verified_costs import is_verified_tip_account
+            verified_tip_lamports = sum(
+                item['lamports'] for item in outside_native
+                if item.get('direction') == 'withdrawal' and is_verified_tip_account(item.get('destination'))
+            )
+            unverified_debit_lamports = sum(
+                item['lamports'] for item in outside_native
+                if item.get('direction') == 'withdrawal' and not is_verified_tip_account(item.get('destination'))
+            )
+            tips_lamports = verified_tip_lamports
             tips_sol = canonical(Decimal(tips_lamports) / LAMPORTS) if tips_lamports else '0'
+            unverified_debits_sol = canonical(Decimal(unverified_debit_lamports) / LAMPORTS) if unverified_debit_lamports else '0'
             network_fee_sol = fee_sol if paid else '0'
             fees_and_tips_sol = canonical(Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)))
             allocate_fee = paid and not outside_native and not native_roles
@@ -994,7 +1057,10 @@ def decode_supported_swaps(transactions, address):
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
                  owner=address, fee_sol=fees_and_tips_sol if allocate_fee else '0',
                  network_fee_sol=network_fee_sol, tips_sol=tips_sol,
-                 fees_and_tips_sol=fees_and_tips_sol, paid_by_wallet=paid,
+                 fees_and_tips_sol=fees_and_tips_sol,
+                 unverified_debits_sol=unverified_debits_sol,
+                 sensitivity_unverified_debits_sol=unverified_debits_sol,
+                 paid_by_wallet=paid,
                  settlement_mint=WSOL,
                  native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
                  unresolved_native_roles=native_roles,
@@ -1026,23 +1092,42 @@ def decode_supported_swaps(transactions, address):
                     direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
         except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
             unknown(str(exc))
+    decoded_sigs = {event.get('signature') for event in events if event.get('kind') in ('buy', 'sell', 'conversion')}
     unsupported = []
+    decoded_unresolved_cash = []
     seen_unsupported = set()
+    seen_cash = set()
     for issue in unresolved:
         signature = issue.get('signature')
-        if not signature or signature in seen_unsupported:
+        if not signature:
+            continue
+        if signature in decoded_sigs:
+            if signature in seen_cash:
+                continue
+            seen_cash.add(signature)
+            decoded_unresolved_cash.append({
+                'signature': signature,
+                'reason': issue.get('reason'),
+                'path': issue.get('path'),
+                'classification': 'decoded_swap_unresolved_cash_role',
+            })
+            continue
+        if signature in seen_unsupported:
             continue
         seen_unsupported.add(signature)
         unsupported.append({
             'signature': signature,
             'reason': issue.get('reason'),
             'path': issue.get('path'),
+            'classification': 'unsupported_swap',
         })
     coverage = {'decoder_version': DECODER_VERSION, 'transactions': len(rows), 'decoded_swaps': supported,
                 'supported_transactions': supported, 'failed_transactions': failed,
                 'unresolved_transactions': len({issue['signature'] for issue in unresolved}),
                 'unsupported_transactions': unsupported,
                 'unsupported_tx_count': len(unsupported),
+                'decoded_unresolved_cash': decoded_unresolved_cash,
+                'decoded_unresolved_cash_count': len(decoded_unresolved_cash),
                 'conversions': conversions,
                 'unrecognized_transactions': no_swap, 'complete': False, 'history_complete': False,
                 'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement',

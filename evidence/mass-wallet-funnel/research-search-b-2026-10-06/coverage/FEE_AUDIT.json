@@ -1,0 +1,368 @@
+{
+  "kind": "fee-audit-v1",
+  "wallets": {
+    "gtfo": {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "largest_charges": [
+        {
+          "signature": "4sf8LF8VCQnoduGYvw2XiZKZCaq1m2KCKAS5YVZTxnQxMkZwKJFocsz8eQJ9czZBfLb6XZKyWWQTwQ7Zodc5Fr4k",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 1053339987,
+          "sol": "1.053339987",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3RDJb6WHmV6ZhEShBzucEjsvTNE7YBeXegM8RaqEfgrkA6fzCvfvdmPLH8cmQMMhYMgdMXQ9GTBHSuSgpB8aBMKe",
+          "recipient": "3AVi9Tg9Uo68tJfuvoKvqKNWKkC5wPdSSdeBnizKZ6jT",
+          "instruction_path": "transaction.message.instructions.3",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 699078632,
+          "sol": "0.699078632",
+          "economic_role": "verified_tip",
+          "counted_elsewhere": true,
+          "verified_tip": true
+        },
+        {
+          "signature": "2LVHBQyv7gVvmAFp5GYema1XU2akuiGqD7efhhMuFR5ZsEdJrD1ewAo8XoapzyCcoVPyCJharf8PXfYVkjcAZaga",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 559628707,
+          "sol": "0.559628707",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "4z4Uns2g22CDTN4RFa8PxzuuR371gCmerk2bKGwGrBTVzWEdfck7dM4tVzoJiDRZMy1FsijWf9yzxa73FPB95fHj",
+          "recipient": "DttWaMuVvTiduZRnguLF7jNxTgiMBZ1hyAumKUiL2KRL",
+          "instruction_path": "transaction.message.instructions.3",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 341133913,
+          "sol": "0.341133913",
+          "economic_role": "verified_tip",
+          "counted_elsewhere": true,
+          "verified_tip": true
+        },
+        {
+          "signature": "V5BqPej1wXn5XnH72quKbooQnTdVgyVu1FsiaimmKc1isgH7CdmjR5HYuN6iP8eUgDNszY6ZXUevR2EAghCoLdU",
+          "recipient": "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
+          "instruction_path": "transaction.message.instructions.3",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 311429499,
+          "sol": "0.311429499",
+          "economic_role": "verified_tip",
+          "counted_elsewhere": true,
+          "verified_tip": true
+        },
+        {
+          "signature": "AHsLSwEqZeYq1FJQZ8n4X3e5Hynp8R11MeTGiTjZJK7tgBemACLAXVx9KJybRs7tSoHHnLQ1i2UgqYqcD66JocA",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 310846747,
+          "sol": "0.310846747",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "5zNYNDb4eDmyVMsy8dWCLNgTYWBPBUNf7hHLF8nuUjb5m8ucmqQ22jTPK1FyGoAMHDXDW54zcfLKpQdr2M7ANeDB",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 292483703,
+          "sol": "0.292483703",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "34VU95euLkg6eU4XEtft6SM1bCLqHFQjYxAFMv1RSQJcwK5i9Lnxav6gDNkidqSN3Aw2CfLwSPpKiqo3gERpBMkw",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 288711232,
+          "sol": "0.288711232",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "12ACZMU3CQ8JDVsb64geJyisMgttEuPbiMdpHYAHtKLcmYXR1XqJA1NcxhEFN7NtusYt5e2ziGFvHUH7xeQdt7NU",
+          "recipient": "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
+          "instruction_path": "transaction.message.instructions.3",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 272341478,
+          "sol": "0.272341478",
+          "economic_role": "verified_tip",
+          "counted_elsewhere": true,
+          "verified_tip": true
+        },
+        {
+          "signature": "92MH5t81MBwAu9eEbUgvvJoD4yzqSJQXxGER4H4Z9JKbpeYwBn4cUsnabzqp3G4RZdfeNKDZ4312WgkLKbZh9Qy",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 259736218,
+          "sol": "0.259736218",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "5G7w1rhP6SrKwNtDdQLW34xREwm44STiosNHJz9LJXTHg3Fkvzta3oBKThyuiFQyGfUCMb4ty8ccW5a5NWrUGcpM",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 257704823,
+          "sol": "0.257704823",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "51M1ngTMpCx1pL3D4Re6nERqJTqCaFidqpExmerpbBT3nEpjvmzxu4p4ycPp9hepnqkPww4MadCDZnZLtuaZHb8G",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 256428236,
+          "sol": "0.256428236",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "2VrYPfU6E227CGXgNap3Gf5RHfrGFWEKeTqEgRL9ThpToJHBXE63bSvFNohTpRyQAyWJUxq6VNJA1FcENdGwrop4",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 253042328,
+          "sol": "0.253042328",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "sDMeQCwuibCnWq6vmEjmZkkFXxHkpMHTTWjigZbE2zXJbDkBC8mbwxRrKVbVSwpCndiRRnLLrR4MTGBKWAP9Xne",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 249835840,
+          "sol": "0.24983584",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "5SyHX4dqiMj1QgHsmXJU2vULftJGVWsF1PDdwr4VTqmieYpwu8Cc84sWHonRnW9Fy18sgVViosfD4QZu2jHSLY1X",
+          "recipient": "3AVi9Tg9Uo68tJfuvoKvqKNWKkC5wPdSSdeBnizKZ6jT",
+          "instruction_path": "transaction.message.instructions.3",
+          "fee_payer": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+          "lamports": 248944642,
+          "sol": "0.248944642",
+          "economic_role": "verified_tip",
+          "counted_elsewhere": true,
+          "verified_tip": true
+        }
+      ],
+      "totals_lamports": {
+        "network_plus_priority": 5107533156,
+        "verified_tips": 3303280298,
+        "unresolved_debits_sensitivity": 105300000
+      },
+      "totals_sol": {
+        "network_plus_priority": "5.107533156",
+        "verified_tips": "3.303280298",
+        "unresolved_debits_sensitivity": "0.1053"
+      },
+      "note": "Net P&L uses verified costs only. Unresolved debits are a labelled sensitivity figure."
+    },
+    "CccS": {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "largest_charges": [
+        {
+          "signature": "VHa9Lko5LvF821ReXz94gjnNSwha42SzdeiJzaoy6vpcBhGK9rCkz7znyL12mqaFuAH32LUfsqexsRSYo5fJwgJ",
+          "recipient": "nozpEGbwx4BcGp6pvEdAh1JoC2CQGZdU6HbNP1v2p6P",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 655659376,
+          "sol": "0.655659376",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "9h5gFEoknkHa2iNZmK6foSsZKNvA5VZANfLpvN3vdK3iqqmHUb39PiFVz9tiNJJVT4JunAKQTBfobWjqg5RekZr",
+          "recipient": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 522739683,
+          "sol": "0.522739683",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3WKrYQdsfFxzci5sGLbqyyDm4NtC1m9rZ96AdYy4rk7PWn91Sw116xjacpeGCBL7h5sdEFkygPGZtHBUK7wEpvUA",
+          "recipient": "NexTBLockJYZ7QD7p2byrUa6df8ndV2WSd8GkbWqfbb",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 479272165,
+          "sol": "0.479272165",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3Tk2L3Ar64z8nB4w3Lz2L81e5bWnEqgHBJE5NYf66MQF2wLezBeB55yK412riPmCS7T2M1aaSLojfULeoBviVwbg",
+          "recipient": "network_fee_burn",
+          "instruction_path": "meta.fee",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 379060821,
+          "sol": "0.379060821",
+          "economic_role": "network_plus_priority_fee",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "4EmiKj6TCuJmPqa3mM4ox7ycC34jkzRmdd3HzH2cMyNKtQCcUKZ9nEbK3JCekKYDRxynQBkuVucN1T7zfSNuv4fK",
+          "recipient": "soyastP66xyYC8XADXZjdMM5BAVGD2YRvz8dwtLsqb8",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 272047356,
+          "sol": "0.272047356",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "YdRoNci1VjtD5Pt5HzKNoNytvJscqKr6gWvnByrGrqYKe4i1Sk92K8M7fmEQT6xjtxwD7JzVJnZ95RiXwgn6HBK",
+          "recipient": "nozpEGbwx4BcGp6pvEdAh1JoC2CQGZdU6HbNP1v2p6P",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 257734699,
+          "sol": "0.257734699",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3w9EPxsM5Zjbv4ZWUJXtMN7aR8ZKHTsAkpmPpagtkTwqTpcLhoxGR2a6jZ9ZsfrPyP2yEvHoVtqXzgLh4ApWCed3",
+          "recipient": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 227093639,
+          "sol": "0.227093639",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "2bYuiaN9Tbzcm36CGtYtnsvR21td2AupFRkfUSdwAhUywuDFpV4JTbNJAa4LjaAjbTj5EKwunbA8uEWhNEL1Fok4",
+          "recipient": "nozpEGbwx4BcGp6pvEdAh1JoC2CQGZdU6HbNP1v2p6P",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 173506576,
+          "sol": "0.173506576",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3rb93va4JaSFQ9DcGqBtmu9gQrGRpe8GPuvG4YmGxUmVfyd9PQCMZ39FXbVv3tJtzMobhfMLWbWjMTYmadNUudRX",
+          "recipient": "astraRVUuTHjpwEVvNBeQEgwYx9w9CFyfxjYoobCZhL",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 148140578,
+          "sol": "0.148140578",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3V3nit8yEYiYnLt2qmQAQXSRJeZFtqFpudEy1hDEneaNUbh7Bcg8pmspxv8QNrY6qx7youMybZY4FQdbCzH9PMek",
+          "recipient": "AsTRADtvb6tTmrsqULQ9Wji9PigDMjhfEMza6zkynEvV",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 142236952,
+          "sol": "0.142236952",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "466zu4aT7NGoj4oYZqCEevMyhrLVG8y3kpXx66YjrYn3A9hDU1tRDCp92BpM6f7cvLxXoZfgFTQEnoVzxECWAXzF",
+          "recipient": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 124681817,
+          "sol": "0.124681817",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "2Ljnni34quvHvK8SY2s1s4uok1PMH4SQYeTJ52XCLuYpLVW317mMTKGPsqfa2q3DBGBnDk7zQ633BmLRXVrDkwiM",
+          "recipient": "NexTBLockJYZ7QD7p2byrUa6df8ndV2WSd8GkbWqfbb",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 113366729,
+          "sol": "0.113366729",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "oBQ9miWdTY81iraer3Sa6Cg8or2dCrt7KcJhhNqZ8zmQwvWqpJDNxf7j7GpzdySQYCH3FpLueoAn9VEN2QVnV6D",
+          "recipient": "astraRVUuTHjpwEVvNBeQEgwYx9w9CFyfxjYoobCZhL",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 90304492,
+          "sol": "0.090304492",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "4RsRsn65WDYfQiU3Nx18JFdqTqvL7veNfBQLYRHaHyJSBhmQgYFmWhcSA63HFXZD7f5bsMc1jYc7Xh1JxX85NQ4u",
+          "recipient": "astraRVUuTHjpwEVvNBeQEgwYx9w9CFyfxjYoobCZhL",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 84010167,
+          "sol": "0.084010167",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        },
+        {
+          "signature": "3QrqdssrqrBXpydHYNDhERL147PRrf7Z4qrwnLkvEy8vMyps9T3Ufd6HThmrTH6ZpoKZMuxiB9bqAW5mBLVyF1i",
+          "recipient": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+          "instruction_path": "transaction.message.instructions.1",
+          "fee_payer": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+          "lamports": 64741349,
+          "sol": "0.064741349",
+          "economic_role": "unresolved_debit_not_a_tip",
+          "counted_elsewhere": false,
+          "verified_tip": false
+        }
+      ],
+      "totals_lamports": {
+        "network_plus_priority": 853338766,
+        "verified_tips": 0,
+        "unresolved_debits_sensitivity": 4481974637
+      },
+      "totals_sol": {
+        "network_plus_priority": "0.853338766",
+        "verified_tips": "0",
+        "unresolved_debits_sensitivity": "4.481974637"
+      },
+      "note": "Net P&L uses verified costs only. Unresolved debits are a labelled sensitivity figure."
+    }
+  },
+  "PRODUCT_READY": false
+}

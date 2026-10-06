@@ -73,7 +73,7 @@ def test_genuine_raw_hash_and_sale_amounts_are_exact_without_promoting_inventory
     assert fee['amount_sol'] == '0.000042'
     assert fee['allocation'] == 'sell_exit'
     assert fee['allocated_trade_path'] == sale['path'] == 'instructions.4'
-    assert result['coverage']['decoder_version'] == DECODER_VERSION == 'spot-v9-quote-conversion-fees-tips-v1'
+    assert result['coverage']['decoder_version'] == DECODER_VERSION == 'spot-v10-reviewed-venues-coverage-v1'
     assert result['coverage']['complete'] is result['coverage']['history_complete'] is False
     administration = result['coverage']['non_economic_instructions']
     assert len(administration) == 1

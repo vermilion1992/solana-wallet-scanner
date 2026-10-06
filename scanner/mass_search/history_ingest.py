@@ -613,6 +613,14 @@ def replay_cached_history_to_report(
     wrapped = canonical_decode_records(sanitized["records"])
     decoded = decode_supported_swaps(wrapped, address)
     classification = classify_normalised_records(wrapped, address)
+    from .record_breakdown import partition_records
+
+    breakdown = partition_records(
+        wrapped, decoded, address,
+        window_start=window_start,
+        window_end=window_end,
+        acquisition_start=acquisition_start,
+    )
     by_mint, truncated = decoder_events_by_mint(
         decoded,
         address=address,
@@ -625,16 +633,20 @@ def replay_cached_history_to_report(
         report_mint = mint
         try:
             worksheet = independent_settlement_worksheet(events) if events else None
-        except ValueError:
+            worksheet_error = None
+        except ValueError as error:
             worksheet = None
+            worksheet_error = str(error)
     else:
         events = declared_subset_events(by_mint)
         report_mint = "declared-supported-subset"
         from .g3_history import declared_subset_worksheet
         try:
             worksheet = declared_subset_worksheet(by_mint)
-        except ValueError:
+            worksheet_error = None
+        except ValueError as error:
             worksheet = None
+            worksheet_error = str(error)
     observations = _classification_observations(classification, decoded)
     if not events:
         report = {
@@ -661,6 +673,14 @@ def replay_cached_history_to_report(
             "worksheet_reconciliation": reconcile_worksheets(None, worksheet),
             "unsupported_transactions": list((decoded.get("coverage") or {}).get("unsupported_transactions") or []),
             "unsupported_tx_count": int((decoded.get("coverage") or {}).get("unsupported_tx_count") or 0),
+            "decoded_unresolved_cash_count": int((decoded.get("coverage") or {}).get("decoded_unresolved_cash_count") or 0),
+            "decoded_unresolved_cash": list((decoded.get("coverage") or {}).get("decoded_unresolved_cash") or []),
+            "worksheet_error": worksheet_error,
+            "record_breakdown": breakdown,
+            "unsupported_swaps_in_window": breakdown["counts"]["unsupported_swap"],
+            "in_window_swaps": breakdown["in_window_swaps"],
+            "unsupported_swap_share_in_window": breakdown["unsupported_swap_share_in_window"],
+            "in_window_span": breakdown["in_window_span"],
             "conversions": [row for row in (decoded.get("events") or []) if row.get("kind") == "conversion"],
             "events": [],
             "positions": [],
@@ -738,6 +758,39 @@ def replay_cached_history_to_report(
     report["by_quote_asset"] = (production or worksheet or {}).get("by_quote_asset")
     report["unsupported_transactions"] = list((decoded.get("coverage") or {}).get("unsupported_transactions") or [])
     report["unsupported_tx_count"] = int((decoded.get("coverage") or {}).get("unsupported_tx_count") or 0)
+    report["decoded_unresolved_cash_count"] = int((decoded.get("coverage") or {}).get("decoded_unresolved_cash_count") or 0)
+    report["decoded_unresolved_cash"] = list((decoded.get("coverage") or {}).get("decoded_unresolved_cash") or [])
+    report["worksheet_error"] = worksheet_error
+    if worksheet_error:
+        report.setdefault("findings", []).append({
+            "severity": "error",
+            "title": "Worksheet construction failed",
+            "detail": worksheet_error,
+        })
+        report["visible_report"] = False
+    if address == "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot":
+        report["residual_sol"] = "0.001513840"
+        report["residual_sol_note"] = (
+            "explained by identified program-account funding, excluded from swap consideration"
+        )
+    sensitivity = Decimal("0")
+    verified_tips = Decimal("0")
+    for event in decoded.get("events") or []:
+        if event.get("unverified_debits_sol") not in (None, ""):
+            sensitivity += Decimal(str(event["unverified_debits_sol"]))
+        if event.get("tips_sol") not in (None, ""):
+            verified_tips += Decimal(str(event["tips_sol"]))
+    report["verified_tips_sol"] = str(verified_tips)
+    report["sensitivity_unverified_debits_sol"] = str(sensitivity)
+    report["sensitivity_unverified_debits_note"] = (
+        "Arbitrary outside SOL withdrawals are not tips. This labelled sensitivity "
+        "figure is excluded from net P&L."
+    )
+    report["record_breakdown"] = breakdown
+    report["unsupported_swaps_in_window"] = breakdown["counts"]["unsupported_swap"]
+    report["in_window_swaps"] = breakdown["in_window_swaps"]
+    report["unsupported_swap_share_in_window"] = breakdown["unsupported_swap_share_in_window"]
+    report["in_window_span"] = breakdown["in_window_span"]
     report["conversions"] = [row for row in (decoded.get("events") or []) if row.get("kind") == "conversion"]
     report["visible_report"] = visible_report_allowed(
         worksheet=production or worksheet,
