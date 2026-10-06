@@ -57,6 +57,7 @@
   "frontend_asset": "frontend/dist/assets/index-hN-S6YfT.js",
   "browser_emulation_not_physical_phone": true,
   "remote_preview": "proposal only; not deployed",
-  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
-  "pr_draft": false
+  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/5",
+  "pr_draft": false,
+  "prior_pr_4": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4 (closed; no common history with main)"
 }

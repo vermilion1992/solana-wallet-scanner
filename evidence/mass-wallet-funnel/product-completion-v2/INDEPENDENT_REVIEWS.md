@@ -15,8 +15,8 @@ It does share `decode_supported_swaps` + canonical wrap via
 
 | Reviewer | Agent | Scope |
 | --- | --- | --- |
-| Accounting / C + qualification | launched after evidence push | Partial-match FIFO, fee-free +24/40/100, rank-1 +376.028087 and G1 −0.167725526 unchanged, qualification categories |
-| App / security A B D + grants | launched after evidence push | HTTP 409 admission, attach/step, visible_report persist, compare window policy, both drafts disabled, `./run.sh` |
+| Accounting / C + qualification | [Accounting release review](bc-9ed96044-d638-5806-88fc-90a8840d3acf) | Partial-match FIFO, fee-free +24/40/100, rank-1 +376.028087 and G1 −0.167725526 unchanged, qualification categories |
+| App / security A B D + grants | [App security release review](bc-9b5fc97a-107c-5fa0-88dc-c3ff84440334) | HTTP 409 admission, attach/step, visible_report persist, compare window policy, both drafts disabled, `./run.sh` |
 
 Prior fold reviewers [Accounting A-D review](bc-50968f34-9c5c-5886-9ffd-beb073a4fd7f)
 and [App security A-D review](bc-70213343-7b25-5034-9cf4-c3634d700719)

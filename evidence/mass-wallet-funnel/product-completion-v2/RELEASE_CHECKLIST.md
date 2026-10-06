@@ -70,7 +70,7 @@ six trades are not six positions. G1 −0.167725526 SOL.
 | requirement | status | evidence | remaining action |
 | --- | --- | --- | --- |
 | Operating doc: start/open, stop/restart, data dir, preserve across update, research/acquire controls | PASS | `docs/OPERATING.md` (tested: Linux `./run.sh` and `./run.sh --lan --no-browser`) | none |
-| PR #4 ready for review; not merged; PRODUCT_READY false | PASS | https://github.com/vermilion1992/solana-wallet-scanner/pull/4 | none (do not merge) |
+| PR ready for review; not merged; PRODUCT_READY false | PASS | https://github.com/vermilion1992/solana-wallet-scanner/pull/5 (PR #4 is closed; this branch has no common history with `main`) | none (do not merge) |
 
 ## Backlog (optional)
 

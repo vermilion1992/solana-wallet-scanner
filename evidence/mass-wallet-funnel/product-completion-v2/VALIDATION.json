@@ -80,6 +80,6 @@
   "genuine_multi_wallet_validation": "BLOCKED",
   "PRODUCT_READY_false_because": "mandatory gate genuine ranked multi-wallet path is BLOCKED (existing B3); B1 NO_GO_CURRENT_SOURCE; B2 OPEN",
   "PRODUCT_READY": false,
-  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
+  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/5",
   "pr_draft": false
 }
