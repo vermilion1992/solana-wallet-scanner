@@ -78,6 +78,28 @@ def test_launch_token_bootstrap_and_private_http_only_cookie(tmp_path):
         assert response.headers["referrer-policy"] == "no-referrer"
         assert response.headers["x-frame-options"] == "DENY"
         assert "connect-src 'self'" in response.headers["content-security-policy"]
+        assert response.json()["PRODUCT_READY"] is False
+
+
+def test_every_api_route_requires_the_session(tmp_path):
+    import re
+    app = create_app(tmp_path / "data", LAUNCH_TOKEN)
+    checked = []
+    with TestClient(app, base_url=BASE_URL) as client:
+        assert client.get("/api/health").status_code == 401
+        for route in app.routes:
+            path = getattr(route, "path", "")
+            methods = getattr(route, "methods", None) or set()
+            if not path.startswith("/api/") or path == "/api/bootstrap":
+                continue
+            sample = re.sub(r"\{[^}]+\}", "0" * 32, path)
+            for method in sorted(methods - {"HEAD", "OPTIONS"}):
+                response = client.request(method, sample)
+                assert response.status_code == 401, (method, sample, response.status_code)
+                checked.append(f"{method} {sample}")
+    assert any(item.startswith("GET /api/mass-search/") for item in checked)
+    assert any("export" in item.lower() for item in checked)
+    assert len(checked) >= 40
 
 
 def test_lan_host_is_opt_in_and_still_requires_the_session(tmp_path):

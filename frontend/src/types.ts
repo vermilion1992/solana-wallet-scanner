@@ -324,6 +324,8 @@ export type Report = {
     note?: string | null;
   } | null;
   research_profile?: Record<string, unknown> | null;
+  capture_sha256?: string;
+  analysis_cache_key?: string;
   funnel?: Record<string, unknown> | null;
   analytics?: Record<string, unknown> | null;
   next_candidates?: Record<string, unknown>[] | null;
@@ -779,6 +781,10 @@ export type RankedWorkflowView = {
   };
   phone_access?: { preview_available?: boolean; blocker?: string };
   note?: string;
+  snapshot_id?: string;
+  snapshot_raw_sha256?: string;
+  analysis_version?: string;
+  capture_sha256?: string;
 };
 export type RankedBatch = {
   batch_id: string;
@@ -796,6 +802,11 @@ export type RankedBatch = {
     scoped_pnl?: string | null;
     scoped_pnl_unit?: string | null;
   }[];
+};
+export type ResearchCompare = {
+  fields?: { key: string; left: unknown; right: unknown }[];
+  mismatches?: { kind: string; detail: string }[];
+  comparable?: boolean;
 };
 export type MassSearchStageCounts = {
   input: number;

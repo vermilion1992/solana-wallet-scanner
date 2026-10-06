@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Download, Play, RefreshCw, Search } from "lucide-react";
 import type { Actions } from "./App";
-import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView } from "./types";
+import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView, ResearchCompare } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
 import { count, decimal, label, shorten } from "./format";
@@ -108,6 +108,24 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
       })
       .catch(() => undefined);
     loadRanked();
+    const savedBatch = sessionStorage.getItem("mass-search-batch-id");
+    if (savedBatch) {
+      api(`/mass-search/ranked-workflow/batch/${savedBatch}`)
+        .then((value) => setBatch(value as RankedBatch))
+        .catch(() => undefined);
+    }
+    try {
+      const nav = JSON.parse(sessionStorage.getItem("mass-search-nav") || "null");
+      if (nav && typeof nav === "object") {
+        if (nav.stage) setStage(nav.stage);
+        if (nav.compareLeft) setCompareLeft(nav.compareLeft);
+        if (nav.compareRight) setCompareRight(nav.compareRight);
+        if (nav.visibleLimit) setVisibleLimit(nav.visibleLimit);
+        if (nav.onlyShortlist != null) setOnlyShortlist(!!nav.onlyShortlist);
+      }
+    } catch {
+      /* session-only navigation restore */
+    }
   }, []);
 
   useEffect(() => {
@@ -120,6 +138,16 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
       .then((value) => setDetail(value as MassSearchRun))
       .catch(() => undefined);
   }, [activeId, state.mass_search?.runs?.length, busy]);
+
+  useEffect(() => {
+    sessionStorage.setItem("mass-search-nav", JSON.stringify({
+      stage,
+      compareLeft,
+      compareRight,
+      visibleLimit,
+      onlyShortlist,
+    }));
+  }, [stage, compareLeft, compareRight, visibleLimit, onlyShortlist]);
 
   useEffect(() => {
     if (!activeId) return;
@@ -145,6 +173,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   };
 
   const startBatch = async (includeFixtures: boolean) => {
+    if (batchBusy) return;
     const shortlist = ranked?.user_shortlist || [];
     const captured = (ranked?.rows || []).filter((row) => row.capture_available).map((row) => row.address);
     const noHistory = (ranked?.rows || []).filter((row) => !row.capture_available).slice(0, 2).map((row) => row.address);
@@ -159,6 +188,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         run: false,
       });
       setBatch(current);
+      sessionStorage.setItem("mass-search-batch-id", current.batch_id);
       while (current.status !== "completed" && current.status !== "cancelled" && current.completed < current.total) {
         current = await api<RankedBatch>(`/mass-search/ranked-workflow/batch/${current.batch_id}/step`, "POST", {});
         setBatch(current);
@@ -189,7 +219,9 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
     <div className="research-workflow mass-search">
       <p className="research-intro">
         Mass research keeps the named Strict preset unchanged. Preliminary ranking is a queue, not a
-        financial MATCH. Offline mode is the default. The public sampler still caps at {count(summary?.legacy_candidate_cap ?? 20)}{" "}
+        financial MATCH. Offline mode is the default. Snapshot {ranked?.snapshot_id || "cached ranked-100"}
+        {ranked?.snapshot_raw_sha256 ? ` · ${ranked.snapshot_raw_sha256.slice(0, 12)}` : ""}.
+        The public sampler still caps at {count(summary?.legacy_candidate_cap ?? 20)}{" "}
         discovery leads; this funnel can store up to {count(summary?.bulk_capacity ?? 10000)} lightweight rows without raising credit caps.
       </p>
       <div className="research-action-row">
@@ -471,8 +503,10 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               variant="secondary"
               disabled={!compareLeft || !compareRight || !!busy}
               onClick={() => api("/mass-search/research-compare", "POST", { left_id: compareLeft, right_id: compareRight }).then((value) => {
-                const body = value as { fields?: { key: string; left: unknown; right: unknown }[] };
-                setCompareResult((body.fields || []).map((field) => `${field.key}: ${String(field.left ?? "—")} vs ${String(field.right ?? "—")}`).join(" · "));
+                const body = value as ResearchCompare;
+                const fields = (body.fields || []).map((field) => `${field.key}: ${String(field.left ?? "—")} vs ${String(field.right ?? "—")}`).join(" · ");
+                const mismatches = (body.mismatches || []).map((item) => `${item.kind}: ${item.detail}`).join(" · ");
+                setCompareResult(mismatches ? `${fields} · Mismatches: ${mismatches}` : fields);
               }).catch((error: Error) => setCompareResult(error.message))}
             >
               Compare saved reports

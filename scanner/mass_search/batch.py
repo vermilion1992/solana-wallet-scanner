@@ -10,13 +10,29 @@ from scanner.mass_search.workflow import replay_captured_wallet
 
 BATCH_KIND = "ranked_batch"
 HISTORY_REQUIRED = "History required — not analysed"
+INCOMPLETE_EVIDENCE = "Analysed with incomplete evidence"
+IN_FLIGHT = "A batch is already in progress"
 
 
 def _now():
     return time.time()
 
 
+def _inflight_batch(store):
+    try:
+        rows = store.list(BATCH_KIND) or []
+    except Exception:
+        return None
+    for row in rows:
+        if isinstance(row, dict) and row.get("status") in ("pending", "running"):
+            return row
+    return None
+
+
 def create_batch(store, addresses, *, include_fixtures=False):
+    existing = _inflight_batch(store)
+    if existing:
+        raise ValueError(IN_FLIGHT)
     catalog = catalog_by_address()
     requested = []
     seen = set()
@@ -87,13 +103,18 @@ def _analyse_one(store, outcome):
         return outcome
     try:
         result = replay_captured_wallet(store, address)
-        outcome["status"] = "cached" if result.get("cache_hit") else "analysed"
+        report = result.get("report") or {}
+        if report.get("visible_report") is False or result.get("visible_report") is False:
+            outcome["status"] = "incomplete_evidence"
+            outcome["detail"] = INCOMPLETE_EVIDENCE
+        else:
+            outcome["status"] = "cached" if result.get("cache_hit") else "analysed"
+            outcome["detail"] = None
         outcome["report_id"] = result.get("report_id")
-        outcome["detail"] = None
         outcome["funnel"] = result.get("funnel")
         outcome["scoped_pnl"] = (result.get("analytics") or {}).get("scoped_pnl")
         outcome["scoped_pnl_unit"] = (result.get("analytics") or {}).get("scoped_pnl_unit")
-        if (result.get("report") or {}).get("corpus_kind") == "SYNTHETIC":
+        if report.get("corpus_kind") == "SYNTHETIC":
             outcome["not_proof"] = True
             outcome["detail"] = "SYNTHETIC — engineering fixture, not proof"
     except Exception as exc:

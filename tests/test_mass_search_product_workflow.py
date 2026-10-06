@@ -31,6 +31,7 @@ from scanner.mass_search.research_profile import load_filters, save_filters
 from scanner.mass_search.workflow import (
     apply_local_filters,
     approval_proposal,
+    compare_reports,
     load_ranked_universe,
     phone_access_status,
     ranked_workflow_view,
@@ -277,6 +278,10 @@ def test_auth_gate_blocks_before_provider_and_under_concurrency(store):
     assert proposal["do_not_dispatch"] is True
     assert proposal["do_not_enable"] is True
     assert proposal["authorization_id"] == DRAFT_ID
+    assert proposal["history_boundaries"]["optional_rank1_earlier_page_for_unbacked_sale"] is False
+    assert len(proposal["selected_candidates"]) == 5
+    assert all(len(row["address"]) >= 32 for row in proposal["selected_candidates"])
+    assert {row["provider_rank"] for row in proposal["selected_candidates"]} == {4, 2, 15, 17, 90}
     access = phone_access_status()
     assert access["preview_available"] is False
 
@@ -296,6 +301,8 @@ def test_ranked_workflow_routes_cover_filters_shortlist_batch_and_gate(session):
     client = session
     view = client.get("/api/mass-search/ranked-workflow").json()
     assert view["ranked_count"] == 100
+    assert view["snapshot_id"] == "ranked100-discovery-pilot-2026-10-05"
+    assert view["snapshot_raw_sha256"]
     assert view["phone_access"]["preview_available"] is False
     assert view["funnel_counts"]["history_required"] >= 99
     no_history = next(row["address"] for row in view["rows"] if row.get("history_required"))
@@ -339,3 +346,31 @@ def test_step_batch_persists_progress(store):
     done = run_batch(store, payload["batch_id"])
     assert done["status"] == "completed"
     assert done["completed"] == 2
+
+
+def test_second_inflight_batch_is_refused(store):
+    first = create_batch(store, [SYNTH_USDC])
+    with pytest.raises(ValueError, match="already in progress"):
+        create_batch(store, [SYNTH_SOL])
+    cancel_batch(store, first["batch_id"])
+    second = create_batch(store, [SYNTH_SOL])
+    assert second["batch_id"] != first["batch_id"]
+
+
+def test_compare_flags_currency_window_and_incomplete_evidence(store):
+    replay_captured_wallet(store, ALLOWED_WALLET)
+    replay_captured_wallet(store, SYNTH_SOL)
+    reports = {row["address"]: row for row in store.list("reports") if row.get("source") == "mass-search"}
+    compared = compare_reports(store, reports[ALLOWED_WALLET]["id"], reports[SYNTH_SOL]["id"])
+    kinds = {item["kind"] for item in compared["mismatches"]}
+    assert "currency" in kinds
+    assert "corpus" in kinds
+    assert compared["comparable"] is False
+
+
+def test_universe_exposes_stable_snapshot_identity():
+    universe = load_ranked_universe()
+    assert universe["ranked_count"] == 100
+    assert universe["snapshot_id"] == "ranked100-discovery-pilot-2026-10-05"
+    assert len(universe["snapshot_raw_sha256"]) == 64
+    assert universe["capture_count"] == 1

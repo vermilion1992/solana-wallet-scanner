@@ -763,6 +763,12 @@ class MassSearchService:
                 "declared_mints": report.get("declared_mints") or [],
                 "wallet_completed_episodes": report.get("wallet_completed_episodes"),
                 "events": report.get("events") or [],
+                "research_profile": report.get("research_profile"),
+                "funnel": report.get("funnel"),
+                "analytics": report.get("analytics"),
+                "capture_sha256": report.get("capture_sha256"),
+                "analysis_cache_key": report.get("analysis_cache_key"),
+                "mass_search_interpretation": report.get("mass_search_interpretation"),
             })
         payload = {"run": view, "decisions": decisions, "report_links": links, "reports": reports, "exported_at": self.clock()}
         digest = self.store.archive(payload)

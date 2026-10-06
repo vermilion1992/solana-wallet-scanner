@@ -7,6 +7,7 @@ from pathlib import Path
 from scanner.mass_search.acquisition_gate import gate_status
 from scanner.mass_search.analytics import build_wallet_analytics
 from scanner.mass_search.capture_catalog import (
+    ANALYSIS_VERSION,
     EXPECTED_CAPTURE_SHA,
     WINDOWS,
     catalog_by_address,
@@ -14,6 +15,7 @@ from scanner.mass_search.capture_catalog import (
     evidence_cache_key,
     genuine_captured_addresses,
     load_capture_records,
+    ranked_snapshot_identity,
 )
 from scanner.mass_search.funnel_abc import classify_candidate, rank_next_candidates
 from scanner.mass_search.g3_reacquire import ALLOWED_WALLET
@@ -75,6 +77,7 @@ def load_ranked_universe():
             "evidence_status": "cached_capture" if address in genuine else "unverified",
             "row_kind": "ranked100",
         })
+    snapshot = ranked_snapshot_identity()
     return {
         "kind": "ranked-100-cached-universe-v1",
         "ranked_count": len(rows),
@@ -82,6 +85,10 @@ def load_ranked_universe():
         "capture_count": sum(1 for row in rows if row["capture_available"]),
         "rows": rows,
         "capture_sha256": EXPECTED_CAPTURE_SHA,
+        "snapshot_id": snapshot["snapshot_id"],
+        "snapshot_raw_sha256": snapshot["raw_sha256"],
+        "snapshot_shortlist_sha256": snapshot["shortlist_sha256"],
+        "analysis_version": ANALYSIS_VERSION,
         "PRODUCT_READY": False,
         "live_enabled": False,
     }
@@ -324,18 +331,18 @@ def replay_captured_wallet(store, address=ALLOWED_WALLET, *, filters=None, force
     if not force:
         cached = _cached_report(store, address, entry)
         if cached:
-            return {
+            result = {
                 "run_id": cached.get("run_id"),
                 "report_id": cached["id"],
                 "report": cached,
-                "research_profile": cached.get("research_profile"),
-                "funnel": cached.get("funnel"),
-                "analytics": cached.get("analytics") or build_wallet_analytics(cached),
-                "next_candidates": cached.get("next_candidates") or [],
                 "external_requests": 0,
                 "cache_hit": True,
+                "visible_report": cached.get("visible_report", True),
                 "PRODUCT_READY": False,
             }
+            result = _attach_research(store, result, address=address, filters=filters, entry=entry)
+            result["cache_hit"] = True
+            return result
     if entry.get("mode") == "synthetic_events":
         result = _replay_synthetic(store, entry, filters=filters)
     else:
@@ -506,6 +513,10 @@ def ranked_workflow_view(store, *, filters=None):
         "ranked_count": universe["ranked_count"],
         "visible_count": len(rows),
         "capture_sha256": universe["capture_sha256"],
+        "snapshot_id": universe.get("snapshot_id"),
+        "snapshot_raw_sha256": universe.get("snapshot_raw_sha256"),
+        "snapshot_shortlist_sha256": universe.get("snapshot_shortlist_sha256"),
+        "analysis_version": universe.get("analysis_version"),
         "rows": rows,
         "engineering_fixtures": [row for row in extras if row["row_kind"] == "synthetic_fixture"],
         "control_archives": [row for row in extras if row["row_kind"] == "control_archive"],
@@ -555,7 +566,23 @@ def compare_reports(store, left_id, right_id):
         {"key": "settlement_asset", "left": left_analytics.get("scoped_pnl_unit"), "right": right_analytics.get("scoped_pnl_unit")},
         {"key": "corpus_kind", "left": left.get("corpus_kind"), "right": right.get("corpus_kind")},
         {"key": "scope", "left": (left_analytics.get("scope") or {}).get("population"), "right": (right_analytics.get("scope") or {}).get("population")},
+        {"key": "window_start", "left": (left.get("window") or {}).get("start"), "right": (right.get("window") or {}).get("start")},
+        {"key": "window_end", "left": (left.get("window") or {}).get("end"), "right": (right.get("window") or {}).get("end")},
+        {"key": "visible_report", "left": left.get("visible_report", True), "right": right.get("visible_report", True)},
     ])
+    mismatches = []
+    left_unit = left_analytics.get("scoped_pnl_unit") or left_profile.get("scoped_pnl_unit")
+    right_unit = right_analytics.get("scoped_pnl_unit") or right_profile.get("scoped_pnl_unit")
+    if left_unit and right_unit and left_unit != right_unit:
+        mismatches.append({"kind": "currency", "detail": f"{left_unit} versus {right_unit}; no FX conversion"})
+    if (left.get("window") or {}) != (right.get("window") or {}):
+        mismatches.append({"kind": "window", "detail": "Report windows differ; totals are not the same interval"})
+    if left.get("corpus_kind") != right.get("corpus_kind"):
+        mismatches.append({"kind": "corpus", "detail": "Genuine and synthetic or control corpora are not equivalent"})
+    if left.get("visible_report") is False or right.get("visible_report") is False:
+        mismatches.append({"kind": "incomplete_evidence", "detail": "At least one report is not a visible completed-position result"})
+    if (left_profile.get("unresolved_basis_sales") or 0) or (right_profile.get("unresolved_basis_sales") or 0):
+        mismatches.append({"kind": "incomplete_evidence", "detail": "Unresolved-basis sales stay unknown; they are not zero-cost closes"})
     return {
         "kind": "research-profile-compare-v1",
         "left_id": left_id,
@@ -563,6 +590,8 @@ def compare_reports(store, left_id, right_id):
         "left_address": left.get("address"),
         "right_address": right.get("address"),
         "fields": fields,
+        "mismatches": mismatches,
+        "comparable": not any(item["kind"] in ("currency", "window") for item in mismatches),
         "left_funnel": left.get("funnel"),
         "right_funnel": right.get("funnel"),
         "left_analytics": left_analytics,
@@ -611,7 +640,11 @@ def approval_proposal():
             "limit": 100,
             "sortOrder": "desc",
             "pages_per_wallet": 2,
-            "optional_rank1_earlier_page_for_unbacked_sale": True,
+            "optional_rank1_earlier_page_for_unbacked_sale": False,
+            "optional_rank1_page_skipped_reason": (
+                "Stored draft max_dispatched_requests=10 covers 5 wallets × 2 pages only; "
+                "it does not unambiguously allocate an 11th rank-1 page."
+            ),
         },
         "max_requests": 10,
         "max_units": 100,
@@ -622,8 +655,9 @@ def approval_proposal():
             "failed_or_timed_out_dispatched_request_consumes_attempt",
         ],
         "realistic_yield": (
-            "At most five unverified ranked-100 wallets, two pages each, plus one optional earlier "
-            "rank-1 page for the unbacked 5tCju6YN sell. Not leftover grants. Not MATCH."
+            "At most five unverified ranked-100 wallets, two pages each. The optional rank-1 "
+            "earlier page is skipped because the stored draft does not unambiguously cover it. "
+            "Not leftover grants. Not MATCH."
         ),
         "PRODUCT_READY": False,
     }

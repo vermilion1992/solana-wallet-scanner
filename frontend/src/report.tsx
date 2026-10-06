@@ -254,6 +254,13 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {` · market ${String(market.market_swaps ?? 0)} / holder-fee ${String(market.holder_fee_distributions ?? 0)}`}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
       </p>
+      <p className="subset-worksheet-note" data-report-provenance="true">
+        Provenance {report.corpus_kind || "unknown corpus"}
+        {report.capture_sha256 ? ` · capture ${String(report.capture_sha256).slice(0, 12)}` : ""}
+        {report.analysis_cache_key ? ` · analysis ${String(report.analysis_cache_key).slice(0, 12)}` : ""}
+        {report.window?.start ? ` · window ${String(report.window.start)} → ${String(report.window.end || "")}` : ""}
+        . Reopened reports keep this capture and window; they are not a later live refresh.
+      </p>
       {!!report.analytics && (
         <div className="research-profile-analytics" data-wallet-analytics="true">
           {(() => {

@@ -218,3 +218,37 @@ def test_workflow_replay_saves_reopenable_report(store):
     assert report["next_candidates"]
     assert all(row["address"] != ALLOWED_WALLET for row in report["next_candidates"])
     assert result["external_requests"] == 0
+
+
+def test_independent_reconciliation_does_not_import_app_accounting():
+    import ast
+    from pathlib import Path
+    from decimal import Decimal
+
+    source = Path("tools/independent_capture_reconciliation.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imported = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported.append(node.module)
+    forbidden = {
+        "scanner.accounting",
+        "scanner.mass_search.settlement",
+        "scanner.mass_search.live_g1",
+        "scanner.mass_search.metrics",
+        "scanner.mass_search.service",
+    }
+    assert forbidden.isdisjoint(imported)
+    from tools.independent_capture_reconciliation import reconcile_g1, reconcile_rank1
+    rank1 = reconcile_rank1()
+    assert rank1["market_trades"] == 6
+    assert Decimal(rank1["fifo"]["total_profit"]) == Decimal("376.028087")
+    assert len(rank1["fifo"]["unresolved_basis_sales"]) == 1
+    assert len(rank1["fifo"]["known_cost_sells"]) == 1
+    assert rank1["fifo"]["known_cost_sells"][0]["fee_in_pnl"] is False
+    assert len(rank1["fifo"]["open_lots"]) == 3
+    g1 = reconcile_g1()
+    assert g1["market_trades"] == 5
+    assert Decimal(g1["fifo"]["total_profit"]) == Decimal("-0.167725526")

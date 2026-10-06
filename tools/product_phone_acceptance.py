@@ -97,6 +97,10 @@ try:
     expect(page.locator("[data-ranked-workflow]")).to_be_visible()
     expect(page.get_by_text("History required — not analysed").first).to_be_visible()
     expect(page.locator("[data-phone-access]")).to_be_visible()
+    expect(page.get_by_text("ranked100-discovery-pilot-2026-10-05")).to_be_visible()
+    health = page.request.get(f"{launcher.base}/api/health").json()
+    assert health["PRODUCT_READY"] is False
+    assert health["version"]
     page.get_by_label("Minimum provider trade count").fill("20")
     page.get_by_role("button", name="Save filters").click()
     expect(page.locator("[data-filters-saved]")).to_be_visible()
@@ -122,6 +126,7 @@ try:
     expect(page.get_by_text("n=1 is one completed position, not a wallet-wide median")).to_be_visible()
     expect(page.get_by_text("USDC results exclude SOL fees")).to_be_visible()
     expect(page.locator("[data-usdc-excludes-sol-fees]")).to_be_visible()
+    expect(page.locator("[data-report-provenance]")).to_be_visible()
     page.locator("[data-subset-worksheet]").scroll_into_view_if_needed()
     _shot(page, "03-report-phone")
     page.locator("[data-wallet-analytics]").scroll_into_view_if_needed()
@@ -140,6 +145,8 @@ try:
     assert body["funnel"]["B"]["state"] == "PARTIAL"
     assert body["funnel"]["C"]["state"] == "NOT_EVALUATED"
     assert body["research_profile"]["safe_to_copy"] is False
+    assert body.get("mass_search_interpretation", {}).get("scoped_pnl_is_not_wallet_wide") is True
+    assert body["mass_search_interpretation"]["not_safe_to_copy"] is True
     synth = next((row for row in mass if row.get("address") == SYNTH_USDC), None)
     if synth:
         _open_nav(page, "Search", exact=True)
@@ -148,6 +155,7 @@ try:
         page.get_by_role("button", name="Compare saved reports").click()
         expect(page.locator("[data-research-compare]")).to_be_visible()
         expect(page.locator("[data-research-compare]")).to_contain_text("376.028087")
+        expect(page.locator("[data-research-compare]")).to_contain_text("Mismatches")
         result["compare_status"] = 200
         _shot(page, "03c-compare-phone")
     g1_store = Store(OUT / "g1-control")

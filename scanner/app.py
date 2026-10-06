@@ -277,6 +277,20 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
             result['archive_assessment'] = {'saved_methodology': saved, 'current_methodology': ARCHIVE_METHODOLOGY,
                 'state': state, 'reason': 'Current archived-source interpretation; coverage and qualification remain separate.' if state == 'current' else
                 'Rebuild this archived report offline to apply current source and fee-window checks. Saved values remain unchanged.'}
+        if report.get("source") == "mass-search" and not report.get("preview"):
+            result["mass_search_interpretation"] = {
+                "kind": "mass-search-export-interpretation-v1",
+                "capture_sha256": report.get("capture_sha256"),
+                "analysis_cache_key": report.get("analysis_cache_key"),
+                "window": report.get("window"),
+                "corpus_kind": report.get("corpus_kind"),
+                "decoder_version": (report.get("coverage") or {}).get("decoder_version"),
+                "not_safe_to_copy": True,
+                "PRODUCT_READY": False,
+                "sol_fees_not_converted": (report.get("worksheet") or {}).get("sol_fees_not_converted"),
+                "unresolved_basis_is_not_zero": True,
+                "scoped_pnl_is_not_wallet_wide": True,
+            }
         if report.get("source") == "live" and not report.get("preview"):
             coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}
             for name, current, scope in (("history", HISTORY_METHODOLOGY, "account-specific receipt"),
@@ -868,9 +882,13 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
         token = request.headers.get("x-launch-token", "")
         if not _secret_equal(token, launch_token) and not _secret_equal(request.cookies.get("scanner_session", ""), cookie_secret):
             raise HTTPException(401, "Use the private launch URL printed by the local app")
-        response = JSONResponse({"csrf": csrf, "version": __version__})
+        response = JSONResponse({"csrf": csrf, "version": __version__, "PRODUCT_READY": False})
         response.set_cookie("scanner_session", cookie_secret, httponly=True, samesite="strict", path="/")
         return response
+
+    @app.get("/api/health")
+    async def health():
+        return {"kind": "local-scanner-health-v1", "version": __version__, "PRODUCT_READY": False}
 
     @app.get("/api/state")
     async def state(report_view: str = "full"):
