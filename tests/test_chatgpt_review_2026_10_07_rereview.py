@@ -218,6 +218,7 @@ def test_committed_gtfo_audit_uses_aggregate_rounding_bridge():
     assert bridge["delta_atomics"] == 6
     assert "auditor confirms within 2 lamports" not in (gtfo.get("auditor_confirmation") or "")
     assert "aggregate rounding bridge" in (gtfo.get("auditor_confirmation") or "")
+    assert str(gtfo["independently_audited_episode_net"]) in (gtfo.get("auditor_confirmation") or "")
 
 
 def test_gtfo_aggregate_rounding_bridge_is_not_within_two_lamports():
@@ -227,6 +228,7 @@ def test_gtfo_aggregate_rounding_bridge_is_not_within_two_lamports():
     text = format_auditor_confirmation("2.030645834", "2.030645840", "SOL", independently_audited=True)
     assert "auditor confirms within 2 lamports" not in text
     assert "aggregate rounding bridge" in text
+    assert "app 2.030645834 vs auditor 2.03064584" in text
     agree = format_auditor_confirmation("283.399579449", "283.399579447", "SOL", independently_audited=True)
     assert "within 2 lamports" in agree
 

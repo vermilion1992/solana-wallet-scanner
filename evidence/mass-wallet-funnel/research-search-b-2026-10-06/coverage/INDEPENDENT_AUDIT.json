@@ -4762,7 +4762,7 @@
         "rounding_policy": "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with ROUND_HALF_EVEN. Two values agree when the absolute atomic difference is at most 2 units of that asset. Never apply a SOL lamport tolerance to USDC.",
         "note": "Aggregate differs by more than the declared 2-atomic tolerance. Do not print 'within 2'. Per-episode components may still agree. Tolerance is not widened."
       },
-      "auditor_confirmation": "aggregate rounding bridge -0.000000006 SOL (6 atomics, not within 2 lamports; per-episode components may still agree)",
+      "auditor_confirmation": "aggregate rounding bridge -0.000000006 SOL (6 atomics, not within 2 lamports; app 2.030645834 vs auditor 2.03064584; per-episode components may still agree)",
       "tolerance_text": "2 lamports",
       "rounding_policy": "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with ROUND_HALF_EVEN. Agreement is at most 2 atomic units of that asset.",
       "unaudited_venues": [],

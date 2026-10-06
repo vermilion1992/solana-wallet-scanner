@@ -666,6 +666,7 @@ def format_auditor_confirmation(app_net, auditor_net, unit, *, independently_aud
     return (
         f"aggregate rounding bridge {bridge['delta']} {unit} "
         f"({bridge['delta_atomics']} atomics, not within {tolerance_text(unit)}; "
+        f"app {bridge['app']} vs auditor {bridge['auditor']}; "
         "per-episode components may still agree)"
     )
 

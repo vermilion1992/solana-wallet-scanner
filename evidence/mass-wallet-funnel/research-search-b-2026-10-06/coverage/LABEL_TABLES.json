@@ -24,7 +24,7 @@
       "scoped_pnl_by_quote_asset": {
         "SOL": "2.030645839"
       },
-      "net_display": "2.030645834 SOL (completed-episode net); aggregate rounding bridge -0.000000006 SOL (6 atomics, not within 2 lamports; per-episode components may still agree); 2.030645839 SOL (worksheet total, partial coverage, not independently audited)",
+      "net_display": "2.030645834 SOL (completed-episode net); aggregate rounding bridge -0.000000006 SOL (6 atomics, not within 2 lamports; app 2.030645834 vs auditor 2.03064584; per-episode components may still agree); 2.030645839 SOL (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 4,

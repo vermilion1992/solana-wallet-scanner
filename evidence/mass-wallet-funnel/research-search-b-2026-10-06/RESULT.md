@@ -17,7 +17,7 @@ Binding work order: `CHATGPT_REVIEW_2026-10-07_0346_FULL.md` of PR #6 at `76833d
 
 ## Per-wallet after this pass (vs 76833dc)
 
-Episode nets and qualification labels are unchanged. gtfo confirmation text is now an aggregate rounding bridge (−0.000000006 SOL / 6 atomics), not “within 2 lamports.” BVZt/DQ7n remain independently audited at 4/4, coverage_blocked, not leads. An9s coverage_status stays `provisional_eligible` with display “Coverage gate eligible; not a research lead.”
+Episode nets and qualification labels are unchanged. gtfo confirmation text is now an aggregate rounding bridge (−0.000000006 SOL / 6 atomics; app 2.030645834 vs auditor 2.03064584), not “within 2 lamports.” BVZt/DQ7n remain independently audited at 4/4, coverage_blocked, not leads. An9s coverage_status stays `provisional_eligible` with display “Coverage gate eligible; not a research lead.”
 
 # RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 ChatGPT review
 
