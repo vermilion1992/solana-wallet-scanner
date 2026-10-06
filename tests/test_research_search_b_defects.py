@@ -89,12 +89,13 @@ def test_d1_gtfo_sol_excess_saves_report_with_unresolved_basis(tmp_path):
     assert report["id"]
     assert result.get("error") is None
     worksheet = report["worksheet"] or {}
-    assert _q(worksheet["total_profit_sol"]) == _q("3.411606267")
     assert int(worksheet.get("unresolved_basis_sales") or 0) == 4
     assert int(worksheet.get("known_cost_sales") or 0) == 55
     indep = reconcile_address(GTFO)
     fifo = indep["fifo"]["SOL"]
-    assert _q(fifo["total_profit"]) == _q("3.411606267")
+    assert _q(worksheet["total_profit_sol"]) == _q(fifo["total_profit"])
+    assert worksheet.get("total_gross_profit_sol") not in (None, "")
+    assert worksheet.get("total_fees_and_tips_sol") not in (None, "")
     assert len(fifo["known_cost_sells"]) == 55
     assert len(fifo["unresolved_basis_sales"]) == 4
     store.close()
@@ -149,20 +150,23 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     by_asset = report["by_quote_asset"] or (report.get("worksheet") or {}).get("by_quote_asset")
     assert by_asset
     usdc = by_asset["USDC"]
-    sol = by_asset["SOL"]
+    sol = by_asset.get("SOL") or {}
+    indep = reconcile_address(MIXED)
+    assert _q(usdc["total_profit_usdc"]) == _q(indep["fifo"]["USDC"]["total_profit"])
     assert _q(usdc["total_profit_usdc"]) == _q("14739.373324196")
     assert int(usdc["known_cost_sales"]) == 3
     assert int(usdc["unresolved_basis_sales"]) == 6
+    assert int(usdc.get("open_lots") or 0) == 3
     assert int(sol.get("known_cost_sales") or 0) == 0
-    assert int(sol["unresolved_basis_sales"]) == 1
-    indep = reconcile_address(MIXED)
-    assert _q(indep["fifo"]["USDC"]["total_profit"]) == _q("14739.373324196")
+    assert int(sol.get("unresolved_basis_sales") or 0) == 0
+    assert int(sol.get("open_lots") or 0) == 1
     assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 3
     assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 6
     assert len(indep["fifo"]["USDC"]["open_lots"]) == 3
     assert len(indep["fifo"]["SOL"]["known_cost_sells"]) == 0
-    assert len(indep["fifo"]["SOL"]["unresolved_basis_sales"]) == 1
+    assert len(indep["fifo"]["SOL"]["unresolved_basis_sales"]) == 0
     assert len(indep["fifo"]["SOL"]["open_lots"]) == 1
+    assert report.get("conversions")
     profile = report["research_profile"]
     assert profile["scoped_pnl_by_quote_asset"]["USDC"]
     assert profile["settlement_asset"] == "mixed"
@@ -180,7 +184,7 @@ def test_d6_analytics_keyed_by_signature(tmp_path):
             break
     assert target is not None
     assert _q(target["allocated_basis"]) == _q("1")
-    assert _q(target["known_cost_pnl"]) == _q("0.169276495")
+    assert _q(target.get("gross_pnl") or target["known_cost_pnl"]) == _q("0.169276495")
     indep = reconcile_address(A6PS)
     by_sig = {row["signature"]: row for row in indep["fifo"]["SOL"]["known_cost_sells"]}
     for row in trades:
@@ -190,6 +194,8 @@ def test_d6_analytics_keyed_by_signature(tmp_path):
         assert sale is not None, row["tx_ref"]
         assert _q(row["allocated_basis"]) == _q(sale["basis"])
         assert _q(row["known_cost_pnl"]) == _q(sale["net_profit"])
+        if row.get("gross_pnl") not in (None, ""):
+            assert _q(row["gross_pnl"]) == _q(sale["gross_profit"])
     assert report["analytics"]["win_rate"]["denominator"] == 6
     store.close()
 

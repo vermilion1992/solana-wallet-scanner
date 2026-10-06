@@ -33,7 +33,7 @@ from .evidence_integrity import (
     classify_records,
     sanitize_transaction_records,
 )
-from .live_g1 import _count_method, _wrap_records
+from .live_g1 import _count_method, _wrap_records, independent_fifo_worksheet
 from .settlement import USDC, isolate_known_cost_events, map_decoder_trade, settlement_of
 from .history_ingest import build_historical_gta_options
 from .service import MassSearchService

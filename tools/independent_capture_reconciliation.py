@@ -35,24 +35,28 @@ def _fifo(trades, *, asset):
         consideration = Decimal(trade["consideration"])
         fee = Decimal(trade.get("fee_sol") or 0)
         if trade["kind"] == "buy":
-            cost = consideration + fee if asset == "SOL" else consideration
             lots[mint].append({
                 "quantity_raw": qty,
-                "consideration": cost,
+                "consideration": consideration,
+                "fees": fee if asset == "SOL" else Decimal(0),
                 "signature": trade["signature"],
                 "mint": mint,
             })
             continue
         remaining = qty
         basis = Decimal(0)
+        buy_fees = Decimal(0)
         consumed = []
         while remaining > 0 and lots[mint]:
             lot = lots[mint][0]
             take = lot["quantity_raw"] if lot["quantity_raw"] <= remaining else remaining
             share = (take / lot["quantity_raw"]) * lot["consideration"]
+            fee_share = (take / lot["quantity_raw"]) * lot["fees"]
             basis += share
+            buy_fees += fee_share
             lot["quantity_raw"] -= take
             lot["consideration"] -= share
+            lot["fees"] -= fee_share
             remaining -= take
             consumed.append({"signature": lot["signature"], "quantity_raw": str(take), "basis": _canonical(share)})
             if lot["quantity_raw"] == 0:
@@ -63,9 +67,8 @@ def _fifo(trades, *, asset):
             unmatched_proceeds = consideration - matched_proceeds
             matched_fee = fee * matched_qty / qty
             unmatched_fee = fee - matched_fee
-            profit = matched_proceeds - basis
-            if asset == "SOL":
-                profit -= matched_fee
+            fees_and_tips = (buy_fees + matched_fee) if asset == "SOL" else Decimal(0)
+            profit = matched_proceeds - basis - fees_and_tips
             sells.append({
                 "signature": trade["signature"],
                 "mint": mint,
@@ -74,7 +77,7 @@ def _fifo(trades, *, asset):
                 "proceeds": _canonical(matched_proceeds),
                 "basis": _canonical(basis),
                 "gross_profit": _canonical(matched_proceeds - basis),
-                "fees_and_tips": _canonical(matched_fee if asset == "SOL" else 0),
+                "fees_and_tips": _canonical(fees_and_tips),
                 "net_profit": _canonical(profit),
                 "consumed_lots": consumed,
                 "fee_sol": _canonical(matched_fee),
