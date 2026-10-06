@@ -14,7 +14,13 @@ ROOT = Path(__file__).resolve().parents[2]
 GENUINE_RANK1_PATH = ROOT / "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json"
 EXPECTED_CAPTURE_SHA = "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d"
 RANKED_SNAPSHOT_ID = "ranked100-discovery-pilot-2026-10-05"
-ANALYSIS_VERSION = "analysis-v4-research-screen-v1+partial-match-v1+material-exit-v2+usdc-fifo-v1"
+ANALYSIS_VERSION = (
+    "analysis-v5-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
+    "sig-keyed-v1+quote-conversion-v1+fees-tips-v1"
+)
+RESEARCH_SEARCH_DIR = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
+RESEARCH_SEARCH_MANIFEST = RESEARCH_SEARCH_DIR / "CAPTURE_MANIFEST.json"
+RESEARCH_SEARCH_AUTHORIZATION_ID = "live-ranked100-research-search-2026-10-06-mitch"
 G1_ARCHIVE = ROOT / (
     "evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/"
     "archives/helius_gta_survivor_desc100.json.gz"
@@ -74,6 +80,50 @@ def _synthetic_entries():
     return entries
 
 
+def _research_search_entries():
+    if not RESEARCH_SEARCH_MANIFEST.exists():
+        return []
+    manifest = json.loads(RESEARCH_SEARCH_MANIFEST.read_text(encoding="utf-8"))
+    grouped = {}
+    for page in (manifest.get("pages") or {}).values():
+        grouped.setdefault(page["address"], []).append(page)
+    entries = []
+    for address, pages in grouped.items():
+        pages = sorted(pages, key=lambda item: item.get("page_index") or 0)
+        page_specs = []
+        for page in pages:
+            path = RESEARCH_SEARCH_DIR / page["repo_gz_path"]
+            page_specs.append({
+                "address": address,
+                "page_index": page["page_index"],
+                "path": str(path),
+                "raw_sha256": page["raw_sha256"],
+                "gz_sha256": page.get("gz_sha256"),
+                "raw_bytes": page.get("raw_bytes"),
+                "record_count": page.get("record_count"),
+            })
+        first = page_specs[0]
+        entries.append({
+            "address": address,
+            "mode": "genuine_gta",
+            "path": first["path"],
+            "sha256": first["raw_sha256"],
+            "pages": page_specs,
+            "multi_page": True,
+            "corpus_kind": "GENUINE_REPLAY",
+            "label": "Genuine ranked-100 research-search capture (2 newest-first GTA pages)",
+            "not_proof": False,
+            "raise_on_replay": False,
+            "windows": dict(WINDOWS),
+            "decoder_version": DECODER_VERSION,
+            "evidence_status": "cached_capture",
+            "authorization_id": RESEARCH_SEARCH_AUTHORIZATION_ID,
+            "source_id": "ranked100-research-search-b-replay",
+            "provider_rank": pages[0].get("provider_rank"),
+        })
+    return entries
+
+
 def catalog_entries():
     genuine = {
         "address": ALLOWED_WALLET,
@@ -107,7 +157,7 @@ def catalog_entries():
         "control": True,
         "mint": G1_MINT,
     }
-    return [genuine, control, *_synthetic_entries()]
+    return [genuine, control, *_research_search_entries(), *_synthetic_entries()]
 
 
 def catalog_by_address():
@@ -122,17 +172,58 @@ def genuine_captured_addresses():
     }
 
 
-def load_capture_records(entry):
-    path = Path(entry["path"])
+def _load_page_bytes(path):
+    path = Path(path)
+    file_bytes = path.read_bytes()
     if path.suffix == ".gz":
-        payload = json.loads(gzip.open(path, "rb").read())
+        raw = gzip.decompress(file_bytes)
     else:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        raw = file_bytes
+    return raw, file_bytes
+
+
+def load_capture_records(entry):
+    pages = entry.get("pages")
+    if pages:
+        records = []
+        raw_digests = []
+        seen = set()
+        for page in sorted(pages, key=lambda item: item.get("page_index") or 0):
+            raw, _file_bytes = _load_page_bytes(page["path"])
+            raw_sha = hashlib.sha256(raw).hexdigest()
+            expected = page.get("raw_sha256")
+            if expected and raw_sha != expected:
+                raise ValueError("Cached capture hash drifted")
+            payload = json.loads(raw)
+            page_records = gta_records_from_capture(payload)
+            for record in page_records:
+                signature = None
+                tx = record.get("transaction") if isinstance(record, dict) else None
+                if isinstance(tx, dict):
+                    sigs = tx.get("signatures")
+                    if isinstance(sigs, list) and sigs:
+                        signature = sigs[0]
+                if signature and signature in seen:
+                    continue
+                if signature:
+                    seen.add(signature)
+                records.append(record)
+            raw_digests.append(raw_sha)
+        digest = hashlib.sha256("".join(raw_digests).encode("utf-8")).hexdigest()
+        return records, digest
+    path = Path(entry["path"])
+    raw, file_bytes = _load_page_bytes(path)
+    if entry.get("sha256") and entry["sha256"] == hashlib.sha256(raw).hexdigest():
+        digest = entry["sha256"]
+    else:
+        digest = hashlib.sha256(file_bytes).hexdigest()
+        expected = entry.get("sha256")
+        if expected and digest != expected and expected != hashlib.sha256(raw).hexdigest():
+            raise ValueError("Cached capture hash drifted")
+        if expected == hashlib.sha256(raw).hexdigest():
+            digest = expected
+    payload = json.loads(raw)
     records = gta_records_from_capture(payload)
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
-    expected = entry.get("sha256")
-    if expected and digest != expected:
-        raise ValueError("Cached capture hash drifted")
     return records, digest
 
 

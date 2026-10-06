@@ -33,7 +33,7 @@ from .evidence_integrity import (
     classify_records,
     sanitize_transaction_records,
 )
-from .live_g1 import _count_method, _wrap_records, independent_fifo_worksheet
+from .live_g1 import _count_method, _wrap_records
 from .settlement import USDC, isolate_known_cost_events, map_decoder_trade, settlement_of
 from .history_ingest import build_historical_gta_options
 from .service import MassSearchService
@@ -357,8 +357,9 @@ def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, a
 
 
 def _ordered_inventory_rows(rows):
-    dated = [row for row in rows if not row.get("timestamp_missing") and row.get("seconds_from_start") is not None]
-    return sorted(dated, key=lambda row: (row["seconds_from_start"], row.get("signature") or ""))
+    from .settlement import _ordered_rows
+
+    return _ordered_rows(rows)
 
 
 def completed_position_episodes(rows):
@@ -431,22 +432,20 @@ def completed_episodes(by_mint):
             total += counted["completed_episodes"]
             sales += counted["sale_count"]
             continue
-        if "buy" not in kinds or "sell" not in kinds:
-            per_mint[mint] = 0
-            per_mint_detail[mint] = {"completed_episodes": 0, "sale_count": 0, "open": False}
-            continue
-        try:
-            independent_fifo_worksheet(usable)
-        except ValueError:
+        usable = _ordered_inventory_rows(usable)
+        known, unresolved = isolate_known_cost_events(usable)
+        known_kinds = {row["kind"] for row in known}
+        if "buy" not in known_kinds or "sell" not in known_kinds:
             per_mint[mint] = 0
             per_mint_detail[mint] = {
                 "completed_episodes": 0,
                 "sale_count": sum(1 for row in usable if row["kind"] == "sell"),
-                "open": True,
-                "unsupported_sale_exceeds_inventory": True,
+                "open": any(row["kind"] == "buy" for row in known),
+                "unresolved_basis_sales": len(unresolved),
             }
             continue
-        counted = completed_position_episodes(usable)
+        counted = completed_position_episodes(known)
+        counted["unresolved_basis_sales"] = len(unresolved)
         per_mint[mint] = counted["completed_episodes"]
         per_mint_detail[mint] = counted
         total += counted["completed_episodes"]
@@ -468,8 +467,6 @@ def declared_subset_events(by_mint):
 
 
 def declared_subset_worksheet(by_mint):
-    from decimal import Decimal
-
     from .settlement import independent_settlement_worksheet
 
     used = []
@@ -485,44 +482,12 @@ def declared_subset_worksheet(by_mint):
         else:
             sol_rows.extend(rows)
             used.append(mint)
-    if usdc_rows and sol_rows:
-        raise ValueError("SOL and USDC consideration cannot share one worksheet; no FX")
-    if usdc_rows:
-        worksheet = independent_settlement_worksheet(usdc_rows)
-        if not worksheet:
-            return None
-        worksheet["declared_mints"] = used
-        worksheet["population"] = "declared_supported_subset"
-        return worksheet
-    if not sol_rows:
+    worksheet = independent_settlement_worksheet(usdc_rows + sol_rows)
+    if not worksheet:
         return None
-    basis = []
-    profits = []
-    total = Decimal("0")
-    used_sol = []
-    for mint in sorted({row.get("mint") for row in sol_rows}):
-        rows = [row for row in sol_rows if row.get("mint") == mint]
-        kinds = {row["kind"] for row in rows}
-        if "buy" not in kinds or "sell" not in kinds:
-            continue
-        try:
-            part = independent_fifo_worksheet(rows)
-        except ValueError:
-            continue
-        basis.extend(part["sale_fifo_basis_sol"])
-        profits.extend(part["sale_net_profit_sol"])
-        total += Decimal(str(part["total_profit_sol"]))
-        used_sol.append(mint)
-    if not used_sol:
-        return None
-    return {
-        "sale_fifo_basis_sol": basis,
-        "sale_net_profit_sol": profits,
-        "total_profit_sol": format(total, "f"),
-        "oracle": "independent-g1-fifo-v1",
-        "declared_mints": used_sol,
-        "population": "declared_supported_subset",
-    }
+    worksheet["declared_mints"] = used
+    worksheet["population"] = "declared_supported_subset"
+    return worksheet
 
 
 def best_mint(by_mint, episode_counts):

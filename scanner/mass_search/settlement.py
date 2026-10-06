@@ -20,9 +20,14 @@ def settlement_of(event):
     return WSOL
 
 
+def _order_key(row):
+    order = row.get("order")
+    return order if isinstance(order, int) and not isinstance(order, bool) else 0
+
+
 def _ordered_rows(rows):
     dated = [row for row in rows if not row.get("timestamp_missing") and row.get("seconds_from_start") is not None]
-    return sorted(dated, key=lambda row: (row["seconds_from_start"], row.get("signature") or ""))
+    return sorted(dated, key=lambda row: (row["seconds_from_start"], _order_key(row), row.get("signature") or ""))
 
 
 def _group_by_mint(rows):
@@ -83,6 +88,7 @@ def isolate_known_cost_events(rows):
                 unresolved.append({
                     **event,
                     "unresolved_basis": True,
+                    "split_part": event.get("split_part") or "unresolved",
                     "whole_sale_pnl_resolved": False,
                     "result_scope": "conditional_on_captured_inventory",
                     "reason": "Sale has no known acquisition cost in this sample",
@@ -93,14 +99,17 @@ def isolate_known_cost_events(rows):
                 tagged = dict(event)
                 tagged["result_scope"] = "conditional_on_captured_inventory"
                 tagged["whole_sale_pnl_resolved"] = True
+                tagged["split_part"] = event.get("split_part") or "matched"
                 known.append(tagged)
                 continue
             matched = _scale_trade(event, units=inventory, original_units=units)
             remainder = _scale_trade(event, units=units - inventory, original_units=units, remainder_of=matched)
             matched["partial_known_cost"] = True
+            matched["split_part"] = "matched"
             matched["whole_sale_pnl_resolved"] = False
             matched["result_scope"] = "conditional_on_captured_inventory"
             remainder["unresolved_basis"] = True
+            remainder["split_part"] = "unresolved"
             remainder["whole_sale_pnl_resolved"] = False
             remainder["result_scope"] = "conditional_on_captured_inventory"
             remainder["reason"] = "Sale remainder has no known acquisition cost in this sample"
@@ -129,6 +138,7 @@ def usdc_fifo_worksheet(events):
     if len(mints) > 1:
         basis = []
         profits = []
+        sale_rows = []
         total = Decimal("0")
         used = []
         for mint in sorted(mints):
@@ -138,9 +148,12 @@ def usdc_fifo_worksheet(events):
             if part.get("total_profit_usdc") not in (None, ""):
                 total += Decimal(str(part["total_profit_usdc"]))
                 used.append(mint)
+            part_rows = part.get("sale_rows") or []
+            sale_rows.extend(part_rows)
         return {
             "sale_fifo_basis_usdc": basis,
             "sale_net_profit_usdc": profits,
+            "sale_rows": sale_rows,
             "total_profit_usdc": canonical(total) if used else None,
             "total_profit_sol": None,
             "settlement_mint": USDC,
@@ -173,14 +186,22 @@ def usdc_fifo_worksheet(events):
                     if lot["units"] == 0:
                         lots.pop(0)
                 proceeds = Decimal(str(event["consideration_usdc"]))
+                profit = canonical(proceeds - basis)
                 sales.append({
+                    "signature": event.get("signature"),
+                    "split_part": event.get("split_part") or "matched",
+                    "mint": event.get("mint"),
                     "basis": canonical(basis),
-                    "net_profit": canonical(proceeds - basis),
+                    "gross_profit": profit,
+                    "fees_and_tips": "0",
+                    "net_profit": profit,
+                    "units": event.get("units"),
                 })
         total = sum((Decimal(sale["net_profit"]) for sale in sales), Decimal("0"))
         return {
             "sale_fifo_basis_usdc": [sale["basis"] for sale in sales],
             "sale_net_profit_usdc": [sale["net_profit"] for sale in sales],
+            "sale_rows": sales,
             "total_profit_usdc": canonical(total) if sales else None,
             "total_profit_sol": None,
             "settlement_mint": USDC,
@@ -195,6 +216,7 @@ def empty_usdc_worksheet(*, unresolved=0, known=0):
     return {
         "sale_fifo_basis_usdc": [],
         "sale_net_profit_usdc": [],
+        "sale_rows": [],
         "total_profit_usdc": None,
         "total_profit_sol": None,
         "settlement_mint": USDC,
@@ -210,91 +232,121 @@ def empty_usdc_worksheet(*, unresolved=0, known=0):
     }
 
 
-def settlement_aware_worksheet(events):
-    """Production worksheet. One settlement asset. Mixed SOL+USDC is refused."""
-    from scanner.mass_search.live_g1 import independent_fifo_worksheet
+def empty_sol_worksheet(*, unresolved=0, known=0, oracle="independent-g1-fifo-v1"):
+    return {
+        "sale_fifo_basis_sol": [],
+        "sale_net_profit_sol": [],
+        "sale_rows": [],
+        "total_profit_sol": None,
+        "total_gross_profit_sol": None,
+        "total_fees_and_tips_sol": None,
+        "oracle": oracle,
+        "settlement_asset": "SOL",
+        "not_fx": True,
+        "unresolved_basis_sales": unresolved,
+        "known_cost_trades": known,
+        "whole_sale_pnl_resolved": unresolved == 0,
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": FEE_ALLOCATION,
+    }
 
-    usable = [row for row in events if row.get("kind") in ("buy", "sell")]
-    if not usable:
+
+def _annotate_isolated_worksheet(worksheet, known, unresolved):
+    if not worksheet:
         return None
-    mints = {settlement_of(row) for row in usable}
-    if USDC in mints and WSOL in mints:
-        raise ValueError("SOL and USDC consideration cannot share one worksheet; no FX")
-    known, unresolved = isolate_known_cost_by_mint(usable)
-    if mints == {USDC}:
-        if not known or not any(row["kind"] == "sell" for row in known):
-            payload = empty_usdc_worksheet(unresolved=len(unresolved), known=len(known))
-            return payload
-        worksheet = usdc_fifo_worksheet(known)
-        worksheet["unresolved_basis_sales"] = len(unresolved)
-        worksheet["known_cost_trades"] = len(known)
-        worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
-        worksheet["result_scope"] = "conditional_on_captured_inventory"
-        worksheet["fee_allocation"] = FEE_ALLOCATION
-        return worksheet
-    if not known or not any(row["kind"] == "sell" for row in known):
-        return {
-            "sale_fifo_basis_sol": [],
-            "sale_net_profit_sol": [],
-            "total_profit_sol": None,
-            "oracle": "independent-g1-fifo-v1",
-            "unresolved_basis_sales": len(unresolved),
-            "known_cost_trades": len(known),
-            "whole_sale_pnl_resolved": len(unresolved) == 0,
-            "result_scope": "conditional_on_captured_inventory",
-            "fee_allocation": FEE_ALLOCATION,
-        }
-    worksheet = independent_fifo_worksheet(known)
     worksheet["unresolved_basis_sales"] = len(unresolved)
     worksheet["known_cost_trades"] = len(known)
+    worksheet["known_cost_sales"] = sum(1 for row in known if row.get("kind") == "sell")
     worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
     worksheet["result_scope"] = "conditional_on_captured_inventory"
     worksheet["fee_allocation"] = FEE_ALLOCATION
+    worksheet["not_fx"] = True
     return worksheet
 
 
-def independent_settlement_worksheet(events):
-    """Independent worksheet. USDC uses the live_g1 oracle; SOL uses G1 FIFO."""
+def _single_asset_worksheet(events, *, production):
     from scanner.mass_search.live_g1 import independent_fifo_worksheet, independent_usdc_fifo_worksheet
 
     usable = [row for row in events if row.get("kind") in ("buy", "sell")]
     if not usable:
         return None
-    mints = {settlement_of(row) for row in usable}
-    if USDC in mints and WSOL in mints:
-        raise ValueError("SOL and USDC consideration cannot share one worksheet; no FX")
     known, unresolved = isolate_known_cost_by_mint(usable)
-    if mints == {USDC}:
+    asset = "USDC" if {settlement_of(row) for row in usable} == {USDC} else "SOL"
+    if asset == "USDC":
         if not known or not any(row["kind"] == "sell" for row in known):
             payload = empty_usdc_worksheet(unresolved=len(unresolved), known=len(known))
-            payload["oracle"] = "independent-usdc-fifo-v1"
+            if not production:
+                payload["oracle"] = "independent-usdc-fifo-v1"
             return payload
-        worksheet = independent_usdc_fifo_worksheet(known)
-        worksheet["unresolved_basis_sales"] = len(unresolved)
-        worksheet["known_cost_trades"] = len(known)
-        worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
-        worksheet["result_scope"] = "conditional_on_captured_inventory"
-        worksheet["fee_allocation"] = FEE_ALLOCATION
-        return worksheet
+        worksheet = usdc_fifo_worksheet(known) if production else independent_usdc_fifo_worksheet(known)
+        return _annotate_isolated_worksheet(worksheet, known, unresolved)
     if not known or not any(row["kind"] == "sell" for row in known):
-        return {
-            "sale_fifo_basis_sol": [],
-            "sale_net_profit_sol": [],
-            "total_profit_sol": None,
-            "oracle": "independent-g1-fifo-v1",
-            "unresolved_basis_sales": len(unresolved),
-            "known_cost_trades": len(known),
-            "whole_sale_pnl_resolved": len(unresolved) == 0,
-            "result_scope": "conditional_on_captured_inventory",
-            "fee_allocation": FEE_ALLOCATION,
-        }
+        return empty_sol_worksheet(unresolved=len(unresolved), known=len(known))
     worksheet = independent_fifo_worksheet(known)
-    worksheet["unresolved_basis_sales"] = len(unresolved)
-    worksheet["known_cost_trades"] = len(known)
-    worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
-    worksheet["result_scope"] = "conditional_on_captured_inventory"
-    worksheet["fee_allocation"] = FEE_ALLOCATION
-    return worksheet
+    return _annotate_isolated_worksheet(worksheet, known, unresolved)
+
+
+def worksheets_by_quote_asset(events, *, production=True):
+    """Separate SOL and USDC worksheets. Never convert. Excess sales isolate known cost."""
+    usable = [row for row in events if row.get("kind") in ("buy", "sell")]
+    grouped = {USDC: [], WSOL: []}
+    for row in usable:
+        grouped[settlement_of(row)].append(row)
+    by_asset = {}
+    if grouped[USDC]:
+        by_asset["USDC"] = _single_asset_worksheet(grouped[USDC], production=production)
+    if grouped[WSOL]:
+        by_asset["SOL"] = _single_asset_worksheet(grouped[WSOL], production=production)
+    return {asset: worksheet for asset, worksheet in by_asset.items() if worksheet}
+
+
+def _mixed_wrapper(by_asset, *, oracle):
+    sol = by_asset.get("SOL") or {}
+    usdc = by_asset.get("USDC") or {}
+    return {
+        "by_quote_asset": by_asset,
+        "not_fx": True,
+        "settlement_asset": "mixed",
+        "total_profit_sol": sol.get("total_profit_sol"),
+        "total_profit_usdc": usdc.get("total_profit_usdc"),
+        "total_gross_profit_sol": sol.get("total_gross_profit_sol"),
+        "total_fees_and_tips_sol": sol.get("total_fees_and_tips_sol"),
+        "sale_fifo_basis_sol": list(sol.get("sale_fifo_basis_sol") or []),
+        "sale_net_profit_sol": list(sol.get("sale_net_profit_sol") or []),
+        "sale_fifo_basis_usdc": list(usdc.get("sale_fifo_basis_usdc") or []),
+        "sale_net_profit_usdc": list(usdc.get("sale_net_profit_usdc") or []),
+        "sale_rows": list(sol.get("sale_rows") or []) + list(usdc.get("sale_rows") or []),
+        "unresolved_basis_sales": sum(int((item or {}).get("unresolved_basis_sales") or 0) for item in by_asset.values()),
+        "known_cost_trades": sum(int((item or {}).get("known_cost_trades") or 0) for item in by_asset.values()),
+        "known_cost_sales": sum(int((item or {}).get("known_cost_sales") or 0) for item in by_asset.values()),
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": FEE_ALLOCATION,
+        "oracle": oracle,
+    }
+
+
+def settlement_aware_worksheet(events):
+    """Production worksheet. Mixed SOL+USDC stays per quote asset with no FX."""
+    by_asset = worksheets_by_quote_asset(events, production=True)
+    if not by_asset:
+        return None
+    if len(by_asset) == 1:
+        worksheet = next(iter(by_asset.values()))
+        worksheet["by_quote_asset"] = by_asset
+        return worksheet
+    return _mixed_wrapper(by_asset, oracle="production-mixed-no-fx-v1")
+
+
+def independent_settlement_worksheet(events):
+    """Independent worksheet. Mixed SOL+USDC stays per quote asset with no FX."""
+    by_asset = worksheets_by_quote_asset(events, production=False)
+    if not by_asset:
+        return None
+    if len(by_asset) == 1:
+        worksheet = next(iter(by_asset.values()))
+        worksheet["by_quote_asset"] = by_asset
+        return worksheet
+    return _mixed_wrapper(by_asset, oracle="independent-mixed-no-fx-v1")
 
 
 def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_qualified, unresolved_order):
@@ -317,6 +369,9 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
         "instruction": row.get("instruction"),
         "venue": row.get("venue") or row.get("source"),
         "classification": row.get("classification") or "market",
+        "order": row.get("order") if isinstance(row.get("order"), int) else row.get("transaction_index"),
+        "network_fee_sol": str(row["network_fee_sol"]) if row.get("network_fee_sol") not in (None, "") else None,
+        "tips_sol": str(row["tips_sol"]) if row.get("tips_sol") not in (None, "") else None,
     }
     if settlement == USDC:
         mapped["consideration_usdc"] = str(row.get("amount_usdc") or "0")

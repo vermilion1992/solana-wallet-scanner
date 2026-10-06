@@ -437,4 +437,4 @@ def test_universe_exposes_stable_snapshot_identity():
     assert universe["ranked_count"] == 100
     assert universe["snapshot_id"] == "ranked100-discovery-pilot-2026-10-05"
     assert len(universe["snapshot_raw_sha256"]) == 64
-    assert universe["capture_count"] == 1
+    assert universe["capture_count"] == 11

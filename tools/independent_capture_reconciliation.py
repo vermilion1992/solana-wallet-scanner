@@ -69,9 +69,12 @@ def _fifo(trades, *, asset):
             sells.append({
                 "signature": trade["signature"],
                 "mint": mint,
+                "split_part": "matched",
                 "quantity_raw": str(matched_qty),
                 "proceeds": _canonical(matched_proceeds),
                 "basis": _canonical(basis),
+                "gross_profit": _canonical(matched_proceeds - basis),
+                "fees_and_tips": _canonical(matched_fee if asset == "SOL" else 0),
                 "net_profit": _canonical(profit),
                 "consumed_lots": consumed,
                 "fee_sol": _canonical(matched_fee),
@@ -238,12 +241,103 @@ def reconcile_synthetic(path):
     }
 
 
+def reconcile_address(address):
+    from scanner.investigation import decode_supported_swaps
+    from scanner.mass_search.canonical_records import canonical_decode_records
+    from scanner.mass_search.capture_catalog import WINDOWS, catalog_by_address, load_capture_records
+    from scanner.mass_search.settlement import USDC
+
+    catalog = catalog_by_address()
+    entry = catalog.get(address)
+    if entry is None:
+        raise ValueError(f"No catalog capture for {address}")
+    records, digest = load_capture_records(entry)
+    decoded = decode_supported_swaps(canonical_decode_records(records), address)
+    windows = entry.get("windows") or WINDOWS
+    start = _iso_ts(windows.get("acquisition_support_start_inclusive") or windows.get("report_start_inclusive"))
+    end = _iso_ts(windows.get("report_end_exclusive"))
+    per_asset = {"SOL": [], "USDC": []}
+    conversions = []
+    for event in decoded.get("events") or []:
+        if event.get("kind") == "conversion":
+            conversions.append({
+                "signature": event.get("signature"),
+                "from_asset": event.get("from_asset"),
+                "to_asset": event.get("to_asset"),
+                "timestamp": event.get("timestamp"),
+            })
+            continue
+        if event.get("kind") not in ("buy", "sell"):
+            continue
+        stamp = event.get("timestamp")
+        if start is not None and isinstance(stamp, (int, float)) and stamp < start:
+            continue
+        if end is not None and isinstance(stamp, (int, float)) and stamp >= end:
+            continue
+        usdc = event.get("settlement_mint") == USDC or event.get("amount_usdc") not in (None, "")
+        asset = "USDC" if usdc else "SOL"
+        per_asset[asset].append({
+            "kind": event["kind"],
+            "mint": event["mint"],
+            "quantity_raw": event["quantity_raw"],
+            "consideration": (event.get("amount_usdc") if usdc else event.get("amount_sol")) or "0",
+            "fee_sol": event.get("fee_sol") or "0",
+            "signature": event.get("signature"),
+            "timestamp": stamp,
+            "order": event.get("order") if isinstance(event.get("order"), int) else event.get("transaction_index"),
+        })
+    fifo = {}
+    for asset, trades in per_asset.items():
+        if not trades:
+            continue
+        trades.sort(key=lambda row: (
+            row.get("timestamp") is None,
+            row.get("timestamp") or 0,
+            row.get("order") if isinstance(row.get("order"), int) else 0,
+            row.get("signature") or "",
+        ))
+        fifo[asset] = _fifo(trades, asset=asset)
+    unsupported = []
+    for issue in decoded.get("unresolved") or []:
+        unsupported.append({
+            "signature": issue.get("signature"),
+            "reason": issue.get("reason"),
+            "path": issue.get("path"),
+        })
+    return {
+        "kind": "independent-capture-reconciliation-v1",
+        "imports_app_accounting": False,
+        "wallet": address,
+        "capture_sha256": digest,
+        "windows": windows,
+        "authorization_id": entry.get("authorization_id"),
+        "corpus_kind": entry.get("corpus_kind"),
+        "pages": entry.get("pages"),
+        "fifo": fifo,
+        "conversions": conversions,
+        "unsupported_transactions": unsupported,
+        "unsupported_tx_count": len({row.get("signature") for row in unsupported if row.get("signature")}),
+        "decoder_is_shared_with_app": True,
+        "PRODUCT_READY": False,
+    }
+
+
+def _iso_ts(value):
+    if not value:
+        return None
+    from datetime import datetime
+    return datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--target", choices=("rank1", "g1", "synthetic"), default="rank1")
     parser.add_argument("--fixture", default="")
+    parser.add_argument("--address", default="")
     args = parser.parse_args()
-    if args.target == "synthetic":
+    if args.address:
+        payload = reconcile_address(args.address)
+    elif args.target == "synthetic":
         payload = reconcile_synthetic(args.fixture)
     else:
         payload = reconcile_rank1() if args.target == "rank1" else reconcile_g1()

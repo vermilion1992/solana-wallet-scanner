@@ -77,7 +77,7 @@
       "existing_plan_confirmed": false,
       "remaining_quota_confirmed_at": null,
       "cycle_start": null,
-      "cycle_end": null,
+      "cycle_end_exclusive": null,
       "max_requests": 20,
       "max_units": 200,
       "max_concurrency": 1,
@@ -92,8 +92,14 @@
       "provider_id": "birdeye",
       "allowed_operations": [],
       "billing_unit": "birdeye_compute_unit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
       "max_requests": 0,
       "max_units": 0,
+      "max_concurrency": 0,
+      "max_duration_seconds": 0,
       "purpose": "Forbidden. Ranked-100 discovery already captured."
     }
   ],

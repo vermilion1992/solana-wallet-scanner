@@ -627,8 +627,10 @@ def research_screen_run(universe_rows, reports, filters):
         rows.append({
             "address": row["address"],
             "outcome": outcome,
-            "reason": "unknown never passes" if judged["unset"] else (
-                "criteria met" if judged["criteria_met"] else "documented screen thresholds not met"
+            "reason": (
+                "meets the screen on matched trades in the captured window"
+                if judged["criteria_met"]
+                else "documented screen thresholds not met"
             ),
             "threshold_results": judged["results"],
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
@@ -674,6 +676,16 @@ def research_screen_run(universe_rows, reports, filters):
     }
 
 
+def _format_unknown_basis(value):
+    if not isinstance(value, dict):
+        return value
+    sales = value.get("sales")
+    quantity = value.get("quantity")
+    proceeds = value.get("proceeds")
+    unit = value.get("unit") or ""
+    return f"sales {sales} · qty {quantity} · proceeds {proceeds} {unit}".strip()
+
+
 def compare_reports(store, left_id, right_id):
     left = store.get("reports", left_id)
     right = store.get("reports", right_id)
@@ -713,8 +725,8 @@ def compare_reports(store, left_id, right_id):
         {"key": "result_scope", "left": left.get("result_scope"), "right": right.get("result_scope")},
         {
             "key": "unknown_basis_quantity_and_proceeds",
-            "left": (left_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds"),
-            "right": (right_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds"),
+            "left": _format_unknown_basis((left_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds")),
+            "right": _format_unknown_basis((right_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds")),
         },
     ])
     mismatches = []
@@ -746,8 +758,12 @@ def compare_reports(store, left_id, right_id):
         "window_policy": {
             "kind": "own_windows_shown_mismatch_blocks",
             "detail": (
-                "Each report keeps its own window. Differing windows are not "
-                "recomputed onto a common interval. Compare is blocked."
+                "Each report keeps its own window. Windows match; compare is shown."
+                if (left.get("window") or {}) == (right.get("window") or {})
+                else (
+                    "Each report keeps its own window. Differing windows are not "
+                    "recomputed onto a common interval. Compare is blocked."
+                )
             ),
             "left_window": left_window,
             "right_window": right_window,

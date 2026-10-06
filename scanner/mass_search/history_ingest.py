@@ -416,6 +416,35 @@ def reconcile_worksheets(production, independent):
         payload["status"] = "INCOMPLETE"
         payload["note"] = "One worksheet is missing; both results are retained when present."
         return payload
+    prod_assets = production.get("by_quote_asset") or {}
+    indep_assets = independent.get("by_quote_asset") or {}
+    if prod_assets or indep_assets:
+        per_asset = {}
+        agree = True
+        for asset in sorted(set(prod_assets) | set(indep_assets)):
+            prod_ws = prod_assets.get(asset) or {}
+            indep_ws = indep_assets.get(asset) or {}
+            key = "total_profit_usdc" if asset == "USDC" else "total_profit_sol"
+            prod_total = prod_ws.get(key)
+            indep_total = indep_ws.get(key)
+            if prod_total in (None, "") and indep_total in (None, ""):
+                per_asset[asset] = {"status": "BOTH_EMPTY"}
+                continue
+            if prod_total in (None, "") or indep_total in (None, ""):
+                per_asset[asset] = {"status": "INCOMPLETE", "production": prod_total, "independent": indep_total}
+                agree = False
+                continue
+            same = Decimal(str(prod_total)) == Decimal(str(indep_total))
+            per_asset[asset] = {
+                "status": "AGREE" if same else "CONFLICT",
+                "production": str(prod_total),
+                "independent": str(indep_total),
+            }
+            agree = agree and same
+        payload["by_quote_asset"] = per_asset
+        payload["status"] = "AGREE" if agree and per_asset else "INCOMPLETE"
+        payload["note"] = "Per quote asset; no FX."
+        return payload
     prod_usdc = production.get("total_profit_usdc")
     indep_usdc = independent.get("total_profit_usdc")
     prod_sol = production.get("total_profit_sol")
@@ -632,6 +661,9 @@ def replay_cached_history_to_report(
             "worksheet": None,
             "independent_worksheet": worksheet,
             "worksheet_reconciliation": reconcile_worksheets(None, worksheet),
+            "unsupported_transactions": list((decoded.get("coverage") or {}).get("unsupported_transactions") or []),
+            "unsupported_tx_count": int((decoded.get("coverage") or {}).get("unsupported_tx_count") or 0),
+            "conversions": [row for row in (decoded.get("events") or []) if row.get("kind") == "conversion"],
             "events": [],
             "positions": [],
             "counts": {"closed": 0, "open": 0, "interrupted": 0, "unresolved": classification["transactions"]},
@@ -703,7 +735,12 @@ def replay_cached_history_to_report(
     report["PRODUCT_READY"] = False
     report["not_ranked_wallet_pipeline_proof"] = True
     report["wallet_completed_episodes"] = episodes["wallet_completed_episodes"]
+    report["wallet_sale_count"] = episodes.get("wallet_sale_count")
     report["completed_episode_detail"] = episodes
+    report["by_quote_asset"] = (production or worksheet or {}).get("by_quote_asset")
+    report["unsupported_transactions"] = list((decoded.get("coverage") or {}).get("unsupported_transactions") or [])
+    report["unsupported_tx_count"] = int((decoded.get("coverage") or {}).get("unsupported_tx_count") or 0)
+    report["conversions"] = [row for row in (decoded.get("events") or []) if row.get("kind") == "conversion"]
     report["visible_report"] = visible_report_allowed(
         worksheet=production or worksheet,
         completed_positions=_visible_completed_positions(episodes, production or worksheet),

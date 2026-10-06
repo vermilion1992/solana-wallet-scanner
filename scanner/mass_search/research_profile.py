@@ -91,7 +91,8 @@ def default_filters():
         "provider_proxy": _default_provider_proxy(),
         "reconstructed": {"thresholds": dict(DEFAULT_THRESHOLDS)},
         "units": dict(THRESHOLD_UNITS),
-        "unset_does_not_pass": True,
+        "unset_does_not_pass": False,
+        "unset_is_not_applied": True,
         "unknown_never_passes": True,
         "not_safe_to_copy": True,
         "PRODUCT_READY": False,
@@ -210,12 +211,35 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     reviewed_jupiter = int(counts.get("reviewed_jupiter_route") or 0)
     inner_unreviewed = int(counts.get("inner_pumpswap_without_reviewed_outer") or 0)
     txs = int(classification.get("transactions") or (report.get("coverage") or {}).get("transactions") or 0)
-    settlement = None
-    if any(settlement_of(row) == USDC for row in mapped):
+    by_quote = worksheet.get("by_quote_asset") or {}
+    if not by_quote:
+        if worksheet.get("settlement_asset") == "USDC" or worksheet.get("total_profit_usdc") not in (None, ""):
+            by_quote = {"USDC": worksheet}
+        elif worksheet.get("total_profit_sol") not in (None, "") or worksheet.get("settlement_asset") == "SOL":
+            by_quote = {"SOL": worksheet}
+    if len(by_quote) > 1:
+        settlement = "mixed"
+    elif "USDC" in by_quote:
+        settlement = "USDC"
+    elif "SOL" in by_quote:
+        settlement = "SOL"
+    elif any(settlement_of(row) == USDC for row in mapped):
         settlement = "USDC"
     elif mapped:
         settlement = "SOL"
-    scoped_pnl = worksheet.get("total_profit_usdc") if settlement == "USDC" else worksheet.get("total_profit_sol")
+    else:
+        settlement = None
+    scoped_by_asset = {}
+    if "USDC" in by_quote:
+        scoped_by_asset["USDC"] = (by_quote["USDC"] or {}).get("total_profit_usdc")
+    if "SOL" in by_quote:
+        scoped_by_asset["SOL"] = (by_quote["SOL"] or {}).get("total_profit_sol")
+    if settlement == "USDC":
+        scoped_pnl = scoped_by_asset.get("USDC")
+    elif settlement == "SOL":
+        scoped_pnl = scoped_by_asset.get("SOL")
+    else:
+        scoped_pnl = None
     sizes = []
     for row in known_buys + known_sells:
         amount = row.get("consideration_usdc") if settlement == "USDC" else row.get("consideration_sol")
@@ -227,7 +251,15 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
                 "asset": settlement,
                 "signature": row.get("signature"),
             })
-    completed = int(report.get("wallet_completed_episodes") or len(known_sells))
+    if "wallet_completed_episodes" in report and report.get("wallet_completed_episodes") is not None:
+        completed = int(report.get("wallet_completed_episodes"))
+    else:
+        completed = 0
+    sale_count = report.get("wallet_sale_count")
+    if sale_count is None:
+        sale_count = len([row for row in mapped if row["kind"] == "sell"])
+    else:
+        sale_count = int(sale_count)
     mint_counts = {}
     for row in known_sells:
         mint_counts[row.get("mint")] = mint_counts.get(row.get("mint"), 0) + 1
@@ -273,7 +305,9 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "settlement_asset": settlement,
         "scoped_pnl": scoped_pnl,
         "scoped_pnl_unit": settlement,
+        "scoped_pnl_by_quote_asset": scoped_by_asset,
         "completed_known_cost_positions": completed,
+        "sale_count": sale_count,
         "known_cost_trades": len(known),
         "unresolved_basis_sales": len(unresolved),
         "open_buys_in_sample": len([row for row in known_buys if row not in known_sells]),
@@ -304,15 +338,16 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "thresholds": filters.get("thresholds") or dict(DEFAULT_THRESHOLDS),
         "threshold_results": {},
         "criteria_met": False,
-        "unset_does_not_pass": True,
+        "unset_does_not_pass": False,
+        "unset_is_not_applied": True,
         "safe_to_copy": False,
         "not_safe_to_copy": True,
         "PRODUCT_READY": False,
         "history_complete": False,
         "notes": [
-            "Scoped subset only. Unset thresholds do not pass.",
+            "Scoped subset only. Unset thresholds are not applied.",
             "Holder rewards and network fees are not trading P&L.",
-            "No blanket safe-to-copy claim.",
+            "Qualification reads the screen on matched trades in the captured window, never account performance.",
         ],
     }
     results = evaluate_thresholds(profile, filters.get("thresholds") or {})
@@ -509,14 +544,41 @@ def evaluate_thresholds(profile, thresholds):
     for key, spec in comparisons.items():
         raw = thresholds.get(key)
         if raw in (None, ""):
-            results[key] = {"state": "UNSET", "passed": False, "note": "Unset does not pass"}
+            results[key] = {"state": "NOT_SET", "passed": None, "applied": False, "note": "not set"}
             unset.append(key)
             continue
         field = spec[0]
         direction = spec[1]
         required_asset = spec[2] if len(spec) > 2 else None
-        if required_asset and profile.get("settlement_asset") != required_asset:
-            results[key] = {"state": "NOT_APPLICABLE", "passed": False, "note": f"Settlement is not {required_asset}"}
+        if required_asset:
+            by_quote = profile.get("scoped_pnl_by_quote_asset") or {}
+            has_asset = required_asset in by_quote or profile.get("settlement_asset") == required_asset
+            if not has_asset:
+                results[key] = {
+                    "state": "NOT_APPLICABLE",
+                    "passed": None,
+                    "applied": False,
+                    "note": f"not set for this wallet — settlement is not {required_asset}",
+                }
+                continue
+        if required_asset and field == "scoped_pnl":
+            actual = (profile.get("scoped_pnl_by_quote_asset") or {}).get(required_asset)
+            if actual is None:
+                actual = profile.get("scoped_pnl")
+            actual_d = _decimal(actual)
+            limit_d = _decimal(raw)
+            if actual_d is None or limit_d is None:
+                results[key] = {"state": "UNKNOWN", "passed": False, "applied": True, "actual": actual, "threshold": str(raw)}
+                evaluated.append(key)
+                continue
+            passed = actual_d >= limit_d if direction == "min" else actual_d <= limit_d
+            results[key] = {
+                "state": "PASS" if passed else "FAIL",
+                "passed": passed,
+                "applied": True,
+                "actual": str(actual_d),
+                "threshold": str(limit_d),
+            }
             evaluated.append(key)
             continue
         if isinstance(field, tuple):
@@ -535,11 +597,12 @@ def evaluate_thresholds(profile, thresholds):
         results[key] = {
             "state": "PASS" if passed else "FAIL",
             "passed": passed,
+            "applied": True,
             "actual": str(actual_d),
             "threshold": str(limit_d),
         }
         evaluated.append(key)
-    criteria_met = bool(evaluated) and all(results[key].get("passed") for key in evaluated) and not unset
+    criteria_met = bool(evaluated) and all(results[key].get("passed") for key in evaluated)
     if not evaluated:
         criteria_met = False
     return {"results": results, "criteria_met": criteria_met, "evaluated": evaluated, "unset": unset}

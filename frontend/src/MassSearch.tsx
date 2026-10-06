@@ -309,7 +309,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
           <div>
             <span>C evaluated</span>
             <strong>{count((ranked?.funnel_counts?.C_MET ?? 0) + (ranked?.funnel_counts?.C_NOT_MET ?? 0))}</strong>
-            <small>unset never passes</small>
+            <small>not set · not applied</small>
           </div>
         </div>
         <form
@@ -387,7 +387,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                 onChange={(event) => setMinCoverage(event.target.value)}
                 placeholder="unset"
               />
-              <small>unit: share · unset stays unknown and never passes</small>
+              <small>unit: share · not set is not applied</small>
             </label>
           </fieldset>
           <Button type="submit" variant="secondary" disabled={!!busy || batchBusy}>Save filters</Button>
@@ -498,7 +498,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   </label>
                   <strong className="mono">{shorten(row.address)}</strong>
                   <p>Provider rank {row.provider_rank ?? "—"} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
-                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : "History required — not analysed"}</p>
+                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : row.report_id ? "analysed" : "History required — not analysed"}</p>
                   <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id
@@ -569,7 +569,22 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               onClick={() => api("/mass-search/research-compare", "POST", { left_id: compareLeft, right_id: compareRight }).then((value) => {
                 const body = value as ResearchCompare;
                 const policy = body.window_policy || {};
-                const fields = (body.fields || []).map((field) => `${field.key}: ${String(field.left ?? "—")} vs ${String(field.right ?? "—")}`).join(" · ");
+                const formatCompare = (value: unknown) => {
+                  if (value == null || value === "") return "—";
+                  if (typeof value === "object") {
+                    const rec = value as Record<string, unknown>;
+                    if ("quantity" in rec || "proceeds" in rec || "sales" in rec) {
+                      return `sales ${rec.sales ?? "—"} · qty ${rec.quantity ?? "—"} · proceeds ${rec.proceeds ?? "—"}`;
+                    }
+                    try {
+                      return JSON.stringify(value);
+                    } catch {
+                      return "—";
+                    }
+                  }
+                  return String(value);
+                };
+                const fields = (body.fields || []).map((field) => `${field.key}: ${formatCompare(field.left)} vs ${formatCompare(field.right)}`).join(" · ");
                 const mismatches = (body.mismatches || []).map((item) => `${item.kind}: ${item.detail}`).join(" · ");
                 const policyText = [
                   policy.kind || "own_windows_shown_mismatch_blocks",

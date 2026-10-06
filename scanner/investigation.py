@@ -57,7 +57,7 @@ RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v8-usdc-route-v2'
+DECODER_VERSION = 'spot-v9-quote-conversion-fees-tips-v1'
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -541,7 +541,7 @@ def decode_supported_swaps(transactions, address):
         rows.append((record if isinstance(record, dict) else {}, raw))
     slots = Counter(raw['slot'] for _, raw in rows if isinstance(raw, dict)
                     and isinstance(raw.get('slot'), int) and not isinstance(raw['slot'], bool))
-    supported, failed, no_swap = 0, 0, 0
+    supported, failed, no_swap, conversions = 0, 0, 0, 0
     used_routes = set()
     for record, raw in rows:
         signature = record.get('signature')
@@ -603,7 +603,7 @@ def decode_supported_swaps(transactions, address):
             _integer(timestamp)
             _integer(slot)
             version = raw.get('version', 'legacy')
-            if isinstance(version, bool) or version not in ('legacy', 0):
+            if isinstance(version, bool) or version not in ('legacy', 0, 1):
                 raise ValueError('Unsupported transaction version')
             meta = raw.get('meta')
             message = raw.get('transaction', {}).get('message')
@@ -895,6 +895,25 @@ def decode_supported_swaps(transactions, address):
                 raise ValueError('SOL and USDC both moved; cross-settlement remains unresolved and is not converted')
             if usdc_settled:
                 mint, quantity = other_assets[0]
+                if mint == WSOL:
+                    usdc_decimals = decimals.get(USDC)
+                    if usdc_decimals is None:
+                        raise ValueError('USDC settlement is missing event-time decimals')
+                    with localcontext() as context:
+                        context.prec = 192
+                        amount_usdc = canonical(Decimal(abs(usdc_delta)) / (Decimal(10) ** usdc_decimals))
+                        amount_sol = canonical(Decimal(abs(quantity)) / LAMPORTS)
+                    from_asset = 'USDC' if usdc_delta < 0 else 'SOL'
+                    to_asset = 'SOL' if usdc_delta < 0 else 'USDC'
+                    emit('conversion', route['path'], mint=USDC, quantity_raw=str(abs(usdc_delta)),
+                         decimals=usdc_decimals, amount_sol=amount_sol, amount_usdc=amount_usdc,
+                         classification='quote_conversion', from_asset=from_asset, to_asset=to_asset,
+                         source=route['program'], venue=route['program'], instruction=route['instruction'],
+                         owner=address, fee_sol=fee_sol if paid else '0', paid_by_wallet=paid,
+                         settlement_mint=USDC, settlement_asset='USDC',
+                         reason='USDC↔SOL is a quote conversion, not a sale of a USDC or SOL position')
+                    conversions += 1
+                    continue
                 kind = 'buy' if quantity > 0 else 'sell'
                 if route['expected_kind'] and route['expected_kind'] != kind:
                     raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
@@ -940,29 +959,54 @@ def decode_supported_swaps(transactions, address):
             mint, quantity = assets[0]
             if not settlement or (quantity > 0) == (settlement > 0):
                 raise ValueError('No opposing SOL consideration for the evidenced asset exchange')
+            tips_lamports = sum(item['lamports'] for item in outside_native if item.get('direction') == 'withdrawal')
+            tips_sol = canonical(Decimal(tips_lamports) / LAMPORTS) if tips_lamports else '0'
+            network_fee_sol = fee_sol if paid else '0'
+            fees_and_tips_sol = canonical(Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)))
+            if mint == USDC:
+                usdc_decimals = decimals.get(USDC)
+                if usdc_decimals is None:
+                    raise ValueError('USDC settlement is missing event-time decimals')
+                with localcontext() as context:
+                    context.prec = 192
+                    amount_usdc = canonical(Decimal(abs(quantity)) / (Decimal(10) ** usdc_decimals))
+                    amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
+                from_asset = 'USDC' if quantity < 0 else 'SOL'
+                to_asset = 'SOL' if quantity < 0 else 'USDC'
+                emit('conversion', route['path'], mint=USDC, quantity_raw=str(abs(quantity)),
+                     decimals=usdc_decimals, amount_sol=amount, amount_usdc=amount_usdc,
+                     classification='quote_conversion', from_asset=from_asset, to_asset=to_asset,
+                     source=route['program'], venue=route['program'], instruction=route['instruction'],
+                     owner=address, fee_sol=fees_and_tips_sol, network_fee_sol=network_fee_sol,
+                     tips_sol=tips_sol, paid_by_wallet=paid, settlement_mint=WSOL,
+                     reason='USDC↔SOL is a quote conversion, not a sale of a USDC or SOL position')
+                conversions += 1
+                continue
             kind = 'buy' if quantity > 0 else 'sell'
             if route['expected_kind'] and route['expected_kind'] != kind:
                 raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            allocate_fee = paid and not outside_native and not native_roles
+            allocate_fee = paid
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
-                 owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
+                 owner=address, fee_sol=fees_and_tips_sol if allocate_fee else '0',
+                 network_fee_sol=network_fee_sol, tips_sol=tips_sol, paid_by_wallet=paid,
                  settlement_mint=WSOL,
-                 native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
+                 native_cash_role_state='UNKNOWN' if native_roles else 'PASS',
                  unresolved_native_roles=native_roles,
                  retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
                  observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
-                 reason='Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence' if allocate_fee else
-                        'Verified spot instruction and reconciled transaction-level owned net exchange; network fee remains unallocated')
+                 reason='Verified spot instruction and reconciled transaction-level owned net exchange; network fee and same-tx tips are allocated to this trade')
             if allocate_fee:
                 fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
                 fee_event['allocated_trade_path'] = route['path']
+                fee_event['tips_sol'] = tips_sol
+                fee_event['network_fee_sol'] = network_fee_sol
             supported += 1
             administration.extend(nonce_administration)
             for role in native_roles:
@@ -972,14 +1016,31 @@ def decode_supported_swaps(transactions, address):
                 direction = 'withdrawal' if info.get('source') in {address, *owned, *wsol_accounts} else 'deposit'
                 uncertain_cash(role['reason'], role['path'], amount=amount, direction=direction, facts=info)
             for movement in outside_native:
+                if movement.get('direction') == 'withdrawal' and allocate_fee:
+                    continue
                 uncertain_cash('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved',
                     movement['path'], amount=canonical(Decimal(movement['lamports']) / LAMPORTS),
                     direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
         except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
             unknown(str(exc))
+    unsupported = []
+    seen_unsupported = set()
+    for issue in unresolved:
+        signature = issue.get('signature')
+        if not signature or signature in seen_unsupported:
+            continue
+        seen_unsupported.add(signature)
+        unsupported.append({
+            'signature': signature,
+            'reason': issue.get('reason'),
+            'path': issue.get('path'),
+        })
     coverage = {'decoder_version': DECODER_VERSION, 'transactions': len(rows), 'decoded_swaps': supported,
                 'supported_transactions': supported, 'failed_transactions': failed,
                 'unresolved_transactions': len({issue['signature'] for issue in unresolved}),
+                'unsupported_transactions': unsupported,
+                'unsupported_tx_count': len(unsupported),
+                'conversions': conversions,
                 'unrecognized_transactions': no_swap, 'complete': False, 'history_complete': False,
                 'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement',
                 'classification': 'UNKNOWN', 'route_fixtures_independently_verified': False,

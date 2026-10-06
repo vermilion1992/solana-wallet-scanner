@@ -336,6 +336,11 @@ export type Report = {
   source_integrity?: { status?: string; damaged?: number; intact?: number } | null;
   declared_mints?: string[];
   wallet_completed_episodes?: number;
+  wallet_sale_count?: number;
+  unsupported_tx_count?: number;
+  unsupported_transactions?: Record<string, unknown>[];
+  conversions?: Record<string, unknown>[];
+  by_quote_asset?: Record<string, unknown>;
   material_exit?: {
     state?: string | null;
     first_sale_seconds?: number | null;

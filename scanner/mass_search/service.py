@@ -405,19 +405,10 @@ class MassSearchService:
         from .settlement import USDC, settlement_aware_worksheet, settlement_of
 
         trade_events = [event for event in events if event.get("kind") in ("buy", "sell")]
-        settlements = {settlement_of(event) for event in trade_events} if trade_events else set()
-        if settlements == {USDC}:
-            try:
-                worksheet = settlement_aware_worksheet(trade_events)
-            except ValueError:
-                worksheet = None
-        elif USDC in settlements:
+        try:
+            worksheet = settlement_aware_worksheet(trade_events) if trade_events else None
+        except ValueError:
             worksheet = None
-        else:
-            worksheet = fifo_sale_results([
-                {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol", "mint")}
-                for event in trade_events
-            ]) if trade_events else None
         exit_diag = material_exit_v2([
             {
                 "kind": event["kind"],
@@ -447,10 +438,14 @@ class MassSearchService:
         profit = None
         profit_unit = "SOL"
         profit_metric = (analysis.get("metrics") or {}).get("profit_sol")
+        mixed = bool((worksheet or {}).get("settlement_asset") == "mixed" or len((worksheet or {}).get("by_quote_asset") or {}) > 1)
         if isinstance(profit_metric, dict) and profit_metric.get("value") is not None and profit_metric.get("status") == "known":
             profit = profit_metric["value"]
             profit_unit = "SOL"
-        elif worksheet and worksheet.get("total_profit_usdc") not in (None, ""):
+        elif mixed:
+            profit = None
+            profit_unit = "mixed"
+        elif worksheet and worksheet.get("total_profit_usdc") not in (None, "") and worksheet.get("settlement_asset") == "USDC":
             profit = worksheet["total_profit_usdc"]
             profit_unit = "USDC"
         elif worksheet and worksheet.get("total_profit_sol") not in (None, ""):
@@ -459,7 +454,42 @@ class MassSearchService:
         window = {"start_inclusive": start, "end_exclusive": end}
         observed = self.clock()
         with self.store.lock, self.store.db:
-            if profit is None:
+            if profit_unit == "mixed":
+                by_asset = (worksheet or {}).get("by_quote_asset") or {}
+                usdc_ws = by_asset.get("USDC") or {}
+                sol_ws = by_asset.get("SOL") or {}
+                if usdc_ws.get("total_profit_usdc") not in (None, ""):
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_usdc", candidate_id=candidate_id,
+                        value=usdc_ws["total_profit_usdc"], unit="USDC",
+                        state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=len(holds) or len(events),
+                        observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                        source_provider="local-reconstruction",
+                        notes=["USDC-settled subset of a mixed wallet; no FX into SOL."],
+                    )
+                    _insert_metric(self.store, run_id, pnl)
+                if sol_ws.get("total_profit_sol") not in (None, ""):
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_sol", candidate_id=candidate_id,
+                        value=sol_ws["total_profit_sol"], unit="SOL",
+                        state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=len(holds) or len(events),
+                        observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                        source_provider="local-reconstruction",
+                        notes=["SOL-settled subset of a mixed wallet; no FX into USDC."],
+                    )
+                else:
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
+                        state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=0,
+                        observed_at=observed, evidence_sha256=[evidence],
+                        missing_dependencies=["mixed_quote_assets_no_fx"],
+                        source_provider="local-reconstruction",
+                        notes=["Mixed SOL+USDC subset; totals stay per quote asset with no FX."],
+                    )
+            elif profit is None:
                 pnl = build_metric(
                     metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
                     state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window, population="supported_closed_subset",
@@ -577,6 +607,7 @@ class MassSearchService:
             "coverage": analysis.get("coverage") or {},
             "research": research,
             "worksheet": worksheet,
+            "by_quote_asset": (worksheet or {}).get("by_quote_asset"),
             "material_exit": exit_diag,
             "evidence": [{"hash": evidence, "kind": "mass-search-reconstruction"}],
             "strict_preset": assert_strict_preset_unchanged(),

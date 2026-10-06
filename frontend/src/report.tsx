@@ -228,7 +228,7 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
   const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
   return (
     <div className="research-profile" data-research-profile="local">
-      <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds do not pass. Not safe to copy." />
+      <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds are not applied. Not safe to copy." />
       <div className="research-metrics mass-search-funnel">
         <div>
           <span>Funnel A</span>
@@ -247,7 +247,15 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         </div>
         <div>
           <span>Scoped P&amp;L</span>
-          <strong>{profile.scoped_pnl ? `${decimal(String(profile.scoped_pnl), 4)} ${String(profile.scoped_pnl_unit || "")}` : "unknown"}</strong>
+          <strong>{
+            profile.scoped_pnl
+              ? `${decimal(String(profile.scoped_pnl), 4)} ${String(profile.scoped_pnl_unit || "")}`
+              : (profile.scoped_pnl_by_quote_asset
+                ? Object.entries(profile.scoped_pnl_by_quote_asset as Record<string, unknown>)
+                  .map(([asset, value]) => `${value != null ? decimal(String(value), 4) : "unknown"} ${asset}`)
+                  .join(" · ")
+                : "unknown")
+          }</strong>
         </div>
       </div>
       <p className="subset-worksheet-note">
@@ -255,7 +263,10 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {profile.hold_t90_seconds != null ? ` · t90 ${String(profile.hold_t90_seconds)}s` : ""}
         {profile.final_hold_seconds != null ? ` · hold ${String(profile.final_hold_seconds)}s` : ""}
         {profile.unresolved_basis_sales != null ? ` · unresolved basis ${String(profile.unresolved_basis_sales)}` : ""}
+        {profile.sale_count != null ? ` · sales ${String(profile.sale_count)}` : ""}
         {` · market ${String(market.market_swaps ?? 0)} / holder-fee ${String(market.holder_fee_distributions ?? 0)}`}
+        {report.unsupported_tx_count != null ? ` · unsupported tx ${String(report.unsupported_tx_count)}` : ""}
+        {Array.isArray(report.conversions) && report.conversions.length ? ` · conversions ${String(report.conversions.length)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
       </p>
       <p className="subset-worksheet-note" data-report-provenance="true">
@@ -267,7 +278,7 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         . Reopened reports keep this capture and window; they are not a later live refresh.
       </p>
       <p className="subset-worksheet-note" data-result-scope="true">
-        Results are conditional on captured inventory. A positive matched trade never qualifies the account.
+        Results are conditional on captured inventory. Qualifying always reads meets the screen on matched trades in the captured window, never account performance.
         {(() => {
           const qual = (profile.qualification_category || {}) as { category?: string };
           return qual.category ? ` Qualification ${String(qual.category).replaceAll("_", " ")} (evidence quality, not a screen pass).` : "";
