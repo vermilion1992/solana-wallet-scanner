@@ -1,9 +1,11 @@
 {
   "kind": "product-completion-v2-handoff",
   "PRODUCT_READY": false,
+  "PRODUCT_READY_false_because": "mandatory gate genuine ranked multi-wallet path is BLOCKED (existing B3)",
   "not_safe_to_copy": true,
-  "app_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
-  "prior_freeze": "accbf13b6618fb75d25c14635e0ab04e0a40131b",
+  "app_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "harness_sha": "50cc6e29fa0069e62e522236865755f73adbeb18",
+  "operating": "docs/OPERATING.md",
   "genuine_multi_wallet_validation": "BLOCKED",
   "acquisition": {
     "authorization_id": "live-ranked100-next-candidates-2026-10-06-mitch",
@@ -34,7 +36,12 @@
     "outcome": "inconclusive",
     "inconclusive": 99,
     "zero_qualified": 1,
-    "completed_qualified": 0
+    "completed_qualified": 0,
+    "search_ran": "not_executed",
+    "qualification": {
+      "not_evaluated": 99,
+      "analysed_incomplete": 1
+    }
   },
   "disposition_counts": {
     "History required": 99,
@@ -44,16 +51,12 @@
     "Cancelled": 0
   },
   "phone_ah": "PASS",
+  "clean_launch": "PASS",
   "lan": "PASS",
-  "backend": "3604 passed / 0 failed",
-  "frontend_asset": "frontend/dist/assets/index-DkLGyhOf.js",
+  "backend": "3607 passed / 0 failed",
+  "frontend_asset": "frontend/dist/assets/index-hN-S6YfT.js",
   "browser_emulation_not_physical_phone": true,
   "remote_preview": "proposal only; not deployed",
   "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
-  "pr_draft": true,
-  "independent_reviews": {
-    "accounting": "bc-50968f34-9c5c-5886-9ffd-beb073a4fd7f",
-    "app_security": "bc-70213343-7b25-5034-9cf4-c3634d700719",
-    "instruction": "focused final-changes only; no app edits"
-  }
+  "pr_draft": false
 }

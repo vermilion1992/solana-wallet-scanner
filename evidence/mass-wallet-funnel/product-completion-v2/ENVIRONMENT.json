@@ -1,8 +1,8 @@
 {
   "kind": "product-completion-v2-environment",
-  "app_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
-  "tree_at_app_freeze": "clean at 1ab2542 (implementation). Evidence files added after validation.",
-  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "app_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "tree_at_app_freeze": "clean at c34eb2c (implementation). Evidence files added after validation. Harness port fix 50cc6e2.",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
   "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
   "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
   "pip_freeze_selected": {
@@ -20,7 +20,7 @@
     "version": "0.3.11"
   },
   "scanner_version": "0.3.11",
-  "frontend_asset": "frontend/dist/assets/index-DkLGyhOf.js",
+  "frontend_asset": "frontend/dist/assets/index-hN-S6YfT.js",
   "viewport": "390x844 Playwright Chromium emulation, not a physical phone",
   "PRODUCT_READY": false
 }

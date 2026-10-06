@@ -10,6 +10,35 @@
     "Error": 0,
     "Cancelled": 0
   },
+  "qualification_counts": {
+    "not_evaluated": 99,
+    "analysed_incomplete": 1,
+    "positive_matched_position_evidence": 0,
+    "positive_net_realised_over_window": 0,
+    "profitable_account_performance": 0
+  },
+  "research_screen": {
+    "outcome": "inconclusive",
+    "outcome_class": "inconclusive_insufficient_history",
+    "counts": {
+      "inconclusive": 99,
+      "completed_qualified": 0,
+      "zero_qualified": 1,
+      "not_executed": 0,
+      "universe": 100,
+      "qualification": {
+        "not_evaluated": 99,
+        "analysed_incomplete": 1,
+        "positive_matched_position_evidence": 0,
+        "positive_net_realised_over_window": 0,
+        "profitable_account_performance": 0
+      }
+    },
+    "thresholds_fixed_before_evaluation": {
+      "min_completed_known_cost": "1",
+      "min_sample_positions": "3"
+    }
+  },
   "rows": [
     {
       "provider_rank": 1,
@@ -19,6 +48,7 @@
       "shortlisted": true,
       "capture_available": true,
       "disposition": "Captured and analysed",
+      "qualification_category": "analysed_incomplete",
       "note": "Rank-1 page-0 genuine capture; known-cost close + unresolved basis + open inventory",
       "corpus_kind": "GENUINE_REPLAY"
     },
@@ -30,6 +60,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -41,6 +72,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -52,6 +84,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -63,6 +96,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -74,6 +108,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -85,6 +120,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -96,6 +132,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -107,6 +144,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -118,6 +156,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -129,6 +168,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -140,6 +180,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -151,6 +192,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -162,6 +204,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -173,6 +216,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -184,6 +228,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -195,6 +240,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -206,6 +252,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -217,6 +264,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -228,6 +276,7 @@
       "shortlisted": true,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -239,6 +288,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -250,6 +300,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -261,6 +312,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -272,6 +324,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -283,6 +336,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -294,6 +348,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -305,6 +360,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -316,6 +372,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -327,6 +384,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -338,6 +396,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -349,6 +408,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -360,6 +420,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -371,6 +432,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -382,6 +444,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -393,6 +456,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -404,6 +468,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -415,6 +480,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -426,6 +492,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -437,6 +504,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -448,6 +516,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -459,6 +528,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -470,6 +540,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -481,6 +552,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -492,6 +564,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -503,6 +576,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -514,6 +588,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -525,6 +600,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -536,6 +612,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -547,6 +624,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -558,6 +636,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -569,6 +648,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -580,6 +660,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -591,6 +672,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -602,6 +684,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -613,6 +696,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -624,6 +708,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -635,6 +720,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -646,6 +732,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -657,6 +744,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -668,6 +756,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -679,6 +768,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -690,6 +780,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -701,6 +792,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -712,6 +804,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -723,6 +816,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -734,6 +828,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -745,6 +840,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -756,6 +852,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -767,6 +864,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -778,6 +876,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -789,6 +888,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -800,6 +900,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -811,6 +912,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -822,6 +924,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -833,6 +936,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -844,6 +948,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -855,6 +960,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -866,6 +972,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -877,6 +984,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -888,6 +996,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -899,6 +1008,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -910,6 +1020,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -921,6 +1032,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -932,6 +1044,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -943,6 +1056,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -954,6 +1068,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -965,6 +1080,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -976,6 +1092,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -987,6 +1104,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -998,6 +1116,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1009,6 +1128,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1020,6 +1140,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1031,6 +1152,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1042,6 +1164,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1053,6 +1176,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1064,6 +1188,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1075,6 +1200,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1086,6 +1212,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1097,6 +1224,7 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     },
@@ -1108,32 +1236,11 @@
       "shortlisted": false,
       "capture_available": false,
       "disposition": "History required",
+      "qualification_category": "not_evaluated",
       "note": "History required \u2014 not analysed",
       "corpus_kind": null
     }
   ],
-  "controls_not_in_ranked_100": [
-    {
-      "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
-      "role": "G1 SOL control archive \u2014 not a ranked-snapshot wallet",
-      "does_not_count_as_second_ranked_wallet": true,
-      "disposition": "Captured and analysed (control only)"
-    }
-  ],
-  "synthetic_kept_separate": true,
-  "genuine_ranked_wallets_through_real_batch": 1,
-  "genuine_multi_wallet_validation": "BLOCKED",
   "PRODUCT_READY": false,
-  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
-  "research_screen": {
-    "outcome": "inconclusive",
-    "outcome_class": "inconclusive_insufficient_history",
-    "counts": {
-      "inconclusive": 99,
-      "zero_qualified": 1,
-      "completed_qualified": 0,
-      "not_executed": 0
-    },
-    "note": "Today's run over the saved snapshot is inconclusive for 99 wallets. Rank-1 n=1 is zero-qualified (min_sample_positions=3)."
-  }
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc"
 }

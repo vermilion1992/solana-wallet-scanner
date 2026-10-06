@@ -61,7 +61,7 @@
     "stop": "first reconciled completed position, win or loss"
   },
   "PRODUCT_READY": false,
-  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
   "separate_research_search_draft": {
     "authorization_id": "live-ranked100-research-search-2026-10-06-mitch",
     "enabled": false,

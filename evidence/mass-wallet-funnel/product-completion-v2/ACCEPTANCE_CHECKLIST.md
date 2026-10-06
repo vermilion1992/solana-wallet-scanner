@@ -3,7 +3,7 @@
 Tracks four tracks separately. `PRODUCT_READY` stays false while any existing
 gate is unresolved (B1 `NO_GO_CURRENT_SOURCE`, B2 `OPEN`, B3 `BLOCKED`).
 
-Frozen app SHA: `1ab254253900a48ee7858731e04faafd09d1210f`.
+Frozen app SHA: `c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc`.
 
 ## (a) Application functionality
 
