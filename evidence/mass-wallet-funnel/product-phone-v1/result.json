@@ -5,6 +5,7 @@
   "provider_calls": 0,
   "external_count": 0,
   "compare_status": 200,
+  "tested_commit": "90cbabafcec8447878a0543068e4bdbdd4aeae96",
   "pre_harness_commit": "2accce8394fa612c3c3b09d201c21c54ac2aa2ba",
   "genuine_capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
   "cases": {
