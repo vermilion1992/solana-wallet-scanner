@@ -1,90 +1,102 @@
-# RANKED100_RESEARCH_SEARCH_HISTORY (grant B): attempt 1
+# RANKED100_RESEARCH_SEARCH_HISTORY (grant B): fix pass
 
-**Outcome: implementation incomplete. Exact remaining blocker: code defects D1–D6 (see `DEFECTS.md`) must be
-fixed by the cloud agent and re-verified offline against these captures. This executor had no CloudAgent tool,
-so no code was changed. Captures are complete and reusable. A further live attempt is NOT needed for these 10 wallets.**
+**Outcome: D1–D10 fixed and re-verified offline against attempt-1 captures. No further live attempt is needed for these 10 wallets.**
 
-`PRODUCT_READY` = **false**. B3 = **BLOCKED** (unchanged). No profitability claim. Not MATCH.
+`PRODUCT_READY` = **false**. B3 = **BLOCKED**. Two newest-first GTA pages are not complete history. No profitability claim. Not MATCH. Qualifying means the wallet meets the screen on matched trades in the captured window, never account performance.
 
 ## Grant and approval
 
-- Grant `live-ranked100-research-search-2026-10-06-mitch`. Approved by Mitch Hoffman 2026-10-06 15:38 ACDT ("B", verbatim in
-  `GRANT_ARMING_RECORD.json`). It was armed **locally only** on the secure box. The repo draft stays `enabled:false`. No enabled grant was committed.
-- Wallets: the app's own `research_search_proposal()` selection. These are the top 10 ranked-100 wallets without a capture, ordered by provider trade count.
+- Grant `live-ranked100-research-search-2026-10-06-mitch`. Approved by Mitch Hoffman 2026-10-06 15:38 ACDT ("B").
+- Repo draft stays `enabled: false`. No grant was enabled in this pass. No Helius or Birdeye call was made.
+- Attempt-1 captures (20 pages, all HTTP 200, 200 documented credits, $0, 0 Birdeye) are unchanged.
 
-## Ledger (attempt 1)
+## Fix commit
 
-| | Value |
+Tested application commit: `1d1b3ec` (this evidence commit sits on top). Branch `cursor/research-search-b-fix-1055`. Draft PR #6.
+
+## Per-wallet table (window 2026-09-05T13:29:27Z → 2026-10-05T13:29:27Z)
+
+Offline `box_driver/ingest.py` + `box_driver/recon.py` on a fresh data dir. All 10 wallets saved a report. App == independent per quote asset and per sale for every completed known-cost position.
+
+| Rank | Wallet | Pages | Completed positions | Gross SOL | Fees+tips SOL | Net SOL | USDC matched | Unresolved (SOL/USDC) | Open lots (SOL/USDC) | Unsupported txs | Screen |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2 | gtfo…CgFL | 2 | 16 | 5.272601609 | 3.258455778 | 2.014145839 | — | 4 / 0 | 0 / 0 | 179 | qualifies (matched trades in captured window) |
+| 4 | CccS…y1eU | 2 | 6 | 0.254204813 | 0.133909877 | 0.120294936 | — | 0 / 0 | 0 / 0 | 46 | qualifies (matched trades in captured window) |
+| 10 | BVZt…Y9n9 | 2 | 0 | — | — | — | — | 0 / 1 | 0 / 0 | 149 | fail (set minimums not met) |
+| 11 | BSN5…BtCM | 2 | 0 | — | — | — | — | 0 / 0 | 0 / 0 | 160 | fail (set minimums not met) |
+| 14 | DQ7n…9Cys | 2 | 0 | — | — | — | — | 0 / 1 | 0 / 0 | 198 | fail (set minimums not met) |
+| 15 | A6PS…vbot | 2 | 6 | 297.232334822 | 9.848260002 | 287.384074822 | — | 0 / 0 | 0 / 0 | 196 | qualifies (matched trades in captured window) |
+| 17 | An9s…LYSB | 2 | 0 | — | — | — | — | 0 / 0 | 0 / 0 | 199 | fail (set minimums not met) |
+| 53 | 58PW…xvDL | 2 | 2 | — | — | — | 14739.373324196 | 0 / 6 | 1 / 3 | 181 | fail (`min_sample_positions=3`; 2 completed) |
+| 56 | AW6P…MzD6 | 2 | 0 | — | — | — | — | 0 / 0 | 0 / 0 | 196 | fail (set minimums not met) |
+| 90 | CRXo…V68U | 2 | 0 | — | — | — | — | 0 / 0 | 0 / 0 | 117 | fail (set minimums not met) |
+
+- **Qualifying count: 3** (gtfo, CccS, A6PS). Research-screen outcome `completed` over the ranked-100 snapshot: inconclusive 89 · zero-qualified 7 · qualified 3 · not_executed 1 (rank-1 capture not replayed in this ingest).
+- Qualification category for all 10 analysed research wallets remains `analysed_incomplete` (evidence class 2 when a positive known-basis subset exists). That is evidence quality, not a pass/fail.
+- Unset thresholds are shown as "not set" and are not applied. The screen applies the configured defaults `min_completed_known_cost=1` and `min_sample_positions=3`.
+- Attempt-1's gtfo +3.411606267 SOL was fee-light independent net. Current matched SOL is net of fees+tips: gross 5.272601609 − 3.258455778 = **2.014145839**, and app == independent.
+- 58PW SOL unresolved sale is now a USDC→SOL conversion (not a SOL position). SOL: 0 known-cost, 0 unresolved, 1 open lot.
+
+## D10 A6PS biggest-token residual
+
+Token `EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump` (1 buy + 13 sells):
+
+| Item | SOL |
 | --- | --- |
-| Tested app commit | `78678d18d8f74304380588410bdef2ae4bc4530b` (app code = `c34eb2c`) |
-| Started / finished | 2026-10-06 15:46:15 → 15:46:17 ACDT (2.2 s) |
-| Helius requests | **20 / 20** (all HTTP 200, 100 records each, no retries, concurrency 1) |
-| Credits | **200** documented estimate (10 per 100 full txs, helius.dev/docs/billing/credits). The provider sent no billing headers, so there is no provider-reported figure. |
-| $ spend | **$0** additional |
-| Birdeye | 0 |
-| Stop reason | `coverage_objective_reached` (10 wallets × 2 pages) |
-| Cumulative (all attempts) | 1 attempt · 20 requests · 200 documented credits · $0 · 0 Birdeye |
+| Decoded gross (sell − buy consideration) | 297.931068225 |
+| Allocated network fee + same-tx tips | 5.954070 |
+| Decoded net | 291.976998225 |
+| Raw wallet SOL Δ on those 14 txs | 291.975484385 |
+| Residual (net − raw) | 0.001513840 |
 
-Per-request provenance is in `attempt-1/LEDGER.json`: exact JSON-RPC body, pagination token used and returned, first/last signature, block-time span, dispatch/complete timestamps, response headers and raw sha256.
+The 0.00151384 SOL is same-tx account-funding for `6dGSmzDVAaP7UUWcsNvoj7evnUmAV2co6sfoF3yYHZb8` on buy `gWoowMidB14X…`. It is not swap consideration, not a network fee, and not a tip. Matched SOL P&L is net of network fee and same-tx tips; that rent/create-account native stays out of P&L.
 
-## Capture safety (the G3 SOURCE_RECORDS_DAMAGED hazard)
+Outside native movements stay listed as unresolved capital on the decoder (reviewed contract). Worksheets still net `fees_and_tips_sol`. Unsupported transactions are counted and listed; they are not silently skipped. Version 1 is accepted into the same decoder path.
 
-The app's live transport (`g3_reacquire.helius_gta_http`) is locked to the rank-1 wallet. It also stores a *redacted, re-serialised* body,
-so it is not byte-for-byte. A local box driver (`box_driver/live_capture.py`) was used instead. It reuses the app's request
-construction (`build_historical_gta_options`, `assert_gta_options_not_widened`, `EXACT_HELIUS_OPTIONS`) and writes
-`response.content` verbatim. The sha256 is taken over those exact bytes and re-checked after writing.
-Redaction applies only to the request URL: the key is never written.
-A self-test against a local mock server confirmed byte-identical files and no key material before the first live call.
-After the run, a scan of every box file and of this directory found no key material. Raw bodies are committed gzipped (`-9 -n`, 3.4 MB).
-`gunzip` reproduces `raw_sha256`.
+## App vs independent
 
-## Per-wallet results (window 2026-09-05T13:29:27Z → 2026-10-05T13:29:27Z, acquisition support from 2026-07-07)
-
-Newest-first pages fetched on 2026-10-06 include records after the snapshot cutoff. Those are outside the report window and excluded.
-
-| Wallet | Rank | Pages (txs) | Span (UTC) | App: in-window trades | App: completed positions shown | App matched P&L | Independent matched P&L (`tools/independent_capture_reconciliation._fifo`) | Indep. unresolved-basis / open lots | App classification |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| CccS…y1eU | 4 | 2 (200) | 10-05 08:55 → 10-06 05:11 | 12 | 6 (flat-to-flat counted 0, D2) | +0.251129813 SOL | +0.251129813 SOL (6 sales), **AGREE** | 0 / 0 | analysed-incomplete; screen zero-qualified |
-| gtfo…CgFL | 2 | 2 (200) | 10-04 05:35 → 10-06 04:59 | 75 | — (**report failed, D1**) | — | +3.411606267 SOL (55 sales) | 4 / 0 | not evaluated (no report) |
-| A6PS…vbot | 15 | 2 (200) | 10-03 05:28 → 10-06 05:02 | 52 | **46 (should be 6, D3)** | +297.232334822 SOL | +297.232334822 SOL (46 sales), **AGREE** (totals); per-row display wrong (D6) | 0 / 0 | analysed-incomplete; zero-qualified |
-| An9s…LYSB | 17 | 2 (200) | 10-03 18:15 → 10-05 08:40 | 0 (0 decoded swaps) | 0 | — | — | — | analysed-incomplete |
-| CRXo…V68U | 90 | 2 (200) | 09-26 06:14 → 10-05 08:51 | 0 (0 decoded) | 0 | — | — | — | analysed-incomplete |
-| BVZt…Y9n9 | 10 | 2 (200) | 09-29 11:59 → 10-05 22:46 | 2 (1 SOL, 1 USDC) | 0 | — | — (both sales unbacked) | 1 SOL + 1 USDC / 0 | analysed-incomplete |
-| AW6P…MzD6 | 56 | 2 (200) | 10-01 03:18 → 10-06 02:11 | 0 (0 decoded) | 0 | — | — | — | analysed-incomplete |
-| 58PW…xvDL | 53 | 2 (200) | 09-23 03:57 → 10-06 03:57 | 20 (18 USDC, 2 SOL) | 2 | **none (mixed settlement, D4)** | +14739.373324196 USDC (3 sales); SOL none | USDC 6 / 3; SOL 1 / 1 | analysed-incomplete |
-| DQ7n…9Cys | 14 | 2 (200) | 10-02 23:36 → 10-06 04:24 | 1 (USDC) | 0 | — | — (1 unbacked sale) | 1 / 0 | analysed-incomplete |
-| BSN5…BtCM | 11 | 2 (200) | 09-23 16:41 → 09-29 00:20 | 0 (0 decoded) | 0 | — | — | — | analysed-incomplete |
-
-- **Qualifying accounts: 0.** Research screen outcome `inconclusive` (90 inconclusive, 9 zero-qualified, 0 qualified, 1 not-executed of 100).
-  Under the current contract, every unset threshold of the 10 fails, so with only the two fixed defaults no wallet can qualify.
-  That rule is a product decision, flagged in `DEFECTS.md` and not changed here.
-  On corrected counts, CccS (6), A6PS (6) and gtfo (≥ 3 closed mints) would meet `min_completed_known_cost=1` and `min_sample_positions=3`.
-  That is still only evidence class 2 (positive known basis, incomplete history), never account performance.
-- P&L is matched P&L conditional on captured inventory. It is not net realised, not wallet-wide and not copyable.
-  When tips exist, SOL P&L is gross of network fees and tips that the decoder leaves unallocated (D10).
-- 4 of 10 wallets had 0 decoded swaps (unreviewed venues, tx version 1, tip flows), see D10.
-
-## App vs independent reconciliation
-
-Where the app produced a worksheet, the per-asset totals AGREE exactly (CccS, A6PS). The app is missing results for gtfo (D1) and 58PW USDC (D4).
-The per-row display is misattributed for every multi-mint wallet (D6). Not all wallets agree yet. Each disagreement is explained in `DEFECTS.md`, with a fix and regression test specified.
-Outputs: `recon/<address>.json`, `recon/SUMMARY.json`. Caveat: the reconciliation's FIFO is independent, but it shares the app decoder.
+Every completed known-cost sale AGREE per quote asset and per signature. Outputs: `recon/<address>.json`, `recon/SUMMARY.json`. The recon tool shares the decoder and does not import app FIFO / settlement / service.
 
 ## App visibility (390×844 Playwright Chromium, phone-sized browser emulation, not a physical phone)
 
-The app was launched with `./run.sh --data-dir <copy of the replay data dir> --no-browser` on loopback.
-Unauthenticated `/api/state` returned 401. There were no external requests and no page errors.
-Screenshots are in `screenshots/`: the ranked list shows the analysed wallets with **Open report**, reports open, and Compare CccS vs A6PS works.
-These images show the attempt-1 **pre-fix** state, including defects D3/D6/D7 visible on screen.
-The replay used `box_driver/ingest.py`, which patches the catalog in-process because of D5. A fresh checkout cannot reproduce this yet.
+Launcher: `python -m scanner --data-dir <fresh ingest dir> --port 8771 --no-browser` on loopback. Unauthenticated `/api/state` = 401. Zero external requests. Zero page errors.
+
+Screenshots in `screenshots/`, labeled as phone-sized browser emulation:
+
+- `fix-01-ranked-list-phone.png` — captured wallets show cached capture / Open report; uncaptured rows still say History required.
+- `fix-02-research-screen-phone.png` — screen completed, qualified 3, "not set is not applied".
+- `fix-03-ranked-row-A6PSQF-phone.png` — A6PSQF analysed, B ESTABLISHED, no History required on analysed rows.
+- `fix-04-report-A6PSQF-phone.png` — genuine replay report, 6 positions.
+- `fix-05-compare-CccSh2-vs-A6PSQF-phone.png` — identical windows: "compare is shown", samples 6 vs 6, no `[object Object]`, no "Compare is blocked".
 
 ## Offline suite at the tested commit
 
-With provider keys exported: 3046 passed, then stopped on 1 failure (D9, which depends on key presence).
-With keys unset: see `TESTS.md`.
+- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_KEY pytest -q`): **3617 passed**, 440 subtests, 0 failed (8 min 40 s). EXIT 0.
+- Keys set (dummy `HELIUS_API_KEY` / `BIRDEYE_API_KEY` / `HELIUS_KEY`): **3617 passed**, 440 subtests, 0 failed (8 min 58 s). EXIT 0. D9 monkeypatch clears keys.
+- `npm run build` (frontend): `tsc -b && vite build` OK; `frontend/dist/assets/index-DpiADeUU.js`.
 
-## Next step
+Regression tests (genuine fixtures, decompress + sha256 first):
 
-Send `CLOUD_AGENT_STEER_DRAFT.md` to cloud agent `bc-3a674f17-fc60-5cc9-85c0-7fb378501055`. When the fix commit passes the full suite and build, pull it and re-run
-`box_driver/ingest.py` and `box_driver/recon.py` **offline** on these captures (0 requests).
-A second live attempt is only justified if a fix requires different pages. None of D1–D9 do.
+- `tests/test_research_search_b_defects.py::test_d5_catalog_registers_hash_verified_research_captures`
+- `tests/test_research_search_b_defects.py::test_d1_gtfo_sol_excess_saves_report_with_unresolved_basis`
+- `tests/test_research_search_b_defects.py::test_d2_completed_episodes_time_order_and_isolate`
+- `tests/test_research_search_b_defects.py::test_d3_zero_episodes_is_zero_and_a6ps_shows_six`
+- `tests/test_research_search_b_defects.py::test_d4_mixed_wallet_separate_quote_asset_worksheets`
+- `tests/test_research_search_b_defects.py::test_d6_analytics_keyed_by_signature`
+- `tests/test_research_search_b_defects.py::test_d8_drafts_armed_with_approval_fields_validate`
+- `tests/test_research_search_b_defects.py::test_d10_conversions_fees_and_unsupported_listed`
+- `tests/test_research_search_b_defects.py::test_d10_a6ps_biggest_token_net_of_fees_vs_raw_sol_delta`
+- `tests/test_research_search_b_defects.py::test_independent_recon_address_works_for_catalog_captures`
+- `tests/test_screening_routes.py::test_import_identity_sample_screen_is_saved_without_strict_promotion`
+- `tests/test_mass_search_product_completion.py::test_unset_thresholds_do_not_pass`
+
+## Independent reviews of the fix commit
+
+- Accounting / C + D1–D10 + screen decision: **ACCEPT** (no requirement-violating findings). See `INDEPENDENT_REVIEWS.md`.
+- App-security / A B D5 D7 D8 D9: **ACCEPT** (no requirement-violating findings). Stale-dist nit was fixed by rebuilding `frontend/dist` in `1d1b3ec`.
+
+## Still blocked
+
+- **B3 / PRODUCT_READY:** two newest-first pages are not complete history. Open inventory, unresolved-basis sales, unsupported venues, and the other 89 ranked wallets remain.
+- No live dispatch. Drafts stay disabled. Consumed grants stay consumed.
+- A second live attempt is only justified if different pages are required. None of D1–D10 required that.

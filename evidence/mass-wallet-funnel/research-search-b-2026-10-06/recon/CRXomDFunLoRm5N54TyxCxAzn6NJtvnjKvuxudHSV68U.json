@@ -2,25 +2,10 @@
   "kind": "independent-capture-reconciliation-v1",
   "imports_app_accounting": false,
   "wallet": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
-  "capture_sha256": "bcb1728cdc999604b3b4be4171a706149cce49e11a909a18248b1c4facb27663",
-  "source_pages": [
-    {
-      "page_index": 0,
-      "raw_sha256": "d283756ee34b377d44b6c97700ae6c433b619931f2d30989c27078d7959dec8c"
-    },
-    {
-      "page_index": 1,
-      "raw_sha256": "1e93978db05e55cf550b89dc03bd546d9130fb769193e5fcd2fbda9dee6bddb7"
-    }
-  ],
-  "window": {
-    "report_start_inclusive": "2026-09-05T13:29:27Z",
-    "report_end_exclusive": "2026-10-05T13:29:27Z",
-    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
-  },
-  "decoder_is_shared_with_app": true,
   "fifo": {},
-  "app_report_id": "ranked-partial-CRXomDFu-099e7d27",
+  "conversions": [],
+  "unsupported_tx_count": 117,
+  "app_report_id": "ranked-partial-CRXomDFu-999600a8",
   "app_error": null,
   "comparison": {},
   "PRODUCT_READY": false

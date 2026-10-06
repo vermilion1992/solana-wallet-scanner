@@ -2,44 +2,7 @@
   "kind": "independent-capture-reconciliation-v1",
   "imports_app_accounting": false,
   "wallet": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
-  "capture_sha256": "1473e50b3edbbd9fbe9afad0fc575c9104efb621d821616d033c7b8aadf3f9b1",
-  "source_pages": [
-    {
-      "page_index": 0,
-      "raw_sha256": "9133f2f7742ed32556da1f450d8e5332e3300e64a5cf199963533ace227a1c52"
-    },
-    {
-      "page_index": 1,
-      "raw_sha256": "a160d0d6c0ecf92370ef5071c50d66dc158351a0cc0a7aa1fb632f3eb9469f45"
-    }
-  ],
-  "window": {
-    "report_start_inclusive": "2026-09-05T13:29:27Z",
-    "report_end_exclusive": "2026-10-05T13:29:27Z",
-    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
-  },
-  "decoder_is_shared_with_app": true,
   "fifo": {
-    "SOL": {
-      "asset": "SOL",
-      "known_cost_sells": [],
-      "unresolved_basis_sales": [
-        {
-          "signature": "2er1h9XemTzHLjj4cKyCu9yHXvN3T6Kka9rtTMDyvyDp7mCZomz32T1HGEJAZ2iJ1MsnMuCJftmU2xdCQhCD6crL",
-          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-          "unmatched_quantity_raw": "1010000000",
-          "gross_proceeds": "8.308149505",
-          "fee_sol": "0.000038056",
-          "unresolved_basis": true,
-          "whole_sale_pnl_resolved": false,
-          "result_scope": "conditional_on_captured_inventory"
-        }
-      ],
-      "open_lots": [],
-      "total_profit": null,
-      "sol_fees_not_converted": false,
-      "missing_basis_is_not_zero": true
-    },
     "USDC": {
       "asset": "USDC",
       "known_cost_sells": [],
@@ -61,18 +24,18 @@
       "missing_basis_is_not_zero": true
     }
   },
-  "app_report_id": "6624c44640ad457c88a825a0ddca4211",
+  "conversions": [
+    {
+      "signature": "2er1h9XemTzHLjj4cKyCu9yHXvN3T6Kka9rtTMDyvyDp7mCZomz32T1HGEJAZ2iJ1MsnMuCJftmU2xdCQhCD6crL",
+      "from_asset": "USDC",
+      "to_asset": "SOL",
+      "timestamp": 1791168407
+    }
+  ],
+  "unsupported_tx_count": 149,
+  "app_report_id": "c49b16b375cc42fdb483e549e11dc24c",
   "app_error": null,
   "comparison": {
-    "SOL": {
-      "independent_total": null,
-      "app_total": null,
-      "independent_known_cost_sells": 0,
-      "app_sales": 0,
-      "independent_unresolved_basis_sales": 1,
-      "independent_open_lots": 0,
-      "status": "BOTH_EMPTY"
-    },
     "USDC": {
       "independent_total": null,
       "app_total": null,
@@ -80,6 +43,7 @@
       "app_sales": 0,
       "independent_unresolved_basis_sales": 1,
       "independent_open_lots": 0,
+      "per_sale": true,
       "status": "BOTH_EMPTY"
     }
   },
