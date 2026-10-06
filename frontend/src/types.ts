@@ -777,6 +777,8 @@ export type RankedWorkflowRow = {
   can_open_report?: boolean;
   user_shortlisted?: boolean;
   history_required?: boolean;
+  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
+  independent_audit?: Record<string, unknown> | null;
   history_required_label?: string | null;
   in_window_span?: { seconds?: number; hours?: string; start?: string; end?: string } | null;
   row_kind?: string;
@@ -949,6 +951,10 @@ export type ResearchCompare = {
     right_independently_audited_episode_net_unit?: string | null;
     result_scope?: string;
   };
+  left_funnel?: { A?: { state?: string }; B?: { state?: string }; C?: { state?: string } } | null;
+  right_funnel?: { A?: { state?: string }; B?: { state?: string }; C?: { state?: string } } | null;
+  left_qualification_category?: { category?: string } | null;
+  right_qualification_category?: { category?: string } | null;
 };
 export type MassSearchStageCounts = {
   input: number;

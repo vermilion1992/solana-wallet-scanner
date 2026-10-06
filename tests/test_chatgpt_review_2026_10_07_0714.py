@@ -54,6 +54,7 @@ def _quota_record(remaining=8):
         "reserved_unallocated": 12,
         "usable_ceiling": 8,
         "remaining": remaining,
+        "baseline": remaining,
         "overages_enabled": False,
         "operator": "mitch-offline-synthetic",
         "confirmed_at": "2026-10-07T00:00:00Z",
@@ -75,8 +76,10 @@ def _synthetic_grant(draft, **overrides):
     return grant
 
 
-def _gtfo_progress():
+def _gtfo_progress(response_id="gtfo-page-1", page_identity=None):
     return {
+        "response_id": response_id,
+        "page_identity": page_identity,
         "named_dependency_observations": [{
             "signature": "5m3vQ8YP8mNzVsg2ZiUaEBnW3H3FrSTZr4qPk9mPLnTHnEXWZzWNcvA1HK1X4dxLqwAQBdpM6wrp7df4u8fe9bKU",
             "unresolved_basis_cleared": True,

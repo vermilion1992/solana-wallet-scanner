@@ -10,6 +10,7 @@ from scanner.mass_search.qualification_gates import (
     CROSS_CURRENCY_SENSITIVITY,
     SENSITIVITY_NOT_ESTABLISHED,
     amounts_agree,
+    audit_fingerprint_matches,
     bindable_independent_audit,
     certificate_comparison_proof,
     completed_episode_ledger,
@@ -376,7 +377,7 @@ INDEPENDENT_AUDIT_PATH = (
 )
 
 
-def load_committed_independent_audit(address, fingerprint=None):
+def load_committed_independent_audit(address, fingerprint=None, ledger=None):
     if not address or not INDEPENDENT_AUDIT_PATH.is_file():
         return None
     try:
@@ -425,7 +426,11 @@ def load_committed_independent_audit(address, fingerprint=None):
             ),
         }
         if fingerprint is not None:
-            return bindable_independent_audit(loaded, fingerprint)
+            if ledger is not None:
+                return bindable_independent_audit(loaded, fingerprint, ledger)
+            if not audit_fingerprint_matches(loaded, fingerprint):
+                return None
+            return loaded
         return loaded
     return None
 
@@ -770,7 +775,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             "fingerprintless_not_certifying": True,
         }
     else:
-        loaded = load_committed_independent_audit(report.get("address") if report else None, fingerprint)
+        loaded = load_committed_independent_audit(report.get("address") if report else None, fingerprint, ledger)
         profile["independent_audit"] = loaded
         if loaded:
             report["independent_audit"] = loaded

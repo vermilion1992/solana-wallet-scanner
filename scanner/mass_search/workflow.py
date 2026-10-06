@@ -245,7 +245,7 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
         episodes=ledger,
     )
     report["audit_fingerprint"] = fingerprint
-    audit = load_committed_independent_audit(address, fingerprint)
+    audit = load_committed_independent_audit(address, fingerprint, ledger)
     if audit and bindable_independent_audit(audit, fingerprint, ledger):
         report["independent_audit"] = audit
     elif report.get("independent_audit"):
@@ -518,7 +518,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
         reconstructed_ok = _reconstructed_pass(profile, filters) if profile else None
         if reconstructed_ok is False:
             continue
-        funnel = (report or {}).get("funnel") or classify_candidate(
+        funnel = classify_candidate(
             provider_rank=row["provider_rank"],
             provider_trade_count=row.get("trade_count"),
             provider_score=row.get("provider_score"),
@@ -531,6 +531,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
             **row,
             "report_id": (report or {}).get("id"),
             "funnel": funnel,
+            "completed_episode_ledger": (profile or {}).get("completed_episode_ledger"),
             "research_profile": profile,
             "analytics": (report or {}).get("analytics"),
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
@@ -551,7 +552,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     for row in universe["rows"]:
         report = reports.get(row["address"])
         profile = _authoritative_saved_profile(report)
-        funnel = (report or {}).get("funnel") or classify_candidate(
+        funnel = classify_candidate(
             provider_rank=row["provider_rank"],
             provider_trade_count=row.get("trade_count"),
             provider_score=row.get("provider_score"),
@@ -572,6 +573,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
         if entry["address"] in {row["address"] for row in universe["rows"]}:
             continue
         report = reports.get(entry["address"])
+        extra_profile = _authoritative_saved_profile(report)
         extras.append({
             "address": entry["address"],
             "provider_rank": None,
@@ -584,8 +586,13 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
             "not_proof": bool(entry.get("not_proof") or entry.get("corpus_kind") == "SYNTHETIC"),
             "corpus_kind": entry.get("corpus_kind"),
             "report_id": (report or {}).get("id"),
-            "funnel": (report or {}).get("funnel"),
-            "research_profile": _authoritative_saved_profile(report),
+            "funnel": classify_candidate(
+                capture_available=True,
+                profile=extra_profile or {},
+                classification=(report or {}).get("classification"),
+                worksheet=(report or {}).get("worksheet"),
+            ),
+            "research_profile": extra_profile,
             "analytics": (report or {}).get("analytics"),
             "user_shortlisted": entry["address"] in user_short,
             "history_required": False,
@@ -973,8 +980,20 @@ def compare_reports(store, left_id, right_id):
             ),
             "result_scope": "conditional_on_captured_inventory",
         },
-        "left_funnel": left.get("funnel"),
-        "right_funnel": right.get("funnel"),
+        "left_funnel": classify_candidate(
+            capture_available=True,
+            profile=left_profile,
+            classification=left.get("classification"),
+            worksheet=left.get("worksheet"),
+        ),
+        "right_funnel": classify_candidate(
+            capture_available=True,
+            profile=right_profile,
+            classification=right.get("classification"),
+            worksheet=right.get("worksheet"),
+        ),
+        "left_qualification_category": left_profile.get("qualification_category"),
+        "right_qualification_category": right_profile.get("qualification_category"),
         "left_analytics": left_analytics,
         "right_analytics": right_analytics,
         "not_safe_to_copy": True,

@@ -4,7 +4,8 @@ import type { Actions } from "./App";
 import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView, ResearchCompare } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
-import { count, coverageStatusDisplay, decimal, formatCompareSidePnl, formatWorksheetTotal, label, rankedDesktopPnlText, rankedPhonePnlText, shorten } from "./format";
+import { count, decimal, formatCompareSidePnl, formatWorksheetTotal, label, shorten } from "./format";
+import { CompareCertificationView, RankedDesktopRow, RankedPhoneCard } from "./researchSurfaces";
 import { useNarrowViewport } from "./useNarrow";
 
 const STAGES = ["triage", "behaviour", "reconstruct", "forward_select"] as const;
@@ -43,6 +44,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [compareLeft, setCompareLeft] = useState<string>("");
   const [compareRight, setCompareRight] = useState<string>("");
   const [compareResult, setCompareResult] = useState<string>("");
+  const [compareView, setCompareView] = useState<ResearchCompare | null>(null);
   const [minTrades, setMinTrades] = useState<string>("");
   const [onlyShortlist, setOnlyShortlist] = useState(false);
   const [onlyUser, setOnlyUser] = useState(false);
@@ -494,17 +496,26 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   </thead>
                   <tbody>
                     {(ranked.rows || []).slice(0, visibleLimit).map((row) => (
-                      <RankedRow
+                      <RankedDesktopRow
                         key={row.address}
                         row={row}
-                        busy={!!busy || batchBusy}
-                        onOpen={(id) => void inspect(id)}
-                        onToggle={(selected) => void toggleShortlist(row.address, selected)}
-                        onReplay={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
-                          const body = value as { report_id?: string };
-                          loadRanked();
-                          if (body?.report_id) void inspect(body.report_id);
-                        })}
+                        shortlist={(
+                          <input
+                            type="checkbox"
+                            aria-label={`Shortlist ${shorten(row.address)}`}
+                            checked={!!row.user_shortlisted}
+                            onChange={(event) => void toggleShortlist(row.address, event.target.checked)}
+                          />
+                        )}
+                        action={row.report_id
+                          ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => void inspect(row.report_id!)}>Open report</Button>
+                          : row.capture_available
+                            ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
+                              const body = value as { report_id?: string };
+                              loadRanked();
+                              if (body?.report_id) void inspect(body.report_id);
+                            })}>Analyse</Button>
+                            : <span data-history-required-label="true">History required — not analysed</span>}
                       />
                     ))}
                   </tbody>
@@ -512,29 +523,22 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               </div>
             )}
             <ul className="mass-search-cards" data-ranked-cards="true">
-              {(ranked.rows || []).slice(0, visibleLimit).map((row) => {
-                const coverage = coverageStatusDisplay(row);
-                return (
-                <li key={`ranked-${row.address}`} data-history-required={row.history_required ? "true" : "false"}>
-                  <label className="mass-search-shortlist">
-                    <input
-                      type="checkbox"
-                      aria-label={`Shortlist ${shorten(row.address)}`}
-                      checked={!!row.user_shortlisted}
-                      onChange={(event) => void toggleShortlist(row.address, event.target.checked)}
-                    />
-                    Shortlist
-                  </label>
-                  <strong className="mono">{shorten(row.address)}</strong>
-                  <p>Provider rank {row.provider_rank ?? "—"} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
-                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : row.report_id ? "analysed" : "History required — not analysed"}{row.in_window_span?.hours != null ? ` · in-window ${String(row.in_window_span.hours)} h` : ""}</p>
-                  <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
-                  <p data-qualification-level={(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}>qualification_level {(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}</p>
-                  <p data-coverage-status={coverage}>coverage_status {coverage}</p>
-                  <p data-ranked-pnl="true">{rankedPhonePnlText(row)}</p>
-                  {(row.blocking_reason || row.research_profile?.blocking_reason) ? <p data-blocking-reason="true">blocking_reason {row.blocking_reason || row.research_profile?.blocking_reason}</p> : null}
-                  <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
-                  {row.report_id
+              {(ranked.rows || []).slice(0, visibleLimit).map((row) => (
+                <RankedPhoneCard
+                  key={`ranked-${row.address}`}
+                  row={row}
+                  shortlist={(
+                    <label className="mass-search-shortlist">
+                      <input
+                        type="checkbox"
+                        aria-label={`Shortlist ${shorten(row.address)}`}
+                        checked={!!row.user_shortlisted}
+                        onChange={(event) => void toggleShortlist(row.address, event.target.checked)}
+                      />
+                      Shortlist
+                    </label>
+                  )}
+                  action={row.report_id
                     ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => void inspect(row.report_id!)}>Open report</Button>
                     : row.capture_available
                       ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
@@ -543,9 +547,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                           if (body?.report_id) void inspect(body.report_id);
                         })}>Analyse</Button>
                       : <span data-history-required-label="true">History required — not analysed</span>}
-                </li>
-                );
-              })}
+                />
+              ))}
             </ul>
             {(ranked.rows || []).length > visibleLimit && (
               <Button variant="secondary" onClick={() => setVisibleLimit((current) => current + 20)}>Show more wallets</Button>
@@ -661,14 +664,16 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                       : "windows differ"),
                   policy.result_scope || "conditional_on_captured_inventory",
                 ].filter(Boolean).join(" · ");
+                setCompareView(body);
                 setCompareResult(mismatches ? `${policyText} · ${fields} · Mismatches: ${mismatches}` : `${policyText} · ${fields}`);
-              }).catch((error: Error) => setCompareResult(error.message))}
+              }).catch((error: Error) => { setCompareView(null); setCompareResult(error.message); })}
             >
               Compare saved reports
             </Button>
           </div>
         )}
-        {compareResult && <p className="research-note" data-research-compare="true">{compareResult}</p>}
+        {compareView && <CompareCertificationView compare={compareView} />}
+        {compareResult && <p className="research-note" data-research-compare-note="true">{compareResult}</p>}
       </section>
       {!runs.length && <Empty title="Not scanned" detail={empty.action} />}
       {!!runs.length && (
@@ -793,41 +798,3 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   );
 }
 
-function RankedRow({
-  row,
-  busy,
-  onOpen,
-  onReplay,
-  onToggle,
-}: {
-  row: RankedWorkflowRow;
-  busy: boolean;
-  onOpen: (id: string) => void;
-  onReplay: () => void;
-  onToggle: (selected: boolean) => void;
-}) {
-  return (
-    <tr data-history-required={row.history_required ? "true" : "false"}>
-      <td>
-        <input
-          type="checkbox"
-          aria-label={`Shortlist ${shorten(row.address)}`}
-          checked={!!row.user_shortlisted}
-          onChange={(event) => onToggle(event.target.checked)}
-        />
-      </td>
-      <td>{row.provider_rank ?? "—"}</td>
-      <td className="mono">{shorten(row.address)}</td>
-      <td>{row.funnel?.A?.state || "—"} / {row.funnel?.B?.state || "—"} / {row.funnel?.C?.state || "—"}</td>
-      <td>{row.trade_count ?? "unknown"}</td>
-      <td>{rankedDesktopPnlText(row)}</td>
-      <td>
-        {row.report_id
-          ? <Button variant="secondary" disabled={busy} onClick={() => onOpen(row.report_id!)}>Open report</Button>
-          : row.capture_available
-            ? <Button variant="secondary" disabled={busy} onClick={onReplay}>Analyse</Button>
-            : <span data-history-required-label="true">History required — not analysed</span>}
-      </td>
-    </tr>
-  );
-}

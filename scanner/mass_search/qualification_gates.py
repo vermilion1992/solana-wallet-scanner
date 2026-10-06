@@ -256,14 +256,55 @@ def _bridge_auditor_identity(bridge):
     return (str(mint), str(close))
 
 
+LEDGER_COMPONENT_KEYS = {
+    "acquisition": ("acquisition", "basis", "basis_sol"),
+    "proceeds": ("proceeds", "proceeds_sol"),
+    "costs": ("costs", "verified_costs", "verified_costs_sol"),
+    "net": ("net", "pnl", "net_profit_sol"),
+}
+
+
 def _bridge_component_key(bridge):
-    identity = _bridge_app_identity(bridge)
     components = (bridge or {}).get("components") or {}
     amounts = []
     for name in REQUIRED_EPISODE_COMPONENTS:
         row = components.get(name) or {}
         amounts.append((name, str(row.get("app") or ""), str(row.get("auditor") or "")))
-    return (identity, (bridge or {}).get("unit"), tuple(amounts))
+    return (
+        _bridge_app_identity(bridge),
+        _bridge_auditor_identity(bridge),
+        (bridge or {}).get("unit"),
+        tuple(amounts),
+    )
+
+
+def _ledger_component(episode, name):
+    for key in LEDGER_COMPONENT_KEYS[name]:
+        value = (episode or {}).get(key)
+        if value not in (None, ""):
+            return value
+    return None
+
+
+def _ledger_unit(episode):
+    return (episode or {}).get("unit") or (episode or {}).get("settlement_asset")
+
+
+def _bridge_app_matches_ledger(bridge, episode):
+    """App-side comparison amounts/units must describe the bound ledger episode."""
+    unit = (bridge or {}).get("unit")
+    ledger_unit = _ledger_unit(episode)
+    if not unit or not ledger_unit or unit != ledger_unit:
+        return False
+    components = (bridge or {}).get("components") or {}
+    for name in REQUIRED_EPISODE_COMPONENTS:
+        app_value = (components.get(name) or {}).get("app")
+        ledger_value = _ledger_component(episode, name)
+        if app_value in (None, "") or ledger_value in (None, ""):
+            return False
+        if not amounts_agree(app_value, ledger_value, ledger_unit):
+            return False
+    return True
 
 
 def _bridges_from_episodes(audit):
@@ -317,46 +358,50 @@ def _bridge_amounts_agree(bridge):
 
 
 def certificate_comparison_proof(audit, ledger=None):
-    """Validate stored comparisons against identities, amounts, and the bound ledger.
+    """Validate stored comparisons against the bound ledger, not just each other.
 
-    Positive agree flags are not enough. Duplicate first-bridge copies, a changed
-    auditor close signature, or removed component amounts must fail even when
-    flags stay True.
+    A missing or empty ledger cannot certify. App-side amounts and units must
+    describe the matching ledger episode. Contradictory proof representations
+    fail. Flags are not evidence.
     """
     if not isinstance(audit, dict):
         return False
     if audit.get("one_to_one_membership") is not True:
         return False
+    rows = list(ledger or [])
+    if not rows:
+        return False
     bridges = canonical_comparison_bridges(audit)
     if not bridges:
         return False
     seen = set()
+    by_id = {}
+    for item in rows:
+        mint = (item or {}).get("mint")
+        close = (item or {}).get("close_signature") or (item or {}).get("close")
+        if not mint or not close:
+            return False
+        key = (str(mint), str(close))
+        if key in seen:
+            return False
+        seen.add(key)
+        by_id[key] = item
+    if len(bridges) != len(rows):
+        return False
+    matched = set()
     for bridge in bridges:
         app_id = _bridge_app_identity(bridge)
         auditor_id = _bridge_auditor_identity(bridge)
         if not app_id or not auditor_id or app_id != auditor_id:
             return False
-        if app_id in seen:
+        if app_id not in by_id or app_id in matched:
             return False
-        seen.add(app_id)
+        matched.add(app_id)
         if not _bridge_amounts_agree(bridge):
             return False
-    if ledger is not None:
-        ledger_ids = []
-        ledger_seen = set()
-        for item in list(ledger):
-            mint = (item or {}).get("mint")
-            close = (item or {}).get("close_signature") or (item or {}).get("close")
-            if not mint or not close:
-                return False
-            key = (str(mint), str(close))
-            if key in ledger_seen:
-                return False
-            ledger_seen.add(key)
-            ledger_ids.append(key)
-        if seen != ledger_seen or len(bridges) != len(ledger_ids):
+        if not _bridge_app_matches_ledger(bridge, by_id[app_id]):
             return False
-    return True
+    return matched == seen
 
 
 def bindable_independent_audit(audit, fingerprint, ledger=None):
@@ -645,13 +690,16 @@ def _invalidate_saved_decisions(report, profile, *, ledger, contradiction):
         profile["independent_audit"] = None
     else:
         profile["independent_audit"] = bindable_independent_audit(attached, current, ledger)
+    from scanner.mass_search.funnel_abc import classify_candidate
     from scanner.mass_search.research_profile import (
+        classify_evidence,
         evaluate_thresholds,
         qualification_category,
         qualification_level,
     )
     from scanner.mass_search.labels import wallet_status_fields
 
+    profile["completed_episode_ledger"] = list(ledger or [])
     eval_profile = dict(profile)
     if contradiction:
         unit = profile.get("completed_episode_net_unit") or "SOL"
@@ -666,8 +714,18 @@ def _invalidate_saved_decisions(report, profile, *, ledger, contradiction):
     profile["criteria_met"] = results["criteria_met"]
     profile["evaluated_thresholds"] = results.get("evaluated")
     profile["unset_thresholds"] = results.get("unset")
+    profile["evidence_class"] = classify_evidence(report or {}, eval_profile)
     profile["qualification_level"] = qualification_level(report, profile)
     profile["qualification_category"] = qualification_category(report, profile)
+    profile["funnel"] = classify_candidate(
+        provider_rank=(report or {}).get("provider_rank"),
+        provider_trade_count=(report or {}).get("trade_count"),
+        provider_score=(report or {}).get("provider_score"),
+        capture_available=True,
+        profile=profile,
+        classification=(report or {}).get("classification"),
+        worksheet=(report or {}).get("worksheet"),
+    )
     fields = wallet_status_fields(report, profile)
     profile["coverage_status"] = fields["coverage_status"]
     profile["coverage_status_display"] = fields.get("coverage_status_display") or fields["coverage_status"]

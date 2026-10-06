@@ -57,6 +57,7 @@ import { SelectedCohortSection } from "./SelectedCohorts";
 import { InventoryObservations } from "./InventoryObservations";
 import { NativeCashObservations } from "./NativeCashObservations";
 import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
+import { ReportCertificationView } from "./researchSurfaces";
 
 export function subsetHoldText(seconds?: number | null) {
   if (seconds === null || seconds === undefined) return "unknown";
@@ -284,7 +285,7 @@ function funnelState(funnel: Record<string, unknown> | null | undefined, key: st
 
 export function ResearchProfilePanel({ report }: { report: Report }) {
   const profile = report.research_profile || {};
-  const funnel = report.funnel || {};
+  const funnel = (profile.funnel as Record<string, unknown> | undefined) || report.funnel || {};
   if (!report.research_profile && !report.funnel) return null;
   const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
   const completedKnown = Number(profile.completed_known_cost_positions ?? 0);
@@ -299,6 +300,7 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
   return (
     <div className="research-profile" data-research-profile="local">
       <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds are not applied. Not safe to copy." />
+      <ReportCertificationView report={report} />
       <div className="research-metrics mass-search-funnel">
         <div>
           <span>Funnel A</span>

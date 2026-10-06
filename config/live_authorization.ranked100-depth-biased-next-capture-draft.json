@@ -72,17 +72,15 @@
       "provider_rank": 15,
       "phase": "conditional_after_gtfo_replay",
       "initial_pages": 1,
-      "max_additional_pages_if_previous_resolved_named_dependency": 1,
+      "max_additional_pages_if_previous_resolved_named_dependency": 0,
+      "additional_page_unavailable": true,
       "continue_from_pagination_token": "452839073:6",
       "separately_justified": true,
       "investigation": "repeatability_of_concentrated_return",
       "named_dependency": "whether the ~287.99 SOL largest-winner / concentrated-return hypothesis repeats on older pages or is a one-page burst",
-      "named_dependency_items": [
-        {"mint": "A6PS-concentrated-largest-winner", "kind": "completed_episode", "role": "repeatability_of_concentrated_return"}
-      ],
-      "acceptable_progress_observations": [
-        "named_sale_or_lot_gained_classified_cost_role"
-      ],
+      "named_dependency_items": [],
+      "acceptable_progress_observations": [],
+      "additional_page_unavailable_reason": "No captured mint/close item is named for a second A6PS page. The separately justified first page remains; further pages stay unavailable.",
       "hypothesis": "A6PS completed-episode net is concentrated; it goes negative without its largest winner (about 287.99 SOL). Older pages test repeatability of that concentration, not profit backfill.",
       "tests": "Repeatability of the concentrated-return hypothesis. Not bundled with coverage-eligibility pending reassessment.",
       "shares_global_stop": true,
@@ -191,7 +189,7 @@
     "documented_credits_ceiling": 200,
     "phase_1_gtfo_continuation": 1,
     "conditional_follow_on_max": 7,
-    "a6ps_repeatability_investigation_max": 2,
+      "a6ps_repeatability_investigation_max": 1,
     "controls_max": 2,
     "reserved_unallocated": 12,
     "reserved_cannot_override_per_wallet_limits": true,

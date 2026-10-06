@@ -376,7 +376,7 @@ def test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_bu
             "unresolved_basis_cleared": True,
             "result": "named_sale_or_lot_unresolved_basis_cleared",
         }]},
-        {"named_dependency_items": [{"signature": "named-sale"}]},
+        {"named_dependency_items": [{"signature": "named-sale"}], "acceptable_progress_observations": ["named_sale_or_lot_unresolved_basis_cleared"]},
     )
     assert progress["progress"] is True
     assert draft["page_budget"]["reserved_cannot_override_per_wallet_limits"] is True

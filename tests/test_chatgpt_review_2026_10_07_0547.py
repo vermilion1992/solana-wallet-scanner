@@ -129,8 +129,20 @@ def test_loader_carries_per_episode_component_bridges():
     assert loaded["one_to_one_membership"] is True
     assert loaded["component_bridges"]
     assert all(bridge.get("agree") for bridge in loaded["component_bridges"])
-    assert certificate_comparison_proof(loaded) is True
-    assert bindable_independent_audit(loaded, gtfo["content_fingerprint"]) == loaded
+    ledger = []
+    for episode in loaded.get("episodes") or []:
+        app = episode.get("app") or {}
+        ledger.append({
+            "mint": episode.get("mint"),
+            "close_signature": episode.get("close_signature"),
+            "unit": (episode.get("component_bridge") or {}).get("unit") or "SOL",
+            "acquisition": app.get("basis") or app.get("acquisition"),
+            "proceeds": app.get("proceeds"),
+            "costs": app.get("verified_costs") or app.get("costs"),
+            "net": app.get("net"),
+        })
+    assert certificate_comparison_proof(loaded, ledger) is True
+    assert bindable_independent_audit(loaded, gtfo["content_fingerprint"], ledger) == loaded
 
 
 def test_saved_profile_summary_cannot_override_negative_or_empty_ledger(tmp_path):
@@ -224,6 +236,7 @@ def test_named_dependency_progress_rejects_bare_boolean_and_ignores_positivity()
     assert bare["progress"] is False
     identified = {
         "named_dependency_items": [{"signature": "named-sale"}],
+        "acceptable_progress_observations": ["named_sale_or_lot_unresolved_basis_cleared"],
     }
     evidence = {
         "named_dependency_observations": [{
@@ -290,7 +303,7 @@ def test_next_capture_phase_cursor_allowance_and_a6ps_second_page():
         cursor_state={a6ps["address"]: "open"},
         **replay,
     )
-    assert second_a6ps["code"] == "named_dependency_not_approached"
+    assert second_a6ps["code"] == "additional_page_unavailable"
     assert evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": gtfo["address"], "phase": 1, "block_time_lt": 1791206967, "pagination_token": "stale-token"},
@@ -310,6 +323,7 @@ def _quota_record(remaining=8):
         "reserved_unallocated": 12,
         "usable_ceiling": 8,
         "remaining": remaining,
+        "baseline": remaining,
         "overages_enabled": False,
         "operator": "mitch-offline-synthetic",
         "confirmed_at": "2026-10-07T00:00:00Z",
@@ -416,9 +430,9 @@ def test_ranked_and_report_surfaces_use_certifying_helper_and_nonlead_copy():
     mass = MASS_SEARCH.read_text(encoding="utf-8")
     fmt = FRONTEND_FORMAT.read_text(encoding="utf-8")
     report = REPORT.read_text(encoding="utf-8")
-    assert "rankedPhonePnlText" in mass
-    assert "rankedDesktopPnlText" in mass
-    assert "coverageStatusDisplay" in mass
+    assert "RankedPhoneCard" in mass
+    assert "RankedDesktopRow" in mass
+    assert "coverageStatusDisplay" in (ROOT / "frontend/src/researchSurfaces.ts").read_text(encoding="utf-8")
     assert "independent_audit?.independently_audited" not in mass
     assert "certificateComparisonProof" in fmt
     assert "one_to_one_membership" in fmt

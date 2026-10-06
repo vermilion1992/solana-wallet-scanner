@@ -1105,6 +1105,7 @@ def named_dependency_progress(previous_page_result, wallet_entry):
     named_items = list((wallet_entry or {}).get("named_dependency_items") or [])
     observations = list((previous_page_result or {}).get("named_dependency_observations") or [])
     incidental_positive = bool((previous_page_result or {}).get("wallet_turned_positive"))
+    accepted = list((wallet_entry or {}).get("acceptable_progress_observations") or [])
     if not named_items:
         return {
             "progress": False,
@@ -1115,14 +1116,27 @@ def named_dependency_progress(previous_page_result, wallet_entry):
             "matched": [],
             **NAMED_DEPENDENCY_PROGRESS,
         }
+    if not accepted:
+        return {
+            "progress": False,
+            "approached": False,
+            "resolved": False,
+            "reason": "no_acceptable_progress_observations",
+            "incidental_positivity_ignored": incidental_positive,
+            "matched": [],
+            **NAMED_DEPENDENCY_PROGRESS,
+        }
     matched = []
     for item in named_items:
         key = item.get("signature") or item.get("mint")
         for row in observations:
             if key and key in {row.get("signature"), row.get("mint")}:
-                if row.get("result") in NAMED_DEPENDENCY_PROGRESS["measurable_progress"] or row.get(
-                    "unresolved_basis_cleared"
-                ) or row.get("classified_cost_role"):
+                result = row.get("result")
+                if result in accepted:
+                    matched.append(row)
+                elif result in (None, "") and "named_sale_or_lot_unresolved_basis_cleared" in accepted and row.get("unresolved_basis_cleared"):
+                    matched.append(row)
+                elif result in (None, "") and "named_sale_or_lot_gained_classified_cost_role" in accepted and row.get("classified_cost_role"):
                     matched.append(row)
     return {
         "progress": bool(matched),
@@ -1192,6 +1206,17 @@ def validate_operator_quota_record(record, draft=None):
         return "quota_inconsistent"
     if record.get("overages_enabled") is not False:
         return "overages_not_disabled"
+    if not record.get("operator"):
+        return "quota_operator_missing"
+    confirmed = _parse_aware(record.get("confirmed_at"))
+    if confirmed is None:
+        return "quota_confirmed_at_missing"
+    try:
+        baseline = int(record["baseline"])
+    except (KeyError, TypeError, ValueError):
+        return "quota_baseline_missing"
+    if remaining > baseline or baseline > usable:
+        return "quota_inconsistent"
     return None
 
 
@@ -1238,12 +1263,25 @@ def validate_fresh_approval_bind(grant, draft, *, now=None):
     quota_error = validate_operator_quota_record(grant.get("current_remaining_quota_confirmation"), draft)
     if quota_error:
         return quota_error
-    return validate_approval_expiry_relationship(grant, now=now)
+    time_error = validate_approval_expiry_relationship(grant, now=now)
+    if time_error:
+        return time_error
+    record = grant.get("current_remaining_quota_confirmation") or {}
+    confirmed = _parse_aware(record.get("confirmed_at"))
+    approval = _parse_aware(grant.get("approval_timestamp"))
+    expiry = _parse_aware(grant.get("expiry"))
+    if confirmed and approval and confirmed < approval:
+        return "quota_confirmed_before_approval"
+    if confirmed and expiry and confirmed > expiry:
+        return "quota_confirmed_after_expiry"
+    return None
 
 
 def replay_bound_to_last_dispatch(last_dispatch, replay_receipts):
     """Replay is a receipt for a specific last page/response identity."""
     if not isinstance(last_dispatch, dict) or not last_dispatch.get("response_id"):
+        return False
+    if last_dispatch.get("status") in ("reserved", "failed"):
         return False
     expected = last_dispatch.get("response_id")
     page = last_dispatch.get("page_identity")
@@ -1255,6 +1293,23 @@ def replay_bound_to_last_dispatch(last_dispatch, replay_receipts):
         ):
             return True
     return False
+
+
+def bind_progress_to_replay(previous_progress, last_dispatch, replay_receipts):
+    """Progress is only accepted when it names the latest replayed response."""
+    if not previous_progress:
+        return previous_progress
+    if not replay_bound_to_last_dispatch(last_dispatch, replay_receipts):
+        return {"named_dependency_observations": []}
+    bound_id = previous_progress.get("response_id") or previous_progress.get("replay_response_id")
+    bound_page = previous_progress.get("page_identity")
+    expected_id = (last_dispatch or {}).get("response_id")
+    expected_page = (last_dispatch or {}).get("page_identity")
+    if bound_id != expected_id:
+        return {"named_dependency_observations": []}
+    if bound_page not in (None, "", expected_page) and bound_page != expected_page:
+        return {"named_dependency_observations": []}
+    return previous_progress
 
 
 def record_next_capture_replay(state, receipt):
@@ -1367,6 +1422,13 @@ def evaluate_next_capture_dispatch(
             return refuse("wrong_kind_grant", "Grant authorization_id is not this draft")
         if bind_error:
             return refuse(bind_error, "Fresh approval bind fields failed validation")
+        quota = grant.get("current_remaining_quota_confirmation") or {}
+        try:
+            remaining = int(quota["remaining"])
+        except (KeyError, TypeError, ValueError):
+            remaining = None
+        if remaining is not None and total_used >= remaining:
+            return refuse("quota_exhausted", "Remaining approved allowance is already consumed")
     if address in excluded:
         return refuse("excluded_wallet", excluded.get(address) or "wallet excluded from this draft")
     if wallet is None:
@@ -1395,6 +1457,8 @@ def evaluate_next_capture_dispatch(
         return refuse("over_budget", "Reserved 12 cannot become discretionary spend or override the usable ceiling")
     if requested.get("use_reserved") and not (grant or {}).get("amended_reserved_authorization"):
         return refuse("reserved_unavailable", "Reserved 12 stays unavailable without an amended freshly bound authorization")
+    if used >= int((wallet or {}).get("initial_pages") or 0) and (wallet or {}).get("additional_page_unavailable"):
+        return refuse("additional_page_unavailable", "Additional page is explicitly unavailable for this wallet")
     if used >= wallet_cap:
         return refuse("per_wallet_limit", "Reserved budget cannot override a stricter per-wallet limit")
     allowance = wallet.get("executable_allowance")
@@ -1412,6 +1476,7 @@ def evaluate_next_capture_dispatch(
             )
         if used >= allowance_n:
             return refuse("zero_executable_allowance", "executable_allowance already consumed")
+    previous_progress = bind_progress_to_replay(previous_progress, last_dispatch, replay_receipts)
     if not is_phase1:
         if not replay_ok:
             return refuse("phase_two_before_replay", "Non-gtfo pages require offline replay of the last dispatched page")
@@ -1471,12 +1536,18 @@ def empty_next_capture_state():
 
 
 def load_next_capture_state(store, draft, state=None):
-    if state is not None:
-        return state
+    """Durable store state is authoritative whenever a store exists.
+
+    A stale or empty caller-supplied state cannot reset a persisted timeout,
+    consumed attempt, or last_dispatch identity.
+    """
     if store is not None:
         saved = store.get(NEXT_CAPTURE_STATE_KIND, (draft or {}).get("authorization_id"))
         if saved:
             return saved
+        return empty_next_capture_state()
+    if state is not None:
+        return state
     return empty_next_capture_state()
 
 
@@ -1571,6 +1642,12 @@ def run_next_capture_offline(
         "attempts": attempts,
         "replay_completed": False,
         "replay_receipts": [],
+        "last_dispatch": {
+            "address": address,
+            "page_identity": expected_cursor,
+            "status": "reserved",
+            "response_id": None,
+        },
         "phase1_dispatched": True,
     })
     persist_next_capture_state(store, draft, state)
@@ -1581,6 +1658,12 @@ def run_next_capture_offline(
         attempt["error"] = type(exc).__name__
         attempt["detail"] = str(exc)[:240]
         requests[-1]["status"] = "failed"
+        state["last_dispatch"] = {
+            "address": address,
+            "page_identity": expected_cursor,
+            "status": "failed",
+            "response_id": None,
+        }
         persist_next_capture_state(store, draft, state)
         return {
             "allowed": True,

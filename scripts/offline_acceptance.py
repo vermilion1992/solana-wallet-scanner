@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""Offline invariant acceptance entry point.
+
+Never enables capture, never reads provider secrets, never makes network calls.
+Exits nonzero on failure or if a mandatory check is skipped.
+
+Usage (from repo root):
+
+    .venv/bin/python scripts/offline_acceptance.py
+"""
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
+OUT = EVIDENCE / "offline-acceptance"
+DRAFT = ROOT / "config/live_authorization.ranked100-depth-biased-next-capture-draft.json"
+MANDATORY = [
+    "tests/test_chatgpt_review_2026_10_07.py",
+    "tests/test_chatgpt_review_2026_10_07_rereview.py",
+    "tests/test_chatgpt_review_2026_10_07_0547.py",
+    "tests/test_chatgpt_review_2026_10_07_0714.py",
+    "tests/test_chatgpt_review_2026_10_07_0842.py",
+    "tests/test_mass_search_mitch_requirements.py",
+]
+FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
+
+
+def _run(command, log_path, env):
+    proc = subprocess.run(
+        command,
+        cwd=str(ROOT),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    log_path.write_text((proc.stdout or "") + (proc.stderr or ""), encoding="utf-8")
+    return proc
+
+
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    raw = OUT / f"RAW_{stamp}.log"
+    result_path = OUT / "RESULT.json"
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in FORBIDDEN_ENV
+    }
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    python = str(ROOT / ".venv/bin/python") if (ROOT / ".venv/bin/python").exists() else sys.executable
+    draft = json.loads(DRAFT.read_text(encoding="utf-8"))
+    if draft.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if draft.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "product_ready"}, indent=2), encoding="utf-8")
+        return 2
+
+    steps = []
+    failed = False
+    skipped_mandatory = False
+
+    pytest_cmd = [
+        python, "-m", "pytest", "-q", "--tb=line",
+        "-p", "no:cacheprovider",
+        *MANDATORY,
+    ]
+    pytest_log = OUT / f"PYTEST_{stamp}.log"
+    pytest_run = _run(pytest_cmd, pytest_log, env)
+    text = pytest_log.read_text(encoding="utf-8")
+    skipped = "skipped" in text.lower() and " skipped" in f" {text.lower()}"
+    if pytest_run.returncode != 0:
+        failed = True
+    if "skipped" in text and pytest_run.returncode == 0:
+        # pytest summary line like "N skipped"
+        for token in text.split():
+            if token.endswith("skipped") or token == "skipped":
+                skipped_mandatory = True
+    steps.append({
+        "name": "invariant_pytest",
+        "command": pytest_cmd,
+        "exit": pytest_run.returncode,
+        "log": str(pytest_log.relative_to(ROOT)),
+        "mandatory": True,
+    })
+
+    node_cmd = [
+        "node", "--experimental-strip-types",
+        str(ROOT / "frontend/scripts/assert-rereview-0842.mts"),
+        str(OUT / "empty-cases.json"),
+    ]
+    (OUT / "empty-cases.json").write_text("{}", encoding="utf-8")
+    node_log = OUT / f"NODE_{stamp}.log"
+    node_run = _run(node_cmd, node_log, env)
+    if node_run.returncode != 0:
+        failed = True
+    steps.append({
+        "name": "mounted_component_smoke",
+        "command": node_cmd,
+        "exit": node_run.returncode,
+        "log": str(node_log.relative_to(ROOT)),
+        "mandatory": True,
+    })
+
+    mutant_cmd = [python, str(ROOT / "scripts/verify_safety_mutants.py")]
+    mutant_log = OUT / f"MUTANTS_{stamp}.log"
+    mutant_run = _run(mutant_cmd, mutant_log, env)
+    if mutant_run.returncode != 0:
+        failed = True
+    steps.append({
+        "name": "safety_mutants",
+        "command": mutant_cmd,
+        "exit": mutant_run.returncode,
+        "log": str(mutant_log.relative_to(ROOT)),
+        "mandatory": True,
+    })
+
+    payload = {
+        "kind": "offline-invariant-acceptance-v1",
+        "ok": not failed and not skipped_mandatory,
+        "skipped_mandatory": skipped_mandatory,
+        "PRODUCT_READY": False,
+        "draft_enabled": False,
+        "provider_env_cleared": list(FORBIDDEN_ENV),
+        "steps": steps,
+        "pytest_log_excerpt": text[-800:],
+        "created_at": stamp,
+    }
+    result_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    raw.write_text(json.dumps(payload, indent=2) + "\n\n" + text, encoding="utf-8")
+    if failed or skipped_mandatory:
+        print(json.dumps({"ok": False, "result": str(result_path)}, indent=2))
+        return 1
+    print(json.dumps({"ok": True, "result": str(result_path)}, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
