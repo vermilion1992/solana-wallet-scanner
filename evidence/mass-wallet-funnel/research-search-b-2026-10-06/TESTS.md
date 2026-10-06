@@ -1,50 +1,33 @@
-# Offline suite at the independent-audit reconciliation commit (cloud agent, 2026-10-06)
+# Offline suite at the 2026-10-07 ChatGPT-review commit
 
-App SHA of this evidence commit. Bundle `frontend/dist/assets/index-CDumZ6B9.js`.
+App SHA of this evidence commit. Bundle recorded after `npm run build`.
 
-- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3673 passed**, 440 subtests, 0 failed, 1 warning (9 min 12 s). EXIT 0.
-- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3673 passed**, 440 subtests, 0 failed, 1 warning (9 min 07 s). EXIT 0.
-- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-CDumZ6B9.js`.
-- Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = **401**. Shots in `screenshots/phone-0*.png`.
-- No Helius or Birdeye calls. Dummy keys were never sent.
+- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): pending clean run.
+- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): pending clean run.
+- `npm run build`: pending.
+- Phone-sized emulation 390×844: pending recapture of changed report/compare screens.
+- No Helius or Birdeye calls. Dummy keys are never sent.
 - `PRODUCT_READY` remains false.
 
-Named regressions:
+Named regressions for this pass:
 
-- `tests/test_mitch_review_2026_10_06.py`
-  - `test_a6ps_75gg_buy_consideration_is_swap_quote_not_wallet_delta`
-  - `test_a6ps_2rss_close_is_meteora_damm_v2_from_raw_bytes`
-  - `test_gtfo_2af7_same_slot_order_closes_missing_episode`
-  - `test_58pw_sales_are_rfq_fill_and_jupiter_usdc`
-  - `test_labelled_wallets_are_independently_audited_in_committed_json`
-  - `test_cccs_scoped_net_bridge_matches_debit_audit`
-  - `test_auditor_owns_tip_list_outside_scanner_and_copies_agree`
-  - `test_auditor_runs_without_scanner_directory_and_nets_match`
-  - `test_auditor_fails_loudly_when_tip_list_missing`
-  - `test_failed_transaction_transfers_are_excluded_from_fee_audit_and_app`
-  - `test_cccs_failed_transaction_debits_are_excluded`
-  - `test_58pw_independently_audited_sits_next_to_episode_net`
-  - `test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed`
-  - `test_compare_tolerance_is_two_lamports`
-  - `test_venue_notes_are_computed_from_auditor_decode`
-  - `test_history_ingest_has_no_wallet_specific_residual_constant`
-  - `test_jupiter_route_v2_usdc_version1_decodes_real_signatures`
-  - `test_outer_ata_still_requires_message_signer`
-  - `test_auditor_refuses_mixed_unit_episode_net_sum`
-  - `test_fee_audit_recomputes_cccs_current_figures_from_captures`
-  - `test_fee_audit_counts_only_wallet_paid_network_fees`
-  - `test_a6ps_residual_is_in_window_new_account_rent_on_buys`
-  - `test_every_wallet_worksheet_figure_is_labelled_partial_coverage`
-  - `test_frontend_pnl_figures_carry_worksheet_or_episode_label`
-  - `test_auditor_rejects_opening_inventory_close_4dyknedb`
-  - `test_astziy6_is_unverified_outside_debit_not_a_tip`
-  - `test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead`
-  - `test_item11_label_tables_cannot_disagree`
-  - `test_committed_wallet_table_matches_label_function`
-  - `test_win_rate_stays_in_unit_interval_including_mixed`
-  - `test_zero_completed_episodes_do_not_expose_net`
-  - `test_item2_only_verified_jito_tips_count`
-  - `test_item8_fee_audit_records_largest_charges_and_roles`
-  - `test_item15_independent_auditor_imports_no_scanner`
-  - `test_item15_auditor_output_covers_labelled_episodes`
+- `tests/test_chatgpt_review_2026_10_07.py`
+  - `test_stale_audit_does_not_attach`
+  - `test_99_5_count_80_value_does_not_qualify`
+  - `test_20_episode_3_mint_one_day_burst_fails_stronger_shortlist`
+  - `test_positive_worksheet_negative_episodes_does_not_qualify`
+  - `test_cross_currency_sensitivity_blocks_lead`
+  - `test_even_sample_median_uses_mean_of_two_central_values`
+  - `test_asset_specific_atomic_tolerances`
+  - `test_message_signers_header_cross_check_rejects_conflicting_flags`
+  - `test_proven_platform_fee_is_a_cost_unexplained_transfer_is_not`
+  - `test_synthetic_cases_never_count_as_genuine_research_wallets`
+  - `test_token_2022_transfer_fee_bvzt_dq7n_jupiter_buys`
+  - `test_rfq_fee_fill_bvzt_three_sales`
+  - `test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer`
+  - `test_swaptob_remains_unsupported_after_bounded_investigation`
+  - `test_next_capture_box_driver_emits_supported_gta_request`
+- `tests/test_mitch_review_2026_10_06.py::test_item17_next_capture_manifest_is_disabled`
+- `tests/test_mitch_review_2026_10_06.py::test_labelled_wallets_are_independently_audited_in_committed_json`
+- `tests/test_mitch_review_2026_10_06.py::test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed`
 - `tests/test_research_search_b_defects.py::test_d4_mixed_wallet_separate_quote_asset_worksheets`
