@@ -5265,6 +5265,15 @@ pre {
 .mass-search-saved li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; overflow-wrap: anywhere; }
 .research-profile { display: grid; gap: 10px; margin-top: 12px; }
 .mass-search-budget .button[disabled] { opacity: 0.55; }
+.mass-search-filters { display: grid; gap: 12px; margin: 12px 0; }
+.mass-search-filters fieldset { border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 8px; padding: 12px; min-width: 0; }
+.mass-search-filters input[type="text"],
+.mass-search-filters input:not([type="checkbox"]) { width: 100%; min-width: 0; }
+.mass-search-shortlist { display: flex; gap: 8px; align-items: center; }
+.mass-search-batch { display: grid; gap: 8px; padding: 12px 0; }
+.mass-search-batch progress { width: 100%; }
+.mass-search-batch ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.research-profile-analytics { display: grid; gap: 6px; }
 @media (max-width: 480px) {
   .results-panel .table-scroll,
   .compare-panel .table-scroll {

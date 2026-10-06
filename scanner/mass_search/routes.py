@@ -222,6 +222,58 @@ def install_mass_search_routes(app, store):
         except Exception as exc:
             _error(exc)
 
+    @app.post("/api/mass-search/ranked-workflow/shortlist")
+    async def ranked_workflow_shortlist(payload: dict | None = None):
+        from .workflow import set_user_shortlist
+        body = payload or {}
+        try:
+            return set_user_shortlist(store, body.get("address"), selected=body.get("selected", True))
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/batch")
+    async def ranked_workflow_batch(payload: dict | None = None):
+        from .batch import create_and_run, create_batch
+        body = payload or {}
+        try:
+            if body.get("run") is False:
+                return create_batch(
+                    store,
+                    body.get("addresses") or [],
+                    include_fixtures=bool(body.get("include_fixtures")),
+                )
+            return create_and_run(
+                store,
+                body.get("addresses") or [],
+                include_fixtures=bool(body.get("include_fixtures")),
+            )
+        except Exception as exc:
+            _error(exc)
+
+    @app.get("/api/mass-search/ranked-workflow/batch/{batch_id}")
+    async def ranked_workflow_batch_get(batch_id: str):
+        from .batch import get_batch
+        try:
+            return get_batch(store, batch_id)
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/batch/{batch_id}/step")
+    async def ranked_workflow_batch_step(batch_id: str):
+        from .batch import step_batch
+        try:
+            return step_batch(store, batch_id)
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/batch/{batch_id}/cancel")
+    async def ranked_workflow_batch_cancel(batch_id: str):
+        from .batch import cancel_batch
+        try:
+            return cancel_batch(store, batch_id)
+        except Exception as exc:
+            _error(exc)
+
     @app.get("/api/mass-search/research-filters")
     async def get_research_filters():
         from .research_profile import load_filters
@@ -231,7 +283,7 @@ def install_mass_search_routes(app, store):
     async def put_research_filters(payload: dict | None = None):
         from .research_profile import save_filters
         body = payload or {}
-        return save_filters(store, body.get("thresholds") or body)
+        return save_filters(store, body)
 
     @app.post("/api/mass-search/research-compare")
     async def research_compare(payload: dict | None = None):
@@ -246,3 +298,36 @@ def install_mass_search_routes(app, store):
     async def get_acquisition_policy():
         from .workflow import acquisition_policy
         return acquisition_policy()
+
+    @app.get("/api/mass-search/acquisition-gate")
+    async def get_acquisition_gate():
+        from .acquisition_gate import attempt_history_acquisition, gate_status
+        return {
+            "status": gate_status(store),
+            "attempt": attempt_history_acquisition(store),
+        }
+
+    @app.post("/api/mass-search/acquisition-gate/check")
+    async def check_acquisition_gate(payload: dict | None = None):
+        from .acquisition_gate import attempt_history_acquisition
+        body = payload or {}
+        return attempt_history_acquisition(
+            store,
+            requested_requests=int(body.get("requested_requests") or 1),
+            requested_units=int(body.get("requested_units") or 1),
+        )
+
+    @app.get("/api/mass-search/instrumentation")
+    async def get_instrumentation():
+        from .instrumentation import snapshot
+        return snapshot()
+
+    @app.get("/api/mass-search/phone-access")
+    async def get_phone_access():
+        from .workflow import phone_access_status
+        return phone_access_status()
+
+    @app.get("/api/mass-search/approval-proposal")
+    async def get_approval_proposal():
+        from .workflow import approval_proposal
+        return approval_proposal()

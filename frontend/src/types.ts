@@ -325,6 +325,7 @@ export type Report = {
   } | null;
   research_profile?: Record<string, unknown> | null;
   funnel?: Record<string, unknown> | null;
+  analytics?: Record<string, unknown> | null;
   next_candidates?: Record<string, unknown>[] | null;
   observations?: { kind?: string; detail?: string; reason?: string; signature?: string; count?: number }[];
   g3_status?: string | null;
@@ -723,12 +724,19 @@ export type MassSearchState = {
 };
 export type RankedWorkflowRow = {
   address: string;
-  provider_rank: number;
+  provider_rank?: number | null;
   trade_count?: number | null;
   shortlisted?: boolean;
   capture_available?: boolean;
   report_id?: string | null;
   can_open_report?: boolean;
+  user_shortlisted?: boolean;
+  history_required?: boolean;
+  history_required_label?: string | null;
+  row_kind?: string;
+  not_proof?: boolean;
+  label?: string;
+  corpus_kind?: string;
   funnel?: {
     A?: { state?: string };
     B?: { state?: string; scoped_pnl?: string | null; scoped_pnl_unit?: string | null };
@@ -741,15 +749,53 @@ export type RankedWorkflowRow = {
     scoped_pnl_unit?: string | null;
     completed_known_cost_positions?: number;
   } | null;
+  analytics?: {
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+    median_hold?: { seconds?: number | null; sample_count?: number | null; n_equals_one_disclosed?: boolean };
+  } | null;
 };
 export type RankedWorkflowView = {
   rows?: RankedWorkflowRow[];
+  engineering_fixtures?: RankedWorkflowRow[];
+  control_archives?: RankedWorkflowRow[];
   ranked_count?: number;
   visible_count?: number;
   budget_enabled?: boolean;
   live_enabled?: boolean;
-  filters?: { thresholds?: Record<string, string | null> };
+  user_shortlist?: string[];
+  funnel_counts?: Record<string, number>;
+  filter_effects?: { key: string; group: string; label: string; unit?: string; value?: unknown; missing?: boolean }[];
+  filters?: {
+    thresholds?: Record<string, string | null>;
+    provider_proxy?: {
+      min_provider_trade_count?: string | null;
+      min_provider_score?: string | null;
+      only_shortlist?: boolean;
+      only_user_shortlist?: boolean;
+      only_captured?: boolean;
+    };
+    units?: Record<string, string>;
+  };
+  phone_access?: { preview_available?: boolean; blocker?: string };
   note?: string;
+};
+export type RankedBatch = {
+  batch_id: string;
+  status: string;
+  total: number;
+  completed: number;
+  cancel_requested?: boolean;
+  outcomes?: {
+    address: string;
+    status: string;
+    report_id?: string | null;
+    detail?: string | null;
+    capture_available?: boolean;
+    not_proof?: boolean;
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+  }[];
 };
 export type MassSearchStageCounts = {
   input: number;

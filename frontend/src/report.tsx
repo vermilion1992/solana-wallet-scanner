@@ -120,7 +120,38 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
           {reconciliation.note ? ` — ${reconciliation.note}` : ""}
         </p>
       )}
-      {!!trades.length && (
+      {!!(report.analytics as { trades?: unknown[] } | undefined)?.trades?.length && (
+        <table className="subset-worksheet-trades" data-subset-trades={String(((report.analytics as { trades?: unknown[] }).trades || []).length)} data-analytics-trades="true">
+          <caption>Supported subset trades ({((report.analytics as { trades?: unknown[] }).trades || []).length})</caption>
+          <thead>
+            <tr>
+              <th>Side</th>
+              <th>Token</th>
+              <th>Qty</th>
+              <th>Settlement</th>
+              <th>Proceeds / cost</th>
+              <th>Allocated basis</th>
+              <th>Reason</th>
+              <th>Tx</th>
+            </tr>
+          </thead>
+          <tbody>
+            {((report.analytics as { trades?: Record<string, unknown>[] }).trades || []).map((row, index) => (
+              <tr key={`${String(row.tx_ref || index)}-${index}`}>
+                <td>{String(row.side || "")}</td>
+                <td>{shorten(String(row.token || ""), 6)}</td>
+                <td>{row.quantity != null ? String(row.quantity) : "unknown"}</td>
+                <td>{String(row.settlement_asset || "")}</td>
+                <td>{row.proceeds_or_cost != null ? `${decimal(String(row.proceeds_or_cost), 4)} ${String(row.settlement_asset || "")}` : "unknown"}</td>
+                <td>{row.allocated_basis != null ? `${decimal(String(row.allocated_basis), 4)} ${String(row.settlement_asset || "")}` : row.reconciliation_or_exclusion === "unresolved_basis" ? "unresolved" : "—"}</td>
+                <td>{String(row.reconciliation_or_exclusion || "—")}</td>
+                <td>{row.tx_ref ? shorten(String(row.tx_ref), 6) : "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {!!trades.length && !(report.analytics as { trades?: unknown[] } | undefined)?.trades?.length && (
         <table className="subset-worksheet-trades" data-subset-trades={String(trades.length)}>
           <caption>Supported subset trades ({trades.length})</caption>
           <thead>
@@ -223,6 +254,44 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {` · market ${String(market.market_swaps ?? 0)} / holder-fee ${String(market.holder_fee_distributions ?? 0)}`}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
       </p>
+      {!!report.analytics && (
+        <div className="research-profile-analytics" data-wallet-analytics="true">
+          {(() => {
+            const analytics = report.analytics as Record<string, unknown>;
+            const win = (analytics.win_rate || {}) as Record<string, unknown>;
+            const hold = (analytics.median_hold || {}) as Record<string, unknown>;
+            const period = (analytics.captured_period || {}) as Record<string, unknown>;
+            const scope = (analytics.scope || {}) as Record<string, unknown>;
+            const pnl = (analytics.known_cost_realised_pnl || {}) as Record<string, unknown>;
+            return (
+              <>
+                <p data-win-rate="true">
+                  Win rate {win.rate != null ? String(win.rate) : "not evaluated"}
+                  {` (${String(win.wins ?? 0)} / ${String(win.denominator ?? 0)} completed known-cost positions)`}
+                </p>
+                <p data-median-hold="true">
+                  Median hold {hold.seconds != null ? `${String(hold.seconds)}s` : "unknown"}
+                  {` · n=${String(hold.sample_count ?? 0)}`}
+                  {hold.n_equals_one_disclosed ? " · n=1 is one completed position, not a wallet-wide median" : ""}
+                  {` · ${String(hold.method_version || "material-exit-v2")}`}
+                </p>
+                <p data-captured-period="true">
+                  Captured period {String(period.start || "unknown")} → {String(period.end || "unknown")}.
+                  {` Scope: ${String(scope.population || "supported_closed_subset")}.`}
+                  {" Coverage of captured transactions is not completeness of wallet history."}
+                </p>
+                {pnl.usdc_excludes_sol_fees ? (
+                  <p data-usdc-excludes-sol-fees="true">USDC results exclude SOL fees. No FX conversion.</p>
+                ) : null}
+                <p>
+                  Open positions {String(analytics.open_positions ?? 0)} stay out of hold statistics.
+                  Unresolved-basis sales {String(analytics.unresolved_basis_sales ?? 0)} are missing basis, not zero.
+                </p>
+              </>
+            );
+          })()}
+        </div>
+      )}
     </div>
   );
 }

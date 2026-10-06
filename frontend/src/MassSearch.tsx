@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Download, Play, RefreshCw, Search } from "lucide-react";
 import type { Actions } from "./App";
-import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedWorkflowRow, RankedWorkflowView, Report } from "./types";
+import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
 import { count, decimal, label, shorten } from "./format";
@@ -43,6 +43,15 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [compareLeft, setCompareLeft] = useState<string>("");
   const [compareRight, setCompareRight] = useState<string>("");
   const [compareResult, setCompareResult] = useState<string>("");
+  const [minTrades, setMinTrades] = useState<string>("");
+  const [onlyShortlist, setOnlyShortlist] = useState(false);
+  const [onlyUser, setOnlyUser] = useState(false);
+  const [onlyCaptured, setOnlyCaptured] = useState(false);
+  const [minCompleted, setMinCompleted] = useState<string>("");
+  const [visibleLimit, setVisibleLimit] = useState(20);
+  const [batch, setBatch] = useState<RankedBatch | null>(null);
+  const [batchBusy, setBatchBusy] = useState(false);
+  const [filterNote, setFilterNote] = useState("");
   const narrow = useNarrowViewport();
   const summary = state.mass_search;
   const runs = summary?.runs || [];
@@ -53,8 +62,42 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
 
   const loadRanked = () => {
     api("/mass-search/ranked-workflow")
-      .then((value) => setRanked(value as RankedWorkflowView))
+      .then((value) => {
+        const view = value as RankedWorkflowView;
+        setRanked(view);
+        const proxy = view.filters?.provider_proxy || {};
+        setMinTrades(proxy.min_provider_trade_count || "");
+        setOnlyShortlist(!!proxy.only_shortlist);
+        setOnlyUser(!!proxy.only_user_shortlist);
+        setOnlyCaptured(!!proxy.only_captured);
+        setMinCompleted(view.filters?.thresholds?.min_completed_known_cost || "");
+      })
       .catch(() => undefined);
+  };
+
+  const persistFilters = async (next: {
+    min_provider_trade_count?: string;
+    only_shortlist?: boolean;
+    only_user_shortlist?: boolean;
+    only_captured?: boolean;
+    min_completed_known_cost?: string;
+  }) => {
+    const body = {
+      provider_proxy: {
+        min_provider_trade_count: next.min_provider_trade_count ?? minTrades,
+        only_shortlist: next.only_shortlist ?? onlyShortlist,
+        only_user_shortlist: next.only_user_shortlist ?? onlyUser,
+        only_captured: next.only_captured ?? onlyCaptured,
+      },
+      thresholds: {
+        ...(ranked?.filters?.thresholds || {}),
+        min_completed_known_cost: next.min_completed_known_cost ?? minCompleted,
+      },
+    };
+    const saved = await api("/mass-search/research-filters", "PUT", body);
+    setFilterNote("Filters saved locally. Provider-proxy and reconstructed-evidence stay separate.");
+    await loadRanked();
+    return saved;
   };
 
   useEffect(() => {
@@ -94,6 +137,43 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
 
   const inspect = async (reportId: string) => {
     await open(await reportDisplay(reportId));
+  };
+
+  const toggleShortlist = async (address: string, selected: boolean) => {
+    await api("/mass-search/ranked-workflow/shortlist", "POST", { address, selected });
+    loadRanked();
+  };
+
+  const startBatch = async (includeFixtures: boolean) => {
+    const shortlist = ranked?.user_shortlist || [];
+    const captured = (ranked?.rows || []).filter((row) => row.capture_available).map((row) => row.address);
+    const noHistory = (ranked?.rows || []).filter((row) => !row.capture_available).slice(0, 2).map((row) => row.address);
+    const addresses = includeFixtures
+      ? Array.from(new Set([...captured, ...noHistory, ...((ranked?.engineering_fixtures || []).map((row) => row.address))]))
+      : (shortlist.length ? shortlist : captured);
+    setBatchBusy(true);
+    try {
+      let current = await api<RankedBatch>("/mass-search/ranked-workflow/batch", "POST", {
+        addresses,
+        include_fixtures: includeFixtures,
+        run: false,
+      });
+      setBatch(current);
+      while (current.status !== "completed" && current.status !== "cancelled" && current.completed < current.total) {
+        current = await api<RankedBatch>(`/mass-search/ranked-workflow/batch/${current.batch_id}/step`, "POST", {});
+        setBatch(current);
+      }
+      loadRanked();
+      await refresh();
+    } finally {
+      setBatchBusy(false);
+    }
+  };
+
+  const cancelActiveBatch = async () => {
+    if (!batch?.batch_id) return;
+    const current = await api<RankedBatch>(`/mass-search/ranked-workflow/batch/${batch.batch_id}/cancel`, "POST", {});
+    setBatch(current);
   };
 
   const loadMore = async () => {
@@ -152,22 +232,128 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         <SectionHeading title="Ranked-100 cached shortlist" subtitle="Provider rank is not verification" />
         <p className="research-note">
           {count(ranked?.ranked_count ?? 0)} ranked wallets from the saved discovery page.
-          Open a captured wallet to reconstruct market trades. Other rows stay browse-only until a future grant.
+          Rank-1, positive subset P&amp;L, and “worth investigating” are not verified profitable or safe to copy.
         </p>
+        <p className="research-note" data-phone-access="blocked">
+          {ranked?.phone_access?.blocker || "Phone access uses the local authenticated launcher only. No public preview is configured."}
+        </p>
+        <div className="research-metrics mass-search-funnel" data-funnel-counts="true">
+          <div>
+            <span>Funnel A yes</span>
+            <strong>{count(ranked?.funnel_counts?.A_YES ?? 0)}</strong>
+            <small>worth investigating — unverified</small>
+          </div>
+          <div>
+            <span>Awaiting evidence</span>
+            <strong>{count(ranked?.funnel_counts?.awaiting_evidence ?? 0)}</strong>
+            <small>history required — not analysed</small>
+          </div>
+          <div>
+            <span>Analysed</span>
+            <strong>{count(ranked?.funnel_counts?.analysed ?? 0)}</strong>
+            <small>cached reconstruction only</small>
+          </div>
+          <div>
+            <span>C evaluated</span>
+            <strong>{count((ranked?.funnel_counts?.C_MET ?? 0) + (ranked?.funnel_counts?.C_NOT_MET ?? 0))}</strong>
+            <small>unset never passes</small>
+          </div>
+        </div>
+        <form
+          className="mass-search-filters"
+          data-filter-group="provider-and-reconstructed"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void persistFilters({
+              min_provider_trade_count: minTrades,
+              only_shortlist: onlyShortlist,
+              only_user_shortlist: onlyUser,
+              only_captured: onlyCaptured,
+              min_completed_known_cost: minCompleted,
+            });
+          }}
+        >
+          <fieldset data-filter-group="provider_proxy">
+            <legend>Provider-proxy filters</legend>
+            <label>
+              Min provider trades
+              <input
+                aria-label="Minimum provider trade count"
+                inputMode="numeric"
+                value={minTrades}
+                onChange={(event) => setMinTrades(event.target.value)}
+                placeholder="unset"
+              />
+              <small>unit: provider_trades · missing does not hide rows</small>
+            </label>
+            <label>
+              <input type="checkbox" checked={onlyShortlist} onChange={(event) => setOnlyShortlist(event.target.checked)} />
+              Provider shortlist only
+            </label>
+            <label>
+              <input type="checkbox" checked={onlyUser} onChange={(event) => setOnlyUser(event.target.checked)} />
+              Your shortlist only
+            </label>
+            <label>
+              <input type="checkbox" checked={onlyCaptured} onChange={(event) => setOnlyCaptured(event.target.checked)} />
+              Cached history only
+            </label>
+          </fieldset>
+          <fieldset data-filter-group="reconstructed_evidence">
+            <legend>Reconstructed-evidence filters</legend>
+            <label>
+              Min completed known-cost
+              <input
+                aria-label="Minimum completed known-cost positions"
+                inputMode="numeric"
+                value={minCompleted}
+                onChange={(event) => setMinCompleted(event.target.value)}
+                placeholder="unset"
+              />
+              <small>unit: positions · unknown never passes · applies only after analysis</small>
+            </label>
+          </fieldset>
+          <Button type="submit" variant="secondary" disabled={!!busy || batchBusy}>Save filters</Button>
+        </form>
+        {filterNote && <p className="research-note" data-filters-saved="true">{filterNote}</p>}
         <div className="research-action-row">
           <Button
             icon={Play}
-            disabled={!!busy}
-            onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", {}, "POST", "Cached rank-1 capture reconstructed offline.").then((value) => {
-              const body = value as { report_id?: string };
-              loadRanked();
-              if (body?.report_id) void inspect(body.report_id);
-            })}
+            disabled={!!busy || batchBusy}
+            onClick={() => void startBatch(false)}
           >
-            Analyse strongest cached wallet
+            Analyse shortlist
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={!!busy || batchBusy}
+            onClick={() => void startBatch(true)}
+          >
+            Analyse available + fixtures
           </Button>
           <Button variant="secondary" disabled={!!busy} onClick={() => loadRanked()}>Refresh cached list</Button>
+          {batch && batch.status === "running" && (
+            <Button variant="secondary" disabled={!batch.batch_id} onClick={() => void cancelActiveBatch()}>Cancel batch</Button>
+          )}
         </div>
+        {batch && (
+          <div className="mass-search-batch" data-batch-progress={batch.status}>
+            <p>
+              Batch {batch.status}: {count(batch.completed)} / {count(batch.total)}
+            </p>
+            <progress max={batch.total || 1} value={batch.completed || 0} />
+            <ul>
+              {(batch.outcomes || []).map((item) => (
+                <li key={item.address} data-batch-status={item.status}>
+                  <span className="mono">{shorten(item.address)}</span>
+                  <span>{item.status === "history_required" ? "History required — not analysed" : item.status}</span>
+                  {item.detail && <small>{item.detail}</small>}
+                  {item.report_id && <Button variant="secondary" onClick={() => void inspect(item.report_id!)}>Open report</Button>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {!!ranked?.rows?.length && (
           <>
             {!narrow && (
@@ -175,6 +361,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                 <table className="mass-search-table">
                   <thead>
                     <tr>
+                      <th>Shortlist</th>
                       <th>Rank</th>
                       <th>Address</th>
                       <th>A / B / C</th>
@@ -184,44 +371,88 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                     </tr>
                   </thead>
                   <tbody>
-                    {(ranked.rows || []).slice(0, 20).map((row) => (
-                      <RankedRow key={row.address} row={row} busy={!!busy} onOpen={(id) => void inspect(id)} onReplay={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
-                        const body = value as { report_id?: string };
-                        loadRanked();
-                        if (body?.report_id) void inspect(body.report_id);
-                      })} />
+                    {(ranked.rows || []).slice(0, visibleLimit).map((row) => (
+                      <RankedRow
+                        key={row.address}
+                        row={row}
+                        busy={!!busy || batchBusy}
+                        onOpen={(id) => void inspect(id)}
+                        onToggle={(selected) => void toggleShortlist(row.address, selected)}
+                        onReplay={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
+                          const body = value as { report_id?: string };
+                          loadRanked();
+                          if (body?.report_id) void inspect(body.report_id);
+                        })}
+                      />
                     ))}
                   </tbody>
                 </table>
               </div>
             )}
             <ul className="mass-search-cards" data-ranked-cards="true">
-              {(ranked.rows || []).slice(0, 20).map((row) => (
-                <li key={`ranked-${row.address}`}>
+              {(ranked.rows || []).slice(0, visibleLimit).map((row) => (
+                <li key={`ranked-${row.address}`} data-history-required={row.history_required ? "true" : "false"}>
+                  <label className="mass-search-shortlist">
+                    <input
+                      type="checkbox"
+                      aria-label={`Shortlist ${shorten(row.address)}`}
+                      checked={!!row.user_shortlisted}
+                      onChange={(event) => void toggleShortlist(row.address, event.target.checked)}
+                    />
+                    Shortlist
+                  </label>
                   <strong className="mono">{shorten(row.address)}</strong>
-                  <p>Provider rank {row.provider_rank} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
-                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : "no history capture"}</p>
+                  <p>Provider rank {row.provider_rank ?? "—"} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
+                  <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : "History required — not analysed"}</p>
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id
-                    ? <Button variant="secondary" disabled={!!busy} onClick={() => void inspect(row.report_id!)}>Open report</Button>
+                    ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => void inspect(row.report_id!)}>Open report</Button>
                     : row.capture_available
-                      ? <Button variant="secondary" disabled={!!busy} onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
+                      ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Cached capture reconstructed.").then((value) => {
                           const body = value as { report_id?: string };
                           loadRanked();
                           if (body?.report_id) void inspect(body.report_id);
                         })}>Analyse</Button>
-                      : null}
+                      : <span data-history-required-label="true">History required — not analysed</span>}
                 </li>
               ))}
             </ul>
+            {(ranked.rows || []).length > visibleLimit && (
+              <Button variant="secondary" onClick={() => setVisibleLimit((current) => current + 20)}>Show more wallets</Button>
+            )}
           </>
+        )}
+        {!!ranked?.engineering_fixtures?.length && (
+          <div data-engineering-fixtures="true">
+            <SectionHeading title="Engineering fixtures" subtitle="SYNTHETIC — not proof" />
+            <ul className="mass-search-cards">
+              {ranked.engineering_fixtures.map((row) => (
+                <li key={`fixture-${row.address}`}>
+                  <label className="mass-search-shortlist">
+                    <input
+                      type="checkbox"
+                      aria-label={`Shortlist ${shorten(row.address)}`}
+                      checked={!!row.user_shortlisted}
+                      onChange={(event) => void toggleShortlist(row.address, event.target.checked)}
+                    />
+                    Shortlist
+                  </label>
+                  <strong className="mono">{shorten(row.address)}</strong>
+                  <p>{row.label || "SYNTHETIC — engineering fixture, not proof"}</p>
+                  {row.report_id
+                    ? <Button variant="secondary" onClick={() => void inspect(row.report_id!)}>Open report</Button>
+                    : <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => run("ranked-replay", "/mass-search/ranked-workflow/replay", { address: row.address }, "POST", "Synthetic fixture reconstructed.").then(() => loadRanked())}>Analyse fixture</Button>}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
         {!!savedReports.length && (
           <div className="research-action-row">
             <label>
               Compare left
               <select aria-label="Compare left report" value={compareLeft} onChange={(event) => setCompareLeft(event.target.value)}>
-                <option value="">Select report</option>
+                <option value="">Select saved report</option>
                 {savedReports.map((report) => (
                   <option key={`left-${report.id}`} value={report.id}>{shorten(report.address)} · {report.id.slice(0, 8)}</option>
                 ))}
@@ -230,7 +461,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             <label>
               Compare right
               <select aria-label="Compare right report" value={compareRight} onChange={(event) => setCompareRight(event.target.value)}>
-                <option value="">Select report</option>
+                <option value="">Select saved report</option>
                 {savedReports.map((report) => (
                   <option key={`right-${report.id}`} value={report.id}>{shorten(report.address)} · {report.id.slice(0, 8)}</option>
                 ))}
@@ -378,15 +609,25 @@ function RankedRow({
   busy,
   onOpen,
   onReplay,
+  onToggle,
 }: {
   row: RankedWorkflowRow;
   busy: boolean;
   onOpen: (id: string) => void;
   onReplay: () => void;
+  onToggle: (selected: boolean) => void;
 }) {
   return (
-    <tr>
-      <td>{row.provider_rank}</td>
+    <tr data-history-required={row.history_required ? "true" : "false"}>
+      <td>
+        <input
+          type="checkbox"
+          aria-label={`Shortlist ${shorten(row.address)}`}
+          checked={!!row.user_shortlisted}
+          onChange={(event) => onToggle(event.target.checked)}
+        />
+      </td>
+      <td>{row.provider_rank ?? "—"}</td>
       <td className="mono">{shorten(row.address)}</td>
       <td>{row.funnel?.A?.state || "—"} / {row.funnel?.B?.state || "—"} / {row.funnel?.C?.state || "—"}</td>
       <td>{row.trade_count ?? "unknown"}</td>
@@ -396,7 +637,7 @@ function RankedRow({
           ? <Button variant="secondary" disabled={busy} onClick={() => onOpen(row.report_id!)}>Open report</Button>
           : row.capture_available
             ? <Button variant="secondary" disabled={busy} onClick={onReplay}>Analyse</Button>
-            : "cached browse"}
+            : <span data-history-required-label="true">History required — not analysed</span>}
       </td>
     </tr>
   );

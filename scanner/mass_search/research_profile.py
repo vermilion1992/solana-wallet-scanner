@@ -22,6 +22,35 @@ THRESHOLD_KEYS = (
 )
 
 DEFAULT_THRESHOLDS = {key: None for key in THRESHOLD_KEYS}
+PROVIDER_PROXY_KEYS = (
+    "min_provider_trade_count",
+    "min_provider_score",
+    "only_shortlist",
+    "only_user_shortlist",
+    "only_captured",
+)
+THRESHOLD_UNITS = {
+    "min_completed_known_cost": "positions",
+    "min_scoped_pnl_usdc": "USDC",
+    "min_scoped_pnl_sol": "SOL",
+    "max_hold_t90_seconds": "seconds",
+    "max_concentration": "share",
+    "max_unresolved_share": "share",
+    "min_market_vs_rewards_ratio": "ratio",
+    "max_holder_fee_share": "share",
+    "min_provider_trade_count": "provider_trades",
+    "min_provider_score": "provider_score",
+}
+
+
+def _default_provider_proxy():
+    return {
+        "min_provider_trade_count": None,
+        "min_provider_score": None,
+        "only_shortlist": False,
+        "only_user_shortlist": False,
+        "only_captured": False,
+    }
 
 
 def default_filters():
@@ -29,10 +58,25 @@ def default_filters():
         "kind": "research-profile-filters-v1",
         "version": FILTERS_VERSION,
         "thresholds": dict(DEFAULT_THRESHOLDS),
+        "provider_proxy": _default_provider_proxy(),
+        "reconstructed": {"thresholds": dict(DEFAULT_THRESHOLDS)},
+        "units": dict(THRESHOLD_UNITS),
         "unset_does_not_pass": True,
+        "unknown_never_passes": True,
         "not_safe_to_copy": True,
         "PRODUCT_READY": False,
     }
+
+
+def _clean_proxy(incoming):
+    proxy = _default_provider_proxy()
+    source = incoming if isinstance(incoming, dict) else {}
+    for key in ("min_provider_trade_count", "min_provider_score"):
+        value = source.get(key)
+        proxy[key] = None if value in (None, "", False) else str(value)
+    for key in ("only_shortlist", "only_user_shortlist", "only_captured"):
+        proxy[key] = bool(source.get(key))
+    return proxy
 
 
 def load_filters(store=None):
@@ -43,26 +87,37 @@ def load_filters(store=None):
         return default_filters()
     thresholds = dict(DEFAULT_THRESHOLDS)
     incoming = saved.get("thresholds") if isinstance(saved.get("thresholds"), dict) else {}
+    reconstructed = saved.get("reconstructed") if isinstance(saved.get("reconstructed"), dict) else {}
+    reconstructed_thresholds = reconstructed.get("thresholds") if isinstance(reconstructed.get("thresholds"), dict) else {}
     for key in THRESHOLD_KEYS:
-        thresholds[key] = incoming.get(key)
+        thresholds[key] = incoming.get(key) if incoming.get(key) not in (None, "") else reconstructed_thresholds.get(key)
     payload = default_filters()
     payload["thresholds"] = thresholds
+    payload["reconstructed"] = {"thresholds": dict(thresholds)}
+    payload["provider_proxy"] = _clean_proxy(saved.get("provider_proxy") or saved)
     payload["version"] = int(saved.get("version") or FILTERS_VERSION)
     payload["saved"] = True
+    payload["only_shortlist"] = payload["provider_proxy"]["only_shortlist"]
+    payload["only_captured"] = payload["provider_proxy"]["only_captured"]
     return payload
 
 
 def save_filters(store, thresholds):
     payload = default_filters()
     incoming = thresholds if isinstance(thresholds, dict) else {}
+    threshold_source = incoming.get("thresholds") if isinstance(incoming.get("thresholds"), dict) else incoming
     cleaned = {}
     for key in THRESHOLD_KEYS:
-        value = incoming.get(key)
+        value = threshold_source.get(key)
         if value in (None, "", False):
             cleaned[key] = None
             continue
         cleaned[key] = str(value)
     payload["thresholds"] = cleaned
+    payload["reconstructed"] = {"thresholds": dict(cleaned)}
+    payload["provider_proxy"] = _clean_proxy(incoming.get("provider_proxy") or incoming)
+    payload["only_shortlist"] = payload["provider_proxy"]["only_shortlist"]
+    payload["only_captured"] = payload["provider_proxy"]["only_captured"]
     store.put(FILTERS_KIND, FILTERS_KEY, payload)
     return payload
 
