@@ -397,11 +397,9 @@ def visible_report_allowed(*, worksheet, completed_positions):
 
 
 def _visible_completed_positions(episodes, worksheet):
-    counted = int((episodes or {}).get("wallet_completed_episodes") or 0)
-    sales = 0
-    if worksheet:
-        sales = len(worksheet.get("sale_net_profit_usdc") or worksheet.get("sale_net_profit_sol") or [])
-    return max(counted, 1 if sales else 0)
+    if episodes and episodes.get("wallet_completed_episodes") is not None:
+        return int(episodes["wallet_completed_episodes"])
+    return 0
 
 
 def reconcile_worksheets(production, independent):

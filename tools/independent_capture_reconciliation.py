@@ -248,8 +248,8 @@ def reconcile_address(address):
     from scanner.investigation import decode_supported_swaps
     from scanner.mass_search.canonical_records import canonical_decode_records
     from scanner.mass_search.capture_catalog import WINDOWS, catalog_by_address, load_capture_records
-    from scanner.mass_search.settlement import USDC
 
+    usdc_mint = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
     catalog = catalog_by_address()
     entry = catalog.get(address)
     if entry is None:
@@ -277,7 +277,7 @@ def reconcile_address(address):
             continue
         if end is not None and isinstance(stamp, (int, float)) and stamp >= end:
             continue
-        usdc = event.get("settlement_mint") == USDC or event.get("amount_usdc") not in (None, "")
+        usdc = event.get("settlement_mint") == usdc_mint or event.get("amount_usdc") not in (None, "")
         asset = "USDC" if usdc else "SOL"
         per_asset[asset].append({
             "kind": event["kind"],

@@ -595,7 +595,12 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   `right tx ${policy.right_included_trades ?? (policy.right_included_tx || []).length}`,
                   `samples ${String(policy.left_sample_size ?? "—")} vs ${String(policy.right_sample_size ?? "—")}`,
                   `scoped_pnl ${String(policy.left_scoped_pnl ?? "—")} vs ${String(policy.right_scoped_pnl ?? "—")}`,
-                  body.comparable ? "comparable" : "blocked",
+                  body.comparable
+                    ? "comparable"
+                    : ((policy.left_window || {}).start === (policy.right_window || {}).start
+                      && (policy.left_window || {}).end === (policy.right_window || {}).end
+                      ? "compare is shown"
+                      : "windows differ"),
                   policy.result_scope || "conditional_on_captured_inventory",
                 ].filter(Boolean).join(" · ");
                 setCompareResult(mismatches ? `${policyText} · ${fields} · Mismatches: ${mismatches}` : `${policyText} · ${fields}`);

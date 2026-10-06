@@ -280,11 +280,10 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
         persist_visible_report(report, False)
     else:
         worksheet = report.get("worksheet") or report.get("independent_worksheet")
-        completed = (
-            report.get("wallet_completed_episodes")
-            or (profile or {}).get("completed_known_cost_positions")
-            or 0
-        )
+        if report.get("wallet_completed_episodes") is not None:
+            completed = int(report["wallet_completed_episodes"])
+        else:
+            completed = int((profile or {}).get("completed_known_cost_positions") or 0)
         persist_visible_report(report, visible_report_allowed(worksheet=worksheet, completed_positions=completed))
     result["visible_report"] = visible_report_passes(report)
     report["result_scope"] = "conditional_on_captured_inventory"

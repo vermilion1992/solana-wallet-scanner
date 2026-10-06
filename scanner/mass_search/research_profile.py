@@ -253,6 +253,12 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             })
     if "wallet_completed_episodes" in report and report.get("wallet_completed_episodes") is not None:
         completed = int(report.get("wallet_completed_episodes"))
+    elif mapped:
+        from scanner.mass_search.g3_history import completed_episodes
+        grouped = {}
+        for row in mapped:
+            grouped.setdefault(row.get("mint") or "", []).append(row)
+        completed = int(completed_episodes(grouped)["wallet_completed_episodes"])
     else:
         completed = 0
     sale_count = report.get("wallet_sale_count")

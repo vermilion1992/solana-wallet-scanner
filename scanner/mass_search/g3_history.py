@@ -393,7 +393,13 @@ def completed_position_episodes(rows):
                     "unsupported_sale_exceeds_inventory": True,
                 }
             if opened and inventory == 0:
-                if event.get("role") == "in_report" or event.get("window_qualified"):
+                role = event.get("role")
+                qualified = event.get("window_qualified")
+                if role is None and qualified is None:
+                    in_window = True
+                else:
+                    in_window = role == "in_report" or bool(qualified)
+                if in_window:
                     complete += 1
                 opened = False
     return {

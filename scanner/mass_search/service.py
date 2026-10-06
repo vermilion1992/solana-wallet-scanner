@@ -409,6 +409,21 @@ class MassSearchService:
             worksheet = settlement_aware_worksheet(trade_events) if trade_events else None
         except ValueError:
             worksheet = None
+        from .g3_history import completed_episodes
+        by_mint = {}
+        for event in trade_events:
+            mint_id = event.get("mint") or mint
+            row = dict(event)
+            if row.get("role") is None and row.get("window_qualified") is None:
+                row["role"] = "in_report"
+                row["window_qualified"] = True
+            by_mint.setdefault(mint_id, []).append(row)
+        episodes = completed_episodes(by_mint) if by_mint else {
+            "wallet_completed_episodes": 0,
+            "wallet_sale_count": 0,
+            "per_mint": {},
+            "per_mint_detail": {},
+        }
         exit_diag = material_exit_v2([
             {
                 "kind": event["kind"],
@@ -608,6 +623,9 @@ class MassSearchService:
             "research": research,
             "worksheet": worksheet,
             "by_quote_asset": (worksheet or {}).get("by_quote_asset"),
+            "wallet_completed_episodes": episodes["wallet_completed_episodes"],
+            "wallet_sale_count": episodes.get("wallet_sale_count") or 0,
+            "completed_episode_detail": episodes,
             "material_exit": exit_diag,
             "evidence": [{"hash": evidence, "kind": "mass-search-reconstruction"}],
             "strict_preset": assert_strict_preset_unchanged(),

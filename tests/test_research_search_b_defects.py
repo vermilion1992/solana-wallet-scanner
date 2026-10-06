@@ -223,18 +223,82 @@ def test_d10_conversions_fees_and_unsupported_listed(tmp_path):
     store, result = _replay(tmp_path, MIXED)
     report = result["report"]
     conversions = report.get("conversions") or []
-    assert any(row.get("kind") == "conversion" or row.get("classification") == "quote_conversion" for row in conversions) or report.get("unsupported_tx_count") is not None
+    assert conversions
+    assert all(row.get("kind") == "conversion" or row.get("classification") == "quote_conversion" for row in conversions)
     kinds = {row.get("kind") for row in report.get("events") or []}
     assert "conversion" not in kinds
     store.close()
     a_store, a_result = _replay(tmp_path / "a6", A6PS)
     a_report = a_result["report"]
     assert a_report.get("unsupported_tx_count") is not None
+    assert int(a_report["unsupported_tx_count"]) >= 1
+    assert a_report.get("unsupported_transactions") is not None
     worksheet = a_report.get("worksheet") or {}
     assert worksheet.get("total_gross_profit_sol") not in (None, "")
     assert worksheet.get("total_fees_and_tips_sol") not in (None, "")
     assert worksheet.get("total_profit_sol") not in (None, "")
     a_store.close()
+
+
+def _wallet_sol_delta_sol(record, address):
+    meta = record.get("meta") or {}
+    message = (record.get("transaction") or {}).get("message") or {}
+    keys = list(message.get("accountKeys") or [])
+    if keys and isinstance(keys[0], dict):
+        keys = [item.get("pubkey") or item.get("key") for item in keys]
+    loaded = meta.get("loadedAddresses") or {}
+    keys = keys + list(loaded.get("writable") or []) + list(loaded.get("readonly") or [])
+    try:
+        index = keys.index(address)
+    except ValueError:
+        return None
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    if index >= len(pre) or index >= len(post):
+        return None
+    return Decimal(post[index] - pre[index]) / Decimal("1000000000")
+
+
+def test_d10_a6ps_biggest_token_net_of_fees_vs_raw_sol_delta(tmp_path):
+    entry = catalog_by_address()[A6PS]
+    _verify_pages(entry)
+    records, _ = load_capture_records(entry)
+    decoded = decode_supported_swaps(canonical_decode_records(records), A6PS)
+    biggest = "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump"
+    buy = sell = fees = Decimal("0")
+    signatures = []
+    for event in decoded.get("events") or []:
+        if event.get("mint") != biggest or event.get("kind") not in ("buy", "sell"):
+            continue
+        amount = Decimal(str(event.get("amount_sol") or 0))
+        fees += Decimal(str(event.get("fee_sol") or 0))
+        signatures.append(event.get("signature"))
+        if event["kind"] == "buy":
+            buy += amount
+        else:
+            sell += amount
+    gross = sell - buy
+    net = gross - fees
+    assert _q(gross) == _q("297.931068225")
+    raw = Decimal("0")
+    by_sig = {}
+    for record in records:
+        signature = record.get("signature") or ((record.get("transaction") or {}).get("signatures") or [None])[0]
+        by_sig[signature] = record
+    for signature in signatures:
+        delta = _wallet_sol_delta_sol(by_sig[signature], A6PS)
+        assert delta is not None
+        raw += delta
+    assert _q(raw) == _q("291.975484385")
+    residual = net - raw
+    assert Decimal("0") < residual < Decimal("0.002")
+    store, result = _replay(tmp_path, A6PS)
+    worksheet = result["report"]["worksheet"]
+    assert worksheet.get("total_gross_profit_sol") not in (None, "")
+    assert worksheet.get("total_fees_and_tips_sol") not in (None, "")
+    recomputed = Decimal(str(worksheet["total_gross_profit_sol"])) - Decimal(str(worksheet["total_fees_and_tips_sol"]))
+    assert abs(_q(worksheet["total_profit_sol"]) - _q(recomputed)) <= Decimal("0.000000002")
+    store.close()
 
 
 def test_independent_recon_address_works_for_catalog_captures():
