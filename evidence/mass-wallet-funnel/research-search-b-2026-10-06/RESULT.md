@@ -1,3 +1,35 @@
+# RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 08:42 + invariant brief
+
+**Outcome: 08:42 CERT / STATE / UI / CAP-A / CAP-B / CAP-D / CAP-E closed on `517c721`. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**
+
+Binding work order: `CHATGPT_REVIEW_2026-10-07_0842_FULL.md` plus `INVARIANT_ACCEPTANCE_BRIEF_2026-10-07`. Gaps 3 and 4 stay closed and were not reopened. gtfo’s labelled six-atomic aggregate bridge stays accepted. DQ7n/BVZt honesty and capture exclusions stay. CAP-C stays accepted.
+
+## This-review claim status
+
+| Gap | Reviewer required closure | Status |
+| --- | --- | --- |
+| CERT | Bind bridge amounts/units to ledger; unique 1:1; empty/missing ledger non-certifying; auditor identity in both representations; headline unit mismatch does not certify | CLOSED. Tests listed in TESTS.md and the registry. |
+| STATE | Rebuild evidence_class before category; ranked/compare/report GET/export do not keep saved C=MET | CLOSED. |
+| UI | Mount actual ranked-phone, desktop, report, compare trees; live ResearchProfilePanel uses authoritative funnel/category | CLOSED. Physical-phone testing NOT RUN. |
+| CAP-A | Store-authoritative load; persist-before-transport; persist failure prevents dispatch | CLOSED. |
+| CAP-B | Reservation invalidates last_dispatch; progress bound to latest replay; old receipt cannot re-arm | CLOSED. |
+| CAP-C | Terminal cursors | Accepted — not reopened. |
+| CAP-D | Committed draft; A6PS additional page unavailable; per-wallet observations | CLOSED. |
+| CAP-E | Operator/confirmed_at/baseline; remaining enforced at reservation; remaining 0 → zero transport | CLOSED. |
+| Gaps 3–4 | Decoders / exposure | Accepted — not reopened. |
+
+## Residual backlog only
+
+- MassSearch desktop “Scoped P&L” header (optional rename to “Captured results”; not a blocker).
+- Open-position ages remain `not_evaluated` (count only).
+- Token-2022 stays observed-only. SwapTob unsupported.
+- Zero leads. Capture draft stays disabled.
+- Physical-phone testing NOT RUN. Interactive browser walkthrough NOT RUN.
+
+## Suite / build (08:42 pass)
+
+See `TESTS.md` on this commit. Keys unset **3747 passed** / 440 subtests / 1 warning (9 min 24 s). Dummy keys **3747 passed** / 440 subtests / 1 warning (9 min 18 s). `npm run build` recorded there (`index-OhAg4lQK.js`). Offline acceptance command green.
+
 # RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 07:14 re-review
 
 **Outcome: ACCEPT_AS_PROGRESS_ONLY remaining blockers held and fixed. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**

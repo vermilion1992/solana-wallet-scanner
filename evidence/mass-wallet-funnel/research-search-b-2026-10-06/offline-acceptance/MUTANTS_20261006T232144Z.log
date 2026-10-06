@@ -1,0 +1,6 @@
+CERT-ledger-bind: caught
+STATE-evidence-class: caught
+CAP-A-store-authority: caught
+CAP-B-progress-bind: caught
+CAP-E-remaining: caught
+[{"id": "CERT-ledger-bind", "caught": true, "exit": 1}, {"id": "STATE-evidence-class", "caught": true, "exit": 1}, {"id": "CAP-A-store-authority", "caught": true, "exit": 1}, {"id": "CAP-B-progress-bind", "caught": true, "exit": 1}, {"id": "CAP-E-remaining", "caught": true, "exit": 1}]

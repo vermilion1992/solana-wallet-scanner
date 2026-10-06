@@ -2,10 +2,10 @@
 
 Fill these values into the ChatGPT brief header.
 
-- Candidate full commit SHA: pending the commit that lands this file; see git rev-parse HEAD after push
-- Application/tested SHA: same as candidate
-- Evidence-only SHA: same as candidate unless a later evidence-only commit exists
-- PR / branch: PR #6 / `cursor/research-search-b-fix-1055` (confirmed)
+- Candidate full commit SHA: `517c721d25c9812ec113a7fad66d4aefffb396dc`
+- Application/tested SHA: `517c721d25c9812ec113a7fad66d4aefffb396dc`
+- Evidence-only SHA: pending this evidence commit (filled immediately after)
+- PR / branch: PR #6 / `cursor/research-search-b-fix-1055` (confirmed; base `cursor/mass-wallet-funnel-v1-1055`)
 - Evidence manifest: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/INVARIANT_REGISTRY.md`
 - Raw logs: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/`
 - Offline acceptance command:
@@ -16,3 +16,4 @@ Fill these values into the ChatGPT brief header.
 
 - Known NOT RUN / BLOCKED: physical-phone testing; interactive browser walkthrough; live capture; any Helius/Birdeye request
 - Flags: `PRODUCT_READY=false`; draft `enabled:false`; no merge; $0
+- Suites: keys-unset 3747 passed / 440 subtests; dummy 3747 passed / 440 subtests; offline acceptance ok

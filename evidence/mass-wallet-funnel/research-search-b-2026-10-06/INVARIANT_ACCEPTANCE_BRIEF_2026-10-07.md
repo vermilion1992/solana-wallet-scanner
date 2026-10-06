@@ -2,13 +2,13 @@
 
 ## Handoff header — the implementing agent completes this
 
-Candidate full commit SHA: `PENDING_THIS_EVIDENCE_COMMIT — implementing agent will replace with the full SHA of the commit that lands this brief on cursor/research-search-b-fix-1055`
-Application/tested SHA, if different: `SAME_AS_CANDIDATE`
-Evidence-only SHA, if different: `SAME_AS_CANDIDATE if RESULT/TESTS land in the same commit; otherwise the later evidence-only SHA`
+Candidate full commit SHA: `517c721d25c9812ec113a7fad66d4aefffb396dc`
+Application/tested SHA, if different: `517c721d25c9812ec113a7fad66d4aefffb396dc`
+Evidence-only SHA, if different: `pending this evidence commit (filled immediately after)`
 PR / branch: `PR #6 / cursor/research-search-b-fix-1055 (confirmed; base cursor/mass-wallet-funnel-v1-1055)`
-Evidence manifest and raw-log paths: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/INVARIANT_REGISTRY.md`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/RESULT.json`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/RAW_*.log`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/TESTS.md`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/RESULT.md`
+Evidence manifest and raw-log paths: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/INVARIANT_REGISTRY.md`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/RESULT.json`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/RAW_20261006T232144Z.log`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/TESTS.md`; `evidence/mass-wallet-funnel/research-search-b-2026-10-06/RESULT.md`
 Offline acceptance command(s): `.venv/bin/python scripts/offline_acceptance.py`
-Known NOT RUN / BLOCKED items: `Physical-phone testing NOT RUN. Interactive browser/responsive walkthrough NOT RUN this pass (ranked phone/desktop/report/compare trees are mounted with react-dom/server under Node ≥22). Live capture BLOCKED (draft enabled:false). Provider/Helius/Birdeye calls NOT RUN and must stay blocked. Full keys-unset application suite is recorded separately in TESTS.md when executed.`
+Known NOT RUN / BLOCKED items: `Physical-phone testing NOT RUN. Interactive browser/responsive walkthrough NOT RUN this pass (ranked phone/desktop/report/compare trees are mounted with react-dom/server under Node ≥22). Live capture BLOCKED (draft enabled:false). Provider/Helius/Birdeye calls NOT RUN and must stay blocked. Full keys-unset application suite: 3747 passed / 440 subtests / 1 warning. Dummy-keys suite: 3747 passed / 440 subtests / 1 warning.`
 
 Do not assume a blank field is evidence of success. Resolve it from the accessible repository where possible; otherwise report the resulting limitation. Do not infer the candidate from the previous reviewed tip.
 
