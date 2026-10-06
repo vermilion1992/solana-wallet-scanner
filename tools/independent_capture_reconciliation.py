@@ -57,28 +57,34 @@ def _fifo(trades, *, asset):
             consumed.append({"signature": lot["signature"], "quantity_raw": str(take), "basis": _canonical(share)})
             if lot["quantity_raw"] == 0:
                 lots[mint].pop(0)
+        matched_qty = qty - remaining
+        if matched_qty > 0:
+            matched_proceeds = consideration * matched_qty / qty
+            matched_fee = fee * matched_qty / qty
+            profit = matched_proceeds - basis
+            if asset == "SOL":
+                profit -= matched_fee
+            sells.append({
+                "signature": trade["signature"],
+                "mint": mint,
+                "quantity_raw": str(matched_qty),
+                "proceeds": _canonical(matched_proceeds),
+                "basis": _canonical(basis),
+                "net_profit": _canonical(profit),
+                "consumed_lots": consumed,
+                "fee_sol": _canonical(matched_fee),
+                "fee_in_pnl": asset == "SOL",
+                "partial_known_cost": remaining > 0,
+            })
         if remaining > 0:
             unresolved.append({
                 "signature": trade["signature"],
                 "mint": mint,
                 "unmatched_quantity_raw": str(remaining),
-                "gross_proceeds": _canonical(consideration),
-                "fee_sol": trade["fee_sol"],
+                "gross_proceeds": _canonical(consideration * remaining / qty),
+                "fee_sol": _canonical(fee * remaining / qty),
+                "unresolved_basis": True,
             })
-            continue
-        profit = consideration - basis
-        if asset == "SOL":
-            profit -= fee
-        sells.append({
-            "signature": trade["signature"],
-            "mint": mint,
-            "proceeds": _canonical(consideration),
-            "basis": _canonical(basis),
-            "net_profit": _canonical(profit),
-            "consumed_lots": consumed,
-            "fee_sol": trade["fee_sol"],
-            "fee_in_pnl": asset == "SOL",
-        })
     for mint, remaining_lots in lots.items():
         for lot in remaining_lots:
             if lot["quantity_raw"] > 0:
@@ -182,11 +188,55 @@ def reconcile_g1():
     }
 
 
+def reconcile_synthetic(path):
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if payload.get("kind") != "SYNTHETIC_ENGINEERING_FIXTURE":
+        raise ValueError("Not a labelled synthetic engineering fixture")
+    trades = []
+    asset = "USDC"
+    for event in payload.get("events") or []:
+        if event.get("kind") not in ("buy", "sell"):
+            continue
+        usdc = event.get("consideration_usdc")
+        sol = event.get("consideration_sol")
+        if usdc not in (None, ""):
+            consideration = usdc
+            asset = "USDC"
+        else:
+            consideration = sol or "0"
+            asset = "SOL"
+        trades.append({
+            "kind": event["kind"],
+            "mint": event.get("mint") or "SynthMint",
+            "quantity_raw": event["units"],
+            "consideration": consideration,
+            "fee_sol": event.get("wallet_fee_sol") or event.get("fee_sol") or "0",
+            "signature": event.get("signature"),
+            "timestamp": event.get("seconds_from_start"),
+            "classification": event.get("classification"),
+        })
+    trades.sort(key=lambda row: (row.get("timestamp") is None, row.get("timestamp") or 0))
+    return {
+        "kind": "independent-capture-reconciliation-v1",
+        "imports_app_accounting": False,
+        "corpus_kind": "SYNTHETIC",
+        "not_proof": True,
+        "wallet": payload.get("address"),
+        "market_trades": len(trades),
+        "fifo": _fifo(trades, asset=asset),
+        "PRODUCT_READY": False,
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--target", choices=("rank1", "g1"), default="rank1")
+    parser.add_argument("--target", choices=("rank1", "g1", "synthetic"), default="rank1")
+    parser.add_argument("--fixture", default="")
     args = parser.parse_args()
-    payload = reconcile_rank1() if args.target == "rank1" else reconcile_g1()
+    if args.target == "synthetic":
+        payload = reconcile_synthetic(args.fixture)
+    else:
+        payload = reconcile_rank1() if args.target == "rank1" else reconcile_g1()
     print(json.dumps(payload, indent=2))
 
 

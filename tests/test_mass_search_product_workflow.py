@@ -52,6 +52,8 @@ DRAFT = ROOT / "config/live_authorization.ranked100-next-candidates-draft.json"
 SYNTH_USDC = "SynthEngUSDC11111111111111111111111111112"
 SYNTH_SOL = "SynthEngSOL111111111111111111111111111111"
 SYNTH_BAD = "SynthEngBAD111111111111111111111111111111"
+SYNTH_EMPTY = "SynthEngEMPTY111111111111111111111111111"
+SYNTH_PARTIAL = "SynthEngPARTIAL1111111111111111111111111"
 
 
 @pytest.fixture
@@ -357,6 +359,32 @@ def test_second_inflight_batch_is_refused(store):
     assert second["batch_id"] != first["batch_id"]
 
 
+def test_concurrent_create_batch_is_atomic(store):
+    created = []
+    refused = []
+    barrier = threading.Barrier(2)
+
+    def worker(address):
+        barrier.wait()
+        try:
+            created.append(create_batch(store, [address]))
+        except ValueError as exc:
+            refused.append(str(exc))
+
+    first = threading.Thread(target=worker, args=(SYNTH_USDC,))
+    second = threading.Thread(target=worker, args=(SYNTH_SOL,))
+    first.start()
+    second.start()
+    first.join()
+    second.join()
+    assert len(created) == 1
+    assert len(refused) == 1
+    assert "already in progress" in refused[0]
+    inflight = [row for row in store.list("ranked_batch") if row.get("status") in ("pending", "running")]
+    assert len(inflight) == 1
+    assert inflight[0]["batch_id"] == created[0]["batch_id"]
+
+
 def test_compare_flags_currency_window_and_incomplete_evidence(store):
     replay_captured_wallet(store, ALLOWED_WALLET)
     replay_captured_wallet(store, SYNTH_SOL)
@@ -366,6 +394,41 @@ def test_compare_flags_currency_window_and_incomplete_evidence(store):
     assert "currency" in kinds
     assert "corpus" in kinds
     assert compared["comparable"] is False
+
+
+def test_compare_flags_differing_windows(store):
+    replay_captured_wallet(store, G1_ADDRESS)
+    replay_captured_wallet(store, SYNTH_SOL)
+    reports = {row["address"]: row for row in store.list("reports") if row.get("source") == "mass-search"}
+    compared = compare_reports(store, reports[G1_ADDRESS]["id"], reports[SYNTH_SOL]["id"])
+    kinds = {item["kind"] for item in compared["mismatches"]}
+    assert "window" in kinds
+    assert compared["comparable"] is False
+    assert (reports[G1_ADDRESS].get("window") or {}) != (reports[SYNTH_SOL].get("window") or {})
+
+
+def test_no_event_reopen_and_cache_hit_default_visible_report_false(tmp_path):
+    first_store = Store(tmp_path / "data")
+    first = replay_captured_wallet(first_store, SYNTH_EMPTY)
+    assert first["cache_hit"] is False
+    assert first["visible_report"] is False
+    assert first["report"]["visible_report"] is False
+    report_id = first["report_id"]
+    first_store.close()
+    reopened = Store(tmp_path / "data")
+    second = replay_captured_wallet(reopened, SYNTH_EMPTY)
+    assert second["cache_hit"] is True
+    assert second["visible_report"] is False
+    assert second["report"]["visible_report"] is False
+    assert second["report_id"] == report_id
+    stale = reopened.get("reports", report_id)
+    stale.pop("visible_report", None)
+    reopened.put("reports", report_id, stale)
+    missing = replay_captured_wallet(reopened, SYNTH_EMPTY)
+    assert missing["cache_hit"] is True
+    assert missing["visible_report"] is False
+    assert missing["report"]["visible_report"] is False
+    reopened.close()
 
 
 def test_universe_exposes_stable_snapshot_identity():

@@ -30,9 +30,6 @@ def _inflight_batch(store):
 
 
 def create_batch(store, addresses, *, include_fixtures=False):
-    existing = _inflight_batch(store)
-    if existing:
-        raise ValueError(IN_FLIGHT)
     catalog = catalog_by_address()
     requested = []
     seen = set()
@@ -46,7 +43,6 @@ def create_batch(store, addresses, *, include_fixtures=False):
             if entry.get("corpus_kind") == "SYNTHETIC" and address not in seen:
                 seen.add(address)
                 requested.append(address)
-    batch_id = str(uuid.uuid4())
     outcomes = []
     for address in requested:
         entry = catalog.get(address)
@@ -62,7 +58,6 @@ def create_batch(store, addresses, *, include_fixtures=False):
         })
     payload = {
         "kind": "ranked-batch-v1",
-        "batch_id": batch_id,
         "status": "pending",
         "created_at": _now(),
         "cancel_requested": False,
@@ -74,8 +69,13 @@ def create_batch(store, addresses, *, include_fixtures=False):
         "provider_calls": provider_call_count(),
         "PRODUCT_READY": False,
     }
-    store.put(BATCH_KIND, batch_id, payload)
-    return payload
+    with store.lock:
+        if _inflight_batch(store):
+            raise ValueError(IN_FLIGHT)
+        batch_id = str(uuid.uuid4())
+        payload["batch_id"] = batch_id
+        store.put(BATCH_KIND, batch_id, payload)
+        return payload
 
 
 def get_batch(store, batch_id):
@@ -104,7 +104,7 @@ def _analyse_one(store, outcome):
     try:
         result = replay_captured_wallet(store, address)
         report = result.get("report") or {}
-        if report.get("visible_report") is False or result.get("visible_report") is False:
+        if report.get("visible_report") is not True or result.get("visible_report") is not True:
             outcome["status"] = "incomplete_evidence"
             outcome["detail"] = INCOMPLETE_EVIDENCE
         else:

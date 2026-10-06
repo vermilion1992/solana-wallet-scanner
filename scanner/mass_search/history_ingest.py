@@ -657,6 +657,7 @@ def replay_cached_history_to_report(
             "not_match": True,
             "not_ranked_wallet_pipeline_proof": True,
             "shortlist_rank": 1,
+            "visible_report": False,
         }
         store.put("reports", report["id"], report)
         return {
@@ -703,6 +704,11 @@ def replay_cached_history_to_report(
     report["not_ranked_wallet_pipeline_proof"] = True
     report["wallet_completed_episodes"] = episodes["wallet_completed_episodes"]
     report["completed_episode_detail"] = episodes
+    report["visible_report"] = visible_report_allowed(
+        worksheet=production or worksheet,
+        completed_positions=_visible_completed_positions(episodes, production or worksheet),
+    )
+    report["not_match"] = True
     if worksheet and worksheet.get("settlement_asset") == "USDC":
         report["g3_status"] = "PARTIAL_USDC_KNOWN_COST"
         report["research"] = {

@@ -32,8 +32,21 @@ def _group_by_mint(rows):
     return grouped
 
 
+def _scale_trade(event, *, units, original_units):
+    """Pro-rate proceeds and SOL fees by quantity. Never invent a zero cost."""
+    scaled = dict(event)
+    scaled["units"] = canonical(units)
+    with localcontext() as ctx:
+        ctx.prec = 192
+        for key in ("consideration_usdc", "consideration_sol", "amount_usdc", "amount_sol", "wallet_fee_sol"):
+            if event.get(key) not in (None, ""):
+                # Multiply first so 180 * 5 / 15 is exactly 60, not 5/15 * 180.
+                scaled[key] = canonical(Decimal(str(event[key])) * units / original_units)
+    return scaled
+
+
 def isolate_known_cost_events(rows):
-    """Keep buys and sells that have inventory. Leading/unbacked sells stay unresolved."""
+    """Keep buys and sells that have inventory. Partial sells split; remainder stays unknown."""
     known = []
     unresolved = []
     inventory = Decimal("0")
@@ -44,15 +57,26 @@ def isolate_known_cost_events(rows):
             known.append(event)
             continue
         if event["kind"] == "sell":
-            if inventory <= 0 or units > inventory:
+            if inventory <= 0:
                 unresolved.append({
                     **event,
                     "unresolved_basis": True,
                     "reason": "Sale has no known acquisition cost in this sample",
                 })
                 continue
-            inventory -= units
-            known.append(event)
+            if units <= inventory:
+                inventory -= units
+                known.append(event)
+                continue
+            matched = _scale_trade(event, units=inventory, original_units=units)
+            remainder = _scale_trade(event, units=units - inventory, original_units=units)
+            matched["partial_known_cost"] = True
+            remainder["unresolved_basis"] = True
+            remainder["reason"] = "Sale remainder has no known acquisition cost in this sample"
+            remainder["unmatched_quantity"] = remainder["units"]
+            known.append(matched)
+            unresolved.append(remainder)
+            inventory = Decimal("0")
     return known, unresolved
 
 
@@ -162,8 +186,8 @@ def settlement_aware_worksheet(events):
     mints = {settlement_of(row) for row in usable}
     if USDC in mints and WSOL in mints:
         raise ValueError("SOL and USDC consideration cannot share one worksheet; no FX")
+    known, unresolved = isolate_known_cost_by_mint(usable)
     if mints == {USDC}:
-        known, unresolved = isolate_known_cost_by_mint(usable)
         if not known or not any(row["kind"] == "sell" for row in known):
             payload = empty_usdc_worksheet(unresolved=len(unresolved), known=len(known))
             return payload
@@ -171,7 +195,19 @@ def settlement_aware_worksheet(events):
         worksheet["unresolved_basis_sales"] = len(unresolved)
         worksheet["known_cost_trades"] = len(known)
         return worksheet
-    return independent_fifo_worksheet(usable)
+    if not known or not any(row["kind"] == "sell" for row in known):
+        return {
+            "sale_fifo_basis_sol": [],
+            "sale_net_profit_sol": [],
+            "total_profit_sol": None,
+            "oracle": "independent-g1-fifo-v1",
+            "unresolved_basis_sales": len(unresolved),
+            "known_cost_trades": len(known),
+        }
+    worksheet = independent_fifo_worksheet(known)
+    worksheet["unresolved_basis_sales"] = len(unresolved)
+    worksheet["known_cost_trades"] = len(known)
+    return worksheet
 
 
 def independent_settlement_worksheet(events):
@@ -184,8 +220,8 @@ def independent_settlement_worksheet(events):
     mints = {settlement_of(row) for row in usable}
     if USDC in mints and WSOL in mints:
         raise ValueError("SOL and USDC consideration cannot share one worksheet; no FX")
+    known, unresolved = isolate_known_cost_by_mint(usable)
     if mints == {USDC}:
-        known, unresolved = isolate_known_cost_by_mint(usable)
         if not known or not any(row["kind"] == "sell" for row in known):
             payload = empty_usdc_worksheet(unresolved=len(unresolved), known=len(known))
             payload["oracle"] = "independent-usdc-fifo-v1"
@@ -194,7 +230,19 @@ def independent_settlement_worksheet(events):
         worksheet["unresolved_basis_sales"] = len(unresolved)
         worksheet["known_cost_trades"] = len(known)
         return worksheet
-    return independent_fifo_worksheet(usable)
+    if not known or not any(row["kind"] == "sell" for row in known):
+        return {
+            "sale_fifo_basis_sol": [],
+            "sale_net_profit_sol": [],
+            "total_profit_sol": None,
+            "oracle": "independent-g1-fifo-v1",
+            "unresolved_basis_sales": len(unresolved),
+            "known_cost_trades": len(known),
+        }
+    worksheet = independent_fifo_worksheet(known)
+    worksheet["unresolved_basis_sales"] = len(unresolved)
+    worksheet["known_cost_trades"] = len(known)
+    return worksheet
 
 
 def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_qualified, unresolved_order):

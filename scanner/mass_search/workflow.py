@@ -19,7 +19,7 @@ from scanner.mass_search.capture_catalog import (
 )
 from scanner.mass_search.funnel_abc import classify_candidate, rank_next_candidates
 from scanner.mass_search.g3_reacquire import ALLOWED_WALLET
-from scanner.mass_search.history_ingest import replay_cached_history_to_report
+from scanner.mass_search.history_ingest import replay_cached_history_to_report, visible_report_allowed
 from scanner.mass_search.research_profile import build_research_profile, load_filters
 from scanner.mass_search.service import MassSearchService
 
@@ -259,6 +259,25 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
     report["shortlist_rank"] = ranked_row.get("provider_rank")
     report["not_safe_to_copy"] = True
     report["PRODUCT_READY"] = False
+    for key in ("not_match", "not_ranked_wallet_pipeline_proof"):
+        if key in result:
+            report[key] = result[key]
+    if result.get("cache_hit"):
+        # Missing or non-True on a cache hit is unknown/false, never True.
+        report["visible_report"] = result.get("visible_report") is True
+    elif report.get("visible_report") is True:
+        pass
+    elif report.get("visible_report") is False:
+        report["visible_report"] = False
+    else:
+        worksheet = report.get("worksheet") or report.get("independent_worksheet")
+        completed = (
+            report.get("wallet_completed_episodes")
+            or (profile or {}).get("completed_known_cost_positions")
+            or 0
+        )
+        report["visible_report"] = visible_report_allowed(worksheet=worksheet, completed_positions=completed)
+    result["visible_report"] = report["visible_report"] is True
     store.put("reports", report["id"], report)
     result["report"] = report
     result["research_profile"] = profile
@@ -295,15 +314,25 @@ def _replay_synthetic(store, entry, *, filters=None):
         "start": windows["report_start_inclusive"],
         "end": windows["report_end_exclusive"],
     }
+    payload = {
+        "run_id": run["run_id"],
+        "report_id": report["id"],
+        "report": report,
+        "external_requests": 0,
+    }
+    if not (entry.get("events") or []):
+        report["visible_report"] = False
+        report["not_match"] = True
+        payload["visible_report"] = False
+        payload["not_match"] = True
+    elif "visible_report" in report:
+        payload["visible_report"] = report["visible_report"] is True
+    if "not_match" in report:
+        payload["not_match"] = report["not_match"]
     store.put("reports", report["id"], report)
     return _attach_research(
         store,
-        {
-            "run_id": run["run_id"],
-            "report_id": report["id"],
-            "report": report,
-            "external_requests": 0,
-        },
+        payload,
         address=entry["address"],
         filters=filters,
         entry=entry,
@@ -337,7 +366,8 @@ def replay_captured_wallet(store, address=ALLOWED_WALLET, *, filters=None, force
                 "report": cached,
                 "external_requests": 0,
                 "cache_hit": True,
-                "visible_report": cached.get("visible_report", True),
+                "visible_report": cached.get("visible_report") is True,
+                "not_match": cached.get("not_match"),
                 "PRODUCT_READY": False,
             }
             result = _attach_research(store, result, address=address, filters=filters, entry=entry)
@@ -568,7 +598,7 @@ def compare_reports(store, left_id, right_id):
         {"key": "scope", "left": (left_analytics.get("scope") or {}).get("population"), "right": (right_analytics.get("scope") or {}).get("population")},
         {"key": "window_start", "left": (left.get("window") or {}).get("start"), "right": (right.get("window") or {}).get("start")},
         {"key": "window_end", "left": (left.get("window") or {}).get("end"), "right": (right.get("window") or {}).get("end")},
-        {"key": "visible_report", "left": left.get("visible_report", True), "right": right.get("visible_report", True)},
+        {"key": "visible_report", "left": left.get("visible_report") is True, "right": right.get("visible_report") is True},
     ])
     mismatches = []
     left_unit = left_analytics.get("scoped_pnl_unit") or left_profile.get("scoped_pnl_unit")
@@ -579,7 +609,7 @@ def compare_reports(store, left_id, right_id):
         mismatches.append({"kind": "window", "detail": "Report windows differ; totals are not the same interval"})
     if left.get("corpus_kind") != right.get("corpus_kind"):
         mismatches.append({"kind": "corpus", "detail": "Genuine and synthetic or control corpora are not equivalent"})
-    if left.get("visible_report") is False or right.get("visible_report") is False:
+    if left.get("visible_report") is not True or right.get("visible_report") is not True:
         mismatches.append({"kind": "incomplete_evidence", "detail": "At least one report is not a visible completed-position result"})
     if (left_profile.get("unresolved_basis_sales") or 0) or (right_profile.get("unresolved_basis_sales") or 0):
         mismatches.append({"kind": "incomplete_evidence", "detail": "Unresolved-basis sales stay unknown; they are not zero-cost closes"})

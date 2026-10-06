@@ -252,3 +252,41 @@ def test_independent_reconciliation_does_not_import_app_accounting():
     g1 = reconcile_g1()
     assert g1["market_trades"] == 5
     assert Decimal(g1["fifo"]["total_profit"]) == Decimal("-0.167725526")
+
+
+def test_partial_match_sell_splits_and_agrees_with_independent_tool(store):
+    from tools.independent_capture_reconciliation import reconcile_synthetic
+
+    fixture = ROOT / "tests/fixtures/synthetic_engineering/partial-match-sell.json"
+    app = replay_captured_wallet(store, "SynthEngPARTIAL1111111111111111111111111")
+    report = app["report"]
+    assert report["corpus_kind"] == "SYNTHETIC"
+    assert report["worksheet"]["total_profit_usdc"] == "20"
+    assert report["worksheet"]["unresolved_basis_sales"] == 1
+    assert report["research_profile"]["unresolved_basis_sales"] == 1
+    independent = reconcile_synthetic(fixture)
+    assert Decimal(independent["fifo"]["total_profit"]) == Decimal("20")
+    assert len(independent["fifo"]["known_cost_sells"]) == 1
+    assert Decimal(independent["fifo"]["known_cost_sells"][0]["proceeds"]) == Decimal("120")
+    assert Decimal(independent["fifo"]["known_cost_sells"][0]["basis"]) == Decimal("100")
+    assert len(independent["fifo"]["unresolved_basis_sales"]) == 1
+    assert Decimal(independent["fifo"]["unresolved_basis_sales"][0]["gross_proceeds"]) == Decimal("60")
+    assert independent["fifo"]["unresolved_basis_sales"][0]["unmatched_quantity_raw"] == "5"
+    assert independent["fifo"]["open_lots"] == []
+    assert Decimal(report["worksheet"]["total_profit_usdc"]) == Decimal(independent["fifo"]["total_profit"])
+
+
+def test_partial_isolate_keeps_inventory_consistent():
+    rows = [
+        {"kind": "buy", "units": "10", "consideration_usdc": "100", "seconds_from_start": 1, "mint": "a", "signature": "b1"},
+        {"kind": "sell", "units": "15", "consideration_usdc": "180", "seconds_from_start": 2, "mint": "a", "signature": "s1"},
+    ]
+    known, unresolved = isolate_known_cost_events(rows)
+    assert [row["signature"] for row in known] == ["b1", "s1"]
+    assert Decimal(known[1]["units"]) == Decimal("10")
+    assert Decimal(known[1]["consideration_usdc"]) == Decimal("120")
+    assert len(unresolved) == 1
+    assert Decimal(unresolved[0]["units"]) == Decimal("5")
+    assert Decimal(unresolved[0]["consideration_usdc"]) == Decimal("60")
+    worksheet = usdc_fifo_worksheet(known)
+    assert worksheet["total_profit_usdc"] == "20"
