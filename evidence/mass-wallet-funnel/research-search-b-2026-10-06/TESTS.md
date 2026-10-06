@@ -1,33 +1,29 @@
-# Offline suite at the 2026-10-07 ChatGPT-review commit
+# Offline suite at the 2026-10-07 03:46 re-review commit
 
-App SHA of this evidence commit. Bundle `frontend/dist/assets/index-ZbPPCV7z.js`.
+App SHA of this evidence commit. Bundle `frontend/dist/assets/index-Cm9QhyzB.js`.
 
-- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 8 s) on `76833dc`.
-- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 14 s) on `76833dc`.
-- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-ZbPPCV7z.js`.
-- Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = **401**. 58PW bridge 44771.791989746 USDC and BVZt bridge 4169.135872971 USDC recaptured.
+- Keys unset and dummy-key full suites: recorded after the clean runs on this tip.
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-Cm9QhyzB.js`.
+- Phone-sized Chromium emulation 390×844 (not a physical phone): no page errors; unauthenticated `/api/state` = **401**. Worksheet total label, bridge operands, verified tips, unknown-cost inventory, and traversed interval recaptured.
 - No Helius or Birdeye calls. Dummy keys were never sent.
 - `PRODUCT_READY` remains false.
+- Spend this pass: 0/0/$0.
 
-Named regressions for this pass:
+Named regressions for this pass (`tests/test_chatgpt_review_2026_10_07_rereview.py`):
 
-- `tests/test_chatgpt_review_2026_10_07.py`
-  - `test_stale_audit_does_not_attach`
-  - `test_99_5_count_80_value_does_not_qualify`
-  - `test_20_episode_3_mint_one_day_burst_fails_stronger_shortlist`
-  - `test_positive_worksheet_negative_episodes_does_not_qualify`
-  - `test_cross_currency_sensitivity_blocks_lead`
-  - `test_even_sample_median_uses_mean_of_two_central_values`
-  - `test_asset_specific_atomic_tolerances`
-  - `test_message_signers_header_cross_check_rejects_conflicting_flags`
-  - `test_proven_platform_fee_is_a_cost_unexplained_transfer_is_not`
-  - `test_synthetic_cases_never_count_as_genuine_research_wallets`
-  - `test_token_2022_transfer_fee_bvzt_dq7n_jupiter_buys`
-  - `test_rfq_fee_fill_bvzt_three_sales`
-  - `test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer`
-  - `test_swaptob_remains_unsupported_after_bounded_investigation`
-  - `test_next_capture_box_driver_emits_supported_gta_request`
-- `tests/test_mitch_review_2026_10_06.py::test_item17_next_capture_manifest_is_disabled`
-- `tests/test_mitch_review_2026_10_06.py::test_labelled_wallets_are_independently_audited_in_committed_json`
-- `tests/test_mitch_review_2026_10_06.py::test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed`
-- `tests/test_research_search_b_defects.py::test_d4_mixed_wallet_separate_quote_asset_worksheets`
+- `test_fingerprintless_audit_does_not_certify_genuine_path`
+- `test_mismatched_fingerprint_detaches_audit`
+- `test_negative_ledger_positive_summary_does_not_qualify`
+- `test_missing_sol_sensitivity_blocks_lead`
+- `test_component_bridge_requires_exact_membership_and_present_components`
+- `test_gtfo_aggregate_rounding_bridge_is_not_within_two_lamports`
+- `test_committed_gtfo_audit_uses_aggregate_rounding_bridge`
+- `test_unknown_cost_inventory_is_not_an_open_lot_count`
+- `test_traversed_interval_is_not_requested_window_fallback`
+- `test_open_position_ages_are_not_evaluated_without_positions`
+- `test_token_2022_ambiguous_and_capped_are_not_config`
+- `test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_budget_grants`
+- `test_synthetic_marking_does_not_justify_permissive_audit_branch`
+- `test_an9s_coverage_copy_is_eligible_not_a_lead`
+
+Prior named tests remain in `tests/test_chatgpt_review_2026_10_07.py`, including the mutated-capture RFQ negatives.

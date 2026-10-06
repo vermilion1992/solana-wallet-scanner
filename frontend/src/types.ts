@@ -368,6 +368,7 @@ export type Report = {
     note?: string;
   } | null;
   verified_tips_sol?: string;
+  proven_platform_fees_sol?: string;
   sensitivity_unverified_debits_sol?: string;
   sensitivity_unverified_debits_note?: string;
   coverage_status?: string;

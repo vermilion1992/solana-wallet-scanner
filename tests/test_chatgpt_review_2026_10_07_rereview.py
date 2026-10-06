@@ -188,6 +188,38 @@ def test_component_bridge_requires_exact_membership_and_present_components():
     assert second is None
 
 
+def test_an9s_coverage_copy_is_eligible_not_a_lead():
+    from pathlib import Path
+    import json
+
+    table = json.loads((
+        Path(__file__).resolve().parents[1]
+        / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/WALLET_TABLE.json"
+    ).read_text(encoding="utf-8"))
+    an9s = next(row for row in table["wallets"] if row["label"] == "An9s")
+    assert an9s["coverage_status"] == "provisional_eligible"
+    assert an9s["qualification_level"] != "provisional_research_lead"
+    assert an9s["coverage_status_display"] == "Coverage gate eligible; not a research lead."
+
+
+def test_committed_gtfo_audit_uses_aggregate_rounding_bridge():
+    from pathlib import Path
+    import json
+
+    payload = json.loads((
+        Path(__file__).resolve().parents[1]
+        / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/INDEPENDENT_AUDIT.json"
+    ).read_text(encoding="utf-8"))
+    gtfo = next(row for row in payload["wallets"] if row["address"].startswith("gtfo"))
+    assert gtfo["independently_audited"] is True
+    assert gtfo["one_to_one_membership"] is True
+    bridge = gtfo["aggregate_rounding_bridge"]
+    assert bridge["within_declared_tolerance"] is False
+    assert bridge["delta_atomics"] == 6
+    assert "auditor confirms within 2 lamports" not in (gtfo.get("auditor_confirmation") or "")
+    assert "aggregate rounding bridge" in (gtfo.get("auditor_confirmation") or "")
+
+
 def test_gtfo_aggregate_rounding_bridge_is_not_within_two_lamports():
     bridge = aggregate_rounding_bridge("2.030645834", "2.030645840", "SOL")
     assert bridge["within_declared_tolerance"] is False

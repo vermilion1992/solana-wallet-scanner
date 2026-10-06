@@ -130,6 +130,7 @@ def wallet_row(address, report):
         "coverage_count_share": profile.get("coverage_count_share"),
         "coverage_value_share": profile.get("coverage_value_share"),
         "coverage_status": labels["coverage_status"],
+        "coverage_status_display": labels.get("coverage_status_display") or labels["coverage_status"],
         "blocking_reason": labels["blocking_reason"],
         "dependency_unresolved_basis": judged.get("dependency_unresolved_basis"),
         "dependency_unresolved_costs": judged.get("dependency_unresolved_costs"),
