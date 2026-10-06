@@ -420,7 +420,9 @@ def test_compare_same_window_control_and_differing_included_trades(store):
     assert same["comparable"] is True or "currency" not in {item["kind"] for item in same["mismatches"]}
     assert set(same["window_policy"]["left_included_tx"]) != set(same["window_policy"]["right_included_tx"])
     assert same["window_policy"]["left_sample_size"] == 1
-    assert same["window_policy"]["right_sample_size"] == 1
+    # Fee-free fixture is buy 6 / sell 10: matched fragment is kept, but item 6
+    # says a partly backed sale is not a clean flat-to-flat episode.
+    assert same["window_policy"]["right_sample_size"] == 0
     assert Decimal(str(same["window_policy"]["left_scoped_pnl"])) == Decimal("30")
     assert Decimal(str(same["window_policy"]["right_scoped_pnl"])) == Decimal("24")
 

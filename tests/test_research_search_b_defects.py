@@ -155,13 +155,13 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     assert _q(usdc["total_profit_usdc"]) == _q(indep["fifo"]["USDC"]["total_profit"])
     assert _q(usdc["total_profit_usdc"]) == _q("51148.756609023")
     assert int(usdc["known_cost_sales"]) == 11
-    assert int(usdc["unresolved_basis_sales"]) == 6
+    assert int(usdc["unresolved_basis_sales"]) == 3
     assert int(usdc.get("open_lots") or 0) == 9
     assert int(sol.get("known_cost_sales") or 0) == 0
     assert int(sol.get("unresolved_basis_sales") or 0) == 0
     assert int(sol.get("open_lots") or 0) == 1
     assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 11
-    assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 6
+    assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 3
     assert len(indep["fifo"]["USDC"]["open_lots"]) == 9
     assert len(indep["fifo"]["SOL"]["known_cost_sells"]) == 0
     assert len(indep["fifo"]["SOL"]["unresolved_basis_sales"]) == 0

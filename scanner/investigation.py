@@ -63,7 +63,7 @@ RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
 DFLOW_SWAP_WITH_DESTINATION = bytes.fromhex('a8ac184dc59c8765')
 REVIEWED_OUTER_VENUES = (
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
-    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, RFQ_FILL,
+    METEORA_DAMM_V2, RFQ_FILL,
 )
 LAMPORTS = Decimal(1_000_000_000)
 DECODER_VERSION = 'spot-v10-reviewed-venues-coverage-v1'
@@ -235,17 +235,9 @@ def _route(instruction, keys):
             name, authority, owned_positions = 'swap', 1, (3, 5)
         elif payload[:8] == _anchor('swap_v2') and len(payload) >= 43 and len(accounts) >= 15:
             name, authority, owned_positions = 'swap_v2', 3, (7, 9)
-    elif program == OKX_DEX_ROUTER:
-        if payload[:8] in (OKX_SWAPTOB, OKX_SWAPTOC) and len(payload) >= 16 and len(accounts) >= 10:
-            name = 'SwapTob' if payload[:8] == OKX_SWAPTOB else 'SwapToc'
-            authority, owned_positions = 0, (1, 2)
     elif program == METEORA_DAMM_V2:
         if payload[:8] == _anchor('swap') and len(payload) >= 24 and len(accounts) >= 13:
             name, authority, owned_positions = 'swap', 8, (2, 3)
-    elif program == DFLOW:
-        if payload[:8] in (_anchor('swap'), DFLOW_SWAP_WITH_DESTINATION) and len(accounts) > 3:
-            name = 'SwapWithDestination' if payload[:8] == DFLOW_SWAP_WITH_DESTINATION else 'swap'
-            authority, owned_positions = 3, ()
     elif program == RFQ_FILL:
         if payload[:8] == RFQ_FILL_DISC and len(payload) >= 16 and len(accounts) >= 11:
             name, authority, owned_positions = 'Fill', 0, (4,)

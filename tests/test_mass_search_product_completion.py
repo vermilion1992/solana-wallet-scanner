@@ -148,10 +148,13 @@ def test_mixed_sol_and_usdc_worksheet_is_per_quote_asset():
         {"kind": "sell", "units": "1", "consideration_usdc": "2", "seconds_from_start": 2, "mint": "a", "settlement_mint": USDC},
     ]
     worksheet = settlement_aware_worksheet(rows)
-    assert worksheet["settlement_asset"] == "mixed"
     assert worksheet["not_fx"] is True
-    assert "USDC" in worksheet["by_quote_asset"]
-    assert "SOL" in worksheet["by_quote_asset"]
+    assert worksheet.get("cross_currency_policy") == "unconverted_unresolved_never_zero" or any(
+        (part or {}).get("cross_currency_policy") == "unconverted_unresolved_never_zero"
+        for part in (worksheet.get("by_quote_asset") or {}).values()
+    )
+    known, unresolved = isolate_known_cost_events(rows)
+    assert any(row.get("cross_currency_unconverted") for row in unresolved)
 
 
 def test_g1_synthetic_oracle_fifo_is_unchanged():

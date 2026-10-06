@@ -588,7 +588,9 @@ def coverage_eligibility(report, profile=None):
         shares.append(Decimal(str(swap_share["by_count"])))
     for value in (swap_share.get("by_consideration") or {}).values():
         shares.append(Decimal(str(value)))
-    unresolved = (profile or {}).get("unresolved_basis_sales") or (report or {}).get("worksheet", {}).get("unresolved_basis_sales")
+    unresolved = (profile or {}).get("unresolved_basis_sales")
+    if unresolved in (None, ""):
+        unresolved = ((report or {}).get("worksheet") or {}).get("unresolved_basis_sales")
     dependency = int(unresolved or 0) > 0
     if not shares:
         status = "blocked_unknown_denominator"

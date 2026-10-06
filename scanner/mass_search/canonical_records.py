@@ -14,10 +14,8 @@ from decimal import Decimal
 from pathlib import Path
 
 from scanner.investigation import (
-    DFLOW,
     JUPITER,
     METEORA_DAMM_V2,
-    OKX_DEX_ROUTER,
     PUMP,
     PUMP_SWAP,
     RAYDIUM_AMM,
@@ -59,7 +57,7 @@ JUPITER_REVIEWED = (
 PUMPSWAP_REVIEWED = ("buy", "sell", "buy_exact_quote_in")
 DECODED_OUTER_PROGRAMS = {
     PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
-    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, RFQ_FILL,
+    METEORA_DAMM_V2, RFQ_FILL,
 }
 LAMPORTS = Decimal(1_000_000_000)
 
@@ -284,17 +282,9 @@ def classify_normalised_transaction(record, address, *, pump_names=None):
         row["class"] = "reviewed_amm_spot_swap_candidate"
         row["reason"] = "Outer Raydium or Orca instruction is a reviewed spot swap"
         return row
-    if any(item["program"] == OKX_DEX_ROUTER for item in row["outer_venues"]):
-        row["class"] = "reviewed_okx_router_swap_candidate"
-        row["reason"] = "Outer OKX DEX router SwapTob/SwapToc is a reviewed spot swap"
-        return row
     if any(item["program"] == METEORA_DAMM_V2 for item in row["outer_venues"]):
         row["class"] = "reviewed_meteora_damm_v2_swap_candidate"
         row["reason"] = "Outer Meteora DAMM v2 swap is a reviewed spot swap"
-        return row
-    if any(item["program"] == DFLOW for item in row["outer_venues"]):
-        row["class"] = "reviewed_dflow_swap_candidate"
-        row["reason"] = "Outer DFlow swap is a reviewed spot swap"
         return row
     if any(item["program"] == RFQ_FILL for item in row["outer_venues"]):
         row["class"] = "reviewed_rfq_fill_swap_candidate"
