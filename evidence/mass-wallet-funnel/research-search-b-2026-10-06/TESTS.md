@@ -2,10 +2,11 @@
 
 App SHA of this evidence commit. Bundle `frontend/dist/assets/index-Cm9QhyzB.js`.
 
-- Keys unset and dummy-key full suites: recorded after the clean runs on this tip.
+- Keys unset: **3703 passed** / 440 subtests / 1 warning (9 min 9 s).
+- Dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`): **3703 passed** / 440 subtests / 1 warning (9 min 19 s). Dummy keys were never sent.
 - `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-Cm9QhyzB.js`.
 - Phone-sized Chromium emulation 390×844 (not a physical phone): no page errors; unauthenticated `/api/state` = **401**. Worksheet total label, bridge operands, verified tips, unknown-cost inventory, and traversed interval recaptured.
-- No Helius or Birdeye calls. Dummy keys were never sent.
+- No Helius or Birdeye calls.
 - `PRODUCT_READY` remains false.
 - Spend this pass: 0/0/$0.
 
