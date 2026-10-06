@@ -1,30 +1,27 @@
-# Offline suite at the 2026-10-07 03:46 re-review commit
+# Offline suite at the 2026-10-07 05:47 re-review commit
 
-App SHA of this evidence commit. Bundle `frontend/dist/assets/index-Cm9QhyzB.js`.
+App SHA of this evidence commit. Bundle `frontend/dist/assets/index-sTfl9L_3.js`.
 
-- Keys unset: **3703 passed** / 440 subtests / 1 warning (9 min 9 s).
-- Dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`): **3703 passed** / 440 subtests / 1 warning (9 min 19 s). Dummy keys were never sent.
-- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-Cm9QhyzB.js`.
-- Phone-sized Chromium emulation 390×844 (not a physical phone): no page errors; unauthenticated `/api/state` = **401**. Worksheet total label, bridge operands, verified tips, unknown-cost inventory, and traversed interval recaptured.
-- No Helius or Birdeye calls.
+- Keys unset and dummy-key full suites: recorded after the clean runs on this tip.
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-sTfl9L_3.js`.
+- Phone-sized Chromium emulation remains labelled as emulation, not a physical phone. Physical-phone testing is NOT RUN.
+- No Helius or Birdeye calls. Dummy keys were never sent.
 - `PRODUCT_READY` remains false.
 - Spend this pass: 0/0/$0.
+- Capture draft stays `enabled:false`.
 
-Named regressions for this pass (`tests/test_chatgpt_review_2026_10_07_rereview.py`):
+Named regressions for this pass (`tests/test_chatgpt_review_2026_10_07_0547.py`):
 
-- `test_fingerprintless_audit_does_not_certify_genuine_path`
-- `test_mismatched_fingerprint_detaches_audit`
-- `test_negative_ledger_positive_summary_does_not_qualify`
-- `test_missing_sol_sensitivity_blocks_lead`
-- `test_component_bridge_requires_exact_membership_and_present_components`
-- `test_gtfo_aggregate_rounding_bridge_is_not_within_two_lamports`
-- `test_committed_gtfo_audit_uses_aggregate_rounding_bridge`
-- `test_unknown_cost_inventory_is_not_an_open_lot_count`
-- `test_traversed_interval_is_not_requested_window_fallback`
-- `test_open_position_ages_are_not_evaluated_without_positions`
-- `test_token_2022_ambiguous_and_capped_are_not_config`
-- `test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_budget_grants`
-- `test_synthetic_marking_does_not_justify_permissive_audit_branch`
-- `test_an9s_coverage_copy_is_eligible_not_a_lead`
+- `test_fingerprint_status_without_comparison_proof_does_not_certify`
+- `test_certificate_mutations_detach_on_attachment_path`
+- `test_loader_carries_per_episode_component_bridges`
+- `test_saved_profile_summary_cannot_override_negative_or_empty_ledger`
+- `test_ledger_mutations_missing_net_unit_or_duplicate_identity`
+- `test_research_screen_filter_match_is_not_certified`
+- `test_named_dependency_progress_rejects_bare_boolean_and_ignores_positivity`
+- `test_next_capture_phase_cursor_allowance_and_a6ps_second_page`
+- `test_next_capture_runner_reaches_recorder_once_and_invalid_zero_times`
+- `test_tolerance_parity_half_even_not_truncation`
+- `test_ranked_and_report_surfaces_use_certifying_helper_and_nonlead_copy`
 
-Prior named tests remain in `tests/test_chatgpt_review_2026_10_07.py`, including the mutated-capture RFQ negatives.
+Prior 03:46 and 0116 named tests remain.

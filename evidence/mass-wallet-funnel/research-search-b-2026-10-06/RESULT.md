@@ -1,3 +1,27 @@
+# RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 05:47 re-review
+
+**Outcome: ACCEPT_AS_PROGRESS_ONLY remaining blockers held and fixed. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**
+
+Binding work order: `CHATGPT_REVIEW_2026-10-07_0547_FULL.md` of PR #6 at `45c1494`. Gaps 3 and 4 stay closed and were not reopened. gtfo’s labelled six-atomic aggregate bridge stays accepted.
+
+## This-review claim status
+
+| Gap | Reviewer required closure | Status |
+| --- | --- | --- |
+| 1 Audit consumption | Certificate requires 1:1 + component proof, not fingerprint/status alone; ranked surfaces use `completedEpisodeFields()`; half-even tolerance parity | Done. Tests in `tests/test_chatgpt_review_2026_10_07_0547.py`. |
+| 2 Saved ledger authority | `qualifying_profit()` / ranked / compare derive or reject; no saved-profile override | Done. |
+| 3 Decoders | Closed — not reopened | Closed. |
+| 4 Exposure/history | Closed — not reopened | Closed. |
+| Capture enforcement | Named-item progress; phase/replay; A6PS start-only exception; executable_allowance; cursor continuity; recorder runner | Done. Draft `enabled:false`. |
+| Wording | Ranked phone uses non-lead coverage display; no raw-boolean auditor text | Done. Physical-phone testing not run. |
+
+## Residual backlog only
+
+- MassSearch desktop “Scoped P&L” header (optional rename to “Captured results”; not a blocker).
+- Open-position ages remain `not_evaluated` (count only).
+- Token-2022 stays observed-only. SwapTob unsupported.
+- Zero leads. Capture draft stays disabled.
+
 # RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 03:46 re-review
 
 **Outcome: ACCEPT_AS_PROGRESS_ONLY blockers held and fixed. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**

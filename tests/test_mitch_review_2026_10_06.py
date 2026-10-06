@@ -104,16 +104,24 @@ def test_item5_default_screen_has_no_pnl_and_count_only_wording():
     assert filters["unset_is_not_applied"] is True
     assert POSITIVE_RESEARCH_SHORTLIST["name"] == "Positive research shortlist"
     assert POSITIVE_RESEARCH_SHORTLIST["min_scoped_pnl_sol"] == "0"
+    ledger = [
+        {"mint": f"CountMint{i}", "close_signature": f"count-close-{i}", "net": "1", "unit": "SOL"}
+        for i in range(3)
+    ]
     profile = {
         "completed_known_cost_positions": 3,
+        "completed_episode_ledger": ledger,
+        "completed_episode_net": "3",
+        "completed_episode_net_unit": "SOL",
         "coverage_count_share": "1",
         "scoped_pnl": "1",
         "scoped_pnl_by_quote_asset": {"SOL": "1"},
         "settlement_asset": "SOL",
         "unresolved_share": "0",
         "market_vs_rewards": {},
+        "sensitivity_evidence_state": "not_established",
     }
-    report = {"address": "count-only", "research_profile": profile, "record_breakdown": {
+    report = {"address": "count-only", "research_profile": profile, "completed_episode_ledger": ledger, "record_breakdown": {
         "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}},
     }, "worksheet": {"unresolved_basis_sales": 0}}
     screen = research_screen_run(
@@ -121,7 +129,9 @@ def test_item5_default_screen_has_no_pnl_and_count_only_wording():
         {"count-only": report},
         {"thresholds": {"min_completed_known_cost": "1", "min_sample_positions": "3"}},
     )
-    assert screen["rows"][0]["reason"] == "meets the sample/activity filters"
+    assert screen["rows"][0]["reason"] == "sample/activity filter match; not a certified research wallet"
+    assert screen["rows"][0]["certified_research_wallet"] is False
+    assert screen["completed_qualified_are_sample_activity_filter_matches"] is True
 
 
 def test_item6_opening_inventory_owned_100_buy_100_sell_100_is_unknown_basis():

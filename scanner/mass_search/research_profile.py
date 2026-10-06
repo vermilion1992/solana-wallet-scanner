@@ -11,6 +11,7 @@ from scanner.mass_search.qualification_gates import (
     SENSITIVITY_NOT_ESTABLISHED,
     amounts_agree,
     bindable_independent_audit,
+    certificate_comparison_proof,
     completed_episode_ledger,
     compute_audit_fingerprint,
     concentration_from_episodes,
@@ -386,6 +387,14 @@ def load_committed_independent_audit(address, fingerprint=None):
         if row.get("address") != address:
             continue
         status = row.get("status")
+        episodes = [item for item in (row.get("episodes") or []) if isinstance(item, dict)]
+        bridges = [item for item in (row.get("component_bridges") or []) if isinstance(item, dict)]
+        if not bridges:
+            bridges = [
+                item.get("component_bridge")
+                for item in episodes
+                if isinstance(item.get("component_bridge"), dict)
+            ]
         loaded = {
             "status": status,
             "independently_audited": status == "independently_audited" or row.get("independently_audited") is True,
@@ -401,7 +410,8 @@ def load_committed_independent_audit(address, fingerprint=None):
             "unaudited_venues": list(row.get("unaudited_venues") or []),
             "content_fingerprint": row.get("content_fingerprint") or row.get("fingerprint"),
             "accounting_policy_version": row.get("accounting_policy_version") or ACCOUNTING_POLICY_VERSION,
-            "component_bridges": list(row.get("component_bridges") or []),
+            "episodes": episodes,
+            "component_bridges": bridges,
             "worksheet_episode_bridge": row.get("worksheet_episode_bridge"),
             "aggregate_rounding_bridge": row.get("aggregate_rounding_bridge"),
             "auditor_confirmation": row.get("auditor_confirmation"),
@@ -430,9 +440,12 @@ def independently_audited(report, profile=None):
     if audit.get("fingerprintless_not_certifying"):
         return False
     fingerprint = (profile or {}).get("audit_fingerprint") or (report or {}).get("audit_fingerprint")
-    if not fingerprint or not bindable_independent_audit(audit, fingerprint):
+    ledger = completed_episode_ledger(report, profile)
+    if not fingerprint or not bindable_independent_audit(audit, fingerprint, ledger):
         return False
     if (profile or {}).get("ledger_summary_contradiction"):
+        return False
+    if not certificate_comparison_proof(audit, ledger):
         return False
     if audit.get("status") == "independently_audited":
         return True
@@ -747,7 +760,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         profile["independent_audit"] = None
         if (report or {}).get("independent_audit"):
             report["independent_audit"] = None
-    elif attached and bindable_independent_audit(attached, fingerprint):
+    elif attached and bindable_independent_audit(attached, fingerprint, ledger):
         profile["independent_audit"] = attached
     elif attached and is_synthetic_case(report):
         # Explicit synthetic marker only. Fingerprintless audits never certify.

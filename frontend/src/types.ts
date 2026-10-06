@@ -800,6 +800,7 @@ export type RankedWorkflowRow = {
     label?: string;
   } | null;
   coverage_status?: string | null;
+  coverage_status_display?: string | null;
   blocking_reason?: string | null;
   research_profile?: {
     scoped_pnl?: string | null;
@@ -811,7 +812,20 @@ export type RankedWorkflowRow = {
     matched_fragment_unit?: string | null;
     qualification_level?: { level?: string; label?: string };
     coverage_status?: string | null;
+    coverage_status_display?: string | null;
     blocking_reason?: string | null;
+    independent_audit?: {
+      independently_audited?: boolean;
+      independently_audited_episode_net?: string | null;
+      independently_audited_episode_net_unit?: string | null;
+      content_fingerprint?: unknown;
+      fingerprint?: unknown;
+      fingerprintless_not_certifying?: boolean;
+      auditor_confirmation?: string | null;
+      one_to_one_membership?: boolean;
+      component_bridges?: Array<Record<string, unknown>>;
+      episodes?: Array<Record<string, unknown>>;
+    };
     qualification_category?: {
       category?: string;
       evidence_class?: number;

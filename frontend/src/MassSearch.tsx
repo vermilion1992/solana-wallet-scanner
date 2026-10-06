@@ -4,7 +4,7 @@ import type { Actions } from "./App";
 import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView, ResearchCompare } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
-import { count, decimal, formatCompareSidePnl, formatWorksheetTotal, label, shorten } from "./format";
+import { completedEpisodeFields, count, coverageStatusDisplay, decimal, formatCompareSidePnl, formatWorksheetTotal, label, shorten } from "./format";
 import { useNarrowViewport } from "./useNarrow";
 
 const STAGES = ["triage", "behaviour", "reconstruct", "forward_select"] as const;
@@ -512,7 +512,10 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               </div>
             )}
             <ul className="mass-search-cards" data-ranked-cards="true">
-              {(ranked.rows || []).slice(0, visibleLimit).map((row) => (
+              {(ranked.rows || []).slice(0, visibleLimit).map((row) => {
+                const fields = completedEpisodeFields(row);
+                const coverage = coverageStatusDisplay(row);
+                return (
                 <li key={`ranked-${row.address}`} data-history-required={row.history_required ? "true" : "false"}>
                   <label className="mass-search-shortlist">
                     <input
@@ -528,15 +531,15 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : row.report_id ? "analysed" : "History required — not analysed"}{row.in_window_span?.hours != null ? ` · in-window ${String(row.in_window_span.hours)} h` : ""}</p>
                   <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
                   <p data-qualification-level={(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}>qualification_level {(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}</p>
-                  <p data-coverage-status={row.coverage_status || row.research_profile?.coverage_status || "blocked_unknown_denominator"}>coverage_status {row.coverage_status || row.research_profile?.coverage_status || "blocked_unknown_denominator"}</p>
+                  <p data-coverage-status={coverage}>coverage_status {coverage}</p>
                   <p data-ranked-pnl="true">{
                     (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && (row.funnel?.B?.scoped_pnl || row.research_profile?.scoped_pnl)
                       ? `${formatCompareSidePnl({
-                          completedNet: row.research_profile?.completed_episode_net,
-                          completedUnit: row.research_profile?.completed_episode_net_unit,
-                          independentlyAudited: Boolean((row.research_profile as { independent_audit?: { independently_audited?: boolean } } | undefined)?.independent_audit?.independently_audited),
-                          auditorNet: (row.research_profile as { independent_audit?: { independently_audited_episode_net?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net,
-                          auditorUnit: (row.research_profile as { independent_audit?: { independently_audited_episode_net_unit?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net_unit,
+                          completedNet: fields.appNet ?? row.research_profile?.completed_episode_net,
+                          completedUnit: fields.appUnit ?? row.research_profile?.completed_episode_net_unit,
+                          independentlyAudited: fields.independentlyAudited,
+                          auditorNet: fields.auditorNet,
+                          auditorUnit: fields.auditorUnit,
                           worksheet: row.funnel?.B?.scoped_pnl || row.research_profile?.scoped_pnl,
                           worksheetUnit: row.funnel?.B?.scoped_pnl_unit || row.research_profile?.scoped_pnl_unit,
                         })}`
@@ -556,7 +559,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                         })}>Analyse</Button>
                       : <span data-history-required-label="true">History required — not analysed</span>}
                 </li>
-              ))}
+                );
+              })}
             </ul>
             {(ranked.rows || []).length > visibleLimit && (
               <Button variant="secondary" onClick={() => setVisibleLimit((current) => current + 20)}>Show more wallets</Button>
@@ -817,6 +821,7 @@ function RankedRow({
   onReplay: () => void;
   onToggle: (selected: boolean) => void;
 }) {
+  const fields = completedEpisodeFields(row);
   return (
     <tr data-history-required={row.history_required ? "true" : "false"}>
       <td>
@@ -834,11 +839,11 @@ function RankedRow({
       <td>{
         (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && row.funnel?.B?.scoped_pnl
           ? formatCompareSidePnl({
-              completedNet: row.research_profile?.completed_episode_net,
-              completedUnit: row.research_profile?.completed_episode_net_unit,
-              independentlyAudited: Boolean((row.research_profile as { independent_audit?: { independently_audited?: boolean } } | undefined)?.independent_audit?.independently_audited),
-              auditorNet: (row.research_profile as { independent_audit?: { independently_audited_episode_net?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net,
-              auditorUnit: (row.research_profile as { independent_audit?: { independently_audited_episode_net_unit?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net_unit,
+              completedNet: fields.appNet ?? row.research_profile?.completed_episode_net,
+              completedUnit: fields.appUnit ?? row.research_profile?.completed_episode_net_unit,
+              independentlyAudited: fields.independentlyAudited,
+              auditorNet: fields.auditorNet,
+              auditorUnit: fields.auditorUnit,
               worksheet: row.funnel.B.scoped_pnl,
               worksheetUnit: row.funnel.B.scoped_pnl_unit,
             })

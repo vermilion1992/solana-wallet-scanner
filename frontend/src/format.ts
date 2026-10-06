@@ -76,6 +76,26 @@ function atomicScale(unit?: string | null): bigint {
   return unit === "USDC" ? 1_000_000n : 1_000_000_000n;
 }
 
+export function quantizeToAtomics(value: string, unit?: string | null): bigint | null {
+  if (!/^-?\d+(?:\.\d+)?$/.test(value)) return null;
+  const scale = atomicScale(unit);
+  const fracPlaces = Number(scale.toString().length - 1);
+  const negative = value.startsWith("-");
+  const [whole, fraction = ""] = value.replace(/^-/, "").split(".");
+  const kept = fraction.slice(0, fracPlaces).padEnd(fracPlaces, "0");
+  const rest = fraction.slice(fracPlaces);
+  let atomics = BigInt(`${whole || "0"}${kept}` || "0");
+  if (rest) {
+    const next = Number(rest[0] || "0");
+    const tail = rest.slice(1);
+    const tailNonZero = [...tail].some((digit) => digit !== "0");
+    const exactHalf = next === 5 && !tailNonZero;
+    const roundUp = next > 5 || (next === 5 && tailNonZero) || (exactHalf && atomics % 2n === 1n);
+    if (roundUp) atomics += 1n;
+  }
+  return negative ? -atomics : atomics;
+}
+
 export function amountsAgreeWithinTolerance(
   left?: string | null,
   right?: string | null,
@@ -83,19 +103,10 @@ export function amountsAgreeWithinTolerance(
   tolerance = 2n,
 ): boolean {
   if (left == null || right == null || left === "" || right === "") return false;
-  if (!/^-?\d+(?:\.\d+)?$/.test(left) || !/^-?\d+(?:\.\d+)?$/.test(right)) return false;
-  const scale = atomicScale(unit);
-  const toAtomic = (value: string) => {
-    const negative = value.startsWith("-");
-    const [whole, fraction = ""] = value.replace(/^-/, "").split(".");
-    const digits = (whole + fraction.padEnd(Number(scale.toString().length - 1), "0")).slice(
-      0,
-      whole.length + Number(scale.toString().length - 1),
-    );
-    const raw = BigInt(digits || "0");
-    return negative ? -raw : raw;
-  };
-  const delta = toAtomic(left) - toAtomic(right);
+  const a = quantizeToAtomics(left, unit);
+  const b = quantizeToAtomics(right, unit);
+  if (a == null || b == null) return false;
+  const delta = a - b;
   return (delta < 0n ? -delta : delta) <= tolerance;
 }
 
@@ -145,8 +156,50 @@ export function formatWorksheetEpisodeBridge(input: {
   return `worksheet-vs-completed-episode bridge ${input.bridge}${unit ? ` ${unit}` : ""} (worksheet ${worksheet || "—"} − episode ${episode || "—"}; worksheet is not the qualifying value)`;
 }
 
+function certificateComparisonProof(audit: {
+  one_to_one_membership?: boolean;
+  component_bridges?: Array<{
+    agree?: boolean;
+    membership?: { one_to_one?: boolean; agree?: boolean };
+    components?: Record<string, { agree?: boolean }>;
+  }>;
+  episodes?: Array<{ component_bridge?: { agree?: boolean; membership?: { one_to_one?: boolean; agree?: boolean }; components?: Record<string, { agree?: boolean }> } }>;
+} | null | undefined): boolean {
+  if (!audit || audit.one_to_one_membership !== true) return false;
+  const bridges = (audit.component_bridges && audit.component_bridges.length
+    ? audit.component_bridges
+    : (audit.episodes || []).map((episode) => episode.component_bridge).filter(Boolean)) as Array<{
+      agree?: boolean;
+      membership?: { one_to_one?: boolean; agree?: boolean };
+      components?: Record<string, { agree?: boolean }>;
+    }>;
+  if (!bridges.length) return false;
+  return bridges.every((bridge) => (
+    bridge?.agree === true
+    && bridge.membership?.one_to_one === true
+    && bridge.membership?.agree === true
+    && ["acquisition", "proceeds", "costs", "net"].every((name) => bridge.components?.[name]?.agree === true)
+  ));
+}
+
+export function coverageStatusDisplay(source?: {
+  coverage_status_display?: string | null;
+  coverage_status?: string | null;
+  research_profile?: { coverage_status_display?: string | null; coverage_status?: string | null } | null;
+} | null): string {
+  return (
+    source?.research_profile?.coverage_status_display
+    || source?.coverage_status_display
+    || source?.research_profile?.coverage_status
+    || source?.coverage_status
+    || "blocked_unknown_denominator"
+  );
+}
+
 export function completedEpisodeFields(source?: {
   corpus_kind?: string | null;
+  coverage_status_display?: string | null;
+  coverage_status?: string | null;
   research_profile?: Record<string, unknown> | null;
   independent_audit?: {
     independently_audited?: boolean;
@@ -158,6 +211,9 @@ export function completedEpisodeFields(source?: {
     fingerprint?: unknown;
     fingerprintless_not_certifying?: boolean;
     auditor_confirmation?: string | null;
+    one_to_one_membership?: boolean;
+    component_bridges?: Array<Record<string, unknown>>;
+    episodes?: Array<Record<string, unknown>>;
   } | null;
 } | null) {
   const profile = source?.research_profile || {};
@@ -172,9 +228,16 @@ export function completedEpisodeFields(source?: {
     fingerprintless_not_certifying?: boolean;
     auditor_confirmation?: string | null;
     not_a_genuine_research_wallet?: boolean;
+    one_to_one_membership?: boolean;
+    component_bridges?: Array<{
+      agree?: boolean;
+      membership?: { one_to_one?: boolean; agree?: boolean };
+      components?: Record<string, { agree?: boolean }>;
+    }>;
+    episodes?: Array<{ component_bridge?: { agree?: boolean; membership?: { one_to_one?: boolean; agree?: boolean }; components?: Record<string, { agree?: boolean }> } }>;
   };
   const hasFingerprint = Boolean(audit.content_fingerprint || audit.fingerprint);
-  const certifying = hasFingerprint && audit.fingerprintless_not_certifying !== true;
+  const certifying = hasFingerprint && audit.fingerprintless_not_certifying !== true && certificateComparisonProof(audit);
   return {
     appNet: (profile.completed_episode_net as string | null | undefined)
       ?? (certifying ? audit.app_completed_episode_net : null),

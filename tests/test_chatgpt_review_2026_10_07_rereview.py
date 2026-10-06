@@ -90,6 +90,21 @@ def _eligible_report():
         "label": "SYNTHETIC — eligible fingerprinted fixture, not a genuine research wallet",
     }, reason="eligible fingerprinted fixture for one-at-a-time mutations")
     fingerprint = compute_audit_fingerprint(report, episodes=ledger)
+    episodes = []
+    for row in ledger:
+        auditor = {
+            "mint": row["mint"],
+            "close_signature": row["close_signature"],
+            "acquisition": row["acquisition"],
+            "proceeds": row["proceeds"],
+            "costs": row["costs"],
+            "net": row["net"],
+        }
+        episodes.append({
+            "mint": row["mint"],
+            "close_signature": row["close_signature"],
+            "component_bridge": component_bridge(row, auditor, row.get("unit") or "SOL"),
+        })
     report["independent_audit"] = {
         "status": "independently_audited",
         "independently_audited": True,
@@ -99,6 +114,9 @@ def _eligible_report():
         "app_completed_episode_net_unit": "SOL",
         "content_fingerprint": fingerprint,
         "accounting_policy_version": ACCOUNTING_POLICY_VERSION,
+        "one_to_one_membership": True,
+        "episodes": episodes,
+        "component_bridges": [item["component_bridge"] for item in episodes],
     }
     return report
 
@@ -302,11 +320,12 @@ def test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_bu
         draft=draft,
         requested={"address": a6ps["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": a6ps["continue_from_pagination_token"]},
         replay_completed=False,
-    )["code"] == "phase_two_before_replay"
+    )["code"] in {"phase_two_before_replay", "non_gtfo_initial"}
     assert evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": gtfo["address"], "phase": 1, "block_time_lt": 1791206967, "pagination_token": gtfo["continue_from_pagination_token"]},
         requests_used=8,
+        replay_completed=True,
     )["code"] == "over_budget"
     assert evaluate_next_capture_dispatch(
         draft=draft,

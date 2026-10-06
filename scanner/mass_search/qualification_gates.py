@@ -236,11 +236,58 @@ def audit_fingerprint_matches(audit, fingerprint):
     return True
 
 
-def bindable_independent_audit(audit, fingerprint):
-    """Return the audit only when its content fingerprint matches. Otherwise None."""
+def episode_comparison_bridges(audit):
+    """Per-episode component bridges from the producer schema or a carried list."""
+    if not isinstance(audit, dict):
+        return []
+    bridges = [row for row in (audit.get("component_bridges") or []) if isinstance(row, dict)]
+    if bridges:
+        return bridges
+    collected = []
+    for episode in audit.get("episodes") or []:
+        if not isinstance(episode, dict):
+            continue
+        bridge = episode.get("component_bridge")
+        if isinstance(bridge, dict):
+            collected.append(bridge)
+    return collected
+
+
+def certificate_comparison_proof(audit, ledger=None):
+    """Fingerprint is not enough: require 1:1 membership and required components."""
+    if not isinstance(audit, dict):
+        return False
+    if audit.get("one_to_one_membership") is not True:
+        return False
+    bridges = episode_comparison_bridges(audit)
+    if not bridges:
+        return False
+    if ledger is not None and len(bridges) != len(list(ledger)):
+        return False
+    for bridge in bridges:
+        if bridge.get("agree") is not True:
+            return False
+        membership = bridge.get("membership") or {}
+        if membership.get("one_to_one") is not True or membership.get("agree") is not True:
+            return False
+        components = bridge.get("components") or {}
+        for name in REQUIRED_EPISODE_COMPONENTS:
+            if (components.get(name) or {}).get("agree") is not True:
+                return False
+    return True
+
+
+def bindable_independent_audit(audit, fingerprint, ledger=None):
+    """Bind only a fingerprint-matched certificate that also has comparison proof.
+
+    A fingerprint binds app inputs. It does not, by itself, establish that the
+    accompanying auditor result contains a successful one-to-one comparison.
+    """
     if not audit or not fingerprint:
         return None
     if not audit_fingerprint_matches(audit, fingerprint):
+        return None
+    if not certificate_comparison_proof(audit, ledger):
         return None
     return audit
 
@@ -371,48 +418,154 @@ def stronger_shortlist_activity_ok(activity):
     )
 
 
-def qualifying_profit(profile, report=None):
-    """Completed-episode ledger net only. Worksheet totals are never used.
-
-    Report-level completed_episode_net / wallet_completed_episodes summaries
-    are not a fallback. Those fields can contradict the bound ledger.
-    """
-    ledger = completed_episode_ledger(report, profile)
-    if ledger:
-        unit = (profile or {}).get("completed_episode_net_unit")
-        amount = _decimal((profile or {}).get("completed_episode_net"))
-        vector = (profile or {}).get("completed_episode_net_vector") or {}
-        if amount is None or not vector:
-            derived_net, derived_unit, derived_vector = episode_net_from_ledger(
-                ledger, fallback_unit=unit
-            )
-            amount = amount if amount is not None else _decimal(derived_net)
-            unit = unit or derived_unit
-            vector = vector or derived_vector
-        return amount, unit, vector
-    unit = (profile or {}).get("completed_episode_net_unit")
-    amount = _decimal((profile or {}).get("completed_episode_net"))
-    vector = (profile or {}).get("completed_episode_net_vector") or {}
-    return amount, unit, vector
-
-
-def episode_net_from_ledger(episodes, fallback_unit=None):
-    if not episodes:
-        return None, fallback_unit, {}
+def validate_episode_ledger(episodes):
+    """Validated membership, count, units, and sums. No SOL fallback, no skipped nets."""
+    rows = list(episodes or [])
+    if not rows:
+        return {
+            "ok": True,
+            "empty": True,
+            "reason": "empty_ledger",
+            "net": None,
+            "unit": None,
+            "vector": {},
+            "count": 0,
+            "episodes": [],
+        }
+    seen = set()
     by_unit = {}
-    for item in episodes:
-        unit = item.get("unit") or item.get("settlement_asset") or fallback_unit or "SOL"
-        net = _decimal(item.get("net") or item.get("pnl"))
+    for item in rows:
+        mint = (item or {}).get("mint")
+        close = (item or {}).get("close_signature") or (item or {}).get("close")
+        if not mint:
+            return {
+                "ok": False,
+                "empty": False,
+                "reason": "episode_identity_incomplete",
+                "net": None,
+                "unit": None,
+                "vector": {},
+                "count": 0,
+                "episodes": rows,
+            }
+        key = (str(mint), str(close or ""))
+        if key in seen:
+            return {
+                "ok": False,
+                "empty": False,
+                "reason": "duplicate_episode_identity",
+                "net": None,
+                "unit": None,
+                "vector": {},
+                "count": 0,
+                "episodes": rows,
+            }
+        seen.add(key)
+        unit = (item or {}).get("unit") or (item or {}).get("settlement_asset")
+        net = _decimal((item or {}).get("net") if (item or {}).get("net") not in (None, "") else (item or {}).get("pnl"))
+        if unit in (None, ""):
+            return {
+                "ok": False,
+                "empty": False,
+                "reason": "missing_settlement_unit",
+                "net": None,
+                "unit": None,
+                "vector": {},
+                "count": 0,
+                "episodes": rows,
+            }
         if net is None:
-            continue
+            return {
+                "ok": False,
+                "empty": False,
+                "reason": "missing_episode_net",
+                "net": None,
+                "unit": None,
+                "vector": {},
+                "count": 0,
+                "episodes": rows,
+            }
         by_unit[unit] = by_unit.get(unit, Decimal("0")) + net
     vector = {unit: _display_decimal(value) for unit, value in by_unit.items()}
     if len(by_unit) == 1:
         unit = next(iter(by_unit))
-        return _display_decimal(by_unit[unit]), unit, vector
-    if not by_unit:
-        return None, fallback_unit, {}
-    return None, "mixed", vector
+        return {
+            "ok": True,
+            "empty": False,
+            "reason": None,
+            "net": _display_decimal(by_unit[unit]),
+            "unit": unit,
+            "vector": vector,
+            "count": len(rows),
+            "episodes": rows,
+        }
+    return {
+        "ok": True,
+        "empty": False,
+        "reason": "mixed_settlement_units",
+        "net": None,
+        "unit": "mixed",
+        "vector": vector,
+        "count": len(rows),
+        "episodes": rows,
+    }
+
+
+def episode_net_from_ledger(episodes, fallback_unit=None):
+    """Derive net only from a validated ledger. fallback_unit is unused."""
+    del fallback_unit
+    validated = validate_episode_ledger(episodes)
+    if not validated["ok"] or validated.get("empty"):
+        return None, validated.get("unit"), validated.get("vector") or {}
+    return validated["net"], validated["unit"], validated["vector"]
+
+
+def qualifying_profit(profile, report=None):
+    """Completed-episode ledger net only. Saved profile summaries never qualify."""
+    ledger = completed_episode_ledger(report, profile)
+    validated = validate_episode_ledger(ledger)
+    if not validated["ok"] or validated.get("empty"):
+        return None, None, {}
+    amount = _decimal(validated["net"])
+    return amount, validated["unit"], validated["vector"]
+
+
+def reconcile_saved_profile(report, profile):
+    """Overwrite saved profile summaries from the bound ledger, or reject them."""
+    profile = dict(profile or {})
+    validated = validate_episode_ledger(completed_episode_ledger(report, profile))
+    saved_net = _decimal(profile.get("completed_episode_net"))
+    saved_count = profile.get("completed_known_cost_positions")
+    if not validated["ok"]:
+        profile["completed_episode_net"] = None
+        profile["completed_episode_net_unit"] = None
+        profile["completed_episode_net_vector"] = {}
+        profile["completed_known_cost_positions"] = 0
+        profile["ledger_summary_contradiction"] = True
+        profile["ledger_validation_reason"] = validated["reason"]
+        return profile
+    derived_net = _decimal(validated["net"])
+    derived_count = validated["count"]
+    contradiction = False
+    if saved_net is not None and derived_net is not None and saved_net != derived_net:
+        contradiction = True
+    if saved_net is not None and derived_net is None and saved_net != 0:
+        contradiction = True
+    if saved_count not in (None, "") and int(saved_count) != int(derived_count):
+        contradiction = True
+    if validated.get("empty") and (
+        (saved_net is not None and saved_net != 0)
+        or (saved_count not in (None, "") and int(saved_count) > 0)
+        or (profile.get("completed_episode_net_vector") or {})
+    ):
+        contradiction = True
+    profile["completed_episode_net"] = validated["net"]
+    profile["completed_episode_net_unit"] = validated["unit"]
+    profile["completed_episode_net_vector"] = validated["vector"]
+    profile["completed_known_cost_positions"] = derived_count
+    profile["ledger_summary_contradiction"] = contradiction or bool(profile.get("ledger_summary_contradiction"))
+    profile["ledger_validation_reason"] = validated.get("reason")
+    return profile
 
 
 def sensitivity_result(report, profile):
