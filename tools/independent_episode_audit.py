@@ -44,16 +44,18 @@ PINNED = {
     (JUPITER, "bb64facc31c4af14"): ("route_v2", 0, (1, 2)),
     (JUPITER, "d19853937cfed8e9"): ("shared_accounts_route_v2", 1, (2, 5)),
 }
-JITO_TIPS = {
-    "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5",
-    "HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe",
-    "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
-    "ADaUMid9yfUytqMBgopwjb2DTLSokTSzL1zt6iGPaS49",
-    "DfXygSm4jCyNCybVYYK6DwvWqjKee8pbDmJGcLWNDXjh",
-    "ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt",
-    "DttWaMuVvTiduZRnguLF7jNxTgiMBZ1hyAumKUiL2KRL",
-    "3AVi9Tg9Uo68tJfuvoKvqKNWKkC5wPdSSdeBnizKZ6jT",
-}
+def _published_tips():
+    path = ROOT / "scanner/mass_search/published_tip_accounts.json"
+    accounts = set()
+    if path.is_file():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        for body in (payload.get("providers") or {}).values():
+            accounts.update(body.get("accounts") or [])
+            accounts.update(body.get("programs") or [])
+    return accounts
+
+
+PUBLISHED_TIPS = _published_tips()
 B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 
@@ -161,7 +163,7 @@ def _verified_tips(raw, keys, address):
             continue
         dest = info.get("destination")
         lamports = info.get("lamports")
-        if dest in JITO_TIPS and isinstance(lamports, int):
+        if dest in PUBLISHED_TIPS and isinstance(lamports, int):
             tips += Decimal(lamports)
     return tips
 
@@ -321,6 +323,9 @@ def _fifo(trades):
         inventory = Decimal("0")
         opened = False
         episode_pnl = Decimal("0")
+        episode_basis = Decimal("0")
+        episode_proceeds = Decimal("0")
+        episode_costs = Decimal("0")
         for row in rows:
             qty = Decimal(row["quantity_raw"])
             consideration = Decimal(row["consideration_sol"])
@@ -366,6 +371,9 @@ def _fifo(trades):
                 pnl = proceeds - basis - buy_fees - sale_fees
                 known_sales += 1
                 episode_pnl += pnl
+                episode_basis += basis
+                episode_proceeds += proceeds
+                episode_costs += buy_fees + sale_fees
             if opened and inventory == 0 and remaining == 0 and opening == 0:
                 timestamp = row.get("timestamp")
                 in_window = timestamp is not None and REPORT_START <= timestamp < REPORT_END
@@ -373,10 +381,18 @@ def _fifo(trades):
                     episodes.append({
                         "mint": mint,
                         "close_signature": row["signature"],
+                        "venue": row.get("program"),
+                        "instruction": row.get("instruction"),
+                        "basis_sol": _canonical(episode_basis),
+                        "proceeds_sol": _canonical(episode_proceeds),
+                        "verified_costs_sol": _canonical(episode_costs),
                         "net_profit_sol": _canonical(episode_pnl),
                     })
                 opened = False
                 episode_pnl = Decimal("0")
+                episode_basis = Decimal("0")
+                episode_proceeds = Decimal("0")
+                episode_costs = Decimal("0")
         if first_buy and Decimal(str(first_buy["observed_pre_quantity_raw"])) > 0:
             # Opening inventory consumed before captured buys; leftover opening is not a clean episode.
             pass

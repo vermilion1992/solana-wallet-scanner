@@ -1,24 +1,53 @@
 """Documented tip and priority-fee recipients. Arbitrary SOL withdrawals are not tips."""
+from __future__ import annotations
 
-# Jito tip-payment accounts (published Jito tip distribution set).
-JITO_TIP_ACCOUNTS = frozenset({
-    "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5",
-    "HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe",
-    "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
-    "ADaUMid9yfUytqMBgopwjb2DTLSokTSzL1zt6iGPaS49",
-    "DfXygSm4jCyNCybVYYK6DwvWqjKee8pbDmJGcLWNDXjh",
-    "ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt",
-    "DttWaMuVvTiduZRnguLF7jNxTgiMBZ1hyAumKUiL2KRL",
-    "3AVi9Tg9Uo68tJfuvoKvqKNWKkC5wPdSSdeBnizKZ6jT",
-})
+import json
+from pathlib import Path
+
+PINNED_TIP_ACCOUNTS_PATH = Path(__file__).with_name("published_tip_accounts.json")
+
+
+def _load_published():
+    payload = json.loads(PINNED_TIP_ACCOUNTS_PATH.read_text(encoding="utf-8"))
+    accounts = {}
+    programs = set()
+    sources = {}
+    for provider, body in (payload.get("providers") or {}).items():
+        source = body.get("source")
+        sources[provider] = source
+        for address in body.get("accounts") or []:
+            accounts[address] = {"provider": provider, "source": source}
+        for address in body.get("programs") or []:
+            programs.add(address)
+            accounts[address] = {"provider": provider, "source": source, "kind": "program"}
+    return {
+        "accounts": accounts,
+        "programs": frozenset(programs),
+        "sources": sources,
+        "payload": payload,
+    }
+
+
+_PUBLISHED = _load_published()
+PUBLISHED_TIP_ACCOUNTS = frozenset(_PUBLISHED["accounts"])
+JITO_TIP_ACCOUNTS = frozenset(
+    address
+    for address, meta in _PUBLISHED["accounts"].items()
+    if meta.get("provider") == "jito" and meta.get("kind") != "program"
+)
 JITO_TIP_PROGRAM = "T1pyyaTNZsKv2WcRAB8oVnk93mLBw6NYZb1hEz6G5Vu"
 
 
+def published_tip_lookup(address):
+    return _PUBLISHED["accounts"].get(address)
+
+
 def is_verified_tip_account(address):
-    return address in JITO_TIP_ACCOUNTS or address == JITO_TIP_PROGRAM
+    return address in PUBLISHED_TIP_ACCOUNTS
 
 
 def classify_native_withdrawal(destination):
-    if is_verified_tip_account(destination):
+    meta = published_tip_lookup(destination)
+    if meta:
         return "verified_tip"
     return "unresolved_debit"

@@ -71,6 +71,35 @@ def _sale_lookup(worksheet):
     return lookup
 
 
+def _inject_opening_inventory(rows):
+    """Mirror decoder opening-inventory injection so win-rate uses clean episodes."""
+    from decimal import Decimal
+
+    by_mint = {}
+    for row in rows:
+        by_mint.setdefault(row.get("mint"), []).append(row)
+    injected = []
+    for mint, mint_rows in by_mint.items():
+        first_buy = next((row for row in mint_rows if row.get("kind") == "buy"), None)
+        pre = (first_buy or {}).get("observed_pre_quantity_raw")
+        try:
+            opening = Decimal(str(pre)) if pre not in (None, "") else Decimal("0")
+        except Exception:
+            opening = Decimal("0")
+        if first_buy and opening > 0:
+            injected.append({
+                "kind": "opening_unknown",
+                "opening_unknown": True,
+                "units": str(opening),
+                "mint": mint,
+                "seconds_from_start": (first_buy.get("seconds_from_start") or 0) - 1,
+                "order": -1,
+                "signature": f"opening-inventory:{mint}",
+            })
+        injected.extend(mint_rows)
+    return injected
+
+
 def _completed_positions(report, profile, fallback):
     if report.get("wallet_completed_episodes") is not None:
         return int(report["wallet_completed_episodes"])
@@ -115,7 +144,14 @@ def completed_episode_pnls(known_rows, sale_by_key):
                 in_window = True
             else:
                 in_window = role == "in_report" or bool(qualified)
-            if in_window and episode_has_sale:
+            clean = (
+                event.get("whole_sale_pnl_resolved") is not False
+                and not event.get("partial_known_cost")
+                and not event.get("not_clean_episode")
+                and not event.get("opening_inventory_consumed")
+                and not event.get("unresolved_basis")
+            )
+            if in_window and episode_has_sale and clean:
                 pnls.append(episode_pnl)
             opened = False
             episode_pnl = Decimal("0")
@@ -141,8 +177,17 @@ def build_wallet_analytics(report):
             "wallet_fee_sol": row.get("fee_sol") or row.get("wallet_fee_sol"),
             "timestamp": row.get("timestamp") or row.get("block_time"),
             "order": row.get("order"),
+            "observed_pre_quantity_raw": row.get("observed_pre_quantity_raw"),
+            "not_clean_episode": row.get("not_clean_episode"),
+            "opening_inventory_consumed": row.get("opening_inventory_consumed"),
+            "partial_known_cost": row.get("partial_known_cost"),
+            "whole_sale_pnl_resolved": row.get("whole_sale_pnl_resolved"),
         })
-    known, unresolved = isolate_known_cost_by_mint(known_inputs) if known_inputs else ([], [])
+    if known_inputs:
+        known_inputs = _inject_opening_inventory(known_inputs)
+        known, unresolved = isolate_known_cost_by_mint(known_inputs)
+    else:
+        known, unresolved = [], []
     # Trades are the FIFO split rows, not the original unsplit sells.
     split_rows = sorted(
         list(known) + list(unresolved),
@@ -232,8 +277,17 @@ def build_wallet_analytics(report):
     profile = report.get("research_profile") or {}
     if profile.get("open_or_unresolved", {}).get("open_inventory_present") and not open_positions:
         open_positions = int(profile.get("open_buys_in_sample") or 0)
-    positions = _completed_positions(report, profile, len(episode_pnls) or len(mint_pnl))
+    positions = len(episode_pnls)
+    official = _completed_positions(report, profile, positions)
+    if official and positions and official != positions:
+        # Same set: prefer the clean-episode P&L list; never invent extra wins.
+        positions = min(official, positions)
+        episode_pnls = episode_pnls[:positions]
+    elif official and not episode_pnls:
+        positions = official
     wins = sum(1 for value in episode_pnls if value > 0)
+    if wins > positions:
+        wins = positions
     win_rate = None
     if positions:
         win_rate = format(Decimal(wins) / Decimal(positions), "f")
@@ -282,6 +336,8 @@ def build_wallet_analytics(report):
             "denominator_is": "completed_known_cost_positions",
             "rate": win_rate,
             "state": "KNOWN" if positions else "NOT_EVALUATED",
+            "same_set": True,
+            "bounded_unit_interval": True,
         },
         "median_hold": {
             "seconds": median_hold,

@@ -76,5 +76,5 @@ PRODUCT_READY remains false. This ledger is offline over committed genuine pages
 - Non-swaps are excluded from the swap denominator and stay on the inventory ledger.
 - Out-of-window records are kept because earlier txs can affect opening basis.
 - Item 12 policy uses both swap-coverage shares and unresolved-basis dependencies.
-- CccS and An9s are coverage provisional_eligible (100% swap coverage, no unresolved-basis sales). gtfo and A6PS stay pending reassessment.
+- coverage_status and qualification_level are different fields. An9s is coverage_status=provisional_eligible and qualification_level=conditional_captured_lot_result (1 completed episode < min_sample 3; 27 open lots). CccS is coverage_status=coverage_eligibility_pending_reassessment (sensitivity sign-flip) and qualification_level=conditional_captured_lot_result, never a provisional_research_lead. gtfo and A6PS stay coverage_eligibility_pending_reassessment on unresolved-basis sales.
 - L2TExMFK…, OKX, and DFlow stay unsupported unless a later review can name the interface with confidence.

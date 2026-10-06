@@ -350,6 +350,9 @@ export type Report = {
   residual_sol_note?: string;
   verified_tips_sol?: string;
   sensitivity_unverified_debits_sol?: string;
+  sensitivity_unverified_debits_note?: string;
+  coverage_status?: string;
+  blocking_reason?: string;
   worksheet_error?: string | null;
   unsupported_transactions?: Record<string, unknown>[];
   conversions?: Record<string, unknown>[];
@@ -762,7 +765,7 @@ export type RankedWorkflowRow = {
   corpus_kind?: string;
   funnel?: {
     A?: { state?: string };
-    B?: { state?: string; scoped_pnl?: string | null; scoped_pnl_unit?: string | null };
+    B?: { state?: string; scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number };
     C?: { state?: string };
     next_action?: { code?: string; detail?: string };
     holder_fee_heavy?: boolean;
@@ -772,10 +775,21 @@ export type RankedWorkflowRow = {
     evidence_class?: number;
     screening_separate?: boolean;
   } | null;
+  qualification_level?: {
+    level?: string;
+    label?: string;
+  } | null;
+  coverage_status?: string | null;
+  blocking_reason?: string | null;
   research_profile?: {
     scoped_pnl?: string | null;
     scoped_pnl_unit?: string | null;
     completed_known_cost_positions?: number;
+    matched_fragment_pnl?: string | null;
+    matched_fragment_unit?: string | null;
+    qualification_level?: { level?: string; label?: string };
+    coverage_status?: string | null;
+    blocking_reason?: string | null;
     qualification_category?: {
       category?: string;
       evidence_class?: number;
@@ -834,6 +848,19 @@ export type RankedWorkflowView = {
         positive_matched_position_evidence?: number;
         positive_net_realised_over_window?: number;
         profitable_account_performance?: number;
+      };
+      qualification_level?: {
+        insufficient_evidence?: number;
+        conditional_captured_lot_result?: number;
+        provisional_research_lead?: number;
+        stronger_research_shortlist?: number;
+      };
+      coverage_status?: {
+        provisional_eligible?: number;
+        coverage_eligibility_pending_reassessment?: number;
+        watchlist_incomplete_evidence?: number;
+        coverage_blocked?: number;
+        blocked_unknown_denominator?: number;
       };
     };
   };

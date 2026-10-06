@@ -1,7 +1,9 @@
 """Local research-profile metrics and versioned thresholds. Not a safe-to-copy claim."""
 from __future__ import annotations
 
+import json
 from decimal import Decimal
+from pathlib import Path
 
 from scanner.mass_search.settlement import (
     USDC,
@@ -220,19 +222,94 @@ def _concentration_detail(report, scoped_pnl, known_sells):
     }
 
 
+def sensitivity_sign_flips(report, profile):
+    """Item 11/12: unresolved adjacent costs that can flip the sign block a lead."""
+    scoped = _decimal(profile.get("scoped_pnl"))
+    if scoped is None:
+        return False
+    sensitivity = _decimal((report or {}).get("sensitivity_unverified_debits_sol"))
+    if sensitivity is None:
+        sensitivity = _decimal(profile.get("sensitivity_unverified_debits_sol"))
+    if sensitivity is None or sensitivity <= 0:
+        return False
+    if profile.get("settlement_asset") not in (None, "SOL"):
+        return False
+    return scoped > 0 and (scoped - sensitivity) <= 0
+
+
+INDEPENDENT_AUDIT_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/INDEPENDENT_AUDIT.json"
+)
+
+
+def load_committed_independent_audit(address):
+    if not address or not INDEPENDENT_AUDIT_PATH.is_file():
+        return None
+    try:
+        payload = json.loads(INDEPENDENT_AUDIT_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    for row in payload.get("wallets") or []:
+        if row.get("address") == address:
+            status = row.get("status")
+            return {
+                "status": status,
+                "independently_audited": status == "independently_audited" or row.get("independently_audited") is True,
+                "app_completed_episodes": row.get("app_completed_episodes"),
+                "auditor_clean_episodes": row.get("auditor_clean_episodes"),
+                "unaudited_venues": list(row.get("unaudited_venues") or []),
+                "note": (
+                    "Decoder-independent auditor vs app per episode. "
+                    "A venue the auditor does not cover keeps the wallet from being a lead."
+                ),
+            }
+    return None
+
+
+def independently_audited(report, profile=None):
+    audit = (report or {}).get("independent_audit") or (profile or {}).get("independent_audit") or {}
+    if audit.get("status") == "not_independently_audited":
+        return False
+    if audit.get("status") == "independently_audited":
+        return True
+    if audit.get("independently_audited") is True:
+        return True
+    address = (report or {}).get("address") or (profile or {}).get("address")
+    loaded = load_committed_independent_audit(address)
+    if not loaded:
+        return False
+    return loaded.get("independently_audited") is True
+
+
 def qualification_level(report, profile):
     completed = int(profile.get("completed_known_cost_positions") or 0)
     scoped = _decimal(profile.get("scoped_pnl"))
     coverage = _decimal(profile.get("coverage_count_share"))
     unresolved = int(profile.get("unresolved_basis_sales") or 0)
     mints = int((profile.get("concentration_detail") or {}).get("distinct_tokens") or 0)
+    cost_dependency = sensitivity_sign_flips(report, profile)
+    if (report or {}).get("corpus_kind") == "GENUINE_REPLAY":
+        audited = independently_audited(report, profile)
+    else:
+        audited = True
     if completed < 1:
         return {
             "level": "insufficient_evidence",
             "label": "insufficient evidence",
             "not": "unprofitable",
         }
-    clean = completed >= 3 and scoped is not None and scoped > 0 and coverage is not None and coverage >= Decimal("0.99") and unresolved == 0
+    unresolved_accounting = unresolved > 0 or cost_dependency or not audited
+    clean = (
+        completed >= 3
+        and scoped is not None
+        and scoped > 0
+        and coverage is not None
+        and coverage >= Decimal("0.99")
+        and unresolved == 0
+        and not cost_dependency
+        and audited
+    )
     stronger = clean and completed >= 20 and mints >= 3
     if stronger:
         level = "stronger_research_shortlist"
@@ -246,7 +323,9 @@ def qualification_level(report, profile):
         "clean_episodes": completed,
         "positive_scoped_net": bool(scoped is not None and scoped > 0),
         "coverage": _display_decimal(coverage),
-        "unresolved_accounting": unresolved > 0,
+        "unresolved_accounting": unresolved_accounting,
+        "sensitivity_sign_flip": cost_dependency,
+        "independently_audited": audited,
     }
 
 
@@ -361,6 +440,12 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         completed = int(completed_episodes(grouped)["wallet_completed_episodes"])
     else:
         completed = 0
+    matched_fragment_pnl = None
+    matched_fragment_unit = None
+    if completed < 1 and scoped_pnl not in (None, ""):
+        matched_fragment_pnl = scoped_pnl
+        matched_fragment_unit = settlement
+        scoped_pnl = None
     sale_count = report.get("wallet_sale_count")
     if sale_count is None:
         sale_count = len([row for row in mapped if row["kind"] == "sell"])
@@ -410,8 +495,15 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "address": report.get("address"),
         "settlement_asset": settlement,
         "scoped_pnl": scoped_pnl,
-        "scoped_pnl_unit": settlement,
-        "scoped_pnl_by_quote_asset": scoped_by_asset,
+        "scoped_pnl_unit": settlement if completed >= 1 else None,
+        "scoped_pnl_by_quote_asset": scoped_by_asset if completed >= 1 else {},
+        "matched_fragment_pnl": matched_fragment_pnl,
+        "matched_fragment_unit": matched_fragment_unit,
+        "matched_fragment_note": (
+            "matched-fragment results; not a completed-episode net"
+            if matched_fragment_pnl not in (None, "")
+            else None
+        ),
         "completed_known_cost_positions": completed,
         "sale_count": sale_count,
         "known_cost_trades": len(known),
@@ -470,6 +562,13 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     profile["qualification_category"] = qualification_category(report, profile)
     profile["qualification_level"] = qualification_level(report, profile)
     profile["candidate_assessment"] = candidate_assessment(report, profile)
+    profile["independent_audit"] = (report or {}).get("independent_audit") or load_committed_independent_audit(
+        report.get("address") if report else None
+    )
+    from scanner.mass_search.labels import wallet_status_fields
+    fields = wallet_status_fields(report, profile)
+    profile["coverage_status"] = fields["coverage_status"]
+    profile["blocking_reason"] = fields["blocking_reason"]
     return profile
 
 

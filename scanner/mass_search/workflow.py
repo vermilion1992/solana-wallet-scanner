@@ -25,6 +25,7 @@ from scanner.mass_search.research_profile import (
     RESEARCH_SCREEN_DEFAULTS,
     build_research_profile,
     evaluate_thresholds,
+    load_committed_independent_audit,
     load_filters,
     qualification_category,
 )
@@ -230,6 +231,9 @@ def reports_by_address(store):
 def _attach_research(store, result, *, address, filters=None, ranked_row=None, entry=None):
     report = result["report"]
     filters = filters or load_filters(store)
+    audit = load_committed_independent_audit(address)
+    if audit:
+        report["independent_audit"] = audit
     profile = build_research_profile(
         report,
         filters=filters,
@@ -496,6 +500,9 @@ def ranked_workflow_view(store, *, filters=None):
             "research_profile": profile,
             "analytics": (report or {}).get("analytics"),
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+            "qualification_level": (profile or {}).get("qualification_level"),
+            "coverage_status": (profile or {}).get("coverage_status"),
+            "blocking_reason": (profile or {}).get("blocking_reason"),
             "user_shortlisted": row["address"] in user_short,
             "history_required": not row["capture_available"] and not (report or {}).get("id"),
             "history_required_label": "History required — not analysed" if not row["capture_available"] and not (report or {}).get("id") else None,
@@ -591,7 +598,9 @@ def coverage_eligibility(report, profile=None):
     unresolved = (profile or {}).get("unresolved_basis_sales")
     if unresolved in (None, ""):
         unresolved = ((report or {}).get("worksheet") or {}).get("unresolved_basis_sales")
-    dependency = int(unresolved or 0) > 0
+    from scanner.mass_search.research_profile import sensitivity_sign_flips
+    cost_dependency = sensitivity_sign_flips(report, profile or {})
+    dependency = int(unresolved or 0) > 0 or cost_dependency
     if not shares:
         status = "blocked_unknown_denominator"
     else:
@@ -608,8 +617,9 @@ def coverage_eligibility(report, profile=None):
         status = "coverage_eligibility_pending_reassessment"
     return {
         "status": status,
-        "dependency_unresolved_basis": bool(dependency),
-        "note": "A missing purchase that could be the FIFO basis of a qualifying sale blocks regardless of percentage.",
+        "dependency_unresolved_basis": int(unresolved or 0) > 0,
+        "dependency_unresolved_costs": bool(cost_dependency),
+        "note": "A missing purchase or unresolved adjacent cost that could change the decision blocks regardless of percentage.",
     }
 
 
@@ -640,6 +650,8 @@ def research_screen_run(universe_rows, reports, filters):
             screen[key] = value
         elif default not in (None, ""):
             screen[key] = default
+    from scanner.mass_search.labels import research_label_tables, wallet_status_fields
+
     inconclusive = 0
     qualified = 0
     zero_qualified = 0
@@ -649,23 +661,32 @@ def research_screen_run(universe_rows, reports, filters):
         report = reports.get(row["address"])
         if not row.get("capture_available") and not report:
             inconclusive += 1
+            labels = wallet_status_fields(report, None)
             rows.append({
                 "address": row["address"],
                 "outcome": "inconclusive",
                 "reason": "insufficient history — History required — not analysed",
                 "qualification_category": qualification_category(None, None),
+                "qualification_level": {"level": "insufficient_evidence", "label": "insufficient evidence"},
+                "coverage_status": labels["coverage_status"],
+                "blocking_reason": labels["blocking_reason"],
             })
             continue
         profile = (report or {}).get("research_profile")
         if not profile:
             not_executed += 1
+            labels = wallet_status_fields(report, None)
             rows.append({
                 "address": row["address"],
                 "outcome": "not_executed",
                 "reason": "capture available; analysis not executed",
                 "qualification_category": qualification_category(report, None),
+                "qualification_level": {"level": "insufficient_evidence", "label": "insufficient evidence"},
+                "coverage_status": labels["coverage_status"],
+                "blocking_reason": labels["blocking_reason"],
             })
             continue
+        labels = wallet_status_fields(report, profile)
         coverage_block = _decoder_coverage_block(report, profile)
         if coverage_block:
             inconclusive += 1
@@ -674,6 +695,9 @@ def research_screen_run(universe_rows, reports, filters):
                 "outcome": "inconclusive",
                 "reason": coverage_block,
                 "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+                "qualification_level": (profile or {}).get("qualification_level"),
+                "coverage_status": labels["coverage_status"],
+                "blocking_reason": labels["blocking_reason"],
                 "in_window_span": (report.get("in_window_span") or profile.get("in_window_span")),
             })
             continue
@@ -701,6 +725,9 @@ def research_screen_run(universe_rows, reports, filters):
             ),
             "threshold_results": judged["results"],
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+            "qualification_level": (profile or {}).get("qualification_level"),
+            "coverage_status": labels["coverage_status"],
+            "blocking_reason": labels["blocking_reason"],
             "in_window_span": (report.get("in_window_span") or profile.get("in_window_span")),
         })
     if qualified:
@@ -711,6 +738,7 @@ def research_screen_run(universe_rows, reports, filters):
         run_outcome = "zero_qualified"
     else:
         run_outcome = "not_executed"
+    label_tables = research_label_tables(rows)
     return {
         "kind": "research-screen-run-v1",
         "thresholds_fixed_before_evaluation": screen,
@@ -734,10 +762,14 @@ def research_screen_run(universe_rows, reports, filters):
                 "positive_net_realised_over_window": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "positive_net_realised_over_window"),
                 "profitable_account_performance": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "profitable_account_performance"),
             },
+            "qualification_level": label_tables["qualification_level_counts"],
+            "coverage_status": label_tables["coverage_status_counts"],
         },
+        "label_tables": label_tables,
         "note": (
             "Today's run over the saved snapshot is inconclusive for wallets "
-            "without a genuine capture. A single matched trade never qualifies the account."
+            "without a genuine capture. A single matched trade never qualifies the account. "
+            "coverage_status and qualification_level are different fields."
         ),
         "rows": rows,
         "PRODUCT_READY": False,

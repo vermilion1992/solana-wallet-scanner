@@ -226,6 +226,7 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
   const funnel = report.funnel || {};
   if (!report.research_profile && !report.funnel) return null;
   const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
+  const completedKnown = Number(profile.completed_known_cost_positions ?? 0);
   return (
     <div className="research-profile" data-research-profile="local">
       <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds are not applied. Not safe to copy." />
@@ -246,14 +247,12 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
           <small>meets research criteria</small>
         </div>
         <div>
-          <span>Scoped P&amp;L</span>
+          <span>{completedKnown >= 1 ? "Scoped P&L" : "Matched fragments"}</span>
           <strong>{
-            profile.scoped_pnl
+            completedKnown >= 1 && profile.scoped_pnl
               ? `${decimal(String(profile.scoped_pnl), 4)} ${String(profile.scoped_pnl_unit || "")}`
-              : (profile.scoped_pnl_by_quote_asset
-                ? Object.entries(profile.scoped_pnl_by_quote_asset as Record<string, unknown>)
-                  .map(([asset, value]) => `${value != null ? decimal(String(value), 4) : "unknown"} ${asset}`)
-                  .join(" · ")
+              : (profile.matched_fragment_pnl
+                ? `${decimal(String(profile.matched_fragment_pnl), 4)} ${String(profile.matched_fragment_unit || "")} (not a completed-episode net)`
                 : "unknown")
           }</strong>
         </div>
@@ -275,9 +274,19 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
           return detail.label ? ` · concentration ${detail.label}` : "";
         })()}
         {report.residual_sol_note ? ` · residual ${String(report.residual_sol || "")} SOL ${String(report.residual_sol_note)}` : ""}
-        {report.sensitivity_unverified_debits_sol != null ? ` · verified tips ${String(report.verified_tips_sol || "0")} · sensitivity unverified debits ${String(report.sensitivity_unverified_debits_sol)}` : ""}
         {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
+      </p>
+      <p className="subset-worksheet-note" data-verified-sensitivity="true">
+        Verified costs {String(report.verified_tips_sol || "0")} SOL tips
+        {` · sensitivity unverified debits ${String(report.sensitivity_unverified_debits_sol ?? "0")} SOL`}
+        {` · ${String(report.sensitivity_unverified_debits_note || "Arbitrary outside SOL withdrawals are not tips.")}`}
+        {(() => {
+          const level = (profile.qualification_level || {}) as { level?: string; label?: string };
+          const coverage = String(profile.coverage_status || report.coverage_status || "");
+          const reason = String(profile.blocking_reason || report.blocking_reason || "");
+          return `${level.level ? ` qualification_level ${level.level}.` : ""}${coverage ? ` coverage_status ${coverage}.` : ""}${reason ? ` blocking_reason ${reason}.` : ""}`;
+        })()}
       </p>
       <p className="subset-worksheet-note" data-report-provenance="true">
         Provenance {report.corpus_kind || "unknown corpus"}

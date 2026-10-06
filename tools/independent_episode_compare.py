@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""Compare the decoder-independent auditor to app episodes. Uses scanner for the app side only."""
+from __future__ import annotations
+
+import json
+import tempfile
+from decimal import Decimal
+from pathlib import Path
+
+from scanner.mass_search.capture_catalog import catalog_by_address
+from scanner.mass_search.workflow import replay_captured_wallet
+from scanner.storage import Store
+from tools.independent_episode_audit import PINNED, audit_address
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/INDEPENDENT_AUDIT.json"
+MANIFEST = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/CAPTURE_MANIFEST.json"
+AUDITED_PROGRAMS = {program for program, _disc in PINNED}
+
+LABELLED = {
+    "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+    "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+    "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+    "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+    "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+}
+
+
+def _q(value):
+    if value in (None, ""):
+        return None
+    return Decimal(str(value)).quantize(Decimal("0.000000001"))
+
+
+def _nets_match(left, right):
+    a, b = _q(left), _q(right)
+    if a is None or b is None:
+        return False
+    return abs(a - b) <= Decimal("0.000000001")
+
+
+def _sale_proceeds(row):
+    if row.get("proceeds") not in (None, ""):
+        return Decimal(str(row["proceeds"]))
+    basis = Decimal(str(row.get("basis") or 0))
+    gross = Decimal(str(row.get("gross_profit") or 0))
+    return basis + gross
+
+
+def _app_episodes(report):
+    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
+    worksheet = report.get("worksheet") or {}
+    sales = []
+    seen = set()
+    sources = [worksheet]
+    sources.extend((worksheet.get("by_quote_asset") or {}).values())
+    for part in sources:
+        if not part:
+            continue
+        for row in part.get("sale_rows") or []:
+            key = (row.get("signature"), row.get("split_part") or "matched", row.get("mint"))
+            if key in seen:
+                continue
+            seen.add(key)
+            sales.append(row)
+    clean_sales = []
+    for row in sales:
+        if row.get("unresolved_basis") or row.get("not_clean_episode") or row.get("split_part") == "unresolved":
+            continue
+        clean_sales.append(row)
+    detail = (report.get("completed_episode_detail") or {}).get("per_mint_detail") or {}
+    episodes = []
+    for mint, counted in detail.items():
+        if int((counted or {}).get("completed_episodes") or 0) < 1:
+            continue
+        mint_sales = [row for row in clean_sales if row.get("mint") == mint]
+        mint_events = [row for row in events if row.get("mint") == mint]
+        close = None
+        for row in reversed(mint_events):
+            if row.get("kind") == "sell":
+                close = row
+                break
+        if not mint_sales and not close:
+            continue
+        last = mint_sales[-1] if mint_sales else {}
+        venue = (close or {}).get("venue") or (close or {}).get("source") or (close or {}).get("program")
+        net = sum(Decimal(str(row.get("net_profit") or 0)) for row in mint_sales)
+        basis = sum(Decimal(str(row.get("basis") or 0)) for row in mint_sales)
+        proceeds = sum(_sale_proceeds(row) for row in mint_sales)
+        fees = sum(Decimal(str(row.get("fees_and_tips") or 0)) for row in mint_sales)
+        episodes.append({
+            "mint": mint,
+            "close_signature": (close or last).get("signature"),
+            "venue": venue,
+            "instruction": (close or {}).get("instruction"),
+            "basis": str(basis) if mint_sales else last.get("basis"),
+            "proceeds": str(proceeds) if mint_sales else last.get("proceeds"),
+            "verified_costs": str(fees) if mint_sales else last.get("fees_and_tips"),
+            "net": str(net) if mint_sales else last.get("net_profit"),
+            "auditor_covers_venue": venue in AUDITED_PROGRAMS if venue else False,
+        })
+    return episodes
+
+
+def compare_wallet(address, pages, tmp):
+    store = Store(tmp / address)
+    result = replay_captured_wallet(store, address, force=True)
+    report = result["report"] or {}
+    store.close()
+    app = _app_episodes(report)
+    independent = audit_address(address, pages)
+    indep_by_sig = {row.get("close_signature"): row for row in independent.get("episodes") or []}
+    indep_by_mint = {row.get("mint"): row for row in independent.get("episodes") or []}
+    rows = []
+    unaudited_venues = []
+    for episode in app:
+        venue = episode.get("venue")
+        if venue and venue not in AUDITED_PROGRAMS:
+            unaudited_venues.append(venue)
+        match = indep_by_sig.get(episode.get("close_signature")) or indep_by_mint.get(episode.get("mint"))
+        venue = episode.get("venue") or (match or {}).get("venue")
+        rows.append({
+            "mint": episode.get("mint"),
+            "close_signature": episode.get("close_signature"),
+            "venue": venue,
+            "auditor_covers_venue": bool(venue in AUDITED_PROGRAMS) if venue else bool(match),
+            "app": {
+                "basis": episode.get("basis"),
+                "proceeds": episode.get("proceeds"),
+                "verified_costs": episode.get("verified_costs"),
+                "net": episode.get("net"),
+            },
+            "auditor": None if not match else {
+                "basis": match.get("basis_sol"),
+                "proceeds": match.get("proceeds_sol"),
+                "verified_costs": match.get("verified_costs_sol"),
+                "net": match.get("net_profit_sol"),
+            },
+            "match": bool(match) and _nets_match((match or {}).get("net_profit_sol"), episode.get("net")),
+        })
+    completed = int(report.get("wallet_completed_episodes") or 0)
+    if not app:
+        status = "not_independently_audited" if completed else "no_completed_episodes"
+    elif completed and all(row.get("match") for row in rows) and len(rows) == completed:
+        status = "independently_audited"
+    else:
+        status = "not_independently_audited"
+    return {
+        "address": address,
+        "records": independent.get("records"),
+        "independently_reconstructed_trades": independent.get("independently_reconstructed_trades"),
+        "app_completed_episodes": report.get("wallet_completed_episodes"),
+        "auditor_clean_episodes": independent.get("clean_episodes"),
+        "status": status,
+        "independently_audited": status == "independently_audited",
+        "unaudited_venues": sorted(set(unaudited_venues)),
+        "episodes": rows,
+        "auditor_only_episodes": independent.get("episodes") or [],
+        "imports_scanner_in_auditor": False,
+        "source": "raw_instructions_balances_ownership_pinned_interfaces",
+        "PRODUCT_READY": False,
+    }
+
+
+def main():
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    by_address = {}
+    for entry in (manifest.get("pages") or {}).values():
+        by_address.setdefault(entry["address"], []).append(entry)
+    tmp = Path(tempfile.mkdtemp(prefix="episode-compare-"))
+    wallets = []
+    for address, pages in sorted(by_address.items()):
+        pages = sorted(pages, key=lambda item: item.get("page_index") or 0)
+        wallets.append(compare_wallet(address, pages, tmp))
+    payload = {
+        "kind": "independent-episode-audit-v1",
+        "wallets": wallets,
+        "labelled_wallets": sorted(LABELLED),
+        "imports_scanner": False,
+        "PRODUCT_READY": False,
+    }
+    OUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({
+        "wallets": [
+            {"address": row["address"], "status": row["status"], "app": row["app_completed_episodes"], "auditor": row["auditor_clean_episodes"]}
+            for row in wallets
+        ]
+    }, indent=2))
+
+
+if __name__ == "__main__":
+    main()

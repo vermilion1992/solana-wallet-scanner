@@ -170,6 +170,10 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     profile = report["research_profile"]
     assert profile["scoped_pnl_by_quote_asset"]["USDC"]
     assert profile["settlement_asset"] == "mixed"
+    win = report["analytics"]["win_rate"]
+    assert win["wins"] <= win["denominator"]
+    if win["rate"] not in (None, ""):
+        assert Decimal("0") <= Decimal(str(win["rate"])) <= Decimal("1")
     store.close()
 
 

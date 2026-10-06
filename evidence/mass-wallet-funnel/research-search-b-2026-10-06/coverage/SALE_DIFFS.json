@@ -1,0 +1,412 @@
+{
+  "kind": "sale-level-diff-v1",
+  "58PW": {
+    "old_usdc_net": "14739.373324196",
+    "new_usdc_net": "51148.756609023",
+    "old_known_cost_sales": 3,
+    "new_known_cost_sales": 11,
+    "new_unresolved_basis_sales": 3,
+    "new_open_lots": 9,
+    "delta_usdc": "36409.383284827",
+    "newly_decoded_or_matched": [
+      {
+        "signature": "32FFggBmHFkDCoffrx9DJ2iX6BvJTwSJozd3DLCiPjNaVrHmcMJMj54MZHaUXiu2mBNcYpMRU9kq4gGNAbfqvSLj",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "8703.125822587",
+        "proceeds": null,
+        "net_profit": "4580.789604413",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "63R7X9eDvmyqWSXiP3LcUKkgfgpipDE35ti7zF7sJBGchh3QkUTFMosKa6VJoxbg9KbukFg5VHcEruM4vomYk716",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "8752.560178136",
+        "proceeds": null,
+        "net_profit": "4498.971013864",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "4rYLGkbM79TarBV1oMoA7hpZNsp1PSVAxBeUPBBMRASx9qtniDFFjaLGJkMxdtx9WiLUzyGUNKLkLEa3FUiw6HYu",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "12749.664977278",
+        "proceeds": null,
+        "net_profit": "491.274510722",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "59Y9fvJQ7X7PoZ24sP3UizD2HvRKqDZH4KvPgZ4qiXp3NC4kmaSvYZC8Ud8eDJnSPqgnZqGH7rqygysoqL9PQfgV",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "12776.387133593",
+        "proceeds": null,
+        "net_profit": "428.765893407",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "4bJrxqXBTbrm4FoKvNtnXWp4mMNrow4QhesHrJjHDUCxosmaZ8mSHekSjsnS6Z8VHctwuXpkpN1knJxcTUSvdmxM",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "13655.857631468",
+        "proceeds": null,
+        "net_profit": "-480.633366447",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "2LV3dz9xjWdABXV2J2a8n9StF1t5Md2rdRrG6UponepbDLwAaMg11gXsEhAdrbFrZKLebEhMjeVw2pmzE7RfXGbj",
+        "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "10625",
+        "proceeds": null,
+        "net_profit": "2743.242271",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "Lsw2FKQKbpKQx8J3h6869Si8eshNFMon2HBtJMHqX3trUrB2urudsdFyUUoZ5L8qxssnY7dqrvU2dip7JmZcX86",
+        "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "10625",
+        "proceeds": null,
+        "net_profit": "2688.699164",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      },
+      {
+        "signature": "2sBVgDR8yjx7gVZqSQgmmAjwYeynrqagXndDKQMqmYyt9g1ZyuDLtHEhWL5px5KrZzodF12v51H7phf1th6abVcm",
+        "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "11435",
+        "proceeds": null,
+        "net_profit": "182.645237",
+        "old_basis": null,
+        "old_proceeds": null,
+        "old_net_profit": null
+      }
+    ],
+    "rebased": [
+      {
+        "signature": "2fLrsZiyS8ysYUUJKBDJLmFTPzmk3YTd9i1zi3jXrSv8nRcZ2w3maz1QzSifagkz7oMHZGjCg7FjVsHp8epFr96V",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "5421.206332047",
+        "proceeds": null,
+        "net_profit": "2514.702184953",
+        "old_basis": "5420.933363039",
+        "old_proceeds": "7935.908517",
+        "old_net_profit": "2514.975153961",
+        "why": "re-based after opening-inventory-first FIFO and later decoded buys backing the same mint"
+      },
+      {
+        "signature": "462hn1EwdcCLjdbhKV4kwSZE1KhAvnpUKujwTHjsJeHUy3x5fScbhuUj9XChsMQuWjNDPHPpBwfoc7dHL948p5ZG",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "43205.175084847",
+        "proceeds": null,
+        "net_profit": "19193.358577153",
+        "old_basis": "26689.056451961",
+        "old_proceeds": "38426.856837606",
+        "old_net_profit": "11737.800385645",
+        "why": "re-based after opening-inventory-first FIFO and later decoded buys backing the same mint"
+      },
+      {
+        "signature": "5WXevGKxvV8w1KWQGMorT8bHi8zMgxUSYVvEBcxrREFPHy1V7hCMhcigh7ZeKAWzfi3tAgXm74fzACEtrEEif6ky",
+        "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+        "split_part": "matched",
+        "unresolved_basis": null,
+        "not_clean_episode": null,
+        "basis": "26043.012655042",
+        "proceeds": null,
+        "net_profit": "14306.941518958",
+        "old_basis": "26420",
+        "old_proceeds": "26906.59778459",
+        "old_net_profit": "486.59778459",
+        "why": "re-based after opening-inventory-first FIFO and later decoded buys backing the same mint"
+      }
+    ],
+    "unchanged": [],
+    "why": "Opening inventory is consumed first and only fully backed clean sales count. Additional Pump/PumpSwap buys now back BPxx, CARDS and pumpCmXq sales that were previously unresolved or open lots, and the earlier partial BPxx matches were re-based against the remaining known lots."
+  },
+  "A6PS": {
+    "old_completed_episodes": 6,
+    "new_completed_episodes": 8,
+    "per_mint_detail": {
+      "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump": {
+        "completed_episodes": 1,
+        "sale_count": 13,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "2RSsw9tntE1RmoiPnNFiu93EzQu2eLnCAzvZiqMSoatH": {
+        "completed_episodes": 1,
+        "sale_count": 4,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "AdSFrF4sJoZ1d64kc3AeFLMhQAG8mwMiacMx47yY5vaB": {
+        "completed_episodes": 1,
+        "sale_count": 5,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "8EZqVPJdEWt754S17nghfa4Y4jQJ7tigBwsGbo1Tpump": {
+        "completed_episodes": 1,
+        "sale_count": 5,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "3VkUe5T9uAuU6EqmEMqQcuTRqEcqU86NAfwbFZKxpump": {
+        "completed_episodes": 1,
+        "sale_count": 5,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "EkFRff9a2jKztJHML1LG9FRmEkPJDR6XAYp3uCPdpump": {
+        "completed_episodes": 1,
+        "sale_count": 13,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "BDbS4nVYqHfbc3XiWbToF39fojHfKMZBVihUscqTTd6M": {
+        "completed_episodes": 1,
+        "sale_count": 5,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "6pnELaCaBMzr7t13HF1SADUtWJ6TDDRTzixbS5A7pump": {
+        "completed_episodes": 1,
+        "sale_count": 5,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "DYo3mP726hCA1NjfTUFvhkUdum6GEP6EKysQX11Lpump": {
+        "completed_episodes": 0,
+        "sale_count": 3,
+        "open": false,
+        "unresolved_basis_sales": 3
+      }
+    },
+    "why": "Two additional mints now complete flat-to-flat after Pump v2 / opening-inventory isolation. Earlier 6-episode count treated some later closes as open or as extra sale rows rather than completed positions."
+  },
+  "An9s": {
+    "old_completed_episodes": 0,
+    "new_completed_episodes": 1,
+    "scoped_pnl": "174.65797861",
+    "open_buys_in_sample": 27,
+    "per_mint_detail": {
+      "9miyM7XKKdtqn4GRwvJGpQry1zVxaLkWwAnMzZYBpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "7i2ksAsM8XHb39QuS46gGwPjQVpbzPj9JGKjo5xzpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "BM7esH4rAfkTyDctWiVRVSpjvxrABzLBDwcekr9Ypump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "GaGoBQFrgCGo3VjkSVNfK4up5Pz3VGLECvvfxx4Wpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "2BFGrFF78rDebruUG9PBjSszi67oV7ZzVMGEjAfWpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "55z3QZQnbqWe6ksCyYipHm6RGWupzoEBGNHWXgtNpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "DJGsptd7CEMEKrHdmVPastxKcPNSqGJT5K7HWcn5pump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "EpjcvRPPkTEsokgNVKiB9MvFamgvBuFAhXecyVcopump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "87TbQkkv6fZ58U4acLHYgKso6spfj699AGZrzoPppump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "5A8RauxZ9Yri23ty7Ufmp3EvUAZoJ16cZ2217J2kpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "EoHTB4ZG8kLDy7MLfWGZXkhYzHhjRszXHEXdBtC1pump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "8LNPFjcui375VSZpNqeziti2w4ykiErkrnDgLtwvpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "J2EuZcNMmxCw3jiug5h2JCkwSFxAravdLZyMXUUepump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "DhQFJXJEBKqRB56AcvCMYKjRQP6p3gvGYP5dpHuPpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "ALd1KJ72HyfcHJcH2fSkWGEKc2xDHuhvWtyTR1Etpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "GVHuvtuh8Dhv5rVwmXGjVMCqUNy9E4yH1QgEqwaapump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "3EMec5v2dTVrHDGoLEzoyzFrBWx6eq4mqYAqoohTpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "AJAaGdG3rV1Awsd9asSPj6PYECE2avZPN3M54wp7pump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "FfTsHtKp57vF38Que4A8q4QhLjGcL2fKc9VhggvYpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "2w4qUD546C9a1ECUMDEXn66eiV6332AF4ZtvqCs2pump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "5TNnGwUgkTe5B1C1bTF7zujKWtPstiz3rREVVmkgpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "78NqvnmmQ8ZYELuVrT5M8YrsPm8KheLdGbw6oUvFpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "57yWMyhKfE1aQBH8hgToJav38BKssMTxSbZF3ETNpump": {
+        "completed_episodes": 1,
+        "sale_count": 39,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 0
+      },
+      "76diVD3xvxDvwm3XyHgyFUf4QZ7MFrQPoKiMogYQpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "BwNvw53Uvmmrmsr3owHz3Qw3b8LrBJ4MWWCCTNz1pump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "HiSgD1Ami2b6btYxpB2JGV5QUFAuKiZJVhboswPUpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "FvyzVzV7nz767apCoh7JwV4MxPkVNG54LH8EJ69kpump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "8ebaPFTifhpkkf8EmmCBBPGDfUdzrGMyPWXh7mvupump": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      }
+    },
+    "why": "One mint now closes a single clean episode (+174.66 SOL) after Pump/PumpSwap reconstruction. 27 other lots stay open and are not episodes."
+  },
+  "PRODUCT_READY": false
+}

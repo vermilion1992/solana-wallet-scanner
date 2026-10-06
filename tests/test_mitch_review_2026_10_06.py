@@ -20,6 +20,7 @@ from scanner.mass_search.research_profile import (
 )
 from scanner.mass_search.settlement import isolate_known_cost_events, worksheets_by_quote_asset
 from scanner.mass_search.verified_costs import classify_native_withdrawal, is_verified_tip_account
+from scanner.mass_search.analytics import build_wallet_analytics
 from scanner.mass_search.workflow import coverage_eligibility, research_screen_run
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -57,6 +58,9 @@ def test_item2_only_verified_jito_tips_count():
     assert is_verified_tip_account("SomeRandomWallet1111111111111111111111111") is False
     assert classify_native_withdrawal(JITO) == "verified_tip"
     assert classify_native_withdrawal("11111111111111111111111111111111") == "unresolved_debit"
+    assert is_verified_tip_account("nozpEGbwx4BcGp6pvEdAh1JoC2CQGZdU6HbNP1v2p6P") is True
+    assert is_verified_tip_account("astraRVUuTHjpwEVvNBeQEgwYx9w9CFyfxjYoobCZhL") is True
+    assert is_verified_tip_account("wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF") is False
 
 
 def test_item3_decoded_unresolved_cash_is_not_unsupported_swap():
@@ -183,10 +187,91 @@ def test_item10_sol_buy_usdc_sell_is_not_split_into_two_fifos():
     assert (usdc_sheet.get("cross_currency_policy") or sol_sheet.get("cross_currency_policy")) == "unconverted_unresolved_never_zero"
 
 
+def test_item11_label_tables_cannot_disagree():
+    from scanner.mass_search.labels import (
+        QUALIFICATION_LEVELS,
+        research_label_tables,
+        wallet_status_fields,
+    )
+
+    report = {
+        "wallet_completed_episodes": 1,
+        "events": [],
+        "corpus_kind": "GENUINE_REPLAY",
+        "independent_audit": {"status": "independently_audited", "independently_audited": True},
+        "worksheet": {"total_profit_sol": "174.65797861", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
+        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+    }
+    profile = build_research_profile(report, filters=default_filters())
+    profile["completed_known_cost_positions"] = 1
+    profile["open_buys_in_sample"] = 27
+    profile["unresolved_basis_sales"] = 0
+    profile["scoped_pnl"] = "174.65797861"
+    profile["settlement_asset"] = "SOL"
+    profile["coverage_count_share"] = "1"
+    an9s = wallet_status_fields(report, profile)
+    assert an9s["qualification_level"] == "conditional_captured_lot_result"
+    assert an9s["coverage_status"] == "provisional_eligible"
+    assert "1 completed episode < min_sample 3" in an9s["blocking_reason"]
+    assert "27 open lots" in an9s["blocking_reason"]
+
+    rows = [
+        {"address": "An9s", **an9s},
+        {
+            "address": "CccS",
+            "qualification_level": "conditional_captured_lot_result",
+            "coverage_status": "coverage_eligibility_pending_reassessment",
+            "blocking_reason": "unresolved adjacent debits flip the sensitivity net sign",
+        },
+        {
+            "address": "gtfo",
+            "qualification_level": "conditional_captured_lot_result",
+            "coverage_status": "coverage_eligibility_pending_reassessment",
+        },
+        {
+            "address": "BVZt",
+            "qualification_level": "insufficient_evidence",
+            "coverage_status": "coverage_blocked",
+        },
+    ]
+    tables = research_label_tables(rows)
+    for level in QUALIFICATION_LEVELS:
+        assert tables["qualification_level_counts"][level] == sum(
+            1 for wallet in tables["wallets"] if wallet["qualification_level"] == level
+        )
+    for status, count in tables["coverage_status_counts"].items():
+        assert count == sum(1 for wallet in tables["wallets"] if wallet["coverage_status"] == status)
+    leads = [wallet["address"] for wallet in tables["wallets"] if wallet["qualification_level"] == "provisional_research_lead"]
+    assert tables["qualification_level_counts"]["provisional_research_lead"] == len(leads)
+    assert tables["qualification_level_counts"]["provisional_research_lead"] == 0
+    an9s_row = next(wallet for wallet in tables["wallets"] if wallet["address"] == "An9s")
+    assert an9s_row["qualification_level"] != an9s_row["coverage_status"]
+    assert an9s_row["coverage_status"] == "provisional_eligible"
+    assert an9s_row["qualification_level"] == "conditional_captured_lot_result"
+
+
 def test_item11_qualification_levels_and_zero_position_is_insufficient_evidence():
     empty = build_research_profile({"events": [], "wallet_completed_episodes": 0}, filters=default_filters())
     assert empty["qualification_level"]["level"] == "insufficient_evidence"
     assert empty["qualification_level"]["not"] == "unprofitable"
+
+
+def test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead():
+    report = {
+        "wallet_completed_episodes": 6,
+        "events": [],
+        "corpus_kind": "GENUINE_REPLAY",
+        "sensitivity_unverified_debits_sol": "1.428081532",
+        "worksheet": {"total_profit_sol": "0.242261753", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
+        "record_breakdown": {"unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"SOL": "0"}}},
+        "independent_audit": {"status": "independently_audited", "independently_audited": True},
+    }
+    profile = build_research_profile(report, filters=default_filters())
+    assert profile["qualification_level"]["level"] != "provisional_research_lead"
+    assert profile["qualification_level"]["sensitivity_sign_flip"] is True
+    judged = coverage_eligibility(report, profile)
+    assert judged["status"] == "coverage_eligibility_pending_reassessment"
+    assert judged["dependency_unresolved_costs"] is True
 
 
 def test_item12_coverage_policy_99_95_blocked_and_dependency():
@@ -219,6 +304,43 @@ def test_item15_independent_auditor_imports_no_scanner():
             assert not node.module.startswith("scanner"), node.module
 
 
+def test_item15_auditor_output_covers_labelled_episodes():
+    payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    labelled = set(payload.get("labelled_wallets") or [])
+    assert labelled
+    by_address = {row["address"]: row for row in payload["wallets"]}
+    for address in labelled:
+        row = by_address[address]
+        assert row["status"] in {"independently_audited", "not_independently_audited", "no_completed_episodes"}
+        if row["status"] == "independently_audited":
+            assert row["independently_audited"] is True
+            assert int(row["app_completed_episodes"] or 0) == len(row.get("episodes") or [])
+            assert all(episode.get("match") for episode in row.get("episodes") or [])
+        for episode in row.get("episodes") or []:
+            assert "venue" in episode
+            assert "app" in episode
+            assert "auditor" in episode
+            for key in ("basis", "proceeds", "verified_costs", "net"):
+                assert key in (episode.get("app") or {})
+
+
+def test_committed_wallet_table_matches_label_function():
+    from scanner.mass_search.labels import research_label_tables
+
+    payload = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
+    tables = research_label_tables(payload["wallets"])
+    assert tables["qualification_level_counts"] == payload["qualification_level_counts"]
+    assert tables["coverage_status_counts"] == payload["coverage_status_counts"]
+    an9s = next(row for row in tables["wallets"] if row["label"] == "An9s")
+    assert an9s["qualification_level"] == "conditional_captured_lot_result"
+    assert an9s["coverage_status"] == "provisional_eligible"
+    assert an9s["blocking_reason"] == "1 completed episode < min_sample 3; 27 open lots"
+    assert tables["qualification_level_counts"]["provisional_research_lead"] == 0
+    cccs = next(row for row in tables["wallets"] if row["label"] == "CccS")
+    assert cccs["qualification_level"] != "provisional_research_lead"
+    assert cccs["coverage_status"] == "coverage_eligibility_pending_reassessment"
+
+
 def test_item8_fee_audit_records_largest_charges_and_roles():
     payload = json.loads((COVERAGE_DIR / "FEE_AUDIT.json").read_text(encoding="utf-8"))
     for label in ("gtfo", "CccS"):
@@ -232,6 +354,55 @@ def test_item8_fee_audit_records_largest_charges_and_roles():
             "verified_tip",
             "unresolved_debit_not_a_tip",
         }
+        assert "debits_gt_0_01_sol" in wallet
+        for charge in wallet["largest_charges"]:
+            assert charge.get("recipient")
+            assert charge.get("instruction_path")
+            assert charge.get("fee_payer") or charge["economic_role"] == "network_plus_priority_fee"
+            assert "counted_elsewhere" in charge
+
+
+def test_win_rate_stays_in_unit_interval_including_mixed():
+    mint_a = "MintWinA111111111111111111111111111111111"
+    mint_b = "MintWinB111111111111111111111111111111111"
+    events = []
+    for mint, sigs in ((mint_a, ("buy-a", "sell-a")), (mint_b, ("buy-b", "sell-b"))):
+        events.extend([
+            {"kind": "buy", "mint": mint, "units": "1", "quantity_raw": "1", "seconds_from_start": 0,
+             "signature": sigs[0], "amount_sol": "1", "consideration_sol": "1"},
+            {"kind": "sell", "mint": mint, "units": "1", "quantity_raw": "1", "seconds_from_start": 1,
+             "signature": sigs[1], "amount_sol": "2", "consideration_sol": "2"},
+        ])
+    report = {
+        "wallet_completed_episodes": 2,
+        "events": events,
+        "worksheet": {
+            "settlement_asset": "mixed",
+            "sale_rows": [
+                {"signature": "sell-a", "split_part": "matched", "basis": "1", "net_profit": "1",
+                 "gross_profit": "1", "fees_and_tips": "0"},
+                {"signature": "sell-b", "split_part": "matched", "basis": "1", "net_profit": "1",
+                 "gross_profit": "1", "fees_and_tips": "0"},
+                {"signature": "sell-extra", "split_part": "matched", "basis": "1", "net_profit": "1",
+                 "gross_profit": "1", "fees_and_tips": "0"},
+            ],
+        },
+        "research_profile": {"completed_known_cost_positions": 2, "sale_count": 3},
+    }
+    analytics = build_wallet_analytics(report)
+    assert 0 <= Decimal(str(analytics["win_rate"]["rate"])) <= 1
+    assert analytics["win_rate"]["wins"] <= analytics["win_rate"]["denominator"]
+
+
+def test_zero_completed_episodes_do_not_expose_net():
+    profile = build_research_profile({
+        "events": [],
+        "wallet_completed_episodes": 0,
+        "worksheet": {"total_profit_usdc": "-2413.398216681", "settlement_asset": "USDC"},
+    }, filters=default_filters())
+    assert profile["completed_known_cost_positions"] == 0
+    assert profile["scoped_pnl"] is None
+    assert profile["matched_fragment_pnl"] == "-2413.398216681"
 
 
 def test_item17_next_capture_manifest_is_disabled():

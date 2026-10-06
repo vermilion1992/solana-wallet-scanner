@@ -10,7 +10,7 @@ from pathlib import Path
 
 from scanner.compiled_instructions import CompiledInstructionError, normalize_instruction, SYSTEM_ID
 from scanner.mass_search.capture_catalog import catalog_by_address, load_capture_records
-from scanner.mass_search.verified_costs import is_verified_tip_account
+from scanner.mass_search.verified_costs import is_verified_tip_account, published_tip_lookup
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/FEE_AUDIT.json"
@@ -89,6 +89,7 @@ def audit_wallet(address):
             if not isinstance(lamports, int):
                 continue
             verified = is_verified_tip_account(dest)
+            meta = published_tip_lookup(dest) or {}
             charges.append({
                 "signature": signature,
                 "recipient": dest,
@@ -97,16 +98,21 @@ def audit_wallet(address):
                 "lamports": lamports,
                 "sol": str(Decimal(lamports) / Decimal(1_000_000_000)),
                 "economic_role": "verified_tip" if verified else "unresolved_debit_not_a_tip",
-                "counted_elsewhere": verified,
+                "counted_elsewhere": bool(verified),
+                "counted_elsewhere_as": "verified_tips_sol" if verified else None,
                 "verified_tip": verified,
+                "provider": meta.get("provider"),
+                "source": meta.get("source"),
             })
     charges.sort(key=lambda item: item["lamports"], reverse=True)
     verified = sum(item["lamports"] for item in charges if item["verified_tip"])
     unresolved = sum(item["lamports"] for item in charges if item["economic_role"] == "unresolved_debit_not_a_tip")
     network = sum(item["lamports"] for item in charges if item["economic_role"] == "network_plus_priority_fee")
+    large = [item for item in charges if item["economic_role"] != "network_plus_priority_fee" and Decimal(item["sol"]) > Decimal("0.01")]
     return {
         "address": address,
         "largest_charges": charges[:15],
+        "debits_gt_0_01_sol": large,
         "totals_lamports": {
             "network_plus_priority": network,
             "verified_tips": verified,
@@ -117,7 +123,7 @@ def audit_wallet(address):
             "verified_tips": str(Decimal(verified) / Decimal(1_000_000_000)),
             "unresolved_debits_sensitivity": str(Decimal(unresolved) / Decimal(1_000_000_000)),
         },
-        "note": "Net P&L uses verified costs only. Unresolved debits are a labelled sensitivity figure.",
+        "note": "Net P&L uses verified costs only. Unresolved debits are a labelled sensitivity figure. Verified only if the recipient is on a published tip-account list.",
     }
 
 

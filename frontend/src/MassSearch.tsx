@@ -454,6 +454,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             . Thresholds were fixed before evaluation. Unknown never passes.
             {` Coverage policy: ≥99% resolved by count and measurable notional with no unresolved dependency is provisionally eligible; 95–99% with understood dependencies is watchlist / incomplete evidence; below 95%, unknown denominator, material unknown notional, or a decision-changing dependency is coverage blocked.`}
             {` Qualification (evidence quality, not screen pass/fail): not evaluated ${count(ranked.research_screen.counts?.qualification?.not_evaluated ?? 0)} · analysed-incomplete ${count(ranked.research_screen.counts?.qualification?.analysed_incomplete ?? 0)} · matched-position ${count(ranked.research_screen.counts?.qualification?.positive_matched_position_evidence ?? 0)} · net realised ${count(ranked.research_screen.counts?.qualification?.positive_net_realised_over_window ?? 0)} · account performance ${count(ranked.research_screen.counts?.qualification?.profitable_account_performance ?? 0)}.`}
+            {` qualification_level: insufficient_evidence ${count(ranked.research_screen.counts?.qualification_level?.insufficient_evidence ?? 0)} · conditional_captured_lot_result ${count(ranked.research_screen.counts?.qualification_level?.conditional_captured_lot_result ?? 0)} · provisional_research_lead ${count(ranked.research_screen.counts?.qualification_level?.provisional_research_lead ?? 0)} · stronger_research_shortlist ${count(ranked.research_screen.counts?.qualification_level?.stronger_research_shortlist ?? 0)}.`}
+            {` coverage_status: provisional_eligible ${count(ranked.research_screen.counts?.coverage_status?.provisional_eligible ?? 0)} · coverage_eligibility_pending_reassessment ${count(ranked.research_screen.counts?.coverage_status?.coverage_eligibility_pending_reassessment ?? 0)} · watchlist_incomplete_evidence ${count(ranked.research_screen.counts?.coverage_status?.watchlist_incomplete_evidence ?? 0)} · coverage_blocked ${count(ranked.research_screen.counts?.coverage_status?.coverage_blocked ?? 0)}. These are different fields.`}
           </p>
         )}
         {batch && (
@@ -525,6 +527,9 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <p>Provider rank {row.provider_rank ?? "—"} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
                   <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : row.report_id ? "analysed" : "History required — not analysed"}{row.in_window_span?.hours != null ? ` · in-window ${String(row.in_window_span.hours)} h` : ""}</p>
                   <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
+                  <p data-qualification-level={(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}>qualification_level {(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}</p>
+                  <p data-coverage-status={row.coverage_status || row.research_profile?.coverage_status || "blocked_unknown_denominator"}>coverage_status {row.coverage_status || row.research_profile?.coverage_status || "blocked_unknown_denominator"}</p>
+                  {(row.blocking_reason || row.research_profile?.blocking_reason) ? <p data-blocking-reason="true">blocking_reason {row.blocking_reason || row.research_profile?.blocking_reason}</p> : null}
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id
                     ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => void inspect(row.report_id!)}>Open report</Button>
@@ -787,7 +792,13 @@ function RankedRow({
       <td className="mono">{shorten(row.address)}</td>
       <td>{row.funnel?.A?.state || "—"} / {row.funnel?.B?.state || "—"} / {row.funnel?.C?.state || "—"}</td>
       <td>{row.trade_count ?? "unknown"}</td>
-      <td>{row.funnel?.B?.scoped_pnl ? `${row.funnel.B.scoped_pnl} ${row.funnel.B.scoped_pnl_unit || ""}` : "unverified"}</td>
+      <td>{
+        (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && row.funnel?.B?.scoped_pnl
+          ? `${row.funnel.B.scoped_pnl} ${row.funnel.B.scoped_pnl_unit || ""}`
+          : (row.research_profile?.matched_fragment_pnl
+            ? `matched-fragment ${row.research_profile.matched_fragment_pnl} ${row.research_profile.matched_fragment_unit || ""}`
+            : "unverified")
+      }</td>
       <td>
         {row.report_id
           ? <Button variant="secondary" disabled={busy} onClick={() => onOpen(row.report_id!)}>Open report</Button>
