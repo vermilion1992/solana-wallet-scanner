@@ -136,9 +136,13 @@ gtfo fee-audit totals: network 5.107533156 / verified tips 3.328280298 (Jito + o
 - `tests/test_mass_search_product_completion.py::test_mixed_sol_and_usdc_worksheet_is_per_quote_asset` — item 10 cross-currency
 - `tests/test_investigation.py::test_real_mainnet_wrappers_and_sponsored_router_are_explicit_gaps` — item 13 wrappers stay unsupported
 
-## Suite / build
+## Suite / build on this exact commit
 
-See TESTS.md for the exact-final-commit counts. PRODUCT_READY remains false.
+- Keys unset: **3647 passed**, 440 subtests, EXIT 0 (9 min 1 s)
+- Keys set (dummy, never dispatched): **3647 passed**, 440 subtests, EXIT 0 (8 min 51 s)
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-Bj4UsG-X.js`
+- Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = 401
+- Screenshot paths: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/phone-01-ranked-list.png`, `phone-02-research-screen-qualification-levels.png`, `phone-03-report-CccS.png`, `phone-04-report-CccS-detail.png`, `phone-03-report-A6PS.png`, `phone-04-report-A6PS-detail.png`, `phone-05-compare.png`
 
 ## Still blocked
 
