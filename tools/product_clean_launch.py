@@ -127,6 +127,7 @@ def stop_run_sh(server):
         except subprocess.TimeoutExpired:
             server.kill()
             server.wait(timeout=5)
+    time.sleep(0.5)
 
 
 result = {
@@ -211,6 +212,7 @@ try:
     pw.stop()
     stop_run_sh(server)
     server = None
+    port = _free_port()
 
     server, url, _log = start_run_sh(data_dir=data, port=port)
     base = url.split("/#")[0]
