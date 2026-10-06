@@ -5,7 +5,7 @@
   "provider_calls": 0,
   "external_count": 0,
   "compare_status": 200,
-  "tested_commit": "cf8402b2ee4c6e087260c4653629927fcaabef10",
+  "tested_commit": "8753392901eca4a4570722caee0f8e80218075eb",
   "pre_harness_commit": "2accce8394fa612c3c3b09d201c21c54ac2aa2ba",
   "genuine_capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
   "cases": {
@@ -41,13 +41,13 @@
   },
   "backend_tests": {
     "full_suite": {
-      "passed": 3561,
-      "failed": 13,
+      "passed": 3580,
+      "failed": 0,
       "skipped": 0,
       "xfailed": 0,
       "subtests_passed": 440,
-      "seconds": 502.12,
-      "commit": "cf8402b2ee4c6e087260c4653629927fcaabef10"
+      "seconds": 512.33,
+      "commit": "8753392901eca4a4570722caee0f8e80218075eb"
     },
     "frontend_build": "passed",
     "phone_ah": "PASS",

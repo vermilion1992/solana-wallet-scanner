@@ -7,5 +7,6 @@
   "PRODUCT_READY": false,
   "state": "PASS",
   "unauthenticated_status": 401,
-  "provider_calls": 0
+  "provider_calls": 0,
+  "tested_commit": "8753392901eca4a4570722caee0f8e80218075eb"
 }
