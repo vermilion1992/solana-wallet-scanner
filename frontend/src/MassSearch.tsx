@@ -566,9 +566,22 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               disabled={!compareLeft || !compareRight || !!busy}
               onClick={() => api("/mass-search/research-compare", "POST", { left_id: compareLeft, right_id: compareRight }).then((value) => {
                 const body = value as ResearchCompare;
+                const policy = body.window_policy || {};
                 const fields = (body.fields || []).map((field) => `${field.key}: ${String(field.left ?? "—")} vs ${String(field.right ?? "—")}`).join(" · ");
                 const mismatches = (body.mismatches || []).map((item) => `${item.kind}: ${item.detail}`).join(" · ");
-                setCompareResult(mismatches ? `${fields} · Mismatches: ${mismatches}` : fields);
+                const policyText = [
+                  policy.kind || "own_windows_shown_mismatch_blocks",
+                  policy.detail,
+                  `left window ${policy.left_window?.start || "—"} → ${policy.left_window?.end || "—"}`,
+                  `right window ${policy.right_window?.start || "—"} → ${policy.right_window?.end || "—"}`,
+                  `left tx ${policy.left_included_trades ?? (policy.left_included_tx || []).length}`,
+                  `right tx ${policy.right_included_trades ?? (policy.right_included_tx || []).length}`,
+                  `samples ${String(policy.left_sample_size ?? "—")} vs ${String(policy.right_sample_size ?? "—")}`,
+                  `scoped_pnl ${String(policy.left_scoped_pnl ?? "—")} vs ${String(policy.right_scoped_pnl ?? "—")}`,
+                  body.comparable ? "comparable" : "blocked",
+                  policy.result_scope || "conditional_on_captured_inventory",
+                ].filter(Boolean).join(" · ");
+                setCompareResult(mismatches ? `${policyText} · ${fields} · Mismatches: ${mismatches}` : `${policyText} · ${fields}`);
               }).catch((error: Error) => setCompareResult(error.message))}
             >
               Compare saved reports

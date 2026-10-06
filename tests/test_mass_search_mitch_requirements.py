@@ -46,6 +46,8 @@ SYNTH_UNBACKED = "SynthEngUNBACKED111111111111111111111111"
 SYNTH_MULTI = "SynthEngMULTI111111111111111111111111111"
 SYNTH_EARLY = "SynthEngWINDEARLY11111111111111111111111"
 SYNTH_LATE = "SynthEngWINDLATE111111111111111111111111"
+SYNTH_OVLEFT = "SynthEngWINDOVLEFT111111111111111111111"
+SYNTH_OVRIGHT = "SynthEngWINDOVRIGHT11111111111111111111"
 FIXTURE_DIR = ROOT / "tests/fixtures/synthetic_engineering"
 
 
@@ -65,6 +67,7 @@ def store(tmp_path):
 def session(tmp_path):
     reset_provider_calls()
     hold_admission_barrier_for_test(None)
+    hold_step_for_test(None)
     app = create_app(tmp_path / "data", LAUNCH_TOKEN)
     with TestClient(app, base_url=BASE_URL) as client:
         response = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
@@ -138,7 +141,114 @@ def test_identical_http_batch_attaches_idempotently(session):
     )
     assert second.status_code == 200
     assert second.json()["batch_id"] == first.json()["batch_id"]
+    assert second.json()["attached"] is True
     assert second.json()["outcomes"][0]["address"] == SYNTH_USDC
+    persisted = session.get(f"/api/mass-search/ranked-workflow/batch/{first.json()['batch_id']}").json()
+    assert persisted["status"] == "pending"
+    assert persisted["completed"] == 0
+    assert persisted["outcomes"][0]["status"] == "pending"
+
+
+def test_identical_create_and_run_attaches_without_rerunning(session):
+    """An attached HTTP create_and_run must not start a second runner."""
+    created = session.post(
+        "/api/mass-search/ranked-workflow/batch",
+        json={"addresses": [SYNTH_USDC], "run": False},
+    )
+    assert created.status_code == 200
+    batch_id = created.json()["batch_id"]
+    hold = threading.Event()
+    hold_step_for_test(hold)
+    stepper = threading.Thread(
+        target=session.post,
+        args=(f"/api/mass-search/ranked-workflow/batch/{batch_id}/step",),
+    )
+    stepper.start()
+    for _ in range(200):
+        current = session.get(f"/api/mass-search/ranked-workflow/batch/{batch_id}").json()
+        if current.get("executing") is True:
+            break
+        time.sleep(0.01)
+    else:
+        hold.set()
+        stepper.join(timeout=5)
+        hold_step_for_test(None)
+        raise AssertionError("HTTP step never marked executing")
+    attached = session.post(
+        "/api/mass-search/ranked-workflow/batch",
+        json={"addresses": [SYNTH_USDC]},
+    )
+    assert attached.status_code == 200
+    body = attached.json()
+    assert body["attached"] is True
+    assert body["batch_id"] == batch_id
+    persisted = session.get(f"/api/mass-search/ranked-workflow/batch/{batch_id}").json()
+    assert persisted["executing"] is True
+    assert persisted["completed"] == 0
+    assert persisted["outcomes"][0]["status"] == "pending"
+    hold.set()
+    stepper.join(timeout=10)
+    hold_step_for_test(None)
+    finished = session.get(f"/api/mass-search/ranked-workflow/batch/{batch_id}").json()
+    assert finished["executing"] is False
+    assert finished["completed"] == 1
+    assert finished["status"] == "completed"
+    assert finished["outcomes"][0]["status"] in ("analysed", "cached")
+    reports = [row for row in session.get("/api/state?report_view=summary").json()["reports"] if row.get("address") == SYNTH_USDC]
+    assert len(reports) == 1
+
+
+def test_concurrent_http_step_does_not_double_analyse(session):
+    created = session.post(
+        "/api/mass-search/ranked-workflow/batch",
+        json={"addresses": [SYNTH_USDC], "run": False},
+    )
+    batch_id = created.json()["batch_id"]
+    hold = threading.Event()
+    hold_step_for_test(hold)
+    first_body = []
+    second_body = []
+
+    def step_into(bucket):
+        response = session.post(f"/api/mass-search/ranked-workflow/batch/{batch_id}/step")
+        bucket.append((response.status_code, response.json()))
+
+    first = threading.Thread(target=step_into, args=(first_body,))
+    first.start()
+    for _ in range(200):
+        current = session.get(f"/api/mass-search/ranked-workflow/batch/{batch_id}").json()
+        if current.get("executing") is True:
+            break
+        time.sleep(0.01)
+    else:
+        hold.set()
+        first.join(timeout=5)
+        hold_step_for_test(None)
+        raise AssertionError("HTTP step never marked executing")
+    second = threading.Thread(target=step_into, args=(second_body,))
+    second.start()
+    second.join(timeout=5)
+    assert second_body and second_body[0][0] == 200
+    ignored = second_body[0][1]
+    assert ignored["attached"] is True
+    assert ignored["step_ignored"] == "already_executing"
+    mid = session.get(f"/api/mass-search/ranked-workflow/batch/{batch_id}").json()
+    assert mid["executing"] is True
+    assert mid["step_ignored"] == "already_executing"
+    assert mid["completed"] == 0
+    assert mid["index"] == 0
+    assert mid["outcomes"][0]["status"] == "pending"
+    hold.set()
+    first.join(timeout=10)
+    hold_step_for_test(None)
+    finished = session.get(f"/api/mass-search/ranked-workflow/batch/{batch_id}").json()
+    assert finished["executing"] is False
+    assert finished["completed"] == 1
+    assert finished["index"] == 1
+    assert finished["status"] == "completed"
+    assert finished["outcomes"][0]["status"] in ("analysed", "cached")
+    reports = [row for row in session.get("/api/state?report_view=summary").json()["reports"] if row.get("address") == SYNTH_USDC]
+    assert len(reports) == 1
 
 
 def test_cancel_releases_admission_only_after_executing_stops(store):
@@ -244,6 +354,29 @@ def test_fee_free_partial_match_is_fully_accounted(store):
     assert unresolved["unmatched_quantity_raw"] == "4"
     assert Decimal(matched["proceeds"]) + Decimal(unresolved["gross_proceeds"]) == Decimal("100")
     assert matched["whole_sale_pnl_resolved"] is False
+    trades = (app["analytics"] or {}).get("trades") or []
+    sells = [row for row in trades if row.get("side") == "sell"]
+    assert len(sells) == 2
+    known = next(row for row in sells if row.get("reconciliation_or_exclusion") != "unresolved_basis")
+    unknown = next(row for row in sells if row.get("reconciliation_or_exclusion") == "unresolved_basis")
+    assert known["tx_ref"] == unknown["tx_ref"] == "synth-eng-feefree-sell-1"
+    assert Decimal(known["quantity"]) == Decimal("6")
+    assert Decimal(known["proceeds_or_cost"]) == Decimal("60")
+    assert Decimal(known["allocated_basis"]) == Decimal("36")
+    assert Decimal(known["known_cost_pnl"]) == Decimal("24")
+    assert known["whole_sale_pnl_resolved"] is False
+    assert known["result_scope"] == "conditional_on_captured_inventory"
+    assert Decimal(unknown["quantity"]) == Decimal("4")
+    assert Decimal(unknown["proceeds_or_cost"]) == Decimal("40")
+    assert Decimal(unknown["unmatched_quantity"]) == Decimal("4")
+    assert unknown["allocated_basis"] is None
+    assert unknown["known_cost_pnl"] is None
+    assert unknown["whole_sale_pnl_resolved"] is False
+    assert Decimal(known["proceeds_or_cost"]) + Decimal(unknown["proceeds_or_cost"]) == Decimal("100")
+    saved = store.get("reports", report["id"])
+    saved_sells = [row for row in (saved.get("analytics") or {}).get("trades") or [] if row.get("side") == "sell"]
+    assert len(saved_sells) == 2
+    assert Decimal(saved_sells[0]["proceeds_or_cost"]) + Decimal(saved_sells[1]["proceeds_or_cost"]) == Decimal("100")
 
 
 def test_partial_match_cases_agree_with_independent_tool(store):
@@ -285,6 +418,11 @@ def test_compare_same_window_control_and_differing_included_trades(store):
     assert "window" not in {item["kind"] for item in same["mismatches"]}
     assert same["window_policy"]["kind"] == "own_windows_shown_mismatch_blocks"
     assert same["comparable"] is True or "currency" not in {item["kind"] for item in same["mismatches"]}
+    assert set(same["window_policy"]["left_included_tx"]) != set(same["window_policy"]["right_included_tx"])
+    assert same["window_policy"]["left_sample_size"] == 1
+    assert same["window_policy"]["right_sample_size"] == 1
+    assert Decimal(str(same["window_policy"]["left_scoped_pnl"])) == Decimal("30")
+    assert Decimal(str(same["window_policy"]["right_scoped_pnl"])) == Decimal("24")
 
     replay_captured_wallet(store, SYNTH_EARLY)
     replay_captured_wallet(store, SYNTH_LATE)
@@ -298,10 +436,49 @@ def test_compare_same_window_control_and_differing_included_trades(store):
     assert policy["left_window"] != policy["right_window"]
     assert policy["left_included_trades"] == 2
     assert policy["right_included_trades"] == 2
+    assert policy["left_included_tx"] == ["synth-eng-wind-early-buy-1", "synth-eng-wind-early-sell-1"]
+    assert policy["right_included_tx"] == ["synth-eng-wind-late-buy-1", "synth-eng-wind-late-sell-1"]
+    assert set(policy["left_included_tx"]).isdisjoint(policy["right_included_tx"])
+    assert policy["left_sample_size"] == 1
+    assert policy["right_sample_size"] == 1
+    assert Decimal(str(policy["left_scoped_pnl"])) == Decimal("8")
+    assert Decimal(str(policy["right_scoped_pnl"])) == Decimal("2")
     assert policy["left_window"]["end"] == "2026-09-20T00:00:00Z"
     assert policy["right_window"]["start"] == "2026-09-25T00:00:00Z"
     # Non-overlap: early ends before late starts.
     assert policy["left_window"]["end"] <= policy["right_window"]["start"]
+
+
+def test_compare_partial_overlap_one_corpus_keeps_own_windows(store):
+    replay_captured_wallet(store, SYNTH_OVLEFT)
+    replay_captured_wallet(store, SYNTH_OVRIGHT)
+    reports = {row["address"]: row for row in store.list("reports") if row.get("source") == "mass-search"}
+    left = reports[SYNTH_OVLEFT]
+    right = reports[SYNTH_OVRIGHT]
+    compared = compare_reports(store, left["id"], right["id"])
+    assert compared["comparable"] is False
+    assert "window" in {item["kind"] for item in compared["mismatches"]}
+    policy = compared["window_policy"]
+    assert policy["kind"] == "own_windows_shown_mismatch_blocks"
+    assert policy["left_window"]["start"] == "2026-09-05T13:29:27Z"
+    assert policy["left_window"]["end"] == "2026-09-25T00:00:00Z"
+    assert policy["right_window"]["start"] == "2026-09-20T00:00:00Z"
+    assert policy["right_window"]["end"] == "2026-10-05T13:29:27Z"
+    left_tx = set(policy["left_included_tx"])
+    right_tx = set(policy["right_included_tx"])
+    overlap = {"synth-eng-wind-overlap-buy-1", "synth-eng-wind-overlap-sell-1"}
+    assert left_tx & right_tx == overlap
+    assert "synth-eng-wind-ovleft-buy-1" in left_tx
+    assert "synth-eng-wind-ovleft-sell-1" in left_tx
+    assert "synth-eng-wind-ovright-buy-1" in right_tx
+    assert "synth-eng-wind-ovright-sell-1" in right_tx
+    assert policy["left_included_trades"] == 4
+    assert policy["right_included_trades"] == 4
+    assert policy["left_sample_size"] == 2
+    assert policy["right_sample_size"] == 2
+    assert Decimal(str(policy["left_scoped_pnl"])) == Decimal("11")
+    assert Decimal(str(policy["right_scoped_pnl"])) == Decimal("10")
+    assert policy["result_scope"] == "conditional_on_captured_inventory"
 
 
 def test_cache_key_includes_window():

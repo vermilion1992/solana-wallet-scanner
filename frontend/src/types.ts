@@ -823,6 +823,21 @@ export type ResearchCompare = {
   fields?: { key: string; left: unknown; right: unknown }[];
   mismatches?: { kind: string; detail: string }[];
   comparable?: boolean;
+  window_policy?: {
+    kind?: string;
+    detail?: string;
+    left_window?: { start?: string; end?: string };
+    right_window?: { start?: string; end?: string };
+    left_included_tx?: string[];
+    right_included_tx?: string[];
+    left_included_trades?: number;
+    right_included_trades?: number;
+    left_sample_size?: number;
+    right_sample_size?: number;
+    left_scoped_pnl?: string | null;
+    right_scoped_pnl?: string | null;
+    result_scope?: string;
+  };
 };
 export type MassSearchStageCounts = {
   input: number;

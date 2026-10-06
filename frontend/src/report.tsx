@@ -131,20 +131,24 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
               <th>Settlement</th>
               <th>Proceeds / cost</th>
               <th>Allocated basis</th>
+              <th>Known P&amp;L</th>
+              <th>Unmatched qty</th>
               <th>Reason</th>
               <th>Tx</th>
             </tr>
           </thead>
           <tbody>
             {((report.analytics as { trades?: Record<string, unknown>[] }).trades || []).map((row, index) => (
-              <tr key={`${String(row.tx_ref || index)}-${index}`}>
+              <tr key={`${String(row.tx_ref || index)}-${index}`} data-trade-scope={String(row.result_scope || report.result_scope || "conditional_on_captured_inventory")}>
                 <td>{String(row.side || "")}</td>
                 <td>{shorten(String(row.token || ""), 6)}</td>
                 <td>{row.quantity != null ? String(row.quantity) : "unknown"}</td>
                 <td>{String(row.settlement_asset || "")}</td>
                 <td>{row.proceeds_or_cost != null ? `${decimal(String(row.proceeds_or_cost), 4)} ${String(row.settlement_asset || "")}` : "unknown"}</td>
-                <td>{row.allocated_basis != null ? `${decimal(String(row.allocated_basis), 4)} ${String(row.settlement_asset || "")}` : row.reconciliation_or_exclusion === "unresolved_basis" ? "unresolved" : "—"}</td>
-                <td>{String(row.reconciliation_or_exclusion || "—")}</td>
+                <td>{row.allocated_basis != null ? `${decimal(String(row.allocated_basis), 4)} ${String(row.settlement_asset || "")}` : row.reconciliation_or_exclusion === "unresolved_basis" ? "unknown basis" : "—"}</td>
+                <td>{row.known_cost_pnl != null ? `${decimal(String(row.known_cost_pnl), 4)} ${String(row.settlement_asset || "")}` : row.reconciliation_or_exclusion === "unresolved_basis" ? "unresolved" : "—"}</td>
+                <td>{row.unmatched_quantity != null && String(row.unmatched_quantity) !== "" ? String(row.unmatched_quantity) : "—"}</td>
+                <td>{String(row.reconciliation_or_exclusion || "—")}{row.whole_sale_pnl_resolved === false && row.side === "sell" ? " · whole-sale unresolved" : ""}</td>
                 <td>{row.tx_ref ? shorten(String(row.tx_ref), 6) : "—"}</td>
               </tr>
             ))}

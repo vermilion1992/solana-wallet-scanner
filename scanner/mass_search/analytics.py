@@ -53,7 +53,6 @@ def build_wallet_analytics(report):
     """Attach scoped metrics. Missing basis stays unresolved, not zero."""
     worksheet = report.get("worksheet") or report.get("independent_worksheet") or {}
     events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
-    mapped = [_map_event(row, index) for index, row in enumerate(events)]
     known_inputs = []
     for row in events:
         known_inputs.append({
@@ -65,10 +64,16 @@ def build_wallet_analytics(report):
             "settlement_mint": row.get("settlement_mint"),
             "consideration_usdc": row.get("amount_usdc") or row.get("consideration_usdc"),
             "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
+            "wallet_fee_sol": row.get("fee_sol") or row.get("wallet_fee_sol"),
+            "timestamp": row.get("timestamp") or row.get("block_time"),
         })
     known, unresolved = isolate_known_cost_by_mint(known_inputs) if known_inputs else ([], [])
-    unresolved_sigs = {row.get("signature") for row in unresolved}
-    known_sells = [row for row in known if row["kind"] == "sell"]
+    # Trades are the FIFO split rows, not the original unsplit sells.
+    split_rows = sorted(
+        list(known) + list(unresolved),
+        key=lambda row: (row.get("seconds_from_start") or 0, row.get("signature") or "", row.get("unresolved_basis") is True),
+    )
+    mapped = [_map_event(row, index) for index, row in enumerate(split_rows)]
     settlement = worksheet.get("settlement_asset")
     if not settlement:
         if any(item["settlement_asset"] == "USDC" for item in mapped):
@@ -81,15 +86,22 @@ def build_wallet_analytics(report):
     wins = 0
     completed = 0
     hold_seconds = []
-    for item in mapped:
-        if item["tx_ref"] in unresolved_sigs and item["side"] == "sell":
+    for item, source in zip(mapped, split_rows):
+        if source.get("unresolved_basis"):
             item["reconciliation_or_exclusion"] = "unresolved_basis"
             item["allocated_basis"] = None
+            item["known_cost_pnl"] = None
+            item["unmatched_quantity"] = str(source.get("unmatched_quantity") or source.get("units") or "")
+            item["whole_sale_pnl_resolved"] = False
+            item["result_scope"] = "conditional_on_captured_inventory"
             continue
         if item["side"] == "sell" and sale_index < len(basis_list):
             item["allocated_basis"] = str(basis_list[sale_index])
             pnl = _sale_pnl(item, item["allocated_basis"])
             item["known_cost_pnl"] = str(pnl) if pnl is not None else None
+            item["whole_sale_pnl_resolved"] = source.get("whole_sale_pnl_resolved") is True
+            item["result_scope"] = "conditional_on_captured_inventory"
+            item["partial_known_cost"] = bool(source.get("partial_known_cost"))
             if pnl is not None:
                 completed += 1
                 if pnl > 0:

@@ -126,10 +126,13 @@ def create_batch(store, addresses, *, include_fixtures=False):
         existing = _held_batch(store)
         if existing:
             if existing.get("request_fingerprint") == fingerprint:
-                return existing
+                attached = dict(existing)
+                attached["attached"] = True
+                return attached
             raise BatchBusy(IN_FLIGHT)
         batch_id = str(uuid.uuid4())
         payload["batch_id"] = batch_id
+        payload["attached"] = False
         store.put(BATCH_KIND, batch_id, payload)
         return payload
 
@@ -143,15 +146,16 @@ def get_batch(store, batch_id):
 
 def cancel_batch(store, batch_id):
     """Request cancel. Admission stays held while executing is still True."""
-    payload = get_batch(store, batch_id)
-    payload["cancel_requested"] = True
-    if payload.get("executing") is True:
+    with store.lock:
+        payload = get_batch(store, batch_id)
+        payload["cancel_requested"] = True
+        if payload.get("executing") is True:
+            store.put(BATCH_KIND, batch_id, payload)
+            return payload
+        if payload.get("status") in ("pending", "running"):
+            payload["status"] = "cancelled"
         store.put(BATCH_KIND, batch_id, payload)
         return payload
-    if payload.get("status") in ("pending", "running"):
-        payload["status"] = "cancelled"
-    store.put(BATCH_KIND, batch_id, payload)
-    return payload
 
 
 def _analyse_one(store, outcome):
@@ -185,22 +189,31 @@ def _analyse_one(store, outcome):
 
 
 def step_batch(store, batch_id):
-    payload = get_batch(store, batch_id)
-    if payload.get("cancel_requested") and payload.get("executing") is not True:
-        payload["status"] = "cancelled"
-        payload["executing"] = False
+    """Claim at most one index. A second stepper attaches and does not re-analyse."""
+    with store.lock:
+        payload = get_batch(store, batch_id)
+        if payload.get("cancel_requested") and payload.get("executing") is not True:
+            payload["status"] = "cancelled"
+            payload["executing"] = False
+            store.put(BATCH_KIND, batch_id, payload)
+            return payload
+        if payload.get("executing") is True:
+            payload["attached"] = True
+            payload["step_ignored"] = "already_executing"
+            store.put(BATCH_KIND, batch_id, payload)
+            return payload
+        index = int(payload.get("index") or 0)
+        outcomes = payload.get("outcomes") or []
+        if index >= len(outcomes):
+            payload["status"] = "completed"
+            payload["executing"] = False
+            store.put(BATCH_KIND, batch_id, payload)
+            return payload
+        payload["status"] = "running"
+        payload["executing"] = True
+        payload["attached"] = False
+        payload.pop("step_ignored", None)
         store.put(BATCH_KIND, batch_id, payload)
-        return payload
-    index = int(payload.get("index") or 0)
-    outcomes = payload.get("outcomes") or []
-    if index >= len(outcomes):
-        payload["status"] = "completed"
-        payload["executing"] = False
-        store.put(BATCH_KIND, batch_id, payload)
-        return payload
-    payload["status"] = "running"
-    payload["executing"] = True
-    store.put(BATCH_KIND, batch_id, payload)
     if _STEP_HOLD is not None:
         _STEP_HOLD.wait()
     try:
@@ -215,12 +228,13 @@ def step_batch(store, batch_id):
             payload["status"] = "completed"
         return payload
     finally:
-        latest = store.get(BATCH_KIND, batch_id) or {}
-        if latest.get("cancel_requested") or payload.get("cancel_requested"):
-            payload["cancel_requested"] = True
-            payload["status"] = "cancelled"
-        payload["executing"] = False
-        store.put(BATCH_KIND, batch_id, payload)
+        with store.lock:
+            latest = store.get(BATCH_KIND, batch_id) or {}
+            if latest.get("cancel_requested") or payload.get("cancel_requested"):
+                payload["cancel_requested"] = True
+                payload["status"] = "cancelled"
+            payload["executing"] = False
+            store.put(BATCH_KIND, batch_id, payload)
 
 
 def run_batch(store, batch_id):
@@ -235,5 +249,8 @@ def run_batch(store, batch_id):
 
 
 def create_and_run(store, addresses, *, include_fixtures=False):
+    """Create or attach. An attached caller must not start a second runner."""
     payload = create_batch(store, addresses, include_fixtures=include_fixtures)
+    if payload.get("attached"):
+        return payload
     return run_batch(store, payload["batch_id"])

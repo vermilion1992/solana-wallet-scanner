@@ -269,7 +269,10 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
         if key in result:
             report[key] = result[key]
     if result.get("cache_hit"):
-        persist_visible_report(report, hydrate_visible_report(result.get("report") or report, cache_hit=True))
+        cached_report = result.get("report") or report
+        if isinstance(cached_report, dict) and "visible_report" in cached_report:
+            persist_visible_report(report, hydrate_visible_report(cached_report, cache_hit=True))
+        # Absent stays unknown. Do not materialize False onto an old report.
     elif report.get("visible_report") is True:
         persist_visible_report(report, True)
     elif report.get("visible_report") is False:
@@ -695,6 +698,12 @@ def compare_reports(store, left_id, right_id):
         {"key": "window_start", "left": (left.get("window") or {}).get("start"), "right": (right.get("window") or {}).get("start")},
         {"key": "window_end", "left": (left.get("window") or {}).get("end"), "right": (right.get("window") or {}).get("end")},
         {"key": "visible_report", "left": left.get("visible_report") is True, "right": right.get("visible_report") is True},
+        {"key": "result_scope", "left": left.get("result_scope"), "right": right.get("result_scope")},
+        {
+            "key": "unknown_basis_quantity_and_proceeds",
+            "left": (left_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds"),
+            "right": (right_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds"),
+        },
     ])
     mismatches = []
     left_unit = left_analytics.get("scoped_pnl_unit") or left_profile.get("scoped_pnl_unit")
@@ -732,8 +741,13 @@ def compare_reports(store, left_id, right_id):
             "right_window": right_window,
             "left_included_trades": len(left_events),
             "right_included_trades": len(right_events),
+            "left_included_tx": [row.get("signature") for row in left_events],
+            "right_included_tx": [row.get("signature") for row in right_events],
             "left_sample_size": left_profile.get("completed_known_cost_positions"),
             "right_sample_size": right_profile.get("completed_known_cost_positions"),
+            "left_scoped_pnl": left_profile.get("scoped_pnl") or left_analytics.get("scoped_pnl"),
+            "right_scoped_pnl": right_profile.get("scoped_pnl") or right_analytics.get("scoped_pnl"),
+            "result_scope": "conditional_on_captured_inventory",
         },
         "left_funnel": left.get("funnel"),
         "right_funnel": right.get("funnel"),

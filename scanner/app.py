@@ -296,7 +296,10 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
                 "usdc_excluding_sol_fees_is_never_net": True,
                 "unresolved_basis_is_not_zero": True,
                 "scoped_pnl_is_not_wallet_wide": True,
-                "whole_sale_pnl_resolved": False if (report.get("worksheet") or {}).get("unresolved_basis_sales") else None,
+                "whole_sale_pnl_resolved": (
+                    False if (report.get("worksheet") or {}).get("unresolved_basis_sales")
+                    else (report.get("worksheet") or {}).get("whole_sale_pnl_resolved")
+                ),
             }
         if report.get("source") == "live" and not report.get("preview"):
             coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}

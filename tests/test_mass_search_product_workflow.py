@@ -427,7 +427,8 @@ def test_no_event_reopen_and_cache_hit_default_visible_report_false(tmp_path):
     missing = replay_captured_wallet(reopened, SYNTH_EMPTY)
     assert missing["cache_hit"] is True
     assert missing["visible_report"] is False
-    assert missing["report"]["visible_report"] is False
+    # Absent stays unknown. Do not write False onto an old report.
+    assert "visible_report" not in missing["report"]
     reopened.close()
 
 
