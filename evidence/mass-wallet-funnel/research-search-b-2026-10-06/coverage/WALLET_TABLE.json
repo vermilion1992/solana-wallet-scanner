@@ -107,7 +107,7 @@
       "blocking_reason": "4 open lots; 7 unresolved-basis sales; cross-currency sensitivity not established; coverage gate requires count AND value; coverage_blocked",
       "dependency_unresolved_basis": true,
       "dependency_unresolved_costs": true,
-      "concentration": null,
+      "concentration": "positive subset; highly concentrated; negative excluding largest winner",
       "win_rate": "0.5",
       "wins": 2,
       "win_denominator": 4,

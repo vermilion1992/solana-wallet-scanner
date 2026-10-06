@@ -1,12 +1,12 @@
 # Offline suite at the 2026-10-07 ChatGPT-review commit
 
-App SHA of this evidence commit. Bundle recorded after `npm run build`.
+App SHA of this evidence commit. Bundle `frontend/dist/assets/index-ZbPPCV7z.js`.
 
-- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): pending clean run.
-- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): pending clean run.
-- `npm run build`: pending.
-- Phone-sized emulation 390×844: pending recapture of changed report/compare screens.
-- No Helius or Birdeye calls. Dummy keys are never sent.
+- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 19 s) on `57e654c`. Re-run on this tip after the BVZt ledger flatten fix.
+- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 21 s) on `57e654c`. Re-run on this tip after the BVZt ledger flatten fix.
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-ZbPPCV7z.js`.
+- Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = **401**. 58PW bridge 44771.791989746 USDC and BVZt bridge 4169.135872971 USDC recaptured.
+- No Helius or Birdeye calls. Dummy keys were never sent.
 - `PRODUCT_READY` remains false.
 
 Named regressions for this pass:

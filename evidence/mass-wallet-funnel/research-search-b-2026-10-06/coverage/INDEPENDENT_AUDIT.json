@@ -2375,10 +2375,10 @@
         },
         "ordered_transaction_set": "7358662dec8a8019b6ae0a63e51882b644c1b5ed486ec2781434f09444a98327",
         "ordered_transaction_count": 32,
-        "completed_episode_ledger": "90369017317cfc861962fb7e8712c96d1307b72cf3a46e575a068227afe35911",
-        "completed_episode_count": 3,
+        "completed_episode_ledger": "1ec6844cb82b5cf403870f21463fe2e19aa71d94d66aec357c6bfa3712f98245",
+        "completed_episode_count": 4,
         "accounting_policy_version": "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1",
-        "fingerprint": "a8595eb06fc3296ca2d9272a5dc68317298fb2b7e7ef20d80acceb5c1a3006a1"
+        "fingerprint": "fd449de1e446140b05dba7b5abf111a07859d88af4d638abfc7b953ccb99c578"
       },
       "accounting_policy_version": "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1",
       "components_agree": true,

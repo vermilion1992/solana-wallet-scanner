@@ -256,8 +256,9 @@ def _episode_ledger_from_report(report):
             by_mint.setdefault(mint, []).append(event)
     for mint, rows in by_mint.items():
         rows = sorted(rows, key=lambda row: (
+            row.get("order") if isinstance(row.get("order"), int) and not isinstance(row.get("order"), bool) else 10**12,
             row.get("seconds_from_start") or 0,
-            row.get("order") if isinstance(row.get("order"), int) else 0,
+            row.get("slot") if isinstance(row.get("slot"), int) else 0,
             row.get("signature") or "",
         ))
         inventory = Decimal("0")
@@ -266,7 +267,12 @@ def _episode_ledger_from_report(report):
         episode_sigs = []
         buy_consideration = Decimal("0")
         for event in rows:
-            units = Decimal(str(event.get("quantity_raw") or event.get("units") or 0))
+            raw_units = event.get("units")
+            if raw_units in (None, ""):
+                raw_units = event.get("quantity_raw")
+            if raw_units in (None, ""):
+                raw_units = event.get("quantity") or 0
+            units = Decimal(str(raw_units))
             if event.get("kind") == "buy":
                 inventory += units
                 if not opened:
@@ -281,6 +287,13 @@ def _episode_ledger_from_report(report):
                 continue
             inventory -= units
             episode_sigs.append(event.get("signature"))
+            if inventory < 0:
+                opened = False
+                opened_at = None
+                episode_sigs = []
+                inventory = Decimal("0")
+                buy_consideration = Decimal("0")
+                continue
             if inventory != 0:
                 continue
             mint_sales = []
