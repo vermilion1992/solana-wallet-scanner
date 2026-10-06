@@ -2,7 +2,8 @@
 
 App SHA of this evidence commit. Bundle `frontend/dist/assets/index-sTfl9L_3.js`.
 
-- Keys unset and dummy-key full suites: recorded after the clean runs on this tip.
+- Keys unset: **3714 passed** / 440 subtests / 1 warning (9 min 52 s).
+- Dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`): **3714 passed** / 440 subtests / 1 warning (9 min 24 s). Dummy keys were never sent.
 - `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-sTfl9L_3.js`.
 - Phone-sized Chromium emulation remains labelled as emulation, not a physical phone. Physical-phone testing is NOT RUN.
 - No Helius or Birdeye calls. Dummy keys were never sent.

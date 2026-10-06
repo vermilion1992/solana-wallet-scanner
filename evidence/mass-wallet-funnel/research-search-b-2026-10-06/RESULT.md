@@ -22,6 +22,10 @@ Binding work order: `CHATGPT_REVIEW_2026-10-07_0547_FULL.md` of PR #6 at `45c149
 - Token-2022 stays observed-only. SwapTob unsupported.
 - Zero leads. Capture draft stays disabled.
 
+## Suite / build (05:47 pass)
+
+See `TESTS.md` on this commit. Keys unset **3714 passed** / 440 subtests / 1 warning (9 min 52 s). Dummy keys **3714 passed** / 440 subtests / 1 warning (9 min 24 s). `npm run build` recorded there (`index-sTfl9L_3.js`).
+
 # RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 03:46 re-review
 
 **Outcome: ACCEPT_AS_PROGRESS_ONLY blockers held and fixed. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**
