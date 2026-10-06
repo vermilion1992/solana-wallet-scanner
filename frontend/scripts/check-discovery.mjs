@@ -65,7 +65,7 @@ try {
   const { replaceActiveReport } = require(join(output, "App.js"));
   const { CompareView, Results, WatchlistView, resultsEmptyCopy, watchlistEmptyCopy, compareEmptyCopy } = require(join(output, "workspace.js"));
   const { ReportTable } = require(join(output, "components.js"));
-  const { compareDecimal, listRealisedProfit } = require(join(output, "format.js"));
+  const { compareDecimal, formatCompareSidePnl, formatCompletedEpisodeHeadline, formatWorksheetTotal, listRealisedProfit, WORKSHEET_LABEL } = require(join(output, "format.js"));
   const {
     parseRawEvidenceBundle,
     EvidenceAuditResult,
@@ -1933,6 +1933,27 @@ try {
   assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 }, stages: { triage: { input: 1, promoted: 1, rejected: 0, deferred: 0, pending: 0 } } }, 0).state, "no_reconstruction");
   assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 } }, 1).state, "synthetic");
   assert.equal(massSearchMetricText({ value: "0.575", unit: "SOL", state: "KNOWN" }), "0.575 SOL");
+  assert.equal(WORKSHEET_LABEL, "worksheet total, partial coverage, not independently audited");
+  assert.equal(formatWorksheetTotal("51148.756609023", "USDC"), "51148.756609023 USDC (worksheet total, partial coverage, not independently audited)");
+  assert.equal(
+    formatCompletedEpisodeHeadline({
+      appNet: "283.399579449",
+      appUnit: "SOL",
+      independentlyAudited: true,
+      auditorNet: "283.399579447",
+      auditorUnit: "SOL",
+    }),
+    "283.399579449 SOL (completed-episode net); auditor confirms within 2 lamports: 283.399579447 SOL",
+  );
+  assert.ok(formatCompareSidePnl({
+    completedNet: "0.120294936",
+    completedUnit: "SOL",
+    independentlyAudited: true,
+    auditorNet: "0.120294936",
+    auditorUnit: "SOL",
+    worksheet: "0.120294936",
+    worksheetUnit: "SOL",
+  }).includes(WORKSHEET_LABEL));
   const searchState = {
     ...state,
     mass_search: {
@@ -1983,14 +2004,42 @@ try {
   const subsetHtml = renderToStaticMarkup(React.createElement(ReportView, {
     ...actions, state: searchState, report: subsetReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined,
   }));
-  assert.ok(subsetHtml.includes("Reconstructed subset / independent worksheet"));
+  assert.ok(subsetHtml.includes("Reconstructed subset worksheet"));
   assert.ok(subsetHtml.includes("Not a wallet-wide MATCH"));
   assert.ok(subsetHtml.includes("0.575 SOL"));
+  assert.ok(subsetHtml.includes(WORKSHEET_LABEL));
+  assert.ok(!subsetHtml.includes("Independent subset"));
+  assert.ok(!subsetHtml.includes("Production subset"));
   assert.ok(subsetHtml.includes("30 seconds"));
   assert.ok(subsetHtml.includes("48 hours (172800 seconds)"));
   assert.ok(subsetHtml.includes("Insufficient evidence"));
   assert.ok(subsetHtml.includes('data-subset-worksheet="independent"'));
   assert.ok(renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, { report: searchState.reports[0] })) === "");
+  const worksheet58 = renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, {
+    report: {
+      ...subsetReport,
+      worksheet: { total_profit_usdc: "51148.756609023", settlement_asset: "USDC" },
+      independent_worksheet: { total_profit_usdc: "51148.756609023" },
+      independent_audit: {
+        independently_audited: true,
+        independently_audited_episode_net: "5614.586672",
+        independently_audited_episode_net_unit: "USDC",
+        app_completed_episode_net: "5614.586672",
+        app_completed_episode_net_unit: "USDC",
+      },
+      research_profile: {
+        completed_known_cost_positions: 2,
+        scoped_pnl: "51148.756609023",
+        scoped_pnl_unit: "USDC",
+        completed_episode_net: "5614.586672",
+        completed_episode_net_unit: "USDC",
+      },
+    },
+  }));
+  assert.ok(worksheet58.includes(WORKSHEET_LABEL));
+  assert.ok(worksheet58.includes("5614.586672 USDC (completed-episode net)"));
+  assert.ok(!worksheet58.includes("Independent subset"));
+  assert.ok(!worksheet58.includes("Production subset"));
   assert.deepEqual(
     listRealisedProfit({ source: "mass-search", metrics: {}, worksheet: { total_profit_sol: "0.575" } }),
     { value: "0.575", basis: "reconstructed-subset" },
@@ -2024,7 +2073,7 @@ try {
     onOpen: () => undefined,
   }));
   assert.ok(tableHtml.includes("0.575"));
-  assert.ok(tableHtml.includes("Reconstructed subset"));
+  assert.ok(tableHtml.includes(WORKSHEET_LABEL));
   assert.ok(tableHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(tableHtml.includes(">subset<"));
   assert.ok(tableHtml.includes("report-cards"));
@@ -2035,7 +2084,7 @@ try {
     onSelect: () => undefined,
   }));
   assert.ok(resultsHtml.includes("0.575"));
-  assert.ok(resultsHtml.includes("Reconstructed subset"));
+  assert.ok(resultsHtml.includes(WORKSHEET_LABEL));
   assert.ok(resultsHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(resultsHtml.includes("Mass-search subset"));
   assert.equal(reportPickerLabel({ source: "mass-search", label: "Mass-search subset · SYNTHETIC", address, created_at: cohort.created_at }).startsWith("subset · "), true);
@@ -2093,7 +2142,7 @@ try {
   }));
   assert.ok(watchlistHtml.includes("Unresolved") || watchlistHtml.includes("UNRESOLVED"));
   assert.ok(watchlistHtml.includes("badge unresolved"));
-  assert.ok(watchlistHtml.includes("Reconstructed subset"));
+  assert.ok(watchlistHtml.includes(WORKSHEET_LABEL));
   assert.ok(watchlistHtml.includes("not a wallet-wide MATCH"));
   assert.ok(watchlistHtml.includes('data-watch-source="mass-search"'));
   assert.ok(watchlistHtml.includes("0.575"));
@@ -2157,7 +2206,7 @@ try {
     onSelect: () => undefined,
   }));
   assert.ok(compareHtml.includes("0.575"));
-  assert.ok(compareHtml.includes("Reconstructed subset"));
+  assert.ok(compareHtml.includes(WORKSHEET_LABEL));
   assert.ok(compareHtml.includes("RECONSTRUCTED SUBSET"));
   assert.ok(compareHtml.includes('data-list-profit="reconstructed-subset"'));
   assert.ok(compareHtml.includes("not a wallet-wide MATCH"));

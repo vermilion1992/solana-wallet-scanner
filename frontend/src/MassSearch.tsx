@@ -4,7 +4,7 @@ import type { Actions } from "./App";
 import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView, ResearchCompare } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
-import { count, decimal, label, shorten } from "./format";
+import { count, decimal, formatCompareSidePnl, formatWorksheetTotal, label, shorten } from "./format";
 import { useNarrowViewport } from "./useNarrow";
 
 const STAGES = ["triage", "behaviour", "reconstruct", "forward_select"] as const;
@@ -529,6 +529,21 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
                   <p data-qualification-level={(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}>qualification_level {(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}</p>
                   <p data-coverage-status={row.coverage_status || row.research_profile?.coverage_status || "blocked_unknown_denominator"}>coverage_status {row.coverage_status || row.research_profile?.coverage_status || "blocked_unknown_denominator"}</p>
+                  <p data-ranked-pnl="true">{
+                    (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && (row.funnel?.B?.scoped_pnl || row.research_profile?.scoped_pnl)
+                      ? `${formatCompareSidePnl({
+                          completedNet: row.research_profile?.completed_episode_net,
+                          completedUnit: row.research_profile?.completed_episode_net_unit,
+                          independentlyAudited: Boolean((row.research_profile as { independent_audit?: { independently_audited?: boolean } } | undefined)?.independent_audit?.independently_audited),
+                          auditorNet: (row.research_profile as { independent_audit?: { independently_audited_episode_net?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net,
+                          auditorUnit: (row.research_profile as { independent_audit?: { independently_audited_episode_net_unit?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net_unit,
+                          worksheet: row.funnel?.B?.scoped_pnl || row.research_profile?.scoped_pnl,
+                          worksheetUnit: row.funnel?.B?.scoped_pnl_unit || row.research_profile?.scoped_pnl_unit,
+                        })}`
+                      : (row.research_profile?.matched_fragment_pnl
+                        ? `matched-fragment ${row.research_profile.matched_fragment_pnl} ${row.research_profile.matched_fragment_unit || ""}`
+                        : "no completed-episode net")
+                  }</p>
                   {(row.blocking_reason || row.research_profile?.blocking_reason) ? <p data-blocking-reason="true">blocking_reason {row.blocking_reason || row.research_profile?.blocking_reason}</p> : null}
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id
@@ -614,8 +629,32 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   }
                   return String(value);
                 };
-                const fields = (body.fields || []).map((field) => `${field.key}: ${formatCompare(field.left)} vs ${formatCompare(field.right)}`).join(" · ");
+                const labelledField = (key: string, value: unknown) => {
+                  if (key === "scoped_pnl") {
+                    return formatWorksheetTotal(value == null || value === "" ? null : String(value), "") || "—";
+                  }
+                  return formatCompare(value);
+                };
+                const fields = (body.fields || []).map((field) => `${field.key}: ${labelledField(field.key, field.left)} vs ${labelledField(field.key, field.right)}`).join(" · ");
                 const mismatches = (body.mismatches || []).map((item) => `${item.kind}: ${item.detail}`).join(" · ");
+                const leftPnl = formatCompareSidePnl({
+                  completedNet: policy.left_completed_episode_net,
+                  completedUnit: policy.left_completed_episode_net_unit,
+                  independentlyAudited: policy.left_independently_audited,
+                  auditorNet: policy.left_independently_audited_episode_net,
+                  auditorUnit: policy.left_independently_audited_episode_net_unit,
+                  worksheet: policy.left_scoped_pnl,
+                  worksheetUnit: policy.left_scoped_pnl_unit,
+                });
+                const rightPnl = formatCompareSidePnl({
+                  completedNet: policy.right_completed_episode_net,
+                  completedUnit: policy.right_completed_episode_net_unit,
+                  independentlyAudited: policy.right_independently_audited,
+                  auditorNet: policy.right_independently_audited_episode_net,
+                  auditorUnit: policy.right_independently_audited_episode_net_unit,
+                  worksheet: policy.right_scoped_pnl,
+                  worksheetUnit: policy.right_scoped_pnl_unit,
+                });
                 const policyText = [
                   policy.kind || "own_windows_shown_mismatch_blocks",
                   policy.detail,
@@ -624,7 +663,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   `left tx ${policy.left_included_trades ?? (policy.left_included_tx || []).length}`,
                   `right tx ${policy.right_included_trades ?? (policy.right_included_tx || []).length}`,
                   `samples ${String(policy.left_sample_size ?? "—")} vs ${String(policy.right_sample_size ?? "—")}`,
-                  `scoped_pnl ${String(policy.left_scoped_pnl ?? "—")} vs ${String(policy.right_scoped_pnl ?? "—")}`,
+                  `left ${leftPnl} vs right ${rightPnl}`,
                   body.comparable
                     ? "comparable"
                     : ((policy.left_window || {}).start === (policy.right_window || {}).start
@@ -715,7 +754,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                       <td className="mono">{shorten(row.address)}</td>
                       <td><Badge value={row.result || "pending"}>{label(row.result || "pending")}</Badge></td>
                       <td>{row.sort_value ? `${decimal(row.sort_value, 2)} ${row.unit || ""}` : row.metric_state || "unknown"}</td>
-                      <td>{massSearchMetricText(row.subset_pnl)}</td>
+                      <td>{row.subset_pnl?.value ? formatWorksheetTotal(row.subset_pnl.value, row.subset_pnl.unit) : massSearchMetricText(row.subset_pnl)}</td>
                       <td>{massSearchMetricText(row.median_hold)}</td>
                       <td>{massSearchMetricText(row.material_exit_t90)}</td>
                       <td>{(row.reason_codes || []).join(", ") || "—"}</td>
@@ -735,7 +774,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <strong className="mono">{shorten(row.address)}</strong>
                   <Badge value={row.result || "pending"}>{label(row.result || "pending")}</Badge>
                   <p>Reported {row.sort_value ? `${decimal(row.sort_value, 2)} ${row.unit || ""}` : row.metric_state || "unknown"}</p>
-                  <p>Subset {massSearchMetricText(row.subset_pnl)} · hold {massSearchMetricText(row.median_hold)} · t90 {massSearchMetricText(row.material_exit_t90)}</p>
+                  <p>Subset {row.subset_pnl?.value ? formatWorksheetTotal(row.subset_pnl.value, row.subset_pnl.unit) : massSearchMetricText(row.subset_pnl)} · hold {massSearchMetricText(row.median_hold)} · t90 {massSearchMetricText(row.material_exit_t90)}</p>
                   <p>{(row.reason_codes || []).join(", ") || "—"}</p>
                   {row.report_id && <Button variant="secondary" disabled={!!busy} onClick={() => void inspect(row.report_id!)}>Open report</Button>}
                 </li>
@@ -794,7 +833,15 @@ function RankedRow({
       <td>{row.trade_count ?? "unknown"}</td>
       <td>{
         (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && row.funnel?.B?.scoped_pnl
-          ? `${row.funnel.B.scoped_pnl} ${row.funnel.B.scoped_pnl_unit || ""} (worksheet total, partial coverage, not independently audited)`
+          ? formatCompareSidePnl({
+              completedNet: row.research_profile?.completed_episode_net,
+              completedUnit: row.research_profile?.completed_episode_net_unit,
+              independentlyAudited: Boolean((row.research_profile as { independent_audit?: { independently_audited?: boolean } } | undefined)?.independent_audit?.independently_audited),
+              auditorNet: (row.research_profile as { independent_audit?: { independently_audited_episode_net?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net,
+              auditorUnit: (row.research_profile as { independent_audit?: { independently_audited_episode_net_unit?: string | null } } | undefined)?.independent_audit?.independently_audited_episode_net_unit,
+              worksheet: row.funnel.B.scoped_pnl,
+              worksheetUnit: row.funnel.B.scoped_pnl_unit,
+            })
           : (row.research_profile?.matched_fragment_pnl
             ? `matched-fragment ${row.research_profile.matched_fragment_pnl} ${row.research_profile.matched_fragment_unit || ""}`
             : "unverified")

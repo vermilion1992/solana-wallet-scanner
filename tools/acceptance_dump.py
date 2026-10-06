@@ -88,11 +88,8 @@ def wallet_row(address, report):
     worksheet_total = audit.get("worksheet_total")
     worksheet_unit = audit.get("worksheet_total_unit")
     worksheet_audited = audit.get("worksheet_total_independently_audited")
-    completed_net = audited_net if audit.get("independently_audited") and audited_net not in (None, "") else audit.get("app_completed_episode_net")
-    completed_unit = audited_unit if audit.get("independently_audited") and audited_net not in (None, "") else audit.get("app_completed_episode_net_unit")
-    if completed_net in (None, ""):
-        completed_net = audit.get("app_completed_episode_net")
-        completed_unit = audit.get("app_completed_episode_net_unit")
+    completed_net = audit.get("app_completed_episode_net")
+    completed_unit = audit.get("app_completed_episode_net_unit")
     worksheet_figure = worksheet_total if worksheet_total not in (None, "") else None
     if worksheet_figure in (None, "") and net not in (None, ""):
         worksheet_figure = net
@@ -110,8 +107,9 @@ def wallet_row(address, report):
         fragment = None
         parts = []
         if completed_net not in (None, ""):
-            tag = "audited episode net" if audit.get("independently_audited") else "completed-episode net"
-            parts.append(f"{completed_net} {completed_unit} ({tag})")
+            parts.append(f"{completed_net} {completed_unit} (completed-episode net)")
+            if audit.get("independently_audited") and audited_net not in (None, ""):
+                parts.append(f"auditor confirms within 2 lamports: {audited_net} {audited_unit or completed_unit or ''}")
         if worksheet_figure not in (None, ""):
             parts.append(f"{worksheet_figure} {worksheet_unit or unit or ''} ({WORKSHEET_LABEL})")
         net_text = "; ".join(parts) if parts else None

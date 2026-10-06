@@ -8,7 +8,17 @@ import {
 import type { LucideIcon } from "lucide-react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import type { Metric, Report } from "./types";
-import { dateTime, decimal, label, listRealisedProfit, shorten } from "./format";
+import {
+  completedEpisodeFields,
+  dateTime,
+  decimal,
+  formatCompletedEpisodeHeadline,
+  formatWorksheetTotal,
+  label,
+  listRealisedProfit,
+  shorten,
+  WORKSHEET_LABEL,
+} from "./format";
 import { useNarrowViewport } from "./useNarrow";
 
 export function Button({
@@ -208,17 +218,20 @@ export function ListRealisedProfitCell({
   report: Report;
   hideLabel?: boolean;
 }) {
+  void hideLabel;
   const listed = listRealisedProfit(report);
   if (listed.basis === "reconstructed-subset" && listed.value != null) {
+    const episode = formatCompletedEpisodeHeadline(completedEpisodeFields(report));
     return (
       <span
         className="subset-list-profit"
         data-list-profit="reconstructed-subset"
-        title="Reconstructed subset. Not a wallet-wide MATCH."
+        title={`${WORKSHEET_LABEL}. Not a wallet-wide MATCH.`}
       >
         {decimal(listed.value, 4)}
         <small> SOL</small>
-        {!hideLabel && <small className="subset-list-label">Reconstructed subset</small>}
+        <small className="subset-list-label" data-worksheet-label="true">{formatWorksheetTotal(listed.value, "SOL")}</small>
+        {episode ? <small className="subset-list-label" data-completed-episode-net="true">{episode}</small> : null}
       </span>
     );
   }

@@ -759,7 +759,8 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     assert wallet["worksheet_total_independently_audited"] is False
     assert wallet["net_display"] != "51148.756609023 USDC"
     assert "5614.586672" in str(wallet["net_display"])
-    assert "audited episode net" in str(wallet["net_display"])
+    assert "completed-episode net" in str(wallet["net_display"])
+    assert "auditor confirms within 2 lamports" in str(wallet["net_display"])
     assert "not independently audited" in str(wallet["net_display"])
     assert "worksheet total, partial coverage, not independently audited" in str(wallet["net_display"])
 
@@ -920,6 +921,14 @@ def test_every_wallet_worksheet_figure_is_labelled_partial_coverage():
             for figure in figures:
                 assert str(figure) in str(display), (name, wallet["label"], figure, display)
             assert WORKSHEET_LABEL in str(display), (name, wallet["label"], display)
+            assert wallet.get("worksheet_total_independently_audited") is not True, (
+                name,
+                wallet["label"],
+                "worksheet labelled not independently audited cannot set worksheet_total_independently_audited true",
+            )
+            assert "completed-episode net" in str(display), (name, wallet["label"], display)
+            if wallet.get("independently_audited"):
+                assert "auditor confirms within 2 lamports" in str(display), (name, wallet["label"], display)
             unit = wallet.get("worksheet_total_unit") or wallet.get("scoped_pnl_unit") or ""
             for figure in figures:
                 assert str(display).strip() != f"{figure} {unit}".strip(), (name, wallet["label"], display)
@@ -968,3 +977,61 @@ def test_auditor_rejects_opening_inventory_close_4dyknedb():
         assert row["status"] == "independently_audited", address
         assert row["app_completed_episodes"] == app
         assert row["auditor_clean_episodes"] == auditor
+
+
+def test_frontend_pnl_figures_carry_worksheet_or_episode_label():
+    forbidden = (
+        "Production subset P&L",
+        "Production subset P&amp;L",
+        "Independent subset P&L",
+        "Independent subset P&amp;L",
+    )
+    sources = [
+        ROOT / "frontend/src/report.tsx",
+        ROOT / "frontend/src/MassSearch.tsx",
+        ROOT / "frontend/src/components.tsx",
+        ROOT / "frontend/src/workspace.tsx",
+        ROOT / "frontend/src/format.ts",
+    ]
+    for path in sources:
+        text = path.read_text(encoding="utf-8")
+        for phrase in forbidden:
+            assert phrase not in text, (path.name, phrase)
+        assert "scoped_pnl ${" not in text, path.name
+    fmt = (ROOT / "frontend/src/format.ts").read_text(encoding="utf-8")
+    assert "export const WORKSHEET_LABEL" in fmt
+    assert "formatWorksheetTotal" in fmt
+    assert "formatCompletedEpisodeHeadline" in fmt
+    assert "auditor confirms within 2 lamports" in fmt
+    report = (ROOT / "frontend/src/report.tsx").read_text(encoding="utf-8")
+    assert "formatWorksheetTotal" in report
+    assert "formatCompletedEpisodeHeadline" in report
+    assert WORKSHEET_LABEL in report
+    mass = (ROOT / "frontend/src/MassSearch.tsx").read_text(encoding="utf-8")
+    assert "formatCompareSidePnl" in mass
+    components = (ROOT / "frontend/src/components.tsx").read_text(encoding="utf-8")
+    assert "formatWorksheetTotal" in components
+    assert "WORKSHEET_LABEL" in components
+    workspace = (ROOT / "frontend/src/workspace.tsx").read_text(encoding="utf-8")
+    assert "WORKSHEET_LABEL" in workspace
+    bundles = list((ROOT / "frontend/dist/assets").glob("index-*.js"))
+    assert bundles, "built frontend bundle missing"
+    bundle = bundles[0].read_text(encoding="utf-8")
+    assert WORKSHEET_LABEL in bundle
+    for phrase in forbidden:
+        assert phrase not in bundle, phrase
+    assert "auditor confirms within 2 lamports" in bundle
+    assert "scoped_pnl ${" not in bundle
+    audit = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
+    by_address = {row["address"]: row for row in audit["wallets"]}
+    for wallet in table["wallets"]:
+        if wallet.get("completed", 0) < 1:
+            continue
+        row = by_address[wallet["address"]]
+        assert wallet.get("worksheet_total_independently_audited") is not True
+        assert wallet["completed_episode_net"] == row["app_completed_episode_net"]
+        assert "completed-episode net" in str(wallet["net_display"])
+        if wallet.get("independently_audited"):
+            assert "auditor confirms within 2 lamports" in str(wallet["net_display"])
+            assert str(row["independently_audited_episode_net"]) in str(wallet["net_display"])

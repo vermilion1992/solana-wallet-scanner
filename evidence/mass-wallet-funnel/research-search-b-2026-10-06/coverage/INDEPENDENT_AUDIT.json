@@ -297,7 +297,7 @@
       },
       "worksheet_total": "283.399579449",
       "worksheet_total_unit": "SOL",
-      "worksheet_total_independently_audited": true,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -853,7 +853,7 @@
       },
       "worksheet_total": "174.65797861",
       "worksheet_total_unit": "SOL",
-      "worksheet_total_independently_audited": true,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -1985,7 +1985,7 @@
       },
       "worksheet_total": "0.120294936",
       "worksheet_total_unit": "SOL",
-      "worksheet_total_independently_audited": true,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [
         {
@@ -2870,7 +2870,7 @@
       },
       "worksheet_total": "2.030645839",
       "worksheet_total_unit": "SOL",
-      "worksheet_total_independently_audited": true,
+      "worksheet_total_independently_audited": false,
       "unaudited_venues": [],
       "episodes": [
         {

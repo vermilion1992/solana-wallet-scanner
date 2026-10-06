@@ -52,6 +52,90 @@ export function decimal(value: string | null | undefined, places = 2): string {
   return `${negative && rounded !== 0n ? "-" : ""}${integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${significant ? `.${significant}` : ""}`;
 }
 // Values stay decimal strings. This comparator never uses binary floating point.
+export const WORKSHEET_LABEL =
+  "worksheet total, partial coverage, not independently audited";
+
+export function joinAmount(
+  amount: string | null | undefined,
+  unit?: string | null,
+): string | null {
+  if (amount == null || amount === "") return null;
+  const trimmedUnit = (unit || "").trim();
+  return trimmedUnit ? `${amount} ${trimmedUnit}` : String(amount);
+}
+
+export function formatWorksheetTotal(
+  amount: string | null | undefined,
+  unit?: string | null,
+): string | null {
+  const joined = joinAmount(amount, unit);
+  return joined ? `${joined} (${WORKSHEET_LABEL})` : null;
+}
+
+export function formatCompletedEpisodeHeadline(input: {
+  appNet?: string | null;
+  appUnit?: string | null;
+  independentlyAudited?: boolean | null;
+  auditorNet?: string | null;
+  auditorUnit?: string | null;
+}): string | null {
+  const headline = joinAmount(input.appNet, input.appUnit);
+  if (!headline) return null;
+  let text = `${headline} (completed-episode net)`;
+  if (input.independentlyAudited && input.auditorNet != null && input.auditorNet !== "") {
+    const auditor = joinAmount(input.auditorNet, input.auditorUnit || input.appUnit);
+    text += `; auditor confirms within 2 lamports: ${auditor}`;
+  }
+  return text;
+}
+
+export function completedEpisodeFields(source?: {
+  research_profile?: Record<string, unknown> | null;
+  independent_audit?: {
+    independently_audited?: boolean;
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
+  } | null;
+} | null) {
+  const profile = source?.research_profile || {};
+  const audit = (source?.independent_audit || (profile.independent_audit as Record<string, unknown> | undefined) || {}) as {
+    independently_audited?: boolean;
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
+  };
+  return {
+    appNet: audit.app_completed_episode_net ?? (profile.completed_episode_net as string | null | undefined),
+    appUnit: audit.app_completed_episode_net_unit ?? (profile.completed_episode_net_unit as string | null | undefined),
+    independentlyAudited: Boolean(audit.independently_audited),
+    auditorNet: audit.independently_audited_episode_net,
+    auditorUnit: audit.independently_audited_episode_net_unit,
+  };
+}
+
+export function formatCompareSidePnl(input: {
+  completedNet?: string | null;
+  completedUnit?: string | null;
+  independentlyAudited?: boolean | null;
+  auditorNet?: string | null;
+  auditorUnit?: string | null;
+  worksheet?: string | null;
+  worksheetUnit?: string | null;
+}): string {
+  const episode = formatCompletedEpisodeHeadline({
+    appNet: input.completedNet,
+    appUnit: input.completedUnit,
+    independentlyAudited: input.independentlyAudited,
+    auditorNet: input.auditorNet,
+    auditorUnit: input.auditorUnit,
+  });
+  const worksheet = formatWorksheetTotal(input.worksheet, input.worksheetUnit);
+  return [episode, worksheet].filter(Boolean).join("; ") || "—";
+}
+
 export function listRealisedProfit(report: {
   source?: string;
   metrics?: { profit_sol?: { status?: string; value?: string | null } | null };

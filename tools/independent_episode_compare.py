@@ -311,11 +311,6 @@ def compare_wallet(address, pages, tmp):
         sol = by_quote.get("SOL") or {}
         worksheet_total = sol.get("total_profit_sol") or worksheet.get("total_profit_sol")
         worksheet_unit = "SOL"
-    worksheet_matches_episodes = (
-        worksheet_total not in (None, "")
-        and episode_net not in (None, "")
-        and _nets_match(worksheet_total, episode_net)
-    )
     return {
         "address": address,
         "records": independent.get("records"),
@@ -331,7 +326,7 @@ def compare_wallet(address, pages, tmp):
         "independently_audited_episode_nets_by_unit": independent.get("independently_audited_episode_nets_by_unit"),
         "worksheet_total": worksheet_total,
         "worksheet_total_unit": worksheet_unit,
-        "worksheet_total_independently_audited": bool(worksheet_matches_episodes) if status == "independently_audited" else False,
+        "worksheet_total_independently_audited": False,
         "unaudited_venues": sorted(set(unaudited_venues)),
         "episodes": rows,
         "auditor_only_episodes": independent.get("episodes") or [],

@@ -913,6 +913,18 @@ export type ResearchCompare = {
     right_sample_size?: number;
     left_scoped_pnl?: string | null;
     right_scoped_pnl?: string | null;
+    left_scoped_pnl_unit?: string | null;
+    right_scoped_pnl_unit?: string | null;
+    left_completed_episode_net?: string | null;
+    right_completed_episode_net?: string | null;
+    left_completed_episode_net_unit?: string | null;
+    right_completed_episode_net_unit?: string | null;
+    left_independently_audited?: boolean;
+    right_independently_audited?: boolean;
+    left_independently_audited_episode_net?: string | null;
+    right_independently_audited_episode_net?: string | null;
+    left_independently_audited_episode_net_unit?: string | null;
+    right_independently_audited_episode_net_unit?: string | null;
     result_scope?: string;
   };
 };

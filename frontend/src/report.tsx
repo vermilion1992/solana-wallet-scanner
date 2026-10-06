@@ -37,7 +37,19 @@ import {
   WindowLabel,
   metricDefinitions,
 } from "./components";
-import { count, date, dateTime, decimal, label, shorten } from "./format";
+import {
+  completedEpisodeFields,
+  count,
+  date,
+  dateTime,
+  decimal,
+  formatCompletedEpisodeHeadline,
+  formatWorksheetTotal,
+  joinAmount,
+  label,
+  shorten,
+  WORKSHEET_LABEL,
+} from "./format";
 import { samePresetSnapshot } from "./Discovery";
 import { reportDisplay } from "./api";
 import { SelectedCohortSection } from "./SelectedCohorts";
@@ -74,11 +86,11 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
   return (
     <section className="panel subset-worksheet" data-subset-worksheet="independent">
       <SectionHeading
-        title="Reconstructed subset / independent worksheet"
+        title="Reconstructed subset worksheet"
         subtitle="Supported closed trades and unresolved observations. Not a wallet-wide MATCH. Below-G3 reports stay visible."
       />
       <p className="subset-worksheet-note">
-        Independently reconciled subset from reconstructed buy/sell events.
+        Reconstructed subset from supported buy/sell events.
         Standard report cards stay on full-wallet evidence and may remain unknown.
         Policy remains {report.policy || "UNRESOLVED"}.
         {report.g3_status ? ` G3 status: ${report.g3_status}.` : ""}
@@ -86,14 +98,29 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
         {report.research?.supported_swaps != null ? ` Supported swaps: ${report.research.supported_swaps}.` : ""}
       </p>
       <div className="subset-worksheet-metrics">
-        <div>
-          <span>Production subset P&amp;L</span>
+        <div data-worksheet-total="true">
+          <span>{WORKSHEET_LABEL}</span>
           <strong>{productionPnl ? `${decimal(productionPnl, 4)} ${settlement}` : "unknown"}</strong>
+          <small>{formatWorksheetTotal(productionPnl ? String(productionPnl) : null, settlement) || WORKSHEET_LABEL}</small>
         </div>
-        <div>
-          <span>Independent subset P&amp;L</span>
-          <strong>{independentPnl ? `${decimal(independentPnl, 4)} ${settlement}` : "unknown"}</strong>
-        </div>
+        {independentPnl && String(independentPnl) !== String(productionPnl || "") ? (
+          <div data-worksheet-total="true">
+            <span>{WORKSHEET_LABEL}</span>
+            <strong>{`${decimal(independentPnl, 4)} ${settlement}`}</strong>
+            <small>{formatWorksheetTotal(String(independentPnl), settlement)}</small>
+          </div>
+        ) : null}
+        {(() => {
+          const headline = formatCompletedEpisodeHeadline(completedEpisodeFields(report));
+          if (!headline) return null;
+          return (
+            <div data-completed-episode-net="true">
+              <span>completed-episode net</span>
+              <strong>{headline.split("; auditor confirms")[0]}</strong>
+              <small>{headline}</small>
+            </div>
+          );
+        })()}
         <div>
           <span>Material-exit t90 (from open)</span>
           <strong>{exit?.exit_90_seconds != null ? `${exit.exit_90_seconds} seconds` : "unknown"}</strong>
@@ -260,27 +287,16 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
             : null}
         </div>
         {(() => {
-          const audit = (report.independent_audit || profile.independent_audit || {}) as {
-            independently_audited?: boolean;
-            independently_audited_episode_net?: string | null;
-            independently_audited_episode_net_unit?: string | null;
-            app_completed_episode_net?: string | null;
-            app_completed_episode_net_unit?: string | null;
-          };
-          const completedNet = (audit.independently_audited && audit.independently_audited_episode_net != null)
-            ? audit.independently_audited_episode_net
-            : (audit.app_completed_episode_net ?? (profile as { completed_episode_net?: string | null }).completed_episode_net);
-          const completedUnit = (audit.independently_audited && audit.independently_audited_episode_net != null)
-            ? audit.independently_audited_episode_net_unit
-            : (audit.app_completed_episode_net_unit ?? (profile as { completed_episode_net_unit?: string | null }).completed_episode_net_unit);
-          if (completedKnown < 1 || completedNet == null) {
+          const fields = completedEpisodeFields(report);
+          const headline = formatCompletedEpisodeHeadline(fields);
+          if (completedKnown < 1 || !headline) {
             return null;
           }
           return (
-            <div data-independently-audited={audit.independently_audited ? "true" : "false"} data-completed-episode-net="true">
-              <span>{audit.independently_audited ? "independently_audited" : "completed-episode net"}</span>
-              <strong>{`${String(completedNet)} ${String(completedUnit || "")}`}</strong>
-              <small>{audit.independently_audited ? "audited episode net" : "completed-episode net"}</small>
+            <div data-independently-audited={fields.independentlyAudited ? "true" : "false"} data-completed-episode-net="true">
+              <span>completed-episode net</span>
+              <strong>{joinAmount(fields.appNet, fields.appUnit)}</strong>
+              <small>{headline}</small>
             </div>
           );
         })()}
@@ -304,29 +320,17 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {report.residual_sol_note ? ` · residual ${String(report.residual_sol || "")} SOL ${String(report.residual_sol_note)}` : ""}
         {(() => {
           const audit = (report.independent_audit || profile.independent_audit || {}) as {
-            independently_audited?: boolean;
-            independently_audited_episode_net?: string | null;
-            independently_audited_episode_net_unit?: string | null;
-            app_completed_episode_net?: string | null;
-            app_completed_episode_net_unit?: string | null;
             worksheet_total?: string | null;
             worksheet_total_unit?: string | null;
             worksheet_total_independently_audited?: boolean;
           };
           const worksheet = audit.worksheet_total || (completedKnown >= 1 ? profile.scoped_pnl : null);
           const worksheetUnit = audit.worksheet_total_unit || profile.scoped_pnl_unit || "";
-          const worksheetNote = worksheet
-            ? ` Worksheet total ${String(worksheet)} ${String(worksheetUnit)} (worksheet total, partial coverage, not independently audited)`
-            : "";
-          if (audit.independently_audited && audit.independently_audited_episode_net != null) {
-            return ` independently_audited:true next to audited episode net ${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}.${worksheetNote}`;
-          }
-          const completedNet = audit.app_completed_episode_net
-            ?? (profile as { completed_episode_net?: string | null }).completed_episode_net;
-          const completedUnit = audit.app_completed_episode_net_unit
-            ?? (profile as { completed_episode_net_unit?: string | null }).completed_episode_net_unit;
-          if (completedKnown >= 1 && completedNet != null) {
-            return ` completed-episode net ${String(completedNet)} ${String(completedUnit || "")}.${worksheetNote}`;
+          const labelledWorksheet = formatWorksheetTotal(worksheet != null ? String(worksheet) : null, String(worksheetUnit || ""));
+          const worksheetNote = labelledWorksheet ? ` ${labelledWorksheet}` : "";
+          const headline = formatCompletedEpisodeHeadline(completedEpisodeFields(report));
+          if (completedKnown >= 1 && headline) {
+            return ` Headline is the app completed-episode sum. ${headline}.${worksheetNote}`;
           }
           return worksheetNote;
         })()}

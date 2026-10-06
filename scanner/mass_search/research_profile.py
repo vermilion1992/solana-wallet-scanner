@@ -575,12 +575,8 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         report.get("address") if report else None
     )
     audit = profile.get("independent_audit") or {}
-    if audit.get("independently_audited") and audit.get("independently_audited_episode_net") not in (None, ""):
-        profile["completed_episode_net"] = audit.get("independently_audited_episode_net")
-        profile["completed_episode_net_unit"] = audit.get("independently_audited_episode_net_unit")
-    else:
-        profile["completed_episode_net"] = audit.get("app_completed_episode_net")
-        profile["completed_episode_net_unit"] = audit.get("app_completed_episode_net_unit")
+    profile["completed_episode_net"] = audit.get("app_completed_episode_net")
+    profile["completed_episode_net_unit"] = audit.get("app_completed_episode_net_unit")
     from scanner.mass_search.labels import wallet_status_fields
     fields = wallet_status_fields(report, profile)
     profile["coverage_status"] = fields["coverage_status"]

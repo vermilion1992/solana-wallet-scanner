@@ -93,7 +93,13 @@ def main():
         if cards.count():
             cards.first.scroll_into_view_if_needed()
             page.wait_for_timeout(400)
+        pnl = page.locator("[data-ranked-pnl]")
+        if pnl.count():
+            pnl.first.scroll_into_view_if_needed()
+            page.wait_for_timeout(300)
         shot(page, "phone-01-ranked-list")
+        if pnl.count():
+            res["texts"]["ranked"] = pnl.first.inner_text()[:1500]
         screen = page.locator("[data-research-screen]")
         if screen.count():
             screen.first.scroll_into_view_if_needed()
@@ -132,7 +138,13 @@ def main():
                 saved.get_by_role("button", name="Reopen report").click()
             page.get_by_text("Research profile").first.wait_for(timeout=15000)
             page.wait_for_timeout(800)
+            overview = page.locator("[data-worksheet-total], .subset-worksheet-metrics").first
+            if overview.count():
+                overview.scroll_into_view_if_needed()
+                page.wait_for_timeout(300)
             shot(page, f"phone-03-report-{short}")
+            if overview.count():
+                res["texts"][f"{short}-overview"] = overview.inner_text()[:1500]
             loc = page.locator(extra).first
             if loc.count():
                 loc.scroll_into_view_if_needed()
