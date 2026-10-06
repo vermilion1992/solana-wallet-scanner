@@ -23,7 +23,7 @@
       "scoped_pnl_by_quote_asset": {
         "SOL": "2.030645839"
       },
-      "net_display": "2.030645839 SOL",
+      "net_display": "2.03064584 SOL (audited episode net); 2.030645839 SOL (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 4,
@@ -32,6 +32,8 @@
       "independent_audit_status": "independently_audited",
       "independently_audited_episode_net": "2.03064584",
       "independently_audited_episode_net_unit": "SOL",
+      "completed_episode_net": "2.03064584",
+      "completed_episode_net_unit": "SOL",
       "worksheet_total": "2.030645839",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -69,7 +71,7 @@
       "scoped_pnl_by_quote_asset": {
         "SOL": "0.120294936"
       },
-      "net_display": "0.120294936 SOL",
+      "net_display": "0.120294936 SOL (audited episode net); 0.120294936 SOL (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 0,
@@ -78,6 +80,8 @@
       "independent_audit_status": "independently_audited",
       "independently_audited_episode_net": "0.120294936",
       "independently_audited_episode_net_unit": "SOL",
+      "completed_episode_net": "0.120294936",
+      "completed_episode_net_unit": "SOL",
       "worksheet_total": "0.120294936",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -115,7 +119,7 @@
       "scoped_pnl_by_quote_asset": {
         "USDC": "-445.94638304"
       },
-      "net_display": "-445.94638304 USDC",
+      "net_display": "940.492859 USDC (completed-episode net); -445.94638304 USDC (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 8,
@@ -124,6 +128,8 @@
       "independent_audit_status": "not_independently_audited",
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "completed_episode_net": "940.492859",
+      "completed_episode_net_unit": "USDC",
       "worksheet_total": "-445.94638304",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
@@ -168,6 +174,8 @@
       "independent_audit_status": "no_completed_episodes",
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
       "worksheet_total": null,
       "worksheet_total_unit": null,
       "worksheet_total_independently_audited": false,
@@ -205,7 +213,7 @@
       "scoped_pnl_by_quote_asset": {
         "USDC": "-149.107753"
       },
-      "net_display": "-149.107753 USDC",
+      "net_display": "-149.107753 USDC (completed-episode net); -149.107753 USDC (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 3,
@@ -214,6 +222,8 @@
       "independent_audit_status": "not_independently_audited",
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "completed_episode_net": "-149.107753",
+      "completed_episode_net_unit": "USDC",
       "worksheet_total": "-149.107753",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
@@ -251,7 +261,7 @@
       "scoped_pnl_by_quote_asset": {
         "SOL": "283.399579449"
       },
-      "net_display": "283.399579449 SOL",
+      "net_display": "283.399579447 SOL (audited episode net); 283.399579449 SOL (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 3,
@@ -260,6 +270,8 @@
       "independent_audit_status": "independently_audited",
       "independently_audited_episode_net": "283.399579447",
       "independently_audited_episode_net_unit": "SOL",
+      "completed_episode_net": "283.399579447",
+      "completed_episode_net_unit": "SOL",
       "worksheet_total": "283.399579449",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -297,7 +309,7 @@
       "scoped_pnl_by_quote_asset": {
         "SOL": "174.65797861"
       },
-      "net_display": "174.65797861 SOL",
+      "net_display": "174.657978611 SOL (audited episode net); 174.65797861 SOL (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 0,
@@ -306,6 +318,8 @@
       "independent_audit_status": "independently_audited",
       "independently_audited_episode_net": "174.657978611",
       "independently_audited_episode_net_unit": "SOL",
+      "completed_episode_net": "174.657978611",
+      "completed_episode_net_unit": "SOL",
       "worksheet_total": "174.65797861",
       "worksheet_total_unit": "SOL",
       "worksheet_total_independently_audited": true,
@@ -344,7 +358,7 @@
         "USDC": "51148.756609023",
         "SOL": null
       },
-      "net_display": "5614.586672 USDC (audited episode net); worksheet 51148.756609023 USDC (not independently audited)",
+      "net_display": "5614.586672 USDC (audited episode net); 51148.756609023 USDC (worksheet total, partial coverage, not independently audited)",
       "matched_fragment_pnl": null,
       "matched_fragment_unit": null,
       "unresolved_basis_sales": 3,
@@ -353,6 +367,8 @@
       "independent_audit_status": "independently_audited",
       "independently_audited_episode_net": "5614.586672",
       "independently_audited_episode_net_unit": "USDC",
+      "completed_episode_net": "5614.586672",
+      "completed_episode_net_unit": "USDC",
       "worksheet_total": "51148.756609023",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
@@ -397,6 +413,8 @@
       "independent_audit_status": "no_completed_episodes",
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
       "worksheet_total": null,
       "worksheet_total_unit": null,
       "worksheet_total_independently_audited": false,
@@ -441,6 +459,8 @@
       "independent_audit_status": "no_completed_episodes",
       "independently_audited_episode_net": null,
       "independently_audited_episode_net_unit": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
       "worksheet_total": null,
       "worksheet_total_unit": null,
       "worksheet_total_independently_audited": false,

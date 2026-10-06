@@ -353,6 +353,8 @@ export type Report = {
     independently_audited?: boolean;
     independently_audited_episode_net?: string | null;
     independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
     worksheet_total?: string | null;
     worksheet_total_unit?: string | null;
     worksheet_total_independently_audited?: boolean;
@@ -794,6 +796,8 @@ export type RankedWorkflowRow = {
   research_profile?: {
     scoped_pnl?: string | null;
     scoped_pnl_unit?: string | null;
+    completed_episode_net?: string | null;
+    completed_episode_net_unit?: string | null;
     completed_known_cost_positions?: number;
     matched_fragment_pnl?: string | null;
     matched_fragment_unit?: string | null;

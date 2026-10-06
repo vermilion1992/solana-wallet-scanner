@@ -24,6 +24,7 @@ HOST = "127.0.0.1"
 CCCS = "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU"
 A6PS = "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot"
 W58 = "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL"
+BVZT = "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"
 
 
 def preload():
@@ -117,6 +118,7 @@ def main():
             (CCCS, "CccS", "[data-verified-sensitivity]"),
             (A6PS, "A6PS", "[data-wallet-analytics], .research-profile"),
             (W58, "58PW", "[data-independently-audited], .research-profile"),
+            (BVZT, "BVZt", "[data-completed-episode-net], .research-profile"),
         ):
             nav(page, "Search")
             page.wait_for_timeout(400)

@@ -255,21 +255,32 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
                 ? `${decimal(String(profile.matched_fragment_pnl), 4)} ${String(profile.matched_fragment_unit || "")} (not a completed-episode net)`
                 : "unknown")
           }</strong>
+          {completedKnown >= 1 && profile.scoped_pnl
+            ? <small>worksheet total, partial coverage, not independently audited</small>
+            : null}
         </div>
         {(() => {
           const audit = (report.independent_audit || profile.independent_audit || {}) as {
             independently_audited?: boolean;
             independently_audited_episode_net?: string | null;
             independently_audited_episode_net_unit?: string | null;
+            app_completed_episode_net?: string | null;
+            app_completed_episode_net_unit?: string | null;
           };
-          if (!audit.independently_audited || audit.independently_audited_episode_net == null) {
+          const completedNet = (audit.independently_audited && audit.independently_audited_episode_net != null)
+            ? audit.independently_audited_episode_net
+            : (audit.app_completed_episode_net ?? (profile as { completed_episode_net?: string | null }).completed_episode_net);
+          const completedUnit = (audit.independently_audited && audit.independently_audited_episode_net != null)
+            ? audit.independently_audited_episode_net_unit
+            : (audit.app_completed_episode_net_unit ?? (profile as { completed_episode_net_unit?: string | null }).completed_episode_net_unit);
+          if (completedKnown < 1 || completedNet == null) {
             return null;
           }
           return (
-            <div data-independently-audited="true">
-              <span>independently_audited</span>
-              <strong>{`${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}`}</strong>
-              <small>audited episode net</small>
+            <div data-independently-audited={audit.independently_audited ? "true" : "false"} data-completed-episode-net="true">
+              <span>{audit.independently_audited ? "independently_audited" : "completed-episode net"}</span>
+              <strong>{`${String(completedNet)} ${String(completedUnit || "")}`}</strong>
+              <small>{audit.independently_audited ? "audited episode net" : "completed-episode net"}</small>
             </div>
           );
         })()}
@@ -296,18 +307,28 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
             independently_audited?: boolean;
             independently_audited_episode_net?: string | null;
             independently_audited_episode_net_unit?: string | null;
+            app_completed_episode_net?: string | null;
+            app_completed_episode_net_unit?: string | null;
             worksheet_total?: string | null;
             worksheet_total_unit?: string | null;
             worksheet_total_independently_audited?: boolean;
           };
-          if (!audit.independently_audited || audit.independently_audited_episode_net == null) {
-            return "";
+          const worksheet = audit.worksheet_total || (completedKnown >= 1 ? profile.scoped_pnl : null);
+          const worksheetUnit = audit.worksheet_total_unit || profile.scoped_pnl_unit || "";
+          const worksheetNote = worksheet
+            ? ` Worksheet total ${String(worksheet)} ${String(worksheetUnit)} (worksheet total, partial coverage, not independently audited)`
+            : "";
+          if (audit.independently_audited && audit.independently_audited_episode_net != null) {
+            return ` independently_audited:true next to audited episode net ${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}.${worksheetNote}`;
           }
-          const episode = ` independently_audited:true next to audited episode net ${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}`;
-          if (audit.worksheet_total && audit.worksheet_total_independently_audited === false) {
-            return `${episode}. Worksheet total ${String(audit.worksheet_total)} ${String(audit.worksheet_total_unit || "")} is not independently audited`;
+          const completedNet = audit.app_completed_episode_net
+            ?? (profile as { completed_episode_net?: string | null }).completed_episode_net;
+          const completedUnit = audit.app_completed_episode_net_unit
+            ?? (profile as { completed_episode_net_unit?: string | null }).completed_episode_net_unit;
+          if (completedKnown >= 1 && completedNet != null) {
+            return ` completed-episode net ${String(completedNet)} ${String(completedUnit || "")}.${worksheetNote}`;
           }
-          return episode;
+          return worksheetNote;
         })()}
         {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.

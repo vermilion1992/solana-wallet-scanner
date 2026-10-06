@@ -10,7 +10,10 @@ from pathlib import Path
 from scanner.mass_search.capture_catalog import catalog_by_address
 from scanner.mass_search.workflow import replay_captured_wallet
 from scanner.storage import Store
-from tools.independent_episode_audit import JUPITER, METEORA_DAMM_V2, PINNED, PUMP, PUMP_SWAP, RFQ_FILL, audit_address
+from tools.independent_episode_audit import (
+    JUPITER, METEORA_DAMM_V2, PINNED, PUMP, PUMP_SWAP, RFQ_FILL,
+    audit_address, episode_net_totals,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/INDEPENDENT_AUDIT.json"
@@ -199,6 +202,7 @@ def _app_episodes(report):
                 "proceeds": str(proceeds) if proceeds is not None else None,
                 "verified_costs": str(fees) if fees is not None else None,
                 "net": str(net) if net is not None else None,
+                "settlement_asset": close.get("settlement_asset") or "SOL",
                 "auditor_covers_venue": venue in AUDITED_PROGRAMS if venue else False,
             })
             opened = False
@@ -234,6 +238,7 @@ def _app_episodes(report):
             "proceeds": str(proceeds) if mint_sales else last.get("proceeds"),
             "verified_costs": str(fees) if mint_sales else last.get("fees_and_tips"),
             "net": str(net) if mint_sales else last.get("net_profit"),
+            "settlement_asset": (close or last).get("settlement_asset") or "SOL",
             "auditor_covers_venue": venue in AUDITED_PROGRAMS if venue else False,
         })
     return episodes
@@ -290,6 +295,10 @@ def compare_wallet(address, pages, tmp):
     notes = _venue_notes_from_auditor(independent)
     episode_net = independent.get("independently_audited_episode_net")
     episode_unit = independent.get("independently_audited_episode_net_unit")
+    app_episode_net, app_episode_unit, _ = episode_net_totals([
+        {"settlement_asset": item.get("settlement_asset") or "SOL", "net_profit_sol": item["net"]}
+        for item in app if item.get("net") not in (None, "")
+    ])
     worksheet = report.get("worksheet") or {}
     by_quote = worksheet.get("by_quote_asset") or {}
     worksheet_total = None
@@ -317,6 +326,8 @@ def compare_wallet(address, pages, tmp):
         "independently_audited": status == "independently_audited",
         "independently_audited_episode_net": episode_net if status == "independently_audited" and episode_unit != "mixed" else None,
         "independently_audited_episode_net_unit": episode_unit if status == "independently_audited" and episode_unit != "mixed" else None,
+        "app_completed_episode_net": app_episode_net,
+        "app_completed_episode_net_unit": app_episode_unit,
         "independently_audited_episode_nets_by_unit": independent.get("independently_audited_episode_nets_by_unit"),
         "worksheet_total": worksheet_total,
         "worksheet_total_unit": worksheet_unit,

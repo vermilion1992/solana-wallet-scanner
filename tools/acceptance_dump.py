@@ -17,6 +17,7 @@ OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage"
 RECON = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/recon"
 OLD_USDC = Decimal("14739.373324196")
 NEW_USDC = Decimal("51148.756609023")
+WORKSHEET_LABEL = "worksheet total, partial coverage, not independently audited"
 
 LABELS = {
     "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL": "gtfo",
@@ -87,22 +88,33 @@ def wallet_row(address, report):
     worksheet_total = audit.get("worksheet_total")
     worksheet_unit = audit.get("worksheet_total_unit")
     worksheet_audited = audit.get("worksheet_total_independently_audited")
+    completed_net = audited_net if audit.get("independently_audited") and audited_net not in (None, "") else audit.get("app_completed_episode_net")
+    completed_unit = audited_unit if audit.get("independently_audited") and audited_net not in (None, "") else audit.get("app_completed_episode_net_unit")
+    if completed_net in (None, ""):
+        completed_net = audit.get("app_completed_episode_net")
+        completed_unit = audit.get("app_completed_episode_net_unit")
+    worksheet_figure = worksheet_total if worksheet_total not in (None, "") else None
+    if worksheet_figure in (None, "") and net not in (None, ""):
+        worksheet_figure = net
+        worksheet_unit = worksheet_unit or unit
+    if worksheet_figure in (None, "") and by_quote:
+        labelled_quotes = [
+            (amount, asset) for asset, amount in by_quote.items() if amount not in (None, "")
+        ]
+        if len(labelled_quotes) == 1:
+            worksheet_figure, worksheet_unit = labelled_quotes[0][0], labelled_quotes[0][1]
     if completed < 1:
         net_text = None
         fragment = profile.get("matched_fragment_pnl")
     else:
         fragment = None
-        net_text = f"{net} {unit}" if net not in (None, "") else None
-        if net_text is None and by_quote:
-            net_text = "; ".join(f"{amount} {asset}" for asset, amount in by_quote.items() if amount not in (None, ""))
-    if audit.get("independently_audited") and audited_net not in (None, "") and worksheet_audited is False:
-        worksheet_part = ""
-        if worksheet_total not in (None, ""):
-            worksheet_part = (
-                f"; worksheet {worksheet_total} {worksheet_unit or ''} "
-                f"(not independently audited)"
-            )
-        net_text = f"{audited_net} {audited_unit} (audited episode net){worksheet_part}"
+        parts = []
+        if completed_net not in (None, ""):
+            tag = "audited episode net" if audit.get("independently_audited") else "completed-episode net"
+            parts.append(f"{completed_net} {completed_unit} ({tag})")
+        if worksheet_figure not in (None, ""):
+            parts.append(f"{worksheet_figure} {worksheet_unit or unit or ''} ({WORKSHEET_LABEL})")
+        net_text = "; ".join(parts) if parts else None
     judged = labels["coverage_status_detail"]
     return {
         "label": LABELS[address],
@@ -133,6 +145,8 @@ def wallet_row(address, report):
         "independent_audit_status": (report.get("independent_audit") or {}).get("status"),
         "independently_audited_episode_net": (report.get("independent_audit") or {}).get("independently_audited_episode_net"),
         "independently_audited_episode_net_unit": (report.get("independent_audit") or {}).get("independently_audited_episode_net_unit"),
+        "completed_episode_net": completed_net if completed >= 1 else None,
+        "completed_episode_net_unit": completed_unit if completed >= 1 else None,
         "worksheet_total": (report.get("independent_audit") or {}).get("worksheet_total"),
         "worksheet_total_unit": (report.get("independent_audit") or {}).get("worksheet_total_unit"),
         "worksheet_total_independently_audited": (report.get("independent_audit") or {}).get("worksheet_total_independently_audited"),

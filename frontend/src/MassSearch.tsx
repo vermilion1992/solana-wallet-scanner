@@ -794,7 +794,7 @@ function RankedRow({
       <td>{row.trade_count ?? "unknown"}</td>
       <td>{
         (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && row.funnel?.B?.scoped_pnl
-          ? `${row.funnel.B.scoped_pnl} ${row.funnel.B.scoped_pnl_unit || ""}`
+          ? `${row.funnel.B.scoped_pnl} ${row.funnel.B.scoped_pnl_unit || ""} (worksheet total, partial coverage, not independently audited)`
           : (row.research_profile?.matched_fragment_pnl
             ? `matched-fragment ${row.research_profile.matched_fragment_pnl} ${row.research_profile.matched_fragment_unit || ""}`
             : "unverified")

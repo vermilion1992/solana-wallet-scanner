@@ -34,6 +34,8 @@ Named regressions:
   - `test_fee_audit_recomputes_cccs_current_figures_from_captures`
   - `test_fee_audit_counts_only_wallet_paid_network_fees`
   - `test_a6ps_residual_is_in_window_new_account_rent_on_buys`
+  - `test_every_wallet_worksheet_figure_is_labelled_partial_coverage`
+  - `test_auditor_rejects_opening_inventory_close_4dyknedb`
   - `test_astziy6_is_unverified_outside_debit_not_a_tip`
   - `test_item11_sensitivity_sign_flip_cannot_be_provisional_research_lead`
   - `test_item11_label_tables_cannot_disagree`

@@ -545,6 +545,7 @@ def _fifo(trades):
         episode_proceeds = Decimal("0")
         episode_costs = Decimal("0")
         episode_asset = None
+        episode_consumed_opening = False
         for row in rows:
             qty = Decimal(row["quantity_raw"])
             asset = row.get("settlement_asset") or "SOL"
@@ -570,6 +571,8 @@ def _fifo(trades):
             remaining = qty
             if opening > 0:
                 take = opening if opening <= remaining else remaining
+                if take > 0:
+                    episode_consumed_opening = True
                 opening -= take
                 remaining -= take
                 unresolved += 1
@@ -607,7 +610,9 @@ def _fifo(trades):
             if opened and inventory == 0 and remaining == 0 and opening == 0:
                 timestamp = row.get("timestamp")
                 in_window = timestamp is not None and REPORT_START <= timestamp < REPORT_END
-                if in_window:
+                # Opening inventory is unknown cost. A flatten that consumed any
+                # of it is not a clean completed episode (same rule as the app).
+                if in_window and not episode_consumed_opening:
                     episodes.append({
                         "mint": mint,
                         "close_signature": row["signature"],
@@ -620,6 +625,7 @@ def _fifo(trades):
                         "net_profit_sol": _canonical(episode_pnl),
                     })
                 opened = False
+                episode_consumed_opening = False
                 episode_pnl = Decimal("0")
                 episode_basis = Decimal("0")
                 episode_proceeds = Decimal("0")

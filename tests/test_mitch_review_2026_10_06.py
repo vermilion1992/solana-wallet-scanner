@@ -727,7 +727,7 @@ def test_compare_reports_mismatch_when_auditor_finds_episodes_app_missed():
     bvzt = by_address["BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"]
     dq7n = by_address["DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"]
     assert bvzt["app_completed_episodes"] == 2
-    assert bvzt["auditor_clean_episodes"] == 5
+    assert bvzt["auditor_clean_episodes"] == 4
     assert bvzt["status"] == "not_independently_audited"
     assert bvzt["independently_audited"] is False
     assert dq7n["app_completed_episodes"] == 2
@@ -761,6 +761,7 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     assert "5614.586672" in str(wallet["net_display"])
     assert "audited episode net" in str(wallet["net_display"])
     assert "not independently audited" in str(wallet["net_display"])
+    assert "worksheet total, partial coverage, not independently audited" in str(wallet["net_display"])
 
 
 def test_venue_notes_are_computed_from_auditor_decode():
@@ -897,3 +898,73 @@ def test_a6ps_residual_is_in_window_new_account_rent_on_buys():
     assert "new-account rent on buys" in report["residual_sol_note"]
     assert "program-account funding" not in report["residual_sol_note"]
     assert report.get("residual_sol_scope") == "in_window_buys"
+
+
+WORKSHEET_LABEL = "worksheet total, partial coverage, not independently audited"
+BVZT_OPENING_CLOSE = "4dyknEdboqrVw3kYkFXeKL1aqHKPbrrp5UgWxQHbw9ittrJ29m88dHtxtR4g56s5qQ5pt6wb2vS7zFyQrgQ12P1h"
+
+
+def test_every_wallet_worksheet_figure_is_labelled_partial_coverage():
+    for name in ("WALLET_TABLE.json", "LABEL_TABLES.json"):
+        payload = json.loads((COVERAGE_DIR / name).read_text(encoding="utf-8"))
+        for wallet in payload["wallets"]:
+            display = wallet.get("net_display")
+            worksheet = wallet.get("worksheet_total")
+            scoped = wallet.get("scoped_pnl")
+            figures = [value for value in (worksheet, scoped) if value not in (None, "")]
+            if wallet.get("completed", 0) < 1:
+                assert display in (None, "")
+                continue
+            assert wallet.get("completed_episode_net") not in (None, "")
+            assert display
+            for figure in figures:
+                assert str(figure) in str(display), (name, wallet["label"], figure, display)
+            assert WORKSHEET_LABEL in str(display), (name, wallet["label"], display)
+            unit = wallet.get("worksheet_total_unit") or wallet.get("scoped_pnl_unit") or ""
+            for figure in figures:
+                assert str(display).strip() != f"{figure} {unit}".strip(), (name, wallet["label"], display)
+
+
+def test_auditor_rejects_opening_inventory_close_4dyknedb():
+    from tools.independent_episode_audit import audit_address
+
+    manifest = json.loads((ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/CAPTURE_MANIFEST.json").read_text(encoding="utf-8"))
+    pages = sorted(
+        [entry for entry in (manifest.get("pages") or {}).values() if entry["address"] == BVZT],
+        key=lambda item: item.get("page_index") or 0,
+    )
+    isolated = audit_address(BVZT, pages)
+    closes = [item["close_signature"] for item in isolated["episodes"]]
+    assert BVZT_OPENING_CLOSE not in closes
+    assert isolated["clean_episodes"] == 4
+    payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
+    by_address = {row["address"]: row for row in payload["wallets"]}
+    bvzt = by_address[BVZT]
+    auditor_closes = [item["close_signature"] for item in bvzt.get("auditor_only_episodes") or []]
+    assert BVZT_OPENING_CLOSE not in auditor_closes
+    assert bvzt["auditor_clean_episodes"] == 4
+    matched = {
+        (item.get("close_signature") or "")[:12]: item.get("match")
+        for item in bvzt.get("episodes") or []
+    }
+    assert matched.get("3R5ejVQSpZ8u") is True
+    assert matched.get("3qgS53GLmKQ7") is True
+    dq7n = by_address[DQ7N]
+    dq_matched = {
+        (item.get("close_signature") or "")[:12]: item.get("match")
+        for item in dq7n.get("episodes") or []
+    }
+    assert dq_matched.get("fFaTSLaSscC2") is True
+    assert dq_matched.get("5SiSZP7QYaER") is True
+    expected = {
+        A6PS: (8, 8),
+        GTFO: (16, 16),
+        W58: (2, 2),
+        "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": (6, 6),
+        "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": (1, 1),
+    }
+    for address, (app, auditor) in expected.items():
+        row = by_address[address]
+        assert row["status"] == "independently_audited", address
+        assert row["app_completed_episodes"] == app
+        assert row["auditor_clean_episodes"] == auditor
