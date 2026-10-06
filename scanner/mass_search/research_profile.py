@@ -19,6 +19,8 @@ THRESHOLD_KEYS = (
     "max_unresolved_share",
     "min_market_vs_rewards_ratio",
     "max_holder_fee_share",
+    "min_sample_positions",
+    "min_coverage_share",
 )
 
 DEFAULT_THRESHOLDS = {key: None for key in THRESHOLD_KEYS}
@@ -38,8 +40,26 @@ THRESHOLD_UNITS = {
     "max_unresolved_share": "share",
     "min_market_vs_rewards_ratio": "ratio",
     "max_holder_fee_share": "share",
+    "min_sample_positions": "positions",
+    "min_coverage_share": "share",
     "min_provider_trade_count": "provider_trades",
     "min_provider_score": "provider_score",
+}
+
+# Documented research-screen defaults, fixed before evaluation.
+# min_sample_positions=3 so a single matched trade never qualifies the account.
+RESEARCH_SCREEN_DEFAULTS = {
+    "min_completed_known_cost": "1",
+    "min_sample_positions": "3",
+    "min_coverage_share": None,
+}
+
+EVIDENCE_CLASS = {
+    1: "profitable_matched_position",
+    2: "positive_known_basis_incomplete_history",
+    3: "positive_net_realised_supported_window",
+    4: "account_performance_claim",
+    5: "missing_or_inconclusive",
 }
 
 
@@ -290,7 +310,134 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     profile["criteria_met"] = results["criteria_met"]
     profile["evaluated_thresholds"] = results["evaluated"]
     profile["unset_thresholds"] = results["unset"]
+    profile["evidence_class"] = classify_evidence(report, profile)
+    profile["candidate_assessment"] = candidate_assessment(report, profile)
     return profile
+
+
+def classify_evidence(report, profile):
+    """Five mutually exclusive evidence classes. A matched trade never qualifies the account."""
+    completed = int(profile.get("completed_known_cost_positions") or 0)
+    scoped = profile.get("scoped_pnl")
+    usdc_excludes = ((report.get("worksheet") or {}).get("sol_fees_not_converted")
+                     or (report.get("analytics") or {}).get("known_cost_realised_pnl", {}).get("usdc_excludes_sol_fees"))
+    profitable = False
+    if scoped not in (None, ""):
+        try:
+            profitable = Decimal(str(scoped)) > 0
+        except Exception:
+            profitable = False
+    account = {
+        "class": 5,
+        "label": EVIDENCE_CLASS[5],
+        "reason": "A positive matched trade never qualifies the account. Valuations and external flows are not in this path.",
+    }
+    if completed < 1 or not report.get("id"):
+        position = {"class": 5, "label": EVIDENCE_CLASS[5], "reason": "No completed known-cost position in the captured sample."}
+    elif profitable and report.get("offline_replay"):
+        position = {
+            "class": 2,
+            "label": EVIDENCE_CLASS[2],
+            "reason": "Positive known-basis result from incomplete captured history. Conditional on captured inventory.",
+        }
+    elif profitable:
+        position = {
+            "class": 1,
+            "label": EVIDENCE_CLASS[1],
+            "reason": "Profitable matched position in the captured sample. Does not qualify the account.",
+        }
+    else:
+        position = {"class": 5, "label": EVIDENCE_CLASS[5], "reason": "Completed position is not a positive known-basis result."}
+    if usdc_excludes:
+        position["usdc_excludes_sol_fees_never_net"] = True
+        position["not_class_3"] = "USDC that excludes SOL fees is never net realised."
+    return {
+        "position": position,
+        "account": account,
+        "transfers_are_not_zero_cost_buys_income_or_sales": True,
+    }
+
+
+def candidate_assessment(report, profile):
+    worksheet = report.get("worksheet") or {}
+    window = report.get("window") or {}
+    analytics = report.get("analytics") or {}
+    classification = report.get("classification") or {}
+    unresolved = int(profile.get("unresolved_basis_sales") or 0)
+    completed = int(profile.get("completed_known_cost_positions") or 0)
+    scoped = profile.get("scoped_pnl")
+    largest = None
+    without_largest = None
+    profits = worksheet.get("sale_net_profit_usdc") or worksheet.get("sale_net_profit_sol") or []
+    if profits:
+        values = [Decimal(str(item)) for item in profits]
+        largest = str(max(values))
+        if scoped not in (None, "") and len(values) >= 1:
+            without_largest = str(Decimal(str(scoped)) - max(values))
+    unknown_qty = Decimal("0")
+    unknown_proceeds = Decimal("0")
+    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
+    if events:
+        from scanner.mass_search.settlement import isolate_known_cost_by_mint
+        mapped = []
+        for row in events:
+            mapped.append({
+                "kind": row["kind"],
+                "units": str(row.get("quantity_raw") or row.get("units") or "0"),
+                "mint": row.get("mint"),
+                "seconds_from_start": row.get("seconds_from_start") or 0,
+                "signature": row.get("signature"),
+                "settlement_mint": row.get("settlement_mint"),
+                "consideration_usdc": row.get("amount_usdc") or row.get("consideration_usdc"),
+                "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
+                "timestamp_missing": False,
+            })
+        _, unresolved_rows = isolate_known_cost_by_mint(mapped)
+        for row in unresolved_rows:
+            unknown_qty += Decimal(str(row.get("units") or 0))
+            amount = row.get("consideration_usdc") if row.get("consideration_usdc") not in (None, "") else row.get("consideration_sol")
+            if amount not in (None, ""):
+                unknown_proceeds += Decimal(str(amount))
+    return {
+        "kind": "candidate-assessment-v1",
+        "evaluated_window": {"start": window.get("start"), "end": window.get("end")},
+        "coverage": {
+            "history_complete": False,
+            "transactions_in_capture": int(classification.get("transactions") or 0),
+            "supported_swaps": int((report.get("coverage") or {}).get("decoded_swaps") or 0),
+            "note": "Coverage of captured transactions is not completeness of wallet history.",
+        },
+        "completed_matched_positions": completed,
+        "active_trading_days": None,
+        "active_trading_days_state": "NOT_EVALUATED",
+        "gross_realised": scoped,
+        "net_realised": None,
+        "net_realised_reason": (
+            "USDC that excludes SOL fees is never net."
+            if (worksheet.get("sol_fees_not_converted") or profile.get("settlement_asset") == "USDC")
+            else "Net realised requires complete fees and a supported window; not claimed here."
+        ),
+        "fees_by_currency": {
+            "SOL": ((report.get("classification") or {}).get("fee_totals") or {}).get("fee_sol"),
+            "USDC": None,
+            "sol_fees_not_converted_into_usdc": True,
+        },
+        "unknown_basis_quantity_and_proceeds": {
+            "sales": unresolved,
+            "quantity": str(unknown_qty),
+            "proceeds": str(unknown_proceeds) if unknown_qty or unknown_proceeds else None,
+            "unit": profile.get("settlement_asset"),
+        },
+        "open_inventory": (analytics.get("open_positions") or profile.get("open_or_unresolved") or {}),
+        "valuation_available": False,
+        "largest_winner_contribution": largest,
+        "result_without_largest_winner": without_largest,
+        "result_scope": "conditional_on_captured_inventory",
+        "pass_fail_reasons": profile.get("threshold_results") or {},
+        "visible_report": report.get("visible_report") is True,
+        "not_safe_to_copy": True,
+        "PRODUCT_READY": False,
+    }
 
 
 def evaluate_thresholds(profile, thresholds):
@@ -300,6 +447,8 @@ def evaluate_thresholds(profile, thresholds):
     unset = []
     comparisons = {
         "min_completed_known_cost": ("completed_known_cost_positions", "min"),
+        "min_sample_positions": ("completed_known_cost_positions", "min"),
+        "min_coverage_share": ("unresolved_share", "max"),
         "min_scoped_pnl_usdc": ("scoped_pnl", "min", "USDC"),
         "min_scoped_pnl_sol": ("scoped_pnl", "min", "SOL"),
         "max_hold_t90_seconds": ("hold_t90_seconds", "max"),

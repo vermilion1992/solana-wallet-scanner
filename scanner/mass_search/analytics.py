@@ -184,6 +184,8 @@ def build_wallet_analytics(report):
         "reconciliation": (report.get("worksheet_reconciliation") or {}).get("status"),
         "failed_on_chain": int(counts.get("failed_on_chain") or coverage.get("failed_transactions") or 0),
         "unsupported_or_unresolved_inner": int(counts.get("inner_pumpswap_without_reviewed_outer") or 0),
+        "result_scope": "conditional_on_captured_inventory",
+        "visible_report": report.get("visible_report") is True,
         "safe_to_copy": False,
         "PRODUCT_READY": False,
         "unrealised_pnl": None,

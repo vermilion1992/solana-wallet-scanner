@@ -20,7 +20,13 @@ from scanner.mass_search.capture_catalog import (
 from scanner.mass_search.funnel_abc import classify_candidate, rank_next_candidates
 from scanner.mass_search.g3_reacquire import ALLOWED_WALLET
 from scanner.mass_search.history_ingest import replay_cached_history_to_report, visible_report_allowed
-from scanner.mass_search.research_profile import build_research_profile, load_filters
+from scanner.mass_search.visible_report import hydrate_visible_report, persist_visible_report, visible_report_passes
+from scanner.mass_search.research_profile import (
+    RESEARCH_SCREEN_DEFAULTS,
+    build_research_profile,
+    evaluate_thresholds,
+    load_filters,
+)
 from scanner.mass_search.service import MassSearchService
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -263,12 +269,11 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
         if key in result:
             report[key] = result[key]
     if result.get("cache_hit"):
-        # Missing or non-True on a cache hit is unknown/false, never True.
-        report["visible_report"] = result.get("visible_report") is True
+        persist_visible_report(report, hydrate_visible_report(result.get("report") or report, cache_hit=True))
     elif report.get("visible_report") is True:
-        pass
+        persist_visible_report(report, True)
     elif report.get("visible_report") is False:
-        report["visible_report"] = False
+        persist_visible_report(report, False)
     else:
         worksheet = report.get("worksheet") or report.get("independent_worksheet")
         completed = (
@@ -276,8 +281,9 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
             or (profile or {}).get("completed_known_cost_positions")
             or 0
         )
-        report["visible_report"] = visible_report_allowed(worksheet=worksheet, completed_positions=completed)
-    result["visible_report"] = report["visible_report"] is True
+        persist_visible_report(report, visible_report_allowed(worksheet=worksheet, completed_positions=completed))
+    result["visible_report"] = visible_report_passes(report)
+    report["result_scope"] = "conditional_on_captured_inventory"
     store.put("reports", report["id"], report)
     result["report"] = report
     result["research_profile"] = profile
@@ -366,7 +372,7 @@ def replay_captured_wallet(store, address=ALLOWED_WALLET, *, filters=None, force
                 "report": cached,
                 "external_requests": 0,
                 "cache_hit": True,
-                "visible_report": cached.get("visible_report") is True,
+                "visible_report": hydrate_visible_report(cached, cache_hit=True),
                 "not_match": cached.get("not_match"),
                 "PRODUCT_READY": False,
             }
@@ -557,9 +563,99 @@ def ranked_workflow_view(store, *, filters=None):
         "live_approval_required": True,
         "acquisition_gate": gate_status(store),
         "phone_access": phone_access_status(),
+        "research_screen": research_screen_run(universe["rows"], reports, filters),
         "PRODUCT_READY": False,
         "not_safe_to_copy": True,
         "note": "Cached browse only. Budget view stays disabled without a live approval. Rank-1 and worth-investigating are not verified profitable.",
+    }
+
+
+def research_screen_run(universe_rows, reports, filters):
+    """Evaluate the saved snapshot against thresholds fixed before the run.
+
+    Outcomes stay distinct: completed (qualified), zero-qualified,
+    inconclusive (insufficient history), not_executed.
+    """
+    from scanner.mass_search.research_profile import RESEARCH_SCREEN_DEFAULTS
+
+    screen = {}
+    incoming = (filters or {}).get("thresholds") or {}
+    for key, default in RESEARCH_SCREEN_DEFAULTS.items():
+        value = incoming.get(key)
+        if value not in (None, ""):
+            screen[key] = value
+        elif default not in (None, ""):
+            screen[key] = default
+    inconclusive = 0
+    qualified = 0
+    zero_qualified = 0
+    not_executed = 0
+    rows = []
+    for row in universe_rows:
+        report = reports.get(row["address"])
+        if not row.get("capture_available") and not report:
+            inconclusive += 1
+            rows.append({
+                "address": row["address"],
+                "outcome": "inconclusive",
+                "reason": "insufficient history — History required — not analysed",
+            })
+            continue
+        profile = (report or {}).get("research_profile")
+        if not profile:
+            not_executed += 1
+            rows.append({
+                "address": row["address"],
+                "outcome": "not_executed",
+                "reason": "capture available; analysis not executed",
+            })
+            continue
+        judged = evaluate_thresholds(profile, screen)
+        if judged["criteria_met"]:
+            qualified += 1
+            outcome = "completed"
+        else:
+            zero_qualified += 1
+            outcome = "zero_qualified"
+        rows.append({
+            "address": row["address"],
+            "outcome": outcome,
+            "reason": "unknown never passes" if judged["unset"] else (
+                "criteria met" if judged["criteria_met"] else "documented screen thresholds not met"
+            ),
+            "threshold_results": judged["results"],
+        })
+    if qualified:
+        run_outcome = "completed"
+    elif inconclusive and not qualified:
+        run_outcome = "inconclusive"
+    elif zero_qualified:
+        run_outcome = "zero_qualified"
+    else:
+        run_outcome = "not_executed"
+    return {
+        "kind": "research-screen-run-v1",
+        "thresholds_fixed_before_evaluation": screen,
+        "unknown_never_passes": True,
+        "outcome": run_outcome,
+        "outcome_class": (
+            "inconclusive_insufficient_history"
+            if run_outcome == "inconclusive"
+            else run_outcome
+        ),
+        "counts": {
+            "inconclusive": inconclusive,
+            "completed_qualified": qualified,
+            "zero_qualified": zero_qualified,
+            "not_executed": not_executed,
+            "universe": len(universe_rows),
+        },
+        "note": (
+            "Today's run over the saved snapshot is inconclusive for wallets "
+            "without a genuine capture. A single matched trade never qualifies the account."
+        ),
+        "rows": rows,
+        "PRODUCT_READY": False,
     }
 
 
@@ -613,6 +709,10 @@ def compare_reports(store, left_id, right_id):
         mismatches.append({"kind": "incomplete_evidence", "detail": "At least one report is not a visible completed-position result"})
     if (left_profile.get("unresolved_basis_sales") or 0) or (right_profile.get("unresolved_basis_sales") or 0):
         mismatches.append({"kind": "incomplete_evidence", "detail": "Unresolved-basis sales stay unknown; they are not zero-cost closes"})
+    left_window = left.get("window") or {}
+    right_window = right.get("window") or {}
+    left_events = [row for row in (left.get("events") or []) if row.get("kind") in ("buy", "sell")]
+    right_events = [row for row in (right.get("events") or []) if row.get("kind") in ("buy", "sell")]
     return {
         "kind": "research-profile-compare-v1",
         "left_id": left_id,
@@ -622,6 +722,19 @@ def compare_reports(store, left_id, right_id):
         "fields": fields,
         "mismatches": mismatches,
         "comparable": not any(item["kind"] in ("currency", "window") for item in mismatches),
+        "window_policy": {
+            "kind": "own_windows_shown_mismatch_blocks",
+            "detail": (
+                "Each report keeps its own window. Differing windows are not "
+                "recomputed onto a common interval. Compare is blocked."
+            ),
+            "left_window": left_window,
+            "right_window": right_window,
+            "left_included_trades": len(left_events),
+            "right_included_trades": len(right_events),
+            "left_sample_size": left_profile.get("completed_known_cost_positions"),
+            "right_sample_size": right_profile.get("completed_known_cost_positions"),
+        },
         "left_funnel": left.get("funnel"),
         "right_funnel": right.get("funnel"),
         "left_analytics": left_analytics,
@@ -689,5 +802,52 @@ def approval_proposal():
             "earlier page is skipped because the stored draft does not unambiguously cover it. "
             "Not leftover grants. Not MATCH."
         ),
+        "PRODUCT_READY": False,
+    }
+
+
+def research_search_proposal():
+    """Separate disabled research-search grant. Does not touch the next-candidates draft."""
+    path = ROOT / "config/live_authorization.ranked100-research-search-draft.json"
+    payload = _load_json(path) if path.exists() else {}
+    universe = load_ranked_universe()
+    next_rows = rank_next_candidates(universe["rows"], exclude_addresses=list(CAPTURED_ADDRESSES), limit=10)
+    return {
+        "kind": "research-search-proposal-v1",
+        "status": "NOT_AUTHORISED",
+        "enabled": False,
+        "do_not_dispatch": True,
+        "do_not_enable": True,
+        "authorization_id": payload.get("authorization_id") or "live-ranked100-research-search-2026-10-06-mitch",
+        "file": "config/live_authorization.ranked100-research-search-draft.json",
+        "separate_from": "live-ranked100-next-candidates-2026-10-06-mitch",
+        "selected_candidates": [
+            {
+                "address": row["address"],
+                "provider_rank": row["provider_rank"],
+                "trade_count": row["trade_count"],
+                "reason": "highest_provider_trade_count_among_shortlist_without_capture",
+            }
+            for row in next_rows
+        ],
+        "window_objective": "two newest-first GTA pages per wallet (documented 100-tx pages)",
+        "max_pages_per_wallet": 2,
+        "max_wallets": 10,
+        "max_requests": 20,
+        "documented_credits": 200,
+        "documented_units_per_request": 10,
+        "credits_needed_versus_balance": "needed=200 documented Helius credits; balance unconfirmed",
+        "max_spend_usd": "0",
+        "retries": 0,
+        "stop_conditions": [
+            "stop_when_budget_exhausted",
+            "stop_when_coverage_objective_reached",
+            "never_until_a_winner",
+        ],
+        "can_establish": (
+            "At most ten additional ranked-100 wallets with page-bounded captured "
+            "history for research-screen classes 1–2. Not an account-performance claim."
+        ),
+        "remains_uncertain": "Earlier inventory, transfers, valuations, SOL/USDC net, and wallets beyond the ten.",
         "PRODUCT_READY": False,
     }

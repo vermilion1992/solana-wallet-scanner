@@ -324,6 +324,8 @@ export type Report = {
     note?: string | null;
   } | null;
   research_profile?: Record<string, unknown> | null;
+  visible_report?: boolean | null;
+  result_scope?: string;
   capture_sha256?: string;
   analysis_cache_key?: string;
   funnel?: Record<string, unknown> | null;
@@ -785,6 +787,20 @@ export type RankedWorkflowView = {
   snapshot_raw_sha256?: string;
   analysis_version?: string;
   capture_sha256?: string;
+  research_screen?: {
+    outcome?: string;
+    thresholds_fixed_before_evaluation?: {
+      min_completed_known_cost?: string | null;
+      min_sample_positions?: string | null;
+      min_coverage_share?: string | null;
+    };
+    counts?: {
+      inconclusive?: number;
+      zero_qualified?: number;
+      completed_qualified?: number;
+      not_executed?: number;
+    };
+  };
 };
 export type RankedBatch = {
   batch_id: string;

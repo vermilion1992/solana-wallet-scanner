@@ -259,7 +259,15 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         {report.capture_sha256 ? ` · capture ${String(report.capture_sha256).slice(0, 12)}` : ""}
         {report.analysis_cache_key ? ` · analysis ${String(report.analysis_cache_key).slice(0, 12)}` : ""}
         {report.window?.start ? ` · window ${String(report.window.start)} → ${String(report.window.end || "")}` : ""}
+        {` · visible_report ${report.visible_report === true ? "true" : report.visible_report === false ? "false" : "unknown"}`}
         . Reopened reports keep this capture and window; they are not a later live refresh.
+      </p>
+      <p className="subset-worksheet-note" data-result-scope="true">
+        Results are conditional on captured inventory. A positive matched trade never qualifies the account.
+        {(() => {
+          const evidence = (profile.evidence_class || {}) as { position?: { label?: string }; account?: { label?: string } };
+          return `${evidence.position?.label ? ` Position class: ${evidence.position.label}.` : ""}${evidence.account?.label ? ` Account class: ${evidence.account.label}.` : ""}`;
+        })()}
       </p>
       {!!report.analytics && (
         <div className="research-profile-analytics" data-wallet-analytics="true">

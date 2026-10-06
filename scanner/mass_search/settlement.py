@@ -32,16 +32,38 @@ def _group_by_mint(rows):
     return grouped
 
 
-def _scale_trade(event, *, units, original_units):
-    """Pro-rate proceeds and SOL fees by quantity. Never invent a zero cost."""
-    scaled = dict(event)
-    scaled["units"] = canonical(units)
+FEE_ALLOCATION = (
+    "Whole-transaction SOL fees and settlement proceeds are allocated by "
+    "quantity: matched = original * matched_qty / qty; unmatched = original "
+    "minus matched so the two parts sum to the original integer/decimal total."
+)
+
+
+def _split_amount(original, *, take, total):
+    """Allocate `take/total` of original; caller assigns the remainder to the other part."""
     with localcontext() as ctx:
         ctx.prec = 192
-        for key in ("consideration_usdc", "consideration_sol", "amount_usdc", "amount_sol", "wallet_fee_sol"):
-            if event.get(key) not in (None, ""):
-                # Multiply first so 180 * 5 / 15 is exactly 60, not 5/15 * 180.
-                scaled[key] = canonical(Decimal(str(event[key])) * units / original_units)
+        if original in (None, "") or total == 0:
+            return None
+        return Decimal(str(original)) * take / total
+
+
+def _scale_trade(event, *, units, original_units, remainder_of=None):
+    """Pro-rate proceeds and SOL fees by quantity. Never invent a zero cost.
+
+    When remainder_of is the already-scaled matched sibling, this side takes
+    original minus matched so proceeds and fees are fully accounted.
+    """
+    scaled = dict(event)
+    scaled["units"] = canonical(units)
+    for key in ("consideration_usdc", "consideration_sol", "amount_usdc", "amount_sol", "wallet_fee_sol"):
+        if event.get(key) in (None, ""):
+            continue
+        if remainder_of is not None and remainder_of.get(key) not in (None, ""):
+            scaled[key] = canonical(Decimal(str(event[key])) - Decimal(str(remainder_of[key])))
+        else:
+            scaled[key] = canonical(_split_amount(event[key], take=units, total=original_units))
+    scaled["fee_allocation"] = FEE_ALLOCATION
     return scaled
 
 
@@ -61,17 +83,26 @@ def isolate_known_cost_events(rows):
                 unresolved.append({
                     **event,
                     "unresolved_basis": True,
+                    "whole_sale_pnl_resolved": False,
+                    "result_scope": "conditional_on_captured_inventory",
                     "reason": "Sale has no known acquisition cost in this sample",
                 })
                 continue
             if units <= inventory:
                 inventory -= units
-                known.append(event)
+                tagged = dict(event)
+                tagged["result_scope"] = "conditional_on_captured_inventory"
+                tagged["whole_sale_pnl_resolved"] = True
+                known.append(tagged)
                 continue
             matched = _scale_trade(event, units=inventory, original_units=units)
-            remainder = _scale_trade(event, units=units - inventory, original_units=units)
+            remainder = _scale_trade(event, units=units - inventory, original_units=units, remainder_of=matched)
             matched["partial_known_cost"] = True
+            matched["whole_sale_pnl_resolved"] = False
+            matched["result_scope"] = "conditional_on_captured_inventory"
             remainder["unresolved_basis"] = True
+            remainder["whole_sale_pnl_resolved"] = False
+            remainder["result_scope"] = "conditional_on_captured_inventory"
             remainder["reason"] = "Sale remainder has no known acquisition cost in this sample"
             remainder["unmatched_quantity"] = remainder["units"]
             known.append(matched)
@@ -173,6 +204,9 @@ def empty_usdc_worksheet(*, unresolved=0, known=0):
         "not_fx": True,
         "unresolved_basis_sales": unresolved,
         "known_cost_trades": known,
+        "whole_sale_pnl_resolved": unresolved == 0,
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": FEE_ALLOCATION,
     }
 
 
@@ -194,6 +228,9 @@ def settlement_aware_worksheet(events):
         worksheet = usdc_fifo_worksheet(known)
         worksheet["unresolved_basis_sales"] = len(unresolved)
         worksheet["known_cost_trades"] = len(known)
+        worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
+        worksheet["result_scope"] = "conditional_on_captured_inventory"
+        worksheet["fee_allocation"] = FEE_ALLOCATION
         return worksheet
     if not known or not any(row["kind"] == "sell" for row in known):
         return {
@@ -203,10 +240,16 @@ def settlement_aware_worksheet(events):
             "oracle": "independent-g1-fifo-v1",
             "unresolved_basis_sales": len(unresolved),
             "known_cost_trades": len(known),
+            "whole_sale_pnl_resolved": len(unresolved) == 0,
+            "result_scope": "conditional_on_captured_inventory",
+            "fee_allocation": FEE_ALLOCATION,
         }
     worksheet = independent_fifo_worksheet(known)
     worksheet["unresolved_basis_sales"] = len(unresolved)
     worksheet["known_cost_trades"] = len(known)
+    worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
+    worksheet["result_scope"] = "conditional_on_captured_inventory"
+    worksheet["fee_allocation"] = FEE_ALLOCATION
     return worksheet
 
 
@@ -229,6 +272,9 @@ def independent_settlement_worksheet(events):
         worksheet = independent_usdc_fifo_worksheet(known)
         worksheet["unresolved_basis_sales"] = len(unresolved)
         worksheet["known_cost_trades"] = len(known)
+        worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
+        worksheet["result_scope"] = "conditional_on_captured_inventory"
+        worksheet["fee_allocation"] = FEE_ALLOCATION
         return worksheet
     if not known or not any(row["kind"] == "sell" for row in known):
         return {
@@ -238,10 +284,16 @@ def independent_settlement_worksheet(events):
             "oracle": "independent-g1-fifo-v1",
             "unresolved_basis_sales": len(unresolved),
             "known_cost_trades": len(known),
+            "whole_sale_pnl_resolved": len(unresolved) == 0,
+            "result_scope": "conditional_on_captured_inventory",
+            "fee_allocation": FEE_ALLOCATION,
         }
     worksheet = independent_fifo_worksheet(known)
     worksheet["unresolved_basis_sales"] = len(unresolved)
     worksheet["known_cost_trades"] = len(known)
+    worksheet["whole_sale_pnl_resolved"] = len(unresolved) == 0
+    worksheet["result_scope"] = "conditional_on_captured_inventory"
+    worksheet["fee_allocation"] = FEE_ALLOCATION
     return worksheet
 
 

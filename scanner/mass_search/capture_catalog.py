@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 GENUINE_RANK1_PATH = ROOT / "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json"
 EXPECTED_CAPTURE_SHA = "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d"
 RANKED_SNAPSHOT_ID = "ranked100-discovery-pilot-2026-10-05"
-ANALYSIS_VERSION = "analysis-v3-partial-match-v1+material-exit-v2+usdc-fifo-v1"
+ANALYSIS_VERSION = "analysis-v4-research-screen-v1+partial-match-v1+material-exit-v2+usdc-fifo-v1"
 G1_ARCHIVE = ROOT / (
     "evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/"
     "archives/helius_gta_survivor_desc100.json.gz"

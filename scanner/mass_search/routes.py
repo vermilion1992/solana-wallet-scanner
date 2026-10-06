@@ -22,6 +22,9 @@ def _service(store):
 
 
 def _error(exc):
+    from .batch import BatchBusy
+    if isinstance(exc, BatchBusy):
+        raise HTTPException(409, str(exc))
     if isinstance(exc, SourceError):
         raise HTTPException(409, str(exc))
     if isinstance(exc, (ValueError, EvidenceError)):
@@ -228,7 +231,8 @@ def install_mass_search_routes(app, store):
             _error(exc)
 
     @app.post("/api/mass-search/ranked-workflow/batch")
-    async def ranked_workflow_batch(payload: dict | None = None):
+    def ranked_workflow_batch(payload: dict | None = None):
+        """Sync so overlapping HTTP callers run in the threadpool and contend for store.lock."""
         from .batch import create_and_run, create_batch
         body = payload or {}
         try:
@@ -255,7 +259,7 @@ def install_mass_search_routes(app, store):
             _error(exc)
 
     @app.post("/api/mass-search/ranked-workflow/batch/{batch_id}/step")
-    async def ranked_workflow_batch_step(batch_id: str):
+    def ranked_workflow_batch_step(batch_id: str):
         from .batch import step_batch
         try:
             return step_batch(store, batch_id)
@@ -263,7 +267,7 @@ def install_mass_search_routes(app, store):
             _error(exc)
 
     @app.post("/api/mass-search/ranked-workflow/batch/{batch_id}/cancel")
-    async def ranked_workflow_batch_cancel(batch_id: str):
+    def ranked_workflow_batch_cancel(batch_id: str):
         from .batch import cancel_batch
         try:
             return cancel_batch(store, batch_id)
@@ -327,3 +331,8 @@ def install_mass_search_routes(app, store):
     async def get_approval_proposal():
         from .workflow import approval_proposal
         return approval_proposal()
+
+    @app.get("/api/mass-search/research-search-proposal")
+    async def get_research_search_proposal():
+        from .workflow import research_search_proposal
+        return research_search_proposal()

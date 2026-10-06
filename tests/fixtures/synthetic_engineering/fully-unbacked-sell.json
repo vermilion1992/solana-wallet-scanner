@@ -1,0 +1,22 @@
+{
+  "kind": "SYNTHETIC_ENGINEERING_FIXTURE",
+  "label": "SYNTHETIC — fully unbacked sell, not proof",
+  "not_proof": true,
+  "corpus_kind": "SYNTHETIC",
+  "address": "SynthEngUNBACKED111111111111111111111111",
+  "window_start": "2026-09-05T13:29:27Z",
+  "window_end": "2026-10-05T13:29:27Z",
+  "events": [
+    {
+      "kind": "sell",
+      "units": "8",
+      "consideration_usdc": "80",
+      "wallet_fee_sol": "0",
+      "seconds_from_start": 60,
+      "mint": "SynthMintUNBACKED1111111111111111111111",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "synth-eng-unbacked-sell-1",
+      "classification": "market"
+    }
+  ]
+}

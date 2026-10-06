@@ -60,7 +60,9 @@ def _fifo(trades, *, asset):
         matched_qty = qty - remaining
         if matched_qty > 0:
             matched_proceeds = consideration * matched_qty / qty
+            unmatched_proceeds = consideration - matched_proceeds
             matched_fee = fee * matched_qty / qty
+            unmatched_fee = fee - matched_fee
             profit = matched_proceeds - basis
             if asset == "SOL":
                 profit -= matched_fee
@@ -75,15 +77,23 @@ def _fifo(trades, *, asset):
                 "fee_sol": _canonical(matched_fee),
                 "fee_in_pnl": asset == "SOL",
                 "partial_known_cost": remaining > 0,
+                "whole_sale_pnl_resolved": remaining == 0,
+                "result_scope": "conditional_on_captured_inventory",
+                "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched",
             })
+        else:
+            unmatched_proceeds = consideration
+            unmatched_fee = fee
         if remaining > 0:
             unresolved.append({
                 "signature": trade["signature"],
                 "mint": mint,
                 "unmatched_quantity_raw": str(remaining),
-                "gross_proceeds": _canonical(consideration * remaining / qty),
-                "fee_sol": _canonical(fee * remaining / qty),
+                "gross_proceeds": _canonical(unmatched_proceeds),
+                "fee_sol": _canonical(unmatched_fee),
                 "unresolved_basis": True,
+                "whole_sale_pnl_resolved": False,
+                "result_scope": "conditional_on_captured_inventory",
             })
     for mint, remaining_lots in lots.items():
         for lot in remaining_lots:

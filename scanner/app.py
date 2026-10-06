@@ -285,11 +285,18 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
                 "window": report.get("window"),
                 "corpus_kind": report.get("corpus_kind"),
                 "decoder_version": (report.get("coverage") or {}).get("decoder_version"),
+                "visible_report": report.get("visible_report") is True,
+                "visible_report_stored": report.get("visible_report") if "visible_report" in report else None,
+                "result_scope": report.get("result_scope") or "conditional_on_captured_inventory",
+                "evidence_class": (report.get("research_profile") or {}).get("evidence_class"),
+                "candidate_assessment": (report.get("research_profile") or {}).get("candidate_assessment"),
                 "not_safe_to_copy": True,
                 "PRODUCT_READY": False,
                 "sol_fees_not_converted": (report.get("worksheet") or {}).get("sol_fees_not_converted"),
+                "usdc_excluding_sol_fees_is_never_net": True,
                 "unresolved_basis_is_not_zero": True,
                 "scoped_pnl_is_not_wallet_wide": True,
+                "whole_sale_pnl_resolved": False if (report.get("worksheet") or {}).get("unresolved_basis_sales") else None,
             }
         if report.get("source") == "live" and not report.get("preview"):
             coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}

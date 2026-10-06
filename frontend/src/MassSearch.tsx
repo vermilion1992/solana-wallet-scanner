@@ -48,10 +48,13 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [onlyUser, setOnlyUser] = useState(false);
   const [onlyCaptured, setOnlyCaptured] = useState(false);
   const [minCompleted, setMinCompleted] = useState<string>("");
+  const [minSample, setMinSample] = useState<string>("3");
+  const [minCoverage, setMinCoverage] = useState<string>("");
   const [visibleLimit, setVisibleLimit] = useState(20);
   const [batch, setBatch] = useState<RankedBatch | null>(null);
   const [batchBusy, setBatchBusy] = useState(false);
   const [filterNote, setFilterNote] = useState("");
+  const [acquireNote, setAcquireNote] = useState("");
   const narrow = useNarrowViewport();
   const summary = state.mass_search;
   const runs = summary?.runs || [];
@@ -71,6 +74,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         setOnlyUser(!!proxy.only_user_shortlist);
         setOnlyCaptured(!!proxy.only_captured);
         setMinCompleted(view.filters?.thresholds?.min_completed_known_cost || "");
+        setMinSample(view.filters?.thresholds?.min_sample_positions || view.research_screen?.thresholds_fixed_before_evaluation?.min_sample_positions || "3");
+        setMinCoverage(view.filters?.thresholds?.min_coverage_share || "");
       })
       .catch(() => undefined);
   };
@@ -81,6 +86,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
     only_user_shortlist?: boolean;
     only_captured?: boolean;
     min_completed_known_cost?: string;
+    min_sample_positions?: string;
+    min_coverage_share?: string;
   }) => {
     const body = {
       provider_proxy: {
@@ -92,6 +99,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
       thresholds: {
         ...(ranked?.filters?.thresholds || {}),
         min_completed_known_cost: next.min_completed_known_cost ?? minCompleted,
+        min_sample_positions: next.min_sample_positions ?? minSample,
+        min_coverage_share: next.min_coverage_share ?? minCoverage,
       },
     };
     const saved = await api("/mass-search/research-filters", "PUT", body);
@@ -206,6 +215,18 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
     setBatch(current);
   };
 
+  const acquireHistory = async () => {
+    const gate = await api<{ status?: { allowed?: boolean; reason?: string }; attempt?: { allowed?: boolean; reason?: string; would_contact_provider?: boolean } }>(
+      "/mass-search/acquisition-gate",
+    );
+    const reason = gate.attempt?.reason || gate.status?.reason || "Acquisition is blocked.";
+    setAcquireNote(
+      gate.attempt?.allowed
+        ? "Authorization would still not dispatch from this UI."
+        : `Acquire history blocked: ${reason}`,
+    );
+  };
+
   const loadMore = async () => {
     if (!activeId || !nextCursor) return;
     const page = await api<{ items?: MassSearchCandidate[]; next_cursor?: string | null }>(
@@ -302,6 +323,8 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               only_user_shortlist: onlyUser,
               only_captured: onlyCaptured,
               min_completed_known_cost: minCompleted,
+              min_sample_positions: minSample,
+              min_coverage_share: minCoverage,
             });
           }}
         >
@@ -344,6 +367,28 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
               />
               <small>unit: positions · unknown never passes · applies only after analysis</small>
             </label>
+            <label>
+              Min sample positions
+              <input
+                aria-label="Minimum sample positions"
+                inputMode="numeric"
+                value={minSample}
+                onChange={(event) => setMinSample(event.target.value)}
+                placeholder="3"
+              />
+              <small>unit: positions · default 3 · a single matched trade never qualifies the account</small>
+            </label>
+            <label>
+              Min coverage share
+              <input
+                aria-label="Minimum coverage share"
+                inputMode="decimal"
+                value={minCoverage}
+                onChange={(event) => setMinCoverage(event.target.value)}
+                placeholder="unset"
+              />
+              <small>unit: share · unset stays unknown and never passes</small>
+            </label>
           </fieldset>
           <Button type="submit" variant="secondary" disabled={!!busy || batchBusy}>Save filters</Button>
         </form>
@@ -364,10 +409,27 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             Analyse available + fixtures
           </Button>
           <Button variant="secondary" disabled={!!busy} onClick={() => loadRanked()}>Refresh cached list</Button>
+          <Button
+            variant="secondary"
+            data-acquire-history="true"
+            disabled={!!busy || batchBusy}
+            onClick={() => void acquireHistory()}
+          >
+            Acquire history
+          </Button>
           {batch && batch.status === "running" && (
             <Button variant="secondary" disabled={!batch.batch_id} onClick={() => void cancelActiveBatch()}>Cancel batch</Button>
           )}
         </div>
+        {acquireNote && <p className="research-note" data-acquire-block="true">{acquireNote}</p>}
+        {ranked?.research_screen && (
+          <p className="research-note" data-research-screen="true">
+            Research screen {ranked.research_screen.outcome}: inconclusive {count(ranked.research_screen.counts?.inconclusive ?? 0)}
+            {` · zero-qualified ${count(ranked.research_screen.counts?.zero_qualified ?? 0)}`}
+            {` · qualified ${count(ranked.research_screen.counts?.completed_qualified ?? 0)}`}
+            . Thresholds were fixed before evaluation. Unknown never passes.
+          </p>
+        )}
         {batch && (
           <div className="mass-search-batch" data-batch-progress={batch.status}>
             <p>

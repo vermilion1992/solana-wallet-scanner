@@ -1,8 +1,9 @@
-# Remote preview proposal (not deployed)
+# Remote deployment proposal (not deployed)
 
-No permitted remote preview exists in repo CI, docs, or deploy config. This
-page is a proposal only. Do not create a tunnel, public host, or new
-deployment from this text.
+No permitted remote preview or public host exists in repo CI, docs, or
+deploy config. This page is a complete deployment proposal only. Do not
+create a tunnel, public host, or new deployment from this text. Mitch has
+not approved a remote deploy.
 
 ## Target that fits the current stack
 
