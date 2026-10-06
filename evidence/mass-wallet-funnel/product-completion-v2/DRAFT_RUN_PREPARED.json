@@ -1,0 +1,58 @@
+{
+  "kind": "single-approval-proposal-v1",
+  "status": "NOT_AUTHORISED",
+  "do_not_dispatch": true,
+  "do_not_enable": true,
+  "authorization_id": "live-ranked100-next-candidates-2026-10-06-mitch",
+  "file": "config/live_authorization.ranked100-next-candidates-draft.json",
+  "selected_candidates": [
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "provider_rank": 4,
+      "trade_count": 1494,
+      "reason": "highest_provider_trade_count_among_shortlist_without_capture"
+    },
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "provider_rank": 2,
+      "trade_count": 1022,
+      "reason": "highest_provider_trade_count_among_shortlist_without_capture"
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "provider_rank": 15,
+      "trade_count": 656,
+      "reason": "highest_provider_trade_count_among_shortlist_without_capture"
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "provider_rank": 17,
+      "trade_count": 599,
+      "reason": "highest_provider_trade_count_among_shortlist_without_capture"
+    },
+    {
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "provider_rank": 90,
+      "trade_count": 422,
+      "reason": "highest_provider_trade_count_among_shortlist_without_capture"
+    }
+  ],
+  "history_boundaries": {
+    "method": "getTransactionsForAddress",
+    "limit": 100,
+    "sortOrder": "desc",
+    "pages_per_wallet": 2,
+    "optional_rank1_earlier_page_for_unbacked_sale": false,
+    "optional_rank1_page_skipped_reason": "Stored draft max_dispatched_requests=10 covers 5 wallets \u00d7 2 pages only; it does not unambiguously allocate an 11th rank-1 page."
+  },
+  "max_requests": 10,
+  "max_units": 100,
+  "max_spend_usd": "0",
+  "stop_conditions": [
+    "stop_once_one_completed_position_reconciled",
+    "do_not_broaden_stop_after_one_into_validating_multiple_wallets",
+    "failed_or_timed_out_dispatched_request_consumes_attempt"
+  ],
+  "realistic_yield": "At most five unverified ranked-100 wallets, two pages each. The optional rank-1 earlier page is skipped because the stored draft does not unambiguously cover it. Not leftover grants. Not MATCH.",
+  "PRODUCT_READY": false
+}

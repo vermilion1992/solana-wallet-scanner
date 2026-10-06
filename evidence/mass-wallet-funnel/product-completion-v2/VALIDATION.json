@@ -1,0 +1,62 @@
+{
+  "kind": "product-completion-v2-validation",
+  "app_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
+  "tested_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
+  "running_build_identity": {
+    "scanner_version": "0.3.11",
+    "shown_in_app": "v0.3.11",
+    "api_health": {"kind": "local-scanner-health-v1", "version": "0.3.11", "PRODUCT_READY": false}
+  },
+  "backend": {
+    "passed": 3585,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "subtests_passed": 440,
+    "seconds": 526.34,
+    "previous_8753392": {"passed": 3580, "failed": 0},
+    "count_change": "+5 tests added (independent recon, every-API token, inflight batch, compare mismatches, snapshot identity). No assertions weakened, no tests deleted, no mock substitutions."
+  },
+  "frontend_build": {
+    "command": "cd frontend && npm run build",
+    "result": "passed",
+    "asset": "frontend/dist/assets/index-Db4OQiix.js"
+  },
+  "acceptance_ah": {
+    "state": "PASS",
+    "viewport": "390x844",
+    "method": "Playwright Chromium browser emulation, not a physical phone",
+    "cases": {
+      "A_ranked_filter_shortlist": "PASS",
+      "B_batch_genuine_fixtures_no_history": "PASS",
+      "C_genuine_baseline_visible": "PASS",
+      "D_export_and_g1_agree": "PASS",
+      "E_auth_and_disabled_budget": "PASS",
+      "F_refresh_persistence": "PASS",
+      "F_restart_reopen": "PASS",
+      "G_auth_gate": "PASS",
+      "H_zero_provider_calls": "PASS"
+    },
+    "provider_calls": 0,
+    "external_count": 0
+  },
+  "lan": {
+    "command": "./run.sh --lan --no-browser",
+    "state": "PASS",
+    "client": "separate non-loopback 172.30.0.2 at 390x844 (browser emulation, not a physical phone)",
+    "unauthenticated_status": 401,
+    "provider_calls": 0,
+    "qr_and_token": "redacted from evidence"
+  },
+  "acquisition": {
+    "authorised": false,
+    "performed": false,
+    "requests": 0,
+    "credits": 0,
+    "spend_usd": "0"
+  },
+  "genuine_multi_wallet_validation": "BLOCKED",
+  "PRODUCT_READY": false,
+  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
+  "pr_draft": true
+}

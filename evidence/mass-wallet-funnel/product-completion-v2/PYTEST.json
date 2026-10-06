@@ -1,0 +1,17 @@
+{
+  "kind": "full-backend-suite-v1",
+  "tested_commit": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
+  "passed": 3585,
+  "failed": 0,
+  "skipped": 0,
+  "xfailed": 0,
+  "subtests_passed": 440,
+  "seconds": 526.34,
+  "previous_bind": {
+    "commit": "8753392901eca4a4570722caee0f8e80218075eb",
+    "passed": 3580,
+    "failed": 0
+  },
+  "count_change": "+5 passed, 0 failed. New tests: test_independent_reconciliation_does_not_import_app_accounting, test_every_api_route_requires_the_session, test_second_inflight_batch_is_refused, test_compare_flags_currency_window_and_incomplete_evidence, test_universe_exposes_stable_snapshot_identity. No assertions weakened, no tests deleted, no mock substitutions.",
+  "PRODUCT_READY": false
+}

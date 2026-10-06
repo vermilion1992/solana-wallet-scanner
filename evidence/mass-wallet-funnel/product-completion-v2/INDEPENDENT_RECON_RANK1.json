@@ -1,0 +1,66 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "market_trades": 6,
+  "classified_counts": {
+    "buy": 4,
+    "sell": 2
+  },
+  "fifo": {
+    "asset": "USDC",
+    "known_cost_sells": [
+      {
+        "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "proceeds": "3376.028087",
+        "basis": "3000",
+        "net_profit": "376.028087",
+        "consumed_lots": [
+          {
+            "signature": "59K92otieTG53v2uDYJiEhPP5bYXpKtvZALmi4K3uDM86PtNG7U8BuhYEdHpvfydmPnZpKebbve3qkzrZLh2kQ6d",
+            "quantity_raw": "1176477238638",
+            "basis": "3000"
+          }
+        ],
+        "fee_sol": "0.00032333",
+        "fee_in_pnl": false
+      }
+    ],
+    "unresolved_basis_sales": [
+      {
+        "signature": "4UAE8RXr1DsdA5Lf9nARhUCJRG51VXAjihLznU6XHh91j5s2uLkvcBdF7TtCb2wzJ2jL7wQNZdmxrA2svARbKnXr",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "unmatched_quantity_raw": "1191776693137",
+        "gross_proceeds": "2954.546038",
+        "fee_sol": "0.000093679"
+      }
+    ],
+    "open_lots": [
+      {
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "quantity_raw": "1277877910791",
+        "consideration": "3000",
+        "signature": "4Kg5mSUZGnyAzqfSah1jMTy1ess3tn1cK6ptPeWmtqKpRm9DeeHcpbnKEH1JRENZngrv5H79WQvLsro2iqWCX34M"
+      },
+      {
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "quantity_raw": "944085989114",
+        "consideration": "2000",
+        "signature": "pweNPfzNPsXsC8yiXp2DfixceLBPJ1R1LFd4uzGbsuaBbfjyabawTiQzpsYvxgRQEmrJW4KKTA2sAwR3AzTorsa"
+      },
+      {
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "quantity_raw": "945590552707",
+        "consideration": "2000",
+        "signature": "51Kvmc8zr8XrsRcwkt9SUr4UFpnnmtNw2JbhcvK7pPv6YPKfe3n7nN8ZJ5qgP2UGsueqchM9snH7NkQRKSK85eUX"
+      }
+    ],
+    "total_profit": "376.028087",
+    "sol_fees_not_converted": true,
+    "missing_basis_is_not_zero": true
+  },
+  "headline_meaning": "Known-cost realised USDC on the one matched 5tCju6YN sell (gross proceeds minus FIFO buy consideration). SOL fees stay SOL and are not subtracted. The leading unbacked 5tCju6YN sell is excluded. Open H4KU buys are inventory, not profit.",
+  "PRODUCT_READY": false
+}

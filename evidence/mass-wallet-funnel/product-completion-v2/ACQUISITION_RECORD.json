@@ -1,0 +1,44 @@
+{
+  "kind": "acquisition-record-v1",
+  "authorization_id": "live-ranked100-next-candidates-2026-10-06-mitch",
+  "file": "config/live_authorization.ranked100-next-candidates-draft.json",
+  "enabled": false,
+  "authorised": false,
+  "performed": false,
+  "requests": 0,
+  "credits": 0,
+  "spend_usd": "0",
+  "would_contact_provider": false,
+  "blocked_before_provider": true,
+  "zero_contact": {
+    "frontend_instrumentation": "httpx get/post monkeypatched in phone A-H and LAN harnesses; page request log has zero provider hosts",
+    "backend_instrumentation": "scanner.mass_search.instrumentation provider_call_count stays 0 through ranked workflow, batch, compare, export, and gate",
+    "startup": "Launcher and /api/health do not construct a provider",
+    "offline_filters": "Saving filters and shortlist cannot dispatch"
+  },
+  "gate_codes_proven_before_transport": [
+    "missing",
+    "disabled",
+    "expired",
+    "consumed",
+    "insufficient",
+    "concurrent"
+  ],
+  "atomic_reservation": "attempt_history_acquisition holds in_flight under the store lock; a second thread receives concurrent; product path still refuses dispatch",
+  "no_sdk_retries": true,
+  "draft_prepared_not_enabled": {
+    "wallets_by_provider_trade_count_full_addresses": [
+      {"provider_rank": 4, "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU", "trade_count": 1494},
+      {"provider_rank": 2, "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL", "trade_count": 1022},
+      {"provider_rank": 15, "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot", "trade_count": 656},
+      {"provider_rank": 17, "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB", "trade_count": 599},
+      {"provider_rank": 90, "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U", "trade_count": 422}
+    ],
+    "resolved_from": "saved ranked100-discovery-pilot-2026-10-05 snapshot, never prefixes",
+    "optional_rank1_earlier_page": false,
+    "optional_rank1_skip_reason": "Stored draft max_dispatched_requests=10 covers 5 wallets × 2 pages only; it does not unambiguously allocate an 11th rank-1 page.",
+    "limits": "10 requests / 100 credits / $0",
+    "stop": "first reconciled completed position, win or loss"
+  },
+  "PRODUCT_READY": false
+}

@@ -127,5 +127,9 @@
   "ranked100_shared_boundary_ui_reopen": "ranked100-shared-boundary/02-reopen-desktop.png",
   "ranked100_shared_boundary_ui_refilter": "ranked100-shared-boundary/03-refilter-desktop.png",
   "ranked100_shared_boundary_ui_export": "ranked100-shared-boundary/UI_EXPORT.json",
-  "ranked100_shared_boundary_ui_external_calls": 0
+  "ranked100_shared_boundary_ui_external_calls": 0,
+  "product_completion_v2": "product-completion-v2/",
+  "product_completion_v2_app_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
+  "product_completion_v2_genuine_multi_wallet": "BLOCKED",
+  "product_completion_v2_PRODUCT_READY": false
 }

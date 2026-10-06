@@ -1,0 +1,42 @@
+{
+  "kind": "product-completion-v2-handoff",
+  "PRODUCT_READY": false,
+  "not_safe_to_copy": true,
+  "app_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
+  "starting_head": "f05e8bf151e5de14cd669b3fada0a2fd60ce354d",
+  "prior_runtime": "8753392901eca4a4570722caee0f8e80218075eb",
+  "genuine_multi_wallet_validation": "BLOCKED",
+  "acquisition": {
+    "authorization_id": "live-ranked100-next-candidates-2026-10-06-mitch",
+    "enabled": false,
+    "authorised": false,
+    "performed": false,
+    "requests": 0,
+    "credits": 0,
+    "spend_usd": "0"
+  },
+  "headline_376": {
+    "value": "376.028087",
+    "unit": "USDC",
+    "meaning": "Known-cost realised USDC on one matched 5tCju6YN sell (3376.028087-3000). SOL fees not subtracted. Unbacked sell excluded. Open H4KU inventory not profit."
+  },
+  "g1_control": {
+    "pnl_sol": "-0.167725526",
+    "hold_seconds": 598,
+    "not_a_ranked_snapshot_wallet": true
+  },
+  "disposition_counts": {
+    "History required": 99,
+    "Captured and analysed": 1,
+    "Analysed with incomplete evidence": 0,
+    "Error": 0,
+    "Cancelled": 0
+  },
+  "phone_ah": "PASS",
+  "lan": "PASS",
+  "backend": "3585 passed / 0 failed",
+  "browser_emulation_not_physical_phone": true,
+  "remote_preview": "proposal only; not deployed",
+  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
+  "pr_draft": true
+}

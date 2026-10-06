@@ -1,0 +1,25 @@
+INFO:     Started server process [48831]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready on this computer's LAN.
+Same Wi-Fi only. Token auth is required. Unauthenticated API stays 401.
+Phone URL:
+http://172.30.0.2:[port]/#session=[redacted]
+Scan the QR on your phone. [QR art omitted from evidence — encodes the session token.]
+Press Ctrl+C to stop.
+
+INFO:     172.30.0.2:56344 - "GET /api/state HTTP/1.1" 401 Unauthorized
+INFO:     172.30.0.2:56350 - "GET / HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56352 - "GET /assets/index-eXsK5YO9.css HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56350 - "GET /assets/index-Db4OQiix.js HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56350 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56352 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56352 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56352 - "GET /api/mass-search/access-blocker HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56350 - "GET /api/mass-search/ranked-workflow HTTP/1.1" 200 OK
+INFO:     172.30.0.2:56344 - "GET /api/mass-search/instrumentation HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [48831]
