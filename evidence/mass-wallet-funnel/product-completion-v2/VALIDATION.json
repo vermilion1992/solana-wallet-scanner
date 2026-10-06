@@ -1,40 +1,48 @@
 {
   "kind": "product-completion-v2-validation",
-  "app_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
-  "tested_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
+  "app_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "final_head_differs_only_by_evidence": true,
   "running_build_identity": {
     "scanner_version": "0.3.11",
     "shown_in_app": "v0.3.11",
-    "api_health": {"kind": "local-scanner-health-v1", "version": "0.3.11", "PRODUCT_READY": false}
+    "frontend_asset": "frontend/dist/assets/index-DkLGyhOf.js",
+    "frontend_asset_sha256": "5749d347d68916682bda58977af4c2b8d4f8e909d6387597fff6481d0b9850f6",
+    "api_health": {
+      "kind": "local-scanner-health-v1",
+      "version": "0.3.11",
+      "PRODUCT_READY": false
+    }
   },
   "backend": {
-    "passed": 3585,
+    "passed": 3604,
     "failed": 0,
     "skipped": 0,
     "xfailed": 0,
     "subtests_passed": 440,
-    "seconds": 526.34,
-    "previous_8753392": {"passed": 3580, "failed": 0},
-    "count_change": "+5 tests added (independent recon, every-API token, inflight batch, compare mismatches, snapshot identity). No assertions weakened, no tests deleted, no mock substitutions."
+    "seconds": 530.36,
+    "count_change": "+19 vs 3585 at c0128f2 (Mitch A-D + research-screen tests and labelled synthetics). No assertions weakened."
   },
   "frontend_build": {
     "command": "cd frontend && npm run build",
     "result": "passed",
-    "asset": "frontend/dist/assets/index-Db4OQiix.js"
+    "asset": "frontend/dist/assets/index-DkLGyhOf.js",
+    "asset_sha256": "5749d347d68916682bda58977af4c2b8d4f8e909d6387597fff6481d0b9850f6"
   },
   "acceptance_ah": {
     "state": "PASS",
     "viewport": "390x844",
     "method": "Playwright Chromium browser emulation, not a physical phone",
+    "tested_commit": "1ab254253900a48ee7858731e04faafd09d1210f",
     "cases": {
       "A_ranked_filter_shortlist": "PASS",
       "B_batch_genuine_fixtures_no_history": "PASS",
       "C_genuine_baseline_visible": "PASS",
       "D_export_and_g1_agree": "PASS",
       "E_auth_and_disabled_budget": "PASS",
+      "G_auth_gate": "PASS",
       "F_refresh_persistence": "PASS",
       "F_restart_reopen": "PASS",
-      "G_auth_gate": "PASS",
       "H_zero_provider_calls": "PASS"
     },
     "provider_calls": 0,
@@ -46,7 +54,13 @@
     "client": "separate non-loopback 172.30.0.2 at 390x844 (browser emulation, not a physical phone)",
     "unauthenticated_status": 401,
     "provider_calls": 0,
-    "qr_and_token": "redacted from evidence"
+    "qr_and_token": "redacted from evidence",
+    "frontend_asset_served": "index-DkLGyhOf.js"
+  },
+  "token_routes": {
+    "checked": 80,
+    "bootstrap_is_launch_exchange": true,
+    "research_search_proposal_protected": true
   },
   "acquisition": {
     "authorised": false,

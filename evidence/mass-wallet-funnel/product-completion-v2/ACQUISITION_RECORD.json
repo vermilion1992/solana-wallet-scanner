@@ -28,17 +28,43 @@
   "no_sdk_retries": true,
   "draft_prepared_not_enabled": {
     "wallets_by_provider_trade_count_full_addresses": [
-      {"provider_rank": 4, "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU", "trade_count": 1494},
-      {"provider_rank": 2, "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL", "trade_count": 1022},
-      {"provider_rank": 15, "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot", "trade_count": 656},
-      {"provider_rank": 17, "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB", "trade_count": 599},
-      {"provider_rank": 90, "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U", "trade_count": 422}
+      {
+        "provider_rank": 4,
+        "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+        "trade_count": 1494
+      },
+      {
+        "provider_rank": 2,
+        "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+        "trade_count": 1022
+      },
+      {
+        "provider_rank": 15,
+        "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+        "trade_count": 656
+      },
+      {
+        "provider_rank": 17,
+        "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+        "trade_count": 599
+      },
+      {
+        "provider_rank": 90,
+        "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+        "trade_count": 422
+      }
     ],
     "resolved_from": "saved ranked100-discovery-pilot-2026-10-05 snapshot, never prefixes",
     "optional_rank1_earlier_page": false,
-    "optional_rank1_skip_reason": "Stored draft max_dispatched_requests=10 covers 5 wallets × 2 pages only; it does not unambiguously allocate an 11th rank-1 page.",
+    "optional_rank1_skip_reason": "Stored draft max_dispatched_requests=10 covers 5 wallets \u00d7 2 pages only; it does not unambiguously allocate an 11th rank-1 page.",
     "limits": "10 requests / 100 credits / $0",
     "stop": "first reconciled completed position, win or loss"
   },
-  "PRODUCT_READY": false
+  "PRODUCT_READY": false,
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "separate_research_search_draft": {
+    "authorization_id": "live-ranked100-research-search-2026-10-06-mitch",
+    "enabled": false,
+    "do_not_dispatch": true
+  }
 }

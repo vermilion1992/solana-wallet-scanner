@@ -1,0 +1,16 @@
+{
+  "requirement": "A. BATCH RACE",
+  "status": "PASS",
+  "evidence": [
+    "scanner/mass_search/batch.py PROCESS_MODEL=single_process_per_data_dir; store.lock admission; BatchBusy 409",
+    "HTTP create/step/cancel are sync threadpool routes",
+    "tests/test_mass_search_mitch_requirements.py::test_http_batch_admission_is_atomic_and_returns_409",
+    "tests/test_mass_search_mitch_requirements.py::test_identical_http_batch_attaches_idempotently",
+    "tests/test_mass_search_mitch_requirements.py::test_cancel_releases_admission_only_after_executing_stops",
+    "tests/test_mass_search_mitch_requirements.py::test_batch_admission_does_not_consult_acquisition",
+    "tests/test_launcher.py data_directory_lock / InstanceAlreadyRunning"
+  ],
+  "process_model": "single_process_per_data_dir",
+  "process_guard": "scanner.__main__.data_directory_lock (.runtime.lock)",
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f"
+}

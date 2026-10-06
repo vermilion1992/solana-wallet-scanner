@@ -1,9 +1,8 @@
 {
   "kind": "product-completion-v2-environment",
-  "app_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
-  "tree_at_app_freeze": "clean at c0128f2 (implementation). Evidence files added after validation.",
-  "tested_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
-
+  "app_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "tree_at_app_freeze": "clean at 1ab2542 (implementation). Evidence files added after validation.",
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
   "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
   "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
   "pip_freeze_selected": {
@@ -21,5 +20,7 @@
     "version": "0.3.11"
   },
   "scanner_version": "0.3.11",
+  "frontend_asset": "frontend/dist/assets/index-DkLGyhOf.js",
+  "viewport": "390x844 Playwright Chromium emulation, not a physical phone",
   "PRODUCT_READY": false
 }

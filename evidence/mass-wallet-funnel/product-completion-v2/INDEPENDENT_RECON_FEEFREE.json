@@ -1,0 +1,51 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "corpus_kind": "SYNTHETIC",
+  "not_proof": true,
+  "wallet": "SynthEngFEEFREE1111111111111111111111111",
+  "market_trades": 2,
+  "fifo": {
+    "asset": "USDC",
+    "known_cost_sells": [
+      {
+        "signature": "synth-eng-feefree-sell-1",
+        "mint": "SynthMintFEEFREE11111111111111111111111",
+        "quantity_raw": "6",
+        "proceeds": "60",
+        "basis": "36",
+        "net_profit": "24",
+        "consumed_lots": [
+          {
+            "signature": "synth-eng-feefree-buy-1",
+            "quantity_raw": "6",
+            "basis": "36"
+          }
+        ],
+        "fee_sol": "0",
+        "fee_in_pnl": false,
+        "partial_known_cost": true,
+        "whole_sale_pnl_resolved": false,
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
+      }
+    ],
+    "unresolved_basis_sales": [
+      {
+        "signature": "synth-eng-feefree-sell-1",
+        "mint": "SynthMintFEEFREE11111111111111111111111",
+        "unmatched_quantity_raw": "4",
+        "gross_proceeds": "40",
+        "fee_sol": "0",
+        "unresolved_basis": true,
+        "whole_sale_pnl_resolved": false,
+        "result_scope": "conditional_on_captured_inventory"
+      }
+    ],
+    "open_lots": [],
+    "total_profit": "24",
+    "sol_fees_not_converted": true,
+    "missing_basis_is_not_zero": true
+  },
+  "PRODUCT_READY": false
+}

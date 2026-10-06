@@ -1,0 +1,31 @@
+{
+  "kind": "research-screen-run-record-v1",
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "snapshot_id": "ranked100-discovery-pilot-2026-10-05",
+  "thresholds_fixed_before_evaluation": {
+    "min_completed_known_cost": "1",
+    "min_sample_positions": "3",
+    "min_coverage_share": null
+  },
+  "unknown_never_passes": true,
+  "outcome": "inconclusive",
+  "outcome_class": "inconclusive_insufficient_history",
+  "counts": {
+    "inconclusive": 99,
+    "zero_qualified": 1,
+    "completed_qualified": 0,
+    "not_executed": 0,
+    "universe": 100
+  },
+  "rank1": {
+    "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+    "outcome": "zero_qualified",
+    "completed_matched_positions": 1,
+    "evidence_class_position": 2,
+    "evidence_class_account": 5,
+    "net_realised": null,
+    "reason": "n=1 is below min_sample_positions=3; a matched trade never qualifies the account"
+  },
+  "note": "Today's run over the saved snapshot is inconclusive for 99 wallets and must say so.",
+  "PRODUCT_READY": false
+}

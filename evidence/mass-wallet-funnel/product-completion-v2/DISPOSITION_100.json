@@ -2,7 +2,7 @@
   "kind": "ranked-100-disposition-v1",
   "snapshot_id": "ranked100-discovery-pilot-2026-10-05",
   "snapshot_raw_sha256": "de278c557a148b00b24e7e46d494eb6d3ee8648a74f5b681a39a2b994579b985",
-  "analysis_version": "analysis-v2-material-exit-v2+usdc-fifo-v1",
+  "analysis_version": "analysis-v4-research-screen-v1+partial-match-v1+material-exit-v2+usdc-fifo-v1",
   "counts": {
     "History required": 99,
     "Captured and analysed": 1,
@@ -1123,5 +1123,17 @@
   "synthetic_kept_separate": true,
   "genuine_ranked_wallets_through_real_batch": 1,
   "genuine_multi_wallet_validation": "BLOCKED",
-  "PRODUCT_READY": false
+  "PRODUCT_READY": false,
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "research_screen": {
+    "outcome": "inconclusive",
+    "outcome_class": "inconclusive_insufficient_history",
+    "counts": {
+      "inconclusive": 99,
+      "zero_qualified": 1,
+      "completed_qualified": 0,
+      "not_executed": 0
+    },
+    "note": "Today's run over the saved snapshot is inconclusive for 99 wallets. Rank-1 n=1 is zero-qualified (min_sample_positions=3)."
+  }
 }

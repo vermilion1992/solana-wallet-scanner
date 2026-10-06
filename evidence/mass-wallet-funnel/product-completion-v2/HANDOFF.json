@@ -2,9 +2,8 @@
   "kind": "product-completion-v2-handoff",
   "PRODUCT_READY": false,
   "not_safe_to_copy": true,
-  "app_sha": "c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf",
-  "starting_head": "f05e8bf151e5de14cd669b3fada0a2fd60ce354d",
-  "prior_runtime": "8753392901eca4a4570722caee0f8e80218075eb",
+  "app_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "prior_freeze": "accbf13b6618fb75d25c14635e0ab04e0a40131b",
   "genuine_multi_wallet_validation": "BLOCKED",
   "acquisition": {
     "authorization_id": "live-ranked100-next-candidates-2026-10-06-mitch",
@@ -14,6 +13,12 @@
     "requests": 0,
     "credits": 0,
     "spend_usd": "0"
+  },
+  "research_search_draft": {
+    "authorization_id": "live-ranked100-research-search-2026-10-06-mitch",
+    "enabled": false,
+    "documented_credits": 200,
+    "balance": "unconfirmed"
   },
   "headline_376": {
     "value": "376.028087",
@@ -25,6 +30,12 @@
     "hold_seconds": 598,
     "not_a_ranked_snapshot_wallet": true
   },
+  "research_screen": {
+    "outcome": "inconclusive",
+    "inconclusive": 99,
+    "zero_qualified": 1,
+    "completed_qualified": 0
+  },
   "disposition_counts": {
     "History required": 99,
     "Captured and analysed": 1,
@@ -34,14 +45,15 @@
   },
   "phone_ah": "PASS",
   "lan": "PASS",
-  "backend": "3585 passed / 0 failed",
+  "backend": "3604 passed / 0 failed",
+  "frontend_asset": "frontend/dist/assets/index-DkLGyhOf.js",
   "browser_emulation_not_physical_phone": true,
   "remote_preview": "proposal only; not deployed",
   "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4",
   "pr_draft": true,
   "independent_reviews": {
-    "accounting": "ACCEPT_WITH_NITS (numbers accurate; runtime import graph is not process-isolated)",
-    "app_security": "ACCEPT_WITH_NITS (no live-spend or auth break; visible_report persist and window-test coverage are latent)",
-    "material_findings": 0
+    "accounting": "bc-50968f34-9c5c-5886-9ffd-beb073a4fd7f",
+    "app_security": "bc-70213343-7b25-5034-9cf4-c3634d700719",
+    "instruction": "focused final-changes only; no app edits"
   }
 }

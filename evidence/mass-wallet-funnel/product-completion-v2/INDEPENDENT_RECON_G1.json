@@ -11,6 +11,7 @@
       {
         "signature": "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c",
         "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+        "quantity_raw": "13032346709725",
         "proceeds": "7.732599474",
         "basis": "7.90026",
         "net_profit": "-0.167725526",
@@ -37,7 +38,11 @@
           }
         ],
         "fee_sol": "0.000065",
-        "fee_in_pnl": true
+        "fee_in_pnl": true,
+        "partial_known_cost": false,
+        "whole_sale_pnl_resolved": true,
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
       }
     ],
     "unresolved_basis_sales": [],

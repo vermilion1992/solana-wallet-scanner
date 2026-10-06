@@ -1,0 +1,12 @@
+{
+  "requirement": "D. COMPARE WINDOWS",
+  "status": "PASS",
+  "evidence": [
+    "window_policy=own_windows_shown_mismatch_blocks",
+    "tests/test_mass_search_mitch_requirements.py::test_compare_same_window_control_and_differing_included_trades",
+    "tests/test_mass_search_mitch_requirements.py::test_cache_key_includes_window",
+    "A-H compare mismatches"
+  ],
+  "policy": "Each report keeps its own window. Differing windows are not recomputed onto a common interval. Compare is blocked.",
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f"
+}

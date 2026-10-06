@@ -14,6 +14,7 @@
       {
         "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo",
         "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "quantity_raw": "1176477238638",
         "proceeds": "3376.028087",
         "basis": "3000",
         "net_profit": "376.028087",
@@ -25,7 +26,11 @@
           }
         ],
         "fee_sol": "0.00032333",
-        "fee_in_pnl": false
+        "fee_in_pnl": false,
+        "partial_known_cost": false,
+        "whole_sale_pnl_resolved": true,
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
       }
     ],
     "unresolved_basis_sales": [
@@ -34,7 +39,10 @@
         "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
         "unmatched_quantity_raw": "1191776693137",
         "gross_proceeds": "2954.546038",
-        "fee_sol": "0.000093679"
+        "fee_sol": "0.000093679",
+        "unresolved_basis": true,
+        "whole_sale_pnl_resolved": false,
+        "result_scope": "conditional_on_captured_inventory"
       }
     ],
     "open_lots": [

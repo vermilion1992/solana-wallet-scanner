@@ -1,0 +1,11 @@
+{
+  "requirement": "B. VISIBILITY",
+  "status": "PASS",
+  "evidence": [
+    "scanner/mass_search/visible_report.py documents True / False / absent",
+    "tests/test_mass_search_mitch_requirements.py::test_visible_report_true_and_false_survive_http_reopen",
+    "tests/test_mass_search_mitch_requirements.py::test_absent_visible_report_never_defaults_true",
+    "A-H provenance visible_report true; export mass_search_interpretation.visible_report_stored"
+  ],
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f"
+}

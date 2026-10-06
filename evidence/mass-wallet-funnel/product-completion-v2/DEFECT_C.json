@@ -1,0 +1,14 @@
+{
+  "requirement": "C. PARTLY BACKED SELLS",
+  "status": "PASS",
+  "evidence": [
+    "fee-free 6@36 / sell 10@100: matched 60 proceeds = +24; unmatched 4 = 40; 100 accounted",
+    "INDEPENDENT_RECON_FEEFREE.json",
+    "tests/test_mass_search_mitch_requirements.py::test_fee_free_partial_match_is_fully_accounted",
+    "tests/test_mass_search_mitch_requirements.py::test_partial_match_cases_agree_with_independent_tool",
+    "tests/test_mass_search_mitch_requirements.py::test_multi_lot_integer_totals_preserved",
+    "rank-1 +376.028087 and G1 -0.167725526 unchanged",
+    "result_scope=conditional_on_captured_inventory on report, compare, export, UI"
+  ],
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f"
+}

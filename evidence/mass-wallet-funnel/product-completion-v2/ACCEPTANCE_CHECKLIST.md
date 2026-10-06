@@ -3,7 +3,7 @@
 Tracks four tracks separately. `PRODUCT_READY` stays false while any existing
 gate is unresolved (B1 `NO_GO_CURRENT_SOURCE`, B2 `OPEN`, B3 `BLOCKED`).
 
-Frozen app SHA: `c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf`.
+Frozen app SHA: `1ab254253900a48ee7858731e04faafd09d1210f`.
 
 ## (a) Application functionality
 
@@ -17,7 +17,7 @@ Frozen app SHA: `c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf`.
 | Batch truthful progress + terminal outcomes | PASS | A–H B; step_batch + completed/cancelled |
 | Failure isolation | PASS | `test_one_bad_wallet_does_not_prevent_later_success` |
 | Cancel leaves a consistent cancelled state | PASS | `test_batch_cache_and_cancel_do_not_call_providers` |
-| Duplicate-submit prevention | PASS | frontend `batchBusy`; `test_second_inflight_batch_is_refused` |
+| Duplicate-submit prevention | PASS | HTTP 409 barrier test; identical attach; `test_second_inflight_batch_is_refused` |
 | Cache bound to wallet+capture+snapshot+analysis version | PASS | `evidence_cache_key`; cache-hit re-attaches filters |
 | History required — not analysed | PASS | 99/100 rows; batch status `history_required` |
 | No substituted / empty-as-success results | PASS | incomplete_evidence when `visible_report` is false |
@@ -57,7 +57,9 @@ Frozen app SHA: `c0128f2e25d88d53e2bb0c4a45e6b8cb13f57cbf`.
 | --- | --- | --- |
 | Rank-1 not safe to copy | PASS | unresolved basis + open inventory + page-0 only |
 | Funnel A/B/C honest | PASS | YES / PARTIAL / NOT_EVALUATED |
-| Next-candidates proposal prepared, not enabled | PASS | `DRAFT_RUN_PREPARED.json` |
+| Next-candidates proposal prepared, not enabled | PASS | `DRAFT_RUN_PREPARED.json` (untouched) |
+| Research screen 99 inconclusive / rank-1 zero-qualified | PASS | `RESEARCH_RUN.json`; A–H `[data-research-screen]` |
+| Separate research-search draft disabled | PASS | `RESEARCH_SEARCH_PROPOSAL.json`; 200 documented credits; balance unconfirmed |
 | Copy-trading / MATCH / PRODUCT_READY | **NOT CLAIMED** | PRODUCT_READY remains false |
 
 ## Existing gates (unchanged)
