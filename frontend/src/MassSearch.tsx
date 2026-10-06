@@ -48,7 +48,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
   const [onlyUser, setOnlyUser] = useState(false);
   const [onlyCaptured, setOnlyCaptured] = useState(false);
   const [minCompleted, setMinCompleted] = useState<string>("");
-  const [minSample, setMinSample] = useState<string>("3");
+  const [minSample, setMinSample] = useState<string>("");
   const [minCoverage, setMinCoverage] = useState<string>("");
   const [visibleLimit, setVisibleLimit] = useState(20);
   const [batch, setBatch] = useState<RankedBatch | null>(null);
@@ -74,7 +74,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
         setOnlyUser(!!proxy.only_user_shortlist);
         setOnlyCaptured(!!proxy.only_captured);
         setMinCompleted(view.filters?.thresholds?.min_completed_known_cost || "");
-        setMinSample(view.filters?.thresholds?.min_sample_positions || view.research_screen?.thresholds_fixed_before_evaluation?.min_sample_positions || "3");
+        setMinSample(view.filters?.thresholds?.min_sample_positions || "");
         setMinCoverage(view.filters?.thresholds?.min_coverage_share || "");
       })
       .catch(() => undefined);
