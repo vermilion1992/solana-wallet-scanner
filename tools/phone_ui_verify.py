@@ -23,6 +23,7 @@ PORT = 8768
 HOST = "127.0.0.1"
 CCCS = "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU"
 A6PS = "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot"
+W58 = "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL"
 
 
 def preload():
@@ -115,12 +116,18 @@ def main():
         for address, short, extra in (
             (CCCS, "CccS", "[data-verified-sensitivity]"),
             (A6PS, "A6PS", "[data-wallet-analytics], .research-profile"),
+            (W58, "58PW", "[data-independently-audited], .research-profile"),
         ):
             nav(page, "Search")
             page.wait_for_timeout(400)
-            row = page.locator("[data-ranked-cards] li").filter(has_text=address[:6]).first
-            row.scroll_into_view_if_needed()
-            row.get_by_role("button", name="Open report").click()
+            row = page.locator("[data-ranked-cards] li").filter(has_text=address[:6])
+            if row.count():
+                row.first.scroll_into_view_if_needed()
+                row.first.get_by_role("button", name="Open report").click()
+            else:
+                saved = page.locator(".mass-search-saved li").filter(has_text=address[:4]).first
+                saved.scroll_into_view_if_needed()
+                saved.get_by_role("button", name="Reopen report").click()
             page.get_by_text("Research profile").first.wait_for(timeout=15000)
             page.wait_for_timeout(800)
             shot(page, f"phone-03-report-{short}")

@@ -144,11 +144,11 @@ gtfo fee-audit totals: network 5.107533156 / verified tips **3.303280298** (Jito
 
 ## Suite / build on this exact commit
 
-- Keys unset: **3653 passed**, 440 subtests, EXIT 0 (9 min 1 s)
-- Keys set (dummy, never dispatched): **3653 passed**, 440 subtests, EXIT 0 (9 min 6 s)
-- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-Bj4UsG-X.js`
+- Keys unset: **3664 passed**, 440 subtests, EXIT 0 (8 min 58 s)
+- Keys set (dummy, never dispatched): **3664 passed**, 440 subtests, EXIT 0 (8 min 57 s)
+- `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-l9mwD6zR.js`
 - Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = 401
-- Screenshot paths: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/phone-01-ranked-list.png`, `phone-02-research-screen-qualification-levels.png`, `phone-03-report-CccS.png`, `phone-04-report-CccS-detail.png`, `phone-03-report-A6PS.png`, `phone-04-report-A6PS-detail.png`, `phone-05-compare.png`
+- Screenshot paths: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/phone-01-ranked-list.png`, `phone-02-research-screen-qualification-levels.png`, `phone-03-report-CccS.png`, `phone-04-report-CccS-detail.png`, `phone-03-report-A6PS.png`, `phone-04-report-A6PS-detail.png`, `phone-03-report-58PW.png`, `phone-04-report-58PW-detail.png`, `phone-05-compare.png`
 
 ## Still blocked
 

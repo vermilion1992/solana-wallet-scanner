@@ -303,9 +303,9 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
           if (!audit.independently_audited || audit.independently_audited_episode_net == null) {
             return "";
           }
-          const episode = ` independently_audited:true next to audited episode net ${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}.`;
+          const episode = ` independently_audited:true next to audited episode net ${String(audit.independently_audited_episode_net)} ${String(audit.independently_audited_episode_net_unit || "")}`;
           if (audit.worksheet_total && audit.worksheet_total_independently_audited === false) {
-            return `${episode} Worksheet total ${String(audit.worksheet_total)} ${String(audit.worksheet_total_unit || "")} is not independently audited.`;
+            return `${episode}. Worksheet total ${String(audit.worksheet_total)} ${String(audit.worksheet_total_unit || "")} is not independently audited`;
           }
           return episode;
         })()}
