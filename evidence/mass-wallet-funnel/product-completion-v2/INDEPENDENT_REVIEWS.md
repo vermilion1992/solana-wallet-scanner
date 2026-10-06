@@ -18,6 +18,14 @@ It does share `decode_supported_swaps` + canonical wrap via
 | Accounting / C + qualification | [Accounting release review](bc-9ed96044-d638-5806-88fc-90a8840d3acf) | Partial-match FIFO, fee-free +24/40/100, rank-1 +376.028087 and G1 −0.167725526 unchanged, qualification categories |
 | App / security A B D + grants | [App security release review](bc-9b5fc97a-107c-5fa0-88dc-c3ff84440334) | HTTP 409 admission, attach/step, visible_report persist, compare window policy, both drafts disabled, `./run.sh` |
 
+[Accounting release review](bc-9ed96044-d638-5806-88fc-90a8840d3acf)
+verdict: **ACCEPT** at `c34eb2c`. Requirement C holds: fee-free analytics
+are matched 6@60 +24 and unmatched 4@40; qualification is separate from
+screen pass/fail; rank-1 +376.028087 USDC and G1 −0.167725526 SOL
+unchanged. Nits (not blocking, not fixed): non-USDC reconstruct path
+skips isolate (G1 fully backed); classes 1/3/4 unused on today's
+offline-replay path; unused screen keys stay UNSET.
+
 [App security release review](bc-9b5fc97a-107c-5fa0-88dc-c3ff84440334)
 verdict: **ACCEPT** at `c34eb2c`. Named requirements A, B, and D hold:
 attach skips `run_batch`; `step_batch` claims one index; `visible_report`
