@@ -322,8 +322,8 @@ def test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_bu
         replay_completed=False,
     )["code"] in {"phase_two_before_replay", "non_gtfo_initial"}
     replay = {
-        "last_dispatch": {"address": gtfo["address"], "response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]},
-        "replay_receipts": [{"response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]}],
+        "last_dispatch": {"address": gtfo["address"], "response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"], "authorization_id": draft["authorization_id"], "attempt": 1},
+        "replay_receipts": [{"response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"], "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 1}],
     }
     assert evaluate_next_capture_dispatch(
         draft=draft,

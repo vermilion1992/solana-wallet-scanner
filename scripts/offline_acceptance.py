@@ -29,6 +29,7 @@ MANDATORY = [
     "tests/test_chatgpt_review_2026_10_07_0842.py",
     "tests/test_adversarial_0842_named_counterexamples.py",
     "tests/test_mass_search_mitch_requirements.py",
+    "tests/test_grok_bot_2fe60bd_repros.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
 
@@ -94,12 +95,19 @@ def main():
         "mandatory": True,
     })
 
+    from tests.test_grok_bot_2fe60bd_repros import frontend_smoke_cases
+
+    cases_path = OUT / "mounted-cases.json"
+    cases = frontend_smoke_cases()
+    if not cases or "valid" not in cases or "headline999" not in cases:
+        result_path.write_text(json.dumps({"ok": False, "error": "mounted_cases_missing"}, indent=2), encoding="utf-8")
+        return 2
+    cases_path.write_text(json.dumps(cases), encoding="utf-8")
     node_cmd = [
         "node", "--experimental-strip-types",
         str(ROOT / "frontend/scripts/assert-rereview-0842.mts"),
-        str(OUT / "empty-cases.json"),
+        str(cases_path),
     ]
-    (OUT / "empty-cases.json").write_text("{}", encoding="utf-8")
     node_log = OUT / f"NODE_{stamp}.log"
     node_run = _run(node_cmd, node_log, env)
     if node_run.returncode != 0:

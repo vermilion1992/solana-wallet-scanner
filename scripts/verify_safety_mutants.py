@@ -44,9 +44,37 @@ MUTANTS = [
     {
         "id": "CAP-E-remaining",
         "path": "scanner/mass_search/history_ingest.py",
-        "old": "        if remaining is not None and total_used >= remaining:\n            return refuse(\"quota_exhausted\", \"Remaining approved allowance is already consumed\")\n",
-        "new": "        if False and remaining is not None and total_used >= remaining:\n            return refuse(\"quota_exhausted\", \"Remaining approved allowance is already consumed\")\n",
+        "old": "        if remaining is None:\n            return refuse(\"quota_not_bound\", \"Remaining approved allowance is not a strict non-negative integer\")\n        if total_used >= remaining:\n            return refuse(\"quota_exhausted\", \"Remaining approved allowance is already consumed\")\n",
+        "new": "        if remaining is None:\n            return refuse(\"quota_not_bound\", \"Remaining approved allowance is not a strict non-negative integer\")\n        if False and total_used >= remaining:\n            return refuse(\"quota_exhausted\", \"Remaining approved allowance is already consumed\")\n",
         "test": "tests/test_chatgpt_review_2026_10_07_0842.py::test_remaining_quota_enforced_at_reservation",
+    },
+    {
+        "id": "M4-keep-saved-funnel",
+        "path": "scanner/mass_search/qualification_gates.py",
+        "old": "    profile[\"funnel\"] = classify_candidate(\n",
+        "new": "    profile[\"funnel\"] = profile.get(\"funnel\") or classify_candidate(\n",
+        "test": "tests/test_chatgpt_review_2026_10_07_0842.py::test_saved_decisions_rebuild_evidence_class_and_funnels",
+    },
+    {
+        "id": "M9-receipt-page",
+        "path": "scanner/mass_search/history_ingest.py",
+        "old": "    if receipt.get(\"page_identity\") in (None, \"\"):\n        return False\n    required = (\"response_id\", \"page_identity\", \"address\", \"authorization_id\", \"attempt\")\n",
+        "new": "    required = (\"response_id\", \"address\", \"authorization_id\", \"attempt\")\n",
+        "test": "tests/test_grok_bot_2fe60bd_repros.py::test_b6_page_less_receipt_is_single_use_and_bound",
+    },
+    {
+        "id": "JS2-contradictory-representation",
+        "path": "frontend/src/format.ts",
+        "old": "    if (left.length !== right.length || left.some((key, index) => key !== right[index])) return null;\n    return listed;",
+        "new": "    return listed;",
+        "test": "tests/test_chatgpt_review_2026_10_07_0842.py::test_mounted_component_trees_reject_invalid_and_stale_payloads",
+    },
+    {
+        "id": "JS4-headline-units",
+        "path": "frontend/src/format.ts",
+        "old": "    && (!profileUnit || !auditorUnit || profileUnit === auditorUnit)",
+        "new": "",
+        "test": "tests/test_chatgpt_review_2026_10_07_0842.py::test_mounted_component_trees_reject_invalid_and_stale_payloads",
     },
 ]
 

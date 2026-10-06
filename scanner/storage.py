@@ -73,6 +73,32 @@ class Store:
         with self.lock, self.db:
             self.db.execute("INSERT INTO records VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at", (kind, id, encoded, now()))
 
+    def cas_put(self, kind, id, payload, expected_generation):
+        """Persist only when the stored generation still matches. Does not call get()."""
+        encoded = json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+        with self.lock:
+            try:
+                self.db.execute("BEGIN IMMEDIATE")
+                row = self.db.execute("SELECT payload FROM records WHERE kind=? AND id=?", (kind, id)).fetchone()
+                current = json.loads(row[0]) if row else None
+                current_gen = int((current or {}).get("generation") or 0)
+                expected = int(expected_generation or 0)
+                if current is None and expected != 0:
+                    self.db.rollback()
+                    return False
+                if current is not None and current_gen != expected:
+                    self.db.rollback()
+                    return False
+                self.db.execute(
+                    "INSERT INTO records VALUES(?,?,?,?) ON CONFLICT(kind,id) DO UPDATE SET payload=excluded.payload,updated_at=excluded.updated_at",
+                    (kind, id, encoded, now()),
+                )
+                self.db.commit()
+                return True
+            except Exception:
+                self.db.rollback()
+                raise
+
     def delete(self, kind, id):
         with self.lock, self.db:
             self.db.execute("DELETE FROM records WHERE kind=? AND id=?", (kind, id))

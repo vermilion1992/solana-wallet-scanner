@@ -37,13 +37,19 @@ for (const key of Object.keys(cases)) {
   if (!row) continue;
   const audit = row.independent_audit || row.research_profile?.independent_audit;
   const ledger = row.completed_episode_ledger || row.research_profile?.completed_episode_ledger;
-  if (row.expectProof === false || key !== "valid") {
-    if (audit) {
+  if (key !== "valid") {
+    if (row.expectProof !== true && audit) {
       assert(certificateComparisonProof(audit, ledger) === false, `${key} proof rejects`);
     }
     const fields = completedEpisodeFields(row);
     assert(fields.independentlyAudited === false, `${key} does not certify`);
     assert(fields.auditorConfirmation == null, `${key} has no auditor confirmation`);
+    if (typeof row.auditorConfirmationForbidden === "string") {
+      assert(
+        !String(fields.auditorConfirmation || "").includes(row.auditorConfirmationForbidden),
+        `${key} must not display stored confirmation ${row.auditorConfirmationForbidden}`,
+      );
+    }
   }
   if (key === "valid") continue;
   const phone = renderToStaticMarkup(createElement(RankedPhoneCard, { row }));

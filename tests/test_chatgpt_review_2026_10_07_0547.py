@@ -316,8 +316,8 @@ def test_next_capture_phase_cursor_allowance_and_a6ps_second_page():
     )["code"] == "wrong_cursor"
 
 
-def _quota_record(remaining=8):
-    return {
+def _quota_record(remaining=8, draft=None):
+    record = {
         "kind": "operator_quota_record_v1",
         "ceiling": 20,
         "reserved_unallocated": 12,
@@ -328,26 +328,46 @@ def _quota_record(remaining=8):
         "operator": "mitch-offline-synthetic",
         "confirmed_at": "2026-10-07T00:00:00Z",
     }
+    if draft is not None:
+        record["authorization_id"] = draft["authorization_id"]
+        record["execution_artifact_hash"] = draft_execution_artifact_hash(draft)
+    return record
 
 
-def _replay_bound(address, page_identity, response_id="page-1"):
+def _replay_bound(address, page_identity, response_id="page-1", authorization_id=None, attempt=1):
+    dispatch = {
+        "address": address,
+        "response_id": response_id,
+        "page_identity": page_identity,
+        "authorization_id": authorization_id or "live-ranked100-depth-biased-next-capture-2026-10-07-mitch-draft",
+        "attempt": attempt,
+    }
     return {
-        "last_dispatch": {
-            "address": address,
+        "last_dispatch": dispatch,
+        "replay_receipts": [{
             "response_id": response_id,
             "page_identity": page_identity,
-        },
-        "replay_receipts": [{"response_id": response_id, "page_identity": page_identity}],
+            "address": address,
+            "authorization_id": dispatch["authorization_id"],
+            "attempt": attempt,
+        }],
     }
 
 
 def _synthetic_grant(draft, **overrides):
+    quota = overrides.pop("current_remaining_quota_confirmation", _quota_record(draft=draft))
+    if isinstance(quota, dict) and "authorization_id" not in quota:
+        quota = {
+            **quota,
+            "authorization_id": draft["authorization_id"],
+            "execution_artifact_hash": draft_execution_artifact_hash(draft),
+        }
     grant = {
         "enabled": False,
         "synthetic_offline_authorization": True,
         "authorization_id": draft["authorization_id"],
         "execution_artifact_hash_of_this_draft": draft_execution_artifact_hash(draft),
-        "current_remaining_quota_confirmation": _quota_record(),
+        "current_remaining_quota_confirmation": quota,
         "overages_enabled": False,
         "approval_timestamp": "2026-10-07T00:00:00Z",
         "expiry": "2026-10-08T00:00:00Z",
@@ -356,7 +376,7 @@ def _synthetic_grant(draft, **overrides):
     return grant
 
 
-def test_next_capture_runner_reaches_recorder_once_and_invalid_zero_times():
+def test_next_capture_runner_reaches_recorder_once_and_invalid_zero_times(tmp_path):
     draft = load_next_capture_draft()
     assert draft["enabled"] is False
     gtfo = next(row for row in draft["allowed_wallets"] if row["address"].startswith("gtfo"))
@@ -372,20 +392,20 @@ def test_next_capture_runner_reaches_recorder_once_and_invalid_zero_times():
         "block_time_lt": 1791206967,
         "pagination_token": gtfo["continue_from_pagination_token"],
     }
-    state = empty_next_capture_state()
+    store = Store(tmp_path / "cap-0547")
     ok = run_next_capture_offline(
         draft=draft,
         requested=requested,
         grant=_synthetic_grant(draft),
         transport=recorder,
-        state=state,
+        store=store,
         now=datetime(2026, 10, 7, 12, tzinfo=timezone.utc),
     )
     assert ok["transport_calls"] == 1
     assert ok["dispatched"] is True
     assert len(calls) == 1
-    assert state["requests_used"] == 1
-    assert state["accepted_continuation"][gtfo["address"]] == "next-token-1"
+    assert ok["state"]["requests_used"] == 1
+    assert ok["state"]["accepted_continuation"][gtfo["address"]] == "next-token-1"
 
     refused = []
 
@@ -399,15 +419,15 @@ def test_next_capture_runner_reaches_recorder_once_and_invalid_zero_times():
         {"requested": requested, "grant": _synthetic_grant(draft, expiry="2026-10-01T00:00:00Z"), "state": empty_next_capture_state()},
         {"requested": requested, "grant": _synthetic_grant(draft, execution_artifact_hash_of_this_draft="0" * 64), "state": empty_next_capture_state()},
         {"requested": requested, "grant": _synthetic_grant(draft, authorization_id="live-g1-vertical-slice-2026-10-05-mitch"), "state": empty_next_capture_state()},
-        {"requested": {**requested, "pagination_token": "stale"}, "grant": _synthetic_grant(draft), "state": {**empty_next_capture_state(), "replay_completed": True, "requests_used": 1, "per_wallet_used": {gtfo["address"]: 1}, "accepted_continuation": {gtfo["address"]: "accepted-next"}, "cursor_state": {gtfo["address"]: "open"}, "last_dispatch": {"address": gtfo["address"], "response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]}, "replay_receipts": [{"response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]}]}},
+        {"requested": {**requested, "pagination_token": "stale"}, "grant": _synthetic_grant(draft), "state": {**empty_next_capture_state(), "replay_completed": True, "requests_used": 1, "per_wallet_used": {gtfo["address"]: 1}, "accepted_continuation": {gtfo["address"]: "accepted-next"}, "cursor_state": {gtfo["address"]: "open"}, "last_dispatch": {"address": gtfo["address"], "response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"], "authorization_id": draft["authorization_id"], "attempt": 1}, "replay_receipts": [{"response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"], "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 1}]}},
     ]
-    for case in invalids:
+    for index, case in enumerate(invalids):
         result = run_next_capture_offline(
             draft=draft,
             requested=case["requested"],
             grant=case["grant"],
             transport=refuse_recorder,
-            state=case["state"],
+            store=Store(tmp_path / f"cap-0547-invalid-{index}"),
             now=datetime(2026, 10, 7, 12, tzinfo=timezone.utc),
         )
         assert result["transport_calls"] == 0

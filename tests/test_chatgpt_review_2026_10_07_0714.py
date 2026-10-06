@@ -47,8 +47,8 @@ DRAFT = ROOT / "config/live_authorization.ranked100-depth-biased-next-capture-dr
 SCRIPT = ROOT / "frontend/scripts/assert-rereview-0714.mts"
 
 
-def _quota_record(remaining=8):
-    return {
+def _quota_record(remaining=8, draft=None):
+    record = {
         "kind": "operator_quota_record_v1",
         "ceiling": 20,
         "reserved_unallocated": 12,
@@ -59,15 +59,26 @@ def _quota_record(remaining=8):
         "operator": "mitch-offline-synthetic",
         "confirmed_at": "2026-10-07T00:00:00Z",
     }
+    if draft is not None:
+        record["authorization_id"] = draft["authorization_id"]
+        record["execution_artifact_hash"] = draft_execution_artifact_hash(draft)
+    return record
 
 
 def _synthetic_grant(draft, **overrides):
+    quota = overrides.pop("current_remaining_quota_confirmation", _quota_record(draft=draft))
+    if isinstance(quota, dict) and "authorization_id" not in quota:
+        quota = {
+            **quota,
+            "authorization_id": draft["authorization_id"],
+            "execution_artifact_hash": draft_execution_artifact_hash(draft),
+        }
     grant = {
         "enabled": False,
         "synthetic_offline_authorization": True,
         "authorization_id": draft["authorization_id"],
         "execution_artifact_hash_of_this_draft": draft_execution_artifact_hash(draft),
-        "current_remaining_quota_confirmation": _quota_record(),
+        "current_remaining_quota_confirmation": quota,
         "overages_enabled": False,
         "approval_timestamp": "2026-10-07T00:00:00Z",
         "expiry": "2026-10-08T00:00:00Z",
@@ -396,8 +407,8 @@ def test_replay_is_bound_to_last_response_and_terminal_cursor_refuses(tmp_path):
     stale = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": a6ps["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": a6ps["continue_from_pagination_token"]},
-        last_dispatch={"address": gtfo["address"], "response_id": response_id, "page_identity": gtfo["continue_from_pagination_token"]},
-        replay_receipts=[{"response_id": response_id, "page_identity": gtfo["continue_from_pagination_token"]}],
+        last_dispatch={"address": gtfo["address"], "response_id": response_id, "page_identity": gtfo["continue_from_pagination_token"], "authorization_id": draft["authorization_id"], "attempt": 1},
+        replay_receipts=[{"response_id": response_id, "page_identity": gtfo["continue_from_pagination_token"], "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 1}],
         requests_used=2,
         per_wallet_used={gtfo["address"]: 1, a6ps["address"]: 1},
         accepted_continuation={**a6ps_ok["state"]["accepted_continuation"]},
@@ -430,10 +441,15 @@ def test_committed_draft_page_bound_replay_allows_cccs_and_rejects_stale():
             "address": gtfo["address"],
             "response_id": "gtfo-page-1",
             "page_identity": gtfo["continue_from_pagination_token"],
+            "authorization_id": draft["authorization_id"],
+            "attempt": 1,
         },
         "replay_receipts": [{
             "response_id": "gtfo-page-1",
             "page_identity": gtfo["continue_from_pagination_token"],
+            "address": gtfo["address"],
+            "authorization_id": draft["authorization_id"],
+            "attempt": 1,
         }],
     }
     allowed = evaluate_next_capture_dispatch(
@@ -464,8 +480,8 @@ def test_committed_draft_page_bound_replay_allows_cccs_and_rejects_stale():
         previous_progress=_gtfo_progress(),
         requests_used=1,
         per_wallet_used={gtfo["address"]: 1},
-        last_dispatch={"address": gtfo["address"], "response_id": "newer-page", "page_identity": "accepted-next"},
-        replay_receipts=[{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"]}],
+        last_dispatch={"address": gtfo["address"], "response_id": "newer-page", "page_identity": "accepted-next", "authorization_id": draft["authorization_id"], "attempt": 2},
+        replay_receipts=[{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"], "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 1}],
     )
     assert stale["code"] == "second_before_replay"
     pw58 = next(row for row in draft["allowed_wallets"] if row["address"].startswith("58PW"))

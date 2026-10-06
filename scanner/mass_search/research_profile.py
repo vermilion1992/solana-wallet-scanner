@@ -436,8 +436,11 @@ def load_committed_independent_audit(address, fingerprint=None, ledger=None):
 
 
 def independently_audited(report, profile=None):
-    """Genuine corpus requires a matching content fingerprint. No bypass."""
-    audit = (report or {}).get("independent_audit") or (profile or {}).get("independent_audit") or {}
+    """Genuine corpus requires a matching content fingerprint. No bypass.
+
+    Saved profile copies are not an authoritative audit source.
+    """
+    audit = (report or {}).get("independent_audit") or {}
     if not audit:
         return False
     if audit.get("status") == "not_independently_audited":
@@ -765,13 +768,15 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     profile["audit_fingerprint"] = fingerprint
     profile["accounting_policy_version"] = ACCOUNTING_POLICY_VERSION
     attached = (report or {}).get("independent_audit")
+    bound = bindable_independent_audit(attached, fingerprint, ledger) if attached else None
     if ledger_contradiction:
         profile["independent_audit"] = None
         if (report or {}).get("independent_audit"):
             report["independent_audit"] = None
-    elif attached and bindable_independent_audit(attached, fingerprint, ledger):
-        profile["independent_audit"] = attached
-    elif attached and is_synthetic_case(report):
+    elif bound:
+        profile["independent_audit"] = bound
+        report["independent_audit"] = bound
+    elif attached and is_synthetic_case(report) and not attached.get("content_fingerprint") and not attached.get("fingerprint"):
         # Explicit synthetic marker only. Fingerprintless audits never certify.
         profile["independent_audit"] = {
             **attached,

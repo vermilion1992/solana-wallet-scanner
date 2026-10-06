@@ -495,7 +495,19 @@ def _authoritative_saved_profile(report):
     profile = report.get("research_profile")
     if not profile:
         return None
-    return reconcile_saved_profile(report, profile)
+    try:
+        return reconcile_saved_profile(report, profile)
+    except Exception:
+        return {
+            "completed_episode_ledger": [],
+            "completed_known_cost_positions": 0,
+            "independent_audit": None,
+            "qualification_category": {"category": "analysed_incomplete"},
+            "qualification_level": {"level": "insufficient_evidence"},
+            "funnel": {"A": {"state": "unknown"}, "B": {"state": "unknown"}, "C": {"state": "NOT_MET"}},
+            "ledger_summary_contradiction": True,
+            "failed_closed": True,
+        }
 
 
 def visible_mass_search_report(report):
@@ -514,6 +526,9 @@ def visible_mass_search_report(report):
         worksheet=visible.get("worksheet"),
     )
     visible["qualification_category"] = profile.get("qualification_category")
+    visible["independent_audit"] = profile.get("independent_audit")
+    visible["audit_fingerprint"] = profile.get("audit_fingerprint")
+    visible["completed_episode_ledger"] = profile.get("completed_episode_ledger")
     return visible
 
 
@@ -551,6 +566,8 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
             "report_id": (report or {}).get("id"),
             "funnel": funnel,
             "completed_episode_ledger": (profile or {}).get("completed_episode_ledger"),
+            "independent_audit": (profile or {}).get("independent_audit"),
+            "audit_fingerprint": (profile or {}).get("audit_fingerprint"),
             "research_profile": profile,
             "analytics": (report or {}).get("analytics"),
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
@@ -1013,6 +1030,12 @@ def compare_reports(store, left_id, right_id):
         ),
         "left_qualification_category": left_profile.get("qualification_category"),
         "right_qualification_category": right_profile.get("qualification_category"),
+        "left_independent_audit": left_profile.get("independent_audit"),
+        "right_independent_audit": right_profile.get("independent_audit"),
+        "left_audit_fingerprint": left_profile.get("audit_fingerprint"),
+        "right_audit_fingerprint": right_profile.get("audit_fingerprint"),
+        "left_completed_episode_ledger": left_profile.get("completed_episode_ledger"),
+        "right_completed_episode_ledger": right_profile.get("completed_episode_ledger"),
         "left_analytics": left_analytics,
         "right_analytics": right_analytics,
         "not_safe_to_copy": True,

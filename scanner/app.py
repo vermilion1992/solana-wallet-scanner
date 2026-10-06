@@ -239,16 +239,43 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
             from .report_view import summary_inputs
             return summary_inputs(store)
         # Enriching an old snapshot must not make it the latest wallet report.
-        return sorted(store.list("reports"), key=lambda report: report["created_at"], reverse=True)
+        return sorted(store.list("reports"), key=lambda report: report.get("created_at") or "", reverse=True)
 
     def reports(view="full"):
-        result = [decorate_report(report) for report in report_inputs(view)]
+        result = []
+        for report in report_inputs(view):
+            try:
+                result.append(decorate_report(report))
+            except Exception:
+                result.append({
+                    **report,
+                    "research_profile": None,
+                    "independent_audit": None,
+                    "funnel": None,
+                    "qualification_category": {"category": "analysed_incomplete"},
+                    "decoration_failed_closed": True,
+                    "PRODUCT_READY": False,
+                })
         if view == 'summary':
             from .report_view import summary_view
             return [summary_view(report) for report in result]
         return result
 
     def decorate_report(report):
+        try:
+            return _decorate_report(report)
+        except Exception:
+            return {
+                **(report or {}),
+                "research_profile": None,
+                "independent_audit": None,
+                "funnel": None,
+                "qualification_category": {"category": "analysed_incomplete"},
+                "decoration_failed_closed": True,
+                "PRODUCT_READY": False,
+            }
+
+    def _decorate_report(report):
         from .copy_review import qualify_report, review_copy_behavior
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
         from .position_evidence import VERSION as POSITION_METHODOLOGY
@@ -283,6 +310,9 @@ def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
             result["research_profile"] = visible.get("research_profile")
             result["funnel"] = visible.get("funnel")
             result["qualification_category"] = visible.get("qualification_category")
+            result["independent_audit"] = visible.get("independent_audit")
+            result["audit_fingerprint"] = visible.get("audit_fingerprint")
+            result["completed_episode_ledger"] = visible.get("completed_episode_ledger")
             result["mass_search_interpretation"] = {
                 "kind": "mass-search-export-interpretation-v1",
                 "capture_sha256": report.get("capture_sha256"),

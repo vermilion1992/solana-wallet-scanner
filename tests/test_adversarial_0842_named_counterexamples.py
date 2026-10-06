@@ -47,6 +47,8 @@ def _grant(draft, remaining=8, **quota_over):
         "overages_enabled": False,
         "operator": "mitch-offline-synthetic",
         "confirmed_at": "2026-10-07T00:00:00Z",
+        "authorization_id": draft["authorization_id"],
+        "execution_artifact_hash": draft_execution_artifact_hash(draft),
     }
     record.update(quota_over)
     return {
@@ -242,8 +244,8 @@ def test_named_old_receipt_cannot_rearm_after_newer_timeout(tmp_path):
     fresh_stale = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": gtfo["address"], "phase": 1, "block_time_lt": 1791206967, "pagination_token": "page-2"},
-        last_dispatch={"address": gtfo["address"], "response_id": "page2-fresh", "page_identity": "page-2"},
-        replay_receipts=[{"response_id": "page2-fresh", "page_identity": "page-2"}],
+        last_dispatch={"address": gtfo["address"], "response_id": "page2-fresh", "page_identity": "page-2", "authorization_id": draft["authorization_id"], "attempt": 2},
+        replay_receipts=[{"response_id": "page2-fresh", "page_identity": "page-2", "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 2}],
         previous_progress={
             "response_id": old,
             "named_dependency_observations": [{
@@ -267,8 +269,8 @@ def test_named_a6ps_additional_page_unavailable():
     assert a6ps.get("additional_page_unavailable") is True
     assert a6ps.get("named_dependency_items") == []
     replay = {
-        "last_dispatch": {"address": gtfo["address"], "response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"]},
-        "replay_receipts": [{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"]}],
+        "last_dispatch": {"address": gtfo["address"], "response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"], "authorization_id": draft["authorization_id"], "attempt": 1},
+        "replay_receipts": [{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"], "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 1}],
     }
     second = evaluate_next_capture_dispatch(
         draft=draft,
@@ -381,8 +383,8 @@ def test_neighbour_reserved_status_and_a6ps_first_page_still_gated():
     first = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": a6ps["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": a6ps["continue_from_pagination_token"]},
-        last_dispatch={"address": gtfo["address"], "response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"]},
-        replay_receipts=[{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"]}],
+        last_dispatch={"address": gtfo["address"], "response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"], "authorization_id": draft["authorization_id"], "attempt": 1},
+        replay_receipts=[{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"], "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 1}],
         requests_used=1,
         per_wallet_used={a6ps["address"]: 0},
         accepted_continuation={},

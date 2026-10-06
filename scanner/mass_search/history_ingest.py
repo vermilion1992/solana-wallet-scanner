@@ -1184,25 +1184,29 @@ def _parse_aware(value):
     return stamp
 
 
+def _strict_nonneg_int(value):
+    if type(value) is not int or value < 0:
+        return None
+    return value
+
+
 def validate_operator_quota_record(record, draft=None):
     """Operator-supplied remaining-quota confirmation. Truthy strings are not enough."""
-    del draft
     if not isinstance(record, dict):
         return "quota_not_bound"
     if record.get("kind") != "operator_quota_record_v1":
         return "quota_not_bound"
-    try:
-        ceiling = int(record["ceiling"])
-        reserved = int(record["reserved_unallocated"])
-        usable = int(record["usable_ceiling"])
-        remaining = int(record["remaining"])
-    except (KeyError, TypeError, ValueError):
+    ceiling = _strict_nonneg_int(record.get("ceiling"))
+    reserved = _strict_nonneg_int(record.get("reserved_unallocated"))
+    usable = _strict_nonneg_int(record.get("usable_ceiling"))
+    remaining = _strict_nonneg_int(record.get("remaining"))
+    if None in (ceiling, reserved, usable, remaining):
         return "quota_not_bound"
     if reserved != RESERVED_UNALLOCATED:
         return "reserved_is_discretionary"
     if usable != ceiling - reserved:
         return "quota_inconsistent"
-    if remaining < 0 or remaining > usable:
+    if remaining > usable:
         return "quota_inconsistent"
     if record.get("overages_enabled") is not False:
         return "overages_not_disabled"
@@ -1211,12 +1215,19 @@ def validate_operator_quota_record(record, draft=None):
     confirmed = _parse_aware(record.get("confirmed_at"))
     if confirmed is None:
         return "quota_confirmed_at_missing"
-    try:
-        baseline = int(record["baseline"])
-    except (KeyError, TypeError, ValueError):
+    baseline = _strict_nonneg_int(record.get("baseline"))
+    if baseline is None:
         return "quota_baseline_missing"
     if remaining > baseline or baseline > usable:
         return "quota_inconsistent"
+    if draft is not None:
+        expected_id = (draft or {}).get("authorization_id")
+        if record.get("authorization_id") != expected_id:
+            return "quota_authorization_mismatch"
+        expected_hash = (draft or {}).get("execution_artifact_hash") or draft_execution_artifact_hash(draft)
+        record_hash = record.get("execution_artifact_hash") or record.get("execution_artifact_hash_of_this_draft")
+        if record_hash != expected_hash:
+            return "quota_artifact_mismatched"
     return None
 
 
@@ -1274,23 +1285,47 @@ def validate_fresh_approval_bind(grant, draft, *, now=None):
         return "quota_confirmed_before_approval"
     if confirmed and expiry and confirmed > expiry:
         return "quota_confirmed_after_expiry"
+    moment = now or datetime.now(timezone.utc)
+    if confirmed and confirmed > moment:
+        return "quota_confirmed_in_the_future"
     return None
 
 
+def _receipt_matches_dispatch(receipt, last_dispatch):
+    if not isinstance(receipt, dict) or not isinstance(last_dispatch, dict):
+        return False
+    if receipt.get("consumed") is True:
+        return False
+    if receipt.get("page_identity") in (None, ""):
+        return False
+    required = ("response_id", "page_identity", "address", "authorization_id", "attempt")
+    for key in required:
+        expected = last_dispatch.get(key)
+        if expected in (None, ""):
+            return False
+        got = receipt.get(key)
+        if got in (None, "") and key in ("address", "authorization_id", "attempt"):
+            if (
+                receipt.get("response_id") == last_dispatch.get("response_id")
+                and receipt.get("page_identity") == last_dispatch.get("page_identity")
+            ):
+                got = expected
+        if got != expected:
+            return False
+    return True
+
+
 def replay_bound_to_last_dispatch(last_dispatch, replay_receipts):
-    """Replay is a receipt for a specific last page/response identity."""
+    """Replay is a receipt for a specific last page/response/wallet/grant/attempt."""
     if not isinstance(last_dispatch, dict) or not last_dispatch.get("response_id"):
         return False
     if last_dispatch.get("status") in ("reserved", "failed"):
         return False
-    expected = last_dispatch.get("response_id")
-    page = last_dispatch.get("page_identity")
+    for key in ("page_identity", "address", "authorization_id", "attempt"):
+        if last_dispatch.get(key) in (None, ""):
+            return False
     for row in replay_receipts or []:
-        if not isinstance(row, dict):
-            continue
-        if row.get("response_id") == expected and (
-            page in (None, "") or row.get("page_identity") in (None, "", page)
-        ):
+        if _receipt_matches_dispatch(row, last_dispatch):
             return True
     return False
 
@@ -1313,13 +1348,26 @@ def bind_progress_to_replay(previous_progress, last_dispatch, replay_receipts):
 
 
 def record_next_capture_replay(state, receipt):
-    """Attach a receipt only when it names the last dispatched response."""
+    """Attach a receipt only when it names the last dispatched response. Single-use."""
     state = state if state is not None else empty_next_capture_state()
     dispatch = state.get("last_dispatch") or {}
     if not replay_bound_to_last_dispatch(dispatch, [receipt]):
         return False
     receipts = list(state.get("replay_receipts") or [])
-    receipts.append(dict(receipt))
+    for row in receipts:
+        if (
+            row.get("response_id") == (receipt or {}).get("response_id")
+            and row.get("attempt") == dispatch.get("attempt")
+        ):
+            return False
+    bound = {
+        "response_id": dispatch.get("response_id"),
+        "page_identity": dispatch.get("page_identity"),
+        "address": dispatch.get("address"),
+        "authorization_id": dispatch.get("authorization_id"),
+        "attempt": dispatch.get("attempt"),
+    }
+    receipts.append(bound)
     state["replay_receipts"] = receipts
     state["replay_completed"] = True
     return True
@@ -1423,11 +1471,10 @@ def evaluate_next_capture_dispatch(
         if bind_error:
             return refuse(bind_error, "Fresh approval bind fields failed validation")
         quota = grant.get("current_remaining_quota_confirmation") or {}
-        try:
-            remaining = int(quota["remaining"])
-        except (KeyError, TypeError, ValueError):
-            remaining = None
-        if remaining is not None and total_used >= remaining:
+        remaining = _strict_nonneg_int(quota.get("remaining"))
+        if remaining is None:
+            return refuse("quota_not_bound", "Remaining approved allowance is not a strict non-negative integer")
+        if total_used >= remaining:
             return refuse("quota_exhausted", "Remaining approved allowance is already consumed")
     if address in excluded:
         return refuse("excluded_wallet", excluded.get(address) or "wallet excluded from this draft")
@@ -1531,6 +1578,8 @@ def empty_next_capture_state():
         "last_dispatch": None,
         "replay_receipts": [],
         "attempts": [],
+        "attempt_seq": 0,
+        "generation": 0,
         "phase1_dispatched": False,
     }
 
@@ -1568,6 +1617,28 @@ def _response_identity(serialized, result):
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def _mint_response_id(draft, address, page_identity, attempt_seq, serialized):
+    return _response_identity(
+        serialized,
+        {
+            "authorization_id": (draft or {}).get("authorization_id"),
+            "address": address,
+            "page_identity": page_identity,
+            "attempt": attempt_seq,
+        },
+    )
+
+
+def _transport_error_or_garbage(result):
+    if not isinstance(result, dict):
+        return True
+    if result.get("error") not in (None, "", False):
+        return True
+    if result.get("errors"):
+        return True
+    return False
+
+
 def run_next_capture_offline(
     *,
     draft,
@@ -1584,29 +1655,36 @@ def run_next_capture_offline(
     Repository draft stays enabled:false. Only a clearly synthetic authorization
     that binds artifact/quota/overages/time/expiry may reach the recorder.
     Failed or timed-out transport still consumes the reserved attempt.
+    A durable store is required. Load through reserve-persist is serialized
+    by CAS on generation (or the store lock). The loser refuses before transport.
     """
-    state = load_next_capture_state(store, draft, state)
+    if store is None:
+        refused = _next_capture_refuse(draft, "durable_store_required", "Offline capture refuses to dispatch without a durable store")
+        return {**refused, "state": state or empty_next_capture_state()}
+    lock = getattr(store, "lock", None)
+
+    loaded = load_next_capture_state(store, draft, state)
+    expected_generation = int(loaded.get("generation") or 0)
     decision = evaluate_next_capture_dispatch(
         draft=draft,
         requested=requested,
         grant=grant,
         previous_progress=previous_progress,
-        requests_used=int(state.get("requests_used") or 0),
-        per_wallet_used=state.get("per_wallet_used") or {},
-        accepted_continuation=state.get("accepted_continuation") or {},
-        last_dispatch=state.get("last_dispatch"),
-        replay_receipts=state.get("replay_receipts") or [],
-        cursor_state=state.get("cursor_state") or {},
+        requests_used=int(loaded.get("requests_used") or 0),
+        per_wallet_used=loaded.get("per_wallet_used") or {},
+        accepted_continuation=loaded.get("accepted_continuation") or {},
+        last_dispatch=loaded.get("last_dispatch"),
+        replay_receipts=loaded.get("replay_receipts") or [],
+        cursor_state=loaded.get("cursor_state") or {},
         now=now,
     )
     if not decision.get("allowed"):
-        return {**decision, "transport_calls": 0, "state": state}
+        return {**decision, "transport_calls": 0, "state": loaded}
     bind_error = validate_fresh_approval_bind(grant, draft, now=now)
     if bind_error:
         refused = _next_capture_refuse(draft, bind_error, "Fresh approval bind fields failed validation")
-        return {**refused, "state": state}
+        return {**refused, "state": loaded}
     address = requested.get("address")
-    wallet = next((row for row in (draft.get("allowed_wallets") or []) if row.get("address") == address), None)
     expected_cursor = decision.get("expected_cursor")
     serialized = serialize_next_capture_gta_request(
         address,
@@ -1617,29 +1695,36 @@ def run_next_capture_offline(
     serialized_cursor = options.get("paginationToken")
     if serialized_cursor != expected_cursor:
         refused = _next_capture_refuse(draft, "wrong_cursor", "Serialized request continuation does not match accepted state")
-        return {**refused, "state": state}
-    used = dict(state.get("per_wallet_used") or {})
+        return {**refused, "state": loaded}
+    used = dict(loaded.get("per_wallet_used") or {})
     used[address] = int(used.get(address) or 0) + 1
-    attempts = list(state.get("attempts") or [])
+    attempt_seq = int(loaded.get("attempt_seq") or 0) + 1
+    attempts = list(loaded.get("attempts") or [])
     attempt = {
         "address": address,
         "pagination_token": expected_cursor,
         "status": "reserved",
         "cutoff": next_capture_block_time_lt(draft),
+        "attempt": attempt_seq,
+        "authorization_id": (draft or {}).get("authorization_id"),
     }
     attempts.append(attempt)
-    requests = list(state.get("requests") or [])
+    requests = list(loaded.get("requests") or [])
     requests.append({
         "address": address,
         "pagination_token": expected_cursor,
         "cutoff": next_capture_block_time_lt(draft),
         "status": "reserved",
+        "attempt": attempt_seq,
     })
-    state.update({
+    current = dict(loaded)
+    current.update({
         "requests": requests,
-        "requests_used": int(state.get("requests_used") or 0) + 1,
+        "requests_used": int(loaded.get("requests_used") or 0) + 1,
         "per_wallet_used": used,
         "attempts": attempts,
+        "attempt_seq": attempt_seq,
+        "generation": expected_generation + 1,
         "replay_completed": False,
         "replay_receipts": [],
         "last_dispatch": {
@@ -1647,24 +1732,66 @@ def run_next_capture_offline(
             "page_identity": expected_cursor,
             "status": "reserved",
             "response_id": None,
+            "authorization_id": (draft or {}).get("authorization_id"),
+            "attempt": attempt_seq,
         },
         "phase1_dispatched": True,
     })
-    persist_next_capture_state(store, draft, state)
+    won = False
+    if hasattr(store, "cas_put"):
+        won = bool(store.cas_put(NEXT_CAPTURE_STATE_KIND, (draft or {}).get("authorization_id"), current, expected_generation))
+    elif lock is not None:
+        with lock:
+            fresh = load_next_capture_state(store, draft, None)
+            if int(fresh.get("generation") or 0) != expected_generation:
+                won = False
+            else:
+                persist_next_capture_state(store, draft, current)
+                won = True
+    else:
+        persist_next_capture_state(store, draft, current)
+        won = True
+    if not won:
+        refused = _next_capture_refuse(draft, "concurrent_reservation", "Lost the durable reservation race; refuse before transport")
+        return {**refused, "state": load_next_capture_state(store, draft, current)}
+
+    def _persist_after_transport(mutator):
+        def _apply():
+            latest = load_next_capture_state(store, draft, current)
+            mutator(latest)
+            latest["generation"] = int(latest.get("generation") or 0) + 1
+            persist_next_capture_state(store, draft, latest)
+            return latest
+
+        if lock is not None:
+            with lock:
+                return _apply()
+        return _apply()
+
     try:
         result = transport(serialized)
     except Exception as exc:
-        attempt["status"] = "failed"
-        attempt["error"] = type(exc).__name__
-        attempt["detail"] = str(exc)[:240]
-        requests[-1]["status"] = "failed"
-        state["last_dispatch"] = {
-            "address": address,
-            "page_identity": expected_cursor,
-            "status": "failed",
-            "response_id": None,
-        }
-        persist_next_capture_state(store, draft, state)
+        def _fail(latest):
+            latest_attempts = list(latest.get("attempts") or [])
+            if latest_attempts:
+                latest_attempts[-1]["status"] = "failed"
+                latest_attempts[-1]["error"] = type(exc).__name__
+                latest_attempts[-1]["detail"] = str(exc)[:240]
+            latest_requests = list(latest.get("requests") or [])
+            if latest_requests:
+                latest_requests[-1]["status"] = "failed"
+            latest["attempts"] = latest_attempts
+            latest["requests"] = latest_requests
+            latest["last_dispatch"] = {
+                "address": address,
+                "page_identity": expected_cursor,
+                "status": "failed",
+                "response_id": None,
+                "authorization_id": (draft or {}).get("authorization_id"),
+                "attempt": attempt_seq,
+            }
+
+        current = _persist_after_transport(_fail)
         return {
             "allowed": True,
             "dispatched": True,
@@ -1677,38 +1804,82 @@ def run_next_capture_offline(
             "draft_enabled": False,
             "PRODUCT_READY": False,
             "serialized": serialized,
-            "state": state,
+            "state": current,
         }
-    next_token = None
-    if isinstance(result, dict):
-        next_token = result.get("pagination_token") or result.get("paginationToken")
-    response_id = (result.get("response_id") if isinstance(result, dict) else None) or _response_identity(serialized, result)
-    continuation = dict(state.get("accepted_continuation") or {})
-    cursors = dict(state.get("cursor_state") or {})
-    if next_token:
-        continuation[address] = next_token
-        cursors[address] = "open"
-    else:
-        continuation[address] = EXHAUSTED_CURSOR
-        cursors[address] = "exhausted"
-    attempt["status"] = "succeeded"
-    attempt["response_id"] = response_id
-    requests[-1]["status"] = "succeeded"
-    requests[-1]["response_id"] = response_id
-    state.update({
-        "accepted_continuation": continuation,
-        "cursor_state": cursors,
-        "last_dispatch": {
-            "address": address,
-            "response_id": response_id,
-            "page_identity": expected_cursor,
-            "next_token": next_token,
-            "exhausted": not bool(next_token),
-        },
-        "replay_receipts": [],
-        "replay_completed": False,
-    })
-    persist_next_capture_state(store, draft, state)
+    if _transport_error_or_garbage(result):
+        def _garbage(latest):
+            latest_attempts = list(latest.get("attempts") or [])
+            if latest_attempts:
+                latest_attempts[-1]["status"] = "failed"
+                latest_attempts[-1]["error"] = "transport_error_envelope"
+            latest_requests = list(latest.get("requests") or [])
+            if latest_requests:
+                latest_requests[-1]["status"] = "failed"
+            latest["attempts"] = latest_attempts
+            latest["requests"] = latest_requests
+            latest["last_dispatch"] = {
+                "address": address,
+                "page_identity": expected_cursor,
+                "status": "failed",
+                "response_id": None,
+                "authorization_id": (draft or {}).get("authorization_id"),
+                "attempt": attempt_seq,
+            }
+
+        current = _persist_after_transport(_garbage)
+        return {
+            "allowed": True,
+            "dispatched": True,
+            "synthetic_offline_only": True,
+            "code": "synthetic_recorder_failed",
+            "detail": "Error or non-page transport result is not a clean terminal cursor.",
+            "transport_calls": 1,
+            "attempt_consumed": True,
+            "not_a_live_dispatch": True,
+            "draft_enabled": False,
+            "PRODUCT_READY": False,
+            "serialized": serialized,
+            "state": current,
+        }
+    next_token = result.get("pagination_token") or result.get("paginationToken")
+    response_id = _mint_response_id(draft, address, expected_cursor, attempt_seq, serialized)
+
+    def _succeed(latest):
+        continuation = dict(latest.get("accepted_continuation") or {})
+        cursors = dict(latest.get("cursor_state") or {})
+        if next_token:
+            continuation[address] = next_token
+            cursors[address] = "open"
+        else:
+            continuation[address] = EXHAUSTED_CURSOR
+            cursors[address] = "exhausted"
+        latest_attempts = list(latest.get("attempts") or [])
+        if latest_attempts:
+            latest_attempts[-1]["status"] = "succeeded"
+            latest_attempts[-1]["response_id"] = response_id
+        reqs = list(latest.get("requests") or [])
+        if reqs:
+            reqs[-1]["status"] = "succeeded"
+            reqs[-1]["response_id"] = response_id
+        latest.update({
+            "attempts": latest_attempts,
+            "requests": reqs,
+            "accepted_continuation": continuation,
+            "cursor_state": cursors,
+            "last_dispatch": {
+                "address": address,
+                "response_id": response_id,
+                "page_identity": expected_cursor,
+                "next_token": next_token,
+                "exhausted": not bool(next_token),
+                "authorization_id": (draft or {}).get("authorization_id"),
+                "attempt": attempt_seq,
+            },
+            "replay_receipts": [],
+            "replay_completed": False,
+        })
+
+    current = _persist_after_transport(_succeed)
     return {
         "allowed": True,
         "dispatched": True,
@@ -1722,5 +1893,5 @@ def run_next_capture_offline(
         "PRODUCT_READY": False,
         "serialized": serialized,
         "response_id": response_id,
-        "state": state,
+        "state": current,
     }

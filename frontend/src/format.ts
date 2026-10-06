@@ -76,12 +76,20 @@ function atomicScale(unit?: string | null): bigint {
   return unit === "USDC" ? 1_000_000n : 1_000_000_000n;
 }
 
-export function quantizeToAtomics(value: string, unit?: string | null): bigint | null {
-  if (!/^-?\d+(?:\.\d+)?$/.test(value)) return null;
+const CANONICAL_AMOUNT = /^-?(?:0|[1-9]\d*)(?:\.\d+)?$/;
+
+export function parseCanonicalAmount(value: unknown): string | null {
+  if (typeof value !== "string" || !CANONICAL_AMOUNT.test(value)) return null;
+  return value;
+}
+
+export function quantizeToAtomics(value: unknown, unit?: string | null): bigint | null {
+  const canonical = parseCanonicalAmount(value);
+  if (canonical == null) return null;
   const scale = atomicScale(unit);
   const fracPlaces = Number(scale.toString().length - 1);
-  const negative = value.startsWith("-");
-  const [whole, fraction = ""] = value.replace(/^-/, "").split(".");
+  const negative = canonical.startsWith("-");
+  const [whole, fraction = ""] = canonical.replace(/^-/, "").split(".");
   const kept = fraction.slice(0, fracPlaces).padEnd(fracPlaces, "0");
   const rest = fraction.slice(fracPlaces);
   let atomics = BigInt(`${whole || "0"}${kept}` || "0");
@@ -97,17 +105,34 @@ export function quantizeToAtomics(value: string, unit?: string | null): bigint |
 }
 
 export function amountsAgreeWithinTolerance(
-  left?: string | null,
-  right?: string | null,
+  left?: unknown,
+  right?: unknown,
   unit?: string | null,
   tolerance = 2n,
 ): boolean {
-  if (left == null || right == null || left === "" || right === "") return false;
+  if (parseCanonicalAmount(left) == null || parseCanonicalAmount(right) == null) return false;
   const a = quantizeToAtomics(left, unit);
   const b = quantizeToAtomics(right, unit);
   if (a == null || b == null) return false;
   const delta = a - b;
   return (delta < 0n ? -delta : delta) <= tolerance;
+}
+
+export function formatAuditorConfirmation(
+  appNet?: string | null,
+  auditorNet?: string | null,
+  unit?: string | null,
+): string | null {
+  if (parseCanonicalAmount(appNet) == null || parseCanonicalAmount(auditorNet) == null) return null;
+  const resolvedUnit = unit || "SOL";
+  const auditor = joinAmount(auditorNet, resolvedUnit);
+  if (amountsAgreeWithinTolerance(appNet, auditorNet, resolvedUnit)) {
+    return resolvedUnit === "USDC"
+      ? `auditor confirms within 2 USDC base units: ${auditor}`
+      : `auditor confirms within 2 lamports: ${auditor}`;
+  }
+  const headline = joinAmount(appNet, resolvedUnit);
+  return `aggregate rounding bridge (not within 2 ${resolvedUnit === "USDC" ? "USDC base units" : "lamports"}): app ${headline} vs auditor ${auditor}`;
 }
 
 export function formatCompletedEpisodeHeadline(input: {
@@ -122,21 +147,8 @@ export function formatCompletedEpisodeHeadline(input: {
   if (!headline) return null;
   let text = `${headline} (completed-episode net)`;
   if (input.independentlyAudited && input.auditorNet != null && input.auditorNet !== "") {
-    if (input.auditorConfirmation) {
-      text += `; ${input.auditorConfirmation}`;
-    } else {
-      const auditor = joinAmount(input.auditorNet, input.auditorUnit || input.appUnit);
-      const unit = input.auditorUnit || input.appUnit || "SOL";
-      if (amountsAgreeWithinTolerance(input.appNet, input.auditorNet, unit)) {
-        const confirm =
-          unit === "USDC"
-            ? `auditor confirms within 2 USDC base units: ${auditor}`
-            : `auditor confirms within 2 lamports: ${auditor}`;
-        text += `; ${confirm}`;
-      } else {
-        text += `; aggregate rounding bridge (not within 2 ${unit === "USDC" ? "USDC base units" : "lamports"}): app ${headline} vs auditor ${auditor}`;
-      }
-    }
+    const derived = formatAuditorConfirmation(input.appNet, input.auditorNet, input.auditorUnit || input.appUnit);
+    if (derived) text += `; ${derived}`;
   }
   return text;
 }
@@ -226,9 +238,85 @@ function canonicalComparisonBridges(audit: {
   return listed.length ? listed : fromEpisodes;
 }
 
+function sumBridgeAuditorNets(bridges: ComparisonBridge[]): { total: string; unit: string } | null {
+  let total = 0n;
+  let unit: string | null = null;
+  for (const bridge of bridges) {
+    if (!bridge.unit) return null;
+    if (unit == null) unit = bridge.unit;
+    else if (unit !== bridge.unit) return null;
+    const auditor = quantizeToAtomics(bridge.components?.net?.auditor, bridge.unit);
+    if (auditor == null) return null;
+    total += auditor;
+  }
+  if (!unit) return null;
+  const scale = Number(atomicScale(unit).toString().length - 1);
+  const negative = total < 0n;
+  const abs = negative ? -total : total;
+  const whole = abs / atomicScale(unit);
+  const frac = (abs % atomicScale(unit)).toString().padStart(scale, "0").replace(/0+$/, "");
+  const text = `${negative ? "-" : ""}${whole.toString()}${frac ? `.${frac}` : ""}`;
+  return { total: text || "0", unit };
+}
+
+function ledgerNetAndUnit(
+  ledger: Array<{ unit?: string | null; settlement_asset?: string | null; net?: unknown }>,
+): { total: string; unit: string } | null {
+  let total = 0n;
+  let unit: string | null = null;
+  for (const row of ledger) {
+    const rowUnit = row.unit || row.settlement_asset;
+    if (!rowUnit) return null;
+    if (unit == null) unit = rowUnit;
+    else if (unit !== rowUnit) return null;
+    const net = quantizeToAtomics(row.net, rowUnit);
+    if (net == null) return null;
+    total += net;
+  }
+  if (!unit) return null;
+  const scale = Number(atomicScale(unit).toString().length - 1);
+  const negative = total < 0n;
+  const abs = negative ? -total : total;
+  const whole = abs / atomicScale(unit);
+  const frac = (abs % atomicScale(unit)).toString().padStart(scale, "0").replace(/0+$/, "");
+  return { total: `${negative ? "-" : ""}${whole.toString()}${frac ? `.${frac}` : ""}` || "0", unit };
+}
+
+function storedHeadlineMatches(
+  audit: {
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
+  },
+  ledger: Array<{ unit?: string | null; settlement_asset?: string | null; net?: unknown }>,
+  bridges: ComparisonBridge[],
+): boolean {
+  const auditor = sumBridgeAuditorNets(bridges);
+  const app = ledgerNetAndUnit(ledger);
+  if (!auditor || !app || auditor.unit !== app.unit) return false;
+  if (audit.independently_audited_episode_net_unit && audit.independently_audited_episode_net_unit !== auditor.unit) return false;
+  if (audit.app_completed_episode_net_unit && audit.app_completed_episode_net_unit !== app.unit) return false;
+  if (
+    audit.independently_audited_episode_net != null
+    && audit.independently_audited_episode_net !== ""
+    && !amountsAgreeWithinTolerance(audit.independently_audited_episode_net, auditor.total, auditor.unit)
+  ) return false;
+  if (
+    audit.app_completed_episode_net != null
+    && audit.app_completed_episode_net !== ""
+    && !amountsAgreeWithinTolerance(audit.app_completed_episode_net, app.total, app.unit)
+  ) return false;
+  return true;
+}
+
 export function certificateComparisonProof(
   audit: {
     one_to_one_membership?: boolean;
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
     component_bridges?: ComparisonBridge[];
     episodes?: Array<{ component_bridge?: ComparisonBridge }>;
   } | null | undefined,
@@ -260,7 +348,8 @@ export function certificateComparisonProof(
     });
     if (!amountsOk || !bridgeAppMatchesLedger(bridge, episode)) return false;
   }
-  return matched.size === byId.size;
+  if (matched.size !== byId.size) return false;
+  return storedHeadlineMatches(audit, ledger, bridges);
 }
 
 function fingerprintId(value: unknown): string | null {
@@ -291,7 +380,7 @@ export function completedEpisodeFields(source?: {
   corpus_kind?: string | null;
   coverage_status_display?: string | null;
   coverage_status?: string | null;
-  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
+  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null; unit?: string | null; settlement_asset?: string | null; net?: unknown }>;
   research_profile?: Record<string, unknown> | null;
   independent_audit?: {
     independently_audited?: boolean;
@@ -309,7 +398,8 @@ export function completedEpisodeFields(source?: {
   } | null;
 } | null) {
   const profile = source?.research_profile || {};
-  const audit = (source?.independent_audit || (profile.independent_audit as Record<string, unknown> | undefined) || {}) as {
+  const topLevelMissing = !source || !("independent_audit" in source);
+  const audit = ((topLevelMissing ? (profile.independent_audit as Record<string, unknown> | undefined) : source?.independent_audit) || {}) as {
     independently_audited?: boolean;
     independently_audited_episode_net?: string | null;
     independently_audited_episode_net_unit?: string | null;
@@ -324,9 +414,17 @@ export function completedEpisodeFields(source?: {
     component_bridges?: ComparisonBridge[];
     episodes?: Array<{ component_bridge?: ComparisonBridge }>;
   };
+  const typedAudit = audit as typeof audit & {
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
+    component_bridges?: ComparisonBridge[];
+    episodes?: Array<{ component_bridge?: ComparisonBridge }>;
+  };
   const ledger = (
     source?.completed_episode_ledger
-    ?? (profile.completed_episode_ledger as Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }> | undefined)
+    ?? (profile.completed_episode_ledger as Array<{ mint?: string | null; close_signature?: string | null; close?: string | null; unit?: string | null; settlement_asset?: string | null; net?: unknown }> | undefined)
     ?? null
   );
   const contradiction = profile.ledger_summary_contradiction === true;
@@ -334,24 +432,37 @@ export function completedEpisodeFields(source?: {
   const certificateFingerprint = fingerprintId(audit.content_fingerprint) || fingerprintId(audit.fingerprint);
   const fingerprintMatches = Boolean(currentFingerprint && certificateFingerprint && currentFingerprint === certificateFingerprint);
   const proof = certificateComparisonProof(audit, ledger);
-  const appUnit = (profile.completed_episode_net_unit as string | null | undefined)
+  const bridges = canonicalComparisonBridges(audit);
+  const derivedAuditor = bridges ? sumBridgeAuditorNets(bridges) : null;
+  const derivedApp = Array.isArray(ledger) ? ledgerNetAndUnit(ledger) : null;
+  const appUnit = derivedApp?.unit
+    ?? (profile.completed_episode_net_unit as string | null | undefined)
     ?? audit.app_completed_episode_net_unit;
-  const auditorUnit = audit.independently_audited_episode_net_unit;
-  const unitsMatch = !auditorUnit || !appUnit || auditorUnit === appUnit;
+  const auditorUnit = derivedAuditor?.unit ?? audit.independently_audited_episode_net_unit;
+  const profileUnit = profile.completed_episode_net_unit as string | null | undefined;
+  const unitsMatch = (
+    (!auditorUnit || !appUnit || auditorUnit === appUnit)
+    && (!profileUnit || !auditorUnit || profileUnit === auditorUnit)
+    && (!audit.independently_audited_episode_net_unit || !appUnit || audit.independently_audited_episode_net_unit === appUnit)
+    && (!audit.app_completed_episode_net_unit || !auditorUnit || audit.app_completed_episode_net_unit === auditorUnit)
+  );
   const certifying = fingerprintMatches
     && audit.fingerprintless_not_certifying !== true
     && !contradiction
     && unitsMatch
     && proof;
+  const derivedConfirmation = certifying && derivedApp && derivedAuditor
+    ? formatAuditorConfirmation(derivedApp.total, derivedAuditor.total, derivedApp.unit)
+    : null;
   return {
-    appNet: (profile.completed_episode_net as string | null | undefined)
+    appNet: derivedApp?.total
+      ?? (profile.completed_episode_net as string | null | undefined)
       ?? (certifying ? audit.app_completed_episode_net : null),
-    appUnit: (profile.completed_episode_net_unit as string | null | undefined)
-      ?? (certifying ? audit.app_completed_episode_net_unit : null),
+    appUnit: appUnit ?? null,
     independentlyAudited: Boolean(audit.independently_audited) && certifying,
-    auditorNet: certifying ? audit.independently_audited_episode_net : null,
-    auditorUnit: certifying ? audit.independently_audited_episode_net_unit : null,
-    auditorConfirmation: certifying ? audit.auditor_confirmation : null,
+    auditorNet: certifying ? (derivedAuditor?.total ?? null) : null,
+    auditorUnit: certifying ? (derivedAuditor?.unit ?? null) : null,
+    auditorConfirmation: derivedConfirmation,
   };
 }
 

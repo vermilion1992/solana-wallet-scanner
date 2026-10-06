@@ -8,8 +8,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from datetime import datetime, timezone
-from decimal import Decimal, ROUND_HALF_EVEN
+from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
 from statistics import median
 
 ACCOUNTING_POLICY_VERSION = (
@@ -48,12 +49,46 @@ CONCENTRATED_LABEL = "positive subset; highly concentrated; negative excluding l
 POSITIVE_SUBSET_LABEL = "positive subset"
 SYNTHETIC_CORPUS = "SYNTHETIC"
 DISPLAY_QUANTUM = Decimal("0.000000001")
+CANONICAL_AMOUNT = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
+
+
+def parse_canonical_amount(value):
+    """Strict shared money grammar. Strings only; no sci-notation, spaces, or numerics."""
+    if not isinstance(value, str) or not CANONICAL_AMOUNT.fullmatch(value):
+        return None
+    try:
+        amount = Decimal(value)
+    except (InvalidOperation, ValueError, OverflowError):
+        return None
+    if not amount.is_finite():
+        return None
+    return amount
 
 
 def _decimal(value):
     if value in (None, ""):
         return None
-    return Decimal(str(value))
+    if isinstance(value, bool):
+        return None
+    try:
+        if isinstance(value, str):
+            lowered = value.strip().lower()
+            if lowered in ("nan", "inf", "+inf", "-inf", "infinity", "-infinity"):
+                return None
+            if not CANONICAL_AMOUNT.fullmatch(value):
+                return None
+            amount = Decimal(value)
+        elif isinstance(value, Decimal):
+            amount = value
+        elif type(value) is int:
+            amount = Decimal(value)
+        else:
+            return None
+        if not amount.is_finite():
+            return None
+        return amount
+    except (InvalidOperation, ValueError, OverflowError):
+        return None
 
 
 def _display_decimal(value):
@@ -75,7 +110,7 @@ def atomic_tolerance(unit):
 
 
 def quantize_asset(value, unit):
-    amount = _decimal(value)
+    amount = parse_canonical_amount(value)
     if amount is None:
         return None
     return amount.quantize(asset_quantum(unit), rounding=ROUND_HALF_EVEN)
@@ -223,7 +258,10 @@ def audit_fingerprint_matches(audit, fingerprint):
         stored_ledger = audit.get("completed_episode_ledger_fingerprint")
     if not stored_id or stored_id != fingerprint.get("fingerprint"):
         return False
+    audit_policy = audit.get("accounting_policy_version")
     if stored_policy and stored_policy != fingerprint.get("accounting_policy_version"):
+        return False
+    if audit_policy and audit_policy != fingerprint.get("accounting_policy_version"):
         return False
     if stored_window and stored_window != fingerprint.get("reporting_window"):
         return False
@@ -342,6 +380,74 @@ def episode_comparison_bridges(audit):
     return list(canonical_comparison_bridges(audit) or [])
 
 
+def _sum_bridge_auditor_nets(bridges):
+    total = Decimal("0")
+    unit = None
+    for bridge in bridges or []:
+        bridge_unit = (bridge or {}).get("unit")
+        if not bridge_unit:
+            return None, None
+        if unit is None:
+            unit = bridge_unit
+        elif unit != bridge_unit:
+            return None, None
+        auditor = parse_canonical_amount(((bridge.get("components") or {}).get("net") or {}).get("auditor"))
+        if auditor is None:
+            return None, None
+        total += auditor
+    return total, unit
+
+
+def _ledger_net_and_unit(rows):
+    validated = validate_episode_ledger(rows)
+    if not validated.get("ok") or validated.get("empty") or validated.get("unit") in (None, "", "mixed"):
+        return None, None
+    return parse_canonical_amount(validated["net"]) or _decimal(validated["net"]), validated["unit"]
+
+
+def _stored_headline_matches(audit, ledger, bridges):
+    """Stored headline nets/units may be absent; when present they must equal derived sums."""
+    auditor_sum, bridge_unit = _sum_bridge_auditor_nets(bridges)
+    ledger_net, ledger_unit = _ledger_net_and_unit(ledger)
+    if auditor_sum is None or ledger_net is None or not bridge_unit or not ledger_unit:
+        return False
+    if bridge_unit != ledger_unit:
+        return False
+    stored_auditor = audit.get("independently_audited_episode_net")
+    stored_app = audit.get("app_completed_episode_net")
+    stored_auditor_unit = audit.get("independently_audited_episode_net_unit")
+    stored_app_unit = audit.get("app_completed_episode_net_unit")
+    if stored_auditor_unit and stored_auditor_unit != bridge_unit:
+        return False
+    if stored_app_unit and stored_app_unit != ledger_unit:
+        return False
+    if stored_auditor not in (None, "") and not amounts_agree(stored_auditor, _display_decimal(auditor_sum), bridge_unit):
+        return False
+    if stored_app not in (None, "") and not amounts_agree(stored_app, _display_decimal(ledger_net), ledger_unit):
+        return False
+    return True
+
+
+def derived_certificate_headlines(audit, ledger):
+    """Headlines and confirmation from bridges + ledger. Never trust stored text."""
+    bridges = canonical_comparison_bridges(audit) or []
+    auditor_sum, bridge_unit = _sum_bridge_auditor_nets(bridges)
+    ledger_net, ledger_unit = _ledger_net_and_unit(ledger)
+    if auditor_sum is None or ledger_net is None or bridge_unit != ledger_unit:
+        return None
+    app_text = _display_decimal(ledger_net)
+    auditor_text = _display_decimal(auditor_sum)
+    return {
+        "app_completed_episode_net": app_text,
+        "app_completed_episode_net_unit": ledger_unit,
+        "independently_audited_episode_net": auditor_text,
+        "independently_audited_episode_net_unit": bridge_unit,
+        "auditor_confirmation": format_auditor_confirmation(
+            app_text, auditor_text, ledger_unit, independently_audited=True
+        ),
+    }
+
+
 def _bridge_amounts_agree(bridge):
     """Recompute agreement from stored amounts. Flags are not evidence."""
     unit = (bridge or {}).get("unit") or "SOL"
@@ -401,7 +507,9 @@ def certificate_comparison_proof(audit, ledger=None):
             return False
         if not _bridge_app_matches_ledger(bridge, by_id[app_id]):
             return False
-    return matched == seen
+    if matched != seen:
+        return False
+    return _stored_headline_matches(audit, rows, bridges)
 
 
 def bindable_independent_audit(audit, fingerprint, ledger=None):
@@ -409,6 +517,7 @@ def bindable_independent_audit(audit, fingerprint, ledger=None):
 
     A fingerprint binds app inputs. It does not, by itself, establish that the
     accompanying auditor result contains a successful one-to-one comparison.
+    Headlines and confirmation are replaced with derived values.
     """
     if not audit or not fingerprint:
         return None
@@ -416,7 +525,12 @@ def bindable_independent_audit(audit, fingerprint, ledger=None):
         return None
     if not certificate_comparison_proof(audit, ledger):
         return None
-    return audit
+    headlines = derived_certificate_headlines(audit, ledger)
+    if not headlines:
+        return None
+    bound = dict(audit)
+    bound.update(headlines)
+    return bound
 
 
 def coverage_shares(report, profile=None):
@@ -685,7 +799,7 @@ def _invalidate_saved_decisions(report, profile, *, ledger, contradiction):
         profile["audit_fingerprint"] = current
     else:
         profile["audit_fingerprint"] = current
-    attached = profile.get("independent_audit") or (report or {}).get("independent_audit")
+    attached = (report or {}).get("independent_audit")
     if contradiction or not certificate_comparison_proof(attached, ledger):
         profile["independent_audit"] = None
     else:

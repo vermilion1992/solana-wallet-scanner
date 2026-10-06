@@ -47,7 +47,7 @@ DRAFT = ROOT / "config/live_authorization.ranked100-depth-biased-next-capture-dr
 NOW = datetime(2026, 10, 7, 12, tzinfo=timezone.utc)
 
 
-def _quota_record(remaining=8, **overrides):
+def _quota_record(remaining=8, draft=None, **overrides):
     record = {
         "kind": "operator_quota_record_v1",
         "ceiling": 20,
@@ -59,17 +59,23 @@ def _quota_record(remaining=8, **overrides):
         "operator": "mitch-offline-synthetic",
         "confirmed_at": "2026-10-07T00:00:00Z",
     }
+    if draft is not None:
+        record["authorization_id"] = draft["authorization_id"]
+        record["execution_artifact_hash"] = draft_execution_artifact_hash(draft)
     record.update(overrides)
     return record
 
 
 def _synthetic_grant(draft, **overrides):
+    quota = overrides.pop("current_remaining_quota_confirmation", _quota_record(draft=draft))
+    if isinstance(quota, dict) and "authorization_id" not in quota:
+        quota = {**quota, "authorization_id": draft["authorization_id"], "execution_artifact_hash": draft_execution_artifact_hash(draft)}
     grant = {
         "enabled": False,
         "synthetic_offline_authorization": True,
         "authorization_id": draft["authorization_id"],
         "execution_artifact_hash_of_this_draft": draft_execution_artifact_hash(draft),
-        "current_remaining_quota_confirmation": _quota_record(),
+        "current_remaining_quota_confirmation": quota,
         "overages_enabled": False,
         "approval_timestamp": "2026-10-07T00:00:00Z",
         "expiry": "2026-10-08T00:00:00Z",
@@ -311,6 +317,10 @@ def test_saved_decisions_rebuild_evidence_class_and_funnels(tmp_path):
         "criteria_met": True,
     }
     persisted_zero = _persist(store, zero, zero_profile, "zero")
+    reconciled_zero = reconcile_saved_profile(zero, deepcopy(zero_profile))
+    assert reconciled_zero["funnel"]["C"]["state"] != "MET"
+    assert reconciled_zero["funnel"]["B"]["state"] != "ESTABLISHED"
+    assert reconciled_zero["qualification_category"]["category"] != "positive_matched_position_evidence"
     zero_row = next(
         item for item in ranked_workflow_view(store, extra_universe_rows=[_universe_row(zero["address"])])["rows"]
         if item["address"] == zero["address"]
@@ -468,8 +478,8 @@ def test_reservation_invalidates_last_dispatch_and_binds_progress(tmp_path):
     fresh_receipt_stale_progress = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": gtfo["address"], "phase": 1, "block_time_lt": 1791206967, "pagination_token": "next-1"},
-        last_dispatch={"address": gtfo["address"], "response_id": "fresh-id", "page_identity": "next-1"},
-        replay_receipts=[{"response_id": "fresh-id", "page_identity": "next-1"}],
+        last_dispatch={"address": gtfo["address"], "response_id": "fresh-id", "page_identity": "next-1", "authorization_id": draft["authorization_id"], "attempt": 2},
+        replay_receipts=[{"response_id": "fresh-id", "page_identity": "next-1", "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 2}],
         previous_progress={
             "response_id": old_id,
             "named_dependency_observations": [{
@@ -488,8 +498,8 @@ def test_reservation_invalidates_last_dispatch_and_binds_progress(tmp_path):
     missing_id = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": gtfo["address"], "phase": 1, "block_time_lt": 1791206967, "pagination_token": "next-1"},
-        last_dispatch={"address": gtfo["address"], "response_id": "fresh-id", "page_identity": "next-1"},
-        replay_receipts=[{"response_id": "fresh-id", "page_identity": "next-1"}],
+        last_dispatch={"address": gtfo["address"], "response_id": "fresh-id", "page_identity": "next-1", "authorization_id": draft["authorization_id"], "attempt": 2},
+        replay_receipts=[{"response_id": "fresh-id", "page_identity": "next-1", "address": gtfo["address"], "authorization_id": draft["authorization_id"], "attempt": 2}],
         previous_progress={
             "named_dependency_observations": [{
                 "signature": gtfo["named_dependency_items"][0]["signature"],
@@ -518,8 +528,16 @@ def test_a6ps_additional_page_unavailable_and_wallet_observations():
             "address": gtfo["address"],
             "response_id": "gtfo-page-1",
             "page_identity": gtfo["continue_from_pagination_token"],
+            "authorization_id": draft["authorization_id"],
+            "attempt": 1,
         },
-        "replay_receipts": [{"response_id": "gtfo-page-1", "page_identity": gtfo["continue_from_pagination_token"]}],
+        "replay_receipts": [{
+            "response_id": "gtfo-page-1",
+            "page_identity": gtfo["continue_from_pagination_token"],
+            "address": gtfo["address"],
+            "authorization_id": draft["authorization_id"],
+            "attempt": 1,
+        }],
     }
     first = evaluate_next_capture_dispatch(
         draft=draft,
@@ -747,6 +765,40 @@ def test_mounted_component_trees_reject_invalid_and_stale_payloads(tmp_path):
                     "right_independently_audited": False,
                 },
             },
+        },
+        "headline999": {
+            **valid,
+            "independent_audit": {
+                **report["independent_audit"],
+                "independently_audited_episode_net": "999",
+                "auditor_confirmation": "auditor confirms within 2 lamports: 999 SOL",
+            },
+            "auditorConfirmationForbidden": "999",
+        },
+        "contradictoryRepresentation": {
+            **valid,
+            "independent_audit": {
+                **report["independent_audit"],
+                "episodes": [
+                    {
+                        **report["independent_audit"]["episodes"][0],
+                        "component_bridge": {
+                            **report["independent_audit"]["episodes"][0]["component_bridge"],
+                            "components": {
+                                **report["independent_audit"]["episodes"][0]["component_bridge"]["components"],
+                                "net": {"app": "9", "auditor": "9"},
+                            },
+                        },
+                    },
+                    *report["independent_audit"]["episodes"][1:],
+                ],
+            },
+        },
+        "profileUnitMismatch": {
+            **valid,
+            "expectProof": True,
+            "research_profile": {**profile, "completed_episode_net_unit": "USDC"},
+            "auditorConfirmationForbidden": "auditor confirms",
         },
     }
     cases_path = tmp_path / "0842-cases.json"
