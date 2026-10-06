@@ -50,9 +50,12 @@ def test_anonymous_and_csrf_guards_cover_new_endpoints(session):
 def test_state_does_not_embed_bulk_rows_and_preserves_legacy_caps(session):
     client, _, data_dir = session
     state = client.get("/api/state").json()
-    assert state["mass_search"]["legacy_candidate_cap"] == LIMITS["candidate_cap"]
-    assert state["mass_search"]["bulk_capacity"] == 10000
     assert "candidates" not in state["mass_search"]
+    assert "note" not in state["mass_search"]
+    assert "ranked_workflow" not in state["mass_search"]
+    listed = client.get("/api/mass-search/runs").json()
+    assert listed["legacy_limits"]["candidate_cap"] == LIMITS["candidate_cap"]
+    assert listed["bulk_capacity"] == 10000
     created = client.post("/api/mass-search/runs", json={"corpus_kind": "SYNTHETIC"}).json()
     pages = [[{"address": synthetic_address(i), "realized_pnl": str(i), "trade_count": 21} for i in range(30)]]
     acquired = client.post(f"/api/mass-search/runs/{created['run_id']}/acquire", json={"pages": pages, "target_unique": 30})

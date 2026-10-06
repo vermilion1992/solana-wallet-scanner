@@ -487,6 +487,37 @@ def _unresolved_native_roles(flat, owned, wrapped, keys, before, address, route,
     return unresolved
 
 
+# Official System allocate (tag 8, 12 bytes) / assign (tag 1, 36 bytes) from
+# scanner.compiled_instructions._system. Used only as inner swap lifecycle —
+# PumpSwap account setup on genuine Jupiter route_v2, or token-account sizes.
+# Outer nonce/authority mutations must not inherit this exception.
+_REVIEWED_LIFECYCLE_OWNERS = frozenset({
+    *TOKEN_IDS, PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+})
+_REVIEWED_ALLOCATE_SPACES = frozenset({137, 165, 170})
+
+
+def _accept_inner_system_lifecycle(kind, info, *, nested, address):
+    if not nested:
+        raise ValueError('Outer System allocate/assign is not swap lifecycle')
+    if not isinstance(info, dict):
+        raise ValueError('System allocate/assign layout is absent')
+    account = info.get('account')
+    if not isinstance(account, str) or not account or account == address:
+        raise ValueError('System allocate/assign account is outside swap lifecycle')
+    allowed = {'account', 'space'} if kind == 'allocate' else {'account', 'owner'}
+    if set(info) != allowed:
+        raise ValueError('System allocate/assign layout is not the pinned System contract')
+    if kind == 'allocate':
+        space = info.get('space')
+        if type(space) is not int or space not in _REVIEWED_ALLOCATE_SPACES:
+            raise ValueError('System allocate space is not a reviewed account layout')
+        return
+    owner = info.get('owner')
+    if owner not in _REVIEWED_LIFECYCLE_OWNERS:
+        raise ValueError('System assign owner is not a reviewed program')
+
+
 def decode_supported_swaps(transactions, address):
     """Decode record wrappers {signature,raw,evidence_hash,transaction_index?}.
 
@@ -730,8 +761,7 @@ def decode_supported_swaps(transactions, address):
                         elif address in (info.get('source'), account):
                             raise ValueError('Unresolved native account funding')
                     elif kind in ('allocate', 'assign'):
-                        # Official System allocate/assign layouts. Lifecycle only;
-                        # native conservation and owned-account reconciliation still apply.
+                        _accept_inner_system_lifecycle(kind, info, nested=nested, address=address)
                         continue
                     else:
                         raise ValueError('Unsupported system operation within swap transaction')

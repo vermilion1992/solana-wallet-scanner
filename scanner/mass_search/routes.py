@@ -30,22 +30,18 @@ def _error(exc):
 
 
 def mass_search_state(store):
-    """Compact run summaries only. Never materialise the bulk universe into /api/state."""
+    """Compact run summaries only. Never materialise the bulk universe into /api/state.
+
+    Caps, ranked-100 browse, and notes live on /api/mass-search/runs and
+    /api/mass-search/ranked-workflow so the shared /api/state budget stays
+    under the 20000-byte compact-checkpoint limit.
+    """
     try:
         service = MassSearchService(store)
         runs = service.list_runs()
     except Exception:
         runs = []
-    return {
-        "runs": runs[:20],
-        "bulk_capacity": MASS_UNIVERSE_CAPACITY,
-        "legacy_candidate_cap": LIMITS["candidate_cap"],
-        "legacy_deep_audit_cap": LIMITS["deep_audit_cap"],
-        "live_default": False,
-        "budget_enabled": False,
-        "ranked_workflow": True,
-        "note": "Paginated candidate rows are served from /api/mass-search/runs/{id}/candidates. Ranked-100 browse is cached and offline.",
-    }
+    return {"runs": runs[:20]}
 
 
 def install_mass_search_routes(app, store):
