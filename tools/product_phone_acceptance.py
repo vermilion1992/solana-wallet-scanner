@@ -98,6 +98,11 @@ try:
     expect(page.get_by_text("History required — not analysed").first).to_be_visible()
     expect(page.locator("[data-phone-access]")).to_be_visible()
     expect(page.get_by_text("ranked100-discovery-pilot-2026-10-05")).to_be_visible()
+    expect(page.locator("[data-research-screen]")).to_contain_text("inconclusive")
+    expect(page.locator("[data-research-screen]")).to_contain_text("99")
+    page.get_by_role("button", name="Acquire history").click()
+    expect(page.locator("[data-acquire-block]")).to_be_visible()
+    expect(page.locator("[data-acquire-block]")).to_contain_text("blocked")
     health = page.request.get(f"{launcher.base}/api/health").json()
     assert health["PRODUCT_READY"] is False
     assert health["version"]
@@ -127,6 +132,8 @@ try:
     expect(page.get_by_text("USDC results exclude SOL fees")).to_be_visible()
     expect(page.locator("[data-usdc-excludes-sol-fees]")).to_be_visible()
     expect(page.locator("[data-report-provenance]")).to_be_visible()
+    expect(page.locator("[data-report-provenance]")).to_contain_text("visible_report")
+    expect(page.locator("[data-result-scope]")).to_contain_text("conditional on captured inventory")
     page.locator("[data-subset-worksheet]").scroll_into_view_if_needed()
     _shot(page, "03-report-phone")
     page.locator("[data-wallet-analytics]").scroll_into_view_if_needed()
@@ -147,6 +154,9 @@ try:
     assert body["research_profile"]["safe_to_copy"] is False
     assert body.get("mass_search_interpretation", {}).get("scoped_pnl_is_not_wallet_wide") is True
     assert body["mass_search_interpretation"]["not_safe_to_copy"] is True
+    assert body["mass_search_interpretation"]["usdc_excluding_sol_fees_is_never_net"] is True
+    assert body.get("result_scope") == "conditional_on_captured_inventory"
+    assert body["visible_report"] is True
     synth = next((row for row in mass if row.get("address") == SYNTH_USDC), None)
     if synth:
         _open_nav(page, "Search", exact=True)
