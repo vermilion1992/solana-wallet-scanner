@@ -1,0 +1,472 @@
+{
+  "kind": "research-search-b-per-wallet-results-v1",
+  "attempt": 1,
+  "application_commit": "78678d18d8f74304380588410bdef2ae4bc4530b",
+  "window": {
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
+  },
+  "research_screen": {
+    "outcome": "inconclusive",
+    "counts": {
+      "inconclusive": 90,
+      "completed_qualified": 0,
+      "zero_qualified": 9,
+      "not_executed": 1,
+      "universe": 100,
+      "qualification": {
+        "not_evaluated": 91,
+        "analysed_incomplete": 9,
+        "positive_matched_position_evidence": 0,
+        "positive_net_realised_over_window": 0,
+        "profitable_account_performance": 0
+      }
+    },
+    "thresholds_fixed_before_evaluation": {
+      "min_completed_known_cost": "1",
+      "min_sample_positions": "3"
+    }
+  },
+  "rows": [
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "short": "CccS\u2026y1eU",
+      "provider_rank": 4,
+      "provider_trade_count": 1494,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-06T05:11:49+00:00",
+      "oldest_block_time": "2026-10-05T08:55:23+00:00",
+      "app_report_id": "a854308386ea4023bc7d331bd35208de",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 69,
+      "app_in_window_trade_events": 12,
+      "app_completed_known_cost_positions": 6,
+      "app_wallet_completed_episodes": 0,
+      "app_matched_pnl": {
+        "SOL": "0.251129813",
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 0,
+      "app_hold_t90_seconds": 135,
+      "app_final_hold_seconds": 135,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "AGREE",
+      "independent": {
+        "SOL": {
+          "matched_pnl": "0.251129813",
+          "known_cost_sales": 6,
+          "unresolved_basis_sales": 0,
+          "open_lots": 0,
+          "mints_fully_closed_in_sample": 6,
+          "partial_sales_on_unbacked_mints": 0
+        }
+      },
+      "recon_comparison": {
+        "SOL": {
+          "independent_total": "0.251129813",
+          "app_total": "0.251129813",
+          "independent_known_cost_sells": 6,
+          "app_sales": 6,
+          "independent_unresolved_basis_sales": 0,
+          "independent_open_lots": 0,
+          "status": "AGREE"
+        }
+      },
+      "meets_two_fixed_screen_defaults_on_app_numbers": true
+    },
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "short": "gtfo\u2026CgFL",
+      "provider_rank": 2,
+      "provider_trade_count": 1022,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-06T04:59:45+00:00",
+      "oldest_block_time": "2026-10-04T05:35:56+00:00",
+      "app_report_id": null,
+      "app_error": "ValueError: Sale exceeds supported inventory",
+      "app_decoded_swaps_all_pages": null,
+      "app_in_window_trade_events": 0,
+      "app_completed_known_cost_positions": null,
+      "app_wallet_completed_episodes": null,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": null,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "not_evaluated",
+      "app_research_screen_outcome": "inconclusive",
+      "app_worksheet_reconciliation": null,
+      "independent": {
+        "SOL": {
+          "matched_pnl": "3.411606267",
+          "known_cost_sales": 55,
+          "unresolved_basis_sales": 4,
+          "open_lots": 0,
+          "mints_fully_closed_in_sample": 12,
+          "partial_sales_on_unbacked_mints": 2
+        }
+      },
+      "recon_comparison": {
+        "SOL": {
+          "independent_total": "3.411606267",
+          "app_total": null,
+          "independent_known_cost_sells": 55,
+          "app_sales": 0,
+          "independent_unresolved_basis_sales": 4,
+          "independent_open_lots": 0,
+          "status": "APP_MISSING"
+        }
+      },
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "short": "A6PS\u2026vbot",
+      "provider_rank": 15,
+      "provider_trade_count": 656,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-06T05:02:51+00:00",
+      "oldest_block_time": "2026-10-03T05:28:46+00:00",
+      "app_report_id": "ea60e509d2164a16a68233f06106ea26",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 70,
+      "app_in_window_trade_events": 52,
+      "app_completed_known_cost_positions": 46,
+      "app_wallet_completed_episodes": 0,
+      "app_matched_pnl": {
+        "SOL": "297.232334822",
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 0,
+      "app_hold_t90_seconds": 12,
+      "app_final_hold_seconds": 12,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "AGREE",
+      "independent": {
+        "SOL": {
+          "matched_pnl": "297.232334822",
+          "known_cost_sales": 46,
+          "unresolved_basis_sales": 0,
+          "open_lots": 0,
+          "mints_fully_closed_in_sample": 6,
+          "partial_sales_on_unbacked_mints": 0
+        }
+      },
+      "recon_comparison": {
+        "SOL": {
+          "independent_total": "297.232334822",
+          "app_total": "297.232334822",
+          "independent_known_cost_sells": 46,
+          "app_sales": 46,
+          "independent_unresolved_basis_sales": 0,
+          "independent_open_lots": 0,
+          "status": "AGREE"
+        }
+      },
+      "meets_two_fixed_screen_defaults_on_app_numbers": true
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "short": "An9s\u2026LYSB",
+      "provider_rank": 17,
+      "provider_trade_count": 599,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-05T08:40:38+00:00",
+      "oldest_block_time": "2026-10-03T18:15:23+00:00",
+      "app_report_id": "ranked-partial-An9sREpL-bd139e28",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 0,
+      "app_in_window_trade_events": 0,
+      "app_completed_known_cost_positions": 0,
+      "app_wallet_completed_episodes": null,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 0,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {},
+      "recon_comparison": {},
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "short": "CRXo\u2026V68U",
+      "provider_rank": 90,
+      "provider_trade_count": 422,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-05T08:51:14+00:00",
+      "oldest_block_time": "2026-09-26T06:14:50+00:00",
+      "app_report_id": "ranked-partial-CRXomDFu-099e7d27",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 0,
+      "app_in_window_trade_events": 0,
+      "app_completed_known_cost_positions": 0,
+      "app_wallet_completed_episodes": null,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 0,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {},
+      "recon_comparison": {},
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "short": "BVZt\u2026Y9n9",
+      "provider_rank": 10,
+      "provider_trade_count": 400,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-05T22:46:04+00:00",
+      "oldest_block_time": "2026-09-29T11:59:46+00:00",
+      "app_report_id": "6624c44640ad457c88a825a0ddca4211",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 2,
+      "app_in_window_trade_events": 2,
+      "app_completed_known_cost_positions": 0,
+      "app_wallet_completed_episodes": 0,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 2,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {
+        "SOL": {
+          "matched_pnl": null,
+          "known_cost_sales": 0,
+          "unresolved_basis_sales": 1,
+          "open_lots": 0,
+          "mints_fully_closed_in_sample": 0,
+          "partial_sales_on_unbacked_mints": 0
+        },
+        "USDC": {
+          "matched_pnl": null,
+          "known_cost_sales": 0,
+          "unresolved_basis_sales": 1,
+          "open_lots": 0,
+          "mints_fully_closed_in_sample": 0,
+          "partial_sales_on_unbacked_mints": 0
+        }
+      },
+      "recon_comparison": {
+        "SOL": {
+          "independent_total": null,
+          "app_total": null,
+          "independent_known_cost_sells": 0,
+          "app_sales": 0,
+          "independent_unresolved_basis_sales": 1,
+          "independent_open_lots": 0,
+          "status": "BOTH_EMPTY"
+        },
+        "USDC": {
+          "independent_total": null,
+          "app_total": null,
+          "independent_known_cost_sells": 0,
+          "app_sales": 0,
+          "independent_unresolved_basis_sales": 1,
+          "independent_open_lots": 0,
+          "status": "BOTH_EMPTY"
+        }
+      },
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "short": "AW6P\u2026MzD6",
+      "provider_rank": 56,
+      "provider_trade_count": 395,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-06T02:11:12+00:00",
+      "oldest_block_time": "2026-10-01T03:18:06+00:00",
+      "app_report_id": "ranked-partial-AW6Pddy7-6774a74b",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 0,
+      "app_in_window_trade_events": 0,
+      "app_completed_known_cost_positions": 0,
+      "app_wallet_completed_episodes": null,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 0,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {},
+      "recon_comparison": {},
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "short": "58PW\u2026xvDL",
+      "provider_rank": 53,
+      "provider_trade_count": 338,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-06T03:57:54+00:00",
+      "oldest_block_time": "2026-09-23T03:57:24+00:00",
+      "app_report_id": "55da61876b414466986f25dc498218f6",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 20,
+      "app_in_window_trade_events": 20,
+      "app_completed_known_cost_positions": 2,
+      "app_wallet_completed_episodes": 2,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 7,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {
+        "SOL": {
+          "matched_pnl": null,
+          "known_cost_sales": 0,
+          "unresolved_basis_sales": 1,
+          "open_lots": 1,
+          "mints_fully_closed_in_sample": 0,
+          "partial_sales_on_unbacked_mints": 0
+        },
+        "USDC": {
+          "matched_pnl": "14739.373324196",
+          "known_cost_sales": 3,
+          "unresolved_basis_sales": 6,
+          "open_lots": 3,
+          "mints_fully_closed_in_sample": 1,
+          "partial_sales_on_unbacked_mints": 1
+        }
+      },
+      "recon_comparison": {
+        "SOL": {
+          "independent_total": null,
+          "app_total": null,
+          "independent_known_cost_sells": 0,
+          "app_sales": 0,
+          "independent_unresolved_basis_sales": 1,
+          "independent_open_lots": 1,
+          "status": "BOTH_EMPTY"
+        },
+        "USDC": {
+          "independent_total": "14739.373324196",
+          "app_total": null,
+          "independent_known_cost_sells": 3,
+          "app_sales": 0,
+          "independent_unresolved_basis_sales": 6,
+          "independent_open_lots": 3,
+          "status": "APP_MISSING"
+        }
+      },
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "short": "DQ7n\u20269Cys",
+      "provider_rank": 14,
+      "provider_trade_count": 334,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-10-06T04:24:55+00:00",
+      "oldest_block_time": "2026-10-02T23:36:59+00:00",
+      "app_report_id": "602f7122b1f54b8f9c20b7115032ebd1",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 2,
+      "app_in_window_trade_events": 1,
+      "app_completed_known_cost_positions": 0,
+      "app_wallet_completed_episodes": 0,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 1,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {
+        "USDC": {
+          "matched_pnl": null,
+          "known_cost_sales": 0,
+          "unresolved_basis_sales": 1,
+          "open_lots": 0,
+          "mints_fully_closed_in_sample": 0,
+          "partial_sales_on_unbacked_mints": 0
+        }
+      },
+      "recon_comparison": {
+        "USDC": {
+          "independent_total": null,
+          "app_total": null,
+          "independent_known_cost_sells": 0,
+          "app_sales": 0,
+          "independent_unresolved_basis_sales": 1,
+          "independent_open_lots": 0,
+          "status": "BOTH_EMPTY"
+        }
+      },
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    },
+    {
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "short": "BSN5\u2026BtCM",
+      "provider_rank": 11,
+      "provider_trade_count": 317,
+      "pages": 2,
+      "records": 200,
+      "newest_block_time": "2026-09-29T00:20:11+00:00",
+      "oldest_block_time": "2026-09-23T16:41:05+00:00",
+      "app_report_id": "ranked-partial-BSN5bh8A-894f02f6",
+      "app_error": null,
+      "app_decoded_swaps_all_pages": 0,
+      "app_in_window_trade_events": 0,
+      "app_completed_known_cost_positions": 0,
+      "app_wallet_completed_episodes": null,
+      "app_matched_pnl": {
+        "SOL": null,
+        "USDC": null
+      },
+      "app_unresolved_basis_sales": 0,
+      "app_hold_t90_seconds": null,
+      "app_final_hold_seconds": null,
+      "app_qualification_category": "analysed_incomplete",
+      "app_research_screen_outcome": "zero_qualified",
+      "app_worksheet_reconciliation": "INCOMPLETE",
+      "independent": {},
+      "recon_comparison": {},
+      "meets_two_fixed_screen_defaults_on_app_numbers": false
+    }
+  ],
+  "PRODUCT_READY": false
+}

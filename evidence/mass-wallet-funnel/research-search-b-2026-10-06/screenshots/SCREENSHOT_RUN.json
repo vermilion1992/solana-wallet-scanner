@@ -1,0 +1,19 @@
+{
+  "errors": [],
+  "external": [],
+  "shots": [
+    "/workspace/research-search-b-live/screens/01-search-top-phone.png",
+    "/workspace/research-search-b-live/screens/02-research-screen-phone.png",
+    "/workspace/research-search-b-live/screens/03-ranked-row-CccSh2-phone.png",
+    "/workspace/research-search-b-live/screens/03-ranked-row-A6PSQF-phone.png",
+    "/workspace/research-search-b-live/screens/03-ranked-row-gtfoTE-phone.png",
+    "/workspace/research-search-b-live/screens/04-compare-CccSh2-vs-A6PSQF-phone.png",
+    "/workspace/research-search-b-live/screens/05-saved-reports-phone.png"
+  ],
+  "unauth_state_status": 401,
+  "research_screen_text": "Research screen inconclusive: inconclusive 90 \u00b7 zero-qualified 9 \u00b7 qualified 0. Thresholds were fixed before evaluation. Unknown never passes. Qualification (evidence quality, not screen pass/fail): not evaluated 91 \u00b7 analysed-incomplete 9 \u00b7 matched-position 0 \u00b7 net realised 0 \u00b7 account performance 0.",
+  "ranked_cards": 1,
+  "compare_text": "own_windows_shown_mismatch_blocks \u00b7 Each report keeps its own window. Differing windows are not recomputed onto a common interval. Compare is blocked. \u00b7 left window 2026-09-05T13:29:27Z \u2192 2026-10-05T13:29:27Z \u00b7 right window 2026-09-05T13:29:27Z \u2192 2026-10-05T13:29:27Z \u00b7 left tx 12 \u00b7 right tx 52 \u00b7 samples 6 vs 46 \u00b7 scoped_pnl 0.251129813 vs 297.232334822 \u00b7 comparable \u00b7 conditional_on_captured_inventory \u00b7 scoped_pnl: 0.251129813 vs 297.232334822 \u00b7 scoped_pnl_unit: SOL vs SOL \u00b7 completed_known_cost_positions: 6 vs 46 \u00b7 hold_t90_seconds: 135 vs 12 \u00b7 final_hold_seconds: 135 vs 12 \u00b7 concentration: 0.1666666666666666666666666667 vs 0.2826086956521739130434782609 \u00b7 unresolved_basis_sales: 0 vs 0 \u00b7 win_rate: 0.5 vs 0.6086956521739130434782608696 \u00b7 win_rate_denominator: 6 vs 46 \u00b7 median_hold_n: 6 vs 6 \u00b7 settlement_asset: SOL vs SOL \u00b7 corpus_kind: GENUINE_REPLAY vs GENUINE_REPLAY \u00b7 scope: supported_closed_subset_on_captured_page vs supported_closed_subset_on_captured_page \u00b7 window_start: 2026-09-05T13:29:27Z vs 2026-09-05T13:29:27Z \u00b7 window_end: 2026-10-05T13:29:27Z vs 2026-10-05T13:29:27Z \u00b7 visible_report: true vs true \u00b7 result_scope: conditional_on_captured_inventory vs conditional_on_captured_inventory \u00b7 unknown_basis_quantity_and_proceeds: [object Object] vs [object Object]",
+  "open_report_buttons": 15,
+  "report_error": "Error('Locator.click: Error: strict mode violation: locator(\"[data-ranked-cards]\").filter(has_text=re.compile(r\"A6PSQF\")).first.get_by_role(\"button\", name=re.compile(r\"Open report\")) resolved to 6 elements:\\n    1) <button class=\"button secondary\">\u2026</button> aka get_by_role(\"button\", name=\"Open report\").first\\n    2) <button class=\"button secondary\">\u2026</button> aka get_by_role(\"button\", name=\"Open report\").nth(1)\\n    3) <button class=\"button secondary\">\u2026</button> aka get_by_role(\"button\", name=\""
+}

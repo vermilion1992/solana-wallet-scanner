@@ -1,0 +1,257 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+  "capture_sha256": "db5bcfab3a46ee883a8fd2533259cfffe1bb1bc52a14dfb81ca60ee511fa0210",
+  "source_pages": [
+    {
+      "page_index": 0,
+      "raw_sha256": "4623ad76214062af9a2df4bf986fa960417034e1753af95d42f292eb031a919c"
+    },
+    {
+      "page_index": 1,
+      "raw_sha256": "62b6cbdad85f25f21b5f94261ec22566162005112513542ee4c0051c1f611925"
+    }
+  ],
+  "window": {
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
+  },
+  "decoder_is_shared_with_app": true,
+  "fifo": {
+    "SOL": {
+      "asset": "SOL",
+      "known_cost_sells": [],
+      "unresolved_basis_sales": [
+        {
+          "signature": "2wCsQtS2vzp3jfMTfk17XMrEV4trNkNmziPP98yY1sdJtZsJbYt28PMMfCanfRuW59ps4CJWJMFBkHHWJ3KUwbXJ",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "unmatched_quantity_raw": "24000000000",
+          "gross_proceeds": "200.296113436",
+          "fee_sol": "0.00141",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        }
+      ],
+      "open_lots": [
+        {
+          "mint": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS",
+          "quantity_raw": "747098",
+          "consideration": "0.101175986",
+          "signature": "48V9D9Ewd1wuxjb2X2oKcKSxcxGH59581i1ziR8z9xLhXDopRBkZUEJYsa4g5h7SwAxHKXNwf5erMWGTMAciuKWV"
+        }
+      ],
+      "total_profit": null,
+      "sol_fees_not_converted": false,
+      "missing_basis_is_not_zero": true
+    },
+    "USDC": {
+      "asset": "USDC",
+      "known_cost_sells": [
+        {
+          "signature": "2fLrsZiyS8ysYUUJKBDJLmFTPzmk3YTd9i1zi3jXrSv8nRcZ2w3maz1QzSifagkz7oMHZGjCg7FjVsHp8epFr96V",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "quantity_raw": "6299540761252",
+          "proceeds": "7935.908517",
+          "basis": "5420.933363039",
+          "net_profit": "2514.975153961",
+          "consumed_lots": [
+            {
+              "signature": "4JxiRwo1gPUYDR8goBxgKvYPPu2KPGrdpXYsRTmoz4LKuEqC48vtQJ9ss2cgwu4sYQG6LT7W3dL4SNjSm2sBzJMH",
+              "quantity_raw": "5811736123079",
+              "basis": "5000"
+            },
+            {
+              "signature": "5bqo9W63t8TbFYadL6R8NcMNAy49Cw4og7AVRJ1XDC4TYoMX5guGwHehdioLLoonzoYfr2QMALg4R5DkjJGVG5b5",
+              "quantity_raw": "487804638173",
+              "basis": "420.933363039"
+            }
+          ],
+          "fee_sol": "0.00001061",
+          "fee_in_pnl": false,
+          "partial_known_cost": false,
+          "whole_sale_pnl_resolved": true,
+          "result_scope": "conditional_on_captured_inventory",
+          "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
+        },
+        {
+          "signature": "462hn1EwdcCLjdbhKV4kwSZE1KhAvnpUKujwTHjsJeHUy3x5fScbhuUj9XChsMQuWjNDPHPpBwfoc7dHL948p5ZG",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "quantity_raw": "30791474240209",
+          "proceeds": "38426.856837606",
+          "basis": "26689.056451961",
+          "net_profit": "11737.800385645",
+          "consumed_lots": [
+            {
+              "signature": "5bqo9W63t8TbFYadL6R8NcMNAy49Cw4og7AVRJ1XDC4TYoMX5guGwHehdioLLoonzoYfr2QMALg4R5DkjJGVG5b5",
+              "quantity_raw": "5306516755730",
+              "basis": "4579.066636961"
+            },
+            {
+              "signature": "37yH4QXxYqvBA6VteTFUHPn5DkYqDkASED7GCfcB6nqg2uRx81fsXKXDRBPpWeHvRDDmgxYMcfFnEyPLXBrTt6xh",
+              "quantity_raw": "5788589869931",
+              "basis": "5000"
+            },
+            {
+              "signature": "46JDQik79v5E1epMK6MizFsDi9cDunz38oy69qTrc7VYiYgeUeusebxHAZb69NjxxsDxoJpUwcipk4G5iYq3L2aE",
+              "quantity_raw": "11572969483790",
+              "basis": "10000"
+            },
+            {
+              "signature": "5F3qjast2PgbDFSDRhpyEGhtrFWCEtnkMMT7ah5CzqqR2fVYuaqUHJhM6SUW1SgzciUZMhL1fSdfZFs8xbNf1uF5",
+              "quantity_raw": "8123398130758",
+              "basis": "7109.989815"
+            }
+          ],
+          "fee_sol": "0.000796462",
+          "fee_in_pnl": false,
+          "partial_known_cost": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory",
+          "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
+        },
+        {
+          "signature": "5WXevGKxvV8w1KWQGMorT8bHi8zMgxUSYVvEBcxrREFPHy1V7hCMhcigh7ZeKAWzfi3tAgXm74fzACEtrEEif6ky",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "quantity_raw": "20004928135899",
+          "proceeds": "26906.59778459",
+          "basis": "26420",
+          "net_profit": "486.59778459",
+          "consumed_lots": [
+            {
+              "signature": "5aHKSpYDFQi1Fbr1brsRibZuXxunTb8MguSTGuQdLJ53hxHSh7TMCMZX5iHU5pXZ188Y4UhnB74n7Jhu4fEHu6vF",
+              "quantity_raw": "10000286967939",
+              "basis": "12750"
+            },
+            {
+              "signature": "47giFwWY6bpDziEEDVrD2NVd4VT3Lss8C6aPzKaMhQACBYgvLCcddfeFkyiZu5rVnUfVeqWUmbzirUVLT6mgqbGq",
+              "quantity_raw": "5003016580083",
+              "basis": "6410"
+            },
+            {
+              "signature": "3ShknLnYF8Awitkf6D5ykCh4EMi26cnB8vntDp9Vc1nYPA9wuZKEux163G2JMzxUxkUL9hoo9cy2t5LpJmxmxr5B",
+              "quantity_raw": "5001624587877",
+              "basis": "7260"
+            }
+          ],
+          "fee_sol": "0.001043356",
+          "fee_in_pnl": false,
+          "partial_known_cost": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory",
+          "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
+        }
+      ],
+      "unresolved_basis_sales": [
+        {
+          "signature": "462hn1EwdcCLjdbhKV4kwSZE1KhAvnpUKujwTHjsJeHUy3x5fScbhuUj9XChsMQuWjNDPHPpBwfoc7dHL948p5ZG",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "unmatched_quantity_raw": "19208525759791",
+          "gross_proceeds": "23971.676824394",
+          "fee_sol": "0.000496853",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        },
+        {
+          "signature": "5125oxVi8HPYPUdyDgnnhJwiQpGZFuj29GSdiVptTdvBbHeT2DX4iNZNRmS5bbhTR1Vr8eMcGJN5GY7RUPHrbhv4",
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "unmatched_quantity_raw": "101331517882",
+          "gross_proceeds": "4423.139066",
+          "fee_sol": "0.001147548",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        },
+        {
+          "signature": "5WXevGKxvV8w1KWQGMorT8bHi8zMgxUSYVvEBcxrREFPHy1V7hCMhcigh7ZeKAWzfi3tAgXm74fzACEtrEEif6ky",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "unmatched_quantity_raw": "9995071864101",
+          "gross_proceeds": "13443.35638941",
+          "fee_sol": "0.000521293",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        },
+        {
+          "signature": "32FFggBmHFkDCoffrx9DJ2iX6BvJTwSJozd3DLCiPjNaVrHmcMJMj54MZHaUXiu2mBNcYpMRU9kq4gGNAbfqvSLj",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "unmatched_quantity_raw": "10000000000000",
+          "gross_proceeds": "13283.915427",
+          "fee_sol": "0.001147548",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        },
+        {
+          "signature": "63R7X9eDvmyqWSXiP3LcUKkgfgpipDE35ti7zF7sJBGchh3QkUTFMosKa6VJoxbg9KbukFg5VHcEruM4vomYk716",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "unmatched_quantity_raw": "10000000000000",
+          "gross_proceeds": "13251.531192",
+          "fee_sol": "0.001147548",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        },
+        {
+          "signature": "4rYLGkbM79TarBV1oMoA7hpZNsp1PSVAxBeUPBBMRASx9qtniDFFjaLGJkMxdtx9WiLUzyGUNKLkLEa3FUiw6HYu",
+          "mint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+          "unmatched_quantity_raw": "10000000000000",
+          "gross_proceeds": "13240.939488",
+          "fee_sol": "0.000018617",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        }
+      ],
+      "open_lots": [
+        {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "quantity_raw": "2002204846528",
+          "consideration": "11650",
+          "signature": "3dXuYBEgUM1jXApZbwyVsyykyS281JA3xT2fwugxpJJubmKQTSS9tP9DVmTn9o2bqNaqCRqD4GsqPqGsdRB6vSRy"
+        },
+        {
+          "mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "quantity_raw": "2003715270000",
+          "consideration": "12700",
+          "signature": "45WFSAT4Ma7SrY3WSzkczH1U2WpsuYNSvg4WFLPBJY3sPn7FXTgg9XTtB6vHFiRcoTXKhPbLuoFpMk37SU3fB2o5"
+        },
+        {
+          "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
+          "quantity_raw": "100059436160",
+          "consideration": "21250",
+          "signature": "4px1xYAQRaLV4mcFe9oLwcD3FmYEGmRhTSrkxgMbuACp9kxLCkbKW1NNagZ8C7NP23XyGXWr3GuUWduXWU4ZrKCu"
+        }
+      ],
+      "total_profit": "14739.373324196",
+      "sol_fees_not_converted": true,
+      "missing_basis_is_not_zero": true
+    }
+  },
+  "app_report_id": "55da61876b414466986f25dc498218f6",
+  "app_error": null,
+  "comparison": {
+    "SOL": {
+      "independent_total": null,
+      "app_total": null,
+      "independent_known_cost_sells": 0,
+      "app_sales": 0,
+      "independent_unresolved_basis_sales": 1,
+      "independent_open_lots": 1,
+      "status": "BOTH_EMPTY"
+    },
+    "USDC": {
+      "independent_total": "14739.373324196",
+      "app_total": null,
+      "independent_known_cost_sells": 3,
+      "app_sales": 0,
+      "independent_unresolved_basis_sales": 6,
+      "independent_open_lots": 3,
+      "status": "APP_MISSING"
+    }
+  },
+  "PRODUCT_READY": false
+}

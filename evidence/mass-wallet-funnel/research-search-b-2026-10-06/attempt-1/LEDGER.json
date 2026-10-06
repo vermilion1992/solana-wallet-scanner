@@ -1,0 +1,1210 @@
+{
+  "attempt": 1,
+  "grant_id": "live-ranked100-research-search-2026-10-06-mitch",
+  "application_commit": "78678d18d8f74304380588410bdef2ae4bc4530b",
+  "started_at": "2026-10-06T05:16:15.641759Z",
+  "started_at_local": "2026-10-06T15:46:15.641765+10:30",
+  "entries": [
+    {
+      "key": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU:page:0",
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "provider_rank": 4,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:15.644269Z",
+      "dispatched_at_local": "2026-10-06T15:46:15.644281+10:30",
+      "completed_at": "2026-10-06T05:16:15.746944Z",
+      "completed_at_local": "2026-10-06T15:46:15.746976+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:15 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231662b8b277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "0u-WrI7E627W",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU_page0.json",
+      "raw_sha256": "a324e7afbd27234cd22a9382f54bd0a87320f6fa965ce81ee10dc152911fc6d1",
+      "raw_bytes": 1082444,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453701561:275",
+      "first_signature": "HGH4stBpYUUZwbHN3aR3tyfSR6jJXuExPFL8HbUNQ8azyttXPKg1TcQDJQ11a1MGzqnNS1JohT7dnuqeSqb6ijS",
+      "last_signature": "5NBQw5xxtVQSGJYJE17SBY6bRu95Dc1K41mq7Ko7umdwGzPuoKrcMPjFdv3W1rr7x8BvxohDGbLttc1pFQcbx2RR",
+      "newest_block_time": "2026-10-06T05:11:49+00:00",
+      "oldest_block_time": "2026-10-05T21:35:57+00:00"
+    },
+    {
+      "key": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU:page:1",
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "provider_rank": 4,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "453701561:275"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "453701561:275",
+      "dispatched_at": "2026-10-06T05:16:15.759817Z",
+      "dispatched_at_local": "2026-10-06T15:46:15.759829+10:30",
+      "completed_at": "2026-10-06T05:16:15.840521Z",
+      "completed_at_local": "2026-10-06T15:46:15.840542+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:15 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a4623166bd08277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "C5vqR4MFFcm2",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU_page1.json",
+      "raw_sha256": "23d93018b1cc81c708ae09eea9e992ae2a7aa5f7ea5b131ba4a26bd1471ad067",
+      "raw_bytes": 971439,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453531442:371",
+      "first_signature": "4uDDSydfSAtcc3sgnC9r8nWEm2JneoGppEUQDWiPyeFXKhiutetXuh5y6FtLAEDxFaei566UvUKhcax5eKcHpLAZ",
+      "last_signature": "45Vgw1RQm8C7oxr6HZDCaBFLrzYKm4mTagavjV2Ka6ZXiCoVfQd5CPbf4mQqER4wcRuXum6FfSfTxtagNyMrjLbG",
+      "newest_block_time": "2026-10-05T21:33:07+00:00",
+      "oldest_block_time": "2026-10-05T08:55:23+00:00"
+    },
+    {
+      "key": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL:page:0",
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "provider_rank": 2,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:15.853119Z",
+      "dispatched_at_local": "2026-10-06T15:46:15.853132+10:30",
+      "completed_at": "2026-10-06T05:16:15.929164Z",
+      "completed_at_local": "2026-10-06T15:46:15.929184+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:15 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231674e53277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "bhPWCqLwMIbm",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL_page0.json",
+      "raw_sha256": "fc843cc8b07faa9b745084231b98225fa2f82e14fb5631d2e568ed4c80bdb0aa",
+      "raw_bytes": 1085477,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453490864:1441",
+      "first_signature": "UsJZQGkd17aseFvzk3WChTT4BzGhTbrzfC2nf2k2c2sRkuGJUn9eTZ1Kg2bgsTtTVJrEtu1HtezSj6TSs4abnio",
+      "last_signature": "3u1duCi2FyuXuH4Z5e9zyhSde7Fno8xAyqpFyr1f7b6rU8MLYyGsZ71XP8nH2sjQw6GQ5Q68qkg5EsE1WEvyagY3",
+      "newest_block_time": "2026-10-06T04:59:45+00:00",
+      "oldest_block_time": "2026-10-05T05:54:55+00:00"
+    },
+    {
+      "key": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL:page:1",
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "provider_rank": 2,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "453490864:1441"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "453490864:1441",
+      "dispatched_at": "2026-10-06T05:16:15.941380Z",
+      "dispatched_at_local": "2026-10-06T15:46:15.941395+10:30",
+      "completed_at": "2026-10-06T05:16:16.023965Z",
+      "completed_at_local": "2026-10-06T15:46:16.023992+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a4623167dfcc277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "52_4EoJ1Xjbm",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL_page1.json",
+      "raw_sha256": "51c6cc72f543693c3f5fe04edf66288340897b3606a82e22534d0f5beb0b467e",
+      "raw_bytes": 966422,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453163900:357",
+      "first_signature": "2qbQTXXaNETNeJyU5engdw8m3s5vueaK29XM1N1LUVxGzMiv7xuMmZca2C1JgTpZ4omuqNrvZ4EXoUWRkZWCT796",
+      "last_signature": "5m3vQ8YP8mNzVsg2ZiUaEBnW3H3FrSTZr4qPk9mPLnTHnEXWZzWNcvA1HK1X4dxLqwAQBdpM6wrp7df4u8fe9bKU",
+      "newest_block_time": "2026-10-05T05:54:55+00:00",
+      "oldest_block_time": "2026-10-04T05:35:56+00:00"
+    },
+    {
+      "key": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot:page:0",
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "provider_rank": 15,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:16.035175Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.035191+10:30",
+      "completed_at": "2026-10-06T05:16:16.112897Z",
+      "completed_at_local": "2026-10-06T15:46:16.112928+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231686936277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "TEcMtL8JJ9Bo",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot_page0.json",
+      "raw_sha256": "f7f87ace807117d365078c9552399ff84c34952b6c118e543db56492b3e79765",
+      "raw_bytes": 751782,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453354847:589",
+      "first_signature": "4Vn1h5y5ZaUFtvWDLjiAULGkcqUjaWXwiNtXC4LLGNaNwM7NPbygz5wPk1ErsKBgDbehQaCibjGhWLVXEN3oeQTz",
+      "last_signature": "4zaL7563HJmwKpYWXCc3KNcAAU32Z2u3qxEgTUpXGbJ5kRiHXqddrJgQgKJ2Ldeywg9w2WkRHU5dsDneycacvhxM",
+      "newest_block_time": "2026-10-06T05:02:51+00:00",
+      "oldest_block_time": "2026-10-04T19:48:08+00:00"
+    },
+    {
+      "key": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot:page:1",
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "provider_rank": 15,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "453354847:589"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "453354847:589",
+      "dispatched_at": "2026-10-06T05:16:16.122337Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.122349+10:30",
+      "completed_at": "2026-10-06T05:16:16.203826Z",
+      "completed_at_local": "2026-10-06T15:46:16.203859+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a4623168fa77277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "ipuDylEocJDy",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot_page1.json",
+      "raw_sha256": "4d404ad83625e0784743eb229ba6dba5444ded9ff2d8f0b20858eda4005a9caa",
+      "raw_bytes": 756989,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "452839073:6",
+      "first_signature": "3KenHbgYweMKC3J4umKLEXWqQgMc9EmavsfxVwsiFz7p9oj8LnFfneLuLR7J6a2tuZpSr9zLmSJosMoBeSrBagG1",
+      "last_signature": "4XvPAntRUxsXCoJmJgqm9g7sMeQsVeFv6Fp63wZBSEEr8rRaY8aHTseT7VTF2H5c4N4nkw6AjUw6arxoUuQKYRbc",
+      "newest_block_time": "2026-10-04T19:38:13+00:00",
+      "oldest_block_time": "2026-10-03T05:28:46+00:00"
+    },
+    {
+      "key": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB:page:0",
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "provider_rank": 17,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:16.213423Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.213437+10:30",
+      "completed_at": "2026-10-06T05:16:16.288554Z",
+      "completed_at_local": "2026-10-06T15:46:16.288580+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231698be9277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "0eNiLSJwFaXz",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB_page0.json",
+      "raw_sha256": "8887776240ea34a42c754864f12dccebf026bf32211decd04cbd227be2de2c86",
+      "raw_bytes": 622288,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453206589:622",
+      "first_signature": "4JDunxWunHKsoK3VdDq4MpWuGvj1qeeAJ1SDvosK2k4y7KQC4DJd29rpiFBTofyckibjw4WyDLWAoFygBeDUJSsT",
+      "last_signature": "3rJEWt4Fe9sCo53Z1E313EgbZ2TPMuXyqRF6cseZi812T1pdmxVvTzRGCJvpxLaCWJPbKasmGuSDtjxSFRXZ3HMs",
+      "newest_block_time": "2026-10-05T08:40:38+00:00",
+      "oldest_block_time": "2026-10-04T08:45:53+00:00"
+    },
+    {
+      "key": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB:page:1",
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "provider_rank": 17,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "453206589:622"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "453206589:622",
+      "dispatched_at": "2026-10-06T05:16:16.297416Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.297429+10:30",
+      "completed_at": "2026-10-06T05:16:16.372514Z",
+      "completed_at_local": "2026-10-06T15:46:16.372542+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316a0d4d277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "ocd3iN-5OORK",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB_page1.json",
+      "raw_sha256": "b9e7bb394b4e56c6f8914ae2dd71b6c852c031dd8349a899f0e983421b5048ac",
+      "raw_bytes": 845427,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453011280:149",
+      "first_signature": "BX8WMNCNijtB5LWntFZbNhJoxKpLTggzkBtrEFrPJPdBJjhnpNnNmmVfRjMsV5MFAHhPxmByhnBVASSnd6BrsEb",
+      "last_signature": "4M5BujyStbVHL7tdpxfy8VdHGcZW4R6NZyarnn7QqE592hdyJL9N6GNWUQWossKEvuHdvHLXasqMSo43otDMNB96",
+      "newest_block_time": "2026-10-04T08:45:44+00:00",
+      "oldest_block_time": "2026-10-03T18:15:23+00:00"
+    },
+    {
+      "key": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U:page:0",
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "provider_rank": 90,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:16.385587Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.385600+10:30",
+      "completed_at": "2026-10-06T05:16:16.487918Z",
+      "completed_at_local": "2026-10-06T15:46:16.487950+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316a9ea3277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "rpZHqfSb8uXy",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U_page0.json",
+      "raw_sha256": "d283756ee34b377d44b6c97700ae6c433b619931f2d30989c27078d7959dec8c",
+      "raw_bytes": 1320962,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "451094354:802",
+      "first_signature": "3HZhoTtQysUeqtV337dZUZnfMfxYcvr8fqHVvYqBFpCmskQH57RYhjXWi9RE6fJFNyubybaKSXy4bcULLRjamRqK",
+      "last_signature": "2bwZvhV1Bn5aqy93SaXBqWVVmnuCFrQL7aEGA54oFwXLKQfoyyc88C2CtLDvFso7GFTpd9cyfteC4k7jQbrVDV4g",
+      "newest_block_time": "2026-10-05T08:51:14+00:00",
+      "oldest_block_time": "2026-09-27T19:43:50+00:00"
+    },
+    {
+      "key": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U:page:1",
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "provider_rank": 90,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "451094354:802"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "451094354:802",
+      "dispatched_at": "2026-10-06T05:16:16.506900Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.506920+10:30",
+      "completed_at": "2026-10-06T05:16:16.590183Z",
+      "completed_at_local": "2026-10-06T15:46:16.590210+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316b6868277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "m_qTr5sQz9RK",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U_page1.json",
+      "raw_sha256": "1e93978db05e55cf550b89dc03bd546d9130fb769193e5fcd2fbda9dee6bddb7",
+      "raw_bytes": 1453140,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "450590833:828",
+      "first_signature": "ksftMpxa8ZMrNUUJt9scTRxAjXsa7Unh53JNZspdkaf2ubFEJubhcb8cLEJc8rNQChuyRDf9i4ajLSAWMdxmpK7",
+      "last_signature": "5CRgXL8m1XCiFk21VfkyufJ6r5EXbt2KnVW8us6X8WHV3wLqx7Z1y2a5SgXHsbDj4R5NeYsDsdjE4U8xFBWV6Kdr",
+      "newest_block_time": "2026-09-27T19:28:08+00:00",
+      "oldest_block_time": "2026-09-26T06:14:50+00:00"
+    },
+    {
+      "key": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9:page:0",
+      "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "provider_rank": 10,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:16.631895Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.631908+10:30",
+      "completed_at": "2026-10-06T05:16:16.745444Z",
+      "completed_at_local": "2026-10-06T15:46:16.745466+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316c2a57277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "HJljuSABz5Hy",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9_page0.json",
+      "raw_sha256": "9133f2f7742ed32556da1f450d8e5332e3300e64a5cf199963533ace227a1c52",
+      "raw_bytes": 1842074,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "451738692:582",
+      "first_signature": "5TR36D4X1MuHHHrgUFqSyxhwrcawJJfnfJZgajkNB74Ch5her9UPRWi6Ehy9txJkLPjYBzPoX5g7w1zpj5F8veZQ",
+      "last_signature": "3StBfWrSm6EdwEjnuTyCmDyv1SexQk3YY3pJMAn54DiGKmGnsQ4HuRMaVzYkTCzdzu8KrVb4kQmQF5LMeBvMBD2n",
+      "newest_block_time": "2026-10-05T22:46:04+00:00",
+      "oldest_block_time": "2026-09-29T19:41:11+00:00"
+    },
+    {
+      "key": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9:page:1",
+      "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "provider_rank": 10,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "451738692:582"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "451738692:582",
+      "dispatched_at": "2026-10-06T05:16:16.775672Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.775684+10:30",
+      "completed_at": "2026-10-06T05:16:16.861011Z",
+      "completed_at_local": "2026-10-06T15:46:16.861030+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316d0c44277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "RpDWUwbTmABL",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9_page1.json",
+      "raw_sha256": "a160d0d6c0ecf92370ef5071c50d66dc158351a0cc0a7aa1fb632f3eb9469f45",
+      "raw_bytes": 739600,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "451635462:51",
+      "first_signature": "5U6cAS2vKi3c6f47c4d24YWjSVtgM4nwUF6dWFWh1BqPCWSFaAVJiyZs54Hvg5BLNV6gDhLhVpLmqXfssDUmLuYU",
+      "last_signature": "2TmArWEyaaS4AxLikQDaLcQKJPTEUDYArMBGxLnbDRqbzkFYMTZPZxU3HcjJZakFaRkU45X7Zka9EaxNmvRiZa3f",
+      "newest_block_time": "2026-09-29T19:35:00+00:00",
+      "oldest_block_time": "2026-09-29T11:59:46+00:00"
+    },
+    {
+      "key": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6:page:0",
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "provider_rank": 56,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:16.872043Z",
+      "dispatched_at_local": "2026-10-06T15:46:16.872055+10:30",
+      "completed_at": "2026-10-06T05:16:17.000951Z",
+      "completed_at_local": "2026-10-06T15:46:17.000977+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:16 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316dadae277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "6gCFzaRPtlxL",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6_page0.json",
+      "raw_sha256": "9d6e8d48c7b394fb4d1656ba767e2f34b3e656382f2d30e108f6c0f9722a935e",
+      "raw_bytes": 1939448,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "452478237:506",
+      "first_signature": "3wRV1PR1iNgLL87HfriYnQcgWxkdLvzGcFCV4K8ius6QgDUjqp5KUSJEj98YNEh5qFe8xJM2LTqDBpEzAfvcEfLH",
+      "last_signature": "4bti8WZRnFgmx9NGShcDTsjmyYfX1AtUCSsq6SjXq5M2tB29Szrw7c483uLWELDWD1iWoA8VkUpSfKSyd8UKWuLa",
+      "newest_block_time": "2026-10-06T02:11:12+00:00",
+      "oldest_block_time": "2026-10-02T02:40:33+00:00"
+    },
+    {
+      "key": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6:page:1",
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "provider_rank": 56,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "452478237:506"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "452478237:506",
+      "dispatched_at": "2026-10-06T05:16:17.021337Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.021354+10:30",
+      "completed_at": "2026-10-06T05:16:17.130104Z",
+      "completed_at_local": "2026-10-06T15:46:17.130127+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316e9feb277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "ABScwnlbIZH6",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6_page1.json",
+      "raw_sha256": "fed2386f399297e20fcf9f31ea3336fb585e1b534c5072f873815ce792e13620",
+      "raw_bytes": 1670107,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "452163894:804",
+      "first_signature": "2vkJe9Z4G1geR5pf3hWHN63RYSR64h6nwY8zk82quSMMMpyYnRD8BwY8g1RaY57mYZb4YsT4k8jREmaiAZ1kqEj4",
+      "last_signature": "3FgfDRBsMvqJfiEnNRu7ZcKPbZFFdvp9YeUmhM8BFfXeL8bfZNXPoY8jTNJzBykqevRRzx2CMowQHuRWtqn6r6HV",
+      "newest_block_time": "2026-10-02T02:40:29+00:00",
+      "oldest_block_time": "2026-10-01T03:18:06+00:00"
+    },
+    {
+      "key": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL:page:0",
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "provider_rank": 53,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:17.148651Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.148664+10:30",
+      "completed_at": "2026-10-06T05:16:17.258356Z",
+      "completed_at_local": "2026-10-06T15:46:17.258379+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a462316f69e7277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "6ffnZX-plJbK",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL_page0.json",
+      "raw_sha256": "4623ad76214062af9a2df4bf986fa960417034e1753af95d42f292eb031a919c",
+      "raw_bytes": 1469481,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "451556964:595",
+      "first_signature": "7dvpC3cmP4uXctKxQxcV5iWpWo2HVxpkqDGRmcR4f9FjQxzV5TVnxC9YTiXrCttjvUa9xzM4nDXwyFi1azFj27z",
+      "last_signature": "5TyJv53Wt3N5UUC8ySWT8aEjFdGLfCuFwXdFULenXx7CCsRRYSW59zKNQWsz9Tu2AtKtrrYKS5pqn8q9THLhsEEK",
+      "newest_block_time": "2026-10-06T03:57:54+00:00",
+      "oldest_block_time": "2026-09-29T06:10:43+00:00"
+    },
+    {
+      "key": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL:page:1",
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "provider_rank": 53,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "451556964:595"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "451556964:595",
+      "dispatched_at": "2026-10-06T05:16:17.276771Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.276785+10:30",
+      "completed_at": "2026-10-06T05:16:17.388543Z",
+      "completed_at_local": "2026-10-06T15:46:17.388564+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231703bdb277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "RNnEtns7WxX6",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL_page1.json",
+      "raw_sha256": "62b6cbdad85f25f21b5f94261ec22566162005112513542ee4c0051c1f611925",
+      "raw_bytes": 1557180,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "449587680:614",
+      "first_signature": "462hn1EwdcCLjdbhKV4kwSZE1KhAvnpUKujwTHjsJeHUy3x5fScbhuUj9XChsMQuWjNDPHPpBwfoc7dHL948p5ZG",
+      "last_signature": "2Sb6GTseSSS7Td8NxMjyVqd2YPuYeU7BtMNfhUV5PcxPy1i16xXskTPBr13XmPwHjsmtBhFw6uXFpHdLTDxaJccS",
+      "newest_block_time": "2026-09-28T21:51:59+00:00",
+      "oldest_block_time": "2026-09-23T03:57:24+00:00"
+    },
+    {
+      "key": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys:page:0",
+      "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "provider_rank": 14,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:17.410180Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.410195+10:30",
+      "completed_at": "2026-10-06T05:16:17.522212Z",
+      "completed_at_local": "2026-10-06T15:46:17.522234+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231710d86277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "LKNLUzSTVRj6",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys_page0.json",
+      "raw_sha256": "6f23ee7168cd7efc2c618381e8ebd0340ef991b4526f88d12e26983352d57beb",
+      "raw_bytes": 1728139,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "453127803:586",
+      "first_signature": "5wqken5xKtKqifRDnKqweVVyiPFAkW4DniKnBS7y4pydvTYeNoA854uEVtARG2nuVeZsvNL3cfZaoDrZjGLfe2cv",
+      "last_signature": "wbeLmTtwenAsawcW7BNRp84RYKaiPEGpNgNaLdnwtYr22LjXy6YEsKVpUY7DzWya6GNJwT38RRby4FkxrYHYx2K",
+      "newest_block_time": "2026-10-06T04:24:55+00:00",
+      "oldest_block_time": "2026-10-04T02:55:04+00:00"
+    },
+    {
+      "key": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys:page:1",
+      "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "provider_rank": 14,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "453127803:586"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "453127803:586",
+      "dispatched_at": "2026-10-06T05:16:17.545497Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.545511+10:30",
+      "completed_at": "2026-10-06T05:16:17.662064Z",
+      "completed_at_local": "2026-10-06T15:46:17.662098+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a4623171df6c277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "bNFTSejMsNj6",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys_page1.json",
+      "raw_sha256": "c8c0462f79a931fe667bba954aa52286258f4c741cb1ff6413e5b982892567eb",
+      "raw_bytes": 1899196,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "452759970:1301",
+      "first_signature": "WArLDrR78aQuEBMXozx8FuKeiDRkLxsKDCvZDTyvGLfLaGnzyDHwaV5RxamwPpj2snmP43Nhed4iGR5DfxWwUhL",
+      "last_signature": "4fNf1oUMtBogjoFEdVyGHTYj9nV8xAjqi3LDVerewLDtw3sZuyZQxxoj46Ltg8ESxeQACbEqwEa8KBu7pxvrRb5i",
+      "newest_block_time": "2026-10-04T01:41:21+00:00",
+      "oldest_block_time": "2026-10-02T23:36:59+00:00"
+    },
+    {
+      "key": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM:page:0",
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "provider_rank": 11,
+      "page_index": 0,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              }
+            }
+          ]
+        }
+      },
+      "request_pagination_token": null,
+      "dispatched_at": "2026-10-06T05:16:17.688058Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.688073+10:30",
+      "completed_at": "2026-10-06T05:16:17.752882Z",
+      "completed_at_local": "2026-10-06T15:46:17.752899+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a4623172b94a277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "42noln1Zj_X6",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM_page0.json",
+      "raw_sha256": "6b3cf160f3c52745ea97bd1adc9739d47d734fa81e6df101ecd7f8605830eef8",
+      "raw_bytes": 330320,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "449760408:1295",
+      "first_signature": "g5b15A23Z5NMrJ8hCdb28PyzGiVdQXUESRXHUAVshjzrETEMXXmxusLtboF5THDEcnpbSJKSKNCgKj44uB5njvR",
+      "last_signature": "2qV1CrnLZeHgAEN7ah86dYPe8VPnQssuuoAtHZj2HP68hLf9TAsRV4xpmzbVc8RGzBNSGn2FJCyk4nsekaXMGVPC",
+      "newest_block_time": "2026-09-29T00:20:11+00:00",
+      "oldest_block_time": "2026-09-23T16:41:19+00:00"
+    },
+    {
+      "key": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM:page:1",
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "provider_rank": 11,
+      "page_index": 1,
+      "request": {
+        "endpoint": "https://mainnet.helius-rpc.com/",
+        "query_string_credentials": "OMITTED",
+        "http_method": "POST",
+        "json_body": {
+          "jsonrpc": "2.0",
+          "id": 1,
+          "method": "getTransactionsForAddress",
+          "params": [
+            "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+            {
+              "transactionDetails": "full",
+              "limit": 100,
+              "sortOrder": "desc",
+              "commitment": "finalized",
+              "maxSupportedTransactionVersion": 1,
+              "filters": {
+                "status": "any",
+                "tokenAccounts": "all"
+              },
+              "paginationToken": "449760408:1295"
+            }
+          ]
+        }
+      },
+      "request_pagination_token": "449760408:1295",
+      "dispatched_at": "2026-10-06T05:16:17.760910Z",
+      "dispatched_at_local": "2026-10-06T15:46:17.760924+10:30",
+      "completed_at": "2026-10-06T05:16:17.824243Z",
+      "completed_at_local": "2026-10-06T15:46:17.824270+10:30",
+      "http_status": 200,
+      "response_headers": {
+        "date": "Tue, 06 Oct 2026 05:16:17 GMT",
+        "content-type": "application/json",
+        "transfer-encoding": "chunked",
+        "connection": "keep-alive",
+        "cf-ray": "a46231733a5f277b-IAD",
+        "cf-cache-status": "DYNAMIC",
+        "server": "cloudflare",
+        "zid": "rviF_XGagw76",
+        "content-encoding": "gzip",
+        "alt-svc": "h3=\":443\"; ma=86400"
+      },
+      "raw_file": "raw/BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM_page1.json",
+      "raw_sha256": "105ad783af1e0de1640e19397ca905b27ac1e9dc43670a08cdb0f04376a9db49",
+      "raw_bytes": 262884,
+      "outcome": "ok",
+      "record_count": 100,
+      "documented_credits": 10,
+      "response_pagination_token": "449760359:1234",
+      "first_signature": "5bMbtwSUmPYKgMMrThi6YN1gXbPzkUGbdCpMRHXmWeBMSxC4a5qQCUpsw8C9LqUuYwiM1xRZt6shiUCaLdDLctPt",
+      "last_signature": "399rn929Kt7Q1Es4ZaujxZmDjmncGaKkKdicEuqY3NqQPUwPSzwiet1eExxSQV3JzpBJUyx3uqGgyXqKduz9dHqg",
+      "newest_block_time": "2026-09-23T16:41:19+00:00",
+      "oldest_block_time": "2026-09-23T16:41:05+00:00"
+    }
+  ],
+  "requests": 20,
+  "documented_credits": 200,
+  "usd": "0",
+  "birdeye_requests": 0,
+  "stop_reason": "coverage_objective_reached",
+  "credits_basis": "documented estimate: 10 credits per 100 returned full txs (min 10); failed responses documented free but counted 10 for ceiling enforcement",
+  "retries": 0,
+  "concurrency": 1,
+  "finished_at": "2026-10-06T05:16:17.829691Z",
+  "finished_at_local": "2026-10-06T15:46:17.829708+10:30",
+  "wall_seconds": 2.19
+}

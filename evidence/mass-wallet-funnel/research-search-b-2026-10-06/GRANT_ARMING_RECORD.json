@@ -1,0 +1,24 @@
+{
+  "kind": "local-arming-record-v1 (NOT a grant file; cannot be loaded as live-research-authorization-v1)",
+  "grant_id": "live-ranked100-research-search-2026-10-06-mitch",
+  "repo_template": "config/live_authorization.ranked100-research-search-draft.json (stays enabled:false)",
+  "armed_copy_box_path": "/workspace/research-search-b-live/live_authorization.ranked100-research-search-armed.json",
+  "armed_copy_sha256": "6e3fdc0f41017d49590c4c0ac9476816ee71295a8b7cb1f0adaea2fdb62ddceb",
+  "approved_by": "Mitch Hoffman",
+  "approved_at": "2026-10-06T15:38:00+10:30",
+  "approved_at_utc": "2026-10-06T05:08:00Z",
+  "expires_at_utc": "2026-10-07T05:08:00Z",
+  "approval_verbatim": "B - I HAVE ENOUGH QUOTA AND CREDITS - THIS MUST WORK! YOU HAVE 5 ATTEMPTS IF YOU NEED TOO MAKE CHANGES OR FIXES - RUN THE FIRST TEST, IF THERE ARE ISSUES, AUDIT AND FIX THEN RE TEST.. YOU ARE MY EXPERT.. WORK AUTONOMOUSLY UNTIL IT WORKS AS IT SHOULD!!!",
+  "approval_choice": "B = config/live_authorization.ranked100-research-search-draft.json",
+  "local_normalisation": "Draft provider key cycle_end is not accepted by validate_live_authorization (requires cycle_end_exclusive) and the Birdeye zero-budget entry lacked required fields; the local armed copy renamed/added them (zero/null). Budgets unchanged: Helius 20 req / 200 credits, Birdeye 0.",
+  "attempt_policy": {
+    "max_attempts": 5,
+    "max_total_helius_requests": 100,
+    "max_total_helius_credits": 1000,
+    "per_attempt_requests": 20,
+    "per_attempt_credits": 200,
+    "attempt_n_plus_1_requires": "concrete defect fixed in code + full offline suite and build pass on new commit",
+    "skip_already_captured_pages": true
+  },
+  "key_material": "none"
+}

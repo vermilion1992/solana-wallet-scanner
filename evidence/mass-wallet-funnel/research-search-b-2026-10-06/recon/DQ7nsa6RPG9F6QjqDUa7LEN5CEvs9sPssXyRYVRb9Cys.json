@@ -1,0 +1,58 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+  "capture_sha256": "f7d5c4b82081a01bb7d8e46ce25f408559c45eb57b33effe73922a9673a1a2ee",
+  "source_pages": [
+    {
+      "page_index": 0,
+      "raw_sha256": "6f23ee7168cd7efc2c618381e8ebd0340ef991b4526f88d12e26983352d57beb"
+    },
+    {
+      "page_index": 1,
+      "raw_sha256": "c8c0462f79a931fe667bba954aa52286258f4c741cb1ff6413e5b982892567eb"
+    }
+  ],
+  "window": {
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
+  },
+  "decoder_is_shared_with_app": true,
+  "fifo": {
+    "USDC": {
+      "asset": "USDC",
+      "known_cost_sells": [],
+      "unresolved_basis_sales": [
+        {
+          "signature": "dD5FUYzzKsjmqzso2ic3Qeys8nS9Ebt3dSCMcrYkkhRi2Po3DA2Ji1Weg9JQwcewAp2wnHBy7pyej1X2fAZL5kg",
+          "mint": "4WPn1oGVE7rza6PjFJwYpEXZn6qtjwxEKkCV9EtAxhUU",
+          "unmatched_quantity_raw": "136093595306",
+          "gross_proceeds": "336.949119",
+          "fee_sol": "0.000106022",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        }
+      ],
+      "open_lots": [],
+      "total_profit": null,
+      "sol_fees_not_converted": true,
+      "missing_basis_is_not_zero": true
+    }
+  },
+  "app_report_id": "602f7122b1f54b8f9c20b7115032ebd1",
+  "app_error": null,
+  "comparison": {
+    "USDC": {
+      "independent_total": null,
+      "app_total": null,
+      "independent_known_cost_sells": 0,
+      "app_sales": 0,
+      "independent_unresolved_basis_sales": 1,
+      "independent_open_lots": 0,
+      "status": "BOTH_EMPTY"
+    }
+  },
+  "PRODUCT_READY": false
+}
