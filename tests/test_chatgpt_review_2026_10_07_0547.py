@@ -264,17 +264,20 @@ def test_next_capture_phase_cursor_allowance_and_a6ps_second_page():
     draft_unlocked["allowed_wallets"] = [
         unlocked if row["address"].startswith("58PW") else row for row in draft["allowed_wallets"]
     ]
+    replay = _replay_bound(gtfo["address"], gtfo["continue_from_pagination_token"])
     assert evaluate_next_capture_dispatch(
         draft=draft_unlocked,
         requested={"address": unlocked["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": unlocked["continue_from_pagination_token"]},
         replay_completed=True,
         requests_used=1,
+        **replay,
     )["code"] == "zero_executable_allowance"
     first_a6ps = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": a6ps["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": a6ps["continue_from_pagination_token"]},
         replay_completed=True,
         requests_used=1,
+        **replay,
     )
     assert first_a6ps["allowed"] is True
     second_a6ps = evaluate_next_capture_dispatch(
@@ -284,6 +287,8 @@ def test_next_capture_phase_cursor_allowance_and_a6ps_second_page():
         requests_used=2,
         per_wallet_used={a6ps["address"]: 1},
         accepted_continuation={a6ps["address"]: a6ps["continue_from_pagination_token"]},
+        cursor_state={a6ps["address"]: "open"},
+        **replay,
     )
     assert second_a6ps["code"] == "named_dependency_not_approached"
     assert evaluate_next_capture_dispatch(
@@ -293,7 +298,33 @@ def test_next_capture_phase_cursor_allowance_and_a6ps_second_page():
         requests_used=1,
         per_wallet_used={gtfo["address"]: 1},
         accepted_continuation={gtfo["address"]: "accepted-next"},
+        cursor_state={gtfo["address"]: "open"},
+        **replay,
     )["code"] == "wrong_cursor"
+
+
+def _quota_record(remaining=8):
+    return {
+        "kind": "operator_quota_record_v1",
+        "ceiling": 20,
+        "reserved_unallocated": 12,
+        "usable_ceiling": 8,
+        "remaining": remaining,
+        "overages_enabled": False,
+        "operator": "mitch-offline-synthetic",
+        "confirmed_at": "2026-10-07T00:00:00Z",
+    }
+
+
+def _replay_bound(address, page_identity, response_id="page-1"):
+    return {
+        "last_dispatch": {
+            "address": address,
+            "response_id": response_id,
+            "page_identity": page_identity,
+        },
+        "replay_receipts": [{"response_id": response_id, "page_identity": page_identity}],
+    }
 
 
 def _synthetic_grant(draft, **overrides):
@@ -302,7 +333,7 @@ def _synthetic_grant(draft, **overrides):
         "synthetic_offline_authorization": True,
         "authorization_id": draft["authorization_id"],
         "execution_artifact_hash_of_this_draft": draft_execution_artifact_hash(draft),
-        "current_remaining_quota_confirmation": "quota-confirmed-offline",
+        "current_remaining_quota_confirmation": _quota_record(),
         "overages_enabled": False,
         "approval_timestamp": "2026-10-07T00:00:00Z",
         "expiry": "2026-10-08T00:00:00Z",
@@ -354,7 +385,7 @@ def test_next_capture_runner_reaches_recorder_once_and_invalid_zero_times():
         {"requested": requested, "grant": _synthetic_grant(draft, expiry="2026-10-01T00:00:00Z"), "state": empty_next_capture_state()},
         {"requested": requested, "grant": _synthetic_grant(draft, execution_artifact_hash_of_this_draft="0" * 64), "state": empty_next_capture_state()},
         {"requested": requested, "grant": _synthetic_grant(draft, authorization_id="live-g1-vertical-slice-2026-10-05-mitch"), "state": empty_next_capture_state()},
-        {"requested": {**requested, "pagination_token": "stale"}, "grant": _synthetic_grant(draft), "state": {**empty_next_capture_state(), "replay_completed": True, "requests_used": 1, "per_wallet_used": {gtfo["address"]: 1}, "accepted_continuation": {gtfo["address"]: "accepted-next"}}},
+        {"requested": {**requested, "pagination_token": "stale"}, "grant": _synthetic_grant(draft), "state": {**empty_next_capture_state(), "replay_completed": True, "requests_used": 1, "per_wallet_used": {gtfo["address"]: 1}, "accepted_continuation": {gtfo["address"]: "accepted-next"}, "cursor_state": {gtfo["address"]: "open"}, "last_dispatch": {"address": gtfo["address"], "response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]}, "replay_receipts": [{"response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]}]}},
     ]
     for case in invalids:
         result = run_next_capture_offline(
@@ -385,7 +416,8 @@ def test_ranked_and_report_surfaces_use_certifying_helper_and_nonlead_copy():
     mass = MASS_SEARCH.read_text(encoding="utf-8")
     fmt = FRONTEND_FORMAT.read_text(encoding="utf-8")
     report = REPORT.read_text(encoding="utf-8")
-    assert "completedEpisodeFields" in mass
+    assert "rankedPhonePnlText" in mass
+    assert "rankedDesktopPnlText" in mass
     assert "coverageStatusDisplay" in mass
     assert "independent_audit?.independently_audited" not in mass
     assert "certificateComparisonProof" in fmt

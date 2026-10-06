@@ -498,9 +498,14 @@ def _authoritative_saved_profile(report):
     return reconcile_saved_profile(report, profile)
 
 
-def ranked_workflow_view(store, *, filters=None):
+def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     filters = filters or load_filters(store)
     universe = load_ranked_universe()
+    if extra_universe_rows:
+        universe = {
+            **universe,
+            "rows": list(universe["rows"]) + list(extra_universe_rows),
+        }
     user_short = user_shortlist_addresses(store)
     reports = reports_by_address(store)
     catalog = catalog_by_address()

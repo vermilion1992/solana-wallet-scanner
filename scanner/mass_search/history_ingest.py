@@ -1153,6 +1153,69 @@ def draft_execution_artifact_hash(draft):
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+RESERVED_UNALLOCATED = 12
+NEXT_CAPTURE_STATE_KIND = "next_capture_offline_state"
+EXHAUSTED_CURSOR = "__exhausted__"
+
+
+def _parse_aware(value):
+    if value in (None, ""):
+        return None
+    try:
+        stamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=timezone.utc)
+    return stamp
+
+
+def validate_operator_quota_record(record, draft=None):
+    """Operator-supplied remaining-quota confirmation. Truthy strings are not enough."""
+    del draft
+    if not isinstance(record, dict):
+        return "quota_not_bound"
+    if record.get("kind") != "operator_quota_record_v1":
+        return "quota_not_bound"
+    try:
+        ceiling = int(record["ceiling"])
+        reserved = int(record["reserved_unallocated"])
+        usable = int(record["usable_ceiling"])
+        remaining = int(record["remaining"])
+    except (KeyError, TypeError, ValueError):
+        return "quota_not_bound"
+    if reserved != RESERVED_UNALLOCATED:
+        return "reserved_is_discretionary"
+    if usable != ceiling - reserved:
+        return "quota_inconsistent"
+    if remaining < 0 or remaining > usable:
+        return "quota_inconsistent"
+    if record.get("overages_enabled") is not False:
+        return "overages_not_disabled"
+    return None
+
+
+def validate_approval_expiry_relationship(grant, *, now=None):
+    approval = _parse_aware(grant.get("approval_timestamp"))
+    expiry = _parse_aware(grant.get("expiry"))
+    if grant.get("approval_timestamp") in (None, ""):
+        return "missing_approval_timestamp"
+    if approval is None:
+        return "invalid_approval_timestamp"
+    if grant.get("expiry") in (None, ""):
+        return "missing_expiry"
+    if expiry is None:
+        return "invalid_expiry"
+    moment = now or datetime.now(timezone.utc)
+    if approval >= expiry:
+        return "approval_not_before_expiry"
+    if approval > moment:
+        return "approval_in_the_future"
+    if expiry <= moment:
+        return "expired_grant"
+    return None
+
+
 def validate_fresh_approval_bind(grant, draft, *, now=None):
     """Validate bind fields before any transport call. Returning names is not enough."""
     if not grant:
@@ -1172,24 +1235,63 @@ def validate_fresh_approval_bind(grant, draft, *, now=None):
         return "artifact_mismatched_grant"
     if grant.get("overages_enabled") is not False:
         return "overages_not_disabled"
-    if not grant.get("current_remaining_quota_confirmation"):
-        return "quota_not_bound"
-    if not grant.get("approval_timestamp"):
-        return "missing_approval_timestamp"
-    expiry = grant.get("expiry")
-    if not expiry:
-        return "missing_expiry"
-    stamp = None
-    try:
-        stamp = datetime.fromisoformat(str(expiry).replace("Z", "+00:00"))
-    except ValueError:
-        return "invalid_expiry"
-    moment = now or datetime.now(timezone.utc)
-    if stamp.tzinfo is None:
-        stamp = stamp.replace(tzinfo=timezone.utc)
-    if stamp <= moment:
-        return "expired_grant"
-    return None
+    quota_error = validate_operator_quota_record(grant.get("current_remaining_quota_confirmation"), draft)
+    if quota_error:
+        return quota_error
+    return validate_approval_expiry_relationship(grant, now=now)
+
+
+def replay_bound_to_last_dispatch(last_dispatch, replay_receipts):
+    """Replay is a receipt for a specific last page/response identity."""
+    if not isinstance(last_dispatch, dict) or not last_dispatch.get("response_id"):
+        return False
+    expected = last_dispatch.get("response_id")
+    page = last_dispatch.get("page_identity")
+    for row in replay_receipts or []:
+        if not isinstance(row, dict):
+            continue
+        if row.get("response_id") == expected and (
+            page in (None, "") or row.get("page_identity") in (None, "", page)
+        ):
+            return True
+    return False
+
+
+def record_next_capture_replay(state, receipt):
+    """Attach a receipt only when it names the last dispatched response."""
+    state = state if state is not None else empty_next_capture_state()
+    dispatch = state.get("last_dispatch") or {}
+    if not replay_bound_to_last_dispatch(dispatch, [receipt]):
+        return False
+    receipts = list(state.get("replay_receipts") or [])
+    receipts.append(dict(receipt))
+    state["replay_receipts"] = receipts
+    state["replay_completed"] = True
+    return True
+
+
+def wallet_cursor_state(state, address, wallet=None):
+    recorded = ((state or {}).get("cursor_state") or {}).get(address)
+    if recorded in ("not-started", "open", "exhausted"):
+        return recorded
+    accepted = ((state or {}).get("accepted_continuation") or {}).get(address)
+    if accepted == EXHAUSTED_CURSOR:
+        return "exhausted"
+    if accepted:
+        return "open"
+    return "not-started"
+
+
+def _progress_wallet(draft, wallet, last_dispatch):
+    if not (wallet or {}).get("shares_global_phase_two_progress_rule"):
+        return wallet
+    preceding = (last_dispatch or {}).get("address")
+    allowed = list((draft or {}).get("allowed_wallets") or [])
+    if preceding:
+        found = next((row for row in allowed if row.get("address") == preceding), None)
+        if found:
+            return found
+    return next((row for row in allowed if row.get("phase") == 1), wallet)
 
 
 def evaluate_next_capture_dispatch(
@@ -1203,16 +1305,21 @@ def evaluate_next_capture_dispatch(
     per_wallet_used=None,
     accepted_continuation=None,
     fake_transport=None,
+    last_dispatch=None,
+    replay_receipts=None,
+    cursor_state=None,
+    now=None,
 ):
     """Offline dispatch boundary. Never invokes a network transport.
 
-    Caller-supplied phase is not trusted. A later live approval must bind this
-    draft's execution artifact, current remaining quota, overages_disabled,
-    approval time, and expiry. This function does not invent that grant.
+    Caller-supplied phase and a free-standing replay_completed flag are not
+    trusted. Replay must name the last dispatched page/response identity.
     """
     del fake_transport
+    del replay_completed
     per_wallet_used = per_wallet_used or {}
     accepted_continuation = accepted_continuation or {}
+    cursor_state = cursor_state or {}
     address = (requested or {}).get("address")
     cutoff = (requested or {}).get("block_time_lt")
     cursor = (requested or {}).get("pagination_token")
@@ -1232,6 +1339,16 @@ def evaluate_next_capture_dispatch(
     phase1 = next((row for row in allowed if row.get("phase") == 1), None)
     is_phase1 = bool(wallet and phase1 and wallet.get("address") == phase1.get("address"))
     a6ps_start = bool((wallet or {}).get("separately_authorized_phase_two_start"))
+    replay_ok = replay_bound_to_last_dispatch(last_dispatch, replay_receipts)
+    recorded_cursor = cursor_state.get(address) or wallet_cursor_state(
+        {
+            "cursor_state": cursor_state,
+            "accepted_continuation": accepted_continuation,
+            "per_wallet_used": per_wallet_used,
+        },
+        address,
+        wallet,
+    )
 
     def refuse(code, detail):
         return _next_capture_refuse(draft, code, detail)
@@ -1239,7 +1356,7 @@ def evaluate_next_capture_dispatch(
     if (draft or {}).get("enabled") is not False:
         return refuse("draft_must_stay_disabled", "Repo next-capture draft must stay enabled:false")
     if grant:
-        bind_error = validate_fresh_approval_bind(grant, draft) if grant.get("synthetic_offline_authorization") else None
+        bind_error = validate_fresh_approval_bind(grant, draft, now=now) if grant.get("synthetic_offline_authorization") else None
         if grant.get("enabled") is True:
             return refuse("grant_enabled", "This evaluator never arms a live grant")
         if grant.get("consumed") or grant.get("status") == "consumed":
@@ -1256,15 +1373,24 @@ def evaluate_next_capture_dispatch(
         return refuse("wrong_wallet", "Address is not in allowed_wallets")
     if cutoff not in (None, expected_cutoff) and int(cutoff) != int(expected_cutoff):
         return refuse("wrong_cutoff", f"blockTime.lt must be {expected_cutoff}")
-    expected_cursor = accepted_continuation.get(address) or wallet.get("continue_from_pagination_token")
+    if recorded_cursor == "exhausted" or accepted_continuation.get(address) == EXHAUSTED_CURSOR:
+        return refuse("cursor_exhausted", "Terminal response already consumed; no further request for this wallet")
+    if recorded_cursor == "open":
+        expected_cursor = accepted_continuation.get(address)
+    elif recorded_cursor == "not-started":
+        expected_cursor = wallet.get("continue_from_pagination_token")
+    else:
+        expected_cursor = accepted_continuation.get(address) or wallet.get("continue_from_pagination_token")
+    if expected_cursor == EXHAUSTED_CURSOR:
+        return refuse("cursor_exhausted", "Terminal response already consumed; no further request for this wallet")
     if expected_cursor and cursor != expected_cursor:
         return refuse("wrong_cursor", "paginationToken is not the accepted preceding continuation")
     if not expected_cursor and cursor:
         return refuse("wrong_cursor", "paginationToken is not authorized for this wallet")
-    if not is_phase1 and total_used == 0 and not replay_completed:
+    if not is_phase1 and total_used == 0 and not replay_ok:
         return refuse("non_gtfo_initial", "Only the phase-1 gtfo continuation may be the first dispatch")
-    if (total_used >= 1 or used >= 1) and not replay_completed:
-        return refuse("second_before_replay", "Any second dispatch requires offline replay first")
+    if (total_used >= 1 or used >= 1) and not replay_ok:
+        return refuse("second_before_replay", "Any second dispatch requires offline replay of the last page")
     if int(requests_used or 0) >= usable_ceiling:
         return refuse("over_budget", "Reserved 12 cannot become discretionary spend or override the usable ceiling")
     if requested.get("use_reserved") and not (grant or {}).get("amended_reserved_authorization"):
@@ -1287,12 +1413,12 @@ def evaluate_next_capture_dispatch(
         if used >= allowance_n:
             return refuse("zero_executable_allowance", "executable_allowance already consumed")
     if not is_phase1:
-        if not replay_completed:
-            return refuse("phase_two_before_replay", "Non-gtfo pages require offline replay of phase one")
+        if not replay_ok:
+            return refuse("phase_two_before_replay", "Non-gtfo pages require offline replay of the last dispatched page")
         if a6ps_start and used == 0:
             pass
         else:
-            progressed = named_dependency_progress(previous_progress, wallet)
+            progressed = named_dependency_progress(previous_progress, _progress_wallet(draft, wallet, last_dispatch))
             if not progressed.get("progress"):
                 return refuse(
                     "named_dependency_not_approached",
@@ -1317,6 +1443,8 @@ def evaluate_next_capture_dispatch(
         "draft_enabled": False,
         "PRODUCT_READY": False,
         "expected_cursor": expected_cursor,
+        "cursor_state": recorded_cursor,
+        "replay_bound": replay_ok,
         "fresh_approval_must_bind": [
             "execution_artifact_hash_of_this_draft",
             "current_remaining_quota_confirmation",
@@ -1334,8 +1462,39 @@ def empty_next_capture_state():
         "per_wallet_used": {},
         "replay_completed": False,
         "accepted_continuation": {},
+        "cursor_state": {},
+        "last_dispatch": None,
+        "replay_receipts": [],
+        "attempts": [],
         "phase1_dispatched": False,
     }
+
+
+def load_next_capture_state(store, draft, state=None):
+    if state is not None:
+        return state
+    if store is not None:
+        saved = store.get(NEXT_CAPTURE_STATE_KIND, (draft or {}).get("authorization_id"))
+        if saved:
+            return saved
+    return empty_next_capture_state()
+
+
+def persist_next_capture_state(store, draft, state):
+    if store is None:
+        return state
+    store.put(NEXT_CAPTURE_STATE_KIND, (draft or {}).get("authorization_id"), state)
+    return state
+
+
+def _response_identity(serialized, result):
+    payload = json.dumps(
+        {"serialized": serialized, "result": result},
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def run_next_capture_offline(
@@ -1347,22 +1506,27 @@ def run_next_capture_offline(
     state=None,
     previous_progress=None,
     now=None,
+    store=None,
 ):
-    """Intended offline runner. Calls transport only after policy + bind succeed.
+    """Intended offline runner. Reserve before transport; persist after.
 
     Repository draft stays enabled:false. Only a clearly synthetic authorization
     that binds artifact/quota/overages/time/expiry may reach the recorder.
+    Failed or timed-out transport still consumes the reserved attempt.
     """
-    state = state if state is not None else empty_next_capture_state()
+    state = load_next_capture_state(store, draft, state)
     decision = evaluate_next_capture_dispatch(
         draft=draft,
         requested=requested,
         grant=grant,
-        replay_completed=bool(state.get("replay_completed")),
         previous_progress=previous_progress,
         requests_used=int(state.get("requests_used") or 0),
         per_wallet_used=state.get("per_wallet_used") or {},
         accepted_continuation=state.get("accepted_continuation") or {},
+        last_dispatch=state.get("last_dispatch"),
+        replay_receipts=state.get("replay_receipts") or [],
+        cursor_state=state.get("cursor_state") or {},
+        now=now,
     )
     if not decision.get("allowed"):
         return {**decision, "transport_calls": 0, "state": state}
@@ -1372,7 +1536,7 @@ def run_next_capture_offline(
         return {**refused, "state": state}
     address = requested.get("address")
     wallet = next((row for row in (draft.get("allowed_wallets") or []) if row.get("address") == address), None)
-    expected_cursor = (state.get("accepted_continuation") or {}).get(address) or (wallet or {}).get("continue_from_pagination_token")
+    expected_cursor = decision.get("expected_cursor")
     serialized = serialize_next_capture_gta_request(
         address,
         pagination_token=expected_cursor,
@@ -1383,28 +1547,85 @@ def run_next_capture_offline(
     if serialized_cursor != expected_cursor:
         refused = _next_capture_refuse(draft, "wrong_cursor", "Serialized request continuation does not match accepted state")
         return {**refused, "state": state}
-    result = transport(serialized)
     used = dict(state.get("per_wallet_used") or {})
     used[address] = int(used.get(address) or 0) + 1
-    continuation = dict(state.get("accepted_continuation") or {})
-    next_token = None
-    if isinstance(result, dict):
-        next_token = result.get("pagination_token") or result.get("paginationToken")
-    if next_token:
-        continuation[address] = next_token
+    attempts = list(state.get("attempts") or [])
+    attempt = {
+        "address": address,
+        "pagination_token": expected_cursor,
+        "status": "reserved",
+        "cutoff": next_capture_block_time_lt(draft),
+    }
+    attempts.append(attempt)
     requests = list(state.get("requests") or [])
     requests.append({
         "address": address,
         "pagination_token": expected_cursor,
         "cutoff": next_capture_block_time_lt(draft),
+        "status": "reserved",
     })
     state.update({
         "requests": requests,
         "requests_used": int(state.get("requests_used") or 0) + 1,
         "per_wallet_used": used,
-        "accepted_continuation": continuation,
+        "attempts": attempts,
+        "replay_completed": False,
+        "replay_receipts": [],
         "phase1_dispatched": True,
     })
+    persist_next_capture_state(store, draft, state)
+    try:
+        result = transport(serialized)
+    except Exception as exc:
+        attempt["status"] = "failed"
+        attempt["error"] = type(exc).__name__
+        attempt["detail"] = str(exc)[:240]
+        requests[-1]["status"] = "failed"
+        persist_next_capture_state(store, draft, state)
+        return {
+            "allowed": True,
+            "dispatched": True,
+            "synthetic_offline_only": True,
+            "code": "synthetic_recorder_failed",
+            "detail": "Synthetic recorder failed or timed out after the attempt was reserved. Not a live grant.",
+            "transport_calls": 1,
+            "attempt_consumed": True,
+            "not_a_live_dispatch": True,
+            "draft_enabled": False,
+            "PRODUCT_READY": False,
+            "serialized": serialized,
+            "state": state,
+        }
+    next_token = None
+    if isinstance(result, dict):
+        next_token = result.get("pagination_token") or result.get("paginationToken")
+    response_id = (result.get("response_id") if isinstance(result, dict) else None) or _response_identity(serialized, result)
+    continuation = dict(state.get("accepted_continuation") or {})
+    cursors = dict(state.get("cursor_state") or {})
+    if next_token:
+        continuation[address] = next_token
+        cursors[address] = "open"
+    else:
+        continuation[address] = EXHAUSTED_CURSOR
+        cursors[address] = "exhausted"
+    attempt["status"] = "succeeded"
+    attempt["response_id"] = response_id
+    requests[-1]["status"] = "succeeded"
+    requests[-1]["response_id"] = response_id
+    state.update({
+        "accepted_continuation": continuation,
+        "cursor_state": cursors,
+        "last_dispatch": {
+            "address": address,
+            "response_id": response_id,
+            "page_identity": expected_cursor,
+            "next_token": next_token,
+            "exhausted": not bool(next_token),
+        },
+        "replay_receipts": [],
+        "replay_completed": False,
+    })
+    persist_next_capture_state(store, draft, state)
     return {
         "allowed": True,
         "dispatched": True,
@@ -1412,9 +1633,11 @@ def run_next_capture_offline(
         "code": "synthetic_recorder_dispatch",
         "detail": "Synthetic offline authorization reached the recorder once. Not a live grant.",
         "transport_calls": 1,
+        "attempt_consumed": True,
         "not_a_live_dispatch": True,
         "draft_enabled": False,
         "PRODUCT_READY": False,
         "serialized": serialized,
+        "response_id": response_id,
         "state": state,
     }

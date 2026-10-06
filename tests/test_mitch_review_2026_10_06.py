@@ -177,8 +177,8 @@ def test_item7_a6ps_concentration_label():
             "settlement_asset": "SOL",
         },
         "completed_episode_ledger": [
-            {"net": "291.976998225", "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump", "day": "2026-09-20", "unit": "SOL"},
-            {"net": "-4.592923403", "mint": "OtherMint111111111111111111111111111111111", "day": "2026-09-21", "unit": "SOL"},
+            {"net": "291.976998225", "mint": "75gGuxuqKhQQiHae8JKDQaetK3XguKf1rUJ1csispump", "day": "2026-09-20", "unit": "SOL", "close_signature": "a6ps-close-largest"},
+            {"net": "-4.592923403", "mint": "OtherMint111111111111111111111111111111111", "day": "2026-09-21", "unit": "SOL", "close_signature": "a6ps-close-other"},
         ],
         "completed_episode_net": "287.384074822",
         "completed_episode_net_unit": "SOL",

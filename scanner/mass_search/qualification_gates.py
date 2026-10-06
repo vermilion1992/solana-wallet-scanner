@@ -236,15 +236,39 @@ def audit_fingerprint_matches(audit, fingerprint):
     return True
 
 
-def episode_comparison_bridges(audit):
-    """Per-episode component bridges from the producer schema or a carried list."""
-    if not isinstance(audit, dict):
-        return []
-    bridges = [row for row in (audit.get("component_bridges") or []) if isinstance(row, dict)]
-    if bridges:
-        return bridges
+def _bridge_app_identity(bridge):
+    membership = (bridge or {}).get("membership") or {}
+    app = membership.get("app") or {}
+    mint = app.get("mint")
+    close = app.get("close_signature") or app.get("close")
+    if not mint or not close:
+        return None
+    return (str(mint), str(close))
+
+
+def _bridge_auditor_identity(bridge):
+    membership = (bridge or {}).get("membership") or {}
+    auditor = membership.get("auditor") or {}
+    mint = auditor.get("mint")
+    close = auditor.get("close_signature") or auditor.get("close")
+    if not mint or not close:
+        return None
+    return (str(mint), str(close))
+
+
+def _bridge_component_key(bridge):
+    identity = _bridge_app_identity(bridge)
+    components = (bridge or {}).get("components") or {}
+    amounts = []
+    for name in REQUIRED_EPISODE_COMPONENTS:
+        row = components.get(name) or {}
+        amounts.append((name, str(row.get("app") or ""), str(row.get("auditor") or "")))
+    return (identity, (bridge or {}).get("unit"), tuple(amounts))
+
+
+def _bridges_from_episodes(audit):
     collected = []
-    for episode in audit.get("episodes") or []:
+    for episode in (audit or {}).get("episodes") or []:
         if not isinstance(episode, dict):
             continue
         bridge = episode.get("component_bridge")
@@ -253,27 +277,85 @@ def episode_comparison_bridges(audit):
     return collected
 
 
+def _bridge_collections_equivalent(left, right):
+    if len(left) != len(right):
+        return False
+    return sorted(_bridge_component_key(row) for row in left) == sorted(
+        _bridge_component_key(row) for row in right
+    )
+
+
+def canonical_comparison_bridges(audit):
+    """One stored comparison collection. Contradictory copies are rejected."""
+    if not isinstance(audit, dict):
+        return None
+    listed = [row for row in (audit.get("component_bridges") or []) if isinstance(row, dict)]
+    from_episodes = _bridges_from_episodes(audit)
+    if listed and from_episodes and not _bridge_collections_equivalent(listed, from_episodes):
+        return None
+    return listed or from_episodes
+
+
+def episode_comparison_bridges(audit):
+    """Canonical per-episode component bridges, or empty when representations contradict."""
+    return list(canonical_comparison_bridges(audit) or [])
+
+
+def _bridge_amounts_agree(bridge):
+    """Recompute agreement from stored amounts. Flags are not evidence."""
+    unit = (bridge or {}).get("unit") or "SOL"
+    components = (bridge or {}).get("components") or {}
+    for name in REQUIRED_EPISODE_COMPONENTS:
+        row = components.get(name) or {}
+        app_value = row.get("app")
+        auditor_value = row.get("auditor")
+        if app_value in (None, "") or auditor_value in (None, ""):
+            return False
+        if not amounts_agree(app_value, auditor_value, unit):
+            return False
+    return True
+
+
 def certificate_comparison_proof(audit, ledger=None):
-    """Fingerprint is not enough: require 1:1 membership and required components."""
+    """Validate stored comparisons against identities, amounts, and the bound ledger.
+
+    Positive agree flags are not enough. Duplicate first-bridge copies, a changed
+    auditor close signature, or removed component amounts must fail even when
+    flags stay True.
+    """
     if not isinstance(audit, dict):
         return False
     if audit.get("one_to_one_membership") is not True:
         return False
-    bridges = episode_comparison_bridges(audit)
+    bridges = canonical_comparison_bridges(audit)
     if not bridges:
         return False
-    if ledger is not None and len(bridges) != len(list(ledger)):
-        return False
+    seen = set()
     for bridge in bridges:
-        if bridge.get("agree") is not True:
+        app_id = _bridge_app_identity(bridge)
+        auditor_id = _bridge_auditor_identity(bridge)
+        if not app_id or not auditor_id or app_id != auditor_id:
             return False
-        membership = bridge.get("membership") or {}
-        if membership.get("one_to_one") is not True or membership.get("agree") is not True:
+        if app_id in seen:
             return False
-        components = bridge.get("components") or {}
-        for name in REQUIRED_EPISODE_COMPONENTS:
-            if (components.get(name) or {}).get("agree") is not True:
+        seen.add(app_id)
+        if not _bridge_amounts_agree(bridge):
+            return False
+    if ledger is not None:
+        ledger_ids = []
+        ledger_seen = set()
+        for item in list(ledger):
+            mint = (item or {}).get("mint")
+            close = (item or {}).get("close_signature") or (item or {}).get("close")
+            if not mint or not close:
                 return False
+            key = (str(mint), str(close))
+            if key in ledger_seen:
+                return False
+            ledger_seen.add(key)
+            ledger_ids.append(key)
+        if seen != ledger_seen or len(bridges) != len(ledger_ids):
+            return False
     return True
 
 
@@ -448,7 +530,18 @@ def validate_episode_ledger(episodes):
                 "count": 0,
                 "episodes": rows,
             }
-        key = (str(mint), str(close or ""))
+        if not close:
+            return {
+                "ok": False,
+                "empty": False,
+                "reason": "missing_close_signature",
+                "net": None,
+                "unit": None,
+                "vector": {},
+                "count": 0,
+                "episodes": rows,
+            }
+        key = (str(mint), str(close))
         if key in seen:
             return {
                 "ok": False,
@@ -530,10 +623,63 @@ def qualifying_profit(profile, report=None):
     return amount, validated["unit"], validated["vector"]
 
 
+def _saved_fingerprint_id(fingerprint):
+    if isinstance(fingerprint, dict):
+        return fingerprint.get("fingerprint"), fingerprint.get("completed_episode_ledger")
+    if fingerprint:
+        return str(fingerprint), None
+    return None, None
+
+
+def _invalidate_saved_decisions(report, profile, *, ledger, contradiction):
+    """Recompute fingerprint, audit bind, qualification, and thresholds after overlay."""
+    current = compute_audit_fingerprint(report, profile=profile, episodes=ledger)
+    saved_id, saved_ledger = _saved_fingerprint_id(profile.get("audit_fingerprint"))
+    membership_changed = saved_ledger != current.get("completed_episode_ledger")
+    if membership_changed or saved_id != current.get("fingerprint"):
+        profile["audit_fingerprint"] = current
+    else:
+        profile["audit_fingerprint"] = current
+    attached = profile.get("independent_audit") or (report or {}).get("independent_audit")
+    if contradiction or not certificate_comparison_proof(attached, ledger):
+        profile["independent_audit"] = None
+    else:
+        profile["independent_audit"] = bindable_independent_audit(attached, current, ledger)
+    from scanner.mass_search.research_profile import (
+        evaluate_thresholds,
+        qualification_category,
+        qualification_level,
+    )
+    from scanner.mass_search.labels import wallet_status_fields
+
+    eval_profile = dict(profile)
+    if contradiction:
+        unit = profile.get("completed_episode_net_unit") or "SOL"
+        eval_profile["scoped_pnl"] = profile.get("completed_episode_net")
+        eval_profile["scoped_pnl_by_quote_asset"] = (
+            {unit: profile.get("completed_episode_net")}
+            if profile.get("completed_episode_net") not in (None, "")
+            else {}
+        )
+    results = evaluate_thresholds(eval_profile, profile.get("thresholds") or {})
+    profile["threshold_results"] = results["results"]
+    profile["criteria_met"] = results["criteria_met"]
+    profile["evaluated_thresholds"] = results.get("evaluated")
+    profile["unset_thresholds"] = results.get("unset")
+    profile["qualification_level"] = qualification_level(report, profile)
+    profile["qualification_category"] = qualification_category(report, profile)
+    fields = wallet_status_fields(report, profile)
+    profile["coverage_status"] = fields["coverage_status"]
+    profile["coverage_status_display"] = fields.get("coverage_status_display") or fields["coverage_status"]
+    profile["blocking_reason"] = fields["blocking_reason"]
+    return profile
+
+
 def reconcile_saved_profile(report, profile):
-    """Overwrite saved profile summaries from the bound ledger, or reject them."""
+    """Overwrite saved summaries from the bound ledger and invalidate stale decisions."""
     profile = dict(profile or {})
-    validated = validate_episode_ledger(completed_episode_ledger(report, profile))
+    ledger = completed_episode_ledger(report, profile)
+    validated = validate_episode_ledger(ledger)
     saved_net = _decimal(profile.get("completed_episode_net"))
     saved_count = profile.get("completed_known_cost_positions")
     if not validated["ok"]:
@@ -543,7 +689,7 @@ def reconcile_saved_profile(report, profile):
         profile["completed_known_cost_positions"] = 0
         profile["ledger_summary_contradiction"] = True
         profile["ledger_validation_reason"] = validated["reason"]
-        return profile
+        return _invalidate_saved_decisions(report, profile, ledger=ledger, contradiction=True)
     derived_net = _decimal(validated["net"])
     derived_count = validated["count"]
     contradiction = False
@@ -565,7 +711,12 @@ def reconcile_saved_profile(report, profile):
     profile["completed_known_cost_positions"] = derived_count
     profile["ledger_summary_contradiction"] = contradiction or bool(profile.get("ledger_summary_contradiction"))
     profile["ledger_validation_reason"] = validated.get("reason")
-    return profile
+    return _invalidate_saved_decisions(
+        report,
+        profile,
+        ledger=ledger,
+        contradiction=bool(profile["ledger_summary_contradiction"]),
+    )
 
 
 def sensitivity_result(report, profile):

@@ -99,7 +99,7 @@ def test_99_5_count_80_value_does_not_qualify():
         "wallet_completed_episodes": 5,
         "completed_episode_net": "20",
         "completed_episode_net_unit": "SOL",
-        "completed_episode_ledger": [{"net": "4", "mint": f"M{i}", "unit": "SOL"} for i in range(5)],
+        "completed_episode_ledger": [{"net": "4", "mint": f"M{i}", "unit": "SOL", "close_signature": f"cov-close-{i}"} for i in range(5)],
         "record_breakdown": {
             "unsupported_swap_share_in_window": {
                 "by_count": "0.005",
@@ -176,7 +176,7 @@ def test_positive_worksheet_negative_episodes_does_not_qualify():
         "wallet_completed_episodes": 4,
         "completed_episode_net": "-12.5",
         "completed_episode_net_unit": "SOL",
-        "completed_episode_ledger": [{"net": "-3.125", "mint": f"M{i}", "unit": "SOL"} for i in range(4)],
+        "completed_episode_ledger": [{"net": "-3.125", "mint": f"M{i}", "unit": "SOL", "close_signature": f"neg-close-{i}"} for i in range(4)],
         "record_breakdown": _clean_coverage(),
         "worksheet": {"total_profit_sol": "88.25", "settlement_asset": "SOL", "unresolved_basis_sales": 0},
         "independent_audit": {"status": "independently_audited", "independently_audited": True},
@@ -201,7 +201,7 @@ def test_cross_currency_sensitivity_blocks_lead():
         "completed_episode_net": "54.96",
         "completed_episode_net_unit": "USDC",
         "completed_episode_net_vector": {"USDC": "54.96", "SOL": "-0.02"},
-        "completed_episode_ledger": [{"net": "13.74", "mint": f"M{i}", "unit": "USDC"} for i in range(4)],
+        "completed_episode_ledger": [{"net": "13.74", "mint": f"M{i}", "unit": "USDC", "close_signature": f"usdc-close-{i}"} for i in range(4)],
         "sensitivity_unverified_debits_sol": "0.5",
         "record_breakdown": {
             "unsupported_swap_share_in_window": {"by_count": "0", "by_consideration": {"USDC": "0"}},

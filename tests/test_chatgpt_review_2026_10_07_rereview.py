@@ -321,16 +321,22 @@ def test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_bu
         requested={"address": a6ps["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": a6ps["continue_from_pagination_token"]},
         replay_completed=False,
     )["code"] in {"phase_two_before_replay", "non_gtfo_initial"}
+    replay = {
+        "last_dispatch": {"address": gtfo["address"], "response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]},
+        "replay_receipts": [{"response_id": "page-1", "page_identity": gtfo["continue_from_pagination_token"]}],
+    }
     assert evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": gtfo["address"], "phase": 1, "block_time_lt": 1791206967, "pagination_token": gtfo["continue_from_pagination_token"]},
         requests_used=8,
         replay_completed=True,
+        **replay,
     )["code"] == "over_budget"
     assert evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": pw58["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": pw58["continue_from_pagination_token"]},
         replay_completed=True,
+        **replay,
     )["code"] == "zero_executable_allowance"
     consumed = evaluate_next_capture_dispatch(
         draft=draft,
@@ -350,12 +356,16 @@ def test_next_capture_fake_transport_refuses_wrong_wallet_cutoff_cursor_phase_bu
         requested={"address": cccs["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": cccs["continue_from_pagination_token"]},
         replay_completed=True,
         previous_progress={"wallet_turned_positive": True},
+        requests_used=1,
+        **replay,
     )
     assert no_progress["code"] == "named_dependency_not_approached"
     a6ps_ok = evaluate_next_capture_dispatch(
         draft=draft,
         requested={"address": a6ps["address"], "phase": 2, "block_time_lt": 1791206967, "pagination_token": a6ps["continue_from_pagination_token"]},
         replay_completed=True,
+        requests_used=1,
+        **replay,
     )
     assert a6ps_ok["allowed"] is True
     assert a6ps_ok["dispatched"] is False

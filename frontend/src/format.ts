@@ -156,30 +156,97 @@ export function formatWorksheetEpisodeBridge(input: {
   return `worksheet-vs-completed-episode bridge ${input.bridge}${unit ? ` ${unit}` : ""} (worksheet ${worksheet || "—"} − episode ${episode || "—"}; worksheet is not the qualifying value)`;
 }
 
-function certificateComparisonProof(audit: {
-  one_to_one_membership?: boolean;
-  component_bridges?: Array<{
+type ComparisonBridge = {
+  agree?: boolean;
+  unit?: string | null;
+  membership?: {
+    one_to_one?: boolean;
     agree?: boolean;
-    membership?: { one_to_one?: boolean; agree?: boolean };
-    components?: Record<string, { agree?: boolean }>;
-  }>;
-  episodes?: Array<{ component_bridge?: { agree?: boolean; membership?: { one_to_one?: boolean; agree?: boolean }; components?: Record<string, { agree?: boolean }> } }>;
-} | null | undefined): boolean {
+    app?: { mint?: string | null; close_signature?: string | null; close?: string | null };
+    auditor?: { mint?: string | null; close_signature?: string | null; close?: string | null };
+  };
+  components?: Record<string, { agree?: boolean; app?: string | null; auditor?: string | null }>;
+};
+
+function bridgeIdentity(side?: { mint?: string | null; close_signature?: string | null; close?: string | null } | null) {
+  const mint = side?.mint;
+  const close = side?.close_signature || side?.close;
+  if (!mint || !close) return null;
+  return `${mint}|${close}`;
+}
+
+function bridgeComponentKey(bridge: ComparisonBridge) {
+  const identity = bridgeIdentity(bridge.membership?.app);
+  const amounts = ["acquisition", "proceeds", "costs", "net"].map((name) => {
+    const row = bridge.components?.[name];
+    return `${name}:${row?.app ?? ""}:${row?.auditor ?? ""}`;
+  });
+  return `${identity}|${bridge.unit ?? ""}|${amounts.join("|")}`;
+}
+
+function canonicalComparisonBridges(audit: {
+  component_bridges?: ComparisonBridge[];
+  episodes?: Array<{ component_bridge?: ComparisonBridge }>;
+} | null | undefined): ComparisonBridge[] | null {
+  const listed = (audit?.component_bridges || []).filter(Boolean);
+  const fromEpisodes = (audit?.episodes || [])
+    .map((episode) => episode.component_bridge)
+    .filter(Boolean) as ComparisonBridge[];
+  if (listed.length && fromEpisodes.length) {
+    const left = [...listed.map(bridgeComponentKey)].sort();
+    const right = [...fromEpisodes.map(bridgeComponentKey)].sort();
+    if (left.length !== right.length || left.some((key, index) => key !== right[index])) return null;
+    return listed;
+  }
+  return listed.length ? listed : fromEpisodes;
+}
+
+export function certificateComparisonProof(
+  audit: {
+    one_to_one_membership?: boolean;
+    component_bridges?: ComparisonBridge[];
+    episodes?: Array<{ component_bridge?: ComparisonBridge }>;
+  } | null | undefined,
+  ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }> | null,
+): boolean {
   if (!audit || audit.one_to_one_membership !== true) return false;
-  const bridges = (audit.component_bridges && audit.component_bridges.length
-    ? audit.component_bridges
-    : (audit.episodes || []).map((episode) => episode.component_bridge).filter(Boolean)) as Array<{
-      agree?: boolean;
-      membership?: { one_to_one?: boolean; agree?: boolean };
-      components?: Record<string, { agree?: boolean }>;
-    }>;
-  if (!bridges.length) return false;
-  return bridges.every((bridge) => (
-    bridge?.agree === true
-    && bridge.membership?.one_to_one === true
-    && bridge.membership?.agree === true
-    && ["acquisition", "proceeds", "costs", "net"].every((name) => bridge.components?.[name]?.agree === true)
-  ));
+  const bridges = canonicalComparisonBridges(audit);
+  if (!bridges || !bridges.length) return false;
+  const seen = new Set<string>();
+  for (const bridge of bridges) {
+    const appId = bridgeIdentity(bridge.membership?.app);
+    const auditorId = bridgeIdentity(bridge.membership?.auditor);
+    if (!appId || !auditorId || appId !== auditorId) return false;
+    if (seen.has(appId)) return false;
+    seen.add(appId);
+    const unit = bridge.unit || "SOL";
+    const amountsOk = ["acquisition", "proceeds", "costs", "net"].every((name) => {
+      const row = bridge.components?.[name];
+      return amountsAgreeWithinTolerance(row?.app, row?.auditor, unit);
+    });
+    if (!amountsOk) return false;
+  }
+  if (ledger) {
+    const ledgerIds = new Set<string>();
+    for (const item of ledger) {
+      const id = bridgeIdentity(item);
+      if (!id || ledgerIds.has(id)) return false;
+      ledgerIds.add(id);
+    }
+    if (seen.size !== ledgerIds.size) return false;
+    for (const id of seen) if (!ledgerIds.has(id)) return false;
+  }
+  return true;
+}
+
+function fingerprintId(value: unknown): string | null {
+  if (!value) return null;
+  if (typeof value === "string") return value;
+  if (typeof value === "object" && value && "fingerprint" in value) {
+    const id = (value as { fingerprint?: unknown }).fingerprint;
+    return typeof id === "string" && id ? id : null;
+  }
+  return null;
 }
 
 export function coverageStatusDisplay(source?: {
@@ -200,6 +267,7 @@ export function completedEpisodeFields(source?: {
   corpus_kind?: string | null;
   coverage_status_display?: string | null;
   coverage_status?: string | null;
+  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
   research_profile?: Record<string, unknown> | null;
   independent_audit?: {
     independently_audited?: boolean;
@@ -229,15 +297,23 @@ export function completedEpisodeFields(source?: {
     auditor_confirmation?: string | null;
     not_a_genuine_research_wallet?: boolean;
     one_to_one_membership?: boolean;
-    component_bridges?: Array<{
-      agree?: boolean;
-      membership?: { one_to_one?: boolean; agree?: boolean };
-      components?: Record<string, { agree?: boolean }>;
-    }>;
-    episodes?: Array<{ component_bridge?: { agree?: boolean; membership?: { one_to_one?: boolean; agree?: boolean }; components?: Record<string, { agree?: boolean }> } }>;
+    component_bridges?: ComparisonBridge[];
+    episodes?: Array<{ component_bridge?: ComparisonBridge }>;
   };
-  const hasFingerprint = Boolean(audit.content_fingerprint || audit.fingerprint);
-  const certifying = hasFingerprint && audit.fingerprintless_not_certifying !== true && certificateComparisonProof(audit);
+  const ledger = (
+    (profile.completed_episode_ledger as Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }> | undefined)
+    || source?.completed_episode_ledger
+    || []
+  );
+  const contradiction = profile.ledger_summary_contradiction === true;
+  const currentFingerprint = fingerprintId(profile.audit_fingerprint) || fingerprintId((source as { audit_fingerprint?: unknown } | null)?.audit_fingerprint);
+  const certificateFingerprint = fingerprintId(audit.content_fingerprint) || fingerprintId(audit.fingerprint);
+  const fingerprintMatches = Boolean(currentFingerprint && certificateFingerprint && currentFingerprint === certificateFingerprint);
+  const proof = certificateComparisonProof(audit, ledger.length ? ledger : null);
+  const certifying = fingerprintMatches
+    && audit.fingerprintless_not_certifying !== true
+    && !contradiction
+    && proof;
   return {
     appNet: (profile.completed_episode_net as string | null | undefined)
       ?? (certifying ? audit.app_completed_episode_net : null),
@@ -248,6 +324,74 @@ export function completedEpisodeFields(source?: {
     auditorUnit: certifying ? audit.independently_audited_episode_net_unit : null,
     auditorConfirmation: certifying ? audit.auditor_confirmation : null,
   };
+}
+
+export function rankedPhonePnlText(row: {
+  funnel?: { B?: { scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number } };
+  research_profile?: Record<string, unknown> | null;
+  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
+  independent_audit?: Record<string, unknown> | null;
+} | null | undefined): string {
+  const fields = completedEpisodeFields(row);
+  const profile = row?.research_profile || {};
+  const positions = Number(profile.completed_known_cost_positions ?? row?.funnel?.B?.completed_known_cost_positions ?? 0);
+  if (positions >= 1 && (row?.funnel?.B?.scoped_pnl || profile.scoped_pnl)) {
+    return formatCompareSidePnl({
+      completedNet: fields.appNet ?? (profile.completed_episode_net as string | null | undefined),
+      completedUnit: fields.appUnit ?? (profile.completed_episode_net_unit as string | null | undefined),
+      independentlyAudited: fields.independentlyAudited,
+      auditorNet: fields.auditorNet,
+      auditorUnit: fields.auditorUnit,
+      worksheet: row?.funnel?.B?.scoped_pnl || (profile.scoped_pnl as string | null | undefined),
+      worksheetUnit: row?.funnel?.B?.scoped_pnl_unit || (profile.scoped_pnl_unit as string | null | undefined),
+    });
+  }
+  if (profile.matched_fragment_pnl) {
+    return `matched-fragment ${profile.matched_fragment_pnl} ${profile.matched_fragment_unit || ""}`;
+  }
+  return "no completed-episode net";
+}
+
+export function rankedDesktopPnlText(row: {
+  funnel?: { B?: { scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number } };
+  research_profile?: Record<string, unknown> | null;
+  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
+  independent_audit?: Record<string, unknown> | null;
+} | null | undefined): string {
+  const fields = completedEpisodeFields(row);
+  const profile = row?.research_profile || {};
+  const positions = Number(profile.completed_known_cost_positions ?? row?.funnel?.B?.completed_known_cost_positions ?? 0);
+  if (positions >= 1 && row?.funnel?.B?.scoped_pnl) {
+    return formatCompareSidePnl({
+      completedNet: fields.appNet ?? (profile.completed_episode_net as string | null | undefined),
+      completedUnit: fields.appUnit ?? (profile.completed_episode_net_unit as string | null | undefined),
+      independentlyAudited: fields.independentlyAudited,
+      auditorNet: fields.auditorNet,
+      auditorUnit: fields.auditorUnit,
+      worksheet: row.funnel.B.scoped_pnl,
+      worksheetUnit: row.funnel.B.scoped_pnl_unit,
+    });
+  }
+  if (profile.matched_fragment_pnl) {
+    return `matched-fragment ${profile.matched_fragment_pnl} ${profile.matched_fragment_unit || ""}`;
+  }
+  return "unverified";
+}
+
+export function reportHeadlineText(report: Parameters<typeof completedEpisodeFields>[0]): string | null {
+  return formatCompletedEpisodeHeadline(completedEpisodeFields(report));
+}
+
+export function compareSideText(policy: {
+  completedNet?: string | null;
+  completedUnit?: string | null;
+  independentlyAudited?: boolean | null;
+  auditorNet?: string | null;
+  auditorUnit?: string | null;
+  worksheet?: string | null;
+  worksheetUnit?: string | null;
+}): string {
+  return formatCompareSidePnl(policy);
 }
 
 export function formatCompareSidePnl(input: {

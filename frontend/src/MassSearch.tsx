@@ -4,7 +4,7 @@ import type { Actions } from "./App";
 import type { MassSearchCandidate, MassSearchMetric, MassSearchRun, RankedBatch, RankedWorkflowRow, RankedWorkflowView, ResearchCompare } from "./types";
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api, reportDisplay } from "./api";
-import { completedEpisodeFields, count, coverageStatusDisplay, decimal, formatCompareSidePnl, formatWorksheetTotal, label, shorten } from "./format";
+import { count, coverageStatusDisplay, decimal, formatCompareSidePnl, formatWorksheetTotal, label, rankedDesktopPnlText, rankedPhonePnlText, shorten } from "./format";
 import { useNarrowViewport } from "./useNarrow";
 
 const STAGES = ["triage", "behaviour", "reconstruct", "forward_select"] as const;
@@ -450,7 +450,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
           <p className="research-note" data-research-screen="true">
             Research screen {ranked.research_screen.outcome}: inconclusive {count(ranked.research_screen.counts?.inconclusive ?? 0)}
             {` · zero-qualified ${count(ranked.research_screen.counts?.zero_qualified ?? 0)}`}
-            {` · qualified ${count(ranked.research_screen.counts?.completed_qualified ?? 0)}`}
+            {` · sample/activity filter matches ${count(ranked.research_screen.counts?.completed_qualified ?? 0)} (not certified research leads)`}
             . Thresholds were fixed before evaluation. Unknown never passes.
             {` Coverage policy: ≥99% resolved by count and measurable notional with no unresolved dependency is provisionally eligible; 95–99% with understood dependencies is watchlist / incomplete evidence; below 95%, unknown denominator, material unknown notional, or a decision-changing dependency is coverage blocked.`}
             {` Qualification (evidence quality, not screen pass/fail): not evaluated ${count(ranked.research_screen.counts?.qualification?.not_evaluated ?? 0)} · analysed-incomplete ${count(ranked.research_screen.counts?.qualification?.analysed_incomplete ?? 0)} · matched-position ${count(ranked.research_screen.counts?.qualification?.positive_matched_position_evidence ?? 0)} · net realised ${count(ranked.research_screen.counts?.qualification?.positive_net_realised_over_window ?? 0)} · account performance ${count(ranked.research_screen.counts?.qualification?.profitable_account_performance ?? 0)}.`}
@@ -513,7 +513,6 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             )}
             <ul className="mass-search-cards" data-ranked-cards="true">
               {(ranked.rows || []).slice(0, visibleLimit).map((row) => {
-                const fields = completedEpisodeFields(row);
                 const coverage = coverageStatusDisplay(row);
                 return (
                 <li key={`ranked-${row.address}`} data-history-required={row.history_required ? "true" : "false"}>
@@ -532,21 +531,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
                   <p data-qualification-level={(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}>qualification_level {(row.qualification_level as { level?: string } | undefined)?.level || "insufficient_evidence"}</p>
                   <p data-coverage-status={coverage}>coverage_status {coverage}</p>
-                  <p data-ranked-pnl="true">{
-                    (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && (row.funnel?.B?.scoped_pnl || row.research_profile?.scoped_pnl)
-                      ? `${formatCompareSidePnl({
-                          completedNet: fields.appNet ?? row.research_profile?.completed_episode_net,
-                          completedUnit: fields.appUnit ?? row.research_profile?.completed_episode_net_unit,
-                          independentlyAudited: fields.independentlyAudited,
-                          auditorNet: fields.auditorNet,
-                          auditorUnit: fields.auditorUnit,
-                          worksheet: row.funnel?.B?.scoped_pnl || row.research_profile?.scoped_pnl,
-                          worksheetUnit: row.funnel?.B?.scoped_pnl_unit || row.research_profile?.scoped_pnl_unit,
-                        })}`
-                      : (row.research_profile?.matched_fragment_pnl
-                        ? `matched-fragment ${row.research_profile.matched_fragment_pnl} ${row.research_profile.matched_fragment_unit || ""}`
-                        : "no completed-episode net")
-                  }</p>
+                  <p data-ranked-pnl="true">{rankedPhonePnlText(row)}</p>
                   {(row.blocking_reason || row.research_profile?.blocking_reason) ? <p data-blocking-reason="true">blocking_reason {row.blocking_reason || row.research_profile?.blocking_reason}</p> : null}
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id
@@ -821,7 +806,6 @@ function RankedRow({
   onReplay: () => void;
   onToggle: (selected: boolean) => void;
 }) {
-  const fields = completedEpisodeFields(row);
   return (
     <tr data-history-required={row.history_required ? "true" : "false"}>
       <td>
@@ -836,21 +820,7 @@ function RankedRow({
       <td className="mono">{shorten(row.address)}</td>
       <td>{row.funnel?.A?.state || "—"} / {row.funnel?.B?.state || "—"} / {row.funnel?.C?.state || "—"}</td>
       <td>{row.trade_count ?? "unknown"}</td>
-      <td>{
-        (row.research_profile?.completed_known_cost_positions ?? row.funnel?.B?.completed_known_cost_positions ?? 0) >= 1 && row.funnel?.B?.scoped_pnl
-          ? formatCompareSidePnl({
-              completedNet: fields.appNet ?? row.research_profile?.completed_episode_net,
-              completedUnit: fields.appUnit ?? row.research_profile?.completed_episode_net_unit,
-              independentlyAudited: fields.independentlyAudited,
-              auditorNet: fields.auditorNet,
-              auditorUnit: fields.auditorUnit,
-              worksheet: row.funnel.B.scoped_pnl,
-              worksheetUnit: row.funnel.B.scoped_pnl_unit,
-            })
-          : (row.research_profile?.matched_fragment_pnl
-            ? `matched-fragment ${row.research_profile.matched_fragment_pnl} ${row.research_profile.matched_fragment_unit || ""}`
-            : "unverified")
-      }</td>
+      <td>{rankedDesktopPnlText(row)}</td>
       <td>
         {row.report_id
           ? <Button variant="secondary" disabled={busy} onClick={() => onOpen(row.report_id!)}>Open report</Button>

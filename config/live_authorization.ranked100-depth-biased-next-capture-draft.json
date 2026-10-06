@@ -36,6 +36,16 @@
       "max_additional_pages_if_previous_resolved_named_dependency": 2,
       "continue_from_pagination_token": "453163900:357",
       "named_dependency": "opening-basis backfill for the 4 unresolved-basis sales; coverage-eligibility reassessment",
+      "named_dependency_items": [
+        {"signature": "5m3vQ8YP8mNzVsg2ZiUaEBnW3H3FrSTZr4qPk9mPLnTHnEXWZzWNcvA1HK1X4dxLqwAQBdpM6wrp7df4u8fe9bKU", "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump", "kind": "unresolved_basis_sale", "role": "opening_basis_backfill"},
+        {"signature": "2XcVSbB5FGZYaScogB95rfPLjupeWb5DrBywojjWD7M5W3LYGSAhDVbrpMtRVPfoSt5ni41jVfeLv5D3w16zirY9", "mint": "V9zCeRU67pBUXYwKz6A7aL1pXCJBXRVhC3NAWhLpump", "kind": "unresolved_basis_sale", "role": "opening_basis_backfill"},
+        {"signature": "UnZinUZne7fdTKRrduaSbdDCgxMuhvDgNKHvKsA9Tic5JNHX6maFsfxXddgfPPMUsWMtfPXpZLcN84uZCQfeVHk", "mint": "2AF7CqwieUjUPALL7icuZtL3X7wENdjUjGBMmfV2pump", "kind": "unresolved_basis_sale", "role": "opening_basis_backfill"},
+        {"signature": "5pR1iXvP5AdJwHV4o718g6XptdvWMHyfhGJZgVWTkLZxg12yvep4SXf5eH3MhoEmQ7v4sNt1nxzAySEkpMTed7a8", "mint": "HHf2VfXSPUVqQth6tXypfdUX2vawCiVKfkbAX4CJpump", "kind": "unresolved_basis_sale", "role": "opening_basis_backfill"}
+      ],
+      "acceptable_progress_observations": [
+        "named_sale_or_lot_unresolved_basis_cleared",
+        "named_opening_lot_now_has_known_basis"
+      ],
       "reason": "First continuation. One older page, then offline replay. Further pages only if that page resolved or approached the named dependency."
     },
     {
@@ -46,6 +56,13 @@
       "max_additional_pages_if_previous_resolved_named_dependency": 0,
       "continue_from_pagination_token": "453531442:371",
       "named_dependency": "cost attribution of the -0.176385580 sensitivity result (unverified adjacent debits)",
+      "named_dependency_items": [
+        {"signature": "466zu4aT7NGoj4oYZqCEevMyhrLVG8y3kpXx66YjrYn3A9hDU1tRDCp92BpM6f7cvLxXoZfgFTQEnoVzxECWAXzF", "kind": "unresolved_adjacent_debit", "role": "sensitivity_cost_attribution"},
+        {"signature": "3QrqdssrqrBXpydHYNDhERL147PRrf7Z4qrwnLkvEy8vMyps9T3Ufd6HThmrTH6ZpoKZMuxiB9bqAW5mBLVyF1i", "kind": "unresolved_adjacent_debit", "role": "sensitivity_cost_attribution"}
+      ],
+      "acceptable_progress_observations": [
+        "named_sale_or_lot_gained_classified_cost_role"
+      ],
       "tests": "Whether one older page classifies the adjacent debits that flip sensitivity. Not profit backfill.",
       "shares_global_phase_two_progress_rule": true,
       "reason": "Cost-attribution control. Shares the single phase-two rule: dispatch only after gtfo replay AND only if the previous page resolved or approached a named sale/lot. Not an exception."
@@ -60,6 +77,12 @@
       "separately_justified": true,
       "investigation": "repeatability_of_concentrated_return",
       "named_dependency": "whether the ~287.99 SOL largest-winner / concentrated-return hypothesis repeats on older pages or is a one-page burst",
+      "named_dependency_items": [
+        {"mint": "A6PS-concentrated-largest-winner", "kind": "completed_episode", "role": "repeatability_of_concentrated_return"}
+      ],
+      "acceptable_progress_observations": [
+        "named_sale_or_lot_gained_classified_cost_role"
+      ],
       "hypothesis": "A6PS completed-episode net is concentrated; it goes negative without its largest winner (about 287.99 SOL). Older pages test repeatability of that concentration, not profit backfill.",
       "tests": "Repeatability of the concentrated-return hypothesis. Not bundled with coverage-eligibility pending reassessment.",
       "shares_global_stop": true,
@@ -90,6 +113,10 @@
       "continue_from_pagination_token": "449760359:1234",
       "role": "evidence_negative_control",
       "named_dependency": "confirm the unsupported unknown/L2 venue category is stable on one older page",
+      "named_dependency_items": [
+        {"identifier": "unknown_L2_venue", "kind": "unsupported_venue_category", "role": "evidence_negative_control"}
+      ],
+      "shares_global_phase_two_progress_rule": true,
       "tests": "Unsupported unknown/L2 venue remains a distinct unresolved-reason category. Zero completed episodes is not a missing-page decode miss.",
       "reason": "Evidence-negative control. One page only, after the gtfo replay, and only if the previous page resolved or approached a named dependency."
     },
@@ -102,6 +129,10 @@
       "continue_from_pagination_token": "452163894:804",
       "role": "evidence_negative_control",
       "named_dependency": "confirm the unreviewed System-opcode block is stable on one older page",
+      "named_dependency_items": [
+        {"identifier": "system_opcode_unreviewed", "kind": "unreviewed_opcode", "role": "evidence_negative_control"}
+      ],
+      "shares_global_phase_two_progress_rule": true,
       "tests": "OKX router reconstruction blocked on an unreviewed System opcode stays unsupported. Zero-position is not 'not enough pages'.",
       "reason": "Evidence-negative control. One page only, after the gtfo replay, and only if the previous page resolved or approached a named dependency."
     }
