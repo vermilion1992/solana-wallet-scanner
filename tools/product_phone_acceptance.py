@@ -35,11 +35,14 @@ def _open_nav(page, name, *, exact=False):
             opener.click()
     nav = page.get_by_label("Main navigation")
     nav.get_by_role("button", name=name, exact=exact).click()
+    closer = page.get_by_role("button", name="Close navigation")
+    if closer.count():
+        closer.click()
 
 
 def _shot(page, name):
     dest = OUT / f"{name}.png"
-    page.screenshot(path=str(dest), full_page=True)
+    page.screenshot(path=str(dest), full_page=False)
     shutil.copyfile(dest, SHOTS / f"{name}.png")
     return dest
 
@@ -97,13 +100,16 @@ try:
     expect(page.locator("[data-filters-saved]")).to_be_visible()
     page.get_by_label("Shortlist", exact=False).first.check()
     expect(page.get_by_text("Your shortlist only")).to_be_visible()
+    page.locator("[data-ranked-cards]").first.scroll_into_view_if_needed()
     _shot(page, "01-ranked100-phone")
     result["cases"]["A_ranked_filter_shortlist"] = "PASS"
 
     page.get_by_role("button", name="Analyse available + fixtures").click()
-    page.locator("[data-batch-progress]").wait_for(timeout=120000)
+    page.locator("[data-batch-progress=completed]").wait_for(timeout=120000)
     expect(page.get_by_text("History required — not analysed").first).to_be_visible()
-    expect(page.get_by_text("analysed").first).to_be_visible()
+    expect(page.locator("[data-batch-status=analysed]").first).to_be_visible()
+    expect(page.locator("[data-batch-status=history_required]").first).to_be_visible()
+    page.locator("[data-batch-progress]").scroll_into_view_if_needed()
     _shot(page, "02-batch-phone")
     result["cases"]["B_batch_genuine_fixtures_no_history"] = "PASS"
 
@@ -114,7 +120,10 @@ try:
     expect(page.get_by_text("n=1 is one completed position, not a wallet-wide median")).to_be_visible()
     expect(page.get_by_text("USDC results exclude SOL fees")).to_be_visible()
     expect(page.locator("[data-usdc-excludes-sol-fees]")).to_be_visible()
+    page.locator("[data-subset-worksheet]").scroll_into_view_if_needed()
     _shot(page, "03-report-phone")
+    page.locator("[data-wallet-analytics]").scroll_into_view_if_needed()
+    _shot(page, "03b-analytics-phone")
     result["cases"]["C_genuine_baseline_visible"] = "PASS"
 
     reports = page.request.get(f"{launcher.base}/api/state?report_view=summary").json()["reports"]
@@ -131,12 +140,14 @@ try:
     assert body["research_profile"]["safe_to_copy"] is False
     synth = next((row for row in mass if row.get("address") == SYNTH_USDC), None)
     if synth:
-        compared = page.request.post(
-            f"{launcher.base}/api/mass-search/research-compare",
-            data={"left_id": genuine["id"], "right_id": synth["id"]},
-        )
-        # CSRF: use the page UI compare instead if this fails
-        result["compare_status"] = compared.status
+        _open_nav(page, "Search", exact=True)
+        page.get_by_label("Compare left report").select_option(genuine["id"])
+        page.get_by_label("Compare right report").select_option(synth["id"])
+        page.get_by_role("button", name="Compare saved reports").click()
+        expect(page.locator("[data-research-compare]")).to_be_visible()
+        expect(page.locator("[data-research-compare]")).to_contain_text("376.028087")
+        result["compare_status"] = 200
+        _shot(page, "03c-compare-phone")
     g1 = independent_fifo_worksheet([
         {"kind": "buy", "units": "100", "consideration_sol": "1", "wallet_fee_sol": "0.01"},
         {"kind": "sell", "units": "50", "consideration_sol": "0.8", "wallet_fee_sol": "0.005"},
@@ -161,6 +172,7 @@ try:
     _open_nav(page, "Search", exact=True)
     expect(page.get_by_text("Filters saved locally").or_(page.get_by_text("Ranked-100 cached shortlist"))).to_be_visible()
     expect(page.get_by_text("Saved subset reports")).to_be_visible()
+    page.get_by_text("Saved subset reports").scroll_into_view_if_needed()
     _shot(page, "04-reopen-phone")
     result["cases"]["F_refresh_persistence"] = "PASS"
 
@@ -183,6 +195,8 @@ try:
     expect(page.get_by_text("Saved subset reports")).to_be_visible()
     page.get_by_role("button", name="Reopen report").first.click()
     expect(page.get_by_text("Research profile")).to_be_visible()
+    target = page.locator("[data-wallet-analytics], [data-subset-worksheet]").first
+    target.scroll_into_view_if_needed()
     _shot(page, "05-restart-reopen-phone")
     result["cases"]["F_restart_reopen"] = "PASS"
     browser.close()
@@ -192,7 +206,7 @@ finally:
     launcher.stop()
 
 result["external_count"] = len(result["external"])
-result["errors"] = result["errors"]
+result["tested_commit"] = os.popen("git -C %s rev-parse HEAD" % ROOT).read().strip()
 result["state"] = "PASS" if all(value == "PASS" for value in result["cases"].values()) and not result["external"] else "FAILED"
 (OUT / "result.json").write_text(json.dumps(result, indent=2) + "\n")
 print(json.dumps(result, indent=2))

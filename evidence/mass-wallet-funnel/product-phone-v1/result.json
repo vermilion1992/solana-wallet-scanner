@@ -1,0 +1,39 @@
+{
+  "kind": "product-phone-acceptance-ah",
+  "state": "PASS",
+  "PRODUCT_READY": false,
+  "provider_calls": 0,
+  "external_count": 0,
+  "compare_status": 200,
+  "pre_harness_commit": "2accce8394fa612c3c3b09d201c21c54ac2aa2ba",
+  "genuine_capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "cases": {
+    "A_ranked_filter_shortlist": "PASS",
+    "B_batch_genuine_fixtures_no_history": "PASS",
+    "C_genuine_baseline_visible": "PASS",
+    "D_export_and_g1_agree": "PASS",
+    "E_auth_and_disabled_budget": "PASS",
+    "F_refresh_persistence": "PASS",
+    "F_restart_reopen": "PASS",
+    "G_auth_gate": "PASS",
+    "H_zero_provider_calls": "PASS"
+  },
+  "phone_access": {
+    "preview_available": false,
+    "blocker": "No permitted remote preview environment is configured in repo CI, docs, or deploy config. Phone access is the local authenticated launcher on loopback with a session token."
+  },
+  "local_performance": {
+    "dataset": "saved ranked-100 discovery page (100 wallets) + genuine page-0 capture + 3 labelled synthetic engineering fixtures + 1 no-history ranked row",
+    "environment": "linux local Store / CPython in /workspace/.venv, no provider network",
+    "filter_seconds": 0.00002,
+    "filter_universe": 100,
+    "batch_seconds": 0.2907,
+    "batch_wallets": 5,
+    "no_throughput_extrapolation": true
+  },
+  "backend_tests": {
+    "test_mass_search_product_completion.py": "8 passed",
+    "test_mass_search_product_workflow.py": "11 passed",
+    "test_mass_search_routes.py_plus_g1_plus_investigation": "68 passed"
+  }
+}
