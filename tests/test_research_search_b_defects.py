@@ -271,7 +271,10 @@ def test_d10_a6ps_biggest_token_net_of_fees_vs_raw_sol_delta(tmp_path):
         if event.get("mint") != biggest or event.get("kind") not in ("buy", "sell"):
             continue
         amount = Decimal(str(event.get("amount_sol") or 0))
-        fees += Decimal(str(event.get("fee_sol") or 0))
+        trade_fees = event.get("fees_and_tips_sol")
+        if trade_fees in (None, ""):
+            trade_fees = event.get("fee_sol") or 0
+        fees += Decimal(str(trade_fees))
         signatures.append(event.get("signature"))
         if event["kind"] == "buy":
             buy += amount

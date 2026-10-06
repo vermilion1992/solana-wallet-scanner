@@ -282,7 +282,11 @@ def decoder_events_to_subset(decoded, *, address, window_start):
             "kind": row["kind"],
             "units": str(row.get("quantity_raw") or "0"),
             "consideration_sol": str(row.get("amount_sol") or "0"),
-            "wallet_fee_sol": str(row.get("fee_sol") or "0"),
+            "wallet_fee_sol": str(
+                row.get("fees_and_tips_sol")
+                if row.get("fees_and_tips_sol") not in (None, "")
+                else row.get("fee_sol") or "0"
+            ),
             "seconds_from_start": seconds,
             "signature": row.get("signature"),
             "mint": mint,

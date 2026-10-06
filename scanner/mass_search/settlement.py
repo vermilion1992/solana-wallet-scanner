@@ -393,7 +393,11 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
     mapped = {
         "kind": row["kind"],
         "units": str(row.get("quantity_raw") or "0"),
-        "wallet_fee_sol": str(row.get("fee_sol") or "0"),
+        "wallet_fee_sol": str(
+            row.get("fees_and_tips_sol")
+            if row.get("fees_and_tips_sol") not in (None, "")
+            else row.get("fee_sol") or "0"
+        ),
         "seconds_from_start": seconds,
         "timestamp_missing": timestamp_missing,
         "window_qualified": window_qualified,

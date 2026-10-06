@@ -963,6 +963,7 @@ def decode_supported_swaps(transactions, address):
             tips_sol = canonical(Decimal(tips_lamports) / LAMPORTS) if tips_lamports else '0'
             network_fee_sol = fee_sol if paid else '0'
             fees_and_tips_sol = canonical(Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)))
+            allocate_fee = paid and not outside_native and not native_roles
             if mint == USDC:
                 usdc_decimals = decimals.get(USDC)
                 if usdc_decimals is None:
@@ -988,20 +989,24 @@ def decode_supported_swaps(transactions, address):
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            allocate_fee = paid
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
                  owner=address, fee_sol=fees_and_tips_sol if allocate_fee else '0',
-                 network_fee_sol=network_fee_sol, tips_sol=tips_sol, paid_by_wallet=paid,
+                 network_fee_sol=network_fee_sol, tips_sol=tips_sol,
+                 fees_and_tips_sol=fees_and_tips_sol, paid_by_wallet=paid,
                  settlement_mint=WSOL,
-                 native_cash_role_state='UNKNOWN' if native_roles else 'PASS',
+                 native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
                  unresolved_native_roles=native_roles,
                  retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
                  observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
-                 reason='Verified spot instruction and reconciled transaction-level owned net exchange; network fee and same-tx tips are allocated to this trade')
+                 reason=(
+                     'Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence'
+                     if allocate_fee else
+                     'Verified spot instruction and reconciled transaction-level owned net exchange; outside native stays unresolved and is listed separately from allocated fees'
+                 ))
             if allocate_fee:
                 fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
                 fee_event['allocated_trade_path'] = route['path']
@@ -1016,8 +1021,6 @@ def decode_supported_swaps(transactions, address):
                 direction = 'withdrawal' if info.get('source') in {address, *owned, *wsol_accounts} else 'deposit'
                 uncertain_cash(role['reason'], role['path'], amount=amount, direction=direction, facts=info)
             for movement in outside_native:
-                if movement.get('direction') == 'withdrawal' and allocate_fee:
-                    continue
                 uncertain_cash('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved',
                     movement['path'], amount=canonical(Decimal(movement['lamports']) / LAMPORTS),
                     direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})

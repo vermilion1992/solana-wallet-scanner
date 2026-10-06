@@ -279,12 +279,15 @@ def reconcile_address(address):
             continue
         usdc = event.get("settlement_mint") == usdc_mint or event.get("amount_usdc") not in (None, "")
         asset = "USDC" if usdc else "SOL"
+        sol_fee = event.get("fees_and_tips_sol")
+        if sol_fee in (None, "") or usdc:
+            sol_fee = event.get("fee_sol") or "0"
         per_asset[asset].append({
             "kind": event["kind"],
             "mint": event["mint"],
             "quantity_raw": event["quantity_raw"],
             "consideration": (event.get("amount_usdc") if usdc else event.get("amount_sol")) or "0",
-            "fee_sol": event.get("fee_sol") or "0",
+            "fee_sol": sol_fee,
             "signature": event.get("signature"),
             "timestamp": stamp,
             "order": event.get("order") if isinstance(event.get("order"), int) else event.get("transaction_index"),
