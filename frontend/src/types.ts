@@ -748,10 +748,20 @@ export type RankedWorkflowRow = {
     next_action?: { code?: string; detail?: string };
     holder_fee_heavy?: boolean;
   } | null;
+  qualification_category?: {
+    category?: string;
+    evidence_class?: number;
+    screening_separate?: boolean;
+  } | null;
   research_profile?: {
     scoped_pnl?: string | null;
     scoped_pnl_unit?: string | null;
     completed_known_cost_positions?: number;
+    qualification_category?: {
+      category?: string;
+      evidence_class?: number;
+      screening_separate?: boolean;
+    };
   } | null;
   analytics?: {
     scoped_pnl?: string | null;
@@ -799,6 +809,13 @@ export type RankedWorkflowView = {
       zero_qualified?: number;
       completed_qualified?: number;
       not_executed?: number;
+      qualification?: {
+        not_evaluated?: number;
+        analysed_incomplete?: number;
+        positive_matched_position_evidence?: number;
+        positive_net_realised_over_window?: number;
+        profitable_account_performance?: number;
+      };
     };
   };
 };

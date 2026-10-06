@@ -26,6 +26,7 @@ from scanner.mass_search.research_profile import (
     build_research_profile,
     evaluate_thresholds,
     load_filters,
+    qualification_category,
 )
 from scanner.mass_search.service import MassSearchService
 
@@ -495,6 +496,7 @@ def ranked_workflow_view(store, *, filters=None):
             "funnel": funnel,
             "research_profile": profile,
             "analytics": (report or {}).get("analytics"),
+            "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
             "user_shortlisted": row["address"] in user_short,
             "history_required": not row["capture_available"] and not (report or {}).get("id"),
             "history_required_label": "History required — not analysed" if not row["capture_available"] and not (report or {}).get("id") else None,
@@ -602,6 +604,7 @@ def research_screen_run(universe_rows, reports, filters):
                 "address": row["address"],
                 "outcome": "inconclusive",
                 "reason": "insufficient history — History required — not analysed",
+                "qualification_category": qualification_category(None, None),
             })
             continue
         profile = (report or {}).get("research_profile")
@@ -611,6 +614,7 @@ def research_screen_run(universe_rows, reports, filters):
                 "address": row["address"],
                 "outcome": "not_executed",
                 "reason": "capture available; analysis not executed",
+                "qualification_category": qualification_category(report, None),
             })
             continue
         judged = evaluate_thresholds(profile, screen)
@@ -627,6 +631,7 @@ def research_screen_run(universe_rows, reports, filters):
                 "criteria met" if judged["criteria_met"] else "documented screen thresholds not met"
             ),
             "threshold_results": judged["results"],
+            "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
         })
     if qualified:
         run_outcome = "completed"
@@ -652,6 +657,13 @@ def research_screen_run(universe_rows, reports, filters):
             "zero_qualified": zero_qualified,
             "not_executed": not_executed,
             "universe": len(universe_rows),
+            "qualification": {
+                "not_evaluated": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "not_evaluated"),
+                "analysed_incomplete": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "analysed_incomplete"),
+                "positive_matched_position_evidence": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "positive_matched_position_evidence"),
+                "positive_net_realised_over_window": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "positive_net_realised_over_window"),
+                "profitable_account_performance": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "profitable_account_performance"),
+            },
         },
         "note": (
             "Today's run over the saved snapshot is inconclusive for wallets "

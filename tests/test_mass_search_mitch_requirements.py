@@ -499,15 +499,26 @@ def test_research_screen_is_inconclusive_for_99_without_history(store):
     assert screen["counts"]["inconclusive"] == 99
     assert screen["counts"]["not_executed"] == 1
     assert screen["outcome"] == "inconclusive"
+    assert screen["counts"]["qualification"]["not_evaluated"] == 100
+    assert all(row["qualification_category"]["category"] == "not_evaluated" for row in view["rows"])
     replay_captured_wallet(store, ALLOWED_WALLET)
-    after = ranked_workflow_view(store)["research_screen"]
-    assert after["counts"]["inconclusive"] == 99
-    assert after["counts"]["completed_qualified"] == 0
-    assert after["counts"]["zero_qualified"] == 1
+    after = ranked_workflow_view(store)
+    screen_after = after["research_screen"]
+    assert screen_after["counts"]["inconclusive"] == 99
+    assert screen_after["counts"]["completed_qualified"] == 0
+    assert screen_after["counts"]["zero_qualified"] == 1
     profile = store.list("reports")[0]["research_profile"]
     assert profile["evidence_class"]["account"]["class"] == 5
     assert profile["evidence_class"]["position"]["class"] in (1, 2)
     assert profile["candidate_assessment"]["net_realised"] is None
+    assert profile["qualification_category"]["category"] == "analysed_incomplete"
+    assert profile["qualification_category"]["screening_separate"] is True
+    assert profile["criteria_met"] is False
+    rank1 = next(row for row in after["rows"] if row["address"] == ALLOWED_WALLET)
+    assert rank1["qualification_category"]["category"] == "analysed_incomplete"
+    assert screen_after["counts"]["qualification"]["analysed_incomplete"] == 1
+    assert screen_after["counts"]["qualification"]["not_evaluated"] == 99
+    assert screen_after["counts"]["qualification"]["profitable_account_performance"] == 0
 
 
 def test_research_search_proposal_is_separate_and_disabled():

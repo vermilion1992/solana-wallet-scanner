@@ -428,6 +428,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
             {` · zero-qualified ${count(ranked.research_screen.counts?.zero_qualified ?? 0)}`}
             {` · qualified ${count(ranked.research_screen.counts?.completed_qualified ?? 0)}`}
             . Thresholds were fixed before evaluation. Unknown never passes.
+            {` Qualification (evidence quality, not screen pass/fail): not evaluated ${count(ranked.research_screen.counts?.qualification?.not_evaluated ?? 0)} · analysed-incomplete ${count(ranked.research_screen.counts?.qualification?.analysed_incomplete ?? 0)} · matched-position ${count(ranked.research_screen.counts?.qualification?.positive_matched_position_evidence ?? 0)} · net realised ${count(ranked.research_screen.counts?.qualification?.positive_net_realised_over_window ?? 0)} · account performance ${count(ranked.research_screen.counts?.qualification?.profitable_account_performance ?? 0)}.`}
           </p>
         )}
         {batch && (
@@ -498,6 +499,7 @@ export function MassSearchView({ state, busy, run, navigate, refresh, open }: Ac
                   <strong className="mono">{shorten(row.address)}</strong>
                   <p>Provider rank {row.provider_rank ?? "—"} · A {row.funnel?.A?.state || "—"} · B {row.funnel?.B?.state || "—"} · C {row.funnel?.C?.state || "—"}</p>
                   <p>Provider trades {row.trade_count ?? "unknown"} · {row.capture_available ? "cached capture" : "History required — not analysed"}</p>
+                  <p data-qualification-category={row.qualification_category?.category || "not_evaluated"}>Qualification {String(row.qualification_category?.category || "not_evaluated").replaceAll("_", " ")} · screening separate</p>
                   <p>{row.funnel?.next_action?.detail || "Browse cached row only."}</p>
                   {row.report_id
                     ? <Button variant="secondary" disabled={!!busy || batchBusy} onClick={() => void inspect(row.report_id!)}>Open report</Button>

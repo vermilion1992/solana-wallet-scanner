@@ -269,6 +269,10 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
       <p className="subset-worksheet-note" data-result-scope="true">
         Results are conditional on captured inventory. A positive matched trade never qualifies the account.
         {(() => {
+          const qual = (profile.qualification_category || {}) as { category?: string };
+          return qual.category ? ` Qualification ${String(qual.category).replaceAll("_", " ")} (evidence quality, not a screen pass).` : "";
+        })()}
+        {(() => {
           const evidence = (profile.evidence_class || {}) as { position?: { label?: string }; account?: { label?: string } };
           return `${evidence.position?.label ? ` Position class: ${evidence.position.label}.` : ""}${evidence.account?.label ? ` Account class: ${evidence.account.label}.` : ""}`;
         })()}

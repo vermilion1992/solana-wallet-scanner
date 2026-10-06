@@ -62,6 +62,16 @@ EVIDENCE_CLASS = {
     5: "missing_or_inconclusive",
 }
 
+# Evidence-quality categories mapped onto the existing classes.
+# These are not research-screen pass/fail.
+QUALIFICATION_CATEGORY = {
+    "not_evaluated": "not_evaluated",
+    "analysed_incomplete": "analysed_incomplete",
+    "positive_matched_position_evidence": "positive_matched_position_evidence",
+    "positive_net_realised_over_window": "positive_net_realised_over_window",
+    "profitable_account_performance": "profitable_account_performance",
+}
+
 
 def _default_provider_proxy():
     return {
@@ -311,8 +321,47 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     profile["evaluated_thresholds"] = results["evaluated"]
     profile["unset_thresholds"] = results["unset"]
     profile["evidence_class"] = classify_evidence(report, profile)
+    profile["qualification_category"] = qualification_category(report, profile)
     profile["candidate_assessment"] = candidate_assessment(report, profile)
     return profile
+
+
+def qualification_category(report=None, profile=None):
+    """Map existing evidence-class states onto qualification categories.
+
+    Screening pass/fail stays in research_screen / criteria_met. A loss or
+    inconclusive analysed wallet stays analysed_incomplete, never dropped.
+    """
+    if not report:
+        return {
+            "category": "not_evaluated",
+            "evidence_class": 5,
+            "evidence_class_label": EVIDENCE_CLASS[5],
+            "screening_separate": True,
+            "note": "Evidence quality is not a research-screen pass or fail.",
+        }
+    evidence = (profile or {}).get("evidence_class") or {}
+    account_class = (evidence.get("account") or {}).get("class")
+    position_class = (evidence.get("position") or {}).get("class")
+    if account_class == 4:
+        category = "profitable_account_performance"
+        klass = 4
+    elif position_class == 3:
+        category = "positive_net_realised_over_window"
+        klass = 3
+    elif position_class == 1:
+        category = "positive_matched_position_evidence"
+        klass = 1
+    else:
+        category = "analysed_incomplete"
+        klass = position_class if position_class in (2, 5) else 5
+    return {
+        "category": category,
+        "evidence_class": klass,
+        "evidence_class_label": EVIDENCE_CLASS.get(klass),
+        "screening_separate": True,
+        "note": "Evidence quality is not a research-screen pass or fail.",
+    }
 
 
 def classify_evidence(report, profile):
