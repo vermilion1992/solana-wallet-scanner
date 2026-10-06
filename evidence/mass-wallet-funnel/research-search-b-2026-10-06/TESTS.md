@@ -2,8 +2,8 @@
 
 App SHA of this evidence commit. Bundle `frontend/dist/assets/index-ZbPPCV7z.js`.
 
-- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 19 s) on `57e654c`. Re-run on this tip after the BVZt ledger flatten fix.
-- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 21 s) on `57e654c`. Re-run on this tip after the BVZt ledger flatten fix.
+- Keys unset (`env -u HELIUS_API_KEY -u BIRDEYE_API_KEY -u HELIUS_API_KEYS .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 8 s) on `76833dc`.
+- Keys set (`HELIUS_API_KEY=dummy-helius-never-dispatch BIRDEYE_API_KEY=dummy-birdeye-never-dispatch .venv/bin/python -m pytest -q`): **3688 passed**, 440 subtests, 0 failed, 1 warning (9 min 14 s) on `76833dc`.
 - `npm run build`: `tsc -b && vite build` OK; bundle `frontend/dist/assets/index-ZbPPCV7z.js`.
 - Phone-sized emulation 390×844: no page errors; unauthenticated `/api/state` = **401**. 58PW bridge 44771.791989746 USDC and BVZt bridge 4169.135872971 USDC recaptured.
 - No Helius or Birdeye calls. Dummy keys were never sent.

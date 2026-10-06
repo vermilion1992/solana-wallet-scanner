@@ -140,7 +140,7 @@ Prior labelled-wallet tests remain: `test_labelled_wallets_are_independently_aud
 
 ## Suite / build
 
-See `TESTS.md` on this commit. Suite and `npm run build` are recorded there after the clean runs.
+See `TESTS.md` on this commit. On `76833dc`: keys unset **3688 passed** / 440 subtests / 1 warning (9 min 8 s); dummy keys **3688 passed** / 440 subtests / 1 warning (9 min 14 s). `npm run build` recorded there.
 
 ## Still blocked
 
