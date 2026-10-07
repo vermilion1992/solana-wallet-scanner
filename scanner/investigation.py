@@ -100,7 +100,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v23-quote-rent-inner-v1'
+DECODER_VERSION = 'spot-v24-wallet-rent-quote-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -633,68 +633,19 @@ def _canonical_user_volume_address(address):
 
 
 def _episode_rent_exclusion(flat, keys, before, after, address, skip_accounts):
-    """Long-lived venue-owned account rent is not trade cost; create+close nets out.
+    """Wallet-owned still-open token rent only. See WALLET_PAID_RENT_RULE.
 
     Independent of tools/independent_episode_audit.py (no shared helper).
-    A wallet-funded System create whose remaining native delta is still
-    funded, and whose owner is a reviewed venue other than PumpSwap
-    user-volume (that path stays on `_retained_user_volume_funding`), is a
-    refundable protocol deposit, not this swap's consideration. A create
-    closed in the same transaction already nets to zero and is not added.
-    Foreign / System-owned / token-account creates stay in cash-role review.
+    Venue PDAs, other-owner ATAs, and router-fee accounts stay in
+    consideration. Closed-in-tx remaining native is 0. skip_accounts are
+    already rent-corrected wallet token accounts.
     """
-    skip = set(skip_accounts or ())
-    venue_owners = set(REVIEWED_OUTER_VENUES) - {PUMP_SWAP}
-    venue_owner_bytes = set()
-    for program in venue_owners:
-        try:
-            venue_owner_bytes.add(_data(program))
-        except ValueError:
-            continue
-    excluded = 0
-    seen = set()
-    for _outer, _path, instruction, _nested in flat:
-        if _program(instruction, keys) != SYSTEM_ID:
-            continue
-        parsed = instruction.get('parsed')
-        source = account = owner = None
-        if isinstance(parsed, dict):
-            if parsed.get('type') not in ('createAccount', 'createAccountWithSeed'):
-                continue
-            info = parsed.get('info') or {}
-            source = info.get('source')
-            account = info.get('newAccount')
-            owner = info.get('owner')
-        else:
-            # Compiled System create (opcode 0). Independent of the auditor.
-            try:
-                payload = _data(instruction.get('data'))
-                accounts = _accounts(instruction, keys)
-            except (ValueError, TypeError, KeyError, IndexError):
-                continue
-            opcode = int.from_bytes(payload[:4], 'little') if len(payload) >= 4 else None
-            if opcode == 0 and len(payload) >= 52 and len(accounts) >= 2:
-                source, account = accounts[0], accounts[1]
-                owner_bytes = payload[20:52]
-                if owner_bytes not in venue_owner_bytes:
-                    continue
-                owner = next((program for program in venue_owners if _data(program) == owner_bytes), None)
-            else:
-                continue
-        if owner not in venue_owners:
-            continue
-        if source != address or not account or account in skip or account in seen:
-            continue
-        if account not in keys:
-            continue
-        seen.add(account)
-        index = keys.index(account)
-        if index >= len(before) or index >= len(after):
-            continue
-        net = after[index] - before[index]
-        if net > 0:
-            excluded += net
-    return excluded
+    del flat, keys, before, after, address
+    # Wallet-owned still-open token rent is excluded by rent_correction
+    # (accounts already in `owned`) and `_verified_new_token_account_rent`.
+    # Venue PDAs / other-owner ATAs stay in consideration (WALLET_PAID_RENT_RULE).
+    del skip_accounts
+    return 0
 
 
 def _retained_user_volume_funding(flat, keys, before, after, address, route):
@@ -869,6 +820,12 @@ WELL_KNOWN_INNER_AMMS = frozenset({
     'B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht',
     'DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD',
     'riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j',
+    # Eco SDK svm/venues/obsidian OBSIDIAN_PROGRAM_ID (constant-product AMM).
+    'HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z',
+    # Eco SDK svm/venues/gatorswap GATORSWAP_PROGRAM_ID (constant-product AMM).
+    'gatorLx9aC1e5ZWAXscv5QRKiLXnLPLXjftVc81h1Hr',
+    # Aquifer DEX hop AMM. Decode is wallet-delta, not Aquifer internals.
+    'AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45',
 })
 REVIEWED_INNER_PROGRAMS = frozenset({
     SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, *TOKEN_IDS, *MEMO_IDS, LIGHTHOUSE,
@@ -928,12 +885,53 @@ def _reviewed_inner_venues(flat, keys, route, owned, address):
     return venues, None
 
 
-def _verified_new_token_account_rent(flat, keys, before, after, address, skip_accounts):
-    """Wallet-funded brand-new token-account rent (pre-balance 0, still funded).
+WALLET_PAID_RENT_RULE = (
+    "Wallet-paid account rent (owned vs not-owned; closed vs still open). "
+    "A System/ATA create funded by the investigated wallet is classified by "
+    "the SPL token owner (not the program owner). Closed in this transaction "
+    "with rent returned to the wallet nets out (remaining native is 0). "
+    "Still-open and token owner == wallet is recoverable ATA/wSOL rent and "
+    "is excluded from swap consideration. Still-open and not wallet-owned "
+    "(venue PDA, other-owner ATA, router-fee account) stays in consideration. "
+    "Unproved owner is treated as not wallet-owned (fail closed: keep in cost). "
+    "Reviewed venue program-account deposits stay on `_episode_rent_exclusion`. "
+    "PumpSwap user-volume PDA funding is not recoverable rent."
+)
 
-    Subtracted from native before a USDC/USDT trade is treated as having a
-    second SOL settlement leg (D2). Venue-owned protocol deposits stay on
-    `_episode_rent_exclusion`.
+
+def _token_account_owner(flat, keys, account):
+    """SPL token owner of a created account, or None if unproved.
+
+    Independent of tools/independent_episode_audit.py.
+    """
+    for _outer, _path, instruction, _nested in flat:
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else {}
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        if program == ASSOCIATED_ID and kind in ('create', 'createIdempotent') and info.get('account') == account:
+            owner = info.get('wallet') or info.get('owner')
+            if owner:
+                return owner
+        if (
+            program in TOKEN_IDS
+            and kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3')
+            and info.get('account') == account
+            and info.get('owner')
+        ):
+            return info.get('owner')
+    return None
+
+
+def _verified_new_token_account_rent(flat, keys, before, after, address, skip_accounts):
+    """Exclude still-open wallet-owned token-account rent only.
+
+    See WALLET_PAID_RENT_RULE. Other-owner ATA/wSOL and venue PDAs stay in
+    consideration. Subtracted from native before a USDC/USDT trade is treated
+    as having a second SOL settlement leg.
     """
     skip = set(skip_accounts or ())
     extra = 0
@@ -957,6 +955,8 @@ def _verified_new_token_account_rent(flat, keys, before, after, address, skip_ac
         ):
             account = info.get('newAccount')
         if not account or account in skip or account in seen or account not in keys:
+            continue
+        if _token_account_owner(flat, keys, account) != address:
             continue
         index = keys.index(account)
         if index >= len(before) or index >= len(after) or before[index] != 0:
@@ -1466,9 +1466,11 @@ def decode_supported_swaps(transactions, address):
                         raise ValueError('Unproven token account rent refund')
                     rent_correction += reserve_delta
             wallet_index = keys.index(address)
+            # PumpSwap user-volume PDA funding is not recoverable rent
+            # (WALLET_PAID_RENT_RULE). It stays in consideration.
             settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
-                          - outside_native_delta + sum(item['lamports'] for item in retained_funding)
+                          - outside_native_delta
                           + episode_rent + new_token_rent)
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
             owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
@@ -1539,10 +1541,7 @@ def decode_supported_swaps(transactions, address):
                     context.prec = 192
                     amount_quote = canonical(Decimal(abs(quote_delta)) / (Decimal(10) ** quote_decimals))
                 allocate_fee = paid and not outside_native and not native_roles
-                excluded_funding_lamports = (
-                    rent_correction + sum(item['lamports'] for item in retained_funding)
-                    + episode_rent + new_token_rent
-                )
+                excluded_funding_lamports = rent_correction + episode_rent + new_token_rent
                 excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
                 t22_fee = token_2022_fees[-1] if token_2022_fees else None
                 rfq_fee = None
@@ -1669,10 +1668,7 @@ def decode_supported_swaps(transactions, address):
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            excluded_funding_lamports = (
-                rent_correction + sum(item['lamports'] for item in retained_funding)
-                + episode_rent + new_token_rent
-            )
+            excluded_funding_lamports = rent_correction + episode_rent + new_token_rent
             excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',

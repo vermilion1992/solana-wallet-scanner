@@ -8,16 +8,48 @@ from scanner.investigation import WSOL
 from scanner.mass_search.metrics import format_decimal
 
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 USDC_DECIMALS = 6
 SETTLEMENT_SOL = WSOL
 SETTLEMENT_USDC = USDC
+SETTLEMENT_USDT = USDT
+QUOTE_MINTS = frozenset({USDC, USDT})
+QUOTE_ASSET = {USDC: "USDC", USDT: "USDT"}
 
 
 def settlement_of(event):
     value = event.get("settlement_mint")
-    if value == USDC or event.get("consideration_usdc") not in (None, ""):
+    asset = event.get("settlement_asset")
+    if value == USDT or asset == "USDT" or event.get("consideration_usdt") not in (None, "") or event.get("amount_usdt") not in (None, ""):
+        return USDT
+    if value == USDC or asset == "USDC" or event.get("consideration_usdc") not in (None, "") or event.get("amount_usdc") not in (None, ""):
         return USDC
-    return WSOL
+    if event.get("unknown_quote"):
+        return None
+    if event.get("consideration_sol") not in (None, "") or event.get("amount_sol") not in (None, ""):
+        return WSOL
+    return None
+
+
+def quote_consideration(event):
+    """Priced quote amount, or None. Never invent 0 for a missing quote."""
+    settlement = settlement_of(event)
+    if settlement == USDT:
+        value = event.get("consideration_usdt")
+        if value in (None, ""):
+            value = event.get("amount_usdt")
+        return None if value in (None, "") else Decimal(str(value))
+    if settlement == USDC:
+        value = event.get("consideration_usdc")
+        if value in (None, ""):
+            value = event.get("amount_usdc")
+        return None if value in (None, "") else Decimal(str(value))
+    if settlement == WSOL:
+        value = event.get("consideration_sol")
+        if value in (None, ""):
+            value = event.get("amount_sol")
+        return None if value in (None, "") else Decimal(str(value))
+    return None
 
 
 def _order_key(row):
@@ -61,7 +93,10 @@ def _scale_trade(event, *, units, original_units, remainder_of=None):
     """
     scaled = dict(event)
     scaled["units"] = canonical(units)
-    for key in ("consideration_usdc", "consideration_sol", "amount_usdc", "amount_sol", "wallet_fee_sol"):
+    for key in (
+        "consideration_usdc", "consideration_usdt", "consideration_sol",
+        "amount_usdc", "amount_usdt", "amount_sol", "wallet_fee_sol",
+    ):
         if event.get(key) in (None, ""):
             continue
         if remainder_of is not None and remainder_of.get(key) not in (None, ""):
@@ -123,6 +158,16 @@ def isolate_known_cost_events(rows):
             lots.append({"units": units, "settlement": None, "undecoded": True})
             continue
         if event["kind"] != "sell":
+            continue
+        if quote_consideration(event) is None:
+            unresolved.append({
+                **event,
+                "unresolved_basis": True,
+                "unknown_quote": True,
+                "split_part": "unresolved",
+                "whole_sale_pnl_resolved": False,
+                "reason": "Unknown quote proceeds; never recorded as 0",
+            })
             continue
         remaining = units
         opening_take = Decimal("0")
@@ -263,7 +308,9 @@ def usdc_fifo_worksheet(events):
         for event in indexed:
             units = Decimal(str(event["units"]))
             if event["kind"] == "buy":
-                consideration = Decimal(str(event["consideration_usdc"]))
+                consideration = quote_consideration(event)
+                if consideration is None:
+                    raise ValueError("USDC/USDT buy is missing quote consideration")
                 lots.append({"remaining_units": units, "remaining_cost": consideration})
             elif event["kind"] == "sell":
                 remaining = units
@@ -280,7 +327,9 @@ def usdc_fifo_worksheet(events):
                     remaining -= take
                     if lot["remaining_units"] == 0:
                         lots.pop(0)
-                proceeds = Decimal(str(event["consideration_usdc"]))
+                proceeds = quote_consideration(event)
+                if proceeds is None:
+                    raise ValueError("USDC/USDT sale is missing quote proceeds")
                 profit = _usdc_canonical(proceeds - basis)
                 sales.append({
                     "signature": event.get("signature"),
@@ -392,15 +441,33 @@ def _single_asset_worksheet(events, *, production):
     if not usable:
         return None
     known, unresolved = isolate_known_cost_by_mint(usable)
-    asset = "USDC" if {settlement_of(row) for row in usable} == {USDC} else "SOL"
-    if asset == "USDC":
+    settlements = {settlement_of(row) for row in usable}
+    if None in settlements:
+        settlements.discard(None)
+    if settlements == {USDC}:
+        asset = "USDC"
+    elif settlements == {USDT}:
+        asset = "USDT"
+    elif settlements == {WSOL}:
+        asset = "SOL"
+    else:
+        asset = "SOL"
+    if asset in ("USDC", "USDT"):
         if not known or not any(row["kind"] == "sell" for row in known):
             payload = empty_usdc_worksheet(unresolved=len(unresolved), known=len(known))
             if not production:
                 payload["oracle"] = "independent-usdc-fifo-v1"
             payload["open_lots"] = _open_lot_count(known)
+            if asset == "USDT":
+                payload["settlement_asset"] = "USDT"
+                payload["settlement_mint"] = USDT
             return payload
         worksheet = usdc_fifo_worksheet(known) if production else independent_usdc_fifo_worksheet(known)
+        if asset == "USDT" and worksheet:
+            worksheet["settlement_asset"] = "USDT"
+            worksheet["settlement_mint"] = USDT
+            if worksheet.get("total_profit_usdc") not in (None, ""):
+                worksheet["total_profit_usdt"] = worksheet["total_profit_usdc"]
         return _annotate_isolated_worksheet(worksheet, known, unresolved)
     if not known or not any(row["kind"] == "sell" for row in known):
         payload = empty_sol_worksheet(unresolved=len(unresolved), known=len(known))
@@ -424,10 +491,14 @@ def worksheets_by_quote_asset(events, *, production=True):
     by_mint = {}
     for row in usable:
         by_mint.setdefault(row.get("mint"), []).append(row)
-    grouped = {USDC: [], WSOL: []}
+    grouped = {USDC: [], USDT: [], WSOL: []}
     cross_currency = []
+    unknown_quote = []
     for mint, rows in by_mint.items():
         settlements = {settlement_of(row) for row in rows}
+        if None in settlements:
+            unknown_quote.extend(rows)
+            continue
         if len(settlements) > 1:
             cross_currency.extend(rows)
             continue
@@ -435,8 +506,27 @@ def worksheets_by_quote_asset(events, *, production=True):
     by_asset = {}
     if grouped[USDC]:
         by_asset["USDC"] = _single_asset_worksheet(grouped[USDC], production=production)
+    if grouped[USDT]:
+        worksheet = _single_asset_worksheet(grouped[USDT], production=production)
+        if worksheet:
+            worksheet["settlement_asset"] = "USDT"
+            worksheet["settlement_mint"] = USDT
+            if worksheet.get("total_profit_usdc") not in (None, ""):
+                worksheet["total_profit_usdt"] = worksheet["total_profit_usdc"]
+        by_asset["USDT"] = worksheet
     if grouped[WSOL]:
         by_asset["SOL"] = _single_asset_worksheet(grouped[WSOL], production=production)
+    if unknown_quote:
+        sells = sum(1 for row in unknown_quote if row.get("kind") == "sell")
+        extra = {
+            **empty_sol_worksheet(unresolved=sells, known=0),
+            "unknown_quote_sales": sells,
+            "unknown_quote_policy": "unresolved_never_zero",
+        }
+        if "SOL" in by_asset and by_asset["SOL"]:
+            by_asset["SOL"]["unresolved_basis_sales"] = int(by_asset["SOL"].get("unresolved_basis_sales") or 0) + sells
+        elif sells:
+            by_asset["SOL"] = extra
     cross_sells = sum(1 for row in cross_currency if row.get("kind") == "sell")
     note = (
         "Cross-currency inventory is per token; unconverted P&L is unresolved, never zero."
@@ -549,11 +639,35 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
         "network_fee_sol": str(row["network_fee_sol"]) if row.get("network_fee_sol") not in (None, "") else None,
         "tips_sol": str(row["tips_sol"]) if row.get("tips_sol") not in (None, "") else None,
     }
-    if settlement == USDC:
-        mapped["consideration_usdc"] = str(row.get("amount_usdc") or "0")
-        mapped["amount_usdc"] = str(row.get("amount_usdc") or "0")
+    mapped["settlement_asset"] = row.get("settlement_asset") or QUOTE_ASSET.get(settlement)
+    if settlement == USDT or row.get("settlement_asset") == "USDT" or row.get("amount_usdt") not in (None, ""):
+        amount = row.get("amount_usdt")
+        if amount in (None, ""):
+            mapped["unknown_quote"] = True
+            mapped["consideration_usdt"] = None
+        else:
+            mapped["consideration_usdt"] = str(amount)
+            mapped["amount_usdt"] = str(amount)
+        mapped["settlement_mint"] = USDT
+        mapped["settlement_asset"] = "USDT"
+    elif settlement == USDC or row.get("settlement_asset") == "USDC" or row.get("amount_usdc") not in (None, ""):
+        amount = row.get("amount_usdc")
+        if amount in (None, ""):
+            mapped["unknown_quote"] = True
+            mapped["consideration_usdc"] = None
+        else:
+            mapped["consideration_usdc"] = str(amount)
+            mapped["amount_usdc"] = str(amount)
+        mapped["settlement_mint"] = USDC
+        mapped["settlement_asset"] = "USDC"
     else:
-        mapped["consideration_sol"] = str(row.get("amount_sol") or "0")
+        amount = row.get("amount_sol")
+        if amount in (None, ""):
+            mapped["unknown_quote"] = True
+            mapped["consideration_sol"] = None
+        else:
+            mapped["consideration_sol"] = str(amount)
+        mapped["settlement_asset"] = "SOL"
     if "paid_by_wallet" in row:
         mapped["paid_by_wallet"] = row["paid_by_wallet"]
     return mapped

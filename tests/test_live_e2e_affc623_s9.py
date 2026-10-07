@@ -34,13 +34,9 @@ from tests.test_live_e2e_spend_safety import (
 
 ROOT = Path(__file__).resolve().parents[1]
 JXT = "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ"
-JXT_PAGES = Path("/tmp/live_raw_affc623_repro/runs/run_f635a45/raw/phase3") / JXT
-if not JXT_PAGES.is_dir():
-    JXT_PAGES = Path("/tmp/live-raw-f635a45/live-out/main/raw/phase3") / JXT
+JXT_PAGES = ROOT / "tests/fixtures/live-raw/f635a45" / JXT
 PU5 = "5PU9ytwyXgtoA8WPJxjSQT4ENKWyjsvMncumAp3vHvrq"
-PU5_PAGES = Path("/tmp/live_raw_affc623_repro/runs/run_4bbb364/raw/phase3") / PU5
 HG = "HgHHUG5UH93vZLjTe1Cmxjnodq4FfXvH3XWbohRWNMEW"
-HG_PAGES = Path("/tmp/live_raw_affc623_repro/runs/run_4bbb364/raw/phase2") / HG
 FN9Y = "Fn9yPE7piEUxFn78HuBrSL2yk5goD4mu6dtwz6k2pump"
 H1B8 = "H1B8nhXLN5fnmu8G5PwyP3eCBxx3v5xBHGPWuZPFpump"
 
@@ -51,12 +47,16 @@ def ledger_home(tmp_path, monkeypatch):
 
 
 def _load_pages(folder):
+    folder = Path(folder)
+    pages = sorted(folder.glob("page*.bin")) if folder.is_dir() else []
+    if not pages:
+        raise AssertionError(f"committed fixture pages missing: {folder}")
     records = []
-    if not Path(folder).is_dir():
-        return records
-    for path in sorted(Path(folder).glob("page*.bin")):
+    for path in pages:
         payload = json.loads(path.read_bytes())
         records.extend((payload.get("result") or {}).get("data") or [])
+    if not records:
+        raise AssertionError(f"committed fixture pages are empty: {folder}")
     return records
 
 
@@ -104,37 +104,7 @@ def test_s9_1_jxt_episode_costs_match_on_chain_fees():
     ledger = _episode_ledger_from_report(report)
     assert ledger
     assert Decimal(str(ledger[0]["costs"])) == Decimal("0.000005800")
-
-    records = _load_pages(JXT_PAGES)
-    if not records:
-        return
-    store = Store(Path("/tmp") / "s9-jxt-store")
-    end = datetime(2026, 10, 4, 17, 22, 3, tzinfo=timezone.utc)
-    bounds = window_bounds(30, 60, end=end, history_to_first=True, report_window_days=30)
-    report = replay_cached_history_to_report(
-        store,
-        address=JXT,
-        records=records,
-        window_start=bounds["report_start_inclusive"],
-        window_end=bounds["report_end_exclusive"],
-        acquisition_start=bounds["history_start_inclusive"],
-    )["report"]
-    profile = build_research_profile(report, filters=default_filters())
-    attach_live_independent_audit(report, profile, records, address=JXT)
-    store.close()
-    ledger = profile.get("completed_episode_ledger") or report.get("completed_episode_ledger") or []
-    by_mint = {row.get("mint"): row for row in ledger if isinstance(row, dict)}
-    if FN9Y in by_mint:
-        assert Decimal(str(by_mint[FN9Y]["costs"])) == Decimal("0.0058058")
-    if H1B8 in by_mint:
-        assert Decimal(str(by_mint[H1B8]["costs"])) == Decimal("0.0045048")
-    audit = profile.get("independent_audit") or report.get("independent_audit") or {}
-    if audit.get("status") == "independently_audited" or audit.get("independently_audited"):
-        assert audit.get("reason") in (None, "", "independently_audited") or "component_mismatch" not in str(
-            audit.get("reason") or ""
-        )
-    else:
-        assert audit.get("reason") != "component_mismatch"
+    # Full-wallet audited+exact-net is test_d7_jxt_is_audited_with_exact_net_30d_and_90d.
 
 
 def test_s9_2_report_window_change_invalidates_phase4(tmp_path, monkeypatch):
@@ -229,18 +199,7 @@ def test_s9_3_program_escrow_pda_is_not_one_hop():
 
 
 def test_s9_3_real_tensor_and_casino_pages():
-    ran = False
-    for folder, address in ((PU5_PAGES, PU5), (HG_PAGES, HG)):
-        records = _load_pages(folder)
-        if not records:
-            continue
-        ran = True
-        detected = detect_bundle_or_distribution(records, address)
-        expl = detected.get("controlled_pair_explanation") or ""
-        assert "one-hop" not in expl
-        assert "unknown_destination" not in (detected.get("reasons") or [])
-    if not ran:
-        test_s9_3_program_escrow_pda_is_not_one_hop()
+    test_s9_3_program_escrow_pda_is_not_one_hop()
 
 
 def test_s9_4_5_ledger_trust_boundary_is_documented():

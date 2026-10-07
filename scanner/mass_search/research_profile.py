@@ -37,8 +37,10 @@ from scanner.mass_search.qualification_gates import (
 )
 from scanner.mass_search.settlement import (
     USDC,
+    USDT,
     _open_lot_count,
     isolate_known_cost_by_mint,
+    quote_consideration,
     settlement_of,
 )
 
@@ -675,14 +677,10 @@ def _episode_ledger_from_report(report):
                     opened_at = event.get("timestamp") or event.get("block_time")
                 opened = True
                 episode_events.append(event)
-                for key in (
-                    "consideration_sol", "amount_sol",
-                    "consideration_usdc", "amount_usdc",
-                    "consideration_usdt", "amount_usdt",
-                ):
-                    if event.get(key) not in (None, ""):
-                        buy_consideration += Decimal(str(event[key]))
-                        break
+                from scanner.mass_search.settlement import quote_consideration
+                priced = quote_consideration(event)
+                if priced is not None:
+                    buy_consideration += priced
                 continue
             if event.get("kind") != "sell" or not opened or inventory <= 0:
                 continue
@@ -735,9 +733,12 @@ def _episode_ledger_from_report(report):
                 net = Decimal(str(event["known_cost_pnl"]))
             if net is None:
                 continue
+            from scanner.mass_search.settlement import quote_consideration, settlement_of, USDC, USDT
+            if proceeds is not None and Decimal(str(proceeds)) == 0 and quote_consideration(event) is None:
+                continue
             unit = event.get("settlement_asset") or (
-                "USDC" if event.get("amount_usdc") or event.get("consideration_usdc")
-                else "USDT" if event.get("amount_usdt") or event.get("consideration_usdt")
+                "USDC" if settlement_of(event) == USDC
+                else "USDT" if settlement_of(event) == USDT
                 else "SOL"
             )
             episodes.append({
@@ -1178,7 +1179,10 @@ def _mapped_trade_row(row):
         "signature": row.get("signature"),
         "settlement_mint": row.get("settlement_mint"),
         "consideration_usdc": row.get("amount_usdc") or row.get("consideration_usdc"),
+        "consideration_usdt": row.get("amount_usdt") or row.get("consideration_usdt"),
         "consideration_sol": row.get("amount_sol") or row.get("consideration_sol"),
+        "amount_usdt": row.get("amount_usdt"),
+        "settlement_asset": row.get("settlement_asset"),
         "wallet_fee_sol": row.get("fee_sol") or row.get("wallet_fee_sol"),
         "timestamp": row.get("timestamp") or row.get("block_time"),
         "timestamp_missing": bool(row.get("timestamp_missing")),
@@ -1214,7 +1218,10 @@ def _merge_decoded_taints(mapped, decoded):
             "signature": event.get("signature"),
             "settlement_mint": event.get("settlement_mint"),
             "consideration_usdc": event.get("amount_usdc") or event.get("consideration_usdc"),
+            "consideration_usdt": event.get("amount_usdt") or event.get("consideration_usdt"),
             "consideration_sol": event.get("amount_sol") or event.get("consideration_sol"),
+            "amount_usdt": event.get("amount_usdt"),
+            "settlement_asset": event.get("settlement_asset"),
             "wallet_fee_sol": event.get("fee_sol") or event.get("wallet_fee_sol"),
             "timestamp": event.get("timestamp") or event.get("block_time"),
             "timestamp_missing": event.get("timestamp") is None and event.get("block_time") is None,
@@ -1277,16 +1284,22 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     txs = int(classification.get("transactions") or (report.get("coverage") or {}).get("transactions") or 0)
     by_quote = worksheet.get("by_quote_asset") or {}
     if not by_quote:
-        if worksheet.get("settlement_asset") == "USDC" or worksheet.get("total_profit_usdc") not in (None, ""):
+        if worksheet.get("settlement_asset") == "USDT" or worksheet.get("total_profit_usdt") not in (None, ""):
+            by_quote = {"USDT": worksheet}
+        elif worksheet.get("settlement_asset") == "USDC" or worksheet.get("total_profit_usdc") not in (None, ""):
             by_quote = {"USDC": worksheet}
         elif worksheet.get("total_profit_sol") not in (None, "") or worksheet.get("settlement_asset") == "SOL":
             by_quote = {"SOL": worksheet}
     if len(by_quote) > 1:
         settlement = "mixed"
+    elif "USDT" in by_quote:
+        settlement = "USDT"
     elif "USDC" in by_quote:
         settlement = "USDC"
     elif "SOL" in by_quote:
         settlement = "SOL"
+    elif any(settlement_of(row) == USDT for row in mapped):
+        settlement = "USDT"
     elif any(settlement_of(row) == USDC for row in mapped):
         settlement = "USDC"
     elif mapped:
@@ -1294,11 +1307,15 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     else:
         settlement = None
     scoped_by_asset = {}
+    if "USDT" in by_quote:
+        scoped_by_asset["USDT"] = (by_quote["USDT"] or {}).get("total_profit_usdt") or (by_quote["USDT"] or {}).get("total_profit_usdc")
     if "USDC" in by_quote:
         scoped_by_asset["USDC"] = (by_quote["USDC"] or {}).get("total_profit_usdc")
     if "SOL" in by_quote:
         scoped_by_asset["SOL"] = (by_quote["SOL"] or {}).get("total_profit_sol")
-    if settlement == "USDC":
+    if settlement == "USDT":
+        scoped_pnl = scoped_by_asset.get("USDT")
+    elif settlement == "USDC":
         scoped_pnl = scoped_by_asset.get("USDC")
     elif settlement == "SOL":
         scoped_pnl = scoped_by_asset.get("SOL")
@@ -1306,7 +1323,10 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         scoped_pnl = None
     sizes = []
     for row in known_buys + known_sells:
-        amount = row.get("consideration_usdc") if settlement == "USDC" else row.get("consideration_sol")
+        priced = quote_consideration(row)
+        amount = priced if priced is not None else (
+            row.get("consideration_usdc") if settlement == "USDC" else row.get("consideration_sol")
+        )
         if amount not in (None, ""):
             sizes.append({
                 "kind": row["kind"],

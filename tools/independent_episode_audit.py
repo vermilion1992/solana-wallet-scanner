@@ -353,6 +353,12 @@ WELL_KNOWN_INNER_AMMS = frozenset({
     "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
     "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
     "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+    # Eco SDK svm/venues/obsidian OBSIDIAN_PROGRAM_ID (constant-product AMM).
+    "HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z",
+    # Eco SDK svm/venues/gatorswap GATORSWAP_PROGRAM_ID (constant-product AMM).
+    "gatorLx9aC1e5ZWAXscv5QRKiLXnLPLXjftVc81h1Hr",
+    # Aquifer DEX hop AMM. Decode is wallet-delta, not Aquifer internals.
+    "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
 })
 REVIEWED_INNER_PROGRAMS = frozenset({
     *_INNER_INFRA,
@@ -429,17 +435,55 @@ def _outside_native(movements, address, wrap_accounts, route_index=None):
     return delta
 
 
-def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None, route_index=None):
-    """Rent policy (independent of scanner.investigation):
+WALLET_PAID_RENT_RULE = (
+    "Wallet-paid account rent (owned vs not-owned; closed vs still open). "
+    "A System/ATA create funded by the investigated wallet is classified by "
+    "the SPL token owner (not the program owner). Closed in this transaction "
+    "with rent returned to the wallet nets out (remaining native is 0). "
+    "Still-open and token owner == wallet is recoverable ATA/wSOL rent and "
+    "is excluded from swap consideration. Still-open and not wallet-owned "
+    "(venue PDA, other-owner ATA, router-fee account) stays in consideration. "
+    "Unproved owner is treated as not wallet-owned (fail closed: keep in cost). "
+    "Same-route is not a reason to keep or drop. PumpSwap user-volume PDA "
+    "funding is not recoverable rent."
+)
 
-    Accounts created and closed in this transaction net out — do not add the
-    create amount as retained. Long-lived account rent is not trade cost —
-    add only the created account's remaining native delta.
 
-    Same-route inner creates (DGMG router-fee createAccount, ATA setup
-    under the swap) stay in consideration. They are swap costs, not
-    leftover PDA funding (D1).
+def _token_account_owner(raw, keys, account):
+    """SPL token owner of a created account, or None if unproved.
+
+    Independent of scanner.investigation (no shared helper).
     """
+    key_list = list(keys or [])
+    for _outer, _path, instruction, _nested in _iter_instructions(raw or {}):
+        program = _program(instruction, key_list)
+        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        kind = parsed.get("type") if isinstance(parsed, dict) else None
+        if not isinstance(info, dict):
+            continue
+        if program == ASSOCIATED and kind in ("create", "createIdempotent") and info.get("account") == account:
+            owner = info.get("wallet") or info.get("owner")
+            if owner:
+                return owner
+        if (
+            program in TOKEN_PROGRAMS
+            and kind in ("initializeAccount", "initializeAccount2", "initializeAccount3")
+            and info.get("account") == account
+            and info.get("owner")
+        ):
+            return info.get("owner")
+    return None
+
+
+def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None, route_index=None):
+    """Exclude still-open wallet-owned token-account rent only.
+
+    Independent of scanner.investigation. See WALLET_PAID_RENT_RULE.
+    skip_accounts are wallet-owned token accounts already rent-corrected.
+    Not-owned still-open funding is left in consideration (do not add back).
+    """
+    del route_index
     extra = Decimal("0")
     meta = (raw or {}).get("meta") or {}
     pre = meta.get("preBalances") or []
@@ -451,7 +495,7 @@ def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None, r
         dest = movement.get("destination")
         if dest in skip_accounts:
             continue
-        if route_index is not None and movement.get("outer") == route_index:
+        if _token_account_owner(raw, key_list, dest) != address:
             continue
         if dest in key_list:
             index = key_list.index(dest)

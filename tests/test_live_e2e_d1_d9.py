@@ -40,7 +40,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_is_v23():
-    assert DECODER_VERSION == "spot-v23-quote-rent-inner-v1"
+    assert DECODER_VERSION == "spot-v24-wallet-rent-quote-v1"
 
 
 def test_d1_auditor_includes_dgmg_router_fee():
@@ -94,6 +94,17 @@ def test_d2_usdc_dflow_rent_only_native_is_not_cross_settlement():
                 "owner": TOKEN_PROGRAM,
                 "lamports": 2_039_280,
                 "space": 165,
+            },
+        },
+    })
+    group["instructions"].append({
+        "programId": TOKEN_PROGRAM,
+        "parsed": {
+            "type": "initializeAccount3",
+            "info": {
+                "account": new_ata,
+                "mint": USDC,
+                "owner": wallet,
             },
         },
     })
@@ -227,3 +238,272 @@ def test_d9_align_wallet_bounds_documents_configured_vs_aligned():
     assert aligned["report_end_anchored_to_last_tx"] is True
     assert aligned["report_end_exclusive"] < configured["report_end_exclusive"]
     assert aligned["report_end_exclusive"] == aligned["aligned_report_end_exclusive"]
+
+
+OBSIDIAN = "HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z"
+GATORSWAP = "gatorLx9aC1e5ZWAXscv5QRKiLXnLPLXjftVc81h1Hr"
+AQUIFER = "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45"
+JXT_PAGES = ROOT / "tests/fixtures/live-raw/f635a45" / JXT
+OTHER_OWNER = "FY8B5zGjOtherOwner1111111111111111111111111"
+WSOL = "So11111111111111111111111111111111111111112"
+
+
+def _require_pages(folder):
+    folder = Path(folder)
+    pages = sorted(folder.glob("page*.bin")) if folder.is_dir() else []
+    if not pages:
+        raise AssertionError(f"committed fixture pages missing: {folder}")
+    records = []
+    for path in pages:
+        payload = json.loads(path.read_bytes())
+        records.extend((payload.get("result") or {}).get("data") or [])
+    if not records:
+        raise AssertionError(f"committed fixture pages are empty: {folder}")
+    return records
+
+
+def test_d3p_obsidian_gator_aquifer_are_reviewed_inner_venues():
+    from scanner.investigation import REVIEWED_INNER_PROGRAMS, WELL_KNOWN_INNER_AMMS
+    assert OBSIDIAN in WELL_KNOWN_INNER_AMMS
+    assert GATORSWAP in WELL_KNOWN_INNER_AMMS
+    assert AQUIFER in WELL_KNOWN_INNER_AMMS
+    assert OBSIDIAN in REVIEWED_INNER_PROGRAMS
+    assert OBSIDIAN in auditor.REVIEWED_INNER_PROGRAMS
+    assert GATORSWAP in auditor.REVIEWED_INNER_PROGRAMS
+    assert AQUIFER in auditor.REVIEWED_INNER_PROGRAMS
+
+
+def test_d1p_jxt_2gDSxX4BGx_pump_pda_stays_in_consideration():
+    payload = _load("jxt-2gDSxX4BGx-pump-pda.json")
+    decoded, trades = _app_trades(payload)
+    assert len(trades) == 1
+    aud = auditor.reconstruct_record(payload["record"], JXT)
+    assert aud
+    assert Decimal(str(trades[0]["amount_sol"])) == Decimal(aud["consideration_sol"])
+    # PDA 1,346,200 lamports is not-owned still-open: both keep it as cost.
+    assert Decimal(str(trades[0]["amount_sol"])) >= Decimal("0.0013462")
+
+
+def test_d2p_other_owner_wsol_create_stays_in_consideration():
+    """EhJH7bmr 3Haiw9Tf pattern: wallet-paid wSOL ATA owned by another pubkey.
+
+    Not wallet-owned still-open rent stays in consideration, so a USDC
+    hop plus leftover native is cross-settlement (unresolved), not a
+    cheapened USDC trade.
+    """
+    payload = copy.deepcopy(_load("dflow-swap2-token-usdc.json"))
+    raw = payload["record"]
+    message = raw["transaction"]["message"]
+    meta = raw["meta"]
+    keys = [
+        item["pubkey"] if isinstance(item, dict) else item
+        for item in message["accountKeys"]
+    ]
+    wallet = payload["address"]
+    wallet_idx = keys.index(wallet)
+    other_ata = "DC3wSwFsOtherOwnerWsol11111111111111111111"
+    loaded = meta.setdefault("loadedAddresses", {})
+    readonly = list(loaded.get("readonly") or [])
+    readonly.append(other_ata)
+    loaded["readonly"] = readonly
+    meta["preBalances"].append(0)
+    meta["postBalances"].append(2_039_280)
+    meta["postBalances"][wallet_idx] -= 2_039_280
+    route_index = next(
+        i
+        for i, ins in enumerate(message["instructions"])
+        if isinstance(ins.get("programIdIndex"), int) and keys[ins["programIdIndex"]] == DFLOW
+        or ins.get("programId") == DFLOW
+    )
+    groups = meta.setdefault("innerInstructions", [])
+    group = next((g for g in groups if g.get("index") == route_index), None)
+    if group is None:
+        group = {"index": route_index, "instructions": []}
+        groups.append(group)
+    group["instructions"].append({
+        "programId": "11111111111111111111111111111111",
+        "parsed": {
+            "type": "createAccount",
+            "info": {
+                "source": wallet,
+                "newAccount": other_ata,
+                "owner": TOKEN_PROGRAM,
+                "lamports": 2_039_280,
+                "space": 165,
+            },
+        },
+    })
+    group["instructions"].append({
+        "programId": TOKEN_PROGRAM,
+        "parsed": {
+            "type": "initializeAccount3",
+            "info": {
+                "account": other_ata,
+                "mint": WSOL,
+                "owner": "FY8B5zGjOtherOwnerPumpPda111111111111111111",
+            },
+        },
+    })
+    decoded, trades = _app_trades(payload)
+    reasons = " ".join(row.get("reason") or "" for row in decoded.get("unresolved") or [])
+    aud = auditor.reconstruct_record(payload["record"], wallet)
+    # App must not exclude the other-owner rent and then emit a USDC sale.
+    if trades:
+        assert trades[0].get("settlement_asset") != "USDC" or Decimal(str(trades[0].get("amount_sol") or 0)) != 0
+    else:
+        assert "cross-settlement" in reasons or aud is None
+    if aud and aud.get("settlement_asset") == "USDC":
+        raise AssertionError("auditor treated other-owner wSOL rent as recoverable USDC rent")
+
+
+def test_d2_auditor_sees_wallet_owned_ata_rent_only_usdc_buy():
+    payload = copy.deepcopy(_load("dflow-swap2-token-usdc.json"))
+    raw = payload["record"]
+    message = raw["transaction"]["message"]
+    meta = raw["meta"]
+    keys = [
+        item["pubkey"] if isinstance(item, dict) else item
+        for item in message["accountKeys"]
+    ]
+    wallet = payload["address"]
+    wallet_idx = keys.index(wallet)
+    new_ata = "NewAtaRent11111111111111111111111111111111"
+    loaded = meta.setdefault("loadedAddresses", {})
+    readonly = list(loaded.get("readonly") or [])
+    readonly.append(new_ata)
+    loaded["readonly"] = readonly
+    meta["preBalances"].append(0)
+    meta["postBalances"].append(2_039_280)
+    meta["postBalances"][wallet_idx] -= 2_039_280
+    route_index = next(
+        i
+        for i, ins in enumerate(message["instructions"])
+        if isinstance(ins.get("programIdIndex"), int) and keys[ins["programIdIndex"]] == DFLOW
+        or ins.get("programId") == DFLOW
+    )
+    groups = meta.setdefault("innerInstructions", [])
+    group = next((g for g in groups if g.get("index") == route_index), None)
+    if group is None:
+        group = {"index": route_index, "instructions": []}
+        groups.append(group)
+    group["instructions"].append({
+        "programId": "11111111111111111111111111111111",
+        "parsed": {
+            "type": "createAccount",
+            "info": {
+                "source": wallet,
+                "newAccount": new_ata,
+                "owner": TOKEN_PROGRAM,
+                "lamports": 2_039_280,
+                "space": 165,
+            },
+        },
+    })
+    group["instructions"].append({
+        "programId": TOKEN_PROGRAM,
+        "parsed": {
+            "type": "initializeAccount3",
+            "info": {"account": new_ata, "mint": USDC, "owner": wallet},
+        },
+    })
+    decoded, trades = _app_trades(payload)
+    assert len(trades) == 1
+    assert trades[0]["settlement_asset"] == "USDC"
+    aud = auditor.reconstruct_record(payload["record"], wallet)
+    assert aud is not None
+    assert aud["settlement_asset"] == "USDC"
+    assert aud["kind"] == trades[0]["kind"]
+
+
+def test_d4p_token_to_usdt_sell_records_usdt_proceeds_not_zero():
+    payload = copy.deepcopy(_load("dflow-swap2-token-usdc.json"))
+    raw = payload["record"]
+    meta = raw["meta"]
+    replaced = 0
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if row.get("mint") == USDC:
+                row["mint"] = USDT
+                replaced += 1
+    assert replaced >= 1
+    decoded, trades = _app_trades(payload)
+    assert trades
+    sell = next((row for row in trades if row.get("kind") == "sell"), trades[0])
+    assert sell.get("settlement_asset") == "USDT"
+    assert sell.get("amount_usdt") not in (None, "", "0")
+    assert sell.get("amount_sol") in (None, "")
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    assert aud
+    assert aud["settlement_asset"] == "USDT"
+    assert Decimal(aud["consideration_usdt"]) > 0
+    from scanner.mass_search.settlement import map_decoder_trade
+    mapped = map_decoder_trade(
+        sell, address=payload["address"], seconds=0, timestamp_missing=False,
+        role="exit", window_qualified=True, unresolved_order=False,
+    )
+    assert mapped.get("unknown_quote") is not True
+    assert Decimal(mapped["consideration_usdt"]) == Decimal(str(sell["amount_usdt"]))
+
+
+def test_d4p_unknown_quote_is_unresolved_never_zero():
+    from scanner.mass_search.settlement import isolate_known_cost_events
+    known, unresolved = isolate_known_cost_events([
+        {
+            "kind": "buy", "units": "10", "mint": "TokenMint",
+            "consideration_sol": "1", "settlement_asset": "SOL",
+            "seconds_from_start": 1, "signature": "b1",
+        },
+        {
+            "kind": "sell", "units": "10", "mint": "TokenMint",
+            "amount_sol": None, "settlement_asset": None,
+            "seconds_from_start": 2, "signature": "s1",
+        },
+    ])
+    assert any(row.get("unknown_quote") or row.get("unresolved_basis") for row in unresolved)
+    assert not any(
+        row.get("kind") == "sell" and row.get("signature") == "s1" and not row.get("unresolved_basis")
+        for row in known
+    )
+
+
+def test_d7_jxt_is_audited_with_exact_net_30d_and_90d(tmp_path):
+    from scanner.mass_search.history_ingest import replay_cached_history_to_report
+    from scanner.mass_search.research_profile import (
+        attach_live_independent_audit,
+        build_research_profile,
+        default_filters,
+    )
+    from scanner.storage import Store
+
+    records = _require_pages(JXT_PAGES)
+    end = datetime(2026, 10, 4, 17, 22, 3, tzinfo=timezone.utc)
+    expected = {
+        30: Decimal("310.781644564"),
+        90: Decimal("321.515629495"),
+    }
+    for days, net in expected.items():
+        bounds = window_bounds(days, 60, end=end, history_to_first=True, report_window_days=days)
+        store = Store(tmp_path / f"jxt-{days}")
+        report = replay_cached_history_to_report(
+            store,
+            address=JXT,
+            records=records,
+            window_start=bounds["report_start_inclusive"],
+            window_end=bounds["report_end_exclusive"],
+            acquisition_start=bounds["history_start_inclusive"],
+        )["report"]
+        profile = build_research_profile(report, filters=default_filters())
+        audit = attach_live_independent_audit(report, profile, records, address=JXT)
+        store.close()
+        assert audit.get("independently_audited") or audit.get("status") == "independently_audited", (
+            days, audit.get("status"), audit.get("reason"), audit.get("app_completed_episode_net"),
+            audit.get("independently_audited_episode_net"),
+        )
+        assert "component_mismatch" not in str(audit.get("reason") or "")
+        got = Decimal(str(
+            audit.get("app_completed_episode_net")
+            or profile.get("completed_episode_net")
+            or report.get("completed_episode_net")
+            or "0"
+        ))
+        assert got == net, (days, got, net, audit.get("reason"))

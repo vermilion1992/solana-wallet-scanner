@@ -93,12 +93,8 @@ def test_keep_flagged_real_bundles():
     detected = detect_bundle_or_distribution([dky["record"]], dky["address"])
     assert "multi_signer_bundle_buy" in detected["reasons"]
 
-    agq_path = Path("/tmp/live-raw-f635a45/live-out/main/raw/phase2/AGqKFZoKduLeXYEtqoyEgsm65XH4zZBcfqZ6fgoZb2G1/page1.bin")
-    if agq_path.is_file():
-        data = (json.loads(agq_path.read_bytes()).get("result") or {}).get("data") or []
-        detected = detect_bundle_or_distribution(data, "AGqKFZoKduLeXYEtqoyEgsm65XH4zZBcfqZ6fgoZb2G1")
-        assert "multi_signer_bundle_buy" in detected["reasons"]
-        assert "sell_proceeds_to_cosigner" in detected["reasons"]
+    # Optional live page is not a committed fixture. The cases above already
+    # pin multi-signer bundle detection on committed records.
 
 
 def test_controlled_pair_bst_and_drbc_not_jxt_exchange():

@@ -55,9 +55,9 @@ ROOT = Path(__file__).resolve().parents[1]
 JXT = "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ"
 LAJ = "9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE"
 DKX = "DKxKrP4yCSGt27AECQvaaxrr5KwZ3FxLYdNhnD3LcMTv"
-JXT_PAGES = Path("/tmp/live-raw-f635a45/live-out/main/raw/phase3") / JXT
-LAJ_PAGES = Path("/tmp/live-raw-4bbb364-a") / LAJ
-DKX_PAGES = Path("/tmp/live-raw-4bbb364-b") / DKX
+JXT_PAGES = ROOT / "tests/fixtures/live-raw/f635a45" / JXT
+LAJ_PAGES = ROOT / "tests/fixtures/live-raw/4bbb364-a" / LAJ
+DKX_PAGES = ROOT / "tests/fixtures/live-raw/4bbb364-b" / DKX
 GM1 = "GM1uLLWQivi72wkZ8EQzmUxB2s3E2aQrZZVzWwaQSWME"
 LOSER_MINT = "HwqzsNd4VMTiqMZTXaAMYuY8BymtDmwR8cK1dWy3pump"
 
@@ -68,12 +68,16 @@ def ledger_home(tmp_path, monkeypatch):
 
 
 def _load_pages(folder):
+    folder = Path(folder)
+    pages = sorted(folder.glob("page*.bin")) if folder.is_dir() else []
+    if not pages:
+        raise AssertionError(f"committed fixture pages missing: {folder}")
     records = []
-    if not Path(folder).is_dir():
-        return records
-    for path in sorted(Path(folder).glob("page*.bin")):
+    for path in pages:
         payload = json.loads(path.read_bytes())
         records.extend((payload.get("result") or {}).get("data") or [])
+    if not records:
+        raise AssertionError(f"committed fixture pages are empty: {folder}")
     return records
 
 
@@ -118,8 +122,6 @@ def test_draft_12_disabled_and_11_retired():
 
 def test_app_and_auditor_rent_policy_independent_on_jxt_pages():
     records = _load_pages(JXT_PAGES)
-    if not records:
-        pytest.skip("jXt f635a45 pages not extracted")
     long_lived = _record_by_prefix(records, "2gDSxX4B")
     create_close = _record_by_prefix(records, "4MvuWAZd")
     assert long_lived and create_close
@@ -136,29 +138,29 @@ def test_app_and_auditor_rent_policy_independent_on_jxt_pages():
                 token_accounts.add(keys[index])
         app_rent = _episode_rent_exclusion(_flat(raw), keys, before, after, JXT, token_accounts)
         gm1 = keys.index(GM1) if GM1 in keys else None
-        if raw is long_lived:
-            assert gm1 is not None
-            assert after[gm1] - before[gm1] > 0
-            assert app_rent == after[gm1] - before[gm1]
-        if raw is create_close:
-            assert gm1 is not None
-            assert after[gm1] - before[gm1] == 0
-            assert app_rent == 0
+        assert gm1 is not None
         movements = auditor._system_movements(raw, keys)
         accounts = auditor._token_accounts(raw, JXT, keys)
         retained = auditor._non_token_creates(movements, JXT, set(accounts), raw=raw, keys=keys)
+        # PumpSwap user-volume PDA is not wallet-owned: both keep it in cost.
         if raw is long_lived:
-            assert retained == Decimal(after[gm1] - before[gm1])
-        if raw is create_close:
+            assert after[gm1] - before[gm1] == 1_346_200
+            assert app_rent == 0
             assert retained == 0
+        if raw is create_close:
+            assert after[gm1] - before[gm1] == 0
+            assert app_rent == 0
+            assert retained == 0
+    decoded_app = decode_supported_swaps(canonical_decode_records([long_lived]), JXT)
+    app_buy = next(row for row in decoded_app.get("events") or [] if row.get("kind") == "buy")
+    aud = auditor.reconstruct_record(long_lived, JXT)
+    assert Decimal(str(app_buy["amount_sol"])) == Decimal(aud["consideration_sol"])
     assert _episode_rent_exclusion.__module__ == "scanner.investigation"
     assert auditor._non_token_creates.__module__ == "tools.independent_episode_audit"
 
 
 def test_binder_ignores_out_of_window_dropped_loser():
     records = _load_pages(JXT_PAGES)
-    if not records:
-        pytest.skip("jXt f635a45 pages not extracted")
     window = {
         "start": "2026-09-07T10:52:20Z",
         "end": "2026-10-07T10:52:20Z",
@@ -191,11 +193,9 @@ def test_binder_ignores_out_of_window_dropped_loser():
 
 def test_dust_transfer_in_does_not_erase_buy_sell_loser():
     records = _load_pages(JXT_PAGES)
-    if not records:
-        pytest.skip("jXt f635a45 pages not extracted")
     tmpl = _record_by_prefix(records, "5fuDBPtG")
     if tmpl is None:
-        pytest.skip("jXt airdrop template missing")
+        raise AssertionError("jXt airdrop template 5fuDBPtG missing from committed pages")
     fake = json.loads(json.dumps(tmpl).replace(
         "DCjjSET97j39BH4nkCQHoeroXtTbA1nEN5DThF6MfQAj", LOSER_MINT,
     ))
@@ -230,8 +230,6 @@ def test_dust_transfer_in_does_not_erase_buy_sell_loser():
 
 def test_coverage_uses_wallet_capture_bounds():
     records = _load_pages(JXT_PAGES)
-    if not records:
-        pytest.skip("jXt f635a45 pages not extracted")
     later = {
         "report_start_inclusive": "2026-09-07T10:52:20Z",
         "report_end_exclusive": "2026-10-07T10:52:20Z",
@@ -250,8 +248,6 @@ def test_coverage_uses_wallet_capture_bounds():
 
 def test_report_window_widening_is_monotone_on_laj():
     records = _load_pages(LAJ_PAGES)
-    if not records:
-        pytest.skip("9Laj pages not extracted")
     store = Store(Path("/tmp") / "df3278c-rwd" / "store")
     end = datetime(2026, 10, 7, 13, 7, 4, tzinfo=timezone.utc)
     completed = []
@@ -275,8 +271,6 @@ def test_report_window_widening_is_monotone_on_laj():
 
 def test_dkx_missing_ge87_buys_now_decode():
     records = _load_pages(DKX_PAGES)
-    if not records:
-        pytest.skip("DKx pages not extracted")
     opening = _record_by_prefix(records, "2vTAoMD5oZkH")
     dflow = _record_by_prefix(records, "vYeWFHJdvG5w")
     assert opening and dflow
@@ -294,8 +288,6 @@ def test_dkx_missing_ge87_buys_now_decode():
 
 def test_dkx_rates_at_90d():
     records = _load_pages(DKX_PAGES)
-    if not records:
-        pytest.skip("DKx pages not extracted")
     store = Store(Path("/tmp") / "df3278c-dkx" / "store")
     end = datetime(2026, 10, 7, 10, 52, 20, tzinfo=timezone.utc)
     short = window_bounds(30, 60, end=end, history_to_first=True, report_window_days=30)
@@ -325,8 +317,6 @@ def test_dkx_rates_at_90d():
 
 def test_rfq_opposite_side_is_not_bundle_partner():
     records = _load_pages(LAJ_PAGES)
-    if not records:
-        pytest.skip("9Laj pages not extracted")
     detected = detect_bundle_or_distribution(records, LAJ)
     assert "multi_signer_bundle_buy" not in (detected.get("reasons") or [])
 
@@ -449,8 +439,6 @@ def test_fresh_address_forward_is_unknown_destination():
 
 def test_seed_counterparties_skips_swap_pools():
     records = _load_pages(JXT_PAGES)
-    if not records:
-        pytest.skip("jXt f635a45 pages not extracted")
     seeds = seed_counterparties_from_records(records, JXT)
     addrs = {row["address"] for row in seeds}
     assert all(len(row["address"]) >= 32 for row in seeds)

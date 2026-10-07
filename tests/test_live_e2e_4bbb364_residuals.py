@@ -72,9 +72,8 @@ def _load(path):
 
 
 def test_laj_jto_rfq_round_trip_decodes_when_pages_present():
-    page = Path("/tmp/live-raw-4bbb364-a/9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE/page0.bin")
-    if not page.is_file():
-        pytest.skip("9LajrZci page0 not extracted")
+    page = Path(__file__).resolve().parents[1] / "tests/fixtures/live-raw/4bbb364-a/9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE/page0.bin"
+    assert page.is_file(), f"committed fixture missing: {page}"
     addr = "9LajrZcitRMGxjZYLh9LGsQsvjwo7pjnRri8BJTrrqrE"
     jto = "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL"
     records = (json.loads(page.read_bytes()).get("result") or {}).get("data") or []
