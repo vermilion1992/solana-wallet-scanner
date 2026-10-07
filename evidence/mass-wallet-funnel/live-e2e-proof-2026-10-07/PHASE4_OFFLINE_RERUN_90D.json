@@ -1,14 +1,14 @@
 {
   "kind": "live-e2e-phase4-offline-rerun-v3",
-  "generated_at": "2026-10-07T16:12:34Z",
-  "report_window_days": 30,
+  "generated_at": "2026-10-07T16:16:37Z",
+  "report_window_days": 90,
   "bounds": {
-    "report_start_inclusive": "2026-09-07T10:52:20Z",
+    "report_start_inclusive": "2026-07-09T10:52:20Z",
     "report_end_exclusive": "2026-10-07T10:52:20Z",
     "history_start_inclusive": "2020-03-16T00:00:00Z",
-    "report_window_days": 30,
+    "report_window_days": 90,
     "window_days": 30,
-    "report_start_unix": 1788778340,
+    "report_start_unix": 1783594340,
     "report_end_unix": 1791370340,
     "history_start_unix": 1584316800
   },
@@ -3135,13 +3135,13 @@
       "coverage_count_share": "0.997126437",
       "coverage_value_share": "0.999911249",
       "coverage_mandatory_share": "0.997126437",
-      "completed_trades": 44,
+      "completed_trades": 58,
       "sample_positions": 347,
-      "realized_pnl_sol": "310.782990765",
+      "realized_pnl_sol": "321.516975697",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "310.782990765",
+      "completed_episode_net": "321.516975697",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "310.782990765",
+      "qualifying_profit": "321.516975697",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -3169,23 +3169,17 @@
       ],
       "quarantine_never_sold": 0,
       "auditor": {
-        "clean_episodes": 44,
-        "independently_audited_episode_net": "310.782990764",
+        "clean_episodes": 58,
+        "independently_audited_episode_net": "321.516975696",
         "independently_audited_episode_net_unit": "SOL",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "310.782990764"
+          "SOL": "321.516975696"
         },
         "unresolved_basis_sales": 1,
         "known_cost_sales": 259,
         "reconstructed_trades": 347,
-        "dropped_losers": true,
-        "dropped_losing_episodes": [
-          {
-            "mint": "BWsC2AZxbUhj9UkRV1CTuy25PUk4MBtsk6NK9jyspump",
-            "net_profit_sol": "-0.356802828",
-            "reason": "not_in_window_or_unresolved"
-          }
-        ]
+        "dropped_losers": false,
+        "dropped_losing_episodes": []
       },
       "phase3_pages": 2,
       "jxt_uncovered": {
@@ -3245,7 +3239,7 @@
     {
       "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
       "blocked": false,
-      "blocker": "27 open lots; 31 unresolved-basis sales; cross-currency sensitivity not established; coverage gate requires count AND value; not independently audited; coverage_blocked",
+      "blocker": "25 open lots; 31 unresolved-basis sales; cross-currency sensitivity not established; coverage gate requires count AND value; not independently audited; coverage_blocked",
       "in_window_tx_count": 627,
       "sample_records": 100,
       "decodable_share": "0.4821",
@@ -3327,10 +3321,10 @@
       "coverage_count_share": "0.784313725",
       "coverage_value_share": "0.814823061",
       "coverage_mandatory_share": "0.784313725",
-      "completed_trades": 10,
+      "completed_trades": 14,
       "sample_positions": 113,
-      "realized_pnl_sol": "0.410996069",
-      "realized_pnl_usdc": "12620.493155",
+      "realized_pnl_sol": "-1.614086016",
+      "realized_pnl_usdc": "12486.635192",
       "completed_episode_net": null,
       "completed_episode_net_unit": "mixed",
       "qualifying_profit": null,
@@ -3398,12 +3392,12 @@
       ],
       "quarantine_never_sold": 5,
       "auditor": {
-        "clean_episodes": 12,
+        "clean_episodes": 16,
         "independently_audited_episode_net": null,
         "independently_audited_episode_net_unit": "mixed",
         "independently_audited_episode_nets_by_unit": {
-          "USDC": "28896.882878358",
-          "SOL": "0.410996069"
+          "USDC": "28763.024915358",
+          "SOL": "-1.614086016"
         },
         "unresolved_basis_sales": 25,
         "known_cost_sales": 36,
@@ -3416,24 +3410,9 @@
             "reason": "unflattened_losing_inventory"
           },
           {
-            "mint": "6ghHENQf93fipqeQxWMDyqKPGA3TykfwJRp54J3LBuC9",
-            "net_profit_sol": "-0.635261801",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "6ghHENQf93fipqeQxWMDyqKPGA3TykfwJRp54J3LBuC9",
-            "net_profit_sol": "-1.389820284",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
             "mint": "9Pfync3ejPC9eHqVzq3nYQJAhyhjqpnB9UsaSfLxpump",
             "net_profit_sol": "-2693.136191295",
             "reason": "unflattened_losing_inventory"
-          },
-          {
-            "mint": "HmM1cLPgB53LweeaDmqSVZwJYQGpWjk1YDhDiCx6wAD",
-            "net_profit_sol": "-172.313423",
-            "reason": "not_in_window_or_unresolved"
           }
         ]
       },
@@ -4169,13 +4148,13 @@
       "coverage_count_share": "0.795379538",
       "coverage_value_share": "0",
       "coverage_mandatory_share": "0",
-      "completed_trades": 12,
+      "completed_trades": 13,
       "sample_positions": 241,
-      "realized_pnl_sol": "87.27162175",
+      "realized_pnl_sol": "87.330662557",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "87.27162175",
+      "completed_episode_net": "87.330662557",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "87.27162175",
+      "qualifying_profit": "87.330662557",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -4247,11 +4226,11 @@
       ],
       "quarantine_never_sold": 30,
       "auditor": {
-        "clean_episodes": 13,
-        "independently_audited_episode_net": "208.269877931",
+        "clean_episodes": 15,
+        "independently_audited_episode_net": "226.952178427",
         "independently_audited_episode_net_unit": "SOL",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "208.269877931"
+          "SOL": "226.952178427"
         },
         "unresolved_basis_sales": 31,
         "known_cost_sales": 62,
@@ -4686,14 +4665,14 @@
       "coverage_count_share": "0.473451327",
       "coverage_value_share": "0.396756262",
       "coverage_mandatory_share": "0.396756262",
-      "completed_trades": 0,
+      "completed_trades": 21,
       "sample_positions": 105,
-      "realized_pnl_sol": null,
+      "realized_pnl_sol": "-24.444110597",
       "realized_pnl_usdc": null,
-      "completed_episode_net": null,
-      "completed_episode_net_unit": null,
-      "qualifying_profit": null,
-      "qualifying_unit": null,
+      "completed_episode_net": "-24.444110597",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "-24.444110597",
+      "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
@@ -4718,101 +4697,17 @@
       ],
       "quarantine_never_sold": 0,
       "auditor": {
-        "clean_episodes": 0,
-        "independently_audited_episode_net": null,
-        "independently_audited_episode_net_unit": null,
-        "independently_audited_episode_nets_by_unit": null,
+        "clean_episodes": 21,
+        "independently_audited_episode_net": "-30.811105316",
+        "independently_audited_episode_net_unit": "SOL",
+        "independently_audited_episode_nets_by_unit": {
+          "SOL": "-30.811105316"
+        },
         "unresolved_basis_sales": 2,
         "known_cost_sales": 31,
         "reconstructed_trades": 88,
-        "dropped_losers": true,
-        "dropped_losing_episodes": [
-          {
-            "mint": "GZLNaWXkrikpxA5Kcu8tRc1fM2N5h9zaBToCWQs1pump",
-            "net_profit_sol": "-0.023886833",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "5jvJtp5Vzi1x2NiGE2RpQFp2p4oQyNFUXFHDv7UVpump",
-            "net_profit_sol": "-0.273092694",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "4rvPEKRFFR36r5r7xJrfqtcZPuUz589BRNuRY6CQpump",
-            "net_profit_sol": "-1.031706702",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7BbxHk7qbQXpg9n6oJJdbRtjkRvjhLkw6u2GnA9wpump",
-            "net_profit_sol": "-2.070928325",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "4ehDQGjbFT76JyLmsQXdUKGUp9RsxiFQi1XVd4Zxpump",
-            "net_profit_sol": "-5.608826528",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FUY6RbdfrDfa82y1AS5ZQRtaoSr1ZVTGD2EkN11bpump",
-            "net_profit_sol": "-3.471927548",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "D52ittGzi4dLhBytN2NbFL9DKRYL2EK8VSSjRxxQpump",
-            "net_profit_sol": "-3.003886356",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CMNDT7PK5gHY8ZknhzEC2Q7UMDs2b7LT6c1eX7Kepump",
-            "net_profit_sol": "-0.587079298",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "HBSkLqJ6VXBaepaP6g9gLrUL5M2Lm4k3T9TY6fzEiaSw",
-            "net_profit_sol": "-5.001659438",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "x8NtU6nnYDn1BwMDGg2oFdBuYBevhJ32kqM97FSpump",
-            "net_profit_sol": "-4.551389746",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "8Gw5ERAe6hxMKyYWVXVhok6jhcvQkAfKH1bFBeQepump",
-            "net_profit_sol": "-1.06779969",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "AuQj7YQSe5ypzxU3f8DDDjNK5qk9PSVCNBcnwAMapump",
-            "net_profit_sol": "-0.023703792",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "6sdFSRAEXGx2m9Lm3mAGEoPZNQGhkW5Cb5h4Y7v9MP3v",
-            "net_profit_sol": "-3.90566986",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "5poHHYifZcxnEfKySUJ4YcyyHnE7gnMivwryUhb9pump",
-            "net_profit_sol": "-0.563893209",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "E4HCymUv9WTB3BYLDZ8G5Xoa1J9vhSy5PZHjaMhbpump",
-            "net_profit_sol": "-1.022353738",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3woeEPMcH9eNnfzvnXBLjeAqAXberTi987H2KZEUpump",
-            "net_profit_sol": "-1.375071834",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FyCiT1uzgWPuryg2hVusd6debeQSauGKP3aHnXKopump",
-            "net_profit_sol": "-0.006426742",
-            "reason": "not_in_window_or_unresolved"
-          }
-        ]
+        "dropped_losers": false,
+        "dropped_losing_episodes": []
       },
       "phase3_pages": 2
     },
@@ -6692,13 +6587,13 @@
       "coverage_count_share": "0.878718535",
       "coverage_value_share": "0.595349492",
       "coverage_mandatory_share": "0.595349492",
-      "completed_trades": 87,
+      "completed_trades": 97,
       "sample_positions": 1152,
-      "realized_pnl_sol": "-362.320121371",
+      "realized_pnl_sol": "-1525.354239089",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "-362.320121371",
+      "completed_episode_net": "-1525.354239089",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "-362.320121371",
+      "qualifying_profit": "-1525.354239089",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -6740,11 +6635,11 @@
       ],
       "quarantine_never_sold": 0,
       "auditor": {
-        "clean_episodes": 172,
-        "independently_audited_episode_net": "8381.546726534",
+        "clean_episodes": 187,
+        "independently_audited_episode_net": "9818.70304825",
         "independently_audited_episode_net_unit": "SOL",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "8381.546726534"
+          "SOL": "9818.70304825"
         },
         "unresolved_basis_sales": 12,
         "known_cost_sales": 559,
@@ -6777,59 +6672,9 @@
             "reason": "unflattened_losing_inventory"
           },
           {
-            "mint": "HK7vwb5pqzdvpWMenrR6Mb4Sx48xNZCyhWvd7vVgpump",
-            "net_profit_sol": "-19.998295703",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CmyQCYQwSTue7WSTgaMpkxFr1XEehBkj7vK43WrJpump",
-            "net_profit_sol": "-647.190866904",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "6Tq2RB8GJYuyfqxcrAFyt2R4ZxSQgKgHzPqp23Kdpump",
-            "net_profit_sol": "-14.999974212",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "EJe8BQaiQfmfU9NHLCMZiVsX8Jgeia6rVWwnvBnvpump",
-            "net_profit_sol": "-3.999877576",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FQaHxGbtFVR2wQtdBwWKBGJuCGbb3CMFoLv1Mrhopump",
-            "net_profit_sol": "-299.979164875",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "GpMNyr1DehzhkRousPrbwNPUZkWzEGFkxtfJu7M9pump",
-            "net_profit_sol": "-104.000238495",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "DL84mgbdEN3Z1tMAYF27RC8SgnK7MRcJffERn8Kqpump",
-            "net_profit_sol": "-43.897127296",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
             "mint": "FnA61tU6sYRxegnnZc4geK9jXvYPR1nK9WFWHa2cpump",
             "net_profit_sol": "-2.551972502",
             "reason": "unflattened_losing_inventory"
-          },
-          {
-            "mint": "2MA5Dcjjk1MFRq9mAR9DfhF24JnE7GKstCsa9CyXpump",
-            "net_profit_sol": "-8.484415452",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "2FttscDkUcookR2a8LhKx2CGSzHb2g76j1vZnb3Ppump",
-            "net_profit_sol": "-20.483536572",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "GG57VpCidMxJF3oB9rQZKcXpDANsijuf8HQ6uzRjpump",
-            "net_profit_sol": "-0.000620633",
-            "reason": "not_in_window_or_unresolved"
           }
         ]
       },
@@ -8828,13 +8673,13 @@
       "coverage_count_share": "0.789760349",
       "coverage_value_share": "0.661087804",
       "coverage_mandatory_share": "0.661087804",
-      "completed_trades": 61,
+      "completed_trades": 74,
       "sample_positions": 725,
-      "realized_pnl_sol": "44.384845345",
+      "realized_pnl_sol": "68.520086866",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "44.384845345",
+      "completed_episode_net": "68.520086866",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "44.384845345",
+      "qualifying_profit": "68.520086866",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -8874,48 +8719,17 @@
       ],
       "quarantine_never_sold": 0,
       "auditor": {
-        "clean_episodes": 99,
-        "independently_audited_episode_net": "4316.311226595",
+        "clean_episodes": 111,
+        "independently_audited_episode_net": "4333.251606112",
         "independently_audited_episode_net_unit": "SOL",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "4316.311226595"
+          "SOL": "4333.251606112"
         },
         "unresolved_basis_sales": 8,
         "known_cost_sales": 244,
         "reconstructed_trades": 748,
-        "dropped_losers": true,
-        "dropped_losing_episodes": [
-          {
-            "mint": "Di85N4ji3btFSnEVSi7vjBP5eEXiencPz7D11pgardhr",
-            "net_profit_sol": "-0.001130903",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7UAYgD2X3JgCRh474Kg4surRgCnrvuh1Kw5Gs3uCZfag",
-            "net_profit_sol": "-0.000341948",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "GyaBdGkrktJdJJcqoXi7mVC37d8eECu5SetPz8TSpump",
-            "net_profit_sol": "-0.002781308",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "99XjLY8VUSuwHcLcbTnqXvhwC3nWShMqqffamanAytMA",
-            "net_profit_sol": "-0.003145281",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7VwjRc8it6s3J19NFvc31To7NZvfJjiHvAM2z9KTpump",
-            "net_profit_sol": "-0.000407433",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7VwjRc8it6s3J19NFvc31To7NZvfJjiHvAM2z9KTpump",
-            "net_profit_sol": "-0.000160471",
-            "reason": "not_in_window_or_unresolved"
-          }
-        ]
+        "dropped_losers": false,
+        "dropped_losing_episodes": []
       },
       "phase3_pages": 2
     },
@@ -11581,7 +11395,7 @@
     {
       "address": "GnDVZMfXzWPGAcGvYnXqkWPyTcZpHdjR1bCB4qPbeiYo",
       "blocked": false,
-      "blocker": "2 completed episodes < min_sample 3; 2 open lots; 71 unresolved-basis sales; coverage gate requires count AND value; not independently audited",
+      "blocker": "2 open lots; 71 unresolved-basis sales; coverage gate requires count AND value; not independently audited",
       "in_window_tx_count": 664,
       "sample_records": 100,
       "decodable_share": "0.4876",
@@ -11628,13 +11442,13 @@
       "coverage_count_share": "0.985507246",
       "coverage_value_share": "0.988437893",
       "coverage_mandatory_share": "0.985507246",
-      "completed_trades": 2,
+      "completed_trades": 4,
       "sample_positions": 272,
-      "realized_pnl_sol": "-6.137550943",
+      "realized_pnl_sol": "81.384746792",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "-6.137550943",
+      "completed_episode_net": "81.384746792",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "-6.137550943",
+      "qualifying_profit": "81.384746792",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -11665,11 +11479,11 @@
       ],
       "quarantine_never_sold": 1,
       "auditor": {
-        "clean_episodes": 1,
-        "independently_audited_episode_net": "457.027411065",
+        "clean_episodes": 3,
+        "independently_audited_episode_net": "544.549708793",
         "independently_audited_episode_net_unit": "SOL",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "457.027411065"
+          "SOL": "544.549708793"
         },
         "unresolved_basis_sales": 119,
         "known_cost_sales": 139,
@@ -11680,11 +11494,6 @@
             "mint": "7bC8ugu1ZJn21MhA4ht483nX8brLNesa8R7XLimpFyhq",
             "net_profit_sol": "-8.58170458",
             "reason": "unflattened_losing_inventory"
-          },
-          {
-            "mint": "4Uk9BHcuosBaViZMgx7RHD2p9tpv7UTpd1vG9nDhpump",
-            "net_profit_sol": "-0.61511669",
-            "reason": "not_in_window_or_unresolved"
           }
         ]
       },
@@ -12486,13 +12295,13 @@
       "coverage_count_share": "0.870496592",
       "coverage_value_share": "0.632272886",
       "coverage_mandatory_share": "0.632272886",
-      "completed_trades": 10,
+      "completed_trades": 28,
       "sample_positions": 894,
-      "realized_pnl_sol": "-51.216373895",
+      "realized_pnl_sol": "-1068.002090254",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "-51.216373895",
+      "completed_episode_net": "-1068.002090254",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "-51.216373895",
+      "qualifying_profit": "-1068.002090254",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -12538,11 +12347,11 @@
       ],
       "quarantine_never_sold": 0,
       "auditor": {
-        "clean_episodes": 113,
-        "independently_audited_episode_net": "7592.459355475",
+        "clean_episodes": 148,
+        "independently_audited_episode_net": "10088.623904466",
         "independently_audited_episode_net_unit": "SOL",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "7592.459355475"
+          "SOL": "10088.623904466"
         },
         "unresolved_basis_sales": 72,
         "known_cost_sales": 600,
@@ -12550,44 +12359,9 @@
         "dropped_losers": true,
         "dropped_losing_episodes": [
           {
-            "mint": "GCjtR5e8JEoCtsigj67Hm3PN4ykS6Hhq5hSafub1pump",
-            "net_profit_sol": "-36.452866098",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CHuw3b7tYY5vkoDT8hZD6D8ieH4upSJioGZ5G7Jupump",
-            "net_profit_sol": "-9.946811517",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "E6X5kLd2maMmymxx4YFyfnySF8Wjx5yK7KMpWi3bpump",
-            "net_profit_sol": "-44.94773358",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "2s17wRK9PEg5hLGFQaSTSvNux7uYwitXN9YmZRXJpump",
-            "net_profit_sol": "-2.43301917",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CZta3hX8S9gZeHca7Urmx64oqDJxpbZKGQEKhff9pump",
-            "net_profit_sol": "-9.916442106",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "53FzfUaguG7UvDHtRbAPcG6fCm17wie8AtTdJy16pump",
-            "net_profit_sol": "-35.348445413",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
             "mint": "C5s2Fv5RvYomXR3KXarnTPH4RDf3YUBX7CY3pmAwpump",
             "net_profit_sol": "-0.093129788",
             "reason": "unflattened_losing_inventory"
-          },
-          {
-            "mint": "64a9XnaNZYaScG6mrMS8WkEkTVif76cdnBUbP39ipump",
-            "net_profit_sol": "-18.100827327",
-            "reason": "not_in_window_or_unresolved"
           },
           {
             "mint": "DBp8uj76vzpd5ZcNf9ytsiTCEHr5BamhwKYMnYsHpump",
@@ -12598,51 +12372,6 @@
             "mint": "5NH5rCDkdFcSt1v7aN7QLWWm7ir7J2xtNZEydiowpump",
             "net_profit_sol": "-12.130496489",
             "reason": "unflattened_losing_inventory"
-          },
-          {
-            "mint": "Da3ea9KAKJbpGeb2iBZnhQBu9ssDmHLgS4VxCjgDpump",
-            "net_profit_sol": "-45.570557555",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ANMpZDv9ud5p14R3NFgwHNDUrMC7cNdz6nHhake7pump",
-            "net_profit_sol": "-9.564255244",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "DePF1sDBMMnKZfTfixwqzW3Udi2NjXwZznjEbjBwpump",
-            "net_profit_sol": "-37.048239724",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ELPcmV2eEyCeKZdoF4pMApe4pvCkDhhAwetWXgsapump",
-            "net_profit_sol": "-153.192606001",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "GDmG2DL5PMDzZpQN2jUuwe1qZsWHA7AfLRZyP41kpump",
-            "net_profit_sol": "-24.123684064",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7zk8XZNbWot2F29XPU2stivUF1vRCEAebtc1iyLzpump",
-            "net_profit_sol": "-568.455605939",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "5Px6njzveTbhMfhd9TG1z92UtuwBE6eZxprGyQj5pump",
-            "net_profit_sol": "-89.269989234",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "HJRT8kkrCXVrmdrrDJSNXAz5w6aszwcgL1Us7dWJpump",
-            "net_profit_sol": "-3.653558119",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "xQj8KrXVoKX8KnSsnDTSRG5pipgkz4bhK8vtM5vpump",
-            "net_profit_sol": "-0.000211387",
-            "reason": "not_in_window_or_unresolved"
           }
         ]
       },
@@ -12908,13 +12637,13 @@
       "coverage_count_share": "0.529411765",
       "coverage_value_share": "0.601072909",
       "coverage_mandatory_share": "0.529411765",
-      "completed_trades": 50,
+      "completed_trades": 227,
       "sample_positions": 807,
-      "realized_pnl_sol": "9.615765199",
+      "realized_pnl_sol": "27.866549107",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "9.615765199",
+      "completed_episode_net": "27.866549107",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "9.615765199",
+      "qualifying_profit": "27.866549107",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -13088,142 +12817,18 @@
       "quarantine_never_sold": 109,
       "PRODUCT_READY": false,
       "auditor": {
-        "clean_episodes": 77,
-        "independently_audited_episode_net": "11.998528893",
-        "independently_audited_episode_net_unit": "SOL",
+        "clean_episodes": 373,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": "mixed",
         "independently_audited_episode_nets_by_unit": {
-          "SOL": "11.998528893"
+          "SOL": "99.382112171",
+          "USDC": "96.884631"
         },
         "unresolved_basis_sales": 129,
         "known_cost_sales": 569,
         "reconstructed_trades": 1325,
         "dropped_losers": true,
         "dropped_losing_episodes": [
-          {
-            "mint": "DtR4D9FtVoTX2569gaL837ZgrB6wNjj6tkmnX9Rdk9B2",
-            "net_profit_sol": "-0.140844044",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.445251787",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.122658667",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.969505595",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.214376628",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-1.544448989",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.992484864",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.474803125",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ai66LHZG9MCzg1WKdawwqduVAXpNDUuV8M3uyq5ppump",
-            "net_profit_sol": "-0.640819716",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7hWcHohzwtLddDUG81H2PkWq6KEkMtSDNkYXsso18Fy3",
-            "net_profit_sol": "-0.178363186",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "8H5yfL1GoDETLDaLYZzrgQuZs37eiKJjdfP21b6ypump",
-            "net_profit_sol": "-0.39336782",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "HmJDgky11u77hpBss6D8sjNpYPD5B6fWgSVDj58jpump",
-            "net_profit_sol": "-0.41084469",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "4yHhHQM1gEVSVFhMwE1oU93aWRbsKfuhzXMdG6h9moon",
-            "net_profit_sol": "-0.017680972",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "915YcCbtupYLTz3RwfKjYngzBG2Bk2RX8We4D2HSpump",
-            "net_profit_sol": "-0.03485145",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "DWrrbYP65oo33Fk83iaQVHQhytntFM1uooyJHjaxpump",
-            "net_profit_sol": "-0.494170349",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3C6nz382qU71aDiEvk5xsmJrzd5Ey6iNXdpTgrjVpump",
-            "net_profit_sol": "-0.168227598",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-0.092789555",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-1.705853655",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-0.466645648",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-0.811142209",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-0.090238342",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-0.127860446",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ApZuxdpzMrbEYTGEzeY9afh5pj9d6qPRJCTgQYiipbKg",
-            "net_profit_sol": "-1.588434629",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CSLP8Vp7u9hrXQi7crPXqCp7BaJaG4JrNxqvR3jDpump",
-            "net_profit_sol": "-0.195949933",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "UWUy7J86LUiBv5SjAUZ53LMGhtnqvbQ7QNSSkyupump",
-            "net_profit_sol": "-3.168647732",
-            "reason": "not_in_window_or_unresolved"
-          },
           {
             "mint": "4U4U8oXwDyVXGeTffMXds4NAgBgLFwq3wNvTCRTSpump",
             "net_profit_sol": "-0.701201552",
@@ -13245,124 +12850,9 @@
             "reason": "not_in_window_or_unresolved"
           },
           {
-            "mint": "Fijo1ZCtZsvUqo3kJJ4quyKTN759Xyev8xSz1h5Mpump",
-            "net_profit_sol": "-0.136006899",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
             "mint": "Df6yfrKC8kZE3KNkrHERKzAetSxbrWeniQfyJY4Jpump",
             "net_profit_sol": "-0.054111262",
             "reason": "opening_inventory"
-          },
-          {
-            "mint": "6TgAzpPCoswgtwdGJNVWxu61eEQZJtETdZiqfkFFpump",
-            "net_profit_sol": "-1.987190127",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "EMWtbpHaNqMbjUMZguuazhuZUVLWG3z4C5oZnGJPSqxS",
-            "net_profit_sol": "-4.173810995",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7V6Sk63y8Rr1MvcN5mYNp61wgFhy4EeQg5gUASk9pump",
-            "net_profit_sol": "-1.148915905",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7V6Sk63y8Rr1MvcN5mYNp61wgFhy4EeQg5gUASk9pump",
-            "net_profit_sol": "-0.442936986",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "7V6Sk63y8Rr1MvcN5mYNp61wgFhy4EeQg5gUASk9pump",
-            "net_profit_sol": "-0.145121875",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "DuVgdHeEk7ejWPxWY5G3PQA99oEGGLmnbWuWWxpEpump",
-            "net_profit_sol": "-0.707769584",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "DuVgdHeEk7ejWPxWY5G3PQA99oEGGLmnbWuWWxpEpump",
-            "net_profit_sol": "-0.02327096",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Hpmr6UPypGQffqh67Y5PK2gvoDeuz1Rsxe12574Mpump",
-            "net_profit_sol": "-0.440041978",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "wzjjr5TW1pxTpi1Dk5VS12oxSFhYncp68RXxe81pump",
-            "net_profit_sol": "-1.936912425",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "4CqbsEkp2F38vL1ABVxUnUophsk4SBWLt5RJzgdesq9W",
-            "net_profit_sol": "-0.408343733",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FzJ1Cm4kwEjiPmfna8WXWwjC7i41KnB9oi9wz3nHpump",
-            "net_profit_sol": "-0.252319824",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "2NffKvfZTcFj2tyoY1Ev84PkqxA7DZnstyv6EwELpump",
-            "net_profit_sol": "-0.02622998",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "XSTuo1fV7HHMhs4BYiwtrWSLsMCJNrooH2AssWTYZqP",
-            "net_profit_sol": "-62.510212",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "XSTuo1fV7HHMhs4BYiwtrWSLsMCJNrooH2AssWTYZqP",
-            "net_profit_sol": "-4.575531046",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "9Y3fY1kwYUTgLwBU7DZKkEwCsZYj3BrXQNP74ZNEpump",
-            "net_profit_sol": "-0.083996943",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "4cvZwC17oMiUA7peKX5GhbaUWv4U5Lwrd8118xnFpump",
-            "net_profit_sol": "-1.246143891",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3kvZYBrBPEySFwQfXZGEvJSeMWRa6BkTS34suBEYpump",
-            "net_profit_sol": "-0.24603158",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3kvZYBrBPEySFwQfXZGEvJSeMWRa6BkTS34suBEYpump",
-            "net_profit_sol": "-0.372262216",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3kvZYBrBPEySFwQfXZGEvJSeMWRa6BkTS34suBEYpump",
-            "net_profit_sol": "-0.412376752",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FtateF34Xzawa91bpbVNdX72hZYo9cymRDYqBreHHbJi",
-            "net_profit_sol": "-0.038831045",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "BaBeW6hdxDSenERN6JcxLY9v27YnZqaAQYWuscUjpump",
-            "net_profit_sol": "-0.388620031",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "ECY31gWwxy4s2VnMkYhmqDkrV75KrwR2yTtsnrnSpump",
-            "net_profit_sol": "-0.566207307",
-            "reason": "not_in_window_or_unresolved"
           },
           {
             "mint": "6ehEcTMCc85aNF4x9CWx8HuvWGhxQtvKdhKVf2HDpump",
@@ -13385,213 +12875,8 @@
             "reason": "not_in_window_or_unresolved"
           },
           {
-            "mint": "DZchfuc2Jom3m6zovzFNTREH4Tm4zx6mAavHCDLbpump",
-            "net_profit_sol": "-0.4556773",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Gymbmn9wwMKe4NnmVceyyfpncp9arbwPfSdBsyY9pump",
-            "net_profit_sol": "-0.332039065",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CVhWiQ2SBhpTJ3xAR3ekf3uf8Ns2tNzj3mEtzKSpump",
-            "net_profit_sol": "-0.039768002",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CVhWiQ2SBhpTJ3xAR3ekf3uf8Ns2tNzj3mEtzKSpump",
-            "net_profit_sol": "-0.284314143",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CVhWiQ2SBhpTJ3xAR3ekf3uf8Ns2tNzj3mEtzKSpump",
-            "net_profit_sol": "-0.763764342",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FzxG3ZieTtfwSd1kyRqJNus1WyjaHnh5KGCCtdarpump",
-            "net_profit_sol": "-0.280815941",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "4SnKwnz6DyagftnFqdxsvWvehrcbEDhxmmXNQk2Jpump",
-            "net_profit_sol": "-0.033570999",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "42cXQvAAr7hcPBPWAS4ocVtDyeJ4Fa6gRR2uG4gppump",
-            "net_profit_sol": "-1.137145416",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "42cXQvAAr7hcPBPWAS4ocVtDyeJ4Fa6gRR2uG4gppump",
-            "net_profit_sol": "-1.899855154",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Am8iBffqgaedfdK5XhtorbcRrKzwH9nyL3ySikQfpump",
-            "net_profit_sol": "-0.794237469",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Am8iBffqgaedfdK5XhtorbcRrKzwH9nyL3ySikQfpump",
-            "net_profit_sol": "-0.238798569",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ge87EtsjwRQbHaqQmKRno69RFTwh9bfSsm99XNxTpump",
-            "net_profit_sol": "-0.436700891",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ge87EtsjwRQbHaqQmKRno69RFTwh9bfSsm99XNxTpump",
-            "net_profit_sol": "-0.32823032",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ge87EtsjwRQbHaqQmKRno69RFTwh9bfSsm99XNxTpump",
-            "net_profit_sol": "-0.162035257",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ge87EtsjwRQbHaqQmKRno69RFTwh9bfSsm99XNxTpump",
-            "net_profit_sol": "-0.171801376",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Ge87EtsjwRQbHaqQmKRno69RFTwh9bfSsm99XNxTpump",
-            "net_profit_sol": "-0.611653407",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "euXT5wMLfGs1zu2zfgeTUSXhjZNuMMiUZLsLsDKpump",
-            "net_profit_sol": "-0.574610721",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "euXT5wMLfGs1zu2zfgeTUSXhjZNuMMiUZLsLsDKpump",
-            "net_profit_sol": "-0.43414788",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "9gAVAtdnsrniW3GCwsvDeRPf5eJDjtT9S5bu1j7tpump",
-            "net_profit_sol": "-0.061382825",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "9gAVAtdnsrniW3GCwsvDeRPf5eJDjtT9S5bu1j7tpump",
-            "net_profit_sol": "-0.205330471",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3BgwJ8b7b9hHX4sgfZ2KJhv9496CoVfsMK2YePevsBRw",
-            "net_profit_sol": "-0.409213134",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3BgwJ8b7b9hHX4sgfZ2KJhv9496CoVfsMK2YePevsBRw",
-            "net_profit_sol": "-0.072391802",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3BgwJ8b7b9hHX4sgfZ2KJhv9496CoVfsMK2YePevsBRw",
-            "net_profit_sol": "-0.29089431",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3BgwJ8b7b9hHX4sgfZ2KJhv9496CoVfsMK2YePevsBRw",
-            "net_profit_sol": "-0.808617393",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3BgwJ8b7b9hHX4sgfZ2KJhv9496CoVfsMK2YePevsBRw",
-            "net_profit_sol": "-0.177937415",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CBQ7NJvfmTKUaYsEaVQTk4sLA1gHYMGMqYWX89rUpump",
-            "net_profit_sol": "-0.647540048",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "FMqh9mqR6drPZqqW6wPqLHxX4rqNDWGhYLaMfoaJpump",
-            "net_profit_sol": "-0.392768488",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CN162nCPpq3DxPCyKLbAvEJeB1aCxsnVTEG4ZU8vpump",
-            "net_profit_sol": "-0.162007372",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "5zCypRD91xWpaQba5t2GG7QzEaJGTQzpYBZdeKuepump",
-            "net_profit_sol": "-0.006296301",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "2oQNkePakuPbHzrVVkQ875WHeewLHCd2cAwfwiLQbonk",
-            "net_profit_sol": "-0.248680188",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "HZG1RVn4zcRM7zEFEVGYPGoPzPAWAj2AAdvQivfmLYNK",
-            "net_profit_sol": "-0.091532745",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "6w35ZYDQTrJwVPkuEBJG4QMjnBZceeW8QoerdEjRpump",
-            "net_profit_sol": "-0.230594723",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
             "mint": "AYYfBtUEwQp5ynUD4AUd8azoyxgtp7oH7QsSBvCmmoon",
             "net_profit_sol": "-0.147484296",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "AYYfBtUEwQp5ynUD4AUd8azoyxgtp7oH7QsSBvCmmoon",
-            "net_profit_sol": "-0.249650849",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "5eiJm3oJRXcd3Aahg338P9DFULG8PPzmCUXGoFKpump",
-            "net_profit_sol": "-0.267965253",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "EocT8aPVWRgReBBvN4DzdE1HWZEejA7HR3eesuJrpump",
-            "net_profit_sol": "-0.073755444",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "2vvw3cSwibzGD6SgW9QzRaBdmjkYrvs218DUy6VWpump",
-            "net_profit_sol": "-0.285949686",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "GSp4qePZUHBtt5f4gE6AsRC9JUUqeZEJLeN2JZxLpump",
-            "net_profit_sol": "-0.413883289",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "Db3FyrbovdsJWXaCBvE24P31uheKQH58cfpqWsXcpump",
-            "net_profit_sol": "-0.321626619",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3grmULXrnQyN2A5LFStKFeSQsWvZjzNDsDVVLknFpump",
-            "net_profit_sol": "-0.521977637",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "3grmULXrnQyN2A5LFStKFeSQsWvZjzNDsDVVLknFpump",
-            "net_profit_sol": "-0.289633873",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "uBLGz81CGT7sncb4ft5Dn2Ty4H6siH8yuhABBaDpump",
-            "net_profit_sol": "-0.456792961",
             "reason": "not_in_window_or_unresolved"
           },
           {
@@ -14071,18 +13356,18 @@
       "coverage_count_share": "1",
       "coverage_value_share": "1",
       "coverage_mandatory_share": "1",
-      "completed_trades": 0,
+      "completed_trades": 1,
       "sample_positions": 109,
-      "realized_pnl_sol": null,
+      "realized_pnl_sol": "1527.075322463",
       "realized_pnl_usdc": null,
-      "completed_episode_net": null,
-      "completed_episode_net_unit": null,
-      "qualifying_profit": null,
-      "qualifying_unit": null,
+      "completed_episode_net": "1527.075322463",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "1527.075322463",
+      "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
-      "lead_level": "insufficient_evidence",
-      "blocker": "0 completed episodes; sensitivity not established",
+      "lead_level": "conditional_captured_lot_result",
+      "blocker": "1 completed episode < min_sample 3; not independently audited",
       "coverage_status": "provisional_eligible",
       "program_blockers": null,
       "bundle": false,
@@ -14132,13 +13417,13 @@
       "coverage_count_share": "0.555178268",
       "coverage_value_share": "0.439945541",
       "coverage_mandatory_share": "0.439945541",
-      "completed_trades": 1,
+      "completed_trades": 2,
       "sample_positions": 306,
       "realized_pnl_sol": null,
-      "realized_pnl_usdc": "63.400338",
-      "completed_episode_net": "63.400338",
+      "realized_pnl_usdc": "-1536.546624",
+      "completed_episode_net": "-1536.546624",
       "completed_episode_net_unit": "USDC",
-      "qualifying_profit": "63.400338",
+      "qualifying_profit": "-1536.546624",
       "qualifying_unit": "USDC",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
@@ -14370,11 +13655,11 @@
       "quarantine_never_sold": 161,
       "PRODUCT_READY": false,
       "auditor": {
-        "clean_episodes": 1,
-        "independently_audited_episode_net": "63.400338",
+        "clean_episodes": 2,
+        "independently_audited_episode_net": "-1536.546624",
         "independently_audited_episode_net_unit": "USDC",
         "independently_audited_episode_nets_by_unit": {
-          "USDC": "63.400338"
+          "USDC": "-1536.546624"
         },
         "unresolved_basis_sales": 51,
         "known_cost_sales": 47,
@@ -14389,11 +13674,6 @@
           {
             "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
             "net_profit_sol": "-344.936485",
-            "reason": "not_in_window_or_unresolved"
-          },
-          {
-            "mint": "CARDSccUMFKoPRZxt5vt3ksUbxEFEcnZ3H2pd3dKxYjp",
-            "net_profit_sol": "-1599.946962",
             "reason": "not_in_window_or_unresolved"
           },
           {
@@ -14675,10 +13955,12 @@
       "quarantine_never_sold": 2,
       "PRODUCT_READY": false,
       "auditor": {
-        "clean_episodes": 0,
-        "independently_audited_episode_net": null,
-        "independently_audited_episode_net_unit": null,
-        "independently_audited_episode_nets_by_unit": null,
+        "clean_episodes": 1,
+        "independently_audited_episode_net": "0.053683283",
+        "independently_audited_episode_net_unit": "SOL",
+        "independently_audited_episode_nets_by_unit": {
+          "SOL": "0.053683283"
+        },
         "unresolved_basis_sales": 25,
         "known_cost_sales": 118,
         "reconstructed_trades": 906,
