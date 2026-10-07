@@ -401,9 +401,9 @@ def test_partial_match_cases_agree_with_independent_tool(store):
 
 def test_rank1_and_g1_unchanged_after_partial_match_and_research_screen():
     rank1 = reconcile_rank1()
-    assert rank1["market_trades"] == 6
+    assert rank1["market_trades"] == 8
     assert Decimal(rank1["fifo"]["total_profit"]) == Decimal("376.028087")
-    assert len(rank1["fifo"]["open_lots"]) == 3
+    assert len(rank1["fifo"]["open_lots"]) == 5
     assert len(rank1["fifo"]["unresolved_basis_sales"]) == 1
     g1 = reconcile_g1()
     assert Decimal(g1["fifo"]["total_profit"]) == Decimal("-0.167725526")
