@@ -489,7 +489,7 @@ def test_pda_unsigned_debit_is_not_a_cosigner():
 
 
 def test_decoder_version_is_pinned():
-    assert DECODER_VERSION == "spot-v23-quote-rent-inner-v1"
+    assert DECODER_VERSION == "spot-v24-wallet-rent-quote-v1"
 
 
 def test_research_program_ids_are_split_into_pinned_and_unverified():

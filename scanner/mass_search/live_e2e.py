@@ -223,6 +223,8 @@ FATAL_SEED_STATES = frozenset({
     "ENTITLEMENT_BLOCKED",
     "UNSUPPORTED_SCHEMA",
     "UNAUTHORIZED",
+    "RATE_LIMITED",
+    "PAYMENT_REQUIRED",
 })
 # Ledger home is pinned here and in the committed draft, not in the armed copy.
 # --live uses this absolute path. It must not depend on HOME.
@@ -1666,8 +1668,11 @@ def _nansen_error_from_response(status, payload, billing):
     if status in (401, 403):
         message = envelope.get("message") or "Nansen rejected the key or plan"
         return SourceError("ENTITLEMENT_BLOCKED", message, http_status=status, extras=extras)
+    if status == 402:
+        message = envelope.get("message") or "Nansen payment required"
+        return SourceError("ENTITLEMENT_BLOCKED", message, http_status=status, extras=extras)
     if status == 429:
-        return SourceError("RATE_LIMITED", envelope.get("message") or "Nansen rate limit", http_status=status, retryable=True, extras=extras)
+        return SourceError("RATE_LIMITED", envelope.get("message") or "Nansen rate limit", http_status=status, retryable=False, extras=extras)
     message = envelope.get("message") or "Unexpected Nansen response"
     return SourceError("UNSUPPORTED_SCHEMA", message, http_status=status, extras=extras)
 
@@ -2348,7 +2353,9 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
             raw_parts.append(response.get("raw_bytes") or b"{}")
             vendor = dict((extras.get(address) or {}).get("vendor_metrics") or {})
             payload = response.get("body") if isinstance(response.get("body"), dict) else {}
-            vendor["profiler_pnl_summary"] = payload.get("data") if isinstance(payload, dict) else None
+            # Documented pnl-summary body is top-level (top5_tokens, realized_pnl_usd).
+            nested = payload.get("data") if isinstance(payload, dict) else None
+            vendor["profiler_pnl_summary"] = nested if isinstance(nested, dict) else payload
             vendor["is_not"] = "independently_verified_profit_or_copyability"
             extras[address]["vendor_metrics"] = vendor
             extras[address]["billing"] = response.get("billing")
@@ -3746,13 +3753,15 @@ async def run_live_e2e(raw):
     grant_lock = ExclusiveLock(ledger_path / "GRANT.lock")
     output_lock = ExclusiveLock(output_dir / "RUN.lock")
     try:
-        grant_lock.acquire()
+        if not config.get("dry_run"):
+            grant_lock.acquire()
         output_lock.acquire()
     except LockHeld as error:
         store.close()
         raise LiveE2EError(str(error)) from error
     try:
-        store.put("configuration", "live_authorization", config["grant"])
+        if not config.get("dry_run"):
+            store.put("configuration", "live_authorization", config["grant"])
         state = load_or_create_state(output_dir, config, resume=config["resume"])
         state["authorization_id"] = config["authorization_id"]
         if state.get("bounds"):

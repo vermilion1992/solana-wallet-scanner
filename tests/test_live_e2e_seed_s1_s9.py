@@ -13,12 +13,14 @@ from scanner.mass_search.adapters import (
     SourceError,
 )
 from scanner.mass_search.live_e2e import (
+    FATAL_SEED_STATES,
     HARD_CEILINGS,
     PINNED_DRAFT_HASHES,
     AUTHORIZATION_ID_13,
     DRAFT_REL_13,
     RecorderTransport,
     ROOT,
+    _nansen_error_from_response,
     _nansen_seed_call,
     bind_caps_from_grant,
     birdeye_failure_state,
@@ -88,8 +90,8 @@ def _phase1_config(tmp_path, seed_source, tokens=None, **extra):
 def test_s2_cu_constants_match_official_birdeye_docs():
     assert BIRDEYE_TOKEN_LIST_UNITS == 60
     assert BIRDEYE_TOKEN_TXS_UNITS == 10
-    assert BIRDEYE_TOKEN_TX_SEEK_UNITS == 10
-    assert BIRDEYE_CU_DOCS_URL.endswith("compute-unit-cost")
+    assert BIRDEYE_TOKEN_TX_SEEK_UNITS == 12
+    assert "birdeye.so" in BIRDEYE_CU_DOCS_URL
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_13] == (
         "e9629ca44a48671bb9a61c1b3c2ec19a42aa5338b1fc53e00c55498fe3254a2e"
     )
@@ -251,6 +253,23 @@ def test_s6a_overlapping_samples_are_deduped_by_signature():
     assert decision["dropped"] is False
 
 
+def test_s6ap_fee_first_same_signature_does_not_drop_trades():
+    t0 = 1_790_000_000
+    recs = [{"signature": "same", "blockTime": t0 + i} for i in range(3)]
+    evs = [
+        {"kind": "fee", "timestamp": t0, "signature": "same", "mint": None},
+        {"kind": "buy", "timestamp": t0, "signature": "same", "mint": "MintA"},
+        {"kind": "sell", "timestamp": t0 + 1, "signature": "same", "mint": "MintA"},
+    ]
+    decision = helius_triage_decision(
+        [{"records": recs, "events": evs}],
+        now_unix=t0 + 400 * 86400,
+    )
+    assert decision["max_economic_trades_in_one_day"] == 2
+    assert decision["economic_trades"] == 2
+    assert decision["dropped"] is False
+
+
 def test_s6b_triage_ignores_legacy_max_bot_rate(tmp_path):
     config = validate_config({
         "mode": "dry-run",
@@ -352,6 +371,45 @@ def test_s9_permission_refusal_is_entitlement_blocked():
     assert retryable is False
     assert "lacks sufficient permissions" in message
     assert birdeye_failure_state(200, {"success": False, "message": "Too many requests"})[0] == "RATE_LIMITED"
+
+
+def test_s1p_dry_run_does_not_write_grant_lock_or_config(tmp_path, monkeypatch):
+    from scanner.mass_search.live_e2e import run_live_e2e
+    from tests.test_live_e2e_spend_safety import _arm_grant, _empty_helius, _live_kwargs, pin_test_ledger
+
+    ledger = pin_test_ledger(tmp_path, monkeypatch)
+    monkeypatch.setattr("scanner.mass_search.live_e2e._live_helius", _empty_helius)
+    grant_path = _arm_grant(tmp_path, helius_req=10, helius_units=100, bind_hash=False)
+    grant = json.loads(Path(grant_path).read_text(encoding="utf-8"))
+    out = tmp_path / "dry-out"
+    store, _ = open_grant_store(grant["authorization_id"])
+    store.put("configuration", "live_authorization", {"marker": "pre-dry-run"})
+    store.close()
+    asyncio.run(run_live_e2e({
+        **_live_kwargs(tmp_path, grant_path, out, [], phases="1"),
+        "mode": "dry-run",
+        "discovery": False,
+        "seed_source": "",
+        "wallets": "",
+    }))
+    assert list(ledger.rglob("GRANT.lock")) == []
+    store, _ = open_grant_store(grant["authorization_id"])
+    assert store.get("configuration", "live_authorization") == {"marker": "pre-dry-run"}
+    store.close()
+
+
+def test_nansen_402_is_entitlement_blocked():
+    err = _nansen_error_from_response(402, {"message": "payment required"}, {"credits_remaining": None})
+    assert err.state == "ENTITLEMENT_BLOCKED"
+    assert err.http_status == 402
+    assert err.state in FATAL_SEED_STATES
+
+
+def test_nansen_429_is_fatal_so_resume_does_not_resend():
+    err = _nansen_error_from_response(429, {"message": "slow down"}, {"credits_remaining": "10"})
+    assert err.state == "RATE_LIMITED"
+    assert err.retryable is False
+    assert "RATE_LIMITED" in FATAL_SEED_STATES
 
 
 def test_phase3_does_not_fallback_when_phase2_drops_everyone():

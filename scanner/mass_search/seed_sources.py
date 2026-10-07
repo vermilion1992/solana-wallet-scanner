@@ -43,17 +43,17 @@ BIRDEYE_TOKEN_LIST_PATH = "/defi/v3/token/list"
 BIRDEYE_FIRST_BUYERS_PATH = "/token/v1/first-buyers"
 BIRDEYE_TOKEN_TX_SEEK_PATH = "/defi/txs/token/seek_by_time"
 BIRDEYE_TOKEN_TXS_PATH = "/defi/txs/token"
-# Current official CU (docs.birdeye.so/docs/compute-unit-cost and
-# docs.birdeye.so/reference/compute-unit-cost, fetched 2026-10-07):
-# GET /defi/v3/token/list = 60 CU; GET /defi/txs/token = 10 CU;
-# GET /defi/txs/token/seek_by_time = 10 CU. The box verify report cited
-# 50 / 12 from an older data.birdeye.so table; current docs win.
+# Official Birdeye CU table (data.birdeye.so, linked from docs.birdeye.so
+# llms.txt; the docs.birdeye.so/docs/compute-unit-cost URL 404s):
+# GET /defi/v3/token/list = 50 CU (code uses 60 = safe over-count);
+# GET /defi/txs/token = 10 CU;
+# GET /defi/txs/token/seek_by_time = 12 CU (Lite+ only).
 BIRDEYE_TOKEN_LIST_UNITS = 60
 BIRDEYE_FIRST_BUYERS_UNITS = 25
-BIRDEYE_TOKEN_TX_SEEK_UNITS = 10
+BIRDEYE_TOKEN_TX_SEEK_UNITS = 12
 BIRDEYE_TOKEN_TXS_UNITS = 10
-BIRDEYE_CU_VERIFIED_ON = "2026-10-07"
-BIRDEYE_CU_DOCS_URL = "https://docs.birdeye.so/docs/compute-unit-cost"
+BIRDEYE_CU_VERIFIED_ON = "2026-10-08"
+BIRDEYE_CU_DOCS_URL = "https://data.birdeye.so"
 
 NANSEN_HOST = "api.nansen.ai"
 NANSEN_KEY_ENV = "NANSEN_API_KEY"
@@ -882,11 +882,16 @@ def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=F
                 seen_sigs.add(sig)
             records.append(row)
         for event in sample.get("events") or []:
-            sig = event.get("signature") if isinstance(event, dict) else None
-            if sig and sig in seen_event_sigs:
+            if not isinstance(event, dict):
+                continue
+            sig = event.get("signature")
+            kind = event.get("kind")
+            mint = event.get("mint")
+            key = (sig, kind, mint)
+            if sig and key in seen_event_sigs:
                 continue
             if sig:
-                seen_event_sigs.add(sig)
+                seen_event_sigs.add(key)
             events.append(event)
     times = []
     for row in records:
