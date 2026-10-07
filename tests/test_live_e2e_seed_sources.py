@@ -24,7 +24,7 @@ from scanner.investigation import (
 )
 from scanner.mass_search.adapters import (
     BIRDEYE_TOKEN_LIST_PATH,
-    BIRDEYE_TOKEN_TX_SEEK_PATH,
+    BIRDEYE_TOKEN_TXS_PATH,
 )
 from scanner.mass_search.bundle_detect import (
     _cosigner_is_tip_payer,
@@ -151,7 +151,7 @@ def test_new_draft_grant_is_disabled_and_hashed():
     assert raw["PRODUCT_READY"] is False
     assert raw["authorization_id"] == AUTHORIZATION_ID_13
     assert raw["providers"][0]["allowed_operations"] == [
-        "trader_gainers_losers", "token_top_traders", "token_list", "token_txs_seek",
+        "trader_gainers_losers", "token_top_traders", "token_list", "token_txs", "token_txs_seek",
     ]
     assert "token_first_buyers" not in raw["providers"][0]["allowed_operations"]
     nansen = next(row for row in raw["providers"] if row["provider_id"] == "nansen")
@@ -326,7 +326,7 @@ def test_token_intersect_dry_run_replays_recorded_fixtures(tmp_path):
     recorder = RecorderTransport()
     recorder.fixtures = {
         BIRDEYE_TOKEN_LIST_PATH: _fixture("token_list_durable.json"),
-        BIRDEYE_TOKEN_TX_SEEK_PATH: _fixture("token_txs_seek.json"),
+        BIRDEYE_TOKEN_TXS_PATH: _fixture("token_txs_seek.json"),
     }
     state = {"spend": empty_spend(), "phase_spend": empty_phase_spend(), "wallets": []}
     result = asyncio.run(phase1_discovery(store, grant, config, state, recorder))
@@ -339,7 +339,8 @@ def test_token_intersect_dry_run_replays_recorded_fixtures(tmp_path):
     assert state["seed_metadata"][JXT]["rank"] == 1
     assert state["spend"]["birdeye_requests"] == 9
     paths = {call["path"] for call in recorder.calls}
-    assert BIRDEYE_TOKEN_TX_SEEK_PATH in paths
+    assert BIRDEYE_TOKEN_TXS_PATH in paths
+    assert all(call["path"] != "/defi/txs/token/seek_by_time" for call in recorder.calls)
     assert all(call["path"] != "/token/v1/first-buyers" for call in recorder.calls)
 
 
@@ -488,7 +489,7 @@ def test_pda_unsigned_debit_is_not_a_cosigner():
 
 
 def test_decoder_version_is_pinned():
-    assert DECODER_VERSION == "spot-v22-dflow-swap2-wrap-v1"
+    assert DECODER_VERSION == "spot-v23-quote-rent-inner-v1"
 
 
 def test_research_program_ids_are_split_into_pinned_and_unverified():

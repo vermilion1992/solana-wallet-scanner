@@ -42,9 +42,18 @@ SEED_SOURCES = PRIMARY_SEED_SOURCES | {
 BIRDEYE_TOKEN_LIST_PATH = "/defi/v3/token/list"
 BIRDEYE_FIRST_BUYERS_PATH = "/token/v1/first-buyers"
 BIRDEYE_TOKEN_TX_SEEK_PATH = "/defi/txs/token/seek_by_time"
+BIRDEYE_TOKEN_TXS_PATH = "/defi/txs/token"
+# Current official CU (docs.birdeye.so/docs/compute-unit-cost and
+# docs.birdeye.so/reference/compute-unit-cost, fetched 2026-10-07):
+# GET /defi/v3/token/list = 60 CU; GET /defi/txs/token = 10 CU;
+# GET /defi/txs/token/seek_by_time = 10 CU. The box verify report cited
+# 50 / 12 from an older data.birdeye.so table; current docs win.
 BIRDEYE_TOKEN_LIST_UNITS = 60
 BIRDEYE_FIRST_BUYERS_UNITS = 25
 BIRDEYE_TOKEN_TX_SEEK_UNITS = 10
+BIRDEYE_TOKEN_TXS_UNITS = 10
+BIRDEYE_CU_VERIFIED_ON = "2026-10-07"
+BIRDEYE_CU_DOCS_URL = "https://docs.birdeye.so/docs/compute-unit-cost"
 
 NANSEN_HOST = "api.nansen.ai"
 NANSEN_KEY_ENV = "NANSEN_API_KEY"
@@ -59,7 +68,54 @@ ALLOWED_NANSEN_PATHS = frozenset({
 })
 NANSEN_LEADERBOARD_UNITS = 5
 NANSEN_PROFILER_UNITS = 1
+NANSEN_TIMEFRAME_ENUM = (1, 7, 30, 90, 180)
 NANSEN_TIMEFRAMES = (90, 180)
+NANSEN_CHAIN = "solana"
+NANSEN_FIRST_FUNDER_CHAIN = "all"
+NANSEN_BILLING_HEADER_NAMES = (
+    "X-Nansen-Credits-Cost",
+    "X-Nansen-Credits-Used",
+    "X-Nansen-Credits-Remaining",
+    "X-Request-Id",
+)
+# Official OpenAPI, fetched 2026-10-07 from docs.nansen.ai.
+# Smart Money PnL leaderboard: POST /api/v1/smart-money/pnl-leaderboard
+# requires chains[] and timeframe ∈ {1,7,30,90,180}; additionalProperties false.
+# Profiler pnl-summary: required chain + date DateRange; prefers wallet_address.
+# First-funder: EVM-only, chain fixed to "all". Dropped for Solana.
+NANSEN_SCHEMAS = {
+    "leaderboard": {
+        "additionalProperties": False,
+        "required": ["chains", "timeframe"],
+        "properties": {
+            "chains": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "timeframe": {"enum": list(NANSEN_TIMEFRAME_ENUM)},
+            "pagination": {"type": "object"},
+            "filters": {"type": "object"},
+            "order_by": {"type": "array"},
+        },
+    },
+    "pnl_summary": {
+        "additionalProperties": False,
+        "required": ["chain", "date"],
+        "properties": {
+            "wallet_address": {"type": "string"},
+            "address": {"type": "string"},
+            "entity_name": {"type": "string"},
+            "chain": {"type": "string"},
+            "date": {"type": "object", "required": ["from", "to"], "properties": {"from": {"type": "string"}, "to": {"type": "string"}}},
+            "pagination": {"type": "object"},
+        },
+    },
+    "first_funder": {
+        "additionalProperties": False,
+        "required": ["address"],
+        "properties": {
+            "address": {"type": "string"},
+            "chain": {"enum": [NANSEN_FIRST_FUNDER_CHAIN]},
+        },
+    },
+}
 
 DURABLE_TOKEN_MIN_AGE_DAYS = 21
 DURABLE_TOKEN_MAX_AGE_DAYS = 42
@@ -114,8 +170,9 @@ LEADERBOARD_VIABILITY = {
         "key_env": NANSEN_KEY_ENV,
         "reason": (
             "Official POST /api/v1/smart-money/pnl-leaderboard (5 credits) plus "
-            "profiler pnl-summary/first-funder (1 credit). Disabled when the "
-            "key is absent. Never call labels (100 credits) or premium_labels."
+            "profiler pnl-summary (1 credit). First-funder is EVM-only and is "
+            "not called for Solana. Disabled when the key is absent. Never "
+            "call labels (100 credits) or premium_labels."
         ),
     },
 }
@@ -156,13 +213,17 @@ SEED_CU_DOCS = {
         "provider": "birdeye",
         "paths": {
             "token_list": {"path": BIRDEYE_TOKEN_LIST_PATH, "documented_cu": BIRDEYE_TOKEN_LIST_UNITS},
+            "token_txs": {"path": BIRDEYE_TOKEN_TXS_PATH, "documented_cu": BIRDEYE_TOKEN_TXS_UNITS},
             "token_txs_seek": {"path": BIRDEYE_TOKEN_TX_SEEK_PATH, "documented_cu": BIRDEYE_TOKEN_TX_SEEK_UNITS},
         },
-        "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
-        "reviewed_on": "2026-10-07",
+        "primary_tx_path": BIRDEYE_TOKEN_TXS_PATH,
+        "docs": BIRDEYE_CU_DOCS_URL,
+        "reviewed_on": BIRDEYE_CU_VERIFIED_ON,
         "note": (
             "Seasoned-token buyers in ordinary windows (not first-block). "
-            "Intersect wallets in >=3 unrelated token cohorts. A seed is not evidence."
+            "Primary sampler is /defi/txs/token (10 CU); seek_by_time is not "
+            "assumed entitled. Intersect wallets in >=3 unrelated token cohorts. "
+            "A seed is not evidence."
         ),
     },
     SEED_NANSEN: {
@@ -173,13 +234,157 @@ SEED_CU_DOCS = {
         "avoid": [NANSEN_LABELS_PATH, "premium_labels"],
         "docs": "https://docs.nansen.ai/api/smart-money/pnl-leaderboard",
         "reviewed_on": "2026-10-07",
-        "note": "Disabled when NANSEN_API_KEY is absent. Never a dummy live call.",
+        "note": (
+            "Disabled when NANSEN_API_KEY is absent. Never a dummy live call. "
+            "First-funder is EVM-only and is not called for Solana."
+        ),
     },
 }
 
 
 class SeedSourceError(ValueError):
     """Invalid --seed-source value or combination."""
+
+
+def _schema_type_ok(value, expected):
+    if expected == "array":
+        return isinstance(value, list)
+    if expected == "object":
+        return isinstance(value, dict)
+    if expected == "string":
+        return isinstance(value, str)
+    if expected == "integer":
+        return type(value) is int and not isinstance(value, bool)
+    return True
+
+
+def validate_nansen_body(kind, body):
+    """Validate a request body against the published Nansen OpenAPI schema.
+
+    A transport fake that accepts any JSON cannot hide a schema violation:
+    this runs on the body before the call.
+    """
+    schema = NANSEN_SCHEMAS.get(kind)
+    if schema is None:
+        raise SeedSourceError(f"unknown Nansen schema kind {kind}")
+    if not isinstance(body, dict):
+        raise SeedSourceError("Nansen body must be an object")
+    allowed = set(schema.get("properties") or {})
+    extra = set(body) - allowed
+    if schema.get("additionalProperties") is False and extra:
+        raise SeedSourceError(f"Nansen {kind} unknown fields {sorted(extra)}")
+    for field in schema.get("required") or []:
+        if field not in body:
+            raise SeedSourceError(f"Nansen {kind} missing required field {field}")
+    for field, spec in (schema.get("properties") or {}).items():
+        if field not in body:
+            continue
+        value = body[field]
+        expected = spec.get("type")
+        if expected and not _schema_type_ok(value, expected):
+            raise SeedSourceError(f"Nansen {kind} field {field} has the wrong type")
+        enum = spec.get("enum")
+        if enum is not None and value not in enum:
+            raise SeedSourceError(f"Nansen {kind} field {field}={value!r} is not in {enum}")
+        if expected == "array" and spec.get("minItems") and len(value) < spec["minItems"]:
+            raise SeedSourceError(f"Nansen {kind} field {field} is empty")
+        if field == "date" and isinstance(value, dict):
+            for part in (spec.get("required") or ()):
+                if part not in value or not value.get(part):
+                    raise SeedSourceError(f"Nansen {kind} date.{part} is required")
+    return True
+
+
+def nansen_leaderboard_body(*, timeframe, page=1, per_page=50):
+    body = {
+        "chains": [NANSEN_CHAIN],
+        "timeframe": int(timeframe),
+        "pagination": {"page": int(page), "per_page": int(per_page)},
+    }
+    validate_nansen_body("leaderboard", body)
+    return body
+
+
+def nansen_pnl_summary_body(*, wallet_address, date_from, date_to):
+    body = {
+        "wallet_address": wallet_address,
+        "chain": NANSEN_CHAIN,
+        "date": {"from": date_from, "to": date_to},
+    }
+    validate_nansen_body("pnl_summary", body)
+    return body
+
+
+def nansen_first_funder_supported(*, chain=NANSEN_CHAIN):
+    """First-funder is EVM-only; Solana must not send the call."""
+    return False if chain == NANSEN_CHAIN else True
+
+
+def nansen_schema_kind_for_path(path):
+    if path == NANSEN_LEADERBOARD_PATH:
+        return "leaderboard"
+    if path == NANSEN_PNL_SUMMARY_PATH:
+        return "pnl_summary"
+    if path == NANSEN_FIRST_FUNDER_PATH:
+        return "first_funder"
+    raise SeedSourceError(f"no Nansen schema for path {path}")
+
+
+def nansen_iso_datetime(unix):
+    return datetime.fromtimestamp(int(unix), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def nansen_date_range_from_bounds(bounds):
+    start = int((bounds or {}).get("report_start_unix") or 0)
+    end = int((bounds or {}).get("report_end_unix") or 0)
+    if start <= 0 or end <= 0 or end <= start:
+        end = utc_now_unix()
+        start = end - (90 * 86400)
+    return nansen_iso_datetime(start), nansen_iso_datetime(end)
+
+
+def nansen_billing_from_headers(headers):
+    """Capture official Nansen billing headers. Values are strings or None."""
+    if headers is None:
+        return {
+            "credits_cost": None,
+            "credits_used": None,
+            "credits_remaining": None,
+            "request_id": None,
+        }
+    getter = headers.get if hasattr(headers, "get") else lambda key, default=None: None
+    return {
+        "credits_cost": getter("X-Nansen-Credits-Cost") or getter("x-nansen-credits-cost"),
+        "credits_used": getter("X-Nansen-Credits-Used") or getter("x-nansen-credits-used"),
+        "credits_remaining": getter("X-Nansen-Credits-Remaining") or getter("x-nansen-credits-remaining"),
+        "request_id": getter("X-Request-Id") or getter("x-request-id"),
+    }
+
+
+def redact_nansen_error_body(payload):
+    """Keep the official error envelope fields only. No raw secrets or addresses."""
+    if not isinstance(payload, dict):
+        return {"message": "non-json"}
+    return {
+        "code": payload.get("code"),
+        "message": payload.get("message") or payload.get("error"),
+        "error": payload.get("error"),
+        "status": payload.get("status"),
+        "request_id": payload.get("request_id"),
+        "param": payload.get("param"),
+        "doc_url": payload.get("doc_url"),
+    }
+
+
+def token_txs_params(token, *, offset=0, limit=50):
+    """GET /defi/txs/token query. No after_time/before_time; filter client-side."""
+    return {
+        "address": token,
+        "offset": int(offset),
+        "limit": int(limit),
+        "tx_type": "swap",
+        "sort_type": "desc",
+    }
 
 
 def canonicalize_seed_name(name):
@@ -289,7 +494,7 @@ def estimate_seed_plan(sources, *, tokens=None, discovery=True, wallets=None, na
         token_n = len(tokens) if tokens else (TOKEN_INTERSECT_SEASONED + TOKEN_INTERSECT_CONTROLS)
         list_req = 0 if tokens else 1
         tx_req = token_n * TOKEN_INTERSECT_WINDOWS * TOKEN_INTERSECT_PAGES_PER_WINDOW
-        units = (0 if tokens else BIRDEYE_TOKEN_LIST_UNITS) + tx_req * BIRDEYE_TOKEN_TX_SEEK_UNITS
+        units = (0 if tokens else BIRDEYE_TOKEN_LIST_UNITS) + tx_req * BIRDEYE_TOKEN_TXS_UNITS
         birdeye_requests += list_req + tx_req
         birdeye_units += units
         per_source[SEED_TOKEN_INTERSECT] = {
@@ -483,7 +688,7 @@ def token_tx_items(body):
     return items if isinstance(items, list) else []
 
 
-def token_tx_owners(rows, *, token=None, window=None, after_time=None):
+def token_tx_owners(rows, *, token=None, window=None, after_time=None, before_time=None):
     """Ordinary-period buyers. First-block (tx time < after_time) are dropped."""
     owners = []
     for row in rows or []:
@@ -503,6 +708,8 @@ def token_tx_owners(rows, *, token=None, window=None, after_time=None):
             row.get("blockUnixTime") or row.get("block_unix_time") or row.get("unixTime") or row.get("timestamp")
         )
         if after_time is not None and stamp is not None and stamp < int(after_time):
+            continue
+        if before_time is not None and stamp is not None and stamp > int(before_time):
             continue
         side = str(row.get("txType") or row.get("side") or row.get("type") or "swap").lower()
         if side in ("add", "remove"):
@@ -664,9 +871,23 @@ def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=F
     """
     records = []
     events = []
+    seen_sigs = set()
+    seen_event_sigs = set()
     for sample in samples or []:
-        records.extend(sample.get("records") or [])
-        events.extend(sample.get("events") or [])
+        for row in sample.get("records") or []:
+            sig = row.get("signature") if isinstance(row, dict) else None
+            if sig and sig in seen_sigs:
+                continue
+            if sig:
+                seen_sigs.add(sig)
+            records.append(row)
+        for event in sample.get("events") or []:
+            sig = event.get("signature") if isinstance(event, dict) else None
+            if sig and sig in seen_event_sigs:
+                continue
+            if sig:
+                seen_event_sigs.add(sig)
+            events.append(event)
     times = []
     for row in records:
         if not isinstance(row, dict):

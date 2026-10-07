@@ -46,6 +46,10 @@ SPEND_KEYS = (
     "nansen_requests",
     "nansen_units",
 )
+PHASE_CAP_KEYS = SPEND_KEYS + (
+    "leaderboard_requests",
+    "leaderboard_units",
+)
 
 _THREAD_LOCKS = {}
 _THREAD_LOCKS_GUARD = threading.Lock()
@@ -116,7 +120,7 @@ def phase_caps_from_grant(grant):
         if not isinstance(entry, dict):
             continue
         cleaned = {}
-        for key in SPEND_KEYS:
+        for key in PHASE_CAP_KEYS:
             if entry.get(key) is not None:
                 cleaned[key] = int(entry[key])
         if cleaned:

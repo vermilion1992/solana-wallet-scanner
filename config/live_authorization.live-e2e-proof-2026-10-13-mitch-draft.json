@@ -22,7 +22,7 @@
   "providers": [
     {
       "provider_id": "birdeye",
-      "allowed_operations": ["trader_gainers_losers", "token_top_traders", "token_list", "token_txs_seek"],
+      "allowed_operations": ["trader_gainers_losers", "token_top_traders", "token_list", "token_txs", "token_txs_seek"],
       "billing_unit": "birdeye_compute_unit",
       "existing_plan_confirmed": false,
       "remaining_quota_confirmed_at": null,
@@ -32,7 +32,7 @@
       "max_units": 1400,
       "max_concurrency": 1,
       "max_duration_seconds": 600,
-      "purpose": "Phase 1 seeds only. Ceiling 40 requests / 1400 CU. Documented: gainers-losers 30 CU; top_traders 35 CU; token list V3 60 CU; token txs seek_by_time 10 CU. token_intersect default plan is 1 list + 10 tokens x 3 windows x 1 page = 31 req / 360 CU. A seed is never evidence. No paid spend."
+      "purpose": "Phase 1 seeds only. Ceiling 40 requests / 1400 CU. Documented 2026-10-07 (docs.birdeye.so/reference/compute-unit-cost): gainers-losers 30 CU; top_traders 35 CU; token list V3 60 CU; /defi/txs/token 10 CU; seek_by_time 10 CU. token_intersect primary sampler is /defi/txs/token (not seek_by_time). Default plan is 1 list + 10 tokens x 3 pages x 1 = 31 req / 360 CU. A seed is never evidence. No paid spend."
     },
     {
       "provider_id": "helius",
@@ -50,7 +50,7 @@
     },
     {
       "provider_id": "nansen",
-      "allowed_operations": ["smart_money_pnl_leaderboard", "profiler_pnl_summary", "profiler_first_funder"],
+      "allowed_operations": ["smart_money_pnl_leaderboard", "profiler_pnl_summary"],
       "billing_unit": "nansen_credit",
       "existing_plan_confirmed": false,
       "remaining_quota_confirmed_at": null,
@@ -60,7 +60,7 @@
       "max_units": 100,
       "max_concurrency": 1,
       "max_duration_seconds": 600,
-      "purpose": "Optional. Disabled when NANSEN_API_KEY is absent; never a dummy call. Allowlisted: POST /api/v1/smart-money/pnl-leaderboard (5 credits, 90d/180d) and profiler pnl-summary/first-funder (1 credit). Forbidden: labels (100 credits) and premium_labels."
+      "purpose": "Optional. Disabled when NANSEN_API_KEY is absent; never a dummy call. Allowlisted: POST /api/v1/smart-money/pnl-leaderboard (5 credits, bodies use chains[] + timeframe) and profiler pnl-summary (1 credit, required date DateRange). First-funder is EVM-only and is not called for Solana. Forbidden: labels (100 credits) and premium_labels."
     },
     {
       "provider_id": "leaderboard",
