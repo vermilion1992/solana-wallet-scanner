@@ -875,6 +875,7 @@ def attach_live_independent_audit(report, profile, records, address):
         "known_cost_sales": known_sales,
         "dropped_losing_episodes": omitted_losing,
         "dropped_losers": bool(omitted_losing),
+        "omitted_losing_all": omitted_losing,
         "reconstructed_trades": len(trades),
         "source": "live_phase4_independent_episode_audit",
         "PRODUCT_READY": False,
@@ -883,6 +884,8 @@ def attach_live_independent_audit(report, profile, records, address):
         row for row in (omitted_losing or [])
         if row.get("reason") != "not_in_window_or_unresolved"
     ]
+    base["dropped_losing_episodes"] = in_window_drops
+    base["dropped_losers"] = bool(in_window_drops)
     if in_window_drops:
         return {
             **base,

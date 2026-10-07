@@ -89,7 +89,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v19-episode-rent-v1'
+DECODER_VERSION = 'spot-v20-dflow-ata-rent-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -152,6 +152,20 @@ def _flashx_is_wrap(instruction):
     except (ValueError, TypeError, KeyError):
         return False
     return bool(payload) and payload[0] == 1
+
+
+def _dflow_is_reviewed_swap(instruction, keys):
+    """True only for pinned DFlow swap discriminators. Wrap/setup siblings are not swaps."""
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return False
+    if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
+        return True
+    if payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
+        return True
+    return False
 
 
 def _anchor(name):
@@ -582,20 +596,38 @@ def _episode_rent_exclusion(flat, keys, before, after, address, skip_accounts):
     """
     skip = set(skip_accounts or ())
     excluded = 0
+    seen = set()
     for _outer, _path, instruction, _nested in flat:
         if _program(instruction, keys) != SYSTEM_ID:
             continue
         parsed = instruction.get('parsed')
-        if not isinstance(parsed, dict):
+        source = account = None
+        if isinstance(parsed, dict):
+            if parsed.get('type') not in ('createAccount', 'createAccountWithSeed'):
+                continue
+            info = parsed.get('info') or {}
+            source = info.get('source')
+            account = info.get('newAccount')
+        else:
+            # Compiled System create (opcode 0) and create-with-seed (opcode 3).
+            # Independent of tools/independent_episode_audit._system_movements.
+            try:
+                payload = _data(instruction.get('data'))
+                accounts = _accounts(instruction, keys)
+            except (ValueError, TypeError, KeyError, IndexError):
+                continue
+            opcode = int.from_bytes(payload[:4], 'little') if len(payload) >= 4 else None
+            if opcode == 0 and len(payload) >= 12 and len(accounts) >= 2:
+                source, account = accounts[0], accounts[1]
+            elif opcode == 3 and len(payload) >= 12 and len(accounts) >= 2:
+                source, account = accounts[0], accounts[1]
+            else:
+                continue
+        if source != address or not account or account in skip or account in seen:
             continue
-        if parsed.get('type') not in ('createAccount', 'createAccountWithSeed'):
+        if account not in keys:
             continue
-        info = parsed.get('info') or {}
-        if info.get('source') != address:
-            continue
-        account = info.get('newAccount')
-        if not account or account in skip or account not in keys:
-            continue
+        seen.add(account)
         index = keys.index(account)
         if index >= len(before) or index >= len(after):
             continue
@@ -882,6 +914,8 @@ def decode_supported_swaps(transactions, address):
                 program = _program(instruction, keys)
                 if program == FLASHX and _flashx_is_wrap(instruction):
                     continue
+                if program == DFLOW and not _dflow_is_reviewed_swap(instruction, keys):
+                    continue
                 if program in REVIEWED_OUTER_VENUES:
                     route = _route(instruction, keys)
                     route.update(index=index, path=f'instructions.{index}')
@@ -995,10 +1029,21 @@ def decode_supported_swaps(transactions, address):
                         pass
                 if program in (COMPUTE_ID, *MEMO_IDS, LIGHTHOUSE):
                     continue
+                if program == FLASHX and _flashx_is_wrap(instruction):
+                    continue
+                if program == DFLOW and not _dflow_is_reviewed_swap(instruction, keys):
+                    continue
                 if program == ASSOCIATED_ID:
                     if kind not in ('create', 'createIdempotent'):
                         raise ValueError('Unparsed associated account administration')
                     if info.get('wallet') != address:
+                        # Nested createIdempotent for a pool/protocol ATA is
+                        # swap lifecycle (Jupiter/Pump hop), not a transfer-out.
+                        if nested and info.get('source') == address:
+                            account = info.get('account')
+                            if account:
+                                rent_funders[account] = address
+                            continue
                         raise ValueError('Associated account creation for another wallet is outside swap scope')
                     account = info.get('account')
                     if info.get('mint') == WSOL:

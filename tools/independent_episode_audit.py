@@ -28,6 +28,7 @@ JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 METEORA_DAMM_V2 = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
 RFQ_FILL = "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
 OKX = "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
+DFLOW = "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
 SYSTEM = "11111111111111111111111111111111"
 LAMPORTS = Decimal(1_000_000_000)
 USDC_DECIMALS = Decimal(10) ** 6
@@ -54,6 +55,11 @@ PINNED = {
     # router accounts (payer 0, source token 1, dest token 2). Written here
     # without importing scanner.investigation.
     (OKX, "aa2955b184501f35"): ("SwapTob", 0, (1, 2)),
+    # Independent DFlow Aggregator v4. Wallet is account 3 on the published
+    # swap / swap_with_destination layouts. Written here without importing
+    # scanner.investigation.
+    (DFLOW, "f8c69e91e17587c8"): ("swap", 3, ()),
+    (DFLOW, "a8ac184dc59c8765"): ("swap_with_destination", 3, (4,)),
 }
 AUDITOR_TIP_LIST = Path(__file__).with_name("published_tip_accounts.json")
 

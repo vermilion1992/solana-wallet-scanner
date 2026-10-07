@@ -325,7 +325,7 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
     other_funders = set()
     forwards = {}
     unknown_forwards = {}
-    for raw, keys, _deltas, _record, _signers, has_swap in parsed_rows:
+    for raw, keys, _deltas, _record, _row_signers, has_swap in parsed_rows:
         if has_swap:
             continue
         token_accounts = _token_account_keys(raw, keys)
@@ -561,7 +561,7 @@ def detect_bundle_or_distribution(records, address):
                 sold_quarantined.update(mint for mint in gained if mint in later_sold and mint != WSOL)
                 zero_basis.append(signature)
     swap_traded = set()
-    for raw, keys, deltas, _record, _signers, _has_swap in parsed_rows:
+    for raw, keys, deltas, _record, _row_signers, _has_swap in parsed_rows:
         if keys and _has_reviewed_swap(raw, keys):
             swap_traded.update(_wallet_traded_mints(deltas))
     sold_quarantined -= swap_traded

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from scanner.investigation import _episode_rent_exclusion, _keys
+from scanner.investigation import _episode_rent_exclusion, _keys, decode_supported_swaps
 from scanner.mass_search.bundle_detect import detect_bundle_or_distribution
 from scanner.mass_search.canonical_records import canonical_decode_records
 from scanner.mass_search.history_ingest import replay_cached_history_to_report
@@ -127,7 +127,14 @@ def test_app_and_auditor_rent_policy_independent_on_jxt_pages():
         keys = _keys((raw.get("transaction") or {}).get("message") or {}, raw.get("meta") or {})
         before = (raw.get("meta") or {}).get("preBalances") or []
         after = (raw.get("meta") or {}).get("postBalances") or []
-        app_rent = _episode_rent_exclusion(_flat(raw), keys, before, after, JXT, set())
+        token_accounts = set()
+        for item in ((raw.get("meta") or {}).get("preTokenBalances") or []) + (
+            (raw.get("meta") or {}).get("postTokenBalances") or []
+        ):
+            index = item.get("accountIndex")
+            if isinstance(index, int) and 0 <= index < len(keys):
+                token_accounts.add(keys[index])
+        app_rent = _episode_rent_exclusion(_flat(raw), keys, before, after, JXT, token_accounts)
         gm1 = keys.index(GM1) if GM1 in keys else None
         if raw is long_lived:
             assert gm1 is not None
@@ -264,6 +271,22 @@ def test_report_window_widening_is_monotone_on_laj():
     assert completed[0] >= 1
     for earlier, later in zip(completed, completed[1:]):
         assert later >= earlier, completed
+
+
+def test_dkx_missing_ge87_buys_now_decode():
+    records = _load_pages(DKX_PAGES)
+    if not records:
+        pytest.skip("DKx pages not extracted")
+    opening = _record_by_prefix(records, "2vTAoMD5oZkH")
+    dflow = _record_by_prefix(records, "vYeWFHJdvG5w")
+    assert opening and dflow
+    decoded = decode_supported_swaps(canonical_decode_records([opening, dflow]), DKX)
+    trades = [row for row in decoded.get("events") or [] if row.get("kind") in ("buy", "sell")]
+    assert {row.get("signature", "")[:12] for row in trades} >= {"2vTAoMD5oZkH", "vYeWFHJdvG5w"}
+    assert all(row.get("kind") == "buy" for row in trades)
+    assert auditor.reconstruct_record(opening, DKX)
+    assert auditor.reconstruct_record(dflow, DKX)
+    assert auditor.reconstruct_record.__module__ == "tools.independent_episode_audit"
 
 
 def test_dkx_rates_at_90d():
