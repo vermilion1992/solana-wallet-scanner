@@ -378,6 +378,8 @@ def _replay_synthetic(store, entry, *, filters=None):
         entry.get("events") or [],
         corpus_kind="SYNTHETIC",
         mint=((entry.get("events") or [{}])[0] or {}).get("mint") or "SynthMint",
+        window_start=windows["report_start_inclusive"],
+        window_end=windows["report_end_exclusive"],
     )
     report = reconstructed["report"]
     report["source"] = "mass-search"

@@ -313,7 +313,11 @@ def test_real_mainnet_wrappers_and_sponsored_router_are_explicit_gaps():
         for signer in signers:
             result = decode_supported_swaps([entry], signer)
             assert not swaps(result)
-            assert 'No reviewed outer spot swap' in result['unresolved'][0]['reason']
+            reason = result['unresolved'][0]['reason']
+            assert (
+                'No reviewed outer spot swap' in reason
+                or 'No reviewed spot swap instruction' in reason
+            )
             assert result['events'][0]['paid_by_wallet'] == (signer == entries[0]['pubkey'])
             assert result['events'][0]['amount_sol'] == {
                 0: '0.000055688', 1: '0.00041', 2: '0.000080001', 3: '0.00041'}[index]

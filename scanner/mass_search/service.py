@@ -382,10 +382,10 @@ class MassSearchService:
             raise RuntimeError("Refilter issued external requests")
         return self.run_view(child["run_id"])
 
-    def reconstruct_candidate(self, run_id, candidate_id, events, *, corpus_kind=None, mint="Mint1111111111111111111111111111111111111"):
+    def reconstruct_candidate(self, run_id, candidate_id, events, *, corpus_kind=None, mint="Mint1111111111111111111111111111111111111", window_start=None, window_end=None):
         run = _load_run(self.store, run_id)
         kind = corpus_kind or run["corpus_kind"]
-        start, end = run["window_start"], run["window_end"]
+        start, end = window_start or run["window_start"], window_end or run["window_end"]
         accounting_events = events_to_accounting(events, mint=mint, start=start)
         evidence = self.store.archive({
             "kind": "mass-search-reconstruction-v1",

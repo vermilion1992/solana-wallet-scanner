@@ -337,6 +337,7 @@ def _restrict_ledger_to_report_window(report, episodes):
             episode.get("closed_at") or episode.get("timestamp") or episode.get("day")
         )
         if stamp is None:
+            out.append(episode)
             continue
         if start is not None and stamp < start:
             continue
