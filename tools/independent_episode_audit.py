@@ -28,6 +28,9 @@ JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 METEORA_DAMM_V2 = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
 RFQ_FILL = "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
 OKX = "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
+DFLOW = "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
+FLASHX = "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9"
+DGMG = "DGMgNKpqygARV2pHZfW4kNQSHT9F3Ly2BKWqvpYrAg5C"
 SYSTEM = "11111111111111111111111111111111"
 LAMPORTS = Decimal(1_000_000_000)
 USDC_DECIMALS = Decimal(10) ** 6
@@ -54,6 +57,14 @@ PINNED = {
     # router accounts (payer 0, source token 1, dest token 2). Written here
     # without importing scanner.investigation.
     (OKX, "aa2955b184501f35"): ("SwapTob", 0, (1, 2)),
+    # Independent DFlow Aggregator v4. Wallet at 3 on the observed swap
+    # (DKx vYeWFHJd). Wrap sibling 2f3e9bac83cd25c9 is not a swap.
+    (DFLOW, "f8c69e91e17587c8"): ("swap", 3, ()),
+    (DFLOW, "a8ac184dc59c8765"): ("swap_with_destination", 3, (4,)),
+    # Independent DGMg PumpSwap router. Same buy/sell discs as Pump; user at 1.
+    (DGMG, "66063d1201daebea"): ("buy", 1, (5, 6)),
+    (DGMG, "33e685a4017f83ad"): ("sell", 1, (5, 6)),
+    (DGMG, "c62e1552b4d9e870"): ("buy_exact_quote_in", 1, (5, 6)),
 }
 AUDITOR_TIP_LIST = Path(__file__).with_name("published_tip_accounts.json")
 
@@ -376,6 +387,26 @@ def _route(raw, address, keys):
             continue
         program = _program(instruction, keys)
         payload = _b58decode(instruction.get("data"))
+        accounts = _accounts(instruction, keys)
+        # Independent FLASHX swap: observed 0x00 payload, wallet at 1.
+        # Wraps (0x01) and other short opcodes are not swaps.
+        if (
+            program == FLASHX
+            and payload
+            and payload[0] == 0
+            and len(payload) >= 16
+            and len(accounts) >= 20
+            and accounts[1] == address
+        ):
+            return {
+                "program": program,
+                "instruction": "flashx_swap",
+                "discriminator": payload[:8].hex(),
+                "authority": accounts[1],
+                "owned": [],
+                "index": index,
+                "path": f"transaction.message.instructions.{index}",
+            }
         if len(payload) < 8:
             continue
         disc = payload[:8].hex()
@@ -383,7 +414,6 @@ def _route(raw, address, keys):
         if not layout:
             continue
         name, authority_idx, owned_idx = layout
-        accounts = _accounts(instruction, keys)
         if authority_idx >= len(accounts) or accounts[authority_idx] != address:
             continue
         owned = [accounts[i] for i in owned_idx if i < len(accounts)]

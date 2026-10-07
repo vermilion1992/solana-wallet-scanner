@@ -59,6 +59,8 @@ DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
 DFLOW_DST = 'dst5MGcFPoBeREFAA5E3tU5ij8m5uVYwkzkSAbsLbNo'
 FLASHX = 'FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9'
 GMGN = 'GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1'
+# Observed PumpSwap buy router (jXt 2EtPn1a61imQ): outer Buy then inner PumpSwap Buy.
+DGMG = 'DGMgNKpqygARV2pHZfW4kNQSHT9F3Ly2BKWqvpYrAg5C'
 PHOTON = '99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2'
 METEORA_DLMM = 'LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'
 PUMP_FEE_PROGRAM = 'pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ'
@@ -80,16 +82,17 @@ PHOTON_SWAP_ALT = bytes.fromhex('0d9e0ddf5fd51c06')
 DLMM_SWAP2 = bytes.fromhex('414b3f4ceb5b5b88')
 # Photon and DFlow DST layouts are pinned below but stay unsupported: every
 # attached real tx fails balance-delta reconciliation (no opposing SOL or
-# multi-asset). FLASHX wraps (10-byte 0x01) are not swaps; only the later
-# 0x00 swap instruction is routed.
+# multi-asset). FLASHX wraps (10-byte 0x01) and other non-0x00 opcodes are
+# not swaps; only the later 0x00 swap instruction is routed. B311 is a
+# multi-asset wrapper and is deliberately unreviewed.
 REVIEWED_OUTER_VENUES = (
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
     METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER, DFLOW,
-    FLASHX, GMGN, METEORA_DLMM,
+    FLASHX, GMGN, DGMG, METEORA_DLMM,
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v20-dflow-ata-rent-v1'
+DECODER_VERSION = 'spot-v21-dgmg-dflow-auditor-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -152,6 +155,16 @@ def _flashx_is_wrap(instruction):
     except (ValueError, TypeError, KeyError):
         return False
     return bool(payload) and payload[0] == 1
+
+
+def _flashx_is_reviewed_swap(instruction, keys):
+    """True only for the observed 0x00 FLASHX swap (wallet at 1, ≥20 accounts)."""
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return False
+    return bool(payload) and payload[0] == 0 and len(payload) >= 16 and len(accounts) >= 20
 
 
 def _dflow_is_reviewed_swap(instruction, keys):
@@ -396,9 +409,19 @@ def _route(instruction, keys):
             name, authority, owned_positions = 'FulfillOrder', 3, ()
     elif program == FLASHX:
         # Observed Axiom FLASHX routed swap: payload starting 0x00 with
-        # wallet at index 1. 10-byte 0x01 wraps are skipped before _route.
+        # wallet at index 1. Non-swap opcodes (wraps, 0x05, …) are skipped
+        # before _route.
         if len(payload) >= 16 and payload[0] == 0 and len(accounts) >= 20:
             name, authority, owned_positions = 'flashx_swap', 1, ()
+    elif program == DGMG:
+        # PumpSwap buy/sell router. Same discriminators as Pump; wallet at 1
+        # (PumpSwap user). Inner PumpSwap Buy is not a second outer.
+        if payload[:8] == _anchor('buy') and len(payload) >= 24 and len(accounts) >= 7:
+            name, authority, owned_positions, expected = 'buy', 1, (5, 6), 'buy'
+        elif payload[:8] == _anchor('sell') and len(payload) >= 24 and len(accounts) >= 7:
+            name, authority, owned_positions, expected = 'sell', 1, (5, 6), 'sell'
+        elif payload[:8] == _anchor('buy_exact_quote_in') and len(payload) >= 24 and len(accounts) >= 7:
+            name, authority, owned_positions, expected = 'buy_exact_quote_in', 1, (5, 6), 'buy'
     elif program == GMGN:
         if payload[:8] == GMGN_SWAP and len(payload) >= 24 and len(accounts) >= 8:
             name, authority, owned_positions = 'gmgn_swap', 0, ()
@@ -782,7 +805,7 @@ def _unresolved_native_roles(flat, owned, wrapped, keys, before, address, route,
 _REVIEWED_LIFECYCLE_OWNERS = frozenset({
     *TOKEN_IDS, PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
     OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, DFLOW_DST, RFQ_FILL,
-    FLASHX, GMGN, PHOTON, METEORA_DLMM,
+    FLASHX, GMGN, DGMG, PHOTON, METEORA_DLMM,
 })
 _REVIEWED_ALLOCATE_SPACES = frozenset({137, 165, 170})
 
@@ -925,7 +948,7 @@ def decode_supported_swaps(transactions, address):
                 if not isinstance(instruction, dict):
                     raise ValueError('Malformed instruction')
                 program = _program(instruction, keys)
-                if program == FLASHX and _flashx_is_wrap(instruction):
+                if program == FLASHX and not _flashx_is_reviewed_swap(instruction, keys):
                     continue
                 if program == DFLOW and not _dflow_is_reviewed_swap(instruction, keys):
                     continue
@@ -1042,7 +1065,7 @@ def decode_supported_swaps(transactions, address):
                         pass
                 if program in (COMPUTE_ID, *MEMO_IDS, LIGHTHOUSE):
                     continue
-                if program == FLASHX and _flashx_is_wrap(instruction):
+                if program == FLASHX and not _flashx_is_reviewed_swap(instruction, keys):
                     continue
                 if program == DFLOW and not _dflow_is_reviewed_swap(instruction, keys):
                     continue
@@ -1285,9 +1308,11 @@ def decode_supported_swaps(transactions, address):
             owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
                 # Jupiter shared-accounts route_v2 often settles native SOL
-                # without a wallet-owned wSOL ATA. The wallet's fee-adjusted
-                # native delta is the SOL leg when it never held WSOL.
-                if not (route['program'] == JUPITER and not owned_wsol_accounts):
+                # without a wallet-owned wSOL ATA. DGMg PumpSwap-router buys
+                # wrap-and-close the quote ATA in the same tx, so post
+                # balances also show no leftover WSOL. The wallet's
+                # fee-adjusted native delta is the SOL leg.
+                if not (route['program'] in (JUPITER, DGMG) and not owned_wsol_accounts):
                     raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
             native_roles = _unresolved_native_roles(flat, owned, wsol_accounts, keys,
                 pre_lamports, address, route, retained_funding, settlement)

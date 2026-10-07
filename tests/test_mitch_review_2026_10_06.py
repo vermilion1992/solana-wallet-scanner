@@ -996,10 +996,12 @@ def test_auditor_rejects_opening_inventory_close_4dyknedb():
     )
     isolated = audit_address(BVZT, pages)
     closes = [item["close_signature"] for item in isolated["episodes"]]
-    # Independent OKX SwapTob now reconstructs the earlier 7VertkgF buys, so
+    # Independent OKX SwapTob reconstructs the earlier 7VertkgF buys, so
     # 4dyknEdb is a clean close of known-cost inventory, not opening stock.
+    # Independent DFlow swap reconstructs 4X6ssNRT (DEW9 USDC buy), which
+    # closes 3QKBQnyvdSvi as an eighth clean episode.
     assert BVZT_OPENING_CLOSE in closes
-    assert isolated["clean_episodes"] == 7
+    assert isolated["clean_episodes"] == 8
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     by_address = {row["address"]: row for row in payload["wallets"]}
     bvzt = by_address[BVZT]

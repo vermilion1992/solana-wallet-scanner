@@ -39,6 +39,7 @@ from pathlib import Path
 from scanner.investigation import (
     DFLOW,
     DFLOW_DST,
+    DGMG,
     FLASHX,
     GMGN,
     JUPITER,
@@ -221,6 +222,7 @@ KNOWN_BLOCKING_PROGRAMS = {
     B311_PROGRAM: "B311 unreviewed",
     DFLOW: "DFlow",
     DFLOW_DST: "DFlow DST FulfillOrder",
+    DGMG: "DGMg PumpSwap router",
     GMGN: "GMGN",
     PHOTON: "Photon",
     METEORA_DLMM: "Meteora DLMM",

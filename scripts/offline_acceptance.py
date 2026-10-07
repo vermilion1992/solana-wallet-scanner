@@ -44,6 +44,7 @@ MANDATORY = [
     "tests/test_live_e2e_f635a45_residuals.py",
     "tests/test_live_e2e_4bbb364_residuals.py",
     "tests/test_live_e2e_df3278c_residuals.py",
+    "tests/test_live_e2e_venue_decode.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
 
