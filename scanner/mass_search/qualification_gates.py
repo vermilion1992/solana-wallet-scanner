@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections import Counter
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
 from statistics import median
@@ -21,20 +22,25 @@ ACCOUNTING_POLICY_VERSION = (
 # Asset-specific atomic units. Tolerances are integer atomics, then converted.
 # Rounding policy: quantize to the asset quantum with ROUND_HALF_EVEN (banker's
 # rounding). Comparison uses the integer atomic difference after that quantize.
-# SOL quantum is 1 lamport (1e-9). USDC quantum is 1 base unit (1e-6).
+# SOL quantum is 1 lamport (1e-9). USDC/USDT quantum is 1 base unit (1e-6).
 ATOMIC_UNITS = {
     "SOL": Decimal("0.000000001"),
     "USDC": Decimal("0.000001"),
+    "USDT": Decimal("0.000001"),
 }
 ATOMIC_TOLERANCE = {
     "SOL": 2,   # 2 lamports
     "USDC": 2,  # 2 USDC base units
+    "USDT": 2,  # 2 USDT base units
 }
 ROUNDING_POLICY = (
-    "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with "
-    "ROUND_HALF_EVEN. Two values agree when the absolute atomic difference is "
-    "at most 2 units of that asset. Never apply a SOL lamport tolerance to USDC."
+    "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6 / "
+    "USDT 1e-6) with ROUND_HALF_EVEN. Two values agree when the absolute "
+    "atomic difference is at most 2 units of that asset. Never apply a SOL "
+    "lamport tolerance to USDC or USDT. Never sum mixed quote currencies."
 )
+MAX_ECONOMIC_TRADES_PER_UTC_DAY = 25
+GT25_ECONOMIC_TRADES_RULE = "gt_25_economic_trades_in_one_day"
 
 COVERAGE_LEAD_SHARE = Decimal("0.99")
 COVERAGE_WATCH_SHARE = Decimal("0.95")
@@ -130,6 +136,8 @@ def tolerance_text(unit):
     count = ATOMIC_TOLERANCE.get(unit, 2)
     if unit == "USDC":
         return f"{count} USDC base units"
+    if unit == "USDT":
+        return f"{count} USDT base units"
     if unit == "SOL":
         return f"{count} lamports"
     return f"{count} {unit} atomic units"
@@ -652,7 +660,92 @@ def trading_activity(events):
     }
 
 
-def stronger_shortlist_activity_ok(activity):
+def _event_unix(event):
+    stamp = (event or {}).get("block_time") or (event or {}).get("blockTime") or (event or {}).get("timestamp")
+    if type(stamp) is int:
+        return stamp
+    if isinstance(stamp, str) and stamp:
+        try:
+            return int(datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp())
+        except (TypeError, ValueError):
+            return None
+    return None
+
+
+def economic_trades_by_utc_day(events):
+    """Count buy/sell economic trades per UTC date.
+
+    One trade is (signature, kind, mint). Route legs are not trades. Fee
+    events are not trades. Overlapping samples collapse. Timestamps may be
+    unix seconds or ISO-8601.
+    """
+    counts = Counter()
+    seen = set()
+    for event in events or []:
+        if not isinstance(event, dict):
+            continue
+        if event.get("kind") not in ("buy", "sell"):
+            continue
+        stamp = _event_unix(event)
+        if stamp is None:
+            continue
+        key = (event.get("signature"), event.get("kind"), event.get("mint"))
+        if event.get("signature") and key in seen:
+            continue
+        if event.get("signature"):
+            seen.add(key)
+        day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
+        counts[day] += 1
+    return dict(counts)
+
+
+def economic_trade_rate(events):
+    by_day = economic_trades_by_utc_day(events)
+    if not by_day:
+        return {"by_day": {}, "max": 0, "max_on": None}
+    day = max(by_day, key=lambda item: (by_day[item], item))
+    return {"by_day": by_day, "max": int(by_day[day]), "max_on": day}
+
+
+def trade_rate_from(report=None, profile=None):
+    """Full-captured-history rate when attached; else best available events."""
+    for source in (profile, report):
+        if not source:
+            continue
+        stored = source.get("max_economic_trades_in_one_day")
+        if stored not in (None, ""):
+            return {
+                "by_day": source.get("economic_trades_by_utc_day") or {},
+                "max": int(stored),
+                "max_on": source.get("max_economic_trades_on") or source.get("max_trades_per_day_on"),
+            }
+    events = []
+    if report:
+        events = list(report.get("captured_history_events") or [])
+        if not events:
+            events = list(report.get("events") or [])
+    if profile and not events:
+        events = list(profile.get("captured_history_events") or [])
+    return economic_trade_rate(events)
+
+
+def attach_economic_trade_rate(target, events):
+    """Write max trades/day + date onto a report or profile. Independent of window."""
+    rate = economic_trade_rate(events)
+    target["economic_trades_by_utc_day"] = rate["by_day"]
+    target["max_economic_trades_in_one_day"] = rate["max"]
+    target["max_economic_trades_on"] = rate["max_on"]
+    target["max_trades_per_day"] = rate["max"]
+    target["max_trades_per_day_on"] = rate["max_on"]
+    return rate
+
+
+def stronger_shortlist_activity_ok(activity, max_economic_trades_in_one_day=None):
+    if (
+        max_economic_trades_in_one_day is not None
+        and int(max_economic_trades_in_one_day) > MAX_ECONOMIC_TRADES_PER_UTC_DAY
+    ):
+        return False
     return (
         int(activity.get("active_trading_days") or 0) >= STRONGER_MIN_ACTIVE_DAYS
         and int(activity.get("span_days") or 0) >= STRONGER_MIN_SPAN_DAYS

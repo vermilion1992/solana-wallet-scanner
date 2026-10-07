@@ -2245,6 +2245,7 @@ def _phase4_wallet_row(report, profile):
         "sample_positions": (profile or {}).get("sample_positions"),
         "realized_pnl_sol": realized.get("SOL"),
         "realized_pnl_usdc": realized.get("USDC"),
+        "realized_pnl_usdt": realized.get("USDT"),
         "completed_episode_net": (profile or {}).get("completed_episode_net"),
         "completed_episode_net_unit": (profile or {}).get("completed_episode_net_unit"),
         "qualifying_profit": str(profit) if profit is not None else None,
@@ -2253,6 +2254,26 @@ def _phase4_wallet_row(report, profile):
         "independently_audited": independently_audited(report, profile),
         "lead_level": level.get("level") or "insufficient_evidence",
         "blocker": blocker,
+        "max_economic_trades_in_one_day": (
+            (profile or {}).get("max_economic_trades_in_one_day")
+            or (report or {}).get("max_economic_trades_in_one_day")
+            or level.get("max_economic_trades_in_one_day")
+        ),
+        "max_economic_trades_on": (
+            (profile or {}).get("max_economic_trades_on")
+            or (report or {}).get("max_economic_trades_on")
+            or level.get("max_economic_trades_on")
+        ),
+        "max_trades_per_day": (
+            (profile or {}).get("max_trades_per_day")
+            or (report or {}).get("max_trades_per_day")
+            or level.get("max_trades_per_day")
+        ),
+        "max_trades_per_day_on": (
+            (profile or {}).get("max_trades_per_day_on")
+            or (report or {}).get("max_trades_per_day_on")
+            or level.get("max_trades_per_day_on")
+        ),
         "coverage_status": fields.get("coverage_status"),
         "program_blockers": ((report.get("prescreen") or {}).get("program_blockers")),
         "bundle": bundle.get("excluded"),

@@ -536,3 +536,196 @@ def test_d7_jxt_is_audited_with_exact_net_30d_and_90d(tmp_path):
             or "0"
         ))
         assert got == net, (days, got, net, audit.get("reason"))
+
+
+def test_d2_unparsed_system_create_wallet_owned_rent_is_not_cross_settlement():
+    """AE4C 2jUxgRQv1z pattern: raw System opcode 0 + wallet-owned ATA still open."""
+    from scanner.compiled_instructions import _base58_decode, _base58_encode
+
+    payload = copy.deepcopy(_load("dflow-swap2-token-usdc.json"))
+    raw = payload["record"]
+    message = raw["transaction"]["message"]
+    meta = raw["meta"]
+    keys = [
+        item["pubkey"] if isinstance(item, dict) else item
+        for item in message["accountKeys"]
+    ]
+    wallet = payload["address"]
+    wallet_idx = keys.index(wallet)
+    new_ata = "NewAtaRaw111111111111111111111111111111111"
+    loaded = meta.setdefault("loadedAddresses", {})
+    readonly = list(loaded.get("readonly") or [])
+    readonly.append(new_ata)
+    loaded["readonly"] = readonly
+    meta["preBalances"].append(0)
+    meta["postBalances"].append(2_039_280)
+    meta["postBalances"][wallet_idx] -= 2_039_280
+    route_index = next(
+        i
+        for i, ins in enumerate(message["instructions"])
+        if isinstance(ins.get("programIdIndex"), int) and keys[ins["programIdIndex"]] == DFLOW
+        or ins.get("programId") == DFLOW
+    )
+    owner = _base58_decode(TOKEN_PROGRAM, "token-program", 32)
+    data = (
+        (0).to_bytes(4, "little")
+        + (2_039_280).to_bytes(8, "little")
+        + (165).to_bytes(8, "little")
+        + owner
+    )
+    groups = meta.setdefault("innerInstructions", [])
+    group = next((g for g in groups if g.get("index") == route_index), None)
+    if group is None:
+        group = {"index": route_index, "instructions": []}
+        groups.append(group)
+    group["instructions"].append({
+        "programId": "11111111111111111111111111111111",
+        "accounts": [wallet, new_ata],
+        "data": _base58_encode(data),
+    })
+    group["instructions"].append({
+        "programId": TOKEN_PROGRAM,
+        "parsed": {
+            "type": "initializeAccount3",
+            "info": {"account": new_ata, "mint": USDC, "owner": wallet},
+        },
+    })
+    decoded, trades = _app_trades(payload)
+    reasons = " ".join(row.get("reason") or "" for row in decoded.get("unresolved") or [])
+    assert "cross-settlement" not in reasons, reasons
+    assert len(trades) == 1
+    assert trades[0]["settlement_asset"] == "USDC"
+
+
+def test_d4pp_usdt_events_keep_usdt_through_accounting_and_episodes():
+    from scanner.mass_search.service import events_to_accounting
+    from scanner.mass_search.research_profile import _episode_ledger_from_report
+
+    payload = copy.deepcopy(_load("dflow-swap2-token-usdc.json"))
+    raw = payload["record"]
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in raw["meta"].get(field) or []:
+            if row.get("mint") == USDC:
+                row["mint"] = USDT
+    decoded, trades = _app_trades(payload)
+    sell = next(row for row in trades if row.get("kind") == "sell")
+    buy = next((row for row in trades if row.get("kind") == "buy"), None)
+    mapped = []
+    for row in trades:
+        mapped.append({
+            **row,
+            "units": str(row.get("quantity_raw") or row.get("units") or "0"),
+            "consideration_usdt": row.get("amount_usdt"),
+            "seconds_from_start": 0 if row is (buy or sell) else 1,
+            "timestamp_missing": False,
+        })
+    rows = events_to_accounting(mapped, mint=sell["mint"], start="2026-10-01T00:00:00Z")
+    trades_out = [row for row in rows if row.get("kind") in ("buy", "sell")]
+    assert trades_out
+    assert all(row.get("settlement_asset") == "USDT" for row in trades_out)
+    assert all(row.get("amount_usdt") not in (None, "") for row in trades_out)
+    assert all(row.get("amount_sol") in (None, "") for row in trades_out)
+    report = {
+        "events": trades_out,
+        "worksheet": {
+            "sale_rows": [{
+                "signature": sell.get("signature"),
+                "mint": sell.get("mint"),
+                "net_profit": "12.5",
+                "basis": "10",
+                "proceeds": "22.5",
+                "fees_and_tips": "0",
+                "settlement_asset": "USDT",
+            }],
+        },
+        "window": {"start": "2026-09-01T00:00:00Z", "end": "2026-10-08T00:00:00Z"},
+    }
+    if buy:
+        report["events"] = trades_out
+    ledger = _episode_ledger_from_report(report)
+    if ledger:
+        assert all(item.get("unit") == "USDT" for item in ledger)
+        assert all(item.get("unit") != "SOL" for item in ledger)
+
+
+def test_reviewed_stablecoin_rule_is_usdc_usdt_only():
+    from scanner.investigation import (
+        PYUSD,
+        QUOTE_MINTS,
+        REVIEWED_STABLECOIN_RULE,
+        USD1,
+        USDS,
+    )
+    from scanner.mass_search.settlement import REVIEWED_STABLECOIN_RULE as SETTLEMENT_RULE
+
+    assert USDC in QUOTE_MINTS
+    assert USDT in QUOTE_MINTS
+    assert PYUSD not in QUOTE_MINTS
+    assert USD1 not in QUOTE_MINTS
+    assert USDS not in QUOTE_MINTS
+    assert "USDC and USDT only" in REVIEWED_STABLECOIN_RULE
+    assert "PYUSD" in REVIEWED_STABLECOIN_RULE
+    assert SETTLEMENT_RULE == REVIEWED_STABLECOIN_RULE or "USDC and USDT only" in SETTLEMENT_RULE
+
+
+def test_ax5_4k3dyjzv_auditor_closes_on_observed_flatten_not_mint_wide_sum():
+    """AX5FaYB3 4k3Dyjzv: auditor was wrong; app flat-to-flat 319/321 is right.
+
+    Buy qty sums miss 58590 raw dust versus observed balances. The first
+    flatten (observed post=0) therefore leaves unmatched sell qty. The
+    auditor used to keep that episode open and glue the next 319.07/321.37
+    flat onto a mint-wide 583.20/640.44. Observed flatten must close.
+    """
+    mint = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+    rows = [
+        ("buy", "3DqoTA8", "6138875934", "100", "0", "6138875934", 1),
+        ("buy", "4TCxff7", "1534488658", "25", "6138875934", "7673364592", 2),
+        ("buy", "4aLQVD5", "1534646909", "25", "7673364592", "9208011501", 3),
+        ("buy", "63Zrb5f", "3809763079", "61.52680626", "9208011501", "13017774580", 4),
+        ("buy", "2mWTne9", "2844482406", "52.595918312", "13017833170", "15862315576", 5),
+        ("sell", "2PVuv31", "3862000000", "74.146321876", "15862315576", "12000315576", 6),
+        ("sell", "fJur4ca", "2000000000", "37.794267709", "12000315576", "10000315576", 7),
+        ("sell", "3F2Zzh2", "10000315576", "207.137489233", "10000315576", "0", 8),
+        ("buy", "3amUVtM", "15312443191", "319.072780188", "0", "15312443191", 9),
+        ("sell", "2TRb1r1", "15312443191", "321.368106664", "15312443191", "0", 10),
+    ]
+    trades = []
+    for kind, sig, qty, sol, pre, post, stamp in rows:
+        trades.append({
+            "mint": mint,
+            "kind": kind,
+            "signature": sig,
+            "slot": stamp,
+            "transaction_index": 0,
+            "timestamp": 1_775_000_000 + stamp,
+            "quantity_raw": qty,
+            "observed_pre_quantity_raw": pre,
+            "observed_post_quantity_raw": post,
+            "settlement_asset": "SOL",
+            "consideration_sol": sol,
+            "fees_and_tips_sol": "0",
+            "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+            "instruction": "route_v2",
+        })
+    original_start, original_end = auditor.REPORT_START, auditor.REPORT_END
+    auditor.REPORT_START = 0
+    auditor.REPORT_END = 2_000_000_000
+    try:
+        episodes, unresolved, _known, omitted = auditor._fifo(trades)
+    finally:
+        auditor.REPORT_START = original_start
+        auditor.REPORT_END = original_end
+    assert omitted == []
+    assert unresolved >= 1
+    assert len(episodes) == 2
+    last = episodes[-1]
+    assert last["close_signature"] == "2TRb1r1"
+    assert Decimal(last["basis_sol"]) == Decimal("319.072780188")
+    assert Decimal(last["proceeds_sol"]) == Decimal("321.368106664")
+    assert Decimal(episodes[0]["basis_sol"]) != Decimal("583.19550476")
+    mint_wide_basis = sum(Decimal(sol) for kind, _s, _q, sol, _pre, _post, _t in rows if kind == "buy")
+    mint_wide_proceeds = sum(Decimal(sol) for kind, _s, _q, sol, _pre, _post, _t in rows if kind == "sell")
+    assert mint_wide_basis == Decimal("583.19550476")
+    assert mint_wide_proceeds == Decimal("640.446185482")
+    assert Decimal(last["basis_sol"]) != mint_wide_basis
+    assert Decimal(last["proceeds_sol"]) != mint_wide_proceeds

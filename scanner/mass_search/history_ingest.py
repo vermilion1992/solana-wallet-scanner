@@ -1057,6 +1057,7 @@ def replay_cached_history_to_report(
     from .research_profile import build_research_profile, default_filters
     report["research_profile"] = build_research_profile(
         report, filters=default_filters(), classification=classification,
+        decoded=decoded,
     )
     from .funnel_abc import classify_candidate
     report["funnel"] = classify_candidate(

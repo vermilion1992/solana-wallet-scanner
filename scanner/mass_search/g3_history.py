@@ -563,19 +563,14 @@ def declared_subset_worksheet(by_mint):
     from .settlement import independent_settlement_worksheet
 
     used = []
-    usdc_rows = []
-    sol_rows = []
+    rows = []
     for mint in sorted(by_mint):
-        rows = _ordered_inventory_rows(by_mint[mint])
-        if not rows:
+        part = _ordered_inventory_rows(by_mint[mint])
+        if not part:
             continue
-        if settlement_of(rows[0]) == USDC:
-            usdc_rows.extend(rows)
-            used.append(mint)
-        else:
-            sol_rows.extend(rows)
-            used.append(mint)
-    worksheet = independent_settlement_worksheet(usdc_rows + sol_rows)
+        rows.extend(part)
+        used.append(mint)
+    worksheet = independent_settlement_worksheet(rows)
     if not worksheet:
         return None
     worksheet["declared_mints"] = used

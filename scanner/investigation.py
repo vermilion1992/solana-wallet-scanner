@@ -36,6 +36,21 @@ USDC = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 USDT = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
 QUOTE_MINTS = frozenset({USDC, USDT})
 QUOTE_ASSET = {USDC: 'USDC', USDT: 'USDT'}
+# Reviewed quote stables are USDC and USDT only. SOL↔USDC/USDT is a
+# conversion. SOL↔PYUSD (2b1kV6Dk…), USD1 (USD1ttGY…), USDS (USDSwr9…)
+# or any other USD-named mint is an ordinary token trade of that mint.
+# Token↔an unreviewed stable is unresolved (two non-SOL assets).
+# Unknown quote is unresolved, never 0. No unsourced FX into SOL.
+REVIEWED_STABLECOIN_RULE = (
+    "Reviewed quote stables: USDC and USDT only. SOL↔reviewed stable is a "
+    "conversion, not a token position. Token↔reviewed stable is a buy/sell "
+    "settled in that stable. PYUSD, USD1, USDS and any other USD-named mint "
+    "are not reviewed quotes: SOL↔them is an ordinary token trade; "
+    "token↔them is unresolved. Unknown quote is unresolved, never 0."
+)
+PYUSD = '2b1kV6DkPYTUsS6vgMfaVwC4w2FgbNwkJWqaERbdW9t'
+USD1 = 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB'
+USDS = 'USDSwr9ApdHk5bvJKMjzff41FfuX8bSxdKcR81vTwcA'
 JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
 PUMP = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
 PUMP_SWAP = 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
@@ -929,6 +944,38 @@ def _token_account_owner(flat, keys, account):
     return None
 
 
+def _b58encode(data):
+    number = int.from_bytes(data, 'big')
+    out = ''
+    while number:
+        number, rem = divmod(number, 58)
+        out = _B58[rem] + out
+    pad = 0
+    for byte in data:
+        if byte:
+            break
+        pad += 1
+    return ('1' * pad) + (out or '1')
+
+
+def _system_create_unparsed(instruction, keys):
+    """Raw System opcode 0 (createAccount). Same layout as compiled_instructions."""
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None
+    if len(payload) < 52 or int.from_bytes(payload[:4], 'little') != 0 or len(accounts) < 2:
+        return None
+    return {
+        'source': accounts[0],
+        'newAccount': accounts[1],
+        'lamports': int.from_bytes(payload[4:12], 'little'),
+        'space': int.from_bytes(payload[12:20], 'little'),
+        'owner': _b58encode(payload[20:52]),
+    }
+
+
 def _verified_new_token_account_rent(flat, keys, before, after, address, skip_accounts):
     """Exclude still-open wallet-owned token-account rent only.
 
@@ -957,6 +1004,10 @@ def _verified_new_token_account_rent(flat, keys, before, after, address, skip_ac
             and info.get('owner') in TOKEN_IDS
         ):
             account = info.get('newAccount')
+        elif program == SYSTEM_ID and not kind:
+            created = _system_create_unparsed(instruction, keys)
+            if created and created.get('source') == address and created.get('owner') in TOKEN_IDS:
+                account = created.get('newAccount')
         if not account or account in skip or account in seen or account not in keys:
             continue
         if _token_account_owner(flat, keys, account) != address:
@@ -1249,6 +1300,11 @@ def decode_supported_swaps(transactions, address):
                         rent_funders[account] = address
                     continue
                 if program == SYSTEM_ID:
+                    if not kind:
+                        created = _system_create_unparsed(instruction, keys)
+                        if created:
+                            kind = 'createAccount'
+                            info = created
                     if kind == 'advanceNonce':
                         nonce_administration.append({**_verify_nonce_administration(
                             message, info, keys, pre_lamports, post_lamports, address, fee, outer, nested, raw=raw),

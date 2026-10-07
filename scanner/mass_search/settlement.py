@@ -15,6 +15,18 @@ SETTLEMENT_USDC = USDC
 SETTLEMENT_USDT = USDT
 QUOTE_MINTS = frozenset({USDC, USDT})
 QUOTE_ASSET = {USDC: "USDC", USDT: "USDT"}
+# Reviewed quote stables are USDC and USDT only. SOL↔USDC/USDT is a
+# conversion. SOL↔PYUSD/USD1/USDS (or any other USD-named mint) is an
+# ordinary token trade of that mint. Token↔an unreviewed stable is
+# unresolved (two non-SOL assets). No FX into SOL.
+REVIEWED_STABLECOIN_RULE = (
+    "Reviewed quote stables: USDC and USDT only. SOL↔reviewed stable is a "
+    "conversion, not a token position. Token↔reviewed stable is a buy/sell "
+    "settled in that stable. PYUSD, USD1, USDS and any other USD-named mint "
+    "are not reviewed quotes: SOL↔them is an ordinary token trade; "
+    "token↔them is unresolved. Unknown quote is unresolved, never 0. "
+    "Never convert one quote into another without a sourced price."
+)
 
 
 def settlement_of(event):
@@ -559,19 +571,28 @@ def worksheets_by_quote_asset(events, *, production=True):
 def _mixed_wrapper(by_asset, *, oracle):
     sol = by_asset.get("SOL") or {}
     usdc = by_asset.get("USDC") or {}
+    usdt = by_asset.get("USDT") or {}
+    sale_rows = (
+        list(sol.get("sale_rows") or [])
+        + list(usdc.get("sale_rows") or [])
+        + list(usdt.get("sale_rows") or [])
+    )
     return {
         "by_quote_asset": by_asset,
         "not_fx": True,
         "settlement_asset": "mixed",
         "total_profit_sol": sol.get("total_profit_sol"),
         "total_profit_usdc": usdc.get("total_profit_usdc"),
+        "total_profit_usdt": usdt.get("total_profit_usdt") or usdt.get("total_profit_usdc"),
         "total_gross_profit_sol": sol.get("total_gross_profit_sol"),
         "total_fees_and_tips_sol": sol.get("total_fees_and_tips_sol"),
         "sale_fifo_basis_sol": list(sol.get("sale_fifo_basis_sol") or []),
         "sale_net_profit_sol": list(sol.get("sale_net_profit_sol") or []),
         "sale_fifo_basis_usdc": list(usdc.get("sale_fifo_basis_usdc") or []),
         "sale_net_profit_usdc": list(usdc.get("sale_net_profit_usdc") or []),
-        "sale_rows": list(sol.get("sale_rows") or []) + list(usdc.get("sale_rows") or []),
+        "sale_fifo_basis_usdt": list(usdt.get("sale_fifo_basis_usdc") or []),
+        "sale_net_profit_usdt": list(usdt.get("sale_net_profit_usdc") or []),
+        "sale_rows": sale_rows,
         "unresolved_basis_sales": sum(int((item or {}).get("unresolved_basis_sales") or 0) for item in by_asset.values()),
         "known_cost_trades": sum(int((item or {}).get("known_cost_trades") or 0) for item in by_asset.values()),
         "known_cost_sales": sum(int((item or {}).get("known_cost_sales") or 0) for item in by_asset.values()),
@@ -676,6 +697,8 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
 def format_settlement_amount(worksheet):
     if not worksheet:
         return None, None
+    if worksheet.get("settlement_asset") == "USDT" or worksheet.get("total_profit_usdt") not in (None, ""):
+        return worksheet.get("total_profit_usdt") or worksheet.get("total_profit_usdc"), "USDT"
     if worksheet.get("settlement_asset") == "USDC" or worksheet.get("total_profit_usdc") not in (None, ""):
         return worksheet.get("total_profit_usdc"), "USDC"
     if worksheet.get("total_profit_sol") not in (None, ""):

@@ -34,7 +34,11 @@ from scanner.mass_search.qualification_gates import (
     stronger_shortlist_activity_ok,
     trading_activity,
     worksheet_episode_bridge,
+    GT25_ECONOMIC_TRADES_RULE,
+    attach_economic_trade_rate,
+    trade_rate_from,
 )
+import scanner.mass_search.qualification_gates as _qual_gates
 from scanner.mass_search.settlement import (
     USDC,
     USDT,
@@ -739,8 +743,15 @@ def _episode_ledger_from_report(report):
             unit = event.get("settlement_asset") or (
                 "USDC" if settlement_of(event) == USDC
                 else "USDT" if settlement_of(event) == USDT
-                else "SOL"
+                else None
             )
+            if unit in (None, "", "SOL") and (
+                event.get("amount_usdt") not in (None, "")
+                or event.get("consideration_usdt") not in (None, "")
+            ):
+                unit = "USDT"
+            if unit in (None, ""):
+                unit = "SOL"
             episodes.append({
                 "mint": mint,
                 "close_signature": event.get("signature"),
@@ -1106,6 +1117,22 @@ def qualification_level(report, profile):
     cost_dependency = sensitivity_sign_flips(report, profile)
     activity = profile.get("trading_activity") or trading_activity((report or {}).get("events") or [])
     audited = independently_audited(report, profile)
+    rate = trade_rate_from(report, profile)
+    if rate["max"] > _qual_gates.MAX_ECONOMIC_TRADES_PER_UTC_DAY:
+        reason = f"{GT25_ECONOMIC_TRADES_RULE}: {rate['max']} on {rate['max_on']}"
+        return {
+            "level": "insufficient_evidence",
+            "label": "insufficient evidence",
+            "reason": reason,
+            "blocker": reason,
+            "not": "unprofitable",
+            "qualifying_ledger": "completed_episode_ledger",
+            "lead_eligible": False,
+            "max_economic_trades_in_one_day": rate["max"],
+            "max_economic_trades_on": rate["max_on"],
+            "max_trades_per_day": rate["max"],
+            "max_trades_per_day_on": rate["max_on"],
+        }
     if completed < 1:
         return {
             "level": "insufficient_evidence",
@@ -1127,7 +1154,7 @@ def qualification_level(report, profile):
         clean
         and completed >= 20
         and mints >= 3
-        and stronger_shortlist_activity_ok(activity)
+        and stronger_shortlist_activity_ok(activity, rate["max"])
     )
     if stronger:
         level = "stronger_research_shortlist"
@@ -1150,6 +1177,10 @@ def qualification_level(report, profile):
         "independently_audited": audited,
         "active_trading_days": activity.get("active_trading_days"),
         "span_days": activity.get("span_days"),
+        "max_economic_trades_in_one_day": rate["max"],
+        "max_economic_trades_on": rate["max_on"],
+        "max_trades_per_day": rate["max"],
+        "max_trades_per_day_on": rate["max_on"],
     }
 
 
@@ -1344,7 +1375,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             or item.get("mint") in completed_buy_sell
         ]
     episode_net, episode_unit, episode_vector = episode_net_from_ledger(
-        ledger, fallback_unit=settlement if settlement in ("SOL", "USDC") else None
+        ledger, fallback_unit=settlement if settlement in ("SOL", "USDC", "USDT") else None
     )
     completed = len(ledger)
     if completed >= 1 and episode_vector:
@@ -1354,7 +1385,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             if amount not in (None, "")
         }
         scoped_pnl = str(episode_net) if episode_net is not None else None
-        if settlement != "mixed" and episode_unit in ("SOL", "USDC"):
+        if settlement != "mixed" and episode_unit in ("SOL", "USDC", "USDT"):
             settlement = episode_unit
     summary_net = report.get("completed_episode_net")
     summary_count = report.get("wallet_completed_episodes")
@@ -1502,6 +1533,19 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     }
     activity = trading_activity(events)
     profile["trading_activity"] = activity
+    rate_events = []
+    if decoded and decoded.get("events"):
+        rate_events = list(decoded.get("events") or [])
+    elif report.get("captured_history_events"):
+        rate_events = list(report.get("captured_history_events") or [])
+    else:
+        rate_events = list(events)
+    attach_economic_trade_rate(profile, rate_events)
+    if report.get("captured_history_events") in (None, []):
+        report["captured_history_events"] = [
+            row for row in rate_events if isinstance(row, dict) and row.get("kind") in ("buy", "sell")
+        ]
+    attach_economic_trade_rate(report, rate_events)
     if "sensitivity_unverified_debits_sol" in (report or {}):
         profile["sensitivity_unverified_debits_sol"] = report.get("sensitivity_unverified_debits_sol")
         profile["sensitivity_evidence_state"] = "measured" if report.get("sensitivity_unverified_debits_sol") not in (None, "") else "not_established"

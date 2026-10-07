@@ -60,6 +60,9 @@ def blocking_reason(report, profile, *, coverage_status, level):
     open_lots = int(profile.get("open_buys_in_sample") or 0)
     unresolved = int(profile.get("unresolved_basis_sales") or 0)
     reasons = []
+    level_reason = (level or {}).get("reason") or (level or {}).get("blocker") or ""
+    if "gt_25_economic_trades_in_one_day" in str(level_reason):
+        reasons.append(str(level_reason))
     if completed < 1:
         reasons.append("0 completed episodes")
     elif completed < MIN_SAMPLE_POSITIONS:

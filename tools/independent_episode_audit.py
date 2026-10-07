@@ -13,7 +13,7 @@ import hashlib
 import json
 from collections import defaultdict
 from datetime import datetime, timezone
-from decimal import Decimal, localcontext
+from decimal import Decimal, InvalidOperation, localcontext
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -816,6 +816,7 @@ def reconstruct_record(record, address):
         "discriminator": route["discriminator"],
         "path": route["path"],
         "observed_pre_quantity_raw": str(pre.get(mint, Decimal("0"))),
+        "observed_post_quantity_raw": str(post.get(mint, Decimal("0"))),
         "source": "independent-pinned-interface",
     }
 
@@ -955,7 +956,23 @@ def _fifo(trades):
                 episode_basis += basis
                 episode_proceeds += proceeds
                 episode_costs += buy_fees + sale_fees
-            if opened and inventory == 0 and remaining == 0 and opening == 0:
+            observed_post = row.get("observed_post_quantity_raw")
+            flattened = False
+            if observed_post not in (None, ""):
+                try:
+                    flattened = Decimal(str(observed_post)) == 0
+                except (InvalidOperation, ValueError, TypeError):
+                    flattened = False
+            # Reconstructed buy qty can miss dust transfers. An observed
+            # flatten (wallet token balance back to 0) with lots exhausted
+            # ends the episode. Leftover unmatched sell qty is already
+            # unresolved; it must not glue the next flat onto this one
+            # (AX5FaYB3 4k3Dyjzv: 58590 raw dust → auditor 583/640 vs
+            # app 319/321).
+            observed_flat_close = flattened and inventory == 0
+            if opened and opening == 0 and (
+                (inventory == 0 and remaining == 0) or observed_flat_close
+            ):
                 timestamp = row.get("timestamp")
                 in_window = timestamp is not None and REPORT_START <= timestamp < REPORT_END
                 # Opening inventory is unknown cost. A flatten that consumed any
