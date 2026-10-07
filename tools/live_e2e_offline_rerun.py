@@ -419,6 +419,7 @@ def main():
         row["chosen_for_full_history"] = True
         chosen.append(row["address"])
 
+    plan = _plan()
     summaries = []
     for report_days in (30, 90):
         bounds = bounds_for(report_days)
