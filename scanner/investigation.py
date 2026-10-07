@@ -1466,11 +1466,12 @@ def decode_supported_swaps(transactions, address):
                         raise ValueError('Unproven token account rent refund')
                     rent_correction += reserve_delta
             wallet_index = keys.index(address)
-            # PumpSwap user-volume PDA funding is not recoverable rent
-            # (WALLET_PAID_RENT_RULE). It stays in consideration.
+            # PumpSwap user-volume (IDL-located) is documented separately and
+            # is isolated from the swap quote. Generic not-owned creates are
+            # not in retained_funding and stay in consideration.
             settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
-                          - outside_native_delta
+                          - outside_native_delta + sum(item['lamports'] for item in retained_funding)
                           + episode_rent + new_token_rent)
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
             owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
