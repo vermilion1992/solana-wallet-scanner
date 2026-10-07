@@ -1,0 +1,16 @@
+{
+  "errors": [],
+  "external": [],
+  "shots": [
+    "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/fix-01-ranked-list-phone.png",
+    "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/fix-02-research-screen-phone.png",
+    "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/fix-03-ranked-row-A6PSQF-phone.png",
+    "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/fix-04-report-A6PSQF-phone.png",
+    "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/screenshots/fix-05-compare-CccSh2-vs-A6PSQF-phone.png"
+  ],
+  "viewport": "390x844 Chromium phone-sized browser emulation, not a physical phone",
+  "unauth_state_status": 401,
+  "research_screen_text": "Research screen completed: inconclusive 89 \u00b7 zero-qualified 7 \u00b7 qualified 3. Thresholds were fixed before evaluation. Unknown never passes. Qualification (evidence quality, not screen pass/fail): not evaluated 90 \u00b7 analysed-incomplete 10 \u00b7 matched-position 0 \u00b7 net realised 0 \u00b7 account performance 0.",
+  "report_has_history_required": false,
+  "compare_text": "own_windows_shown_mismatch_blocks \u00b7 Each report keeps its own window. Windows match; compare is shown. \u00b7 left window 2026-09-05T13:29:27Z \u2192 2026-10-05T13:29:27Z \u00b7 right window 2026-09-05T13:29:27Z \u2192 2026-10-05T13:29:27Z \u00b7 left tx 12 \u00b7 right tx 52 \u00b7 samples 6 vs 6 \u00b7 scoped_pnl 0.120294936 vs 287.384074822 \u00b7 comparable \u00b7 conditional_on_captured_inventory \u00b7 scoped_pnl: 0.120294936 vs 287.384074822 \u00b7 scoped_pnl_unit: SOL vs SOL \u00b7 completed_known_cost_positions: 6 vs 6 \u00b7 hold_t90_seconds: 135 vs 12 \u00b7 final_hold_seconds: 135 vs 12 \u00b7 concentration: 0.1666666666666666666666666667 vs 0.2826086956521739130434782609 \u00b7 unresolved_basis_sales: 0 vs 0 \u00b7 win_rate: 0.5 vs 0.3333333333333333333333333333 \u00b7 win_rate_denominator: 6 vs 6 \u00b7 median_hold_n: 6 vs 6 \u00b7 settlement_asset: SOL vs SOL \u00b7 corpus_kind: GENUINE_REPLAY vs GENUINE_REPLAY \u00b7 scope: supported_closed_subset_on_captured_page vs supported_closed_subset_on_captured_page \u00b7 window_start: 2026-09-05T13:29:27Z vs 2026-09-05T13:29:27Z \u00b7 window_end: 2026-10-05T13:29:27Z vs 2026-10-05T13:29:27Z \u00b7 visible_report: true vs true \u00b7 result_scope: conditional_on_captured_inventory vs conditional_on_captured_inventory \u00b7 unknown_basis_quantity_and_proceeds: sales 0 \u00b7 qty 0 \u00b7 proceeds None SOL vs sales 0 \u00b7 qty 0 \u00b7 proceeds None SOL"
+}

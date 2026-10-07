@@ -1,0 +1,15 @@
+{
+  "outcome_label": "RANKED_100_DISCOVERY_PILOT",
+  "preflight_at": "2026-10-05T13:29:26Z",
+  "grant_path": "/workspace/ranked100-live-results/live_authorization.g2-ranked100-discovery-armed.json",
+  "grant_enabled": true,
+  "authorization_id": "live-g2-ranked100-discovery-2026-10-05-mitch",
+  "birdeye_max_requests": 1,
+  "birdeye_max_units": 30,
+  "documented_units_estimate": 30,
+  "arming_blockers": [],
+  "birdeye_key_present": true,
+  "helius_requests_planned": 0,
+  "clone_justification": "Local clone allowed: API keys exist only on this box (not Cloud Agents); work depends on machine-local secrets.",
+  "PRODUCT_READY": false
+}

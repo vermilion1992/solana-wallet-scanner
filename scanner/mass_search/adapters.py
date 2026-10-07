@@ -21,6 +21,8 @@ from .plan import canonical_json
 ADAPTER_VERSION = "mass-search-adapter-v1"
 ALLOWED_BIRDEYE_HOST = "public-api.birdeye.so"
 ALLOWED_BIRDEYE_PATH = "/trader/gainers-losers"
+BIRDEYE_TOP_TRADERS_PATH = "/defi/v2/tokens/top_traders"
+ALLOWED_BIRDEYE_PATHS = frozenset({ALLOWED_BIRDEYE_PATH, BIRDEYE_TOP_TRADERS_PATH})
 
 
 class SourceError(Exception):
@@ -54,8 +56,11 @@ def parse_trader_row(raw, *, field_map, source_id, page, offset, fetch_timestamp
     realized = _lookup(raw, field_map["realized_pnl"]["path"])
     trade_count = _lookup(raw, field_map["trade_count"]["path"])
     last_active = _lookup(raw, field_map["last_active"]["path"])
+    score_map = field_map.get("trader_score") or {"path": ["trader_score", "score"], "unit": "provider_score"}
+    score = _lookup(raw, score_map["path"])
     extras = sorted(set(raw) - {"address", "realized_pnl", "pnl", "trade_count", "tx_counts",
-                                "last_trade_unix_time", "last_active", "volume", "rank", "network"})
+                                "last_trade_unix_time", "last_active", "volume", "rank", "network",
+                                "trader_score", "score"})
     return {
         "valid": True,
         "address": address,
@@ -66,8 +71,14 @@ def parse_trader_row(raw, *, field_map, source_id, page, offset, fetch_timestamp
         "rank": raw.get("rank"),
         "realized_pnl": None if realized is None else str(realized),
         "realized_pnl_unit": field_map["realized_pnl"].get("unit", "USD"),
+        "realized_pnl_basis": field_map["realized_pnl"].get("basis", "PROVIDER_REPORTED"),
         "trade_count": trade_count if type(trade_count) is int and not isinstance(trade_count, bool) else None,
+        "trade_count_is_not": "completed_profitable_trades",
         "last_active": last_active,
+        "trader_score": None if score is None else str(score),
+        "trader_score_unit": score_map.get("unit", "provider_score"),
+        "trader_score_basis": score_map.get("basis", "PROVIDER_REPORTED"),
+        "trader_score_is_not": "independently_verified_profit_or_copyability",
         "unreviewed_fields": extras,
         "source_timestamp": source_timestamp,
         "fetch_timestamp": fetch_timestamp,
@@ -152,7 +163,10 @@ class BirdeyeTraderAdapter:
         if not checked.get("enabled"):
             raise SourceError("UNAUTHORIZED", checked.get("reason") or "Live authorization is disabled", retryable=False)
         for entry in checked["providers"]:
-            if entry["provider_id"] == "birdeye" and "trader_gainers_losers" in entry["allowed_operations"]:
+            if entry["provider_id"] == "birdeye" and (
+                "trader_gainers_losers" in entry["allowed_operations"]
+                or "token_top_traders" in entry["allowed_operations"]
+            ):
                 return checked, entry
         raise SourceError("UNAUTHORIZED", "Authorization does not include Birdeye trader_gainers_losers")
 
@@ -161,6 +175,42 @@ class BirdeyeTraderAdapter:
             return None
         cap = entry["max_units"]
         return store.reserve("birdeye", "trader_gainers_losers", units, entry["cycle_start"], cap)
+
+    def _used_requests(self, store, entry):
+        memory = self.requests
+        if store is None:
+            return memory
+        with store.lock:
+            row = store.db.execute(
+                "SELECT COUNT(*) FROM reservations WHERE provider=? AND cycle=? AND method=? "
+                "AND state IN ('dispatched','settled')",
+                ("birdeye", entry["cycle_start"], "trader_gainers_losers"),
+            ).fetchone()
+        return max(memory, int(row[0] if row else 0))
+
+    def _enforce_query(self, authorization, *, window, sort_by, sort_type, offset, limit):
+        if sort_by not in self.capability.get("sort_fields", []):
+            raise SourceError(
+                "UNSUPPORTED_SCHEMA",
+                f"Unsupported sort_by {sort_by}; silent fallback is forbidden",
+            )
+        exact = (authorization or {}).get("exact_query")
+        if not exact:
+            return
+        params = exact.get("params") or {}
+        expected = {
+            "type": params.get("type"),
+            "sort_by": params.get("sort_by"),
+            "sort_type": params.get("sort_type"),
+            "offset": params.get("offset"),
+            "limit": params.get("limit"),
+        }
+        actual = {"type": window, "sort_by": sort_by, "sort_type": sort_type, "offset": offset, "limit": limit}
+        if actual != expected:
+            raise SourceError(
+                "UNSUPPORTED_SCHEMA",
+                "Request does not match the authorized exact query; silent fallback is forbidden",
+            )
 
     async def fetch_page(self, *, offset, limit, window="30d", authorization=None, store=None,
                          sort_by="realized_pnl", sort_type="desc"):
@@ -171,7 +221,8 @@ class BirdeyeTraderAdapter:
         if window not in self.capability["supported_windows"]:
             raise SourceError("UNSUPPORTED_SCHEMA", f"Unsupported ranking window {window}")
         auth, entry = self._authorized_entry(authorization, store)
-        if self.requests >= entry["max_requests"]:
+        self._enforce_query(auth, window=window, sort_by=sort_by, sort_type=sort_type, offset=offset, limit=limit)
+        if self._used_requests(store, entry) >= entry["max_requests"]:
             raise SourceError("RATE_LIMITED", "Authorization request ceiling reached")
         units = int(self.capability["cost_model"]["documented_units_per_request"])
         reservation = None
@@ -179,12 +230,14 @@ class BirdeyeTraderAdapter:
             reservation = self._reserve(store, entry, units)
             if reservation and store:
                 store.dispatch(reservation)
+                self.requests += 1
+            elif store is None:
+                self.requests += 1
             if self.transport is None:
                 raise SourceError("UNAUTHORIZED", "Live HTTP transport is not attached; collection remains blocked")
             response = await self.transport("GET", ALLOWED_BIRDEYE_PATH, params={
                 "type": window, "sort_by": sort_by, "sort_type": sort_type, "offset": offset, "limit": limit,
             })
-            self.requests += 1
             status = int(response.get("status", 0))
             body = response.get("body")
             if status in (401, 403):
@@ -223,6 +276,15 @@ class BirdeyeTraderAdapter:
                 "external_requests": 1,
                 "corpus_kind": "GENUINE_LIVE",
                 "authorization_id": auth.get("authorization_id"),
+                "query": {
+                    "type": window,
+                    "sort_by": sort_by,
+                    "sort_type": sort_type,
+                    "offset": offset,
+                    "limit": limit,
+                },
+                "raw_body": redact_secrets(body),
+                "raw_bytes": response.get("raw_bytes"),
             }
         except QuotaExceeded as error:
             raise SourceError("RATE_LIMITED", str(error)) from error
@@ -233,6 +295,13 @@ class BirdeyeTraderAdapter:
                 except ValueError:
                     pass
             raise
+        except Exception as error:
+            if store and reservation:
+                try:
+                    store.settle(reservation, charge=True)
+                except ValueError:
+                    pass
+            raise SourceError("UNAVAILABLE", "Provider request failed or timed out") from error
         finally:
             if store and reservation:
                 try:

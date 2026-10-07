@@ -1,0 +1,47 @@
+{
+  "kind": "ranked100-shared-boundary-before-after-v1",
+  "before_unwrapped": {
+    "decoded_swaps": 0,
+    "failed_transactions": 0,
+    "unresolved_transactions": 1,
+    "unresolved_reason_counts": {
+      "Missing raw transaction result": 100
+    }
+  },
+  "after_canonical_wrap": {
+    "decoded_swaps": 0,
+    "failed_transactions": 19,
+    "unresolved_transactions": 81,
+    "unresolved_reason_counts": {
+      "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap": 61,
+      "Investigated wallet is absent from transaction account keys": 5,
+      "No reviewed outer spot swap; transfers and balances alone do not prove trading": 8,
+      "No reviewed spot swap instruction for this program and discriminator": 6,
+      "Unsupported transaction version": 1
+    }
+  },
+  "classification_counts": {
+    "pump_holder_fee_distribution": 61,
+    "wallet_absent_from_account_keys": 5,
+    "inner_pumpswap_without_reviewed_outer": 2,
+    "no_reviewed_outer_spot_swap": 6,
+    "unreviewed_jupiter_discriminator": 6,
+    "failed_on_chain": 19,
+    "unsupported_transaction_version": 1
+  },
+  "fee_totals": {
+    "transactions_with_integer_fee": 100,
+    "failed_transactions_with_integer_fee": 19,
+    "fee_lamports": 5654729,
+    "failed_fee_lamports": 171000,
+    "fee_sol": "0.005654729",
+    "failed_fee_sol": "0.000171",
+    "not_pnl": true,
+    "note": "Visible transaction fees only. Raw SOL delta is not profit."
+  },
+  "summarize_page_completed_positions": 0,
+  "supported_sol_swaps": 0,
+  "independently_reconciled_completed_positions": 0,
+  "honest_partial": true,
+  "PRODUCT_READY": false
+}

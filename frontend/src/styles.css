@@ -1673,14 +1673,32 @@ select:focus {
   font-size: 10px;
 }
 .watchlist-list .watch-row {
-  display: flex;
-  align-items: center;
-  gap: 13px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(132px, max-content) auto;
+  align-items: start;
+  gap: 12px 16px;
   padding: 20px 23px;
   border-top: 1px solid #edf1e8;
+  min-width: 0;
+}
+.watch-report-meta {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  max-width: 220px;
+  overflow-wrap: anywhere;
+  justify-items: start;
+}
+.watch-report-meta .subset-list-profit {
+  align-items: flex-start;
+}
+.watch-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .watch-wallet {
-  flex: 1;
   min-width: 0;
 }
 .watch-wallet strong {
@@ -1695,10 +1713,12 @@ select:focus {
   margin-top: 6px;
   overflow-wrap: anywhere;
 }
+.watch-actions > .button,
 .watch-row > .button {
   font-size: 9px;
   min-height: 32px;
   padding: 7px 10px;
+  white-space: nowrap;
 }
 .watch-row > .muted {
   font-size: 10px;
@@ -2669,11 +2689,11 @@ pre {
     grid-column: 1/-1;
     justify-self: end;
   }
-  .watch-row {
-    flex-wrap: wrap;
+  .watchlist-list .watch-row {
+    grid-template-columns: auto minmax(0, 1fr) minmax(120px, max-content) auto;
   }
   .watch-wallet {
-    min-width: calc(100% - 55px);
+    min-width: 0;
   }
 }
 @media (max-width: 950px) {
@@ -3133,9 +3153,6 @@ pre {
   .result-footer > span:last-child {
     font-size: 7px;
   }
-  .report-table {
-    min-width: 800px;
-  }
   .report-table th {
     font-size: 8px;
     padding-inline: 12px;
@@ -3177,6 +3194,16 @@ pre {
   .watchlist-list .watch-row {
     padding: 20px;
     gap: 10px;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .watch-wallet {
+    grid-column: 2;
+  }
+  .watch-report-meta,
+  .watch-row > .muted,
+  .watch-actions {
+    grid-column: 1 / -1;
+    max-width: none;
   }
   .watch-wallet small {
     font-size: 8px;
@@ -5069,6 +5096,87 @@ pre {
     padding-inline: 20px;
   }
 }
+.subset-list-profit {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.subset-list-label {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.28px;
+  color: #9d8b59;
+  font-weight: 550;
+}
+.subset-compare-note {
+  color: #657a70;
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 0 23px 12px;
+  overflow-wrap: anywhere;
+}
+.results-panel,
+.compare-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+.report-cards,
+.compare-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0 18px 12px;
+}
+.report-cards li,
+.compare-cards li {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.report-card-compare {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #657a70;
+}
+.report-card-profit {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.report-card-profit > span {
+  color: #63766b;
+  font-size: 11px;
+}
+.report-cards .subset-list-profit,
+.compare-cards .subset-list-profit {
+  align-items: flex-start;
+}
+.report-cards .button,
+.compare-cards .button,
+.research-cards .button {
+  width: 100%;
+  white-space: normal;
+}
+.research-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.research-cards li {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
 .subset-worksheet { margin-bottom: 18px; }
 .subset-worksheet-note {
   color: #657a70;
@@ -5079,9 +5187,27 @@ pre {
 }
 .subset-worksheet-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   padding: 0 23px 18px;
+}
+.subset-worksheet-trades {
+  width: calc(100% - 46px);
+  margin: 0 23px 18px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.subset-worksheet-trades caption {
+  text-align: left;
+  color: #63766b;
+  font-size: 11px;
+  padding-bottom: 8px;
+}
+.subset-worksheet-trades th,
+.subset-worksheet-trades td {
+  text-align: left;
+  padding: 6px 8px 6px 0;
+  overflow-wrap: anywhere;
 }
 .subset-worksheet-metrics > div { display: grid; gap: 6px; min-width: 0; }
 .subset-worksheet-metrics span { color: #63766b; font-size: 11px; }
@@ -5137,7 +5263,56 @@ pre {
 .mass-search-cards li { display: grid; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; min-width: 0; }
 .mass-search-saved { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .mass-search-saved li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; overflow-wrap: anywhere; }
+.research-profile { display: grid; gap: 10px; margin-top: 12px; }
+.mass-search-budget .button[disabled] { opacity: 0.55; }
+.mass-search-filters { display: grid; gap: 12px; margin: 12px 0; }
+.mass-search-filters fieldset { border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 8px; padding: 12px; min-width: 0; }
+.mass-search-filters input[type="text"],
+.mass-search-filters input:not([type="checkbox"]) { width: 100%; min-width: 0; }
+.mass-search-shortlist { display: flex; gap: 8px; align-items: center; }
+.mass-search-batch { display: grid; gap: 8px; padding: 12px 0; }
+.mass-search-batch progress { width: 100%; }
+.mass-search-batch ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.research-profile-analytics { display: grid; gap: 6px; }
 @media (max-width: 480px) {
+  .results-panel .table-scroll,
+  .compare-panel .table-scroll {
+    display: none;
+  }
+  .report-cards,
+  .compare-cards,
+  .research-cards {
+    display: grid;
+  }
+  .research-table-wrap {
+    display: none;
+  }
+  .research-report-picker,
+  .research-report-picker select,
+  .research-action-row {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .compare-picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .comparison-table th,
+  .comparison-table th:first-child {
+    min-width: 0;
+  }
+  .segmented {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .results-filters,
+  .results-filters > select,
+  .search-input {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .results-filters > select {
+    width: 100%;
+  }
   .mass-search-funnel { grid-template-columns: minmax(0, 1fr); }
   .mass-search .research-action-row,
   .mass-search-saved li {

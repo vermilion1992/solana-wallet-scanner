@@ -1,0 +1,12 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+  "fifo": {},
+  "conversions": [],
+  "unsupported_tx_count": 160,
+  "app_report_id": "ranked-partial-BSN5bh8A-03bff99c",
+  "app_error": null,
+  "comparison": {},
+  "PRODUCT_READY": false
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": "live-research-authorization-v1",
+  "enabled": false,
+  "authorization_id": null,
+  "authorized_by_user_at": null,
+  "expires_at": null,
+  "purpose": "PROOF grant draft only. Not a permission grant. After a real grant, first live target is G1 vertical slice only: one real acquired candidate → supported buy+sell → populated report. Then G2, then G3.",
+  "first_live_target_after_grant": "G1_VERTICAL_SLICE_ONLY",
+  "g1_scope": "One real acquired candidate, targeted Helius history, at least one supported closed buy+sell, independent worksheet. Do not start G2 or G3 in the same live burst.",
+  "g2_scope_after_g1": "Birdeye GET /trader/gainers-losers for ~1000 unique candidates",
+  "g3_scope_after_g2": "At least three genuine reports, at least 10 episodes each, including a losing or unresolved control",
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "allow_paid_upgrade": false,
+  "allow_signing_or_submission": false,
+  "do_not_reset_setup_pilot": true,
+  "providers": [
+    {
+      "provider_id": "birdeye",
+      "allowed_operations": ["trader_gainers_losers"],
+      "billing_unit": "birdeye_compute_unit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
+      "max_requests": 10,
+      "max_units": 250,
+      "max_concurrency": 1,
+      "max_duration_seconds": 300,
+      "purpose": "G2 genuine ~1000-candidate acquire after G1. Page size 100, offset+limit <= 10000. Ceiling 10 calls / 250 CU."
+    },
+    {
+      "provider_id": "helius",
+      "allowed_operations": ["getTransactionsForAddress"],
+      "billing_unit": "helius_credit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
+      "max_requests": 20,
+      "max_units": 600,
+      "max_concurrency": 1,
+      "max_duration_seconds": 900,
+      "purpose": "G1 first (survivors only), then G3 targeted history. Ceiling 20 calls / 600 credits. Do not reset setup-pilot."
+    }
+  ],
+  "notes": [
+    "DRAFT ONLY. enabled is false. This file is not a live-research-authorization-v1 grant.",
+    "work_packages/mass_wallet_search_v1/config/live_authorization.example.json is also not a grant.",
+    "Do not set enabled true from an agent. A real grant requires authorization_id, authorized_by_user_at, expires_at, remaining_quota_confirmed_at, existing_plan_confirmed=true, and enabled=true set by the operator.",
+    "Do not put API keys, tokens, or signing secrets in this file.",
+    "First live run after a real grant is G1 only. Do not start G2, G3, or G5 until G1 produces a supported buy+sell report.",
+    "Zero extra spend. No overages. No paid upgrade. No setup-pilot reset."
+  ]
+}

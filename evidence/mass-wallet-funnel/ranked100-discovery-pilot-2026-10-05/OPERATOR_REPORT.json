@@ -1,0 +1,121 @@
+{
+  "outcome_label": "RANKED_100_DISCOVERY_PILOT",
+  "status": "PASS",
+  "authorization_id": "live-g2-ranked100-discovery-2026-10-05-mitch",
+  "raw_count": 100,
+  "unique_valid_wallets": 100,
+  "acquisition_complete": true,
+  "acquisition_incomplete": false,
+  "shortlist_count": 20,
+  "exclusions_total": 80,
+  "shortlist_reason_codes": {
+    "prefer_positive_reported_realised_pnl": 20,
+    "provider_trade_count_proxy_not_completed_profitable_trades": 20,
+    "prefer_repeated_trading_proxy": 20,
+    "high_score_missing_fields_needs_verification": 20,
+    "ranked_by_provider_score": 20,
+    "decision=shortlisted": 20
+  },
+  "exclusion_reason_codes_top": {
+    "prefer_positive_reported_realised_pnl": 80,
+    "provider_trade_count_proxy_not_completed_profitable_trades": 80,
+    "prefer_repeated_trading_proxy": 80,
+    "high_score_missing_fields_needs_verification": 80,
+    "excluded_below_shortlist_ceiling": 80
+  },
+  "available_metrics": {
+    "trader_score": 100,
+    "realized_pnl": 100,
+    "trade_count": 100,
+    "last_active": 0
+  },
+  "requests_dispatched": 1,
+  "birdeye_requests_used": 1,
+  "cu": {
+    "documented_estimate": 30,
+    "grant_ceiling": 30,
+    "ledger_units_label": "documented_estimate_not_confirmed_dashboard_receipt",
+    "billing_from_cache": {
+      "birdeye_requests": 1,
+      "birdeye_units_documented": 30,
+      "units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+      "helius_requests": 0,
+      "helius_units": 0,
+      "other_providers": 0
+    },
+    "provider_headers_filtered": {
+      "x-ratelimit-limit": "100",
+      "x-ratelimit-remaining": "99",
+      "x-ratelimit-reset": "1791206968"
+    },
+    "provider_header_names": [
+      "access-control-allow-origin",
+      "access-control-expose-headers",
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-type",
+      "date",
+      "server",
+      "transfer-encoding",
+      "x-powered-by",
+      "x-ratelimit-limit",
+      "x-ratelimit-remaining",
+      "x-ratelimit-reset"
+    ],
+    "http_status": 200
+  },
+  "helius_requests": 0,
+  "helius_units": 0,
+  "from_cache": false,
+  "setup_pilot_before": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "setup_pilot_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "errors": null,
+  "shortlist_row_keys": [
+    "address",
+    "decision",
+    "evidence_status",
+    "label",
+    "metrics",
+    "provider_score",
+    "reason_codes",
+    "shortlist_rank",
+    "source_order",
+    "uncertainty"
+  ],
+  "evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+  "query": {
+    "provider": "birdeye",
+    "method": "GET",
+    "host": "public-api.birdeye.so",
+    "path": "/trader/gainers-losers",
+    "chain": "solana",
+    "params": {
+      "type": "30d",
+      "sort_by": "trader_score",
+      "sort_type": "desc",
+      "offset": 0,
+      "limit": 100
+    }
+  },
+  "candidate_label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+  "PRODUCT_READY": false,
+  "screening_reason_summary": {
+    "shortlist": "Top 20 by provider trader_score after local heuristics; all 20 have positive reported realised PnL, trade_count proxy, and needs_verification due to missing last_active; profitability/copyability not independently verified.",
+    "exclusions": "80 rows excluded solely as below shortlist ceiling (rank 21\u2013100); same positive-PnL / trade-count proxy codes present but not selected.",
+    "missing_metrics": "last_active unavailable for all 100 rows (stays unknown)."
+  }
+}

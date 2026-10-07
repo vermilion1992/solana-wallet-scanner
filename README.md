@@ -42,7 +42,15 @@ For an alternate port or an explicit data directory:
 ./run.sh --port 8766 --data-dir ./local-data --no-browser
 ```
 
-Windows accepts the same flags after `.\run.ps1`. The host is always `127.0.0.1`. The launcher reserves its listening port before startup and reports a useful error if another application occupies it. An OS file lock permits only one running scanner process per data directory, including when different ports are used; the lock releases when the process stops. Do not expose the server through a reverse proxy or publish it to a public host.
+Windows accepts the same flags after `.\run.ps1`. Default bind is `127.0.0.1`. The launcher reserves its listening port before startup and reports a useful error if another application occupies it. An OS file lock permits only one running scanner process per data directory, including when different ports are used; the lock releases when the process stops. Do not expose the server through a reverse proxy or publish it to a public host.
+
+To open the built app on a phone on the same Wi-Fi, start it once on your computer:
+
+```sh
+./run.sh --lan --no-browser
+```
+
+Scan the printed QR (or open the printed token URL) on the phone. Token auth stays mandatory; an unauthenticated API call returns 401. The token is not saved in the repo. Away from that LAN there is no permitted remote preview — do not add a tunnel or public host.
 
 ## Use the scanner
 

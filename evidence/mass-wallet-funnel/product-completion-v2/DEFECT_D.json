@@ -1,0 +1,13 @@
+{
+  "requirement": "D. COMPARE WINDOWS",
+  "status": "PASS",
+  "paragraph": "Documented policy is own_windows_shown_mismatch_blocks: each report keeps its own window; a common interval is not recomputed; compare is blocked when windows differ. Tests cover a same-window control (distinct included tx, sample sizes, scoped P&L), non-overlapping early/late windows (disjoint tx, different metrics), and a partial-overlap pair sliced from one labelled corpus (intersection is the shared overlap signatures). window_policy records boundaries, included tx, sample sizes, and scoped metrics. The analysis cache key includes the window.",
+  "test_node_id": "tests/test_mass_search_mitch_requirements.py::test_compare_same_window_control_and_differing_included_trades",
+  "also": [
+    "tests/test_mass_search_mitch_requirements.py::test_compare_partial_overlap_one_corpus_keeps_own_windows",
+    "tests/test_mass_search_mitch_requirements.py::test_cache_key_includes_window"
+  ],
+  "log_path": "evidence/mass-wallet-funnel/product-completion-v2/logs/PYTEST_AD.log",
+  "policy": "own_windows_shown_mismatch_blocks",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc"
+}

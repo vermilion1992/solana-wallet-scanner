@@ -1,0 +1,26 @@
+{
+  "kind": "product-completion-v2-environment",
+  "app_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "tree_at_app_freeze": "clean at c34eb2c (implementation). Evidence files added after validation. Harness port fix 50cc6e2.",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
+  "pip_freeze_selected": {
+    "fastapi": "fastapi==0.142.2",
+    "httpx": "httpx==0.28.1",
+    "keyring": "keyring==25.6.0",
+    "pytest": "pytest==9.1.1",
+    "starlette": "starlette==1.7.0",
+    "uvicorn": "uvicorn==0.34.2"
+  },
+  "node": "v22.14.0",
+  "npm": "10.9.7",
+  "frontend_package": {
+    "name": "solana-wallet-scanner-ui",
+    "version": "0.3.11"
+  },
+  "scanner_version": "0.3.11",
+  "frontend_asset": "frontend/dist/assets/index-hN-S6YfT.js",
+  "viewport": "390x844 Playwright Chromium emulation, not a physical phone",
+  "PRODUCT_READY": false
+}

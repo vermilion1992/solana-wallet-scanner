@@ -1,0 +1,1895 @@
+{
+  "shortlist_count": 20,
+  "shortlist": [
+    {
+      "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      "source_order": 0,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "88.91080080813859",
+      "metrics": {
+        "provider_score": "88.91080080813859",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "46042.61814189257",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 161,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 1
+    },
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "source_order": 1,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "88.89059734315495",
+      "metrics": {
+        "provider_score": "88.89059734315495",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "50968.45079018403",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 1022,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 2
+    },
+    {
+      "address": "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+      "source_order": 2,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "87.32196813931452",
+      "metrics": {
+        "provider_score": "87.32196813931452",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "44764.687490925964",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 282,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 3
+    },
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "source_order": 3,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "87.14424916414869",
+      "metrics": {
+        "provider_score": "87.14424916414869",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "30269.017447544706",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 1494,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 4
+    },
+    {
+      "address": "3g8KsJE1yhJvBo6kvqvxLnoSXQ9suqQnHMqGFs3LFckM",
+      "source_order": 4,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "86.81750728576282",
+      "metrics": {
+        "provider_score": "86.81750728576282",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "143711.23124818518",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 150,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 5
+    },
+    {
+      "address": "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+      "source_order": 5,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "86.7504603886932",
+      "metrics": {
+        "provider_score": "86.7504603886932",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "18459.09616764307",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 304,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 6
+    },
+    {
+      "address": "B4HUfUDVzVuVgd3xqEm4wfCmBofuHh4h5NqjV3EzKAzi",
+      "source_order": 6,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "86.6049239241208",
+      "metrics": {
+        "provider_score": "86.6049239241208",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "31471.529096013423",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 121,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 7
+    },
+    {
+      "address": "C74ibw78fok9zA9ywd9SjVz2bbjHc1AVysnjk2e9fL4X",
+      "source_order": 7,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "86.06103949509217",
+      "metrics": {
+        "provider_score": "86.06103949509217",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "38082.958152420324",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 192,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 8
+    },
+    {
+      "address": "6yDW8qprBCZhFdCuS1G1vbsS3R3tWYHYuYB9iek5GFr3",
+      "source_order": 8,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.96091612880156",
+      "metrics": {
+        "provider_score": "85.96091612880156",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "47383.679624924",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 280,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 9
+    },
+    {
+      "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "source_order": 9,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.73090057392145",
+      "metrics": {
+        "provider_score": "85.73090057392145",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "27958.52582312082",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 400,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 10
+    },
+    {
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "source_order": 10,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.67288265899055",
+      "metrics": {
+        "provider_score": "85.67288265899055",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "43440.51942878488",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 317,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 11
+    },
+    {
+      "address": "GMemhV1EBnyUiNT3GJKKULs74SZzEaCTidL7JZHKUbAZ",
+      "source_order": 11,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.54848831596075",
+      "metrics": {
+        "provider_score": "85.54848831596075",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "46967.40768690407",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 107,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 12
+    },
+    {
+      "address": "FNvuekiK1cCXN6cPfhbMf2Ha2Nmv3ejZ3THA7i6zotoQ",
+      "source_order": 12,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.36585256834314",
+      "metrics": {
+        "provider_score": "85.36585256834314",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "130089.153444282",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 194,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 13
+    },
+    {
+      "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "source_order": 13,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.29518513883178",
+      "metrics": {
+        "provider_score": "85.29518513883178",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "36451.86730001378",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 334,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 14
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "source_order": 14,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.28088180079027",
+      "metrics": {
+        "provider_score": "85.28088180079027",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "94025.06568430352",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 656,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 15
+    },
+    {
+      "address": "HLmW94XWhZkusu1MRgReP3Zgyw5NPZoxBmye9JJZ2HNJ",
+      "source_order": 15,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.1947935849529",
+      "metrics": {
+        "provider_score": "85.1947935849529",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "22487.907787812495",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 239,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 16
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "source_order": 16,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.16860059716437",
+      "metrics": {
+        "provider_score": "85.16860059716437",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "171191.98459895264",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 599,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 17
+    },
+    {
+      "address": "3nptjNHuusLfyduYekcXS3143FTmPsWhqFidGBZYbUpf",
+      "source_order": 17,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "85.08148432890526",
+      "metrics": {
+        "provider_score": "85.08148432890526",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "64328.97839337166",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 164,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 18
+    },
+    {
+      "address": "C4DKn6oqmJE8cZgPDU3X8N2S9MPFSjFSnUjv7WJCGxHh",
+      "source_order": 18,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.9757737211922",
+      "metrics": {
+        "provider_score": "84.9757737211922",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "292767.2648874106",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 235,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 19
+    },
+    {
+      "address": "5DAubjPGgeDtEoULeHgfCaaoECUjLAg5YBup78QNaM45",
+      "source_order": 19,
+      "decision": "shortlisted",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.94251846024567",
+      "metrics": {
+        "provider_score": "84.94251846024567",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "43281.36632440854",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 227,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified",
+      "shortlist_rank": 20
+    }
+  ],
+  "exclusions_sample": [
+    {
+      "address": "AgmCQu5Q3YUBHNpbTU6iFzmKboe81v15SPyZw2413Xu4",
+      "source_order": 20,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.84775884572062",
+      "metrics": {
+        "provider_score": "84.84775884572062",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "47486.79417899807",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 123,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "EP87qz6X1NgyTbaZ3CKccEJJD5fJExHXzbkMZ3Lzu4ia",
+      "source_order": 21,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.7042337880603",
+      "metrics": {
+        "provider_score": "84.7042337880603",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "69716.86272879713",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 130,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "HBH4dSdaMvAxQqshkGmu4XoSBW2trkH94CtBfJaoDwFW",
+      "source_order": 22,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.63995816273624",
+      "metrics": {
+        "provider_score": "84.63995816273624",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "103850.810735858",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 180,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "5LR2DWZQhAJzdACR9z2Hkovvf8cL497Hc4ZVTJjBHABa",
+      "source_order": 23,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.6345050151079",
+      "metrics": {
+        "provider_score": "84.6345050151079",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "117111.83912503699",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 160,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "FcmBRmQbmpMcsZgHtXfrbi15LKFUSJASNkEpYkYfgZsb",
+      "source_order": 24,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.62288355294918",
+      "metrics": {
+        "provider_score": "84.62288355294918",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "96854.63131252052",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 181,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "BfaeMdw7XfzAqqJ87a6jPV1bQvFeUUgcBCwBPURPQmtp",
+      "source_order": 25,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.61506141495771",
+      "metrics": {
+        "provider_score": "84.61506141495771",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "94048.60243750713",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 192,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "AMpC1dD2WSwogBYTom6CpUzBpNxPWqyAH1NrhnxNmDsS",
+      "source_order": 26,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.61501671702634",
+      "metrics": {
+        "provider_score": "84.61501671702634",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "57855.39768992162",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 160,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "3Yy21zwBwMEGrdtGTLW2zxuzX4pmMJRjN7pX9xXaTUQf",
+      "source_order": 27,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.61148558044735",
+      "metrics": {
+        "provider_score": "84.61148558044735",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "37564.996982846744",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 303,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "CYoMnp11dhVoUF9rj4w9PVrQJK1DKyCD3pZHyy91iV5S",
+      "source_order": 28,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.58703581198262",
+      "metrics": {
+        "provider_score": "84.58703581198262",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "96187.75690492829",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 170,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "HaKf1QLWSr8wUy1KwmoV1AeN4cL2LYUu83eL5XTfzZtj",
+      "source_order": 29,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.53536500330765",
+      "metrics": {
+        "provider_score": "84.53536500330765",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "86285.81201915481",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 179,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "96d9GKPQ7h3FTX1oBBW983rVPHFJdYZLzNqmCgLigL3D",
+      "source_order": 30,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.53487332606247",
+      "metrics": {
+        "provider_score": "84.53487332606247",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "23642.61997322545",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 90,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "C1jsvnoujd7iy1XfZun3AFADXppgYxSHtnqRqBCKuqxF",
+      "source_order": 31,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.52982245981656",
+      "metrics": {
+        "provider_score": "84.52982245981656",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "84279.46865008665",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 182,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "7XXz1Ub4N1FxjGGBrRfaycybZnLnWV1LbdQq2GHkMzt4",
+      "source_order": 32,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.52481629150203",
+      "metrics": {
+        "provider_score": "84.52481629150203",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "102518.27815775276",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 138,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "GJsQuN9H5N1qqP3R2XNVRPnSahX56yScPFkuLDq79b5Y",
+      "source_order": 33,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.52021240456993",
+      "metrics": {
+        "provider_score": "84.52021240456993",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "88044.24022687488",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 162,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "J2utYZFvr4xyQgzee7mWFAApRwNFrH6qz84ZPCU6Snfk",
+      "source_order": 34,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.51516153832401",
+      "metrics": {
+        "provider_score": "84.51516153832401",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "79792.28281516363",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 185,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "4677U9uiM2fXcPX9GgaRgHD75mnXN6FtxVF2iymZ8Fae",
+      "source_order": 35,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.51051295346052",
+      "metrics": {
+        "provider_score": "84.51051295346052",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "94020.97018770581",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 144,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "J6xXD2k2o1tUwAxAvfBePMjswDTWT4a6D4uPQrZr48MD",
+      "source_order": 36,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.49902558509592",
+      "metrics": {
+        "provider_score": "84.49902558509592",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "77616.59128061013",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 198,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "F6N9Dnuns1B1NfwHKECrhY7cKfKG8zJC2M41bUB89JMR",
+      "source_order": 37,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.48874506087859",
+      "metrics": {
+        "provider_score": "84.48874506087859",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "83954.4639673694",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 161,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "Bnbib7wwASnkkhLoMTo6v46tDJDyvUTVwaR5m3b8S4ig",
+      "source_order": 38,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.47216212833669",
+      "metrics": {
+        "provider_score": "84.47216212833669",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "82982.05670364908",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 158,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "GL8wZsFXwm9mr6Yjtts91sS3P8zAUYEuDK2wvXLvMREP",
+      "source_order": 39,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.4633566358549",
+      "metrics": {
+        "provider_score": "84.4633566358549",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "93338.80805339321",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 134,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "ExcDjyySRUK8ZPMk7ZziXgcakTG7x2ECoR2V1r27eUdE",
+      "source_order": 40,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.45696483166759",
+      "metrics": {
+        "provider_score": "84.45696483166759",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "85441.49718437997",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 150,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "9GZfeE2zs5qdUPKDiaYWy9bVDywBQySUDVetRG2YTWfS",
+      "source_order": 41,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.44918739160751",
+      "metrics": {
+        "provider_score": "84.44918739160751",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "79279.79274192401",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 163,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "7meYKsazWvACvyAeRPHi21WesfiedhWVJHc6RRMerdMV",
+      "source_order": 42,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.4457009529599",
+      "metrics": {
+        "provider_score": "84.4457009529599",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "93340.43909688137",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 127,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "2EJsEMASVaoj96cEZ9pQXdd8ogr3PmZ2Zs3kSDcMDPED",
+      "source_order": 43,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.39930450018772",
+      "metrics": {
+        "provider_score": "84.39930450018772",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "77379.07742988235",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 147,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "2apSyUwJKPHZ3iDcY4cb3P6HQqCwhsaGLDUVbJ6SjnJh",
+      "source_order": 44,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.3727092310168",
+      "metrics": {
+        "provider_score": "84.3727092310168",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "83173.11089399294",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 129,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "B8wZgcJAMuZs1NR6vaKhcQsGdPp7cpaPoh4GTquMCTdW",
+      "source_order": 45,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.37150238686954",
+      "metrics": {
+        "provider_score": "84.37150238686954",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "42661.29594914605",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 181,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "AUn7v7iApbJfBUr6JBERQdeet8tmxouNZcn1hhQaq2Ca",
+      "source_order": 46,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.35255046396453",
+      "metrics": {
+        "provider_score": "84.35255046396453",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "40450.79175554162",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 159,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "5tgFxTE8rBpYJc4opKsrve4iTdyhAnWFrNVRQRhNwSFP",
+      "source_order": 47,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.34647154529688",
+      "metrics": {
+        "provider_score": "84.34647154529688",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "73390.43868608604",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 141,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "zb3bt9MdyeYLdMPPgZZs6FBzuZwEXy92N9xtWyQbVep",
+      "source_order": 48,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.33596753142264",
+      "metrics": {
+        "provider_score": "84.33596753142264",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "68062.32986919623",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 162,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "DtQA6dqMsXWchvhaon96s8PsMuNxnyBwJLG7qs6LfWZv",
+      "source_order": 49,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.33015680034329",
+      "metrics": {
+        "provider_score": "84.33015680034329",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "72383.74356125556",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 140,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "BGuR7NfZMJ8Ris7m2GJvtBqeUr9mzJgj72v2GeLJhZtB",
+      "source_order": 50,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.32148540165562",
+      "metrics": {
+        "provider_score": "84.32148540165562",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "23203.366338194166",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 65,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "AvABNaxrqNoX2H7aT7v9yezeDjNWAEu5XPL1dhtAzUc8",
+      "source_order": 51,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.31151776295793",
+      "metrics": {
+        "provider_score": "84.31151776295793",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "65797.83790894547",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 167,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "source_order": 52,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.29931522769127",
+      "metrics": {
+        "provider_score": "84.29931522769127",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "186473.0427607518",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 338,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "BoUhz27x1s2ggkAz7MxbRWW5GPL1rjgfRnvkbpXpdmw7",
+      "source_order": 53,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.26628345640164",
+      "metrics": {
+        "provider_score": "84.26628345640164",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "63640.65458080444",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 158,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "BgGcLYSfUPq9R9JSCKniMqNakSpzh3Eg7j9G38dCPZTS",
+      "source_order": 54,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.247376231428",
+      "metrics": {
+        "provider_score": "84.247376231428",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "32133.996166748293",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 213,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "source_order": 55,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.23566537340652",
+      "metrics": {
+        "provider_score": "84.23566537340652",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "71095.26607074008",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 395,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "rQnGUGo5DExwDu8TgRKwhFXwBCFabz2teaVWGM8hoff",
+      "source_order": 56,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.231955445102",
+      "metrics": {
+        "provider_score": "84.231955445102",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "66450.44531150135",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 131,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "F4e7MMWZdr9kHwKprUpcmoVuzgUwwJJt1n4ketEFQqHX",
+      "source_order": 57,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.228424308523",
+      "metrics": {
+        "provider_score": "84.228424308523",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "32135.113226065416",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 47,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK",
+      "source_order": 58,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.21751801326634",
+      "metrics": {
+        "provider_score": "84.21751801326634",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "26019.534190447157",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 157,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    },
+    {
+      "address": "H4wX4pKTkMftK2YUb1EHLCGDkYt4m7WLixiJVu8fXfuA",
+      "source_order": 59,
+      "decision": "excluded",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "excluded_below_shortlist_ceiling"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "provider_score": "84.21202016770664",
+      "metrics": {
+        "provider_score": "84.21202016770664",
+        "provider_score_unit": "provider_score",
+        "provider_score_basis": "PROVIDER_REPORTED",
+        "realized_pnl": "64133.80866062354",
+        "realized_pnl_unit": "USD",
+        "realized_pnl_basis": "PROVIDER_REPORTED",
+        "realized_pnl_definition": "provider-reported realised P&L; currency attached; not independently verified",
+        "trade_count": 138,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null,
+        "last_active_unit": "unix_seconds"
+      },
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "evidence_status": "unverified"
+    }
+  ],
+  "exclusions_total": 80,
+  "candidate_label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+  "available_metrics": {
+    "trader_score": 100,
+    "realized_pnl": 100,
+    "trade_count": 100,
+    "last_active": 0
+  }
+}

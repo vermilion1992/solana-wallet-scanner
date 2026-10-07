@@ -1,0 +1,18 @@
+{
+  "kind": "live-e2e-wallet-list-v1",
+  "source": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/WALLET_TABLE.json",
+  "authorization_id": "live-e2e-proof-2026-10-07-mitch",
+  "PRODUCT_READY": false,
+  "wallets": [
+    {"label": "gtfo", "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL"},
+    {"label": "CccS", "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU"},
+    {"label": "BVZt", "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9"},
+    {"label": "BSN5", "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM"},
+    {"label": "DQ7n", "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys"},
+    {"label": "A6PS", "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot"},
+    {"label": "An9s", "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB"},
+    {"label": "58PW", "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL"},
+    {"label": "AW6P", "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6"},
+    {"label": "CRXo", "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U"}
+  ]
+}

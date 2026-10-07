@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { useNarrowViewport } from "./useNarrow";
 import {
   Activity,
   ArrowDown,
@@ -29,6 +30,7 @@ import {
   Button,
   Empty,
   EvidenceHint,
+  ListRealisedProfitCell,
   MetricValue,
   ReportTable,
   SectionHeading,
@@ -40,7 +42,9 @@ import {
   count,
   date,
   label,
+  listRealisedProfit,
   parseAddresses,
+  WORKSHEET_LABEL,
   shorten,
   validAddress,
 } from "./format";
@@ -626,6 +630,62 @@ export function ScanView({ state, busy, run, navigate, manualAddresses, refresh,
 function ListPreset() {
   return <Layers3 size={15} />;
 }
+export function resultsEmptyCopy(source: string, totalReports: number) {
+  if (source === "mass-search") {
+    return {
+      kind: "results-no-subset",
+      title: "No reconstructed-subset reports",
+      detail:
+        "This filter shows mass-search subset worksheets only. They are not wallet-wide MATCH rows. Run an offline Search slice, or choose another source.",
+    };
+  }
+  if (!totalReports) {
+    return {
+      kind: "results-none",
+      title: "No reports yet",
+      detail:
+        "Run a small scan, load the offline demonstration, or run an offline Search slice. Mass-search rows are a reconstructed subset, not a wallet-wide MATCH.",
+    };
+  }
+  return {
+    kind: "results-filtered",
+    title: "No reports for these filters",
+    detail:
+      "Adjust the filters to inspect your saved reports. Policy thresholds remain unchanged. Mass-search rows, when present, stay a reconstructed subset.",
+  };
+}
+export function watchlistEmptyCopy() {
+  return {
+    kind: "watchlist-none",
+    title: "A place for wallets worth revisiting",
+    detail:
+      "Save a public address above or use the star button on a wallet report. An empty list is not a MATCH shortlist and does not start quote-only observation.",
+  };
+}
+export function compareEmptyCopy(
+  reports: { source?: string }[],
+  selectedCount: number,
+) {
+  if (!reports.length) {
+    return {
+      kind: "compare-none",
+      title: "No reports to compare",
+      detail:
+        "Run an offline Search slice or another investigation first. Subset rows, when they appear, are not a wallet-wide MATCH comparison.",
+    };
+  }
+  if (selectedCount === 0) {
+    const subset = reports.some((report) => report.source === "mass-search");
+    return {
+      kind: "compare-none-selected",
+      title: "No reports selected",
+      detail: subset
+        ? "Select two to four reports. Mass-search rows are a reconstructed subset, not a wallet-wide MATCH comparison."
+        : "Select two to four reports with the same window, source, and methodology. This view does not promote a MATCH.",
+    };
+  }
+  return null;
+}
 export function Results({
   state,
   open,
@@ -649,14 +709,8 @@ export function Results({
     );
     if (sort !== "recent")
       result.sort((a, b) => {
-        const x =
-            a.metrics.profit_sol?.status === "known"
-              ? a.metrics.profit_sol.value
-              : null,
-          y =
-            b.metrics.profit_sol?.status === "known"
-              ? b.metrics.profit_sol.value
-              : null;
+        const x = listRealisedProfit(a).value,
+          y = listRealisedProfit(b).value;
         if (x === null || x === undefined)
           return y === null || y === undefined ? 0 : 1;
         if (y === null || y === undefined) return -1;
@@ -724,18 +778,7 @@ export function Results({
           onSelect={onSelect}
         />
       ) : (
-        <Empty
-          title={
-            state.reports.length
-              ? "No reports for these filters"
-              : "No reports yet"
-          }
-          detail={
-            state.reports.length
-              ? "Adjust the filters to inspect your saved reports. Policy thresholds remain unchanged."
-              : "Run a small scan or load the offline demonstration to inspect how reports are evaluated."
-          }
-        />
+        <Empty {...resultsEmptyCopy(source, state.reports.length)} />
       )}
       <div className="result-footer">
         <span>
@@ -760,6 +803,7 @@ export function CompareView({
   const reports = state.reports.filter((report) =>
     selected.includes(report.id),
   );
+  const narrow = useNarrowViewport();
   const sameWindows =
     reports.length < 2 ||
     reports.every(
@@ -769,12 +813,18 @@ export function CompareView({
         r.methodology === reports[0].methodology &&
         r.source === reports[0].source,
     );
+  const empty = compareEmptyCopy(state.reports, selected.length);
+  const hasSubset = state.reports.some((report) => report.source === "mass-search");
   return (
     <>
       <section className="panel">
         <SectionHeading
           title="Choose up to four reports"
-          subtitle="Comparisons require identical windows, methodology, and data source."
+          subtitle={
+            hasSubset
+              ? "Comparisons require identical windows, methodology, and data source. Mass-search rows are a reconstructed subset, not a MATCH comparison."
+              : "Comparisons require identical windows, methodology, and data source."
+          }
         />
         <div className="compare-picker">
           {state.reports.slice(0, 100).map((report) => (
@@ -800,13 +850,7 @@ export function CompareView({
             </button>
           ))}
         </div>
-        {!state.reports.length && (
-          <Empty
-            title="Choose reports to compare"
-            detail="Complete an investigation first, then select two to four wallet reports."
-            icon={GitCompareArrows}
-          />
-        )}
+        {empty && <Empty {...empty} icon={GitCompareArrows} />}
       </section>
       {reports.length > 0 && (
         <section className="panel compare-panel">
@@ -814,10 +858,17 @@ export function CompareView({
             title="A shared view of the details"
             subtitle={
               sameWindows
-                ? "The selected reports use the same window, source, and methodology."
+                ? reports.some((report) => report.source === "mass-search")
+                  ? "Mass-search realised P&L is reconstructed subset, not a wallet-wide MATCH."
+                  : "The selected reports use the same window, source, and methodology."
                 : "These reports have different windows, data sources, or methodology. Their metrics cannot be compared like for like."
             }
           />
+          {reports.some((report) => report.source === "mass-search") && (
+            <p className="subset-compare-note">
+              Supported closed trades only. Reconstructed subset P&amp;L is not wallet-wide MATCH.
+            </p>
+          )}
           {!sameWindows && (
             <div className="inline-alert">
               <CircleHelp size={18} />
@@ -827,62 +878,105 @@ export function CompareView({
               </span>
             </div>
           )}
-          <div className="table-scroll">
-            <table className="comparison-table">
-              <thead>
-                <tr>
-                  <th>Research measure</th>
-                  {reports.map((report) => (
-                    <th key={report.id}>
-                      <button
-                        className="text-button"
-                        onClick={() => open(report)}
-                      >
-                        {report.label || shorten(report.address)}
-                        <ArrowRight size={14} />
-                      </button>
-                      <WindowLabel report={report} />
-                      {report.source === "demo" && (
-                        <small className="demo-inline">SYNTHETIC DEMO</small>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Policy fit</td>
-                  {reports.map((r) => (
-                    <td key={r.id}>
-                      <Badge value={r.policy} />
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td>Evidence status</td>
-                  {reports.map((r) => (
-                    <td key={r.id}>
-                      <Badge value={r.evidence_status} />
-                    </td>
-                  ))}
-                </tr>
-                {sameWindows &&
-                  metricDefinitions.map((metric) => (
-                    <tr key={metric.key}>
-                      <td title={metric.hint}>{metric.name}</td>
-                      {reports.map((r) => (
-                        <td key={r.id} className="numeric">
-                          <MetricValue
-                            metric={r.metrics[metric.key]}
-                            suffix={metric.suffix}
-                          />
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          {!narrow && (
+            <div className="table-scroll">
+              <table className="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Research measure</th>
+                    {reports.map((report) => (
+                      <th key={report.id}>
+                        <button
+                          className="text-button"
+                          onClick={() => open(report)}
+                        >
+                          {report.label || shorten(report.address)}
+                          <ArrowRight size={14} />
+                        </button>
+                        <WindowLabel report={report} />
+                        {report.source === "demo" && (
+                          <small className="demo-inline">SYNTHETIC DEMO</small>
+                        )}
+                        {report.source === "mass-search" && (
+                          <small className="demo-inline">RECONSTRUCTED SUBSET</small>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Policy fit</td>
+                    {reports.map((r) => (
+                      <td key={r.id}>
+                        <Badge value={r.policy} />
+                      </td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Evidence status</td>
+                    {reports.map((r) => (
+                      <td key={r.id}>
+                        <Badge value={r.evidence_status} />
+                      </td>
+                    ))}
+                  </tr>
+                  {sameWindows &&
+                    metricDefinitions.map((metric) => (
+                      <tr key={metric.key}>
+                        <td title={metric.hint}>{metric.name}</td>
+                        {reports.map((r) => (
+                          <td key={r.id} className="numeric">
+                            {metric.key === "profit_sol" ? (
+                              <ListRealisedProfitCell report={r} />
+                            ) : (
+                              <MetricValue
+                                metric={r.metrics[metric.key]}
+                                suffix={metric.suffix}
+                              />
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <ul className="compare-cards">
+            {reports.map((report) => (
+              <li key={`compare-card-${report.id}`}>
+                <strong>{report.label || shorten(report.address)}</strong>
+                {report.source === "demo" && (
+                  <small className="demo-inline">SYNTHETIC DEMO</small>
+                )}
+                {report.source === "mass-search" && (
+                  <small className="demo-inline">RECONSTRUCTED SUBSET</small>
+                )}
+                <div className="report-card-profit">
+                  <span>Realised profit</span>
+                  <ListRealisedProfitCell report={report} />
+                </div>
+                <p>
+                  Hold{" "}
+                  <MetricValue
+                    metric={report.metrics.median_hold_hours}
+                    suffix="h"
+                  />
+                  {" · "}
+                  Positions{" "}
+                  <MetricValue metric={report.metrics.completed_positions} />
+                </p>
+                <p>
+                  <Badge value={report.policy} />{" "}
+                  <Badge value={report.evidence_status} />
+                </p>
+                <Button variant="secondary" onClick={() => open(report)}>
+                  Open report
+                </Button>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
     </>
@@ -962,14 +1056,18 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
           title="Saved wallets"
           subtitle={`${state.watchlist.length} wallet${state.watchlist.length !== 1 ? "s" : ""} · ${state.settings.refresh_minutes ? `refresh every ${state.settings.refresh_minutes} minutes while app runs` : "manual refresh"}`}
         />
+        {state.watchlist.some((item) => item.source === "mass-search" || state.reports.some((report) => report.address === item.address && report.source === "mass-search")) && (
+          <p className="research-note">Mass-search shortlist entries are a reconstructed subset, not a wallet-wide MATCH. Quote-only observation is not started from this list.</p>
+        )}
         {state.watchlist.length ? (
           <div className="watchlist-list">
             {state.watchlist.map((item) => {
               const report = state.reports.find(
                 (r) => r.address === item.address,
               );
+              const subset = item.source === "mass-search" || report?.source === "mass-search";
               return (
-                <div className="watch-row" key={item.address}>
+                <div className="watch-row" key={item.address} data-watch-source={item.source ?? report?.source ?? "unknown"}>
                   <span className="wallet-avatar">
                     <Star size={20} />
                   </span>
@@ -978,8 +1076,21 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                     <small className="mono">{item.address}</small>
                   </div>
                   {report ? (
-                    <>
+                    <div className="watch-report-meta">
                       <Badge value={report.policy} />
+                      {subset && (
+                        <>
+                          <small className="subset-list-label">{WORKSHEET_LABEL}</small>
+                          <small>not a wallet-wide MATCH</small>
+                          <ListRealisedProfitCell report={report} />
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="muted">{subset ? "Reconstructed subset · no live MATCH" : "No report yet"}</span>
+                  )}
+                  <div className="watch-actions">
+                    {report && (
                       <Button
                         variant="secondary"
                         onClick={() => open(report)}
@@ -987,36 +1098,30 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                       >
                         Latest report
                       </Button>
-                    </>
-                  ) : (
-                    <span className="muted">No report yet</span>
-                  )}
-                  <button
-                    className="icon-button"
-                    disabled={busy === `watch-remove-${item.address}`}
-                    aria-label={`Remove ${item.label || item.address} from watchlist`}
-                    onClick={() =>
-                      run(
-                        `watch-remove-${item.address}`,
-                        `/watchlist/${item.address}`,
-                        undefined,
-                        "DELETE",
-                        "Wallet removed from the watchlist.",
-                      )
-                    }
-                  >
-                    <Trash2 size={17} />
-                  </button>
+                    )}
+                    <button
+                      className="icon-button"
+                      disabled={busy === `watch-remove-${item.address}`}
+                      aria-label={`Remove ${item.label || item.address} from watchlist`}
+                      onClick={() =>
+                        run(
+                          `watch-remove-${item.address}`,
+                          `/watchlist/${item.address}`,
+                          undefined,
+                          "DELETE",
+                          "Wallet removed from the watchlist.",
+                        )
+                      }
+                    >
+                      <Trash2 size={17} />
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <Empty
-            title="A place for wallets worth revisiting"
-            detail="Save a public address above or use the star button on a wallet report."
-            icon={Star}
-          />
+          <Empty {...watchlistEmptyCopy()} icon={Star} />
         )}
       </section>
     </>

@@ -96,6 +96,9 @@ def test_summary_sql_preserves_missing_null_and_boolean_types_and_avoids_full_li
     rich_report(app.state.store, 'true', preview=True)
     inputs = {report['id']: report for report in summary_inputs(app.state.store)}
     assert 'preview' not in inputs['missing']
+    assert 'worksheet' not in inputs['missing']
+    assert 'material_exit' not in inputs['missing']
+    assert 'corpus_kind' not in inputs['missing']
     assert inputs['false']['preview'] is False
     assert inputs['null']['preview'] is None
     assert inputs['true']['preview'] is True
@@ -141,6 +144,31 @@ def test_invalid_views_fail_before_mutation_or_provider_dispatch(session, monkey
     assert client.get('/api/reports/missing?view=bogus').status_code == 422
     assert saved_payload(app.state.store, original['id']) == before
     assert client.get('/api/usage').json()['used'] == 0
+
+
+def test_summary_inputs_extracts_optional_subset_worksheet_without_inventing_it(session):
+    _, app, _ = session
+    report = rich_report(app.state.store, 'subset-row')
+    report['source'] = 'mass-search'
+    report['corpus_kind'] = 'SYNTHETIC'
+    report['worksheet'] = {
+        'total_profit_sol': '0.575',
+        'sale_net_profit_sol': ['0.29', '0.2605', '0.0245'],
+    }
+    report['material_exit'] = {'exit_90_seconds': 30, 'final_hold_seconds': 172800}
+    app.state.store.put('reports', report['id'], report)
+    extracted = next(row for row in summary_inputs(app.state.store) if row['id'] == report['id'])
+    assert extracted['source'] == 'mass-search'
+    assert extracted['corpus_kind'] == 'SYNTHETIC'
+    assert extracted['worksheet']['total_profit_sol'] == '0.575'
+    assert extracted['worksheet']['sale_net_profit_sol'] == ['0.29', '0.2605', '0.0245']
+    assert extracted['material_exit']['exit_90_seconds'] == 30
+    assert extracted['material_exit']['final_hold_seconds'] == 172800
+    other = rich_report(app.state.store, 'plain-row')
+    plain = next(row for row in summary_inputs(app.state.store) if row['id'] == other['id'])
+    assert 'worksheet' not in plain
+    assert 'material_exit' not in plain
+    assert 'corpus_kind' not in plain
 
 
 def test_transient_helpers_never_edit_nested_original_and_summary_of_full_is_compact(session):

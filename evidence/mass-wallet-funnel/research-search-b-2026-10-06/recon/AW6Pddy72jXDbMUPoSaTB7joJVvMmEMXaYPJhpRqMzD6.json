@@ -1,0 +1,12 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+  "fifo": {},
+  "conversions": [],
+  "unsupported_tx_count": 196,
+  "app_report_id": "ranked-partial-AW6Pddy7-3ec5e290",
+  "app_error": null,
+  "comparison": {},
+  "PRODUCT_READY": false
+}

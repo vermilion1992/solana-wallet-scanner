@@ -1,0 +1,19 @@
+{
+  "result": "SOURCE_RECORDS_DAMAGED",
+  "db": "/workspace/g3-ranked100-live-results/data/scanner.sqlite",
+  "grant_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "pages": 10,
+  "transactions_cached": 1000,
+  "intact_preTokenBalances_arrays": 0,
+  "damaged_preTokenBalances": 1000,
+  "unmodified_original_bodies_found": false,
+  "token_program_id_present_in_pages": false,
+  "uiTokenAmount_present_in_pages": false,
+  "notes": [
+    "All 10 cached Helius pages store meta.preTokenBalances/postTokenBalances as the string [REDACTED].",
+    "No separate raw/original body column or sidecar found in this sqlite.",
+    "A transaction hash alone cannot restore deleted balances.",
+    "Do not silently reacquire; a later separately approved minimal repair acquisition may be needed.",
+    "Credentials and grant file were not exported."
+  ]
+}

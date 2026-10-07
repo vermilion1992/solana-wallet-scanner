@@ -1,0 +1,25 @@
+{
+  "outcome_label": "G3_RANKED100_HISTORY",
+  "status": "INCOMPLETE",
+  "authorization_id": "[REDACTED]",
+  "qualifying_reports": 0,
+  "visible_below_g3": 0,
+  "investigations": 5,
+  "external_requests": 10,
+  "helius_requests_used": 10,
+  "helius_units_used": 100,
+  "helius_units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+  "birdeye_requests": 0,
+  "stop_reason": "wallet_investigation_cap",
+  "blocker": null,
+  "inspected_addresses": [
+    "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+    "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+    "3g8KsJE1yhJvBo6kvqvxLnoSXQ9suqQnHMqGFs3LFckM",
+    "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+    "B4HUfUDVzVuVgd3xqEm4wfCmBofuHh4h5NqjV3EzKAzi"
+  ],
+  "unused_reserves": [],
+  "transport_dispatches": 10,
+  "PRODUCT_READY": false
+}

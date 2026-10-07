@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import pytest
 from fastapi.testclient import TestClient
 
-from scanner.app import create_app
+from scanner.app import allowed_request_host, create_app
 from scanner.config import LIMITS, STRICT
 from scanner.storage import Store
 
@@ -78,6 +78,43 @@ def test_launch_token_bootstrap_and_private_http_only_cookie(tmp_path):
         assert response.headers["referrer-policy"] == "no-referrer"
         assert response.headers["x-frame-options"] == "DENY"
         assert "connect-src 'self'" in response.headers["content-security-policy"]
+        assert response.json()["PRODUCT_READY"] is False
+
+
+def test_every_api_route_requires_the_session(tmp_path):
+    import re
+    app = create_app(tmp_path / "data", LAUNCH_TOKEN)
+    checked = []
+    with TestClient(app, base_url=BASE_URL) as client:
+        assert client.get("/api/health").status_code == 401
+        for route in app.routes:
+            path = getattr(route, "path", "")
+            methods = getattr(route, "methods", None) or set()
+            if not path.startswith("/api/") or path == "/api/bootstrap":
+                continue
+            sample = re.sub(r"\{[^}]+\}", "0" * 32, path)
+            for method in sorted(methods - {"HEAD", "OPTIONS"}):
+                response = client.request(method, sample)
+                assert response.status_code == 401, (method, sample, response.status_code)
+                checked.append(f"{method} {sample}")
+    assert any(item.startswith("GET /api/mass-search/") for item in checked)
+    assert any("export" in item.lower() for item in checked)
+    assert len(checked) >= 40
+
+
+def test_lan_host_is_opt_in_and_still_requires_the_session(tmp_path):
+    lan = "172.30.0.2"
+    app = create_app(tmp_path / "data", LAUNCH_TOKEN, allowed_hosts=("127.0.0.1", "localhost", lan))
+    with TestClient(app, base_url=f"http://{lan}:8765") as client:
+        assert client.get("/api/state").status_code == 401
+        bootstrap = client.get("/api/bootstrap", headers={"x-launch-token": LAUNCH_TOKEN})
+        assert bootstrap.status_code == 200
+        client.headers["x-csrf-token"] = bootstrap.json()["csrf"]
+        assert client.get("/api/state").status_code == 200
+        assert client.get("/api/state", headers={"host": "127.0.0.1:8765"}).status_code == 200
+        assert client.get("/api/state", headers={"host": "8.8.8.8:8765"}).status_code == 403
+    assert allowed_request_host("172.30.0.2:8765", (lan,)) is True
+    assert allowed_request_host("8.8.8.8:8765", (lan,)) is False
 
 
 @pytest.mark.parametrize("host", ["attacker.invalid", "127.0.0.1.attacker.invalid:8765", "127.1:8765",
@@ -454,7 +491,9 @@ def test_scheduler_rotates_bounded_live_watchlist_and_skips_synthetic(fast_sessi
     for index, address in enumerate(addresses):
         app.state.store.put("watchlist", address, {"address": address, "source": "live", "label": str(index)})
     synthetic = _base58(bytes([200]) * 32)
+    mass_search = _base58(bytes([201]) * 32)
     app.state.store.put("watchlist", synthetic, {"address": synthetic, "source": "demo"})
+    app.state.store.put("watchlist", mass_search, {"address": mass_search, "source": "mass-search", "label": "Research shortlist"})
     make_scheduler_due(app)
     deadline = time.monotonic() + 3
     scans = []
@@ -469,6 +508,7 @@ def test_scheduler_rotates_bounded_live_watchlist_and_skips_synthetic(fast_sessi
     assert first["discovery_source"] == "watchlist-schedule"
     assert len(first["audit_addresses"]) == 5
     assert synthetic not in first["addresses"]
+    assert mass_search not in first["addresses"]
     status = app.state.store.get("configuration", "schedule")
     assert status["offset"] == 5
     status["last_run"] = "2000-01-01T00:00:00+00:00"
@@ -484,6 +524,7 @@ def test_scheduler_rotates_bounded_live_watchlist_and_skips_synthetic(fast_sessi
     assert set(captured) == set(addresses)
     assert len(captured) == 10
     assert synthetic not in captured
+    assert mass_search not in captured
 
 
 @pytest.mark.parametrize("blocker", ["unconfigured", "paused", "headroom", "synthetic-only"])

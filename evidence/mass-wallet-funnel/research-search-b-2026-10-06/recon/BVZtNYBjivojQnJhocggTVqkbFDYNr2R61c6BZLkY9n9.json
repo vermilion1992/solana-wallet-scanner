@@ -1,0 +1,51 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+  "fifo": {
+    "USDC": {
+      "asset": "USDC",
+      "known_cost_sells": [],
+      "unresolved_basis_sales": [
+        {
+          "signature": "4cE6kbdqh83UbybuJBgnrH5uvW6KzmQEycyJKfpXGHpqu3BexvpcZKxjMBDHhwXwXP2JDZMVeq9b9fymxchMJCKz",
+          "mint": "7VertkgF9KLhxxJXHX6uaWuoYZTP9LdGj2bWmVXVpump",
+          "unmatched_quantity_raw": "1222025082496",
+          "gross_proceeds": "15195.012693",
+          "fee_sol": "0.00006156",
+          "unresolved_basis": true,
+          "whole_sale_pnl_resolved": false,
+          "result_scope": "conditional_on_captured_inventory"
+        }
+      ],
+      "open_lots": [],
+      "total_profit": null,
+      "sol_fees_not_converted": true,
+      "missing_basis_is_not_zero": true
+    }
+  },
+  "conversions": [
+    {
+      "signature": "2er1h9XemTzHLjj4cKyCu9yHXvN3T6Kka9rtTMDyvyDp7mCZomz32T1HGEJAZ2iJ1MsnMuCJftmU2xdCQhCD6crL",
+      "from_asset": "USDC",
+      "to_asset": "SOL",
+      "timestamp": 1791168407
+    }
+  ],
+  "unsupported_tx_count": 149,
+  "app_report_id": "c49b16b375cc42fdb483e549e11dc24c",
+  "app_error": null,
+  "comparison": {
+    "USDC": {
+      "independent_total": null,
+      "app_total": null,
+      "independent_known_cost_sells": 0,
+      "app_sales": 0,
+      "independent_unresolved_basis_sales": 1,
+      "independent_open_lots": 0,
+      "per_sale": true,
+      "status": "BOTH_EMPTY"
+    }
+  },
+  "PRODUCT_READY": false
+}

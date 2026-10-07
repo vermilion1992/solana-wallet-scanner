@@ -76,15 +76,72 @@ def run(args):
         page.goto(launcher.url)
         page.get_by_role("button", name="Search", exact=True).wait_for()
 
-        def capture(name):
+        def expect_worksheet():
+            expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
+            expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_be_visible()
+            expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+            expect(page.get_by_text("30 seconds", exact=False).first).to_be_visible()
+            expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
+            expect(page.get_by_text("A conclusion needs more evidence", exact=False)).to_be_visible()
+
+        def expect_subset_screening():
+            expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible()
+            expect(page.locator('[data-screening-corpus="reconstructed-subset"]').first).to_be_visible()
+            expect(page.get_by_text("UNRESOLVED reconstructed subset", exact=False)).to_be_visible()
+            expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+            expect(page.get_by_role("button", name="Start quote-only observation", exact=True)).to_be_disabled()
+            expect(page.get_by_role("button", name="Continue investigation", exact=True)).to_be_disabled()
+
+        def expect_watchlist_pnl_grouped():
+            measured = page.evaluate(
+                """() => {
+                  const profit = document.querySelector('[data-list-profit="reconstructed-subset"]');
+                  const meta = document.querySelector('.watch-report-meta');
+                  const button = [...document.querySelectorAll('button')].find((el) => el.textContent.trim() === 'Latest report');
+                  if (!profit || !meta || !button) return { ok: false, reason: 'missing-nodes' };
+                  const p = profit.getBoundingClientRect();
+                  const m = meta.getBoundingClientRect();
+                  const b = button.getBoundingClientRect();
+                  const grouped = p.left >= m.left - 2 && p.right <= m.right + 2 && p.top >= m.top - 2 && p.bottom <= m.bottom + 2;
+                  const notUnderButton = p.right <= b.left + 2 || p.bottom <= b.top + 2;
+                  return {
+                    ok: grouped && notUnderButton,
+                    grouped,
+                    notUnderButton,
+                    innerWidth: innerWidth,
+                    profit: { left: p.left, right: p.right, top: p.top, bottom: p.bottom },
+                    meta: { left: m.left, right: m.right, top: m.top, bottom: m.bottom },
+                    button: { left: b.left, right: b.right, top: b.top, bottom: b.bottom },
+                  };
+                }"""
+            )
+            assert measured["ok"], measured
+
+        def expect_watchlist_subset():
+            expect(page.locator('[data-watch-source="mass-search"]').first).to_be_visible()
+            expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
+            expect(page.locator(".watch-report-meta .subset-list-label").first).to_have_text("Reconstructed subset")
+            expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+            expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+            expect(page.get_by_text("not started from this list", exact=False)).to_be_visible()
+            expect_watchlist_pnl_grouped()
+
+        def expect_results_subset():
+            page.get_by_label("Data source").select_option("mass-search")
+            expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+            expect(page.locator(".subset-list-label").first).to_have_text("Reconstructed subset")
+            expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
+
+        def capture(name, *, desktop_only=False):
             page.evaluate(
                 """message => {let b=document.getElementById('synthetic-browser-test-banner');if(!b){b=document.createElement('div');b.id='synthetic-browser-test-banner';b.style.cssText='position:sticky;top:0;z-index:9999;padding:12px;background:#571a21;color:#fff;text-align:center;font:700 14px sans-serif;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box';document.body.prepend(b)}b.textContent=message}""",
                 BANNER,
             )
-            for width, height, label in ((1440, 1000, "desktop"), (360, 640, "mobile")):
+            sizes = ((1440, 1000, "desktop"),) if desktop_only else ((1440, 1000, "desktop"), (360, 640, "mobile"))
+            for width, height, label in sizes:
                 page.set_viewport_size({"width": width, "height": height})
                 page.evaluate("scrollTo(0,0)")
-                page.wait_for_timeout(200)
+                page.wait_for_timeout(350)
                 measured = page.evaluate(
                     """() => {
                       const vw = innerWidth;
@@ -117,6 +174,30 @@ def run(args):
         capture("01-empty")
         result["cases"].append({"case": "empty-not-scanned", "state": "PASS"})
 
+        page.get_by_label("Main navigation").get_by_role("button", name="Watchlist").click()
+        expect(page.locator('[data-empty-kind="watchlist-none"]')).to_be_visible()
+        expect(page.get_by_text("not a MATCH shortlist", exact=False)).to_be_visible()
+        expect(page.get_by_text("does not start quote-only observation", exact=False)).to_be_visible()
+        capture("14-watchlist-empty")
+        page.get_by_label("Main navigation").get_by_role("button", name="Results").click()
+        expect(page.locator('[data-empty-kind="results-none"]')).to_be_visible()
+        expect(page.get_by_text("reconstructed subset", exact=False).first).to_be_visible()
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        page.get_by_label("Data source").select_option("mass-search")
+        expect(page.locator('[data-empty-kind="results-no-subset"]')).to_be_visible()
+        expect(page.get_by_text("No reconstructed-subset reports", exact=True)).to_be_visible()
+        expect(page.get_by_text("not wallet-wide MATCH", exact=False).first).to_be_visible()
+        capture("14-results-empty")
+        page.get_by_label("Main navigation").get_by_role("button", name="Compare", exact=True).click()
+        expect(page.locator('[data-empty-kind="compare-none"]')).to_be_visible()
+        expect(page.get_by_text("No reports to compare", exact=True)).to_be_visible()
+        expect(page.get_by_text("not a wallet-wide MATCH comparison", exact=False)).to_be_visible()
+        capture("16-compare-empty")
+        result["cases"].append({"case": "empty-watchlist-results-compare", "state": "PASS"})
+
+        page.get_by_label("Main navigation").get_by_role("button", name="Search", exact=True).click()
+        expect(page.get_by_text("Not scanned", exact=True)).to_be_visible()
+
         with page.expect_response(lambda response: response.request.method == "POST" and response.url.endswith("/api/mass-search/vertical-slice")) as sliced:
             page.get_by_role("button", name="Run offline slice", exact=True).click()
         assert sliced.value.status == 200, sliced.value.text()
@@ -134,15 +215,15 @@ def run(args):
         shutil.copyfile(download.value.path(), dest)
         exported = json.loads(dest.read_text())
         assert exported["run"]["run_id"] == run_id
+        assert exported["reports"][0]["id"] == report_id
+        assert exported["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
+        assert exported["reports"][0]["material_exit"]["final_hold_seconds"] == 172800
+        assert exported["reports"][0]["policy"] == "UNRESOLVED"
         result["cases"].append({"case": "export-run", "state": "PASS"})
 
         page.get_by_role("button", name="Open report", exact=True).first.click()
         expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
-        expect(page.get_by_text("Reconstructed subset / independent worksheet", exact=True)).to_be_visible()
-        expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_be_visible()
-        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
-        expect(page.get_by_text("30 seconds", exact=False).first).to_be_visible()
-        expect(page.get_by_text("48 hours (172800 seconds)", exact=True)).to_be_visible()
+        expect_worksheet()
         capture("03-opened-report")
         result["cases"].append({"case": "open-subset-report", "state": "PASS", "report_id": report_id})
 
@@ -153,8 +234,198 @@ def run(args):
         page.goto(launcher.url)
         page.get_by_role("button", name="Search", exact=True).click()
         expect(page.get_by_role("button", name="Reopen report", exact=True)).to_be_visible(timeout=15000)
-        capture("04-reopen-after-restart")
-        result["cases"].append({"case": "restart-reopen", "state": "PASS"})
+        capture("04-reopen-button-after-restart")
+        page.get_by_role("button", name="Reopen report", exact=True).click()
+        expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect_worksheet()
+        capture("05-reopened-report-after-restart")
+        result["cases"].append({"case": "restart-reopen-worksheet", "state": "PASS", "report_id": report_id})
+
+        page.get_by_role("button", name="Back to results", exact=True).click()
+        page.get_by_label("Data source").select_option("mass-search")
+        page.get_by_label("Sort results").select_option("profit_desc")
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.locator(".subset-list-label").first).to_have_text("Reconstructed subset")
+        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+        expect(page.get_by_text("UNRESOLVED", exact=False).first).to_be_visible()
+        expect(page.get_by_text("Not a wallet-wide MATCH", exact=False)).to_have_count(0)
+        capture("06-results-subset-pnl")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect(page.locator(".report-cards").first).to_be_visible()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        result["cases"].append({"case": "results-subset-pnl", "state": "PASS", "report_id": report_id})
+
+        page.get_by_label("Main navigation").get_by_role("button", name="Compare", exact=True).click()
+        expect(page.locator('[data-empty-kind="compare-none-selected"]')).to_be_visible()
+        expect(page.get_by_text("No reports selected", exact=True)).to_be_visible()
+        expect(page.get_by_text("reconstructed subset, not a wallet-wide MATCH comparison", exact=False)).to_be_visible()
+        expect(page.get_by_text("Mass-search subset", exact=False).first).to_be_visible()
+        capture("16-compare-unselected-subset")
+        result["cases"].append({"case": "compare-unselected-subset", "state": "PASS", "report_id": report_id})
+        page.locator(".compare-choice").first.click()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.get_by_text("Reconstructed subset", exact=False).first).to_be_visible()
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        expect(page.get_by_text("RECONSTRUCTED SUBSET", exact=False).first).to_be_visible()
+        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+        capture("07-compare-subset-pnl")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect(page.locator(".compare-cards").first).to_be_visible()
+        expect(page.locator('[data-list-profit="reconstructed-subset"]').first).to_contain_text("0.575")
+        expect(page.get_by_text("not a wallet-wide MATCH", exact=False).first).to_be_visible()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        result["cases"].append({"case": "compare-subset-pnl", "state": "PASS", "report_id": report_id})
+
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect(page.get_by_text("reconstructed subset, not a wallet-wide MATCH", exact=False)).to_be_visible()
+        expect(page.get_by_label("Report to screen")).to_be_visible()
+        with page.expect_response(lambda response: response.request.method == "POST" and response.url.endswith("/api/screenings")) as screened:
+            page.get_by_role("button", name="Screen and save assessment", exact=True).click()
+        assert screened.value.status == 200, screened.value.text()
+        screening = screened.value.json()
+        assert screening["source"] == "mass-search"
+        assert screening["result"] == "insufficient_evidence"
+        assert screening["strict_qualification"]["qualified"] is False
+        assert screening["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        assert screening["current_eligibility"]["can_start_observation"] is False
+        expect(page.get_by_text("Insufficient evidence", exact=False).first).to_be_visible(timeout=15000)
+        expect_subset_screening()
+        capture("09-research-screen-subset")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect_subset_screening()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        result["cases"].append({
+            "case": "research-screen-subset",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening["id"],
+            "result": screening["result"],
+            "observation_started": False,
+        })
+
+        screening_id = screening["id"]
+        launcher.stop()
+        launcher.start()
+        page.goto(launcher.url)
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect(page.get_by_role("button", name="Reopen saved assessment", exact=True)).to_be_visible(timeout=15000)
+        capture("10-reopen-screening-button-after-restart", desktop_only=True)
+        with page.expect_response(lambda response: response.request.method == "GET" and response.url.rstrip("/").endswith("/api/screenings/" + screening_id)) as reopened:
+            page.get_by_role("button", name="Reopen saved assessment", exact=True).click()
+        assert reopened.value.status == 200, reopened.value.text()
+        detail = reopened.value.json()
+        assert detail["id"] == screening_id
+        assert detail["source"] == "mass-search"
+        assert detail["result"] == "insufficient_evidence"
+        assert detail["strict_qualification"]["qualified"] is False
+        assert detail["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        assert detail["current_eligibility"]["can_start_observation"] is False
+        expect_subset_screening()
+        expect(page.get_by_label("Saved screening assessment")).to_contain_text("subset ·")
+        capture("10-reopened-screening-after-restart")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect_subset_screening()
+        expect(page.get_by_label("Saved screening assessment")).to_contain_text("subset ·")
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        with page.expect_download() as download:
+            page.get_by_role("link", name="Export screening", exact=False).click()
+        dest = out / "screening-export.json"
+        shutil.copyfile(download.value.path(), dest)
+        exported_screening = json.loads(dest.read_text())
+        assert exported_screening["id"] == screening_id
+        assert exported_screening["source"] == "mass-search"
+        assert exported_screening["result"] == "insufficient_evidence"
+        assert exported_screening["strict_qualification"]["financial_policy"] == "UNRESOLVED"
+        assert exported_screening["strict_qualification"]["qualified"] is False
+        assert exported_screening["current_eligibility"]["can_start_observation"] is False
+        result["cases"].append({
+            "case": "restart-reopen-screening",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening_id,
+            "result": detail["result"],
+            "observation_started": False,
+            "export": "screening-export.json",
+        })
+
+        with page.expect_response(lambda response: response.request.method == "POST" and response.url.endswith("/api/watchlist")) as shortlisted:
+            page.get_by_role("button", name="Save to shortlist", exact=True).click()
+        assert shortlisted.value.status == 200, shortlisted.value.text()
+        expect(page.get_by_role("button", name="Shortlisted", exact=True)).to_be_visible()
+        expect_subset_screening()
+        page.get_by_label("Main navigation").get_by_role("button", name="Watchlist").click()
+        expect(page.locator('[data-watch-source="mass-search"]').first).to_be_visible(timeout=15000)
+        expect_watchlist_subset()
+        capture("11-watchlist-shortlist-subset")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect_watchlist_subset()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.get_by_label("Main navigation").get_by_role("button", name="Results").click()
+        expect_results_subset()
+        capture("11-results-after-shortlist")
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect_subset_screening()
+        result["cases"].append({
+            "case": "shortlist-subset-watchlist-results",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening_id,
+            "observation_started": False,
+        })
+
+        launcher.stop()
+        launcher.start()
+        page.goto(launcher.url)
+        page.get_by_label("Main navigation").get_by_role("button", name="Watchlist").click()
+        expect(page.locator('[data-watch-source="mass-search"]').first).to_be_visible(timeout=15000)
+        expect_watchlist_subset()
+        capture("12-watchlist-after-restart")
+        page.set_viewport_size({"width": 360, "height": 640})
+        page.wait_for_timeout(350)
+        expect_watchlist_subset()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.get_by_role("button", name="Latest report", exact=True).click()
+        expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect_worksheet()
+        capture("13-watchlist-latest-report-after-restart")
+        page.get_by_label("Main navigation").get_by_role("button", name="Results").click()
+        expect_results_subset()
+        capture("12-results-after-restart")
+        page.get_by_label("Main navigation").get_by_role("button", name="Search", exact=True).click()
+        with page.expect_download() as download:
+            page.get_by_role("link", name="Export run", exact=False).click()
+        dest = out / "mass-search-export-after-restart.json"
+        shutil.copyfile(download.value.path(), dest)
+        exported_run = json.loads(dest.read_text())
+        assert exported_run["run"]["run_id"] == run_id
+        assert exported_run["reports"][0]["id"] == report_id
+        assert exported_run["reports"][0]["worksheet"]["total_profit_sol"] == "0.575"
+        assert exported_run["reports"][0]["policy"] == "UNRESOLVED"
+        assert exported_run["reports"][0]["source"] == "mass-search"
+        page.get_by_role("button", name="Reopen report", exact=True).click()
+        expect(page.get_by_text("Wallet report", exact=False).first).to_be_visible(timeout=15000)
+        expect_worksheet()
+        expect(page.get_by_text("0.575 SOL", exact=False).first).to_be_visible()
+        capture("15-reopen-after-export")
+        page.get_by_label("Main navigation").get_by_role("button", name="Research", exact=True).click()
+        expect(page.get_by_role("button", name="Shortlisted", exact=True)).to_be_visible(timeout=15000)
+        expect_subset_screening()
+        capture("12-research-after-restart", desktop_only=True)
+        result["cases"].append({
+            "case": "restart-shortlist-loop",
+            "state": "PASS",
+            "report_id": report_id,
+            "screening_id": screening_id,
+            "loop": ["slice", "screen", "reopen-screening", "shortlist", "restart", "watchlist", "latest-report", "results", "export", "reopen-export", "research"],
+            "observation_started": False,
+            "export": "mass-search-export-after-restart.json",
+        })
 
         assert not errors, errors
         assert not external, external

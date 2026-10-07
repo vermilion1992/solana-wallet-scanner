@@ -1,0 +1,12 @@
+{
+  "outcome_label": "RANKED_100_DISCOVERY_PILOT",
+  "status": "PASS",
+  "authorization_id": "live-g2-ranked100-discovery-2026-10-05-mitch",
+  "from_cache": false,
+  "shortlist_count": 20,
+  "external_requests": 1,
+  "blocker": null,
+  "result": "RANKED_100_RESULT.json",
+  "not_full_g2": true,
+  "PRODUCT_READY": false
+}

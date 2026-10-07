@@ -1,0 +1,1509 @@
+{
+  "id": "2c51d3f2de6445f4bacbfa42b636798e",
+  "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "label": "Mass-search subset \u00b7 GENUINE_REPLAY",
+  "source": "mass-search",
+  "corpus_kind": "GENUINE_REPLAY",
+  "created_at": "2026-10-05T13:29:27Z",
+  "window": {
+    "start": "2026-09-05T13:29:27Z",
+    "end": "2026-10-05T13:29:27Z"
+  },
+  "methodology": null,
+  "policy": "UNRESOLVED",
+  "evidence_status": "partial",
+  "metrics": {
+    "profit_sol": {
+      "value": null,
+      "unit": "SOL",
+      "status": "unknown",
+      "population": "In-window meme disposals less matched basis, exit costs and trading overhead",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "realised_roi_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Period net realised profit / disposed acquisition cost",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "median_roi_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Whole-episode net ROI; strict-zero completed cohort",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "win_rate_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Net-positive strict-zero completed episodes / all completed episodes (breakeven included)",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "median_hold_hours": {
+      "value": null,
+      "unit": "hours",
+      "status": "unknown",
+      "population": "First acquisition to final sale; strict-zero closes inside reporting window",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "completed_positions": {
+      "value": null,
+      "unit": "positions",
+      "status": "unknown",
+      "population": "Strict-zero completed episodes closing in report window",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "completed_positions_90d": {
+      "value": null,
+      "unit": "positions",
+      "status": "unknown",
+      "population": "Strict-zero completed episodes closing in 90 days ending at report end",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "traded_mints": {
+      "value": null,
+      "unit": "mints",
+      "status": "unknown",
+      "population": "Distinct meme mint IDs traded in reporting window; settlement assets excluded",
+      "reason": "Classification or scope unresolved",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "rapid_sale_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Completed episodes with first positive economic sale within five minutes",
+      "reason": "Incomplete eligible episode population or first positive sale consideration",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "avg_buys": {
+      "value": null,
+      "unit": "buys/episode",
+      "status": "unknown",
+      "population": "Buy events per strict-zero completed episode",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "avg_sells": {
+      "value": null,
+      "unit": "sells/episode",
+      "status": "unknown",
+      "population": "Sale events per strict-zero completed episode",
+      "reason": "Incomplete acquisition quantities, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "positive_weeks": {
+      "value": null,
+      "unit": "weeks",
+      "status": "unknown",
+      "population": "Four independent consecutive seven-day periods over [report end - 28 days, report end)",
+      "reason": "Independent four-week history, matched basis or costs remain unresolved",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "largest_contribution_pct": {
+      "value": null,
+      "unit": "%",
+      "status": "unknown",
+      "population": "Highest positive aggregate realised P&L for one mint / positive net period P&L",
+      "reason": "Incomplete basis, chronology, classification or interrupted eligible episode",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    "economic_pnl_sol": {
+      "value": null,
+      "unit": "SOL",
+      "status": "unknown",
+      "population": "Closing equity - opening equity - external deposits + withdrawals",
+      "reason": "Boundary equity and valued external flows must all be reconciled",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    }
+  },
+  "checks": [],
+  "counts": {
+    "closed": 0,
+    "open": 0,
+    "interrupted": 0,
+    "unresolved": 3
+  },
+  "positions": [
+    {
+      "id": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump:1",
+      "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+      "classification": "meme",
+      "status": "unresolved",
+      "in_window": true,
+      "start": "2026-10-03T04:33:52+00:00",
+      "cohort_quantity_status": "unknown",
+      "monetary_status": "unknown",
+      "first_sale_status": "unknown",
+      "first_sale_observation_status": "unknown",
+      "acquisition_basis_status": "unknown",
+      "known_basis_sol": null,
+      "known_matched_basis_sol": null,
+      "remaining_basis_status": "unknown",
+      "remaining_basis_sol": null,
+      "end": "2026-10-03T04:33:52+00:00",
+      "start_order": 0,
+      "end_order": 0,
+      "remaining_lots": [],
+      "quantity_raw": "0",
+      "acquired_raw": "1191776693137",
+      "sold_raw": "1191776693137",
+      "decimals": 0,
+      "buy_count": 0,
+      "sell_count": 1,
+      "basis_sol": null,
+      "matched_basis_sol": null,
+      "proceeds_sol": "0",
+      "exit_fees_sol": "0.000093679",
+      "pnl_sol": null,
+      "roi_pct": null,
+      "hold_hours": "0",
+      "first_sale_hours": null,
+      "sold_50_pct_hours": "0",
+      "sold_90_pct_hours": "0",
+      "evidence": [
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ]
+    },
+    {
+      "id": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump:2",
+      "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+      "classification": "meme",
+      "status": "unresolved",
+      "in_window": true,
+      "start": "2026-10-03T23:10:56+00:00",
+      "cohort_quantity_status": "unknown",
+      "monetary_status": "unknown",
+      "first_sale_status": "unknown",
+      "first_sale_observation_status": "unknown",
+      "acquisition_basis_status": "unknown",
+      "known_basis_sol": null,
+      "known_matched_basis_sol": null,
+      "remaining_basis_status": "known",
+      "remaining_basis_sol": "0",
+      "end": "2026-10-03T23:25:08+00:00",
+      "start_order": 1,
+      "end_order": 2,
+      "remaining_lots": [],
+      "quantity_raw": "0",
+      "acquired_raw": "1176477238638",
+      "sold_raw": "1176477238638",
+      "decimals": 0,
+      "buy_count": 1,
+      "sell_count": 1,
+      "basis_sol": null,
+      "matched_basis_sol": null,
+      "proceeds_sol": "0",
+      "exit_fees_sol": "0.00032333",
+      "pnl_sol": null,
+      "roi_pct": null,
+      "hold_hours": "0.236666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667",
+      "first_sale_hours": null,
+      "sold_50_pct_hours": "0.236666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667",
+      "sold_90_pct_hours": "0.236666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d"
+      ]
+    },
+    {
+      "id": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc:3",
+      "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+      "classification": "meme",
+      "status": "unresolved",
+      "in_window": true,
+      "start": "2026-10-04T18:19:10+00:00",
+      "cohort_quantity_status": "unknown",
+      "monetary_status": "unknown",
+      "first_sale_status": "unknown",
+      "first_sale_observation_status": "known",
+      "acquisition_basis_status": "unknown",
+      "known_basis_sol": null,
+      "known_matched_basis_sol": null,
+      "remaining_basis_status": "unknown",
+      "remaining_basis_sol": null,
+      "end": null,
+      "start_order": 3,
+      "end_order": null,
+      "remaining_lots": [
+        {
+          "quantity_raw": "1277877910791",
+          "basis_sol": null,
+          "basis_status": "unknown",
+          "acquisition": {
+            "signature": "4Kg5mSUZGnyAzqfSah1jMTy1ess3tn1cK6ptPeWmtqKpRm9DeeHcpbnKEH1JRENZngrv5H79WQvLsro2iqWCX34M",
+            "evidence": [
+              "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c"
+            ],
+            "timestamp": "2026-10-04T18:19:10+00:00",
+            "order": 3,
+            "quantity_raw": "1277877910791"
+          }
+        },
+        {
+          "quantity_raw": "944085989114",
+          "basis_sol": null,
+          "basis_status": "unknown",
+          "acquisition": {
+            "signature": "pweNPfzNPsXsC8yiXp2DfixceLBPJ1R1LFd4uzGbsuaBbfjyabawTiQzpsYvxgRQEmrJW4KKTA2sAwR3AzTorsa",
+            "evidence": [
+              "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582"
+            ],
+            "timestamp": "2026-10-04T18:21:54+00:00",
+            "order": 4,
+            "quantity_raw": "944085989114"
+          }
+        },
+        {
+          "quantity_raw": "945590552707",
+          "basis_sol": null,
+          "basis_status": "unknown",
+          "acquisition": {
+            "signature": "51Kvmc8zr8XrsRcwkt9SUr4UFpnnmtNw2JbhcvK7pPv6YPKfe3n7nN8ZJ5qgP2UGsueqchM9snH7NkQRKSK85eUX",
+            "evidence": [
+              "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd"
+            ],
+            "timestamp": "2026-10-04T18:45:35+00:00",
+            "order": 5,
+            "quantity_raw": "945590552707"
+          }
+        }
+      ],
+      "quantity_raw": "3167554452612",
+      "acquired_raw": "3167554452612",
+      "sold_raw": "0",
+      "decimals": 0,
+      "buy_count": 3,
+      "sell_count": 0,
+      "basis_sol": null,
+      "matched_basis_sol": null,
+      "proceeds_sol": "0",
+      "exit_fees_sol": "0",
+      "pnl_sol": null,
+      "roi_pct": null,
+      "hold_hours": null,
+      "first_sale_hours": null,
+      "sold_50_pct_hours": null,
+      "sold_90_pct_hours": null,
+      "evidence": [
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "kind": "sell",
+      "timestamp": "2026-10-03T04:33:52Z",
+      "order": 0,
+      "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+      "quantity_raw": "1191776693137",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "4UAE8RXr1DsdA5Lf9nARhUCJRG51VXAjihLznU6XHh91j5s2uLkvcBdF7TtCb2wzJ2jL7wQNZdmxrA2svARbKnXr",
+      "path": "instructions.3",
+      "evidence": [
+        "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+      ],
+      "seconds_from_start": 2387065,
+      "units": "1191776693137",
+      "amount_usdc": "2954.546038",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "market_classification": "market",
+      "fee_sol": "0.000093679",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-03T23:10:56Z",
+      "order": 1,
+      "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+      "quantity_raw": "1176477238638",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "59K92otieTG53v2uDYJiEhPP5bYXpKtvZALmi4K3uDM86PtNG7U8BuhYEdHpvfydmPnZpKebbve3qkzrZLh2kQ6d",
+      "path": "instructions.3",
+      "evidence": [
+        "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d"
+      ],
+      "seconds_from_start": 2454089,
+      "units": "1176477238638",
+      "amount_usdc": "3000",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "market_classification": "market",
+      "fee_sol": "0",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "sell",
+      "timestamp": "2026-10-03T23:25:08Z",
+      "order": 2,
+      "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+      "quantity_raw": "1176477238638",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo",
+      "path": "instructions.3",
+      "evidence": [
+        "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3"
+      ],
+      "seconds_from_start": 2454941,
+      "units": "1176477238638",
+      "amount_usdc": "3376.028087",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "market_classification": "market",
+      "fee_sol": "0.00032333",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-04T18:19:10Z",
+      "order": 3,
+      "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+      "quantity_raw": "1277877910791",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "4Kg5mSUZGnyAzqfSah1jMTy1ess3tn1cK6ptPeWmtqKpRm9DeeHcpbnKEH1JRENZngrv5H79WQvLsro2iqWCX34M",
+      "path": "instructions.2",
+      "evidence": [
+        "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c"
+      ],
+      "seconds_from_start": 2522983,
+      "units": "1277877910791",
+      "amount_usdc": "3000",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "market_classification": "market",
+      "fee_sol": "0",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-04T18:21:54Z",
+      "order": 4,
+      "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+      "quantity_raw": "944085989114",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "pweNPfzNPsXsC8yiXp2DfixceLBPJ1R1LFd4uzGbsuaBbfjyabawTiQzpsYvxgRQEmrJW4KKTA2sAwR3AzTorsa",
+      "path": "instructions.2",
+      "evidence": [
+        "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582"
+      ],
+      "seconds_from_start": 2523147,
+      "units": "944085989114",
+      "amount_usdc": "2000",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "market_classification": "market",
+      "fee_sol": "0",
+      "paid_by_wallet": true
+    },
+    {
+      "kind": "buy",
+      "timestamp": "2026-10-04T18:45:35Z",
+      "order": 5,
+      "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+      "quantity_raw": "945590552707",
+      "decimals": 0,
+      "classification": "meme",
+      "signature": "51Kvmc8zr8XrsRcwkt9SUr4UFpnnmtNw2JbhcvK7pPv6YPKfe3n7nN8ZJ5qgP2UGsueqchM9snH7NkQRKSK85eUX",
+      "path": "instructions.2",
+      "evidence": [
+        "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd"
+      ],
+      "seconds_from_start": 2524568,
+      "units": "945590552707",
+      "amount_usdc": "2000",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "market_classification": "market",
+      "fee_sol": "0",
+      "paid_by_wallet": true
+    }
+  ],
+  "findings": [],
+  "coverage": {
+    "decoder_version": "spot-v8-usdc-route-v2",
+    "transactions": 100,
+    "decoded_swaps": 6,
+    "supported_transactions": 6,
+    "failed_transactions": 19,
+    "unresolved_transactions": 79,
+    "unrecognized_transactions": 8,
+    "complete": false,
+    "history_complete": false,
+    "scope": "Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement",
+    "classification": "UNKNOWN",
+    "route_fixtures_independently_verified": false,
+    "non_economic_instructions": [],
+    "fixture_validation": [
+      {
+        "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+        "instruction": "route_v2",
+        "discriminator": "bb64facc31c4af14",
+        "state": "PINNED_OFFICIAL_LAYOUT",
+        "fixture": "tests/fixtures/retained_protocol_funding/jupiter-route-v2.json",
+        "scope": "Official route_v2 accounts and discriminator; executed wallet deltas prove fills; USDC settlement stays USDC"
+      }
+    ],
+    "visible_fee_lamports": 5654729,
+    "visible_fee_sol": "0.005654729",
+    "failed_fee_lamports": 171000,
+    "failed_fee_sol": "0.000171",
+    "not_pnl": true
+  },
+  "research": {
+    "version": "supported-subset-research-v5-origin-scopes",
+    "scope": "Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement",
+    "history_complete": false,
+    "wallet_profit_verified": false,
+    "opening_inventory_verified_mints": [],
+    "observed_profit_sol": null,
+    "known_matched_profit_sol": null,
+    "conditional_observed_lot_profit_sol": null,
+    "conditional_profit_population": "In-window sales fully matched to fetched purchase lots, less supplied wallet-paid overhead; unresolved sales excluded",
+    "supported_swaps": 6,
+    "sales": 2,
+    "matched_sales": 0,
+    "observed_matched_sales": 0,
+    "unresolved_basis_sales": 2,
+    "observed_unmatched_sales": 2,
+    "closed_episodes": 0,
+    "verified_closed_episodes": 0,
+    "strategy_population": "Observed strict-zero episodes closing in the selected window; boundaries remain conditional on undiscovered inventory",
+    "conditional_median_hold_hours": null,
+    "conditional_first_sale_hours": null,
+    "conditional_exit_50_hours": null,
+    "conditional_exit_90_hours": null,
+    "conditional_rapid_sale_pct": null,
+    "wallet_fees_paid_sol": "0.000417009",
+    "unallocated_fees_sol": "0",
+    "unresolved_transactions": 6,
+    "chronology_unknown": false,
+    "scoped_chronology_unknown": false,
+    "episodes": [
+      {
+        "id": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump:1",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "status": "unresolved",
+        "in_window": true,
+        "cohort_quantity_status": "unknown",
+        "monetary_status": "unknown",
+        "first_sale_status": "unknown",
+        "first_sale_observation_status": "unknown",
+        "acquisition_basis_status": "unknown",
+        "known_basis_sol": null,
+        "known_matched_basis_sol": null,
+        "remaining_basis_status": "unknown",
+        "remaining_basis_sol": null,
+        "start_order": 0,
+        "end_order": 0,
+        "remaining_lots": [],
+        "quantity_raw": "0",
+        "acquired_raw": "1191776693137",
+        "sold_raw": "1191776693137",
+        "decimals": 0,
+        "buy_count": 0,
+        "sell_count": 1,
+        "basis_sol": null,
+        "matched_basis_sol": null,
+        "proceeds_sol": null,
+        "exit_fees_sol": "0.000093679",
+        "pnl_sol": null,
+        "roi_pct": null,
+        "hold_hours": "0",
+        "first_sale_hours": null,
+        "sold_50_pct_hours": "0",
+        "sold_90_pct_hours": "0",
+        "evidence": [
+          "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+        ],
+        "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+        "attributable": false,
+        "conditional": true,
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "timing_state": "PASS",
+        "observed_start": "2026-10-03T04:33:52+00:00",
+        "observed_end": "2026-10-03T04:33:52+00:00"
+      },
+      {
+        "id": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump:2",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "status": "unresolved",
+        "in_window": true,
+        "cohort_quantity_status": "unknown",
+        "monetary_status": "unknown",
+        "first_sale_status": "unknown",
+        "first_sale_observation_status": "unknown",
+        "acquisition_basis_status": "unknown",
+        "known_basis_sol": null,
+        "known_matched_basis_sol": null,
+        "remaining_basis_status": "known",
+        "remaining_basis_sol": "0",
+        "start_order": 1,
+        "end_order": 2,
+        "remaining_lots": [],
+        "quantity_raw": "0",
+        "acquired_raw": "1176477238638",
+        "sold_raw": "1176477238638",
+        "decimals": 0,
+        "buy_count": 1,
+        "sell_count": 1,
+        "basis_sol": null,
+        "matched_basis_sol": null,
+        "proceeds_sol": null,
+        "exit_fees_sol": "0.00032333",
+        "pnl_sol": null,
+        "roi_pct": null,
+        "hold_hours": "0.236666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667",
+        "first_sale_hours": null,
+        "sold_50_pct_hours": "0.236666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667",
+        "sold_90_pct_hours": "0.236666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666667",
+        "evidence": [
+          "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+          "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d"
+        ],
+        "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+        "attributable": false,
+        "conditional": true,
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "timing_state": "PASS",
+        "observed_start": "2026-10-03T23:10:56+00:00",
+        "observed_end": "2026-10-03T23:25:08+00:00"
+      },
+      {
+        "id": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc:3",
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "status": "unresolved",
+        "in_window": true,
+        "cohort_quantity_status": "unknown",
+        "monetary_status": "unknown",
+        "first_sale_status": "unknown",
+        "first_sale_observation_status": "known",
+        "acquisition_basis_status": "unknown",
+        "known_basis_sol": null,
+        "known_matched_basis_sol": null,
+        "remaining_basis_status": "unknown",
+        "remaining_basis_sol": null,
+        "start_order": 3,
+        "end_order": null,
+        "remaining_lots": [
+          {
+            "quantity_raw": "1277877910791",
+            "basis_sol": null,
+            "basis_status": "unknown",
+            "acquisition": {
+              "signature": "4Kg5mSUZGnyAzqfSah1jMTy1ess3tn1cK6ptPeWmtqKpRm9DeeHcpbnKEH1JRENZngrv5H79WQvLsro2iqWCX34M",
+              "evidence": [
+                "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c"
+              ],
+              "timestamp": "2026-10-04T18:19:10+00:00",
+              "order": 3,
+              "quantity_raw": "1277877910791"
+            }
+          },
+          {
+            "quantity_raw": "944085989114",
+            "basis_sol": null,
+            "basis_status": "unknown",
+            "acquisition": {
+              "signature": "pweNPfzNPsXsC8yiXp2DfixceLBPJ1R1LFd4uzGbsuaBbfjyabawTiQzpsYvxgRQEmrJW4KKTA2sAwR3AzTorsa",
+              "evidence": [
+                "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582"
+              ],
+              "timestamp": "2026-10-04T18:21:54+00:00",
+              "order": 4,
+              "quantity_raw": "944085989114"
+            }
+          },
+          {
+            "quantity_raw": "945590552707",
+            "basis_sol": null,
+            "basis_status": "unknown",
+            "acquisition": {
+              "signature": "51Kvmc8zr8XrsRcwkt9SUr4UFpnnmtNw2JbhcvK7pPv6YPKfe3n7nN8ZJ5qgP2UGsueqchM9snH7NkQRKSK85eUX",
+              "evidence": [
+                "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd"
+              ],
+              "timestamp": "2026-10-04T18:45:35+00:00",
+              "order": 5,
+              "quantity_raw": "945590552707"
+            }
+          }
+        ],
+        "quantity_raw": "3167554452612",
+        "acquired_raw": "3167554452612",
+        "sold_raw": "0",
+        "decimals": 0,
+        "buy_count": 3,
+        "sell_count": 0,
+        "basis_sol": null,
+        "matched_basis_sol": null,
+        "proceeds_sol": "0",
+        "exit_fees_sol": "0",
+        "pnl_sol": null,
+        "roi_pct": null,
+        "hold_hours": null,
+        "first_sale_hours": null,
+        "sold_50_pct_hours": null,
+        "sold_90_pct_hours": null,
+        "evidence": [
+          "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+          "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+          "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd"
+        ],
+        "scope": "Observed supported swaps; episode boundaries conditional on zero undiscovered inventory",
+        "attributable": false,
+        "conditional": true,
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "timing_state": "PASS",
+        "observed_start": "2026-10-04T18:19:10+00:00",
+        "observed_end": null
+      }
+    ],
+    "sales_detail": [
+      {
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "signature": "4UAE8RXr1DsdA5Lf9nARhUCJRG51VXAjihLznU6XHh91j5s2uLkvcBdF7TtCb2wzJ2jL7wQNZdmxrA2svARbKnXr",
+        "fifo_episode": {
+          "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+          "ordinal": 1
+        },
+        "timestamp": "2026-10-03T04:33:52+00:00",
+        "quantity_raw": "1191776693137",
+        "conditional_matched_basis_sol": null,
+        "conditional_profit_sol": null,
+        "conditional_proceeds_sol": null,
+        "conditional_exit_fees_sol": "0.000093679",
+        "cost_basis_state": "UNKNOWN",
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      },
+      {
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo",
+        "fifo_episode": {
+          "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+          "ordinal": 2
+        },
+        "timestamp": "2026-10-03T23:25:08+00:00",
+        "quantity_raw": "1176477238638",
+        "conditional_matched_basis_sol": null,
+        "conditional_profit_sol": null,
+        "conditional_proceeds_sol": null,
+        "conditional_exit_fees_sol": "0.00032333",
+        "cost_basis_state": "UNKNOWN",
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      }
+    ],
+    "historical_sales_detail": [
+      {
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "signature": "4UAE8RXr1DsdA5Lf9nARhUCJRG51VXAjihLznU6XHh91j5s2uLkvcBdF7TtCb2wzJ2jL7wQNZdmxrA2svARbKnXr",
+        "fifo_episode": {
+          "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+          "ordinal": 1
+        },
+        "timestamp": "2026-10-03T04:33:52+00:00",
+        "quantity_raw": "1191776693137",
+        "conditional_matched_basis_sol": null,
+        "conditional_profit_sol": null,
+        "conditional_proceeds_sol": null,
+        "conditional_exit_fees_sol": "0.000093679",
+        "cost_basis_state": "UNKNOWN",
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      },
+      {
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo",
+        "fifo_episode": {
+          "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+          "ordinal": 2
+        },
+        "timestamp": "2026-10-03T23:25:08+00:00",
+        "quantity_raw": "1176477238638",
+        "conditional_matched_basis_sol": null,
+        "conditional_profit_sol": null,
+        "conditional_proceeds_sol": null,
+        "conditional_exit_fees_sol": "0.00032333",
+        "cost_basis_state": "UNKNOWN",
+        "monetary_state": "UNKNOWN",
+        "quantity_state": "PASS",
+        "clock_state": "PASS",
+        "origin_state": "PASS",
+        "attributable": false,
+        "evidence": [
+          "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3"
+        ],
+        "reason": "Earlier inventory or unmatched cost remains unresolved; observed-lot model only"
+      }
+    ],
+    "evidence": [
+      "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+      "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+      "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+      "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+      "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+      "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+    ],
+    "risk_findings": [
+      {
+        "severity": "warning",
+        "title": "Opening inventory is not inferred from fetched buys",
+        "detail": "A sampled purchase does not prove zero earlier inventory across every wallet-owned account. Profit and strategy timings are conditional unless an independent opening anchor and complete flows establish the episode.",
+        "evidence": [
+          "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+          "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+          "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+          "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+          "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+          "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+        ]
+      },
+      {
+        "severity": "warning",
+        "title": "Native monetary roles remain unresolved",
+        "detail": "Unknown cash movements or linked cost/identity/clock dependencies revoke affected monetary results. Independently supported quantities, timings and network fees remain separate.",
+        "evidence": [
+          "0e208c05bae1935aebd39dce536a6b13ea06e0d115428c7a7db844abd00f3de3",
+          "4b947939bbb9530f3a85d463d29b3f70f3e69911b3d68d2860b01965981ad08c",
+          "5da745751ceafada5f822e86979159ede8849121ac05d3047faf6473d86dbe3d",
+          "657176230d1f6dbebc055fb34b4f2a6f389141adc6f79817574902f740dc4582",
+          "73008bb73092af54945b47e6b714c4dd3d14c3dfcc6775dc773bda78e0cccdbd",
+          "a034e7dc39191ad33e391bc1d2bd0d4d67f4316f36201d0d5741f29b1d0a1b0c"
+        ]
+      }
+    ],
+    "limitations": [
+      "Research covers supported SOL-settled spot swaps in the fetched subset, not complete wallet P&L or strict meme-policy qualification.",
+      "Conditional observed-lot profit assumes no earlier undiscovered holdings or intervening asset flows. Sales without matched fetched basis are excluded and counted explicitly.",
+      "Episode duration, first sale and 50%/90% exits describe fetched observed quantities; undiscovered acquisitions or transfers may change those boundaries.",
+      "Wallet-paid buy fees enter FIFO basis, including purchases before the window; only disposed units consume that basis. Exit fees are deducted once. Validated original fee display events are not counted again; unallocated fees remain period overhead and sponsored fees are excluded.",
+      "Current token controls and liquidity observations cannot establish historical execution, copy-trade fill prices, legitimacy or future returns."
+    ],
+    "settlement_asset": "USDC"
+  },
+  "worksheet": {
+    "sale_fifo_basis_usdc": [
+      "3000"
+    ],
+    "sale_net_profit_usdc": [
+      "376.028087"
+    ],
+    "total_profit_usdc": "376.028087",
+    "total_profit_sol": null,
+    "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "settlement_asset": "USDC",
+    "oracle": "production-usdc-fifo-v1",
+    "sol_fees_not_converted": true,
+    "not_fx": true,
+    "declared_mints": [
+      "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump"
+    ],
+    "unresolved_basis_sales": 1,
+    "known_cost_trades": 5
+  },
+  "material_exit": {
+    "state": "KNOWN",
+    "first_sale_seconds": 852,
+    "exit_50_seconds": 852,
+    "exit_90_seconds": 852,
+    "final_hold_seconds": 852,
+    "position_opened_seconds": 2454089,
+    "position_closed_seconds": 2454941,
+    "position_hold_seconds": 852,
+    "quantity_weighted_exit_seconds": "852",
+    "first_sale_window_offset_seconds": 2454941,
+    "exit_50_window_offset_seconds": 2454941,
+    "exit_90_window_offset_seconds": 2454941,
+    "quantity_weighted_exit_window_offset_seconds": "2454941",
+    "sold_units": "1176477238638",
+    "acquired_units": "1176477238638",
+    "open_units": "0",
+    "method_version": "material-exit-v2",
+    "quantity_weighted_exit_note": "quantity_weighted_exit_seconds is the sold-unit-weighted time from that position's first acquisition to each sale. It is not quantity-weighted lot holding time (each lot's own open-to-close duration).",
+    "aggregation_method": "single",
+    "sample_count": 1,
+    "positions": [
+      {
+        "state": "UNKNOWN",
+        "missing_dependencies": [
+          "unresolved_quantities"
+        ],
+        "first_sale_seconds": null,
+        "exit_50_seconds": null,
+        "exit_90_seconds": null,
+        "final_hold_seconds": null,
+        "position_opened_seconds": null,
+        "position_closed_seconds": null,
+        "position_hold_seconds": null,
+        "quantity_weighted_exit_seconds": null,
+        "first_sale_window_offset_seconds": null,
+        "exit_50_window_offset_seconds": null,
+        "exit_90_window_offset_seconds": null,
+        "quantity_weighted_exit_window_offset_seconds": null,
+        "sold_units": null,
+        "acquired_units": null,
+        "open_units": null,
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "position_index": 0,
+        "method_version": "material-exit-v2",
+        "quantity_weighted_exit_note": "quantity_weighted_exit_seconds is the sold-unit-weighted time from that position's first acquisition to each sale. It is not quantity-weighted lot holding time (each lot's own open-to-close duration)."
+      },
+      {
+        "state": "KNOWN",
+        "missing_dependencies": [],
+        "first_sale_seconds": 852,
+        "exit_50_seconds": 852,
+        "exit_90_seconds": 852,
+        "final_hold_seconds": 852,
+        "position_opened_seconds": 2454089,
+        "position_closed_seconds": 2454941,
+        "position_hold_seconds": 852,
+        "quantity_weighted_exit_seconds": "852",
+        "first_sale_window_offset_seconds": 2454941,
+        "exit_50_window_offset_seconds": 2454941,
+        "exit_90_window_offset_seconds": 2454941,
+        "quantity_weighted_exit_window_offset_seconds": "2454941",
+        "sold_units": "1176477238638",
+        "acquired_units": "1176477238638",
+        "open_units": "0",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "position_index": 1,
+        "completed": true,
+        "method_version": "material-exit-v2",
+        "quantity_weighted_exit_note": "quantity_weighted_exit_seconds is the sold-unit-weighted time from that position's first acquisition to each sale. It is not quantity-weighted lot holding time (each lot's own open-to-close duration)."
+      },
+      {
+        "state": "UNKNOWN",
+        "missing_dependencies": [
+          "no_supported_sale"
+        ],
+        "first_sale_seconds": null,
+        "exit_50_seconds": null,
+        "exit_90_seconds": null,
+        "final_hold_seconds": null,
+        "position_opened_seconds": 2522983,
+        "position_closed_seconds": null,
+        "position_hold_seconds": null,
+        "quantity_weighted_exit_seconds": null,
+        "first_sale_window_offset_seconds": null,
+        "exit_50_window_offset_seconds": null,
+        "exit_90_window_offset_seconds": null,
+        "quantity_weighted_exit_window_offset_seconds": null,
+        "sold_units": "0",
+        "acquired_units": "3167554452612",
+        "open_units": "3167554452612",
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "position_index": 0,
+        "method_version": "material-exit-v2",
+        "quantity_weighted_exit_note": "quantity_weighted_exit_seconds is the sold-unit-weighted time from that position's first acquisition to each sale. It is not quantity-weighted lot holding time (each lot's own open-to-close duration).",
+        "completed": false
+      }
+    ],
+    "missing_dependencies": []
+  },
+  "evidence": [
+    {
+      "hash": "519e1d47ce1fb91c51dfdc2bf575f9dbdbafcf514682cf7295e266bbdaa6f618",
+      "kind": "mass-search-reconstruction"
+    }
+  ],
+  "strict_preset": {
+    "name": "Strict research",
+    "version": "strict-v0.3",
+    "window_days": 30,
+    "verification_days": 90,
+    "min_profit_sol": "5",
+    "min_realised_roi_pct": "10",
+    "min_median_roi_pct": "5",
+    "min_win_rate_pct": "50",
+    "max_win_rate_pct": "85",
+    "min_hold_hours": "1",
+    "max_hold_hours": "72",
+    "min_positions": 50,
+    "min_positions_90d": 100,
+    "min_mints": 20,
+    "max_mints": 100,
+    "max_rapid_sale_pct": "10",
+    "min_avg_buys": "1",
+    "max_avg_buys": "2",
+    "min_avg_sells": "1",
+    "max_avg_sells": "3",
+    "min_positive_weeks": 3,
+    "max_contribution_pct": "25",
+    "require_positive_economic_pnl": true
+  },
+  "notes": [
+    "USDC-settled Jupiter route_v2 subset. SOL fees stay SOL and are not converted.",
+    "Holder-fee distributions are rewards, not trading P&L.",
+    "Leading/unbacked sells stay unresolved_basis. PRODUCT_READY remains false."
+  ],
+  "independent_worksheet": {
+    "sale_fifo_basis_usdc": [
+      "3000"
+    ],
+    "sale_net_profit_usdc": [
+      "376.028087"
+    ],
+    "total_profit_usdc": "376.028087",
+    "total_profit_sol": null,
+    "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "settlement_asset": "USDC",
+    "oracle": "independent-usdc-fifo-v1",
+    "sol_fees_not_converted": true,
+    "not_fx": true,
+    "declared_mints": [
+      "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+      "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc"
+    ],
+    "unresolved_basis_sales": 1,
+    "known_cost_trades": 5,
+    "population": "declared_supported_subset"
+  },
+  "worksheet_reconciliation": {
+    "production_worksheet": {
+      "sale_fifo_basis_usdc": [
+        "3000"
+      ],
+      "sale_net_profit_usdc": [
+        "376.028087"
+      ],
+      "total_profit_usdc": "376.028087",
+      "total_profit_sol": null,
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "oracle": "production-usdc-fifo-v1",
+      "sol_fees_not_converted": true,
+      "not_fx": true,
+      "declared_mints": [
+        "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump"
+      ],
+      "unresolved_basis_sales": 1,
+      "known_cost_trades": 5
+    },
+    "independent_worksheet": {
+      "sale_fifo_basis_usdc": [
+        "3000"
+      ],
+      "sale_net_profit_usdc": [
+        "376.028087"
+      ],
+      "total_profit_usdc": "376.028087",
+      "total_profit_sol": null,
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "settlement_asset": "USDC",
+      "oracle": "independent-usdc-fifo-v1",
+      "sol_fees_not_converted": true,
+      "not_fx": true,
+      "declared_mints": [
+        "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc"
+      ],
+      "unresolved_basis_sales": 1,
+      "known_cost_trades": 5,
+      "population": "declared_supported_subset"
+    },
+    "production_total_profit_usdc": "376.028087",
+    "independent_total_profit_usdc": "376.028087",
+    "difference_usdc": "0",
+    "settlement_asset": "USDC",
+    "status": "AGREE"
+  },
+  "declared_mints": [
+    "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+    "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc"
+  ],
+  "source_integrity": {
+    "status": "SOURCE_RECORDS_INTACT",
+    "records": 100,
+    "intact": 100,
+    "damaged": 0,
+    "malformed": 0,
+    "integrity_failure": false,
+    "all_unsupported": false
+  },
+  "observations": [
+    {
+      "kind": "tx_classification",
+      "detail": "failed_on_chain=19, inner_pumpswap_without_reviewed_outer=2, no_reviewed_outer_spot_swap=6, pump_holder_fee_distribution=61, reviewed_jupiter_route=6, unsupported_transaction_version=1, wallet_absent_from_account_keys=5",
+      "count": 100
+    },
+    {
+      "kind": "decoder_coverage",
+      "detail": "decoded_swaps=6 failed=19 unresolved=79",
+      "count": 100
+    },
+    {
+      "kind": "fees",
+      "detail": "visible_fee_sol=0.005654729 failed_fee_sol=0.000171 (not P&L; integer lamports 5654729)",
+      "count": 100
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap",
+      "count": 61
+    },
+    {
+      "kind": "unresolved",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+      "count": 8
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Investigated wallet is absent from transaction account keys",
+      "count": 5
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Same-route native transfer has no supported wallet wrapping, cost or capital role",
+      "count": 4
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Unsupported transaction version",
+      "count": 1
+    }
+  ],
+  "classification": {
+    "counts": {
+      "pump_holder_fee_distribution": 61,
+      "wallet_absent_from_account_keys": 5,
+      "inner_pumpswap_without_reviewed_outer": 2,
+      "no_reviewed_outer_spot_swap": 6,
+      "reviewed_jupiter_route": 6,
+      "failed_on_chain": 19,
+      "unsupported_transaction_version": 1
+    },
+    "transactions": 100,
+    "fee_totals": {
+      "transactions_with_integer_fee": 100,
+      "failed_transactions_with_integer_fee": 19,
+      "fee_lamports": 5654729,
+      "failed_fee_lamports": 171000,
+      "fee_sol": "0.005654729",
+      "failed_fee_sol": "0.000171",
+      "not_pnl": true,
+      "note": "Visible transaction fees only. Raw SOL delta is not profit."
+    },
+    "pump_idl_pin": {
+      "repository": "pump-fun/pump-public-docs",
+      "commit": "e0687ae9b7e064a0f54efc7297c65eecfbba3a8f",
+      "document": "idl/pump.json",
+      "local_fixture": "tests/fixtures/retained_protocol_funding/pump-native.json",
+      "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b"
+    }
+  },
+  "offline_replay": true,
+  "PRODUCT_READY": false,
+  "not_ranked_wallet_pipeline_proof": true,
+  "wallet_completed_episodes": 1,
+  "completed_episode_detail": {
+    "wallet_completed_episodes": 1,
+    "wallet_sale_count": 1,
+    "per_mint": {
+      "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc": 0,
+      "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump": 1
+    },
+    "per_mint_detail": {
+      "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc": {
+        "completed_episodes": 0,
+        "sale_count": 0,
+        "open": true,
+        "unresolved_basis_sales": 0
+      },
+      "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump": {
+        "completed_episodes": 1,
+        "sale_count": 1,
+        "open": false,
+        "unsupported_sale_exceeds_inventory": false,
+        "unresolved_basis_sales": 1
+      }
+    }
+  },
+  "g3_status": "PARTIAL_USDC_KNOWN_COST",
+  "research_profile": {
+    "kind": "research-profile-v1",
+    "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+    "settlement_asset": "USDC",
+    "scoped_pnl": "376.028087",
+    "scoped_pnl_unit": "USDC",
+    "completed_known_cost_positions": 1,
+    "known_cost_trades": 5,
+    "unresolved_basis_sales": 1,
+    "open_buys_in_sample": 4,
+    "sizes": [
+      {
+        "kind": "buy",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "amount": "3000",
+        "asset": "USDC",
+        "signature": "59K92otieTG53v2uDYJiEhPP5bYXpKtvZALmi4K3uDM86PtNG7U8BuhYEdHpvfydmPnZpKebbve3qkzrZLh2kQ6d"
+      },
+      {
+        "kind": "buy",
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "amount": "3000",
+        "asset": "USDC",
+        "signature": "4Kg5mSUZGnyAzqfSah1jMTy1ess3tn1cK6ptPeWmtqKpRm9DeeHcpbnKEH1JRENZngrv5H79WQvLsro2iqWCX34M"
+      },
+      {
+        "kind": "buy",
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "amount": "2000",
+        "asset": "USDC",
+        "signature": "pweNPfzNPsXsC8yiXp2DfixceLBPJ1R1LFd4uzGbsuaBbfjyabawTiQzpsYvxgRQEmrJW4KKTA2sAwR3AzTorsa"
+      },
+      {
+        "kind": "buy",
+        "mint": "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc",
+        "amount": "2000",
+        "asset": "USDC",
+        "signature": "51Kvmc8zr8XrsRcwkt9SUr4UFpnnmtNw2JbhcvK7pPv6YPKfe3n7nN8ZJ5qgP2UGsueqchM9snH7NkQRKSK85eUX"
+      },
+      {
+        "kind": "sell",
+        "mint": "5tCju6YNxHq5zrA6tGndr6F7TK42mpUFmeE31cSFpump",
+        "amount": "3376.028087",
+        "asset": "USDC",
+        "signature": "5VRWeR5eXBXgx7MK1y1xVghYn1NQdTXBUew5LShUJgZ1VHJFnrs3Cyybn6ndrBRpussF3q9ricTfCEi4saQoZqHo"
+      }
+    ],
+    "hold_t90_seconds": 852,
+    "final_hold_seconds": 852,
+    "concentration": "1",
+    "open_or_unresolved": {
+      "unresolved_basis_sales": 1,
+      "inner_unreviewed": 2,
+      "failed": 19,
+      "open_inventory_present": true
+    },
+    "market_vs_rewards": {
+      "market_swaps": 6,
+      "holder_fee_distributions": 61,
+      "failed": 19,
+      "reviewed_jupiter_routes": 6,
+      "ratio_market_to_rewards": "0.09836065573770491803278688525",
+      "holder_fee_share": "0.61",
+      "rewards_are_not_trading_pnl": true,
+      "fees_are_not_profitability": true
+    },
+    "privileged_or_difficult_follower": [
+      {
+        "indicator": "holder_fee_distributions",
+        "count": 61,
+        "detail": "Reviewed Pump distribute_fee_to_holders is a reward, not a market trade"
+      },
+      {
+        "indicator": "inner_pumpswap_without_reviewed_outer",
+        "count": 2,
+        "detail": "Inner PumpSwap under an unreviewed outer stays unresolved and is hard to follow"
+      },
+      {
+        "indicator": "jupiter_usdc_route_v2",
+        "count": 6,
+        "detail": "Followable only after official route_v2 + USDC settlement reconstruction"
+      },
+      {
+        "indicator": "unresolved_basis_sales",
+        "count": 1,
+        "detail": "Leading/unbacked sells have no known acquisition cost in this sample"
+      }
+    ],
+    "unresolved_share": "0.03",
+    "thresholds": {
+      "min_completed_known_cost": null,
+      "min_scoped_pnl_usdc": null,
+      "min_scoped_pnl_sol": null,
+      "max_hold_t90_seconds": null,
+      "max_concentration": null,
+      "max_unresolved_share": null,
+      "min_market_vs_rewards_ratio": null,
+      "max_holder_fee_share": null
+    },
+    "threshold_results": {
+      "min_completed_known_cost": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "min_scoped_pnl_usdc": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "min_scoped_pnl_sol": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "max_hold_t90_seconds": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "max_concentration": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "max_unresolved_share": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "min_market_vs_rewards_ratio": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      },
+      "max_holder_fee_share": {
+        "state": "UNSET",
+        "passed": false,
+        "note": "Unset does not pass"
+      }
+    },
+    "criteria_met": false,
+    "unset_does_not_pass": true,
+    "safe_to_copy": false,
+    "not_safe_to_copy": true,
+    "PRODUCT_READY": false,
+    "history_complete": false,
+    "notes": [
+      "Scoped subset only. Unset thresholds do not pass.",
+      "Holder rewards and network fees are not trading P&L.",
+      "No blanket safe-to-copy claim."
+    ],
+    "evaluated_thresholds": [],
+    "unset_thresholds": [
+      "min_completed_known_cost",
+      "min_scoped_pnl_usdc",
+      "min_scoped_pnl_sol",
+      "max_hold_t90_seconds",
+      "max_concentration",
+      "max_unresolved_share",
+      "min_market_vs_rewards_ratio",
+      "max_holder_fee_share"
+    ]
+  },
+  "funnel": {
+    "kind": "research-funnel-abc-v1",
+    "provider_rank": 1,
+    "provider_rank_is_not_verification": true,
+    "A": {
+      "id": "A_worth_investigating",
+      "state": "YES",
+      "reasons": [
+        "sample_contains_market_trades",
+        "provider_trade_count_proxy_unverified",
+        "provider_score_is_not_verification",
+        "holder_fee_heavy_sample_classified_as_rewards_not_pnl"
+      ]
+    },
+    "B": {
+      "id": "B_evidence_establishes_results",
+      "state": "PARTIAL",
+      "reasons": [
+        "known_cost_completed_position_reconciled",
+        "sample_still_has_unresolved_or_open_inventory",
+        "holder_rewards_are_not_trading_pnl"
+      ],
+      "completed_known_cost_positions": 1,
+      "scoped_pnl": "376.028087",
+      "scoped_pnl_unit": "USDC"
+    },
+    "C": {
+      "id": "C_meets_research_criteria",
+      "state": "NOT_EVALUATED",
+      "reasons": [
+        "unset_thresholds_do_not_pass"
+      ],
+      "criteria_met": false,
+      "safe_to_copy": false
+    },
+    "holder_fee_heavy": true,
+    "next_action": {
+      "code": "investigate_better_shortlist_candidates",
+      "detail": "Rank-1 sample is holder-fee-heavy but has a known-cost market close. Investigate other saved ranked-100 candidates locally before any new grant.",
+      "live_required": false
+    },
+    "PRODUCT_READY": false,
+    "not_safe_to_copy": true
+  },
+  "next_candidates": [
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "provider_rank": 4,
+      "trade_count": 1494,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "provider_rank": 2,
+      "trade_count": 1022,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "provider_rank": 15,
+      "trade_count": 656,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "provider_rank": 17,
+      "trade_count": 599,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "provider_rank": 90,
+      "trade_count": 422,
+      "shortlisted": false,
+      "capture_available": false
+    }
+  ],
+  "shortlist_rank": 1
+}

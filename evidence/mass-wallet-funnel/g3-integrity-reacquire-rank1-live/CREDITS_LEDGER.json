@@ -1,0 +1,26 @@
+{
+  "kind": "g3-integrity-reacquire-rank1-credits-ledger-v1",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "generated_at": "2026-10-05T16:38:29Z",
+  "providers": {
+    "helius": {
+      "method": "getTransactionsForAddress",
+      "requests_used": 1,
+      "documented_units_per_request": 10,
+      "documented_units_used": 10,
+      "ceiling_requests": 2,
+      "ceiling_units": 20,
+      "remaining_requests_under_grant": 1,
+      "remaining_units_under_grant": 10,
+      "reservation_state": "see live-data-page0 scanner.sqlite reservations"
+    },
+    "birdeye": {
+      "requests_used": 0,
+      "units_used": 0
+    }
+  },
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "leftover_g3_ranked100_history_not_reused": true,
+  "PRODUCT_READY": false
+}

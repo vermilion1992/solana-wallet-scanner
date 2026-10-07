@@ -1,0 +1,28 @@
+{
+  "kind": "product-phone-acceptance-ah",
+  "cases": {
+    "A_ranked_filter_shortlist": "PASS",
+    "B_batch_genuine_fixtures_no_history": "PASS",
+    "C_genuine_baseline_visible": "PASS",
+    "D_export_and_g1_agree": "PASS",
+    "E_auth_and_disabled_budget": "PASS",
+    "G_auth_gate": "PASS",
+    "F_refresh_persistence": "PASS",
+    "F_restart_reopen": "PASS",
+    "H_zero_provider_calls": "PASS"
+  },
+  "external": [],
+  "errors": [],
+  "PRODUCT_READY": false,
+  "provider_calls": 0,
+  "compare_status": 200,
+  "g1_genuine": {
+    "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+    "pnl_sol": "-0.167725526",
+    "hold_seconds": 598,
+    "synthetic_oracle_0_575_not_used": true
+  },
+  "external_count": 0,
+  "tested_commit": "50cc6e29fa0069e62e522236865755f73adbeb18",
+  "state": "PASS"
+}

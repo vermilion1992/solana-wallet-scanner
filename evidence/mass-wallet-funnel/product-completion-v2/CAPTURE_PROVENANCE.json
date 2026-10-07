@@ -1,0 +1,59 @@
+{
+  "kind": "product-completion-v2-capture-provenance",
+  "PRODUCT_READY": false,
+  "genuine_ranked_snapshot_captures": [
+    {
+      "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      "provider_rank": 1,
+      "snapshot_id": "ranked100-discovery-pilot-2026-10-05",
+      "snapshot_fetched_at": "2026-10-05T13:29:27Z",
+      "capture_id": "ranked100-anchored-validation-live/SOURCE_RESPONSE_page0",
+      "path": "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json",
+      "sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+      "source": "Helius getTransactionsForAddress page 0, grant live-ranked100-anchored-validation-2026-10-06-mitch (consumed; not reused)",
+      "timestamp_window": {
+        "report_start_inclusive": "2026-09-05T13:29:27Z",
+        "report_end_exclusive": "2026-10-05T13:29:27Z",
+        "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
+      },
+      "pagination": {
+        "page": 0,
+        "limit": 100,
+        "sortOrder": "desc",
+        "continuation_after_page0": "452802642:577",
+        "page1_not_in_this_capture": true
+      },
+      "tx_counts": {
+        "page0_signatures": 100,
+        "reviewed_jupiter_route": 6,
+        "pump_holder_fee_distribution": 61,
+        "failed_on_chain": 19,
+        "inner_pumpswap_without_reviewed_outer": 2
+      },
+      "limitations": [
+        "Page-0 sample only. Earlier history for the unbacked 5tCju6YN sell is not in this capture.",
+        "Two inner PumpSwap legs under unreviewed outers stay unresolved.",
+        "This is the only ranked-snapshot wallet with a genuine history capture.",
+        "Does not count as two-wallet validation."
+      ]
+    }
+  ],
+  "controls_not_counted_as_ranked_snapshot_wallets": [
+    {
+      "wallet": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+      "role": "G1 SOL control archive",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "path": "evidence/mass-wallet-funnel/1bffe2ac21854424aa3fe3b8bf6a22ae/archives/helius_gta_survivor_desc100.json.gz",
+      "sha256": "ec66c74856e08f70739cb59c1709ae4bb1aba88b31f85d6b556b70765eb67746",
+      "source": "Genuine G1 live archive replay — not on the ranked-100 snapshot",
+      "does_not_satisfy_genuine_multi_wallet": true
+    }
+  ],
+  "synthetic_fixtures_not_proof": [
+    "SynthEngUSDC11111111111111111111111111112",
+    "SynthEngSOL111111111111111111111111111111",
+    "SynthEngBAD111111111111111111111111111111"
+  ],
+  "genuine_multi_wallet_validation": "BLOCKED",
+  "reason": "Genuine multi-wallet validation needs genuine captures from at least 2 distinct ranked-snapshot wallets through the real batch. Only rank-1 page 0 exists. G1, rank-1 duplicates, and synthetic data do not count."
+}

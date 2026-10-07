@@ -1,0 +1,39 @@
+{
+  "kind": "research-screen-run-record-v1",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "snapshot_id": "ranked100-discovery-pilot-2026-10-05",
+  "thresholds_fixed_before_evaluation": {
+    "min_completed_known_cost": "1",
+    "min_sample_positions": "3"
+  },
+  "unknown_never_passes": true,
+  "outcome": "inconclusive",
+  "outcome_class": "inconclusive_insufficient_history",
+  "search_ran": "not_executed",
+  "counts": {
+    "inconclusive": 99,
+    "completed_qualified": 0,
+    "zero_qualified": 1,
+    "not_executed": 0,
+    "universe": 100,
+    "qualification": {
+      "not_evaluated": 99,
+      "analysed_incomplete": 1,
+      "positive_matched_position_evidence": 0,
+      "positive_net_realised_over_window": 0,
+      "profitable_account_performance": 0
+    }
+  },
+  "rank1": {
+    "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+    "outcome": "zero_qualified",
+    "completed_matched_positions": 1,
+    "evidence_class_position": 2,
+    "evidence_class_account": 5,
+    "qualification_category": "analysed_incomplete",
+    "net_realised": null,
+    "reason": "n=1 is below min_sample_positions=3; a matched trade never qualifies the account"
+  },
+  "note": "Today's run over the saved snapshot is inconclusive for 99 wallets and must say so. Live research search was not executed.",
+  "PRODUCT_READY": false
+}

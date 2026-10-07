@@ -1,0 +1,54 @@
+{
+  "schema_version": "live-research-authorization-v1",
+  "enabled": false,
+  "authorization_id": "live-g1-vertical-slice-2026-10-05-mitch",
+  "authorized_by_user_at": "2026-10-05T10:41:00Z",
+  "expires_at": "2026-10-07T00:00:00Z",
+  "purpose": "Operator-approved G1 vertical slice only: one real acquired candidate → supported buy+sell → populated report with independent worksheet. Not G2, G3, G5, or G6.",
+  "first_live_target_after_grant": "G1_VERTICAL_SLICE_ONLY",
+  "g1_scope": "One real acquired candidate, targeted Helius history, at least one supported closed buy+sell, independent worksheet. Do not start G2 or G3 in the same live burst.",
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "allow_paid_upgrade": false,
+  "allow_signing_or_submission": false,
+  "do_not_reset_setup_pilot": true,
+  "providers": [
+    {
+      "provider_id": "birdeye",
+      "allowed_operations": ["trader_gainers_losers"],
+      "billing_unit": "birdeye_compute_unit",
+      "existing_plan_confirmed": true,
+      "remaining_quota_confirmed_at": "2026-10-05T10:41:00Z",
+      "cycle_start": "2026-10-05T00:00:00Z",
+      "cycle_end_exclusive": "2026-10-07T00:00:00Z",
+      "max_requests": 10,
+      "max_units": 250,
+      "max_concurrency": 1,
+      "max_duration_seconds": 300,
+      "purpose": "G1 discovery only as needed for one usable candidate. Page size ≤100, offset+limit ≤10000. Ceiling 10 calls / 250 CU."
+    },
+    {
+      "provider_id": "helius",
+      "allowed_operations": ["getTransactionsForAddress"],
+      "billing_unit": "helius_credit",
+      "existing_plan_confirmed": true,
+      "remaining_quota_confirmed_at": "2026-10-05T10:41:00Z",
+      "cycle_start": "2026-10-05T00:00:00Z",
+      "cycle_end_exclusive": "2026-10-07T00:00:00Z",
+      "max_requests": 20,
+      "max_units": 600,
+      "max_concurrency": 1,
+      "max_duration_seconds": 900,
+      "purpose": "G1 targeted history on one survivor. Ceiling 20 calls / 600 credits. Do not reset setup-pilot."
+    }
+  ],
+  "notes": [
+    "Real named grant for G1 only. authorization_id live-g1-vertical-slice-2026-10-05-mitch.",
+    "work_packages/mass_wallet_search_v1/config/live_authorization.example.json remains disabled and is not a grant.",
+    "config/live_authorization.proof-grant-draft.json remains disabled and is not this grant.",
+    "Do not put API keys, tokens, or signing secrets in this file.",
+    "Operator approved G1 ceilings on 2026-10-05. Dashboard remaining units were not independently re-read in this runtime; hard ceilings apply and entitlement/HTTP failures stop the live lane.",
+    "Zero extra spend. No overages. No paid upgrade. No setup-pilot reset. No G2/G3/G5/G6.",
+    "RETIRED 2026-10-07. Expired 2026-10-07T00:00:00Z. enabled is false so G1 tests fail closed for grant_disabled, not a stale enabled+expired file."
+  ]
+}

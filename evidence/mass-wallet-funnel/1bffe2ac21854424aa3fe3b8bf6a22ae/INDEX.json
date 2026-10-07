@@ -1,0 +1,15 @@
+{
+  "run_id": "1bffe2ac21854424aa3fe3b8bf6a22ae",
+  "gate": "G1",
+  "status": "PASS",
+  "authorization_id": "live-g1-vertical-slice-2026-10-05-mitch",
+  "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+  "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+  "subset_realised_pnl_sol": "-0.167725526",
+  "result": "G1_RESULT.json",
+  "freeze": "PRE_RUN_FREEZE.json",
+  "worksheet": "WORKSHEET.json",
+  "report": "REPORT.json",
+  "raw_archive": "archives/helius_gta_survivor_desc100.json.gz",
+  "prior_official_blocked": "b3d5c6a8b1c44d49bdb3c55b27676c71"
+}

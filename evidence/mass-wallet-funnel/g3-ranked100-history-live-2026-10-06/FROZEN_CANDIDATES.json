@@ -1,0 +1,203 @@
+{
+  "kind": "g3-ranked100-history-freeze-v1",
+  "outcome_label": "G3_RANKED100_HISTORY",
+  "authorization_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "parent_commit": "159639b1bc4fd20d6504026f8d58247f1b2e42c9",
+  "source_shortlist": "evidence/mass-wallet-funnel/ranked100-discovery-pilot-2026-10-05/SHORTLIST.json",
+  "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+  "discovery_cutoff": "2026-10-05T13:29:27Z",
+  "windows": {
+    "report_window_days": 30,
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_days": 90,
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z",
+    "acquisition_support_end_exclusive": "2026-10-05T13:29:27Z",
+    "timestamp_semantics": "Discovery cutoff is the ranked-100 fetch timestamp. Report window is 30 days ending at cutoff. Acquisition-support records may start 90 days before cutoff. Preserve actual coverage and truncation honestly."
+  },
+  "report_rules": {
+    "g3_min_supported_completed_observed_episodes": 10,
+    "target_independently_reconciled_reports": 3,
+    "winners_not_required": true,
+    "smaller_reports_visible_but_do_not_pass_g3": true,
+    "not_wallet_wide_match": true,
+    "not_full_g2": true,
+    "PRODUCT_READY": false
+  },
+  "initial_ranks": [
+    1,
+    3,
+    5
+  ],
+  "reserve_ranks": [
+    6,
+    7
+  ],
+  "initial_candidates": [
+    {
+      "role": "initial",
+      "shortlist_rank": 1,
+      "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      "chain": "solana",
+      "provider_score": "88.91080080813859",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "evidence_status": "unverified",
+      "selection_reason": "Initial G3 history candidate from saved ranked-100 shortlist rank 1; provider-ranked only, not independently verified.",
+      "shortlist_row_sha256": "3828f7a61bf03cd3208049bd76fe03ad7427c876b2efde6717012e667a05603a",
+      "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+      "metrics": {
+        "realized_pnl": "46042.61814189257",
+        "realized_pnl_unit": "USD",
+        "trade_count": 161,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null
+      }
+    },
+    {
+      "role": "initial",
+      "shortlist_rank": 3,
+      "address": "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+      "chain": "solana",
+      "provider_score": "87.32196813931452",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "evidence_status": "unverified",
+      "selection_reason": "Initial G3 history candidate from saved ranked-100 shortlist rank 3; provider-ranked only, not independently verified.",
+      "shortlist_row_sha256": "ffc580ab937bb7242797d03048b81e09f0b71901eed73d04cf6e8f7e6cd9ccf6",
+      "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+      "metrics": {
+        "realized_pnl": "44764.687490925964",
+        "realized_pnl_unit": "USD",
+        "trade_count": 282,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null
+      }
+    },
+    {
+      "role": "initial",
+      "shortlist_rank": 5,
+      "address": "3g8KsJE1yhJvBo6kvqvxLnoSXQ9suqQnHMqGFs3LFckM",
+      "chain": "solana",
+      "provider_score": "86.81750728576282",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "evidence_status": "unverified",
+      "selection_reason": "Initial G3 history candidate from saved ranked-100 shortlist rank 5; provider-ranked only, not independently verified.",
+      "shortlist_row_sha256": "1958d9103296776ada0da8ad41e49703208e414affc8b7b16fb3a10591106811",
+      "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+      "metrics": {
+        "realized_pnl": "143711.23124818518",
+        "realized_pnl_unit": "USD",
+        "trade_count": 150,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null
+      }
+    }
+  ],
+  "reserve_candidates": [
+    {
+      "role": "reserve",
+      "shortlist_rank": 6,
+      "address": "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+      "chain": "solana",
+      "provider_score": "86.7504603886932",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "evidence_status": "unverified",
+      "selection_reason": "Reserve G3 history candidate (order after initials) from shortlist rank 6; used only if needed.",
+      "shortlist_row_sha256": "63bf6eb0eed0f35b93b50183e88336ccedba51124236345ffc5734708936dc8e",
+      "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+      "metrics": {
+        "realized_pnl": "18459.09616764307",
+        "realized_pnl_unit": "USD",
+        "trade_count": 304,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null
+      }
+    },
+    {
+      "role": "reserve",
+      "shortlist_rank": 7,
+      "address": "B4HUfUDVzVuVgd3xqEm4wfCmBofuHh4h5NqjV3EzKAzi",
+      "chain": "solana",
+      "provider_score": "86.6049239241208",
+      "reason_codes": [
+        "prefer_positive_reported_realised_pnl",
+        "provider_trade_count_proxy_not_completed_profitable_trades",
+        "prefer_repeated_trading_proxy",
+        "high_score_missing_fields_needs_verification",
+        "ranked_by_provider_score"
+      ],
+      "uncertainty": [
+        "recent_activity_unknown"
+      ],
+      "label": "Provider-ranked candidate \u2014 profitability and copyability not independently verified.",
+      "evidence_status": "unverified",
+      "selection_reason": "Reserve G3 history candidate (order after initials) from shortlist rank 7; used only if needed.",
+      "shortlist_row_sha256": "8f709ea6b74fd7d511cedc59eb0a5cc7413a984e3bf6aa15ab9bf5245fadc183",
+      "source_page_evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+      "metrics": {
+        "realized_pnl": "31471.529096013423",
+        "realized_pnl_unit": "USD",
+        "trade_count": 121,
+        "trade_count_is_not": "completed_profitable_trades",
+        "last_active": null
+      }
+    }
+  ],
+  "no_additional_live_addresses": true,
+  "helius_query": {
+    "method": "getTransactionsForAddress",
+    "params": {
+      "transactionDetails": "full",
+      "limit": 100,
+      "sortOrder": "desc",
+      "commitment": "finalized",
+      "maxSupportedTransactionVersion": 1,
+      "filters": {
+        "status": "any",
+        "tokenAccounts": "all"
+      }
+    },
+    "silent_fallback_forbidden": true,
+    "page_enlarge_forbidden": true,
+    "retry_forbidden": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "kind": "product-clean-launch-v1",
+  "launcher": "./run.sh",
+  "emulation": "Playwright Chromium 390x844 labelled browser emulation, not a physical phone",
+  "cases": {
+    "fresh_open_browse_filter_shortlist": "PASS",
+    "fresh_analyse": "PASS",
+    "fresh_inspect_compare_export": "PASS",
+    "existing_dir_restart_reopen_export": "PASS",
+    "lan_existing_dir": "PASS",
+    "zero_provider_calls": "PASS"
+  },
+  "external": [],
+  "errors": [],
+  "PRODUCT_READY": false,
+  "fresh_url_host": "127.0.0.1",
+  "export_report_id": "bda96b77803b419b8a24e8981e7490ba",
+  "lan_ip": "172.30.0.2",
+  "external_count": 0,
+  "tested_commit": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "state": "PASS"
+}

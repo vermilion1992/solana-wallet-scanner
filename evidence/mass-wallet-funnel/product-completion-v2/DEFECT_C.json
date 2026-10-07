@@ -1,0 +1,12 @@
+{
+  "requirement": "C. PARTLY BACKED SELLS",
+  "status": "PASS",
+  "paragraph": "A partly backed sell is split: matched quantity takes FIFO cost and pro-rata proceeds (realised result); unmatched quantity keeps unknown basis and its proceeds; whole-transaction SOL fees are allocated by quantity (matched = original * matched_qty / qty; unmatched = original minus matched) so integer/decimal totals are preserved. Whole-sale P&L stays unresolved. Analytics emit the split rows (not one collapsed signature). The labelled fee-free fixture (6 tokens cost 36 USDC; sell 10 for 100) accounts 60 proceeds = +24 matched and 4 unmatched = 40 unknown-basis; 100 is fully accounted. Fully backed, partly backed, fully unbacked, and multi-lot cases agree with the independent tool (algorithm-independent, shared decoder). Results are labelled conditional on captured inventory through UI, compare, saved reports, and export.",
+  "test_node_id": "tests/test_mass_search_mitch_requirements.py::test_fee_free_partial_match_is_fully_accounted",
+  "also": [
+    "tests/test_mass_search_mitch_requirements.py::test_partial_match_cases_agree_with_independent_tool"
+  ],
+  "log_path": "evidence/mass-wallet-funnel/product-completion-v2/logs/PYTEST_AD.log",
+  "independent": "evidence/mass-wallet-funnel/product-completion-v2/INDEPENDENT_RECON_FEEFREE.json",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc"
+}

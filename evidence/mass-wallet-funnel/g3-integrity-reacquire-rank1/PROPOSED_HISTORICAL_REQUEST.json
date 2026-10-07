@@ -1,0 +1,80 @@
+{
+  "page0": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getTransactionsForAddress",
+    "params": [
+      "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      {
+        "transactionDetails": "full",
+        "limit": 100,
+        "sortOrder": "desc",
+        "commitment": "finalized",
+        "maxSupportedTransactionVersion": 1,
+        "filters": {
+          "status": "any",
+          "tokenAccounts": "all",
+          "signature": {
+            "lte": "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG"
+          }
+        }
+      }
+    ],
+    "endpoint": "https://mainnet.helius-rpc.com/",
+    "query_string_credentials": "OMITTED",
+    "headers": {},
+    "secrets": false,
+    "historical_anchor": {
+      "filters.signature.lte": "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG",
+      "paginationToken": null,
+      "sortOrder": "desc",
+      "page_index": 0,
+      "expected_newest_signature": "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG",
+      "expected_signature_count": 100,
+      "boundary_inclusive": true,
+      "note": "filters.signature.lte is the documented inclusive newest-signature bound so newest-first-now cannot substitute current chain-tip history. Later pages use the frozen paginationToken. Top-level until is rejected."
+    },
+    "PRODUCT_READY": false,
+    "not_a_dispatched_request": true,
+    "not_a_guarantee_of_exact_signature_match": true
+  },
+  "page1": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getTransactionsForAddress",
+    "params": [
+      "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      {
+        "transactionDetails": "full",
+        "limit": 100,
+        "sortOrder": "desc",
+        "commitment": "finalized",
+        "maxSupportedTransactionVersion": 1,
+        "filters": {
+          "status": "any",
+          "tokenAccounts": "all"
+        },
+        "paginationToken": "452802642:577"
+      }
+    ],
+    "endpoint": "https://mainnet.helius-rpc.com/",
+    "query_string_credentials": "OMITTED",
+    "headers": {},
+    "secrets": false,
+    "historical_anchor": {
+      "filters.signature.lte": null,
+      "paginationToken": "452802642:577",
+      "sortOrder": "desc",
+      "page_index": 1,
+      "expected_newest_signature": "4DkivqAUbHY4RLudP1jLotQipEcEN8n2xsxwgd3EW7iCMBmMAmym7kEujjLS5rybu3PFC7NyF4JB29TtVgLy61r2",
+      "expected_signature_count": 100,
+      "boundary_inclusive": null,
+      "note": "filters.signature.lte is the documented inclusive newest-signature bound so newest-first-now cannot substitute current chain-tip history. Later pages use the frozen paginationToken. Top-level until is rejected."
+    },
+    "PRODUCT_READY": false,
+    "not_a_dispatched_request": true,
+    "not_a_guarantee_of_exact_signature_match": true
+  },
+  "PRODUCT_READY": false,
+  "not_a_live_grant": true
+}

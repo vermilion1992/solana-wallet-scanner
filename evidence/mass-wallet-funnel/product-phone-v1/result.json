@@ -1,0 +1,56 @@
+{
+  "kind": "product-phone-acceptance-ah",
+  "state": "PASS",
+  "PRODUCT_READY": false,
+  "provider_calls": 0,
+  "external_count": 0,
+  "compare_status": 200,
+  "tested_commit": "8753392901eca4a4570722caee0f8e80218075eb",
+  "pre_harness_commit": "2accce8394fa612c3c3b09d201c21c54ac2aa2ba",
+  "genuine_capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "cases": {
+    "A_ranked_filter_shortlist": "PASS",
+    "B_batch_genuine_fixtures_no_history": "PASS",
+    "C_genuine_baseline_visible": "PASS",
+    "D_export_and_g1_agree": "PASS",
+    "E_auth_and_disabled_budget": "PASS",
+    "F_refresh_persistence": "PASS",
+    "F_restart_reopen": "PASS",
+    "G_auth_gate": "PASS",
+    "H_zero_provider_calls": "PASS"
+  },
+  "g1": {
+    "genuine_archive_pnl_sol": "-0.167725526",
+    "genuine_archive_hold_seconds": 598,
+    "synthetic_oracle_0_575_is_not_the_archive": true
+  },
+  "phone_access": {
+    "preview_available": false,
+    "lan_opt_in": "./run.sh --lan",
+    "away_from_home_blocker": "No permitted remote preview exists.",
+    "blocker": "No permitted remote preview environment is configured. Away from the operator LAN the app cannot be opened on a phone."
+  },
+  "local_performance": {
+    "dataset": "saved ranked-100 discovery page (100 wallets) + genuine page-0 capture + 3 labelled synthetic engineering fixtures + 1 no-history ranked row",
+    "environment": "linux local Store / CPython in /workspace/.venv, no provider network",
+    "filter_seconds": 0.00002,
+    "filter_universe": 100,
+    "batch_seconds": 0.2907,
+    "batch_wallets": 5,
+    "no_throughput_extrapolation": true
+  },
+  "backend_tests": {
+    "full_suite": {
+      "passed": 3580,
+      "failed": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "subtests_passed": 440,
+      "seconds": 512.33,
+      "commit": "8753392901eca4a4570722caee0f8e80218075eb"
+    },
+    "frontend_build": "passed",
+    "phone_ah": "PASS",
+    "lan_phone": "PASS"
+  }
+}

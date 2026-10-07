@@ -32,7 +32,8 @@ from .metrics import (
     earliest_quote_request_seconds,
     fifo_sale_results,
     format_decimal,
-    material_exit_v1,
+    MATERIAL_EXIT_VERSION,
+    material_exit_v2,
     median_hold_hours,
     unavailable_exit,
 )
@@ -381,10 +382,10 @@ class MassSearchService:
             raise RuntimeError("Refilter issued external requests")
         return self.run_view(child["run_id"])
 
-    def reconstruct_candidate(self, run_id, candidate_id, events, *, corpus_kind=None, mint="Mint1111111111111111111111111111111111111"):
+    def reconstruct_candidate(self, run_id, candidate_id, events, *, corpus_kind=None, mint="Mint1111111111111111111111111111111111111", window_start=None, window_end=None):
         run = _load_run(self.store, run_id)
         kind = corpus_kind or run["corpus_kind"]
-        start, end = run["window_start"], run["window_end"]
+        start, end = window_start or run["window_start"], window_end or run["window_end"]
         accounting_events = events_to_accounting(events, mint=mint, start=start)
         evidence = self.store.archive({
             "kind": "mass-search-reconstruction-v1",
@@ -395,19 +396,46 @@ class MassSearchService:
         })
         try:
             analysis = analyze(accounting_events, start, end, history_complete=False)
-        except (ValueError, TypeError, KeyError):
-            analysis = {"metrics": {}, "positions": [], "policy": "UNRESOLVED", "methodology": None}
+        except (ValueError, TypeError, KeyError) as error:
+            raise ValueError(f"Accounting integration failed: {error}") from error
         try:
             research = summarize_research(accounting_events, start, end, history_complete=False)
-        except (ValueError, TypeError, KeyError):
-            research = {"supported_swaps": 0, "notes": ["Research summary unavailable for these events."]}
-        worksheet = fifo_sale_results([
-            {k: event[k] for k in event if k in ("kind", "units", "consideration_sol", "wallet_fee_sol")}
-            for event in events if event.get("kind") in ("buy", "sell")
-        ]) if any(event.get("kind") in ("buy", "sell") for event in events) else None
-        exit_diag = material_exit_v1([
-            {"kind": event["kind"], "units": event["units"], "seconds_from_start": event.get("seconds_from_start", 0)}
-            for event in events if event.get("kind") in ("buy", "sell")
+        except (ValueError, TypeError, KeyError) as error:
+            raise ValueError(f"Research integration failed: {error}") from error
+        from .settlement import USDC, settlement_aware_worksheet, settlement_of
+
+        trade_events = [event for event in events if event.get("kind") in ("buy", "sell")]
+        try:
+            worksheet = settlement_aware_worksheet(trade_events) if trade_events else None
+        except ValueError:
+            worksheet = None
+        from .g3_history import completed_episodes
+        by_mint = {}
+        for event in trade_events:
+            mint_id = event.get("mint") or mint
+            row = dict(event)
+            if row.get("role") is None and row.get("window_qualified") is None:
+                row["role"] = "in_report"
+                row["window_qualified"] = True
+            by_mint.setdefault(mint_id, []).append(row)
+        episodes = completed_episodes(by_mint) if by_mint else {
+            "wallet_completed_episodes": 0,
+            "wallet_sale_count": 0,
+            "per_mint": {},
+            "per_mint_detail": {},
+        }
+        exit_diag = material_exit_v2([
+            {
+                "kind": event["kind"],
+                "units": event.get("units"),
+                "seconds_from_start": event.get("seconds_from_start"),
+                "mint": event.get("mint") or mint,
+                "signature": event.get("signature"),
+                "unresolved_order": event.get("unresolved_order"),
+                "timestamp_missing": event.get("timestamp_missing"),
+            }
+            for event in events
+            if event.get("kind") in ("buy", "sell")
         ], transfers_unknown=any(event.get("origin") == "transfer" for event in events))
         holds = []
         for position in analysis.get("positions") or []:
@@ -423,21 +451,123 @@ class MassSearchService:
             holds = [format_decimal(Decimal(exit_diag["final_hold_seconds"]) / Decimal("3600"))]
         hold_metric = median_hold_hours(holds)
         profit = None
+        profit_unit = "SOL"
         profit_metric = (analysis.get("metrics") or {}).get("profit_sol")
+        mixed = bool((worksheet or {}).get("settlement_asset") == "mixed" or len((worksheet or {}).get("by_quote_asset") or {}) > 1)
         if isinstance(profit_metric, dict) and profit_metric.get("value") is not None and profit_metric.get("status") == "known":
             profit = profit_metric["value"]
-        elif worksheet:
+            profit_unit = "SOL"
+        elif mixed:
+            profit = None
+            profit_unit = "mixed"
+        elif worksheet and worksheet.get("total_profit_usdc") not in (None, "") and worksheet.get("settlement_asset") == "USDC":
+            profit = worksheet["total_profit_usdc"]
+            profit_unit = "USDC"
+        elif worksheet and (
+            worksheet.get("settlement_asset") == "USDT"
+            or worksheet.get("total_profit_usdt") not in (None, "")
+        ):
+            profit = worksheet.get("total_profit_usdt") or worksheet.get("total_profit_usdc")
+            profit_unit = "USDT"
+        elif worksheet and worksheet.get("total_profit_sol") not in (None, ""):
             profit = worksheet["total_profit_sol"]
+            profit_unit = "SOL"
         window = {"start_inclusive": start, "end_exclusive": end}
         observed = self.clock()
         with self.store.lock, self.store.db:
-            if profit is None:
+            if profit_unit == "mixed":
+                by_asset = (worksheet or {}).get("by_quote_asset") or {}
+                usdc_ws = by_asset.get("USDC") or {}
+                usdt_ws = by_asset.get("USDT") or {}
+                sol_ws = by_asset.get("SOL") or {}
+                if usdc_ws.get("total_profit_usdc") not in (None, ""):
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_usdc", candidate_id=candidate_id,
+                        value=usdc_ws["total_profit_usdc"], unit="USDC",
+                        state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=len(holds) or len(events),
+                        observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                        source_provider="local-reconstruction",
+                        notes=["USDC-settled subset of a mixed wallet; no FX into SOL."],
+                    )
+                    _insert_metric(self.store, run_id, pnl)
+                if (usdt_ws.get("total_profit_usdt") or usdt_ws.get("total_profit_usdc")) not in (None, ""):
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_usdt", candidate_id=candidate_id,
+                        value=usdt_ws.get("total_profit_usdt") or usdt_ws.get("total_profit_usdc"),
+                        unit="USDT",
+                        state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=len(holds) or len(events),
+                        observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                        source_provider="local-reconstruction",
+                        notes=["USDT-settled subset of a mixed wallet; no FX into SOL."],
+                    )
+                    _insert_metric(self.store, run_id, pnl)
+                if sol_ws.get("total_profit_sol") not in (None, ""):
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_sol", candidate_id=candidate_id,
+                        value=sol_ws["total_profit_sol"], unit="SOL",
+                        state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=len(holds) or len(events),
+                        observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                        source_provider="local-reconstruction",
+                        notes=["SOL-settled subset of a mixed wallet; no FX into USDC."],
+                    )
+                else:
+                    pnl = build_metric(
+                        metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
+                        state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window,
+                        population="supported_closed_subset", population_count=0,
+                        observed_at=observed, evidence_sha256=[evidence],
+                        missing_dependencies=["mixed_quote_assets_no_fx"],
+                        source_provider="local-reconstruction",
+                        notes=["Mixed SOL+USDC subset; totals stay per quote asset with no FX."],
+                    )
+            elif profit is None:
                 pnl = build_metric(
                     metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
                     state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window, population="supported_closed_subset",
                     population_count=0, observed_at=observed, evidence_sha256=[evidence],
                     missing_dependencies=["supported_fifo_basis"], source_provider="local-reconstruction",
                     notes=["Subset P&L unknown; independent fees remain visible where supported."],
+                )
+            elif profit_unit == "USDC":
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_usdc", candidate_id=candidate_id, value=profit, unit="USDC",
+                    state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=len(holds) or len(events),
+                    observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
+                    notes=["USDC-settled subset; SOL P&L is not converted. Not a wallet-wide MATCH."],
+                )
+                _insert_metric(self.store, run_id, pnl)
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
+                    state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=0,
+                    observed_at=observed, evidence_sha256=[evidence],
+                    missing_dependencies=["usdc_settlement_not_converted"],
+                    source_provider="local-reconstruction",
+                    notes=["USDC-settled subset; no fake FX into SOL."],
+                )
+            elif profit_unit == "USDT":
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_usdt", candidate_id=candidate_id, value=profit, unit="USDT",
+                    state="KNOWN", basis="INDEPENDENTLY_RECONCILED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=len(holds) or len(events),
+                    observed_at=observed, evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
+                    notes=["USDT-settled subset; SOL P&L is not converted. Not a wallet-wide MATCH."],
+                )
+                _insert_metric(self.store, run_id, pnl)
+                pnl = build_metric(
+                    metric_key="subset_realised_pnl_sol", candidate_id=candidate_id, value=None, unit="SOL",
+                    state="UNKNOWN", basis="RAW_DERIVED_SUBSET", window=window,
+                    population="supported_closed_subset", population_count=0,
+                    observed_at=observed, evidence_sha256=[evidence],
+                    missing_dependencies=["usdt_settlement_not_converted"],
+                    source_provider="local-reconstruction",
+                    notes=["USDT-settled subset; no fake FX into SOL."],
                 )
             else:
                 pnl = build_metric(
@@ -470,19 +600,44 @@ class MassSearchService:
                 t90 = build_metric(
                     metric_key="material_exit_t90_seconds", candidate_id=candidate_id,
                     value=str(exit_diag["exit_90_seconds"]), unit="seconds", state="KNOWN",
-                    basis="RAW_DERIVED_SUBSET", window=window, population="completed_observed_episode",
-                    population_count=1, observed_at=observed, evidence_sha256=[evidence],
-                    missing_dependencies=[], source_provider="local-reconstruction",
-                    notes=["material-exit-v1; long final hold does not hide a fast t90."],
+                    basis="RAW_DERIVED_SUBSET", window=window,
+                    population="per_position_opening_relative",
+                    population_count=int(exit_diag.get("sample_count") or 1),
+                    method_version=MATERIAL_EXIT_VERSION, observed_at=observed,
+                    evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
+                    notes=[
+                        note for note in (
+                            "material-exit-v2; t90 is opening-relative per completed position.",
+                            "Long final hold does not hide a fast t90.",
+                            exit_diag.get("quantity_weighted_exit_note"),
+                        ) if note
+                    ],
+                )
+                _insert_metric(self.store, run_id, t90)
+            elif (exit_diag.get("state") == "UNKNOWN") or exit_diag.get("missing_dependencies"):
+                t90 = build_metric(
+                    metric_key="material_exit_t90_seconds", candidate_id=candidate_id,
+                    value=None, unit="seconds", state="UNKNOWN",
+                    basis="RAW_DERIVED_SUBSET", window=window,
+                    population="per_position_opening_relative",
+                    population_count=0, method_version=MATERIAL_EXIT_VERSION,
+                    observed_at=observed, evidence_sha256=[evidence],
+                    missing_dependencies=list(exit_diag.get("missing_dependencies") or ["material_exit_unavailable"]),
+                    source_provider="local-reconstruction",
+                    notes=["material-exit-v2; opening-relative t90 unavailable; no window-offset substitution."],
                 )
                 _insert_metric(self.store, run_id, t90)
             if exit_diag.get("final_hold_seconds") is not None:
                 final = build_metric(
                     metric_key="final_hold_seconds", candidate_id=candidate_id,
                     value=str(exit_diag["final_hold_seconds"]), unit="seconds", state="KNOWN",
-                    basis="RAW_DERIVED_SUBSET", window=window, population="completed_observed_episode",
-                    population_count=1, observed_at=observed, evidence_sha256=[evidence],
-                    missing_dependencies=[], source_provider="local-reconstruction",
+                    basis="RAW_DERIVED_SUBSET", window=window,
+                    population="per_position_opening_relative",
+                    population_count=int(exit_diag.get("sample_count") or 1),
+                    method_version=MATERIAL_EXIT_VERSION, observed_at=observed,
+                    evidence_sha256=[evidence], missing_dependencies=[],
+                    source_provider="local-reconstruction",
                 )
                 _insert_metric(self.store, run_id, final)
         report = {
@@ -500,11 +655,15 @@ class MassSearchService:
             "checks": analysis.get("checks") or [],
             "counts": analysis.get("counts") or {},
             "positions": analysis.get("positions") or [],
-            "events": analysis.get("events") or [],
+            "events": [row for row in accounting_events if row.get("kind") in ("buy", "sell")],
             "findings": [],
             "coverage": analysis.get("coverage") or {},
             "research": research,
             "worksheet": worksheet,
+            "by_quote_asset": (worksheet or {}).get("by_quote_asset"),
+            "wallet_completed_episodes": episodes["wallet_completed_episodes"],
+            "wallet_sale_count": episodes.get("wallet_sale_count") or 0,
+            "completed_episode_detail": episodes,
             "material_exit": exit_diag,
             "evidence": [{"hash": evidence, "kind": "mass-search-reconstruction"}],
             "strict_preset": assert_strict_preset_unchanged(),
@@ -671,8 +830,36 @@ class MassSearchService:
         view = self.run_view(run_id)
         with self.store.lock:
             decisions = [dict(row) for row in self.store.db.execute("SELECT * FROM stage_decisions WHERE run_id=?", (run_id,)).fetchall()]
-            reports = [dict(row) for row in self.store.db.execute("SELECT * FROM report_links WHERE run_id=?", (run_id,)).fetchall()]
-        payload = {"run": view, "decisions": decisions, "report_links": reports, "exported_at": self.clock()}
+            links = [dict(row) for row in self.store.db.execute("SELECT * FROM report_links WHERE run_id=?", (run_id,)).fetchall()]
+        reports = []
+        from scanner.mass_search.workflow import visible_mass_search_report
+        for report in self.linked_reports(run_id):
+            visible = visible_mass_search_report(report)
+            reports.append({
+                "id": visible.get("id"),
+                "candidate_id": visible.get("candidate_id"),
+                "address": visible.get("address"),
+                "source": visible.get("source"),
+                "corpus_kind": visible.get("corpus_kind"),
+                "policy": visible.get("policy"),
+                "label": visible.get("label"),
+                "worksheet": visible.get("worksheet"),
+                "material_exit": visible.get("material_exit"),
+                "notes": visible.get("notes"),
+                "observations": visible.get("observations") or [],
+                "g3_status": visible.get("g3_status"),
+                "source_integrity": visible.get("source_integrity"),
+                "declared_mints": visible.get("declared_mints") or [],
+                "wallet_completed_episodes": visible.get("wallet_completed_episodes"),
+                "events": visible.get("events") or [],
+                "research_profile": visible.get("research_profile"),
+                "funnel": visible.get("funnel"),
+                "analytics": visible.get("analytics"),
+                "capture_sha256": visible.get("capture_sha256"),
+                "analysis_cache_key": visible.get("analysis_cache_key"),
+                "mass_search_interpretation": visible.get("mass_search_interpretation"),
+            })
+        payload = {"run": view, "decisions": decisions, "report_links": links, "reports": reports, "exported_at": self.clock()}
         digest = self.store.archive(payload)
         dest = self.store.path / "exports" / f"mass-search-{run_id[:12]}.json"
         dest.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -753,22 +940,35 @@ class MassSearchService:
                             seed=plan["exploration_audit"]["selection_seed"], authorised_slots=slots)
 
 
+def evidenced_paid_by_wallet(event):
+    """Carry explicit payer evidence. Do not invent paid_by_wallet=True on every trade."""
+    if "paid_by_wallet" in event:
+        paid = event["paid_by_wallet"]
+        if not isinstance(paid, bool):
+            raise ValueError("paid_by_wallet must be boolean")
+        return paid
+    return None
+
+
 def events_to_accounting(events, *, mint, start):
     start_dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
     rows = []
     for index, event in enumerate(events):
+        if event.get("timestamp_missing"):
+            continue
         if event.get("kind") == "transfer":
             when = start_dt + timedelta(seconds=int(event.get("seconds_from_start") or 0))
+            transfer_order = event.get("order")
             rows.append({
                 "kind": "transfer",
                 "timestamp": when.isoformat().replace("+00:00", "Z"),
-                "order": index,
-                "mint": mint,
+                "order": transfer_order if isinstance(transfer_order, int) and not isinstance(transfer_order, bool) else index,
+                "mint": event.get("mint") or mint,
                 "quantity_raw": str(event["units"]),
                 "decimals": 0,
                 "classification": "meme",
                 "signature": event.get("signature") or f"synthetic-transfer-{index}",
-                "path": "fixture",
+                "path": event.get("path") or "fixture",
                 "evidence": event.get("evidence") or ["fixture-hash"],
                 "origin": "transfer",
             })
@@ -776,29 +976,66 @@ def events_to_accounting(events, *, mint, start):
         if event.get("kind") not in ("buy", "sell", "fee"):
             continue
         when = start_dt + timedelta(seconds=int(event.get("seconds_from_start") or 0))
+        paid = evidenced_paid_by_wallet(event)
+        fee_amount = event.get("wallet_fee_sol") if event.get("wallet_fee_sol") not in (None, "") else event.get("fee_sol")
+        event_order = event.get("order")
         row = {
             "kind": event["kind"],
             "timestamp": when.isoformat().replace("+00:00", "Z"),
-            "order": index,
-            "mint": mint,
+            "order": event_order if isinstance(event_order, int) and not isinstance(event_order, bool) else index,
+            "mint": event.get("mint") or mint,
             "quantity_raw": str(event.get("units") or "0"),
             "decimals": 0,
             "classification": "meme",
             "signature": event.get("signature") or f"synthetic-{index}",
-            "path": "fixture",
+            "path": event.get("path") or "fixture",
             "evidence": event.get("evidence") or ["fixture-hash"],
+            "seconds_from_start": event.get("seconds_from_start"),
+            "units": str(event.get("units") or "0"),
         }
-        if "consideration_sol" in event:
+        from .settlement import USDC, USDT, settlement_of
+        if settlement_of(event) == USDT:
+            amount = event.get("consideration_usdt")
+            if amount in (None, ""):
+                amount = event.get("amount_usdt")
+            if amount in (None, ""):
+                row["unknown_quote"] = True
+                row["amount_usdt"] = None
+            else:
+                row["amount_usdt"] = str(amount)
+            row["settlement_mint"] = USDT
+            row["settlement_asset"] = "USDT"
+            row["market_classification"] = event.get("classification") or "market"
+        elif settlement_of(event) == USDC:
+            row["amount_usdc"] = str(event.get("consideration_usdc") or event.get("amount_usdc") or "0")
+            row["settlement_mint"] = USDC
+            row["settlement_asset"] = "USDC"
+            row["market_classification"] = event.get("classification") or "market"
+        elif "consideration_sol" in event:
             row["amount_sol"] = event["consideration_sol"]
-        if event.get("wallet_fee_sol"):
-            row["fee_sol"] = event["wallet_fee_sol"]
+        elif event.get("amount_sol") is not None:
+            row["amount_sol"] = event["amount_sol"]
+        if fee_amount not in (None, ""):
+            row["fee_sol"] = str(fee_amount)
+        if paid is True:
+            row["paid_by_wallet"] = True
+        elif paid is False:
+            row["paid_by_wallet"] = False
+        elif fee_amount not in (None, "", "0"):
+            # wallet_fee_sol / fee_sol on a mass-search trade is evidenced wallet spend.
+            row["paid_by_wallet"] = True
+            paid = True
         rows.append(row)
-        if event.get("wallet_fee_sol") and event["kind"] in ("buy", "sell"):
+        if (
+            event["kind"] in ("buy", "sell")
+            and fee_amount not in (None, "", "0")
+            and row.get("paid_by_wallet") is True
+        ):
             rows.append({
                 "kind": "fee",
                 "timestamp": row["timestamp"],
                 "order": index + 1000,
-                "amount_sol": event["wallet_fee_sol"],
+                "amount_sol": str(fee_amount),
                 "paid_by_wallet": True,
                 "signature": row["signature"],
                 "path": "meta.fee",

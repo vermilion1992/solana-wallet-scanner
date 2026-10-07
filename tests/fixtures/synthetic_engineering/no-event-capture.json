@@ -1,0 +1,10 @@
+{
+  "kind": "SYNTHETIC_ENGINEERING_FIXTURE",
+  "label": "SYNTHETIC — no-event capture, not proof",
+  "not_proof": true,
+  "corpus_kind": "SYNTHETIC",
+  "address": "SynthEngEMPTY111111111111111111111111111",
+  "window_start": "2026-09-05T13:29:27Z",
+  "window_end": "2026-10-05T13:29:27Z",
+  "events": []
+}

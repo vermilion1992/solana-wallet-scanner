@@ -1,0 +1,26 @@
+{
+  "kind": "research-search-proposal-record-v1",
+  "enabled": false,
+  "do_not_dispatch": true,
+  "authorization_id": "live-ranked100-research-search-2026-10-06-mitch",
+  "file": "config/live_authorization.ranked100-research-search-draft.json",
+  "separate_from": "live-ranked100-next-candidates-2026-10-06-mitch",
+  "next_candidates_draft_untouched": true,
+  "max_wallets": 10,
+  "max_pages_per_wallet": 2,
+  "max_requests": 20,
+  "documented_credits": 200,
+  "credits_needed_versus_balance": "needed=200 documented Helius credits (20 requests \u00d7 10 units). Balance unconfirmed. Do not invent remaining quota.",
+  "max_spend_usd": "0",
+  "retries": 0,
+  "stop_conditions": [
+    "stop_when_budget_exhausted",
+    "stop_when_coverage_objective_reached",
+    "never_until_a_winner",
+    "failed_or_timed_out_dispatched_request_consumes_attempt"
+  ],
+  "never_until_a_winner": true,
+  "can_establish": "At most ten additional ranked-100 wallets with page-bounded captured history. Research-screen evidence classes 1 or 2 only. A matched trade never qualifies the account.",
+  "remains_uncertain": "Earlier inventory, transfers, valuations, net realised across SOL+USDC, and the other 89 ranked wallets.",
+  "PRODUCT_READY": false
+}

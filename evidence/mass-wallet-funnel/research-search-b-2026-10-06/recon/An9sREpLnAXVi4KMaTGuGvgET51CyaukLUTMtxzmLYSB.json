@@ -1,0 +1,12 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+  "fifo": {},
+  "conversions": [],
+  "unsupported_tx_count": 199,
+  "app_report_id": "ranked-partial-An9sREpL-1bfba706",
+  "app_error": null,
+  "comparison": {},
+  "PRODUCT_READY": false
+}

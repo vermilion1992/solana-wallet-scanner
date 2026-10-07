@@ -1,0 +1,100 @@
+{
+  "gate": "G1",
+  "status": "BLOCKED",
+  "run_id": "882c292365c44ad5bab91d957d28f86c",
+  "authorization_id": "[REDACTED]",
+  "grant_path": "[REDACTED]",
+  "grant_enabled": true,
+  "blocker": "[REDACTED]",
+  "detail": "[REDACTED]",
+  "application_commit": "0a6b5b1159cb9caea1a1512b2f1bd259eea370aa",
+  "spend": {
+    "birdeye": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 250,
+      "remaining": 250,
+      "cycle_start": "2026-10-05T00:00:00Z"
+    },
+    "helius": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 600,
+      "remaining": 600,
+      "cycle_start": "2026-10-05T00:00:00Z"
+    },
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    }
+  },
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "freeze": {
+    "kind": "mass-search-g1-pre-run-freeze-v1",
+    "frozen_at": "2026-10-05T10:48:45Z",
+    "application_commit": "0a6b5b1159cb9caea1a1512b2f1bd259eea370aa",
+    "authorization_id": "[REDACTED]",
+    "authorization_sha256": "[REDACTED]",
+    "first_live_target": "G1_VERTICAL_SLICE_ONLY",
+    "corpus_kind": "GENUINE_LIVE",
+    "source_ids": [
+      "birdeye-traders",
+      "helius-history"
+    ],
+    "windows": {
+      "report_window_days": 30,
+      "verification_window_days": 90,
+      "timestamp_semantics": "Birdeye ranking snapshot is not an atomic as-of universe; Helius blockTime is chain time"
+    },
+    "ceilings": {
+      "birdeye": {
+        "max_requests": 10,
+        "max_units": 250,
+        "billing_unit": "birdeye_compute_unit"
+      },
+      "helius": {
+        "max_requests": 20,
+        "max_units": 600,
+        "billing_unit": "helius_credit"
+      },
+      "max_additional_spend_usd": "0",
+      "overages_enabled": false,
+      "do_not_reset_setup_pilot": true
+    },
+    "stop_conditions": [
+      "G1 only \u2014 one survivor with supported buy+sell",
+      "[REDACTED]",
+      "Do not run G2/G3/G5/G6"
+    ],
+    "hardware": {
+      "system": "Linux",
+      "release": "6.12.94+",
+      "machine": "x86_64",
+      "python": "3.12.3"
+    },
+    "example_and_draft_not_grants": {
+      "example_enabled": false,
+      "draft_enabled": false
+    }
+  },
+  "missing_dependency": "[REDACTED]",
+  "extra": {
+    "missing_env": [
+      "birdeye",
+      "helius"
+    ],
+    "presence": {
+      "birdeye": false,
+      "helius": false
+    }
+  }
+}

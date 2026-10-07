@@ -1,0 +1,12 @@
+{
+  "dataset": "saved ranked-100 discovery page (100 wallets) + genuine page-0 capture sha256 53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d + 3 labelled synthetic engineering fixtures + 1 no-history ranked row",
+  "environment": "linux local Store / CPython in /workspace/.venv, no provider network",
+  "filter_seconds": 2e-05,
+  "filter_visible": 100,
+  "filter_universe": 100,
+  "batch_seconds": 0.2907,
+  "batch_wallets": 5,
+  "batch_status": "completed",
+  "provider_calls": 0,
+  "no_throughput_extrapolation": true
+}

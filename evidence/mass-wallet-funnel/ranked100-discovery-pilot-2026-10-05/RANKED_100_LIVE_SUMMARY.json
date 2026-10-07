@@ -1,0 +1,100 @@
+{
+  "outcome_label": "RANKED_100_DISCOVERY_PILOT",
+  "status": "PASS",
+  "authorization_id": "[REDACTED]",
+  "from_cache": false,
+  "external_requests": 1,
+  "birdeye_requests_used": 1,
+  "cache": {
+    "evidence_sha256": "03869fe91b21e0c3e7425a278989eddc58e3f3267b047add2cf8f86ab52ac9f4",
+    "unique_valid_wallets": 100,
+    "acquisition_complete": true,
+    "raw_count": 100,
+    "query": {
+      "provider": "birdeye",
+      "method": "GET",
+      "host": "public-api.birdeye.so",
+      "path": "/trader/gainers-losers",
+      "chain": "solana",
+      "params": {
+        "type": "30d",
+        "sort_by": "trader_score",
+        "sort_type": "desc",
+        "offset": 0,
+        "limit": 100
+      }
+    },
+    "billing": {
+      "birdeye_requests": 1,
+      "birdeye_units_documented": 30,
+      "units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+      "helius_requests": 0,
+      "helius_units": 0,
+      "other_providers": 0
+    },
+    "fetched_at": "2026-10-05T13:29:27Z"
+  },
+  "available_metrics": {
+    "trader_score": 100,
+    "realized_pnl": 100,
+    "trade_count": 100,
+    "last_active": 0
+  },
+  "shortlist_count": 20,
+  "acquisition_note": null,
+  "blocker": null,
+  "detail": null,
+  "cu": {
+    "documented_estimate": 30,
+    "grant_ceiling": 30,
+    "ledger_units_label": "documented_estimate_not_confirmed_dashboard_receipt",
+    "billing_from_cache": {
+      "birdeye_requests": 1,
+      "birdeye_units_documented": 30,
+      "units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+      "helius_requests": 0,
+      "helius_units": 0,
+      "other_providers": 0
+    },
+    "provider_headers_filtered": {
+      "x-ratelimit-limit": "100",
+      "x-ratelimit-remaining": "99",
+      "x-ratelimit-reset": "1791206968"
+    },
+    "provider_header_names": [
+      "access-control-allow-origin",
+      "access-control-expose-headers",
+      "cf-cache-status",
+      "cf-ray",
+      "connection",
+      "content-encoding",
+      "content-type",
+      "date",
+      "server",
+      "transfer-encoding",
+      "x-powered-by",
+      "x-ratelimit-limit",
+      "x-ratelimit-remaining",
+      "x-ratelimit-reset"
+    ],
+    "http_status": 200
+  },
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "setup_pilot_after": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "PRODUCT_READY": false,
+  "not_full_g2": true,
+  "helius_requests": 0,
+  "helius_units": 0
+}

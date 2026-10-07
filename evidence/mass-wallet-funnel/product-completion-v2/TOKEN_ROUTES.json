@@ -1,0 +1,499 @@
+{
+  "kind": "token-route-enumerator-v1",
+  "checked": 80,
+  "bootstrap_is_launch_exchange": true,
+  "new_routes_present": true,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/archives/example.zip",
+      "sample": "/api/archives/example.zip",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/archives/import",
+      "sample": "/api/archives/import",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/backup",
+      "sample": "/api/backup",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/demo",
+      "sample": "/api/demo",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery",
+      "sample": "/api/discovery",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/import",
+      "sample": "/api/discovery/import",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/discovery/universe",
+      "sample": "/api/discovery/universe",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/discovery/{identifier}",
+      "sample": "/api/discovery/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/{identifier}/audit",
+      "sample": "/api/discovery/00000000000000000000000000000000/audit",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/discovery/{identifier}/identity",
+      "sample": "/api/discovery/00000000000000000000000000000000/identity",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/evidence/audit",
+      "sample": "/api/evidence/audit",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/evidence/audits/{identifier}",
+      "sample": "/api/evidence/audits/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/evidence/audits/{identifier}/export",
+      "sample": "/api/evidence/audits/00000000000000000000000000000000/export",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/evidence/example",
+      "sample": "/api/evidence/example",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/evidence/{digest}",
+      "sample": "/api/evidence/{digest}",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/export/reports/{filename}",
+      "sample": "/api/export/reports/{filename}",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "sample": "/api/health",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/access-blocker",
+      "sample": "/api/mass-search/access-blocker",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/acquisition-gate",
+      "sample": "/api/mass-search/acquisition-gate",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/acquisition-gate/check",
+      "sample": "/api/mass-search/acquisition-gate/check",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/acquisition-policy",
+      "sample": "/api/mass-search/acquisition-policy",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/approval-proposal",
+      "sample": "/api/mass-search/approval-proposal",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/benchmark/local",
+      "sample": "/api/mass-search/benchmark/local",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/capability",
+      "sample": "/api/mass-search/capability",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/instrumentation",
+      "sample": "/api/mass-search/instrumentation",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/phone-access",
+      "sample": "/api/mass-search/phone-access",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/preview",
+      "sample": "/api/mass-search/preview",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/ranked-workflow",
+      "sample": "/api/mass-search/ranked-workflow",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/ranked-workflow/batch",
+      "sample": "/api/mass-search/ranked-workflow/batch",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/ranked-workflow/batch/{batch_id}",
+      "sample": "/api/mass-search/ranked-workflow/batch/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/ranked-workflow/batch/{batch_id}/cancel",
+      "sample": "/api/mass-search/ranked-workflow/batch/00000000000000000000000000000000/cancel",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/ranked-workflow/batch/{batch_id}/step",
+      "sample": "/api/mass-search/ranked-workflow/batch/00000000000000000000000000000000/step",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/ranked-workflow/replay",
+      "sample": "/api/mass-search/ranked-workflow/replay",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/ranked-workflow/shortlist",
+      "sample": "/api/mass-search/ranked-workflow/shortlist",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/research-compare",
+      "sample": "/api/mass-search/research-compare",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/research-filters",
+      "sample": "/api/mass-search/research-filters",
+      "status": 401
+    },
+    {
+      "method": "PUT",
+      "path": "/api/mass-search/research-filters",
+      "sample": "/api/mass-search/research-filters",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/research-search-proposal",
+      "sample": "/api/mass-search/research-search-proposal",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs",
+      "sample": "/api/mass-search/runs",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs",
+      "sample": "/api/mass-search/runs",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/{run_id}",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/acquire",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/acquire",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/cancel",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/cancel",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/{run_id}/candidates",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/candidates",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/{run_id}/export",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/export",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/pause",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/pause",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/reconstruct",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/reconstruct",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/refilter",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/refilter",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/{run_id}/reports",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/reports",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/resume",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/resume",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/runs/{run_id}/stages/{stage_id}",
+      "sample": "/api/mass-search/runs/00000000000000000000000000000000/stages/{stage_id}",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/mass-search/vertical-slice",
+      "sample": "/api/mass-search/vertical-slice",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations",
+      "sample": "/api/observations",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations",
+      "sample": "/api/observations",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/{identifier}",
+      "sample": "/api/observations/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/observations/{identifier}/export",
+      "sample": "/api/observations/00000000000000000000000000000000/export",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations/{identifier}/mark",
+      "sample": "/api/observations/00000000000000000000000000000000/mark",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations/{identifier}/resume",
+      "sample": "/api/observations/00000000000000000000000000000000/resume",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/observations/{identifier}/stop",
+      "sample": "/api/observations/00000000000000000000000000000000/stop",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/presets/preview",
+      "sample": "/api/presets/preview",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/provider",
+      "sample": "/api/provider",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/provider/key",
+      "sample": "/api/provider/key",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/provider/manifest",
+      "sample": "/api/provider/manifest",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/provider/test",
+      "sample": "/api/provider/test",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/{identifier}",
+      "sample": "/api/reports/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/{identifier}/enrich",
+      "sample": "/api/reports/00000000000000000000000000000000/enrich",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/{identifier}/rebuild",
+      "sample": "/api/reports/00000000000000000000000000000000/rebuild",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/scans",
+      "sample": "/api/scans",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/scans/{identifier}/pause",
+      "sample": "/api/scans/00000000000000000000000000000000/pause",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/scans/{identifier}/resume",
+      "sample": "/api/scans/00000000000000000000000000000000/resume",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings",
+      "sample": "/api/screenings",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/screenings",
+      "sample": "/api/screenings",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings/{identifier}",
+      "sample": "/api/screenings/00000000000000000000000000000000",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/screenings/{identifier}/continue",
+      "sample": "/api/screenings/00000000000000000000000000000000/continue",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings/{identifier}/export",
+      "sample": "/api/screenings/00000000000000000000000000000000/export",
+      "status": 401
+    },
+    {
+      "method": "PUT",
+      "path": "/api/settings",
+      "sample": "/api/settings",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/state",
+      "sample": "/api/state",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/usage",
+      "sample": "/api/usage",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/watchlist",
+      "sample": "/api/watchlist",
+      "status": 401
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/watchlist/{address}",
+      "sample": "/api/watchlist/00000000000000000000000000000000",
+      "status": 401
+    }
+  ],
+  "bootstrap": [
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "sample": "/api/bootstrap",
+      "status": 401,
+      "role": "launch_token_exchange"
+    }
+  ],
+  "PRODUCT_READY": false,
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc"
+}

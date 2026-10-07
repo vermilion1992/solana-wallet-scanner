@@ -1,0 +1,50 @@
+INFO:     Started server process [58957]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+
+Solana Wallet Scanner is ready on this computer's LAN.
+Same Wi-Fi only. Token auth is required. Unauthenticated API stays 401.
+Phone URL:
+http://172.30.0.2:60165/#session=[redacted]
+
+
+  █▀▀▀▀▀▀ ▄ ██▀ █▄▀ ▄██▄█▄▄█▄█▀ █▀▀▀▀▀█
+  █ ███ ▀  █ ▀ ▀▀▀█▄█▀ ▄███▄▄▀  █ ███ █
+  █ ▀▀▀ ▀ ▀█ █▀█▄▄█ ▀▄▄█ █▀ ██▄ █ ▀▀▀ █
+  ▀ ▀ ▀ ▀ ▀ █ ▀▄▀ █▄█ ▀▄▀▄█▄▀ █ ▀ ▀ ▀ ▀
+  ▀▄█▄▀ ▀▄▄▀█▀▄▄▀█   ▄██  █▀█▀█ ▄▄▀ ▄█▄
+  █ ▄ ▀█▀      ▄▄▄ █ ▄▄█  ▄▄▀▄ ██▄▄█ ▄█
+  ▄▄▀▀ ▄▀ ▀▀ █▄▀ ▄██ ▀██  ▄▄▄▀█ ██  ▄ ▄
+  ▀ ██▄█▀█ █▄▀ ▄▀▀█▄ ▄█▄  ▄█▀  ▄▀▄ █ ▄▀
+   ▀   █▀▀ █▄   ██ ▄  █▄▄ █▀▄ ▄ ██ █  █
+  ▀▄▄▄▀ ▀█▀▀  ▀█ ▄ █ ▄▄▄▀▄ █▀   ▀ ▄█▀█▀
+  █▀▄▄ █▀▄█▀▀▄█ █▄███ █▀▀ ▄▀█ ▄ █▄ ▀ ▀█
+  ▄  ▀▄█▀  ▄▄█▄ ▀▀██▀▄▄▄▄ █▄▀▄▄██▄▀█ █▀
+   ▄█▀ █▀██ ▀  ▄▄█ ▄▄ ▄▀▀  ▀  █ ██ █ ▀█
+  ▀▄█▀▀ ▀▀▀▄▀██▀ ▄ █▀▄▀▄▄ ▀▄█  ▀▀ ▄▄ █▀
+  ▀  ▀  ▀ █▄█▀███▄███ ▄  ▄▄▀  █▀▀▀█ ▄▄▄
+  █▀▀▀▀▀▀   ▄   ▀▀█▄▀  ▄▄ ▀█ ▀█ ▀ █▄ █▀
+  █ ███ ▀ ▀██▄▀ ██  ▀███ ██▄  ██▀███ █
+  █ ▀▀▀ ▀ ▀ ▄   █▄ ▀ ▄ ▄█▄▀▄█▄█ ▄▄▀█ █▀
+  ▀▀▀▀▀▀▀ ▀▀    ▀ ▀   ▀  ▀ ▀  ▀▀  ▀▀ ▀▀
+
+
+Scan the QR on your phone. Do not publish this URL off your LAN.
+Press Ctrl+C to stop.
+
+INFO:     172.30.0.2:59296 - "GET /api/state HTTP/1.1" 401 Unauthorized
+INFO:     172.30.0.2:59302 - "GET / HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59302 - "GET /assets/index-hN-S6YfT.js HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59308 - "GET /assets/index-eXsK5YO9.css HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59302 - "GET /api/bootstrap HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59308 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59302 - "GET /api/state?report_view=summary HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59302 - "GET /api/mass-search/access-blocker HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59308 - "GET /api/mass-search/ranked-workflow HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59310 - "GET /api/mass-search/runs/05748d55613646df96a28dd1d3496f45 HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59312 - "GET /api/mass-search/runs/05748d55613646df96a28dd1d3496f45/candidates?stage=triage&limit=50 HTTP/1.1" 200 OK
+INFO:     172.30.0.2:59312 - "GET /api/mass-search/runs/05748d55613646df96a28dd1d3496f45/candidates?stage=triage&limit=50 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [58957]

@@ -32,14 +32,97 @@ from .accounting import canonical, raw_quantity, decimal
 from .decoder import SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, TOKEN_IDS, MEMO_IDS
 
 WSOL = 'So11111111111111111111111111111111111111112'
+USDC = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+USDT = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
+QUOTE_MINTS = frozenset({USDC, USDT})
+QUOTE_ASSET = {USDC: 'USDC', USDT: 'USDT'}
+# Reviewed quote stables are USDC and USDT only. SOL↔USDC/USDT is a
+# conversion. SOL↔PYUSD (2b1kV6Dk…), USD1 (USD1ttGY…), USDS (USDSwr9…)
+# or any other USD-named mint is an ordinary token trade of that mint.
+# Token↔an unreviewed stable is unresolved (two non-SOL assets).
+# Unknown quote is unresolved, never 0. No unsourced FX into SOL.
+REVIEWED_STABLECOIN_RULE = (
+    "Reviewed quote stables: USDC and USDT only. SOL↔reviewed stable is a "
+    "conversion, not a token position. Token↔reviewed stable is a buy/sell "
+    "settled in that stable. PYUSD, USD1, USDS and any other USD-named mint "
+    "are not reviewed quotes: SOL↔them is an ordinary token trade; "
+    "token↔them is unresolved. Unknown quote is unresolved, never 0."
+)
+PYUSD = '2b1kV6DkPYTUsS6vgMfaVwC4w2FgbNwkJWqaERbdW9t'
+USD1 = 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB'
+USDS = 'USDSwr9ApdHk5bvJKMjzff41FfuX8bSxdKcR81vTwcA'
 JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
 PUMP = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
 PUMP_SWAP = 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
+PUMP_REVIEWED_NON_SWAP = (
+    'distribute_fee_to_holders',
+    'claim_cashback',
+    'claim_cashback_v2',
+    'collect_creator_fee',
+    'collect_creator_fee_v2',
+    'create',
+    'create_v2',
+    'migrate',
+    'migrate_v2',
+    'init_user_volume_accumulator',
+    'sync_user_volume_accumulator',
+    'close_user_volume_accumulator',
+)
 RAYDIUM_CPMM = 'CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C'
 RAYDIUM_AMM = '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8'
 WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
+OKX_DEX_ROUTER = 'proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u'
+METEORA_DAMM_V2 = 'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'
+DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
+DFLOW_DST = 'dst5MGcFPoBeREFAA5E3tU5ij8m5uVYwkzkSAbsLbNo'
+FLASHX = 'FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9'
+GMGN = 'GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1'
+# Observed PumpSwap buy router (jXt 2EtPn1a61imQ): outer Buy then inner PumpSwap Buy.
+DGMG = 'DGMgNKpqygARV2pHZfW4kNQSHT9F3Ly2BKWqvpYrAg5C'
+PHOTON = '99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2'
+METEORA_DLMM = 'LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'
+PUMP_FEE_PROGRAM = 'pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ'
+RFQ_FILL = '61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH'
+TOKEN_2022_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+# Lighthouse assertions. Not a venue. Bundled with swaps; never a trade.
+LIGHTHOUSE = 'L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95'
+# Exact observed RFQ Fill top-level fee recipient. Not a general fee sink.
+RFQ_FEE_FILL_ACCOUNT = '9PnYDCTJ5B4mJJMPvjCZ97L6ZBcti48CYgxv5QU1mV5G'
+OKX_SWAPTOC = bytes.fromhex('bbc9d433109bec3c')
+OKX_SWAPTOB = bytes.fromhex('aa2955b184501f35')
+RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
+DFLOW_SWAP = bytes.fromhex('f8c69e91e17587c8')
+DFLOW_SWAP_WITH_DESTINATION = bytes.fromhex('a8ac184dc59c8765')
+DFLOW_SWAP2 = bytes.fromhex('414b3f4ceb5b5b88')
+DFLOW_WRAP = bytes.fromhex('2f3e9bac83cd25c9')
+DFLOW_UNWRAP = bytes.fromhex('63280e692d6bacc9')
+DFLOW_TRANSFER_FEE = bytes.fromhex('81a4c415b130b4a2')
+DFLOW_TRANSFER_TO_SPONSOR = bytes.fromhex('9bb38297c48bfda3')
+DFLOW_DST_FULFILL = bytes.fromhex('3dd627f841d49924')
+GMGN_SWAP = bytes.fromhex('f8c69e91e17587c8')
+PHOTON_SWAP = bytes.fromhex('0b9c60da27a3b413')
+PHOTON_SWAP_ALT = bytes.fromhex('0d9e0ddf5fd51c06')
+DLMM_SWAP2 = bytes.fromhex('414b3f4ceb5b5b88')
+# Photon and DFlow DST layouts are pinned below but stay unsupported: every
+# attached real tx fails balance-delta reconciliation (no opposing SOL or
+# multi-asset). FLASHX wraps (10-byte 0x01) and other non-0x00 opcodes are
+# not swaps; only the later 0x00 swap instruction is routed. B311 is a
+# multi-asset wrapper and is deliberately unreviewed.
+REVIEWED_OUTER_VENUES = (
+    JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+    METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER, DFLOW,
+    FLASHX, GMGN, DGMG, METEORA_DLMM,
+)
+UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v7-native-flow-roles'
+DECODER_VERSION = 'spot-v24-wallet-rent-quote-v1'
+SWAPTOB_UNSUPPORTED_REASON = (
+    'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
+    'source_token_account at 1, destination_token_account at 2 from the '
+    'published OKX DEX v2 layout. Remaining accounts are hops, not user legs. '
+    'Unknown OKX discriminators stay unsupported. Balance changes alone do '
+    'not prove a swap.'
+)
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 _RAW_FIXTURE_ROUTES = {
@@ -56,6 +139,29 @@ _RAW_FIXTURE_ROUTES = {
         'raw_hash': '25271562a99c96879c6d5f347792340320a6f55c12497a0ba3602db86eca6b4a',
         'scope': 'One successful sell with exact owned quantities, persistent wSOL proceeds and wallet-paid fee; earlier nonzero inventory cost remains unknown',
     },
+    (JUPITER, 'route_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'fixture': 'tests/fixtures/retained_protocol_funding/jupiter-route-v2.json',
+        'discriminator': 'bb64facc31c4af14',
+        'scope': 'Official route_v2 accounts and discriminator; executed wallet deltas prove fills; USDC settlement stays USDC',
+    },
+    (JUPITER, 'shared_accounts_route_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'discriminator': 'd19853937cfed8e9',
+        'scope': 'Official shared_accounts_route_v2 discriminator; authority index 1 and user token accounts 2/5 from genuine ranked pages',
+    },
+    (PUMP, 'sell_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'fixture': 'tests/fixtures/retained_protocol_funding/pump-native.json',
+        'discriminator': '5df6823ce7e940b2',
+        'scope': 'Official Pump sell_v2 accounts; user at 13, associated base/quote user at 14/15',
+    },
+    (PUMP, 'buy_exact_quote_in_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'fixture': 'tests/fixtures/retained_protocol_funding/pump-native.json',
+        'discriminator': 'c2ab1c46684d5b2f',
+        'scope': 'Official Pump buy_exact_quote_in_v2 accounts; user at 13, associated base/quote user at 14/15',
+    },
 }
 
 
@@ -63,6 +169,42 @@ def _integer(value):
     if not isinstance(value, int) or isinstance(value, bool) or value < 0:
         raise ValueError('Missing unsigned RPC integer')
     return value
+
+
+def _flashx_is_wrap(instruction):
+    """FLASHX 10-byte 0x01 (and other short 0x01) instructions are wraps, not swaps."""
+    try:
+        payload = _data(instruction.get('data'))
+    except (ValueError, TypeError, KeyError):
+        return False
+    return bool(payload) and payload[0] == 1
+
+
+def _flashx_is_reviewed_swap(instruction, keys):
+    """True only for the observed 0x00 FLASHX swap (wallet at 1, ≥20 accounts)."""
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return False
+    return bool(payload) and payload[0] == 0 and len(payload) >= 16 and len(accounts) >= 20
+
+
+def _dflow_is_reviewed_swap(instruction, keys):
+    """True only for pinned DFlow swap discriminators. Wrap/setup siblings are not swaps."""
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return False
+    if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
+        return True
+    if payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
+        return True
+    # Swap2: same wallet-at-3 prefix as Swap. Run-7 blocked 654 txs on this disc.
+    if payload[:8] == DFLOW_SWAP2 and len(payload) >= 16 and len(accounts) >= 6:
+        return True
+    return False
 
 
 def _anchor(name):
@@ -103,6 +245,91 @@ def _keys(message, meta):
     return result
 
 
+def token_2022_ceiling_fee(amount, bps):
+    """Token-2022 transfer fee: ceil(amount * bps / 10_000), no max-fee cap."""
+    if bps <= 0:
+        return 0
+    return (int(amount) * int(bps) + 9999) // 10000
+
+
+def infer_token_2022_fee_bps_candidates(gross_amounts, withheld):
+    """Every uncapped ceiling-formula bps that fits the observed withheld.
+
+    This is not TransferFeeConfig. The Token-2022 on-chain fee also applies a
+    maximum-fee cap and selects configuration by epoch. Those fields are not
+    in GTA captures, so a numeric fit is not execution-time mint config.
+    """
+    withheld = int(withheld)
+    if withheld < 0 or not gross_amounts:
+        return []
+    matches = []
+    for bps in range(0, 10001):
+        if sum(token_2022_ceiling_fee(amount, bps) for amount in gross_amounts) == withheld:
+            matches.append(bps)
+    return matches
+
+
+def infer_token_2022_fee_bps(gross_amounts, withheld):
+    """Unique uncapped-ceiling bps, or None if ambiguous / no fit.
+
+    A unique fit is still not TransferFeeConfig or execution-time mint config.
+    """
+    matches = infer_token_2022_fee_bps_candidates(gross_amounts, withheld)
+    if len(matches) == 1:
+        return matches[0]
+    return None
+
+
+def _header_counts(header, static_len):
+    """Match compiled_instructions.py:150-185 header bounds."""
+    if not isinstance(header, dict):
+        return None
+    required = header.get('numRequiredSignatures')
+    readonly_signed = header.get('numReadonlySignedAccounts')
+    readonly_unsigned = header.get('numReadonlyUnsignedAccounts')
+    if (any(type(value) is not int or isinstance(value, bool)
+            for value in (required, readonly_signed, readonly_unsigned)) or
+            not 1 <= required <= static_len or not 0 <= readonly_signed < required or
+            not 0 <= readonly_unsigned <= static_len - required):
+        return None
+    return required, readonly_signed, readonly_unsigned
+
+
+def _message_signers(message, keys):
+    """Message signers from parsed flags or header.numRequiredSignatures.
+
+    Cross-checks parsed signer/writable flags against the message header the
+    same way compiled_instructions.py:150-185 does. Conflicting flags yield no
+    signers. Does not invent signers. Outer ATA still requires the funding
+    source to be one of these keys; that check stays in normalize_instruction.
+    """
+    entries = message.get('accountKeys')
+    header = message.get('header') if isinstance(message.get('header'), dict) else {}
+    header_present = bool(header)
+    if isinstance(entries, list) and entries and all(isinstance(item, dict) for item in entries):
+        if header_present:
+            counts = _header_counts(header, len(entries))
+            if counts is None:
+                return set()
+            required, readonly_signed, readonly_unsigned = counts
+            for index, entry in enumerate(entries):
+                writable = (index < required - readonly_signed if index < required else
+                            index < len(entries) - readonly_unsigned)
+                if entry.get('signer') is not (index < required) or entry.get('writable') is not writable:
+                    return set()
+            flagged = [entry.get('pubkey') for entry in entries[:required]]
+        else:
+            flagged = [item.get('pubkey') for item in entries if item.get('signer') is True]
+        if flagged and all(isinstance(key, str) and key for key in flagged):
+            return set(flagged)
+        return set()
+    counts = _header_counts(header, len(keys))
+    if counts is None:
+        return set()
+    required, _readonly_signed, _readonly_unsigned = counts
+    return set(keys[:required])
+
+
 def _program(instruction, keys):
     program = instruction.get('programId')
     if isinstance(program, str):
@@ -140,6 +367,14 @@ def _route(instruction, keys):
                 name = candidate
                 authority, owned_positions = (2, (3, 6)) if shared else (1, (2, 3))
                 break
+        if name is None and payload[:8] == _anchor('route_v2'):
+            if len(payload) < 28 or len(accounts) < 10:
+                raise ValueError('Jupiter route_v2 layout is absent or truncated')
+            name, authority, owned_positions = 'route_v2', 0, (1, 2)
+        if name is None and payload[:8] == _anchor('shared_accounts_route_v2'):
+            if len(payload) < 28 or len(accounts) < 12:
+                raise ValueError('Jupiter shared_accounts_route_v2 layout is absent or truncated')
+            name, authority, owned_positions = 'shared_accounts_route_v2', 1, (2, 5)
     elif program in (PUMP, PUMP_SWAP):
         names = ('buy', 'sell', 'buy_exact_sol_in') if program == PUMP else ('buy', 'sell', 'buy_exact_quote_in')
         for candidate in names:
@@ -148,6 +383,20 @@ def _route(instruction, keys):
                 authority, owned_positions = (6, (5,)) if program == PUMP else (1, (5, 6))
                 expected = 'sell' if candidate == 'sell' else 'buy'
                 break
+        if name is None and program == PUMP:
+            for candidate in ('sell_v2', 'buy_exact_quote_in_v2', 'buy_v2'):
+                if payload[:8] == _anchor(candidate) and len(payload) >= 24 and len(accounts) > 15:
+                    name = candidate
+                    # Official IDL: associated_quote_user is ignored for legacy SOL quote.
+                    authority, owned_positions = 13, (14,)
+                    expected = 'sell' if candidate == 'sell_v2' else 'buy'
+                    break
+        if name is None and program == PUMP:
+            for candidate in PUMP_REVIEWED_NON_SWAP:
+                if payload[:8] == _anchor(candidate):
+                    raise ValueError(
+                        f'Reviewed Pump instruction {candidate} is not a spot swap'
+                    )
     elif program == RAYDIUM_CPMM:
         for candidate in ('swap_base_input', 'swap_base_output'):
             if payload[:8] == _anchor(candidate) and len(payload) == 24 and len(accounts) >= 13:
@@ -163,6 +412,55 @@ def _route(instruction, keys):
             name, authority, owned_positions = 'swap', 1, (3, 5)
         elif payload[:8] == _anchor('swap_v2') and len(payload) >= 43 and len(accounts) >= 15:
             name, authority, owned_positions = 'swap_v2', 3, (7, 9)
+    elif program == METEORA_DAMM_V2:
+        if payload[:8] == _anchor('swap') and len(payload) >= 24 and len(accounts) >= 13:
+            name, authority, owned_positions = 'swap', 8, (2, 3)
+    elif program == RFQ_FILL:
+        if payload[:8] == RFQ_FILL_DISC and len(payload) >= 16 and len(accounts) >= 11:
+            name, authority, owned_positions = 'Fill', 0, (4,)
+    elif program == OKX_DEX_ROUTER:
+        # Official OKX DEX v2 SwapTob: payer, source_token_account,
+        # destination_token_account, source_mint, destination_mint, …
+        if payload[:8] == OKX_SWAPTOB and len(payload) >= 61 and len(accounts) >= 5:
+            name, authority, owned_positions = 'SwapTob', 0, (1, 2)
+    elif program == DFLOW:
+        # Official DFlow Aggregator v4. Wallet is account 3 on the observed swap.
+        # Wrap 2f3e9bac / Unwrap 63280e69 / TransferFee / TransferToSponsor are
+        # not swaps and are skipped before _route.
+        if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
+            name, authority, owned_positions = 'swap_with_destination', 3, (4,)
+        elif payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
+            name, authority, owned_positions = 'swap', 3, ()
+        elif payload[:8] == DFLOW_SWAP2 and len(payload) >= 16 and len(accounts) >= 6:
+            name, authority, owned_positions = 'swap2', 3, ()
+    elif program == DFLOW_DST:
+        # Native Flow FulfillOrder. Wallet at 3 on the attached CfNx page.
+        if payload[:8] == DFLOW_DST_FULFILL and len(payload) >= 16 and len(accounts) >= 4:
+            name, authority, owned_positions = 'FulfillOrder', 3, ()
+    elif program == FLASHX:
+        # Observed Axiom FLASHX routed swap: payload starting 0x00 with
+        # wallet at index 1. Non-swap opcodes (wraps, 0x05, …) are skipped
+        # before _route.
+        if len(payload) >= 16 and payload[0] == 0 and len(accounts) >= 20:
+            name, authority, owned_positions = 'flashx_swap', 1, ()
+    elif program == DGMG:
+        # PumpSwap buy/sell router. Same discriminators as Pump; wallet at 1
+        # (PumpSwap user). Inner PumpSwap Buy is not a second outer.
+        if payload[:8] == _anchor('buy') and len(payload) >= 24 and len(accounts) >= 7:
+            name, authority, owned_positions, expected = 'buy', 1, (5, 6), 'buy'
+        elif payload[:8] == _anchor('sell') and len(payload) >= 24 and len(accounts) >= 7:
+            name, authority, owned_positions, expected = 'sell', 1, (5, 6), 'sell'
+        elif payload[:8] == _anchor('buy_exact_quote_in') and len(payload) >= 24 and len(accounts) >= 7:
+            name, authority, owned_positions, expected = 'buy_exact_quote_in', 1, (5, 6), 'buy'
+    elif program == GMGN:
+        if payload[:8] == GMGN_SWAP and len(payload) >= 24 and len(accounts) >= 8:
+            name, authority, owned_positions = 'gmgn_swap', 0, ()
+    elif program == PHOTON:
+        if payload[:8] in (PHOTON_SWAP, PHOTON_SWAP_ALT) and len(payload) >= 16 and len(accounts) >= 5:
+            name, authority, owned_positions = 'photon_swap', 1, ()
+    elif program == METEORA_DLMM:
+        if payload[:8] == DLMM_SWAP2 and len(payload) >= 16 and len(accounts) > 10:
+            name, authority, owned_positions = 'swap2', 10, ()
     if name is None:
         raise ValueError('No reviewed spot swap instruction for this program and discriminator')
     return {'program': program, 'instruction': name, 'authority': accounts[authority],
@@ -212,6 +510,18 @@ def _verify_nonce_administration(message, info, keys, pre_lamports, post_lamport
     return {'kind': 'advanceNonce', 'nonce_account': nonce, 'authority': address,
             'economic_role': 'administration',
             'reason': 'First successful System advanceNonce changes nonce state only; nonce balance is unchanged and native endpoints conserve the network fee'}
+
+
+def _close_authority(info):
+    """Close authority is `owner`, or a sole-signer `multisigOwner`."""
+    owner = info.get('owner')
+    if owner:
+        return owner
+    multi = info.get('multisigOwner')
+    signers = info.get('signers') or []
+    if multi and signers and all(item == multi for item in signers):
+        return multi
+    return owner
 
 
 def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
@@ -268,10 +578,19 @@ def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
             raise ValueError('Temporary wrapped SOL creation lacks wallet-funded primary rent and native-token account identity')
         if initialization.get('owner') != address or initialization.get('mint') != WSOL:
             raise ValueError('Temporary wrapped SOL initialization lacks event-time wallet ownership and mint')
-        if close_program != token_program or close.get('owner') != address or close.get('destination') != address:
+        if close_program != token_program or _close_authority(close) != address or close.get('destination') != address:
             raise ValueError('Temporary wrapped SOL closure and rent refund must belong to the investigated wallet')
         if not creation_position < initialization_position < route_position < close_position:
-            raise ValueError('Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved')
+            # DFlow Swap/Swap2 wrap SOL as a CPI inside the swap (create/init
+            # after the outer route in the flattened list) and close via an
+            # inner close or a sibling UnwrapSol. Still require one wallet-
+            # funded create/init and one wallet-refunded close.
+            dflow_in_swap_wrap = (
+                route.get('program') == DFLOW
+                and route_position < creation_position < initialization_position < close_position
+            )
+            if not dflow_in_swap_wrap:
+                raise ValueError('Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved')
         wrapped_units, pending_sync = 0, False
         for position, outer, movement_type, kind, program, info in sorted(movements):
             if not creation_position < position < close_position:
@@ -326,6 +645,22 @@ def _canonical_user_volume_address(address):
         if not on_curve:
             return candidate, bump
     raise ValueError('User-volume PDA has no supported canonical bump')
+
+
+def _episode_rent_exclusion(flat, keys, before, after, address, skip_accounts):
+    """Wallet-owned still-open token rent only. See WALLET_PAID_RENT_RULE.
+
+    Independent of tools/independent_episode_audit.py (no shared helper).
+    Venue PDAs, other-owner ATAs, and router-fee accounts stay in
+    consideration. Closed-in-tx remaining native is 0. skip_accounts are
+    already rent-corrected wallet token accounts.
+    """
+    del flat, keys, before, after, address
+    # Wallet-owned still-open token rent is excluded by rent_correction
+    # (accounts already in `owned`) and `_verified_new_token_account_rent`.
+    # Venue PDAs / other-owner ATAs stay in consideration (WALLET_PAID_RENT_RULE).
+    del skip_accounts
+    return 0
 
 
 def _retained_user_volume_funding(flat, keys, before, after, address, route):
@@ -453,6 +788,261 @@ def _unresolved_native_roles(flat, owned, wrapped, keys, before, address, route,
     return unresolved
 
 
+# Official System allocate (tag 8, 12 bytes) / assign (tag 1, 36 bytes) from
+# scanner.compiled_instructions._system. Used only as inner swap lifecycle —
+# PumpSwap account setup on genuine Jupiter route_v2, or token-account sizes.
+# Outer nonce/authority mutations must not inherit this exception.
+_REVIEWED_LIFECYCLE_OWNERS = frozenset({
+    *TOKEN_IDS, PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
+    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, DFLOW_DST, RFQ_FILL,
+    FLASHX, GMGN, DGMG, PHOTON, METEORA_DLMM,
+})
+_REVIEWED_ALLOCATE_SPACES = frozenset({137, 165, 170})
+
+
+# Infra + reviewed venues + well-known hop AMMs. An unknown inner program
+# that touches a wallet-owned account blocks (D3). P&L stays wallet-delta
+# guarded; this is provenance + fail-closed, not a silent allow.
+RAYDIUM_CLMM = 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK'
+# Published hop AMMs seen under Jupiter/DFlow. A random program id still blocks (D3).
+WELL_KNOWN_INNER_AMMS = frozenset({
+    RAYDIUM_CLMM,
+    'PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY',  # Phoenix
+    'SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn',  # Sanctum Infinity
+    'ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA',  # AlphaQ
+    'ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY',  # ZeroFi
+    'BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi',  # BisonFi
+    'SoLFiHG9TfgtdUXUjWAxi3LtvYuFyDLVhBWxdMZxyCe',  # SolFi
+    'obriQD1zbpyLz95G5n7nJe6a4DPjpFwa5XYPoNm113y',  # Obric
+    '2wT8Yq49kHgDzXuPxZSaeLaH1qJgCwzzjYyvKZlYNVpj',  # Lifinity v2
+    'EewxydAPCCVuNEyrVN68XT4NWAI1uCml1p55i1BPVsbJ',  # Lifinity
+    'srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX',  # OpenBook
+    'opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb',  # OpenBook v2
+    'FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X',  # FluxBeam
+    'Eo7WjKq67rjJQSZxS6z3YcapmYde3M6t4gadxJtdEJge',  # GooseFX
+    '6MLxLqiXaaSUpkgMnWDTuejNZEz3kE7k2woyHGVFw319',  # Crema
+    'HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJueZ',  # Invariant
+    'SwaPpA9LAaLfeLi3a68M4DjnLqgKzHa7VMEBUNHzMeU',  # Token Swap
+    'MERLuDFBMmsHnszOkfP1zZuj7bK1uAmo4BqTKKQs',  # Mercurial
+    'SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ',  # Saber
+    '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',  # Serum DEX
+    'BSwp6bEBihVLdqJRK3PkMH2nNzQ4K3CwbGoiJ2mr8BEf',  # Bonkswap
+    'TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH',  # Tessera
+    'HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq',  # HumidiFi
+    'goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE',  # GoonFi
+    '3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU',
+    'MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms',  # Manifest
+    'B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht',
+    'DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD',
+    'riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j',
+    # Eco SDK svm/venues/obsidian OBSIDIAN_PROGRAM_ID (constant-product AMM).
+    'HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z',
+    # Eco SDK svm/venues/gatorswap GATORSWAP_PROGRAM_ID (constant-product AMM).
+    'gatorLx9aC1e5ZWAXscv5QRKiLXnLPLXjftVc81h1Hr',
+    # Aquifer DEX hop AMM. Decode is wallet-delta, not Aquifer internals.
+    'AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45',
+})
+REVIEWED_INNER_PROGRAMS = frozenset({
+    SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, *TOKEN_IDS, *MEMO_IDS, LIGHTHOUSE,
+    *REVIEWED_OUTER_VENUES, *UNSUPPORTED_PINNED_OUTER, PUMP_FEE_PROGRAM,
+    *WELL_KNOWN_INNER_AMMS,
+})
+_INNER_INFRA = frozenset({
+    SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, *TOKEN_IDS, *MEMO_IDS, LIGHTHOUSE,
+})
+
+
+def _instruction_account_keys(instruction, keys):
+    try:
+        return set(_accounts(instruction, keys))
+    except (ValueError, TypeError, KeyError, IndexError):
+        pass
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    found = set()
+    if isinstance(info, dict):
+        for field in (
+            'source', 'destination', 'account', 'newAccount', 'owner',
+            'authority', 'wallet', 'mint', 'payer',
+        ):
+            value = info.get(field)
+            if isinstance(value, str) and value:
+                found.add(value)
+    return found
+
+
+def _reviewed_inner_venues(flat, keys, route, owned, address):
+    """Record inner program ids; block unknown inners that touch wallet assets."""
+    venues = []
+    seen = set()
+    wallet_assets = {address, *owned}
+    route_index = route.get('index')
+    for outer, _path, instruction, nested in flat:
+        if not nested or outer != route_index:
+            continue
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program in _INNER_INFRA:
+            continue
+        if program not in seen:
+            seen.add(program)
+            venues.append({'program': program})
+        if program in REVIEWED_INNER_PROGRAMS:
+            continue
+        touched = _instruction_account_keys(instruction, keys)
+        if touched.intersection(wallet_assets):
+            return venues, (
+                'Unknown inner program touches a wallet-owned account; '
+                f'inner venue {program} is not on the reviewed inner allowlist'
+            )
+    return venues, None
+
+
+WALLET_PAID_RENT_RULE = (
+    "Wallet-paid account rent (owned vs not-owned; closed vs still open). "
+    "A System/ATA create funded by the investigated wallet is classified by "
+    "the SPL token owner (not the program owner). Closed in this transaction "
+    "with rent returned to the wallet nets out (remaining native is 0). "
+    "Still-open and token owner == wallet is recoverable ATA/wSOL rent and "
+    "is excluded from swap consideration. Still-open and not wallet-owned "
+    "(venue PDA, other-owner ATA, router-fee account) stays in consideration. "
+    "Unproved owner is treated as not wallet-owned (fail closed: keep in cost). "
+    "Reviewed venue program-account deposits stay on `_episode_rent_exclusion`. "
+    "PumpSwap IDL user-volume PDA (buy / buy_exact_quote_in ordinal 20, "
+    "derived from the user) is isolated from the swap quote — not "
+    "recoverable rent and not consideration. Jupiter-inner PumpSwap "
+    "creates are not IDL-located on the outer route and stay in consideration."
+)
+
+
+def _token_account_owner(flat, keys, account):
+    """SPL token owner of a created account, or None if unproved.
+
+    Independent of tools/independent_episode_audit.py.
+    """
+    for _outer, _path, instruction, _nested in flat:
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else {}
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        if program == ASSOCIATED_ID and kind in ('create', 'createIdempotent') and info.get('account') == account:
+            owner = info.get('wallet') or info.get('owner')
+            if owner:
+                return owner
+        if (
+            program in TOKEN_IDS
+            and kind in ('initializeAccount', 'initializeAccount2', 'initializeAccount3')
+            and info.get('account') == account
+            and info.get('owner')
+        ):
+            return info.get('owner')
+    return None
+
+
+def _b58encode(data):
+    number = int.from_bytes(data, 'big')
+    out = ''
+    while number:
+        number, rem = divmod(number, 58)
+        out = _B58[rem] + out
+    pad = 0
+    for byte in data:
+        if byte:
+            break
+        pad += 1
+    return ('1' * pad) + (out or '1')
+
+
+def _system_create_unparsed(instruction, keys):
+    """Raw System opcode 0 (createAccount). Same layout as compiled_instructions."""
+    try:
+        payload = _data(instruction.get('data'))
+        accounts = _accounts(instruction, keys)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return None
+    if len(payload) < 52 or int.from_bytes(payload[:4], 'little') != 0 or len(accounts) < 2:
+        return None
+    return {
+        'source': accounts[0],
+        'newAccount': accounts[1],
+        'lamports': int.from_bytes(payload[4:12], 'little'),
+        'space': int.from_bytes(payload[12:20], 'little'),
+        'owner': _b58encode(payload[20:52]),
+    }
+
+
+def _verified_new_token_account_rent(flat, keys, before, after, address, skip_accounts):
+    """Exclude still-open wallet-owned token-account rent only.
+
+    See WALLET_PAID_RENT_RULE. Other-owner ATA/wSOL and venue PDAs stay in
+    consideration. Subtracted from native before a USDC/USDT trade is treated
+    as having a second SOL settlement leg.
+    """
+    skip = set(skip_accounts or ())
+    extra = 0
+    seen = set()
+    for _outer, _path, instruction, _nested in flat:
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else {}
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        account = None
+        if program == ASSOCIATED_ID and kind in ('create', 'createIdempotent') and info.get('source') == address:
+            account = info.get('account')
+        elif (
+            program == SYSTEM_ID
+            and kind in ('createAccount', 'createAccountWithSeed')
+            and info.get('source') == address
+            and info.get('owner') in TOKEN_IDS
+        ):
+            account = info.get('newAccount')
+        elif program == SYSTEM_ID and not kind:
+            created = _system_create_unparsed(instruction, keys)
+            if created and created.get('source') == address and created.get('owner') in TOKEN_IDS:
+                account = created.get('newAccount')
+        if not account or account in skip or account in seen or account not in keys:
+            continue
+        if _token_account_owner(flat, keys, account) != address:
+            continue
+        index = keys.index(account)
+        if index >= len(before) or index >= len(after) or before[index] != 0:
+            continue
+        net = after[index] - before[index]
+        if net > 0:
+            extra += net
+            seen.add(account)
+    return extra
+
+
+def _accept_inner_system_lifecycle(kind, info, *, nested, address):
+    if not nested:
+        raise ValueError('Outer System allocate/assign is not swap lifecycle')
+    if not isinstance(info, dict):
+        raise ValueError('System allocate/assign layout is absent')
+    account = info.get('account')
+    if not isinstance(account, str) or not account or account == address:
+        raise ValueError('System allocate/assign account is outside swap lifecycle')
+    allowed = {'account', 'space'} if kind == 'allocate' else {'account', 'owner'}
+    if set(info) != allowed:
+        raise ValueError('System allocate/assign layout is not the pinned System contract')
+    if kind == 'allocate':
+        space = info.get('space')
+        if type(space) is not int or space not in _REVIEWED_ALLOCATE_SPACES:
+            raise ValueError('System allocate space is not a reviewed account layout')
+        return
+    owner = info.get('owner')
+    if owner not in _REVIEWED_LIFECYCLE_OWNERS:
+        raise ValueError('System assign owner is not a reviewed program')
+
+
 def decode_supported_swaps(transactions, address):
     """Decode record wrappers {signature,raw,evidence_hash,transaction_index?}.
 
@@ -476,7 +1066,7 @@ def decode_supported_swaps(transactions, address):
         rows.append((record if isinstance(record, dict) else {}, raw))
     slots = Counter(raw['slot'] for _, raw in rows if isinstance(raw, dict)
                     and isinstance(raw.get('slot'), int) and not isinstance(raw['slot'], bool))
-    supported, failed, no_swap = 0, 0, 0
+    supported, failed, no_swap, conversions = 0, 0, 0, 0
     used_routes = set()
     for record, raw in rows:
         signature = record.get('signature')
@@ -538,13 +1128,14 @@ def decode_supported_swaps(transactions, address):
             _integer(timestamp)
             _integer(slot)
             version = raw.get('version', 'legacy')
-            if isinstance(version, bool) or version not in ('legacy', 0):
+            if isinstance(version, bool) or version not in ('legacy', 0, 1):
                 raise ValueError('Unsupported transaction version')
             meta = raw.get('meta')
             message = raw.get('transaction', {}).get('message')
             if not isinstance(meta, dict) or not isinstance(message, dict) or 'err' not in meta:
                 raise ValueError('Missing transaction metadata or success state')
             keys = _keys(message, meta)
+            signers = _message_signers(message, keys)
             fee = _integer(meta.get('fee'))
             paid = keys[0] == address
             fee_sol = canonical(Decimal(fee) / LAMPORTS)
@@ -568,12 +1159,36 @@ def decode_supported_swaps(transactions, address):
             for index, instruction in enumerate(instructions):
                 if not isinstance(instruction, dict):
                     raise ValueError('Malformed instruction')
-                if _program(instruction, keys) in (JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL):
+                program = _program(instruction, keys)
+                if program == FLASHX and not _flashx_is_reviewed_swap(instruction, keys):
+                    continue
+                if program == DFLOW and not _dflow_is_reviewed_swap(instruction, keys):
+                    continue
+                if program in REVIEWED_OUTER_VENUES:
                     route = _route(instruction, keys)
                     route.update(index=index, path=f'instructions.{index}')
                     routes.append(route)
             if not routes:
                 no_swap += 1
+                from scanner.mass_search.verified_costs import is_verified_tip_account
+                for index, instruction in enumerate(instructions):
+                    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+                    info = parsed.get('info') if isinstance(parsed, dict) else None
+                    if not isinstance(info, dict) or parsed.get('type') != 'transfer':
+                        continue
+                    if info.get('source') != address:
+                        continue
+                    dest = info.get('destination')
+                    lamports = info.get('lamports')
+                    if type(lamports) is not int or not is_verified_tip_account(dest):
+                        continue
+                    emit('tip', f'instructions.{index}',
+                         amount_sol=canonical(Decimal(lamports) / LAMPORTS),
+                         tips_sol=canonical(Decimal(lamports) / LAMPORTS),
+                         paid_by_wallet=paid, destination=dest,
+                         economic_role='verified_tip',
+                         separate_successful_transaction=True,
+                         reason='Tip paid in a separate successful transaction; counted as a cost, not swap volume')
                 raise ValueError('No reviewed outer spot swap; transfers and balances alone do not prove trading')
             if len(routes) != 1:
                 raise ValueError('Multiple outer swaps need separate instruction-level economic allocation')
@@ -586,7 +1201,7 @@ def decode_supported_swaps(transactions, address):
                 raise ValueError('Incomplete native balance evidence')
             pre_lamports = [_integer(value) for value in pre_lamports]
             post_lamports = [_integer(value) for value in post_lamports]
-            pre, post, identities = {}, {}, {}
+            pre, post, identities, token_programs = {}, {}, {}, {}
             for field, target in (('preTokenBalances', pre), ('postTokenBalances', post)):
                 balances = meta.get(field)
                 if not isinstance(balances, list):
@@ -607,6 +1222,8 @@ def decode_supported_swaps(transactions, address):
                     if account in target:
                         raise ValueError('Duplicate token account balance')
                     identities[account] = identity
+                    if balance.get('programId'):
+                        token_programs[account] = balance.get('programId')
                     target[account] = raw_quantity(token['amount'])
             owned = {account: value for account, value in identities.items() if value['owner'] == address}
             inner = defaultdict(list)
@@ -626,13 +1243,17 @@ def decode_supported_swaps(transactions, address):
                     inner[outer].append((f'innerInstructions.{outer}.{index}', instruction))
             flat = []
             for index, instruction in enumerate(instructions):
-                flat.append((index, f'instructions.{index}', instruction, False))
-                flat.extend((index, path, nested, True) for path, nested in inner[index])
+                flat.append((index, f'instructions.{index}', dict(instruction), False))
+                flat.extend((index, path, dict(nested), True) for path, nested in inner[index])
             flow = defaultdict(int)
             rent_funders, closures, allowed_wrapped = {}, {}, set()
             outside_native = []
             outside_native_delta = 0
             nonce_administration = []
+            rfq_platform_fees = []
+            token_2022_inbound = defaultdict(list)
+            token_2022_declared_fees = defaultdict(int)
+            token_2022_fees = []
             for outer, path, instruction, nested in flat:
                 if 'parsed' in instruction and any(key in instruction for key in ('accounts', 'data')):
                     raise ValueError('Parsed and opaque instruction representations conflict')
@@ -640,12 +1261,37 @@ def decode_supported_swaps(transactions, address):
                 parsed = instruction.get('parsed')
                 kind = parsed.get('type') if isinstance(parsed, dict) else None
                 info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
-                if program in (COMPUTE_ID, *MEMO_IDS):
+                if kind is None and instruction.get('data') is not None and program in (SYSTEM_ID, ASSOCIATED_ID, *TOKEN_IDS):
+                    try:
+                        from .compiled_instructions import CompiledInstructionError, normalize_instruction
+                        viewed = normalize_instruction(
+                            instruction, keys, inner=nested, path=path,
+                            signers=signers,
+                        )
+                        parsed = viewed['instruction'].get('parsed')
+                        kind = parsed.get('type') if isinstance(parsed, dict) else None
+                        info = parsed.get('info', {}) if isinstance(parsed, dict) else {}
+                        instruction['parsed'] = parsed
+                        instruction['programId'] = viewed['instruction'].get('programId', program)
+                    except (CompiledInstructionError, ValueError, KeyError, IndexError, TypeError):
+                        pass
+                if program in (COMPUTE_ID, *MEMO_IDS, LIGHTHOUSE):
+                    continue
+                if program == FLASHX and not _flashx_is_reviewed_swap(instruction, keys):
+                    continue
+                if program == DFLOW and not _dflow_is_reviewed_swap(instruction, keys):
                     continue
                 if program == ASSOCIATED_ID:
                     if kind not in ('create', 'createIdempotent'):
                         raise ValueError('Unparsed associated account administration')
                     if info.get('wallet') != address:
+                        # Nested createIdempotent for a pool/protocol ATA is
+                        # swap lifecycle (Jupiter/Pump hop), not a transfer-out.
+                        if nested and info.get('source') == address:
+                            account = info.get('account')
+                            if account:
+                                rent_funders[account] = address
+                            continue
                         raise ValueError('Associated account creation for another wallet is outside swap scope')
                     account = info.get('account')
                     if info.get('mint') == WSOL:
@@ -654,6 +1300,11 @@ def decode_supported_swaps(transactions, address):
                         rent_funders[account] = address
                     continue
                 if program == SYSTEM_ID:
+                    if not kind:
+                        created = _system_create_unparsed(instruction, keys)
+                        if created:
+                            kind = 'createAccount'
+                            info = created
                     if kind == 'advanceNonce':
                         nonce_administration.append({**_verify_nonce_administration(
                             message, info, keys, pre_lamports, post_lamports, address, fee, outer, nested, raw=raw),
@@ -682,6 +1333,9 @@ def decode_supported_swaps(transactions, address):
                             rent_funders[account] = address
                         elif address in (info.get('source'), account):
                             raise ValueError('Unresolved native account funding')
+                    elif kind in ('allocate', 'assign'):
+                        _accept_inner_system_lifecycle(kind, info, nested=nested, address=address)
+                        continue
                     else:
                         raise ValueError('Unsupported system operation within swap transaction')
                     continue
@@ -693,28 +1347,57 @@ def decode_supported_swaps(transactions, address):
                         continue
                     if kind in ('getAccountDataSize', 'syncNative', 'initializeImmutableOwner'):
                         continue
+                    if kind is None and route['program'] == JUPITER:
+                        # Token-2022 harvest / excess-lamports CPIs on vaults
+                        # have no reviewed binary contract. Inside a reviewed
+                        # Jupiter route they are non-economic: wallet legs
+                        # still have to reconcile below.
+                        continue
                     if kind == 'closeAccount':
                         account = info.get('account')
                         if info.get('destination') == address:
-                            if owned.get(account, {}).get('mint') == WSOL and info.get('owner') != address:
+                            if owned.get(account, {}).get('mint') == WSOL and _close_authority(info) != address:
                                 raise ValueError('Wrapped SOL closure lacks the investigated wallet authority')
                             closures[account] = address
                         elif account in owned or account in allowed_wrapped:
                             raise ValueError('Token account closes to another recipient')
                         continue
-                    if kind not in ('transfer', 'transferChecked'):
+                    if kind not in ('transfer', 'transferChecked', 'transferCheckedWithFee'):
                         raise ValueError('Unsupported token permission, extension, mint or burn operation')
                     source, destination = info.get('source'), info.get('destination')
-                    checked = info.get('tokenAmount') if kind == 'transferChecked' else None
+                    checked = info.get('tokenAmount') if kind in ('transferChecked', 'transferCheckedWithFee') else None
                     quantity = raw_quantity(checked['amount'] if checked else info.get('amount'))
                     for account in (source, destination):
                         identity = identities.get(account)
                         if identity and checked and (_integer(checked.get('decimals')) != identity['decimals'] or info.get('mint') != identity['mint']):
                             raise ValueError('Parsed transfer disagrees with token identity')
+                    rfq_fee_fill = (
+                        kind == 'transferChecked'
+                        and route['program'] == RFQ_FILL
+                        and not nested
+                        and outer != route['index']
+                        and destination == RFQ_FEE_FILL_ACCOUNT
+                        and source in owned
+                    )
                     if outer != route['index'] and any(account in owned for account in (source, destination)):
-                        raise ValueError('Unrelated token transfer prevents swap quantity attribution')
+                        if not rfq_fee_fill:
+                            raise ValueError('Unrelated token transfer prevents swap quantity attribution')
+                        declared = info.get('fee')
+                        rfq_platform_fees.append({
+                            'destination': destination,
+                            'source': source,
+                            'quantity': quantity,
+                            'mint': (identities.get(source) or {}).get('mint') or info.get('mint'),
+                            'path': path,
+                            'declared_fee': raw_quantity(declared) if declared not in (None, '') else quantity,
+                        })
                     flow[source] -= quantity
                     flow[destination] += quantity
+                    if program == TOKEN_2022_ID and destination in owned:
+                        token_2022_inbound[destination].append(quantity)
+                        declared = info.get('fee')
+                        if declared not in (None, ''):
+                            token_2022_declared_fees[destination] += raw_quantity(declared)
                     continue
                 if outer != route['index']:
                     raise ValueError('Unreviewed outer program may bundle other economic activity')
@@ -723,6 +1406,18 @@ def decode_supported_swaps(transactions, address):
             _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
                                       post_lamports, address, route, fee)
             retained_funding = _retained_user_volume_funding(flat, keys, pre_lamports, post_lamports, address, route)
+            rent_skip = set(owned) | set(allowed_wrapped) | {item['account'] for item in retained_funding}
+            episode_rent = _episode_rent_exclusion(
+                flat, keys, pre_lamports, post_lamports, address, rent_skip,
+            )
+            new_token_rent = _verified_new_token_account_rent(
+                flat, keys, pre_lamports, post_lamports, address, rent_skip,
+            )
+            inner_venues, inner_block = _reviewed_inner_venues(
+                flat, keys, route, owned, address,
+            )
+            if inner_block:
+                raise ValueError(inner_block)
             if retained_funding:
                 from .transaction_format import original_instruction_paths
                 original = record.get('raw')
@@ -733,9 +1428,18 @@ def decode_supported_swaps(transactions, address):
                     path = f'meta.innerInstructions.{group_index}.instructions.{ordinal}'
                     item['raw_paths'] = original_instruction_paths(original,
                         [path + '.parsed.info.' + field for field in ('source', 'newAccount', 'lamports', 'space', 'owner')])
-            for account in route['owned_accounts']:
-                if account not in owned and account not in allowed_wrapped:
-                    raise ValueError('Route user account lacks event-time wallet ownership')
+            if route['program'] == OKX_DEX_ROUTER:
+                if not any(account in owned or account in allowed_wrapped for account in route['owned_accounts']):
+                    raise ValueError('OKX SwapTob user token accounts lack event-time wallet ownership')
+            elif route['program'] == RFQ_FILL:
+                # RFQ Fill account 4 is often the maker/vault ATA, not the
+                # investigated wallet. Wallet token and SOL/USDC legs still
+                # have to reconcile below.
+                pass
+            else:
+                for account in route['owned_accounts']:
+                    if account not in owned and account not in allowed_wrapped:
+                        raise ValueError('Route user account lacks event-time wallet ownership')
             deltas, decimals = defaultdict(int), {}
             rent_correction = 0
             for account, identity in owned.items():
@@ -770,7 +1474,42 @@ def decode_supported_swaps(transactions, address):
                                 position for position, row in enumerate(flat) if row[1] == route['path'])):
                         raise ValueError('Missing wrapped SOL opening token balance requires primary wallet-funded creation and initialization; ATA idempotence is not proof')
                 if mint != WSOL and delta != flow[account]:
-                    raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                    inbound = token_2022_inbound.get(account) or []
+                    withheld = flow[account] - delta
+                    declared_fee = token_2022_declared_fees.get(account) or 0
+                    token_2022 = token_programs.get(account) == TOKEN_2022_ID and inbound and withheld > 0
+                    if not token_2022:
+                        raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                    proved = declared_fee == withheld
+                    candidates = infer_token_2022_fee_bps_candidates(inbound, withheld)
+                    unique = candidates[0] if len(candidates) == 1 else None
+                    token_2022_fees.append({
+                        'account': account,
+                        'mint': mint,
+                        'gross': flow[account],
+                        'inbound_gross_amounts': list(inbound),
+                        'net_received': delta,
+                        'withheld': withheld,
+                        'declared_fee': declared_fee or None,
+                        'observed': not proved,
+                        'transfer_fee_basis_points': unique,
+                        'inferred_bps_unique': unique is not None,
+                        'inferred_bps_candidates': candidates if len(candidates) <= 8 else candidates[:8] + ['…'],
+                        'source': (
+                            'transfer_fee_extension' if proved else 'observed_token_2022_withheld'
+                        ),
+                        'execution_time_mint_config_established': False,
+                        'transfer_fee_config_established': proved,
+                        'note': (
+                            'Transfer-fee extension amount from transferCheckedWithFee '
+                            'reconciles the wallet token delta.'
+                            if proved else
+                            'Observed gross / net received / withheld only. '
+                            'Mint account bytes (max fee, epoch) are absent from GTA. '
+                            'A unique uncapped-ceiling bps fit is not TransferFeeConfig.'
+                        ),
+                    })
+                    flow[account] = delta
                 if mint in decimals and decimals[mint] != identity['decimals']:
                     raise ValueError('Conflicting decimals across owned accounts for one mint')
                 decimals[mint] = identity['decimals']
@@ -786,12 +1525,23 @@ def decode_supported_swaps(transactions, address):
                         raise ValueError('Unproven token account rent refund')
                     rent_correction += reserve_delta
             wallet_index = keys.index(address)
+            # PumpSwap user-volume (IDL-located) is documented separately and
+            # is isolated from the swap quote. Generic not-owned creates are
+            # not in retained_funding and stay in consideration.
             settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
-                          - outside_native_delta + sum(item['lamports'] for item in retained_funding))
+                          - outside_native_delta + sum(item['lamports'] for item in retained_funding)
+                          + episode_rent + new_token_rent)
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
+            owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
-                raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
+                # Jupiter shared-accounts route_v2 often settles native SOL
+                # without a wallet-owned wSOL ATA. DGMg PumpSwap-router buys
+                # wrap-and-close the quote ATA in the same tx, so post
+                # balances also show no leftover WSOL. The wallet's
+                # fee-adjusted native delta is the SOL leg.
+                if not (route['program'] in (JUPITER, DGMG, DFLOW) and not owned_wsol_accounts):
+                    raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
             native_roles = _unresolved_native_roles(flat, owned, wsol_accounts, keys,
                 pre_lamports, address, route, retained_funding, settlement)
             for role in native_roles:
@@ -802,22 +1552,196 @@ def decode_supported_swaps(transactions, address):
                     group_index = next(index for index, group in enumerate(meta['innerInstructions']) if group['index'] == int(outer))
                     role['raw_paths'] = [f'meta.innerInstructions.{group_index}.instructions.{ordinal}']
             assets = [(mint, delta) for mint, delta in deltas.items() if delta]
+            quote_legs = [(mint, delta) for mint, delta in assets if mint in QUOTE_MINTS]
+            other_assets = [(mint, delta) for mint, delta in assets if mint not in QUOTE_MINTS]
+            if len(quote_legs) > 1:
+                raise ValueError('Multiple quote assets moved; cross-quote settlement remains unresolved')
+            quote_mint, quote_delta = quote_legs[0] if quote_legs else (None, 0)
+            quote_asset = QUOTE_ASSET.get(quote_mint)
+            quote_settled = (
+                not settlement
+                and quote_delta
+                and len(other_assets) == 1
+                and (other_assets[0][1] > 0) != (quote_delta > 0)
+            )
+            if settlement and quote_delta and other_assets:
+                raise ValueError(
+                    f'SOL and {quote_asset} both moved; cross-settlement remains unresolved and is not converted'
+                )
+            if quote_settled:
+                mint, quantity = other_assets[0]
+                if mint == WSOL:
+                    quote_decimals = decimals.get(quote_mint)
+                    if quote_decimals is None:
+                        raise ValueError(f'{quote_asset} settlement is missing event-time decimals')
+                    with localcontext() as context:
+                        context.prec = 192
+                        amount_quote = canonical(Decimal(abs(quote_delta)) / (Decimal(10) ** quote_decimals))
+                        amount_sol = canonical(Decimal(abs(quantity)) / LAMPORTS)
+                    from_asset = quote_asset if quote_delta < 0 else 'SOL'
+                    to_asset = 'SOL' if quote_delta < 0 else quote_asset
+                    quote_fields = {'amount_usdc': amount_quote} if quote_mint == USDC else {'amount_usdt': amount_quote}
+                    emit('conversion', route['path'], mint=quote_mint, quantity_raw=str(abs(quote_delta)),
+                         decimals=quote_decimals, amount_sol=amount_sol, **quote_fields,
+                         classification='quote_conversion', from_asset=from_asset, to_asset=to_asset,
+                         source=route['program'], venue=route['program'], instruction=route['instruction'],
+                         owner=address, fee_sol=fee_sol if paid else '0', paid_by_wallet=paid,
+                         settlement_mint=quote_mint, settlement_asset=quote_asset,
+                         inner_venues=inner_venues,
+                         reason=f'{quote_asset}↔SOL is a quote conversion, not a sale of a {quote_asset} or SOL position')
+                    conversions += 1
+                    continue
+                kind = 'buy' if quantity > 0 else 'sell'
+                if route['expected_kind'] and route['expected_kind'] != kind:
+                    raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
+                quote_decimals = decimals.get(quote_mint)
+                if quote_decimals is None:
+                    raise ValueError(f'{quote_asset} settlement is missing event-time decimals')
+                with localcontext() as context:
+                    context.prec = 192
+                    amount_quote = canonical(Decimal(abs(quote_delta)) / (Decimal(10) ** quote_decimals))
+                allocate_fee = paid and not outside_native and not native_roles
+                excluded_funding_lamports = rent_correction + episode_rent + new_token_rent
+                excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
+                t22_fee = token_2022_fees[-1] if token_2022_fees else None
+                rfq_fee = None
+                platform_fee_usdc = None
+                if rfq_platform_fees:
+                    fee_qty = sum(item['quantity'] for item in rfq_platform_fees)
+                    fee_mint = rfq_platform_fees[0].get('mint')
+                    rfq_fee = {
+                        'recipient': RFQ_FEE_FILL_ACCOUNT,
+                        'pattern': 'rfq_fill_separate_top_level_transfer_checked',
+                        'quantity_raw': str(fee_qty),
+                        'mint': fee_mint,
+                        'counted_in_wallet_delta': True,
+                        'not_subtracted_again': True,
+                    }
+                    if fee_mint == quote_mint:
+                        platform_fee_usdc = canonical(Decimal(fee_qty) / (Decimal(10) ** quote_decimals))
+                quote_amount_fields = (
+                    {'amount_usdc': amount_quote} if quote_mint == USDC else {'amount_usdt': amount_quote}
+                )
+                emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
+                     decimals=decimals[mint], amount_sol=None, **quote_amount_fields,
+                     classification='market',
+                     source=route['program'], venue=route['program'], instruction=route['instruction'],
+                     owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
+                     settlement_mint=quote_mint, settlement_asset=quote_asset,
+                     token_2022_transfer_fee=t22_fee,
+                     rfq_platform_fee=rfq_fee,
+                     platform_fee_usdc=platform_fee_usdc,
+                     excluded_funding_sol=excluded_funding_sol,
+                     inner_venues=inner_venues,
+                     native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
+                     unresolved_native_roles=native_roles,
+                     retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
+                     observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
+                     observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
+                     observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
+                     reason=f'Verified route and reconciled wallet {quote_asset}/token deltas; SOL fee stays SOL and is not {quote_asset} P&L')
+                if allocate_fee:
+                    fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
+                    fee_event['allocated_trade_path'] = route['path']
+                    fee_event['settlement_note'] = f'Network fee is SOL; not converted into {quote_asset} consideration'
+                supported += 1
+                administration.extend(nonce_administration)
+                for role in native_roles:
+                    info = role['facts']
+                    lamports = info.get('lamports') if role['kind'] in ('transfer', 'createAccount', 'createAccountWithSeed') else None
+                    amount = canonical(Decimal(lamports) / LAMPORTS) if type(lamports) is int else None
+                    direction = 'withdrawal' if info.get('source') in {address, *owned, *wsol_accounts} else 'deposit'
+                    uncertain_cash(role['reason'], role['path'], amount=amount, direction=direction, facts=info)
+                for movement in outside_native:
+                    uncertain_cash('Outside native movement may be a trading fee, tip or capital flow; its economic role remains unresolved',
+                        movement['path'], amount=canonical(Decimal(movement['lamports']) / LAMPORTS),
+                        direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
+                continue
             if len(assets) != 1:
                 raise ValueError('Swap requires exactly one net non-SOL asset; crossquotes and multiple assets remain unresolved')
             mint, quantity = assets[0]
             if not settlement or (quantity > 0) == (settlement > 0):
                 raise ValueError('No opposing SOL consideration for the evidenced asset exchange')
+            from scanner.mass_search.verified_costs import classify_cost_role
+            platform_accounts = set()
+            if route.get('program') == JUPITER:
+                accounts = route.get('accounts') or []
+                # Official Jupiter route / exact_out_route platform_fee_account is index 6.
+                if route.get('instruction') in (
+                    'route', 'route_with_token_ledger', 'exact_out_route',
+                ) and len(accounts) > 6:
+                    platform_accounts.add(accounts[6])
+            verified_tip_lamports = 0
+            platform_fee_lamports = 0
+            unverified_debit_lamports = 0
+            for item in outside_native:
+                if item.get('direction') != 'withdrawal':
+                    continue
+                role = classify_cost_role(
+                    item.get('destination'),
+                    proven_from_layout=item.get('destination') in platform_accounts,
+                    transfer=True,
+                )
+                item['cost_role'] = role
+                if role == 'verified_tip':
+                    verified_tip_lamports += item['lamports']
+                elif role == 'proven_router_or_platform_fee':
+                    platform_fee_lamports += item['lamports']
+                    item['counted_as_fee'] = True
+                else:
+                    unverified_debit_lamports += item['lamports']
+                    item['counted_as_fee'] = False
+            tips_lamports = verified_tip_lamports
+            tips_sol = canonical(Decimal(tips_lamports) / LAMPORTS) if tips_lamports else '0'
+            platform_fee_sol = canonical(Decimal(platform_fee_lamports) / LAMPORTS) if platform_fee_lamports else '0'
+            unverified_debits_sol = canonical(Decimal(unverified_debit_lamports) / LAMPORTS) if unverified_debit_lamports else '0'
+            network_fee_sol = fee_sol if paid else '0'
+            fees_and_tips_sol = canonical(
+                Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)) + Decimal(str(platform_fee_sol))
+            )
+            allocate_fee = paid and not outside_native and not native_roles
+            if mint in QUOTE_MINTS:
+                quote_decimals = decimals.get(mint)
+                quote_name = QUOTE_ASSET[mint]
+                if quote_decimals is None:
+                    raise ValueError(f'{quote_name} settlement is missing event-time decimals')
+                with localcontext() as context:
+                    context.prec = 192
+                    amount_quote = canonical(Decimal(abs(quantity)) / (Decimal(10) ** quote_decimals))
+                    amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
+                from_asset = quote_name if quantity < 0 else 'SOL'
+                to_asset = 'SOL' if quantity < 0 else quote_name
+                quote_fields = {'amount_usdc': amount_quote} if mint == USDC else {'amount_usdt': amount_quote}
+                emit('conversion', route['path'], mint=mint, quantity_raw=str(abs(quantity)),
+                     decimals=quote_decimals, amount_sol=amount, **quote_fields,
+                     classification='quote_conversion', from_asset=from_asset, to_asset=to_asset,
+                     source=route['program'], venue=route['program'], instruction=route['instruction'],
+                     owner=address, fee_sol=fees_and_tips_sol, network_fee_sol=network_fee_sol,
+                     tips_sol=tips_sol, paid_by_wallet=paid, settlement_mint=WSOL,
+                     settlement_asset=quote_name, inner_venues=inner_venues,
+                     reason=f'{quote_name}↔SOL is a quote conversion, not a sale of a {quote_name} or SOL position')
+                conversions += 1
+                continue
             kind = 'buy' if quantity > 0 else 'sell'
             if route['expected_kind'] and route['expected_kind'] != kind:
                 raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            allocate_fee = paid and not outside_native and not native_roles
+            excluded_funding_lamports = rent_correction + episode_rent + new_token_rent
+            excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',
                  source=route['program'], venue=route['program'], instruction=route['instruction'],
-                 owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
+                 owner=address, fee_sol=fees_and_tips_sol if allocate_fee else '0',
+                 network_fee_sol=network_fee_sol, tips_sol=tips_sol,
+                 platform_fee_sol=platform_fee_sol,
+                 fees_and_tips_sol=fees_and_tips_sol,
+                 inner_venues=inner_venues,
+                 unverified_debits_sol=unverified_debits_sol,
+                 sensitivity_unverified_debits_sol=unverified_debits_sol,
+                 excluded_funding_sol=excluded_funding_sol,
+                 paid_by_wallet=paid,
                  settlement_mint=WSOL,
                  native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
                  unresolved_native_roles=native_roles,
@@ -825,11 +1749,16 @@ def decode_supported_swaps(transactions, address):
                  observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                  observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
-                 reason='Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence' if allocate_fee else
-                        'Verified spot instruction and reconciled transaction-level owned net exchange; network fee remains unallocated')
+                 reason=(
+                     'Verified spot instruction and reconciled transaction-level owned net exchange; allocated network fee is linked to its display evidence'
+                     if allocate_fee else
+                     'Verified spot instruction and reconciled transaction-level owned net exchange; outside native stays unresolved and is listed separately from allocated fees'
+                 ))
             if allocate_fee:
                 fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
                 fee_event['allocated_trade_path'] = route['path']
+                fee_event['tips_sol'] = tips_sol
+                fee_event['network_fee_sol'] = network_fee_sol
             supported += 1
             administration.extend(nonce_administration)
             for role in native_roles:
@@ -844,11 +1773,45 @@ def decode_supported_swaps(transactions, address):
                     direction=movement['direction'], facts={'source': movement['source'], 'destination': movement['destination']})
         except (ValueError, KeyError, IndexError, TypeError, OverflowError) as exc:
             unknown(str(exc))
+    decoded_sigs = {event.get('signature') for event in events if event.get('kind') in ('buy', 'sell', 'conversion')}
+    unsupported = []
+    decoded_unresolved_cash = []
+    seen_unsupported = set()
+    seen_cash = set()
+    for issue in unresolved:
+        signature = issue.get('signature')
+        if not signature:
+            continue
+        if signature in decoded_sigs:
+            if signature in seen_cash:
+                continue
+            seen_cash.add(signature)
+            decoded_unresolved_cash.append({
+                'signature': signature,
+                'reason': issue.get('reason'),
+                'path': issue.get('path'),
+                'classification': 'decoded_swap_unresolved_cash_role',
+            })
+            continue
+        if signature in seen_unsupported:
+            continue
+        seen_unsupported.add(signature)
+        unsupported.append({
+            'signature': signature,
+            'reason': issue.get('reason'),
+            'path': issue.get('path'),
+            'classification': 'unsupported_swap',
+        })
     coverage = {'decoder_version': DECODER_VERSION, 'transactions': len(rows), 'decoded_swaps': supported,
                 'supported_transactions': supported, 'failed_transactions': failed,
                 'unresolved_transactions': len({issue['signature'] for issue in unresolved}),
+                'unsupported_transactions': unsupported,
+                'unsupported_tx_count': len(unsupported),
+                'decoded_unresolved_cash': decoded_unresolved_cash,
+                'decoded_unresolved_cash_count': len(decoded_unresolved_cash),
+                'conversions': conversions,
                 'unrecognized_transactions': no_swap, 'complete': False, 'history_complete': False,
-                'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL settlement',
+                'scope': 'Fetched sample; recognized single spot routes with SOL/wSOL or USDC settlement',
                 'classification': 'UNKNOWN', 'route_fixtures_independently_verified': False,
                 'non_economic_instructions': administration,
                 'fixture_validation': [{'program': program, 'instruction': instruction,

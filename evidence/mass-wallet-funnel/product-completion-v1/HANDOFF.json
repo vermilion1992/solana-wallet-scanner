@@ -1,0 +1,161 @@
+{
+  "kind": "product-completion-handoff-v1",
+  "PRODUCT_READY": false,
+  "not_safe_to_copy": true,
+  "branch_baseline": "617e01bdf4780699b529a9c74714e9b3da6f60ea",
+  "capture_path": "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json",
+  "capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "route_v2_fixture": "tests/fixtures/retained_protocol_funding/jupiter-route-v2.json",
+  "route_v2_sha256": "946a3278be88c29eff98a4167599c607da222e4c24938224f0990631c06ff218",
+  "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "provider_rank": 1,
+  "decoder_version": "spot-v8-usdc-route-v2",
+  "classification_counts": {
+    "pump_holder_fee_distribution": 61,
+    "wallet_absent_from_account_keys": 5,
+    "inner_pumpswap_without_reviewed_outer": 2,
+    "no_reviewed_outer_spot_swap": 6,
+    "reviewed_jupiter_route": 6,
+    "failed_on_chain": 19,
+    "unsupported_transaction_version": 1
+  },
+  "decoded_swaps": 6,
+  "worksheet": {
+    "settlement_asset": "USDC",
+    "total_profit_usdc": "376.028087",
+    "unresolved_basis_sales": 1,
+    "known_cost_trades": 5,
+    "oracle_production": "production-usdc-fifo-v1",
+    "oracle_independent": "independent-usdc-fifo-v1",
+    "reconciliation": "AGREE",
+    "not_fx": true,
+    "sol_fees_not_converted": true
+  },
+  "material_exit": {
+    "method_version": "material-exit-v2",
+    "final_hold_seconds": 852,
+    "exit_90_seconds": 852
+  },
+  "research_profile": {
+    "scoped_pnl": "376.028087",
+    "scoped_pnl_unit": "USDC",
+    "completed_known_cost_positions": 1,
+    "unresolved_basis_sales": 1,
+    "criteria_met": false,
+    "safe_to_copy": false
+  },
+  "funnel": {
+    "kind": "research-funnel-abc-v1",
+    "provider_rank": 1,
+    "provider_rank_is_not_verification": true,
+    "A": {
+      "id": "A_worth_investigating",
+      "state": "YES",
+      "reasons": [
+        "sample_contains_market_trades",
+        "provider_trade_count_proxy_unverified",
+        "provider_score_is_not_verification",
+        "holder_fee_heavy_sample_classified_as_rewards_not_pnl"
+      ]
+    },
+    "B": {
+      "id": "B_evidence_establishes_results",
+      "state": "PARTIAL",
+      "reasons": [
+        "known_cost_completed_position_reconciled",
+        "sample_still_has_unresolved_or_open_inventory",
+        "holder_rewards_are_not_trading_pnl"
+      ],
+      "completed_known_cost_positions": 1,
+      "scoped_pnl": "376.028087",
+      "scoped_pnl_unit": "USDC"
+    },
+    "C": {
+      "id": "C_meets_research_criteria",
+      "state": "NOT_EVALUATED",
+      "reasons": [
+        "unset_thresholds_do_not_pass"
+      ],
+      "criteria_met": false,
+      "safe_to_copy": false
+    },
+    "holder_fee_heavy": true,
+    "next_action": {
+      "code": "investigate_better_shortlist_candidates",
+      "detail": "Rank-1 sample is holder-fee-heavy but has a known-cost market close. Investigate other saved ranked-100 candidates locally before any new grant.",
+      "live_required": false
+    },
+    "PRODUCT_READY": false,
+    "not_safe_to_copy": true
+  },
+  "next_candidates": [
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "provider_rank": 4,
+      "trade_count": 1494,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "provider_rank": 2,
+      "trade_count": 1022,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "provider_rank": 15,
+      "trade_count": 656,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "provider_rank": 17,
+      "trade_count": 599,
+      "shortlisted": true,
+      "capture_available": false
+    },
+    {
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "provider_rank": 90,
+      "trade_count": 422,
+      "shortlisted": false,
+      "capture_available": false
+    }
+  ],
+  "ranked_100": 100,
+  "root_causes": [
+    "Decoder previously treated no-SOL-swap as not-a-trader. Rank-1 page 0 has six official Jupiter route_v2 USDC market trades.",
+    "Buys failed because Helius GTA v0 inners are compiled, not parsed. Official compiled System/Token/ATA layouts were applied without stripping ownership or reconciliation checks.",
+    "First 5tCju6YN sell has no on-page buy; isolate_known_cost keeps it unresolved_basis instead of zeroing the mint.",
+    "Holder-fee distributions (61) are rewards, not trading P&L. Fees stay SOL and are not USDC profitability."
+  ],
+  "limitations": [
+    "Page-0 sample only. One unbacked sell and three open H4KU buys remain.",
+    "Two inner PumpSwap legs under unreviewed outers stay unresolved.",
+    "Other 99 ranked wallets have no history capture.",
+    "PRODUCT_READY remains false. No safe-to-copy claim."
+  ],
+  "external_dependency": {
+    "needed": true,
+    "precise": "History for other saved ranked-100 candidates (and optional earlier rank-1 page for the unbacked sell).",
+    "grant_draft": "config/live_authorization.ranked100-next-candidates-draft.json",
+    "enabled": false,
+    "dispatched": false,
+    "do_not_reuse_consumed_grants": true
+  },
+  "g1_control": {
+    "retained": true,
+    "address": "GatgyE2 retained as SOL regression only",
+    "material_exit": "material-exit-v2"
+  },
+  "ui_captures": {
+    "desktop_report": "evidence/mass-wallet-funnel/product-completion-v1/ui/01-report-desktop.png",
+    "mobile_report": "evidence/mass-wallet-funnel/product-completion-v1/ui/01-report-mobile.png",
+    "mobile_reopen": "evidence/mass-wallet-funnel/product-completion-v1/ui/02-reopen-mobile.png",
+    "search_refilter": "evidence/mass-wallet-funnel/product-completion-v1/ui/03-refilter-desktop.png",
+    "external_requests": 0
+  }
+}

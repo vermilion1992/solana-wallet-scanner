@@ -1,0 +1,113 @@
+{
+  "schema_version": "live-research-authorization-v1",
+  "enabled": false,
+  "draft_status": "DISABLED; NOT AUTHORISED",
+  "not_authorised_for_live_spend_in_repo_template": true,
+  "authorization_id": "live-ranked100-research-search-2026-10-06-mitch",
+  "authorized_by_user_at": null,
+  "expires_at": null,
+  "purpose": "DISABLED research-search draft. Meaningful history collection over the saved ranked-100 snapshot for wallets that lack a capture. Separate from live-ranked100-next-candidates-2026-10-06-mitch (that draft stays untouched; its stop-after-one is integration evidence only). Not MATCH. Do not dispatch.",
+  "first_live_target_after_grant": "RANKED100_RESEARCH_SEARCH_HISTORY",
+  "outcome_label": "RANKED100_RESEARCH_SEARCH_HISTORY",
+  "separate_from_next_candidates_draft": true,
+  "do_not_reuse_consumed_grants": true,
+  "allowed_wallets_policy": "highest_provider_trade_count_among_shortlist_without_capture",
+  "already_captured_wallet_excluded": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "max_wallet_investigations": 10,
+  "max_requests_per_wallet": 2,
+  "max_dispatched_requests": 20,
+  "max_full_txs_per_call": 100,
+  "retries": 0,
+  "observation_window_objective": "two newest-first getTransactionsForAddress pages per wallet (documented 100-tx pages, sortOrder=desc)",
+  "acquisition_policy": {
+    "kind": "acquisition-policy-v1",
+    "enabled_for_live": false,
+    "applies_only_when_grant_approved": true,
+    "max_wallets": 10,
+    "max_pages_per_wallet": 2,
+    "prefer": "highest_provider_trade_count_among_shortlist_without_capture",
+    "exclude": ["already_captured", "consumed_grants"],
+    "do_not_dispatch": true
+  },
+  "max_additional_spend_usd": "0",
+  "overages_enabled": false,
+  "allow_paid_upgrade": false,
+  "allow_signing_or_submission": false,
+  "no_retries": true,
+  "no_automatic_refresh": true,
+  "no_billable_preflight_probes": true,
+  "stop_once_one_completed_position_reconciled": false,
+  "never_until_a_winner": true,
+  "stop_conditions": [
+    "stop_when_budget_exhausted",
+    "stop_when_coverage_objective_reached",
+    "never_until_a_winner",
+    "failed_or_timed_out_dispatched_request_consumes_attempt"
+  ],
+  "can_establish": "At most ten additional ranked-100 wallets with page-bounded captured history. Research-screen evidence classes 1 or 2 only. A matched trade never qualifies the account.",
+  "remains_uncertain": "Earlier inventory, transfers, valuations, net realised across SOL+USDC, and the other 89 ranked wallets.",
+  "credits_needed_versus_balance": "needed=200 documented Helius credits (20 requests × 10 units). Balance unconfirmed. Do not invent remaining quota.",
+  "exact_query": {
+    "provider": "helius",
+    "method": "getTransactionsForAddress",
+    "params": {
+      "transactionDetails": "full",
+      "limit": 100,
+      "sortOrder": "desc",
+      "commitment": "finalized",
+      "maxSupportedTransactionVersion": 1,
+      "filters": {
+        "status": "any",
+        "tokenAccounts": "all"
+      }
+    },
+    "documented_units_per_request": 10,
+    "silent_fallback_forbidden": true,
+    "page_enlarge_forbidden": true,
+    "retry_forbidden": true,
+    "endpoint_switch_forbidden": true,
+    "current_latest_history_forbidden": true,
+    "top_level_until_forbidden": true
+  },
+  "providers": [
+    {
+      "provider_id": "helius",
+      "allowed_operations": ["getTransactionsForAddress"],
+      "billing_unit": "helius_credit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
+      "max_requests": 20,
+      "max_units": 200,
+      "max_concurrency": 1,
+      "max_duration_seconds": 600,
+      "max_requests_per_wallet": 2,
+      "max_wallet_investigations": 10,
+      "documented_units_per_request": 10,
+      "retries": 0,
+      "purpose": "DISABLED research-search draft. Up to ten saved ranked-100 wallets without capture, two GTA pages each. Do not dispatch."
+    },
+    {
+      "provider_id": "birdeye",
+      "allowed_operations": [],
+      "billing_unit": "birdeye_compute_unit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": null,
+      "cycle_end_exclusive": null,
+      "max_requests": 0,
+      "max_units": 0,
+      "max_concurrency": 0,
+      "max_duration_seconds": 0,
+      "purpose": "Forbidden. Ranked-100 discovery already captured."
+    }
+  ],
+  "notes": [
+    "DRAFT — DISABLED; NOT AUTHORISED. authorization_id live-ranked100-research-search-2026-10-06-mitch.",
+    "Separate from live-ranked100-next-candidates-2026-10-06-mitch. That file is not modified.",
+    "Repo template stays enabled:false. Do not commit an armed copy. Do not dispatch.",
+    "Credits needed are the documented 200 Helius units. Balance is unconfirmed.",
+    "Zero extra spend until explicitly approved. PRODUCT_READY stays false."
+  ]
+}

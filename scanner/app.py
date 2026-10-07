@@ -14,8 +14,6 @@ import re
 from contextlib import asynccontextmanager
 import uuid
 import hashlib
-from urllib.parse import urlsplit
-
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -190,7 +188,20 @@ def _freeze_native_dependencies(store, collected, *, address, window):
     return frozen, primary, linked, raw_sources, raw_receipts
 
 
-def create_app(data_dir, launch_token=None):
+def allowed_request_host(host, allowed_hosts):
+    """Exact hostname allow-list. Rejects rebinding, IPv6, and junk."""
+    if not isinstance(host, str) or not host or any(char in host for char in "@?#/\\"):
+        return False
+    if host.startswith("["):
+        return False
+    name, sep, port = host.partition(":")
+    if sep:
+        if not port.isdigit() or not 1 <= int(port) <= 65535:
+            return False
+    return name in set(allowed_hosts)
+
+
+def create_app(data_dir, launch_token=None, *, allowed_hosts=None):
     store = Store(data_dir)
     launch_token = launch_token or secrets.token_urlsafe(32)
     cookie_secret, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
@@ -228,16 +239,43 @@ def create_app(data_dir, launch_token=None):
             from .report_view import summary_inputs
             return summary_inputs(store)
         # Enriching an old snapshot must not make it the latest wallet report.
-        return sorted(store.list("reports"), key=lambda report: report["created_at"], reverse=True)
+        return sorted(store.list("reports"), key=lambda report: report.get("created_at") or "", reverse=True)
 
     def reports(view="full"):
-        result = [decorate_report(report) for report in report_inputs(view)]
+        result = []
+        for report in report_inputs(view):
+            try:
+                result.append(decorate_report(report))
+            except Exception:
+                result.append({
+                    **report,
+                    "research_profile": None,
+                    "independent_audit": None,
+                    "funnel": None,
+                    "qualification_category": {"category": "analysed_incomplete"},
+                    "decoration_failed_closed": True,
+                    "PRODUCT_READY": False,
+                })
         if view == 'summary':
             from .report_view import summary_view
             return [summary_view(report) for report in result]
         return result
 
     def decorate_report(report):
+        try:
+            return _decorate_report(report)
+        except Exception:
+            return {
+                **(report or {}),
+                "research_profile": None,
+                "independent_audit": None,
+                "funnel": None,
+                "qualification_category": {"category": "analysed_incomplete"},
+                "decoration_failed_closed": True,
+                "PRODUCT_READY": False,
+            }
+
+    def _decorate_report(report):
         from .copy_review import qualify_report, review_copy_behavior
         from .history_evidence import VERSION as HISTORY_METHODOLOGY
         from .position_evidence import VERSION as POSITION_METHODOLOGY
@@ -266,6 +304,38 @@ def create_app(data_dir, launch_token=None):
             result['archive_assessment'] = {'saved_methodology': saved, 'current_methodology': ARCHIVE_METHODOLOGY,
                 'state': state, 'reason': 'Current archived-source interpretation; coverage and qualification remain separate.' if state == 'current' else
                 'Rebuild this archived report offline to apply current source and fee-window checks. Saved values remain unchanged.'}
+        if report.get("source") == "mass-search" and not report.get("preview"):
+            from scanner.mass_search.workflow import visible_mass_search_report
+            visible = visible_mass_search_report(report)
+            result["research_profile"] = visible.get("research_profile")
+            result["funnel"] = visible.get("funnel")
+            result["qualification_category"] = visible.get("qualification_category")
+            result["independent_audit"] = visible.get("independent_audit")
+            result["audit_fingerprint"] = visible.get("audit_fingerprint")
+            result["completed_episode_ledger"] = visible.get("completed_episode_ledger")
+            result["mass_search_interpretation"] = {
+                "kind": "mass-search-export-interpretation-v1",
+                "capture_sha256": report.get("capture_sha256"),
+                "analysis_cache_key": report.get("analysis_cache_key"),
+                "window": report.get("window"),
+                "corpus_kind": report.get("corpus_kind"),
+                "decoder_version": (report.get("coverage") or {}).get("decoder_version"),
+                "visible_report": report.get("visible_report") is True,
+                "visible_report_stored": report.get("visible_report") if "visible_report" in report else None,
+                "result_scope": report.get("result_scope") or "conditional_on_captured_inventory",
+                "evidence_class": (visible.get("research_profile") or {}).get("evidence_class"),
+                "candidate_assessment": (visible.get("research_profile") or {}).get("candidate_assessment"),
+                "not_safe_to_copy": True,
+                "PRODUCT_READY": False,
+                "sol_fees_not_converted": (report.get("worksheet") or {}).get("sol_fees_not_converted"),
+                "usdc_excluding_sol_fees_is_never_net": True,
+                "unresolved_basis_is_not_zero": True,
+                "scoped_pnl_is_not_wallet_wide": True,
+                "whole_sale_pnl_resolved": (
+                    False if (report.get("worksheet") or {}).get("unresolved_basis_sales")
+                    else (report.get("worksheet") or {}).get("whole_sale_pnl_resolved")
+                ),
+            }
         if report.get("source") == "live" and not report.get("preview"):
             coverage = report.get("coverage") if isinstance(report.get("coverage"), dict) else {}
             for name, current, scope in (("history", HISTORY_METHODOLOGY, "account-specific receipt"),
@@ -705,7 +775,7 @@ def create_app(data_dir, launch_token=None):
                 continue
             if usage()["used"] + usage()["reserved"] >= settings()["limits"]["discovery_pause"]:
                 continue
-            addresses = [w["address"] for w in store.list("watchlist") if w.get("source") != "demo"]
+            addresses = [w["address"] for w in store.list("watchlist") if w.get("source") not in ("demo", "mass-search")]
             if not addresses:
                 continue
             try:
@@ -767,18 +837,15 @@ def create_app(data_dir, launch_token=None):
 
     app = FastAPI(title="Solana Wallet Scanner", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.store, app.state.launch_token, app.state.csrf = store, launch_token, csrf
+    app.state.allowed_hosts = tuple(allowed_hosts) if allowed_hosts else ("127.0.0.1", "localhost")
 
     @app.middleware("http")
     async def local_boundary(request, call_next):
         host = request.headers.get("host", "")
-        try:
-            parts = urlsplit("http://" + host)
-            valid_host = bool(re.fullmatch(r"(?:127\.0\.0\.1|localhost)(?::[0-9]{1,5})?", host))
-            _ = parts.port
-        except ValueError:
-            valid_host = False
+        valid_host = allowed_request_host(host, app.state.allowed_hosts)
         if not valid_host:
-            return JSONResponse({"detail": "Loopback Host required"}, 403)
+            loopback_only = set(app.state.allowed_hosts) <= {"127.0.0.1", "localhost"}
+            return JSONResponse({"detail": "Loopback Host required" if loopback_only else "Bound Host required"}, 403)
         origin = request.headers.get("origin")
         if origin and origin != f"http://{host}":
             return JSONResponse({"detail": "Same-origin local access required"}, 403)
@@ -860,9 +927,13 @@ def create_app(data_dir, launch_token=None):
         token = request.headers.get("x-launch-token", "")
         if not _secret_equal(token, launch_token) and not _secret_equal(request.cookies.get("scanner_session", ""), cookie_secret):
             raise HTTPException(401, "Use the private launch URL printed by the local app")
-        response = JSONResponse({"csrf": csrf, "version": __version__})
+        response = JSONResponse({"csrf": csrf, "version": __version__, "PRODUCT_READY": False})
         response.set_cookie("scanner_session", cookie_secret, httponly=True, samesite="strict", path="/")
         return response
+
+    @app.get("/api/health")
+    async def health():
+        return {"kind": "local-scanner-health-v1", "version": __version__, "PRODUCT_READY": False}
 
     @app.get("/api/state")
     async def state(report_view: str = "full"):
@@ -1255,8 +1326,14 @@ def create_app(data_dir, launch_token=None):
         label = data.get("label", "")
         if not isinstance(label, str) or len(label) > 100:
             raise ValueError("Label must be at most 100 characters")
-        synthetic = any(r["address"] == address and r["source"] == "demo" for r in store.list("reports"))
-        store.put("watchlist", address, {"address": address, "label": label, "added_at": now(), "source": "demo" if synthetic else "live"})
+        reports = [row for row in store.list("reports") if row.get("address") == address]
+        if any(row.get("source") == "mass-search" for row in reports):
+            source = "mass-search"
+        elif any(row.get("source") == "demo" or row.get("preview") is True for row in reports):
+            source = "demo"
+        else:
+            source = "live"
+        store.put("watchlist", address, {"address": address, "label": label, "added_at": now(), "source": source})
         return {"ok": True}
 
     @app.delete("/api/watchlist/{address}")

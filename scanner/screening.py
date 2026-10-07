@@ -238,7 +238,12 @@ def build_screening(report, preset=None, identity=None):
     failed = [row for row in reasons if row["state"] == "FAIL"]
     missing = [row for row in reasons if row["state"] == "UNKNOWN"]
     if report.get("source") != "live" or report.get("preview") is True:
-        missing.append({"key": "live_source", "state": "UNKNOWN", "reason": "Synthetic and preview reports cannot establish a live wallet screening result.", "actual": report.get("source"), "evidence": []})
+        live_reason = (
+            "Mass-search reconstructed-subset reports cannot establish a live wallet screening result or MATCH."
+            if report.get("source") == "mass-search"
+            else "Synthetic and preview reports cannot establish a live wallet screening result."
+        )
+        missing.append({"key": "live_source", "state": "UNKNOWN", "reason": live_reason, "actual": report.get("source"), "evidence": []})
         reasons.append(missing[-1])
     result = "excluded_by_preset" if failed else "insufficient_evidence" if missing else "worth_observing"
     labels = {"excluded_by_preset": "Excluded by this preset", "insufficient_evidence": "Insufficient evidence", "worth_observing": "Worth observing"}
