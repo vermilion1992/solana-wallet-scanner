@@ -216,12 +216,13 @@ def test_d8_drafts_armed_with_approval_fields_validate():
         "config/live_authorization.ranked100-research-search-draft.json",
         "config/live_authorization.ranked100-next-candidates-draft.json",
         "config/live_authorization.ranked100-depth-biased-next-capture-draft.json",
+        "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json",
     ):
         payload = json.loads((ROOT / rel).read_text(encoding="utf-8"))
         assert payload["enabled"] is False
         payload["enabled"] = True
         payload["authorized_by_user_at"] = "2026-10-06T05:38:00Z"
-        payload["expires_at"] = "2026-10-07T05:38:00Z"
+        payload["expires_at"] = "2099-01-01T00:00:00Z"
         for entry in payload["providers"]:
             entry["existing_plan_confirmed"] = True
             entry["remaining_quota_confirmed_at"] = "2026-10-06T05:38:00Z"
