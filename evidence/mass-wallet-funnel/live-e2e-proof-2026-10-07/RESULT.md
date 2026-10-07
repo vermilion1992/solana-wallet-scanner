@@ -33,23 +33,27 @@ Armed local copies must set `draft_artifact_hash` to the draft SHA above.
 
 ## Spend-safety invariants now in the runner
 
-- Grant ledger + `GRANT.lock` live under `--ledger-dir` / `SCANNER_LIVE_LEDGER_DIR` / `~/.scanner/live-e2e-ledgers/<authorization_id>`. Caps are per grant, not per output folder.
+- Grant ledger + `GRANT.lock` live under `$SCANNER_LIVE_LEDGER_HOME/<authorization_id>` (default `~/.scanner/live-e2e-ledgers/<id>`). `--ledger-dir` must equal that home. A second ledger dir for the same grant is refused.
 - Output dir takes `RUN.lock`. Concurrent `--resume` is refused.
-- `--live` refuses armed provider/phase caps above the committed draft and a mismatched `draft_artifact_hash`.
-- Write-ahead receipt keyed by `(wallet, phase, page, cursor)`. `reserved` / `dispatched` / `consumed` / `failed` = spent. Resume never silently re-sends; `--explicit-retry` counts against the cap.
+- `--live` requires `draft_artifact_hash` equal to the **git object** of the committed draft (`git show HEAD:config/…-draft.json`). Working-tree edits and a missing hash are refused. Armed provider caps must be ≤ the git draft. Missing `phase_caps` inherit the draft.
+- Write-ahead receipt keyed by `(wallet, phase, page, cursor)`. `reserved` / `dispatched` / `consumed` / `failed` = spent. Resume never silently re-sends; `--explicit-retry` **appends** `:retryN` and counts against the cap.
 - Every `Exception` persists `RUN_STATE`. `BaseException` (SIGINT) persists then re-raises. Failed requests are in state spend and the ledger.
 - Phase 3 uses `--wallets` when supplied; otherwise phase-2 kept rows. Plan == execution.
 - Draft `phase_caps` are enforced at dispatch.
 - Birdeye: one documented 30 CU reserve (adapter does not get the store).
-- Window `report_start` / `report_end` persist in `RUN_STATE` at first run.
+- Window `report_start` / `report_end` persist in `RUN_STATE` at first run. `--resume` with a different `--window-days` is refused.
 - `--wallets` accepts a file or a comma list; paths ≥255 chars are never passed to `Path.is_file()`.
-- Helius auth is the `api-key` header, not the query string.
-- `redact_text` runs on every string written to logs/state/results/console. Raw pages: SHA-256 of the original bytes is stored in `pageN.bin.integrity.json` (`original_sha256`); the written `.bin` is the scrubbed copy when a secret appeared (`scrubbed: true`).
+- Helius auth is the documented `?api-key=` query param. The key never reaches disk, logs, receipts, or exception text.
+- `redact_text` runs on every string written to logs/state/results/console. Raw pages: SHA-256 of the **provider bytes before scrub** is `original_sha256` (Birdeye included). A missing raw page is `MISSING_CAPTURE` / blocked, never an empty covered page.
+- Phase 4 replays captures as `GENUINE_REPLAY` (offline). `GENUINE_LIVE` is not used on saved pages.
+- Pre-screen resolves `programIdIndex` via accountKeys + loadedAddresses, including inner instructions. Token-2022 and Lighthouse are infra, not venue blockers.
+- Qualification, completed counts and realized P&L use only episodes closed inside the report window. `window_days` anchors to report end, not last activity, and drops currencies with no in-window episodes.
+- Token-2022 transfer / transferChecked / transferCheckedWithFee decode from instruction bytes, including transfer-fee extension amounts. OKX SwapTob is a reviewed outer (payer 0, user token accounts 1/2). DFlow layout is pinned but stays blocked until a real attached tx reconciles. Lighthouse is non-economic infra. FLASHX / B311 stay unsupported.
 
 ## Filters
 
 - FL1: `only_shortlist` / `only_captured` / `only_user_shortlist` accept only JSON `true` / `false` / `null` (else HTTP 422). Load sanitizes junk to false.
-- FL2: `window_days` clips reconstructed events/episodes then rebuilds sample counts and scoped P&L. Oracle in `test_fl2_window_days_changes_episodes_and_pnl`.
+- FL2: `window_days` clips to `[report_end - days, report_end)`. Currencies with no in-window episodes are dropped. Oracle in `test_fl2_window_days_changes_episodes_and_pnl` plus `test_fl2a_drops_stale_currency_and_fl2b_anchors_report_end`.
 - FL3: user numbers must match `^-?(?:0|[1-9]\d*)(?:\.\d+)?$`. `1_000`, Unicode digits, spaces, `1e3`, `+3` are 422.
 
 ## Dry-run counts (10 Search B wallets + discovery)
@@ -70,6 +74,6 @@ Documented max limit is 1,000. Signatures-only is 10 credits flat. Full is 10 cr
 
 ## Box commands
 
-See `BOX_COMMANDS.md`. Arm a **local copy** of the draft only. Do not enable the committed file. Set `draft_artifact_hash` to the draft SHA. Use one `--ledger-dir` for the grant. Do not run two resumes at once.
+See `BOX_COMMANDS.md`. Arm a **local copy** of the draft only. Do not enable the committed file. Set `draft_artifact_hash` to the git-object SHA of the committed draft. Use one ledger home for the grant. Do not run two resumes at once.
 
 No merge. No live calls. `PRODUCT_READY` false.

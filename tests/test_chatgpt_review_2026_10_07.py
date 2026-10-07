@@ -454,23 +454,19 @@ def test_unrelated_transfer_guard_still_rejects_non_rfq_outer_owned_transfer():
     _assert_rfq_exception_rejected(clone)
 
 
-def test_swaptob_remains_unsupported_after_bounded_investigation():
-    from scanner.investigation import OKX_SWAPTOB, SWAPTOB_UNSUPPORTED_REASON, decode_supported_swaps
+def test_swaptob_decodes_from_official_layout_on_live_fixture():
+    from scanner.investigation import OKX_SWAPTOB, decode_supported_swaps
     from scanner.mass_search.canonical_records import canonical_decode_records
-    from scanner.mass_search.capture_catalog import catalog_by_address, load_capture_records
-    from tools.independent_episode_audit import _unwrap
 
     assert OKX_SWAPTOB.hex() == "aa2955b184501f35"
-    assert "95+" in SWAPTOB_UNSUPPORTED_REASON or "95" in SWAPTOB_UNSUPPORTED_REASON
-    records, _ = load_capture_records(catalog_by_address()[BVZT])
-    record = next(
-        item for item in records
-        if (item.get("signature") or ((_unwrap(item).get("transaction") or {}).get("signatures") or [None])[0]) == SWAPTOB
-    )
-    decoded = decode_supported_swaps(canonical_decode_records([record]), BVZT)
-    reasons = [row.get("reason") for row in decoded.get("unresolved") or []]
-    assert any("No reviewed outer spot swap" in (reason or "") for reason in reasons)
-    assert not [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
+    payload = json.loads(Path("tests/fixtures/live-e2e-phase3/okx-swaptob.json").read_text())
+    decoded = decode_supported_swaps(canonical_decode_records([payload["record"]]), payload["address"])
+    trades = [row for row in decoded["events"] if row.get("kind") in ("buy", "sell")]
+    assert trades
+    assert trades[0]["venue"] == "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
+    assert trades[0]["instruction"] == "SwapTob"
+    assert trades[0]["quantity_raw"]
+    assert trades[0].get("amount_usdc") or trades[0].get("amount_sol")
 
 
 def test_next_capture_box_driver_emits_supported_gta_request():

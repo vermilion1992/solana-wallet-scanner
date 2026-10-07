@@ -178,9 +178,9 @@ def test_classic_multisig_rpc_names_and_independent_threshold_limitation():
     assert output['instruction']['parsed']['info']['multisigAuthority'] == KEYS['mint']
     assert output['instruction']['parsed']['info']['signers'] == [KEYS['authority']]
     instruction['programId'] = KEYS['token2022']
-    with pytest.raises(CompiledInstructionError) as caught:
-        normalize_instruction(instruction, list(KEYS.values()), signers={KEYS['authority']})
-    assert caught.value.code == 'unsupported-extension-accounts'
+    output = normalize_instruction(instruction, list(KEYS.values()), signers={KEYS['mint']})
+    assert output['instruction']['parsed']['info']['authority'] == KEYS['mint']
+    assert output['instruction']['parsed']['info']['extensionAccounts'] == [KEYS['authority']]
 
 
 def test_v0_loaded_keys_are_resolved_once_in_protocol_order():

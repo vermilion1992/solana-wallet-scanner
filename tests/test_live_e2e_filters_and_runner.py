@@ -38,6 +38,14 @@ from scanner.storage import Store
 
 ROOT = Path(__file__).resolve().parents[1]
 LAUNCH_TOKEN = "test-private-launch-token"
+
+
+@pytest.fixture(autouse=True)
+def ledger_home(tmp_path, monkeypatch):
+    home = tmp_path / "ledger-home"
+    home.mkdir(exist_ok=True)
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(home))
+    return home
 BASE_URL = "http://127.0.0.1:8765"
 GTFO = "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL"
 
@@ -372,22 +380,26 @@ def test_draft_grant_is_disabled_and_caps_match():
 def test_prescreen_reports_known_program_blockers():
     records = [
         {"transaction": {"message": {"instructions": [
-            {"programId": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"},
+            {"programId": "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9"},
+            {"programId": "B3111yJCeHBcA1bizdJjUFPALfhAfSRnAbJzGUtnt56A"},
             {"programId": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"},
             {"programId": L2TEX_PROGRAM},
             {"programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"},
+            {"programId": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"},
         ]}}}
     ]
     classified = classify_programs(records)
     labels = {row["label"] for row in classified["blockers"]}
-    assert "OKX SwapTob" in labels
+    assert "FLASHX Axiom" in labels
+    assert "B311 unreviewed" in labels
     assert "DFlow" in labels
-    assert "L2TExMFK" in labels
-    assert "Token-2022 observed-only" in labels
+    assert "Token-2022 observed-only" not in labels
+    assert "L2TExMFK" not in labels
+    assert "OKX SwapTob" not in labels
     assert set(KNOWN_BLOCKING_PROGRAMS) >= {
-        "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+        "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9",
+        "B3111yJCeHBcA1bizdJjUFPALfhAfSRnAbJzGUtnt56A",
         "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-        L2TEX_PROGRAM,
     }
 
 
@@ -425,7 +437,7 @@ def test_runner_rejects_bad_params_and_caps_of_zero(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(tmp_path / "zero-run"),
-        "ledger_dir": str(tmp_path / "ledger-zero"),
+        "ledger_dir": str(tmp_path / "ledger-home"),
         "wallets": [GTFO],
         "phases": "2",
         "max_helius_requests": 0,
@@ -448,7 +460,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(out),
-        "ledger_dir": str(tmp_path / "ledger-run"),
+        "ledger_dir": str(tmp_path / "ledger-home"),
         "wallets": wallets,
         "discovery": True,
         "phases": "all",
@@ -467,7 +479,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
             "mode": "dry-run",
             "grant_path": str(DRAFT_PATH),
             "output_dir": str(out),
-            "ledger_dir": str(tmp_path / "ledger-run"),
+            "ledger_dir": str(tmp_path / "ledger-home"),
             "wallets": wallets,
             "phases": "all",
         }))
@@ -475,7 +487,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(out),
-        "ledger_dir": str(tmp_path / "ledger-run"),
+        "ledger_dir": str(tmp_path / "ledger-home"),
         "wallets": wallets,
         "discovery": True,
         "phases": "all",
@@ -485,11 +497,14 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
     }))
     assert resumed["status"] == "completed"
     crashed = tmp_path / "crash"
+    crash_home = tmp_path / "crash-home"
+    crash_home.mkdir()
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(crash_home))
     asyncio.run(run_live_e2e({
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(crashed),
-        "ledger_dir": str(tmp_path / "ledger-crash"),
+        "ledger_dir": str(crash_home),
         "wallets": wallets[:2],
         "phases": "2",
         "window_days": 30,
@@ -504,7 +519,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(crashed),
-        "ledger_dir": str(tmp_path / "ledger-crash"),
+        "ledger_dir": str(crash_home),
         "wallets": wallets[:2],
         "phases": "2",
         "resume": True,

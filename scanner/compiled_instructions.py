@@ -271,17 +271,23 @@ def _arity(accounts, size, path):
         _reject('unsupported-account-arity', 'Instruction account arity has no reviewed layout', path + '.accounts')
 
 
-def _signer_fields(info, accounts, index, name, signers, inner, path, program):
+def _signer_fields(info, accounts, index, name, signers, inner, path, program,
+                   *, allow_extension_accounts=False):
     """Match primary RPC names; multisig threshold needs separate account state."""
     extra = accounts[index + 1:]
     if extra:
-        if program == TOKEN_2022_ID:
+        if program == TOKEN_2022_ID and allow_extension_accounts:
+            info[name] = accounts[index]
+            info['extensionAccounts'] = list(extra)
+            required = [accounts[index]]
+        elif program == TOKEN_2022_ID:
             _reject('unsupported-extension-accounts', 'Token-2022 extra accounts may be extension roles', path + '.accounts')
-        if len(extra) > 11 or len(extra) != len(set(extra)):
-            _reject('unsupported-multisig', 'Multisig signer list exceeds or duplicates reviewed roles', path + '.accounts')
-        info['multisig' + name[0].upper() + name[1:]] = accounts[index]
-        info['signers'] = extra
-        required = extra
+        else:
+            if len(extra) > 11 or len(extra) != len(set(extra)):
+                _reject('unsupported-multisig', 'Multisig signer list exceeds or duplicates reviewed roles', path + '.accounts')
+            info['multisig' + name[0].upper() + name[1:]] = accounts[index]
+            info['signers'] = extra
+            required = extra
     else:
         info[name] = accounts[index]
         required = [accounts[index]]
@@ -360,12 +366,16 @@ def _token(data, accounts, signers, inner, path, program):
         if len(accounts) < minimum:
             _reject('unsupported-account-arity', 'Token instruction is missing required account roles', path + '.accounts')
         if tag in (3, 4, 5, 9, 12, 13):
-            if len(accounts) > minimum + 11:
+            token_2022_transfer = program == TOKEN_2022_ID and tag in (3, 12)
+            if not token_2022_transfer and len(accounts) > minimum + 11:
                 _reject('unsupported-account-arity', 'Token signer account list exceeds reviewed bound', path + '.accounts')
             if tag in (3, 4):
                 info = {'source': accounts[0], 'destination' if tag == 3 else 'delegate': accounts[1],
                         'amount': str(int.from_bytes(data[1:9], 'little'))}
-                required = _signer_fields(info, accounts, 2, 'authority' if tag == 3 else 'owner', signers, inner, path, program)
+                required = _signer_fields(
+                    info, accounts, 2, 'authority' if tag == 3 else 'owner', signers, inner, path, program,
+                    allow_extension_accounts=token_2022_transfer,
+                )
             elif tag == 5:
                 info = {'source': accounts[0]}
                 required = _signer_fields(info, accounts, 1, 'owner', signers, inner, path, program)
@@ -378,7 +388,10 @@ def _token(data, accounts, signers, inner, path, program):
                 ui = (digits[:-decimals] + '.' + digits[-decimals:]).rstrip('0').rstrip('.') if decimals else digits
                 info = {'source': accounts[0], 'mint': accounts[1], 'destination' if tag == 12 else 'delegate': accounts[2],
                         'tokenAmount': {'amount': str(amount), 'decimals': decimals, 'uiAmountString': ui}}
-                required = _signer_fields(info, accounts, 3, 'authority' if tag == 12 else 'owner', signers, inner, path, program)
+                required = _signer_fields(
+                    info, accounts, 3, 'authority' if tag == 12 else 'owner', signers, inner, path, program,
+                    allow_extension_accounts=token_2022_transfer,
+                )
         else:
             _arity(accounts, minimum, path)
             info = {'account': accounts[0]}
@@ -435,7 +448,10 @@ def _token(data, accounts, signers, inner, path, program):
                 'tokenAmount': {'amount': str(amount), 'decimals': decimals, 'uiAmountString': ui},
                 'fee': str(fee),
             }
-            required = _signer_fields(info, accounts, 3, 'authority', signers, inner, path, program)
+            required = _signer_fields(
+                info, accounts, 3, 'authority', signers, inner, path, program,
+                allow_extension_accounts=True,
+            )
         else:
             _reject('unsupported-opcode', 'Token-2022 transfer-fee sub-instruction has no reviewed layout', path + '.data')
     elif tag in (0, 20):

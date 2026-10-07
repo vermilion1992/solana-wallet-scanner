@@ -35,6 +35,7 @@ from pathlib import Path
 from scanner.investigation import (
     DFLOW,
     JUPITER,
+    LIGHTHOUSE,
     METEORA_DAMM_V2,
     OKX_DEX_ROUTER,
     PUMP,
@@ -45,6 +46,8 @@ from scanner.investigation import (
     RFQ_FILL,
     TOKEN_2022_ID,
     WHIRLPOOL,
+    _keys,
+    _program,
     decode_supported_swaps,
 )
 from scanner.mass_search.adapters import ALLOWED_BIRDEYE_HOST, ALLOWED_BIRDEYE_PATH, BirdeyeTraderAdapter, SourceError
@@ -55,7 +58,7 @@ from scanner.mass_search.labels import wallet_status_fields
 from scanner.mass_search.live_e2e_ledger import (
     ExclusiveLock,
     LockHeld,
-    draft_artifact_hash,
+    committed_draft_payload,
     empty_phase_spend,
     empty_spend,
     grant_ledger_path,
@@ -97,22 +100,25 @@ BIRDEYE_DEFAULT_LIMIT = 100
 BIRDEYE_DEFAULT_WINDOW = "30d"
 BIRDEYE_DEFAULT_SORT = "trader_score"
 
-L2TEX_PROGRAM = "L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95"
+L2TEX_PROGRAM = LIGHTHOUSE
+FLASHX_PROGRAM = "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9"
+B311_PROGRAM = "B3111yJCeHBcA1bizdJjUFPALfhAfSRnAbJzGUtnt56A"
 KNOWN_BLOCKING_PROGRAMS = {
-    OKX_DEX_ROUTER: "OKX SwapTob",
+    FLASHX_PROGRAM: "FLASHX Axiom",
+    B311_PROGRAM: "B311 unreviewed",
     DFLOW: "DFlow",
-    L2TEX_PROGRAM: "L2TExMFK",
-    RFQ_FILL: "RFQ",
-    TOKEN_2022_ID: "Token-2022 observed-only",
 }
 SUPPORTED_PROGRAMS = frozenset(REVIEWED_OUTER_VENUES) | {
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL, METEORA_DAMM_V2,
+    OKX_DEX_ROUTER, RFQ_FILL,
 }
 INFRA_PROGRAMS = frozenset({
     "11111111111111111111111111111111",
     "ComputeBudget111111111111111111111111111111",
     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    TOKEN_2022_ID,
+    LIGHTHOUSE,
     "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
     "Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo",
 })
@@ -312,21 +318,38 @@ def gta_page_size_note():
 
 
 def collect_program_ids(records):
+    """Resolve instruction programs via accountKeys + loadedAddresses, including inners."""
     found = []
-
-    def walk(node):
-        if isinstance(node, dict):
-            for key in ("programId", "program_id", "program"):
-                value = node.get(key)
-                if isinstance(value, str) and 32 <= len(value) <= 44:
-                    found.append(value)
-            for value in node.values():
-                walk(value)
-        elif isinstance(node, list):
-            for item in node:
-                walk(item)
-
-    walk(records)
+    for record in records or []:
+        raw = record
+        if isinstance(record, dict) and isinstance(record.get("raw"), dict):
+            raw = record["raw"]
+        if isinstance(raw, dict) and isinstance(raw.get("result"), dict) and "transaction" not in raw:
+            raw = raw["result"]
+        if not isinstance(raw, dict):
+            continue
+        transaction = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+        message = transaction.get("message") if isinstance(transaction.get("message"), dict) else {}
+        meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+        if not message:
+            continue
+        try:
+            keys = _keys(message, meta)
+        except (ValueError, TypeError, KeyError, IndexError):
+            keys = []
+        instructions = list(message.get("instructions") or [])
+        for group in meta.get("innerInstructions") or []:
+            if isinstance(group, dict):
+                instructions.extend(group.get("instructions") or [])
+        for instruction in instructions:
+            if not isinstance(instruction, dict):
+                continue
+            try:
+                program = _program(instruction, keys) if keys else instruction.get("programId")
+            except (ValueError, TypeError, KeyError, IndexError):
+                program = instruction.get("programId")
+            if isinstance(program, str) and 32 <= len(program) <= 44:
+                found.append(program)
     return found
 
 
@@ -633,9 +656,9 @@ async def _live_helius(address, *, options, page_index=0):
     import httpx
 
     payload = {"jsonrpc": "2.0", "id": page_index + 1, "method": HELIUS_METHOD, "params": [address, options]}
-    headers = {"api-key": key, "content-type": "application/json"}
+    headers = {"content-type": "application/json"}
     async with httpx.AsyncClient(follow_redirects=False, timeout=httpx.Timeout(40, connect=10)) as client:
-        response = await client.post(HELIUS_ENDPOINT, json=payload, headers=headers)
+        response = await client.post(HELIUS_ENDPOINT, params={"api-key": key}, json=payload, headers=headers)
     raw = response.content
     status = response.status_code
     if status in (401, 403):
@@ -693,29 +716,48 @@ def _save_raw(output_dir, relative, raw_bytes):
     return original_sha
 
 
+def _next_receipt_key(store, base, *, explicit_retry):
+    existing = load_receipt(store, base)
+    if receipt_is_spent(existing) and not explicit_retry:
+        return base, existing, True
+    if receipt_is_spent(existing) and explicit_retry:
+        index = 1
+        while receipt_is_spent(load_receipt(store, f"{base}:retry{index}")):
+            index += 1
+        return f"{base}:retry{index}", None, False
+    return base, existing, False
+
+
 def _replay_saved_page(config, phase, address, page_index, units):
     relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
     path = Path(config["output_dir"]) / relative
-    raw = path.read_bytes() if path.is_file() else b""
+    if not path.is_file() or path.stat().st_size == 0:
+        raise SourceError(
+            "MISSING_CAPTURE",
+            f"raw page missing: {relative}; not covered",
+        )
+    raw = path.read_bytes()
     records = []
     token = None
-    if raw:
-        try:
-            body = json.loads(raw.decode("utf-8"))
-            result = body.get("result") if isinstance(body, dict) else {}
-            data = (result or {}).get("data") if isinstance(result, dict) else result
-            if isinstance(data, list):
-                records = data
-            if isinstance(result, dict):
-                token = result.get("paginationToken")
-        except (UnicodeDecodeError, json.JSONDecodeError, AttributeError):
-            records = []
+    try:
+        body = json.loads(raw.decode("utf-8"))
+        result = body.get("result") if isinstance(body, dict) else {}
+        data = (result or {}).get("data") if isinstance(result, dict) else result
+        if isinstance(data, list):
+            records = data
+        if isinstance(result, dict):
+            token = result.get("paginationToken")
+    except (UnicodeDecodeError, json.JSONDecodeError, AttributeError) as error:
+        raise SourceError(
+            "MISSING_CAPTURE",
+            f"raw page unreadable: {relative}; not covered",
+        ) from error
     return {
         "records": records,
         "pagination_token": token,
         "http_status": 200,
         "raw_bytes": raw,
-        "evidence_sha256": _sha256_bytes(raw) if raw else None,
+        "evidence_sha256": _sha256_bytes(raw),
         "units": units,
         "external_requests": 0,
         "replayed_from_receipt": True,
@@ -726,9 +768,9 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
     entry = provider_entry(grant, "helius")
     units = documented_units(options.get("transactionDetails"), int(options.get("limit") or 0))
     cursor = (options or {}).get("paginationToken")
-    key = request_identity("helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
-    existing = load_receipt(store, key)
-    if receipt_is_spent(existing) and not config.get("explicit_retry"):
+    base = request_identity("helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
+    key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
+    if replay:
         reconcile_state_spend(store, state)
         save_state(config["output_dir"], state)
         return _replay_saved_page(config, phase, address, page_index, units)
@@ -829,9 +871,9 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "offset": 0,
         "limit": int(config.get("birdeye_limit") or BIRDEYE_DEFAULT_LIMIT),
     }
-    key = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=None)
-    existing = load_receipt(store, key)
-    if receipt_is_spent(existing) and not config.get("explicit_retry"):
+    base = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=None)
+    key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
+    if replay:
         reconcile_state_spend(store, state)
         save_state(config["output_dir"], state)
         return {"addresses": list(state.get("wallets") or config.get("wallets") or []), "replayed_from_receipt": True}
@@ -880,7 +922,9 @@ async def phase1_discovery(store, grant, config, state, recorder):
             )
             store.settle(reservation, charge=True)
             charged = True
-            raw = json.dumps(redact_secrets(page.get("raw_body") or {}), sort_keys=True, separators=(",", ":")).encode()
+            raw = page.get("raw_bytes")
+            if not isinstance(raw, (bytes, bytearray)):
+                raw = json.dumps(page.get("raw_body") or {}, sort_keys=True, separators=(",", ":")).encode()
             addresses = [row["address"] for row in (page.get("rows") or []) if row.get("valid") and row.get("address")]
     except Exception:
         if reservation and not charged:
@@ -1072,16 +1116,43 @@ def phase4_offline(store, config, state):
     for address in config["wallets"]:
         raw_dir = Path(config["output_dir"]) / "raw" / "phase3" / address
         records = []
-        if raw_dir.is_dir():
+        expected_pages = int(((state.get("phase3") or {}).get(address) or {}).get("pages") or 0)
+        missing_page = False
+        if expected_pages:
+            for index in range(expected_pages):
+                path = raw_dir / f"page{index}.bin"
+                if not path.is_file() or path.stat().st_size == 0:
+                    missing_page = True
+                    break
+        if raw_dir.is_dir() and not missing_page:
             for path in sorted(raw_dir.glob("page*.bin")):
                 try:
                     body = json.loads(path.read_bytes().decode("utf-8"))
                 except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-                    continue
+                    missing_page = True
+                    records = []
+                    break
                 result = body.get("result") if isinstance(body, dict) else None
                 data = (result or {}).get("data") if isinstance(result, dict) else result
                 if isinstance(data, list):
                     records.extend(data)
+        if missing_page:
+            rows.append({
+                "address": address,
+                "coverage_count_share": None,
+                "coverage_value_share": None,
+                "completed_trades": 0,
+                "realized_pnl_sol": None,
+                "realized_pnl_usdc": None,
+                "audit_status": "not_independently_audited",
+                "independently_audited": False,
+                "lead_level": "insufficient_evidence",
+                "blocker": "missing raw page; not covered",
+                "coverage_status": "blocked",
+                "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
+                "PRODUCT_READY": False,
+            })
+            continue
         if not records:
             rows.append({
                 "address": address,
@@ -1106,7 +1177,7 @@ def phase4_offline(store, config, state):
             window_start=bounds["report_start_inclusive"],
             window_end=bounds["report_end_exclusive"],
             acquisition_start=bounds["history_start_inclusive"],
-            corpus_kind="GENUINE_LIVE",
+            corpus_kind="GENUINE_REPLAY",
             authorization_id=config.get("authorization_id") or AUTHORIZATION_ID,
             source_id="live-e2e-proof",
         )
@@ -1152,8 +1223,10 @@ def human_summary(results):
 
 
 def load_committed_draft():
-    raw = json.loads(DRAFT_PATH.read_text(encoding="utf-8"))
-    return raw, draft_artifact_hash(DRAFT_PATH)
+    try:
+        return committed_draft_payload(DRAFT_REL, repo_root=ROOT)
+    except ValueError as error:
+        raise LiveE2EError(str(error)) from error
 
 
 def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
@@ -1163,8 +1236,12 @@ def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
         draft, draft_hash = load_committed_draft()
         draft_caps = provider_caps(draft)
         bound = grant.get("draft_artifact_hash")
-        if bound and bound != draft_hash:
+        if not bound:
+            raise LiveE2EError("draft_artifact_hash is required for --live")
+        if bound != draft_hash:
             raise LiveE2EError("armed grant is not bound to the committed draft artifact")
+        if not grant.get("phase_caps"):
+            caps["phase_caps"] = phase_caps_from_grant(draft)
         for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
             if caps[key] > draft_caps[key]:
                 raise LiveE2EError(
@@ -1204,7 +1281,10 @@ def validate_config(raw):
     output_dir = Path(raw["output_dir"])
     authorization_id = grant.get("authorization_id")
     ledger_dir = raw.get("ledger_dir")
-    store_path = grant_ledger_path(authorization_id, ledger_dir)
+    try:
+        store_path = grant_ledger_path(authorization_id, ledger_dir)
+    except ValueError as error:
+        raise LiveE2EError(str(error)) from error
     phases = parse_phases(raw.get("phases"))
     wallets_raw = raw.get("wallets")
     wallets = parse_wallets(wallets_raw)
@@ -1260,7 +1340,10 @@ async def run_live_e2e(raw):
     output_dir = Path(config["output_dir"])
     output_dir.mkdir(parents=True, exist_ok=True)
     _write_json(output_dir / GTA_DOCS_NAME, gta_page_size_note())
-    store, ledger_path = open_grant_store(config["authorization_id"], config.get("ledger_dir"))
+    try:
+        store, ledger_path = open_grant_store(config["authorization_id"], config.get("ledger_dir"))
+    except ValueError as error:
+        raise LiveE2EError(str(error)) from error
     grant_lock = ExclusiveLock(ledger_path / "GRANT.lock")
     output_lock = ExclusiveLock(output_dir / "RUN.lock")
     try:
@@ -1274,7 +1357,18 @@ async def run_live_e2e(raw):
         state = load_or_create_state(output_dir, config, resume=config["resume"])
         state["authorization_id"] = config["authorization_id"]
         if state.get("bounds"):
-            config["bounds"] = state["bounds"]
+            persisted = state["bounds"]
+            if persisted.get("window_days") != config["window_days"]:
+                raise LiveE2EError(
+                    f"--window-days {config['window_days']} disagrees with persisted "
+                    f"{persisted.get('window_days')}"
+                )
+            if persisted.get("earlier_history_days") != config["earlier_history_days"]:
+                raise LiveE2EError(
+                    f"--earlier-history-days {config['earlier_history_days']} disagrees "
+                    f"with persisted {persisted.get('earlier_history_days')}"
+                )
+            config["bounds"] = persisted
         else:
             state["bounds"] = dict(config["bounds"])
         reconcile_state_spend(store, state)

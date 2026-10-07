@@ -289,28 +289,61 @@ def _stamp_unix(value):
 
 
 def _report_end_unix(report):
-    span = (report or {}).get("in_window_span") or ((report or {}).get("research_profile") or {}).get("in_window_span") or {}
-    for key in ("end", "end_exclusive", "report_end"):
-        stamp = _stamp_unix(span.get(key) if isinstance(span, dict) else None)
-        if stamp is not None:
-            return stamp
+    """Anchor window_days to the report end, never last activity / in_window_span."""
     window = (report or {}).get("window") or {}
-    for key in ("end", "end_exclusive"):
+    for key in ("end", "end_exclusive", "report_end"):
         stamp = _stamp_unix(window.get(key))
         if stamp is not None:
             return stamp
-    latest = None
-    for event in (report or {}).get("events") or []:
-        stamp = _stamp_unix(event.get("timestamp") or event.get("block_time"))
-        if stamp is not None:
-            latest = stamp if latest is None else max(latest, stamp)
-    for episode in (report or {}).get("completed_episode_ledger") or []:
-        stamp = _stamp_unix(episode.get("closed_at") or episode.get("timestamp"))
-        if stamp is not None:
-            latest = stamp if latest is None else max(latest, stamp)
-    if latest is not None:
-        return latest
+    applied = (report or {}).get("research_window") or {}
+    if applied.get("end_unix") is not None:
+        try:
+            return int(applied["end_unix"])
+        except (TypeError, ValueError):
+            pass
+    created = _stamp_unix((report or {}).get("created_at"))
+    if created is not None:
+        return created
     return int(datetime.now(timezone.utc).timestamp())
+
+
+def _capture_window_unix(report):
+    window = (report or {}).get("window") or {}
+    start = _stamp_unix(window.get("start") or window.get("start_inclusive"))
+    end = _stamp_unix(window.get("end") or window.get("end_exclusive") or window.get("report_end"))
+    applied = (report or {}).get("research_window") or {}
+    if applied.get("applied"):
+        if applied.get("start_unix") is not None:
+            try:
+                start = int(applied["start_unix"])
+            except (TypeError, ValueError):
+                pass
+        if applied.get("end_unix") is not None:
+            try:
+                end = int(applied["end_unix"])
+            except (TypeError, ValueError):
+                pass
+    return start, end
+
+
+def _restrict_ledger_to_report_window(report, episodes):
+    """Qualification and P&L use only episodes closed inside the report window."""
+    start, end = _capture_window_unix(report)
+    if start is None and end is None:
+        return list(episodes or [])
+    out = []
+    for episode in episodes or []:
+        stamp = _stamp_unix(
+            episode.get("closed_at") or episode.get("timestamp") or episode.get("day")
+        )
+        if stamp is None:
+            continue
+        if start is not None and stamp < start:
+            continue
+        if end is not None and stamp >= end:
+            continue
+        out.append(episode)
+    return out
 
 
 def apply_research_window(report, window_days):
@@ -330,7 +363,7 @@ def apply_research_window(report, window_days):
     events = []
     for event in report.get("events") or []:
         stamp = _stamp_unix(event.get("timestamp") or event.get("block_time") or event.get("day"))
-        if stamp is not None and start_unix <= stamp <= end_unix:
+        if stamp is not None and start_unix <= stamp < end_unix:
             events.append(event)
     source_ledger = report.get("completed_episode_ledger")
     if source_ledger is None:
@@ -341,25 +374,31 @@ def apply_research_window(report, window_days):
         stamp = _stamp_unix(
             episode.get("closed_at") or episode.get("timestamp") or episode.get("day")
         )
-        if stamp is None or not (start_unix <= stamp <= end_unix):
+        if stamp is None or not (start_unix <= stamp < end_unix):
             continue
         ledger.append(episode)
         unit = episode.get("unit") or episode.get("settlement_asset")
         if unit and episode.get("net") not in (None, ""):
             nets[unit] = nets.get(unit, Decimal("0")) + Decimal(str(episode["net"]))
     worksheet = dict(report.get("worksheet") or {})
-    by_quote = dict(worksheet.get("by_quote_asset") or {})
+    prior_by_quote = dict(worksheet.get("by_quote_asset") or {})
+    by_quote = {}
     for unit, amount in nets.items():
         key = f"total_profit_{unit.lower()}"
         worksheet[key] = str(amount)
-        prior = dict(by_quote.get(unit) or {})
+        prior = dict(prior_by_quote.get(unit) or {})
         prior[key] = str(amount)
         by_quote[unit] = prior
-    if by_quote:
-        worksheet["by_quote_asset"] = by_quote
+    for key in list(worksheet):
+        if key.startswith("total_profit_"):
+            unit = key[len("total_profit_"):].upper()
+            if unit not in nets:
+                worksheet.pop(key, None)
+    worksheet["by_quote_asset"] = by_quote
     if len(nets) == 1:
-        unit = next(iter(nets))
-        worksheet["settlement_asset"] = unit
+        worksheet["settlement_asset"] = next(iter(nets))
+    elif not nets:
+        worksheet["settlement_asset"] = None
     clipped = dict(report)
     clipped["events"] = events
     clipped["completed_episode_ledger"] = ledger
@@ -369,6 +408,9 @@ def apply_research_window(report, window_days):
     if len(nets) == 1:
         clipped["completed_episode_net"] = str(next(iter(nets.values())))
         clipped["completed_episode_net_unit"] = next(iter(nets))
+    elif not nets:
+        clipped["completed_episode_net"] = None
+        clipped["completed_episode_net_unit"] = None
     clipped["research_window"] = {
         "window_days": days,
         "start_unix": start_unix,
@@ -558,10 +600,10 @@ def _episode_day(event):
 
 def _episode_ledger_from_report(report):
     if report and "completed_episode_ledger" in report:
-        return list(report.get("completed_episode_ledger") or [])
+        return _restrict_ledger_to_report_window(report, report.get("completed_episode_ledger") or [])
     explicit = completed_episode_ledger(report)
     if explicit:
-        return explicit
+        return _restrict_ledger_to_report_window(report, explicit)
     events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
     worksheet = report.get("worksheet") or {}
     sales = []
@@ -676,7 +718,7 @@ def _episode_ledger_from_report(report):
             opened_at = None
             episode_sigs = []
             buy_consideration = Decimal("0")
-    return episodes
+    return _restrict_ledger_to_report_window(report, episodes)
 
 
 def _concentration_detail(report, scoped_pnl, known_sells):

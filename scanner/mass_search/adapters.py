@@ -279,6 +279,7 @@ class BirdeyeTraderAdapter:
                     "limit": limit,
                 },
                 "raw_body": redact_secrets(body),
+                "raw_bytes": response.get("raw_bytes"),
             }
         except QuotaExceeded as error:
             raise SourceError("RATE_LIMITED", str(error)) from error

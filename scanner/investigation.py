@@ -58,25 +58,27 @@ METEORA_DAMM_V2 = 'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'
 DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
 RFQ_FILL = '61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH'
 TOKEN_2022_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+# Lighthouse assertions. Not a venue. Bundled with swaps; never a trade.
+LIGHTHOUSE = 'L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95'
 # Exact observed RFQ Fill top-level fee recipient. Not a general fee sink.
 RFQ_FEE_FILL_ACCOUNT = '9PnYDCTJ5B4mJJMPvjCZ97L6ZBcti48CYgxv5QU1mV5G'
 OKX_SWAPTOC = bytes.fromhex('bbc9d433109bec3c')
 OKX_SWAPTOB = bytes.fromhex('aa2955b184501f35')
 RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
+DFLOW_SWAP = bytes.fromhex('f8c69e91e17587c8')
 DFLOW_SWAP_WITH_DESTINATION = bytes.fromhex('a8ac184dc59c8765')
 REVIEWED_OUTER_VENUES = (
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
-    METEORA_DAMM_V2, RFQ_FILL,
+    METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER,
 )
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v12-token2022-observed-rfq-transferchecked-v1'
+DECODER_VERSION = 'spot-v13-token2022-okx-dflow-lighthouse-infra-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
-    'proVF4p SwapTob stays unsupported: discriminator aa2955b184501f35 and a '
-    '61-byte payload are observed, but the official account layout and '
-    'user/authority indices are not established from bytes. Logs name '
-    'SwapTob and nested DEX hops; logs and the instruction name are not '
-    'authority, and 95+ remaining accounts are not a reviewed layout. '
-    'Balance changes alone do not prove a swap.'
+    'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
+    'source_token_account at 1, destination_token_account at 2 from the '
+    'published OKX DEX v2 layout. Remaining accounts are hops, not user legs. '
+    'Unknown OKX discriminators stay unsupported. Balance changes alone do '
+    'not prove a swap.'
 )
 RECENT_BLOCKHASHES_SYSVAR = 'SysvarRecentB1ockHashes11111111111111111111'
 _B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
@@ -337,6 +339,17 @@ def _route(instruction, keys):
     elif program == RFQ_FILL:
         if payload[:8] == RFQ_FILL_DISC and len(payload) >= 16 and len(accounts) >= 11:
             name, authority, owned_positions = 'Fill', 0, (4,)
+    elif program == OKX_DEX_ROUTER:
+        # Official OKX DEX v2 SwapTob: payer, source_token_account,
+        # destination_token_account, source_mint, destination_mint, …
+        if payload[:8] == OKX_SWAPTOB and len(payload) >= 61 and len(accounts) >= 5:
+            name, authority, owned_positions = 'SwapTob', 0, (1, 2)
+    elif program == DFLOW:
+        # Official DFlow Aggregator v4.
+        if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
+            name, authority, owned_positions = 'swap_with_destination', 3, (4,)
+        elif payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
+            name, authority, owned_positions = 'swap', 3, ()
     if name is None:
         raise ValueError('No reviewed spot swap instruction for this program and discriminator')
     return {'program': program, 'instruction': name, 'authority': accounts[authority],
@@ -863,6 +876,7 @@ def decode_supported_swaps(transactions, address):
             nonce_administration = []
             rfq_platform_fees = []
             token_2022_inbound = defaultdict(list)
+            token_2022_declared_fees = defaultdict(int)
             token_2022_fees = []
             for outer, path, instruction, nested in flat:
                 if 'parsed' in instruction and any(key in instruction for key in ('accounts', 'data')):
@@ -885,7 +899,7 @@ def decode_supported_swaps(transactions, address):
                         instruction['programId'] = viewed['instruction'].get('programId', program)
                     except (CompiledInstructionError, ValueError, KeyError, IndexError, TypeError):
                         pass
-                if program in (COMPUTE_ID, *MEMO_IDS):
+                if program in (COMPUTE_ID, *MEMO_IDS, LIGHTHOUSE):
                     continue
                 if program == ASSOCIATED_ID:
                     if kind not in ('create', 'createIdempotent'):
@@ -983,6 +997,9 @@ def decode_supported_swaps(transactions, address):
                     flow[destination] += quantity
                     if program == TOKEN_2022_ID and destination in owned:
                         token_2022_inbound[destination].append(quantity)
+                        declared = info.get('fee')
+                        if declared not in (None, ''):
+                            token_2022_declared_fees[destination] += raw_quantity(declared)
                     continue
                 if outer != route['index']:
                     raise ValueError('Unreviewed outer program may bundle other economic activity')
@@ -1001,9 +1018,13 @@ def decode_supported_swaps(transactions, address):
                     path = f'meta.innerInstructions.{group_index}.instructions.{ordinal}'
                     item['raw_paths'] = original_instruction_paths(original,
                         [path + '.parsed.info.' + field for field in ('source', 'newAccount', 'lamports', 'space', 'owner')])
-            for account in route['owned_accounts']:
-                if account not in owned and account not in allowed_wrapped:
-                    raise ValueError('Route user account lacks event-time wallet ownership')
+            if route['program'] == OKX_DEX_ROUTER:
+                if not any(account in owned or account in allowed_wrapped for account in route['owned_accounts']):
+                    raise ValueError('OKX SwapTob user token accounts lack event-time wallet ownership')
+            else:
+                for account in route['owned_accounts']:
+                    if account not in owned and account not in allowed_wrapped:
+                        raise ValueError('Route user account lacks event-time wallet ownership')
             deltas, decimals = defaultdict(int), {}
             rent_correction = 0
             for account, identity in owned.items():
@@ -1040,9 +1061,11 @@ def decode_supported_swaps(transactions, address):
                 if mint != WSOL and delta != flow[account]:
                     inbound = token_2022_inbound.get(account) or []
                     withheld = flow[account] - delta
+                    declared_fee = token_2022_declared_fees.get(account) or 0
                     token_2022 = token_programs.get(account) == TOKEN_2022_ID and inbound and withheld > 0
                     if not token_2022:
                         raise ValueError('Wallet token delta does not reconcile to parsed swap transfers')
+                    proved = declared_fee == withheld
                     candidates = infer_token_2022_fee_bps_candidates(inbound, withheld)
                     unique = candidates[0] if len(candidates) == 1 else None
                     token_2022_fees.append({
@@ -1052,14 +1075,20 @@ def decode_supported_swaps(transactions, address):
                         'inbound_gross_amounts': list(inbound),
                         'net_received': delta,
                         'withheld': withheld,
-                        'observed': True,
+                        'declared_fee': declared_fee or None,
+                        'observed': not proved,
                         'transfer_fee_basis_points': unique,
                         'inferred_bps_unique': unique is not None,
                         'inferred_bps_candidates': candidates if len(candidates) <= 8 else candidates[:8] + ['…'],
-                        'source': 'observed_token_2022_withheld',
+                        'source': (
+                            'transfer_fee_extension' if proved else 'observed_token_2022_withheld'
+                        ),
                         'execution_time_mint_config_established': False,
-                        'transfer_fee_config_established': False,
+                        'transfer_fee_config_established': proved,
                         'note': (
+                            'Transfer-fee extension amount from transferCheckedWithFee '
+                            'reconciles the wallet token delta.'
+                            if proved else
                             'Observed gross / net received / withheld only. '
                             'Mint account bytes (max fee, epoch) are absent from GTA. '
                             'A unique uncapped-ceiling bps fit is not TransferFeeConfig.'

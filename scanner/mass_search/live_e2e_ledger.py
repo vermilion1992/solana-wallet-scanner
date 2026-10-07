@@ -14,6 +14,7 @@ from pathlib import Path
 
 from scanner.storage import Store
 
+LEDGER_HOME_ENV = "SCANNER_LIVE_LEDGER_HOME"
 LEDGER_ENV = "SCANNER_LIVE_LEDGER_DIR"
 DEFAULT_LEDGER_ROOT = Path.home() / ".scanner" / "live-e2e-ledgers"
 RECEIPT_KIND = "live_e2e_receipt"
@@ -43,6 +44,38 @@ def draft_artifact_hash(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def committed_draft_hash(rel_path, *, repo_root, commit="HEAD"):
+    """SHA-256 of the draft blob at a pinned git object. Working-tree edits do not count."""
+    import subprocess
+
+    spec = f"{commit}:{rel_path}"
+    proc = subprocess.run(
+        ["git", "show", spec],
+        cwd=str(repo_root),
+        capture_output=True,
+        check=False,
+    )
+    if proc.returncode != 0 or not proc.stdout:
+        raise ValueError(f"committed draft blob missing: {spec}")
+    return hashlib.sha256(proc.stdout).hexdigest()
+
+
+def committed_draft_payload(rel_path, *, repo_root, commit="HEAD"):
+    import json
+    import subprocess
+
+    spec = f"{commit}:{rel_path}"
+    proc = subprocess.run(
+        ["git", "show", spec],
+        cwd=str(repo_root),
+        capture_output=True,
+        check=False,
+    )
+    if proc.returncode != 0 or not proc.stdout:
+        raise ValueError(f"committed draft blob missing: {spec}")
+    return json.loads(proc.stdout.decode("utf-8")), hashlib.sha256(proc.stdout).hexdigest()
+
+
 def provider_caps(grant):
     caps = empty_spend()
     for entry in grant.get("providers") or []:
@@ -69,16 +102,32 @@ def phase_caps_from_grant(grant):
     return out
 
 
-def ledger_root(explicit=None):
-    text = explicit or os.environ.get(LEDGER_ENV)
+def ledger_home():
+    """Fixed per-user home. Caps are per authorization_id inside this home."""
+    text = os.environ.get(LEDGER_HOME_ENV) or os.environ.get(LEDGER_ENV)
     if text:
         return Path(text)
     return DEFAULT_LEDGER_ROOT
 
 
+def ledger_root(explicit=None):
+    if explicit:
+        return Path(explicit)
+    return ledger_home()
+
+
 def grant_ledger_path(authorization_id, explicit=None):
     ident = str(authorization_id or "unknown").replace("/", "_").replace("..", "_")
-    return ledger_root(explicit) / ident
+    home = ledger_home()
+    canonical = home / ident
+    if explicit:
+        requested = Path(explicit)
+        if requested.resolve() != home.resolve():
+            raise ValueError(
+                f"refusing second ledger dir {requested} for {ident}; "
+                f"grant ledger is {canonical}"
+            )
+    return canonical
 
 
 def open_grant_store(authorization_id, explicit=None):

@@ -6,11 +6,17 @@ set `enabled: true`, `authorized_by_user_at`, `existing_plan_confirmed`, and
 `2026-10-09T00:00:00+10:30` (`2026-10-08T13:30:00Z`).
 
 Replace `$ARMED` with the local armed grant path and `$OUT` with a writable
-directory on the box. Spend is ledgered per `authorization_id` under
-`--ledger-dir` (default `~/.scanner/live-e2e-ledgers/<authorization_id>`),
-not per output folder. Armed copies must set `draft_artifact_hash` to the
-SHA-256 of the committed draft and keep provider/phase caps at or below
-the draft. Do not run two `--resume` processes on the same grant or output.
+directory on the box. Spend is ledgered per `authorization_id` under the
+fixed home `$SCANNER_LIVE_LEDGER_HOME` (default
+`~/.scanner/live-e2e-ledgers/<authorization_id>`). `--ledger-dir` must equal
+that home or the runner refuses a second ledger for the same grant. Armed
+copies must set `draft_artifact_hash` to `git show HEAD:config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json | sha256sum`
+(the committed blob, not a working-tree edit). Missing hash is refused for
+`--live`. Missing `phase_caps` inherit the draft. `--explicit-retry` appends
+a new receipt. A different `--window-days` on `--resume` is an error. Helius
+auth is `?api-key=` on the query string; the key is redacted in every written
+string. Phase 4 is offline `GENUINE_REPLAY` on captured pages. Do not run two
+`--resume` processes on the same grant or output.
 
 ## Dry-run (no spend) — already committed
 

@@ -19,7 +19,7 @@ from scanner.mass_search.live_e2e import (
     run_live_e2e,
     validate_config,
 )
-from scanner.mass_search.live_e2e_ledger import draft_artifact_hash, spend_from_ledger
+from scanner.mass_search.live_e2e_ledger import committed_draft_hash, spend_from_ledger
 from scanner.mass_search.research_profile import FilterValidationError, save_filters
 from scanner.mass_search.workflow import ranked_workflow_view
 from scanner.storage import Store
@@ -64,7 +64,10 @@ def _arm_grant(tmp_path, *, helius_req=500, helius_units=5000, birdeye_req=3, bi
     raw["authorized_by_user_at"] = "2026-10-07T00:00:00Z"
     raw["expires_at"] = "2099-01-01T00:00:00Z"
     if bind_hash:
-        raw["draft_artifact_hash"] = draft_artifact_hash(DRAFT_PATH)
+        raw["draft_artifact_hash"] = committed_draft_hash(
+            "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json",
+            repo_root=DRAFT_PATH.parents[1],
+        )
     for entry in raw["providers"]:
         entry["existing_plan_confirmed"] = True
         entry["remaining_quota_confirmed_at"] = "2026-10-07T00:00:00Z"
@@ -97,6 +100,11 @@ def _live_kwargs(tmp_path, grant, output, wallets, **extra):
     }
     payload.update(extra)
     return payload
+
+
+@pytest.fixture(autouse=True)
+def ledger_home(tmp_path, monkeypatch):
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(tmp_path / "ledger"))
 
 
 @pytest.fixture
@@ -386,12 +394,16 @@ def test_ss12_long_comma_wallets_do_not_crash():
     assert parsed == WALLETS
 
 
-def test_helius_header_auth_not_query(tmp_path, monkeypatch, fake_keys):
+def test_helius_query_auth_key_never_reaches_disk_logs_or_exceptions(tmp_path, monkeypatch, fake_keys):
     seen = {}
 
     class FakeResponse:
         status_code = 200
-        content = b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'
+        content = json.dumps({
+            "jsonrpc": "2.0",
+            "result": {"data": [], "paginationToken": None},
+            "echo": f"?api-key={FAKE_HELIUS}",
+        }).encode()
 
         def json(self):
             return json.loads(self.content)
@@ -408,17 +420,28 @@ def test_helius_header_auth_not_query(tmp_path, monkeypatch, fake_keys):
 
         async def post(self, url, json=None, headers=None, params=None):
             seen["url"] = url
-            seen["headers"] = headers
-            seen["params"] = params
+            seen["headers"] = headers or {}
+            seen["params"] = params or {}
             return FakeResponse()
 
     monkeypatch.setattr("httpx.AsyncClient", FakeClient)
     from scanner.mass_search.live_e2e import _live_helius
 
     asyncio.run(_live_helius(WALLETS[0], options={"transactionDetails": "signatures", "limit": 1000}))
-    assert seen["params"] in (None, {})
-    assert seen["headers"]["api-key"] == FAKE_HELIUS
-    assert "api-key" not in str(seen.get("url") or "")
+    assert seen["params"]["api-key"] == FAKE_HELIUS
+    assert "api-key" not in (seen["headers"] or {})
+    grant = _arm_grant(tmp_path)
+    result = asyncio.run(run_live_e2e(_live_kwargs(
+        tmp_path, grant, tmp_path / "query-auth", WALLETS[:1], phases="2",
+    )))
+    blob = json.dumps(result)
+    blob += (tmp_path / "query-auth" / "RUN_STATE.json").read_text(encoding="utf-8")
+    blob += (tmp_path / "query-auth" / "RESULTS.json").read_text(encoding="utf-8")
+    for path in (tmp_path / "query-auth").rglob("*"):
+        if path.is_file():
+            blob += path.read_text(encoding="utf-8", errors="ignore")
+    assert FAKE_HELIUS not in blob
+    assert FAKE_HELIUS not in redact_text(f"?api-key={FAKE_HELIUS}")
 
 
 def test_fl1_proxy_bools_only_true_false_null(tmp_path):
@@ -465,7 +488,8 @@ def test_fl2_window_days_changes_episodes_and_pnl(tmp_path):
         "completed_episode_ledger": ledger,
         "wallet_completed_episodes": 2,
         "completed_episode_net": "11",
-        "in_window_span": {"end": "2026-10-07T00:00:00Z"},
+        "window": {"start": "2026-09-07T00:00:00Z", "end": "2026-10-07T00:00:00Z"},
+        "in_window_span": {"end": "2026-09-26T00:00:00Z"},
         "worksheet": {
             "settlement_asset": "SOL",
             "total_profit_sol": "11",

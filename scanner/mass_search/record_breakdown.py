@@ -9,6 +9,7 @@ from scanner.investigation import (
     ASSOCIATED_ID,
     COMPUTE_ID,
     JUPITER,
+    LIGHTHOUSE,
     MEMO_IDS,
     PUMP,
     PUMP_SWAP,
@@ -30,6 +31,7 @@ INFRA_PROGRAMS = {
     ASSOCIATED_ID,
     *TOKEN_IDS,
     *MEMO_IDS,
+    LIGHTHOUSE,
 }
 SOL_SWAP_FLOOR = Decimal("0.003")
 LAMPORTS = Decimal(1_000_000_000)
