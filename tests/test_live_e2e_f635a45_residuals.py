@@ -186,6 +186,18 @@ def test_plain_history_to_first_is_accepted_and_capped(tmp_path, fake_keys, monk
     assert len(calls) <= 3
 
 
+def test_receipt_sha_finds_page_zero(tmp_path):
+    from scanner.mass_search.live_e2e import _receipt_sha_for_page
+    store = Store(tmp_path / "store")
+    digest = "a" * 64
+    put_receipt(store, {"authorization_id": AUTHORIZATION_ID_11}, "helius:w:3:0:x", {
+        "provider": "helius", "wallet": WALLETS[0], "phase": 3, "page": 0,
+        "state": "consumed", "sha256": digest, "units": 10,
+    })
+    assert _receipt_sha_for_page(store, WALLETS[0], "page0.bin", phase=3) == digest
+    store.close()
+
+
 def test_import_paid_page_by_ledger_sha(tmp_path):
     prior = tmp_path / "prior" / "raw" / "phase3" / WALLETS[0]
     prior.mkdir(parents=True)
