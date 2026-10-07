@@ -187,9 +187,16 @@ def test_plan_estimates_per_source():
     disabled = estimate_seed_plan([SEED_NANSEN], discovery=True, nansen_enabled=False)
     assert disabled["totals"]["nansen_requests"] == 0
     assert disabled["per_source"][SEED_NANSEN]["enabled"] is False
-    enabled = estimate_seed_plan([SEED_NANSEN], discovery=True, nansen_enabled=True)
-    assert enabled["totals"]["nansen_requests"] == 2
-    assert enabled["totals"]["nansen_units"] == 10
+    leaders_only = estimate_seed_plan(
+        [SEED_NANSEN], discovery=True, nansen_enabled=True, nansen_profile_cap=0,
+    )
+    assert leaders_only["totals"]["nansen_requests"] == 2
+    assert leaders_only["totals"]["nansen_units"] == 10
+    enabled = estimate_seed_plan(
+        [SEED_NANSEN], discovery=True, nansen_enabled=True, nansen_request_cap=18, nansen_unit_cap=90,
+    )
+    assert enabled["totals"]["nansen_requests"] == 18
+    assert enabled["totals"]["nansen_units"] == 26
     triage = estimate_seed_plan(
         [SEED_TOKEN_INTERSECT], tokens=tokens, wallets=[JXT], discovery=True,
     )

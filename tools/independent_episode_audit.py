@@ -11,7 +11,7 @@ import argparse
 import gzip
 import hashlib
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation, localcontext
 from pathlib import Path
@@ -52,6 +52,17 @@ USDC_DECIMALS = Decimal(10) ** 6
 REPORT_START = datetime.fromisoformat("2026-09-05T13:29:27+00:00").timestamp()
 REPORT_END = datetime.fromisoformat("2026-10-05T13:29:27+00:00").timestamp()
 ACQUISITION = datetime.fromisoformat("2026-07-07T13:29:27+00:00").timestamp()
+
+# Bot-rule definition (must match scanner.mass_search.qualification_gates):
+# every economic swap is a trade, including token-to-token; dedupe
+# (signature, kind, mint); route-leg hops are not trades, so a multi-hop
+# route in one tx is one trade, not one per hop.
+BOT_RULE_DEFINITION = (
+    "economic_swap_including_token_to_token; "
+    "dedupe=(signature,kind,mint); "
+    "route_legs_are_not_trades; "
+    "multi_hop_same_tx_counts_once_per_mint_kind"
+)
 
 # Pinned published discriminators (Pump IDL / Jupiter parser / Meteora swap / RFQ Fill).
 # Meteora swap = sha256("global:swap")[:8]; RFQ Fill is the published 8-byte disc.
@@ -1021,6 +1032,60 @@ def _fifo(trades):
     return episodes, unresolved, known_sales, omitted_losing
 
 
+def economic_trade_identity(event):
+    """Bot-rule identity. Token-to-token included. Route legs are not trades."""
+    if not isinstance(event, dict):
+        return None
+    if event.get("kind") not in ("buy", "sell"):
+        return None
+    signature = event.get("signature")
+    if not signature:
+        return None
+    return (signature, event.get("kind"), event.get("mint"))
+
+
+def independent_economic_trade_keys(events):
+    keys = []
+    seen = set()
+    for event in events or []:
+        key = economic_trade_identity(event)
+        if key is None or key in seen:
+            continue
+        seen.add(key)
+        keys.append(key)
+    return keys
+
+
+def economic_trades_by_utc_day(events):
+    """Same bot-rule count as the app. Does not import scanner/."""
+    counts = Counter()
+    seen = set()
+    for event in events or []:
+        if not isinstance(event, dict):
+            continue
+        key = economic_trade_identity(event)
+        if key is None:
+            continue
+        if key in seen:
+            continue
+        seen.add(key)
+        stamp = event.get("timestamp") or event.get("block_time") or event.get("blockTime")
+        if stamp is None:
+            continue
+        if isinstance(stamp, str):
+            try:
+                stamp = datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp()
+            except ValueError:
+                continue
+        try:
+            stamp = int(stamp)
+        except (TypeError, ValueError):
+            continue
+        day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
+        counts[day] += 1
+    return dict(counts)
+
+
 def episode_net_totals(episodes):
     """Sum episode nets per currency. Refuse a mixed-unit total.
 
@@ -1068,10 +1133,17 @@ def audit_address(address, pages):
         })
     reconstructed_mints.sort(key=lambda row: row["mint"])
     episode_net, episode_unit, episode_nets_by_unit = episode_net_totals(episodes)
+    by_day = economic_trades_by_utc_day(trades)
+    max_day = max(by_day.values()) if by_day else 0
+    max_on = max(by_day, key=lambda item: (by_day[item], item)) if by_day else None
     return {
         "address": address,
         "records": len(records),
         "independently_reconstructed_trades": len(trades),
+        "bot_rule_definition": BOT_RULE_DEFINITION,
+        "economic_trades_by_utc_day": by_day,
+        "max_economic_trades_in_one_day": max_day,
+        "max_economic_trades_on": max_on,
         "clean_episodes": len(episodes),
         "independently_audited_episode_net": episode_net,
         "independently_audited_episode_net_unit": episode_unit,

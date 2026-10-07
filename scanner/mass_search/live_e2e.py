@@ -103,7 +103,11 @@ from scanner.mass_search.live_e2e_ledger import (
     spend_from_ledger,
     verify_receipt_chain,
 )
-from scanner.mass_search.qualification_gates import coverage_shares, qualifying_profit
+from scanner.mass_search.qualification_gates import (
+    coverage_shares,
+    economic_trade_rate,
+    qualifying_profit,
+)
 from scanner.mass_search.seed_sources import (
     ALLOWED_NANSEN_PATHS,
     BIRDEYE_FIRST_BUYERS_UNITS,
@@ -116,6 +120,7 @@ from scanner.mass_search.seed_sources import (
     DURABLE_TOKEN_MIN_MARKET_CAP_USD,
     FIRST_BLOCK_EXCLUSION_SECONDS,
     TOKEN_INTERSECT_WINDOWS,
+    TRIAGE_SAMPLES,
     NANSEN_FIRST_FUNDER_PATH,
     NANSEN_HOST,
     NANSEN_LABELS_PATH,
@@ -135,6 +140,7 @@ from scanner.mass_search.seed_sources import (
     cheap_prescreen_decision,
     cheap_prescreen_enabled,
     cost_per_audit_worthy,
+    densest_utc_day_bounds,
     estimate_seed_plan,
     helius_triage_decision,
     helius_triage_enabled,
@@ -246,6 +252,7 @@ BIRDEYE_MIN_INTERVAL_ENV = "SCANNER_BIRDEYE_MIN_INTERVAL_SEC"
 BIRDEYE_BACKOFF_ENV = "SCANNER_BIRDEYE_BACKOFF_SEC"
 DEFAULT_BIRDEYE_MIN_INTERVAL = 4.0
 DEFAULT_BIRDEYE_BACKOFF = 4.0
+BIRDEYE_RATE_LIMIT_RETRIES = 2
 _BIRDEYE_LAST_CALL = 0.0
 _BIRDEYE_PACE_LOCK = asyncio.Lock() if hasattr(asyncio, "Lock") else None
 
@@ -1058,6 +1065,72 @@ def apply_cheap_prescreen_phase1(config, state):
     return dropped
 
 
+def wallet_triage_requests(state, address, *, triage=False):
+    """Requests already counted against --per-wallet-cap from phase 2."""
+    row = ((state or {}).get("phase2") or {}).get(address) or {}
+    if row.get("requests") is not None:
+        return int(row["requests"])
+    if row.get("triage") or triage:
+        return TRIAGE_SAMPLES
+    return 0
+
+
+def wallet_phase3_requests(state, address):
+    cursor = ((state or {}).get("phase3") or {}).get(address) or {}
+    return int(cursor.get("requests") or cursor.get("pages") or 0)
+
+
+def phase3_remaining_budget(config, state, address, *, triage=False):
+    """Remaining Helius requests this wallet may spend in phase 3."""
+    cap = config.get("per_wallet_cap")
+    if cap is None:
+        return None
+    used = wallet_phase3_requests(state, address) + wallet_triage_requests(state, address, triage=triage)
+    return max(0, int(cap) - used)
+
+
+def phase3_planned_pages(config, state, address, estimated_pages, *, triage=False):
+    already = wallet_phase3_requests(state, address)
+    needed = max(0, int(estimated_pages) - already)
+    remaining = phase3_remaining_budget(config, state, address, triage=triage)
+    if remaining is None:
+        return needed
+    return min(needed, remaining)
+
+
+def phase1_produced_seed_count(state):
+    wallets = list((state or {}).get("wallets") or [])
+    if wallets:
+        return len(wallets)
+    count = 0
+    for key, row in ((state or {}).get("discoveries") or {}).items():
+        if not isinstance(row, dict):
+            continue
+        if key.endswith("|helius_triage"):
+            continue
+        count += int(row.get("count") or len(row.get("addresses") or []) or 0)
+    return count
+
+
+def discovered_seed_pool(config, state):
+    """Resume pool: explicit --wallets, else this run's phase-1 discoveries."""
+    if config.get("wallets_supplied") and config.get("wallets"):
+        return list(config.get("wallets") or [])
+    state_wallets = [addr for addr in ((state or {}).get("wallets") or []) if addr]
+    if state_wallets:
+        return state_wallets
+    combined = []
+    seen = set()
+    for key, row in ((state or {}).get("discoveries") or {}).items():
+        if not isinstance(row, dict):
+            continue
+        for addr in row.get("addresses") or []:
+            if addr and addr not in seen:
+                seen.add(addr)
+                combined.append(addr)
+    return combined
+
+
 def estimate_phase3_pages(config, state=None):
     """Pages per wallet from pre-screen tx density (minimum 2)."""
     state = state or {}
@@ -1150,6 +1223,9 @@ def plan_request_counts(config, state=None):
         wallets=wallets,
         nansen_enabled=bool((config.get("nansen_enabled") if "nansen_enabled" in config else os.environ.get(NANSEN_KEY_ENV))),
         birdeye_top_mode=discovery_mode if discovery_mode == BIRDEYE_DISCOVERY_TOP_TRADERS else BIRDEYE_DISCOVERY_GAINERS,
+        nansen_profile_cap=config.get("nansen_profile_cap"),
+        nansen_request_cap=(config.get("caps") or {}).get("nansen_requests"),
+        nansen_unit_cap=(config.get("caps") or {}).get("nansen_units"),
     )
     if 1 in phases and (discovery or not wallets):
         birdeye_requests = seed_plan["totals"]["birdeye_requests"]
@@ -1172,15 +1248,15 @@ def plan_request_counts(config, state=None):
     helius_phase2 = ((3 * n) if triage else (2 * n)) if 2 in phases else 0
     page_estimates = estimate_phase3_pages(config, state) if 3 in phases else {}
     per_wallet_cap = config.get("per_wallet_cap")
-    if per_wallet_cap is not None:
+    if 3 in phases:
         page_estimates = {
-            address: min(int(pages), int(per_wallet_cap))
+            address: phase3_planned_pages(config, state, address, int(pages), triage=triage)
             for address, pages in page_estimates.items()
         }
     helius_phase3 = sum(page_estimates.values()) if 3 in phases else 0
     if 3 in phases and not page_estimates and n3:
-        capped = int(per_wallet_cap) if per_wallet_cap is not None else 2
-        helius_phase3 = min(2, capped) * n3
+        remaining = phase3_remaining_budget(config, state, None, triage=triage)
+        helius_phase3 = min(2, remaining if remaining is not None else 2) * n3
     helius_units = 0
     if 2 in phases:
         if triage:
@@ -1236,7 +1312,9 @@ def plan_request_counts(config, state=None):
                 "note": (
                     "Planner estimates pages per wallet from pre-screen tx "
                     "density (in-window count / window days × history days / 1000), "
-                    "minimum 2, then clips each wallet to --per-wallet-cap. "
+                    "minimum 2, then clips each wallet to the remaining "
+                    "--per-wallet-cap after triage requests already counted "
+                    "against that same cap (typically 3) and pages already fetched. "
                     "A leftover paginationToken is not the end unless first-funding "
                     "is proven. Units are the documented worst case "
                     "(100 credits / 1000 txs) per estimated page."
@@ -1276,6 +1354,25 @@ class RecorderTransport:
 
     def __init__(self):
         self.calls = []
+        self.fail_at = {}
+        self._path_counts = {}
+
+    def _maybe_fail(self, path):
+        count = self._path_counts.get(path, 0) + 1
+        self._path_counts[path] = count
+        spec = (self.fail_at or {}).get(path)
+        if not spec:
+            return
+        after = int(spec.get("after") or 1)
+        times = spec.get("times")
+        if count < after:
+            return
+        if times is not None and count >= after + int(times):
+            return
+        error = spec.get("error")
+        if error is None:
+            error = SourceError("RATE_LIMITED", "Birdeye rate limit", http_status=429, retryable=True)
+        raise error
 
     async def birdeye(self, method, path, params):
         units = BIRDEYE_UNITS
@@ -1308,6 +1405,7 @@ class RecorderTransport:
             "params": dict(params or {}),
             "units": units,
         })
+        self._maybe_fail(path)
         return {
             "status": 200,
             "fetched_at": utc_now(),
@@ -1487,10 +1585,14 @@ def _account_source_spend(state, source, *, provider, units):
     if not source:
         return
     state.setdefault("source_spend", {})
-    bucket = state["source_spend"].setdefault(source, {"requests": 0, "units": 0, "provider": provider})
+    bucket = state["source_spend"].setdefault(source, {"requests": 0, "units": 0, "provider": provider, "by_provider": {}})
     bucket["requests"] += 1
     bucket["units"] += units
     bucket["provider"] = provider
+    by_provider = bucket.setdefault("by_provider", {})
+    row = by_provider.setdefault(provider, {"requests": 0, "units": 0})
+    row["requests"] += 1
+    row["units"] += units
 
 
 def _helius_min_interval():
@@ -1684,19 +1786,39 @@ def _put_receipt(config, store, grant, key, payload):
     return put_receipt(store, grant, key, payload)
 
 
+def _retained_seed_pages(state, source):
+    progress = ((state or {}).get("seed_source_progress") or {}).get(source) or {}
+    if int(progress.get("paid_pages") or 0) > 0:
+        return True
+    discoveries = (state or {}).get("discoveries") or {}
+    for key, row in discoveries.items():
+        if isinstance(row, dict) and str(key).endswith(f"|{source}") and (
+            row.get("addresses") or int(row.get("paid_pages") or 0)
+        ):
+            return True
+    return False
+
+
 def _seed_source_stopped(state, source):
     row = ((state or {}).get("seed_source_failures") or {}).get(source) or {}
+    if _retained_seed_pages(state, source) and not row.get("exhausted"):
+        return False
     return bool(row.get("stop_after_failure") or row.get("fatal"))
 
 
-def _record_seed_source_failure(state, source, error):
+def _record_seed_source_failure(state, source, error, *, retained_pages=0):
     code = getattr(error, "state", None) or "FAILED"
     extras = getattr(error, "extras", None) or {}
+    retained = int(retained_pages or 0) > 0 or _retained_seed_pages(state, source)
+    stop = code in FATAL_SEED_STATES and not (code == "RATE_LIMITED" and retained)
     state.setdefault("seed_source_failures", {})[source] = {
         "state": code,
         "message": str(error),
-        "fatal": code in FATAL_SEED_STATES,
-        "stop_after_failure": code in FATAL_SEED_STATES,
+        "fatal": code in FATAL_SEED_STATES and not retained,
+        "stop_after_failure": stop,
+        "retained_pages": int(retained_pages or 0) or int(
+            (((state or {}).get("seed_source_progress") or {}).get(source) or {}).get("paid_pages") or 0
+        ),
         "billing": extras.get("billing"),
         "error_body": extras.get("error_body"),
     }
@@ -2142,8 +2264,35 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
 
 
 async def _birdeye_seed_call(store, grant, config, state, recorder, *, path, params, operation, units, wallet, page, identity, source=None):
+    """Ledgered Birdeye GET with bounded RATE_LIMITED retries inside caps."""
+    last_error = None
+    attempts = 1 + BIRDEYE_RATE_LIMIT_RETRIES
+    for attempt in range(attempts):
+        try:
+            return await _birdeye_seed_call_once(
+                store, grant, config, state, recorder,
+                path=path, params=params, operation=operation, units=units,
+                wallet=wallet, page=page, identity=identity, source=source,
+                attempt=attempt,
+            )
+        except SourceError as error:
+            last_error = error
+            if getattr(error, "state", None) != "RATE_LIMITED":
+                raise
+            if attempt + 1 >= attempts:
+                break
+            left = remaining_caps(config, state["spend"])
+            if left["birdeye_requests"] < 1 or left["birdeye_units"] < units:
+                break
+            backoff = _birdeye_backoff_seconds()
+            if backoff:
+                await asyncio.sleep(backoff * (attempt + 1))
+    raise last_error
+
+
+async def _birdeye_seed_call_once(store, grant, config, state, recorder, *, path, params, operation, units, wallet, page, identity, source=None, attempt=0):
     """Ledgered, grant-gated Birdeye GET. Dry-run uses the recorder only."""
-    token_key = request_identity("birdeye", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}")
+    token_key = request_identity("birdeye", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}:a{attempt}")
     hard_stop_if_needed(
         config, state["spend"], provider="birdeye", units=units,
         phase=1, phase_spend=state.get("phase_spend"),
@@ -2321,16 +2470,33 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
                 seen=seen,
             ):
                 selected.append(row)
-                extras[row["address"]] = {
+                existing = extras.get(row["address"]) or {}
+                timeframes = dict(existing.get("timeframes") or {})
+                timeframes[str(timeframe)] = {
                     "rank": row.get("rank"),
                     "selection_reason": row.get("selection_reason"),
                     "vendor_metrics": row.get("vendor_metrics"),
-                    "timeframe": timeframe,
                     "billing": response.get("billing"),
+                    "timeframe": timeframe,
                 }
+                if row["address"] not in extras:
+                    extras[row["address"]] = {
+                        "rank": row.get("rank"),
+                        "selection_reason": row.get("selection_reason"),
+                        "vendor_metrics": row.get("vendor_metrics"),
+                        "timeframe": timeframe,
+                        "billing": response.get("billing"),
+                        "timeframes": timeframes,
+                    }
+                else:
+                    extras[row["address"]]["timeframes"] = timeframes
         profile_page = len(NANSEN_TIMEFRAMES)
+        profile_cap = config.get("nansen_profile_cap")
+        profiled = 0
         for row in selected:
             address = row["address"]
+            if profile_cap is not None and profiled >= int(profile_cap):
+                break
             left = remaining_caps(config, state["spend"])
             if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_PROFILER_UNITS:
                 break
@@ -2359,6 +2525,7 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
             vendor["is_not"] = "independently_verified_profit_or_copyability"
             extras[address]["vendor_metrics"] = vendor
             extras[address]["billing"] = response.get("billing")
+            profiled += 1
     except Exception:
         if raw_parts:
             _save_seed_raw_parts(config, identity, SEED_NANSEN, raw_parts)
@@ -2429,6 +2596,7 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
     appearances = []
     page = 1
     limit = min(int(config.get("birdeye_limit") or 50), 50)
+    rate_limited = None
     try:
         for token_row in chosen:
             token = token_row.get("address")
@@ -2452,6 +2620,12 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
                 )
                 page += 1
                 raw_parts.append(response.get("raw_bytes") or b"{}")
+                state.setdefault("seed_source_progress", {})[SEED_TOKEN_INTERSECT] = {
+                    "paid_pages": len(raw_parts),
+                    "tokens": [row.get("address") for row in chosen],
+                    "seed_source": SEED_TOKEN_INTERSECT,
+                }
+                save_state(config["output_dir"], state)
                 items = token_tx_items(response.get("body"))
                 windowed = False
                 for window in windows:
@@ -2472,6 +2646,13 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
                         window="recent_ordinary",
                         after_time=after_first_block,
                     ))
+    except SourceError as error:
+        if raw_parts:
+            _save_seed_raw_parts(config, identity, SEED_TOKEN_INTERSECT, raw_parts)
+        if getattr(error, "state", None) == "RATE_LIMITED" and raw_parts:
+            rate_limited = error
+        else:
+            raise
     except Exception:
         if raw_parts:
             _save_seed_raw_parts(config, identity, SEED_TOKEN_INTERSECT, raw_parts)
@@ -2499,20 +2680,36 @@ async def _phase1_token_intersect(store, grant, config, state, recorder, identit
         "sha256": digest,
         "count": len(addresses),
         "tokens": [row.get("address") for row in chosen],
+        "paid_pages": len(raw_parts),
+        "partial": bool(rate_limited),
         "seed_source": SEED_TOKEN_INTERSECT,
         "seed_is_not": "evidence",
     }
+    state.setdefault("seed_source_progress", {})[SEED_TOKEN_INTERSECT] = {
+        "paid_pages": len(raw_parts),
+        "addresses": list(addresses),
+        "partial": bool(rate_limited),
+        "seed_source": SEED_TOKEN_INTERSECT,
+    }
     _merge_discovery_wallets(config, state, addresses, source=SEED_TOKEN_INTERSECT, extras=extras)
+    if rate_limited:
+        _record_seed_source_failure(state, SEED_TOKEN_INTERSECT, rate_limited, retained_pages=len(raw_parts))
     save_state(config["output_dir"], state)
-    return {
+    result = {
         "addresses": addresses,
         "sha256": digest,
         "count": len(addresses),
         "discovery_identity": identity,
         "pool_size": len(state.get("wallets") or []),
+        "paid_pages": len(raw_parts),
+        "partial": bool(rate_limited),
         "seed_source": SEED_TOKEN_INTERSECT,
         "seed_is_not": "evidence",
     }
+    if rate_limited:
+        result["rate_limited"] = True
+        result["stop_after_failure"] = False
+    return result
 
 
 async def phase1_discovery(store, grant, config, state, recorder):
@@ -2559,8 +2756,18 @@ async def phase1_discovery(store, grant, config, state, recorder):
             else:
                 continue
         except SourceError as error:
-            _record_seed_source_failure(state, source, error)
+            retained = 0
+            progress = ((state.get("seed_source_progress") or {}).get(source) or {})
+            retained = int(progress.get("paid_pages") or 0)
+            _record_seed_source_failure(state, source, error, retained_pages=retained)
             save_state(config["output_dir"], state)
+            if getattr(error, "state", None) == "RATE_LIMITED" and retained:
+                prior = ((state.get("discoveries") or {}).get(source_identity) or {})
+                per_source[source] = {**prior, "rate_limited": True, "stop_after_failure": False}
+                for addr in prior.get("addresses") or []:
+                    if addr not in combined:
+                        combined.append(addr)
+                continue
             raise
         per_source[source] = result
         for addr in result.get("addresses") or []:
@@ -2855,6 +3062,18 @@ def _triage_sample_options(bounds):
     )
 
 
+def _triage_third_sample(bounds, samples):
+    """Retarget the third sample at the densest UTC day already seen."""
+    densest = densest_utc_day_bounds(samples)
+    if densest:
+        return ("densest_day", gta_options(
+            details="full", limit=GTA_SAMPLE_LIMIT,
+            start_unix=densest["start_unix"], end_unix=densest["end_unix"],
+            sort_order="desc",
+        ))
+    return _triage_sample_options(bounds)[2]
+
+
 async def phase2_prescreen(store, grant, config, state, recorder):
     if 2 not in config["phases"]:
         return {"skipped": True}
@@ -2874,7 +3093,12 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             samples = []
             sample_records = []
             try:
-                for page_index, (name, options) in enumerate(_triage_sample_options(bounds)):
+                specs = list(_triage_sample_options(bounds))
+                for page_index in range(TRIAGE_SAMPLES):
+                    if page_index == 2:
+                        name, options = _triage_third_sample(bounds, samples)
+                    else:
+                        name, options = specs[page_index]
                     page = await _dispatch_helius(
                         store, grant, config, state, transport, address, options,
                         phase=2, page_index=page_index,
@@ -2889,6 +3113,8 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                         events = []
                     samples.append({"name": name, "records": records, "events": events})
                     sample_records.extend(records)
+                    seed_source = seed_fields_for_wallet(state, address).get("seed_source") or "helius_triage"
+                    _account_source_spend(state, seed_source, provider="helius", units=FULL_100_UNITS)
                     _account_source_spend(state, "helius_triage", provider="helius", units=FULL_100_UNITS)
             except SourceError as error:
                 if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
@@ -3113,22 +3339,41 @@ async def phase3_history(store, grant, config, state, recorder):
     transport = recorder.helius if config["dry_run"] else _live_helius
     kept = phase3_wallets(config, state)
     pages = {}
+    triage = helius_triage_enabled(config.get("seed_sources"))
     for address in kept:
         cursor = (state.get("phase3") or {}).get(address) or {"pages": 0, "requests": 0, "done": False}
-        if cursor.get("done"):
+        remaining = phase3_remaining_budget(config, state, address, triage=triage)
+        history_finished = bool(
+            cursor.get("history_complete")
+            or cursor.get("window_covered")
+            or cursor.get("early_stop_bot_rate")
+            or cursor.get("history_complete_reason") in (
+                "wallet_created_in_range",
+                "no_leftover_pagination_token",
+                "gt_25_economic_trades_in_one_day",
+            )
+        )
+        if cursor.get("done") and history_finished:
             pages[address] = cursor
             continue
+        if cursor.get("done") and remaining == 0:
+            pages[address] = cursor
+            continue
+        if cursor.get("done") and remaining not in (None, 0) and not history_finished:
+            cursor = dict(cursor)
+            cursor["done"] = False
         token = cursor.get("pagination_token")
         while True:
             page_cap = config.get("per_wallet_cap")
             used = int(cursor.get("requests") or 0)
-            used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
+            used += wallet_triage_requests(state, address, triage=triage)
             if page_cap is not None and used >= int(page_cap):
                 cursor["done"] = True
                 cursor["history_complete"] = False
                 cursor["history_complete_reason"] = "per_wallet_cap"
                 cursor["leftover_pagination_token"] = bool(token)
                 cursor["window_covered"] = False
+                cursor["history_reached_window_start"] = False
                 break
             options = gta_options(
                 details="full",
@@ -3160,6 +3405,27 @@ async def phase3_history(store, grant, config, state, recorder):
             cursor["last_sha256"] = result.get("evidence_sha256")
             token = result.get("pagination_token")
             records = result.get("records") or []
+            seed_source = seed_fields_for_wallet(state, address).get("seed_source") or "helius_history"
+            _account_source_spend(state, seed_source, provider="helius", units=FULL_1000_UNITS)
+            page_events = []
+            try:
+                from scanner.mass_search.canonical_records import canonical_decode_records
+                decoded = decode_supported_swaps(canonical_decode_records(records), address)
+                page_events = list(decoded.get("events") or [])
+            except Exception:
+                page_events = []
+            rate = economic_trade_rate(page_events)
+            if rate["max"] > 25:
+                cursor["done"] = True
+                cursor["history_complete"] = False
+                cursor["history_complete_reason"] = "gt_25_economic_trades_in_one_day"
+                cursor["early_stop_bot_rate"] = True
+                cursor["leftover_pagination_token"] = bool(token)
+                cursor["window_covered"] = False
+                cursor["history_reached_window_start"] = False
+                cursor["max_economic_trades_in_one_day"] = rate["max"]
+                cursor["max_economic_trades_on"] = rate["max_on"]
+                break
             oldest = None
             for row in records:
                 stamp = row.get("blockTime") or row.get("timestamp") or ((row.get("transaction") or {}).get("blockTime"))
@@ -3176,10 +3442,12 @@ async def phase3_history(store, grant, config, state, recorder):
             covered = no_more or created_complete or (
                 reached_bound and created["wallet_created_in_range"]
             )
-            hit_page_cap = page_cap is not None and cursor["pages"] >= int(page_cap)
+            used_after = int(cursor.get("requests") or 0) + wallet_triage_requests(state, address, triage=triage)
+            hit_page_cap = page_cap is not None and used_after >= int(page_cap)
             if covered or config["dry_run"] or hit_page_cap:
                 cursor["done"] = True
                 cursor["window_covered"] = bool(covered)
+                cursor["history_reached_window_start"] = bool(covered or reached_bound)
                 cursor["leftover_pagination_token"] = bool(token)
                 cursor["history_complete"] = bool(created["history_complete"]) and not hit_page_cap
                 if hit_page_cap and token:
@@ -3273,6 +3541,18 @@ def _phase4_wallet_row(report, profile):
         "has_known_basis_buys": ((report.get("prescreen") or {}).get("has_known_basis_buys")),
         "history_complete": history.get("history_complete"),
         "history_complete_reason": history.get("history_complete_reason"),
+        "history_pages_fetched": history.get("pages_fetched") or history.get("phase3_pages"),
+        "history_reached_window_start": history.get("history_reached_window_start"),
+        "not_audited_reason": (
+            None
+            if independently_audited(report, profile)
+            else (
+                blocker
+                or history.get("history_complete_reason")
+                or ((profile or {}).get("independent_audit") or {}).get("reason")
+                or "not_independently_audited"
+            )
+        ),
         "wallet_created_in_range": history.get("wallet_created_in_range"),
         "leftover_pagination_token": history.get("leftover_pagination_token"),
         "pnl_scope": (
@@ -3366,6 +3646,9 @@ def phase4_offline(store, config, state):
                 "independently_audited": False,
                 "lead_level": "insufficient_evidence",
                 "blocker": page_blocker,
+                "history_pages_fetched": expected_pages,
+                "history_reached_window_start": False,
+                "not_audited_reason": page_blocker,
                 "coverage_status": "blocked",
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 **seed_fields_for_wallet(state, address),
@@ -3384,6 +3667,9 @@ def phase4_offline(store, config, state):
                 "independently_audited": False,
                 "lead_level": "insufficient_evidence",
                 "blocker": "no captured history in this run",
+                "history_pages_fetched": expected_pages,
+                "history_reached_window_start": False,
+                "not_audited_reason": "no captured history in this run",
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 **seed_fields_for_wallet(state, address),
                 "PRODUCT_READY": False,
@@ -3403,6 +3689,12 @@ def phase4_offline(store, config, state):
             address=address,
             cap_truncated=bool(phase3_cursor) and not phase3_cursor.get("done"),
             page_cap_hit=bool(phase3_cursor.get("history_complete_reason") == "page_cap_with_leftover_token"),
+        )
+        history["pages_fetched"] = int(phase3_cursor.get("pages") or 0)
+        history["phase3_pages"] = int(phase3_cursor.get("pages") or 0)
+        history["history_reached_window_start"] = bool(
+            phase3_cursor.get("history_reached_window_start")
+            or phase3_cursor.get("window_covered")
         )
         if phase3_cursor.get("history_complete") is False:
             history["history_complete"] = False
@@ -3727,6 +4019,9 @@ def validate_config(raw):
         "bounds": bounds,
         "caps": caps,
         "per_wallet_cap": raw.get("per_wallet_cap"),
+        "nansen_profile_cap": (
+            int(raw["nansen_profile_cap"]) if raw.get("nansen_profile_cap") not in (None, "") else None
+        ),
         "resume": bool(raw.get("resume")),
         "explicit_retry": bool(raw.get("explicit_retry")),
         "birdeye_limit": int(raw.get("birdeye_limit") or BIRDEYE_DEFAULT_LIMIT),
@@ -3840,7 +4135,21 @@ async def run_live_e2e(raw):
                 state["phases_done"] = sorted(done | {1})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
+            if not (config.get("wallets_supplied") and config.get("wallets")):
+                loaded = discovered_seed_pool(config, state)
+                if loaded:
+                    config["wallets"] = list(loaded)
+                    state["wallets"] = list(loaded)
             wanted = list(config.get("wallets") or [])
+            if any(phase in config["phases"] for phase in (2, 3, 4)) and not wanted:
+                produced = phase1_produced_seed_count(state)
+                if produced:
+                    raise SourceError(
+                        "EMPTY_SEED_POOL",
+                        f"phase {sorted(set(config['phases']) & {2, 3, 4})} has an empty "
+                        f"wallet pool but phase 1 produced {produced} seeds; "
+                        "resume must load the run's own phase-1 output",
+                    )
             phase2_pending = [
                 addr for addr in wanted
                 if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
@@ -4033,6 +4342,12 @@ def build_arg_parser():
         help="Optional earlier bound (Unix seconds) when --history-to-first is set",
     )
     parser.add_argument("--per-wallet-cap", dest="per_wallet_cap", type=int)
+    parser.add_argument(
+        "--nansen-profile-cap",
+        dest="nansen_profile_cap",
+        type=int,
+        help="Max Nansen pnl-summary calls after the two leaderboard pages. Plan equals this bound.",
+    )
     parser.add_argument("--max-birdeye-requests", dest="max_birdeye_requests", type=int)
     parser.add_argument("--max-birdeye-units", dest="max_birdeye_units", type=int)
     parser.add_argument("--max-helius-requests", dest="max_helius_requests", type=int)

@@ -41,6 +41,12 @@ ROUNDING_POLICY = (
 )
 MAX_ECONOMIC_TRADES_PER_UTC_DAY = 25
 GT25_ECONOMIC_TRADES_RULE = "gt_25_economic_trades_in_one_day"
+BOT_RULE_DEFINITION = (
+    "economic_swap_including_token_to_token; "
+    "dedupe=(signature,kind,mint); "
+    "route_legs_are_not_trades; "
+    "multi_hop_same_tx_counts_once_per_mint_kind"
+)
 
 COVERAGE_LEAD_SHARE = Decimal("0.99")
 COVERAGE_WATCH_SHARE = Decimal("0.95")
@@ -672,24 +678,54 @@ def _event_unix(event):
     return None
 
 
-def economic_trades_by_utc_day(events):
-    """Count buy/sell economic trades per UTC date.
+def economic_trade_identity(event):
+    """Bot-rule identity: (signature, kind, mint). Token-to-token included."""
+    if not isinstance(event, dict):
+        return None
+    if event.get("kind") not in ("buy", "sell"):
+        return None
+    signature = event.get("signature")
+    if not signature:
+        return None
+    return (signature, event.get("kind"), event.get("mint"))
 
-    One trade is (signature, kind, mint). Route legs are not trades. Fee
-    events are not trades. Overlapping samples collapse. Timestamps may be
-    unix seconds or ISO-8601.
+
+def independent_economic_trade_keys(events):
+    """Independent (signature, kind, mint) set. Must match economic_trades_by_utc_day."""
+    keys = []
+    seen = set()
+    for event in events or []:
+        key = economic_trade_identity(event)
+        if key is None or key in seen:
+            continue
+        seen.add(key)
+        keys.append(key)
+    return keys
+
+
+def economic_trades_by_utc_day(events):
+    """Count every economic swap as a trade, including token-to-token.
+
+    Dedupe by (signature, kind, mint) so one multi-leg tx is not counted more
+    than once per mint/kind. Route-leg hops are not trades: a multi-hop route
+    in one tx is one trade, not one per hop. An independent unique-
+    (signature, kind, mint) count must match. Fee events are not trades.
+    Overlapping samples collapse. Timestamps may be unix seconds or ISO-8601.
     """
     counts = Counter()
     seen = set()
     for event in events or []:
         if not isinstance(event, dict):
             continue
-        if event.get("kind") not in ("buy", "sell"):
-            continue
         stamp = _event_unix(event)
         if stamp is None:
             continue
-        key = (event.get("signature"), event.get("kind"), event.get("mint"))
+        key = economic_trade_identity(event)
+        if key is None:
+            # Unsigned synthetic events still count once (tests use no signature).
+            if event.get("kind") not in ("buy", "sell"):
+                continue
+            key = (None, event.get("kind"), event.get("mint"), id(event))
         if event.get("signature") and key in seen:
             continue
         if event.get("signature"):

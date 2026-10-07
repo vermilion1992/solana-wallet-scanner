@@ -69,6 +69,7 @@ ALLOWED_NANSEN_PATHS = frozenset({
 })
 NANSEN_LEADERBOARD_UNITS = 5
 NANSEN_PROFILER_UNITS = 1
+NANSEN_LEADERBOARD_PER_PAGE = 50
 NANSEN_TIMEFRAME_ENUM = (1, 7, 30, 90, 180)
 NANSEN_TIMEFRAMES = (90, 180)
 NANSEN_CHAIN = "solana"
@@ -150,6 +151,20 @@ COUNT_KINDS = (
     "route_legs",
     "positions",
     "completed_episodes",
+)
+
+# Bot-rule definition (app + independent auditor, 2026-10-08):
+# Every economic swap is a trade, including token-to-token. Identity is
+# (signature, kind, mint): one multi-leg tx is not counted more than once
+# per mint/kind. Route-leg hops are not trades, so a multi-hop route in one
+# tx is one trade, not one per hop. An independent unique-(sig, kind, mint)
+# count must match. Under 25/day proves nothing; >25 on full history is the
+# lead gate.
+BOT_RULE_DEFINITION = (
+    "economic_swap_including_token_to_token; "
+    "dedupe=(signature,kind,mint); "
+    "route_legs_are_not_trades; "
+    "multi_hop_same_tx_counts_once_per_mint_kind"
 )
 
 LEADERBOARD_VIABILITY = {
@@ -456,8 +471,42 @@ def leaderboard_not_viable_reason():
     )
 
 
-def estimate_seed_plan(sources, *, tokens=None, discovery=True, wallets=None, nansen_enabled=False, birdeye_top_mode=None):
-    """Dry-run request/credit estimates per selected source. No HTTP."""
+def estimate_nansen_profiler_count(*, profile_cap=None, request_cap=None, unit_cap=None, already_requests=0, already_units=0):
+    """Upper bound on pnl-summary calls. Runtime must not exceed this."""
+    leaderboard_req = len(NANSEN_TIMEFRAMES)
+    leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
+    worst = NANSEN_LEADERBOARD_PER_PAGE * len(NANSEN_TIMEFRAMES)
+    profile_n = worst
+    if profile_cap is not None:
+        profile_n = min(profile_n, max(0, int(profile_cap)))
+    if request_cap is not None:
+        remaining = max(0, int(request_cap) - int(already_requests) - leaderboard_req)
+        profile_n = min(profile_n, remaining)
+    if unit_cap is not None:
+        remaining_units = max(0, int(unit_cap) - int(already_units) - leaderboard_units)
+        profile_n = min(profile_n, remaining_units // NANSEN_PROFILER_UNITS)
+    return profile_n
+
+
+def estimate_seed_plan(
+    sources,
+    *,
+    tokens=None,
+    discovery=True,
+    wallets=None,
+    nansen_enabled=False,
+    birdeye_top_mode=None,
+    nansen_profile_cap=None,
+    nansen_request_cap=None,
+    nansen_unit_cap=None,
+):
+    """Dry-run request/credit estimates per selected source. No HTTP.
+
+    Nansen includes leaderboard calls plus the profiler loop. The profiler
+    count is min(profile_cap, remaining request/unit cap, 50×timeframes).
+    That is a strict upper bound; with an explicit --nansen-profile-cap it
+    equals runtime on a fixture that yields that many unique seeds.
+    """
     sources = [canonicalize_seed_name(item) for item in (sources or [])]
     tokens = list(tokens or [])
     wallets = list(wallets or [])
@@ -509,15 +558,30 @@ def estimate_seed_plan(sources, *, tokens=None, discovery=True, wallets=None, na
         }
     if run_discovery and SEED_NANSEN in sources:
         if nansen_enabled:
-            nansen_requests += len(NANSEN_TIMEFRAMES)
-            nansen_units += len(NANSEN_TIMEFRAMES) * NANSEN_LEADERBOARD_UNITS
+            leaderboard_req = len(NANSEN_TIMEFRAMES)
+            leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
+            profile_n = estimate_nansen_profiler_count(
+                profile_cap=nansen_profile_cap,
+                request_cap=nansen_request_cap,
+                unit_cap=nansen_unit_cap,
+            )
+            nansen_requests += leaderboard_req + profile_n
+            nansen_units += leaderboard_units + profile_n * NANSEN_PROFILER_UNITS
             per_source[SEED_NANSEN] = {
                 "provider": "nansen",
                 "requests": nansen_requests,
                 "units": nansen_units,
                 "billing_unit": "nansen_credit",
                 "timeframes": list(NANSEN_TIMEFRAMES),
-                "note": "2 leaderboard calls (90d/180d). Profiler is planned only for kept candidates.",
+                "leaderboard_requests": leaderboard_req,
+                "profiler_requests": profile_n,
+                "profile_cap": nansen_profile_cap,
+                "note": (
+                    f"{leaderboard_req} leaderboard calls (90d/180d) plus up to "
+                    f"{profile_n} profiler pnl-summary calls (1 credit). "
+                    "Plan is a strict upper bound of runtime; set "
+                    "--nansen-profile-cap to pin the profiler count."
+                ),
             }
         else:
             per_source[SEED_NANSEN] = {
@@ -537,11 +601,13 @@ def estimate_seed_plan(sources, *, tokens=None, discovery=True, wallets=None, na
             "requests": helius_triage_requests,
             "units": helius_triage_units,
             "billing_unit": "helius_credit",
-            "samples": ["earliest", "recent", "older_month"],
+            "samples": ["earliest", "recent", "densest_day_or_older_month"],
             "note": (
-                "Up to 3 bounded full samples (limit 100, 10 credits). "
-                ">25 economic trades in one UTC day rejects. Under 25 proves nothing. "
-                "Prefer 180+ days of observed age. Survivors only get --history-to-first."
+                "Up to 3 bounded full samples (limit 100, 10 credits): earliest, "
+                "recent, then the densest UTC day from those samples (older-month "
+                "fallback). >25 economic trades in one UTC day rejects. Under 25 "
+                "proves nothing. Prefer 180+ days of observed age. Survivors only "
+                "get --history-to-first."
             ),
         }
     return {
@@ -774,8 +840,13 @@ def nansen_leaderboard_rows(body):
 
 
 def select_nansen_wallets(rows, *, timeframe, seen=None):
-    """Provider-ranked wallets. Metrics are stored separately, never evidence."""
-    seen = set(seen or ())
+    """Provider-ranked wallets. Metrics are stored separately, never evidence.
+
+    Mutates the caller's `seen` set so 90d and 180d share one dedupe. A wallet
+    on both boards is selected once; per-timeframe rank/PnL is recorded later.
+    """
+    if seen is None:
+        seen = set()
     selected = []
     for index, row in enumerate(rows or [], start=1):
         if not isinstance(row, dict):
@@ -848,8 +919,29 @@ def cheap_prescreen_decision(signals, *, max_trades_per_day=None, min_history_da
     }
 
 
-# economic_trades_by_utc_day: shared helper. (signature, kind, mint)
-# dedupe; ISO or unix timestamps; route legs are not trades.
+# economic_trades_by_utc_day: shared helper. BOT_RULE_DEFINITION.
+# (signature, kind, mint) dedupe; token-to-token included; route legs are
+# not trades; ISO or unix timestamps.
+
+
+def densest_utc_day_bounds(samples):
+    """UTC day with the most economic trades in the samples already fetched."""
+    events = []
+    for sample in samples or []:
+        events.extend(sample.get("events") or [])
+    by_day = economic_trades_by_utc_day(events)
+    if not by_day:
+        return None
+    day = max(by_day, key=lambda item: (by_day[item], item))
+    start = datetime.fromisoformat(day).replace(tzinfo=timezone.utc)
+    start_unix = int(start.timestamp())
+    return {
+        "name": "densest_day",
+        "day": day,
+        "start_unix": start_unix,
+        "end_unix": start_unix + 86400,
+        "trades": int(by_day[day]),
+    }
 
 
 def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=False):
@@ -948,6 +1040,8 @@ def record_seed_metadata(state, address, source, extra=None):
     mapped = canonicalize_seed_name(source)
     if mapped not in sources:
         sources.append(mapped)
+    extra = dict(extra or {})
+    incoming_tf = extra.pop("timeframes", None)
     meta = {
         "seed_sources": sources,
         "primary_seed_source": sources[0],
@@ -956,7 +1050,32 @@ def record_seed_metadata(state, address, source, extra=None):
     for key, value in (existing or {}).items():
         if key not in meta and key not in ("seed_sources", "primary_seed_source"):
             meta[key] = value
-    for key, value in (extra or {}).items():
+    merged_tf = dict(existing.get("timeframes") or {})
+    if incoming_tf:
+        for tf, payload in incoming_tf.items():
+            if not payload:
+                continue
+            key = str(tf)
+            merged_tf[key] = {**(merged_tf.get(key) or {}), **payload}
+    incoming_timeframe = extra.get("timeframe")
+    if incoming_timeframe is not None and mapped == SEED_NANSEN:
+        tf_key = str(incoming_timeframe)
+        slot = dict(merged_tf.get(tf_key) or {})
+        for field in ("rank", "selection_reason", "vendor_metrics", "billing"):
+            if extra.get(field) is not None:
+                slot[field] = extra[field]
+        slot["timeframe"] = incoming_timeframe
+        merged_tf[tf_key] = slot
+        already = existing.get("timeframe")
+        if already not in (None, incoming_timeframe) and existing.get("rank") is not None:
+            extra = {
+                key: value
+                for key, value in extra.items()
+                if key not in ("rank", "timeframe", "selection_reason", "vendor_metrics")
+            }
+    if merged_tf:
+        meta["timeframes"] = merged_tf
+    for key, value in extra.items():
         if value is not None:
             meta[key] = value
     state["seed_metadata"][address] = meta
@@ -981,21 +1100,39 @@ def seed_fields_for_wallet(state, address):
         "selection_reason": meta.get("selection_reason"),
         "seed_is_not": "evidence",
         "vendor_metrics": meta.get("vendor_metrics"),
+        "timeframes": meta.get("timeframes"),
         "seed_token": meta.get("token"),
     }
 
 
 def cost_per_audit_worthy(spend_by_source, audit_worthy_by_source):
-    """Credits per independently audited wallet. None when the denominator is 0."""
+    """Credits per independently audited wallet across every provider and phase.
+
+    `units`/`requests` stay the source-bucket totals (may mix providers once
+    Helius triage/history is attributed). `by_provider` splits Birdeye / Helius
+    / Nansen so phase-3 Helius is never omitted. None when the denominator is 0.
+    """
     out = {}
     for source, spend in (spend_by_source or {}).items():
         worthy = int((audit_worthy_by_source or {}).get(source) or 0)
         units = int((spend or {}).get("units") or 0)
+        requests = int((spend or {}).get("requests") or 0)
+        by_provider = dict((spend or {}).get("by_provider") or {})
+        if not by_provider and spend:
+            provider = spend.get("provider")
+            if provider:
+                by_provider = {provider: {"requests": requests, "units": units}}
+        all_units = sum(int((row or {}).get("units") or 0) for row in by_provider.values()) or units
         out[source] = {
             "units": units,
-            "requests": int((spend or {}).get("requests") or 0),
+            "requests": requests,
             "audit_worthy": worthy,
             "cost_per_audit_worthy": None if worthy <= 0 else str((Decimal(units) / Decimal(worthy)).quantize(Decimal("0.0001"))),
+            "by_provider": by_provider,
+            "all_providers_units": all_units,
+            "cost_per_audit_worthy_all_providers": (
+                None if worthy <= 0 else str((Decimal(all_units) / Decimal(worthy)).quantize(Decimal("0.0001")))
+            ),
             "seed_is_not": "evidence",
         }
     return out
