@@ -183,7 +183,7 @@ def test_positive_worksheet_negative_episodes_does_not_qualify():
         "corpus_kind": "SYNTHETIC",
     }, "positive worksheet with negative completed episodes")
     profile = build_research_profile(report, filters=default_filters())
-    assert Decimal(str(profile["scoped_pnl"])) == Decimal("88.25")
+    assert Decimal(str(profile["scoped_pnl"])) == Decimal("-12.5")
     assert Decimal(str(profile["completed_episode_net"])) == Decimal("-12.5")
     assert profile["worksheet_episode_bridge"]["worksheet_is_not_qualifying"] is True
     judged = qualification_level(report, profile)

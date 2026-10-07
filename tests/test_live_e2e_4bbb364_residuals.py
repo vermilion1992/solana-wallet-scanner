@@ -305,6 +305,29 @@ def test_scoped_pnl_uses_completed_episode_not_worksheet():
     assert Decimal(str(profile["scoped_pnl_by_quote_asset"]["USDC"])) == Decimal("63.40")
 
 
+def test_mixed_quote_assets_keep_mixed_settlement():
+    report = {
+        "address": "MixedWallet",
+        "events": [],
+        "worksheet": {
+            "settlement_asset": "mixed",
+            "by_quote_asset": {
+                "USDC": {"total_profit_usdc": "63.40", "known_cost_sales": 1},
+                "SOL": {"total_profit_sol": "0", "known_cost_sales": 0, "open_lots": 1},
+            },
+        },
+        "classification": {"counts": {}, "transactions": 2},
+        "coverage": {"decoded_swaps": 2},
+        "completed_episode_ledger": [{
+            "mint": "M", "close_signature": "s1", "net": "63.40", "unit": "USDC",
+            "basis": "10", "proceeds": "73.40", "costs": "0", "timestamp": 20,
+        }],
+    }
+    profile = build_research_profile(report, filters=default_filters())
+    assert profile["settlement_asset"] == "mixed"
+    assert Decimal(str(profile["scoped_pnl_by_quote_asset"]["USDC"])) == Decimal("63.40")
+
+
 def test_report_window_days_optional_default_30():
     default = window_bounds(30, 60)
     assert default["report_window_days"] == 30

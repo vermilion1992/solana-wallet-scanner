@@ -272,10 +272,13 @@ def _arity(accounts, size, path):
 
 
 def _signer_fields(info, accounts, index, name, signers, inner, path, program,
-                   *, allow_extension_accounts=False):
+                   *, allow_extension_accounts=False, allow_duplicate_owner=False):
     """Match primary RPC names; multisig threshold needs separate account state."""
     extra = accounts[index + 1:]
-    if extra:
+    if extra and allow_duplicate_owner and all(item == accounts[index] for item in extra):
+        info[name] = accounts[index]
+        required = [accounts[index]]
+    elif extra:
         if program == TOKEN_2022_ID and allow_extension_accounts:
             info[name] = accounts[index]
             info['extensionAccounts'] = list(extra)
@@ -381,14 +384,17 @@ def _token(data, accounts, signers, inner, path, program):
                 required = _signer_fields(info, accounts, 1, 'owner', signers, inner, path, program)
             elif tag == 9:
                 info = {'account': accounts[0], 'destination': accounts[1]}
-                # Token-2022 clients often repeat the owner as extra accounts.
-                # Allow that encoding; other extra parties stay fail-closed.
+                # Clients often repeat the owner as extra accounts on both
+                # Token and Token-2022 (ZyPS6ThF-class PumpSwap wrap/close).
+                # Treat that as a single owner; other extra parties stay
+                # fail-closed as multisig / extension roles.
                 extra = accounts[3:]
                 owner = accounts[2] if len(accounts) > 2 else None
-                duplicate_owner = bool(extra) and program == TOKEN_2022_ID and owner and all(item == owner for item in extra)
+                duplicate_owner = bool(extra) and owner and all(item == owner for item in extra)
                 required = _signer_fields(
                     info, accounts, 2, 'owner', signers, inner, path, program,
                     allow_extension_accounts=duplicate_owner,
+                    allow_duplicate_owner=duplicate_owner,
                 )
             else:
                 amount, decimals = int.from_bytes(data[1:9], 'little'), data[9]

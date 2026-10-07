@@ -171,6 +171,21 @@ def test_outer_required_signer_is_checked_but_cpi_pda_is_not_a_message_signer():
     assert output['normalization']['required_signer_roles'] == [KEYS['authority']]
 
 
+def test_classic_token_close_repeated_owner_is_single_owner_not_multisig():
+    instruction = {
+        'programId': KEYS['token'],
+        'accounts': [KEYS['source'], KEYS['destination'], KEYS['authority'], KEYS['authority']],
+        'data': binary_base58('09'),
+    }
+    output = normalize_instruction(instruction, list(KEYS.values()), signers={KEYS['authority']})
+    info = output['instruction']['parsed']['info']
+    assert output['instruction']['parsed']['type'] == 'closeAccount'
+    assert info['owner'] == KEYS['authority']
+    assert 'multisigOwner' not in info
+    assert info['account'] == KEYS['source']
+    assert info['destination'] == KEYS['destination']
+
+
 def test_classic_multisig_rpc_names_and_independent_threshold_limitation():
     instruction = {'programId': KEYS['token'], 'accounts': [KEYS['source'], KEYS['destination'], KEYS['mint'], KEYS['authority']],
                    'data': binary_base58('030100000000000000')}

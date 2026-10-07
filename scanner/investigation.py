@@ -445,6 +445,18 @@ def _verify_nonce_administration(message, info, keys, pre_lamports, post_lamport
             'reason': 'First successful System advanceNonce changes nonce state only; nonce balance is unchanged and native endpoints conserve the network fee'}
 
 
+def _close_authority(info):
+    """Close authority is `owner`, or a sole-signer `multisigOwner`."""
+    owner = info.get('owner')
+    if owner:
+        return owner
+    multi = info.get('multisigOwner')
+    signers = info.get('signers') or []
+    if multi and signers and all(item == multi for item in signers):
+        return multi
+    return owner
+
+
 def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
                               post_lamports, address, route, fee):
     """Prove temporary wSOL accounts from primary instructions, not ATA hints.
@@ -499,7 +511,7 @@ def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
             raise ValueError('Temporary wrapped SOL creation lacks wallet-funded primary rent and native-token account identity')
         if initialization.get('owner') != address or initialization.get('mint') != WSOL:
             raise ValueError('Temporary wrapped SOL initialization lacks event-time wallet ownership and mint')
-        if close_program != token_program or close.get('owner') != address or close.get('destination') != address:
+        if close_program != token_program or _close_authority(close) != address or close.get('destination') != address:
             raise ValueError('Temporary wrapped SOL closure and rent refund must belong to the investigated wallet')
         if not creation_position < initialization_position < route_position < close_position:
             raise ValueError('Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved')
@@ -1012,7 +1024,7 @@ def decode_supported_swaps(transactions, address):
                     if kind == 'closeAccount':
                         account = info.get('account')
                         if info.get('destination') == address:
-                            if owned.get(account, {}).get('mint') == WSOL and info.get('owner') != address:
+                            if owned.get(account, {}).get('mint') == WSOL and _close_authority(info) != address:
                                 raise ValueError('Wrapped SOL closure lacks the investigated wallet authority')
                             closures[account] = address
                         elif account in owned or account in allowed_wrapped:
@@ -1059,20 +1071,8 @@ def decode_supported_swaps(transactions, address):
                     raise ValueError('Unreviewed outer program may bundle other economic activity')
                 # CPIs are part of a successful, verified route; net owned legs
                 # still require exact parsed-transfer reconciliation below.
-            try:
-                _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
-                                          post_lamports, address, route, fee)
-            except ValueError as error:
-                # Pump AMM / Jupiter native-SOL buys often close an ephemeral
-                # wSOL ATA to a tipper or shared account. Wallet legs still
-                # have to reconcile below.
-                if (
-                    route['program'] in (PUMP_SWAP, PUMP, JUPITER)
-                    and 'closure and rent refund must belong' in str(error)
-                ):
-                    pass
-                else:
-                    raise
+            _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
+                                      post_lamports, address, route, fee)
             retained_funding = _retained_user_volume_funding(flat, keys, pre_lamports, post_lamports, address, route)
             if retained_funding:
                 from .transaction_format import original_instruction_paths

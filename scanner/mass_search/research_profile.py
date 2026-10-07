@@ -1284,7 +1284,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             if amount not in (None, "")
         }
         scoped_pnl = str(episode_net) if episode_net is not None else None
-        if episode_unit in ("SOL", "USDC"):
+        if settlement != "mixed" and episode_unit in ("SOL", "USDC"):
             settlement = episode_unit
     summary_net = report.get("completed_episode_net")
     summary_count = report.get("wallet_completed_episodes")
