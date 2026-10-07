@@ -2,8 +2,27 @@
 
 **When:** 2026-10-07
 **Base:** `6dc3424c81af117a13c6cfafe451761c74dddb71`
+**Candidate / tip (pre-handoff pin):** `bdb90e6b96a0e35f1d587beea1b99f7dd1fb6ff2`
 **PRODUCT_READY:** false
 **Spend this task:** 0 Helius requests, 0 Birdeye requests, $0
+
+## Suites (keys unset + dummy)
+
+| Suite | Result |
+|---|---|
+| keys unset | **3781 passed** / 440 subtests / 1 warning |
+| dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`) | **3781 passed** / 440 subtests / 1 warning. Dummy keys were never sent. |
+| `scripts/offline_acceptance.py` | ok; `PRODUCT_READY` false; live-e2e draft `enabled:false` |
+| G1 | 3 tests pass for `grant_disabled` / retired committed file |
+
+## Evidence SHAs
+
+| Artifact | SHA-256 |
+|---|---|
+| `dry-run/DRY_RUN_PLAN.json` | `f0f56bcf32e13ed59d639484bd8cd341fd0732ad24f89e62f5feb93ed6b58afc` |
+| `dry-run/RESULTS.json` | `f8aa5d9d66e9d6a0cb0ef24eebd3f77046f1902800d5155748319cd617b43b52` |
+| draft grant | `4fcb38b6740863d58d8a447447be155caeeadb9098f307dba49fa94f24697750` |
+| retired G1 grant | `efacb45deb16af81c759b95e10aeb31081f0fdaacd696ba044c86e52e662cecc` |
 
 ## What is ready
 
