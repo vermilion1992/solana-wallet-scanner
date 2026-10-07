@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import re
+from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -70,6 +72,7 @@ THRESHOLD_RANGES = {
     "max_holder_fee_share": ("share", "0", "1"),
 }
 WINDOW_DAYS_RANGE = (1, 365)
+CANONICAL_AMOUNT = re.compile(r"^-?(?:0|[1-9]\d*)(?:\.\d+)?$")
 PROVIDER_TRADE_COUNT_RANGE = (0, 1_000_000_000)
 PROVIDER_SCORE_RANGE = (Decimal("0"), Decimal("1000000000000"))
 PROOF_GATES = {
@@ -193,8 +196,36 @@ def _finite_decimal(value):
     return amount
 
 
+def _canonical_number_text(value):
+    if value is None or value == "" or value is False:
+        return None
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int) and not isinstance(value, bool):
+        return str(value)
+    if isinstance(value, Decimal):
+        if not value.is_finite():
+            return None
+        return format(value, "f")
+    if isinstance(value, float):
+        if value != value or value in (float("inf"), float("-inf")):
+            return None
+        text = format(Decimal(str(value)), "f")
+        if CANONICAL_AMOUNT.fullmatch(text):
+            return text
+        return None
+    if isinstance(value, str):
+        if not CANONICAL_AMOUNT.fullmatch(value):
+            return None
+        return value
+    return None
+
+
 def _require_canonical_number(value, *, name):
-    parsed = _finite_decimal(value)
+    text = _canonical_number_text(value)
+    if text is None:
+        raise FilterValidationError(f"{name} must be a finite ASCII decimal")
+    parsed = _finite_decimal(text)
     if parsed is None:
         raise FilterValidationError(f"{name} must be a finite number")
     return parsed
@@ -235,6 +266,118 @@ def validate_window_days(value):
     return number
 
 
+def _stamp_unix(value):
+    if value is None or value == "":
+        return None
+    if type(value) is int:
+        if value > 10**12:
+            return value // 1000
+        return value
+    if type(value) is float:
+        if value != value:
+            return None
+        return int(value)
+    text = str(value).strip()
+    if not text:
+        return None
+    if text.isdigit() or (text.startswith("-") and text[1:].isdigit()):
+        return int(text)
+    try:
+        return int(datetime.fromisoformat(text.replace("Z", "+00:00")).timestamp())
+    except (TypeError, ValueError):
+        return None
+
+
+def _report_end_unix(report):
+    span = (report or {}).get("in_window_span") or ((report or {}).get("research_profile") or {}).get("in_window_span") or {}
+    for key in ("end", "end_exclusive", "report_end"):
+        stamp = _stamp_unix(span.get(key) if isinstance(span, dict) else None)
+        if stamp is not None:
+            return stamp
+    window = (report or {}).get("window") or {}
+    for key in ("end", "end_exclusive"):
+        stamp = _stamp_unix(window.get(key))
+        if stamp is not None:
+            return stamp
+    latest = None
+    for event in (report or {}).get("events") or []:
+        stamp = _stamp_unix(event.get("timestamp") or event.get("block_time"))
+        if stamp is not None:
+            latest = stamp if latest is None else max(latest, stamp)
+    for episode in (report or {}).get("completed_episode_ledger") or []:
+        stamp = _stamp_unix(episode.get("closed_at") or episode.get("timestamp"))
+        if stamp is not None:
+            latest = stamp if latest is None else max(latest, stamp)
+    if latest is not None:
+        return latest
+    return int(datetime.now(timezone.utc).timestamp())
+
+
+def apply_research_window(report, window_days):
+    """Clip events and completed episodes to the last window_days, then rebuild counts.
+
+    window_days is a research-screen bound. Unset leaves the captured profile unchanged.
+    Events or episodes without a usable timestamp are dropped while a window is applied
+    so unknown time never silently stays in-window.
+    """
+    if report is None:
+        return report
+    if window_days in (None, ""):
+        return report
+    days = int(window_days)
+    end_unix = _report_end_unix(report)
+    start_unix = end_unix - (days * 86400)
+    events = []
+    for event in report.get("events") or []:
+        stamp = _stamp_unix(event.get("timestamp") or event.get("block_time") or event.get("day"))
+        if stamp is not None and start_unix <= stamp <= end_unix:
+            events.append(event)
+    source_ledger = report.get("completed_episode_ledger")
+    if source_ledger is None:
+        source_ledger = ((report.get("research_profile") or {}).get("completed_episode_ledger")) or []
+    ledger = []
+    nets = {}
+    for episode in source_ledger:
+        stamp = _stamp_unix(
+            episode.get("closed_at") or episode.get("timestamp") or episode.get("day")
+        )
+        if stamp is None or not (start_unix <= stamp <= end_unix):
+            continue
+        ledger.append(episode)
+        unit = episode.get("unit") or episode.get("settlement_asset")
+        if unit and episode.get("net") not in (None, ""):
+            nets[unit] = nets.get(unit, Decimal("0")) + Decimal(str(episode["net"]))
+    worksheet = dict(report.get("worksheet") or {})
+    by_quote = dict(worksheet.get("by_quote_asset") or {})
+    for unit, amount in nets.items():
+        key = f"total_profit_{unit.lower()}"
+        worksheet[key] = str(amount)
+        prior = dict(by_quote.get(unit) or {})
+        prior[key] = str(amount)
+        by_quote[unit] = prior
+    if by_quote:
+        worksheet["by_quote_asset"] = by_quote
+    if len(nets) == 1:
+        unit = next(iter(nets))
+        worksheet["settlement_asset"] = unit
+    clipped = dict(report)
+    clipped["events"] = events
+    clipped["completed_episode_ledger"] = ledger
+    clipped["wallet_completed_episodes"] = len(ledger)
+    clipped["wallet_sale_count"] = sum(1 for event in events if event.get("kind") == "sell")
+    clipped["worksheet"] = worksheet
+    if len(nets) == 1:
+        clipped["completed_episode_net"] = str(next(iter(nets.values())))
+        clipped["completed_episode_net_unit"] = next(iter(nets))
+    clipped["research_window"] = {
+        "window_days": days,
+        "start_unix": start_unix,
+        "end_unix": end_unix,
+        "applied": True,
+    }
+    return clipped
+
+
 def validate_provider_proxy_value(key, value):
     if value is None or value == "" or value is False:
         return None
@@ -269,8 +412,20 @@ def _clean_proxy(incoming, *, strict=False):
             except FilterValidationError:
                 proxy[key] = None
     for key in ("only_shortlist", "only_user_shortlist", "only_captured"):
-        proxy[key] = bool(source.get(key))
+        proxy[key] = _clean_bool(source.get(key), name=key, strict=strict)
     return proxy
+
+
+def _clean_bool(value, *, name, strict):
+    if value is None:
+        return False
+    if value is True:
+        return True
+    if value is False:
+        return False
+    if strict:
+        raise FilterValidationError(f"{name} must be true, false, or null")
+    return False
 
 
 _PASSTHROUGH_FILTER_KEYS = {

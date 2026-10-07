@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import os
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -48,13 +49,34 @@ from scanner.investigation import (
 )
 from scanner.mass_search.adapters import ALLOWED_BIRDEYE_HOST, ALLOWED_BIRDEYE_PATH, BirdeyeTraderAdapter, SourceError
 from scanner.mass_search.capability import LIVE_AUTH_SCHEMA, redact_secrets, utc_now, validate_live_authorization
-from scanner.mass_search.evidence_integrity import sanitize_jsonrpc_body
+from scanner.mass_search.evidence_integrity import redact_text, sanitize_jsonrpc_body, scrub_bytes
 from scanner.mass_search.history_ingest import replay_cached_history_to_report
 from scanner.mass_search.labels import wallet_status_fields
+from scanner.mass_search.live_e2e_ledger import (
+    ExclusiveLock,
+    LockHeld,
+    draft_artifact_hash,
+    empty_phase_spend,
+    empty_spend,
+    grant_ledger_path,
+    integrity_record,
+    load_receipt,
+    merge_spend,
+    open_grant_store,
+    phase_caps_from_grant,
+    provider_caps,
+    put_receipt,
+    receipt_is_spent,
+    request_identity,
+    spend_from_ledger,
+)
 from scanner.mass_search.qualification_gates import coverage_shares, qualifying_profit
 from scanner.mass_search.research_profile import build_research_profile, default_filters, independently_audited
 from scanner.mass_search.workflow import _authoritative_saved_profile
 from scanner.storage import QuotaExceeded, Store
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 ROOT = Path(__file__).resolve().parents[2]
 AUTHORIZATION_ID = "live-e2e-proof-2026-10-07-mitch"
@@ -99,7 +121,7 @@ PLAN_NAME = "DRY_RUN_PLAN.json"
 RESULTS_NAME = "RESULTS.json"
 SUMMARY_NAME = "SUMMARY.md"
 GTA_DOCS_NAME = "GTA_PAGE_SIZE.md"
-RECEIPT_KIND = "live_e2e_receipt"
+NAME_MAX = 255
 
 SEARCH_B_COHORT = (
     "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
@@ -133,7 +155,10 @@ def _sha256_bytes(data):
 def _write_json(path, payload):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, default=str) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(redact_secrets(payload), indent=2, default=str) + "\n",
+        encoding="utf-8",
+    )
     return path
 
 
@@ -174,14 +199,23 @@ def parse_phases(value):
     return tuple(sorted(set(items)))
 
 
+def _is_wallet_file(value):
+    text = str(value)
+    if not text or len(text) >= NAME_MAX or "," in text:
+        return False
+    try:
+        return Path(text).is_file()
+    except OSError:
+        return False
+
+
 def parse_wallets(value):
     if value in (None, "", []):
         return []
     if isinstance(value, (list, tuple)):
         return [str(item).strip() for item in value if str(item).strip()]
-    path = Path(value)
-    if path.is_file():
-        payload = json.loads(path.read_text(encoding="utf-8"))
+    if _is_wallet_file(value):
+        payload = json.loads(Path(value).read_text(encoding="utf-8"))
         if isinstance(payload, list):
             return [str(item).strip() for item in payload if str(item).strip()]
         rows = payload.get("wallets") or payload.get("addresses") or []
@@ -334,7 +368,22 @@ def classify_programs(records):
     }
 
 
-def plan_request_counts(config):
+def phase3_wallets(config, state=None):
+    """Honour an explicit --wallets selection; otherwise use phase-2 kept rows."""
+    state = state or {}
+    kept = [
+        row["address"]
+        for row in (state.get("phase2") or {}).values()
+        if isinstance(row, dict) and row.get("address") and not row.get("dropped")
+    ]
+    if config.get("wallets_supplied"):
+        return list(config.get("wallets") or [])
+    if kept:
+        return kept
+    return list(config.get("wallets") or [])
+
+
+def plan_request_counts(config, state=None):
     wallets = list(config["wallets"])
     phases = set(config["phases"])
     discovery = bool(config.get("discovery"))
@@ -342,14 +391,15 @@ def plan_request_counts(config):
     if 1 in phases and wallets and not discovery:
         birdeye_requests = 0
     n = len(wallets)
+    n3 = len(phase3_wallets(config, state)) if 3 in phases else 0
     helius_phase2 = (2 * n) if 2 in phases else 0
-    helius_phase3 = n if 3 in phases else 0
+    helius_phase3 = n3 if 3 in phases else 0
     birdeye_units = birdeye_requests * BIRDEYE_UNITS
     helius_units = 0
     if 2 in phases:
         helius_units += n * (SIG_ONLY_UNITS + FULL_100_UNITS)
     if 3 in phases:
-        helius_units += n * FULL_1000_UNITS
+        helius_units += n3 * FULL_1000_UNITS
     return {
         "kind": "live-e2e-request-plan-v1",
         "dry_run": True,
@@ -373,7 +423,7 @@ def plan_request_counts(config):
             "3": {
                 "provider": "helius",
                 "requests": helius_phase3,
-                "units": n * FULL_1000_UNITS if 3 in phases else 0,
+                "units": n3 * FULL_1000_UNITS if 3 in phases else 0,
                 "billing_unit": "helius_credit",
                 "note": (
                     "Dry-run recorder returns empty pages, so paging stops after "
@@ -467,15 +517,12 @@ def _empty_state(config):
         "status": "started",
         "phases_done": [],
         "wallets": list(config.get("wallets") or []),
+        "bounds": dict(config.get("bounds") or {}),
         "phase2": {},
         "phase3": {},
         "receipts": {},
-        "spend": {
-            "birdeye_requests": 0,
-            "birdeye_units": 0,
-            "helius_requests": 0,
-            "helius_units": 0,
-        },
+        "spend": empty_spend(),
+        "phase_spend": empty_phase_spend(),
         "PRODUCT_READY": False,
     }
 
@@ -499,26 +546,15 @@ def save_state(output_dir, state):
     return state
 
 
-def _receipt_key(provider, attempt):
-    return f"{provider}:{attempt}"
-
-
-def consume_receipt(store, grant, provider, attempt, payload):
-    key = _receipt_key(provider, attempt)
-    existing = store.get(RECEIPT_KIND, key)
-    if existing and existing.get("consumed") is True:
-        raise LiveE2EError(f"receipt already consumed: {key}")
-    receipt = {
-        "response_id": payload.get("response_id") or uuid.uuid4().hex,
-        "provider": provider,
-        "attempt": attempt,
-        "authorization_id": grant.get("authorization_id"),
-        "consumed": True,
-        "sha256": payload.get("sha256"),
-        "units": payload.get("units"),
-    }
-    store.put(RECEIPT_KIND, key, receipt)
-    return receipt
+def reconcile_state_spend(store, state):
+    ledger_spend, ledger_phase = spend_from_ledger(store)
+    state["spend"] = merge_spend(state.get("spend"), ledger_spend)
+    merged_phase = empty_phase_spend()
+    existing = state.get("phase_spend") or {}
+    for phase in merged_phase:
+        merged_phase[phase] = merge_spend(existing.get(phase), ledger_phase.get(phase))
+    state["phase_spend"] = merged_phase
+    return state
 
 
 def remaining_caps(config, spend):
@@ -531,7 +567,7 @@ def remaining_caps(config, spend):
     }
 
 
-def hard_stop_if_needed(config, spend, *, provider, units):
+def hard_stop_if_needed(config, spend, *, provider, units, phase=None, phase_spend=None):
     left = remaining_caps(config, spend)
     if provider == "birdeye":
         if left["birdeye_requests"] < 1 or left["birdeye_units"] < units:
@@ -539,6 +575,27 @@ def hard_stop_if_needed(config, spend, *, provider, units):
     else:
         if left["helius_requests"] < 1 or left["helius_units"] < units:
             raise SourceError("RATE_LIMITED", "Helius cap reached; hard stop")
+    if phase is None:
+        return
+    phase_caps = (config.get("caps") or {}).get("phase_caps") or {}
+    limits = phase_caps.get(str(phase)) or {}
+    used = (phase_spend or {}).get(str(phase)) or empty_spend()
+    req_key = f"{provider}_requests"
+    unit_key = f"{provider}_units"
+    if limits.get(req_key) is not None and used.get(req_key, 0) + 1 > int(limits[req_key]):
+        raise SourceError("RATE_LIMITED", f"Phase {phase} {provider} request cap reached; hard stop")
+    if limits.get(unit_key) is not None and used.get(unit_key, 0) + units > int(limits[unit_key]):
+        raise SourceError("RATE_LIMITED", f"Phase {phase} {provider} credit cap reached; hard stop")
+
+
+def _account_spend(state, *, provider, units, phase):
+    state.setdefault("spend", empty_spend())
+    state.setdefault("phase_spend", empty_phase_spend())
+    state["spend"][f"{provider}_requests"] += 1
+    state["spend"][f"{provider}_units"] += units
+    bucket = state["phase_spend"].setdefault(str(phase), empty_spend())
+    bucket[f"{provider}_requests"] += 1
+    bucket[f"{provider}_units"] += units
 
 
 async def _live_birdeye(method, path, params):
@@ -576,8 +633,9 @@ async def _live_helius(address, *, options, page_index=0):
     import httpx
 
     payload = {"jsonrpc": "2.0", "id": page_index + 1, "method": HELIUS_METHOD, "params": [address, options]}
+    headers = {"api-key": key, "content-type": "application/json"}
     async with httpx.AsyncClient(follow_redirects=False, timeout=httpx.Timeout(40, connect=10)) as client:
-        response = await client.post(HELIUS_ENDPOINT, params={"api-key": key}, json=payload)
+        response = await client.post(HELIUS_ENDPOINT, json=payload, headers=headers)
     raw = response.content
     status = response.status_code
     if status in (401, 403):
@@ -609,53 +667,150 @@ async def _live_helius(address, *, options, page_index=0):
     }
 
 
+def _runtime_secrets():
+    values = []
+    for name in ("BIRDEYE_API_KEY", "HELIUS_API_KEY", "HELIUS_KEY"):
+        value = os.environ.get(name)
+        if value and len(value) >= 8:
+            values.append(value)
+    return values
+
+
 def _save_raw(output_dir, relative, raw_bytes):
     path = Path(output_dir) / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     data = raw_bytes if isinstance(raw_bytes, (bytes, bytearray)) else bytes(raw_bytes)
-    path.write_bytes(data)
-    digest = _sha256_bytes(data)
-    written = path.read_bytes()
-    if _sha256_bytes(written) != digest:
+    written, original_sha, scrubbed = scrub_bytes(data, extra_secrets=_runtime_secrets())
+    path.write_bytes(written)
+    written_sha = _sha256_bytes(written)
+    if _sha256_bytes(path.read_bytes()) != written_sha:
         raise LiveE2EError("raw response checksum mismatch after write")
-    return digest
+    _write_json(path.with_name(path.name + ".integrity.json"), integrity_record(
+        original_sha256=original_sha,
+        written_sha256=written_sha,
+        scrubbed=scrubbed,
+    ))
+    return original_sha
+
+
+def _replay_saved_page(config, phase, address, page_index, units):
+    relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
+    path = Path(config["output_dir"]) / relative
+    raw = path.read_bytes() if path.is_file() else b""
+    records = []
+    token = None
+    if raw:
+        try:
+            body = json.loads(raw.decode("utf-8"))
+            result = body.get("result") if isinstance(body, dict) else {}
+            data = (result or {}).get("data") if isinstance(result, dict) else result
+            if isinstance(data, list):
+                records = data
+            if isinstance(result, dict):
+                token = result.get("paginationToken")
+        except (UnicodeDecodeError, json.JSONDecodeError, AttributeError):
+            records = []
+    return {
+        "records": records,
+        "pagination_token": token,
+        "http_status": 200,
+        "raw_bytes": raw,
+        "evidence_sha256": _sha256_bytes(raw) if raw else None,
+        "units": units,
+        "external_requests": 0,
+        "replayed_from_receipt": True,
+    }
 
 
 async def _dispatch_helius(store, grant, config, state, transport, address, options, *, phase, page_index):
     entry = provider_entry(grant, "helius")
     units = documented_units(options.get("transactionDetails"), int(options.get("limit") or 0))
-    hard_stop_if_needed(config, state["spend"], provider="helius", units=units)
+    cursor = (options or {}).get("paginationToken")
+    key = request_identity("helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
+    existing = load_receipt(store, key)
+    if receipt_is_spent(existing) and not config.get("explicit_retry"):
+        reconcile_state_spend(store, state)
+        save_state(config["output_dir"], state)
+        return _replay_saved_page(config, phase, address, page_index, units)
+    hard_stop_if_needed(
+        config, state["spend"], provider="helius", units=units,
+        phase=phase, phase_spend=state.get("phase_spend"),
+    )
     if config.get("per_wallet_cap") is not None:
         used = int((state.get("phase3") or {}).get(address, {}).get("requests") or 0)
         used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
         if used >= int(config["per_wallet_cap"]):
             raise SourceError("RATE_LIMITED", "Per-wallet request cap reached; hard stop")
     reservation = None
+    put_receipt(store, grant, key, {
+        "provider": "helius",
+        "wallet": address,
+        "phase": phase,
+        "page": page_index,
+        "cursor": cursor,
+        "units": units,
+        "state": "reserved",
+        "response_id": uuid.uuid4().hex,
+    })
     if not config.get("dry_run"):
         reservation = store.reserve("helius", HELIUS_METHOD, units, entry["cycle_start"], entry["max_units"])
         store.dispatch(reservation)
+        put_receipt(store, grant, key, {
+            **(load_receipt(store, key) or {}),
+            "state": "dispatched",
+            "reservation_id": reservation,
+            "units": units,
+            "provider": "helius",
+            "wallet": address,
+            "phase": phase,
+            "page": page_index,
+            "cursor": cursor,
+        })
+    charged = False
     try:
         result = await transport(address, options=options, page_index=page_index)
         if reservation:
             store.settle(reservation, charge=True)
+            charged = True
+        raw = result.get("raw_bytes") or b""
+        digest = _save_raw(
+            config["output_dir"],
+            f"raw/phase{phase}/{address}/page{page_index}.bin",
+            raw,
+        )
+        put_receipt(store, grant, key, {
+            "provider": "helius",
+            "wallet": address,
+            "phase": phase,
+            "page": page_index,
+            "cursor": cursor,
+            "units": units,
+            "state": "consumed",
+            "sha256": digest,
+            "reservation_id": reservation,
+        })
+        _account_spend(state, provider="helius", units=units, phase=phase)
+        save_state(config["output_dir"], state)
+        return {**result, "evidence_sha256": digest, "units": units}
     except Exception:
-        if reservation:
+        if reservation and not charged:
             try:
                 store.settle(reservation, charge=True)
             except ValueError:
                 pass
+        put_receipt(store, grant, key, {
+            "provider": "helius",
+            "wallet": address,
+            "phase": phase,
+            "page": page_index,
+            "cursor": cursor,
+            "units": units,
+            "state": "failed",
+            "reservation_id": reservation,
+        })
+        _account_spend(state, provider="helius", units=units, phase=phase)
+        save_state(config["output_dir"], state)
         raise
-    raw = result.get("raw_bytes") or b""
-    digest = _save_raw(
-        config["output_dir"],
-        f"raw/phase{phase}/{address}/page{page_index}.bin",
-        raw,
-    )
-    attempt = state["spend"]["helius_requests"] + 1
-    consume_receipt(store, grant, "helius", attempt, {"sha256": digest, "units": units})
-    state["spend"]["helius_requests"] += 1
-    state["spend"]["helius_units"] += units
-    return {**result, "evidence_sha256": digest, "units": units}
 
 
 async def phase1_discovery(store, grant, config, state, recorder):
@@ -663,7 +818,10 @@ async def phase1_discovery(store, grant, config, state, recorder):
         return {"skipped": True}
     if config["wallets"] and not config.get("discovery"):
         return {"skipped": True, "reason": "wallet_list_supplied"}
-    hard_stop_if_needed(config, state["spend"], provider="birdeye", units=BIRDEYE_UNITS)
+    hard_stop_if_needed(
+        config, state["spend"], provider="birdeye", units=BIRDEYE_UNITS,
+        phase=1, phase_spend=state.get("phase_spend"),
+    )
     params = {
         "type": config.get("birdeye_window") or BIRDEYE_DEFAULT_WINDOW,
         "sort_by": config.get("birdeye_sort") or BIRDEYE_DEFAULT_SORT,
@@ -671,44 +829,90 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "offset": 0,
         "limit": int(config.get("birdeye_limit") or BIRDEYE_DEFAULT_LIMIT),
     }
+    key = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=None)
+    existing = load_receipt(store, key)
+    if receipt_is_spent(existing) and not config.get("explicit_retry"):
+        reconcile_state_spend(store, state)
+        save_state(config["output_dir"], state)
+        return {"addresses": list(state.get("wallets") or config.get("wallets") or []), "replayed_from_receipt": True}
     reservation = None
-    if config["dry_run"]:
-        response = await recorder.birdeye("GET", ALLOWED_BIRDEYE_PATH, params)
-        raw = response.get("raw_bytes") or b"{}"
-        addresses = []
-    else:
-        if not grant.get("enabled"):
-            raise SourceError("UNAUTHORIZED", grant.get("reason") or "grant disabled")
-        entry = provider_entry(grant, "birdeye")
-        reservation = store.reserve(
-            "birdeye", "trader_gainers_losers", BIRDEYE_UNITS, entry["cycle_start"], entry["max_units"],
-        )
-        store.dispatch(reservation)
-        try:
+    put_receipt(store, grant, key, {
+        "provider": "birdeye",
+        "wallet": "_",
+        "phase": 1,
+        "page": 0,
+        "units": BIRDEYE_UNITS,
+        "state": "reserved",
+    })
+    charged = False
+    try:
+        if config["dry_run"]:
+            response = await recorder.birdeye("GET", ALLOWED_BIRDEYE_PATH, params)
+            raw = response.get("raw_bytes") or b"{}"
+            addresses = []
+        else:
+            if not grant.get("enabled"):
+                raise SourceError("UNAUTHORIZED", grant.get("reason") or "grant disabled")
+            entry = provider_entry(grant, "birdeye")
+            reservation = store.reserve(
+                "birdeye", "trader_gainers_losers", BIRDEYE_UNITS, entry["cycle_start"], entry["max_units"],
+            )
+            store.dispatch(reservation)
+            put_receipt(store, grant, key, {
+                "provider": "birdeye",
+                "wallet": "_",
+                "phase": 1,
+                "page": 0,
+                "units": BIRDEYE_UNITS,
+                "state": "dispatched",
+                "reservation_id": reservation,
+            })
+            # Adapter must not receive the store: one documented 30 CU reserve only.
             adapter = BirdeyeTraderAdapter(transport=_live_birdeye)
             page = await adapter.fetch_page(
                 offset=0,
                 limit=int(params["limit"]),
                 window=params["type"],
                 authorization=grant,
-                store=store,
+                store=None,
                 sort_by=params["sort_by"],
                 sort_type="desc",
             )
             store.settle(reservation, charge=True)
-        except Exception:
-            if reservation:
-                try:
-                    store.settle(reservation, charge=True)
-                except ValueError:
-                    pass
-            raise
-        raw = json.dumps(redact_secrets(page.get("raw_body") or {}), sort_keys=True, separators=(",", ":")).encode()
-        addresses = [row["address"] for row in (page.get("rows") or []) if row.get("valid") and row.get("address")]
+            charged = True
+            raw = json.dumps(redact_secrets(page.get("raw_body") or {}), sort_keys=True, separators=(",", ":")).encode()
+            addresses = [row["address"] for row in (page.get("rows") or []) if row.get("valid") and row.get("address")]
+    except Exception:
+        if reservation and not charged:
+            try:
+                store.settle(reservation, charge=True)
+            except ValueError:
+                pass
+        put_receipt(store, grant, key, {
+            "provider": "birdeye",
+            "wallet": "_",
+            "phase": 1,
+            "page": 0,
+            "units": BIRDEYE_UNITS,
+            "state": "failed",
+            "reservation_id": reservation,
+        })
+        _account_spend(state, provider="birdeye", units=BIRDEYE_UNITS, phase=1)
+        save_state(config["output_dir"], state)
+        raise
     digest = _save_raw(config["output_dir"], "raw/phase1/birdeye.bin", raw)
-    consume_receipt(store, grant, "birdeye", 1, {"sha256": digest, "units": BIRDEYE_UNITS})
-    state["spend"]["birdeye_requests"] += 1
-    state["spend"]["birdeye_units"] += BIRDEYE_UNITS
+    put_receipt(store, grant, key, {
+        "provider": "birdeye",
+        "wallet": "_",
+        "phase": 1,
+        "page": 0,
+        "units": BIRDEYE_UNITS,
+        "state": "consumed",
+        "sha256": digest,
+        "reservation_id": reservation,
+    })
+    _account_spend(state, provider="birdeye", units=BIRDEYE_UNITS, phase=1)
+    save_state(config["output_dir"], state)
     if not config["wallets"]:
         config["wallets"] = addresses
         state["wallets"] = list(addresses)
@@ -785,13 +989,7 @@ async def phase3_history(store, grant, config, state, recorder):
         return {"skipped": True}
     bounds = config["bounds"]
     transport = recorder.helius if config["dry_run"] else _live_helius
-    kept = [
-        row["address"]
-        for row in ((state.get("phase2") or {}).values() if state.get("phase2") else [{"address": a, "dropped": False} for a in config["wallets"]])
-        if not (isinstance(row, dict) and row.get("dropped"))
-    ]
-    if not kept:
-        kept = list(config["wallets"])
+    kept = phase3_wallets(config, state)
     pages = {}
     for address in kept:
         cursor = (state.get("phase3") or {}).get(address) or {"pages": 0, "requests": 0, "done": False}
@@ -953,16 +1151,35 @@ def human_summary(results):
     return "\n".join(lines) + "\n"
 
 
-def bind_caps_from_grant(grant, overrides):
-    birdeye = provider_entry(grant, "birdeye")
-    helius = provider_entry(grant, "helius")
-    caps = {
-        "birdeye_requests": int(birdeye.get("max_requests") or 0),
-        "birdeye_units": int(birdeye.get("max_units") or 0),
-        "helius_requests": int(helius.get("max_requests") or 0),
-        "helius_units": int(helius.get("max_units") or 0),
-    }
-    for key in caps:
+def load_committed_draft():
+    raw = json.loads(DRAFT_PATH.read_text(encoding="utf-8"))
+    return raw, draft_artifact_hash(DRAFT_PATH)
+
+
+def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
+    caps = provider_caps(grant)
+    caps["phase_caps"] = phase_caps_from_grant(grant)
+    if mode == "live" and grant.get("authorization_id") == AUTHORIZATION_ID:
+        draft, draft_hash = load_committed_draft()
+        draft_caps = provider_caps(draft)
+        bound = grant.get("draft_artifact_hash")
+        if bound and bound != draft_hash:
+            raise LiveE2EError("armed grant is not bound to the committed draft artifact")
+        for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
+            if caps[key] > draft_caps[key]:
+                raise LiveE2EError(
+                    f"armed {key} {caps[key]} exceeds committed draft cap {draft_caps[key]}"
+                )
+        draft_phase = phase_caps_from_grant(draft)
+        for phase, limits in (caps.get("phase_caps") or {}).items():
+            allowed = draft_phase.get(phase) or {}
+            for key, value in limits.items():
+                if key in allowed and value > allowed[key]:
+                    raise LiveE2EError(
+                        f"armed phase {phase} {key} {value} exceeds draft {allowed[key]}"
+                    )
+        caps["draft_artifact_hash"] = draft_hash
+    for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
         if overrides.get(key) is not None:
             value = int(overrides[key])
             if value < 0:
@@ -985,9 +1202,13 @@ def validate_config(raw):
     if raw["mode"] == "live" and grant.get("authorization_id") != AUTHORIZATION_ID:
         raise LiveE2EError(f"live runner expects {AUTHORIZATION_ID}")
     output_dir = Path(raw["output_dir"])
-    store_path = Path(raw.get("store_path") or (output_dir / "store"))
+    authorization_id = grant.get("authorization_id")
+    ledger_dir = raw.get("ledger_dir")
+    store_path = grant_ledger_path(authorization_id, ledger_dir)
     phases = parse_phases(raw.get("phases"))
-    wallets = parse_wallets(raw.get("wallets"))
+    wallets_raw = raw.get("wallets")
+    wallets = parse_wallets(wallets_raw)
+    wallets_supplied = wallets_raw not in (None, "", [])
     window_days = 30 if raw.get("window_days") is None else int(raw.get("window_days"))
     earlier = 60 if raw.get("earlier_history_days") is None else int(raw.get("earlier_history_days"))
     caps = bind_caps_from_grant(grant, {
@@ -995,7 +1216,7 @@ def validate_config(raw):
         "birdeye_units": raw.get("max_birdeye_units"),
         "helius_requests": raw.get("max_helius_requests"),
         "helius_units": raw.get("max_helius_units"),
-    })
+    }, mode=raw["mode"])
     if raw["mode"] == "live":
         presence = credential_presence()
         if 1 in phases and (raw.get("discovery") or not wallets) and not presence["birdeye"]:
@@ -1007,11 +1228,13 @@ def validate_config(raw):
         "dry_run": raw["mode"] == "dry-run",
         "grant": grant,
         "grant_path": str(grant_path),
-        "authorization_id": grant.get("authorization_id"),
+        "authorization_id": authorization_id,
         "output_dir": str(output_dir),
+        "ledger_dir": str(ledger_dir) if ledger_dir else None,
         "store_path": str(store_path),
         "phases": phases,
         "wallets": wallets,
+        "wallets_supplied": wallets_supplied,
         "discovery": bool(raw.get("discovery")),
         "window_days": window_days,
         "earlier_history_days": earlier,
@@ -1019,6 +1242,7 @@ def validate_config(raw):
         "caps": caps,
         "per_wallet_cap": raw.get("per_wallet_cap"),
         "resume": bool(raw.get("resume")),
+        "explicit_retry": bool(raw.get("explicit_retry")),
         "birdeye_limit": int(raw.get("birdeye_limit") or BIRDEYE_DEFAULT_LIMIT),
         "birdeye_window": raw.get("birdeye_window") or BIRDEYE_DEFAULT_WINDOW,
         "birdeye_sort": raw.get("birdeye_sort") or BIRDEYE_DEFAULT_SORT,
@@ -1036,18 +1260,36 @@ async def run_live_e2e(raw):
     output_dir = Path(config["output_dir"])
     output_dir.mkdir(parents=True, exist_ok=True)
     _write_json(output_dir / GTA_DOCS_NAME, gta_page_size_note())
-    store = require_durable_store(config["store_path"])
-    store.put("configuration", "live_authorization", config["grant"])
-    state = load_or_create_state(output_dir, config, resume=config["resume"])
-    state["authorization_id"] = config["authorization_id"]
-    recorder = RecorderTransport()
-    plan = plan_request_counts(config)
-    plan["within_caps"] = within_caps(plan, config["caps"])
-    plan["gta_page_size"] = gta_page_size_note()
-    _write_json(output_dir / PLAN_NAME, plan)
-    if not plan["within_caps"] and not config["dry_run"]:
-        raise LiveE2EError("planned requests exceed grant/runner caps")
+    store, ledger_path = open_grant_store(config["authorization_id"], config.get("ledger_dir"))
+    grant_lock = ExclusiveLock(ledger_path / "GRANT.lock")
+    output_lock = ExclusiveLock(output_dir / "RUN.lock")
     try:
+        grant_lock.acquire()
+        output_lock.acquire()
+    except LockHeld as error:
+        store.close()
+        raise LiveE2EError(str(error)) from error
+    try:
+        store.put("configuration", "live_authorization", config["grant"])
+        state = load_or_create_state(output_dir, config, resume=config["resume"])
+        state["authorization_id"] = config["authorization_id"]
+        if state.get("bounds"):
+            config["bounds"] = state["bounds"]
+        else:
+            state["bounds"] = dict(config["bounds"])
+        reconcile_state_spend(store, state)
+        save_state(output_dir, state)
+        recorder = RecorderTransport()
+        plan = plan_request_counts(config, state)
+        plan["within_caps"] = within_caps(plan, config["caps"])
+        plan["gta_page_size"] = gta_page_size_note()
+        plan["phase3_wallets"] = phase3_wallets(config, state)
+        _write_json(output_dir / PLAN_NAME, plan)
+        if not plan["within_caps"] and not config["dry_run"]:
+            raise LiveE2EError("planned requests exceed grant/runner caps")
+        phase4 = {"wallets": state.get("phase4_wallets") or []}
+        status = "started"
+        blocker = None
         try:
             done = set(state.get("phases_done") or [])
             if 1 in config["phases"] and 1 not in done:
@@ -1065,33 +1307,39 @@ async def run_live_e2e(raw):
                 state["phases_done"] = sorted(done | {3})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
-            phase4 = {"wallets": state.get("phase4_wallets") or []}
             if 4 in config["phases"] and 4 not in done:
                 phase4 = phase4_offline(store, config, state)
                 state["phase4_wallets"] = phase4.get("wallets") or []
                 state["phases_done"] = sorted(done | {4})
                 save_state(output_dir, state)
+            else:
+                phase4 = {"wallets": state.get("phase4_wallets") or []}
             state["status"] = "completed"
             status = "completed"
             blocker = None
-        except (SourceError, LiveE2EError, QuotaExceeded) as error:
+        except BaseException as error:
             state["status"] = "blocked"
             state["blocker"] = getattr(error, "state", None) or error.__class__.__name__
-            state["detail"] = str(error)
+            state["detail"] = redact_text(str(error))
             phase4 = {"wallets": state.get("phase4_wallets") or []}
             status = "blocked"
             blocker = state["blocker"]
+            save_state(output_dir, state)
+            if not isinstance(error, Exception):
+                raise
         save_state(output_dir, state)
         results = {
             "kind": "live-e2e-results-v1",
             "status": status,
             "blocker": blocker,
+            "detail": redact_text(state.get("detail") or ""),
             "dry_run": config["dry_run"],
             "authorization_id": config["authorization_id"],
             "grant_enabled": bool(config["grant"].get("enabled")),
             "phases": list(config["phases"]),
             "bounds": config["bounds"],
             "spend": state["spend"],
+            "phase_spend": state.get("phase_spend"),
             "plan": plan,
             "recorder_calls": recorder.calls,
             "phase1": state.get("phase1"),
@@ -1101,9 +1349,11 @@ async def run_live_e2e(raw):
             "PRODUCT_READY": False,
         }
         _write_json(output_dir / RESULTS_NAME, redact_secrets(results))
-        (output_dir / SUMMARY_NAME).write_text(human_summary(results), encoding="utf-8")
+        (output_dir / SUMMARY_NAME).write_text(redact_text(human_summary(results)), encoding="utf-8")
         return results
     finally:
+        output_lock.release()
+        grant_lock.release()
         store.close()
 
 
@@ -1131,7 +1381,10 @@ def build_arg_parser():
     parser.add_argument("--max-bot-rate", dest="max_bot_rate", default="1")
     parser.add_argument("--output", dest="output_dir", required=True)
     parser.add_argument("--store", dest="store_path")
+    parser.add_argument("--ledger-dir", dest="ledger_dir", help="Grant-scoped spend ledger root (outside output)")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--explicit-retry", dest="explicit_retry", action="store_true",
+                        help="Re-send a request that already has a receipt; counts against the cap")
     return parser
 
 
@@ -1143,15 +1396,18 @@ def main(argv=None):
 
     try:
         result = asyncio.run(run_live_e2e(raw))
-    except (LiveE2EError, SourceError, QuotaExceeded) as error:
-        print(str(error))
+    except (LiveE2EError, SourceError, QuotaExceeded, LockHeld) as error:
+        print(redact_text(str(error)))
         return 2
-    print(json.dumps({
+    except Exception as error:
+        print(redact_text(str(error)))
+        return 2
+    print(json.dumps(redact_secrets({
         "status": result["status"],
         "dry_run": result["dry_run"],
         "spend": result["spend"],
         "plan_totals": result["plan"]["totals"],
         "within_caps": result["plan"]["within_caps"],
         "PRODUCT_READY": False,
-    }, indent=2))
+    }), indent=2))
     return 0

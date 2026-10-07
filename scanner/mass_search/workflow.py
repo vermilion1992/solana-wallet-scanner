@@ -23,6 +23,7 @@ from scanner.mass_search.history_ingest import replay_cached_history_to_report, 
 from scanner.mass_search.visible_report import hydrate_visible_report, persist_visible_report, visible_report_passes
 from scanner.mass_search.research_profile import (
     RESEARCH_SCREEN_DEFAULTS,
+    apply_research_window,
     build_research_profile,
     evaluate_thresholds,
     independently_audited,
@@ -553,6 +554,17 @@ def _authoritative_saved_profile(report):
         }
 
 
+def _profile_for_view(report, filters):
+    """Apply window_days to reconstructed episodes/P&L/sample before screening."""
+    if not report:
+        return None
+    window_days = (filters or {}).get("window_days")
+    if window_days not in (None, ""):
+        clipped = apply_research_window(report, window_days)
+        return build_research_profile(clipped, filters=filters)
+    return _authoritative_saved_profile(report)
+
+
 def visible_mass_search_report(report):
     """Copy whose funnel, category, and profile follow reconciled evidence."""
     if not report:
@@ -591,7 +603,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     rows = []
     for row in screened:
         report = reports.get(row["address"])
-        profile = _authoritative_saved_profile(report)
+        profile = _profile_for_view(report, filters)
         reconstructed_ok = _reconstructed_pass(profile, filters) if profile else None
         if reconstructed_ok is False:
             continue
@@ -630,7 +642,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     all_classified = []
     for row in universe["rows"]:
         report = reports.get(row["address"])
-        profile = _authoritative_saved_profile(report)
+        profile = _profile_for_view(report, filters)
         funnel = classify_candidate(
             provider_rank=row["provider_rank"],
             provider_trade_count=row.get("trade_count"),
@@ -652,7 +664,7 @@ def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
         if entry["address"] in {row["address"] for row in universe["rows"]}:
             continue
         report = reports.get(entry["address"])
-        extra_profile = _authoritative_saved_profile(report)
+        extra_profile = _profile_for_view(report, filters)
         extras.append({
             "address": entry["address"],
             "provider_rank": None,
@@ -816,7 +828,7 @@ def research_screen_run(universe_rows, reports, filters):
                 "blocking_reason": labels["blocking_reason"],
             })
             continue
-        profile = _authoritative_saved_profile(report)
+        profile = _profile_for_view(report, filters)
         if not profile:
             not_executed += 1
             labels = wallet_status_fields(report, None)

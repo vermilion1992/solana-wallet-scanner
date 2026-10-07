@@ -362,6 +362,8 @@ def test_draft_grant_is_disabled_and_caps_match():
     helius = next(entry for entry in raw["providers"] if entry["provider_id"] == "helius")
     assert birdeye["max_requests"] == 3 and birdeye["max_units"] == 91
     assert helius["max_requests"] == 500 and helius["max_units"] == 5000
+    assert raw["phase_caps"]["2"]["helius_requests"] == 200
+    assert raw["phase_caps"]["3"]["helius_requests"] == 300
     checked = validate_live_authorization(raw)
     assert checked["enabled"] is False
     assert load_grant(DRAFT_PATH)["enabled"] is False
@@ -423,6 +425,7 @@ def test_runner_rejects_bad_params_and_caps_of_zero(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(tmp_path / "zero-run"),
+        "ledger_dir": str(tmp_path / "ledger-zero"),
         "wallets": [GTFO],
         "phases": "2",
         "max_helius_requests": 0,
@@ -445,6 +448,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(out),
+        "ledger_dir": str(tmp_path / "ledger-run"),
         "wallets": wallets,
         "discovery": True,
         "phases": "all",
@@ -463,6 +467,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
             "mode": "dry-run",
             "grant_path": str(DRAFT_PATH),
             "output_dir": str(out),
+            "ledger_dir": str(tmp_path / "ledger-run"),
             "wallets": wallets,
             "phases": "all",
         }))
@@ -470,6 +475,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(out),
+        "ledger_dir": str(tmp_path / "ledger-run"),
         "wallets": wallets,
         "discovery": True,
         "phases": "all",
@@ -483,6 +489,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(crashed),
+        "ledger_dir": str(tmp_path / "ledger-crash"),
         "wallets": wallets[:2],
         "phases": "2",
         "window_days": 30,
@@ -497,6 +504,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
         "mode": "dry-run",
         "grant_path": str(DRAFT_PATH),
         "output_dir": str(crashed),
+        "ledger_dir": str(tmp_path / "ledger-crash"),
         "wallets": wallets[:2],
         "phases": "2",
         "resume": True,
