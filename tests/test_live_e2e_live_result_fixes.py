@@ -47,7 +47,13 @@ from tests.test_live_e2e_spend_safety import (
 
 @pytest.fixture(autouse=True)
 def ledger_home(tmp_path, monkeypatch):
-    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(tmp_path / "ledger"))
+    from scanner.mass_search.live_e2e import PINNED_LEDGER_REL
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    pin = home / PINNED_LEDGER_REL
+    pin.mkdir(parents=True)
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(pin))
 
 
 @pytest.fixture
@@ -298,8 +304,9 @@ def test_n1_second_ledger_dir_refused(tmp_path, fake_keys):
             **_live_kwargs(tmp_path, grant, tmp_path / "out2", WALLETS[:1]),
             "ledger_dir": str(tmp_path / "other-ledger"),
         })
+    from scanner.mass_search.live_e2e import PINNED_LEDGER_REL
     path = grant_ledger_path("live-e2e-proof-2026-10-07-mitch")
-    assert path == Path(tmp_path / "ledger" / "live-e2e-proof-2026-10-07-mitch")
+    assert path == Path.home() / PINNED_LEDGER_REL / "live-e2e-proof-2026-10-07-mitch"
 
 
 def test_n2_missing_hash_and_working_tree_hash_refused(tmp_path, fake_keys):
@@ -323,7 +330,7 @@ def test_missing_phase_caps_inherit_draft(tmp_path, fake_keys):
     raw.pop("phase_caps", None)
     grant.write_text(json.dumps(raw), encoding="utf-8")
     cfg = validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out", WALLETS[:1]))
-    assert cfg["caps"]["phase_caps"]["2"]["helius_requests"] == 200
+    assert cfg["caps"]["phase_caps"]["2"]["helius_requests"] == 600
 
 
 def test_explicit_retry_appends_receipt(tmp_path, monkeypatch, fake_keys):
@@ -344,7 +351,8 @@ def test_explicit_retry_appends_receipt(tmp_path, monkeypatch, fake_keys):
         tmp_path, grant, out, WALLETS[:1], phases="2", resume=True, explicit_retry=True,
     )))
     assert second["spend"]["helius_requests"] >= 3
-    store = Store(tmp_path / "ledger" / second["authorization_id"])
+    from scanner.mass_search.live_e2e import PINNED_LEDGER_REL
+    store = Store(Path.home() / PINNED_LEDGER_REL / second["authorization_id"])
     receipts = list(store.list(RECEIPT_KIND) or [])
     keys = [row.get("request_id") for row in receipts]
     assert any(":retry" in (key or "") for key in keys)

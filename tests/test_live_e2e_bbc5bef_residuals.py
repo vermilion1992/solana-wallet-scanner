@@ -50,7 +50,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.fixture(autouse=True)
 def ledger_home(tmp_path, monkeypatch):
-    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(tmp_path / "ledger"))
+    from scanner.mass_search.live_e2e import PINNED_LEDGER_REL
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    pin = home / PINNED_LEDGER_REL
+    pin.mkdir(parents=True)
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(pin))
 
 
 @pytest.fixture
@@ -85,8 +91,8 @@ def test_pinned_hash_and_hard_ceilings_block_local_inflated_draft(tmp_path, fake
     grant = _arm_grant(tmp_path, helius_req=20_000, helius_units=1_000_000)
     with pytest.raises(LiveE2EError, match="hard ceiling|exceeds committed draft"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out2", WALLETS[:1]))
-    assert HARD_CEILINGS["helius_requests"] == 1500
-    assert HARD_CEILINGS["birdeye_units"] == 300
+    assert HARD_CEILINGS["helius_requests"] == 3000
+    assert HARD_CEILINGS["birdeye_units"] == 1000
     working = hashlib.sha256((ROOT / DRAFT_REL_NEXT).read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_NEXT] == working
 

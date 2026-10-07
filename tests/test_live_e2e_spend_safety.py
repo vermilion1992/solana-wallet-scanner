@@ -5,6 +5,7 @@ import asyncio
 import json
 import threading
 from datetime import datetime, timezone
+from pathlib import Path
 import httpx
 import pytest
 from fastapi.testclient import TestClient
@@ -14,7 +15,8 @@ from scanner.mass_search.adapters import SourceError
 from scanner.mass_search.evidence_integrity import redact_text
 from scanner.mass_search.live_e2e import (
     DRAFT_PATH,
-    DRAFT_REL_NEXT,
+    DRAFT_REL_11,
+    PINNED_LEDGER_REL,
     LiveE2EError,
     parse_wallets,
     run_live_e2e,
@@ -62,16 +64,16 @@ def _arm_grant(tmp_path, *, helius_req=500, helius_units=5000, birdeye_req=3, bi
                phase_caps=None, extra=None, bind_hash=True):
     import os
     from pathlib import Path
-    draft_path = DRAFT_PATH.parents[1] / DRAFT_REL_NEXT
+    draft_path = DRAFT_PATH.parents[1] / DRAFT_REL_11
     raw = json.loads(draft_path.read_text(encoding="utf-8"))
     raw["enabled"] = True
     raw["authorized_by_user_at"] = "2026-10-07T00:00:00Z"
     raw["expires_at"] = "2099-01-01T00:00:00Z"
     raw["armed_home"] = str(Path.home())
-    raw["ledger_home"] = os.environ.get("SCANNER_LIVE_LEDGER_HOME") or str(tmp_path / "ledger")
+    raw["ledger_home"] = str(Path.home() / PINNED_LEDGER_REL)
     if bind_hash:
         raw["draft_artifact_hash"] = committed_draft_hash(
-            DRAFT_REL_NEXT,
+            DRAFT_REL_11,
             repo_root=DRAFT_PATH.parents[1],
         )
     for entry in raw["providers"]:
@@ -97,7 +99,7 @@ def _live_kwargs(tmp_path, grant, output, wallets, **extra):
         "mode": "live",
         "grant_path": str(grant),
         "output_dir": str(output),
-        "ledger_dir": str(tmp_path / "ledger"),
+        "ledger_dir": extra.pop("ledger_dir", None) or str(Path.home() / PINNED_LEDGER_REL),
         "wallets": wallets,
         "phases": extra.pop("phases", "2"),
         "window_days": 30,
@@ -110,7 +112,13 @@ def _live_kwargs(tmp_path, grant, output, wallets, **extra):
 
 @pytest.fixture(autouse=True)
 def ledger_home(tmp_path, monkeypatch):
-    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(tmp_path / "ledger"))
+    from pathlib import Path
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    pin = home / PINNED_LEDGER_REL
+    pin.mkdir(parents=True)
+    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(pin))
 
 
 @pytest.fixture
@@ -310,7 +318,7 @@ def test_ss8_birdeye_is_one_documented_30_cu(tmp_path, monkeypatch, fake_keys):
     assert len(calls) == 1
     assert result["spend"]["birdeye_requests"] == 1
     assert result["spend"]["birdeye_units"] == 30
-    store = Store(tmp_path / "ledger" / result["authorization_id"])
+    store = Store(Path.home() / PINNED_LEDGER_REL / result["authorization_id"])
     usage = store.usage("birdeye", "2026-10-07T00:00:00Z", 91)
     assert usage["used"] == 30
     store.close()
@@ -327,7 +335,7 @@ def test_ss9_failed_request_is_in_state_spend(tmp_path, monkeypatch, fake_keys):
     )))
     assert result["spend"]["helius_requests"] == 1
     assert result["spend"]["helius_units"] == 10
-    store = Store(tmp_path / "ledger" / result["authorization_id"])
+    store = Store(Path.home() / PINNED_LEDGER_REL / result["authorization_id"])
     ledger, _ = spend_from_ledger(store)
     assert ledger["helius_requests"] == 1
     store.close()

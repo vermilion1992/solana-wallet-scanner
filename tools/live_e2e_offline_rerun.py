@@ -39,6 +39,7 @@ from scanner.storage import Store
 import tools.independent_episode_audit as auditor
 
 RAW_ROOTS = [
+    Path("/tmp/live-raw-f635a45/live-out/main/raw"),
     Path("/tmp/live-raw-06cea26/live-out/main/raw"),
     Path("/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw"),
     Path("/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw"),
@@ -345,7 +346,7 @@ def main():
         "",
         "## Phase 4 replay",
         "",
-        "| Wallet | history_complete | Bundle flags | Venue share | Cov count / value | In-window completed | Realized P&L | Auditor clean / net | App − auditor | Lead | Blocker |",
+        "| Wallet | history_complete | Bundle / pair flags | Venue share | Cov count / value | In-window completed | Realized P&L | Auditor clean / net | App − auditor | Lead | Blocker |",
         "|---|---|---|---:|---|---:|---|---|---|---|---|",
     ]
     for row in wallets:

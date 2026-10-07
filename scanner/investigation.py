@@ -89,7 +89,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v16-flashx-wrap-skip-token2022-close-v1'
+DECODER_VERSION = 'spot-v17-jup-native-settle-token2022-close-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -1003,6 +1003,12 @@ def decode_supported_swaps(transactions, address):
                         continue
                     if kind in ('getAccountDataSize', 'syncNative', 'initializeImmutableOwner'):
                         continue
+                    if kind is None and route['program'] == JUPITER:
+                        # Token-2022 harvest / excess-lamports CPIs on vaults
+                        # have no reviewed binary contract. Inside a reviewed
+                        # Jupiter route they are non-economic: wallet legs
+                        # still have to reconcile below.
+                        continue
                     if kind == 'closeAccount':
                         account = info.get('account')
                         if info.get('destination') == address:
@@ -1162,8 +1168,13 @@ def decode_supported_swaps(transactions, address):
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
                           - outside_native_delta + sum(item['lamports'] for item in retained_funding))
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
+            owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
-                raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
+                # Jupiter shared-accounts route_v2 often settles native SOL
+                # without a wallet-owned wSOL ATA. The wallet's fee-adjusted
+                # native delta is the SOL leg when it never held WSOL.
+                if not (route['program'] == JUPITER and not owned_wsol_accounts):
+                    raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
             native_roles = _unresolved_native_roles(flat, owned, wsol_accounts, keys,
                 pre_lamports, address, route, retained_funding, settlement)
             for role in native_roles:

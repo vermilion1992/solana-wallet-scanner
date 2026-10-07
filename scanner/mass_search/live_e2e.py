@@ -107,16 +107,19 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 ROOT = Path(__file__).resolve().parents[2]
 AUTHORIZATION_ID = "live-e2e-proof-2026-10-07-mitch"
 AUTHORIZATION_ID_NEXT = "live-e2e-proof-2026-10-09-mitch"
+AUTHORIZATION_ID_11 = "live-e2e-proof-2026-10-11-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
 DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
+DRAFT_REL_11 = "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
-# --live accepts only the 2026-10-09 draft. The 07 draft is retired immediately
-# (it was still accepted until 2026-10-08T13:30Z). Dry-run may still load it.
+# --live accepts only the 2026-10-11 draft. 07 and 09 are retired for --live.
+# Dry-run may still load a retired draft.
 LIVE_KNOWN_DRAFTS = {
-    AUTHORIZATION_ID_NEXT: DRAFT_REL_NEXT,
+    AUTHORIZATION_ID_11: DRAFT_REL_11,
 }
 RETIRED_LIVE_DRAFTS = {
     AUTHORIZATION_ID: DRAFT_REL,
+    AUTHORIZATION_ID_NEXT: DRAFT_REL_NEXT,
 }
 KNOWN_DRAFTS = {**RETIRED_LIVE_DRAFTS, **LIVE_KNOWN_DRAFTS}
 # Pinned committed-blob hashes. A local commit of an inflated draft cannot
@@ -124,13 +127,16 @@ KNOWN_DRAFTS = {**RETIRED_LIVE_DRAFTS, **LIVE_KNOWN_DRAFTS}
 PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID: "ca4c3f9637d5d8ee11475a8c1704bb964a0a7bed4e126c69e92c65ef9043f410",
     AUTHORIZATION_ID_NEXT: "cda7b98d4d3bf0c219c53f4c37f2c6bc3b62d9480b60ad69d01f1709fc65af62",
+    AUTHORIZATION_ID_11: "d0a44d99a64500258ac6afde52010b88a933edb51bd1f90eeb2b7e5643897534",
 }
 HARD_CEILINGS = {
-    "birdeye_requests": 10,
-    "birdeye_units": 300,
-    "helius_requests": 1500,
-    "helius_units": 15000,
+    "birdeye_requests": 30,
+    "birdeye_units": 1000,
+    "helius_requests": 3000,
+    "helius_units": 30000,
 }
+# Ledger home is pinned here and in the committed draft, not in the armed copy.
+PINNED_LEDGER_REL = ".scanner/live-e2e-ledgers"
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
 HELIUS_KEY_ENV = "HELIUS_API_KEY"
 HELIUS_ENDPOINT = "https://mainnet.helius-rpc.com/"
@@ -160,6 +166,14 @@ BIRDEYE_DEFAULT_WINDOW = "30d"
 BIRDEYE_DEFAULT_SORT = "trader_score"
 BIRDEYE_DISCOVERY_GAINERS = "gainers-losers"
 BIRDEYE_DISCOVERY_TOP_TRADERS = "top-traders"
+# Liquid established tokens for solo-trader top-traders discovery.
+ESTABLISHED_LIQUID_MINTS = (
+    "So11111111111111111111111111111111111111112",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+)
 # Documented CU (docs.birdeye.so/docs/compute-unit-cost, reviewed 2026-10-07):
 # GET /trader/gainers-losers = 30 CU fixed. Supported type= yesterday|today|1W|30d|90d;
 # sort_by = PnL|realized_pnl|unrealized_pnl|trader_score.
@@ -324,7 +338,10 @@ def parse_wallets(value):
 def window_bounds(window_days, earlier_history_days, *, end=None, history_to_first=False, history_start_unix=None):
     if type(window_days) is not int or not 1 <= window_days <= 365:
         raise LiveE2EError("window_days must be an integer 1-365")
-    if type(earlier_history_days) is not int or not 0 <= earlier_history_days <= 365:
+    if history_to_first or history_start_unix is not None:
+        if type(earlier_history_days) is not int or earlier_history_days < 0:
+            raise LiveE2EError("earlier_history_days must be a non-negative integer")
+    elif type(earlier_history_days) is not int or not 0 <= earlier_history_days <= 365:
         raise LiveE2EError("earlier_history_days must be an integer 0-365")
     end = end or datetime.now(timezone.utc).replace(microsecond=0)
     report_start = end - timedelta(days=window_days)
@@ -582,11 +599,11 @@ def classify_programs(records, address=None):
 
 
 def compute_bot_rate(sig_records, window_days):
-    """In-window txs per observed day. A full 1000-sig page is a lower bound.
+    """Robust txs / active day. A 7-minute 4-tx burst is not 96/day.
 
-    Uses the observed timestamp span, not max(window, observed). A 30-day
-    window with a full signatures page would otherwise cap at 33.33/day and
-    never fire --max-bot-rate 50.
+    Denominator is max(observed span in days, distinct UTC dates, 1 day) so
+    low-activity wallets stay under a 25/day drop while genuine HFT
+    (hundreds of txs in one calendar day) still fire.
     """
     count = len(sig_records or [])
     times = []
@@ -598,11 +615,12 @@ def compute_bot_rate(sig_records, window_days):
                 stamp = ((row.get("transaction") or {}).get("blockTime"))
         if type(stamp) is int:
             times.append(stamp)
-    if times:
-        observed = (max(times) - min(times)) / 86400
-        span = max(Decimal(str(observed)), Decimal("0.0416667"))
-    else:
+    if not times:
         span = Decimal(max(int(window_days or 1), 1))
+        return (Decimal(count) / span).quantize(Decimal("0.0001"))
+    observed = Decimal(max(times) - min(times)) / Decimal(86400)
+    active_days = Decimal(len({datetime.fromtimestamp(stamp, tz=timezone.utc).date() for stamp in times}))
+    span = max(observed, active_days, Decimal("1"))
     return (Decimal(count) / span).quantize(Decimal("0.0001"))
 
 
@@ -631,9 +649,8 @@ def unwrap_gta_record(record):
 
 
 def oldest_native_prebalance(records, address):
-    """Oldest captured native preBalance for the wallet, or None if absent."""
-    oldest_stamp = None
-    oldest_pre = None
+    """Oldest captured native preBalance. Same-second ties prefer preBalance 0."""
+    oldest = None
     for record in records or []:
         raw = unwrap_gta_record(record)
         if not isinstance(raw, dict):
@@ -652,61 +669,126 @@ def oldest_native_prebalance(records, address):
         pre = meta.get("preBalances") or []
         if index >= len(pre):
             continue
-        if oldest_stamp is None or stamp < oldest_stamp:
-            oldest_stamp = stamp
-            oldest_pre = pre[index]
-    return oldest_stamp, oldest_pre
+        slot = raw.get("slot")
+        if type(slot) is not int:
+            slot = 2**62
+        signature = ((raw.get("transaction") or {}).get("signatures") or [None])[0] or ""
+        key = (stamp, 0 if pre[index] == 0 else 1, slot, signature)
+        if oldest is None or key < oldest[0]:
+            oldest = (key, stamp, pre[index])
+    if oldest is None:
+        return None, None
+    return oldest[1], oldest[2]
+
+
+def mints_sold_without_acquisition(records, address):
+    """Mints sold in-history with no prior in-history acquisition (unknown basis)."""
+    from scanner.mass_search.bundle_detect import _owned_token_deltas, _sale_mints, _unwrap
+
+    acquired = set()
+    unknown = set()
+    rows = []
+    for record in records or []:
+        raw = _unwrap(record)
+        if not isinstance(raw, dict) or (raw.get("meta") or {}).get("err") is not None:
+            continue
+        stamp = raw.get("blockTime") or raw.get("timestamp") or ((raw.get("transaction") or {}).get("blockTime"))
+        if type(stamp) is not int:
+            continue
+        slot = raw.get("slot") if type(raw.get("slot")) is int else 0
+        signature = ((raw.get("transaction") or {}).get("signatures") or [None])[0] or ""
+        try:
+            keys = _keys((raw.get("transaction") or {}).get("message") or {}, raw.get("meta") or {})
+        except (ValueError, TypeError, KeyError, IndexError):
+            keys = []
+        rows.append((stamp, slot, signature, raw, keys))
+    rows.sort()
+    for _stamp, _slot, _signature, raw, keys in rows:
+        deltas = _owned_token_deltas(raw, address)
+        for mint, qty in deltas.items():
+            if qty > 0:
+                acquired.add(mint)
+        for mint in _sale_mints(raw, keys, address, deltas):
+            if mint not in acquired:
+                unknown.add(mint)
+    return unknown
 
 
 def assess_history_completeness(records, leftover_token, *, address, cap_truncated=False, page_cap_hit=False):
-    """Complete only when the wallet was created in the captured range, or no leftover token."""
+    """Complete only when pagination is exhausted or first-funding is proven.
+
+    Oldest native preBalance 0 alone is not enough: wallets drain to 0 SOL
+    while still holding tokens that are absent from that tx's token
+    pre-balances. A later sale of a mint with no in-history acquisition is
+    unknown basis and is never complete.
+    """
     stamp, pre = oldest_native_prebalance(records, address)
     created_in_range = pre == 0
     leftover = bool(leftover_token)
-    if cap_truncated:
-        return {
-            "history_complete": False,
-            "history_complete_reason": "cap_truncated",
-            "wallet_created_in_range": created_in_range,
-            "leftover_pagination_token": leftover,
-            "oldest_block_time": stamp,
-            "oldest_native_prebalance": pre,
-        }
-    if page_cap_hit and leftover:
-        return {
-            "history_complete": False,
-            "history_complete_reason": "page_cap_with_leftover_token",
-            "wallet_created_in_range": created_in_range,
-            "leftover_pagination_token": leftover,
-            "oldest_block_time": stamp,
-            "oldest_native_prebalance": pre,
-        }
-    if leftover and not created_in_range:
-        return {
-            "history_complete": False,
-            "history_complete_reason": "pagination_token_remaining_earlier_history",
-            "wallet_created_in_range": created_in_range,
-            "leftover_pagination_token": leftover,
-            "oldest_block_time": stamp,
-            "oldest_native_prebalance": pre,
-        }
-    if created_in_range:
-        reason = "wallet_created_in_range"
-        complete = True
-    elif not leftover:
-        reason = "no_leftover_pagination_token"
-        complete = True
-    else:
-        reason = "unproven"
-        complete = False
-    return {
-        "history_complete": complete,
-        "history_complete_reason": reason,
+    unknown = mints_sold_without_acquisition(records, address)
+    base = {
         "wallet_created_in_range": created_in_range,
         "leftover_pagination_token": leftover,
         "oldest_block_time": stamp,
         "oldest_native_prebalance": pre,
+        "unknown_basis_mints": sorted(unknown),
     }
+    if cap_truncated:
+        return {**base, "history_complete": False, "history_complete_reason": "cap_truncated"}
+    if page_cap_hit and leftover:
+        return {**base, "history_complete": False, "history_complete_reason": "page_cap_with_leftover_token"}
+    if unknown:
+        return {**base, "history_complete": False, "history_complete_reason": "unknown_basis_sale"}
+    if leftover and not created_in_range:
+        return {
+            **base,
+            "history_complete": False,
+            "history_complete_reason": "pagination_token_remaining_earlier_history",
+        }
+    if created_in_range:
+        return {**base, "history_complete": True, "history_complete_reason": "wallet_created_in_range"}
+    if not leftover:
+        return {**base, "history_complete": True, "history_complete_reason": "no_leftover_pagination_token"}
+    return {**base, "history_complete": False, "history_complete_reason": "unproven"}
+
+
+def seed_counterparties_from_records(records, address):
+    """Cheap solo-trader seeds: non-infra counterparties that did not co-sign.
+
+    Exchange hot-wallet funders (single signer, no co-sign) and peer
+    withdraw destinations are candidates. Service co-signers are skipped.
+    """
+    from scanner.mass_search.bundle_detect import (
+        INFRA,
+        _native_counterparties,
+        _signers,
+        _unwrap,
+    )
+
+    found = []
+    seen = set()
+    for record in records or []:
+        raw = _unwrap(record)
+        if not isinstance(raw, dict) or (raw.get("meta") or {}).get("err") is not None:
+            continue
+        try:
+            keys = _keys((raw.get("transaction") or {}).get("message") or {}, raw.get("meta") or {})
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        signers = _signers(raw, keys) if keys else []
+        for party, kind, amount in _native_counterparties(raw, keys, address):
+            if party in INFRA or party in seen:
+                continue
+            if party in signers and address in signers:
+                continue
+            seen.add(party)
+            found.append({
+                "address": party,
+                "role": kind,
+                "lamports": str(amount),
+                "source_wallet": address,
+            })
+    return found
 
 
 def discovery_identity(config):
@@ -753,21 +835,27 @@ def estimate_phase3_pages(config, state=None):
 
 
 def prescreen_rank_score(row):
-    """(supported-venue share by value) x (has known-basis buys) x (not bundle/bot)."""
+    """(supported-venue share by value) x (has known-basis buys) x (not bundle/bot/pair)."""
     share = Decimal(str(row.get("supported_venue_value_share") or "0"))
     has_buys = Decimal("1") if row.get("has_known_basis_buys") else Decimal("0")
-    clean = Decimal("0") if row.get("bundle") or row.get("bot") else Decimal("1")
+    dirty = row.get("bundle") or row.get("bot") or row.get("controlled_pair")
+    clean = Decimal("0") if dirty else Decimal("1")
     return (share * has_buys * clean).quantize(Decimal("0.0001"))
 
 
 def phase3_wallets(config, state=None):
-    """Honour an explicit --wallets selection; otherwise use phase-2 kept rows."""
+    """Honour an explicit --wallets selection; otherwise rank phase-2 kept rows."""
     state = state or {}
-    kept = [
-        row["address"]
+    kept_rows = [
+        row
         for row in (state.get("phase2") or {}).values()
         if isinstance(row, dict) and row.get("address") and not row.get("dropped")
     ]
+    kept_rows.sort(key=lambda row: (
+        -float(row.get("coverability_rank_key") or 0),
+        row.get("address") or "",
+    ))
+    kept = [row["address"] for row in kept_rows]
     if config.get("wallets_supplied"):
         return list(config.get("wallets") or [])
     if kept:
@@ -798,9 +886,16 @@ def plan_request_counts(config, state=None):
     n3 = len(phase3_wallets(config, state)) if 3 in phases else 0
     helius_phase2 = (2 * n) if 2 in phases else 0
     page_estimates = estimate_phase3_pages(config, state) if 3 in phases else {}
+    per_wallet_cap = config.get("per_wallet_cap")
+    if per_wallet_cap is not None:
+        page_estimates = {
+            address: min(int(pages), int(per_wallet_cap))
+            for address, pages in page_estimates.items()
+        }
     helius_phase3 = sum(page_estimates.values()) if 3 in phases else 0
     if 3 in phases and not page_estimates and n3:
-        helius_phase3 = 2 * n3
+        capped = int(per_wallet_cap) if per_wallet_cap is not None else 2
+        helius_phase3 = min(2, capped) * n3
     helius_units = 0
     if 2 in phases:
         helius_units += n * (SIG_ONLY_UNITS + FULL_100_UNITS)
@@ -813,6 +908,7 @@ def plan_request_counts(config, state=None):
         "wallet_count": n,
         "discovery_source": source,
         "phase3_page_estimates": page_estimates,
+        "per_wallet_cap": per_wallet_cap,
         "birdeye_cu_docs": BIRDEYE_CU_DOCS,
         "per_phase": {
             "1": {
@@ -836,14 +932,15 @@ def plan_request_counts(config, state=None):
             "3": {
                 "provider": "helius",
                 "requests": helius_phase3,
-                "units": n3 * 2 * FULL_1000_UNITS if 3 in phases else 0,
+                "units": helius_phase3 * FULL_1000_UNITS if 3 in phases else 0,
                 "billing_unit": "helius_credit",
                 "note": (
                     "Planner estimates pages per wallet from pre-screen tx "
                     "density (in-window count / window days × history days / 1000), "
-                    "minimum 2. A leftover paginationToken is not treated as the "
-                    "end unless the wallet was created in range. Units are the "
-                    "documented worst case (100 credits / 1000 txs) per estimated page."
+                    "minimum 2, then clips each wallet to --per-wallet-cap. "
+                    "A leftover paginationToken is not the end unless first-funding "
+                    "is proven. Units are the documented worst case "
+                    "(100 credits / 1000 txs) per estimated page."
                 ),
             },
             "4": {"provider": None, "requests": 0, "units": 0, "note": "offline only"},
@@ -1232,6 +1329,10 @@ def _next_receipt_key(store, base, *, explicit_retry):
     if receipt_is_spent(existing) and not explicit_retry:
         return base, existing, True
     if receipt_is_spent(existing) and explicit_retry:
+        if existing.get("state") != "failed":
+            # reserved/dispatched: adopt the saved page if present; do not
+            # mint a retry key that would re-send a consumed success.
+            return base, existing, True
         index = 1
         while receipt_is_spent(load_receipt(store, f"{base}:retry{index}")):
             index += 1
@@ -1239,8 +1340,8 @@ def _next_receipt_key(store, base, *, explicit_retry):
     return base, existing, False
 
 
-def _receipt_sha_for_page(store, address, page_name):
-    """Ledger consumed-receipt sha256 for a Phase-3 page, if present."""
+def _receipt_sha_for_page(store, address, page_name, phase=None):
+    """Ledger consumed-receipt sha256 for a saved page, if present."""
     if store is None or not hasattr(store, "list"):
         return None
     stem = Path(page_name).stem
@@ -1256,7 +1357,9 @@ def _receipt_sha_for_page(store, address, page_name):
     for row in rows:
         if not isinstance(row, dict):
             continue
-        if row.get("wallet") != address or row.get("phase") != 3:
+        if row.get("wallet") != address:
+            continue
+        if phase is not None and int(row.get("phase") or -1) != int(phase):
             continue
         if int(row.get("page") or -1) != page_index:
             continue
@@ -1268,13 +1371,19 @@ def _receipt_sha_for_page(store, address, page_name):
     return None
 
 
-def _verify_saved_page(path, relative=None):
-    """Require integrity receipt + result body. Error JSON is blocked, never empty."""
+def _verify_saved_page(path, relative=None, expected_sha=None):
+    """Require integrity receipt + result body. Sidecar rewrite alone cannot pass.
+
+    The immutable ledger receipt sha256 is the source of truth. A tampered
+    page that only rewrites written_sha256 (keeping original_sha256 equal to
+    the ledger sha) is rejected when the file bytes no longer match.
+    """
     path = Path(path)
     label = relative or str(path)
     if not path.is_file() or path.stat().st_size == 0:
         raise SourceError("MISSING_CAPTURE", f"raw page missing: {label}; not covered")
     raw = path.read_bytes()
+    file_sha = _sha256_bytes(raw)
     integrity_path = path.with_name(path.name + ".integrity.json")
     if not integrity_path.is_file():
         raise SourceError("MISSING_CAPTURE", f"integrity receipt missing: {label}; not covered")
@@ -1283,8 +1392,27 @@ def _verify_saved_page(path, relative=None):
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         raise SourceError("MISSING_CAPTURE", f"integrity receipt unreadable: {label}; not covered") from error
     written = integrity.get("written_sha256")
-    if written != _sha256_bytes(raw):
+    original = integrity.get("original_sha256")
+    scrubbed = bool(integrity.get("scrubbed"))
+    if written != file_sha:
         raise SourceError("MISSING_CAPTURE", f"raw page hash mismatch: {label}; not covered")
+    if expected_sha:
+        if scrubbed:
+            if original != expected_sha:
+                raise SourceError(
+                    "MISSING_CAPTURE",
+                    f"ledger receipt sha mismatch (scrubbed original): {label}; not covered",
+                )
+        elif file_sha != expected_sha:
+            raise SourceError(
+                "MISSING_CAPTURE",
+                f"ledger receipt sha mismatch: {label}; file was rewritten; not covered",
+            )
+        if not scrubbed and original and original != expected_sha:
+            raise SourceError(
+                "MISSING_CAPTURE",
+                f"sidecar original_sha256 disagrees with ledger: {label}; not covered",
+            )
     try:
         body = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -1301,10 +1429,62 @@ def _verify_saved_page(path, relative=None):
     return raw, data, token
 
 
-def _replay_saved_page(config, phase, address, page_index, units):
+def _import_paid_page(config, store, phase, address, page_index, expected_sha):
+    """Copy a previously paid page into this output dir by verified ledger sha."""
+    relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
+    dest = Path(config["output_dir"]) / relative
+    roots = list(config.get("import_raw_dirs") or [])
+    for root in roots:
+        root = Path(root)
+        if not root.exists():
+            continue
+        candidates = []
+        if root.is_file() and root.name.endswith(".bin"):
+            candidates.append(root)
+        else:
+            candidates.extend(root.rglob(f"page{page_index}.bin"))
+            named = root / "raw" / f"phase{phase}" / address / f"page{page_index}.bin"
+            if named.is_file():
+                candidates.append(named)
+        for candidate in candidates:
+            if not candidate.is_file():
+                continue
+            digest = _sha256_bytes(candidate.read_bytes())
+            if expected_sha and digest != expected_sha:
+                continue
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(candidate.read_bytes())
+            sidecar = candidate.with_name(candidate.name + ".integrity.json")
+            if sidecar.is_file():
+                dest.with_name(dest.name + ".integrity.json").write_bytes(sidecar.read_bytes())
+            raw, records, token = _verify_saved_page(dest, relative, expected_sha=expected_sha)
+            return raw, records, token
+    guidance = (
+        f"Paid page sha256={expected_sha} is not in this output dir "
+        f"({relative}). Copy the page plus sidecar from the prior run, or pass "
+        f"--import-raw-dir pointing at that raw tree. Refusing to re-send a "
+        f"consumed receipt."
+    )
+    raise SourceError("MISSING_CAPTURE", guidance)
+
+
+def _replay_saved_page(config, phase, address, page_index, units, store=None):
     relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
     path = Path(config["output_dir"]) / relative
-    raw, records, token = _verify_saved_page(path, relative)
+    expected_sha = _receipt_sha_for_page(store, address, f"page{page_index}.bin", phase=phase) if store is not None else None
+    if (not path.is_file() or path.stat().st_size == 0) and expected_sha:
+        raw, records, token = _import_paid_page(
+            config, store, phase, address, page_index, expected_sha,
+        )
+    else:
+        if not path.is_file() or path.stat().st_size == 0:
+            raise SourceError(
+                "MISSING_CAPTURE",
+                f"raw page missing: {relative}; a consumed receipt exists or the "
+                f"file was never copied. Pass --import-raw-dir <prior-raw-root> "
+                f"or copy the paid page plus sidecar. Refusing to re-send.",
+            )
+        raw, records, token = _verify_saved_page(path, relative, expected_sha=expected_sha)
     return {
         "records": records,
         "pagination_token": token,
@@ -1326,7 +1506,25 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
     if replay:
         reconcile_state_spend(store, state)
         save_state(config["output_dir"], state)
-        return _replay_saved_page(config, phase, address, page_index, units)
+        return _replay_saved_page(config, phase, address, page_index, units, store=store)
+    existing_page = Path(config["output_dir"]) / f"raw/phase{phase}/{address}/page{page_index}.bin"
+    if existing_page.is_file() and existing_page.stat().st_size > 0:
+        # Kill between save_raw and consumed receipt: adopt the file, no re-send.
+        adopted = _replay_saved_page(config, phase, address, page_index, units, store=store)
+        put_receipt(store, grant, key, {
+            "provider": "helius",
+            "wallet": address,
+            "phase": phase,
+            "page": page_index,
+            "cursor": cursor,
+            "units": units,
+            "state": "consumed",
+            "sha256": adopted.get("evidence_sha256"),
+            "adopted_existing_file": True,
+        })
+        _account_spend(state, provider="helius", units=units, phase=phase)
+        save_state(config["output_dir"], state)
+        return {**adopted, "adopted_existing_file": True}
     hard_stop_if_needed(
         config, state["spend"], provider="helius", units=units,
         phase=phase, phase_spend=state.get("phase_spend"),
@@ -1335,7 +1533,7 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
         used = int((state.get("phase3") or {}).get(address, {}).get("requests") or 0)
         used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
         if used >= int(config["per_wallet_cap"]):
-            raise SourceError("CAP_EXCEEDED", "Per-wallet request cap reached; hard stop")
+            raise SourceError("WALLET_CAP", "Per-wallet request cap reached; continue with other wallets")
     reservation = None
     put_receipt(store, grant, key, {
         "provider": "helius",
@@ -1667,6 +1865,8 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             "has_known_basis_buys": has_known_basis_buys,
             "bundle": bundle.get("excluded"),
             "bundle_reasons": bundle.get("reasons") or [],
+            "controlled_pair": bundle.get("controlled_pair") or [],
+            "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
             "bot": bot_rate > max_bot_rate,
             "bot_rate": str(bot_rate),
             "program_blockers": programs["blockers"],
@@ -1675,6 +1875,7 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                 "has_known_basis_buys": has_known_basis_buys,
                 "bundle": bundle.get("excluded"),
                 "bot": bot_rate > max_bot_rate,
+                "controlled_pair": bundle.get("controlled_pair"),
             })),
             "dropped": dropped,
             "drop_reason": drop_reason,
@@ -1707,6 +1908,16 @@ async def phase3_history(store, grant, config, state, recorder):
             continue
         token = cursor.get("pagination_token")
         while True:
+            page_cap = config.get("per_wallet_cap")
+            used = int(cursor.get("requests") or 0)
+            used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
+            if page_cap is not None and used >= int(page_cap):
+                cursor["done"] = True
+                cursor["history_complete"] = False
+                cursor["history_complete_reason"] = "per_wallet_cap"
+                cursor["leftover_pagination_token"] = bool(token)
+                cursor["window_covered"] = False
+                break
             options = gta_options(
                 details="full",
                 limit=GTA_MAX_LIMIT,
@@ -1714,10 +1925,20 @@ async def phase3_history(store, grant, config, state, recorder):
                 end_unix=bounds["report_end_unix"],
                 pagination_token=token,
             )
-            result = await _dispatch_helius(
-                store, grant, config, state, transport, address, options,
-                phase=3, page_index=cursor["pages"],
-            )
+            try:
+                result = await _dispatch_helius(
+                    store, grant, config, state, transport, address, options,
+                    phase=3, page_index=cursor["pages"],
+                )
+            except SourceError as error:
+                if getattr(error, "state", None) == "WALLET_CAP":
+                    cursor["done"] = True
+                    cursor["history_complete"] = False
+                    cursor["history_complete_reason"] = "per_wallet_cap"
+                    cursor["leftover_pagination_token"] = bool(token)
+                    cursor["window_covered"] = False
+                    break
+                raise
             cursor["pages"] += 1
             cursor["requests"] = cursor.get("requests", 0) + 1
             cursor["pagination_token"] = result.get("pagination_token")
@@ -1740,7 +1961,6 @@ async def phase3_history(store, grant, config, state, recorder):
             covered = no_more or created_complete or (
                 reached_bound and created["wallet_created_in_range"]
             )
-            page_cap = config.get("per_wallet_cap")
             hit_page_cap = page_cap is not None and cursor["pages"] >= int(page_cap)
             if covered or config["dry_run"] or hit_page_cap:
                 cursor["done"] = True
@@ -1749,7 +1969,7 @@ async def phase3_history(store, grant, config, state, recorder):
                 cursor["history_complete"] = bool(created["history_complete"]) and not hit_page_cap
                 if hit_page_cap and token:
                     cursor["history_complete"] = False
-                    cursor["history_complete_reason"] = "page_cap_with_leftover_token"
+                    cursor["history_complete_reason"] = "per_wallet_cap"
                 elif token and not created["wallet_created_in_range"]:
                     cursor["history_complete"] = False
                     cursor["history_complete_reason"] = "pagination_token_remaining_earlier_history"
@@ -1806,6 +2026,8 @@ def _phase4_wallet_row(report, profile):
         "program_blockers": ((report.get("prescreen") or {}).get("program_blockers")),
         "bundle": bundle.get("excluded"),
         "bundle_reasons": bundle.get("reasons") or [],
+        "controlled_pair": bundle.get("controlled_pair") or [],
+        "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
         "bot": ((report.get("prescreen") or {}).get("bot")),
         "bot_rate": ((report.get("prescreen") or {}).get("bot_rate")),
         "supported_venue_value_share": (
@@ -1817,6 +2039,19 @@ def _phase4_wallet_row(report, profile):
         "history_complete_reason": history.get("history_complete_reason"),
         "wallet_created_in_range": history.get("wallet_created_in_range"),
         "leftover_pagination_token": history.get("leftover_pagination_token"),
+        "pnl_scope": (
+            "decoded_subset"
+            if shares.get("coverage_count_share") not in (None, "", "1", "1.0000")
+            else "decoded"
+        ),
+        "pnl_note": (
+            "App realized P&L is the decoded-subset FIFO, not the wallet's "
+            "full balance-delta P&L. A high-coverage gap versus the auditor "
+            "(e.g. 9R3m89gX −362 vs +8,221) means the decoded sample is not "
+            "representative; unknown-basis / incomplete history blocks a lead."
+            if shares.get("coverage_count_share") not in (None, "", "1", "1.0000")
+            else None
+        ),
         "PRODUCT_READY": False,
     }
 
@@ -1841,12 +2076,10 @@ def phase4_offline(store, config, state):
         if raw_dir.is_dir() and not missing_page:
             for path in sorted(raw_dir.glob("page*.bin"), key=page_sort_key):
                 try:
-                    _raw, data, token = _verify_saved_page(path, f"raw/phase3/{address}/{path.name}")
-                    expected_sha = _receipt_sha_for_page(store, address, path.name)
-                    if expected_sha and expected_sha != _sha256_bytes(_raw) and expected_sha != (
-                        json.loads(path.with_name(path.name + ".integrity.json").read_text()).get("original_sha256")
-                    ):
-                        raise SourceError("MISSING_CAPTURE", f"ledger receipt sha mismatch: {path.name}; not covered")
+                    expected_sha = _receipt_sha_for_page(store, address, path.name, phase=3)
+                    _raw, data, token = _verify_saved_page(
+                        path, f"raw/phase3/{address}/{path.name}", expected_sha=expected_sha,
+                    )
                 except SourceError:
                     missing_page = True
                     records = []
@@ -1966,6 +2199,11 @@ def load_committed_draft(rel=DRAFT_REL):
         raise LiveE2EError(str(error)) from error
 
 
+def expected_pinned_ledger(armed_home):
+    """Ledger home is Path(armed_home)/PINNED_LEDGER_REL. Armed copies cannot relocate it."""
+    return (Path(armed_home).expanduser() / PINNED_LEDGER_REL).resolve()
+
+
 def assert_live_ledger_identity(grant):
     recorded_home = grant.get("armed_home")
     recorded_ledger = grant.get("ledger_home")
@@ -1976,18 +2214,37 @@ def assert_live_ledger_identity(grant):
         )
     if Path(recorded_home).expanduser().resolve() != Path.home().resolve():
         raise LiveE2EError("HOME differs from armed_home recorded at arming")
+    pinned = expected_pinned_ledger(recorded_home)
+    auth_id = grant.get("authorization_id")
+    if auth_id in LIVE_KNOWN_DRAFTS:
+        try:
+            draft, _ = load_committed_draft(LIVE_KNOWN_DRAFTS[auth_id])
+        except LiveE2EError:
+            draft = {}
+        draft_pin = draft.get("pinned_ledger_home")
+        if draft_pin:
+            if str(draft_pin).startswith("~/"):
+                draft_path = (Path(recorded_home) / str(draft_pin)[2:]).resolve()
+            else:
+                draft_path = Path(draft_pin).expanduser().resolve()
+            if draft_path != pinned:
+                raise LiveE2EError("committed draft pinned_ledger_home disagrees with PINNED_LEDGER_REL")
+    if Path(recorded_ledger).expanduser().resolve() != pinned:
+        raise LiveE2EError(
+            "armed ledger_home is not the pinned ledger home "
+            f"({pinned}); re-arming with a new ledger home is refused"
+        )
     env_home = os.environ.get(LEDGER_HOME_ENV) or os.environ.get(LEDGER_ENV)
-    pinned = Path(recorded_ledger).expanduser().resolve()
     if env_home:
         if Path(env_home).expanduser().resolve() != pinned:
             raise LiveE2EError(
                 "refusing SCANNER_LIVE_LEDGER_* override that differs from "
-                "grant-recorded ledger_home"
+                "the pinned ledger home"
             )
     else:
-        default = (Path.home() / ".scanner" / "live-e2e-ledgers").resolve()
+        default = expected_pinned_ledger(Path.home())
         if default != pinned:
-            raise LiveE2EError("default ledger home differs from grant-recorded ledger_home")
+            raise LiveE2EError("default ledger home differs from the pinned ledger home")
     return pinned
 
 
@@ -2053,7 +2310,8 @@ def validate_config(raw):
         raise LiveE2EError(grant.get("reason") or "grant disabled")
     if raw["mode"] == "live" and grant.get("authorization_id") in RETIRED_LIVE_DRAFTS:
         raise LiveE2EError(
-            "2026-10-07 draft is retired for --live; use live-e2e-proof-2026-10-09-mitch"
+            "2026-10-07 and 2026-10-09 drafts are retired for --live; "
+            "use live-e2e-proof-2026-10-11-mitch"
         )
     if raw["mode"] == "live" and grant.get("authorization_id") not in LIVE_KNOWN_DRAFTS:
         raise LiveE2EError(f"live runner expects one of {sorted(LIVE_KNOWN_DRAFTS)}")
@@ -2075,6 +2333,11 @@ def validate_config(raw):
         raw["birdeye_tokens"] = [part.strip() for part in tokens_raw.split(",") if part.strip()]
     elif tokens_raw in (None, ""):
         raw["birdeye_tokens"] = []
+    if (raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS) == BIRDEYE_DISCOVERY_TOP_TRADERS and not raw["birdeye_tokens"]:
+        raw["birdeye_tokens"] = list(ESTABLISHED_LIQUID_MINTS)
+    import_raw = raw.get("import_raw_dir") or raw.get("import_raw_dirs") or []
+    if isinstance(import_raw, str):
+        import_raw = [part.strip() for part in import_raw.split(",") if part.strip()]
     window_days = 30 if raw.get("window_days") is None else int(raw.get("window_days"))
     earlier = 60 if raw.get("earlier_history_days") is None else int(raw.get("earlier_history_days"))
     history_to_first = bool(raw.get("history_to_first"))
@@ -2095,6 +2358,13 @@ def validate_config(raw):
             raise LiveE2EError("missing_provider_credentials: BIRDEYE_API_KEY")
         if (2 in phases or 3 in phases) and not presence["helius"]:
             raise LiveE2EError("missing_provider_credentials: HELIUS_API_KEY")
+    bounds = window_bounds(
+        window_days, earlier,
+        history_to_first=history_to_first,
+        history_start_unix=history_start_unix,
+    )
+    if history_to_first or history_start_unix is not None:
+        earlier = bounds["earlier_history_days"]
     return {
         "mode": raw["mode"],
         "dry_run": raw["mode"] == "dry-run",
@@ -2114,11 +2384,8 @@ def validate_config(raw):
         "earlier_history_days": earlier,
         "history_to_first": history_to_first,
         "history_start_unix": history_start_unix,
-        "bounds": window_bounds(
-            window_days, earlier,
-            history_to_first=history_to_first,
-            history_start_unix=history_start_unix,
-        ),
+        "import_raw_dirs": list(import_raw),
+        "bounds": bounds,
         "caps": caps,
         "per_wallet_cap": raw.get("per_wallet_cap"),
         "resume": bool(raw.get("resume")),
@@ -2163,15 +2430,23 @@ async def run_live_e2e(raw):
                     f"--window-days {config['window_days']} disagrees with persisted "
                     f"{persisted.get('window_days')}"
                 )
-            if persisted.get("earlier_history_days") != config["earlier_history_days"]:
-                raise LiveE2EError(
-                    f"--earlier-history-days {config['earlier_history_days']} disagrees "
-                    f"with persisted {persisted.get('earlier_history_days')}"
-                )
-            if bool(persisted.get("history_to_first")) != bool(config.get("history_to_first")):
+            persisted_htf = bool(persisted.get("history_to_first"))
+            config_htf = bool(config.get("history_to_first") or config.get("history_start_unix") is not None)
+            if persisted_htf != config_htf:
                 raise LiveE2EError(
                     f"--history-to-first {config.get('history_to_first')} disagrees "
                     f"with persisted {persisted.get('history_to_first')}"
+                )
+            if persisted_htf:
+                if persisted.get("history_start_unix") != config["bounds"]["history_start_unix"]:
+                    raise LiveE2EError(
+                        "--history-start-unix disagrees with persisted history_start_unix"
+                    )
+                config["earlier_history_days"] = persisted.get("earlier_history_days")
+            elif persisted.get("earlier_history_days") != config["earlier_history_days"]:
+                raise LiveE2EError(
+                    f"--earlier-history-days {config['earlier_history_days']} disagrees "
+                    f"with persisted {persisted.get('earlier_history_days')}"
                 )
             config["bounds"] = persisted
         else:
@@ -2354,7 +2629,14 @@ def build_arg_parser():
     parser.add_argument("--ledger-dir", dest="ledger_dir", help="Grant-scoped spend ledger root (outside output)")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--explicit-retry", dest="explicit_retry", action="store_true",
-                        help="Re-send a request that already has a receipt; counts against the cap")
+                        help="Re-send a failed request; consumed successes are never re-sent")
+    parser.add_argument(
+        "--import-raw-dir",
+        dest="import_raw_dir",
+        action="append",
+        default=[],
+        help="Prior raw-page tree; import paid pages by verified ledger sha (no re-send)",
+    )
     return parser
 
 

@@ -2,11 +2,21 @@
 
 A wallet is not lead-eligible when its sample shows coordinated funding,
 multi-signer bundle buys (including when the wallet pays the fee), sell
-proceeds routed to co-signers or the funder, or tokens transferred in with
-no buy that are later sold (zero basis). Detection uses account keys and
-token-balance owner changes, so inflows that never list the wallet in
-accountKeys are still seen. Benign inflows (WSOL wrap, stablecoin deposit,
-dust airdrop with no later sale) are not bundle flags.
+proceeds routed to co-signers or the funder, tokens transferred in with
+no buy that are later sold (zero basis), or a controller pair that both
+funds and sweeps the wallet. Detection uses account keys and token-balance
+owner changes, so inflows that never list the wallet in accountKeys are
+still seen.
+
+A co-signer is a bundle partner only when it has a material token or SOL
+position change in the same swap: it buys or sells the same mint, or it
+receives proceeds beyond fees and tips. Passive Jupiter / Axiom signers
+and a Jito-tip payer are not bundle partners. sell_proceeds_to_cosigner
+does not fire on a buy just because a relayer collected a fee.
+
+Benign inflows (WSOL wrap, stablecoin deposit, dust airdrop) lose the
+exemption as soon as that mint is later sold through any venue, decoded
+or not. ATA close / rent reclaim is not a sale.
 """
 from __future__ import annotations
 
@@ -21,6 +31,7 @@ from scanner.investigation import (
     _keys,
     _program,
 )
+from scanner.mass_search.verified_costs import is_verified_tip_account
 
 TOKEN_PROGRAMS = frozenset({
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -37,6 +48,10 @@ USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 STABLES = frozenset({USDC, USDT})
 DUST_RAW = Decimal("1000000")
+# Tips and relayer fees sit at or below 0.01 SOL. Material proceeds sit far above.
+MATERIAL_SOL_LAMPORTS = Decimal("10000000")
+RENT_LAMPORTS = Decimal("3000000")
+CONTROLLED_SHARE = Decimal("0.80")
 
 
 def _unwrap(record):
@@ -115,13 +130,66 @@ def _has_reviewed_swap(raw, keys):
     return False
 
 
+def _iter_instructions(raw):
+    message = (raw.get("transaction") or {}).get("message") or {}
+    meta = raw.get("meta") or {}
+    yield from message.get("instructions") or []
+    for group in meta.get("innerInstructions") or []:
+        if isinstance(group, dict):
+            yield from group.get("instructions") or []
+
+
+def _is_close_only(raw, keys, address, mint):
+    """ATA close / burn of leftover tokens is not a sale."""
+    saw_close = False
+    saw_other = False
+    for instruction in _iter_instructions(raw):
+        if not isinstance(instruction, dict):
+            continue
+        try:
+            program = _program(instruction, keys) if keys else instruction.get("programId")
+        except (ValueError, TypeError, KeyError, IndexError):
+            program = instruction.get("programId")
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        kind = parsed.get("type") if parsed else None
+        if program in TOKEN_PROGRAMS and kind == "closeAccount":
+            info = parsed.get("info") or {}
+            if info.get("owner") == address or info.get("destination") == address:
+                saw_close = True
+                continue
+        if program in TOKEN_PROGRAMS and kind in ("burn", "burnChecked"):
+            continue
+        if program in INFRA:
+            continue
+        if program in REVIEWED_OUTER_VENUES or program in (PUMP, PUMP_SWAP):
+            saw_other = True
+        elif program and program not in INFRA:
+            saw_other = True
+    native, _ = _native_delta(raw, keys, address) if keys else (Decimal("0"), False)
+    if saw_other:
+        return False
+    if saw_close and native <= RENT_LAMPORTS:
+        return True
+    return False
+
+
+def _sale_mints(raw, keys, address, deltas):
+    """Mints sold through any venue, decoded or not. ATA close is not a sale."""
+    sold = set()
+    for mint, qty in (deltas or {}).items():
+        if qty >= 0 or mint in (WSOL,):
+            continue
+        if keys and _is_close_only(raw, keys, address, mint):
+            continue
+        sold.add(mint)
+    return sold
+
+
 def _benign_inflow(gained, later_sold):
     if not gained:
         return True
     if all(mint == WSOL for mint in gained):
         return True
-    # Fail-closed only when a gained mint is later sold. Airdrops, stable
-    # deposits and other inbound tokens that are never sold are not bundle P&L.
     if not any(mint in later_sold for mint in gained):
         return True
     return False
@@ -130,65 +198,166 @@ def _benign_inflow(gained, later_sold):
 def _outbound_transfer_mints(raw, keys, address):
     """Mints sent to another owner. ATA close/burn is not a sale."""
     sold = set()
-    meta = raw.get("meta") or {}
-    message = (raw.get("transaction") or {}).get("message") or {}
-    for group in [message] + [
-        {"instructions": group.get("instructions") or []}
-        for group in (meta.get("innerInstructions") or [])
-        if isinstance(group, dict)
-    ]:
-        for instruction in group.get("instructions") or []:
-            if not isinstance(instruction, dict):
-                continue
-            try:
-                program = _program(instruction, keys) if keys else instruction.get("programId")
-            except (ValueError, TypeError, KeyError, IndexError):
-                program = instruction.get("programId")
-            if program not in TOKEN_PROGRAMS:
-                continue
-            parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
-            if not parsed or parsed.get("type") not in ("transfer", "transferChecked"):
-                continue
-            info = parsed.get("info") or {}
-            if info.get("authority") == address or info.get("source") == address:
-                mint = info.get("mint")
-                if mint:
-                    sold.add(mint)
+    for instruction in _iter_instructions(raw):
+        if not isinstance(instruction, dict):
+            continue
+        try:
+            program = _program(instruction, keys) if keys else instruction.get("programId")
+        except (ValueError, TypeError, KeyError, IndexError):
+            program = instruction.get("programId")
+        if program not in TOKEN_PROGRAMS:
+            continue
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        if not parsed or parsed.get("type") not in ("transfer", "transferChecked"):
+            continue
+        info = parsed.get("info") or {}
+        if info.get("authority") == address or info.get("source") == address:
+            mint = info.get("mint")
+            if mint:
+                sold.add(mint)
     return sold
 
 
 def _token_transfer_in(raw, keys, address):
     """True when another owner sends a token to this wallet with no swap."""
-    meta = raw.get("meta") or {}
-    message = (raw.get("transaction") or {}).get("message") or {}
     if keys and _has_reviewed_swap(raw, keys):
         return False
     inbound = False
-    for group in [message] + [
-        {"instructions": group.get("instructions") or []}
-        for group in (meta.get("innerInstructions") or [])
-        if isinstance(group, dict)
-    ]:
-        for instruction in group.get("instructions") or []:
-            if not isinstance(instruction, dict):
-                continue
-            try:
-                program = _program(instruction, keys) if keys else instruction.get("programId")
-            except (ValueError, TypeError, KeyError, IndexError):
-                program = instruction.get("programId")
-            if program not in TOKEN_PROGRAMS:
-                continue
-            parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
-            if not parsed or parsed.get("type") not in ("transfer", "transferChecked"):
-                continue
-            info = parsed.get("info") or {}
-            authority = info.get("authority")
-            source = info.get("source")
-            if authority and authority != address and source != address:
-                inbound = True
+    for instruction in _iter_instructions(raw):
+        if not isinstance(instruction, dict):
+            continue
+        try:
+            program = _program(instruction, keys) if keys else instruction.get("programId")
+        except (ValueError, TypeError, KeyError, IndexError):
+            program = instruction.get("programId")
+        if program not in TOKEN_PROGRAMS:
+            continue
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        if not parsed or parsed.get("type") not in ("transfer", "transferChecked"):
+            continue
+        info = parsed.get("info") or {}
+        authority = info.get("authority")
+        source = info.get("source")
+        if authority and authority != address and source != address:
+            inbound = True
     deltas = _owned_token_deltas(raw, address)
     gained = {mint: qty for mint, qty in deltas.items() if qty > 0}
     return inbound or (bool(gained) and not (keys and _has_reviewed_swap(raw, keys)))
+
+
+def _wallet_traded_mints(deltas):
+    return {mint for mint, qty in (deltas or {}).items() if qty != 0 and mint != WSOL}
+
+
+def _material_cosigner(raw, keys, other, wallet_deltas):
+    """True when the co-signer buys/sells the same mint or takes material SOL."""
+    other_native, _ = _native_delta(raw, keys, other)
+    other_tokens = _owned_token_deltas(raw, other)
+    traded = _wallet_traded_mints(wallet_deltas)
+    for mint, qty in other_tokens.items():
+        if mint in traded and qty != 0:
+            return True
+    if other_native >= MATERIAL_SOL_LAMPORTS:
+        return True
+    if other_native <= -MATERIAL_SOL_LAMPORTS:
+        return True
+    return False
+
+
+def _cosigner_is_tip_payer(raw, keys, other):
+    other_native, _ = _native_delta(raw, keys, other)
+    if other_native >= 0 or abs(other_native) > MATERIAL_SOL_LAMPORTS:
+        return False
+    meta = raw.get("meta") or {}
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    for index, key in enumerate(keys):
+        if key == other or index >= len(pre) or index >= len(post):
+            continue
+        gained = post[index] - pre[index]
+        if gained > 0 and is_verified_tip_account(key):
+            return True
+    return False
+
+
+def _native_counterparties(raw, keys, address):
+    """Accounts whose native delta opposes the wallet by a material amount."""
+    wallet_delta, _ = _native_delta(raw, keys, address)
+    if abs(wallet_delta) < MATERIAL_SOL_LAMPORTS:
+        return []
+    found = []
+    for key in keys:
+        if key == address or key in INFRA:
+            continue
+        other_delta, _ = _native_delta(raw, keys, key)
+        if wallet_delta > 0 and other_delta <= -MATERIAL_SOL_LAMPORTS:
+            found.append((key, "funding", min(wallet_delta, -other_delta)))
+        elif wallet_delta < 0 and other_delta >= MATERIAL_SOL_LAMPORTS:
+            found.append((key, "withdrawal", min(-wallet_delta, other_delta)))
+    return found
+
+
+def _detect_controlled_pair(parsed_rows, address):
+    """Funding and withdrawals dominated by one co-signing counterparty."""
+    funding = {}
+    withdrawals = {}
+    cosigned_with = set()
+    sweep_partners = set()
+    swap_cosigners = set()
+    for raw, keys, deltas, _record, signers, has_swap in parsed_rows:
+        if address in signers:
+            for other in signers:
+                if other != address:
+                    cosigned_with.add(other)
+                    if has_swap:
+                        swap_cosigners.add(other)
+    for raw, keys, deltas, _record, signers, has_swap in parsed_rows:
+        if has_swap:
+            continue
+        for party, kind, amount in _native_counterparties(raw, keys, address):
+            bucket = funding if kind == "funding" else withdrawals
+            row = bucket.setdefault(party, {"lamports": Decimal("0"), "cosigned": False, "party_signed": False, "count": 0})
+            row["lamports"] += amount
+            row["count"] += 1
+            if party in signers:
+                row["party_signed"] = True
+            if address in signers and party in signers:
+                row["cosigned"] = True
+            if kind == "withdrawal" and party in swap_cosigners:
+                sweep_partners.add(party)
+    total_in = sum((row["lamports"] for row in funding.values()), Decimal("0"))
+    total_out = sum((row["lamports"] for row in withdrawals.values()), Decimal("0"))
+    explanations = []
+    flagged = []
+    parties = set(funding) | set(withdrawals)
+    for party in parties:
+        inbound = funding.get(party) or {"lamports": Decimal("0"), "cosigned": False, "party_signed": False, "count": 0}
+        outbound = withdrawals.get(party) or {"lamports": Decimal("0"), "cosigned": False, "party_signed": False, "count": 0}
+        in_share = (inbound["lamports"] / total_in) if total_in else Decimal("0")
+        out_share = (outbound["lamports"] / total_out) if total_out else Decimal("0")
+        cosigned = inbound["cosigned"] or outbound["cosigned"] or party in cosigned_with
+        # Closed loop: one signer funds the wallet and later receives the
+        # sweeps. The destination of a withdrawal need not sign. Exchange
+        # hot-wallet funding (no return flow) does not match.
+        dominated = (
+            total_in > 0 and total_out > 0
+            and in_share >= CONTROLLED_SHARE
+            and out_share >= CONTROLLED_SHARE
+            and bool(inbound.get("party_signed"))
+        )
+        swept = party in sweep_partners and outbound["lamports"] >= MATERIAL_SOL_LAMPORTS
+        if dominated or swept:
+            flagged.append(party)
+            if dominated:
+                explanations.append(
+                    f"{party[:8]} co-signs and dominates funding "
+                    f"({in_share:.2%}) and withdrawals ({out_share:.2%})"
+                )
+            if swept:
+                explanations.append(
+                    f"{party[:8]} is a fee-paying / swap co-signer that later sweeps proceeds"
+                )
+    return flagged, explanations
 
 
 def detect_bundle_or_distribution(records, address):
@@ -204,13 +373,13 @@ def detect_bundle_or_distribution(records, address):
         except (ValueError, TypeError, KeyError, IndexError):
             keys = []
         deltas = _owned_token_deltas(raw, address)
-        if keys and _has_reviewed_swap(raw, keys):
-            for mint, qty in deltas.items():
-                if qty < 0:
-                    later_sold.add(mint)
-        else:
-            later_sold.update(_outbound_transfer_mints(raw, keys, address))
-        parsed_rows.append((raw, keys, deltas, record))
+        later_sold.update(_sale_mints(raw, keys, address, deltas))
+        later_sold.update(_outbound_transfer_mints(raw, keys, address))
+        signers = _signers(raw, keys) if keys else []
+        has_swap = bool(keys) and (
+            _has_reviewed_swap(raw, keys) or bool(_wallet_traded_mints(deltas))
+        )
+        parsed_rows.append((raw, keys, deltas, record, signers, has_swap))
 
     reasons = []
     shared_funders = {}
@@ -218,32 +387,40 @@ def detect_bundle_or_distribution(records, address):
     proceeds_to_cosigner = []
     zero_basis = []
     counterparts = set()
-    for raw, keys, deltas, record in parsed_rows:
-        signers = _signers(raw, keys) if keys else []
+    for raw, keys, deltas, record, signers, has_swap in parsed_rows:
         native, paid = _native_delta(raw, keys, address) if keys else (Decimal("0"), False)
         message = (raw.get("transaction") or {}).get("message") or {}
         signature = ((raw.get("transaction") or {}).get("signatures") or [None])[0] or record.get("signature")
-        has_swap = bool(keys) and _has_reviewed_swap(raw, keys)
-        if len(signers) > 1 and address in signers and has_swap:
+        reviewed_swap = bool(keys) and _has_reviewed_swap(raw, keys)
+        wallet_sold = any(qty < 0 and mint != WSOL for mint, qty in deltas.items())
+        if len(signers) > 1 and address in signers and (reviewed_swap or has_swap):
             others = [item for item in signers if item != address]
-            counterparts.update(others)
-            multi_signer.append({
-                "signature": signature,
-                "co_signers": others,
-                "fee_payer": keys[0] if keys else None,
-                "wallet_is_fee_payer": paid,
-            })
-            reasons.append("multi_signer_bundle_buy")
+            partners = []
             for other in others:
-                other_delta, _ = _native_delta(raw, keys, other)
-                if other_delta > 0 and native <= 0:
-                    proceeds_to_cosigner.append({
-                        "signature": signature,
-                        "co_signer": other,
-                        "co_signer_sol": str(other_delta / Decimal(1_000_000_000)),
-                    })
-                    reasons.append("sell_proceeds_to_cosigner")
-        if keys and not has_swap:
+                if _cosigner_is_tip_payer(raw, keys, other):
+                    continue
+                if not _material_cosigner(raw, keys, other, deltas):
+                    continue
+                partners.append(other)
+            if partners:
+                counterparts.update(partners)
+                multi_signer.append({
+                    "signature": signature,
+                    "co_signers": partners,
+                    "fee_payer": keys[0] if keys else None,
+                    "wallet_is_fee_payer": paid,
+                })
+                reasons.append("multi_signer_bundle_buy")
+                for other in partners:
+                    other_delta, _ = _native_delta(raw, keys, other)
+                    if wallet_sold and other_delta >= MATERIAL_SOL_LAMPORTS:
+                        proceeds_to_cosigner.append({
+                            "signature": signature,
+                            "co_signer": other,
+                            "co_signer_sol": str(other_delta / Decimal(1_000_000_000)),
+                        })
+                        reasons.append("sell_proceeds_to_cosigner")
+        if keys and not reviewed_swap:
             for instruction in message.get("instructions") or []:
                 parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
                 info = parsed.get("info") if isinstance(parsed, dict) else None
@@ -262,12 +439,12 @@ def detect_bundle_or_distribution(records, address):
                         "co_signer": info.get("destination"),
                     })
                     reasons.append("sell_proceeds_to_cosigner")
-        if keys and len(signers) > 1 and address in signers and not has_swap and native < 0:
+        if keys and len(signers) > 1 and address in signers and not reviewed_swap and native < 0:
             for other in signers:
                 if other == address:
                     continue
                 other_delta, _ = _native_delta(raw, keys, other)
-                if other_delta > 0 and (other in counterparts or other in shared_funders):
+                if other_delta >= MATERIAL_SOL_LAMPORTS and (other in counterparts or other in shared_funders):
                     proceeds_to_cosigner.append({
                         "signature": signature,
                         "co_signer": other,
@@ -276,12 +453,20 @@ def detect_bundle_or_distribution(records, address):
                     reasons.append("sell_proceeds_to_cosigner")
         if _token_transfer_in(raw, keys, address):
             gained = {mint: qty for mint, qty in deltas.items() if qty > 0}
+            # A material SOL debit with a token credit is a paid (possibly
+            # unreviewed) buy, not a gifted inflow. Unknown basis is a
+            # history problem, not a bundle transfer-in.
+            if native <= -MATERIAL_SOL_LAMPORTS and gained:
+                continue
             if _benign_inflow(gained, later_sold):
                 continue
             zero_basis.append(signature)
             reasons.append("transfer_in_zero_basis")
     if shared_funders and multi_signer:
         reasons.append("shared_funder")
+    controlled, controlled_explanations = _detect_controlled_pair(parsed_rows, address)
+    if controlled:
+        reasons.append("controlled_pair")
     unique = []
     for item in reasons:
         if item not in unique:
@@ -295,5 +480,7 @@ def detect_bundle_or_distribution(records, address):
         "multi_signer_buys": multi_signer,
         "sell_proceeds_to_cosigner": proceeds_to_cosigner,
         "zero_basis_signatures": [item for item in zero_basis if item],
+        "controlled_pair": controlled,
+        "controlled_pair_explanation": "; ".join(controlled_explanations) if controlled_explanations else None,
         "lead_eligible": not excluded,
     }

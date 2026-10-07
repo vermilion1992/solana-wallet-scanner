@@ -160,14 +160,24 @@ def receipt_is_spent(receipt):
     return receipt.get("state") in SPENT_STATES
 
 
+def _receipt_canonical_bytes(receipt):
+    body = {name: receipt[name] for name in sorted(receipt) if name != "receipt_hash"}
+    return json.dumps(body, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+
+
 def put_receipt(store, grant, key, payload):
+    head = store.get("live_e2e_chain", "head") if hasattr(store, "get") else None
+    prev_hash = (head or {}).get("receipt_hash") if isinstance(head, dict) else None
     receipt = {
         "request_id": key,
         "authorization_id": grant.get("authorization_id"),
         "consumed": payload.get("state") == "consumed",
+        "prev_receipt_hash": prev_hash,
         **payload,
     }
+    receipt["receipt_hash"] = hashlib.sha256(_receipt_canonical_bytes(receipt)).hexdigest()
     store.put(RECEIPT_KIND, key, receipt)
+    store.put("live_e2e_chain", "head", {"receipt_hash": receipt["receipt_hash"], "request_id": key})
     return receipt
 
 
