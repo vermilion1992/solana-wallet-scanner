@@ -717,12 +717,11 @@ def test_ax5_4k3dyjzv_auditor_closes_on_observed_flatten_not_mint_wide_sum():
         auditor.REPORT_END = original_end
     assert omitted == []
     assert unresolved >= 1
-    assert len(episodes) == 2
-    last = episodes[-1]
+    assert len(episodes) == 1
+    last = episodes[0]
     assert last["close_signature"] == "2TRb1r1"
     assert Decimal(last["basis_sol"]) == Decimal("319.072780188")
     assert Decimal(last["proceeds_sol"]) == Decimal("321.368106664")
-    assert Decimal(episodes[0]["basis_sol"]) != Decimal("583.19550476")
     mint_wide_basis = sum(Decimal(sol) for kind, _s, _q, sol, _pre, _post, _t in rows if kind == "buy")
     mint_wide_proceeds = sum(Decimal(sol) for kind, _s, _q, sol, _pre, _post, _t in rows if kind == "sell")
     assert mint_wide_basis == Decimal("583.19550476")

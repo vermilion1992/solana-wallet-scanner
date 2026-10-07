@@ -964,15 +964,22 @@ def _fifo(trades):
                 except (InvalidOperation, ValueError, TypeError):
                     flattened = False
             # Reconstructed buy qty can miss dust transfers. An observed
-            # flatten (wallet token balance back to 0) with lots exhausted
-            # ends the episode. Leftover unmatched sell qty is already
-            # unresolved; it must not glue the next flat onto this one
-            # (AX5FaYB3 4k3Dyjzv: 58590 raw dust → auditor 583/640 vs
-            # app 319/321).
-            observed_flat_close = flattened and inventory == 0
-            if opened and opening == 0 and (
-                (inventory == 0 and remaining == 0) or observed_flat_close
-            ):
+            # flatten (wallet token balance back to 0) with unmatched sell
+            # qty is the app's oversell reset: abandon the lot, do not emit,
+            # and do not glue the next flat on (AX5FaYB3 4k3Dyjzv 58590 raw
+            # dust used to merge 319/321 into a mint-wide 583/640).
+            if opened and flattened and remaining > 0 and opening == 0:
+                opened = False
+                episode_consumed_opening = False
+                episode_pnl = Decimal("0")
+                episode_basis = Decimal("0")
+                episode_proceeds = Decimal("0")
+                episode_costs = Decimal("0")
+                episode_asset = None
+                lots = []
+                inventory = Decimal("0")
+                continue
+            if opened and inventory == 0 and remaining == 0 and opening == 0:
                 timestamp = row.get("timestamp")
                 in_window = timestamp is not None and REPORT_START <= timestamp < REPORT_END
                 # Opening inventory is unknown cost. A flatten that consumed any
