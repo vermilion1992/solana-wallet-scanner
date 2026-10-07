@@ -273,6 +273,35 @@ def test_d3p_obsidian_gator_aquifer_are_reviewed_inner_venues():
     assert AQUIFER in auditor.REVIEWED_INNER_PROGRAMS
 
 
+def test_d1p_pumpswap_idl_user_volume_is_isolated_in_app_and_auditor():
+    """Direct PumpSwap buy: IDL user-volume is isolated from the quote in both."""
+    import gzip
+    import hashlib
+
+    page = ROOT / "evidence/genuine-wallet-batch/collection/phase5/02-lifetime-page-1-response.raw.gz"
+    wallet = "2Bj3dZTSSc14hFR9fCLN9CQ1TiaYyszCKX8fuVG7pyAY"
+    body = gzip.decompress(page.read_bytes())
+    assert hashlib.sha256(body).hexdigest() == (
+        "7517110b5b3825584ec24a6e48aad3c23fbcc4c475056f7708d56b87a999fe7a"
+    )
+    raw = json.loads(body)["result"]["data"][83]
+    record = {
+        "signature": raw["transaction"]["signatures"][0],
+        "evidence_hash": hashlib.sha256(
+            json.dumps(raw, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest(),
+        "raw": raw,
+    }
+    decoded, trades = _app_trades({"record": record, "address": wallet})
+    assert len(trades) == 1
+    assert Decimal(str(trades[0]["amount_sol"])) == Decimal("0.5651351")
+    funding = trades[0].get("retained_account_funding") or []
+    assert funding and funding[0]["lamports"] == 1_346_200
+    aud = auditor.reconstruct_record(record, wallet)
+    assert aud
+    assert Decimal(aud["consideration_sol"]) == Decimal(str(trades[0]["amount_sol"]))
+
+
 def test_d1p_jxt_2gDSxX4BGx_pump_pda_stays_in_consideration():
     payload = _load("jxt-2gDSxX4BGx-pump-pda.json")
     decoded, trades = _app_trades(payload)

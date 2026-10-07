@@ -895,7 +895,10 @@ WALLET_PAID_RENT_RULE = (
     "(venue PDA, other-owner ATA, router-fee account) stays in consideration. "
     "Unproved owner is treated as not wallet-owned (fail closed: keep in cost). "
     "Reviewed venue program-account deposits stay on `_episode_rent_exclusion`. "
-    "PumpSwap user-volume PDA funding is not recoverable rent."
+    "PumpSwap IDL user-volume PDA (buy / buy_exact_quote_in ordinal 20, "
+    "derived from the user) is isolated from the swap quote — not "
+    "recoverable rent and not consideration. Jupiter-inner PumpSwap "
+    "creates are not IDL-located on the outer route and stay in consideration."
 )
 
 

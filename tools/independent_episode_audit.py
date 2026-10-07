@@ -444,8 +444,11 @@ WALLET_PAID_RENT_RULE = (
     "is excluded from swap consideration. Still-open and not wallet-owned "
     "(venue PDA, other-owner ATA, router-fee account) stays in consideration. "
     "Unproved owner is treated as not wallet-owned (fail closed: keep in cost). "
-    "Same-route is not a reason to keep or drop. PumpSwap user-volume PDA "
-    "funding is not recoverable rent."
+    "Same-route is not a reason to keep or drop. PumpSwap IDL user-volume "
+    "PDA (buy / buy_exact_quote_in ordinal 20, derived from the user) is "
+    "isolated from the swap quote — not recoverable rent and not "
+    "consideration. Jupiter-inner PumpSwap creates are not IDL-located on "
+    "the outer route and stay in consideration."
 )
 
 
@@ -474,6 +477,123 @@ def _token_account_owner(raw, keys, account):
         ):
             return info.get("owner")
     return None
+
+
+def _pubkey32(value):
+    body = _b58decode(value)
+    return body if len(body) == 32 else None
+
+
+def _canonical_user_volume_pda(address):
+    """Independent of scanner.investigation. PumpSwap user_volume_accumulator."""
+    user = _pubkey32(address)
+    program = _pubkey32(PUMP_SWAP)
+    if user is None or program is None:
+        raise ValueError("User-volume PDA requires exact 32-byte public keys")
+    prime = 2**255 - 19
+    curve_d = -121665 * pow(121666, prime - 2, prime) % prime
+    for bump in range(255, -1, -1):
+        candidate = hashlib.sha256(
+            b"user_volume_accumulator" + user + bytes([bump]) + program + b"ProgramDerivedAddress"
+        ).digest()
+        y = (int.from_bytes(candidate, "little") & (2**255 - 1)) % prime
+        square = (y * y - 1) * pow(curve_d * y * y + 1, prime - 2, prime) % prime
+        on_curve = square == 0 or pow(square, (prime - 1) // 2, prime) == 1
+        if not on_curve:
+            return candidate, bump
+    raise ValueError("User-volume PDA has no supported canonical bump")
+
+
+def _system_create_details(instruction, keys):
+    """Parsed createAccount or raw System opcode 0. Independent of scanner."""
+    parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+    info = parsed.get("info") if isinstance(parsed, dict) else None
+    kind = parsed.get("type") if isinstance(parsed, dict) else None
+    if isinstance(info, dict) and kind in ("createAccount", "createAccountWithSeed"):
+        owner = info.get("owner")
+        return {
+            "kind": kind,
+            "source": info.get("source"),
+            "new_account": info.get("newAccount"),
+            "owner_bytes": _pubkey32(owner) if isinstance(owner, str) else None,
+            "lamports": info.get("lamports") if isinstance(info.get("lamports"), int) else None,
+            "space": info.get("space") if isinstance(info.get("space"), int) else None,
+        }
+    payload = _b58decode(instruction.get("data"))
+    accounts = _accounts(instruction, keys)
+    if len(payload) >= 52 and int.from_bytes(payload[:4], "little") == 0 and len(accounts) >= 2:
+        return {
+            "kind": "createAccount",
+            "source": accounts[0],
+            "new_account": accounts[1],
+            "owner_bytes": payload[20:52],
+            "lamports": int.from_bytes(payload[4:12], "little"),
+            "space": int.from_bytes(payload[12:20], "little"),
+        }
+    return None
+
+
+def _isolated_pumpswap_user_volume(raw, keys, address, route):
+    """Isolate IDL-located PumpSwap user-volume from the swap quote.
+
+    Independent of scanner.investigation. Ordinal 20, derived from the user,
+    wallet-paid, still open, program-owned. Not recoverable rent; not swap
+    consideration. Returns (lamports, ok). ok is False when the create is
+    present but disagrees with the pinned IDL location (fail closed).
+    """
+    if route.get("program") != PUMP_SWAP:
+        return Decimal("0"), True
+    accounts = route.get("accounts") or []
+    if len(accounts) <= 20:
+        return Decimal("0"), True
+    account = accounts[20]
+    creates = []
+    for outer, path, instruction, nested in _iter_instructions(raw):
+        if _program(instruction, keys) != SYSTEM:
+            continue
+        details = _system_create_details(instruction, keys)
+        if details and details.get("new_account") == account:
+            creates.append((outer, path, nested, details))
+    if not creates:
+        return Decimal("0"), True
+    try:
+        derived, _bump = _canonical_user_volume_pda(address)
+    except ValueError:
+        return Decimal("0"), False
+    if len(creates) != 1 or _pubkey32(account) != derived or keys.count(account) != 1:
+        return Decimal("0"), False
+    outer, create_path, nested, details = creates[0]
+    if account not in keys:
+        return Decimal("0"), False
+    index = keys.index(account)
+    meta = raw.get("meta") or {}
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    lamports = details.get("lamports")
+    space = details.get("space")
+    if (
+        outer != route.get("index")
+        or not nested
+        or details.get("kind") != "createAccount"
+        or details.get("source") != address
+        or details.get("owner_bytes") != _pubkey32(PUMP_SWAP)
+        or not isinstance(space, int)
+        or not 0 < space <= 2**64 - 1
+        or not isinstance(lamports, int)
+        or not 0 < lamports <= 2**64 - 1
+        or index >= len(pre)
+        or index >= len(post)
+        or pre[index] != 0
+        or post[index] != lamports
+        or account in (route.get("owned") or [])
+    ):
+        return Decimal("0"), False
+    for movement in _system_movements(raw, keys):
+        if movement.get("path") == create_path:
+            continue
+        if account in (movement.get("source"), movement.get("destination")):
+            return Decimal("0"), False
+    return Decimal(lamports), True
 
 
 def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None, route_index=None):
@@ -544,6 +664,7 @@ def _route(raw, address, keys):
                 "discriminator": payload[:8].hex(),
                 "authority": accounts[1],
                 "owned": [],
+                "accounts": accounts,
                 "index": index,
                 "path": f"transaction.message.instructions.{index}",
             }
@@ -563,6 +684,7 @@ def _route(raw, address, keys):
             "discriminator": disc,
             "authority": accounts[authority_idx],
             "owned": owned,
+            "accounts": accounts,
             "index": index,
             "path": f"transaction.message.instructions.{index}",
         }
@@ -614,12 +736,16 @@ def reconstruct_record(record, address):
         movements, address, set(accounts) | wrap_accounts,
         raw=raw, keys=keys, route_index=route.get("index"),
     )
+    isolated, isolated_ok = _isolated_pumpswap_user_volume(raw, keys, address, route)
+    if not isolated_ok:
+        return None
     inner_venues, inner_ok = _inner_venues(raw, keys, route, address, set(accounts))
     if not inner_ok:
         return None
     # Isolate the swap quote: wallet SOL+wSOL minus tips/other transfers, ATA rent,
-    # and program-account funding. Those are costs or residuals, not consideration.
-    settlement = native + wsol + rent - outside + retained
+    # and IDL-located PumpSwap user-volume. Those are costs or residuals, not
+    # consideration. Generic not-owned creates stay in native.
+    settlement = native + wsol + rent - outside + retained + isolated
     tips = _verified_tips(raw, keys, address)
     fee = Decimal(meta.get("fee") or 0) if paid else Decimal("0")
     quote_mint = None
