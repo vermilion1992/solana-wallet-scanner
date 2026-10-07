@@ -536,9 +536,8 @@ def main():
             lines.append("- none")
         lines.extend([
             "",
-            "App-vs-auditor gap is decoded-subset FIFO vs full balance-delta. Remaining uncovered "
-            "outers (pumpapi / G2GMMDK / transfers) are not Jupiter; those episodes stay in the auditor "
-            "and out of app P&L.",
+            "App-vs-auditor gap is decoded-subset FIFO vs full balance-delta. Jupiter is closed; "
+            "remaining uncovered txs are non-swap (transfers / unresolved programId / absent keys).",
         ])
     lines.extend(["", f"JSON: `{out.relative_to(ROOT)}`", ""])
     md.write_text("\n".join(lines), encoding="utf-8")

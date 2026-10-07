@@ -1,6 +1,6 @@
 {
   "kind": "live-e2e-phase4-offline-rerun-v2",
-  "generated_at": "2026-10-07T11:21:07Z",
+  "generated_at": "2026-10-07T12:43:13Z",
   "bounds": {
     "report_start_inclusive": "2026-09-07T10:52:20Z",
     "report_end_exclusive": "2026-10-07T10:52:20Z",
@@ -8,11 +8,20 @@
   },
   "max_bot_rate": "25",
   "full_history_slots": 25,
-  "wallet_count": 174,
-  "phase2_wallets": 174,
+  "wallet_count": 178,
+  "phase2_wallets": 178,
   "phase3_wallets": 26,
-  "chosen_for_full_history": [],
-  "chosen_count": 0,
+  "chosen_for_full_history": [
+    "BkRUpYSosGE1EfdYHR56Rwh3QRHbd1AbHVqsh99U6DEc",
+    "C7qJjX2ce9AGE2jNn68NRSf4d6HmTthMLmiaZvMyDnZe",
+    "AUiycVsy5MRcHtBKxPKRs93hAkXRhwmTKuk7MSWZJcSb",
+    "Co4EHJtCZLKUmpwENamnEiRLFA372sq3T14a3GRhnf7A",
+    "5E54AoTgSKCRTyRxDx2JuAjHY2RQzEt66CpeUzHTvmEo",
+    "AoJHCcxFNdv32e82sWPzzRPJEze3SkzbcWYEc3H9VYyG",
+    "6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm",
+    "4crn3XUFgSXuvBJPyb6v6PAh9DPB9fXQ9q8RAD6qGNtB"
+  ],
+  "chosen_count": 8,
   "plan": {
     "kind": "live-e2e-request-plan-v1",
     "dry_run": true,
@@ -51,6 +60,7 @@
       "W23": 2,
       "W24": 2
     },
+    "per_wallet_cap": null,
     "birdeye_cu_docs": {
       "gainers-losers": {
         "path": "/trader/gainers-losers",
@@ -85,7 +95,7 @@
         "requests": 50,
         "units": 5000,
         "billing_unit": "helius_credit",
-        "note": "Planner estimates pages per wallet from pre-screen tx density (in-window count / window days \u00d7 history days / 1000), minimum 2. A leftover paginationToken is not treated as the end unless the wallet was created in range. Units are the documented worst case (100 credits / 1000 txs) per estimated page."
+        "note": "Planner estimates pages per wallet from pre-screen tx density (in-window count / window days \u00d7 history days / 1000), minimum 2, then clips each wallet to --per-wallet-cap. A leftover paginationToken is not the end unless first-funding is proven. Units are the documented worst case (100 credits / 1000 txs) per estimated page."
       },
       "4": {
         "provider": null,
@@ -101,15 +111,996 @@
       "helius_units": 7000
     },
     "caps": {
-      "birdeye_requests": 10,
-      "birdeye_units": 300,
-      "helius_requests": 1500,
-      "helius_units": 15000
+      "birdeye_requests": 30,
+      "birdeye_units": 1000,
+      "helius_requests": 3000,
+      "helius_units": 30000
     },
     "PRODUCT_READY": false
   },
   "plan_fits": true,
   "wallets": [
+    {
+      "address": "BkRUpYSosGE1EfdYHR56Rwh3QRHbd1AbHVqsh99U6DEc",
+      "blocked": false,
+      "blocker": "pagination_token_remaining_earlier_history",
+      "in_window_tx_count": 28,
+      "sample_records": 100,
+      "decodable_share": "0.4554",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "1.0345",
+      "program_blockers": [
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 44,
+          "value_sol": "0.001855579",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 30,
+          "value_sol": "0.001855579",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.001855579",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.001855573",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "6E-9",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 4,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "swapFpHZwjELNnjvThjajtiVmkz3yPQEHjLtka2fwHW",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "1.0000",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/BkRUpYSosGE1EfdYHR56Rwh3QRHbd1AbHVqsh99U6DEc"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0.495677233",
+      "coverage_value_share": "0.082552061",
+      "coverage_mandatory_share": "0.082552061",
+      "completed_trades": 0,
+      "sample_positions": 171,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
+      "history_complete": false,
+      "history_complete_reason": "pagination_token_remaining_earlier_history",
+      "wallet_created_in_range": false,
+      "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 35,
+        "known_cost_sales": 14,
+        "reconstructed_trades": 134
+      },
+      "phase3_pages": 1
+    },
+    {
+      "address": "C7qJjX2ce9AGE2jNn68NRSf4d6HmTthMLmiaZvMyDnZe",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 7,
+      "sample_records": 39,
+      "decodable_share": "0.2381",
+      "supported_venue_value_share": "0.4559",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "0.4769",
+      "program_blockers": [
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 11,
+          "value_sol": "0.150931590",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 11,
+          "value_sol": "0.150931590",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 9,
+          "value_sol": "0.136144054",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.116661621",
+          "supported": false
+        },
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 23,
+          "value_sol": "0.042885289",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.024530694",
+          "supported": false
+        },
+        {
+          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.005999995",
+          "supported": false
+        },
+        {
+          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0008",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0008",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.4559",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/C7qJjX2ce9AGE2jNn68NRSf4d6HmTthMLmiaZvMyDnZe"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "AUiycVsy5MRcHtBKxPKRs93hAkXRhwmTKuk7MSWZJcSb",
+      "blocked": false,
+      "blocker": "0 completed episodes; 2 open lots; sensitivity not established; coverage_blocked",
+      "in_window_tx_count": 4,
+      "sample_records": 23,
+      "decodable_share": "0.3000",
+      "supported_venue_value_share": "0.4238",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "0.1826",
+      "program_blockers": [
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 8,
+          "value_sol": "0.017752637",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0.017752637",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0.011913357",
+          "supported": false
+        },
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.00970576",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.00507408",
+          "supported": false
+        },
+        {
+          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00303928",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.003",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 1,
+          "value_sol": "0.003",
+          "supported": false
+        },
+        {
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00283928",
+          "supported": false
+        },
+        {
+          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.001999997",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.001",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.4238",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/AUiycVsy5MRcHtBKxPKRs93hAkXRhwmTKuk7MSWZJcSb"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": false,
+      "phase4_bundle_reasons": [],
+      "coverage_count_share": "0.2",
+      "coverage_value_share": "0.08256424",
+      "coverage_mandatory_share": "0.08256424",
+      "completed_trades": 0,
+      "sample_positions": 2,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
+      "history_complete": true,
+      "history_complete_reason": "wallet_created_in_range",
+      "wallet_created_in_range": true,
+      "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 0
+      },
+      "phase3_pages": 1
+    },
+    {
+      "address": "Co4EHJtCZLKUmpwENamnEiRLFA372sq3T14a3GRhnf7A",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 8,
+      "sample_records": 53,
+      "decodable_share": "0.1974",
+      "supported_venue_value_share": "0.4183",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "0.4699",
+      "program_blockers": [
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 34,
+          "value_sol": "0.066286658",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 7,
+          "value_sol": "0.045752639",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.045752639",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0.043113359",
+          "supported": false
+        },
+        {
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.02227408",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 2,
+          "value_sol": "0.01163928",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00263928",
+          "supported": false
+        },
+        {
+          "program_id": "GAMMA7meSFWaBXF25oSUgmGRwaW6sCMFLmBNiMSdbHVT",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00263928",
+          "supported": false
+        },
+        {
+          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.000199999",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.4183",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/Co4EHJtCZLKUmpwENamnEiRLFA372sq3T14a3GRhnf7A"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "5E54AoTgSKCRTyRxDx2JuAjHY2RQzEt66CpeUzHTvmEo",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 19,
+      "sample_records": 43,
+      "decodable_share": "0.2900",
+      "supported_venue_value_share": "0.4129",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "1.3558",
+      "program_blockers": [
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 10,
+          "value_sol": "0.03257264",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 10,
+          "value_sol": "0.03257264",
+          "supported": false
+        },
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 17,
+          "value_sol": "0.02936256",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 12,
+          "value_sol": "0.02533336",
+          "supported": false
+        },
+        {
+          "program_id": "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.0151",
+          "supported": false
+        },
+        {
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.01213928",
+          "supported": false
+        },
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.005",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.00313928",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 1,
+          "value_sol": "0.00208408",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.00011",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.4129",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/5E54AoTgSKCRTyRxDx2JuAjHY2RQzEt66CpeUzHTvmEo"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "AoJHCcxFNdv32e82sWPzzRPJEze3SkzbcWYEc3H9VYyG",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 54,
+      "sample_records": 100,
+      "decodable_share": "0.3571",
+      "supported_venue_value_share": "0.4092",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "1.8422",
+      "program_blockers": [
+        {
+          "program_id": "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9",
+          "label": "FLASHX Axiom",
+          "observations": 5,
+          "value_sol": "3.317237897",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "3.277851962",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "3.277851962",
+          "supported": false
+        },
+        {
+          "program_id": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "1.997063760",
+          "supported": false
+        },
+        {
+          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.280788202",
+          "supported": false
+        },
+        {
+          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.280788202",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.07952762",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.902538589",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.135698770",
+          "supported": false
+        },
+        {
+          "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.039385935",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.039385935",
+          "supported": false
+        },
+        {
+          "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.014997551",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.4092",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/AoJHCcxFNdv32e82sWPzzRPJEze3SkzbcWYEc3H9VYyG"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm",
+      "blocked": false,
+      "blocker": "0 completed episodes; 1 open lots; sensitivity not established; coverage_blocked",
+      "in_window_tx_count": 20,
+      "sample_records": 29,
+      "decodable_share": "0.2281",
+      "supported_venue_value_share": "0.3467",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "1.0076",
+      "program_blockers": [
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 19,
+          "value_sol": "0.03122176",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 7,
+          "value_sol": "0.02184108",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.02184108",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0.01780180",
+          "supported": false
+        },
+        {
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.01406252",
+          "supported": false
+        },
+        {
+          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.00707856",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0005",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.3467",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": false,
+      "phase4_bundle_reasons": [],
+      "coverage_count_share": "0.125",
+      "coverage_value_share": "0.000457643",
+      "coverage_mandatory_share": "0.000457643",
+      "completed_trades": 0,
+      "sample_positions": 1,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
+      "history_complete": true,
+      "history_complete_reason": "wallet_created_in_range",
+      "wallet_created_in_range": true,
+      "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 1
+      },
+      "phase3_pages": 1
+    },
+    {
+      "address": "4crn3XUFgSXuvBJPyb6v6PAh9DPB9fXQ9q8RAD6qGNtB",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 220,
+      "sample_records": 100,
+      "decodable_share": "0.4124",
+      "supported_venue_value_share": "0.0684",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.2274",
+      "program_blockers": [
+        {
+          "program_id": "mayan34VedncxdK2XobtvWFDXQASUTBXhUVzt2kKgny",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.051750954",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 25,
+          "value_sol": "0.0019",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.0019",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 29,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 8,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "swapFpHZwjELNnjvThjajtiVmkz3yPQEHjLtka2fwHW",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "3i5JeuZuUxeKtVysUnwQNGerJP2bSMX9fTFfS4Nxe3Br",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0684",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/4crn3XUFgSXuvBJPyb6v6PAh9DPB9fXQ9q8RAD6qGNtB"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
     {
       "address": "HyKa4Vo7tyYyre8NYA9Hu7rEgVCUTmqk9ARiALNpk7no",
       "blocked": false,
@@ -160,9 +1151,10 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
+        "transfer_in_zero_basis",
         "multi_signer_bundle_buy",
         "sell_proceeds_to_cosigner",
-        "transfer_in_zero_basis"
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "64.1833",
@@ -184,7 +1176,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/237YAnrwH9Urn3zoTvLbSDSGqCzcBxUuxfWcfcJWqsDS"
@@ -203,7 +1195,8 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy"
       ],
       "bot": true,
       "bot_rate": "26.0894",
@@ -294,10 +1287,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "no_leftover_pagination_token",
       "wallet_created_in_range": false,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 12,
         "independently_audited_episode_net": null,
@@ -379,7 +1376,7 @@
         "transfer_in_zero_basis"
       ],
       "bot": true,
-      "bot_rate": "321.6569",
+      "bot_rate": "261.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -417,8 +1414,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "0.8988",
@@ -647,10 +1643,12 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "controlled_pair"
+      ],
       "bot": true,
-      "bot_rate": "3143.9975",
+      "bot_rate": "131.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -669,7 +1667,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "bot_rate",
+      "drop_reason": "controlled_pair",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/2ueo5yNJ7zgDbtHtgjwuPu75bStFfAmk72VLK6KCScaD"
@@ -750,8 +1748,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "0.0000",
@@ -916,8 +1913,11 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner"
+      ],
       "bot": false,
       "bot_rate": "0.0000",
       "program_blockers": [
@@ -931,7 +1931,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "no_known_basis_buys",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/3MvopLKqEEYxwjkig5z1DKmsafErzjxpULjcrqJ7agz7"
@@ -948,12 +1948,10 @@
       "decodable_share": "0.4444",
       "supported_venue_value_share": "0.0000",
       "has_known_basis_buys": false,
-      "bundle": true,
-      "bundle_reasons": [
-        "transfer_in_zero_basis"
-      ],
+      "bundle": false,
+      "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "378.5973",
+      "bot_rate": "92.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -972,7 +1970,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "bot_rate",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/3U9iMcVm37WTfLCbUp1sZExrTw4Cwbmpivo5sfExmCB2"
@@ -992,7 +1990,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "1733.4092",
+      "bot_rate": "141.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -1142,7 +2140,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "801.0262",
+      "bot_rate": "159.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -1180,7 +2178,9 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner",
+        "controlled_pair"
       ],
       "bot": false,
       "bot_rate": "1.9782",
@@ -1215,7 +2215,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "896.3511",
+      "bot_rate": "174.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -1246,8 +2246,10 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner",
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "controlled_pair"
       ],
       "bot": false,
       "bot_rate": "17.4370",
@@ -1269,7 +2271,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/4C3wGAYsxhmE15dzFo664MA7ou9LApara7SgYdccZqfM"
@@ -1289,7 +2291,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "406.6510",
+      "bot_rate": "122.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -1328,7 +2330,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "4511.9964",
+      "bot_rate": "188.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -1552,8 +2554,10 @@
       "decodable_share": "0.4444",
       "supported_venue_value_share": "0.9999",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "controlled_pair"
+      ],
       "bot": false,
       "bot_rate": "0.0000",
       "program_blockers": [
@@ -1574,7 +2578,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "no_known_basis_buys",
+      "drop_reason": "controlled_pair",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/4PaPYsHHhaiahVWTFRbD8BRFxUugXhdwjdp4TPkFR5r1"
@@ -1585,7 +2589,7 @@
     {
       "address": "4WFgxbFDSH6PbMhqCGErqBKt6oguh4EXdcpfv4AyzepV",
       "blocked": false,
-      "blocker": "pagination_token_remaining_earlier_history",
+      "blocker": "unknown_basis_sale",
       "in_window_tx_count": 1000,
       "sample_records": 100,
       "decodable_share": "0.4308",
@@ -1691,11 +2695,11 @@
         "transfer_in_zero_basis",
         "multi_signer_bundle_buy"
       ],
-      "coverage_count_share": "0.749174917",
+      "coverage_count_share": "0.752475248",
       "coverage_value_share": "0",
       "coverage_mandatory_share": "0",
       "completed_trades": 12,
-      "sample_positions": 227,
+      "sample_positions": 228,
       "realized_pnl_sol": "87.27162175",
       "realized_pnl_usdc": null,
       "completed_episode_net": "87.27162175",
@@ -1706,10 +2710,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": false,
-      "history_complete_reason": "pagination_token_remaining_earlier_history",
+      "history_complete_reason": "unknown_basis_sale",
       "wallet_created_in_range": false,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 13,
         "independently_audited_episode_net": "208.269877931",
@@ -1724,159 +2732,6 @@
       "phase3_pages": 4
     },
     {
-      "address": "4crn3XUFgSXuvBJPyb6v6PAh9DPB9fXQ9q8RAD6qGNtB",
-      "blocked": false,
-      "blocker": null,
-      "in_window_tx_count": 220,
-      "sample_records": 100,
-      "decodable_share": "0.4098",
-      "supported_venue_value_share": "0.0684",
-      "has_known_basis_buys": true,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "8.2274",
-      "program_blockers": [
-        {
-          "program_id": "mayan34VedncxdK2XobtvWFDXQASUTBXhUVzt2kKgny",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.051750954",
-          "supported": false
-        },
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 25,
-          "value_sol": "0.0019",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 3,
-          "value_sol": "0.0019",
-          "supported": false
-        },
-        {
-          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
-          "label": "unsupported_or_unreviewed",
-          "observations": 30,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
-          "label": "Meteora DLMM",
-          "observations": 8,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
-          "label": "unsupported_or_unreviewed",
-          "observations": 3,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "swapFpHZwjELNnjvThjajtiVmkz3yPQEHjLtka2fwHW",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "3i5JeuZuUxeKtVysUnwQNGerJP2bSMX9fTFfS4Nxe3Br",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/4crn3XUFgSXuvBJPyb6v6PAh9DPB9fXQ9q8RAD6qGNtB"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false
-    },
-    {
       "address": "4h4qaaQuiv3x5X6UW2SeSiRh3jhBL16omX19GEtTt3G7",
       "blocked": false,
       "blocker": null,
@@ -1888,7 +2743,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "2368.6684",
+      "bot_rate": "231.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -2052,7 +2907,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "1804.4226",
+      "bot_rate": "153.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -2090,8 +2945,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "50.2806",
@@ -2157,138 +3011,6 @@
       "PRODUCT_READY": false
     },
     {
-      "address": "5E54AoTgSKCRTyRxDx2JuAjHY2RQzEt66CpeUzHTvmEo",
-      "blocked": false,
-      "blocker": null,
-      "in_window_tx_count": 19,
-      "sample_records": 43,
-      "decodable_share": "0.2981",
-      "supported_venue_value_share": "0.4286",
-      "has_known_basis_buys": false,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "1.3558",
-      "program_blockers": [
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 10,
-          "value_sol": "0.03257264",
-          "supported": false
-        },
-        {
-          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
-          "label": "unsupported_or_unreviewed",
-          "observations": 10,
-          "value_sol": "0.03257264",
-          "supported": false
-        },
-        {
-          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
-          "label": "unsupported_or_unreviewed",
-          "observations": 17,
-          "value_sol": "0.02936256",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 12,
-          "value_sol": "0.02533336",
-          "supported": false
-        },
-        {
-          "program_id": "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
-          "label": "unsupported_or_unreviewed",
-          "observations": 3,
-          "value_sol": "0.0151",
-          "supported": false
-        },
-        {
-          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.01213928",
-          "supported": false
-        },
-        {
-          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.005",
-          "supported": false
-        },
-        {
-          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.00313928",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0.00217408",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00217408",
-          "supported": false
-        },
-        {
-          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
-          "label": "Meteora DLMM",
-          "observations": 1,
-          "value_sol": "0.00208408",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.00011",
-          "supported": false
-        },
-        {
-          "program_id": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/5E54AoTgSKCRTyRxDx2JuAjHY2RQzEt66CpeUzHTvmEo"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false
-    },
-    {
       "address": "5H9w3ux1UMYYpNvXFci4rsT5HSRgScMFc4jYrTxCTjgS",
       "blocked": false,
       "blocker": null,
@@ -2300,7 +3022,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "181.1631",
+      "bot_rate": "147.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -2336,11 +3058,8 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner"
-      ],
+      "bundle": false,
+      "bundle_reasons": [],
       "bot": true,
       "bot_rate": "97.7623",
       "program_blockers": [
@@ -2354,7 +3073,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "bot_rate",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/5LDvwqg74RXLX82dcV2XvxYryz1RzUg4aKPdAr8BvE3y"
@@ -2365,7 +3084,7 @@
     {
       "address": "5Qfie4TbmSst6KnFvHd67EgKgUwSAXyrKNQuppiPscVS",
       "blocked": false,
-      "blocker": "transfer_in_zero_basis",
+      "blocker": "unknown_basis_sale",
       "in_window_tx_count": 180,
       "sample_records": 100,
       "decodable_share": "0.4968",
@@ -2449,10 +3168,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
-      "history_complete": true,
-      "history_complete_reason": "no_leftover_pagination_token",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
+      "history_complete": false,
+      "history_complete_reason": "unknown_basis_sale",
       "wallet_created_in_range": false,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -2475,8 +3198,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "49.3463",
@@ -2673,7 +3395,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "4440.1048",
+      "bot_rate": "1000.0000",
       "program_blockers": [],
       "coverability_rank_key": "0.0000",
       "dropped": true,
@@ -2697,8 +3419,7 @@
       "bundle": true,
       "bundle_reasons": [
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner"
+        "controlled_pair"
       ],
       "bot": false,
       "bot_rate": "3.9622",
@@ -2761,7 +3482,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "994.9496",
+      "bot_rate": "700.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -2806,7 +3527,6 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": true,
@@ -2836,7 +3556,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/6VhEfmkVDzQSug6v7L3QXKt9Lb7vwxSvZgZz1a1L177f"
@@ -2855,8 +3575,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "59.6751",
@@ -2926,7 +3645,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "1998.8433",
+      "bot_rate": "500.0000",
       "program_blockers": [],
       "coverability_rank_key": "0.0000",
       "dropped": true,
@@ -3155,8 +3874,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "14.2954",
@@ -3215,14 +3933,13 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
-      "coverage_count_share": "0.989071038",
-      "coverage_value_share": "0.999170274",
-      "coverage_mandatory_share": "0.989071038",
+      "coverage_count_share": "0.994535519",
+      "coverage_value_share": "0.999708937",
+      "coverage_mandatory_share": "0.994535519",
       "completed_trades": 0,
-      "sample_positions": 180,
+      "sample_positions": 181,
       "realized_pnl_sol": null,
       "realized_pnl_usdc": null,
       "completed_episode_net": null,
@@ -3233,10 +3950,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_eligibility_pending_reassessment",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -3259,8 +3980,8 @@
       "has_known_basis_buys": false,
       "bundle": false,
       "bundle_reasons": [],
-      "bot": true,
-      "bot_rate": "88.5972",
+      "bot": false,
+      "bot_rate": "5.0000",
       "program_blockers": [
         {
           "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
@@ -3307,7 +4028,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "bot_rate",
+      "drop_reason": "no_known_basis_buys",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/6o1dmiuyPdDE9LCRhzRoBq8uT9KSsdXneuWbrMLhVTHo"
@@ -3326,9 +4047,10 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
         "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner"
+        "sell_proceeds_to_cosigner",
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": false,
       "bot_rate": "5.2726",
@@ -3343,122 +4065,13 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/6q7PU1ZPBidWgRSaWPgH9noqLRoWRT9H2YZ2Mqout5Br"
       ],
       "pages": 2,
       "PRODUCT_READY": false
-    },
-    {
-      "address": "6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm",
-      "blocked": false,
-      "blocker": "multi_signer_bundle_buy",
-      "in_window_tx_count": 20,
-      "sample_records": 29,
-      "decodable_share": "0.2281",
-      "supported_venue_value_share": "0.3467",
-      "has_known_basis_buys": true,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "1.0076",
-      "program_blockers": [
-        {
-          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
-          "label": "unsupported_or_unreviewed",
-          "observations": 19,
-          "value_sol": "0.03122176",
-          "supported": false
-        },
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 7,
-          "value_sol": "0.02184108",
-          "supported": false
-        },
-        {
-          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
-          "label": "unsupported_or_unreviewed",
-          "observations": 7,
-          "value_sol": "0.02184108",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0.01780180",
-          "supported": false
-        },
-        {
-          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.01406252",
-          "supported": false
-        },
-        {
-          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.00707856",
-          "supported": false
-        },
-        {
-          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.0005",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/6qVcd9kp5XURL5Bj5Qf1CCwKwoX3fQZopXxZb96WquHm"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false,
-      "phase4_bundle": true,
-      "phase4_bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "coverage_count_share": "0.125",
-      "coverage_value_share": "0.000457643",
-      "coverage_mandatory_share": "0.000457643",
-      "completed_trades": 0,
-      "sample_positions": 1,
-      "realized_pnl_sol": null,
-      "realized_pnl_usdc": null,
-      "completed_episode_net": null,
-      "completed_episode_net_unit": null,
-      "qualifying_profit": null,
-      "qualifying_unit": null,
-      "audit_status": "not_independently_audited",
-      "independently_audited": false,
-      "lead_level": "insufficient_evidence",
-      "coverage_status": "coverage_blocked",
-      "history_complete": true,
-      "history_complete_reason": "wallet_created_in_range",
-      "wallet_created_in_range": true,
-      "leftover_pagination_token": true,
-      "auditor": {
-        "clean_episodes": 0,
-        "independently_audited_episode_net": null,
-        "independently_audited_episode_net_unit": null,
-        "independently_audited_episode_nets_by_unit": null,
-        "unresolved_basis_sales": 0,
-        "known_cost_sales": 0,
-        "reconstructed_trades": 1
-      },
-      "phase3_pages": 1
     },
     {
       "address": "6rSQ5r58QohX5hcSGwXnnKb8H85JFCfpyn5LSRRiLpZf",
@@ -3610,7 +4223,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "227.5746",
+      "bot_rate": "183.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -3648,9 +4261,10 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
         "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner"
+        "sell_proceeds_to_cosigner",
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": false,
       "bot_rate": "6.4611",
@@ -3672,7 +4286,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/734xTmPzAtU9A6Zo6CT9oByZQf7DRVBeaCbMwhfYSPRm"
@@ -3689,8 +4303,12 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner",
+        "controlled_pair"
+      ],
       "bot": false,
       "bot_rate": "0.0000",
       "program_blockers": [
@@ -3704,7 +4322,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "no_known_basis_buys",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/75qsE3p5y2BFSLnfS9MUMqSAwq6MW5FhTavrUPMTFkKz"
@@ -3776,10 +4394,8 @@
       "decodable_share": "0.0000",
       "supported_venue_value_share": null,
       "has_known_basis_buys": false,
-      "bundle": true,
-      "bundle_reasons": [
-        "transfer_in_zero_basis"
-      ],
+      "bundle": false,
+      "bundle_reasons": [],
       "bot": true,
       "bot_rate": "32.1937",
       "program_blockers": [
@@ -3807,7 +4423,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "bot_rate",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/7JVtPBiQbWrowxbn9b7Mi3VUS3SUBHM45HS28L66Uxps"
@@ -3966,7 +4582,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "184.7959",
+      "bot_rate": "70.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -3992,7 +4608,7 @@
       "blocker": null,
       "in_window_tx_count": 42,
       "sample_records": 42,
-      "decodable_share": "0.4737",
+      "decodable_share": "0.4667",
       "supported_venue_value_share": "0.9986",
       "has_known_basis_buys": true,
       "bundle": true,
@@ -4014,15 +4630,8 @@
         {
           "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "label": "unsupported_or_unreviewed",
-          "observations": 7,
-          "value_sol": "0.515611348",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.021138286",
+          "observations": 6,
+          "value_sol": "0.494473062",
           "supported": false
         },
         {
@@ -4090,12 +4699,11 @@
       "blocker": null,
       "in_window_tx_count": 33,
       "sample_records": 69,
-      "decodable_share": "0.2688",
-      "supported_venue_value_share": "0.2641",
+      "decodable_share": "0.2568",
+      "supported_venue_value_share": "0.2436",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": false,
@@ -4221,20 +4829,6 @@
           "supported": false
         },
         {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0.015928725",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.014274030",
-          "supported": false
-        },
-        {
           "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
           "label": "unsupported_or_unreviewed",
           "observations": 2,
@@ -4298,17 +4892,10 @@
           "supported": false
         },
         {
-          "program_id": "24Uqj9JCLxUeoC3hGfh5W3s9FM9uCHDS2SG3LYwBpyTi",
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.001654695",
-          "supported": false
-        },
-        {
-          "program_id": "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.001654695",
+          "observations": 2,
+          "value_sol": "0",
           "supported": false
         },
         {
@@ -4328,7 +4915,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/893jrJP12sKPC946y68Q9JM8z3SP8MpWktpho4oR4rHf"
@@ -4458,10 +5045,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "no_leftover_pagination_token",
       "wallet_created_in_range": false,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 17,
         "independently_audited_episode_net": "320.992044616",
@@ -4769,7 +5360,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "5213.9279",
+      "bot_rate": "1000.0000",
       "program_blockers": [
         {
           "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
@@ -4825,7 +5416,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "193.0917",
+      "bot_rate": "73.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -4863,8 +5454,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "42.2089",
@@ -4900,37 +5490,17 @@
       "blocker": "transfer_in_zero_basis",
       "in_window_tx_count": 111,
       "sample_records": 100,
-      "decodable_share": "0.4800",
-      "supported_venue_value_share": "0.9999",
+      "decodable_share": "0.0000",
+      "supported_venue_value_share": "0.0000",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy"
       ],
       "bot": true,
       "bot_rate": "37.0026",
       "program_blockers": [
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "54.509208520",
-          "supported": false
-        },
-        {
-          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "45.861679678",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "8.647528842",
-          "supported": false
-        },
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
           "label": "unsupported_or_unreviewed",
@@ -4953,25 +5523,29 @@
         "transfer_in_zero_basis",
         "multi_signer_bundle_buy"
       ],
-      "coverage_count_share": "0.865384615",
-      "coverage_value_share": "0.872713136",
-      "coverage_mandatory_share": "0.865384615",
-      "completed_trades": 1,
-      "sample_positions": 90,
-      "realized_pnl_sol": "193.910824519",
+      "coverage_count_share": "0.990384615",
+      "coverage_value_share": "0.990957737",
+      "coverage_mandatory_share": "0.990384615",
+      "completed_trades": 2,
+      "sample_positions": 103,
+      "realized_pnl_sol": "358.971593577",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "193.910824519",
+      "completed_episode_net": "358.971593577",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "193.910824519",
+      "qualifying_profit": "358.971593577",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
-      "coverage_status": "coverage_blocked",
+      "coverage_status": "coverage_eligibility_pending_reassessment",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 3,
         "independently_audited_episode_net": "414.674391225",
@@ -4997,7 +5571,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "2151.5265",
+      "bot_rate": "146.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -5018,6 +5592,59 @@
       "PRODUCT_READY": false
     },
     {
+      "address": "953V4zSz7TcDEEhdYeYMgVhBGN2pJVEM9BrNuy3rNpUA",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 265,
+      "sample_records": 100,
+      "decodable_share": "0.3889",
+      "supported_venue_value_share": "0.5493",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": true,
+      "bot_rate": "132.5000",
+      "program_blockers": [
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.060039133",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0223266",
+          "supported": false
+        },
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00148844",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "bot_rate",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-f635a45/live-out/main/raw/phase2/953V4zSz7TcDEEhdYeYMgVhBGN2pJVEM9BrNuy3rNpUA"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
       "address": "96d9GKPQ7h3FTX1oBBW983rVPHFJdYZLzNqmCgLigL3D",
       "blocked": false,
       "blocker": "transfer_in_zero_basis",
@@ -5028,8 +5655,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "7.9210",
@@ -5074,8 +5700,7 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "coverage_count_share": "0",
       "coverage_value_share": "0",
@@ -5092,10 +5717,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -5293,7 +5922,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "3671.9971",
+      "bot_rate": "153.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -5410,7 +6039,7 @@
     {
       "address": "9R3m89gXeC6BWc2aN9CFqWDZA5WUJP3umQUerC7gjoFs",
       "blocked": false,
-      "blocker": "transfer_in_zero_basis",
+      "blocker": "multi_signer_bundle_buy",
       "in_window_tx_count": 1000,
       "sample_records": 100,
       "decodable_share": "0.4118",
@@ -5418,7 +6047,9 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "multi_signer_bundle_buy",
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "72.1354",
@@ -5440,7 +6071,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/9R3m89gXeC6BWc2aN9CFqWDZA5WUJP3umQUerC7gjoFs"
@@ -5449,9 +6080,14 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
+        "multi_signer_bundle_buy",
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "controlled_pair"
       ],
+      "controlled_pair": [
+        "8zxkmeqHrpmqyzCSGxLNWZ4W7ZgjwHuo4HV11ALceNAg"
+      ],
+      "controlled_pair_explanation": "8zxkmeqH co-signs and dominates funding (100.00%) and withdrawals (100.00%)",
       "coverage_count_share": "0.878718535",
       "coverage_value_share": "0.595349492",
       "coverage_mandatory_share": "0.595349492",
@@ -5471,6 +6107,8 @@
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 172,
         "independently_audited_episode_net": "8220.714490507",
@@ -5496,7 +6134,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "241.8695",
+      "bot_rate": "138.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -5541,8 +6179,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "8.2573",
@@ -5654,7 +6291,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "375.6634",
+      "bot_rate": "145.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -5692,9 +6329,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
-        "transfer_in_zero_basis",
-        "sell_proceeds_to_cosigner"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "57.6849",
@@ -5821,7 +6456,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/9j6L2rrNhDJab6Gd1RME7izQdFtsWb49mbZHLM6UBS5V"
@@ -5985,8 +6620,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "51.6323",
@@ -6111,7 +6745,6 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": true,
@@ -6246,7 +6879,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/AGdtsMmphhymH5wYW3dWKSkAxpLYRrNDCTFAfuq8ii9v"
@@ -6255,18 +6888,61 @@
       "PRODUCT_READY": false
     },
     {
+      "address": "AGqKFZoKduLeXYEtqoyEgsm65XH4zZBcfqZ6fgoZb2G1",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 34,
+      "sample_records": 34,
+      "decodable_share": "0.4915",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner",
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "17.0000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 29,
+          "value_sol": "540.650266200",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-f635a45/live-out/main/raw/phase2/AGqKFZoKduLeXYEtqoyEgsm65XH4zZBcfqZ6fgoZb2G1"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
       "address": "AMMLTuy9Xz6t8DApbR3feq8BYz1sX5pEXKa4QZrgp6DY",
       "blocked": false,
-      "blocker": "transfer_in_zero_basis",
+      "blocker": "multi_signer_bundle_buy",
       "in_window_tx_count": 234,
       "sample_records": 100,
-      "decodable_share": "0.3095",
+      "decodable_share": "0.2895",
       "supported_venue_value_share": "0.9165",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "14.6643",
@@ -6302,15 +6978,8 @@
         {
           "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "label": "unsupported_or_unreviewed",
-          "observations": 10,
-          "value_sol": "0.009523144",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.002370504",
+          "observations": 9,
+          "value_sol": "0.00715264",
           "supported": false
         },
         {
@@ -6337,7 +7006,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/AMMLTuy9Xz6t8DApbR3feq8BYz1sX5pEXKa4QZrgp6DY"
@@ -6346,28 +7015,32 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "transfer_in_zero_basis"
       ],
-      "coverage_count_share": "0.968152866",
-      "coverage_value_share": "0.022276203",
-      "coverage_mandatory_share": "0.022276203",
-      "completed_trades": 18,
-      "sample_positions": 152,
-      "realized_pnl_sol": "-0.004837792",
+      "coverage_count_share": "0.98089172",
+      "coverage_value_share": "0.022536921",
+      "coverage_mandatory_share": "0.022536921",
+      "completed_trades": 20,
+      "sample_positions": 154,
+      "realized_pnl_sol": "-0.009025192",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "-0.004837792",
+      "completed_episode_net": "-0.009025192",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "-0.004837792",
+      "qualifying_profit": "-0.009025192",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -6382,7 +7055,7 @@
     {
       "address": "AN344abTBpmzF6Fq8EpUvr4SvkzkCTisi18nJFqnwofL",
       "blocked": false,
-      "blocker": "transfer_in_zero_basis",
+      "blocker": "multi_signer_bundle_buy",
       "in_window_tx_count": 1000,
       "sample_records": 100,
       "decodable_share": "0.5000",
@@ -6390,8 +7063,9 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
+        "multi_signer_bundle_buy",
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "sell_proceeds_to_cosigner"
       ],
       "bot": true,
       "bot_rate": "88.6237",
@@ -6406,7 +7080,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/AN344abTBpmzF6Fq8EpUvr4SvkzkCTisi18nJFqnwofL"
@@ -6415,8 +7089,9 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
+        "multi_signer_bundle_buy",
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "sell_proceeds_to_cosigner"
       ],
       "coverage_count_share": "0.932960894",
       "coverage_value_share": "0.186643139",
@@ -6433,10 +7108,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 7,
         "independently_audited_episode_net": "-77.417969728",
@@ -6461,9 +7140,8 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner",
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "103.5449",
@@ -6485,7 +7163,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/APUkrYCeq46BumAkxiLockYYNBvpkC1Xy6dnFEXY8oNi"
@@ -6502,12 +7180,8 @@
       "decodable_share": "0.3841",
       "supported_venue_value_share": "0.9548",
       "has_known_basis_buys": false,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner",
-        "transfer_in_zero_basis"
-      ],
+      "bundle": false,
+      "bundle_reasons": [],
       "bot": true,
       "bot_rate": "110.5797",
       "program_blockers": [
@@ -6647,7 +7321,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "bot_rate",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/AQWEYPwko4zzFMSJ8J8fkTBtakMP1QsV4DBYdvjrzkQJ"
@@ -6700,157 +7374,6 @@
       ],
       "pages": 2,
       "PRODUCT_READY": false
-    },
-    {
-      "address": "AUiycVsy5MRcHtBKxPKRs93hAkXRhwmTKuk7MSWZJcSb",
-      "blocked": false,
-      "blocker": "multi_signer_bundle_buy",
-      "in_window_tx_count": 4,
-      "sample_records": 23,
-      "decodable_share": "0.3148",
-      "supported_venue_value_share": "0.4638",
-      "has_known_basis_buys": true,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "0.1826",
-      "program_blockers": [
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 8,
-          "value_sol": "0.017752637",
-          "supported": false
-        },
-        {
-          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
-          "label": "unsupported_or_unreviewed",
-          "observations": 8,
-          "value_sol": "0.017752637",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0.011913357",
-          "supported": false
-        },
-        {
-          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0.00970576",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.00507408",
-          "supported": false
-        },
-        {
-          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00303928",
-          "supported": false
-        },
-        {
-          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.003",
-          "supported": false
-        },
-        {
-          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
-          "label": "Meteora DLMM",
-          "observations": 1,
-          "value_sol": "0.003",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.002871721",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.002871721",
-          "supported": false
-        },
-        {
-          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00283928",
-          "supported": false
-        },
-        {
-          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.001999997",
-          "supported": false
-        },
-        {
-          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.001",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/AUiycVsy5MRcHtBKxPKRs93hAkXRhwmTKuk7MSWZJcSb"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false,
-      "phase4_bundle": true,
-      "phase4_bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "coverage_count_share": "0.1",
-      "coverage_value_share": "0.037340676",
-      "coverage_mandatory_share": "0.037340676",
-      "completed_trades": 0,
-      "sample_positions": 1,
-      "realized_pnl_sol": null,
-      "realized_pnl_usdc": null,
-      "completed_episode_net": null,
-      "completed_episode_net_unit": null,
-      "qualifying_profit": null,
-      "qualifying_unit": null,
-      "audit_status": "not_independently_audited",
-      "independently_audited": false,
-      "lead_level": "insufficient_evidence",
-      "coverage_status": "coverage_blocked",
-      "history_complete": true,
-      "history_complete_reason": "wallet_created_in_range",
-      "wallet_created_in_range": true,
-      "leftover_pagination_token": true,
-      "auditor": {
-        "clean_episodes": 0,
-        "independently_audited_episode_net": null,
-        "independently_audited_episode_net_unit": null,
-        "independently_audited_episode_nets_by_unit": null,
-        "unresolved_basis_sales": 0,
-        "known_cost_sales": 0,
-        "reconstructed_trades": 0
-      },
-      "phase3_pages": 1
     },
     {
       "address": "AUn7v7iApbJfBUr6JBERQdeet8tmxouNZcn1hhQaq2Ca",
@@ -6986,7 +7509,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "605.4175",
+      "bot_rate": "100.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -7025,7 +7548,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "1417.6949",
+      "bot_rate": "500.0000",
       "program_blockers": [],
       "coverability_rank_key": "0.0000",
       "dropped": true,
@@ -7067,117 +7590,6 @@
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false
-    },
-    {
-      "address": "AoJHCcxFNdv32e82sWPzzRPJEze3SkzbcWYEc3H9VYyG",
-      "blocked": false,
-      "blocker": null,
-      "in_window_tx_count": 54,
-      "sample_records": 100,
-      "decodable_share": "0.3571",
-      "supported_venue_value_share": "0.4092",
-      "has_known_basis_buys": true,
-      "bundle": true,
-      "bundle_reasons": [
-        "transfer_in_zero_basis"
-      ],
-      "bot": false,
-      "bot_rate": "1.8422",
-      "program_blockers": [
-        {
-          "program_id": "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9",
-          "label": "FLASHX Axiom",
-          "observations": 5,
-          "value_sol": "3.317237897",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 4,
-          "value_sol": "3.277851962",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 4,
-          "value_sol": "3.277851962",
-          "supported": false
-        },
-        {
-          "program_id": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
-          "label": "unsupported_or_unreviewed",
-          "observations": 3,
-          "value_sol": "1.997063760",
-          "supported": false
-        },
-        {
-          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "1.280788202",
-          "supported": false
-        },
-        {
-          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "1.280788202",
-          "supported": false
-        },
-        {
-          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "1.07952762",
-          "supported": false
-        },
-        {
-          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.902538589",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 4,
-          "value_sol": "0.135698770",
-          "supported": false
-        },
-        {
-          "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.039385935",
-          "supported": false
-        },
-        {
-          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.039385935",
-          "supported": false
-        },
-        {
-          "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.014997551",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/AoJHCcxFNdv32e82sWPzzRPJEze3SkzbcWYEc3H9VYyG"
       ],
       "pages": 2,
       "PRODUCT_READY": false
@@ -7230,7 +7642,7 @@
         "transfer_in_zero_basis"
       ],
       "bot": true,
-      "bot_rate": "288.3322",
+      "bot_rate": "162.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -7456,10 +7868,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "no_leftover_pagination_token",
       "wallet_created_in_range": false,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -7482,7 +7898,8 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "38.0759",
@@ -7513,8 +7930,13 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
+      "controlled_pair": [
+        "8zxkmeqHrpmqyzCSGxLNWZ4W7ZgjwHuo4HV11ALceNAg"
+      ],
+      "controlled_pair_explanation": "8zxkmeqH co-signs and dominates funding (99.98%) and withdrawals (99.38%)",
       "coverage_count_share": "0.782135076",
       "coverage_value_share": "0.661087475",
       "coverage_mandatory_share": "0.661087475",
@@ -7534,6 +7956,8 @@
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 99,
         "independently_audited_episode_net": "4232.114655222",
@@ -7613,7 +8037,8 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "85.3882",
@@ -7644,8 +8069,13 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
+      "controlled_pair": [
+        "98YDfUMbZ91Mk9PfHCyBLG6t5Gh1TWQvNUygUQV8gCtU"
+      ],
+      "controlled_pair_explanation": "98YDfUMb co-signs and dominates funding (100.00%) and withdrawals (100.00%)",
       "coverage_count_share": "1",
       "coverage_value_share": "1",
       "coverage_mandatory_share": "1",
@@ -7665,6 +8095,8 @@
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded",
+      "pnl_note": null,
       "auditor": {
         "clean_episodes": 1,
         "independently_audited_episode_net": "218.2416947",
@@ -7689,9 +8121,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
-        "transfer_in_zero_basis",
-        "sell_proceeds_to_cosigner"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "11.7996",
@@ -7776,7 +8206,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/BWu2cCV9nUDCkgXNYwiZoHQxxBhH3MWP4xvXovBJAEdd"
@@ -7796,7 +8226,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "3206.8655",
+      "bot_rate": "173.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -7940,8 +8370,8 @@
       "bundle_reasons": [
         "transfer_in_zero_basis"
       ],
-      "bot": true,
-      "bot_rate": "95.9999",
+      "bot": false,
+      "bot_rate": "4.0000",
       "program_blockers": [
         {
           "program_id": "RangohQxaWip6i1twAAnRVLmob9j88fid7sq2DMAATW",
@@ -8141,187 +8571,6 @@
       "PRODUCT_READY": false
     },
     {
-      "address": "BkRUpYSosGE1EfdYHR56Rwh3QRHbd1AbHVqsh99U6DEc",
-      "blocked": false,
-      "blocker": "pagination_token_remaining_earlier_history",
-      "in_window_tx_count": 28,
-      "sample_records": 100,
-      "decodable_share": "0.4554",
-      "supported_venue_value_share": "1.0000",
-      "has_known_basis_buys": true,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "1.0345",
-      "program_blockers": [
-        {
-          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
-          "label": "unsupported_or_unreviewed",
-          "observations": 44,
-          "value_sol": "0.001855579",
-          "supported": false
-        },
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 30,
-          "value_sol": "0.001855579",
-          "supported": false
-        },
-        {
-          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0.001855579",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 5,
-          "value_sol": "0.001855573",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 7,
-          "value_sol": "6E-9",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 8,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
-          "label": "Meteora DLMM",
-          "observations": 4,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
-          "label": "unsupported_or_unreviewed",
-          "observations": 3,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "swapFpHZwjELNnjvThjajtiVmkz3yPQEHjLtka2fwHW",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        },
-        {
-          "program_id": "vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/BkRUpYSosGE1EfdYHR56Rwh3QRHbd1AbHVqsh99U6DEc"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false,
-      "phase4_bundle": true,
-      "phase4_bundle_reasons": [
-        "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner",
-        "transfer_in_zero_basis"
-      ],
-      "coverage_count_share": "0.495677233",
-      "coverage_value_share": "0.082552061",
-      "coverage_mandatory_share": "0.082552061",
-      "completed_trades": 0,
-      "sample_positions": 171,
-      "realized_pnl_sol": null,
-      "realized_pnl_usdc": null,
-      "completed_episode_net": null,
-      "completed_episode_net_unit": null,
-      "qualifying_profit": null,
-      "qualifying_unit": null,
-      "audit_status": "not_independently_audited",
-      "independently_audited": false,
-      "lead_level": "insufficient_evidence",
-      "coverage_status": "coverage_blocked",
-      "history_complete": false,
-      "history_complete_reason": "pagination_token_remaining_earlier_history",
-      "wallet_created_in_range": false,
-      "leftover_pagination_token": true,
-      "auditor": {
-        "clean_episodes": 0,
-        "independently_audited_episode_net": null,
-        "independently_audited_episode_net_unit": null,
-        "independently_audited_episode_nets_by_unit": null,
-        "unresolved_basis_sales": 35,
-        "known_cost_sales": 14,
-        "reconstructed_trades": 134
-      },
-      "phase3_pages": 1
-    },
-    {
       "address": "Bn6UXZQxs45hMWuGCru6CZvyMj3oEm3v58q4KXs6L4rp",
       "blocked": false,
       "blocker": null,
@@ -8333,7 +8582,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "243.3239",
+      "bot_rate": "73.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -8513,107 +8762,20 @@
       "PRODUCT_READY": false
     },
     {
-      "address": "C7qJjX2ce9AGE2jNn68NRSf4d6HmTthMLmiaZvMyDnZe",
-      "blocked": false,
-      "blocker": null,
-      "in_window_tx_count": 7,
-      "sample_records": 39,
-      "decodable_share": "0.2381",
-      "supported_venue_value_share": "0.4559",
-      "has_known_basis_buys": true,
-      "bundle": true,
-      "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "0.4769",
-      "program_blockers": [
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 11,
-          "value_sol": "0.150931590",
-          "supported": false
-        },
-        {
-          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
-          "label": "unsupported_or_unreviewed",
-          "observations": 11,
-          "value_sol": "0.150931590",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 9,
-          "value_sol": "0.136144054",
-          "supported": false
-        },
-        {
-          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
-          "label": "unsupported_or_unreviewed",
-          "observations": 4,
-          "value_sol": "0.116661621",
-          "supported": false
-        },
-        {
-          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
-          "label": "unsupported_or_unreviewed",
-          "observations": 23,
-          "value_sol": "0.042885289",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 3,
-          "value_sol": "0.024530694",
-          "supported": false
-        },
-        {
-          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.005999995",
-          "supported": false
-        },
-        {
-          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.0008",
-          "supported": false
-        },
-        {
-          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.0008",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/C7qJjX2ce9AGE2jNn68NRSf4d6HmTthMLmiaZvMyDnZe"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false
-    },
-    {
       "address": "CfNx9LxWbHh8Ut6F5W33Ra481D5RNAF1YiGEnAgcAUKu",
       "blocked": false,
-      "blocker": "transfer_in_zero_basis",
+      "blocker": "unknown_basis_sale",
       "in_window_tx_count": 988,
       "sample_records": 100,
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy",
+        "controlled_pair"
+      ],
       "bot": true,
       "bot_rate": "33.5520",
       "program_blockers": [
@@ -8637,8 +8799,13 @@
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "controlled_pair"
       ],
+      "controlled_pair": [
+        "G5GFpTfMFPU31nmXzu5C7198RqXiVC49ToUA1h5pGyph"
+      ],
+      "controlled_pair_explanation": "G5GFpTfM is a fee-paying / swap co-signer that later sweeps proceeds",
       "coverage_count_share": "0.577235772",
       "coverage_value_share": "0.723830738",
       "coverage_mandatory_share": "0.577235772",
@@ -8654,10 +8821,12 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
-      "history_complete": true,
-      "history_complete_reason": "no_leftover_pagination_token",
+      "history_complete": false,
+      "history_complete_reason": "unknown_basis_sale",
       "wallet_created_in_range": false,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 1,
         "independently_audited_episode_net": "444.861224406",
@@ -8672,110 +8841,6 @@
       "phase3_pages": 3
     },
     {
-      "address": "Co4EHJtCZLKUmpwENamnEiRLFA372sq3T14a3GRhnf7A",
-      "blocked": false,
-      "blocker": null,
-      "in_window_tx_count": 8,
-      "sample_records": 53,
-      "decodable_share": "0.2125",
-      "supported_venue_value_share": "0.4328",
-      "has_known_basis_buys": false,
-      "bundle": true,
-      "bundle_reasons": [
-        "multi_signer_bundle_buy"
-      ],
-      "bot": false,
-      "bot_rate": "0.4699",
-      "program_blockers": [
-        {
-          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
-          "label": "unsupported_or_unreviewed",
-          "observations": 34,
-          "value_sol": "0.066286658",
-          "supported": false
-        },
-        {
-          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
-          "label": "DFlow",
-          "observations": 7,
-          "value_sol": "0.045752639",
-          "supported": false
-        },
-        {
-          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
-          "label": "unsupported_or_unreviewed",
-          "observations": 7,
-          "value_sol": "0.045752639",
-          "supported": false
-        },
-        {
-          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
-          "label": "unsupported_or_unreviewed",
-          "observations": 6,
-          "value_sol": "0.043113359",
-          "supported": false
-        },
-        {
-          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.02227408",
-          "supported": false
-        },
-        {
-          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
-          "label": "Meteora DLMM",
-          "observations": 2,
-          "value_sol": "0.01163928",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00307408",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00307408",
-          "supported": false
-        },
-        {
-          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00263928",
-          "supported": false
-        },
-        {
-          "program_id": "GAMMA7meSFWaBXF25oSUgmGRwaW6sCMFLmBNiMSdbHVT",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.00263928",
-          "supported": false
-        },
-        {
-          "program_id": "SSwapUtytfBdBn1b9NUGG6foMVPtcWgpRU32HToDUZr",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.000199999",
-          "supported": false
-        }
-      ],
-      "coverability_rank_key": "0.0000",
-      "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
-      "chosen_for_full_history": false,
-      "source_runs": [
-        "/tmp/live-raw-06cea26/live-out/main/raw/phase2/Co4EHJtCZLKUmpwENamnEiRLFA372sq3T14a3GRhnf7A"
-      ],
-      "pages": 2,
-      "PRODUCT_READY": false
-    },
-    {
       "address": "CxTmNCVyjHjgNX3yAHnTj6P8CArok5vscBYPNc6shLN9",
       "blocked": false,
       "blocker": null,
@@ -8787,7 +8852,9 @@
       "bundle": true,
       "bundle_reasons": [
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "134.0226",
@@ -8826,8 +8893,10 @@
       "decodable_share": "0.4444",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "controlled_pair"
+      ],
       "bot": true,
       "bot_rate": "284.7549",
       "program_blockers": [
@@ -8848,7 +8917,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "bot_rate",
+      "drop_reason": "controlled_pair",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/D4iUvxinYe26bijLd5rnhkfC4TmeWv6nZ4PPTQt3iqpS"
@@ -8868,7 +8937,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "1125.4274",
+      "bot_rate": "72.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -8900,7 +8969,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "698.4076",
+      "bot_rate": "100.0000",
       "program_blockers": [
         {
           "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
@@ -8923,16 +8992,20 @@
     {
       "address": "DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx",
       "blocked": false,
-      "blocker": "pagination_token_remaining_earlier_history",
+      "blocker": "transfer_in_zero_basis",
       "in_window_tx_count": 262,
       "sample_records": 100,
       "decodable_share": "0.3333",
       "supported_venue_value_share": "0.1747",
       "has_known_basis_buys": true,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy",
+        "controlled_pair"
+      ],
       "bot": true,
-      "bot_rate": "1319.9300",
+      "bot_rate": "262.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -8958,7 +9031,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "bot_rate",
+      "drop_reason": "controlled_pair",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx"
@@ -8968,8 +9041,13 @@
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "controlled_pair"
       ],
+      "controlled_pair": [
+        "Sm71cE7vTst5hTT5bPFqfQsh86ouJXSau12au5t6RZA"
+      ],
+      "controlled_pair_explanation": "Sm71cE7v co-signs and dominates funding (100.00%) and withdrawals (100.00%)",
       "coverage_count_share": "0.992125984",
       "coverage_value_share": "0.985793097",
       "coverage_mandatory_share": "0.985793097",
@@ -8985,10 +9063,12 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_eligibility_pending_reassessment",
-      "history_complete": false,
-      "history_complete_reason": "pagination_token_remaining_earlier_history",
-      "wallet_created_in_range": false,
+      "history_complete": true,
+      "history_complete_reason": "wallet_created_in_range",
+      "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 3,
         "independently_audited_episode_net": "512.633417334",
@@ -9013,8 +9093,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "70.3251",
@@ -9197,8 +9276,8 @@
       "blocker": "multi_signer_bundle_buy",
       "in_window_tx_count": 84,
       "sample_records": 84,
-      "decodable_share": "0.3913",
-      "supported_venue_value_share": "0.9964",
+      "decodable_share": "0.3684",
+      "supported_venue_value_share": "0.9963",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
@@ -9219,15 +9298,8 @@
         {
           "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "label": "unsupported_or_unreviewed",
-          "observations": 7,
-          "value_sol": "0.578652442",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.030772992",
+          "observations": 6,
+          "value_sol": "0.547879450",
           "supported": false
         },
         {
@@ -9274,11 +9346,11 @@
         "sell_proceeds_to_cosigner",
         "transfer_in_zero_basis"
       ],
-      "coverage_count_share": "0.967213115",
-      "coverage_value_share": "0.030765613",
-      "coverage_mandatory_share": "0.030765613",
+      "coverage_count_share": "0.983606557",
+      "coverage_value_share": "0.035192429",
+      "coverage_mandatory_share": "0.035192429",
       "completed_trades": 0,
-      "sample_positions": 59,
+      "sample_positions": 60,
       "realized_pnl_sol": null,
       "realized_pnl_usdc": null,
       "completed_episode_net": null,
@@ -9289,10 +9361,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -9313,10 +9389,12 @@
       "decodable_share": "0.3333",
       "supported_venue_value_share": "0.0503",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "controlled_pair"
+      ],
       "bot": true,
-      "bot_rate": "738.3849",
+      "bot_rate": "123.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -9342,7 +9420,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "bot_rate",
+      "drop_reason": "controlled_pair",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/DY1f83rwDZsX4q4RWMecLuTj4VNbwNzrQf5QaH2SZV3m"
@@ -9362,10 +9440,11 @@
       "bundle": true,
       "bundle_reasons": [
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "controlled_pair"
       ],
       "bot": true,
-      "bot_rate": "131.4068",
+      "bot_rate": "61.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -9388,6 +9467,54 @@
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/Do3BUVkyYAwxFWUYPMRBnx4rW546kraTLqtyGfrFgnJc"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "DrBCfAThfyj2a9JvHDekYBQ9JtYCiVAPDycvoymHbpBk",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9998",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "controlled_pair"
+      ],
+      "bot": true,
+      "bot_rate": "292.6304",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "63.533001344",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "63.533001344",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "controlled_pair",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-f635a45/live-out/main/raw/phase2/DrBCfAThfyj2a9JvHDekYBQ9JtYCiVAPDycvoymHbpBk"
       ],
       "pages": 2,
       "PRODUCT_READY": false
@@ -9514,10 +9641,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
-      "history_complete_reason": "no_leftover_pagination_token",
-      "wallet_created_in_range": false,
+      "history_complete_reason": "wallet_created_in_range",
+      "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -9709,8 +9840,11 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "controlled_pair"
+      ],
       "bot": false,
       "bot_rate": "2.9568",
       "program_blockers": [
@@ -9724,7 +9858,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "no_known_basis_buys",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/E6wWPhMPMFgTPKSRDJGxcScJ8jXd3LzijJGp8hqyR6xx"
@@ -9735,15 +9869,14 @@
     {
       "address": "E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK",
       "blocked": false,
-      "blocker": "multi_signer_bundle_buy",
+      "blocker": "transfer_in_zero_basis",
       "in_window_tx_count": 65,
       "sample_records": 65,
-      "decodable_share": "0.3158",
-      "supported_venue_value_share": "0.7133",
+      "decodable_share": "0.2667",
+      "supported_venue_value_share": "0.6226",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": false,
@@ -9752,8 +9885,8 @@
         {
           "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "10.881404676",
+          "observations": 1,
+          "value_sol": "5.879916236",
           "supported": false
         },
         {
@@ -9761,13 +9894,6 @@
           "label": "Meteora DLMM",
           "observations": 1,
           "value_sol": "5.879916236",
-          "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "5.00148844",
           "supported": false
         },
         {
@@ -9822,7 +9948,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK"
@@ -9831,28 +9957,31 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
-      "coverage_count_share": "0.936170213",
-      "coverage_value_share": "0.944283872",
-      "coverage_mandatory_share": "0.936170213",
-      "completed_trades": 0,
-      "sample_positions": 44,
-      "realized_pnl_sol": null,
+      "coverage_count_share": "0.957446809",
+      "coverage_value_share": "0.963053044",
+      "coverage_mandatory_share": "0.957446809",
+      "completed_trades": 1,
+      "sample_positions": 45,
+      "realized_pnl_sol": "21.281202681",
       "realized_pnl_usdc": null,
-      "completed_episode_net": null,
-      "completed_episode_net_unit": null,
-      "qualifying_profit": null,
-      "qualifying_unit": null,
+      "completed_episode_net": "21.281202681",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "21.281202681",
+      "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
-      "coverage_status": "coverage_blocked",
+      "coverage_status": "watchlist_incomplete_evidence",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 2,
         "independently_audited_episode_net": "37.547732525",
@@ -9912,7 +10041,8 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "980.6481",
@@ -9954,7 +10084,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "277.8966",
+      "bot_rate": "129.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -9992,7 +10122,8 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "501.0845",
@@ -10033,7 +10164,6 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": true,
@@ -10203,7 +10333,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/F1a7cR49s7VsKz8XGanFBfsbNE2M91hgKkkDhDjv44w6"
@@ -10223,7 +10353,6 @@
       "bundle": true,
       "bundle_reasons": [
         "multi_signer_bundle_buy",
-        "sell_proceeds_to_cosigner",
         "transfer_in_zero_basis"
       ],
       "bot": false,
@@ -10438,10 +10567,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -10587,7 +10720,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "458.1079",
+      "bot_rate": "108.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -10618,14 +10751,16 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "multi_signer_bundle_buy",
+        "transfer_in_zero_basis",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "470.2501",
       "program_blockers": [],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "transfer_in_zero_basis",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/G3zqDCvjMD21PD7S4i1mTuEUScNabsoU9p7wsoBx8v3V"
@@ -10644,8 +10779,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "67.8603",
@@ -10798,7 +10932,6 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": false,
@@ -10870,7 +11003,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/GCGoRXVx6fSrR9CgKxRmF4qQQP75MnUST5varKCYpXJY"
@@ -11038,10 +11171,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_eligibility_pending_reassessment",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 1,
         "independently_audited_episode_net": "457.027411065",
@@ -11067,7 +11204,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "244.8021",
+      "bot_rate": "105.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -11093,12 +11230,11 @@
       "blocker": null,
       "in_window_tx_count": 8,
       "sample_records": 41,
-      "decodable_share": "0.3444",
-      "supported_venue_value_share": "0.6636",
+      "decodable_share": "0.3293",
+      "supported_venue_value_share": "0.6488",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "multi_signer_bundle_buy",
         "transfer_in_zero_basis"
       ],
       "bot": false,
@@ -11131,25 +11267,11 @@
           "observations": 15,
           "value_sol": "0.02567568",
           "supported": false
-        },
-        {
-          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.021039772",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 2,
-          "value_sol": "0.021039772",
-          "supported": false
         }
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "multi_signer_bundle_buy",
+      "drop_reason": "transfer_in_zero_basis",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/GtfcnzeZSjRN1G55nyGSuyJv9qMQ4qa5BEMhurYQaUPY"
@@ -11163,7 +11285,7 @@
       "blocker": "multi_signer_bundle_buy",
       "in_window_tx_count": 52,
       "sample_records": 52,
-      "decodable_share": "0.4783",
+      "decodable_share": "0.4737",
       "supported_venue_value_share": "0.9995",
       "has_known_basis_buys": true,
       "bundle": true,
@@ -11185,15 +11307,8 @@
         {
           "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
           "label": "unsupported_or_unreviewed",
-          "observations": 8,
-          "value_sol": "0.665025232",
-          "supported": false
-        },
-        {
-          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-          "label": "unsupported_or_unreviewed",
-          "observations": 1,
-          "value_sol": "0.022623512",
+          "observations": 7,
+          "value_sol": "0.642401720",
           "supported": false
         },
         {
@@ -11219,11 +11334,11 @@
         "sell_proceeds_to_cosigner",
         "transfer_in_zero_basis"
       ],
-      "coverage_count_share": "0.9375",
-      "coverage_value_share": "0.005337297",
-      "coverage_mandatory_share": "0.005337297",
+      "coverage_count_share": "0.96875",
+      "coverage_value_share": "0.006107339",
+      "coverage_mandatory_share": "0.006107339",
       "completed_trades": 0,
-      "sample_positions": 30,
+      "sample_positions": 31,
       "realized_pnl_sol": null,
       "realized_pnl_usdc": null,
       "completed_episode_net": null,
@@ -11234,10 +11349,14 @@
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
       "coverage_status": "coverage_blocked",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
       "history_complete": true,
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": false,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 0,
         "independently_audited_episode_net": null,
@@ -11261,7 +11380,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "203.3463",
+      "bot_rate": "165.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -11294,14 +11413,13 @@
       "blocker": null,
       "in_window_tx_count": 0,
       "sample_records": 100,
-      "decodable_share": "0.3000",
-      "supported_venue_value_share": "0.3355",
+      "decodable_share": "0.2875",
+      "supported_venue_value_share": "0.3326",
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
         "multi_signer_bundle_buy",
-        "transfer_in_zero_basis",
-        "sell_proceeds_to_cosigner"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "0.0000",
@@ -11309,8 +11427,8 @@
         {
           "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
           "label": "unsupported_or_unreviewed",
-          "observations": 20,
-          "value_sol": "0.306240390",
+          "observations": 16,
+          "value_sol": "0.302092230",
           "supported": false
         },
         {
@@ -11337,14 +11455,14 @@
         {
           "program_id": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
           "label": "unsupported_or_unreviewed",
-          "observations": 11,
-          "value_sol": "0.169071838",
+          "observations": 9,
+          "value_sol": "0.164923678",
           "supported": false
         },
         {
           "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
           "label": "unsupported_or_unreviewed",
-          "observations": 5,
+          "observations": 3,
           "value_sol": "0.131297129",
           "supported": false
         },
@@ -11358,8 +11476,8 @@
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
           "label": "unsupported_or_unreviewed",
-          "observations": 18,
-          "value_sol": "0.034683972",
+          "observations": 14,
+          "value_sol": "0.030535812",
           "supported": false
         },
         {
@@ -11590,8 +11708,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "7.3409",
@@ -11630,8 +11747,11 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner"
+      ],
       "bot": true,
       "bot_rate": "27.4200",
       "program_blockers": [
@@ -11645,7 +11765,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "bot_rate",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/HUPHeyBkcSCkHTxS9wsbVcj9UP9wZNXU998g5Csbc9AT"
@@ -11667,7 +11787,7 @@
         "transfer_in_zero_basis"
       ],
       "bot": true,
-      "bot_rate": "597.5605",
+      "bot_rate": "82.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -11706,7 +11826,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "3599.9971",
+      "bot_rate": "150.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -11745,7 +11865,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "364.7420",
+      "bot_rate": "91.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -11784,7 +11904,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "22343.9821",
+      "bot_rate": "931.0000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -11927,7 +12047,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "3455.9972",
+      "bot_rate": "144.0000",
       "program_blockers": [
         {
           "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
@@ -11998,7 +12118,7 @@
     {
       "address": "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ",
       "blocked": false,
-      "blocker": "pagination_token_remaining_earlier_history",
+      "blocker": "transfer_in_zero_basis",
       "in_window_tx_count": 357,
       "sample_records": 100,
       "decodable_share": "0.3846",
@@ -12006,8 +12126,7 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": false,
       "bot_rate": "14.8820",
@@ -12045,28 +12164,31 @@
       "PRODUCT_READY": false,
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
-      "coverage_count_share": "0.835260116",
-      "coverage_value_share": "0.878796994",
-      "coverage_mandatory_share": "0.835260116",
-      "completed_trades": 21,
-      "sample_positions": 289,
-      "realized_pnl_sol": "197.82971516",
+      "coverage_count_share": "0.997109827",
+      "coverage_value_share": "0.989759154",
+      "coverage_mandatory_share": "0.989759154",
+      "completed_trades": 43,
+      "sample_positions": 345,
+      "realized_pnl_sol": "302.359008744",
       "realized_pnl_usdc": null,
-      "completed_episode_net": "197.82971516",
+      "completed_episode_net": "302.359008744",
       "completed_episode_net_unit": "SOL",
-      "qualifying_profit": "197.82971516",
+      "qualifying_profit": "302.359008744",
       "qualifying_unit": "SOL",
       "audit_status": "not_independently_audited",
       "independently_audited": false,
       "lead_level": "insufficient_evidence",
-      "coverage_status": "coverage_blocked",
-      "history_complete": false,
-      "history_complete_reason": "pagination_token_remaining_earlier_history",
-      "wallet_created_in_range": false,
+      "coverage_status": "coverage_eligibility_pending_reassessment",
+      "controlled_pair": [],
+      "controlled_pair_explanation": null,
+      "history_complete": true,
+      "history_complete_reason": "wallet_created_in_range",
+      "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 44,
         "independently_audited_episode_net": "310.784669009",
@@ -12074,11 +12196,22 @@
         "independently_audited_episode_nets_by_unit": {
           "SOL": "310.784669009"
         },
-        "unresolved_basis_sales": 0,
+        "unresolved_basis_sales": 1,
         "known_cost_sales": 259,
-        "reconstructed_trades": 346
+        "reconstructed_trades": 347
       },
-      "phase3_pages": 1
+      "phase3_pages": 2,
+      "jxt_uncovered": {
+        "uncovered_tx_count": 105,
+        "uncovered_by_cause": {
+          "unknown: no_outer_program": 49,
+          "unknown: No reviewed outer spot swap; transfers and balances alone do not prove trading": 41,
+          "unknown: Investigated wallet is absent from transaction account keys": 14,
+          "unknown: Temporary wrapped SOL closure and rent refund must belong to the investigated wallet": 1
+        },
+        "decoder_version": "spot-v17-jup-native-settle-token2022-close-v1",
+        "buy_sell_events": 346
+      }
     },
     {
       "address": "ji1bQ5hebfq9sUmATpyXuVB1nNXj7LDR55R4kKBEcK6",
@@ -12091,8 +12224,7 @@
       "has_known_basis_buys": false,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "transfer_in_zero_basis"
       ],
       "bot": true,
       "bot_rate": "27.8715",
@@ -12215,8 +12347,11 @@
       "decodable_share": "0.5000",
       "supported_venue_value_share": "1.0000",
       "has_known_basis_buys": false,
-      "bundle": false,
-      "bundle_reasons": [],
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner"
+      ],
       "bot": false,
       "bot_rate": "24.6021",
       "program_blockers": [
@@ -12230,7 +12365,7 @@
       ],
       "coverability_rank_key": "0.0000",
       "dropped": true,
-      "drop_reason": "no_known_basis_buys",
+      "drop_reason": "multi_signer_bundle_buy",
       "chosen_for_full_history": false,
       "source_runs": [
         "/tmp/live-raw-06cea26/live-out/main/raw/phase2/qAkJ2SuveYDsN2ZaEPU5gWhF8gWZvsA2Pfizn3B9ZQ5"
@@ -12250,7 +12385,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "437.4365",
+      "bot_rate": "121.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -12289,7 +12424,7 @@
       "bundle": false,
       "bundle_reasons": [],
       "bot": true,
-      "bot_rate": "537.2134",
+      "bot_rate": "73.5000",
       "program_blockers": [
         {
           "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
@@ -12320,7 +12455,9 @@
       "has_known_basis_buys": true,
       "bundle": true,
       "bundle_reasons": [
-        "transfer_in_zero_basis"
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy",
+        "controlled_pair"
       ],
       "bot": true,
       "bot_rate": "221.3563",
@@ -12359,8 +12496,13 @@
       "phase4_bundle": true,
       "phase4_bundle_reasons": [
         "transfer_in_zero_basis",
-        "multi_signer_bundle_buy"
+        "multi_signer_bundle_buy",
+        "controlled_pair"
       ],
+      "controlled_pair": [
+        "V5wL73paYB8snnN4RGsyoHGQ3v1qnjPienLCmbqTbmt"
+      ],
+      "controlled_pair_explanation": "V5wL73pa is a fee-paying / swap co-signer that later sweeps proceeds",
       "coverage_count_share": "0.870496592",
       "coverage_value_share": "0.632272895",
       "coverage_mandatory_share": "0.632272895",
@@ -12380,6 +12522,8 @@
       "history_complete_reason": "wallet_created_in_range",
       "wallet_created_in_range": true,
       "leftover_pagination_token": true,
+      "pnl_scope": "decoded_subset",
+      "pnl_note": "App realized P&L is the decoded-subset FIFO, not the wallet's full balance-delta P&L. A high-coverage gap versus the auditor (e.g. 9R3m89gX \u2212362 vs +8,221) means the decoded sample is not representative; unknown-basis / incomplete history blocks a lead.",
       "auditor": {
         "clean_episodes": 113,
         "independently_audited_episode_net": "7401.957035847",
@@ -12392,7 +12536,297 @@
         "reconstructed_trades": 1024
       },
       "phase3_pages": 4
+    },
+    {
+      "address": "wzafXT9GJrJ2mNu3DTJRwFeNRmu5NsEdP7zfG1XZvvV",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.0000",
+      "supported_venue_value_share": "0.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": true,
+      "bot_rate": "500.0000",
+      "program_blockers": [
+        {
+          "program_id": "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0223266",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "bot_rate",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-f635a45/live-out/main/raw/phase2/wzafXT9GJrJ2mNu3DTJRwFeNRmu5NsEdP7zfG1XZvvV"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     }
   ],
+  "jxt_uncovered": {
+    "decoder_version": "spot-v17-jup-native-settle-token2022-close-v1",
+    "transactions": 451,
+    "decoded_swaps": 346,
+    "buy_sell_events": 346,
+    "uncovered_tx_count": 105,
+    "uncovered_by_cause": {
+      "unknown: no_outer_program": 49,
+      "unknown: No reviewed outer spot swap; transfers and balances alone do not prove trading": 41,
+      "unknown: Investigated wallet is absent from transaction account keys": 14,
+      "unknown: Temporary wrapped SOL closure and rent refund must belong to the investigated wallet": 1
+    },
+    "uncovered_sample": [
+      {
+        "signature": "3qrnBc6rzqBTN4JUPXZKf6PLaTLmUB1euD9hsCWYFe94qW7VFc4658S7hJX5pbtvML5EfYMYWaLMkUh16wXQdzUP",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "67VhAm5FWt4pgPat3mDgjtLSifBCiwkbNTp7VXSFqb7uLNszVAjAZiQCBJDcywv9RvkTgZrz3GeSrTArAkLL4vDN",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "bVZub7ptwjZeBH9c79UCXwPG1ZDYPxGfwC28cZXqHBdWzhPJS1NtA6dnCAnhgPZok33TTFT2dVPEV8AMMphaxUk",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "5o2xGbEDFjKgwJwRYPJGeY7sE2do7FFFueuUotR1pQKgzBhJKoGR8wRRE2DgKUHXzTVSAUMrZr5ftwS39i3rtBPS",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "4ZeMGdHAExv4gFiTodPBQ6y5ygrDkqystC7UXYV6SqbX56DjmqUAt4kvcA7ukPCgS8iSiUBWMVpw3SCGZpBy5JGR",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "7RRTPs3pmZPJeb8aSQqJ9gW8MBt58Jj1vAPcYH5McRhT33uLziqk6vaz9pnd1MGhGpKanfoVJUugW64M832onsX",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "qHMf6QRzPzrUor7Gf1zuydBTAR81sRfNg9gFgDqsM2zbtNwtF9zUhpwYG19v3ib5nA7UUo99GjsQdpzmC6XCvPT",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "45aY3TfNPJCVkeo9rzFtpyK9Uw2BQ781dvhyBtcthZrDcyT7gEy88ePQWCW1aYg2VhTsJtbL5WQe6s52rzLdEwLx",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "3De2AyYvvpke6uuA9X3sVvTaZSGe5s5aFGr11v7ygJAuQ7gLZfbkM7qJvqARsft9cXyG7ejYWyPTpCJ5ZoQQn6Jg",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "ZyPS6ThFXUSH9U7Tm59KR3ix1w5n27bjaLYpuBw5Sx1vCBU35HAvr5UdU8f1CJnwepmdRga1FdDDG65nJQtP1w9",
+        "venue": null,
+        "reason": "Temporary wrapped SOL closure and rent refund must belong to the investigated wallet",
+        "programs": []
+      },
+      {
+        "signature": "5drbGmsk7E3UtbzBQcEtMsdhhnasWF6wYC6Xor5ucWrdJSwAgmkWisifCfxXJucun7L6RbEAsXesQsVAtLWhg536",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "2ZGrmZYBnEb1Y38oGkvxfNoRaJbA6gaefUpzZe6bpZ1oDBDtj3QRWhY95U5ULxnrsi99zSPykx6ou1TGRUGU9NTY",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "4tM6pcDai9U9RaKiVHFEtmGS7QhoBeueHP2BxuhB6Z6xZBKrjmRRMgLR2ECu9CM6HuHyfGmxR5JokuVytqXEEMU2",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "2uRE675ER1GFUsAUFKFBSkjT7DFwx78g3QiRHPBEbGfVpU4BNFiuQCKwgcrWD9wxzB8B6NUEa6avLrfADZr8EzT2",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "5XrNNzpAJTrma7J6pRyz4v1L4nTnVC9GvQDssQfr7ZyPmPbUAnFqa2sKsXHJcfAXV5Ek5DRZACNHYeSYUmhbGVKD",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "27xH86SejzXh6Hvi48orHiLQr7sVTUbhsPSTGBr2odYkMLvQ9GrEuhCCYsVtTk7NjF4S1q9YTMjcZ7DCY8MTsj51",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "445udfNYBpuPd2QJqFDsnwiVchcwqam5cFy3JGerKX4vD96sNZpbe7ffrVh2vbrCDRZexwwbjocLqeyqJryRs38Z",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "28CWPkYuhbjDwBp7hBjxyAnrgEBcu21wpXLEbp64bc6fRDYbc62h3VHqZCKv7UduTPERdTaLKG9RN3QAR5Jc2C7e",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "4mL22Z6b8FgD6SVUNfSDHDcQSPJSn7KmGrVL6EDSzmhKqSnJmde4xYVnwAw9Y4sJyypHd63VnMbBM9ppK9mA9BnP",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "YfcXwx1VxmnEtnu3kGVUwQ916buyedRcyevjCpwKufm9hjtdSzr3Q1YXKkvXpAybwbGz4nRSTFqvi5tpsSJ7w4a",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "4NXpvFKjjMBt4sG7LGpyN51ptR2obpDFoVDDRwRAjTuSsfBD5WE7XgRMUxZu46beJqjCwZi1zkVXy9wok98JEy6A",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "4vjroT8xu8srCeF2R8sxxyFt72CvH7W1qahYLEiJCnZ9ggVpH2N2qpyZo1HBccrLEzK3ghXvuU3RrqBZ8MEztqcw",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "rKAV8HAyUERJEMLGvdmpAh54zipgFx8e2TyEKekJr1XQhcPE3Ty5L13ijsRDGso1zpGNC6kjGD4j4pDFPRKMvNM",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "2o6WXf7f8BUREdEUF74fBLMZHbHwgTAruDDAUkA9MkZPfmQPuzL7VL37ZsNUFLdD9kMR5dEr7GM1j2SiWXAHBqPc",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "XmJtLiLVjf7nU5wYcMz1fce8aRon3ZPhxuuXstvTSjhu1yifw6xzJ8Kv3ZNWqFrJrbkwaW4Zb2EqkfTDpQ6jErU",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "3sSXhRk562JfgQZDYTJNs3UFoivySXyF7VzDjGDxi9NEUEg2imeeyAzpji6FqGdBwAwkjcaGZKmmcdmbhVna59YQ",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "5BapCiXGgC1TpxZdCcVj953cq5Y5PLFKZ32HzGvWhx73mVudookWo54gU6MkxougRiq3J5Tjs8j6LyLCSZdVfd6n",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "4g7UBFDpa1a9ufWSTtnVnFNDD7Zoz4fCkUqwCeqz1KPd3EFYvJGLWcf6hJcbn93bE43N5RWdu7qLY4Da6HLacnfo",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "3ffgW7qtfR1LhTpJUMbZPwUjTFuTDwV5scd4qFUnJVrGEQbus1dWeGLRsBM7Hsjjyc2tj4yR4Fxv2vTYzS3VxiJF",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "3jQibuPs5maLRwbcV422Ug51N6Cnuoh8p6DJtHi7yrtbb3vLQkZz8UYWoCzwFFukkGp3pqnKW2Zt27tj7SUya2mV",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "4pe7VjjRSuhFoBbVHDwbcT1GEFLFMYVYrUnLyeDiXKNfUqkXzLmVgus3nFLp6H4pEuvpj9dHDXSeiPMSPG4obMo3",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "2ZiNiNUf5e4pzxF2h1x5VJYTAqrioUwDJ8WqMhmpxxgM9duwcfbSCS92H8etudkTTKZwPNmkSKrRDCNauZLzDW8C",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "3Eu4GgMNz55zgiXHcaJLbHF6mjvAAxPiyJRbb4FXjGbJiUiUCyWXLqtY6pGTogcPA3AkxvTA6CarJ4iBVcHRYjA4",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "27psiRS4aPqSYqwfS7xbgDoEwoqK7FypEPV5AeMFePsw6nbfWx1UYRTHaJiAXPbuogrQ93VH91xctgXgvTX4Ub1Q",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "3p7rjfKg9u1DPn7L3gA5c5BZHuezy8MTKHRSCgYAUSFfdmTqNawdYk3RSsRSSDTsMW2DNQmys38SZcP2WAxqNfwF",
+        "venue": null,
+        "reason": "no_outer_program",
+        "programs": []
+      },
+      {
+        "signature": "2nWKkmpLTZuea7SZyMveZzxLNUVvx4kEMGJaa71ZcYuyjeQ1brQNNUrbjBPawCTYfy8NWWYnbzU21XzqHzJZ3NT1",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "4HTdUpJ8ty2RYciLqc1P5k3WSjEeostuTGji1ptFDUmSXJhPhH4EE6c5GKAA2vWCfn8RB7Nf5ertMeh15mZKgMEL",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "5r8D7PyqoYgSu65Sr6cDHFuukGEMD8UE2DvkWVL9UT5YCW7LD57oKD4UJSYZR3S7AjYFb5UqYiHkvjBKQUAktHdH",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      },
+      {
+        "signature": "2XbEf92cubRoAtmGdzYZqYZzusd7THar8THdL1Y8vb6xxwGuABEUszcigmzLq4gXJQmTb8Tvh2zqwUS9oPQdonQi",
+        "venue": null,
+        "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+        "programs": []
+      },
+      {
+        "signature": "3MRDHZ782Tmt7sNgf7ub8gobqGu8SZQxktTzHMGyDhbejLwkReuJYFdb3cDSPQmERz8RbJwtjxcHvU6298HKE1zo",
+        "venue": null,
+        "reason": "Investigated wallet is absent from transaction account keys",
+        "programs": []
+      }
+    ],
+    "unsupported_tx_count": 56,
+    "decoded_unresolved_cash_count": 41
+  },
+  "jxt_pages": 2,
   "PRODUCT_READY": false
 }
