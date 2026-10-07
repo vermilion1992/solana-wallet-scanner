@@ -2,6 +2,14 @@
 
 Caps are per authorization_id, not per output folder. A reserved, dispatched,
 consumed, or failed receipt is spent and is never silently re-sent.
+
+Trust boundary (affc623 §9.4 / §9.5): the chain, head, seal and
+reservations all live in the same Store/SQLite. An attacker with write
+access to that DB can recompute a keyless chain or delete receipts +
+log + head + seal + reservations and reset spend to 0. The defense is
+the operator-held grant file and the host filesystem ACL on the ledger
+directory — not an in-DB HMAC. Do not treat a rewritten DB as an
+integrity proof.
 """
 from __future__ import annotations
 

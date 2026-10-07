@@ -660,6 +660,7 @@ def _episode_ledger_from_report(report):
         opened = False
         opened_at = None
         episode_sigs = []
+        episode_events = []
         buy_consideration = Decimal("0")
         for event in rows:
             raw_units = event.get("units")
@@ -673,6 +674,7 @@ def _episode_ledger_from_report(report):
                 if not opened:
                     opened_at = event.get("timestamp") or event.get("block_time")
                 opened = True
+                episode_events.append(event)
                 for key in ("consideration_sol", "amount_sol", "consideration_usdc", "amount_usdc"):
                     if event.get(key) not in (None, ""):
                         buy_consideration += Decimal(str(event[key]))
@@ -682,10 +684,12 @@ def _episode_ledger_from_report(report):
                 continue
             inventory -= units
             episode_sigs.append(event.get("signature"))
+            episode_events.append(event)
             if inventory < 0:
                 opened = False
                 opened_at = None
                 episode_sigs = []
+                episode_events = []
                 inventory = Decimal("0")
                 buy_consideration = Decimal("0")
                 continue
@@ -709,6 +713,19 @@ def _episode_ledger_from_report(report):
                 if buy_consideration and abs(basis - buy_consideration) <= Decimal("0.000000010"):
                     basis = buy_consideration
                     if proceeds is not None and costs is not None:
+                        net = proceeds - basis - costs
+                # Per-sale-row quantization of fees_and_tips drifted ±5 atomics
+                # on jXt (Fn9yPE7p / H1B8nhXL). Snap costs to the episode's
+                # wallet-paid fee sum, same 10-lamport rule as basis.
+                event_fees = Decimal("0")
+                for ev in episode_events:
+                    for key in ("fees_and_tips_sol", "wallet_fee_sol", "fee_sol"):
+                        if ev.get(key) not in (None, ""):
+                            event_fees += Decimal(str(ev[key]))
+                            break
+                if costs is not None and event_fees and abs(costs - event_fees) <= Decimal("0.000000010"):
+                    costs = event_fees
+                    if proceeds is not None and basis is not None:
                         net = proceeds - basis - costs
             elif event.get("known_cost_pnl") not in (None, ""):
                 net = Decimal(str(event["known_cost_pnl"]))
@@ -736,6 +753,7 @@ def _episode_ledger_from_report(report):
             opened = False
             opened_at = None
             episode_sigs = []
+            episode_events = []
             buy_consideration = Decimal("0")
     return _restrict_ledger_to_report_window(report, episodes)
 

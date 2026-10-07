@@ -316,6 +316,19 @@ def _token_account_keys(raw, keys):
     return found
 
 
+def _unsigned_debit_is_program_mediated(raw, keys):
+    """True when a non-infra program is invoked (Tensor/casino escrow payouts)."""
+    message = (raw.get("transaction") or {}).get("message") or {}
+    for instruction in message.get("instructions") or []:
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program and program not in INFRA:
+            return True
+    return False
+
+
 def _one_hop_forwarders(parsed_rows, address, destinations):
     """Fresh addresses funded only by this wallet that later send to a controller.
 
@@ -329,6 +342,8 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
         if has_swap:
             continue
         token_accounts = _token_account_keys(raw, keys)
+        hop_signers = set(_row_signers or [])
+        program_mediated = _unsigned_debit_is_program_mediated(raw, keys)
         for key in keys:
             if key == address or key in INFRA or key in token_accounts:
                 continue
@@ -349,6 +364,12 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
                     continue
                 hop_delta, _ = _native_delta(raw, keys, key)
                 if hop_delta < 0 and dest_delta >= MATERIAL_SOL_LAMPORTS:
+                    # Program escrow PDAs (Tensor TSWAP, casino) debit without
+                    # signing, via a non-System program. A compiled System
+                    # transfer with empty/infra-only instructions can still be
+                    # a hop even when the origin wallet pays the fee.
+                    if key not in hop_signers and program_mediated:
+                        continue
                     forwards.setdefault(key, set()).add(dest)
         # Any later material send from a wallet-only-funded hop is a forward,
         # even when the destination is not yet a known controller.
@@ -357,6 +378,8 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
                 continue
             hop_delta, _ = _native_delta(raw, keys, key)
             if hop_delta >= 0 or abs(hop_delta) < MATERIAL_SOL_LAMPORTS:
+                continue
+            if key not in hop_signers and program_mediated:
                 continue
             for other in keys:
                 if other in (address, key) or other in INFRA or other in token_accounts:
