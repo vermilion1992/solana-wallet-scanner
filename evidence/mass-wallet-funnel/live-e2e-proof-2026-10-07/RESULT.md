@@ -13,10 +13,10 @@
 
 | Suite | Result |
 |---|---|
-| keys unset | re-run after residual + fixture-expectation updates |
-| dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`) | re-run; dummy keys never sent |
-| `scripts/offline_acceptance.py` | checks both live-e2e drafts `enabled:false`; includes bbc5bef residual tests |
-| focused | `tests/test_live_e2e_bbc5bef_residuals.py` + spend-safety + filters + live-result (67 passed before full suite) |
+| keys unset | **3834 passed** / 440 subtests / 1 warning |
+| dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`) | **3834 passed** / 440 subtests / 1 warning. Dummy keys were never sent. |
+| `scripts/offline_acceptance.py` | ok; `PRODUCT_READY` false; both live-e2e drafts `enabled:false` |
+| focused | `tests/test_live_e2e_bbc5bef_residuals.py` + spend-safety + filters + live-result |
 
 ## Evidence SHAs
 
