@@ -20,6 +20,16 @@
     "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
     "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U"
   ],
+  "bounds": {
+    "report_end_exclusive": "2026-10-07T07:24:22Z",
+    "report_start_inclusive": "2026-09-07T07:24:22Z",
+    "history_start_inclusive": "2026-07-09T07:24:22Z",
+    "report_start_unix": 1788765862,
+    "report_end_unix": 1791357862,
+    "history_start_unix": 1783581862,
+    "window_days": 30,
+    "earlier_history_days": 60
+  },
   "phase2": {
     "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL": {
       "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
@@ -240,6 +250,32 @@
     "birdeye_units": 30,
     "helius_requests": 30,
     "helius_units": 1200
+  },
+  "phase_spend": {
+    "1": {
+      "birdeye_requests": 1,
+      "birdeye_units": 30,
+      "helius_requests": 0,
+      "helius_units": 0
+    },
+    "2": {
+      "birdeye_requests": 0,
+      "birdeye_units": 0,
+      "helius_requests": 20,
+      "helius_units": 200
+    },
+    "3": {
+      "birdeye_requests": 0,
+      "birdeye_units": 0,
+      "helius_requests": 10,
+      "helius_units": 1000
+    },
+    "4": {
+      "birdeye_requests": 0,
+      "birdeye_units": 0,
+      "helius_requests": 0,
+      "helius_units": 0
+    }
   },
   "PRODUCT_READY": false,
   "phase1": {

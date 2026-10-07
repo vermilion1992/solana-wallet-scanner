@@ -2,6 +2,7 @@
   "kind": "live-e2e-results-v1",
   "status": "completed",
   "blocker": null,
+  "detail": "",
   "dry_run": true,
   "authorization_id": "live-e2e-proof-2026-10-07-mitch",
   "grant_enabled": false,
@@ -12,12 +13,12 @@
     4
   ],
   "bounds": {
-    "report_end_exclusive": "2026-10-07T06:30:01Z",
-    "report_start_inclusive": "2026-09-07T06:30:01Z",
-    "history_start_inclusive": "2026-07-09T06:30:01Z",
-    "report_start_unix": 1788762601,
-    "report_end_unix": 1791354601,
-    "history_start_unix": 1783578601,
+    "report_end_exclusive": "2026-10-07T07:24:22Z",
+    "report_start_inclusive": "2026-09-07T07:24:22Z",
+    "history_start_inclusive": "2026-07-09T07:24:22Z",
+    "report_start_unix": 1788765862,
+    "report_end_unix": 1791357862,
+    "history_start_unix": 1783581862,
     "window_days": 30,
     "earlier_history_days": 60
   },
@@ -26,6 +27,32 @@
     "birdeye_units": 30,
     "helius_requests": 30,
     "helius_units": 1200
+  },
+  "phase_spend": {
+    "1": {
+      "birdeye_requests": 1,
+      "birdeye_units": 30,
+      "helius_requests": 0,
+      "helius_units": 0
+    },
+    "2": {
+      "birdeye_requests": 0,
+      "birdeye_units": 0,
+      "helius_requests": 20,
+      "helius_units": 200
+    },
+    "3": {
+      "birdeye_requests": 0,
+      "birdeye_units": 0,
+      "helius_requests": 10,
+      "helius_units": 1000
+    },
+    "4": {
+      "birdeye_requests": 0,
+      "birdeye_units": 0,
+      "helius_requests": 0,
+      "helius_units": 0
+    }
   },
   "plan": {
     "kind": "live-e2e-request-plan-v1",
@@ -76,7 +103,33 @@
       "birdeye_requests": 3,
       "birdeye_units": 91,
       "helius_requests": 500,
-      "helius_units": 5000
+      "helius_units": 5000,
+      "phase_caps": {
+        "1": {
+          "birdeye_requests": 3,
+          "birdeye_units": 91,
+          "helius_requests": 0,
+          "helius_units": 0
+        },
+        "2": {
+          "birdeye_requests": 0,
+          "birdeye_units": 0,
+          "helius_requests": 200,
+          "helius_units": 2000
+        },
+        "3": {
+          "birdeye_requests": 0,
+          "birdeye_units": 0,
+          "helius_requests": 300,
+          "helius_units": 3000
+        },
+        "4": {
+          "birdeye_requests": 0,
+          "birdeye_units": 0,
+          "helius_requests": 0,
+          "helius_units": 0
+        }
+      }
     },
     "PRODUCT_READY": false,
     "within_caps": true,
@@ -104,7 +157,19 @@
         "note": "Largest documented page. Same credits as ten limit=100 pages for 1,000 returned txs; fewer requests. next-capture freeze stays limit=100 and is not used here."
       },
       "PRODUCT_READY": false
-    }
+    },
+    "phase3_wallets": [
+      "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U"
+    ]
   },
   "recorder_calls": [
     {
@@ -134,8 +199,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -155,8 +220,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -176,8 +241,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -197,8 +262,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -218,8 +283,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -239,8 +304,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -260,8 +325,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -281,8 +346,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -302,8 +367,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -323,8 +388,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -344,8 +409,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -365,8 +430,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -386,8 +451,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -407,8 +472,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -428,8 +493,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -449,8 +514,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -470,8 +535,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -491,8 +556,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -512,8 +577,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1788762601,
-            "lt": 1791354601
+            "gte": 1788765862,
+            "lt": 1791357862
           }
         }
       },
@@ -533,8 +598,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -554,8 +619,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -575,8 +640,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -596,8 +661,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -617,8 +682,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -638,8 +703,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -659,8 +724,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -680,8 +745,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -701,8 +766,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -722,8 +787,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },
@@ -743,8 +808,8 @@
           "status": "any",
           "tokenAccounts": "all",
           "blockTime": {
-            "gte": 1783578601,
-            "lt": 1791354601
+            "gte": 1783581862,
+            "lt": 1791357862
           }
         }
       },

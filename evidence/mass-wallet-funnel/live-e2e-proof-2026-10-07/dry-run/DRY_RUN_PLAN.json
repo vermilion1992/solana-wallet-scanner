@@ -47,7 +47,33 @@
     "birdeye_requests": 3,
     "birdeye_units": 91,
     "helius_requests": 500,
-    "helius_units": 5000
+    "helius_units": 5000,
+    "phase_caps": {
+      "1": {
+        "birdeye_requests": 3,
+        "birdeye_units": 91,
+        "helius_requests": 0,
+        "helius_units": 0
+      },
+      "2": {
+        "birdeye_requests": 0,
+        "birdeye_units": 0,
+        "helius_requests": 200,
+        "helius_units": 2000
+      },
+      "3": {
+        "birdeye_requests": 0,
+        "birdeye_units": 0,
+        "helius_requests": 300,
+        "helius_units": 3000
+      },
+      "4": {
+        "birdeye_requests": 0,
+        "birdeye_units": 0,
+        "helius_requests": 0,
+        "helius_units": 0
+      }
+    }
   },
   "PRODUCT_READY": false,
   "within_caps": true,
@@ -75,5 +101,17 @@
       "note": "Largest documented page. Same credits as ten limit=100 pages for 1,000 returned txs; fewer requests. next-capture freeze stays limit=100 and is not used here."
     },
     "PRODUCT_READY": false
-  }
+  },
+  "phase3_wallets": [
+    "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+    "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+    "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+    "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+    "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+    "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+    "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+    "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+    "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+    "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U"
+  ]
 }

@@ -6,7 +6,11 @@ set `enabled: true`, `authorized_by_user_at`, `existing_plan_confirmed`, and
 `2026-10-09T00:00:00+10:30` (`2026-10-08T13:30:00Z`).
 
 Replace `$ARMED` with the local armed grant path and `$OUT` with a writable
-directory on the box.
+directory on the box. Spend is ledgered per `authorization_id` under
+`--ledger-dir` (default `~/.scanner/live-e2e-ledgers/<authorization_id>`),
+not per output folder. Armed copies must set `draft_artifact_hash` to the
+SHA-256 of the committed draft and keep provider/phase caps at or below
+the draft. Do not run two `--resume` processes on the same grant or output.
 
 ## Dry-run (no spend) — already committed
 
@@ -19,6 +23,7 @@ directory on the box.
   --phases all \
   --window-days 30 \
   --earlier-history-days 60 \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers-dry-run" \
   --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run
 ```
 
@@ -33,6 +38,7 @@ directory on the box.
   --birdeye-window 30d \
   --birdeye-sort trader_score \
   --birdeye-limit 100 \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
 
@@ -49,6 +55,7 @@ directory on the box.
   --min-in-window-tx 0 \
   --max-unsupported-share 1 \
   --resume \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
 
@@ -63,6 +70,7 @@ directory on the box.
   --window-days 30 \
   --earlier-history-days 60 \
   --resume \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
 
@@ -75,6 +83,7 @@ directory on the box.
   --wallets config/live_e2e_search_b_cohort.json \
   --phases 4 \
   --resume \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
 
@@ -92,5 +101,6 @@ Phase 4 can also run as `--live --phases 4`; it still makes no provider calls.
   --window-days 30 \
   --earlier-history-days 60 \
   --resume \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
