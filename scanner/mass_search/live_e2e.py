@@ -601,9 +601,10 @@ def classify_programs(records, address=None):
 def compute_bot_rate(sig_records, window_days):
     """Robust txs / active day. A 7-minute 4-tx burst is not 96/day.
 
-    Denominator is max(observed span in days, distinct UTC dates, 1 day) so
-    low-activity wallets stay under a 25/day drop while genuine HFT
-    (hundreds of txs in one calendar day) still fire.
+    Denominator is max(observed span in days, 1 day). Distinct UTC dates
+    only raise the floor when the observed span is under one day (a
+    midnight-crossing burst), so 100 txs over exactly one observed day
+    stay 100/day while genuine HFT still fires.
     """
     count = len(sig_records or [])
     times = []
@@ -619,8 +620,10 @@ def compute_bot_rate(sig_records, window_days):
         span = Decimal(max(int(window_days or 1), 1))
         return (Decimal(count) / span).quantize(Decimal("0.0001"))
     observed = Decimal(max(times) - min(times)) / Decimal(86400)
-    active_days = Decimal(len({datetime.fromtimestamp(stamp, tz=timezone.utc).date() for stamp in times}))
-    span = max(observed, active_days, Decimal("1"))
+    span = max(observed, Decimal("1"))
+    if observed < Decimal("1"):
+        active_days = Decimal(len({datetime.fromtimestamp(stamp, tz=timezone.utc).date() for stamp in times}))
+        span = max(span, active_days)
     return (Decimal(count) / span).quantize(Decimal("0.0001"))
 
 
@@ -1359,9 +1362,12 @@ def _receipt_sha_for_page(store, address, page_name, phase=None):
             continue
         if row.get("wallet") != address:
             continue
-        if phase is not None and int(row.get("phase") or -1) != int(phase):
-            continue
-        if int(row.get("page") or -1) != page_index:
+        if phase is not None:
+            row_phase = row.get("phase")
+            if row_phase is None or int(row_phase) != int(phase):
+                continue
+        row_page = row.get("page")
+        if row_page is None or int(row_page) != page_index:
             continue
         if row.get("state") != "consumed":
             continue
@@ -1472,12 +1478,13 @@ def _replay_saved_page(config, phase, address, page_index, units, store=None):
     relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
     path = Path(config["output_dir"]) / relative
     expected_sha = _receipt_sha_for_page(store, address, f"page{page_index}.bin", phase=phase) if store is not None else None
-    if (not path.is_file() or path.stat().st_size == 0) and expected_sha:
+    missing = not path.is_file() or path.stat().st_size == 0
+    if missing and (expected_sha or config.get("import_raw_dirs")):
         raw, records, token = _import_paid_page(
             config, store, phase, address, page_index, expected_sha,
         )
     else:
-        if not path.is_file() or path.stat().st_size == 0:
+        if missing:
             raise SourceError(
                 "MISSING_CAPTURE",
                 f"raw page missing: {relative}; a consumed receipt exists or the "
