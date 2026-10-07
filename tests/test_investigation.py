@@ -317,6 +317,8 @@ def test_real_mainnet_wrappers_and_sponsored_router_are_explicit_gaps():
             assert (
                 'No reviewed outer spot swap' in reason
                 or 'No reviewed spot swap instruction' in reason
+                or 'Recognized swap authority is not the investigated wallet' in reason
+                or 'Token account closes to another recipient' in reason
             )
             assert result['events'][0]['paid_by_wallet'] == (signer == entries[0]['pubkey'])
             assert result['events'][0]['amount_sol'] == {

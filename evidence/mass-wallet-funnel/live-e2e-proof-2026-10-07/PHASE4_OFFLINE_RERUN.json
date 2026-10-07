@@ -1,376 +1,5385 @@
 {
-  "kind": "live-e2e-phase4-offline-rerun",
+  "kind": "live-e2e-phase4-offline-rerun-v2",
+  "generated_at": "2026-10-07T10:07:03Z",
   "bounds": {
     "report_start_inclusive": "2026-09-07T07:51:22Z",
     "report_end_exclusive": "2026-10-07T07:51:22Z",
     "history_start_inclusive": "2026-07-09T07:51:22Z"
   },
-  "PRODUCT_READY": false,
-  "phase4": {
-    "wallets": [
-      {
-        "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
-        "coverage_count_share": "0.77124183",
-        "coverage_value_share": "0.814790942",
-        "coverage_mandatory_share": "0.77124183",
-        "completed_trades": 10,
-        "sample_positions": 112,
-        "realized_pnl_sol": "0.410996069",
-        "realized_pnl_usdc": "12620.493155",
-        "completed_episode_net": null,
-        "completed_episode_net_unit": "mixed",
-        "qualifying_profit": null,
-        "qualifying_unit": "mixed",
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "conditional_captured_lot_result",
-        "blocker": "18 open lots; 23 unresolved-basis sales; cross-currency sensitivity not established; coverage gate requires count AND value; not independently audited; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
+  "max_bot_rate": "50",
+  "full_history_slots": 25,
+  "wallet_count": 78,
+  "phase2_wallets": 78,
+  "phase3_wallets": 14,
+  "chosen_for_full_history": [
+    "8wmGrD3F5bd439r2k7eJWcHk9UgssuQDLF6kNawBRBRF",
+    "DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx",
+    "BSTs43nNTc3wBidj8ueY92RJbGn4wxvF8VYYKMVWGdNR"
+  ],
+  "chosen_count": 3,
+  "plan": {
+    "kind": "live-e2e-request-plan-v1",
+    "dry_run": true,
+    "phases": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "wallet_count": 100,
+    "discovery_source": "gainers-losers",
+    "birdeye_cu_docs": {
+      "gainers-losers": {
+        "path": "/trader/gainers-losers",
+        "documented_cu": 30,
+        "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+        "reviewed_on": "2026-10-07"
       },
-      {
-        "address": "5Qfie4TbmSst6KnFvHd67EgKgUwSAXyrKNQuppiPscVS",
-        "coverage_count_share": "0.455752212",
-        "coverage_value_share": "0.38717787",
-        "coverage_mandatory_share": "0.38717787",
-        "completed_trades": 0,
-        "sample_positions": 101,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; 18 open lots; 13 unresolved-basis sales; sensitivity not established; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "6i4nSG488oDwqbjTTBCGUD3KMhtdkEFnC8Wg1Rmn9UGQ",
-        "coverage_count_share": "0.989071038",
-        "coverage_value_share": "0.999170274",
-        "coverage_mandatory_share": "0.989071038",
-        "completed_trades": 0,
-        "sample_positions": 180,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; 35 open lots; 63 unresolved-basis sales; sensitivity not established",
-        "coverage_status": "coverage_eligibility_pending_reassessment",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "8B3KyNP6QWnvbuHAz4CCMLQmWhcXJ3KvcX2GHCEs6yNS",
-        "coverage_count_share": "0.536764706",
-        "coverage_value_share": "0.550163127",
-        "coverage_mandatory_share": "0.536764706",
-        "completed_trades": 17,
-        "sample_positions": 72,
-        "realized_pnl_sol": "320.992044616",
-        "realized_pnl_usdc": null,
-        "completed_episode_net": "320.992044616",
-        "completed_episode_net_unit": "SOL",
-        "qualifying_profit": "320.992044616",
-        "qualifying_unit": "SOL",
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "conditional_captured_lot_result",
-        "blocker": "7 open lots; 16 unresolved-basis sales; coverage gate requires count AND value; not independently audited; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "96d9GKPQ7h3FTX1oBBW983rVPHFJdYZLzNqmCgLigL3D",
-        "coverage_count_share": "0",
-        "coverage_value_share": "0",
-        "coverage_mandatory_share": "0",
-        "completed_trades": 0,
-        "sample_positions": 0,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; sensitivity not established; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "AMMLTuy9Xz6t8DApbR3feq8BYz1sX5pEXKa4QZrgp6DY",
-        "coverage_count_share": "0.968152866",
-        "coverage_value_share": "0.022276203",
-        "coverage_mandatory_share": "0.022276203",
-        "completed_trades": 18,
-        "sample_positions": 152,
-        "realized_pnl_sol": "-0.004837792",
-        "realized_pnl_usdc": null,
-        "completed_episode_net": "-0.004837792",
-        "completed_episode_net_unit": "SOL",
-        "qualifying_profit": "-0.004837792",
-        "qualifying_unit": "SOL",
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "conditional_captured_lot_result",
-        "blocker": "3 open lots; 4 unresolved-basis sales; coverage gate requires count AND value; not independently audited; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "B8wZgcJAMuZs1NR6vaKhcQsGdPp7cpaPoh4GTquMCTdW",
-        "coverage_count_share": "0",
-        "coverage_value_share": "0",
-        "coverage_mandatory_share": "0",
-        "completed_trades": 0,
-        "sample_positions": 0,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; sensitivity not established; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "CfNx9LxWbHh8Ut6F5W33Ra481D5RNAF1YiGEnAgcAUKu",
-        "coverage_count_share": "0.577235772",
-        "coverage_value_share": "0.723830738",
-        "coverage_mandatory_share": "0.577235772",
-        "completed_trades": 1,
-        "sample_positions": 71,
-        "realized_pnl_sol": "444.861224407",
-        "realized_pnl_usdc": null,
-        "completed_episode_net": "444.861224407",
-        "completed_episode_net_unit": "SOL",
-        "qualifying_profit": "444.861224407",
-        "qualifying_unit": "SOL",
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "conditional_captured_lot_result",
-        "blocker": "1 completed episode < min_sample 3; 39 open lots; 5 unresolved-basis sales; coverage gate requires count AND value; not independently audited; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "DtCiNAXmvhQ3YXY2gfpL3EvXScg7mWrwvgBS3TBe6vG8",
-        "coverage_count_share": "0.5",
-        "coverage_value_share": "0.999584059",
-        "coverage_mandatory_share": "0.5",
-        "completed_trades": 0,
-        "sample_positions": 1,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; 1 open lots; sensitivity not established; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK",
-        "coverage_count_share": "0.936170213",
-        "coverage_value_share": "0.944283872",
-        "coverage_mandatory_share": "0.936170213",
-        "completed_trades": 0,
-        "sample_positions": 44,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; 2 open lots; 1 unresolved-basis sale; sensitivity not established; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
-      },
-      {
-        "address": "GnDVZMfXzWPGAcGvYnXqkWPyTcZpHdjR1bCB4qPbeiYo",
-        "coverage_count_share": "0.963768116",
-        "coverage_value_share": "0.947735506",
-        "coverage_mandatory_share": "0.947735506",
-        "completed_trades": 0,
-        "sample_positions": 266,
-        "realized_pnl_sol": null,
-        "realized_pnl_usdc": null,
-        "completed_episode_net": null,
-        "completed_episode_net_unit": null,
-        "qualifying_profit": null,
-        "qualifying_unit": null,
-        "audit_status": "not_independently_audited",
-        "independently_audited": false,
-        "lead_level": "insufficient_evidence",
-        "blocker": "0 completed episodes; 8 open lots; 115 unresolved-basis sales; sensitivity not established; coverage_blocked",
-        "coverage_status": "coverage_blocked",
-        "program_blockers": null,
-        "PRODUCT_READY": false
+      "top-traders": {
+        "path": "/defi/v2/tokens/top_traders",
+        "documented_cu": 35,
+        "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+        "reviewed_on": "2026-10-07"
       }
-    ]
+    },
+    "per_phase": {
+      "1": {
+        "provider": "birdeye",
+        "requests": 1,
+        "units": 30,
+        "billing_unit": "birdeye_compute_unit",
+        "note": "0 when a wallet list is supplied without --discovery. gainers-losers: documented 30 CU/call."
+      },
+      "2": {
+        "provider": "helius",
+        "requests": 200,
+        "units": 2000,
+        "billing_unit": "helius_credit",
+        "note": "1 signatures-only (limit 1000, 10 CU) + 1 full sample (limit 100, 10 CU) per wallet"
+      },
+      "3": {
+        "provider": "helius",
+        "requests": 50,
+        "units": 5000,
+        "billing_unit": "helius_credit",
+        "note": "Planner minimum is 2 full limit=1000 pages per wallet. A short page (len < limit) or empty page stops without fetching an extra empty terminal page. Live continues until the window is covered or the cap is hit. Units are the documented worst case for those 2 pages (100 credits / 1000 txs)."
+      },
+      "4": {
+        "provider": null,
+        "requests": 0,
+        "units": 0,
+        "note": "offline only"
+      }
+    },
+    "totals": {
+      "birdeye_requests": 1,
+      "birdeye_units": 30,
+      "helius_requests": 250,
+      "helius_units": 7000
+    },
+    "caps": {
+      "birdeye_requests": 10,
+      "birdeye_units": 300,
+      "helius_requests": 1500,
+      "helius_units": 15000
+    },
+    "PRODUCT_READY": false
   },
-  "auditor": [
+  "plan_fits": true,
+  "wallets": [
+    {
+      "address": "8wmGrD3F5bd439r2k7eJWcHk9UgssuQDLF6kNawBRBRF",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 111,
+      "sample_records": 100,
+      "decodable_share": "0.4800",
+      "supported_venue_value_share": "0.9999",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "3.7000",
+      "program_blockers": [
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "54.509208520",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "45.861679678",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "8.647528842",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.9999",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/8wmGrD3F5bd439r2k7eJWcHk9UgssuQDLF6kNawBRBRF"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 262,
+      "sample_records": 100,
+      "decodable_share": "0.4167",
+      "supported_venue_value_share": "0.9997",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.7333",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "77.698474458",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0026924",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.9997",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "BSTs43nNTc3wBidj8ueY92RJbGn4wxvF8VYYKMVWGdNR",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 179,
+      "sample_records": 100,
+      "decodable_share": "0.4167",
+      "supported_venue_value_share": "0.7939",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.9667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.09802712",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.7939",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": true,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/BSTs43nNTc3wBidj8ueY92RJbGn4wxvF8VYYKMVWGdNR"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.0274",
+      "supported_venue_value_share": "0.0000",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "AddressLookupTab1e1111111111111111111111111",
+          "label": "unsupported_or_unreviewed",
+          "observations": 67,
+          "value_sol": "0.07941056",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.0000",
+      "supported_venue_value_share": "0.0000",
+      "has_known_basis_buys": true,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.038163486",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": false,
+      "drop_reason": null,
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
     {
       "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
-      "records": 978,
-      "trades": 106,
-      "clean_episodes": 12,
-      "episode_net": null,
-      "episode_unit": "mixed",
-      "episode_vector": {
-        "USDC": "26240.568111137",
-        "SOL": "0.410996069"
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 627,
+      "sample_records": 100,
+      "decodable_share": "0.4821",
+      "supported_venue_value_share": "0.0000",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "20.9000",
+      "program_blockers": [
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 88,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.77124183",
+      "coverage_value_share": "0.814790942",
+      "coverage_mandatory_share": "0.77124183",
+      "completed_trades": 10,
+      "sample_positions": 112,
+      "realized_pnl_sol": "0.410996069",
+      "realized_pnl_usdc": "12620.493155",
+      "completed_episode_net": null,
+      "completed_episode_net_unit": "mixed",
+      "qualifying_profit": null,
+      "qualifying_unit": "mixed",
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 12,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": "mixed",
+        "independently_audited_episode_nets_by_unit": {
+          "USDC": "28896.882878358",
+          "SOL": "0.410996069"
+        },
+        "unresolved_basis_sales": 25,
+        "known_cost_sales": 36,
+        "reconstructed_trades": 112
       },
-      "unresolved_basis_sales": 25,
-      "known_cost_sales": 34
+      "phase3_pages": 2
+    },
+    {
+      "address": "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1",
+          "label": "GMGN",
+          "observations": 1,
+          "value_sol": "5.051",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "5.051",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "5.051",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 88,
+          "value_sol": "0.001924236",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "2apSyUwJKPHZ3iDcY4cb3P6HQqCwhsaGLDUVbJ6SjnJh",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 261,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9992",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.7000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "15.995730535",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/2apSyUwJKPHZ3iDcY4cb3P6HQqCwhsaGLDUVbJ6SjnJh"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "2ueo5yNJ7zgDbtHtgjwuPu75bStFfAmk72VLK6KCScaD",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 131,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.3667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "1.101192927",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/2ueo5yNJ7zgDbtHtgjwuPu75bStFfAmk72VLK6KCScaD"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "3hcUVXt8dn2uGBSKUfQBRzz5FKmiREwfd68NWNkfBY9u",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 141,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.7000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.179311973",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/3hcUVXt8dn2uGBSKUfQBRzz5FKmiREwfd68NWNkfBY9u"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "3oX6CE66BPUauKdYCgBN7g3B6JjFNn8skLBjAaydVNc4",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 159,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9920",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.3000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.164655534",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/3oX6CE66BPUauKdYCgBN7g3B6JjFNn8skLBjAaydVNc4"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "43VE6RJAvZ16bW86d3rTzRc6gmHD7rGakKs72xyzJSnz",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 174,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.8000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "5.913014101",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/43VE6RJAvZ16bW86d3rTzRc6gmHD7rGakKs72xyzJSnz"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "4Gbhd8qDwMPyJZEgtWTE94GvsdQniNtHnp4gyUUiE2TZ",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 244,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9980",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.1333",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "6.450485305",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/4Gbhd8qDwMPyJZEgtWTE94GvsdQniNtHnp4gyUUiE2TZ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "4JiNkbS5XM9Bdaom567JRM2txKoBd8MvzATfiNsdGHpk",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 188,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "6.2667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "2.502824694",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/4JiNkbS5XM9Bdaom567JRM2txKoBd8MvzATfiNsdGHpk"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "4h4qaaQuiv3x5X6UW2SeSiRh3jhBL16omX19GEtTt3G7",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 231,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9975",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "7.7000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "5.135234474",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/4h4qaaQuiv3x5X6UW2SeSiRh3jhBL16omX19GEtTt3G7"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "4hiobwqgBaYwZjxpfb2VzgNkUoJtvA42D7k7FGkhmw2Q",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4865",
+      "supported_venue_value_share": "0.5025",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.01001",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.01001",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 1,
+          "value_sol": "1.01001",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 1,
+          "value_sol": "1.01001",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 52,
+          "value_sol": "0.033278137",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/4hiobwqgBaYwZjxpfb2VzgNkUoJtvA42D7k7FGkhmw2Q"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "5BFNwxC8roeKND3EgF41urJ4wGvwoD6AnucQmatw1byV",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 153,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.1000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.282738695",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/5BFNwxC8roeKND3EgF41urJ4wGvwoD6AnucQmatw1byV"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "5DAubjPGgeDtEoULeHgfCaaoECUjLAg5YBup78QNaM45",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.0155",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2",
+          "label": "Photon",
+          "observations": 2,
+          "value_sol": "0.0004",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/5DAubjPGgeDtEoULeHgfCaaoECUjLAg5YBup78QNaM45"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "5H9w3ux1UMYYpNvXFci4rsT5HSRgScMFc4jYrTxCTjgS",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 147,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9991",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.9000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "13.928199026",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/5H9w3ux1UMYYpNvXFci4rsT5HSRgScMFc4jYrTxCTjgS"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "5Qfie4TbmSst6KnFvHd67EgKgUwSAXyrKNQuppiPscVS",
-      "records": 349,
-      "trades": 88,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 2,
-      "known_cost_sales": 31
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 180,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "6.0000",
+      "program_blockers": [
+        {
+          "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "91.876100001",
+          "supported": false
+        },
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 52,
+          "value_sol": "78.383410374",
+          "supported": false
+        },
+        {
+          "program_id": "GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1",
+          "label": "GMGN",
+          "observations": 52,
+          "value_sol": "78.383410374",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 49,
+          "value_sol": "65.738332080",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "12.645078294",
+          "supported": false
+        },
+        {
+          "program_id": "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2",
+          "label": "Photon",
+          "observations": 2,
+          "value_sol": "8.151",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/5Qfie4TbmSst6KnFvHd67EgKgUwSAXyrKNQuppiPscVS"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0.473451327",
+      "coverage_value_share": "0.396756262",
+      "coverage_mandatory_share": "0.396756262",
+      "completed_trades": 0,
+      "sample_positions": 105,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 2,
+        "known_cost_sales": 31,
+        "reconstructed_trades": 88
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "5azbu8CHWdLHjgKFrR6s5PUS6hB91jjXVctpooGt5X5B",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9875",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.00151384",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.00151384",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/5azbu8CHWdLHjgKFrR6s5PUS6hB91jjXVctpooGt5X5B"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "6i4nSG488oDwqbjTTBCGUD3KMhtdkEFnC8Wg1Rmn9UGQ",
-      "records": 300,
-      "trades": 75,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 59,
-      "known_cost_sales": 0
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 300,
+      "sample_records": 100,
+      "decodable_share": "0.1429",
+      "supported_venue_value_share": "0.4996",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "10.0000",
+      "program_blockers": [
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "7.07",
+          "supported": false
+        },
+        {
+          "program_id": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "7.07",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/6i4nSG488oDwqbjTTBCGUD3KMhtdkEFnC8Wg1Rmn9UGQ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0.989071038",
+      "coverage_value_share": "0.999170274",
+      "coverage_mandatory_share": "0.989071038",
+      "completed_trades": 0,
+      "sample_positions": 180,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_eligibility_pending_reassessment",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 59,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 75
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "6rSQ5r58QohX5hcSGwXnnKb8H85JFCfpyn5LSRRiLpZf",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 503,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9988",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "16.7667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "10.477156023",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/6rSQ5r58QohX5hcSGwXnnKb8H85JFCfpyn5LSRRiLpZf"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "6yDW8qprBCZhFdCuS1G1vbsS3R3tWYHYuYB9iek5GFr3",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4587",
+      "supported_venue_value_share": "0.5000",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 2,
+          "value_sol": "81.339829203",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 2,
+          "value_sol": "81.339829203",
+          "supported": false
+        },
+        {
+          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "81.339829203",
+          "supported": false
+        },
+        {
+          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "81.339829203",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "81.339829203",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "42.134380925",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "39.205448278",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "DeJBGdMFa1uynnnKiwrVioatTuHmNLpyFKnmB5kaFdzQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00148844",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 44,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/6yDW8qprBCZhFdCuS1G1vbsS3R3tWYHYuYB9iek5GFr3"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "71EqtHHUgFu5NthvainzEuSLDBWsNapsNTuKszhiKbp5",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 183,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9995",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "6.1000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "22.491744896",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.011307144",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/71EqtHHUgFu5NthvainzEuSLDBWsNapsNTuKszhiKbp5"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "7JVtPBiQbWrowxbn9b7Mi3VUS3SUBHM45HS28L66Uxps",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 944,
+      "sample_records": 100,
+      "decodable_share": "0.0000",
+      "supported_venue_value_share": null,
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "31.4667",
+      "program_blockers": [
+        {
+          "program_id": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/7JVtPBiQbWrowxbn9b7Mi3VUS3SUBHM45HS28L66Uxps"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "7meYKsazWvACvyAeRPHi21WesfiedhWVJHc6RRMerdMV",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 140,
+      "sample_records": 100,
+      "decodable_share": "0.0000",
+      "supported_venue_value_share": "0.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.6667",
+      "program_blockers": [
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/7meYKsazWvACvyAeRPHi21WesfiedhWVJHc6RRMerdMV"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "7vPV34sJP2uR9CuNES1nNVUhnawMVM5P2djSQs818TH4",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 42,
+      "sample_records": 42,
+      "decodable_share": "0.4737",
+      "supported_venue_value_share": "0.9986",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "sell_proceeds_to_cosigner"
+      ],
+      "bot": false,
+      "bot_rate": "1.4000",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "8.441786185",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.515611348",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.021138286",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "sell_proceeds_to_cosigner",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/7vPV34sJP2uR9CuNES1nNVUhnawMVM5P2djSQs818TH4"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "847CFpCvzNB2hrwK4azch4APs4dUsqE91Kqrr8E6gPTW",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 513,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9986",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "17.1000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "18.319603134",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/847CFpCvzNB2hrwK4azch4APs4dUsqE91Kqrr8E6gPTW"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "8B3KyNP6QWnvbuHAz4CCMLQmWhcXJ3KvcX2GHCEs6yNS",
-      "records": 385,
-      "trades": 69,
-      "clean_episodes": 17,
-      "episode_net": "320.992044616",
-      "episode_unit": "SOL",
-      "episode_vector": {
-        "SOL": "320.992044616"
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 384,
+      "sample_records": 100,
+      "decodable_share": "0.3719",
+      "supported_venue_value_share": "0.7986",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "12.8000",
+      "program_blockers": [
+        {
+          "program_id": "GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1",
+          "label": "GMGN",
+          "observations": 7,
+          "value_sol": "65.986741681",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "58.168723221",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 12,
+          "value_sol": "41.240723990",
+          "supported": false
+        },
+        {
+          "program_id": "GMgnVFR8Jb39LoXsEVzb3DvBy3ywCmdmJquHUy1Lrkqb",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "39.309447785",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "38.810831383",
+          "supported": false
+        },
+        {
+          "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "15.15248844",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "12.036826578",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 1,
+          "value_sol": "7.81801846",
+          "supported": false
+        },
+        {
+          "program_id": "b1oomGGqPKGD6errbyfbVMBuzSC8WtAAYo8MwNafWW1",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "1.931276205",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.089048134",
+          "supported": false
+        },
+        {
+          "program_id": "6e2hZ9HN4oMTwDbqWQRVhGGrTNVPkP162DUyTLdvXzUt",
+          "label": "unsupported_or_unreviewed",
+          "observations": 13,
+          "value_sol": "0.01340472",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/8B3KyNP6QWnvbuHAz4CCMLQmWhcXJ3KvcX2GHCEs6yNS"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0.647058824",
+      "coverage_value_share": "0.663924597",
+      "coverage_mandatory_share": "0.647058824",
+      "completed_trades": 20,
+      "sample_positions": 87,
+      "realized_pnl_sol": "173.180468671",
+      "realized_pnl_usdc": null,
+      "completed_episode_net": "173.180468671",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "173.180468671",
+      "qualifying_unit": "SOL",
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 17,
+        "independently_audited_episode_net": "320.992044616",
+        "independently_audited_episode_net_unit": "SOL",
+        "independently_audited_episode_nets_by_unit": {
+          "SOL": "320.992044616"
+        },
+        "unresolved_basis_sales": 14,
+        "known_cost_sales": 32,
+        "reconstructed_trades": 69
       },
-      "unresolved_basis_sales": 14,
-      "known_cost_sales": 32
+      "phase3_pages": 2
+    },
+    {
+      "address": "8JLN2NsVQGyskGJmvKUL1KBP3QffZjKUxSP2ooLKwu6E",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 388,
+      "sample_records": 100,
+      "decodable_share": "0.3636",
+      "supported_venue_value_share": "0.9917",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "12.9333",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "4.20549072",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.035335450",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00148844",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/8JLN2NsVQGyskGJmvKUL1KBP3QffZjKUxSP2ooLKwu6E"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "8qgXwVpnVWZaH9MV34jH3ZsqZEWzN5hogf5L7HXPKNsG",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 147,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9909",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.9000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "2.768717982",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/8qgXwVpnVWZaH9MV34jH3ZsqZEWzN5hogf5L7HXPKNsG"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "8vjChJhBiVJPpG6HRYB2YGZZHbAVsiFoj4qifmwC96xJ",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4719",
+      "supported_venue_value_share": "0.0075",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.063605810",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 42,
+          "value_sol": "0.000480933",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/8vjChJhBiVJPpG6HRYB2YGZZHbAVsiFoj4qifmwC96xJ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "91XzVsoZSFN3ifGVGHcA7WSM2pF3U54xh9FbDLsUr5nZ",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 146,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.8667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "4.629259021",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/91XzVsoZSFN3ifGVGHcA7WSM2pF3U54xh9FbDLsUr5nZ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "96d9GKPQ7h3FTX1oBBW983rVPHFJdYZLzNqmCgLigL3D",
-      "records": 182,
-      "trades": 0,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 0,
-      "known_cost_sales": 0
+      "blocked": false,
+      "blocker": "0 completed episodes; sensitivity not established; coverage_blocked",
+      "in_window_tx_count": 182,
+      "sample_records": 100,
+      "decodable_share": "0.4881",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "6.0667",
+      "program_blockers": [
+        {
+          "program_id": "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9",
+          "label": "FLASHX Axiom",
+          "observations": 83,
+          "value_sol": "1113.377564774",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 77,
+          "value_sol": "984.759635120",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "128.617929654",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0.101769296",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/96d9GKPQ7h3FTX1oBBW983rVPHFJdYZLzNqmCgLigL3D"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": false,
+      "phase4_bundle_reasons": [],
+      "coverage_count_share": "0",
+      "coverage_value_share": "0",
+      "coverage_mandatory_share": "0",
+      "completed_trades": 0,
+      "sample_positions": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 0
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "96vJSNV4oHgejFBvrvpcWW4T5qYMkqJnvgCW7baXN7wd",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.3840",
+      "supported_venue_value_share": "0.6280",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 53,
+          "value_sol": "0.104967580",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.050884648",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 36,
+          "value_sol": "0.01022768",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 30,
+          "value_sol": "0.00902768",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "0.00511384",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 15,
+          "value_sol": "0.00451384",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 14,
+          "value_sol": "0.0028",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.00231384",
+          "supported": false
+        },
+        {
+          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.00211384",
+          "supported": false
+        },
+        {
+          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.00211384",
+          "supported": false
+        },
+        {
+          "program_id": "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00171384",
+          "supported": false
+        },
+        {
+          "program_id": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0.0016",
+          "supported": false
+        },
+        {
+          "program_id": "SV2EYYJyRz2YhfXwXnhNAevDEui5Q6yrfyo13WtupPF",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.0014",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.0010",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.0010",
+          "supported": false
+        },
+        {
+          "program_id": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.0006",
+          "supported": false
+        },
+        {
+          "program_id": "FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.0004",
+          "supported": false
+        },
+        {
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0002",
+          "supported": false
+        },
+        {
+          "program_id": "FW6zUqn4iKRaeopwwhwsquTY6ABWLLgjxtrC3VPnaWBf",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0002",
+          "supported": false
+        },
+        {
+          "program_id": "REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0002",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0002",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/96vJSNV4oHgejFBvrvpcWW4T5qYMkqJnvgCW7baXN7wd"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "9Ad9QK8f5aMsD1yoA4Cu95Jz9bg7ADAmZPyYrfq7fmA4",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 153,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.1000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.974545165",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/9Ad9QK8f5aMsD1yoA4Cu95Jz9bg7ADAmZPyYrfq7fmA4"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "9cyDJyYfLTRGAdRjzF2xiCN6X7nWpLgHfkLv54JQRRK9",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 138,
+      "sample_records": 100,
+      "decodable_share": "0.4286",
+      "supported_venue_value_share": "0.9987",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.6000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "9.657131325",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/9cyDJyYfLTRGAdRjzF2xiCN6X7nWpLgHfkLv54JQRRK9"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "9iG79XSBRQKbPfPoTK7B879u1Ymv2YqNtpFhWZBUMA9J",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 145,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9975",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.8333",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "4.534687673",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.011307144",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/9iG79XSBRQKbPfPoTK7B879u1Ymv2YqNtpFhWZBUMA9J"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "AMMLTuy9Xz6t8DApbR3feq8BYz1sX5pEXKa4QZrgp6DY",
-      "records": 234,
-      "trades": 24,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 21,
-      "known_cost_sales": 0
+      "blocked": false,
+      "blocker": "multi_signer_bundle_buy",
+      "in_window_tx_count": 234,
+      "sample_records": 100,
+      "decodable_share": "0.3095",
+      "supported_venue_value_share": "0.9165",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "7.8000",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "78.867673964",
+          "supported": false
+        },
+        {
+          "program_id": "Stake11111111111111111111111111111111111111",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "7.135977258",
+          "supported": false
+        },
+        {
+          "program_id": "8gxk64hYgGAEnHVhRMvBGVvBXZM5WhkGkaQ6DVgVV2kn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 10,
+          "value_sol": "0.034607949",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 10,
+          "value_sol": "0.009523144",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.002370504",
+          "supported": false
+        },
+        {
+          "program_id": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/AMMLTuy9Xz6t8DApbR3feq8BYz1sX5pEXKa4QZrgp6DY"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.968152866",
+      "coverage_value_share": "0.022276203",
+      "coverage_mandatory_share": "0.022276203",
+      "completed_trades": 18,
+      "sample_positions": 152,
+      "realized_pnl_sol": "-0.004837792",
+      "realized_pnl_usdc": null,
+      "completed_episode_net": "-0.004837792",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "-0.004837792",
+      "qualifying_unit": "SOL",
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 21,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 24
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "AQWEYPwko4zzFMSJ8J8fkTBtakMP1QsV4DBYdvjrzkQJ",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.3841",
+      "supported_venue_value_share": "0.9548",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "sell_proceeds_to_cosigner",
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.741736090",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 85,
+          "value_sol": "0.02777100",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 75,
+          "value_sol": "0.02270760",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 50,
+          "value_sol": "0.01926776",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 21,
+          "value_sol": "0.00564320",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 9,
+          "value_sol": "0.00561424",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 21,
+          "value_sol": "0.00371720",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 17,
+          "value_sol": "0.00302768",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 13,
+          "value_sol": "0.00302768",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0.00206468",
+          "supported": false
+        },
+        {
+          "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.00151384",
+          "supported": false
+        },
+        {
+          "program_id": "jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.00151384",
+          "supported": false
+        },
+        {
+          "program_id": "HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.00110168",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0.00079536",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 12,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/AQWEYPwko4zzFMSJ8J8fkTBtakMP1QsV4DBYdvjrzkQJ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "AUn7v7iApbJfBUr6JBERQdeet8tmxouNZcn1hhQaq2Ca",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 417,
+      "sample_records": 100,
+      "decodable_share": "0.3151",
+      "supported_venue_value_share": "0.4999",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "13.9000",
+      "program_blockers": [
+        {
+          "program_id": "CxvksNjwhdHDLr3qbCXNKVdeYACW8cs93vFqLqtgyFE5",
+          "label": "unsupported_or_unreviewed",
+          "observations": 22,
+          "value_sol": "175.43",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 17,
+          "value_sol": "169.82",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "5.56",
+          "supported": false
+        },
+        {
+          "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.2",
+          "supported": false
+        },
+        {
+          "program_id": "BBRouter1cVunVXvkcqeKkZQcBK7ruan37PPm3xzWaXD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.2",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.050884648",
+          "supported": false
+        },
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.05",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/AUn7v7iApbJfBUr6JBERQdeet8tmxouNZcn1hhQaq2Ca"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "AmDF6YBBdsrDaL6CHsjaJPo8qCrvX3QarD5TCJDtgQib",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 201,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9888",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "6.7000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.117840978",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/AmDF6YBBdsrDaL6CHsjaJPo8qCrvX3QarD5TCJDtgQib"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "AyvDiGvjyDUUnMtNrNk4UTJ3nTr61qfkFioFFQqdZgCY",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 162,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9960",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.4000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "6.276099473",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/AyvDiGvjyDUUnMtNrNk4UTJ3nTr61qfkFioFFQqdZgCY"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "B8wZgcJAMuZs1NR6vaKhcQsGdPp7cpaPoh4GTquMCTdW",
-      "records": 355,
-      "trades": 0,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 0,
-      "known_cost_sales": 0
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 170,
+      "sample_records": 100,
+      "decodable_share": "0.2648",
+      "supported_venue_value_share": "0.1807",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "5.6667",
+      "program_blockers": [
+        {
+          "program_id": "B3111yJCeHBcA1bizdJjUFPALfhAfSRnAbJzGUtnt56A",
+          "label": "B311 unreviewed",
+          "observations": 55,
+          "value_sol": "0.150650732",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "0.145620087",
+          "supported": false
+        },
+        {
+          "program_id": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.141327673",
+          "supported": false
+        },
+        {
+          "program_id": "SV2EYYJyRz2YhfXwXnhNAevDEui5Q6yrfyo13WtupPF",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.140787568",
+          "supported": false
+        },
+        {
+          "program_id": "3i5JeuZuUxeKtVysUnwQNGerJP2bSMX9fTFfS4Nxe3Br",
+          "label": "unsupported_or_unreviewed",
+          "observations": 12,
+          "value_sol": "0.140647111",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 10,
+          "value_sol": "0.124383584",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 34,
+          "value_sol": "0.007620428",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 49,
+          "value_sol": "0.006711798",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 33,
+          "value_sol": "0.006128976",
+          "supported": false
+        },
+        {
+          "program_id": "HuTkmnrv4zPnArMqpbMbFhfwzTR7xfWQZHH1aQKzDKFZ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 26,
+          "value_sol": "0.004557975",
+          "supported": false
+        },
+        {
+          "program_id": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+          "label": "unsupported_or_unreviewed",
+          "observations": 22,
+          "value_sol": "0.004538972",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.002368198",
+          "supported": false
+        },
+        {
+          "program_id": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.001646991",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.000804831",
+          "supported": false
+        },
+        {
+          "program_id": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.000639279",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.000611901",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 11,
+          "value_sol": "0.000472670",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.000410587",
+          "supported": false
+        },
+        {
+          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.000286074",
+          "supported": false
+        },
+        {
+          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.000286074",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.000236011",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00009944",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/B8wZgcJAMuZs1NR6vaKhcQsGdPp7cpaPoh4GTquMCTdW"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0",
+      "coverage_value_share": "0",
+      "coverage_mandatory_share": "0",
+      "completed_trades": 0,
+      "sample_positions": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 0
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.1642",
+      "supported_venue_value_share": "0.1072",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "Stake11111111111111111111111111111111111111",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "51.051535749",
+          "supported": false
+        },
+        {
+          "program_id": "8gxk64hYgGAEnHVhRMvBGVvBXZM5WhkGkaQ6DVgVV2kn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 40,
+          "value_sol": "6.968912479",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 11,
+          "value_sol": "6.968912479",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "BYzCun17SntKEtfcBpJm9yxfnnjNcHduGw1vAEUfHNBb",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 173,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.7667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.023827352",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/BYzCun17SntKEtfcBpJm9yxfnnjNcHduGw1vAEUfHNBb"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "Bbu8XAvxE8GjNqrvkNbDfzSihD9KLQHE5d2oQHVYS1Ye",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 217,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9997",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "7.2333",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "42.646424842",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "42.646424842",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/Bbu8XAvxE8GjNqrvkNbDfzSihD9KLQHE5d2oQHVYS1Ye"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "Bn6UXZQxs45hMWuGCru6CZvyMj3oEm3v58q4KXs6L4rp",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 146,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9980",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.8667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "6.25874364",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/Bn6UXZQxs45hMWuGCru6CZvyMj3oEm3v58q4KXs6L4rp"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "C74ibw78fok9zA9ywd9SjVz2bbjHc1AVysnjk2e9fL4X",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 355,
+      "sample_records": 100,
+      "decodable_share": "0.4271",
+      "supported_venue_value_share": "0.0009",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "11.8333",
+      "program_blockers": [
+        {
+          "program_id": "Stake11111111111111111111111111111111111111",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "5.710166093",
+          "supported": false
+        },
+        {
+          "program_id": "8gxk64hYgGAEnHVhRMvBGVvBXZM5WhkGkaQ6DVgVV2kn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 12,
+          "value_sol": "0.00538988",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.00408940",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 36,
+          "value_sol": "0.00130048",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/C74ibw78fok9zA9ywd9SjVz2bbjHc1AVysnjk2e9fL4X"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "CfNx9LxWbHh8Ut6F5W33Ra481D5RNAF1YiGEnAgcAUKu",
-      "records": 1310,
-      "trades": 64,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 13,
-      "known_cost_sales": 3
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 988,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "32.9333",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 74,
+          "value_sol": "0.053016488",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/CfNx9LxWbHh8Ut6F5W33Ra481D5RNAF1YiGEnAgcAUKu"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.577235772",
+      "coverage_value_share": "0.723830738",
+      "coverage_mandatory_share": "0.577235772",
+      "completed_trades": 1,
+      "sample_positions": 71,
+      "realized_pnl_sol": "444.861224407",
+      "realized_pnl_usdc": null,
+      "completed_episode_net": "444.861224407",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "444.861224407",
+      "qualifying_unit": "SOL",
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 1,
+        "independently_audited_episode_net": "444.861224406",
+        "independently_audited_episode_net_unit": "SOL",
+        "independently_audited_episode_nets_by_unit": {
+          "SOL": "444.861224406"
+        },
+        "unresolved_basis_sales": 10,
+        "known_cost_sales": 13,
+        "reconstructed_trades": 79
+      },
+      "phase3_pages": 3
+    },
+    {
+      "address": "D5WjrRpQPaKfFP7UdK7CvYefa8PYFNwTYujVZMDPvjrL",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 144,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.8000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.362282173",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/D5WjrRpQPaKfFP7UdK7CvYefa8PYFNwTYujVZMDPvjrL"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 700,
+      "sample_records": 100,
+      "decodable_share": "0.3256",
+      "supported_venue_value_share": "0.4534",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis",
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "23.3333",
+      "program_blockers": [
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 42,
+          "value_sol": "0.152601543",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 13,
+          "value_sol": "0.122375544",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.049470630",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 40,
+          "value_sol": "0.035369158",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 40,
+          "value_sol": "0.033931519",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "0.015239999",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 33,
+          "value_sol": "0.01382776",
+          "supported": false
+        },
+        {
+          "program_id": "4Tabcoy1niosiNAGHMruLBFscgJWXZsVF3pfij3FqMB5",
+          "label": "unsupported_or_unreviewed",
+          "observations": 24,
+          "value_sol": "0.01231392",
+          "supported": false
+        },
+        {
+          "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+          "label": "unsupported_or_unreviewed",
+          "observations": 24,
+          "value_sol": "0.01231392",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0.00613156",
+          "supported": false
+        },
+        {
+          "program_id": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+          "label": "unsupported_or_unreviewed",
+          "observations": 16,
+          "value_sol": "0.00459232",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 18,
+          "value_sol": "0.00454152",
+          "supported": false
+        },
+        {
+          "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.00357852",
+          "supported": false
+        },
+        {
+          "program_id": "jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.00357852",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.003027681",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 10,
+          "value_sol": "0.00153924",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.00153924",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0.00055084",
+          "supported": false
+        },
+        {
+          "program_id": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "DXCWcAiBxoCYDavawh9HCC2f2XiV2DCv4UWuafAypLU9",
+      "blocked": false,
+      "blocker": "sell_proceeds_to_cosigner",
+      "in_window_tx_count": 84,
+      "sample_records": 84,
+      "decodable_share": "0.3913",
+      "supported_venue_value_share": "0.9964",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "sell_proceeds_to_cosigner",
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "2.8000",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "6.387071152",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0.578652442",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.030772992",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "sell_proceeds_to_cosigner",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/DXCWcAiBxoCYDavawh9HCC2f2XiV2DCv4UWuafAypLU9"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "sell_proceeds_to_cosigner",
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.967213115",
+      "coverage_value_share": "0.030765613",
+      "coverage_mandatory_share": "0.030765613",
+      "completed_trades": 0,
+      "sample_positions": 59,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 1
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "DY1f83rwDZsX4q4RWMecLuTj4VNbwNzrQf5QaH2SZV3m",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 247,
+      "sample_records": 100,
+      "decodable_share": "0.3750",
+      "supported_venue_value_share": "0.9946",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.2333",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "4.641612034",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/DY1f83rwDZsX4q4RWMecLuTj4VNbwNzrQf5QaH2SZV3m"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "Do3BUVkyYAwxFWUYPMRBnx4rW546kraTLqtyGfrFgnJc",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 122,
+      "sample_records": 100,
+      "decodable_share": "0.4167",
+      "supported_venue_value_share": "0.9993",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.0667",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "25.00555244",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "7.889637807",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.022614288",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/Do3BUVkyYAwxFWUYPMRBnx4rW546kraTLqtyGfrFgnJc"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "DtCiNAXmvhQ3YXY2gfpL3EvXScg7mWrwvgBS3TBe6vG8",
-      "records": 92,
-      "trades": 0,
-      "clean_episodes": 0,
-      "episode_net": null,
-      "episode_unit": null,
-      "episode_vector": null,
-      "unresolved_basis_sales": 0,
-      "known_cost_sales": 0
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 92,
+      "sample_records": 92,
+      "decodable_share": "0.3224",
+      "supported_venue_value_share": "0.3658",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "3.0667",
+      "program_blockers": [
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 56,
+          "value_sol": "0.08186420",
+          "supported": false
+        },
+        {
+          "program_id": "8gxk64hYgGAEnHVhRMvBGVvBXZM5WhkGkaQ6DVgVV2kn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 55,
+          "value_sol": "0.08186420",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "pumpapii17v9uhRiokHwhG3yWYtB6hgJRmsSC5p5bb2",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0223266",
+          "supported": false
+        },
+        {
+          "program_id": "LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0.01230884",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "LockrWmn6K5twhz3y9w1dQERbmgSaRkfnTeTKbpofwE",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/DtCiNAXmvhQ3YXY2gfpL3EvXScg7mWrwvgBS3TBe6vG8"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0.5",
+      "coverage_value_share": "0.999584059",
+      "coverage_mandatory_share": "0.5",
+      "completed_trades": 0,
+      "sample_positions": 1,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 0
+      },
+      "phase3_pages": 2
     },
     {
       "address": "E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK",
-      "records": 65,
-      "trades": 38,
-      "clean_episodes": 1,
-      "episode_net": "21.282548881",
-      "episode_unit": "SOL",
-      "episode_vector": {
-        "SOL": "21.282548881"
+      "blocked": false,
+      "blocker": "multi_signer_bundle_buy",
+      "in_window_tx_count": 65,
+      "sample_records": 65,
+      "decodable_share": "0.3158",
+      "supported_venue_value_share": "0.7133",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "2.1667",
+      "program_blockers": [
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "10.881404676",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 1,
+          "value_sol": "5.879916236",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "5.00148844",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.965308064",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 1,
+          "value_sol": "3.965308064",
+          "supported": false
+        },
+        {
+          "program_id": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.965308064",
+          "supported": false
+        },
+        {
+          "program_id": "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.965308064",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.965308064",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.038163486",
+          "supported": false
+        },
+        {
+          "program_id": "H6PeZBdMDiPZHmhUkq2upYuh6X69tmyzzXwk7RUjpfjH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/E7KevJv87Yh5RNsd6wX5andVkkQwo384G2rSDs5hQQFK"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.936170213",
+      "coverage_value_share": "0.944283872",
+      "coverage_mandatory_share": "0.936170213",
+      "completed_trades": 0,
+      "sample_positions": 44,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 2,
+        "independently_audited_episode_net": "37.547732525",
+        "independently_audited_episode_net_unit": "SOL",
+        "independently_audited_episode_nets_by_unit": {
+          "SOL": "37.547732525"
+        },
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 43,
+        "reconstructed_trades": 46
       },
-      "unresolved_basis_sales": 1,
-      "known_cost_sales": 35
+      "phase3_pages": 2
+    },
+    {
+      "address": "EP87qz6X1NgyTbaZ3CKccEJJD5fJExHXzbkMZ3Lzu4ia",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 258,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9950",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.6000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "2.242483249",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.011307144",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/EP87qz6X1NgyTbaZ3CKccEJJD5fJExHXzbkMZ3Lzu4ia"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "F1a7cR49s7VsKz8XGanFBfsbNE2M91hgKkkDhDjv44w6",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4248",
+      "supported_venue_value_share": "0.9998",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "12.12694672",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "12.12538716",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 23,
+          "value_sol": "0.00456184",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 27,
+          "value_sol": "0.00451612",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 16,
+          "value_sol": "0.00302768",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 18,
+          "value_sol": "0.00300228",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.00155956",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00151384",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.00148844",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "24Uqj9JCLxUeoC3hGfh5W3s9FM9uCHDS2SG3LYwBpyTi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2",
+          "label": "Photon",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "TESQvsR4TmYxiroPPQgZpVRoSFG8pru4fsYr67iv6kf",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/F1a7cR49s7VsKz8XGanFBfsbNE2M91hgKkkDhDjv44w6"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "FBfChxAZmkWRYQJZuNk2p69xYsnRcMT9nmYjjrM1A8xc",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 275,
+      "sample_records": 100,
+      "decodable_share": "0.3986",
+      "supported_venue_value_share": "0.6417",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "9.1667",
+      "program_blockers": [
+        {
+          "program_id": "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9",
+          "label": "FLASHX Axiom",
+          "observations": 49,
+          "value_sol": "474.126646768",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 31,
+          "value_sol": "338.641150077",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 25,
+          "value_sol": "270.855144113",
+          "supported": false
+        },
+        {
+          "program_id": "6RCmQ8XMQCJnPbNDQa8U9ucAS9hk4tXQeps96V7p6aRY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 24,
+          "value_sol": "255.846944936",
+          "supported": false
+        },
+        {
+          "program_id": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+          "label": "unsupported_or_unreviewed",
+          "observations": 14,
+          "value_sol": "107.079013666",
+          "supported": false
+        },
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "23.668655556",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "AddressLookupTab1e1111111111111111111111111",
+          "label": "unsupported_or_unreviewed",
+          "observations": 6,
+          "value_sol": "0.02044192",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 15,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/FBfChxAZmkWRYQJZuNk2p69xYsnRcMT9nmYjjrM1A8xc"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "FNvuekiK1cCXN6cPfhbMf2Ha2Nmv3ejZ3THA7i6zotoQ",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 247,
+      "sample_records": 100,
+      "decodable_share": null,
+      "supported_venue_value_share": null,
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.2333",
+      "program_blockers": [],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/FNvuekiK1cCXN6cPfhbMf2Ha2Nmv3ejZ3THA7i6zotoQ"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "FWgfv6jSoXxw3Pqg7SLpYj4fBPuBWR8oWHK8UhCGs8nm",
+      "blocked": false,
+      "blocker": "sell_proceeds_to_cosigner",
+      "in_window_tx_count": 75,
+      "sample_records": 75,
+      "decodable_share": "0.4737",
+      "supported_venue_value_share": "0.9992",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "sell_proceeds_to_cosigner",
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "2.5000",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "11.791408984",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "4.679996690",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.025335374",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "sell_proceeds_to_cosigner",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/FWgfv6jSoXxw3Pqg7SLpYj4fBPuBWR8oWHK8UhCGs8nm"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "sell_proceeds_to_cosigner",
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.956521739",
+      "coverage_value_share": "0.271892428",
+      "coverage_mandatory_share": "0.271892428",
+      "completed_trades": 0,
+      "sample_positions": 44,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 1,
+        "reconstructed_trades": 2
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "FvUNFkLVeUDZHa8J4p4dDFRzM48QGVFcp46cKtfY7sSg",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 216,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "7.2000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "4.93990245",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/FvUNFkLVeUDZHa8J4p4dDFRzM48QGVFcp46cKtfY7sSg"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "G6SeWJ9fwmVLcWLLkesCeKUsb9A3mvGMUgrsAtr6ATVL",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4161",
+      "supported_venue_value_share": "0.0000",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.038163486",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 36,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 8,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2",
+          "label": "Photon",
+          "observations": 4,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 4,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "DMohCzuYMQUsmYAiitgtYtSpsBtyEw9UWZha7EGqTv8M",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/G6SeWJ9fwmVLcWLLkesCeKUsb9A3mvGMUgrsAtr6ATVL"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "GCGoRXVx6fSrR9CgKxRmF4qQQP75MnUST5varKCYpXJY",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 145,
+      "sample_records": 100,
+      "decodable_share": "0.4858",
+      "supported_venue_value_share": "0.5013",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy",
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "4.8333",
+      "program_blockers": [
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 46,
+          "value_sol": "0.754070177",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.754070177",
+          "supported": false
+        },
+        {
+          "program_id": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.754070177",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.754070177",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 73,
+          "value_sol": "0.03974066",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "5VtQHnhs2pfVEr68qQsbTRwKh4JV5GTu9mBHgHFxpHeQ",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00218948",
+          "supported": false
+        },
+        {
+          "program_id": "D8C8iW6zmoKg5TRr8nQ7h14TMWqQX8FiBdj2ju5MF3wa",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00218948",
+          "supported": false
+        },
+        {
+          "program_id": "mayan34VedncxdK2XobtvWFDXQASUTBXhUVzt2kKgny",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.00218948",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/GCGoRXVx6fSrR9CgKxRmF4qQQP75MnUST5varKCYpXJY"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "GRJh4kKC23RmPPqx4PHZMxKvFgEZ11QXKhAAQGk6yoWF",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 206,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9925",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "6.8667",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "1.685266216",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/GRJh4kKC23RmPPqx4PHZMxKvFgEZ11QXKhAAQGk6yoWF"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     },
     {
       "address": "GnDVZMfXzWPGAcGvYnXqkWPyTcZpHdjR1bCB4qPbeiYo",
-      "records": 711,
-      "trades": 270,
-      "clean_episodes": 1,
-      "episode_net": "457.027411065",
-      "episode_unit": "SOL",
-      "episode_vector": {
-        "SOL": "457.027411065"
+      "blocked": false,
+      "blocker": "transfer_in_zero_basis",
+      "in_window_tx_count": 664,
+      "sample_records": 100,
+      "decodable_share": "0.4918",
+      "supported_venue_value_share": "0.9993",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "22.1333",
+      "program_blockers": [
+        {
+          "program_id": "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2",
+          "label": "Photon",
+          "observations": 1,
+          "value_sol": "34.8",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 59,
+          "value_sol": "0.000022855",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/GnDVZMfXzWPGAcGvYnXqkWPyTcZpHdjR1bCB4qPbeiYo"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "coverage_count_share": "0.985507246",
+      "coverage_value_share": "0.988437893",
+      "coverage_mandatory_share": "0.985507246",
+      "completed_trades": 2,
+      "sample_positions": 272,
+      "realized_pnl_sol": "-6.137550943",
+      "realized_pnl_usdc": null,
+      "completed_episode_net": "-6.137550943",
+      "completed_episode_net_unit": "SOL",
+      "qualifying_profit": "-6.137550943",
+      "qualifying_unit": "SOL",
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_eligibility_pending_reassessment",
+      "auditor": {
+        "clean_episodes": 1,
+        "independently_audited_episode_net": "457.027411065",
+        "independently_audited_episode_net_unit": "SOL",
+        "independently_audited_episode_nets_by_unit": {
+          "SOL": "457.027411065"
+        },
+        "unresolved_basis_sales": 119,
+        "known_cost_sales": 139,
+        "reconstructed_trades": 270
       },
-      "unresolved_basis_sales": 119,
-      "known_cost_sales": 139
+      "phase3_pages": 2
+    },
+    {
+      "address": "GoSddySDKK7Hbbpk32Uy83LKS3n6yzYc4ENKCw2Au2Sc",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 210,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "7.0000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.17022781",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/GoSddySDKK7Hbbpk32Uy83LKS3n6yzYc4ENKCw2Au2Sc"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "Gv3ksNUG6cfzydnJVvptodT6CwSRZve45waayH7PDNZT",
+      "blocked": false,
+      "blocker": "sell_proceeds_to_cosigner",
+      "in_window_tx_count": 52,
+      "sample_records": 52,
+      "decodable_share": "0.4783",
+      "supported_venue_value_share": "0.9995",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "sell_proceeds_to_cosigner",
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "1.7333",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "27.258154824",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 8,
+          "value_sol": "0.665025232",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.022623512",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "sell_proceeds_to_cosigner",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/Gv3ksNUG6cfzydnJVvptodT6CwSRZve45waayH7PDNZT"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false,
+      "phase4_bundle": true,
+      "phase4_bundle_reasons": [
+        "sell_proceeds_to_cosigner",
+        "multi_signer_bundle_buy"
+      ],
+      "coverage_count_share": "0.9375",
+      "coverage_value_share": "0.005337297",
+      "coverage_mandatory_share": "0.005337297",
+      "completed_trades": 0,
+      "sample_positions": 30,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "completed_episode_net": null,
+      "completed_episode_net_unit": null,
+      "qualifying_profit": null,
+      "qualifying_unit": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "coverage_status": "coverage_blocked",
+      "auditor": {
+        "clean_episodes": 0,
+        "independently_audited_episode_net": null,
+        "independently_audited_episode_net_unit": null,
+        "independently_audited_episode_nets_by_unit": null,
+        "unresolved_basis_sales": 0,
+        "known_cost_sales": 0,
+        "reconstructed_trades": 1
+      },
+      "phase3_pages": 2
+    },
+    {
+      "address": "H3KxmKBy4WYrAriMAxEkqrBmZXjuv6GzP74ceM9MehuL",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 165,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9988",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.5000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "10.3693722",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/H3KxmKBy4WYrAriMAxEkqrBmZXjuv6GzP74ceM9MehuL"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "J1WANisYixDrWk4TYGsPUiQ367vG5W4hUquJ5rEbvqbL",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 165,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9944",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.5000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "4.543800772",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/J1WANisYixDrWk4TYGsPUiQ367vG5W4hUquJ5rEbvqbL"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "J6Q3tdQCuhreBYiSP1u1AbLEnJ4Ri3ogzUEoU5R93rAR",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 150,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "5.0000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.634688436",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/J6Q3tdQCuhreBYiSP1u1AbLEnJ4Ri3ogzUEoU5R93rAR"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "fJD8FEGYScCozJJsqbaXw2mMKUcW7kEXYPU3t2yyFQd",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 144,
+      "sample_records": 100,
+      "decodable_share": "0.5000",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.8000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "3.378224481",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/fJD8FEGYScCozJJsqbaXw2mMKUcW7kEXYPU3t2yyFQd"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 1000,
+      "sample_records": 100,
+      "decodable_share": "0.4375",
+      "supported_venue_value_share": "0.5068",
+      "has_known_basis_buys": true,
+      "bundle": true,
+      "bundle_reasons": [
+        "transfer_in_zero_basis"
+      ],
+      "bot": false,
+      "bot_rate": "33.3333",
+      "program_blockers": [
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0.026148748",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0.025442324",
+          "supported": false
+        },
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 2,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "transfer_in_zero_basis",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "ji1bQ5hebfq9sUmATpyXuVB1nNXj7LDR55R4kKBEcK6",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 834,
+      "sample_records": 100,
+      "decodable_share": "0.4093",
+      "supported_venue_value_share": "1.0000",
+      "has_known_basis_buys": false,
+      "bundle": true,
+      "bundle_reasons": [
+        "multi_signer_bundle_buy"
+      ],
+      "bot": false,
+      "bot_rate": "27.8000",
+      "program_blockers": [
+        {
+          "program_id": "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH",
+          "label": "DFlow",
+          "observations": 18,
+          "value_sol": "0.0015748",
+          "supported": false
+        },
+        {
+          "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "label": "Meteora DLMM",
+          "observations": 10,
+          "value_sol": "0.0015748",
+          "supported": false
+        },
+        {
+          "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0.0015748",
+          "supported": false
+        },
+        {
+          "program_id": "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2",
+          "label": "Photon",
+          "observations": 23,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+          "label": "unsupported_or_unreviewed",
+          "observations": 17,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+          "label": "unsupported_or_unreviewed",
+          "observations": 17,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u",
+          "label": "unsupported_or_unreviewed",
+          "observations": 7,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+          "label": "unsupported_or_unreviewed",
+          "observations": 5,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "4Tabcoy1niosiNAGHMruLBFscgJWXZsVF3pfij3FqMB5",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+          "label": "unsupported_or_unreviewed",
+          "observations": 3,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        },
+        {
+          "program_id": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "multi_signer_bundle_buy",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw/phase2/ji1bQ5hebfq9sUmATpyXuVB1nNXj7LDR55R4kKBEcK6"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "rQnGUGo5DExwDu8TgRKwhFXwBCFabz2teaVWGM8hoff",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 243,
+      "sample_records": 100,
+      "decodable_share": "0.4000",
+      "supported_venue_value_share": "0.9457",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "8.1000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.195695181",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.011307144",
+          "supported": false
+        },
+        {
+          "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.0013462",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/rQnGUGo5DExwDu8TgRKwhFXwBCFabz2teaVWGM8hoff"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "vumPmr5QTu7sDJzucw6jYyr29WDpKZbVPXqRRtq6nhY",
+      "blocked": false,
+      "blocker": null,
+      "in_window_tx_count": 147,
+      "sample_records": 100,
+      "decodable_share": "0.3333",
+      "supported_venue_value_share": "0.9985",
+      "has_known_basis_buys": false,
+      "bundle": false,
+      "bundle_reasons": [],
+      "bot": false,
+      "bot_rate": "4.9000",
+      "program_blockers": [
+        {
+          "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "8.564065797",
+          "supported": false
+        },
+        {
+          "program_id": "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg",
+          "label": "unsupported_or_unreviewed",
+          "observations": 1,
+          "value_sol": "0.012721162",
+          "supported": false
+        }
+      ],
+      "coverability_rank_key": "0.0000",
+      "dropped": true,
+      "drop_reason": "no_known_basis_buys",
+      "chosen_for_full_history": false,
+      "source_runs": [
+        "/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw/phase2/vumPmr5QTu7sDJzucw6jYyr29WDpKZbVPXqRRtq6nhY"
+      ],
+      "pages": 2,
+      "PRODUCT_READY": false
     }
-  ]
+  ],
+  "PRODUCT_READY": false
 }

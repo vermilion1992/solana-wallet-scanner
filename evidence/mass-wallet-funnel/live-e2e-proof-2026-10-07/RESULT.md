@@ -1,102 +1,118 @@
-# LIVE E2E proof — live-result blockers closed offline
+# LIVE E2E proof — bbc5bef residuals closed offline
 
 **When:** 2026-10-07
 **Base:** `6dc3424c81af117a13c6cfafe451761c74dddb71` (merged PR #6)
-**Live box tip:** `cfe6e78aa6e15d081e29be65caaead9633f1b4b0` (0 proven leads / 11 Phase-3 wallets)
-**Live-result code:** `099772f033412c18383a86c39848594e483473c3`
+**Live box tips:** `cfe6e78` then `bbc5bef` (0 proven leads on both; spend-safety GREEN; $0)
+**This pass:** residual code + offline replay on attached pages from both runs
 **Branch:** `cursor/live-e2e-proof-1055` (PR #7)
 **PRODUCT_READY:** false
-**Draft grant:** `enabled:false`
-**Spend this task:** 0 Helius requests, 0 Birdeye requests, $0. No live calls. Phase 4 replayed the attached `cfe6e78` raw pages offline.
+**Draft grants:** both `enabled: false`
+**Spend this task:** 0 Helius requests, 0 Birdeye requests, $0. No live calls.
 
 ## Suites (keys unset + dummy)
 
 | Suite | Result |
 |---|---|
-| keys unset | **3817 passed** / 440 subtests / 1 warning |
-| dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`) | **3817 passed** / 440 subtests / 1 warning. Dummy keys were never sent. |
-| `scripts/offline_acceptance.py` | ok; `PRODUCT_READY` false; live-e2e draft `enabled:false` |
-| spend-safety + filters + live-result | `tests/test_live_e2e_spend_safety.py` + `tests/test_live_e2e_filters_and_runner.py` + `tests/test_live_e2e_live_result_fixes.py` |
+| keys unset | re-run after residual + fixture-expectation updates |
+| dummy keys (`HELIUS_API_KEY=dummy`, `BIRDEYE_API_KEY=dummy`, `HELIUS_API_KEYS=dummy`) | re-run; dummy keys never sent |
+| `scripts/offline_acceptance.py` | checks both live-e2e drafts `enabled:false`; includes bbc5bef residual tests |
+| focused | `tests/test_live_e2e_bbc5bef_residuals.py` + spend-safety + filters + live-result (67 passed before full suite) |
 
 ## Evidence SHAs
 
 | Artifact | SHA-256 |
 |---|---|
-| `dry-run/DRY_RUN_PLAN.json` | `46b08344ab1cfe11eae1bc8828777a6c9a45bc29b25d3854d806b812ba1a7dd6` |
-| `dry-run/RESULTS.json` | `2e68f68312c4ebff88347f041b5f68d872acdc58437da01992d81fe208675d7e` |
-| `PHASE4_OFFLINE_RERUN.json` | `e9b4e82f1a60c62b35b241b17a897b22761d8852d9bbf6669c4af9591a75f191` |
-| draft grant | `ca4c3f9637d5d8ee11475a8c1704bb964a0a7bed4e126c69e92c65ef9043f410` |
-| retired G1 grant | `efacb45deb16af81c759b95e10aeb31081f0fdaacd696ba044c86e52e662cecc` |
+| new draft grant `live-e2e-proof-2026-10-09-mitch` | `cda7b98d4d3bf0c219c53f4c37f2c6bc3b62d9480b60ad69d01f1709fc65af62` |
+| retired draft grant `live-e2e-proof-2026-10-07-mitch` | `ca4c3f9637d5d8ee11475a8c1704bb964a0a7bed4e126c69e92c65ef9043f410` |
+| `dry-run-2026-10-09/DRY_RUN_PLAN.json` | `2c4acff7adfd940db8cad49d0dc90c527bcdacfe09d2ee26f52a35568717bbd7` |
+| `PHASE4_OFFLINE_RERUN.json` | `b3d7802c99efce0b450cfd31fddc42b4a40552813dd847fe9cc5a2f6f7b4b9f6` |
+| `PHASE4_OFFLINE_RERUN.md` | `78673bf5e909a9d50a04dc659c5dd335706cd9b8bf6c67a6df17256a64e0d4fa` |
 
-Armed local copies must set `draft_artifact_hash` to the draft SHA above.
+Armed local copies must set `draft_artifact_hash` to the **pinned** SHA in `PINNED_DRAFT_HASHES`. Caps cannot exceed `HARD_CEILINGS` (Birdeye 10/300, Helius 1500/15000).
 
-## Spend-safety invariants now in the runner
+## Spend-safety residuals
 
-- Grant ledger + `GRANT.lock` live under `$SCANNER_LIVE_LEDGER_HOME/<authorization_id>` (default `~/.scanner/live-e2e-ledgers/<id>`). `--ledger-dir` must equal that home. A second ledger dir for the same grant is refused.
-- Output dir takes `RUN.lock`. Concurrent `--resume` is refused.
-- `--live` requires `draft_artifact_hash` equal to the **git object** of the committed draft (`git show HEAD:config/…-draft.json`). Working-tree edits and a missing hash are refused. Armed provider caps must be ≤ the git draft. Missing `phase_caps` inherit the draft.
-- Write-ahead receipt keyed by `(wallet, phase, page, cursor)`. `reserved` / `dispatched` / `consumed` / `failed` = spent. Resume never silently re-sends; `--explicit-retry` **appends** `:retryN` and counts against the cap.
-- Every `Exception` persists `RUN_STATE`. `BaseException` (SIGINT) persists then re-raises. Failed requests are in state spend and the ledger.
-- Phase 3 uses `--wallets` when supplied; otherwise phase-2 kept rows. Plan == execution.
-- Draft `phase_caps` are enforced at dispatch.
-- Birdeye: one documented 30 CU reserve (adapter does not get the store).
-- Window `report_start` / `report_end` persist in `RUN_STATE` at first run. `--resume` with a different `--window-days` is refused.
-- `--wallets` accepts a file or a comma list; paths ≥255 chars are never passed to `Path.is_file()`.
-- Helius auth is the documented `?api-key=` query param. The key never reaches disk, logs, receipts, or exception text.
-- `redact_text` runs on every string written to logs/state/results/console. Raw pages: SHA-256 of the **provider bytes before scrub** is `original_sha256` (Birdeye included). A missing raw page is `MISSING_CAPTURE` / blocked, never an empty covered page.
-- Phase 4 replays captures as `GENUINE_REPLAY` (offline). `GENUINE_LIVE` is not used on saved pages.
-- Pre-screen resolves `programIdIndex` via accountKeys + loadedAddresses, including inner instructions. Token-2022 and Lighthouse are infra, not venue blockers.
-- Qualification, completed counts and realized P&L use only episodes closed inside the report window. `window_days` anchors to report end, not last activity, and drops currencies with no in-window episodes.
-- Token-2022 transfer / transferChecked / transferCheckedWithFee decode from instruction bytes, including transfer-fee extension amounts. OKX SwapTob is a reviewed outer (payer 0, user token accounts 1/2). DFlow layout is pinned but stays blocked until a real attached tx reconciles. Lighthouse is non-economic infra. FLASHX / B311 stay unsupported.
+- `--live` refuses `SCANNER_LIVE_LEDGER_HOME` / `SCANNER_LIVE_LEDGER_DIR` unless they equal grant `ledger_home`, and refuses if `HOME` ≠ `armed_home`.
+- Armed caps are bound by the pinned draft hash **and** hard ceilings. A local commit of an inflated draft cannot raise those ceilings.
+- `redact_text` covers stdout/stderr, including top-level `BaseException` / `KeyboardInterrupt` handlers.
+- Phase 2 resume screens wallets that are not yet `done`. It never reports `completed` with unscreened wallets.
+- Helius default pace is 0.5s (2 rps) with 2s 429 backoff. Every attempt is receipted.
 
-## Filters
+## Correctness
 
-- FL1: `only_shortlist` / `only_captured` / `only_user_shortlist` accept only JSON `true` / `false` / `null` (else HTTP 422). Load sanitizes junk to false.
-- FL2: `window_days` clips to `[report_end - days, report_end)`. Currencies with no in-window episodes are dropped. Oracle in `test_fl2_window_days_changes_episodes_and_pnl` plus `test_fl2a_drops_stale_currency_and_fl2b_anchors_report_end`.
-- FL3: user numbers must match `^-?(?:0|[1-9]\d*)(?:\.\d+)?$`. `1_000`, Unicode digits, spaces, `1e3`, `+3` are 422.
+- Phase 4 verifies each saved page hash/receipt. Mismatch or JSON error body is blocked, never treated as an empty covered page.
+- `--max-bot-rate` is computed from in-window activity (count / max(window_days, observed span, 1)).
+- Planner budgets 2 full-history pages per wallet. Live paging stops on a short or empty page.
+- State reflects the latest per-phase outcome (stale `RATE_LIMITED` is cleared on later success).
+- Unsupported-program ranking counts only programs in undecoded swaps, by value then count. Pump fee-calc is infra.
+- An undecoded earlier buy taints later sales as unknown-basis. Partial-match P&L is not shown.
+- Independent OKX decoder in `tools/independent_episode_audit.py` (no scanner import). CfNx9LxW SwapTob: app `+444.861224407` SOL, auditor `+444.861224406` SOL.
 
-## Dry-run counts (10 Search B wallets + discovery)
+## Find wallets
+
+- Bundle/distribution detection: shared funder, multi-signer bundle buys, sell proceeds to co-signer, transfer-in zero basis. Excluded from lead eligibility with an explicit reason; pre-screen ranks them to 0.
+- FLASHX, GMGN, Photon, Meteora DLMM Swap2, DFlow DST are reviewed outers on attached txs. Unknown stays blocked. B311 remains unsupported (low value).
+- Discovery: `--discovery-source gainers-losers` (30 CU) or `top-traders` (35 CU) from Birdeye docs. Pre-screen rank = (supported-venue share by value) × (has known-basis buys) × (not bundle/bot).
+- New 2026-10-09 draft: Birdeye ≤10/≤300 CU; Helius ≤1,500/≤15,000 credits; phase 2 200/2000; phase 3 200/12000.
+
+## Next-run planner (100 pre-screen, 25 kept)
 
 | Phase | Provider | Requests | Units | Cap |
 |---|---|---:|---:|---|
-| 1 discovery | Birdeye | 1 | 30 CU | 3 / 91 |
-| 2 pre-screen | Helius | 20 | 200 credits | 500 / 5,000 (phase 2: 200 / 2,000) |
-| 3 history (empty recorder page) | Helius | 10 | 1,000 credits worst-case | 500 / 5,000 (phase 3: 300 / 3,000) |
+| 1 discovery | Birdeye | 1 | 30 CU | 10 / 300 |
+| 2 pre-screen | Helius | 200 | 2,000 credits | 200 / 2,000 |
+| 3 history (planner min 2 pages) | Helius | 50 | 5,000 credits | 200 / 12,000 |
 | 4 offline | — | 0 | 0 | — |
-| **Total** | | **1 + 30** | **30 CU + 1,200 credits** | **within caps** |
+| **Total** | | **1 + 250** | **30 CU + 7,000 credits** | **fits** |
 
-Live phase 3 continues paging until the window is covered or the cap is hit. Dry-run stops after one empty full page per wallet.
+Live Phase 3 may fetch up to ~8 pages per wallet until the credit cap. Worst-case 25 × 8 × 100 credits would exceed 15,000; the ledger stops first. Attached pages were much shorter than 1,000 txs.
 
-## GTA page size
+## Offline Phase 4 + pre-screen (attached pages from both live runs)
 
-Documented max limit is 1,000. Signatures-only is 10 credits flat. Full is 10 credits / 100 txs. `limit=1000` full reduces **requests**, not credits, versus ten `limit=100` pages. Next-capture freeze stays `limit=100` and is unused here.
+Bounds: report `2026-09-07T07:51:22Z` → `2026-10-07T07:51:22Z`; history `2026-07-09T07:51:22Z`. 78 distinct Phase-2 wallets, 14 with Phase-3 pages. Corpus `GENUINE_REPLAY`. `max_bot_rate` 50/day.
+
+### Which of the ~80 would be chosen for full history
+
+Rank > 0, known-basis buys, not bundle/bot (25 slots available; 3 qualify):
+
+| Wallet | Rank | Venue share | In-window txs | Bot rate | Source |
+|---|---:|---:|---:|---:|---|
+| `8wmGrD3F5bd439r2k7eJWcHk9UgssuQDLF6kNawBRBRF` | 0.9999 | 0.9999 | 111 | 3.70 | cfe6e78 pre-screen only |
+| `DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx` | 0.9997 | 0.9997 | 262 | 8.73 | bbc5bef pre-screen only |
+| `BSTs43nNTc3wBidj8ueY92RJbGn4wxvF8VYYKMVWGdNR` | 0.7939 | 0.7939 | 179 | 5.97 | bbc5bef pre-screen only |
+
+None of the 14 already-fetched Phase-3 wallets remain eligible (bundle / zero-basis / no known buys). Two more wallets have known buys and are not bundle/bot but venue share 0 (A6PS, An9s); rank 0, no full-history slot.
+
+Drop reasons across 78: no_known_basis_buys 43, transfer_in_zero_basis 18, multi_signer_bundle_buy 8, sell_proceeds_to_cosigner 4, eligible 5.
+
+### Phase 4 replay (14 wallets)
+
+| Wallet | Bundle / reasons | Cov count / value | Completed | Realized P&L | Auditor | Lead |
+|---|---|---|---:|---|---|---|
+| 25865JdB | yes / transfer_in_zero_basis, multi_signer | 0.771 / 0.815 | 10 | SOL +0.411, USDC +12,620 | 12 mixed | insufficient |
+| 5Qfie4Tb | yes / transfer_in_zero_basis | 0.473 / 0.397 | 0 | — | 0 | insufficient |
+| 6i4nSG48 | yes / transfer_in_zero_basis | 0.989 / 0.999 | 0 | — | 0 | insufficient |
+| 8B3KyNP6 | yes / transfer_in_zero_basis | 0.647 / 0.664 | 20 | SOL +173.18 | 17 / +320.99 SOL | insufficient |
+| 96d9GKPQ | no | 0 / 0 | 0 | — | 0 | insufficient |
+| AMMLTuy9 | yes / multi_signer | 0.968 / 0.022 | 18 | SOL −0.0048 | 0 | insufficient |
+| B8wZgcJA | yes / transfer_in_zero_basis | 0 / 0 | 0 | — | 0 | insufficient |
+| CfNx9LxW | yes / transfer_in_zero_basis, multi_signer | 0.577 / 0.724 | 1 | SOL **+444.86** | **1 / +444.86 SOL** | insufficient |
+| DXCWcAiB | yes / sell_proceeds, multi_signer | 0.967 / 0.031 | 0 | — | 0 | insufficient |
+| DtCiNAXm | yes / transfer_in_zero_basis | 0.500 / 1.000 | 0 | — | 0 | insufficient |
+| E7KevJv8 | yes / multi_signer | 0.936 / 0.944 | 0 | — | 2 / +37.55 SOL | insufficient |
+| FWgfv6jS | yes / sell_proceeds, multi_signer | 0.957 / 0.272 | 0 | — | 0 | insufficient |
+| GnDVZMfX | yes / transfer_in_zero_basis | 0.986 / 0.988 | 2 | SOL −6.14 | 1 / +457.03 SOL | insufficient |
+| Gv3ksNUG | yes / sell_proceeds, multi_signer | 0.938 / 0.005 | 0 | — | 0 | insufficient |
+
+**0 proven leads.** Coverage still blocks every Phase-3 wallet, and bundle/zero-basis now excludes them from lead eligibility even when a single venue (OKX on CfNx9LxW) reconciles. FLASHX on 96d9GKPQ still fails closed on those attached txs. Full 78-wallet table: `PHASE4_OFFLINE_RERUN.md`.
+
+Hand vs app on named wallets:
+- **CfNx9LxW:** app and independent auditor now agree at +444.86 SOL on the SwapTob. Hand +444.8594. Wallet stays non-lead because of transfer-in / multi-signer bundle on the rest of the book.
+- **8B3KyNP6:** app 20 / +173.18 after new venues + FIFO taint; auditor 17 / +320.99. Difference is still unsupported-venue / unknown-basis inventory. Bundle excluded.
+- **DXCWcAiB:** no partial-match P&L. Undecoded earlier buy taints later sales. Bundle excluded.
 
 ## Box commands
 
-See `BOX_COMMANDS.md`. Arm a **local copy** of the draft only. Do not enable the committed file. Set `draft_artifact_hash` to the git-object SHA of the committed draft. Use one ledger home for the grant. Do not run two resumes at once.
+See `BOX_COMMANDS.md`. Arm a **local copy** of the 2026-10-09 draft only. Record `armed_home` and `ledger_home`. Set `draft_artifact_hash` to the pinned SHA above. Leave `SCANNER_LIVE_LEDGER_*` unset. Do not enable the committed file.
 
 No merge. No live calls. `PRODUCT_READY` false.
-
-## Phase 4 offline rerun (attached `cfe6e78` pages)
-
-Bounds: report `2026-09-07T07:51:22Z` → `2026-10-07T07:51:22Z`; history start `2026-07-09T07:51:22Z`. 11 wallets, 23 raw pages. Corpus `GENUINE_REPLAY`. Independent auditor = `tools/independent_episode_audit.py` with those same bounds (pinned venues only; no scanner import).
-
-| Wallet | Cov count / value | In-window completed | Realized P&L (episode vector) | Auditor (in-window clean / net) | Lead | vs live table §3.1 |
-|---|---|---:|---|---|---|---|
-| 25865JdB | 0.771 / 0.815 | **10** | SOL +0.411, USDC +12,620.49 | 12 mixed: USDC 26,240.57 / SOL +0.411 | conditional | Live profile 15 / window 10 with worksheet SOL **-1.614** + USDC 9,919. Now 10 in-window only. SOL matches auditor. USDC is the app subset (10 vs 12). |
-| 5Qfie4Tb | 0.456 / 0.387 | **0** | — | 0 | insufficient | Live profile **21** (all pre-window) and SOL -22.8. Now 0 / hidden. |
-| 6i4nSG48 | 0.989 / 0.999 | **0** | — | 0 | insufficient | Live profile 1 / window 0 still showed SOL -0.002. Now hidden. |
-| 8B3KyNP6 | 0.537 / 0.550 | 17 | SOL **+320.992** | **17 / +320.992 exact** | conditional | Same as live app/auditor. Hand raw was 38 / +356.73: the extra +35.7 is unsupported venues (still 63/136 in-window swaps). |
-| 96d9GKPQ | 0 / 0 | 0 | — | 0 | insufficient | Unchanged. FLASHX is 100% of in-window swaps. |
-| AMMLTuy9 | 0.968 / 0.022 | 18 | SOL **-0.0048** | 0 (21 unresolved) | conditional | Live episode net -0.0048 / worksheet -0.0076. Coverage value 0.004 → 0.022 (Token-2022/Lighthouse no longer venue-block). Still far below 0.95. |
-| B8wZgcJA | 0 / 0 | 0 | — | 0 | insufficient | Unchanged. B311 is 100% of in-window swaps. |
-| CfNx9LxW | 0.577 / 0.724 | 1 | SOL **+444.86** | 0 | conditional | Live 0 completed. One new known-cost close after Token-2022/OKX. Auditor (pinned venues only) still 0. Coverage 0.463/0.340 → 0.577/0.724. |
-| DtCiNAXm | 0.500 / 0.9996 | 0 | — | 0 | insufficient | Unchanged. |
-| E7KevJv8 | 0.936 / 0.944 | 0 | — | 1 / +21.28 SOL | insufficient | Token-2022 coverage 0.766/0.711 → 0.936/0.944. Still below 0.99/0.95. App has no clean known-cost flatten; auditor's one episode is outside the app subset. |
-| GnDVZMfX | 0.964 / 0.948 | **0** | — | 1 / +457.03 SOL | insufficient | Live profile **2** (both pre-window) and scoped SOL **+539.9**. Now 0 / hidden. Hand in-window 3 / +444.28 includes unsupported-venue deltas the app does not decode. Auditor 1 / +457.03 is its pinned-venue FIFO. |
-
-**0 proven leads.** Coverage still blocks every wallet (gate count ≥ 0.99 AND value ≥ 0.95). Remaining value/count gaps: FLASHX (96d9GKPQ), B311 (B8wZgcJA), DFlow (layout pinned; ephemeral wSOL lifecycle unresolved — not guessed), leftover Jupiter/OKX-adjacent routes that fail balance-delta reconcile.
-
-Hand vs app on the two named wallets:
-- **8B3KyNP6:** app/auditor +320.992 over 17 episodes. Hand +356.73 over 38. Difference is unsupported-venue swaps counted in the raw SOL/token FIFO and excluded here.
-- **GnDVZMfX:** app 0 in-window completed (the live +539.9 was pre-window + out-of-window sales). Hand 3 / +444.28. Auditor 1 / +457.03. The app is fail-closed on unknown venues; it does not claim the hand or auditor extras.

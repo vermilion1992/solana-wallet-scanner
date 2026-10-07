@@ -22,6 +22,7 @@ EVIDENCE = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
 OUT = EVIDENCE / "offline-acceptance"
 DRAFT = ROOT / "config/live_authorization.ranked100-depth-biased-next-capture-draft.json"
 LIVE_E2E_DRAFT = ROOT / "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
+LIVE_E2E_DRAFT_NEXT = ROOT / "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 MANDATORY = [
     "tests/test_chatgpt_review_2026_10_07.py",
     "tests/test_chatgpt_review_2026_10_07_rereview.py",
@@ -33,6 +34,8 @@ MANDATORY = [
     "tests/test_grok_bot_2fe60bd_repros.py",
     "tests/test_live_e2e_filters_and_runner.py",
     "tests/test_live_e2e_spend_safety.py",
+    "tests/test_live_e2e_live_result_fixes.py",
+    "tests/test_live_e2e_bbc5bef_residuals.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
 
@@ -75,6 +78,13 @@ def main():
         return 2
     if live_e2e.get("PRODUCT_READY") is not False:
         result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_product_ready"}, indent=2), encoding="utf-8")
+        return 2
+    live_e2e_next = json.loads(LIVE_E2E_DRAFT_NEXT.read_text(encoding="utf-8"))
+    if live_e2e_next.get("enabled") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_next_draft_enabled"}, indent=2), encoding="utf-8")
+        return 2
+    if live_e2e_next.get("PRODUCT_READY") is not False:
+        result_path.write_text(json.dumps({"ok": False, "error": "live_e2e_next_product_ready"}, indent=2), encoding="utf-8")
         return 2
 
     steps = []

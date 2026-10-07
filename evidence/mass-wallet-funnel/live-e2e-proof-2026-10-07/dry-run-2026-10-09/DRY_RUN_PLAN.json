@@ -1,0 +1,70 @@
+{
+  "kind": "live-e2e-request-plan-v1",
+  "dry_run": true,
+  "phases": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "wallet_count": 100,
+  "discovery_source": "gainers-losers",
+  "birdeye_cu_docs": {
+    "gainers-losers": {
+      "path": "/trader/gainers-losers",
+      "documented_cu": 30,
+      "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+      "reviewed_on": "2026-10-07"
+    },
+    "top-traders": {
+      "path": "/defi/v2/tokens/top_traders",
+      "documented_cu": 35,
+      "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+      "reviewed_on": "2026-10-07"
+    }
+  },
+  "per_phase": {
+    "1": {
+      "provider": "birdeye",
+      "requests": 1,
+      "units": 30,
+      "billing_unit": "birdeye_compute_unit",
+      "note": "0 when a wallet list is supplied without --discovery. gainers-losers: documented 30 CU/call."
+    },
+    "2": {
+      "provider": "helius",
+      "requests": 200,
+      "units": 2000,
+      "billing_unit": "helius_credit",
+      "note": "1 signatures-only (limit 1000, 10 CU) + 1 full sample (limit 100, 10 CU) per wallet"
+    },
+    "3": {
+      "provider": "helius",
+      "requests": 50,
+      "units": 5000,
+      "billing_unit": "helius_credit",
+      "note": "Planner minimum is 2 full limit=1000 pages per wallet. A short page (len < limit) or empty page stops without fetching an extra empty terminal page. Live continues until the window is covered or the cap is hit. Units are the documented worst case for those 2 pages (100 credits / 1000 txs)."
+    },
+    "4": {
+      "provider": null,
+      "requests": 0,
+      "units": 0,
+      "note": "offline only"
+    }
+  },
+  "totals": {
+    "birdeye_requests": 1,
+    "birdeye_units": 30,
+    "helius_requests": 250,
+    "helius_units": 7000
+  },
+  "caps": {
+    "birdeye_requests": 10,
+    "birdeye_units": 300,
+    "helius_requests": 1500,
+    "helius_units": 15000
+  },
+  "PRODUCT_READY": false,
+  "scenario": "100 pre-screen wallets, 25 kept for full history, gainers-losers discovery",
+  "fits": true
+}

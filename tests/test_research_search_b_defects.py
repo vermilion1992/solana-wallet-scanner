@@ -160,18 +160,18 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     sol = by_asset.get("SOL") or {}
     indep = reconcile_address(MIXED)
     assert _q(usdc["total_profit_usdc"]) == _q(indep["fifo"]["USDC"]["total_profit"])
-    assert _q(usdc["total_profit_usdc"]) == _q("50386.378661746")
-    assert int(usdc["known_cost_sales"]) == 12
-    # Token-2022 / OKX now surface two extra unbacked USDC sales. They stay
-    # unresolved (never guessed as zero-cost). Known-cost P&L is unchanged.
-    assert int(usdc["unresolved_basis_sales"]) == 4
-    assert int(usdc.get("open_lots") or 0) == 10
+    assert _q(usdc["total_profit_usdc"]) == _q("50432.422865")
+    assert int(usdc["known_cost_sales"]) == 13
+    # Additional OKX SwapTob fills add one known-cost USDC sale. Extra
+    # unbacked sales stay unresolved (never guessed as zero-cost).
+    assert int(usdc["unresolved_basis_sales"]) == 5
+    assert int(usdc.get("open_lots") or 0) == 9
     assert int(sol.get("known_cost_sales") or 0) == 0
     assert int(sol.get("unresolved_basis_sales") or 0) == 0
     assert int(sol.get("open_lots") or 0) == 1
-    assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 12
-    assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 4
-    assert len(indep["fifo"]["USDC"]["open_lots"]) == 10
+    assert len(indep["fifo"]["USDC"]["known_cost_sells"]) == 13
+    assert len(indep["fifo"]["USDC"]["unresolved_basis_sales"]) == 5
+    assert len(indep["fifo"]["USDC"]["open_lots"]) == 9
     assert len(indep["fifo"]["SOL"]["known_cost_sells"]) == 0
     assert len(indep["fifo"]["SOL"]["unresolved_basis_sales"]) == 0
     assert len(indep["fifo"]["SOL"]["open_lots"]) == 1
