@@ -1,3 +1,37 @@
+# RANKED100_RESEARCH_SEARCH_HISTORY (grant B): Grok Bot 2fe60bd 8-blocker fix
+
+**Outcome: B1–B8 invariants closed on `4986e79` after Grok Bot broke tip `2fe60bd`. PRODUCT_READY stays false. No live calls. Next-capture draft stays enabled:false. G1 grant was not extended after its 2026-10-07T00:00:00Z expiry. No merge/deploy. Spend this pass 0/0/$0.**
+
+Binding work order: Grok Bot independent adversarial verify of tip `2fe60bd` (8 blocking counterexamples). Fixes are in the predicates/runner/UI, not named fixtures. Gaps 3 and 4 stay closed. gtfo’s labelled six-atomic aggregate bridge stays accepted. DQ7n/BVZt honesty and capture exclusions stay. CAP-C missing-token-as-clean-finish is unchanged; error/garbage envelopes are no longer recorded as a clean terminal cursor.
+
+## This-review claim status
+
+| Gap | Reviewer required closure | Status |
+| --- | --- | --- |
+| B1 CERT | Headline auditor net = Σ bridge auditor nets; headline app net = ledger sum; units equal; confirmation from `format_auditor_confirmation(derived)` | CLOSED at the predicate (Python + JS). `independently_audited_episode_net='999'` is non-certifying. |
+| B2 STATE | Top-level `independent_audit` / `audit_fingerprint` / `completed_episode_ledger` derived from reconciled profile on GET/export/ranked/compare | CLOSED. `decorate_report` no longer returns the raw stored audit. |
+| B3 STATE | Never bind from `profile.independent_audit` | CLOSED. `_invalidate_saved_decisions` uses report-level audit only. |
+| B4 CAP-E | `confirmed_at > now` refused (also after expiry / before approval) | CLOSED. |
+| B5 CAP-E | Quota record binds authorization_id + artifact hash; remaining is a strict non-negative int | CLOSED. |
+| B6 CAP-B | Receipt matches last_dispatch address/page/authorization_id/attempt; runner-minted `response_id`; single-use | CLOSED. |
+| B7 CAP-A | Refuse without a durable store; no default `store=None` dispatch | CLOSED. |
+| B8 CAP-A | CAS on generation from load through reserve-persist; loser refuses before transport | CLOSED. |
+| UI / mutants | Mounted real payloads; M4 observable; M9/JS2/JS4 caught | CLOSED at harness/mutant scripts. Physical-phone testing NOT RUN. |
+| CAP-C missing-token | Unchanged since 04a676f | Accepted / backlog. Error envelopes are not treated as clean terminals. |
+| Gaps 3–4 | Decoders / exposure | Accepted — not reopened. |
+
+## Residual backlog only
+
+- Compare downgrade of a valid positive category (`CompareCertificationView` without ledger).
+- Field-name lookup order mismatch (fails safe).
+- CAP-C missing-token-as-clean-finish on a success envelope with no token.
+- MassSearch desktop “Scoped P&L” header (optional rename).
+- Physical-phone testing NOT RUN. Interactive browser walkthrough NOT RUN.
+
+## Suite / build (2fe60bd fix)
+
+See `TESTS.md` on this commit. Keys unset **3764 passed** / 3 G1-expiry failed / 440 subtests. Dummy **3764 passed** / same 3 failed. `npm run build` recorded there (`index-Dt5k-k7X.js`). Offline acceptance command green. Adapted `scripts/minimal_repros_2fe60bd.py` shows all 8 refuse/correct.
+
 # RANKED100_RESEARCH_SEARCH_HISTORY (grant B): 2026-10-07 08:42 + invariant brief
 
 **Outcome: 08:42 CERT / STATE / UI / CAP-A / CAP-B / CAP-D / CAP-E closed on `517c721`. PRODUCT_READY stays false. No live calls. No grant enabled. No merge/deploy. Spend this pass 0/0/$0.**
