@@ -3,7 +3,9 @@
 **When:** 2026-10-07
 **Base:** `6dc3424c81af117a13c6cfafe451761c74dddb71` (merged PR #6)
 **Prior tip attacked:** `edee60848030f489ddea1b4ea622b4c9cb23b218`
-**Candidate / tip (this handoff):** `9f4806fe0ccc8e97954b431781a533da703e2a2a`
+**Invariant code:** `1cfd34c1c9ab981f2d19bbb86c4b836b2ed58ff1`
+**Evidence + suites:** `70bccd2262256e93f205c486b14041dc7e2106eb`
+**Branch tip:** `cursor/live-e2e-proof-1055` (this pin commit)
 **PRODUCT_READY:** false
 **Spend this task:** 0 Helius requests, 0 Birdeye requests, $0. No live run.
 
