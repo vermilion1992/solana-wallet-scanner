@@ -56,6 +56,10 @@ RAW_ROOTS = [
     Path("/tmp/live-raw-4bbb364-a"),
     Path("/tmp/live-raw-4bbb364-b"),
     Path("/tmp/live-raw-df3278c/live-out/main/raw"),
+    Path("/tmp/live_raw_affc623_dflow_top/runs/run7_affc623/raw"),
+    Path("/tmp/live_raw_affc623_repro/runs/run7_affc623/raw"),
+    Path("/tmp/live_raw_affc623_repro/runs/run_4bbb364/raw"),
+    Path("/tmp/live_raw_affc623_repro/runs/run_f635a45/raw"),
 ]
 EVIDENCE = ROOT / "evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07"
 MAX_BOT_RATE = Decimal("25")

@@ -611,7 +611,9 @@ def _decoded_swap_signatures(records, address=None):
         return set()
     found = set()
     for event in decoded.get("events") or []:
-        if event.get("kind") in ("buy", "sell") and event.get("signature"):
+        # USDC↔SOL DFlow/Jupiter fills are reviewed conversions, not
+        # missing venues. They must not rank as DFlow blockers.
+        if event.get("kind") in ("buy", "sell", "conversion") and event.get("signature"):
             found.add(event["signature"])
     return found
 
@@ -2296,6 +2298,7 @@ def phase4_offline(store, config, state):
                     missing_page = True
                     break
         leftover_token = None
+        page_blocker = "missing raw page; not covered"
         try:
             verify_receipt_chain(store)
         except ValueError:
@@ -2316,6 +2319,14 @@ def phase4_offline(store, config, state):
                     )
                 except SourceError:
                     missing_page = True
+                    integrity_path = path.with_name(path.name + ".integrity.json")
+                    if integrity_path.is_file():
+                        try:
+                            integrity = json.loads(integrity_path.read_text(encoding="utf-8"))
+                        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                            integrity = {}
+                        if integrity.get("scrubbed"):
+                            page_blocker = "scrubbed provider echo; not covered"
                     records = []
                     break
                 leftover_token = token
@@ -2331,7 +2342,7 @@ def phase4_offline(store, config, state):
                 "audit_status": "not_independently_audited",
                 "independently_audited": False,
                 "lead_level": "insufficient_evidence",
-                "blocker": "missing raw page; not covered",
+                "blocker": page_blocker,
                 "coverage_status": "blocked",
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 "PRODUCT_READY": False,
@@ -2712,6 +2723,12 @@ async def run_live_e2e(raw):
                 )
                 config["bounds"] = updated
                 state["bounds"] = dict(updated)
+                # Stale Phase 4 rows were computed under the old window.
+                # Never serve 30d RESULTS under a 90d bound (§9.2).
+                state["phases_done"] = [
+                    phase for phase in (state.get("phases_done") or []) if phase != 4
+                ]
+                state["phase4_wallets"] = []
             else:
                 config["bounds"] = persisted
         else:

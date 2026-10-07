@@ -4,25 +4,25 @@
     {
       "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
       "records": 200,
-      "independently_reconstructed_trades": 48,
-      "app_completed_episodes": 2,
-      "auditor_clean_episodes": 2,
+      "independently_reconstructed_trades": 52,
+      "app_completed_episodes": 3,
+      "auditor_clean_episodes": 3,
       "status": "independently_audited",
       "independently_audited": true,
-      "independently_audited_episode_net": "5614.586672",
+      "independently_audited_episode_net": "4109.038305",
       "independently_audited_episode_net_unit": "USDC",
-      "app_completed_episode_net": "5614.586672",
+      "app_completed_episode_net": "4109.038305",
       "app_completed_episode_net_unit": "USDC",
       "independently_audited_episode_nets_by_unit": {
-        "USDC": "5614.586672"
+        "USDC": "4109.038305"
       },
       "worksheet_total": "50386.378661746",
       "worksheet_total_unit": "USDC",
       "worksheet_total_independently_audited": false,
       "worksheet_episode_bridge": {
         "worksheet_total": "50386.378661746",
-        "completed_episode_net": "5614.586672",
-        "bridge": "44771.791989746",
+        "completed_episode_net": "4109.038305",
+        "bridge": "46277.340356746",
         "unit": "USDC",
         "note": "worksheet total minus completed-episode net. The worksheet is never the qualifying value.",
         "worksheet_is_not_qualifying": true
@@ -40,7 +40,7 @@
         "ordered_transaction_set": "cc47c04a8a308992dbe4552c7538e0eb30004df9fd2daea468e482beb081cb3b",
         "ordered_transaction_count": 46,
         "completed_episode_ledger": "7b8270220955a747718d154ba750f4a557c9559b71b0ecfad429c9d4d6bc4fa8",
-        "completed_episode_count": 2,
+        "completed_episode_count": 3,
         "accounting_policy_version": "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1+audit-1to1-v1",
         "fingerprint": "bb0440c3be69d394b1100231d38c9ac21b97b46dd5265a5b59490f729fb2a2c6"
       },
@@ -48,8 +48,8 @@
       "components_agree": true,
       "one_to_one_membership": true,
       "aggregate_rounding_bridge": {
-        "app": "5614.586672",
-        "auditor": "5614.586672",
+        "app": "4109.038305",
+        "auditor": "4109.038305",
         "delta": "0",
         "delta_atomics": 0,
         "unit": "USDC",
@@ -58,7 +58,7 @@
         "rounding_policy": "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with ROUND_HALF_EVEN. Two values agree when the absolute atomic difference is at most 2 units of that asset. Never apply a SOL lamport tolerance to USDC.",
         "note": "Aggregate agrees within the declared 2-atomic tolerance."
       },
-      "auditor_confirmation": "auditor confirms within 2 USDC base units: 5614.586672 USDC",
+      "auditor_confirmation": "auditor confirms within 2 USDC base units: 4109.038305 USDC",
       "tolerance_text": "2 USDC base units",
       "rounding_policy": "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with ROUND_HALF_EVEN. Agreement is at most 2 atomic units of that asset.",
       "unaudited_venues": [],
@@ -210,6 +210,80 @@
               "net"
             ]
           }
+        },
+        {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "close_signature": "5125oxVi8HPYPUdyDgnnhJwiQpGZFuj29GSdiVptTdvBbHeT2DX4iNZNRmS5bbhTR1Vr8eMcGJN5GY7RUPHrbhv4",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "auditor_covers_venue": true,
+          "app": {
+            "basis": "10400",
+            "proceeds": "8894.451633",
+            "verified_costs": "0",
+            "net": "-1505.548367"
+          },
+          "auditor": {
+            "basis": "10400",
+            "proceeds": "8894.451633",
+            "verified_costs": "0",
+            "net": "-1505.548367"
+          },
+          "match": true,
+          "component_bridge": {
+            "unit": "USDC",
+            "tolerance": "2 USDC base units",
+            "rounding_policy": "Quantize each amount to the asset quantum (SOL 1e-9 / USDC 1e-6) with ROUND_HALF_EVEN. Two values agree when the absolute atomic difference is at most 2 units of that asset. Never apply a SOL lamport tolerance to USDC.",
+            "membership": {
+              "app": {
+                "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+                "close_signature": "5125oxVi8HPYPUdyDgnnhJwiQpGZFuj29GSdiVptTdvBbHeT2DX4iNZNRmS5bbhTR1Vr8eMcGJN5GY7RUPHrbhv4"
+              },
+              "auditor": {
+                "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+                "close_signature": "5125oxVi8HPYPUdyDgnnhJwiQpGZFuj29GSdiVptTdvBbHeT2DX4iNZNRmS5bbhTR1Vr8eMcGJN5GY7RUPHrbhv4"
+              },
+              "agree": true,
+              "one_to_one": true,
+              "mint_only_fallback": false
+            },
+            "components": {
+              "acquisition": {
+                "app": "10400",
+                "auditor": "10400",
+                "delta": "0",
+                "agree": true,
+                "tolerance": "2 USDC base units"
+              },
+              "proceeds": {
+                "app": "8894.451633",
+                "auditor": "8894.451633",
+                "delta": "0",
+                "agree": true,
+                "tolerance": "2 USDC base units"
+              },
+              "costs": {
+                "app": "0",
+                "auditor": "0",
+                "delta": "0",
+                "agree": true,
+                "tolerance": "2 USDC base units"
+              },
+              "net": {
+                "app": "-1505.548367",
+                "auditor": "-1505.548367",
+                "delta": "0",
+                "agree": true,
+                "tolerance": "2 USDC base units"
+              }
+            },
+            "agree": true,
+            "required_components": [
+              "acquisition",
+              "proceeds",
+              "costs",
+              "net"
+            ]
+          }
         }
       ],
       "auditor_only_episodes": [
@@ -234,6 +308,17 @@
           "proceeds_sol": "26681.941435",
           "verified_costs_sol": "0",
           "net_profit_sol": "5431.941435"
+        },
+        {
+          "mint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+          "close_signature": "5125oxVi8HPYPUdyDgnnhJwiQpGZFuj29GSdiVptTdvBbHeT2DX4iNZNRmS5bbhTR1Vr8eMcGJN5GY7RUPHrbhv4",
+          "venue": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "instruction": "route_v2",
+          "settlement_asset": "USDC",
+          "basis_sol": "10400",
+          "proceeds_sol": "8894.451633",
+          "verified_costs_sol": "0",
+          "net_profit_sol": "-1505.548367"
         }
       ],
       "reconstructed_mints": [

@@ -57,10 +57,12 @@ PINNED = {
     # router accounts (payer 0, source token 1, dest token 2). Written here
     # without importing scanner.investigation.
     (OKX, "aa2955b184501f35"): ("SwapTob", 0, (1, 2)),
-    # Independent DFlow Aggregator v4. Wallet at 3 on the observed swap
-    # (DKx vYeWFHJd). Wrap sibling 2f3e9bac83cd25c9 is not a swap.
+    # Independent DFlow Aggregator v4. Wallet at 3 on Swap / Swap2
+    # (DKx vYeWFHJd; run-7 4rZp4CN3). Wrap 2f3e9bac, Unwrap 63280e69,
+    # TransferFee 81a4c415 and TransferToSponsor 9bb38297 are not swaps.
     (DFLOW, "f8c69e91e17587c8"): ("swap", 3, ()),
     (DFLOW, "a8ac184dc59c8765"): ("swap_with_destination", 3, (4,)),
+    (DFLOW, "414b3f4ceb5b5b88"): ("swap2", 3, ()),
     # Independent DGMg PumpSwap router. Same buy/sell discs as Pump; user at 1.
     (DGMG, "66063d1201daebea"): ("buy", 1, (5, 6)),
     (DGMG, "33e685a4017f83ad"): ("sell", 1, (5, 6)),

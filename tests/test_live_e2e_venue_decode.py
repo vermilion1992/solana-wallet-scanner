@@ -36,7 +36,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_bumped_for_dgmg_dflow():
-    assert DECODER_VERSION == "spot-v21-dgmg-dflow-auditor-v1"
+    assert DECODER_VERSION == "spot-v22-dflow-swap2-wrap-v1"
 
 
 def test_app_and_auditor_are_independent_modules():
@@ -148,16 +148,149 @@ def test_unknown_program_stays_unresolved():
     assert auditor.reconstruct_record(fake, JXT) is None
 
 
-def test_dflow_fixture_without_reconciliation_stays_unresolved():
-    """App rejects the multi-hop 25865JdB fixture (no opposing SOL reconcilation).
+def _conversions(decoded):
+    return [row for row in decoded.get("events") or [] if row.get("kind") == "conversion"]
 
-    Auditor may isolate a USDC-settled single-mint fill from balances; that is
-    not a silent zero-basis guess — consideration must be nonzero.
+
+def test_dflow_swap2_usdc_sol_is_conversion_not_blocked():
+    """Run-7 9TxdAeLT 4rZp4CN3 is DFlow Swap2 (414b3f4ceb5b5b88), wallet at 3.
+
+    Hand: native −125_000_005_704 + fee 5_704 = 125 SOL out; +14_512_696_704
+    raw USDC. App policy: USDC↔SOL is a quote conversion, not a spot buy.
+    Auditor has no non-USDC mint, so it stays silent (not a zero-basis guess).
     """
-    payload = _load("dflow-swap.json")
+    from scanner.mass_search.live_e2e import classify_programs
+
+    payload = _load("dflow-swap2-buy.json")
+    assert payload["address"].startswith("9TxdAeLT")
+    assert payload["signature"].startswith("4rZp4CN3")
+    decoded, trades = _app_trades(payload)
+    assert trades == []
+    conversions = _conversions(decoded)
+    assert len(conversions) == 1
+    row = conversions[0]
+    assert row.get("instruction") == "swap2"
+    assert row["quantity_raw"] == "14512696704"
+    assert Decimal(str(row["amount_sol"])) == Decimal("125")
+    assert Decimal(str(row["amount_usdc"])) == Decimal("14512.696704")
+    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+    ranked = classify_programs([payload["record"]], payload["address"])
+    assert not any(item.get("program_id") == DFLOW for item in ranked.get("blockers") or [])
+
+
+def test_dflow_swap_plus_unwrap_usdc_sol_is_conversion():
+    """CSC8 5pSfmWV2 is DFlow Swap + UnwrapSol sibling (63280e692d6bacc9).
+
+    Unwrap is not a second swap. Hand: −37_908_000_000 raw USDC, native
+    +421_036_689_583 + fee 1_426_619 = 421.038116202 SOL. Quote conversion.
+    """
+    from scanner.mass_search.live_e2e import classify_programs
+
+    payload = _load("dflow-swap-unwrap-sell.json")
+    assert payload["address"].startswith("CSC8xFPM")
+    decoded, trades = _app_trades(payload)
+    assert trades == []
+    conversions = _conversions(decoded)
+    assert len(conversions) == 1
+    row = conversions[0]
+    assert row.get("instruction") == "swap"
+    assert row["quantity_raw"] == "37908000000"
+    assert Decimal(str(row["amount_sol"])) == Decimal("421.038116202")
+    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+    ranked = classify_programs([payload["record"]], payload["address"])
+    assert not any(item.get("program_id") == DFLOW for item in ranked.get("blockers") or [])
+
+
+def test_dflow_transfer_to_sponsor_is_not_a_swap():
+    """9bb38297 TransferToSponsor (and companion cd4d7f6c) stay unresolved."""
+    payload = _load("dflow-sponsor-not-swap.json")
     decoded, trades = _app_trades(payload)
     assert trades == []
     assert decoded.get("unresolved")
+    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+
+
+def test_dflow_swap2_token_sol_hand_deltas():
+    """HAv8 3G9EDeWV is Swap2 token↔SOL. Hand: +29_860_798_819 raw 74SBV4zD
+    against 2.080341597 SOL.
+    """
+    payload = _load("dflow-swap2-token-sol.json")
+    decoded, trades = _app_trades(payload)
+    assert len(trades) == 1
+    trade = trades[0]
+    assert trade["kind"] == "buy"
+    assert trade["mint"].startswith("74SBV4zD")
+    assert trade["quantity_raw"] == "29860798819"
+    assert Decimal(str(trade.get("amount_sol") or trade.get("consideration_sol"))) == Decimal("2.080341597")
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    assert aud
+    assert aud["kind"] == "buy"
+    assert aud["quantity_raw"] == "29860798819"
+    assert Decimal(aud["consideration_sol"]) == Decimal("2.080341597")
+    assert aud["instruction"] == "swap2"
+
+
+def test_dflow_swap2_token_usdc_hand_deltas():
+    """23Yu 2KFyZ9yq is Swap2 token↔USDC. Hand: −402_160_000_000 raw 3iQL8BFS
+    for 317.208149 USDC. Auditor isolates the USDC-settled fill.
+    """
+    payload = _load("dflow-swap2-token-usdc.json")
+    decoded, trades = _app_trades(payload)
+    assert len(trades) == 1
+    trade = trades[0]
+    assert trade["kind"] == "sell"
+    assert trade["mint"].startswith("3iQL8BFS")
+    assert trade["quantity_raw"] == "402160000000"
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    assert aud
+    assert aud["kind"] == "sell"
+    assert aud["quantity_raw"] == "402160000000"
+    assert Decimal(str(aud.get("consideration_usdc") or 0)) == Decimal("317.208149")
+
+
+def test_dflow_swap2_unwrap_token_hand_deltas():
+    """2gPk 4WeDYptj (run-7 venue example) is Swap2 + unwrap, token↔SOL.
+
+    Hand: −308_290_000 raw CASHx9KJ against 2.505635336 SOL. Unwrap is not a
+    second swap.
+    """
+    payload = _load("dflow-swap-unwrap-token.json")
+    decoded, trades = _app_trades(payload)
+    assert len(trades) == 1
+    trade = trades[0]
+    assert trade["kind"] == "sell"
+    assert trade["mint"].startswith("CASHx9KJ")
+    assert trade["quantity_raw"] == "308290000"
+    assert Decimal(str(trade.get("amount_sol") or trade.get("consideration_sol"))) == Decimal("2.505635336")
+    aud = auditor.reconstruct_record(payload["record"], payload["address"])
+    assert aud
+    assert aud["kind"] == "sell"
+    assert aud["quantity_raw"] == "308290000"
+    assert Decimal(aud["consideration_sol"]) == Decimal("2.505635336")
+
+
+def test_dflow_transfer_fee_is_not_a_swap():
+    payload = _load("dflow-transfer-fee-not-swap.json")
+    decoded, trades = _app_trades(payload)
+    assert trades == []
+    assert decoded.get("unresolved")
+    assert auditor.reconstruct_record(payload["record"], payload["address"]) is None
+
+
+def test_dflow_fixture_without_reconciliation_stays_unresolved():
+    """25865JdB multi-hop: app may now isolate H4KUxs if wrap/settlement
+    reconciles; otherwise it stays unresolved. Never a silent zero-basis.
+    """
+    payload = _load("dflow-swap.json")
+    decoded, trades = _app_trades(payload)
+    if trades:
+        trade = trades[0]
+        assert trade["mint"].startswith("H4KUxs")
+        assert Decimal(str(trade.get("amount_sol") or trade.get("consideration_sol") or 0)) > 0 or Decimal(
+            str(trade.get("amount_usdc") or trade.get("consideration_usdc") or 0)
+        ) > 0
+    else:
+        assert decoded.get("unresolved")
     aud = auditor.reconstruct_record(payload["record"], payload["address"])
     if aud is not None:
         usdc = Decimal(str(aud.get("consideration_usdc") or 0))

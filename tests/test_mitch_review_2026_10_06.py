@@ -538,7 +538,7 @@ def test_labelled_wallets_are_independently_audited_in_committed_json():
     expected = {
         A6PS: (8, 8),
         GTFO: (16, 16),
-        W58: (2, 2),
+        W58: (3, 3),
         "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": (6, 6),
         "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": (1, 1),
     }
@@ -793,17 +793,17 @@ def test_58pw_independently_audited_sits_next_to_episode_net():
     payload = json.loads((COVERAGE_DIR / "INDEPENDENT_AUDIT.json").read_text(encoding="utf-8"))
     row = next(item for item in payload["wallets"] if item["address"] == W58)
     assert row["independently_audited"] is True
-    assert Decimal(str(row["independently_audited_episode_net"])) == Decimal("5614.586672")
+    assert Decimal(str(row["independently_audited_episode_net"])) == Decimal("4109.038305")
     assert row["independently_audited_episode_net_unit"] == "USDC"
     assert row["worksheet_total_independently_audited"] is False
     assert Decimal(str(row["worksheet_total"])) == Decimal("50386.378661746")
     table = json.loads((COVERAGE_DIR / "WALLET_TABLE.json").read_text(encoding="utf-8"))
     wallet = next(item for item in table["wallets"] if item["address"] == W58)
     assert wallet["independently_audited"] is True
-    assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("5614.586672")
+    assert Decimal(str(wallet["independently_audited_episode_net"])) == Decimal("4109.038305")
     assert wallet["worksheet_total_independently_audited"] is False
     assert wallet["net_display"] != "50386.378661746 USDC"
-    assert "5614.586672" in str(wallet["net_display"])
+    assert "4109.038305" in str(wallet["net_display"])
     assert "completed-episode net" in str(wallet["net_display"])
     assert (
         "auditor confirms within 2 USDC base units" in str(wallet["net_display"])
@@ -1024,7 +1024,7 @@ def test_auditor_rejects_opening_inventory_close_4dyknedb():
     expected = {
         A6PS: (8, 8),
         GTFO: (16, 16),
-        W58: (2, 2),
+        W58: (3, 3),
         "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": (6, 6),
         "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": (1, 1),
     }

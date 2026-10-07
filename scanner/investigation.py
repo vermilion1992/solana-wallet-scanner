@@ -75,6 +75,11 @@ OKX_SWAPTOB = bytes.fromhex('aa2955b184501f35')
 RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
 DFLOW_SWAP = bytes.fromhex('f8c69e91e17587c8')
 DFLOW_SWAP_WITH_DESTINATION = bytes.fromhex('a8ac184dc59c8765')
+DFLOW_SWAP2 = bytes.fromhex('414b3f4ceb5b5b88')
+DFLOW_WRAP = bytes.fromhex('2f3e9bac83cd25c9')
+DFLOW_UNWRAP = bytes.fromhex('63280e692d6bacc9')
+DFLOW_TRANSFER_FEE = bytes.fromhex('81a4c415b130b4a2')
+DFLOW_TRANSFER_TO_SPONSOR = bytes.fromhex('9bb38297c48bfda3')
 DFLOW_DST_FULFILL = bytes.fromhex('3dd627f841d49924')
 GMGN_SWAP = bytes.fromhex('f8c69e91e17587c8')
 PHOTON_SWAP = bytes.fromhex('0b9c60da27a3b413')
@@ -92,7 +97,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v21-dgmg-dflow-auditor-v1'
+DECODER_VERSION = 'spot-v22-dflow-swap2-wrap-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -177,6 +182,9 @@ def _dflow_is_reviewed_swap(instruction, keys):
     if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
         return True
     if payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
+        return True
+    # Swap2: same wallet-at-3 prefix as Swap. Run-7 blocked 654 txs on this disc.
+    if payload[:8] == DFLOW_SWAP2 and len(payload) >= 16 and len(accounts) >= 6:
         return True
     return False
 
@@ -399,10 +407,14 @@ def _route(instruction, keys):
             name, authority, owned_positions = 'SwapTob', 0, (1, 2)
     elif program == DFLOW:
         # Official DFlow Aggregator v4. Wallet is account 3 on the observed swap.
+        # Wrap 2f3e9bac / Unwrap 63280e69 / TransferFee / TransferToSponsor are
+        # not swaps and are skipped before _route.
         if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
             name, authority, owned_positions = 'swap_with_destination', 3, (4,)
         elif payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
             name, authority, owned_positions = 'swap', 3, ()
+        elif payload[:8] == DFLOW_SWAP2 and len(payload) >= 16 and len(accounts) >= 6:
+            name, authority, owned_positions = 'swap2', 3, ()
     elif program == DFLOW_DST:
         # Native Flow FulfillOrder. Wallet at 3 on the attached CfNx page.
         if payload[:8] == DFLOW_DST_FULFILL and len(payload) >= 16 and len(accounts) >= 4:
@@ -551,7 +563,16 @@ def _verify_ephemeral_wrapped(flat, candidates, owned, keys, pre_lamports,
         if close_program != token_program or _close_authority(close) != address or close.get('destination') != address:
             raise ValueError('Temporary wrapped SOL closure and rent refund must belong to the investigated wallet')
         if not creation_position < initialization_position < route_position < close_position:
-            raise ValueError('Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved')
+            # DFlow Swap/Swap2 wrap SOL as a CPI inside the swap (create/init
+            # after the outer route in the flattened list) and close via an
+            # inner close or a sibling UnwrapSol. Still require one wallet-
+            # funded create/init and one wallet-refunded close.
+            dflow_in_swap_wrap = (
+                route.get('program') == DFLOW
+                and route_position < creation_position < initialization_position < close_position
+            )
+            if not dflow_in_swap_wrap:
+                raise ValueError('Temporary wrapped SOL creation, initialization, route and closure ordering is unresolved')
         wrapped_units, pending_sync = 0, False
         for position, outer, movement_type, kind, program, info in sorted(movements):
             if not creation_position < position < close_position:
@@ -1312,7 +1333,7 @@ def decode_supported_swaps(transactions, address):
                 # wrap-and-close the quote ATA in the same tx, so post
                 # balances also show no leftover WSOL. The wallet's
                 # fee-adjusted native delta is the SOL leg.
-                if not (route['program'] in (JUPITER, DGMG) and not owned_wsol_accounts):
+                if not (route['program'] in (JUPITER, DGMG, DFLOW) and not owned_wsol_accounts):
                     raise ValueError('Isolated native consideration does not reconcile to wallet-owned wrapped SOL swap transfers')
             native_roles = _unresolved_native_roles(flat, owned, wsol_accounts, keys,
                 pre_lamports, address, route, retained_funding, settlement)
