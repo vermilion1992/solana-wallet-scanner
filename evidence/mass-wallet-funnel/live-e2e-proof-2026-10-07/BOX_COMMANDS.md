@@ -95,6 +95,14 @@ string. Phase 4 is offline `GENUINE_REPLAY` on captured pages. Do not run two
 
 Phase 4 can also run as `--live --phases 4`; it still makes no provider calls.
 
+To replay the attached `cfe6e78` Phase-3 pages with no provider calls, copy
+`live-out/raw/phase3/<wallet>/page*.bin` into `$OUT/raw/phase3/` (23 pages,
+11 wallets) and run `--dry-run --phases 4`. The runner uses `GENUINE_REPLAY`,
+the persisted report window, and refuses a missing page (never an empty
+covered page). Bounds for that capture: report
+`2026-09-07T07:51:22Z` → `2026-10-07T07:51:22Z`, history start
+`2026-07-09T07:51:22Z`.
+
 ## All remaining phases after arming
 
 ```bash
