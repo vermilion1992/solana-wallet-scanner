@@ -3,7 +3,7 @@
 **When:** 2026-10-07
 **Base:** `6dc3424c81af117a13c6cfafe451761c74dddb71` (merged PR #6)
 **Prior tip attacked:** `edee60848030f489ddea1b4ea622b4c9cb23b218`
-**Candidate / tip (this handoff):** see git HEAD after this commit
+**Candidate / tip (this handoff):** `9f4806fe0ccc8e97954b431781a533da703e2a2a`
 **PRODUCT_READY:** false
 **Spend this task:** 0 Helius requests, 0 Birdeye requests, $0. No live run.
 
