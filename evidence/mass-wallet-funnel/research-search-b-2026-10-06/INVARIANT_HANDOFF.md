@@ -4,7 +4,7 @@ Fill these values into the ChatGPT brief header.
 
 - Candidate full commit SHA: `4986e795e6e336b4afdea31f521a94cbd6382cf4`
 - Application/tested SHA: `4986e795e6e336b4afdea31f521a94cbd6382cf4`
-- Evidence-only SHA: pending this evidence commit (filled after push)
+- Evidence-only SHA: `cd5c80314694156d50813f26943d71700761c4e3`
 - Broken tip under attack: `2fe60bd8d0e4ec3a996f80d8b2f1e9bac1152d20`
 - PR / branch: PR #6 / `cursor/research-search-b-fix-1055` (confirmed; base `cursor/mass-wallet-funnel-v1-1055`)
 - Evidence manifest: `evidence/mass-wallet-funnel/research-search-b-2026-10-06/INVARIANT_REGISTRY.md`
