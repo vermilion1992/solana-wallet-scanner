@@ -10,10 +10,14 @@
       "state": "PASS"
     },
     {
+      "case": "empty-watchlist-results-compare",
+      "state": "PASS"
+    },
+    {
       "case": "offline-slice-populated",
       "state": "PASS",
-      "run_id": "796e6826d1cb432689db40e1a7e4c3be",
-      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4"
+      "run_id": "1e8befe44e8e4d7b9225852d4a11a468",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
       "case": "export-run",
@@ -22,11 +26,72 @@
     {
       "case": "open-subset-report",
       "state": "PASS",
-      "report_id": "abb7df9e4ce841c5a26ad6b950d5bec4"
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
     },
     {
-      "case": "restart-reopen",
-      "state": "PASS"
+      "case": "restart-reopen-worksheet",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
+    },
+    {
+      "case": "results-subset-pnl",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
+    },
+    {
+      "case": "compare-unselected-subset",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
+    },
+    {
+      "case": "compare-subset-pnl",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd"
+    },
+    {
+      "case": "research-screen-subset",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
+      "result": "insufficient_evidence",
+      "observation_started": false
+    },
+    {
+      "case": "restart-reopen-screening",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
+      "result": "insufficient_evidence",
+      "observation_started": false,
+      "export": "screening-export.json"
+    },
+    {
+      "case": "shortlist-subset-watchlist-results",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
+      "observation_started": false
+    },
+    {
+      "case": "restart-shortlist-loop",
+      "state": "PASS",
+      "report_id": "4a9fa6fb56904d508fe70af5f3396edd",
+      "screening_id": "da562c00322a4543882e0d1bc2a74d51",
+      "loop": [
+        "slice",
+        "screen",
+        "reopen-screening",
+        "shortlist",
+        "restart",
+        "watchlist",
+        "latest-report",
+        "results",
+        "export",
+        "reopen-export",
+        "research"
+      ],
+      "observation_started": false,
+      "export": "mass-search-export-after-restart.json"
     }
   ],
   "limitations": [
@@ -50,6 +115,54 @@
       "nodes": []
     },
     {
+      "name": "14-watchlist-empty",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "14-watchlist-empty",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "14-results-empty",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "14-results-empty",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-empty",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-empty",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
       "name": "02-populated-slice",
       "label": "desktop",
       "innerWidth": 1440,
@@ -82,7 +195,7 @@
       "nodes": []
     },
     {
-      "name": "04-reopen-after-restart",
+      "name": "04-reopen-button-after-restart",
       "label": "desktop",
       "innerWidth": 1440,
       "scrollWidth": 1440,
@@ -90,10 +203,218 @@
       "nodes": []
     },
     {
-      "name": "04-reopen-after-restart",
+      "name": "04-reopen-button-after-restart",
       "label": "mobile",
       "innerWidth": 360,
       "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "05-reopened-report-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "05-reopened-report-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "06-results-subset-pnl",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "06-results-subset-pnl",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-unselected-subset",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "16-compare-unselected-subset",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "07-compare-subset-pnl",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "07-compare-subset-pnl",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "09-research-screen-subset",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "09-research-screen-subset",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "10-reopen-screening-button-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "10-reopened-screening-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "10-reopened-screening-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-watchlist-shortlist-subset",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-watchlist-shortlist-subset",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-results-after-shortlist",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "11-results-after-shortlist",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "12-watchlist-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "12-watchlist-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "13-watchlist-latest-report-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "13-watchlist-latest-report-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "12-results-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "12-results-after-restart",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "15-reopen-after-export",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "15-reopen-after-export",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "12-research-after-restart",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
       "overflow": false,
       "nodes": []
     }
@@ -117,6 +438,11 @@
       "status": 200
     },
     {
+      "method": "GET",
+      "path": "/api/mass-search/access-blocker",
+      "status": 200
+    },
+    {
       "method": "POST",
       "path": "/api/mass-search/vertical-slice",
       "status": 200
@@ -128,32 +454,22 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/reports/abb7df9e4ce841c5a26ad6b950d5bec4?view=display",
-      "status": 200
-    },
-    {
-      "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
-      "status": 200
-    },
-    {
-      "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
       "status": 200
     },
     {
@@ -173,17 +489,102 @@
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
       "status": 200
     },
     {
       "method": "GET",
-      "path": "/api/mass-search/runs/796e6826d1cb432689db40e1a7e4c3be/candidates?stage=triage&limit=50",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/screenings",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenings/da562c00322a4543882e0d1bc2a74d51",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/watchlist",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/bootstrap",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/state?report_view=summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/access-blocker",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/mass-search/runs/1e8befe44e8e4d7b9225852d4a11a468/candidates?stage=triage&limit=50",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/reports/4a9fa6fb56904d508fe70af5f3396edd?view=display",
       "status": 200
     }
   ],

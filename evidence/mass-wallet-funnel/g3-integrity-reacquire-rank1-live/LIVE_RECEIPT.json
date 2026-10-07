@@ -1,0 +1,83 @@
+{
+  "outcome_label": "G3_INTEGRITY_REACQUIRE_RANK1",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "grant_enabled": true,
+  "repo_template_enabled": false,
+  "freeze_verified": true,
+  "allowed_wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "signature_manifest_status": "EXTRACT_OK",
+  "original_segments_identified": true,
+  "page0_signature_count": 100,
+  "page1_signature_count": 100,
+  "windows": {
+    "report_window_days": 30,
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_days": 90,
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z",
+    "acquisition_support_end_exclusive": "2026-10-05T13:29:27Z",
+    "timestamp_semantics": "Discovery cutoff is the ranked-100 fetch timestamp 2026-10-05T13:29:27Z. Report window is 30 days ending at cutoff (exclusive end). Acquisition-support records may start 90 days before cutoff. Do not substitute a later cutoff or current/latest history."
+  },
+  "encoding_and_version": {
+    "helius_method": "getTransactionsForAddress",
+    "transactionDetails": "full",
+    "limit": 100,
+    "sortOrder": "desc",
+    "commitment": "finalized",
+    "maxSupportedTransactionVersion": 1,
+    "filters": {
+      "status": "any",
+      "tokenAccounts": "all"
+    },
+    "documented_units_per_request": 10,
+    "decoder_version_observed_on_damaged_run": "spot-v7-native-flow-roles",
+    "sanitize_version_required": "schema-aware-v2",
+    "cache_key_prefix_required": "g3-history-v2:",
+    "legacy_v1_cache_is": "SOURCE_RECORDS_DAMAGED",
+    "newest_first_now_would_substitute_current_history": true
+  },
+  "page_hashes": {
+    "0": "b0fa9cb76a9e9531b5654f4fa22b0e9b7ef9a81ab61fa21bc16a649de0fb492d",
+    "1": "2cdb237a8adbca04ee4f9e04abd469a525ce499beca1def7e39a3a908244a0fd"
+  },
+  "pagination_tokens": {
+    "page0": "452802642:577",
+    "page1": "452554670:596"
+  },
+  "arming_blockers": [],
+  "non_grants": {
+    "example_enabled": false,
+    "draft_enabled": false,
+    "ranked100_enabled": false,
+    "g3_leftover_enabled": false,
+    "reacquire_enabled": false,
+    "g1_not_reused": true,
+    "ranked100_not_reused": true,
+    "g3_leftover_not_reused": true
+  },
+  "external_requests": 1,
+  "helius_requests_used": 1,
+  "helius_units_used": 10,
+  "birdeye_requests_used": 0,
+  "setup_pilot_untouched": true,
+  "PRODUCT_READY": false,
+  "not_full_g2": true,
+  "not_match": true,
+  "application_commit": "79e8e81b348a4a80f858d79f87f6587e1e8a06bf",
+  "parent_recovery_commit": "fe6a398a40c59d1e1afcb3788c3ccba00d936779",
+  "token_balances": "SOURCE_RECORDS_DAMAGED",
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "status": "BLOCKED",
+  "blocker": "SIGNATURE_MISMATCH",
+  "detail": "Returned signatures do not match the frozen original segment",
+  "stop_reason": "SIGNATURE_MISMATCH",
+  "pages_fetched": [],
+  "page_integrity": [],
+  "transport_called": true
+}

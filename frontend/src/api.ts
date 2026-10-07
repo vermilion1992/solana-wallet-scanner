@@ -2,6 +2,19 @@ import type { Report, State } from "./types";
 
 let csrf = "";
 const displayRequests = new Map<string, Promise<Report>>();
+const frontendCalls = { frontend_api_calls: 0, frontend_provider_calls: 0 };
+const PROVIDER_MARKERS = [
+  "mainnet.helius-rpc.com",
+  "public-api.birdeye.so",
+  "api.mainnet-beta.solana.com",
+  "api.jup.ag",
+];
+export function frontendInstrumentation() {
+  return { ...frontendCalls };
+}
+export function noteFrontendUrl(url: string) {
+  if (PROVIDER_MARKERS.some((marker) => url.includes(marker))) frontendCalls.frontend_provider_calls += 1;
+}
 export async function bootstrap() {
   const params = new URLSearchParams(location.hash.slice(1));
   const token = params.get("session");
@@ -24,6 +37,7 @@ export async function api<T = unknown>(
   method = "GET",
   body?: unknown,
 ): Promise<T> {
+  frontendCalls.frontend_api_calls += 1;
   const response = await fetch(`/api${path}`, {
     method,
     credentials: "same-origin",

@@ -1,0 +1,34 @@
+{
+  "kind": "ranked100-shared-boundary-next-data-v1",
+  "status": "EXTERNAL_DATA_BLOCKER",
+  "PRODUCT_READY": false,
+  "not_a_grant": true,
+  "do_not_reuse_leftover_units": true,
+  "current_capture": {
+    "path": "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json",
+    "sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+    "bytes": 2403585,
+    "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+    "supported_sol_swaps": 0,
+    "independently_reconciled_completed_positions": 0,
+    "why_this_page_cannot_close_the_ranked_workflow": [
+      "80 Pump outers are pinned-IDL distribute_fee_to_holders, not buy/sell/buy_exact_sol_in.",
+      "19 failed on-chain txs keep fees visible and reconstruct no trades.",
+      "6 Jupiter outers use unreviewed discriminator bb64facc31c4af14 with inner PumpSwap settling USDC.",
+      "2 PumpSwap buys appear only as inners under unreviewed outers.",
+      "Reviewed decoder still requires one outer SOL/wSOL route. Raw SOL delta is not P&L."
+    ]
+  },
+  "needed_if_a_later_grant_is_separately_approved": {
+    "minimum": "One captured page whose outer instruction is a reviewed Pump buy/sell/buy_exact_sol_in or a reviewed Jupiter route with SOL/wSOL settlement for this wallet.",
+    "preferred": "Enough supported SOL-settled trades to reconstruct at least one independently reconciled completed position.",
+    "same_wallet_ok": true,
+    "page1_not_required_unless_needed_for_that_position": true,
+    "zero_live_calls_until_named_grant": true
+  },
+  "code_not_blocked": [
+    "Shared canonical decode-record wrap is in place.",
+    "Existing Pump adapter names reviewed non-swap instructions.",
+    "Honest partial application report, classification, fees, and G1 control path work offline."
+  ]
+}

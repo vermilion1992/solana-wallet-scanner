@@ -1,0 +1,93 @@
+{
+  "outcome_label": "G3_RANKED100_HISTORY",
+  "status": "INCOMPLETE",
+  "authorization_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "qualifying_reports": 0,
+  "visible_below_g3": 0,
+  "g3_bar": ">=10 supported completed observed episodes per report",
+  "target_reports": 3,
+  "target_not_a_guarantee": true,
+  "helius_requests_used": 10,
+  "helius_units_used_documented_estimate": 100,
+  "helius_units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+  "birdeye_requests": 0,
+  "investigations": 5,
+  "inspected_addresses": [
+    "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+    "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+    "3g8KsJE1yhJvBo6kvqvxLnoSXQ9suqQnHMqGFs3LFckM",
+    "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+    "B4HUfUDVzVuVgd3xqEm4wfCmBofuHh4h5NqjV3EzKAzi"
+  ],
+  "per_wallet": [
+    {
+      "shortlist_rank": 1,
+      "role": "initial",
+      "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+      "pages": 2,
+      "records_merged": 200,
+      "episodes": 0,
+      "status": "NO_SUPPORTED_CLOSED_PAIR",
+      "g3_qualifying": false,
+      "decoded_swaps": 0,
+      "supported_transactions": 0
+    },
+    {
+      "shortlist_rank": 3,
+      "role": "initial",
+      "address": "DSJVxpK1gwZvFsiYdaRz7Ly51vTXnAwHGfLGWcRvVJGE",
+      "pages": 2,
+      "records_merged": 200,
+      "episodes": 0,
+      "status": "NO_SUPPORTED_CLOSED_PAIR",
+      "g3_qualifying": false,
+      "decoded_swaps": 0,
+      "supported_transactions": 0
+    },
+    {
+      "shortlist_rank": 5,
+      "role": "initial",
+      "address": "3g8KsJE1yhJvBo6kvqvxLnoSXQ9suqQnHMqGFs3LFckM",
+      "pages": 2,
+      "records_merged": 200,
+      "episodes": 0,
+      "status": "NO_SUPPORTED_CLOSED_PAIR",
+      "g3_qualifying": false,
+      "decoded_swaps": 0,
+      "supported_transactions": 0
+    },
+    {
+      "shortlist_rank": 6,
+      "role": "reserve",
+      "address": "291Yj2YfCbbMoP6UF6cPkzagvBMvUuxDmBkDbuRFJKsQ",
+      "pages": 2,
+      "records_merged": 200,
+      "episodes": 0,
+      "status": "NO_SUPPORTED_CLOSED_PAIR",
+      "g3_qualifying": false,
+      "decoded_swaps": 0,
+      "supported_transactions": 0
+    },
+    {
+      "shortlist_rank": 7,
+      "role": "reserve",
+      "address": "B4HUfUDVzVuVgd3xqEm4wfCmBofuHh4h5NqjV3EzKAzi",
+      "pages": 2,
+      "records_merged": 200,
+      "episodes": 0,
+      "status": "NO_SUPPORTED_CLOSED_PAIR",
+      "g3_qualifying": false,
+      "decoded_swaps": 0,
+      "supported_transactions": 0
+    }
+  ],
+  "unused_reserves": [],
+  "stop_reason": "wallet_investigation_cap",
+  "blocker": null,
+  "errors": [],
+  "setup_pilot_unchanged": true,
+  "application_sha": "c3a3ffe5d910823f1113ea5b4f8912c3cf47dfce",
+  "evidence_dir": "/workspace/g3-ranked100-live-results/evidence",
+  "PRODUCT_READY": false,
+  "not_full_g2": true
+}

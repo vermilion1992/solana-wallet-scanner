@@ -1,0 +1,44 @@
+{
+  "kind": "actual-launcher-offline-synthetic-research-browser",
+  "state": "PASS",
+  "software_functionality": "PASS_IN_SYNTHETIC_BROWSER_SCOPE",
+  "genuine_live_evidence": "NOT_RUN_IN_OFFLINE_BROWSER",
+  "PRODUCT_READY": false,
+  "cases": [
+    {
+      "case": "research-paper-tables",
+      "state": "PASS",
+      "run_ids": [
+        "c297bf62d52c4de9a852e9d83068d0c3",
+        "2d364649dbf242f9ad2ae24ab66a6ec6"
+      ]
+    }
+  ],
+  "limitations": [
+    "Seeded stopped paper runs validate Research table/card layout, not live quotes or profitable following."
+  ],
+  "overflow": [
+    {
+      "name": "01-research-paper-tables",
+      "label": "desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "nodes": []
+    },
+    {
+      "name": "01-research-paper-tables",
+      "label": "mobile",
+      "innerWidth": 360,
+      "scrollWidth": 360,
+      "overflow": false,
+      "nodes": []
+    }
+  ],
+  "javascript_errors": [],
+  "external_browser_requests": [],
+  "overflowed": [],
+  "actual_launcher": "/workspace/run.sh",
+  "browser": "Chromium 148.0.7778.96",
+  "launcher_stopped": true
+}

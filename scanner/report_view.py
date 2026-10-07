@@ -18,6 +18,7 @@ _SUMMARY_TOP = (
     'collection_input_hash', 'rebuilt_from', 'previous_methodology', 'previous_history_methodology',
     'previous_position_methodology', 'rebuild', 'market_observation_scope', 'market_observation_note',
     'history_assessment', 'position_assessment', 'archive_assessment', 'wallet_assessment',
+    'corpus_kind', 'worksheet', 'independent_worksheet', 'worksheet_reconciliation', 'material_exit',
 )
 _SUMMARY_NESTED = (
     ('coverage', 'history_evidence', 'version'),

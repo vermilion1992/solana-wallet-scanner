@@ -1,0 +1,76 @@
+{
+  "kind": "genuine-replay-hunt-v1",
+  "inspected_at": "2026-10-05T10:35:00Z",
+  "usable_genuine_replay": false,
+  "archives_found": true,
+  "archives_usable_for_g1": false,
+  "conclusion": "Partial real provider archives exist. None contain a supported closed buy+sell pair that mass-search reconstruct_candidate can consume without fabricating events. Genuine-replay G1 is NOT_RUN. Live grant required.",
+  "inspected_paths": {
+    "real_cache": "evidence/runs/real-cache",
+    "manifest": "evidence/runs/real-cache/manifest.json.gz",
+    "manifest_sha256": "6353860af1eba9d5270e5416f6c5a93004b132a47694b026dd59d7bce12c7bec",
+    "archive_count": 63,
+    "source_probe": "evidence/source-probe-2026-10-04",
+    "genuine_partial_report": "evidence/product-milestone/product-browser-accepted/genuine-partial-report.json",
+    "decoder_diagnostic_not_used": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_CASH_ROLE_FIRST.json"
+  },
+  "real_cache": {
+    "scope": "Cached native selected records, not complete wallet history",
+    "reported_wallet": "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+    "scan_addresses": [
+      "6eAZdxA68tQJBD1LiinU7quXkcuwkSScXh2vC6G56pNM",
+      "5phPCsrugVb2uVTmBrDJUdCKDsxUYZUJhvsZAvtrygQY",
+      "MriyaNN8TMp6qRWjfr723PK7xgQK7yCt7Kg2v2PQu7X",
+      "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
+      "DY5qAVztKXXPMY9enjbgvJxn6wPPZ1Ek34Jp3xJm4Lct"
+    ],
+    "transactions_collected_on_reported_wallet": 23,
+    "scan_progress_transactions": 94,
+    "counts": {"closed": 0, "open": 0, "interrupted": 0, "unresolved": 0},
+    "positions": 0,
+    "profit_sol": null,
+    "known_realised_profit_sol": "-0.000240394",
+    "known_realised_meaning": "fees only; unallocated overhead; not a supported swap P&L",
+    "policy": "UNRESOLVED",
+    "archive_rpc_methods": {
+      "getSignaturesForAddress": 34,
+      "transaction_records": 23,
+      "getTokenAccountsByOwner": 2,
+      "getSlot": 1,
+      "getAccountInfo": 1,
+      "getBalance": 1
+    },
+    "birdeye_trader_pages": 0,
+    "getTransactionsForAddress_pages": 0,
+    "normalized_buy_sell_events_in_archives": 0,
+    "decoder_finding": "No reviewed decoder for this instruction/program; balance deltas do not prove a swap",
+    "live_exchange_finding": "This build supports parsed transfers, account administration and fees. It has no reviewed DEX buy/sell adapters or historical meme classifier; live trading metrics remain unresolved.",
+    "scan_status": "paused",
+    "scan_reason": "Free application credit cap reached, including pending requests; collection is incomplete. Resume only within the confirmed provider cycle and budget."
+  },
+  "rejected_as_genuine_replay_input": [
+    {
+      "path": "evidence/product-milestone/product-browser-accepted/world_hash-restored-report.json",
+      "reason": "source=demo; not a genuine archive"
+    },
+    {
+      "path": "evidence/genuine-wallet-batch/read-only-financial-review/RESEARCH_CASH_ROLE_FIRST.json",
+      "reason": "Explicitly a production_fixture_diagnostic with synthetic-anchor / development-control scope. Not a discovered candidate native corpus. Not fed into reconstruct_candidate."
+    },
+    {
+      "path": "evidence/product-milestone/product-browser-accepted/genuine-partial-report.json",
+      "reason": "Same live wallet as real-cache; closed=0; profit_sol unknown; no supported buy+sell"
+    }
+  ],
+  "missing_artifacts_for_genuine_replay_g1": [
+    "Immutable archived Birdeye GET /trader/gainers-losers pages (page size 100) containing real trader addresses",
+    "Immutable archived Helius getTransactionsForAddress (or equivalent native history) pages whose current reviewed decoder yields at least one supported closed buy+sell pair with reconciled SOL consideration"
+  ],
+  "not_done": [
+    "Did not fabricate archives or normalized events",
+    "Did not label SYNTHETIC dust-tail as GENUINE_REPLAY",
+    "Did not enable live-research-authorization-v1",
+    "Did not call live providers",
+    "Did not reset setup-pilot"
+  ]
+}

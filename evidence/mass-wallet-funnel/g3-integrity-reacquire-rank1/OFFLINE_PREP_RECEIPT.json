@@ -1,0 +1,60 @@
+{
+  "outcome_label": "G3_INTEGRITY_REACQUIRE_RANK1",
+  "status": "OFFLINE_PASS",
+  "stop_reason": "offline_prep_only",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "application_commit": "0fa9f9a8bd5b0178579f4185e0bbcc9589fbccc3",
+  "parent_recovery_commit": "fe6a398a40c59d1e1afcb3788c3ccba00d936779",
+  "descendant_of_parent_recovery_commit": true,
+  "grant_path": "config/live_authorization.g3-integrity-reacquire-rank1-draft.json",
+  "grant_enabled": false,
+  "leftover_g3_authorization_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "leftover_g3_not_reused": true,
+  "signature_manifest_status": "EXTRACT_OK",
+  "original_segments_identified": true,
+  "page0_signature_count": 100,
+  "page1_signature_count": 100,
+  "expected_signatures_if_original_pages": 200,
+  "page0_pagination_token": "452802642:577",
+  "page1_pagination_token": "452554670:596",
+  "allowed_wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "page0_evidence_sha256": "b0fa9cb76a9e9531b5654f4fa22b0e9b7ef9a81ab61fa21bc16a649de0fb492d",
+  "page1_evidence_sha256": "2cdb237a8adbca04ee4f9e04abd469a525ce499beca1def7e39a3a908244a0fd",
+  "token_balances": "SOURCE_RECORDS_DAMAGED",
+  "windows": {
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z"
+  },
+  "encoding": {
+    "method": "getTransactionsForAddress",
+    "transactionDetails": "full",
+    "limit": 100,
+    "sortOrder": "desc",
+    "commitment": "finalized",
+    "maxSupportedTransactionVersion": 1,
+    "filters": {
+      "status": "any",
+      "tokenAccounts": "all"
+    }
+  },
+  "external_requests": 0,
+  "helius_calls": 0,
+  "birdeye_calls": 0,
+  "PRODUCT_READY": false,
+  "offline_tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_mass_search_g3_reacquire.py tests/test_mass_search_g3.py tests/test_mass_search_g1.py tests/test_validation_gates.py",
+    "passed": 184,
+    "failed": 0,
+    "proved": [
+      "overlay freeze is EXTRACT_OK with 100+100 signatures and pagination tokens",
+      "new grant id validates offline while enabled:false",
+      "leftover G3 / G1 / ranked-100 grants cannot be loaded as reacquire",
+      "out-of-scope wallets, page>1, and 15/150 leftover ceilings are rejected",
+      "page1 requires intact page0 plus mint+sig+reason, not episode-count/PnL",
+      "STOP_NO_SEGMENT freeze does not call transport",
+      "signature mismatch stops after page 0 and charges 10 credits",
+      "two failures consume the 20-credit ceiling and block a third request"
+    ]
+  }
+}

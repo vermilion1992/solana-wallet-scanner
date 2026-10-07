@@ -1,0 +1,23 @@
+{
+  "authorization_id": "live-g3-ranked100-history-2026-10-06-mitch",
+  "provider": "helius",
+  "method": "getTransactionsForAddress",
+  "documented_units_per_request": 10,
+  "requests_dispatched": 10,
+  "units_ledger_documented_estimate": 100,
+  "units_are": "documented_estimate_not_confirmed_dashboard_receipt",
+  "dashboard_confirmed_units": null,
+  "dashboard_confirmed_note": "No Helius credit/cost headers observed on responses; billing remains documented estimate until dashboard confirmation.",
+  "provider_billing_headers_observed": {},
+  "ceiling_max_requests": 15,
+  "ceiling_max_units": 150,
+  "remaining_budget_by_estimate": {
+    "requests": 5,
+    "units": 50
+  },
+  "birdeye_requests": 0,
+  "birdeye_units": 0,
+  "setup_pilot_unchanged": true,
+  "max_additional_spend_usd": "0",
+  "generated_at": "2026-10-05T14:36:39Z"
+}

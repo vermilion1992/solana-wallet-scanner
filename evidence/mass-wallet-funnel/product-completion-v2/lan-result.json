@@ -1,0 +1,11 @@
+{
+  "kind": "product-lan-phone-acceptance",
+  "lan_ip": "172.30.0.2",
+  "loopback": false,
+  "external": [],
+  "errors": [],
+  "PRODUCT_READY": false,
+  "state": "PASS",
+  "unauthenticated_status": 401,
+  "provider_calls": 0
+}

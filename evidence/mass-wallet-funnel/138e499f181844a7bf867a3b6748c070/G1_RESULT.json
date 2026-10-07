@@ -1,0 +1,100 @@
+{
+  "gate": "G1",
+  "status": "BLOCKED",
+  "run_id": "138e499f181844a7bf867a3b6748c070",
+  "authorization_id": "live-g1-vertical-slice-2026-10-05-mitch",
+  "grant_path": "config/live_authorization.g1-granted.json",
+  "grant_enabled": true,
+  "blocker": "missing_provider_credentials",
+  "detail": "Live G1 stopped before any provider HTTP: BIRDEYE_API_KEY absent, HELIUS_API_KEY absent. Grant remains enabled. Example/draft remain disabled. Setup-pilot untouched.",
+  "application_commit": "0a6b5b1159cb9caea1a1512b2f1bd259eea370aa",
+  "spend": {
+    "birdeye": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 250,
+      "remaining": 250,
+      "cycle_start": "2026-10-05T00:00:00Z"
+    },
+    "helius": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 600,
+      "remaining": 600,
+      "cycle_start": "2026-10-05T00:00:00Z"
+    },
+    "setup_pilot": {
+      "used": 0,
+      "reserved": 0,
+      "cap": 200,
+      "remaining": 200,
+      "cycle_start": "setup-pilot"
+    }
+  },
+  "setup_pilot": {
+    "used": 0,
+    "reserved": 0,
+    "cap": 200,
+    "remaining": 200,
+    "cycle_start": "setup-pilot"
+  },
+  "freeze": {
+    "kind": "mass-search-g1-pre-run-freeze-v1",
+    "frozen_at": "2026-10-05T10:49:11Z",
+    "application_commit": "0a6b5b1159cb9caea1a1512b2f1bd259eea370aa",
+    "authorization_id": "live-g1-vertical-slice-2026-10-05-mitch",
+    "authorization_sha256": "3d58fc3375d1b26e3a8d5beb002eda5607a3d6b713c4ef0230ecb8df083f6246",
+    "first_live_target": "G1_VERTICAL_SLICE_ONLY",
+    "corpus_kind": "GENUINE_LIVE",
+    "source_ids": [
+      "birdeye-traders",
+      "helius-history"
+    ],
+    "windows": {
+      "report_window_days": 30,
+      "verification_window_days": 90,
+      "timestamp_semantics": "Birdeye ranking snapshot is not an atomic as-of universe; Helius blockTime is chain time"
+    },
+    "ceilings": {
+      "birdeye": {
+        "max_requests": 10,
+        "max_units": 250,
+        "billing_unit": "birdeye_compute_unit"
+      },
+      "helius": {
+        "max_requests": 20,
+        "max_units": 600,
+        "billing_unit": "helius_credit"
+      },
+      "max_additional_spend_usd": "0",
+      "overages_enabled": false,
+      "do_not_reset_setup_pilot": true
+    },
+    "stop_conditions": [
+      "G1 only \u2014 one survivor with supported buy+sell",
+      "Stop on 401/403/429/quota/missing credentials",
+      "Do not run G2/G3/G5/G6"
+    ],
+    "hardware": {
+      "system": "Linux",
+      "release": "6.12.94+",
+      "machine": "x86_64",
+      "python": "3.12.3"
+    },
+    "example_and_draft_not_grants": {
+      "example_enabled": false,
+      "draft_enabled": false
+    }
+  },
+  "missing_dependency": "Live G1 stopped before any provider HTTP: BIRDEYE_API_KEY absent, HELIUS_API_KEY absent. Grant remains enabled. Example/draft remain disabled. Setup-pilot untouched.",
+  "extra": {
+    "missing_env": [
+      "birdeye",
+      "helius"
+    ],
+    "presence": {
+      "birdeye": false,
+      "helius": false
+    }
+  }
+}

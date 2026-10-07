@@ -5,6 +5,7 @@ import type { PaperObservation, PaperSettings, Preset, Screening } from "./types
 import { Badge, Button, Empty, SectionHeading } from "./components";
 import { api } from "./api";
 import { count, dateTime, decimal, label, shorten } from "./format";
+import { useNarrowViewport } from "./useNarrow";
 
 export const defaultPaperSettings: PaperSettings = {
   capital_sol: "10", entry_sol: "0.1", max_open_positions: 5,
@@ -83,6 +84,7 @@ export function screeningReviewKey(screening: Screening): string {
 
 export function canObserveScreening(screening: Screening | undefined): boolean {
   if (!screening) return false;
+  if (screening.source === "mass-search" || screening.source === "demo") return false;
   if (screening.current_eligibility) return screening.current_eligibility.can_start_observation === true;
   return screening.identity?.state === "PASS" && screening.result !== "excluded_by_preset";
 }
@@ -103,7 +105,9 @@ export function ScreeningDetail({ screening, showEvidence }: { screening: Screen
       <p>{screening.current_reason ?? screening.reason}</p>
       <small>Saved assessment: {screening.label} · {dateTime(screening.created_at)} UTC</small>
       <small>Worth observing describes research eligibility. Conditional observations do not establish verified wallet profit.</small>
+      {screening.source === "mass-search" && <small data-screening-corpus="reconstructed-subset">UNRESOLVED reconstructed subset · not a wallet-wide MATCH.</small>}
     </div>
+    {screening.source === "mass-search" && <div className="inline-info" role="status" data-screening-corpus="reconstructed-subset"><strong>Reconstructed subset</strong><p>This assessment is from a mass-search reconstructed subset, not a wallet-wide MATCH. Saved report policy stays UNRESOLVED. Quote-only observation cannot start from this sample.</p></div>}
     {sourcesMissing && <div className="inline-alert" role="status"><TriangleAlert size={18} /><div><strong>Current screening evidence unavailable</strong><p>Required cited archives are missing or unreadable. The saved assessment is retained, but its original positive result cannot support a current observation decision.</p><EvidenceLinks evidence={screening.current_source_availability?.missing.filter((hash): hash is string => typeof hash === "string")} showEvidence={showEvidence} /></div></div>}
     {screening.current_identity && <div className={identityMissing ? "inline-alert" : "inline-info"} role="status"><Badge value={screening.current_identity.state}>Current native identity: {label(screening.current_identity.state)}</Badge><div><p>{screening.current_identity.reason}</p><EvidenceLinks evidence={screening.current_identity.evidence} showEvidence={showEvidence} /></div></div>}
     <details className="research-subpanel"><summary>Original saved assessment and settings</summary><pre>{detail(savedSnapshot)}</pre></details>
@@ -151,6 +155,7 @@ export function ScreeningDetail({ screening, showEvidence }: { screening: Screen
 }
 
 export function PaperDetail({ observation, showEvidence = () => undefined }: { observation: PaperObservation; showEvidence?: (hash: string) => void }) {
+  const narrow = useNarrowViewport();
   const summary = observation.summary;
   const observer = observation.observer;
   const connected = observer?.status === "listening";
@@ -190,12 +195,25 @@ export function PaperDetail({ observation, showEvidence = () => undefined }: { o
     {!!observation.risk_observations?.length && <section className="research-subpanel"><SectionHeading title="Observed follower disadvantages" subtitle="Evidence and timing for this strategy and run." />{observation.risk_observations.map((risk, index) => <article className="research-risk" key={`${risk.key}-${index}`}><div><strong>{label(risk.key)}</strong><Badge value={risk.state} /></div><p>{risk.reason}</p>{risk.actual !== undefined && <pre>{detail(risk.actual)}</pre>}<EvidenceLinks evidence={risk.evidence} showEvidence={showEvidence} /></article>)}</section>}
     <section className="research-subpanel"><SectionHeading title="Original run settings" subtitle="Frozen at run creation. New settings require a new run." /><dl className="research-settings-snapshot">{settingFields.map((field) => <div key={field.key}><dt>{field.name}</dt><dd>{String(observation.settings[field.key])}</dd></div>)}</dl></section>
     <section className="research-subpanel"><SectionHeading title="Paper positions" subtitle="Open losses and unavailable exits remain visible. Quote-based results are hypothetical, not actual fills." />
-      {observation.positions.length ? <div className="table-scroll"><table className="report-table"><thead><tr><th>Mint / state</th><th>Entry cost</th><th>Quoted exit / mark</th><th>Result and timing</th></tr></thead><tbody>{observation.positions.map((position, index) => <tr key={String(position.id ?? index)}>
+      {observation.positions.length ? <>
+        {!narrow && <div className="table-scroll research-table-wrap"><table className="report-table"><thead><tr><th>Mint / state</th><th>Entry cost</th><th>Quoted exit / mark</th><th>Result and timing</th></tr></thead><tbody>{observation.positions.map((position, index) => <tr key={String(position.id ?? index)}>
         <td><span className="mono" title={String(position.mint ?? "")}>{shorten(String(position.mint ?? "Unknown"))}</span><small>{detail(position.status ?? position.state)}</small></td>
         <td><Amount value={position.entry_cost_sol ?? position.cost_sol ?? paperSolFromLamports(position.cost_lamports)} /><small>{dateTime(typeof position.opened_at === "string" ? position.opened_at : undefined)}</small></td>
         <td><Amount value={position.exit_proceeds_sol ?? paperSolFromLamports(position.net_exit_lamports) ?? (position.mark && typeof position.mark === "object" ? paperSolFromLamports((position.mark as Record<string, unknown>).net_value_lamports) : undefined)} unknown="Quote / value unavailable" />{position.exit_unavailable === true && <small>Leader exit observed · sell quote unavailable</small>}</td>
         <td><details><summary>Inspect retained position</summary><pre>{detail(position)}</pre></details></td>
-      </tr>)}</tbody></table></div> : <p>No paper entries yet. Excluded and additional leader signals are retained below.</p>}
+      </tr>)}</tbody></table></div>}
+        <ul className="research-cards">
+          {observation.positions.map((position, index) => <li key={`position-card-${String(position.id ?? index)}`}>
+            <strong className="mono">{shorten(String(position.mint ?? "Unknown"))}</strong>
+            <small>{detail(position.status ?? position.state)}</small>
+            <p>Entry <Amount value={position.entry_cost_sol ?? position.cost_sol ?? paperSolFromLamports(position.cost_lamports)} /></p>
+            <p>Quoted exit / mark <Amount value={position.exit_proceeds_sol ?? paperSolFromLamports(position.net_exit_lamports) ?? (position.mark && typeof position.mark === "object" ? paperSolFromLamports((position.mark as Record<string, unknown>).net_value_lamports) : undefined)} unknown="Quote / value unavailable" /></p>
+            {position.exit_unavailable === true && <p>Leader exit observed · sell quote unavailable</p>}
+            <small>{dateTime(typeof position.opened_at === "string" ? position.opened_at : undefined)}</small>
+            <details><summary>Inspect retained position</summary><pre>{detail(position)}</pre></details>
+          </li>)}
+        </ul>
+      </> : <p>No paper entries yet. Excluded and additional leader signals are retained below.</p>}
     </section>
     <section className="research-subpanel"><SectionHeading title="Detected signals and exclusions" subtitle="Detection, decode time and the selected delay determine the earliest eligible quote time." />
       {observation.signals.length ? <div className="research-signal-list">{observation.signals.slice(-100).reverse().map((signal, index) => <details key={String(signal.id ?? index)}><summary>{label(String(signal.side ?? signal.kind ?? "Signal"))} · {shorten(String(signal.mint ?? signal.signature ?? "Unknown"))} · {label(String(signal.status ?? signal.decision ?? "Recorded"))}</summary><pre>{detail(signal)}</pre></details>)}</div> : <p>No signals detected during this run.</p>}
@@ -211,7 +229,18 @@ export function PaperDetail({ observation, showEvidence = () => undefined }: { o
   </>;
 }
 
+export function reportPickerLabel(item: { source?: string; label?: string; address: string; created_at: string }) {
+  const prefix = item.source === "demo" ? "SYNTHETIC · " : item.source === "mass-search" ? "subset · " : "";
+  return `${prefix}${item.label || shorten(item.address)} · ${dateTime(item.created_at)}`;
+}
+
+export function screeningPickerLabel(item: { source?: string; address: string; current_label?: string; label?: string; created_at?: string }) {
+  const prefix = item.source === "mass-search" ? "subset · " : item.source === "demo" ? "SYNTHETIC · " : "";
+  return `${prefix}${shorten(item.address)} · ${item.current_label ?? item.label ?? "Saved assessment"} · ${dateTime(item.created_at)}`;
+}
+
 export function ResearchView({ state, busy, run, open, navigate, refresh, showEvidence }: Actions & { showEvidence: (hash: string) => void }) {
+  const narrow = useNarrowViewport();
   const screenings = state.screenings ?? [];
   const observations = state.observations ?? [];
   const [screeningId, setScreeningId] = useState("");
@@ -274,7 +303,7 @@ export function ResearchView({ state, busy, run, open, navigate, refresh, showEv
     {detailError && <div className="inline-alert" role="alert">{detailError}</div>}
     <section className="panel">
       <SectionHeading title="Save a screening assessment" subtitle="A bounded sample can be useful while full historical qualification remains unresolved." action={<Button icon={Search} variant="secondary" onClick={() => navigate("discover")}>Discover or paste wallets</Button>} />
-      {reports.length ? <div className="research-action-row"><label className="research-report-picker">Saved report<select aria-label="Report to screen" value={report?.id ?? ""} onChange={(event) => setReportId(event.target.value)}>{reports.map((item) => <option value={item.id} key={item.id}>{item.source === "demo" ? "SYNTHETIC · " : ""}{item.label || shorten(item.address)} · {dateTime(item.created_at)}</option>)}</select></label><Button icon={Search} busy={busy === "screen-wallet"} disabled={!!busy} onClick={screen}>Screen and save assessment</Button><Button variant="secondary" disabled={!report || !!busy} onClick={() => report && open(report)}>Inspect original report</Button></div> : <Empty title="Start with a wallet sample" detail="Discover or import public addresses, check native identity and investigate selected wallets. Their saved reports can be screened here." action={<Button onClick={() => navigate("discover")}>Find or paste wallets</Button>} />}
+      {reports.length ? <div className="research-action-row"><label className="research-report-picker">Saved report<select aria-label="Report to screen" value={report?.id ?? ""} onChange={(event) => setReportId(event.target.value)}>{reports.map((item) => <option value={item.id} key={item.id}>{reportPickerLabel(item)}</option>)}</select></label>{report?.source === "mass-search" && <p className="research-note">Selected report is a reconstructed subset, not a wallet-wide MATCH.</p>}<Button icon={Search} busy={busy === "screen-wallet"} disabled={!!busy} onClick={screen}>Screen and save assessment</Button><Button variant="secondary" disabled={!report || !!busy} onClick={() => report && open(report)}>Inspect original report</Button></div> : <Empty title="Start with a wallet sample" detail="Discover or import public addresses, check native identity and investigate selected wallets. Their saved reports can be screened here." action={<Button onClick={() => navigate("discover")}>Find or paste wallets</Button>} />}
       <details className="research-subpanel"><summary>Adjust sampled screening preset</summary><p>These settings affect a new sampled assessment. The original strict financial preset stays separate; saved assessments keep their settings.</p><div className="research-setting-grid">
         {(["min_supported_swaps", "min_matched_sales", "max_rapid_sale_pct", "continuation_max_transactions", "continuation_max_credits", "continuation_max_accounts"] as const).map((key) => <label key={key}>{label(key)}<input type="number" aria-label={label(key)} min={key === "min_matched_sales" || key === "max_rapid_sale_pct" ? 0 : 1} max={key === "max_rapid_sale_pct" ? 100 : undefined} step="1" value={String(screeningPreset[key])} onChange={(event) => setScreeningPreset((current) => ({ ...current, [key]: key === "max_rapid_sale_pct" ? event.target.value : Number(event.target.value) }))} /></label>)}
       </div><div className="research-checkboxes">{(["require_positive_conditional_profit", "exclude_active_mint_authority", "exclude_active_freeze_authority", "exclude_restrictive_extensions"] as const).map((key) => <label key={key}><input type="checkbox" checked={screeningPreset[key] === true} onChange={(event) => setScreeningPreset((current) => ({ ...current, [key]: event.target.checked }))} />{label(key)}</label>)}</div></details>
@@ -282,7 +311,7 @@ export function ResearchView({ state, busy, run, open, navigate, refresh, showEv
     <section className="panel" ref={screeningPanelRef}>
       <SectionHeading title="Saved screenings" subtitle={`${count(screenings.length)} immutable assessments · Every result retains its reasons and collection limits.`} />
       {screening ? <>
-        <div className="research-action-row"><label className="research-report-picker">Assessment<select aria-label="Saved screening assessment" value={screening.id} onChange={(event) => void reopen("screenings", event.target.value)}>{screenings.map((item) => <option key={item.id} value={item.id}>{shorten(item.address)} · {item.current_label ?? item.label} · {dateTime(item.created_at)}</option>)}</select></label><Button variant="secondary" disabled={!!busy} onClick={() => reopen("screenings", screening.id)}>Reopen saved assessment</Button><a className="button secondary" href={`/api/screenings/${encodeURIComponent(screening.id)}/export`} download><Download size={15} /> Export screening</a></div>
+        <div className="research-action-row"><label className="research-report-picker">Assessment<select aria-label="Saved screening assessment" value={screening.id} onChange={(event) => void reopen("screenings", event.target.value)}>{screenings.map((item) => <option key={item.id} value={item.id}>{screeningPickerLabel(item)}</option>)}</select></label><Button variant="secondary" disabled={!!busy} onClick={() => reopen("screenings", screening.id)}>Reopen saved assessment</Button><a className="button secondary" href={`/api/screenings/${encodeURIComponent(screening.id)}/export`} download><Download size={15} /> Export screening</a></div>
         <p className="mono research-address">{screening.address}</p>
         <ScreeningDetail screening={screening} showEvidence={showEvidence} />
         <div className="research-action-row"><label>Additional transaction budget<input type="number" aria-label="Continue investigation transaction budget" min={1} max={screening.continuation?.budget?.max_transactions ?? 20} value={transactionLimit} onChange={(event) => setTransactionLimit(Number(event.target.value))} /></label><Button icon={RefreshCw} variant="secondary" disabled={!!busy || !screening.continuation?.recommended || !Number.isInteger(transactionLimit) || transactionLimit < 1} busy={busy === "screen-continue"} onClick={() => run("screen-continue", `/screenings/${encodeURIComponent(screening.id)}/continue`, { transaction_limit: transactionLimit }, "POST", "Budgeted continuation queued. The saved assessment stays unchanged.")}>Continue investigation</Button><Button icon={Star} variant="secondary" disabled={!!busy || !!watched} busy={busy === "research-shortlist"} onClick={() => run("research-shortlist", "/watchlist", { address: screening.address, label: "Research shortlist" }, "POST", "Wallet shortlisted. This is not a profit or safety endorsement.")}>{watched ? "Shortlisted" : "Save to shortlist"}</Button></div>
@@ -302,7 +331,19 @@ export function ResearchView({ state, busy, run, open, navigate, refresh, showEv
     </section>
     <section className="panel" ref={paperResultsRef}>
       <SectionHeading title="Saved paper observations" subtitle="Reopen a run to inspect its frozen settings, retained signals, quotes and unresolved exposure." />
-      {observations.length > 1 && <div className="table-scroll"><table className="report-table"><thead><tr><th>Wallet / started</th><th>Delay / entry</th><th>Paper P&L including open exposure</th><th>Gaps / open positions</th><th /></tr></thead><tbody>{observations.slice(0, 30).map((item) => <tr key={item.id}><td><span className="mono">{shorten(item.address)}</span><small>{dateTime(item.started_at)}</small></td><td>{item.settings.reaction_delay_seconds} seconds<small><Amount value={item.settings.entry_sol} /> fixed entry</small></td><td><Amount value={"supported_economic_pnl_sol" in item.summary ? item.summary.supported_economic_pnl_sol : item.summary.economic_pnl_sol} unknown="Incomplete / unsupported valuation" /><small>{label(item.status)} · {item.summary.complete_observation ? "No recorded gaps or unvalued exposure" : "Incomplete observation"}</small></td><td>{item.gaps.length} gaps · {item.summary.open_positions} open</td><td><button className="text-button" onClick={() => reopen("observations", item.id)}>Inspect run <ArrowRight size={13} /></button></td></tr>)}</tbody></table></div>}
+      {observations.length > 1 && <>
+        {!narrow && <div className="table-scroll research-table-wrap"><table className="report-table"><thead><tr><th>Wallet / started</th><th>Delay / entry</th><th>Paper P&L including open exposure</th><th>Gaps / open positions</th><th /></tr></thead><tbody>{observations.slice(0, 30).map((item) => <tr key={item.id}><td><span className="mono">{shorten(item.address)}</span><small>{dateTime(item.started_at)}</small></td><td>{item.settings.reaction_delay_seconds} seconds<small><Amount value={item.settings.entry_sol} /> fixed entry</small></td><td><Amount value={"supported_economic_pnl_sol" in item.summary ? item.summary.supported_economic_pnl_sol : item.summary.economic_pnl_sol} unknown="Incomplete / unsupported valuation" /><small>{label(item.status)} · {item.summary.complete_observation ? "No recorded gaps or unvalued exposure" : "Incomplete observation"}</small></td><td>{item.gaps.length} gaps · {item.summary.open_positions} open</td><td><button className="text-button" onClick={() => reopen("observations", item.id)}>Inspect run <ArrowRight size={13} /></button></td></tr>)}</tbody></table></div>}
+        <ul className="research-cards">
+          {observations.slice(0, 30).map((item) => <li key={`observation-card-${item.id}`}>
+            <strong className="mono">{shorten(item.address)}</strong>
+            <small>{dateTime(item.started_at)} · {item.settings.reaction_delay_seconds} seconds · <Amount value={item.settings.entry_sol} /> fixed entry</small>
+            <p>Paper P&amp;L including open exposure <Amount value={"supported_economic_pnl_sol" in item.summary ? item.summary.supported_economic_pnl_sol : item.summary.economic_pnl_sol} unknown="Incomplete / unsupported valuation" /></p>
+            <p>{label(item.status)} · {item.gaps.length} gaps · {item.summary.open_positions} open</p>
+            <small>{item.summary.complete_observation ? "No recorded gaps or unvalued exposure" : "Incomplete observation"}</small>
+            <Button variant="secondary" onClick={() => void reopen("observations", item.id)}>Inspect run</Button>
+          </li>)}
+        </ul>
+      </>}
       {observation ? <>
         <div className="research-action-row"><label className="research-report-picker">Observation<select aria-label="Saved paper observation" value={observation.id} onChange={(event) => void reopen("observations", event.target.value)}>{observations.map((item) => <option key={item.id} value={item.id}>{shorten(item.address)} · {label(item.status)} · {dateTime(item.started_at)}</option>)}</select></label><Button variant="secondary" disabled={!!busy} onClick={() => reopen("observations", observation.id)}>Reopen saved observation</Button><a className="button secondary" href={`/api/observations/${encodeURIComponent(observation.id)}/export`} download><Download size={15} /> Export paper observation</a></div>
         <div className="research-action-row"><Button icon={Square} variant="secondary" busy={busy === "paper-stop"} disabled={!!busy || observation.status !== "running"} onClick={() => changeRun("stop")}>Stop observation</Button><Button icon={Play} variant="secondary" busy={busy === "paper-resume"} disabled={!!busy || !["stopped", "paused"].includes(observation.status)} onClick={() => changeRun("resume")}>Resume observation</Button><Button icon={RefreshCw} variant="secondary" busy={busy === "paper-mark"} disabled={!!busy || !observation.summary.open_positions} onClick={() => changeRun("mark")}>Request current open-position quotes</Button></div>

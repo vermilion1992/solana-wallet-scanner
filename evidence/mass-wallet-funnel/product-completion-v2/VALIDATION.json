@@ -1,0 +1,85 @@
+{
+  "kind": "product-completion-v2-validation",
+  "app_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "harness_sha": "50cc6e29fa0069e62e522236865755f73adbeb18",
+  "final_head_differs_only_by_evidence": true,
+  "running_build_identity": {
+    "scanner_version": "0.3.11",
+    "shown_in_app": "v0.3.11",
+    "frontend_asset": "frontend/dist/assets/index-hN-S6YfT.js",
+    "frontend_asset_sha256": "462fc01dd6ec835744d15cd4114b0e4e49f2e21677743c477c1702e8e35f142e",
+    "api_health": {
+      "kind": "local-scanner-health-v1",
+      "version": "0.3.11",
+      "PRODUCT_READY": false
+    }
+  },
+  "backend": {
+    "passed": 3607,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "subtests_passed": 440,
+    "log": "logs/PYTEST_FULL.log"
+  },
+  "frontend_build": {
+    "command": "cd frontend && npm run build",
+    "result": "passed",
+    "asset": "frontend/dist/assets/index-hN-S6YfT.js",
+    "asset_sha256": "462fc01dd6ec835744d15cd4114b0e4e49f2e21677743c477c1702e8e35f142e"
+  },
+  "clean_launch": {
+    "command": "./run.sh --no-browser (fresh data dir) then same --data-dir restart; ./run.sh --lan --no-browser",
+    "state": "PASS",
+    "viewport": "390x844",
+    "method": "Playwright Chromium browser emulation, not a physical phone",
+    "result": "CLEAN_LAUNCH.json"
+  },
+  "acceptance_ah": {
+    "state": "PASS",
+    "viewport": "390x844",
+    "method": "Playwright Chromium browser emulation, not a physical phone",
+    "tested_commit": "50cc6e29fa0069e62e522236865755f73adbeb18",
+    "app_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+    "cases": {
+      "A_ranked_filter_shortlist": "PASS",
+      "B_batch_genuine_fixtures_no_history": "PASS",
+      "C_genuine_baseline_visible": "PASS",
+      "D_export_and_g1_agree": "PASS",
+      "E_auth_and_disabled_budget": "PASS",
+      "G_auth_gate": "PASS",
+      "F_refresh_persistence": "PASS",
+      "F_restart_reopen": "PASS",
+      "H_zero_provider_calls": "PASS"
+    },
+    "provider_calls": 0,
+    "external_count": 0
+  },
+  "lan": {
+    "command": "./run.sh --lan --no-browser",
+    "state": "PASS",
+    "client": "separate non-loopback 172.30.0.2 at 390x844 (browser emulation, not a physical phone)",
+    "unauthenticated_status": 401,
+    "provider_calls": 0,
+    "qr_and_token": "redacted from evidence",
+    "frontend_asset_served": "index-hN-S6YfT.js"
+  },
+  "token_routes": {
+    "checked": 80,
+    "bootstrap_is_launch_exchange": true,
+    "research_search_proposal_protected": true
+  },
+  "acquisition": {
+    "authorised": false,
+    "performed": false,
+    "requests": 0,
+    "credits": 0,
+    "spend_usd": "0"
+  },
+  "genuine_multi_wallet_validation": "BLOCKED",
+  "PRODUCT_READY_false_because": "mandatory gate genuine ranked multi-wallet path is BLOCKED (existing B3); B1 NO_GO_CURRENT_SOURCE; B2 OPEN",
+  "PRODUCT_READY": false,
+  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/5",
+  "pr_draft": false
+}

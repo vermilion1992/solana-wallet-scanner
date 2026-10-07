@@ -1,0 +1,163 @@
+{
+  "id": "ranked-partial-25865JdB-58b0c6e5",
+  "address": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "label": "Mass-search subset \u00b7 GENUINE_REPLAY",
+  "source": "mass-search",
+  "corpus_kind": "GENUINE_REPLAY",
+  "created_at": "2026-10-05T13:29:27Z",
+  "window": {
+    "start": "2026-09-05T13:29:27Z",
+    "end": "2026-10-05T13:29:27Z"
+  },
+  "methodology": null,
+  "policy": "UNRESOLVED",
+  "evidence_status": "partial",
+  "metrics": {},
+  "checks": [],
+  "findings": [
+    {
+      "severity": "info",
+      "title": "No supported SOL-settled swaps on this captured page",
+      "detail": "Holder-fee distributions, failed transactions, and unreviewed Jupiter/PumpSwap inners stay visible. Raw SOL delta is not treated as profit."
+    },
+    {
+      "severity": "info",
+      "title": "Visible transaction fees are not profit",
+      "detail": "0.005654729 SOL fees across 100 txs; 0.000171 SOL on 19 failed txs."
+    }
+  ],
+  "evidence": [],
+  "coverage": {
+    "decoder_version": "spot-v7-native-flow-roles",
+    "transactions": 100,
+    "decoded_swaps": 0,
+    "supported_transactions": 0,
+    "failed_transactions": 19,
+    "unresolved_transactions": 81,
+    "unrecognized_transactions": 8,
+    "complete": false,
+    "history_complete": false,
+    "scope": "Fetched sample; recognized single spot routes with SOL/wSOL settlement",
+    "classification": "UNKNOWN",
+    "route_fixtures_independently_verified": false,
+    "non_economic_instructions": [],
+    "fixture_validation": [],
+    "visible_fee_lamports": 5654729,
+    "visible_fee_sol": "0.005654729",
+    "failed_fee_lamports": 171000,
+    "failed_fee_sol": "0.000171",
+    "not_pnl": true
+  },
+  "g3_status": "PARTIAL_NO_SUPPORTED_SOL_SWAPS",
+  "source_integrity": {
+    "status": "SOURCE_RECORDS_INTACT",
+    "records": 100,
+    "intact": 100,
+    "damaged": 0,
+    "malformed": 0,
+    "integrity_failure": false,
+    "all_unsupported": false
+  },
+  "observations": [
+    {
+      "kind": "tx_classification",
+      "detail": "failed_on_chain=19, inner_pumpswap_without_reviewed_outer=2, no_reviewed_outer_spot_swap=6, pump_holder_fee_distribution=61, unreviewed_jupiter_discriminator=6, unsupported_transaction_version=1, wallet_absent_from_account_keys=5",
+      "count": 100
+    },
+    {
+      "kind": "decoder_coverage",
+      "detail": "decoded_swaps=0 failed=19 unresolved=81",
+      "count": 100
+    },
+    {
+      "kind": "fees",
+      "detail": "visible_fee_sol=0.005654729 failed_fee_sol=0.000171 (not P&L; integer lamports 5654729)",
+      "count": 100
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Reviewed Pump instruction distribute_fee_to_holders is not a spot swap",
+      "count": 61
+    },
+    {
+      "kind": "unresolved",
+      "reason": "No reviewed outer spot swap; transfers and balances alone do not prove trading",
+      "count": 8
+    },
+    {
+      "kind": "unresolved",
+      "reason": "No reviewed spot swap instruction for this program and discriminator",
+      "count": 6
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Investigated wallet is absent from transaction account keys",
+      "count": 5
+    },
+    {
+      "kind": "unresolved",
+      "reason": "Unsupported transaction version",
+      "count": 1
+    }
+  ],
+  "worksheet": null,
+  "independent_worksheet": null,
+  "worksheet_reconciliation": {
+    "production_worksheet": null,
+    "independent_worksheet": null,
+    "status": "INCOMPLETE",
+    "note": "One worksheet is missing; both results are retained when present."
+  },
+  "events": [],
+  "positions": [],
+  "counts": {
+    "closed": 0,
+    "open": 0,
+    "interrupted": 0,
+    "unresolved": 100
+  },
+  "classification": {
+    "counts": {
+      "pump_holder_fee_distribution": 61,
+      "wallet_absent_from_account_keys": 5,
+      "inner_pumpswap_without_reviewed_outer": 2,
+      "no_reviewed_outer_spot_swap": 6,
+      "unreviewed_jupiter_discriminator": 6,
+      "failed_on_chain": 19,
+      "unsupported_transaction_version": 1
+    },
+    "transactions": 100,
+    "fee_totals": {
+      "transactions_with_integer_fee": 100,
+      "failed_transactions_with_integer_fee": 19,
+      "fee_lamports": 5654729,
+      "failed_fee_lamports": 171000,
+      "fee_sol": "0.005654729",
+      "failed_fee_sol": "0.000171",
+      "not_pnl": true,
+      "note": "Visible transaction fees only. Raw SOL delta is not profit."
+    },
+    "pump_idl_pin": {
+      "repository": "pump-fun/pump-public-docs",
+      "commit": "e0687ae9b7e064a0f54efc7297c65eecfbba3a8f",
+      "document": "idl/pump.json",
+      "local_fixture": "tests/fixtures/retained_protocol_funding/pump-native.json",
+      "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b"
+    }
+  },
+  "research": {
+    "scope": "Fetched sample; recognized single spot routes with SOL/wSOL settlement",
+    "history_complete": false,
+    "supported_swaps": 0
+  },
+  "notes": [
+    "Honest partial report. No independently reconciled SOL-settled completed position on this captured page.",
+    "Holder-fee distributions, failed transactions, and unreviewed Jupiter/PumpSwap inners stay visible.",
+    "Raw SOL delta is not P&L. PRODUCT_READY remains false."
+  ],
+  "offline_replay": true,
+  "PRODUCT_READY": false,
+  "not_match": true,
+  "not_ranked_wallet_pipeline_proof": true,
+  "shortlist_rank": 1
+}

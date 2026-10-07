@@ -1,0 +1,105 @@
+{
+  "result": "DESTRUCTIVE_REDACTION_REPRODUCED",
+  "reviewed_commit": "864a75b9d45d3318d3593c2dd4c9c9b9dd973e93",
+  "source_function": "scanner/mass_search/capability.py::redact_secrets",
+  "input_kind": "SYNTHETIC_STRUCTURAL_FIXTURE",
+  "network_requests": 0,
+  "repository_modified": false,
+  "live_wallets_replayed": 0,
+  "checks": {
+    "preTokenBalances_replaced": true,
+    "postTokenBalances_replaced": true,
+    "public_token_program_key_replaced": true,
+    "inner_instruction_program_id_replaced": true,
+    "parsed_token_amount_replaced": true
+  },
+  "before": {
+    "transaction": {
+      "message": {
+        "accountKeys": [
+          "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        ],
+        "instructions": []
+      }
+    },
+    "meta": {
+      "err": null,
+      "preTokenBalances": [
+        {
+          "accountIndex": 0,
+          "uiTokenAmount": {
+            "amount": "10",
+            "decimals": 6
+          }
+        }
+      ],
+      "postTokenBalances": [
+        {
+          "accountIndex": 0,
+          "uiTokenAmount": {
+            "amount": "5",
+            "decimals": 6
+          }
+        }
+      ],
+      "innerInstructions": [
+        {
+          "index": 0,
+          "instructions": [
+            {
+              "program": "spl-token",
+              "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "parsed": {
+                "type": "transferChecked",
+                "info": {
+                  "tokenAmount": {
+                    "amount": "5",
+                    "decimals": 6
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "after": {
+    "transaction": {
+      "message": {
+        "accountKeys": [
+          "[REDACTED]"
+        ],
+        "instructions": []
+      }
+    },
+    "meta": {
+      "err": null,
+      "preTokenBalances": "[REDACTED]",
+      "postTokenBalances": "[REDACTED]",
+      "innerInstructions": [
+        {
+          "index": 0,
+          "instructions": [
+            {
+              "program": "[REDACTED]",
+              "programId": "[REDACTED]",
+              "parsed": {
+                "type": "transferChecked",
+                "info": {
+                  "tokenAmount": "[REDACTED]"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Not an import or test run of the full application.",
+    "Does not confirm the contents or recoverability of the secure-box cache.",
+    "Does not prove that this defect is the only cause of zero decoded swaps.",
+    "Not a production fix, live grant, G3 pass, or profitability claim."
+  ]
+}

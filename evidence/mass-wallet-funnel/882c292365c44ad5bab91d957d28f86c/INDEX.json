@@ -1,0 +1,8 @@
+{
+  "run_id": "882c292365c44ad5bab91d957d28f86c",
+  "gate": "G1",
+  "status": "BLOCKED",
+  "authorization_id": "live-g1-vertical-slice-2026-10-05-mitch",
+  "result": "G1_RESULT.json",
+  "freeze": "PRE_RUN_FREEZE.json"
+}

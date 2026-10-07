@@ -1,0 +1,44 @@
+{
+  "kind": "SYNTHETIC_ENGINEERING_FIXTURE",
+  "label": "SYNTHETIC — multi-lot partial-match, not proof",
+  "not_proof": true,
+  "corpus_kind": "SYNTHETIC",
+  "address": "SynthEngMULTI111111111111111111111111111",
+  "window_start": "2026-09-05T13:29:27Z",
+  "window_end": "2026-10-05T13:29:27Z",
+  "events": [
+    {
+      "kind": "buy",
+      "units": "3",
+      "consideration_usdc": "15",
+      "wallet_fee_sol": "0",
+      "seconds_from_start": 0,
+      "mint": "SynthMintMULTI1111111111111111111111111",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "synth-eng-multi-buy-1",
+      "classification": "market"
+    },
+    {
+      "kind": "buy",
+      "units": "5",
+      "consideration_usdc": "30",
+      "wallet_fee_sol": "0",
+      "seconds_from_start": 30,
+      "mint": "SynthMintMULTI1111111111111111111111111",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "synth-eng-multi-buy-2",
+      "classification": "market"
+    },
+    {
+      "kind": "sell",
+      "units": "12",
+      "consideration_usdc": "96",
+      "wallet_fee_sol": "0",
+      "seconds_from_start": 90,
+      "mint": "SynthMintMULTI1111111111111111111111111",
+      "settlement_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "synth-eng-multi-sell-1",
+      "classification": "market"
+    }
+  ]
+}

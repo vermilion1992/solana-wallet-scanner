@@ -1,0 +1,23 @@
+{
+  "kind": "g3-integrity-reacquire-rank1-live-page0-summary-v1",
+  "authorization_id": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "generated_at": "2026-10-05T16:38:29Z",
+  "status": "BLOCKED_SIGNATURE_MISMATCH_PAGE0",
+  "tip_sha": "79e8e81b348a4a80f858d79f87f6587e1e8a06bf",
+  "parent_recovery_commit": "fe6a398a40c59d1e1afcb3788c3ccba00d936779",
+  "wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "requests_credits": {
+    "helius_requests": 1,
+    "helius_documented_credits": 10,
+    "birdeye": 0
+  },
+  "signature_match": false,
+  "signature_match_detail": "page0 live GTA signatures != frozen overlay 100; runner STOP",
+  "balance_integrity": "NOT_EVALUATED_AFTER_MISMATCH",
+  "reconstruction_episodes": "NOT_EVALUATED_AFTER_MISMATCH",
+  "page1_fired": false,
+  "PRODUCT_READY": false,
+  "merged": false,
+  "armed_grant_committed": false,
+  "evidence_dir": "/workspace/g3-integrity-reacquire/live-evidence-page0"
+}

@@ -346,6 +346,29 @@ def test_authorization_example_is_not_a_grant():
     assert access_blocker()["max_additional_spend_usd"] == "0"
 
 
+def test_proof_grant_draft_is_not_a_grant():
+    draft = json.loads((Path(__file__).resolve().parents[1] / "config/live_authorization.proof-grant-draft.json").read_text())
+    assert draft["schema_version"] == "live-research-authorization-v1"
+    assert draft["enabled"] is False
+    assert draft["max_additional_spend_usd"] == "0"
+    assert draft["overages_enabled"] is False
+    assert draft["allow_paid_upgrade"] is False
+    assert draft["do_not_reset_setup_pilot"] is True
+    assert draft["first_live_target_after_grant"] == "G1_VERTICAL_SLICE_ONLY"
+    checked = validate_live_authorization(draft)
+    assert checked["enabled"] is False
+    birdeye = next(entry for entry in draft["providers"] if entry["provider_id"] == "birdeye")
+    assert birdeye["max_requests"] == 10
+    assert birdeye["max_units"] == 250
+    helius = next(entry for entry in draft["providers"] if entry["provider_id"] == "helius")
+    assert helius["max_requests"] == 20
+    assert helius["max_units"] == 600
+    assert birdeye["existing_plan_confirmed"] is False
+    assert helius["existing_plan_confirmed"] is False
+    assert birdeye["remaining_quota_confirmed_at"] is None
+    assert helius["remaining_quota_confirmed_at"] is None
+
+
 def test_redaction_and_schema_drift_keep_raw_unknown():
     raw = parse_trader_row({"address": synthetic_address(3), "mystery_score": 99, "api_key": "secret-value"},
                            field_map=documented_birdeye_traders()["field_map"], source_id="birdeye-traders",

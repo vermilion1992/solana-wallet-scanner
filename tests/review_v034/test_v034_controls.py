@@ -120,9 +120,64 @@ def test_archived_nonce_sale_matches_independent_integer_endpoints_and_fee():
 
 @pytest.mark.parametrize('operation',['withdrawNonce','initializeNonce','authorizeNonce','allocate','assign'])
 def test_unknown_system_operation_does_not_inherit_nonce_administration_exception(operation):
+    # allocate/assign stay here: this mutates the *outer* nonce instruction.
+    # Inner layout-pinned allocate/assign (PumpSwap space 137 on genuine
+    # Jupiter route_v2) is a separate lifecycle path; outer rewrite is not.
     record=nonce_record();raw=record['raw']
     wallet=raw['transaction']['message']['accountKeys'][0]['pubkey']
     raw['transaction']['message']['instructions'][0]['parsed']['type']=operation
+    result=decode_supported_swaps([record],wallet)
+    assert not any(e['kind'] in ('buy','sell') for e in result['events'])
+    fee=next(e for e in result['events'] if e['kind']=='fee')
+    assert fee['amount_sol']=='0.000042' and fee['allocation']=='unallocated'
+
+
+def _inner_allocate_assign(account, *, space=137, owner='pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'):
+    return [
+        {'parsed': {'type': 'allocate', 'info': {'account': account, 'space': space}},
+         'program': 'system', 'programId': '11111111111111111111111111111111', 'stackHeight': 2},
+        {'parsed': {'type': 'assign', 'info': {'account': account, 'owner': owner}},
+         'program': 'system', 'programId': '11111111111111111111111111111111', 'stackHeight': 2},
+    ]
+
+
+def test_inner_layout_pinned_allocate_assign_does_not_block_reviewed_route():
+    record=nonce_record();raw=record['raw']
+    wallet=raw['transaction']['message']['accountKeys'][0]['pubkey']
+    account='6XQwe38mNZbxp4UW9x9117MvDKbHoVPWbgqGRnbtaXA'
+    raw['meta']['innerInstructions'][0]['instructions'].extend(_inner_allocate_assign(account))
+    result=decode_supported_swaps([record],wallet)
+    assert any(e['kind']=='sell' for e in result['events'])
+
+
+@pytest.mark.parametrize('mutate', [
+    'outer-layout-pinned',
+    'inner-wallet-account',
+    'inner-unreviewed-owner',
+    'inner-unreviewed-space',
+    'inner-nonce-fields',
+])
+def test_unsafe_allocate_assign_is_still_refused(mutate):
+    record=nonce_record();raw=record['raw']
+    wallet=raw['transaction']['message']['accountKeys'][0]['pubkey']
+    account='6XQwe38mNZbxp4UW9x9117MvDKbHoVPWbgqGRnbtaXA'
+    if mutate=='outer-layout-pinned':
+        raw['transaction']['message']['instructions'][0]['parsed']={
+            'type':'allocate','info':{'account':account,'space':137}}
+    elif mutate=='inner-wallet-account':
+        raw['meta']['innerInstructions'][0]['instructions'].extend(_inner_allocate_assign(wallet))
+    elif mutate=='inner-unreviewed-owner':
+        raw['meta']['innerInstructions'][0]['instructions'].extend(
+            _inner_allocate_assign(account, owner=wallet))
+    elif mutate=='inner-unreviewed-space':
+        raw['meta']['innerInstructions'][0]['instructions'].extend(
+            _inner_allocate_assign(account, space=80))
+    else:
+        raw['meta']['innerInstructions'][0]['instructions'].append({
+            'parsed':{'type':'allocate','info':{
+                'account':account,'space':137,
+                'nonceAccount':'9oBXtqffWUPPZnqJ5YG3BVJWm8x3nvWf1txEKRhGmMBN'}},
+            'program':'system','programId':'11111111111111111111111111111111','stackHeight':2})
     result=decode_supported_swaps([record],wallet)
     assert not any(e['kind'] in ('buy','sell') for e in result['events'])
     fee=next(e for e in result['events'] if e['kind']=='fee')

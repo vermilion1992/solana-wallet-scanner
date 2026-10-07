@@ -1,0 +1,55 @@
+{
+  "kind": "independent-capture-reconciliation-v1",
+  "imports_app_accounting": false,
+  "wallet": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+  "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+  "capture_sha256": "ec66c74856e08f70739cb59c1709ae4bb1aba88b31f85d6b556b70765eb67746",
+  "market_trades": 5,
+  "fifo": {
+    "asset": "SOL",
+    "known_cost_sells": [
+      {
+        "signature": "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c",
+        "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+        "quantity_raw": "13032346709725",
+        "proceeds": "7.732599474",
+        "basis": "7.90026",
+        "net_profit": "-0.167725526",
+        "consumed_lots": [
+          {
+            "signature": "SaiC2d5YUSoSHZxmsojrjnEnt23kXBndKdPkDknrtvhjsLBBW2Y69Qi5U6MesNtUmnSR7gJLNy3nzg3oFYcYHNV",
+            "quantity_raw": "5957395455887",
+            "basis": "3.200065"
+          },
+          {
+            "signature": "2mztKUMb1F6C9ogvszaPxu3RqwVZz6arZrXv2dffDNzb3nMaZTRpu2N2RLpcThgtKHQApFNz9HczHESjyMSP6H5W",
+            "quantity_raw": "2212022914716",
+            "basis": "1.400065"
+          },
+          {
+            "signature": "5cVeGPWURhoBAwtspk4zVLJ8KFZVegZiA23uAZxFnxuBAamTu3CKTvgpZciEZwRpue4TKZiiUB5MUhk84wHXjd7t",
+            "quantity_raw": "2306993863643",
+            "basis": "1.500065"
+          },
+          {
+            "signature": "2AgUpNVUF42UXWpCFfB4egw5bXNZvkE7SsZn4SwfjGk3avJt1kcY74NgF6TbqwdRC8q2jo6Ssh36ksw8ywqrPho2",
+            "quantity_raw": "2555934475479",
+            "basis": "1.800065"
+          }
+        ],
+        "fee_sol": "0.000065",
+        "fee_in_pnl": true,
+        "partial_known_cost": false,
+        "whole_sale_pnl_resolved": true,
+        "result_scope": "conditional_on_captured_inventory",
+        "fee_allocation": "pro_rata_by_quantity; unmatched = original minus matched"
+      }
+    ],
+    "unresolved_basis_sales": [],
+    "open_lots": [],
+    "total_profit": "-0.167725526",
+    "sol_fees_not_converted": false,
+    "missing_basis_is_not_zero": true
+  },
+  "PRODUCT_READY": false
+}

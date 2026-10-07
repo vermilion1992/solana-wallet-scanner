@@ -1,0 +1,108 @@
+{
+  "kind": "mass-search-g1-independent-worksheet-v1",
+  "oracle": "independent-g1-fifo-v1",
+  "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+  "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+  "corpus_kind": "GENUINE_LIVE",
+  "events": [
+    {
+      "kind": "buy",
+      "units": "5957395455887",
+      "consideration_sol": "3.2",
+      "wallet_fee_sol": "0.000065",
+      "seconds_from_start": 2263334,
+      "signature": "SaiC2d5YUSoSHZxmsojrjnEnt23kXBndKdPkDknrtvhjsLBBW2Y69Qi5U6MesNtUmnSR7gJLNy3nzg3oFYcYHNV",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+      "evidence": [
+        "caec8e80bc3c95201f8d3872a7521ba7ea51429fb443f8d69db85e53cfc49668"
+      ]
+    },
+    {
+      "kind": "buy",
+      "units": "2212022914716",
+      "consideration_sol": "1.4",
+      "wallet_fee_sol": "0.000065",
+      "seconds_from_start": 2263755,
+      "signature": "2mztKUMb1F6C9ogvszaPxu3RqwVZz6arZrXv2dffDNzb3nMaZTRpu2N2RLpcThgtKHQApFNz9HczHESjyMSP6H5W",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+      "evidence": [
+        "30ba22f9ccb7e2dbc2c69f31d70cb4606273614152849e56f43a0d196949e1a3"
+      ]
+    },
+    {
+      "kind": "buy",
+      "units": "2306993863643",
+      "consideration_sol": "1.5",
+      "wallet_fee_sol": "0.000065",
+      "seconds_from_start": 2263758,
+      "signature": "5cVeGPWURhoBAwtspk4zVLJ8KFZVegZiA23uAZxFnxuBAamTu3CKTvgpZciEZwRpue4TKZiiUB5MUhk84wHXjd7t",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+      "evidence": [
+        "cbfd22eaf0b6aad1d874ac64b77a06c3da9b7b14455c97482412f93650116862"
+      ]
+    },
+    {
+      "kind": "buy",
+      "units": "2555934475479",
+      "consideration_sol": "1.8",
+      "wallet_fee_sol": "0.000065",
+      "seconds_from_start": 2263771,
+      "signature": "2AgUpNVUF42UXWpCFfB4egw5bXNZvkE7SsZn4SwfjGk3avJt1kcY74NgF6TbqwdRC8q2jo6Ssh36ksw8ywqrPho2",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+      "evidence": [
+        "485d50b7316752059c22725d621fda88706743211233430f77743952e85e30be"
+      ]
+    },
+    {
+      "kind": "sell",
+      "units": "13032346709725",
+      "consideration_sol": "7.732599474",
+      "wallet_fee_sol": "0.000065",
+      "seconds_from_start": 2263932,
+      "signature": "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c",
+      "mint": "4oPr8EG6qxbYksWt2F3rJ4CqqvpcPrZ4aWg4ByDJpump",
+      "address": "GatgyE2SqnNNjNeNGR8MG1VSVxFGxgyjB111hYJRTkee",
+      "evidence": [
+        "fb6edd9c31dd9d08d00e0369f8fac8634235bc2da104212c4fcf0da3e17b8523"
+      ]
+    }
+  ],
+  "independent_worksheet": {
+    "sale_fifo_basis_sol": [
+      "7.900260000"
+    ],
+    "sale_net_profit_sol": [
+      "-0.167725526"
+    ],
+    "total_profit_sol": "-0.167725526",
+    "oracle": "independent-g1-fifo-v1"
+  },
+  "production_worksheet": {
+    "sale_fifo_basis_sol": [
+      "7.90026"
+    ],
+    "sale_net_profit_sol": [
+      "-0.167725526"
+    ],
+    "total_profit_sol": "-0.167725526"
+  },
+  "material_exit_episode_hold_seconds": 598,
+  "first_buy_unix": 2263334,
+  "sale_unix_from_window": 2263932,
+  "signatures": [
+    "SaiC2d5YUSoSHZxmsojrjnEnt23kXBndKdPkDknrtvhjsLBBW2Y69Qi5U6MesNtUmnSR7gJLNy3nzg3oFYcYHNV",
+    "2mztKUMb1F6C9ogvszaPxu3RqwVZz6arZrXv2dffDNzb3nMaZTRpu2N2RLpcThgtKHQApFNz9HczHESjyMSP6H5W",
+    "5cVeGPWURhoBAwtspk4zVLJ8KFZVegZiA23uAZxFnxuBAamTu3CKTvgpZciEZwRpue4TKZiiUB5MUhk84wHXjd7t",
+    "2AgUpNVUF42UXWpCFfB4egw5bXNZvkE7SsZn4SwfjGk3avJt1kcY74NgF6TbqwdRC8q2jo6Ssh36ksw8ywqrPho2",
+    "589LPs3ccVzxXXcud37yLMUsUutZJ6SzqJXko5rafN3nsaJQ3mXnbGCzTCwr2god4WzhWnbJMti1ZATdVsGNJA9c"
+  ],
+  "notes": [
+    "Subset is one mint with supported closed buy+sell from fetched native history.",
+    "Not wallet-wide MATCH. Policy remains UNRESOLVED.",
+    "Subset realised P&L is negative on this specimen; still satisfies G1 supported closed-pair requirement."
+  ]
+}

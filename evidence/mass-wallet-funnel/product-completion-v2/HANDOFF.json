@@ -1,0 +1,63 @@
+{
+  "kind": "product-completion-v2-handoff",
+  "PRODUCT_READY": false,
+  "PRODUCT_READY_false_because": "mandatory gate genuine ranked multi-wallet path is BLOCKED (existing B3)",
+  "not_safe_to_copy": true,
+  "app_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc",
+  "harness_sha": "50cc6e29fa0069e62e522236865755f73adbeb18",
+  "operating": "docs/OPERATING.md",
+  "genuine_multi_wallet_validation": "BLOCKED",
+  "acquisition": {
+    "authorization_id": "live-ranked100-next-candidates-2026-10-06-mitch",
+    "enabled": false,
+    "authorised": false,
+    "performed": false,
+    "requests": 0,
+    "credits": 0,
+    "spend_usd": "0"
+  },
+  "research_search_draft": {
+    "authorization_id": "live-ranked100-research-search-2026-10-06-mitch",
+    "enabled": false,
+    "documented_credits": 200,
+    "balance": "unconfirmed"
+  },
+  "headline_376": {
+    "value": "376.028087",
+    "unit": "USDC",
+    "meaning": "Known-cost realised USDC on one matched 5tCju6YN sell (3376.028087-3000). SOL fees not subtracted. Unbacked sell excluded. Open H4KU inventory not profit."
+  },
+  "g1_control": {
+    "pnl_sol": "-0.167725526",
+    "hold_seconds": 598,
+    "not_a_ranked_snapshot_wallet": true
+  },
+  "research_screen": {
+    "outcome": "inconclusive",
+    "inconclusive": 99,
+    "zero_qualified": 1,
+    "completed_qualified": 0,
+    "search_ran": "not_executed",
+    "qualification": {
+      "not_evaluated": 99,
+      "analysed_incomplete": 1
+    }
+  },
+  "disposition_counts": {
+    "History required": 99,
+    "Captured and analysed": 1,
+    "Analysed with incomplete evidence": 0,
+    "Error": 0,
+    "Cancelled": 0
+  },
+  "phone_ah": "PASS",
+  "clean_launch": "PASS",
+  "lan": "PASS",
+  "backend": "3607 passed / 0 failed",
+  "frontend_asset": "frontend/dist/assets/index-hN-S6YfT.js",
+  "browser_emulation_not_physical_phone": true,
+  "remote_preview": "proposal only; not deployed",
+  "pr": "https://github.com/vermilion1992/solana-wallet-scanner/pull/5",
+  "pr_draft": false,
+  "prior_pr_4": "https://github.com/vermilion1992/solana-wallet-scanner/pull/4 (closed; no common history with main)"
+}

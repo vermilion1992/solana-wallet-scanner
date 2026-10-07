@@ -22,6 +22,9 @@ def _service(store):
 
 
 def _error(exc):
+    from .batch import BatchBusy
+    if isinstance(exc, BatchBusy):
+        raise HTTPException(409, str(exc))
     if isinstance(exc, SourceError):
         raise HTTPException(409, str(exc))
     if isinstance(exc, (ValueError, EvidenceError)):
@@ -30,20 +33,18 @@ def _error(exc):
 
 
 def mass_search_state(store):
-    """Compact run summaries only. Never materialise the bulk universe into /api/state."""
+    """Compact run summaries only. Never materialise the bulk universe into /api/state.
+
+    Caps, ranked-100 browse, and notes live on /api/mass-search/runs and
+    /api/mass-search/ranked-workflow so the shared /api/state budget stays
+    under the 20000-byte compact-checkpoint limit.
+    """
     try:
         service = MassSearchService(store)
         runs = service.list_runs()
     except Exception:
         runs = []
-    return {
-        "runs": runs[:20],
-        "bulk_capacity": MASS_UNIVERSE_CAPACITY,
-        "legacy_candidate_cap": LIMITS["candidate_cap"],
-        "legacy_deep_audit_cap": LIMITS["deep_audit_cap"],
-        "live_default": False,
-        "note": "Paginated candidate rows are served from /api/mass-search/runs/{id}/candidates.",
-    }
+    return {"runs": runs[:20]}
 
 
 def install_mass_search_routes(app, store):
@@ -204,3 +205,134 @@ def install_mass_search_routes(app, store):
     @app.get("/api/mass-search/access-blocker")
     async def blocker():
         return {"birdeye": access_blocker("birdeye-traders"), "helius": access_blocker("helius-history")}
+
+    @app.get("/api/mass-search/ranked-workflow")
+    async def ranked_workflow():
+        from .workflow import ranked_workflow_view
+        return ranked_workflow_view(store)
+
+    @app.post("/api/mass-search/ranked-workflow/replay")
+    async def ranked_workflow_replay(payload: dict | None = None):
+        from .g3_reacquire import ALLOWED_WALLET
+        from .workflow import replay_captured_wallet
+        body = payload or {}
+        try:
+            return replay_captured_wallet(store, body.get("address") or ALLOWED_WALLET)
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/shortlist")
+    async def ranked_workflow_shortlist(payload: dict | None = None):
+        from .workflow import set_user_shortlist
+        body = payload or {}
+        try:
+            return set_user_shortlist(store, body.get("address"), selected=body.get("selected", True))
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/batch")
+    def ranked_workflow_batch(payload: dict | None = None):
+        """Sync so overlapping HTTP callers run in the threadpool and contend for store.lock."""
+        from .batch import create_and_run, create_batch
+        body = payload or {}
+        try:
+            if body.get("run") is False:
+                return create_batch(
+                    store,
+                    body.get("addresses") or [],
+                    include_fixtures=bool(body.get("include_fixtures")),
+                )
+            return create_and_run(
+                store,
+                body.get("addresses") or [],
+                include_fixtures=bool(body.get("include_fixtures")),
+            )
+        except Exception as exc:
+            _error(exc)
+
+    @app.get("/api/mass-search/ranked-workflow/batch/{batch_id}")
+    async def ranked_workflow_batch_get(batch_id: str):
+        from .batch import get_batch
+        try:
+            return get_batch(store, batch_id)
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/batch/{batch_id}/step")
+    def ranked_workflow_batch_step(batch_id: str):
+        from .batch import step_batch
+        try:
+            return step_batch(store, batch_id)
+        except Exception as exc:
+            _error(exc)
+
+    @app.post("/api/mass-search/ranked-workflow/batch/{batch_id}/cancel")
+    def ranked_workflow_batch_cancel(batch_id: str):
+        from .batch import cancel_batch
+        try:
+            return cancel_batch(store, batch_id)
+        except Exception as exc:
+            _error(exc)
+
+    @app.get("/api/mass-search/research-filters")
+    async def get_research_filters():
+        from .research_profile import load_filters
+        return load_filters(store)
+
+    @app.put("/api/mass-search/research-filters")
+    async def put_research_filters(payload: dict | None = None):
+        from .research_profile import save_filters
+        body = payload or {}
+        return save_filters(store, body)
+
+    @app.post("/api/mass-search/research-compare")
+    async def research_compare(payload: dict | None = None):
+        from .workflow import compare_reports
+        body = payload or {}
+        try:
+            return compare_reports(store, body.get("left_id"), body.get("right_id"))
+        except Exception as exc:
+            _error(exc)
+
+    @app.get("/api/mass-search/acquisition-policy")
+    async def get_acquisition_policy():
+        from .workflow import acquisition_policy
+        return acquisition_policy()
+
+    @app.get("/api/mass-search/acquisition-gate")
+    async def get_acquisition_gate():
+        from .acquisition_gate import attempt_history_acquisition, gate_status
+        return {
+            "status": gate_status(store),
+            "attempt": attempt_history_acquisition(store),
+        }
+
+    @app.post("/api/mass-search/acquisition-gate/check")
+    async def check_acquisition_gate(payload: dict | None = None):
+        from .acquisition_gate import attempt_history_acquisition
+        body = payload or {}
+        return attempt_history_acquisition(
+            store,
+            requested_requests=int(body.get("requested_requests") or 1),
+            requested_units=int(body.get("requested_units") or 1),
+        )
+
+    @app.get("/api/mass-search/instrumentation")
+    async def get_instrumentation():
+        from .instrumentation import snapshot
+        return snapshot()
+
+    @app.get("/api/mass-search/phone-access")
+    async def get_phone_access():
+        from .workflow import phone_access_status
+        return phone_access_status()
+
+    @app.get("/api/mass-search/approval-proposal")
+    async def get_approval_proposal():
+        from .workflow import approval_proposal
+        return approval_proposal()
+
+    @app.get("/api/mass-search/research-search-proposal")
+    async def get_research_search_proposal():
+        from .workflow import research_search_proposal
+        return research_search_proposal()

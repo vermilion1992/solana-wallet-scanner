@@ -18,6 +18,8 @@ try {
       "src/report.tsx",
       "src/EvidenceAudit.tsx",
       "src/MassSearch.tsx",
+      "src/workspace.tsx",
+      "src/Research.tsx",
       "--target",
       "ES2022",
       "--module",
@@ -57,10 +59,13 @@ try {
   const { NativeCashObservations, nativeCashAmount } = require(join(output, "NativeCashObservations.js"));
   const { InventoryObservations } = require(join(output, "InventoryObservations.js"));
   const { HistoricalSourceNotice } = require(join(output, "HistoricalSourceNotice.js"));
-  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
+  const { PaperDetail, ScreeningDetail, ResearchView, defaultPaperSettings, paperSolFromLamports, reportPickerLabel, screeningPickerLabel, screeningReviewKey, canObserveScreening, newerObservationState } = require(join(output, "Research.js"));
   const { MassSearchView, massSearchCorpusLabel, massSearchEmptyReason, massSearchMetricText } = require(join(output, "MassSearch.js"));
   const { workspaceSummary, reportDisplay, loadReportDisplay } = require(join(output, "api.js"));
   const { replaceActiveReport } = require(join(output, "App.js"));
+  const { CompareView, Results, WatchlistView, resultsEmptyCopy, watchlistEmptyCopy, compareEmptyCopy } = require(join(output, "workspace.js"));
+  const { ReportTable } = require(join(output, "components.js"));
+  const { compareDecimal, formatCompareSidePnl, formatCompletedEpisodeHeadline, formatWorksheetEpisodeBridge, formatWorksheetTotal, listRealisedProfit, WORKSHEET_LABEL } = require(join(output, "format.js"));
   const {
     parseRawEvidenceBundle,
     EvidenceAuditResult,
@@ -647,6 +652,8 @@ try {
   assert.ok(paperHtml.includes("Frozen at run creation"));
   assert.ok(paperHtml.includes("Quotes do not guarantee execution"));
   assert.ok(paperHtml.includes("counted once"), "Pool/provider fees are not modeled a second time");
+  assert.ok(paperHtml.includes("research-cards"));
+  assert.ok(paperHtml.includes("research-table-wrap"));
   const reconnectingHtml = renderToStaticMarkup(React.createElement(PaperDetail, { observation: {
     ...paper, status: "running", stop_reason: undefined,
     observer: { status: "reconnecting", notifications: 3, transactions: 2,
@@ -1926,6 +1933,45 @@ try {
   assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 }, stages: { triage: { input: 1, promoted: 1, rejected: 0, deferred: 0, pending: 0 } } }, 0).state, "no_reconstruction");
   assert.equal(massSearchEmptyReason({ run_id: "x", status: "UNIVERSE_SEALED", source_id: "fixture-traders", corpus_kind: "SYNTHETIC", live_authorized: false, universe: { unique_candidates: 1 } }, 1).state, "synthetic");
   assert.equal(massSearchMetricText({ value: "0.575", unit: "SOL", state: "KNOWN" }), "0.575 SOL");
+  assert.equal(WORKSHEET_LABEL, "worksheet total, partial coverage, not independently audited");
+  assert.equal(formatWorksheetTotal("51148.756609023", "USDC"), "51148.756609023 USDC (worksheet total, partial coverage, not independently audited)");
+  assert.equal(
+    formatCompletedEpisodeHeadline({
+      appNet: "283.399579449",
+      appUnit: "SOL",
+      independentlyAudited: true,
+      auditorNet: "283.399579447",
+      auditorUnit: "SOL",
+    }),
+    "283.399579449 SOL (completed-episode net); auditor confirms within 2 lamports: 283.399579447 SOL",
+  );
+  assert.ok(formatCompareSidePnl({
+    completedNet: "0.120294936",
+    completedUnit: "SOL",
+    independentlyAudited: true,
+    auditorNet: "0.120294936",
+    auditorUnit: "SOL",
+    worksheet: "0.120294936",
+    worksheetUnit: "SOL",
+  }).includes(WORKSHEET_LABEL));
+  assert.equal(
+    formatWorksheetEpisodeBridge({
+      worksheet_total: "50386.378661746",
+      completed_episode_net: "5614.586672",
+      bridge: "44771.791989746",
+      unit: "USDC",
+    }),
+    "worksheet-vs-completed-episode bridge 44771.791989746 USDC (worksheet 50386.378661746 − episode 5614.586672; worksheet is not the qualifying value)",
+  );
+  assert.ok(
+    formatCompletedEpisodeHeadline({
+      appNet: "2.030645834",
+      appUnit: "SOL",
+      independentlyAudited: true,
+      auditorNet: "2.030645840",
+      auditorUnit: "SOL",
+    }).includes("aggregate rounding bridge"),
+  );
   const searchState = {
     ...state,
     mass_search: {
@@ -1976,14 +2022,230 @@ try {
   const subsetHtml = renderToStaticMarkup(React.createElement(ReportView, {
     ...actions, state: searchState, report: subsetReport, showEvidence: () => undefined, selected: [], onSelect: () => undefined,
   }));
-  assert.ok(subsetHtml.includes("Reconstructed subset / independent worksheet"));
+  assert.ok(subsetHtml.includes("Reconstructed subset worksheet"));
   assert.ok(subsetHtml.includes("Not a wallet-wide MATCH"));
   assert.ok(subsetHtml.includes("0.575 SOL"));
+  assert.ok(subsetHtml.includes(WORKSHEET_LABEL));
+  assert.ok(!subsetHtml.includes("Independent subset"));
+  assert.ok(!subsetHtml.includes("Production subset"));
   assert.ok(subsetHtml.includes("30 seconds"));
   assert.ok(subsetHtml.includes("48 hours (172800 seconds)"));
   assert.ok(subsetHtml.includes("Insufficient evidence"));
   assert.ok(subsetHtml.includes('data-subset-worksheet="independent"'));
   assert.ok(renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, { report: searchState.reports[0] })) === "");
+  const worksheet58 = renderToStaticMarkup(React.createElement(SubsetWorksheetPanel, {
+    report: {
+      ...subsetReport,
+      worksheet: { total_profit_usdc: "51148.756609023", settlement_asset: "USDC" },
+      independent_worksheet: { total_profit_usdc: "51148.756609023" },
+      independent_audit: {
+        independently_audited: true,
+        independently_audited_episode_net: "5614.586672",
+        independently_audited_episode_net_unit: "USDC",
+        app_completed_episode_net: "5614.586672",
+        app_completed_episode_net_unit: "USDC",
+      },
+      research_profile: {
+        completed_known_cost_positions: 2,
+        scoped_pnl: "51148.756609023",
+        scoped_pnl_unit: "USDC",
+        completed_episode_net: "5614.586672",
+        completed_episode_net_unit: "USDC",
+      },
+    },
+  }));
+  assert.ok(worksheet58.includes(WORKSHEET_LABEL));
+  assert.ok(worksheet58.includes("5614.586672 USDC (completed-episode net)"));
+  assert.ok(!worksheet58.includes("Independent subset"));
+  assert.ok(!worksheet58.includes("Production subset"));
+  assert.deepEqual(
+    listRealisedProfit({ source: "mass-search", metrics: {}, worksheet: { total_profit_sol: "0.575" } }),
+    { value: "0.575", basis: "reconstructed-subset" },
+  );
+  assert.deepEqual(
+    listRealisedProfit({
+      source: "live",
+      metrics: { profit_sol: { status: "known", value: "2" } },
+      worksheet: { total_profit_sol: "0.575" },
+    }),
+    { value: "2", basis: "wallet" },
+  );
+  assert.deepEqual(
+    listRealisedProfit({ source: "mass-search", metrics: { profit_sol: { status: "unknown", value: null } } }),
+    { value: null, basis: "wallet" },
+  );
+  const ranked = [
+    { source: "live", metrics: { profit_sol: { status: "known", value: "0.1" } } },
+    { source: "mass-search", metrics: {}, worksheet: { total_profit_sol: "0.575" } },
+    { source: "live", metrics: { profit_sol: { status: "unknown", value: null } } },
+  ].sort((a, b) => {
+    const x = listRealisedProfit(a).value;
+    const y = listRealisedProfit(b).value;
+    if (x == null) return y == null ? 0 : 1;
+    if (y == null) return -1;
+    return compareDecimal(x, y) * -1;
+  });
+  assert.equal(listRealisedProfit(ranked[0]).value, "0.575");
+  const tableHtml = renderToStaticMarkup(React.createElement(ReportTable, {
+    reports: [subsetReport],
+    onOpen: () => undefined,
+  }));
+  assert.ok(tableHtml.includes("0.575"));
+  assert.ok(tableHtml.includes(WORKSHEET_LABEL));
+  assert.ok(tableHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(tableHtml.includes(">subset<"));
+  assert.ok(tableHtml.includes("report-cards"));
+  const resultsHtml = renderToStaticMarkup(React.createElement(Results, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.ok(resultsHtml.includes("0.575"));
+  assert.ok(resultsHtml.includes(WORKSHEET_LABEL));
+  assert.ok(resultsHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(resultsHtml.includes("Mass-search subset"));
+  assert.equal(reportPickerLabel({ source: "mass-search", label: "Mass-search subset · SYNTHETIC", address, created_at: cohort.created_at }).startsWith("subset · "), true);
+  const researchSubsetHtml = renderToStaticMarkup(React.createElement(ResearchView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport], observations: [paper, { ...paper, id: "paper-2" }] },
+    showEvidence: () => undefined,
+  }));
+  assert.ok(researchSubsetHtml.includes("subset · "));
+  assert.ok(researchSubsetHtml.includes("reconstructed subset, not a wallet-wide MATCH"));
+  assert.ok(researchSubsetHtml.includes("research-cards"));
+  assert.ok(researchSubsetHtml.includes("Paper P&amp;L including open exposure") || researchSubsetHtml.includes("Paper P&L including open exposure"));
+  const subsetScreening = {
+    id: "mass-search-screen", version: "wallet-screening-v1", created_at: cohort.created_at,
+    report_id: subsetReport.id, address, source: "mass-search",
+    result: "insufficient_evidence", label: "Insufficient evidence",
+    reason: "Mass-search reconstructed-subset reports cannot establish a live wallet screening result or MATCH.",
+    reasons: [{ key: "live_source", state: "UNKNOWN", reason: "Mass-search reconstructed-subset reports cannot establish a live wallet screening result or MATCH.", evidence: [] }],
+    trading_evidence: { supported_swaps: 1, matched_sales: 1, unmatched_sales: 0, conditional_matched_lot_profit_sol: null, open_exposure: [] },
+    risk_observations: [],
+    collection: { stop_reason: "Subset reconstruction finished" },
+    strict_qualification: { qualified: false, financial_policy: "UNRESOLVED", reason: "Demo, synthetic and preview reports do not qualify as live wallet matches." },
+    current_result: "insufficient_evidence", current_label: "Insufficient evidence",
+    current_reason: "Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH.",
+    current_eligibility: { can_start_observation: false, reason: "Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH." },
+  };
+  assert.equal(canObserveScreening(subsetScreening), false);
+  assert.equal(canObserveScreening({ ...subsetScreening, current_eligibility: { can_start_observation: true, reason: "should stay blocked" } }), false);
+  const subsetScreenHtml = renderToStaticMarkup(React.createElement(ScreeningDetail, { screening: subsetScreening, showEvidence: () => undefined }));
+  assert.ok(subsetScreenHtml.includes("Insufficient evidence"));
+  assert.ok(subsetScreenHtml.includes("reconstructed subset"));
+  assert.ok(subsetScreenHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(subsetScreenHtml.includes("UNRESOLVED"));
+  assert.ok(subsetScreenHtml.includes('data-screening-corpus="reconstructed-subset"'));
+  assert.ok(!subsetScreenHtml.includes("Worth observing</span>") && !subsetScreenHtml.includes(">MATCH<"));
+  const subsetResearchScreenHtml = renderToStaticMarkup(React.createElement(ResearchView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport], screenings: [subsetScreening] },
+    showEvidence: () => undefined,
+  }));
+  assert.ok(button(subsetResearchScreenHtml, "Start quote-only observation").includes("disabled="));
+  assert.ok(subsetResearchScreenHtml.includes("reconstructed subset"));
+  assert.ok(subsetResearchScreenHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(subsetResearchScreenHtml.includes("UNRESOLVED"));
+  assert.equal(screeningPickerLabel(subsetScreening).startsWith("subset · "), true);
+  assert.ok(subsetResearchScreenHtml.includes("subset · "));
+  assert.ok(screeningPickerLabel(subsetScreening).includes("Insufficient evidence"));
+  const watchlistHtml = renderToStaticMarkup(React.createElement(WatchlistView, {
+    ...actions,
+    state: {
+      ...searchState,
+      reports: [subsetReport],
+      watchlist: [{ address, label: "Research shortlist", source: "mass-search" }],
+    },
+  }));
+  assert.ok(watchlistHtml.includes("Unresolved") || watchlistHtml.includes("UNRESOLVED"));
+  assert.ok(watchlistHtml.includes("badge unresolved"));
+  assert.ok(watchlistHtml.includes(WORKSHEET_LABEL));
+  assert.ok(watchlistHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(watchlistHtml.includes('data-watch-source="mass-search"'));
+  assert.ok(watchlistHtml.includes("0.575"));
+  assert.ok(watchlistHtml.includes("not started from this list"));
+  assert.ok(watchlistHtml.includes("watch-report-meta"));
+  assert.ok(watchlistHtml.includes("watch-actions"));
+  assert.ok(watchlistHtml.indexOf("watch-report-meta") < watchlistHtml.indexOf("watch-actions"));
+  assert.ok(watchlistHtml.indexOf("data-list-profit=\"reconstructed-subset\"") < watchlistHtml.indexOf("Latest report"));
+  const emptyWatchlistHtml = renderToStaticMarkup(React.createElement(WatchlistView, {
+    ...actions,
+    state: { ...searchState, reports: [], watchlist: [] },
+  }));
+  assert.equal(watchlistEmptyCopy().kind, "watchlist-none");
+  assert.ok(emptyWatchlistHtml.includes('data-empty-kind="watchlist-none"'));
+  assert.ok(emptyWatchlistHtml.includes("not a MATCH shortlist"));
+  assert.ok(emptyWatchlistHtml.includes("does not start quote-only observation"));
+  const emptyResultsHtml = renderToStaticMarkup(React.createElement(Results, {
+    ...actions,
+    state: { ...searchState, reports: [] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.equal(resultsEmptyCopy("all", 0).kind, "results-none");
+  assert.equal(resultsEmptyCopy("mass-search", 0).kind, "results-no-subset");
+  assert.equal(resultsEmptyCopy("mass-search", 1).kind, "results-no-subset");
+  assert.equal(resultsEmptyCopy("all", 1).kind, "results-filtered");
+  assert.ok(emptyResultsHtml.includes('data-empty-kind="results-none"'));
+  assert.ok(emptyResultsHtml.includes("reconstructed subset"));
+  assert.ok(emptyResultsHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(resultsEmptyCopy("mass-search", 0).detail.includes("not wallet-wide MATCH"));
+  assert.equal(compareEmptyCopy([], 0).kind, "compare-none");
+  assert.ok(compareEmptyCopy([], 0).detail.includes("not a wallet-wide MATCH comparison"));
+  assert.equal(compareEmptyCopy([subsetReport], 0).kind, "compare-none-selected");
+  assert.ok(compareEmptyCopy([subsetReport], 0).detail.includes("reconstructed subset"));
+  assert.ok(compareEmptyCopy([subsetReport], 0).detail.includes("not a wallet-wide MATCH comparison"));
+  assert.equal(compareEmptyCopy([{ source: "live" }], 0).kind, "compare-none-selected");
+  assert.equal(compareEmptyCopy([subsetReport], 1), null);
+  const emptyCompareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.ok(emptyCompareHtml.includes('data-empty-kind="compare-none"'));
+  assert.ok(emptyCompareHtml.includes("not a wallet-wide MATCH comparison"));
+  const unselectedCompareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport] },
+    selected: [],
+    onSelect: () => undefined,
+  }));
+  assert.ok(unselectedCompareHtml.includes('data-empty-kind="compare-none-selected"'));
+  assert.ok(unselectedCompareHtml.includes("Mass-search subset"));
+  assert.ok(unselectedCompareHtml.includes("reconstructed subset"));
+  assert.ok(unselectedCompareHtml.includes("not a wallet-wide MATCH comparison"));
+  assert.ok(!unselectedCompareHtml.includes("data-list-profit"));
+  const compareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [subsetReport] },
+    selected: [subsetReport.id],
+    onSelect: () => undefined,
+  }));
+  assert.ok(compareHtml.includes("0.575"));
+  assert.ok(compareHtml.includes(WORKSHEET_LABEL));
+  assert.ok(compareHtml.includes("RECONSTRUCTED SUBSET"));
+  assert.ok(compareHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(compareHtml.includes("not a wallet-wide MATCH"));
+  assert.ok(compareHtml.includes("not wallet-wide MATCH"));
+  assert.ok(compareHtml.includes("compare-cards"));
+  const liveCompare = {
+    ...subsetReport,
+    id: "live-row",
+    source: "live",
+    label: "Live control",
+    metrics: { profit_sol: { status: "known", value: "2.00" } },
+  };
+  const liveCompareHtml = renderToStaticMarkup(React.createElement(CompareView, {
+    ...actions,
+    state: { ...searchState, reports: [liveCompare] },
+    selected: [liveCompare.id],
+    onSelect: () => undefined,
+  }));
+  assert.ok(liveCompareHtml.includes("2"));
+  assert.ok(!liveCompareHtml.includes('data-list-profit="reconstructed-subset"'));
+  assert.ok(!liveCompareHtml.includes("RECONSTRUCTED SUBSET"));
   console.log(
     "Discovery, interval coverage, independent freshness, source consistency, scoped account-episode, selected holding/cohort and gross native cash isolation, rebuild, report projection routing, display reuse, and lazy coverage assertions passed (one frontend runner).",
   );

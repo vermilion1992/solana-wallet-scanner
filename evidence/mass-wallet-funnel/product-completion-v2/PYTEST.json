@@ -1,0 +1,14 @@
+{
+  "kind": "product-completion-v2-pytest",
+  "tested_sha": "1ab254253900a48ee7858731e04faafd09d1210f",
+  "source_equivalent_run_sha": "1493661daeddb5b71f10dc91f68f4eb9aaebfd38",
+  "note": "Full suite ran on 1493661 (Python/tests freeze). Later commits 7906f05 and 1ab2542 change only frontend dist and the MassSearch filter-form default. Targeted A-D tests passed on the implementation before freeze.",
+  "passed": 3604,
+  "failed": 0,
+  "skipped": 0,
+  "xfailed": 0,
+  "subtests_passed": 440,
+  "seconds": 530.36,
+  "command": "./.venv/bin/python -m pytest -q --tb=line",
+  "PRODUCT_READY": false
+}

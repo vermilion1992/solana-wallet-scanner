@@ -292,9 +292,93 @@ export type Report = {
   notes: string[];
   worksheet?: {
     total_profit_sol?: string | null;
+    total_profit_usdc?: string | null;
     sale_fifo_basis_sol?: string[];
+    sale_fifo_basis_usdc?: string[];
     sale_net_profit_sol?: string[];
+    sale_net_profit_usdc?: string[];
+    settlement_asset?: string | null;
+    unresolved_basis_sales?: number;
+    oracle?: string | null;
   } | null;
+  independent_worksheet?: {
+    total_profit_sol?: string | null;
+    total_profit_usdc?: string | null;
+    sale_fifo_basis_sol?: string[];
+    sale_fifo_basis_usdc?: string[];
+    sale_net_profit_sol?: string[];
+    sale_net_profit_usdc?: string[];
+    settlement_asset?: string | null;
+    unresolved_basis_sales?: number;
+    oracle?: string | null;
+  } | null;
+  worksheet_reconciliation?: {
+    status?: string | null;
+    production_total_profit_sol?: string | null;
+    independent_total_profit_sol?: string | null;
+    production_total_profit_usdc?: string | null;
+    independent_total_profit_usdc?: string | null;
+    difference_sol?: string | null;
+    difference_usdc?: string | null;
+    settlement_asset?: string | null;
+    note?: string | null;
+  } | null;
+  research_profile?: Record<string, unknown> | null;
+  completed_episode_ledger?: Array<Record<string, unknown>>;
+  qualification_category?: { category?: string; evidence_class?: number } | null;
+  visible_report?: boolean | null;
+  result_scope?: string;
+  capture_sha256?: string;
+  analysis_cache_key?: string;
+  funnel?: Record<string, unknown> | null;
+  analytics?: Record<string, unknown> | null;
+  next_candidates?: Record<string, unknown>[] | null;
+  observations?: { kind?: string; detail?: string; reason?: string; signature?: string; count?: number }[];
+  g3_status?: string | null;
+  source_integrity?: { status?: string; damaged?: number; intact?: number } | null;
+  declared_mints?: string[];
+  wallet_completed_episodes?: number;
+  wallet_sale_count?: number;
+  unsupported_tx_count?: number;
+  unsupported_swaps_in_window?: number;
+  in_window_swaps?: number;
+  unsupported_swap_share_in_window?: {
+    by_count?: string | null;
+    by_consideration?: Record<string, string>;
+  };
+  in_window_span?: { seconds?: number; hours?: string; start?: string; end?: string } | null;
+  record_breakdown?: Record<string, unknown>;
+  residual_sol?: string;
+  residual_sol_note?: string;
+  independent_audit?: {
+    status?: string;
+    independently_audited?: boolean;
+    independently_audited_episode_net?: string | null;
+    independently_audited_episode_net_unit?: string | null;
+    app_completed_episode_net?: string | null;
+    app_completed_episode_net_unit?: string | null;
+    worksheet_total?: string | null;
+    worksheet_total_unit?: string | null;
+    worksheet_total_independently_audited?: boolean;
+    worksheet_episode_bridge?: {
+      worksheet_total?: string | null;
+      completed_episode_net?: string | null;
+      bridge?: string | null;
+      unit?: string | null;
+    } | null;
+    content_fingerprint?: Record<string, unknown> | null;
+    note?: string;
+  } | null;
+  verified_tips_sol?: string;
+  proven_platform_fees_sol?: string;
+  sensitivity_unverified_debits_sol?: string;
+  sensitivity_unverified_debits_note?: string;
+  coverage_status?: string;
+  blocking_reason?: string;
+  worksheet_error?: string | null;
+  unsupported_transactions?: Record<string, unknown>[];
+  conversions?: Record<string, unknown>[];
+  by_quote_asset?: Record<string, unknown>;
   material_exit?: {
     state?: string | null;
     first_sale_seconds?: number | null;
@@ -302,6 +386,12 @@ export type Report = {
     exit_90_seconds?: number | null;
     final_hold_seconds?: number | null;
     quantity_weighted_exit_seconds?: string | null;
+    method_version?: string | null;
+    aggregation_method?: string | null;
+    sample_count?: number | null;
+    quantity_weighted_exit_note?: string | null;
+    first_sale_window_offset_seconds?: number | null;
+    exit_90_window_offset_seconds?: number | null;
   } | null;
   market_observations?: Record<string, unknown>[];
   market_observation_scope?: string;
@@ -516,7 +606,7 @@ export type State = {
   observations?: PaperObservation[];
   mass_search?: MassSearchState;
   reports: Report[];
-  watchlist: { address: string; label: string; added_at?: string }[];
+  watchlist: { address: string; label: string; added_at?: string; source?: "demo" | "live" | "mass-search" }[];
   usage: {
     used: number;
     reserved: number;
@@ -548,6 +638,7 @@ export type Screening = {
   created_at: string;
   report_id: string;
   address: string;
+  source?: "demo" | "live" | "mass-search" | string;
   preset_snapshot?: Preset;
   identity?: { state: string; reason: string; evidence: string[] };
   current_source_availability?: { state: string; missing: (string | null)[] };
@@ -674,7 +765,198 @@ export type MassSearchState = {
   legacy_candidate_cap?: number;
   legacy_deep_audit_cap?: number;
   live_default?: boolean;
+  budget_enabled?: boolean;
+  ranked_workflow?: boolean;
   note?: string;
+};
+export type RankedWorkflowRow = {
+  address: string;
+  provider_rank?: number | null;
+  trade_count?: number | null;
+  shortlisted?: boolean;
+  capture_available?: boolean;
+  report_id?: string | null;
+  can_open_report?: boolean;
+  user_shortlisted?: boolean;
+  history_required?: boolean;
+  completed_episode_ledger?: Array<{ mint?: string | null; close_signature?: string | null; close?: string | null }>;
+  independent_audit?: Record<string, unknown> | null;
+  history_required_label?: string | null;
+  in_window_span?: { seconds?: number; hours?: string; start?: string; end?: string } | null;
+  row_kind?: string;
+  not_proof?: boolean;
+  label?: string;
+  corpus_kind?: string;
+  funnel?: {
+    A?: { state?: string };
+    B?: { state?: string; scoped_pnl?: string | null; scoped_pnl_unit?: string | null; completed_known_cost_positions?: number };
+    C?: { state?: string };
+    next_action?: { code?: string; detail?: string };
+    holder_fee_heavy?: boolean;
+  } | null;
+  qualification_category?: {
+    category?: string;
+    evidence_class?: number;
+    screening_separate?: boolean;
+  } | null;
+  qualification_level?: {
+    level?: string;
+    label?: string;
+  } | null;
+  coverage_status?: string | null;
+  coverage_status_display?: string | null;
+  blocking_reason?: string | null;
+  research_profile?: {
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+    completed_episode_net?: string | null;
+    completed_episode_net_unit?: string | null;
+    completed_known_cost_positions?: number;
+    matched_fragment_pnl?: string | null;
+    matched_fragment_unit?: string | null;
+    qualification_level?: { level?: string; label?: string };
+    coverage_status?: string | null;
+    coverage_status_display?: string | null;
+    blocking_reason?: string | null;
+    independent_audit?: {
+      independently_audited?: boolean;
+      independently_audited_episode_net?: string | null;
+      independently_audited_episode_net_unit?: string | null;
+      content_fingerprint?: unknown;
+      fingerprint?: unknown;
+      fingerprintless_not_certifying?: boolean;
+      auditor_confirmation?: string | null;
+      one_to_one_membership?: boolean;
+      component_bridges?: Array<Record<string, unknown>>;
+      episodes?: Array<Record<string, unknown>>;
+    };
+    qualification_category?: {
+      category?: string;
+      evidence_class?: number;
+      screening_separate?: boolean;
+    };
+  } | null;
+  analytics?: {
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+    median_hold?: { seconds?: number | null; sample_count?: number | null; n_equals_one_disclosed?: boolean };
+  } | null;
+};
+export type RankedWorkflowView = {
+  rows?: RankedWorkflowRow[];
+  engineering_fixtures?: RankedWorkflowRow[];
+  control_archives?: RankedWorkflowRow[];
+  ranked_count?: number;
+  visible_count?: number;
+  budget_enabled?: boolean;
+  live_enabled?: boolean;
+  user_shortlist?: string[];
+  funnel_counts?: Record<string, number>;
+  filter_effects?: { key: string; group: string; label: string; unit?: string; value?: unknown; missing?: boolean }[];
+  filters?: {
+    thresholds?: Record<string, string | null>;
+    provider_proxy?: {
+      min_provider_trade_count?: string | null;
+      min_provider_score?: string | null;
+      only_shortlist?: boolean;
+      only_user_shortlist?: boolean;
+      only_captured?: boolean;
+    };
+    units?: Record<string, string>;
+  };
+  phone_access?: { preview_available?: boolean; blocker?: string };
+  note?: string;
+  snapshot_id?: string;
+  snapshot_raw_sha256?: string;
+  analysis_version?: string;
+  capture_sha256?: string;
+  research_screen?: {
+    outcome?: string;
+    thresholds_fixed_before_evaluation?: {
+      min_completed_known_cost?: string | null;
+      min_sample_positions?: string | null;
+      min_coverage_share?: string | null;
+    };
+    counts?: {
+      inconclusive?: number;
+      zero_qualified?: number;
+      completed_qualified?: number;
+      not_executed?: number;
+      qualification?: {
+        not_evaluated?: number;
+        analysed_incomplete?: number;
+        positive_matched_position_evidence?: number;
+        positive_net_realised_over_window?: number;
+        profitable_account_performance?: number;
+      };
+      qualification_level?: {
+        insufficient_evidence?: number;
+        conditional_captured_lot_result?: number;
+        provisional_research_lead?: number;
+        stronger_research_shortlist?: number;
+      };
+      coverage_status?: {
+        provisional_eligible?: number;
+        coverage_eligibility_pending_reassessment?: number;
+        watchlist_incomplete_evidence?: number;
+        coverage_blocked?: number;
+        blocked_unknown_denominator?: number;
+      };
+    };
+  };
+};
+export type RankedBatch = {
+  batch_id: string;
+  status: string;
+  total: number;
+  completed: number;
+  cancel_requested?: boolean;
+  outcomes?: {
+    address: string;
+    status: string;
+    report_id?: string | null;
+    detail?: string | null;
+    capture_available?: boolean;
+    not_proof?: boolean;
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+  }[];
+};
+export type ResearchCompare = {
+  fields?: { key: string; left: unknown; right: unknown }[];
+  mismatches?: { kind: string; detail: string }[];
+  comparable?: boolean;
+  window_policy?: {
+    kind?: string;
+    detail?: string;
+    left_window?: { start?: string; end?: string };
+    right_window?: { start?: string; end?: string };
+    left_included_tx?: string[];
+    right_included_tx?: string[];
+    left_included_trades?: number;
+    right_included_trades?: number;
+    left_sample_size?: number;
+    right_sample_size?: number;
+    left_scoped_pnl?: string | null;
+    right_scoped_pnl?: string | null;
+    left_scoped_pnl_unit?: string | null;
+    right_scoped_pnl_unit?: string | null;
+    left_completed_episode_net?: string | null;
+    right_completed_episode_net?: string | null;
+    left_completed_episode_net_unit?: string | null;
+    right_completed_episode_net_unit?: string | null;
+    left_independently_audited?: boolean;
+    right_independently_audited?: boolean;
+    left_independently_audited_episode_net?: string | null;
+    right_independently_audited_episode_net?: string | null;
+    left_independently_audited_episode_net_unit?: string | null;
+    right_independently_audited_episode_net_unit?: string | null;
+    result_scope?: string;
+  };
+  left_funnel?: { A?: { state?: string }; B?: { state?: string }; C?: { state?: string } } | null;
+  right_funnel?: { A?: { state?: string }; B?: { state?: string }; C?: { state?: string } } | null;
+  left_qualification_category?: { category?: string } | null;
+  right_qualification_category?: { category?: string } | null;
 };
 export type MassSearchStageCounts = {
   input: number;

@@ -1,0 +1,128 @@
+{
+  "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL": {
+    "app_error": null,
+    "comparison": {
+      "SOL": {
+        "independent_total": "2.014145839",
+        "app_total": "2.014145839",
+        "independent_known_cost_sells": 55,
+        "app_sales": 55,
+        "independent_unresolved_basis_sales": 4,
+        "independent_open_lots": 0,
+        "per_sale": true,
+        "status": "AGREE"
+      }
+    },
+    "unsupported_tx_count": 179
+  },
+  "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": {
+    "app_error": null,
+    "comparison": {
+      "SOL": {
+        "independent_total": "0.120294936",
+        "app_total": "0.120294936",
+        "independent_known_cost_sells": 6,
+        "app_sales": 6,
+        "independent_unresolved_basis_sales": 0,
+        "independent_open_lots": 0,
+        "per_sale": true,
+        "status": "AGREE"
+      }
+    },
+    "unsupported_tx_count": 46
+  },
+  "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9": {
+    "app_error": null,
+    "comparison": {
+      "USDC": {
+        "independent_total": null,
+        "app_total": null,
+        "independent_known_cost_sells": 0,
+        "app_sales": 0,
+        "independent_unresolved_basis_sales": 1,
+        "independent_open_lots": 0,
+        "per_sale": true,
+        "status": "BOTH_EMPTY"
+      }
+    },
+    "unsupported_tx_count": 149
+  },
+  "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM": {
+    "app_error": null,
+    "comparison": {},
+    "unsupported_tx_count": 160
+  },
+  "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys": {
+    "app_error": null,
+    "comparison": {
+      "USDC": {
+        "independent_total": null,
+        "app_total": null,
+        "independent_known_cost_sells": 0,
+        "app_sales": 0,
+        "independent_unresolved_basis_sales": 1,
+        "independent_open_lots": 0,
+        "per_sale": true,
+        "status": "BOTH_EMPTY"
+      }
+    },
+    "unsupported_tx_count": 198
+  },
+  "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot": {
+    "app_error": null,
+    "comparison": {
+      "SOL": {
+        "independent_total": "287.384074822",
+        "app_total": "287.384074822",
+        "independent_known_cost_sells": 46,
+        "app_sales": 46,
+        "independent_unresolved_basis_sales": 0,
+        "independent_open_lots": 0,
+        "per_sale": true,
+        "status": "AGREE"
+      }
+    },
+    "unsupported_tx_count": 196
+  },
+  "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": {
+    "app_error": null,
+    "comparison": {},
+    "unsupported_tx_count": 199
+  },
+  "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL": {
+    "app_error": null,
+    "comparison": {
+      "SOL": {
+        "independent_total": null,
+        "app_total": null,
+        "independent_known_cost_sells": 0,
+        "app_sales": 0,
+        "independent_unresolved_basis_sales": 0,
+        "independent_open_lots": 1,
+        "per_sale": true,
+        "status": "BOTH_EMPTY"
+      },
+      "USDC": {
+        "independent_total": "14739.373324196",
+        "app_total": "14739.373324196",
+        "independent_known_cost_sells": 3,
+        "app_sales": 3,
+        "independent_unresolved_basis_sales": 6,
+        "independent_open_lots": 3,
+        "per_sale": true,
+        "status": "AGREE"
+      }
+    },
+    "unsupported_tx_count": 181
+  },
+  "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6": {
+    "app_error": null,
+    "comparison": {},
+    "unsupported_tx_count": 196
+  },
+  "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U": {
+    "app_error": null,
+    "comparison": {},
+    "unsupported_tx_count": 117
+  }
+}

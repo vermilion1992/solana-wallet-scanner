@@ -1,0 +1,171 @@
+{
+  "outcome_label": "RANKED100_ANCHORED_VALIDATION",
+  "status": "OFFLINE_PASS",
+  "stop_reason": "offline_prep_only",
+  "authorization_id": "live-ranked100-anchored-validation-2026-10-06-mitch",
+  "reacquire_authorization_id_not_reused": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "g3_leftover_authorization_id_not_reused": "live-g3-ranked100-history-2026-10-06-mitch",
+  "tested_application_commit": "723c4d5877c39fa78a9e46b21b83e93988325579",
+  "application_commit_from_runner": "723c4d5877c39fa78a9e46b21b83e93988325579",
+  "reviewed_baseline_tip": "3409b3ad5e8adda0cb232467192a52dab1ecbc92",
+  "grant_path": "config/live_authorization.ranked100-anchored-validation-draft.json",
+  "grant_enabled": false,
+  "draft_status": "DISABLED; NOT AUTHORISED",
+  "not_authorised": true,
+  "authorized_by_user_at": null,
+  "expires_at": null,
+  "validate_live_authorization_enabled": false,
+  "accepted_historical_authorization_ids": [
+    "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+    "live-ranked100-anchored-validation-2026-10-06-mitch"
+  ],
+  "binding": {
+    "shared_path_accepts_new_id": true,
+    "load_anchored_validation_grant": true,
+    "prior_grants_rejected_as_this_grant": {
+      "g1": "Prior grants must not be reused for ranked-100 anchored validation",
+      "ranked100": "Prior grants must not be reused for ranked-100 anchored validation",
+      "g3_leftover": "Prior grants must not be reused for ranked-100 anchored validation",
+      "reacquire": "Prior grants must not be reused for ranked-100 anchored validation"
+    },
+    "this_grant_rejected_as_reacquire": "G1, ranked-100, leftover G3, and anchored-validation grants must not be reused for reacquire",
+    "ceiling_widening_rejected": "Helius ceilings must be 2 requests / 20 credits",
+    "cache_key_includes_authorization_id": true,
+    "persist_before_validate": true,
+    "mismatch_quarantines_under_new_id": true
+  },
+  "hard_limits": {
+    "max_helius_gta": 2,
+    "max_credits": 20,
+    "max_credits_per_call": 10,
+    "limit": 100,
+    "concurrency": 1,
+    "retries": 0,
+    "max_duration_seconds": 300,
+    "birdeye": 0,
+    "max_additional_spend_usd": "0",
+    "helius_grant": {
+      "max_requests": 2,
+      "max_units": 20,
+      "documented_units_per_request": 10,
+      "max_concurrency": 1,
+      "max_duration_seconds": 300,
+      "retries": 0
+    },
+    "birdeye_grant": {
+      "max_requests": 0,
+      "max_units": 0,
+      "allowed_operations": []
+    }
+  },
+  "referenced_signature_manifests": {
+    "freeze_path": "evidence/mass-wallet-funnel/g3-integrity-reacquire-rank1/FROZEN_SEGMENTS.json",
+    "overlay_path": "evidence/mass-wallet-funnel/g3-integrity-reacquire-rank1/rank1-signature-overlay.json",
+    "do_not_overwrite": true,
+    "note": "Reference the original EXTRACT_OK page-0/page-1 signatures and pagination tokens. Do not rewrite those files."
+  },
+  "freeze_authorization_id_unchanged": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "overlay_authorization_id_unchanged": "live-g3-integrity-reacquire-rank1-2026-10-06-mitch",
+  "freeze_path_sha256": "376809b58291918b6f44c4771911b246fe4497672b3e6ba7d4fc4b56df31bd32",
+  "overlay_path_sha256": "d937cb0b2f97b2cd67de475c7735aed878e508cfc5a6e73933e1bcf82cbdf404",
+  "do_not_overwrite_manifests": true,
+  "signature_manifest_status": "EXTRACT_OK",
+  "original_segments_identified": true,
+  "page0_signature_count": 100,
+  "page1_signature_count": 100,
+  "page0_filters_signature_lte": "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG",
+  "page1_pagination_token": "452802642:577",
+  "page0_pagination_token_from_freeze": "452802642:577",
+  "allowed_wallet": "25865JdBJVVLbt6Kfe4KnKrVCy8UVCYFRRBAPvmJ17LL",
+  "ranked100_shortlist_rank": 1,
+  "arming_blockers": [
+    "existing_plan_unconfirmed",
+    "grant_disabled",
+    "missing_provider_credentials",
+    "not_authorised",
+    "remaining_quota_unconfirmed"
+  ],
+  "non_grants": {
+    "example_enabled": false,
+    "draft_enabled": false,
+    "ranked100_enabled": false,
+    "g3_leftover_enabled": false,
+    "reacquire_enabled": false,
+    "anchored_validation_enabled": false,
+    "g1_not_reused": true,
+    "ranked100_not_reused": true,
+    "g3_leftover_not_reused": true,
+    "reacquire_not_reused": true
+  },
+  "windows": {
+    "report_window_days": 30,
+    "report_start_inclusive": "2026-09-05T13:29:27Z",
+    "report_end_exclusive": "2026-10-05T13:29:27Z",
+    "acquisition_support_days": 90,
+    "acquisition_support_start_inclusive": "2026-07-07T13:29:27Z",
+    "acquisition_support_end_exclusive": "2026-10-05T13:29:27Z",
+    "timestamp_semantics": "Discovery cutoff is the ranked-100 fetch timestamp 2026-10-05T13:29:27Z. Report window is 30 days ending at cutoff (exclusive end). Acquisition-support records may start 90 days before cutoff. Do not substitute a later cutoff or current/latest history."
+  },
+  "encoding": {
+    "method": "getTransactionsForAddress",
+    "transactionDetails": "full",
+    "limit": 100,
+    "sortOrder": "desc",
+    "commitment": "finalized",
+    "maxSupportedTransactionVersion": 1,
+    "filters": {
+      "status": "any",
+      "tokenAccounts": "all"
+    },
+    "top_level_until_forbidden": true
+  },
+  "page0_request_shape": {
+    "filters.signature.lte": "3Brdt8dMcSY96bjkKf3DZKDAWjo7r1znTMj6H2iuzBWSTA4XuwPGaBxVy4yDM6xeWDu2AKwX3o7WEFdAECc4GDHG",
+    "until_present": false,
+    "paginationToken": null,
+    "transactionDetails": "full",
+    "limit": 100,
+    "sortOrder": "desc",
+    "commitment": "finalized",
+    "status": "any",
+    "tokenAccounts": "all",
+    "maxSupportedTransactionVersion": 1
+  },
+  "page1_request_shape_conditional": {
+    "paginationToken": "452802642:577",
+    "until_present": false,
+    "filters.signature.lte": null,
+    "note": "Page 1 is conditional: frozen paginationToken 452802642:577 only after page 0 integrity plus a recorded missing acquisition/position boundary."
+  },
+  "external_requests": 0,
+  "helius_calls": 0,
+  "birdeye_calls": 0,
+  "transport_called": false,
+  "PRODUCT_READY": false,
+  "live_still_requires": [
+    "Mitch separate explicit approval of live-ranked100-anchored-validation-2026-10-06-mitch",
+    "approval_time/expiry set only after that approval",
+    "tariff/quota confirm (existing_plan_confirmed + remaining_quota_confirmed_at) on a local uncommitted armed copy",
+    "Do not reuse leftover units from any prior grant",
+    "Do not dispatch Helius/Birdeye from this offline prep",
+    "Do not merge PR #4"
+  ],
+  "offline_tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_mass_search_ranked100_anchored.py tests/test_mass_search_g3_reacquire.py tests/test_mass_search_g1.py::test_g1_grant_enabled_and_non_grants_stay_disabled tests/test_mass_search_ranked100.py::test_committed_ranked100_grant_is_disabled_and_not_g1 tests/test_mass_search_ranked100.py::test_g1_grant_cannot_be_loaded_as_ranked100 tests/test_mass_search_g3.py::test_g1_and_ranked100_cannot_be_loaded_as_g3",
+    "tested_application_commit": "723c4d5877c39fa78a9e46b21b83e93988325579",
+    "passed": 27,
+    "failed": 0,
+    "proved": [
+      "new grant ID live-ranked100-anchored-validation-2026-10-06-mitch is bound on the shared historical path",
+      "repo draft stays enabled:false / DISABLED; NOT AUTHORISED with null approval_time/expiry",
+      "prior G1 / ranked-100 / leftover G3 / reacquire grants cannot load as this grant",
+      "this grant cannot load as the reacquire grant",
+      "request/credit ceilings stay 2 Helius GTA / 20 credits / 10 credits/call / limit 100 / concurrency 1 / retries 0 / 300s / Birdeye 0 / $0",
+      "ceiling widening to leftover 15/150 is rejected",
+      "sanitised page 0 uses filters.signature.lte and no top-level until",
+      "conditional page 1 shape uses frozen paginationToken 452802642:577 and no top-level until",
+      "persist-before-validate + mismatch quarantine keys under the new authorization_id and do not write the old reacquire capture",
+      "existing 100+100 EXTRACT_OK manifests are referenced, not overwritten"
+    ]
+  }
+}

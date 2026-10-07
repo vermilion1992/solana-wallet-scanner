@@ -1,0 +1,15 @@
+{
+  "requirement": "A. BATCH RACE",
+  "status": "PASS",
+  "paragraph": "Admission is a single store.lock critical section at create_batch. Exactly one active batch is held (pending/running or executing). A second HTTP caller on a different fingerprint gets BatchBusy → 409; an identical fingerprint attaches and create_and_run returns without starting a second runner. step_batch claims one index under the same lock; a concurrent stepper persists step_ignored=already_executing and does not analyse. Cancel sets cancel_requested but keeps admission held while executing is true; the guard releases on success, failure, and only after executing becomes false. Process model is single_process_per_data_dir, enforced by the launcher .runtime.lock. Batch admission never consults the acquisition grant.",
+  "test_node_id": "tests/test_mass_search_mitch_requirements.py::test_http_batch_admission_is_atomic_and_returns_409",
+  "also": [
+    "tests/test_mass_search_mitch_requirements.py::test_identical_create_and_run_attaches_without_rerunning",
+    "tests/test_mass_search_mitch_requirements.py::test_concurrent_http_step_does_not_double_analyse",
+    "tests/test_mass_search_mitch_requirements.py::test_cancel_releases_admission_only_after_executing_stops"
+  ],
+  "log_path": "evidence/mass-wallet-funnel/product-completion-v2/logs/PYTEST_AD.log",
+  "process_model": "single_process_per_data_dir",
+  "process_guard": "scanner.__main__.data_directory_lock (.runtime.lock)",
+  "tested_sha": "c34eb2cec41bdbb3a2ef6d7c349d20d01db635bc"
+}

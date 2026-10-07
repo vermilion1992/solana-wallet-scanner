@@ -81,7 +81,14 @@ def screening_view(store, frozen, *, source_cache=None, identity_cache=None):
     else:
         reason = frozen['reason']
     supportable = not missing and identity['state'] == 'PASS'
-    eligible = supportable and frozen['result'] != 'excluded_by_preset'
+    live_report = frozen.get('source') == 'live'
+    if not missing and not live_report:
+        reason = (
+            'Mass-search reconstructed-subset reports cannot start quote-only observation. They are not a wallet-wide MATCH.'
+            if frozen.get('source') == 'mass-search'
+            else 'Synthetic and preview reports cannot start quote-only observation.'
+        )
+    eligible = supportable and live_report and frozen['result'] != 'excluded_by_preset'
     return {**deepcopy(frozen),
             'current_source_availability': {'state': 'UNKNOWN' if missing else 'PASS', 'missing': missing},
             'current_identity': identity,
@@ -550,7 +557,7 @@ def install_research_routes(app, store, body, observer, *, build_report, queue_s
         if set(data) - {'screening_id', 'settings'} or 'screening_id' not in data:
             raise ValueError('Select a saved screening and paper settings')
         selected = assessment(data['screening_id'])
-        if not selected['current_eligibility']['can_start_observation']:
+        if not selected['current_eligibility']['can_start_observation'] or selected.get('source') != 'live':
             raise HTTPException(409, selected['current_eligibility']['reason'])
         if saved_identity(store, selected['address'])['state'] != 'PASS':
             raise HTTPException(409, 'Native identity evidence must be checked before forward observation')

@@ -1,0 +1,33 @@
+{
+  "kind": "ranked100-shared-boundary-diagnosis-v1",
+  "tested_application_commit": "3948e6aaf2abbcac85522f1bc8fd5daa9f96ab58",
+  "tested_application_commit_pending_tip": false,
+  "capture_path": "evidence/mass-wallet-funnel/ranked100-anchored-validation-live/SOURCE_RESPONSE_page0.json",
+  "capture_sha256": "53a5c6f46ec2e0f8c895df6398116756ae3728892f0a6b702137f56d8624328d",
+  "capture_bytes": 2403585,
+  "root_causes": [
+    {
+      "id": "summarize_page_unwrapped_gta",
+      "detail": "g3_reacquire._summarize_page passed raw GTA bodies to decode_supported_swaps, which requires {signature, raw, evidence_hash}. Every tx was Missing raw transaction result.",
+      "fix": "canonical_decode_records is the single wrap; _summarize_page, _wrap_records, history_ingest replay, and g3_history now share it. Already-wrapped records are not wrapped again."
+    },
+    {
+      "id": "pump_outers_are_holder_fee_not_buy_sell",
+      "detail": "80 Pump program outers use discriminator 623691610246ad2b = distribute_fee_to_holders from the pinned pump-public-docs IDL. Existing buy/sell/buy_exact_sol_in adapters did not fail those txs; those instructions are not present as outer swaps on this page.",
+      "fix": "Adapter now names the reviewed non-swap. Classification records holder-fee distributions separately from missing-discriminator."
+    },
+    {
+      "id": "inner_pumpswap_under_unreviewed_jupiter",
+      "detail": "6 outer Jupiter instructions use unreviewed discriminator bb64facc31c4af14. Inners include PumpSwap buy/sell/buy_exact_quote_in settling USDC, not SOL/wSOL. 2 more PumpSwap buys sit under other unreviewed outers. Existing decoder requires one reviewed outer SOL/wSOL route.",
+      "fix": "Classified honestly. Not reconstructed as SOL P&L. Raw SOL delta is not treated as profit."
+    }
+  ],
+  "pump_idl_pin": {
+    "repository": "pump-fun/pump-public-docs",
+    "commit": "e0687ae9b7e064a0f54efc7297c65eecfbba3a8f",
+    "document": "idl/pump.json",
+    "local_fixture": "tests/fixtures/retained_protocol_funding/pump-native.json",
+    "sha256": "ffe966c42f1af41652ee753fe2f1e3f7cd4077d7e6f49faf3138959c8b56064b"
+  },
+  "PRODUCT_READY": false
+}
