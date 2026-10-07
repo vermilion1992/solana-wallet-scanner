@@ -861,6 +861,13 @@ def reconcile_saved_profile(report, profile):
         profile["completed_known_cost_positions"] = 0
         profile["ledger_summary_contradiction"] = True
         profile["ledger_validation_reason"] = validated["reason"]
+        events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
+        if events:
+            profile["sample_positions"] = len(events)
+        shares = coverage_shares(report, profile)
+        profile["coverage_count_share"] = shares["coverage_count_share"]
+        profile["coverage_value_share"] = shares["coverage_value_share"]
+        profile["coverage_mandatory_share"] = shares["coverage_mandatory_share"]
         return _invalidate_saved_decisions(report, profile, ledger=ledger, contradiction=True)
     derived_net = _decimal(validated["net"])
     derived_count = validated["count"]
@@ -881,6 +888,20 @@ def reconcile_saved_profile(report, profile):
     profile["completed_episode_net_unit"] = validated["unit"]
     profile["completed_episode_net_vector"] = validated["vector"]
     profile["completed_known_cost_positions"] = derived_count
+    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
+    if events:
+        profile["sample_positions"] = len(events)
+    elif profile.get("sample_positions") in (None, ""):
+        sale_count = profile.get("sale_count")
+        if sale_count not in (None, ""):
+            try:
+                profile["sample_positions"] = int(sale_count)
+            except (TypeError, ValueError):
+                pass
+    shares = coverage_shares(report, profile)
+    profile["coverage_count_share"] = shares["coverage_count_share"]
+    profile["coverage_value_share"] = shares["coverage_value_share"]
+    profile["coverage_mandatory_share"] = shares["coverage_mandatory_share"]
     profile["ledger_summary_contradiction"] = contradiction or bool(profile.get("ledger_summary_contradiction"))
     profile["ledger_validation_reason"] = validated.get("reason")
     return _invalidate_saved_decisions(

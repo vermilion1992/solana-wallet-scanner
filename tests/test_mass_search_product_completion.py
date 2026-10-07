@@ -174,6 +174,7 @@ def test_g1_synthetic_oracle_fifo_is_unchanged():
 def test_unset_thresholds_do_not_pass():
     profile = {
         "completed_known_cost_positions": 3,
+        "sample_positions": 3,
         "scoped_pnl": "376.028087",
         "scoped_pnl_by_quote_asset": {"USDC": "376.028087"},
         "settlement_asset": "USDC",

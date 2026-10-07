@@ -1,0 +1,79 @@
+{
+  "kind": "live-e2e-request-plan-v1",
+  "dry_run": true,
+  "phases": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "wallet_count": 10,
+  "per_phase": {
+    "1": {
+      "provider": "birdeye",
+      "requests": 1,
+      "units": 30,
+      "billing_unit": "birdeye_compute_unit",
+      "note": "0 when a wallet list is supplied without --discovery"
+    },
+    "2": {
+      "provider": "helius",
+      "requests": 20,
+      "units": 200,
+      "billing_unit": "helius_credit",
+      "note": "1 signatures-only (limit 1000, 10 CU) + 1 full sample (limit 100, 10 CU) per wallet"
+    },
+    "3": {
+      "provider": "helius",
+      "requests": 10,
+      "units": 1000,
+      "billing_unit": "helius_credit",
+      "note": "Dry-run recorder returns empty pages, so paging stops after one full limit=1000 page per wallet. Live continues until the window is covered or the cap is hit. Units are the documented worst case (100 credits / 1000 txs)."
+    },
+    "4": {
+      "provider": null,
+      "requests": 0,
+      "units": 0,
+      "note": "offline only"
+    }
+  },
+  "totals": {
+    "birdeye_requests": 1,
+    "birdeye_units": 30,
+    "helius_requests": 30,
+    "helius_units": 1200
+  },
+  "caps": {
+    "birdeye_requests": 3,
+    "birdeye_units": 91,
+    "helius_requests": 500,
+    "helius_units": 5000
+  },
+  "PRODUCT_READY": false,
+  "within_caps": true,
+  "gta_page_size": {
+    "kind": "helius-gta-page-size-v1",
+    "docs": "https://www.helius.dev/docs/rpc/gettransactionsforaddress",
+    "reviewed_on": "2026-10-07",
+    "max_limit": 1000,
+    "signatures_only": {
+      "transactionDetails": "signatures",
+      "limit": 1000,
+      "credits": 10,
+      "note": "10 credits flat for up to 1,000 signatures."
+    },
+    "full_sample": {
+      "transactionDetails": "full",
+      "limit": 100,
+      "credits": 10,
+      "note": "One sample page. 10 credits per 100 txs returned."
+    },
+    "full_history": {
+      "transactionDetails": "full",
+      "limit": 1000,
+      "credits_worst_case": 100,
+      "note": "Largest documented page. Same credits as ten limit=100 pages for 1,000 returned txs; fewer requests. next-capture freeze stays limit=100 and is not used here."
+    },
+    "PRODUCT_READY": false
+  }
+}

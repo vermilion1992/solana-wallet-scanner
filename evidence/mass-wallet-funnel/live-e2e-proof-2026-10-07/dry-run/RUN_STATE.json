@@ -1,0 +1,622 @@
+{
+  "kind": "live-e2e-run-state-v1",
+  "authorization_id": "live-e2e-proof-2026-10-07-mitch",
+  "status": "completed",
+  "phases_done": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "wallets": [
+    "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+    "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+    "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+    "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+    "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+    "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+    "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+    "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+    "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+    "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U"
+  ],
+  "phase2": {
+    "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL": {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9": {
+      "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM": {
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys": {
+      "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot": {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL": {
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6": {
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    },
+    "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U": {
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "in_window_tx_count": 0,
+      "sample_records": 0,
+      "decodable_share": null,
+      "unsupported_share": "0",
+      "program_blockers": [],
+      "coverability_rank_key": "0",
+      "dropped": false,
+      "drop_reason": null,
+      "requests": 2,
+      "done": true
+    }
+  },
+  "phase3": {
+    "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    },
+    "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U": {
+      "pages": 1,
+      "requests": 1,
+      "done": true,
+      "pagination_token": null,
+      "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+      "window_covered": true
+    }
+  },
+  "receipts": {},
+  "spend": {
+    "birdeye_requests": 1,
+    "birdeye_units": 30,
+    "helius_requests": 30,
+    "helius_units": 1200
+  },
+  "PRODUCT_READY": false,
+  "phase1": {
+    "addresses": [],
+    "sha256": "8d21d85683613b0429e6f198dc9c1da476a2766af9c69e767c31f5029a572232",
+    "count": 0
+  },
+  "phase2_result": {
+    "wallets": [
+      {
+        "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      },
+      {
+        "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+        "in_window_tx_count": 0,
+        "sample_records": 0,
+        "decodable_share": null,
+        "unsupported_share": "0",
+        "program_blockers": [],
+        "coverability_rank_key": "0",
+        "dropped": false,
+        "drop_reason": null,
+        "requests": 2,
+        "done": true
+      }
+    ],
+    "kept": [
+      "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL"
+    ]
+  },
+  "phase3_result": {
+    "pages": {
+      "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      },
+      "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U": {
+        "pages": 1,
+        "requests": 1,
+        "done": true,
+        "pagination_token": null,
+        "last_sha256": "497509b53139a1f2480f3ea10e3eaec6e832f1611e8592f8a54f634a0c2284d8",
+        "window_covered": true
+      }
+    }
+  },
+  "phase4_wallets": [
+    {
+      "address": "gtfoTELAeEZHUgHetA6umfsCETiBMzJCN4tB2sqCgFL",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "CccSh2xwBvmiwiUwZRjQvktwTQHz8yypSPCKM3tHy1eU",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "BVZtNYBjivojQnJhocggTVqkbFDYNr2R61c6BZLkY9n9",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "BSN5bh8At4BkTGMoysA76fvsvoTsVpjaXRatNJYJBtCM",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "DQ7nsa6RPG9F6QjqDUa7LEN5CEvs9sPssXyRYVRb9Cys",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "A6PSQFRfv93hoAn1LhQGRT2dYQtjDKX6SE2vN9MEvbot",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "An9sREpLnAXVi4KMaTGuGvgET51CyaukLUTMtxzmLYSB",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "58PWvekDbHVPFB9FXGQrpumHD16NRajahkYLHiTvxvDL",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "AW6Pddy72jXDbMUPoSaTB7joJVvMmEMXaYPJhpRqMzD6",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    },
+    {
+      "address": "CRXomDFunLoRm5N54TyxCxAzn6NJtvnjKvuxudHSV68U",
+      "coverage_count_share": null,
+      "coverage_value_share": null,
+      "completed_trades": 0,
+      "realized_pnl_sol": null,
+      "realized_pnl_usdc": null,
+      "audit_status": "not_independently_audited",
+      "independently_audited": false,
+      "lead_level": "insufficient_evidence",
+      "blocker": "no captured history in this run",
+      "program_blockers": [],
+      "PRODUCT_READY": false
+    }
+  ]
+}

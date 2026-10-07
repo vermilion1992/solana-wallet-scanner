@@ -110,6 +110,7 @@ def test_item5_default_screen_has_no_pnl_and_count_only_wording():
     ]
     profile = {
         "completed_known_cost_positions": 3,
+        "sample_positions": 3,
         "completed_episode_ledger": ledger,
         "completed_episode_net": "3",
         "completed_episode_net_unit": "SOL",

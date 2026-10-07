@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from scanner.mass_search.qualification_gates import (
@@ -54,6 +54,40 @@ THRESHOLD_KEYS = (
     "min_sample_positions",
     "min_coverage_share",
 )
+
+# User-editable research-screen filters. Proof gates stay in qualification_gates
+# and cannot be weakened through this API.
+THRESHOLD_RANGES = {
+    "min_completed_known_cost": ("int", 0, 10_000),
+    "min_sample_positions": ("int", 0, 10_000),
+    "min_coverage_share": ("share", "0", "1"),
+    "min_scoped_pnl_usdc": ("amount", "-1000000000000", "1000000000000"),
+    "min_scoped_pnl_sol": ("amount", "-1000000000000", "1000000000000"),
+    "max_hold_t90_seconds": ("int", 0, 1_000_000_000),
+    "max_concentration": ("share", "0", "1"),
+    "max_unresolved_share": ("share", "0", "1"),
+    "min_market_vs_rewards_ratio": ("amount", "0", "1000000"),
+    "max_holder_fee_share": ("share", "0", "1"),
+}
+WINDOW_DAYS_RANGE = (1, 365)
+PROVIDER_TRADE_COUNT_RANGE = (0, 1_000_000_000)
+PROVIDER_SCORE_RANGE = (Decimal("0"), Decimal("1000000000000"))
+PROOF_GATES = {
+    "kind": "proof_gate_not_user_filter",
+    "coverage_lead_share": "0.99",
+    "coverage_watch_share": "0.95",
+    "weakenable_via_filter_api": False,
+    "note": (
+        "Qualification floors for lead/watch. min_coverage_share is a research "
+        "screen filter (count AND value). It does not lower these proof gates."
+    ),
+}
+
+
+class FilterValidationError(ValueError):
+    """Rejected at save time. Routes map this to HTTP 422."""
+
+    status_code = 422
 
 DEFAULT_THRESHOLDS = {key: None for key in THRESHOLD_KEYS}
 PROVIDER_PROXY_KEYS = (
@@ -132,6 +166,8 @@ def default_filters():
         "provider_proxy": _default_provider_proxy(),
         "reconstructed": {"thresholds": dict(DEFAULT_THRESHOLDS)},
         "units": dict(THRESHOLD_UNITS),
+        "window_days": None,
+        "proof_gates": dict(PROOF_GATES),
         "unset_does_not_pass": False,
         "unset_is_not_applied": True,
         "unknown_never_passes": True,
@@ -140,15 +176,156 @@ def default_filters():
     }
 
 
-def _clean_proxy(incoming):
+def _finite_decimal(value):
+    if value is None or value == "" or value is False:
+        return None
+    if isinstance(value, bool):
+        return None
+    try:
+        text = str(value).strip()
+        if not text or text.lower() in ("nan", "inf", "+inf", "-inf", "infinity", "-infinity"):
+            return None
+        amount = Decimal(text)
+    except (InvalidOperation, ValueError, OverflowError, TypeError):
+        return None
+    if not amount.is_finite():
+        return None
+    return amount
+
+
+def _require_canonical_number(value, *, name):
+    parsed = _finite_decimal(value)
+    if parsed is None:
+        raise FilterValidationError(f"{name} must be a finite number")
+    return parsed
+
+
+def validate_threshold_value(key, value):
+    if value is None or value == "" or value is False:
+        return None
+    spec = THRESHOLD_RANGES.get(key)
+    if spec is None:
+        raise FilterValidationError(f"Unknown filter {key}")
+    kind, lo, hi = spec
+    parsed = _require_canonical_number(value, name=key)
+    if kind == "int":
+        if parsed != parsed.to_integral_value():
+            raise FilterValidationError(f"{key} must be an integer")
+        number = int(parsed)
+        if number < lo or number > hi:
+            raise FilterValidationError(f"{key} must be between {lo} and {hi}")
+        return str(number)
+    low = Decimal(str(lo))
+    high = Decimal(str(hi))
+    if parsed < low or parsed > high:
+        raise FilterValidationError(f"{key} must be between {lo} and {hi}")
+    return format(parsed, "f")
+
+
+def validate_window_days(value):
+    if value is None or value == "" or value is False:
+        return None
+    parsed = _require_canonical_number(value, name="window_days")
+    if parsed != parsed.to_integral_value():
+        raise FilterValidationError("window_days must be an integer")
+    number = int(parsed)
+    lo, hi = WINDOW_DAYS_RANGE
+    if number < lo or number > hi:
+        raise FilterValidationError(f"window_days must be between {lo} and {hi}")
+    return number
+
+
+def validate_provider_proxy_value(key, value):
+    if value is None or value == "" or value is False:
+        return None
+    parsed = _require_canonical_number(value, name=key)
+    if key == "min_provider_trade_count":
+        if parsed != parsed.to_integral_value():
+            raise FilterValidationError(f"{key} must be an integer")
+        number = int(parsed)
+        lo, hi = PROVIDER_TRADE_COUNT_RANGE
+        if number < lo or number > hi:
+            raise FilterValidationError(f"{key} must be between {lo} and {hi}")
+        return str(number)
+    lo, hi = PROVIDER_SCORE_RANGE
+    if parsed < lo or parsed > hi:
+        raise FilterValidationError(f"{key} must be between {lo} and {hi}")
+    return format(parsed, "f")
+
+
+def _clean_proxy(incoming, *, strict=False):
     proxy = _default_provider_proxy()
     source = incoming if isinstance(incoming, dict) else {}
     for key in ("min_provider_trade_count", "min_provider_score"):
         value = source.get(key)
-        proxy[key] = None if value in (None, "", False) else str(value)
+        if value is None or value == "" or value is False:
+            proxy[key] = None
+            continue
+        if strict:
+            proxy[key] = validate_provider_proxy_value(key, value)
+        else:
+            try:
+                proxy[key] = validate_provider_proxy_value(key, value)
+            except FilterValidationError:
+                proxy[key] = None
     for key in ("only_shortlist", "only_user_shortlist", "only_captured"):
         proxy[key] = bool(source.get(key))
     return proxy
+
+
+_PASSTHROUGH_FILTER_KEYS = {
+    "kind",
+    "version",
+    "thresholds",
+    "provider_proxy",
+    "reconstructed",
+    "units",
+    "window_days",
+    "proof_gates",
+    "unset_does_not_pass",
+    "unset_is_not_applied",
+    "unknown_never_passes",
+    "not_safe_to_copy",
+    "PRODUCT_READY",
+    "saved",
+    "only_shortlist",
+    "only_captured",
+    "only_user_shortlist",
+    "min_provider_trade_count",
+    "min_provider_score",
+}
+
+
+def _sanitize_thresholds(incoming):
+    cleaned = dict(DEFAULT_THRESHOLDS)
+    source = incoming if isinstance(incoming, dict) else {}
+    unknown = [
+        key for key in source
+        if key not in THRESHOLD_KEYS
+        and key not in _PASSTHROUGH_FILTER_KEYS
+        and source.get(key) not in (None, "")
+    ]
+    if unknown:
+        raise FilterValidationError("Unknown filter keys: " + ", ".join(sorted(unknown)))
+    for key in THRESHOLD_KEYS:
+        cleaned[key] = validate_threshold_value(key, source.get(key))
+    return cleaned
+
+
+def _load_thresholds(incoming, reconstructed_thresholds):
+    cleaned = dict(DEFAULT_THRESHOLDS)
+    source = incoming if isinstance(incoming, dict) else {}
+    fallback = reconstructed_thresholds if isinstance(reconstructed_thresholds, dict) else {}
+    for key in THRESHOLD_KEYS:
+        raw = source.get(key) if source.get(key) not in (None, "") else fallback.get(key)
+        if raw in (None, ""):
+            cleaned[key] = None
+            continue
+        try:
+            cleaned[key] = validate_threshold_value(key, raw)
+        except FilterValidationError:
+            cleaned[key] = None
+    return cleaned
 
 
 def load_filters(store=None):
@@ -157,17 +334,22 @@ def load_filters(store=None):
     saved = store.get(FILTERS_KIND, FILTERS_KEY)
     if not isinstance(saved, dict):
         return default_filters()
-    thresholds = dict(DEFAULT_THRESHOLDS)
     incoming = saved.get("thresholds") if isinstance(saved.get("thresholds"), dict) else {}
     reconstructed = saved.get("reconstructed") if isinstance(saved.get("reconstructed"), dict) else {}
     reconstructed_thresholds = reconstructed.get("thresholds") if isinstance(reconstructed.get("thresholds"), dict) else {}
-    for key in THRESHOLD_KEYS:
-        thresholds[key] = incoming.get(key) if incoming.get(key) not in (None, "") else reconstructed_thresholds.get(key)
+    thresholds = _load_thresholds(incoming, reconstructed_thresholds)
     payload = default_filters()
     payload["thresholds"] = thresholds
     payload["reconstructed"] = {"thresholds": dict(thresholds)}
-    payload["provider_proxy"] = _clean_proxy(saved.get("provider_proxy") or saved)
-    payload["version"] = int(saved.get("version") or FILTERS_VERSION)
+    payload["provider_proxy"] = _clean_proxy(saved.get("provider_proxy") or saved, strict=False)
+    try:
+        payload["window_days"] = validate_window_days(saved.get("window_days"))
+    except FilterValidationError:
+        payload["window_days"] = None
+    try:
+        payload["version"] = int(saved.get("version") or FILTERS_VERSION)
+    except (TypeError, ValueError):
+        payload["version"] = FILTERS_VERSION
     payload["saved"] = True
     payload["only_shortlist"] = payload["provider_proxy"]["only_shortlist"]
     payload["only_captured"] = payload["provider_proxy"]["only_captured"]
@@ -175,19 +357,14 @@ def load_filters(store=None):
 
 
 def save_filters(store, thresholds):
-    payload = default_filters()
     incoming = thresholds if isinstance(thresholds, dict) else {}
     threshold_source = incoming.get("thresholds") if isinstance(incoming.get("thresholds"), dict) else incoming
-    cleaned = {}
-    for key in THRESHOLD_KEYS:
-        value = threshold_source.get(key)
-        if value in (None, "", False):
-            cleaned[key] = None
-            continue
-        cleaned[key] = str(value)
+    cleaned = _sanitize_thresholds(threshold_source)
+    payload = default_filters()
     payload["thresholds"] = cleaned
     payload["reconstructed"] = {"thresholds": dict(cleaned)}
-    payload["provider_proxy"] = _clean_proxy(incoming.get("provider_proxy") or incoming)
+    payload["provider_proxy"] = _clean_proxy(incoming.get("provider_proxy") or incoming, strict=True)
+    payload["window_days"] = validate_window_days(incoming.get("window_days"))
     payload["only_shortlist"] = payload["provider_proxy"]["only_shortlist"]
     payload["only_captured"] = payload["provider_proxy"]["only_captured"]
     store.put(FILTERS_KIND, FILTERS_KEY, payload)
@@ -195,9 +372,7 @@ def save_filters(store, thresholds):
 
 
 def _decimal(value):
-    if value in (None, ""):
-        return None
-    return Decimal(str(value))
+    return _finite_decimal(value)
 
 
 DISPLAY_QUANTUM = Decimal("0.000000001")
@@ -694,6 +869,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             else None
         ),
         "completed_known_cost_positions": completed,
+        "sample_positions": len(mapped),
         "sale_count": sale_count,
         "known_cost_trades": len(known),
         "unresolved_basis_sales": len(unresolved),
@@ -969,8 +1145,8 @@ def evaluate_thresholds(profile, thresholds):
     unset = []
     comparisons = {
         "min_completed_known_cost": ("completed_known_cost_positions", "min"),
-        "min_sample_positions": ("completed_known_cost_positions", "min"),
-        "min_coverage_share": ("coverage_count_share", "min"),
+        "min_sample_positions": ("sample_positions", "min"),
+        "min_coverage_share": ("coverage_mandatory_share", "min"),
         "min_scoped_pnl_usdc": ("scoped_pnl", "min", "USDC"),
         "min_scoped_pnl_sol": ("scoped_pnl", "min", "SOL"),
         "max_hold_t90_seconds": ("hold_t90_seconds", "max"),
@@ -1025,6 +1201,11 @@ def evaluate_thresholds(profile, thresholds):
                 actual = (actual or {}).get(part) if isinstance(actual, dict) else None
         else:
             actual = profile.get(field)
+        if key == "min_coverage_share" and actual in (None, ""):
+            count_d = _decimal(profile.get("coverage_count_share"))
+            value_d = _decimal(profile.get("coverage_value_share"))
+            if count_d is not None and value_d is not None:
+                actual = min(count_d, value_d)
         actual_d = _decimal(actual)
         limit_d = _decimal(raw)
         if actual_d is None or limit_d is None:
