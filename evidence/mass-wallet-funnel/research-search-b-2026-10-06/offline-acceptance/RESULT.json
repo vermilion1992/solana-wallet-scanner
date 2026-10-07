@@ -33,10 +33,11 @@
         "tests/test_live_e2e_spend_safety.py",
         "tests/test_live_e2e_live_result_fixes.py",
         "tests/test_live_e2e_bbc5bef_residuals.py",
-        "tests/test_live_e2e_06cea26_residuals.py"
+        "tests/test_live_e2e_06cea26_residuals.py",
+        "tests/test_live_e2e_f635a45_residuals.py"
       ],
       "exit": 0,
-      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/PYTEST_20261007T114536Z.log",
+      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/PYTEST_20261007T124839Z.log",
       "mandatory": true
     },
     {
@@ -48,7 +49,7 @@
         "/workspace/evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/mounted-cases.json"
       ],
       "exit": 0,
-      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/NODE_20261007T114536Z.log",
+      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/NODE_20261007T124839Z.log",
       "mandatory": true
     },
     {
@@ -58,10 +59,10 @@
         "/workspace/scripts/verify_safety_mutants.py"
       ],
       "exit": 0,
-      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/MUTANTS_20261007T114536Z.log",
+      "log": "evidence/mass-wallet-funnel/research-search-b-2026-10-06/offline-acceptance/MUTANTS_20261007T124839Z.log",
       "mandatory": true
     }
   ],
-  "pytest_log_excerpt": "........................................................................ [ 36%]\n........................................................................ [ 73%]\n...................................................                      [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /workspace/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n195 passed, 1 warning in 9.13s\n",
-  "created_at": "20261007T114536Z"
+  "pytest_log_excerpt": "........................................................................ [ 33%]\n........................................................................ [ 67%]\n.....................................................................    [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /workspace/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n213 passed, 1 warning in 9.41s\n",
+  "created_at": "20261007T124839Z"
 }
