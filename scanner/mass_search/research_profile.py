@@ -326,13 +326,26 @@ def _capture_window_unix(report):
     return start, end
 
 
+def _known_cost_episodes(episodes):
+    """Known-cost completed episodes only. A missing net is not realized P&L."""
+    out = []
+    for episode in episodes or []:
+        net = episode.get("net") if episode.get("net") not in (None, "") else episode.get("pnl")
+        if net not in (None, ""):
+            out.append(episode)
+    return out
+
+
 def _restrict_ledger_to_report_window(report, episodes):
     """Qualification and P&L use only episodes closed inside the report window."""
     start, end = _capture_window_unix(report)
     if start is None and end is None:
-        return list(episodes or [])
+        return _known_cost_episodes(episodes)
     out = []
     for episode in episodes or []:
+        net = episode.get("net") if episode.get("net") not in (None, "") else episode.get("pnl")
+        if net in (None, ""):
+            continue
         stamp = _stamp_unix(
             episode.get("closed_at") or episode.get("timestamp") or episode.get("day")
         )
@@ -696,6 +709,8 @@ def _episode_ledger_from_report(report):
                         net = proceeds - basis - costs
             elif event.get("known_cost_pnl") not in (None, ""):
                 net = Decimal(str(event["known_cost_pnl"]))
+            if net is None:
+                continue
             unit = event.get("settlement_asset") or (
                 "USDC" if event.get("amount_usdc") or event.get("consideration_usdc") else "SOL"
             )
@@ -711,7 +726,7 @@ def _episode_ledger_from_report(report):
                 "proceeds": str(proceeds) if proceeds is not None else None,
                 "costs": str(costs) if costs is not None else None,
                 "verified_costs": str(costs) if costs is not None else None,
-                "net": str(net) if net is not None else None,
+                "net": str(net),
                 "unit": unit,
                 "settlement_asset": unit,
             })
@@ -1008,6 +1023,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         matched_fragment_pnl = scoped_pnl
         matched_fragment_unit = settlement
         scoped_pnl = None
+        scoped_by_asset = {}
     sale_count = report.get("wallet_sale_count")
     if sale_count is None:
         sale_count = len([row for row in mapped if row["kind"] == "sell"])

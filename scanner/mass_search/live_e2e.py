@@ -1085,15 +1085,17 @@ def _phase4_wallet_row(report, profile):
     blocker = fields.get("blocking_reason")
     if level.get("level") in ("provisional_research_lead", "stronger_research_shortlist"):
         blocker = None
+    completed = int((profile or {}).get("completed_known_cost_positions") or 0)
+    realized = (vector or {}) if completed else {}
     return {
         "address": report.get("address"),
         "coverage_count_share": shares.get("coverage_count_share"),
         "coverage_value_share": shares.get("coverage_value_share"),
         "coverage_mandatory_share": shares.get("coverage_mandatory_share"),
-        "completed_trades": (profile or {}).get("completed_known_cost_positions"),
+        "completed_trades": completed,
         "sample_positions": (profile or {}).get("sample_positions"),
-        "realized_pnl_sol": ((profile or {}).get("scoped_pnl_by_quote_asset") or {}).get("SOL"),
-        "realized_pnl_usdc": ((profile or {}).get("scoped_pnl_by_quote_asset") or {}).get("USDC"),
+        "realized_pnl_sol": realized.get("SOL"),
+        "realized_pnl_usdc": realized.get("USDC"),
         "completed_episode_net": (profile or {}).get("completed_episode_net"),
         "completed_episode_net_unit": (profile or {}).get("completed_episode_net_unit"),
         "qualifying_profit": str(profit) if profit is not None else None,

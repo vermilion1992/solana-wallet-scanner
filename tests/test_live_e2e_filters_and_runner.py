@@ -311,7 +311,7 @@ def test_filter_oracle_matches_api_over_random_combos(tmp_path):
             "completed_known_cost_positions": completed,
             "sample_positions": sample,
             "coverage_mandatory_share": str(min(Decimal(count), Decimal(value))),
-            "scoped_pnl_sol": pnl,
+            "scoped_pnl_sol": pnl if completed else None,
             "scoped_pnl_usdc": None,
             "hold_t90_seconds": 100,
             "concentration": "0.4",

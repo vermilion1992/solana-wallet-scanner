@@ -859,6 +859,9 @@ def reconcile_saved_profile(report, profile):
         profile["completed_episode_net_unit"] = None
         profile["completed_episode_net_vector"] = {}
         profile["completed_known_cost_positions"] = 0
+        profile["scoped_pnl"] = None
+        profile["scoped_pnl_unit"] = None
+        profile["scoped_pnl_by_quote_asset"] = {}
         profile["ledger_summary_contradiction"] = True
         profile["ledger_validation_reason"] = validated["reason"]
         events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
@@ -888,6 +891,10 @@ def reconcile_saved_profile(report, profile):
     profile["completed_episode_net_unit"] = validated["unit"]
     profile["completed_episode_net_vector"] = validated["vector"]
     profile["completed_known_cost_positions"] = derived_count
+    if derived_count < 1:
+        profile["scoped_pnl"] = None
+        profile["scoped_pnl_unit"] = None
+        profile["scoped_pnl_by_quote_asset"] = {}
     events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
     if events:
         profile["sample_positions"] = len(events)

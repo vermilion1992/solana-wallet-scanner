@@ -5,6 +5,7 @@ import asyncio
 import hashlib
 import json
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -180,6 +181,39 @@ def test_in_window_ledger_and_zero_completed_hides_pnl():
     assert profile["scoped_pnl"] is None
     assert profile["scoped_pnl_by_quote_asset"] == {}
     assert profile["scoped_pnl_unit"] is None
+
+
+def test_netless_episode_does_not_zero_in_window_ledger():
+    start = int(datetime(2026, 9, 7, tzinfo=timezone.utc).timestamp())
+    mid = start + 86400
+    report = {
+        "id": "mixed-netless",
+        "address": "W",
+        "source": "mass-search",
+        "window": {"start": "2026-09-07T00:00:00Z", "end": "2026-10-07T00:00:00Z"},
+        "events": [],
+        "completed_episode_ledger": [
+            {"mint": "USDC1", "close_signature": "u1", "net": "347.34", "unit": "USDC", "closed_at": mid},
+            {"mint": "SOL1", "close_signature": "s1", "net": "0.411", "unit": "SOL", "closed_at": mid},
+            {"mint": "USDC2", "close_signature": "u2", "net": None, "unit": "USDC", "closed_at": mid},
+        ],
+        "wallet_completed_episodes": 3,
+        "worksheet": {
+            "settlement_asset": "mixed",
+            "total_profit_sol": "-1.614",
+            "total_profit_usdc": "9919.05",
+            "by_quote_asset": {
+                "SOL": {"total_profit_sol": "-1.614"},
+                "USDC": {"total_profit_usdc": "9919.05"},
+            },
+        },
+    }
+    profile = build_research_profile(report, filters=default_filters())
+    assert profile["completed_known_cost_positions"] == 2
+    assert profile["completed_episode_net"] is None
+    assert set(profile["completed_episode_net_vector"]) == {"USDC", "SOL"}
+    assert Decimal(str(profile["completed_episode_net_vector"]["USDC"])) == Decimal("347.34")
+    assert Decimal(str(profile["completed_episode_net_vector"]["SOL"])) == Decimal("0.411")
 
 
 def test_fl2a_drops_stale_currency_and_fl2b_anchors_report_end():
