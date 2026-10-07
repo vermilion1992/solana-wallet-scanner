@@ -1487,9 +1487,10 @@ def _replay_saved_page(config, phase, address, page_index, units, store=None):
         if missing:
             raise SourceError(
                 "MISSING_CAPTURE",
-                f"raw page missing: {relative}; a consumed receipt exists or the "
-                f"file was never copied. Pass --import-raw-dir <prior-raw-root> "
-                f"or copy the paid page plus sidecar. Refusing to re-send.",
+                f"raw page missing: {relative}; not covered. A consumed receipt "
+                f"exists or the file was never copied. Pass --import-raw-dir "
+                f"<prior-raw-root> or copy the paid page plus sidecar. "
+                f"Refusing to re-send.",
             )
         raw, records, token = _verify_saved_page(path, relative, expected_sha=expected_sha)
     return {
