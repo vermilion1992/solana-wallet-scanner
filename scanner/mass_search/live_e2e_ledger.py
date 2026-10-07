@@ -6,10 +6,15 @@ consumed, or failed receipt is spent and is never silently re-sent.
 Trust boundary (affc623 §9.4 / §9.5): the chain, head, seal and
 reservations all live in the same Store/SQLite. An attacker with write
 access to that DB can recompute a keyless chain or delete receipts +
-log + head + seal + reservations and reset spend to 0. The defense is
-the operator-held grant file and the host filesystem ACL on the ledger
-directory — not an in-DB HMAC. Do not treat a rewritten DB as an
-integrity proof.
+log + head + seal + reservations and reset spend to 0.
+
+There is no defense against a same-uid writer. The grant file holds no spend state,
+so it cannot stop a reset. Ledger directories are typically
+0755 and owned by the same uid every agent on the box runs as; sqlite
+files may be 0600 but remain writable by that uid. The host filesystem
+ACL is not a boundary between same-uid processes. Provider-side usage
+checks before each run are the remaining control. Do not treat a
+rewritten DB as an integrity proof.
 """
 from __future__ import annotations
 

@@ -33,6 +33,9 @@ from .decoder import SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, TOKEN_IDS, MEMO_IDS
 
 WSOL = 'So11111111111111111111111111111111111111112'
 USDC = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+USDT = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
+QUOTE_MINTS = frozenset({USDC, USDT})
+QUOTE_ASSET = {USDC: 'USDC', USDT: 'USDT'}
 JUPITER = 'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4'
 PUMP = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'
 PUMP_SWAP = 'pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA'
@@ -97,7 +100,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v22-dflow-swap2-wrap-v1'
+DECODER_VERSION = 'spot-v23-quote-rent-inner-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -831,6 +834,140 @@ _REVIEWED_LIFECYCLE_OWNERS = frozenset({
 _REVIEWED_ALLOCATE_SPACES = frozenset({137, 165, 170})
 
 
+# Infra + reviewed venues + well-known hop AMMs. An unknown inner program
+# that touches a wallet-owned account blocks (D3). P&L stays wallet-delta
+# guarded; this is provenance + fail-closed, not a silent allow.
+RAYDIUM_CLMM = 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK'
+# Published hop AMMs seen under Jupiter/DFlow. A random program id still blocks (D3).
+WELL_KNOWN_INNER_AMMS = frozenset({
+    RAYDIUM_CLMM,
+    'PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY',  # Phoenix
+    'SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn',  # Sanctum Infinity
+    'ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA',  # AlphaQ
+    'ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY',  # ZeroFi
+    'BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi',  # BisonFi
+    'SoLFiHG9TfgtdUXUjWAxi3LtvYuFyDLVhBWxdMZxyCe',  # SolFi
+    'obriQD1zbpyLz95G5n7nJe6a4DPjpFwa5XYPoNm113y',  # Obric
+    '2wT8Yq49kHgDzXuPxZSaeLaH1qJgCwzzjYyvKZlYNVpj',  # Lifinity v2
+    'EewxydAPCCVuNEyrVN68XT4NWAI1uCml1p55i1BPVsbJ',  # Lifinity
+    'srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX',  # OpenBook
+    'opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb',  # OpenBook v2
+    'FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X',  # FluxBeam
+    'Eo7WjKq67rjJQSZxS6z3YcapmYde3M6t4gadxJtdEJge',  # GooseFX
+    '6MLxLqiXaaSUpkgMnWDTuejNZEz3kE7k2woyHGVFw319',  # Crema
+    'HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJueZ',  # Invariant
+    'SwaPpA9LAaLfeLi3a68M4DjnLqgKzHa7VMEBUNHzMeU',  # Token Swap
+    'MERLuDFBMmsHnszOkfP1zZuj7bK1uAmo4BqTKKQs',  # Mercurial
+    'SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ',  # Saber
+    '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin',  # Serum DEX
+    'BSwp6bEBihVLdqJRK3PkMH2nNzQ4K3CwbGoiJ2mr8BEf',  # Bonkswap
+    'TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH',  # Tessera
+    'HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq',  # HumidiFi
+    'goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE',  # GoonFi
+    '3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU',
+    'MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms',  # Manifest
+    'B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht',
+    'DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD',
+    'riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j',
+})
+REVIEWED_INNER_PROGRAMS = frozenset({
+    SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, *TOKEN_IDS, *MEMO_IDS, LIGHTHOUSE,
+    *REVIEWED_OUTER_VENUES, *UNSUPPORTED_PINNED_OUTER, PUMP_FEE_PROGRAM,
+    *WELL_KNOWN_INNER_AMMS,
+})
+_INNER_INFRA = frozenset({
+    SYSTEM_ID, COMPUTE_ID, ASSOCIATED_ID, *TOKEN_IDS, *MEMO_IDS, LIGHTHOUSE,
+})
+
+
+def _instruction_account_keys(instruction, keys):
+    try:
+        return set(_accounts(instruction, keys))
+    except (ValueError, TypeError, KeyError, IndexError):
+        pass
+    parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+    info = parsed.get('info') if isinstance(parsed, dict) else None
+    found = set()
+    if isinstance(info, dict):
+        for field in (
+            'source', 'destination', 'account', 'newAccount', 'owner',
+            'authority', 'wallet', 'mint', 'payer',
+        ):
+            value = info.get(field)
+            if isinstance(value, str) and value:
+                found.add(value)
+    return found
+
+
+def _reviewed_inner_venues(flat, keys, route, owned, address):
+    """Record inner program ids; block unknown inners that touch wallet assets."""
+    venues = []
+    seen = set()
+    wallet_assets = {address, *owned}
+    route_index = route.get('index')
+    for outer, _path, instruction, nested in flat:
+        if not nested or outer != route_index:
+            continue
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        if program in _INNER_INFRA:
+            continue
+        if program not in seen:
+            seen.add(program)
+            venues.append({'program': program})
+        if program in REVIEWED_INNER_PROGRAMS:
+            continue
+        touched = _instruction_account_keys(instruction, keys)
+        if touched.intersection(wallet_assets):
+            return venues, (
+                'Unknown inner program touches a wallet-owned account; '
+                f'inner venue {program} is not on the reviewed inner allowlist'
+            )
+    return venues, None
+
+
+def _verified_new_token_account_rent(flat, keys, before, after, address, skip_accounts):
+    """Wallet-funded brand-new token-account rent (pre-balance 0, still funded).
+
+    Subtracted from native before a USDC/USDT trade is treated as having a
+    second SOL settlement leg (D2). Venue-owned protocol deposits stay on
+    `_episode_rent_exclusion`.
+    """
+    skip = set(skip_accounts or ())
+    extra = 0
+    seen = set()
+    for _outer, _path, instruction, _nested in flat:
+        try:
+            program = _program(instruction, keys)
+        except (ValueError, TypeError, KeyError, IndexError):
+            continue
+        parsed = instruction.get('parsed') if isinstance(instruction, dict) else None
+        info = parsed.get('info') if isinstance(parsed, dict) else {}
+        kind = parsed.get('type') if isinstance(parsed, dict) else None
+        account = None
+        if program == ASSOCIATED_ID and kind in ('create', 'createIdempotent') and info.get('source') == address:
+            account = info.get('account')
+        elif (
+            program == SYSTEM_ID
+            and kind in ('createAccount', 'createAccountWithSeed')
+            and info.get('source') == address
+            and info.get('owner') in TOKEN_IDS
+        ):
+            account = info.get('newAccount')
+        if not account or account in skip or account in seen or account not in keys:
+            continue
+        index = keys.index(account)
+        if index >= len(before) or index >= len(after) or before[index] != 0:
+            continue
+        net = after[index] - before[index]
+        if net > 0:
+            extra += net
+            seen.add(account)
+    return extra
+
+
 def _accept_inner_system_lifecycle(kind, info, *, nested, address):
     if not nested:
         raise ValueError('Outer System allocate/assign is not swap lifecycle')
@@ -1214,6 +1351,14 @@ def decode_supported_swaps(transactions, address):
             episode_rent = _episode_rent_exclusion(
                 flat, keys, pre_lamports, post_lamports, address, rent_skip,
             )
+            new_token_rent = _verified_new_token_account_rent(
+                flat, keys, pre_lamports, post_lamports, address, rent_skip,
+            )
+            inner_venues, inner_block = _reviewed_inner_venues(
+                flat, keys, route, owned, address,
+            )
+            if inner_block:
+                raise ValueError(inner_block)
             if retained_funding:
                 from .transaction_format import original_instruction_paths
                 original = record.get('raw')
@@ -1324,7 +1469,7 @@ def decode_supported_swaps(transactions, address):
             settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
                           - outside_native_delta + sum(item['lamports'] for item in retained_funding)
-                          + episode_rent)
+                          + episode_rent + new_token_rent)
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
             owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
@@ -1345,48 +1490,59 @@ def decode_supported_swaps(transactions, address):
                     group_index = next(index for index, group in enumerate(meta['innerInstructions']) if group['index'] == int(outer))
                     role['raw_paths'] = [f'meta.innerInstructions.{group_index}.instructions.{ordinal}']
             assets = [(mint, delta) for mint, delta in deltas.items() if delta]
-            usdc_delta = next((delta for mint, delta in assets if mint == USDC), 0)
-            other_assets = [(mint, delta) for mint, delta in assets if mint != USDC]
-            usdc_settled = (
+            quote_legs = [(mint, delta) for mint, delta in assets if mint in QUOTE_MINTS]
+            other_assets = [(mint, delta) for mint, delta in assets if mint not in QUOTE_MINTS]
+            if len(quote_legs) > 1:
+                raise ValueError('Multiple quote assets moved; cross-quote settlement remains unresolved')
+            quote_mint, quote_delta = quote_legs[0] if quote_legs else (None, 0)
+            quote_asset = QUOTE_ASSET.get(quote_mint)
+            quote_settled = (
                 not settlement
-                and usdc_delta
+                and quote_delta
                 and len(other_assets) == 1
-                and (other_assets[0][1] > 0) != (usdc_delta > 0)
+                and (other_assets[0][1] > 0) != (quote_delta > 0)
             )
-            if settlement and usdc_delta and other_assets:
-                raise ValueError('SOL and USDC both moved; cross-settlement remains unresolved and is not converted')
-            if usdc_settled:
+            if settlement and quote_delta and other_assets:
+                raise ValueError(
+                    f'SOL and {quote_asset} both moved; cross-settlement remains unresolved and is not converted'
+                )
+            if quote_settled:
                 mint, quantity = other_assets[0]
                 if mint == WSOL:
-                    usdc_decimals = decimals.get(USDC)
-                    if usdc_decimals is None:
-                        raise ValueError('USDC settlement is missing event-time decimals')
+                    quote_decimals = decimals.get(quote_mint)
+                    if quote_decimals is None:
+                        raise ValueError(f'{quote_asset} settlement is missing event-time decimals')
                     with localcontext() as context:
                         context.prec = 192
-                        amount_usdc = canonical(Decimal(abs(usdc_delta)) / (Decimal(10) ** usdc_decimals))
+                        amount_quote = canonical(Decimal(abs(quote_delta)) / (Decimal(10) ** quote_decimals))
                         amount_sol = canonical(Decimal(abs(quantity)) / LAMPORTS)
-                    from_asset = 'USDC' if usdc_delta < 0 else 'SOL'
-                    to_asset = 'SOL' if usdc_delta < 0 else 'USDC'
-                    emit('conversion', route['path'], mint=USDC, quantity_raw=str(abs(usdc_delta)),
-                         decimals=usdc_decimals, amount_sol=amount_sol, amount_usdc=amount_usdc,
+                    from_asset = quote_asset if quote_delta < 0 else 'SOL'
+                    to_asset = 'SOL' if quote_delta < 0 else quote_asset
+                    quote_fields = {'amount_usdc': amount_quote} if quote_mint == USDC else {'amount_usdt': amount_quote}
+                    emit('conversion', route['path'], mint=quote_mint, quantity_raw=str(abs(quote_delta)),
+                         decimals=quote_decimals, amount_sol=amount_sol, **quote_fields,
                          classification='quote_conversion', from_asset=from_asset, to_asset=to_asset,
                          source=route['program'], venue=route['program'], instruction=route['instruction'],
                          owner=address, fee_sol=fee_sol if paid else '0', paid_by_wallet=paid,
-                         settlement_mint=USDC, settlement_asset='USDC',
-                         reason='USDC↔SOL is a quote conversion, not a sale of a USDC or SOL position')
+                         settlement_mint=quote_mint, settlement_asset=quote_asset,
+                         inner_venues=inner_venues,
+                         reason=f'{quote_asset}↔SOL is a quote conversion, not a sale of a {quote_asset} or SOL position')
                     conversions += 1
                     continue
                 kind = 'buy' if quantity > 0 else 'sell'
                 if route['expected_kind'] and route['expected_kind'] != kind:
                     raise ValueError('Venue instruction direction conflicts with wallet exchange direction')
-                usdc_decimals = decimals.get(USDC)
-                if usdc_decimals is None:
-                    raise ValueError('USDC settlement is missing event-time decimals')
+                quote_decimals = decimals.get(quote_mint)
+                if quote_decimals is None:
+                    raise ValueError(f'{quote_asset} settlement is missing event-time decimals')
                 with localcontext() as context:
                     context.prec = 192
-                    amount_usdc = canonical(Decimal(abs(usdc_delta)) / (Decimal(10) ** usdc_decimals))
+                    amount_quote = canonical(Decimal(abs(quote_delta)) / (Decimal(10) ** quote_decimals))
                 allocate_fee = paid and not outside_native and not native_roles
-                excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding) + episode_rent
+                excluded_funding_lamports = (
+                    rent_correction + sum(item['lamports'] for item in retained_funding)
+                    + episode_rent + new_token_rent
+                )
                 excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
                 t22_fee = token_2022_fees[-1] if token_2022_fees else None
                 rfq_fee = None
@@ -1402,29 +1558,33 @@ def decode_supported_swaps(transactions, address):
                         'counted_in_wallet_delta': True,
                         'not_subtracted_again': True,
                     }
-                    if fee_mint == USDC:
-                        platform_fee_usdc = canonical(Decimal(fee_qty) / (Decimal(10) ** usdc_decimals))
+                    if fee_mint == quote_mint:
+                        platform_fee_usdc = canonical(Decimal(fee_qty) / (Decimal(10) ** quote_decimals))
+                quote_amount_fields = (
+                    {'amount_usdc': amount_quote} if quote_mint == USDC else {'amount_usdt': amount_quote}
+                )
                 emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
-                     decimals=decimals[mint], amount_sol=None, amount_usdc=amount_usdc,
+                     decimals=decimals[mint], amount_sol=None, **quote_amount_fields,
                      classification='market',
                      source=route['program'], venue=route['program'], instruction=route['instruction'],
                      owner=address, fee_sol=fee_sol if allocate_fee else '0', paid_by_wallet=paid,
-                     settlement_mint=USDC, settlement_asset='USDC',
+                     settlement_mint=quote_mint, settlement_asset=quote_asset,
                      token_2022_transfer_fee=t22_fee,
                      rfq_platform_fee=rfq_fee,
                      platform_fee_usdc=platform_fee_usdc,
                      excluded_funding_sol=excluded_funding_sol,
+                     inner_venues=inner_venues,
                      native_cash_role_state='UNKNOWN' if native_roles or outside_native else 'PASS',
                      unresolved_native_roles=native_roles,
                      retained_account_funding=[{**item, 'evidence': hashes} for item in retained_funding],
                      observed_pre_quantity_raw=str(sum(pre.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                      observed_post_quantity_raw=str(sum(post.get(account, 0) for account, identity in owned.items() if identity['mint'] == mint)),
                      observation_scope='Transaction account keys only; no proof of wallet-wide zero inventory',
-                     reason='Verified route_v2 and reconciled wallet USDC/token deltas; SOL fee stays SOL and is not USDC P&L')
+                     reason=f'Verified route and reconciled wallet {quote_asset}/token deltas; SOL fee stays SOL and is not {quote_asset} P&L')
                 if allocate_fee:
                     fee_event['allocation'] = 'buy_basis' if kind == 'buy' else 'sell_exit'
                     fee_event['allocated_trade_path'] = route['path']
-                    fee_event['settlement_note'] = 'Network fee is SOL; not converted into USDC consideration'
+                    fee_event['settlement_note'] = f'Network fee is SOL; not converted into {quote_asset} consideration'
                 supported += 1
                 administration.extend(nonce_administration)
                 for role in native_roles:
@@ -1481,23 +1641,26 @@ def decode_supported_swaps(transactions, address):
                 Decimal(str(network_fee_sol)) + Decimal(str(tips_sol)) + Decimal(str(platform_fee_sol))
             )
             allocate_fee = paid and not outside_native and not native_roles
-            if mint == USDC:
-                usdc_decimals = decimals.get(USDC)
-                if usdc_decimals is None:
-                    raise ValueError('USDC settlement is missing event-time decimals')
+            if mint in QUOTE_MINTS:
+                quote_decimals = decimals.get(mint)
+                quote_name = QUOTE_ASSET[mint]
+                if quote_decimals is None:
+                    raise ValueError(f'{quote_name} settlement is missing event-time decimals')
                 with localcontext() as context:
                     context.prec = 192
-                    amount_usdc = canonical(Decimal(abs(quantity)) / (Decimal(10) ** usdc_decimals))
+                    amount_quote = canonical(Decimal(abs(quantity)) / (Decimal(10) ** quote_decimals))
                     amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-                from_asset = 'USDC' if quantity < 0 else 'SOL'
-                to_asset = 'SOL' if quantity < 0 else 'USDC'
-                emit('conversion', route['path'], mint=USDC, quantity_raw=str(abs(quantity)),
-                     decimals=usdc_decimals, amount_sol=amount, amount_usdc=amount_usdc,
+                from_asset = quote_name if quantity < 0 else 'SOL'
+                to_asset = 'SOL' if quantity < 0 else quote_name
+                quote_fields = {'amount_usdc': amount_quote} if mint == USDC else {'amount_usdt': amount_quote}
+                emit('conversion', route['path'], mint=mint, quantity_raw=str(abs(quantity)),
+                     decimals=quote_decimals, amount_sol=amount, **quote_fields,
                      classification='quote_conversion', from_asset=from_asset, to_asset=to_asset,
                      source=route['program'], venue=route['program'], instruction=route['instruction'],
                      owner=address, fee_sol=fees_and_tips_sol, network_fee_sol=network_fee_sol,
                      tips_sol=tips_sol, paid_by_wallet=paid, settlement_mint=WSOL,
-                     reason='USDC↔SOL is a quote conversion, not a sale of a USDC or SOL position')
+                     settlement_asset=quote_name, inner_venues=inner_venues,
+                     reason=f'{quote_name}↔SOL is a quote conversion, not a sale of a {quote_name} or SOL position')
                 conversions += 1
                 continue
             kind = 'buy' if quantity > 0 else 'sell'
@@ -1506,7 +1669,10 @@ def decode_supported_swaps(transactions, address):
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding) + episode_rent
+            excluded_funding_lamports = (
+                rent_correction + sum(item['lamports'] for item in retained_funding)
+                + episode_rent + new_token_rent
+            )
             excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',
@@ -1515,6 +1681,7 @@ def decode_supported_swaps(transactions, address):
                  network_fee_sol=network_fee_sol, tips_sol=tips_sol,
                  platform_fee_sol=platform_fee_sol,
                  fees_and_tips_sol=fees_and_tips_sol,
+                 inner_venues=inner_venues,
                  unverified_debits_sol=unverified_debits_sol,
                  sensitivity_unverified_debits_sol=unverified_debits_sol,
                  excluded_funding_sol=excluded_funding_sol,

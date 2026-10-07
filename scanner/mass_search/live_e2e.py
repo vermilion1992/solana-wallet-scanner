@@ -423,6 +423,12 @@ def align_wallet_bounds(records, bounds):
     Coverage uses the captured span so a later run clock cannot hide an
     uncovered earlier transaction. P&L still uses the requested report days
     ending at min(configured_end, last+1).
+
+    Alignment is last-tx anchoring, not a clock-now window. A quiet wallet's
+    "30d" can therefore end at its last transaction (stale versus the
+    configured report_end). Gates still consume the aligned end. Both the
+    configured and aligned ends are returned so reports can document the
+    difference (D9). This function does not change how alignment works.
     """
     times = record_block_times(records)
     configured_end = _parse_iso(bounds["report_end_exclusive"])
@@ -447,6 +453,9 @@ def align_wallet_bounds(records, bounds):
     return {
         "report_start_inclusive": _iso(start),
         "report_end_exclusive": _iso(end),
+        "configured_report_end_exclusive": _iso(configured_end),
+        "aligned_report_end_exclusive": _iso(end),
+        "report_end_anchored_to_last_tx": bool(last is not None and end != configured_end),
         "history_start_inclusive": _iso(hist),
         "coverage_start_inclusive": _iso(cov_start),
         "coverage_end_exclusive": _iso(end),
@@ -2277,6 +2286,9 @@ def _phase4_wallet_row(report, profile):
         "quarantined_mints": bundle.get("quarantined_mints") or [],
         "sold_quarantined_mints": bundle.get("sold_quarantined_mints") or [],
         "quarantine_never_sold": len(bundle.get("quarantined_mints") or []) - len(bundle.get("sold_quarantined_mints") or []),
+        "configured_report_end_exclusive": ((report.get("window") or {}).get("configured_report_end_exclusive")),
+        "aligned_report_end_exclusive": ((report.get("window") or {}).get("aligned_report_end_exclusive")),
+        "report_end_anchored_to_last_tx": ((report.get("window") or {}).get("report_end_anchored_to_last_tx")),
         "PRODUCT_READY": False,
     }
 
@@ -2397,6 +2409,15 @@ def phase4_offline(store, config, state):
             source_id="live-e2e-proof",
         )
         report = result["report"]
+        window_doc = dict(report.get("window") or {})
+        window_doc.update({
+            "start": aligned["report_start_inclusive"],
+            "end": aligned["report_end_exclusive"],
+            "configured_report_end_exclusive": aligned.get("configured_report_end_exclusive"),
+            "aligned_report_end_exclusive": aligned.get("aligned_report_end_exclusive") or aligned["report_end_exclusive"],
+            "report_end_anchored_to_last_tx": aligned.get("report_end_anchored_to_last_tx"),
+        })
+        report["window"] = window_doc
         report["prescreen"] = (state.get("phase2") or {}).get(address) or {}
         report["bundle_or_distribution"] = bundle
         report["history"] = history

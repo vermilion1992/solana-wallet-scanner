@@ -22,6 +22,9 @@ OUT = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06/coverage/
 
 WSOL = "So11111111111111111111111111111111111111112"
 USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+QUOTE_MINTS = frozenset({USDC, USDT})
+QUOTE_ASSET = {USDC: "USDC", USDT: "USDT"}
 PUMP = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 PUMP_SWAP = "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
 JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
@@ -31,6 +34,18 @@ OKX = "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
 DFLOW = "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
 FLASHX = "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9"
 DGMG = "DGMgNKpqygARV2pHZfW4kNQSHT9F3Ly2BKWqvpYrAg5C"
+PHOTON = "99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2"
+DFLOW_DST = "dst5MGcFPoBeREFAA5E3tU5ij8m5uVYwkzkSAbsLbNo"
+PUMP_FEE = "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ"
+RAYDIUM_CLMM = "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+RAYDIUM_CPMM = "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C"
+RAYDIUM_AMM = "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"
+WHIRLPOOL = "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+GMGN = "GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1"
+METEORA_DLMM = "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+ASSOCIATED = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+COMPUTE = "ComputeBudget111111111111111111111111111111"
+LIGHTHOUSE = "L2TExMFKdjpN9kozasaurPirfHy9P8sbXoAN1qA3S95"
 SYSTEM = "11111111111111111111111111111111"
 LAMPORTS = Decimal(1_000_000_000)
 USDC_DECIMALS = Decimal(10) ** 6
@@ -301,6 +316,79 @@ TOKEN_PROGRAMS = {
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
 }
+MEMO_PROGRAMS = {
+    "MemoSq4gqABAXKb96QnHLmNbpX6VKFSubuNAgPqAq",
+    "Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo",
+}
+_INNER_INFRA = frozenset({
+    SYSTEM, COMPUTE, ASSOCIATED, LIGHTHOUSE, *TOKEN_PROGRAMS, *MEMO_PROGRAMS,
+})
+WELL_KNOWN_INNER_AMMS = frozenset({
+    RAYDIUM_CLMM,
+    "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY",
+    "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+    "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+    "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+    "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+    "SoLFiHG9TfgtdUXUjWAxi3LtvYuFyDLVhBWxdMZxyCe",
+    "obriQD1zbpyLz95G5n7nJe6a4DPjpFwa5XYPoNm113y",
+    "2wT8Yq49kHgDzXuPxZSaeLaH1qJgCwzzjYyvKZlYNVpj",
+    "EewxydAPCCVuNEyrVN68XT4NWAI1uCml1p55i1BPVsbJ",
+    "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX",
+    "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb",
+    "FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X",
+    "Eo7WjKq67rjJQSZxS6z3YcapmYde3M6t4gadxJtdEJge",
+    "6MLxLqiXaaSUpkgMnWDTuejNZEz3kE7k2woyHGVFw319",
+    "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJueZ",
+    "SwaPpA9LAaLfeLi3a68M4DjnLqgKzHa7VMEBUNHzMeU",
+    "MERLuDFBMmsHnszOkfP1zZuj7bK1uAmo4BqTKKQs",
+    "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ",
+    "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+    "BSwp6bEBihVLdqJRK3PkMH2nNzQ4K3CwbGoiJ2mr8BEf",
+    "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+    "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+    "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+    "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+    "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+    "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+    "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+    "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+})
+REVIEWED_INNER_PROGRAMS = frozenset({
+    *_INNER_INFRA,
+    PUMP, PUMP_SWAP, JUPITER, METEORA_DAMM_V2, RFQ_FILL, OKX, DFLOW, FLASHX,
+    DGMG, PHOTON, DFLOW_DST, PUMP_FEE, RAYDIUM_CLMM, RAYDIUM_CPMM, RAYDIUM_AMM,
+    WHIRLPOOL, GMGN, METEORA_DLMM, *WELL_KNOWN_INNER_AMMS,
+})
+
+
+def _inner_venues(raw, keys, route, address, owned_accounts):
+    venues = []
+    seen = set()
+    wallet_assets = {address, *owned_accounts}
+    route_index = route.get("index")
+    for outer, _path, instruction, nested in _iter_instructions(raw):
+        if not nested or outer != route_index:
+            continue
+        program = _program(instruction, keys)
+        if not program or program in _INNER_INFRA:
+            continue
+        if program not in seen:
+            seen.add(program)
+            venues.append({"program": program})
+        if program in REVIEWED_INNER_PROGRAMS:
+            continue
+        touched = set(_accounts(instruction, keys))
+        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        if isinstance(info, dict):
+            for field in ("source", "destination", "account", "newAccount", "owner", "authority", "wallet"):
+                value = info.get(field)
+                if isinstance(value, str) and value:
+                    touched.add(value)
+        if touched.intersection(wallet_assets):
+            return venues, False
+    return venues, True
 
 
 def _closed_to_wallet(raw, keys, address):
@@ -341,12 +429,16 @@ def _outside_native(movements, address, wrap_accounts, route_index=None):
     return delta
 
 
-def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None):
+def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None, route_index=None):
     """Rent policy (independent of scanner.investigation):
 
     Accounts created and closed in this transaction net out — do not add the
     create amount as retained. Long-lived account rent is not trade cost —
     add only the created account's remaining native delta.
+
+    Same-route inner creates (DGMG router-fee createAccount, ATA setup
+    under the swap) stay in consideration. They are swap costs, not
+    leftover PDA funding (D1).
     """
     extra = Decimal("0")
     meta = (raw or {}).get("meta") or {}
@@ -358,6 +450,8 @@ def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None):
             continue
         dest = movement.get("destination")
         if dest in skip_accounts:
+            continue
+        if route_index is not None and movement.get("outer") == route_index:
             continue
         if dest in key_list:
             index = key_list.index(dest)
@@ -472,49 +566,72 @@ def reconstruct_record(record, address):
     wrap_accounts = wsol_accounts | set(route.get("owned") or []) | closed
     rent = _rent_correction(raw, accounts)
     outside = _outside_native(movements, address, wrap_accounts, route.get("index"))
-    retained = _non_token_creates(movements, address, set(accounts) | wrap_accounts, raw=raw, keys=keys)
+    retained = _non_token_creates(
+        movements, address, set(accounts) | wrap_accounts,
+        raw=raw, keys=keys, route_index=route.get("index"),
+    )
+    inner_venues, inner_ok = _inner_venues(raw, keys, route, address, set(accounts))
+    if not inner_ok:
+        return None
     # Isolate the swap quote: wallet SOL+wSOL minus tips/other transfers, ATA rent,
     # and program-account funding. Those are costs or residuals, not consideration.
     settlement = native + wsol + rent - outside + retained
     tips = _verified_tips(raw, keys, address)
     fee = Decimal(meta.get("fee") or 0) if paid else Decimal("0")
-    usdc_delta = token_deltas.pop(USDC, Decimal("0"))
+    quote_mint = None
+    quote_delta = Decimal("0")
+    for mint in QUOTE_MINTS:
+        delta = token_deltas.pop(mint, Decimal("0"))
+        if delta == 0:
+            continue
+        if quote_mint is not None:
+            return None
+        quote_mint, quote_delta = mint, delta
     assets = [(mint, qty) for mint, qty in token_deltas.items() if qty != 0]
+    if quote_mint and not assets:
+        return None
     if len(assets) != 1:
         return None
     mint, quantity = assets[0]
-    usdc_settled = settlement == 0 and usdc_delta != 0 and (quantity > 0) != (usdc_delta > 0)
-    sol_settled = settlement != 0 and usdc_delta == 0 and (quantity > 0) != (settlement > 0)
-    if not usdc_settled and not sol_settled:
+    quote_settled = settlement == 0 and quote_delta != 0 and (quantity > 0) != (quote_delta > 0)
+    sol_settled = settlement != 0 and quote_delta == 0 and (quantity > 0) != (settlement > 0)
+    if not quote_settled and not sol_settled:
         return None
     kind = "buy" if quantity > 0 else "sell"
     signature = record.get("signature") or ((raw.get("transaction") or {}).get("signatures") or [None])[0]
     timestamp = raw.get("blockTime")
-    usdc_decimals = next((info.get("decimals") for info in accounts.values() if info.get("mint") == USDC), 6)
-    try:
-        usdc_scale = Decimal(10) ** int(usdc_decimals)
-    except (TypeError, ValueError, OverflowError):
-        usdc_scale = USDC_DECIMALS
-    if usdc_settled:
+    fees = _canonical((fee + tips) / LAMPORTS)
+    if quote_settled:
+        quote_decimals = next(
+            (info.get("decimals") for info in accounts.values() if info.get("mint") == quote_mint),
+            6,
+        )
+        try:
+            quote_scale = Decimal(10) ** int(quote_decimals)
+        except (TypeError, ValueError, OverflowError):
+            quote_scale = USDC_DECIMALS
         consideration_sol = "0"
-        consideration_usdc = _canonical(abs(usdc_delta) / usdc_scale)
-        settlement_asset = "USDC"
-        fees = "0"
+        quote_amount = _canonical(abs(quote_delta) / quote_scale)
+        settlement_asset = QUOTE_ASSET[quote_mint]
+        consideration_usdc = quote_amount if quote_mint == USDC else None
+        consideration_usdt = quote_amount if quote_mint == USDT else None
     else:
         consideration_sol = _canonical(abs(settlement) / LAMPORTS)
         consideration_usdc = None
+        consideration_usdt = None
         settlement_asset = "SOL"
-        fees = _canonical((fee + tips) / LAMPORTS)
     return {
         "kind": kind,
         "mint": mint,
         "quantity_raw": str(abs(quantity)),
         "consideration_sol": consideration_sol,
         "consideration_usdc": consideration_usdc,
+        "consideration_usdt": consideration_usdt,
         "settlement_asset": settlement_asset,
         "network_fee_sol": _canonical(fee / LAMPORTS),
         "tips_sol": _canonical(tips / LAMPORTS),
         "fees_and_tips_sol": fees,
+        "inner_venues": inner_venues,
         "signature": signature,
         "timestamp": timestamp,
         "slot": raw.get("slot") if raw.get("slot") is not None else record.get("slot"),
@@ -607,6 +724,11 @@ def _fifo(trades):
             asset = row.get("settlement_asset") or "SOL"
             if asset == "USDC" and row.get("consideration_usdc") not in (None, ""):
                 consideration = Decimal(row["consideration_usdc"])
+                # SOL fees stay on the event (fees_and_tips_sol). Mixing them
+                # into a USDC episode net would change the quote unit.
+                fees = Decimal("0")
+            elif asset == "USDT" and row.get("consideration_usdt") not in (None, ""):
+                consideration = Decimal(row["consideration_usdt"])
                 fees = Decimal("0")
             else:
                 consideration = Decimal(row["consideration_sol"])

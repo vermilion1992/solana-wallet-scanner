@@ -162,8 +162,8 @@ def test_d4_mixed_wallet_separate_quote_asset_worksheets(tmp_path):
     assert _q(usdc["total_profit_usdc"]) == _q(indep["fifo"]["USDC"]["total_profit"])
     assert _q(usdc["total_profit_usdc"]) == _q("49643.208242023")
     assert int(usdc["known_cost_sales"]) == 13
-    # DFlow Swap2 reconstructs the DEW9 buys; one previously unbacked sale
-    # now has basis. Extra unbacked sales stay unresolved.
+    # DFlow Swap (f8c69e91) reconstructs the DEW9 close 5125oxVi8HPY; one
+    # previously unbacked sale now has basis. Extra unbacked sales stay unresolved.
     assert int(usdc["unresolved_basis_sales"]) == 4
     assert int(usdc.get("open_lots") or 0) == 9
     assert int(sol.get("known_cost_sales") or 0) == 0

@@ -675,7 +675,11 @@ def _episode_ledger_from_report(report):
                     opened_at = event.get("timestamp") or event.get("block_time")
                 opened = True
                 episode_events.append(event)
-                for key in ("consideration_sol", "amount_sol", "consideration_usdc", "amount_usdc"):
+                for key in (
+                    "consideration_sol", "amount_sol",
+                    "consideration_usdc", "amount_usdc",
+                    "consideration_usdt", "amount_usdt",
+                ):
                     if event.get(key) not in (None, ""):
                         buy_consideration += Decimal(str(event[key]))
                         break
@@ -732,7 +736,9 @@ def _episode_ledger_from_report(report):
             if net is None:
                 continue
             unit = event.get("settlement_asset") or (
-                "USDC" if event.get("amount_usdc") or event.get("consideration_usdc") else "SOL"
+                "USDC" if event.get("amount_usdc") or event.get("consideration_usdc")
+                else "USDT" if event.get("amount_usdt") or event.get("consideration_usdt")
+                else "SOL"
             )
             episodes.append({
                 "mint": mint,

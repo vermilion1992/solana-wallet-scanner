@@ -36,7 +36,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_bumped_for_dgmg_dflow():
-    assert DECODER_VERSION == "spot-v22-dflow-swap2-wrap-v1"
+    assert DECODER_VERSION == "spot-v23-quote-rent-inner-v1"
 
 
 def test_app_and_auditor_are_independent_modules():
@@ -50,9 +50,9 @@ def test_app_and_auditor_are_independent_modules():
 def test_jxt_dgmg_buy_hand_deltas():
     """jXt unresolved-basis sale was mint 44y8…pump: PumpSwap sell decoded, DGMg buy did not.
 
-    Hand: wallet wraps 99_910_001 lamports, receives 4_450_544_168_706 raw of 44y8
-    (6 decimals). Auditor isolates wrap-minus-dust 0.099909999 SOL. App emits the
-    same quantity; fee 105_000 lamports.
+    Hand: wallet −104_998_679 = fee 105_000 + pool 99_909_999 + router
+    1_844_400 + ATA rent 2_039_280 + tips 1_100_000. App and auditor both
+    include the 1_844_400-lamport DGMg router fee in basis (0.101754399).
     """
     payload = _load("jxt-dgmg-buy.json")
     assert payload["address"] == JXT
@@ -70,7 +70,8 @@ def test_jxt_dgmg_buy_hand_deltas():
     assert aud["kind"] == "buy"
     assert aud["mint"] == JXT_MINT
     assert aud["quantity_raw"] == "4450544168706"
-    assert Decimal(aud["consideration_sol"]) == Decimal("0.099909999")
+    assert Decimal(str(trade.get("amount_sol") or trade.get("consideration_sol"))) == Decimal("0.101754399")
+    assert Decimal(aud["consideration_sol"]) == Decimal("0.101754399")
     assert Decimal(aud["network_fee_sol"]) == Decimal("0.000105")
     assert aud["program"] == DGMG
     assert aud["instruction"] == "buy"
