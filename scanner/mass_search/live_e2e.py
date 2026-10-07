@@ -23,10 +23,13 @@ Helius getTransactionsForAddress metering (docs.helius.dev, repo review
 from __future__ import annotations
 
 import argparse
+import asyncio
 import hashlib
 import json
 import logging
 import os
+import sys
+import time
 import uuid
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -34,11 +37,17 @@ from pathlib import Path
 
 from scanner.investigation import (
     DFLOW,
+    DFLOW_DST,
+    FLASHX,
+    GMGN,
     JUPITER,
     LIGHTHOUSE,
     METEORA_DAMM_V2,
+    METEORA_DLMM,
     OKX_DEX_ROUTER,
+    PHOTON,
     PUMP,
+    PUMP_FEE_PROGRAM,
     PUMP_SWAP,
     RAYDIUM_AMM,
     RAYDIUM_CPMM,
@@ -50,19 +59,32 @@ from scanner.investigation import (
     _program,
     decode_supported_swaps,
 )
-from scanner.mass_search.adapters import ALLOWED_BIRDEYE_HOST, ALLOWED_BIRDEYE_PATH, BirdeyeTraderAdapter, SourceError
+from scanner.mass_search.adapters import (
+    ALLOWED_BIRDEYE_HOST,
+    ALLOWED_BIRDEYE_PATH,
+    ALLOWED_BIRDEYE_PATHS,
+    BIRDEYE_TOP_TRADERS_PATH,
+    BirdeyeTraderAdapter,
+    SourceError,
+)
+from scanner.mass_search.bundle_detect import detect_bundle_or_distribution
 from scanner.mass_search.capability import LIVE_AUTH_SCHEMA, redact_secrets, utc_now, validate_live_authorization
 from scanner.mass_search.evidence_integrity import redact_text, sanitize_jsonrpc_body, scrub_bytes
+from scanner.mass_search.g3_history import inject_undecoded_buy_taints
 from scanner.mass_search.history_ingest import replay_cached_history_to_report
 from scanner.mass_search.labels import wallet_status_fields
 from scanner.mass_search.live_e2e_ledger import (
+    DEFAULT_LEDGER_ROOT,
     ExclusiveLock,
+    LEDGER_ENV,
+    LEDGER_HOME_ENV,
     LockHeld,
     committed_draft_payload,
     empty_phase_spend,
     empty_spend,
     grant_ledger_path,
     integrity_record,
+    ledger_home,
     load_receipt,
     merge_spend,
     open_grant_store,
@@ -83,12 +105,36 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 ROOT = Path(__file__).resolve().parents[2]
 AUTHORIZATION_ID = "live-e2e-proof-2026-10-07-mitch"
+AUTHORIZATION_ID_NEXT = "live-e2e-proof-2026-10-09-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
+DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
+KNOWN_DRAFTS = {
+    AUTHORIZATION_ID: DRAFT_REL,
+    AUTHORIZATION_ID_NEXT: DRAFT_REL_NEXT,
+}
+# Pinned committed-blob hashes. A local commit of an inflated draft cannot
+# satisfy --live unless this constant is also changed (HARD_CEILINGS still bind).
+PINNED_DRAFT_HASHES = {
+    AUTHORIZATION_ID: "ca4c3f9637d5d8ee11475a8c1704bb964a0a7bed4e126c69e92c65ef9043f410",
+    AUTHORIZATION_ID_NEXT: "cda7b98d4d3bf0c219c53f4c37f2c6bc3b62d9480b60ad69d01f1709fc65af62",
+}
+HARD_CEILINGS = {
+    "birdeye_requests": 10,
+    "birdeye_units": 300,
+    "helius_requests": 1500,
+    "helius_units": 15000,
+}
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
 HELIUS_KEY_ENV = "HELIUS_API_KEY"
 HELIUS_ENDPOINT = "https://mainnet.helius-rpc.com/"
 HELIUS_METHOD = "getTransactionsForAddress"
+HELIUS_MIN_INTERVAL_ENV = "SCANNER_HELIUS_MIN_INTERVAL_SEC"
+HELIUS_BACKOFF_ENV = "SCANNER_HELIUS_BACKOFF_SEC"
+DEFAULT_HELIUS_MIN_INTERVAL = 0.5
+DEFAULT_HELIUS_BACKOFF = 2.0
+_HELIUS_LAST_CALL = 0.0
+_HELIUS_PACE_LOCK = asyncio.Lock() if hasattr(asyncio, "Lock") else None
 
 GTA_MAX_LIMIT = 1000
 GTA_SAMPLE_LIMIT = 100
@@ -96,21 +142,47 @@ SIG_ONLY_UNITS = 10
 FULL_100_UNITS = 10
 FULL_1000_UNITS = 100
 BIRDEYE_UNITS = 30
+BIRDEYE_TOP_TRADERS_UNITS = 35
 BIRDEYE_DEFAULT_LIMIT = 100
 BIRDEYE_DEFAULT_WINDOW = "30d"
 BIRDEYE_DEFAULT_SORT = "trader_score"
+BIRDEYE_DISCOVERY_GAINERS = "gainers-losers"
+BIRDEYE_DISCOVERY_TOP_TRADERS = "top-traders"
+# Documented CU (docs.birdeye.so/docs/compute-unit-cost, reviewed 2026-10-07):
+# GET /trader/gainers-losers = 30 CU fixed. Supported type= yesterday|today|1W|30d|90d;
+# sort_by = PnL|realized_pnl|unrealized_pnl|trader_score.
+# GET /defi/v2/tokens/top_traders = 35 CU fixed. time_frame=30m|1h|2h|4h|6h|8h|12h|24h
+# plus 2d|3d|7d|14d|30d|60d|90d; sort_by=volume|trade|total_pnl|unrealized_pnl|realized_pnl|volume_usd.
+BIRDEYE_CU_DOCS = {
+    BIRDEYE_DISCOVERY_GAINERS: {
+        "path": ALLOWED_BIRDEYE_PATH,
+        "documented_cu": BIRDEYE_UNITS,
+        "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+        "reviewed_on": "2026-10-07",
+    },
+    BIRDEYE_DISCOVERY_TOP_TRADERS: {
+        "path": BIRDEYE_TOP_TRADERS_PATH,
+        "documented_cu": BIRDEYE_TOP_TRADERS_UNITS,
+        "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+        "reviewed_on": "2026-10-07",
+    },
+}
 
 L2TEX_PROGRAM = LIGHTHOUSE
-FLASHX_PROGRAM = "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9"
+FLASHX_PROGRAM = FLASHX
 B311_PROGRAM = "B3111yJCeHBcA1bizdJjUFPALfhAfSRnAbJzGUtnt56A"
 KNOWN_BLOCKING_PROGRAMS = {
     FLASHX_PROGRAM: "FLASHX Axiom",
     B311_PROGRAM: "B311 unreviewed",
     DFLOW: "DFlow",
+    DFLOW_DST: "DFlow DST FulfillOrder",
+    GMGN: "GMGN",
+    PHOTON: "Photon",
+    METEORA_DLMM: "Meteora DLMM",
 }
 SUPPORTED_PROGRAMS = frozenset(REVIEWED_OUTER_VENUES) | {
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL, METEORA_DAMM_V2,
-    OKX_DEX_ROUTER, RFQ_FILL,
+    OKX_DEX_ROUTER, RFQ_FILL, DFLOW, DFLOW_DST, FLASHX, GMGN, PHOTON, METEORA_DLMM,
 }
 INFRA_PROGRAMS = frozenset({
     "11111111111111111111111111111111",
@@ -121,6 +193,7 @@ INFRA_PROGRAMS = frozenset({
     LIGHTHOUSE,
     "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
     "Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo",
+    PUMP_FEE_PROGRAM,
 })
 STATE_NAME = "RUN_STATE.json"
 PLAN_NAME = "DRY_RUN_PLAN.json"
@@ -353,42 +426,160 @@ def collect_program_ids(records):
     return found
 
 
-def classify_programs(records):
+def _record_signature(record):
+    if not isinstance(record, dict):
+        return None
+    if record.get("signature"):
+        return record["signature"]
+    raw = record.get("raw") if isinstance(record.get("raw"), dict) else record
+    if isinstance(raw, dict) and isinstance(raw.get("result"), dict) and "transaction" not in raw:
+        raw = raw["result"]
+    tx = raw.get("transaction") if isinstance(raw, dict) else None
+    sigs = (tx or {}).get("signatures") if isinstance(tx, dict) else None
+    if isinstance(sigs, list) and sigs:
+        return sigs[0]
+    return None
+
+
+def _record_abs_sol(record, address=None):
+    raw = record
+    if isinstance(record, dict) and isinstance(record.get("raw"), dict):
+        raw = record["raw"]
+    if isinstance(raw, dict) and isinstance(raw.get("result"), dict) and "transaction" not in raw:
+        raw = raw["result"]
+    if not isinstance(raw, dict):
+        return Decimal("0")
+    meta = raw.get("meta") or {}
+    message = ((raw.get("transaction") or {}).get("message") or {})
+    try:
+        keys = _keys(message, meta)
+    except (ValueError, TypeError, KeyError, IndexError):
+        return Decimal("0")
+    if not keys:
+        return Decimal("0")
+    target = address if address in keys else keys[0]
+    try:
+        index = keys.index(target)
+    except ValueError:
+        return Decimal("0")
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    if index >= len(pre) or index >= len(post):
+        return Decimal("0")
+    delta = Decimal(post[index] - pre[index])
+    fee = meta.get("fee") if isinstance(meta.get("fee"), int) else 0
+    if keys[0] == target:
+        delta += Decimal(fee)
+    return abs(delta) / Decimal(1_000_000_000)
+
+
+def _decoded_swap_signatures(records, address=None):
+    address = address or ""
+    try:
+        from scanner.mass_search.canonical_records import canonical_decode_records
+        decoded = decode_supported_swaps(canonical_decode_records(records or []), address)
+    except Exception:
+        return set()
+    found = set()
+    for event in decoded.get("events") or []:
+        if event.get("kind") in ("buy", "sell") and event.get("signature"):
+            found.add(event["signature"])
+    return found
+
+
+def classify_programs(records, address=None):
+    """Rank programs that appear in UNDECODED swaps only, by count and by value.
+
+    Pump fee-calculation `pfeeUxB6` is infra (it appears inside decoded PumpSwap
+    too) and is never a venue blocker.
+    """
+    decoded_sigs = _decoded_swap_signatures(records, address)
     counts = {}
-    for program in collect_program_ids(records):
-        counts[program] = counts.get(program, 0) + 1
+    value = {}
+    for record in records or []:
+        signature = _record_signature(record)
+        if signature and signature in decoded_sigs:
+            continue
+        programs = []
+        raw = record
+        if isinstance(record, dict) and isinstance(record.get("raw"), dict):
+            raw = record["raw"]
+        if isinstance(raw, dict) and isinstance(raw.get("result"), dict) and "transaction" not in raw:
+            raw = raw["result"]
+        if not isinstance(raw, dict):
+            continue
+        for program in collect_program_ids([record]):
+            programs.append(program)
+        sol = _record_abs_sol(record, address)
+        seen = set()
+        for program in programs:
+            if program in INFRA_PROGRAMS or program in seen:
+                continue
+            seen.add(program)
+            counts[program] = counts.get(program, 0) + 1
+            value[program] = value.get(program, Decimal("0")) + sol
     blockers = []
     seen = set()
-    for program, count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
-        if program in INFRA_PROGRAMS:
+    ranked = sorted(counts.items(), key=lambda item: (-value.get(item[0], Decimal("0")), -item[1], item[0]))
+    for program, count in ranked:
+        if program in seen:
             continue
-        label = KNOWN_BLOCKING_PROGRAMS.get(program)
-        if label and program not in seen:
-            seen.add(program)
-            blockers.append({
-                "program_id": program,
-                "label": label,
-                "observations": count,
-                "supported": False,
-            })
-        elif program not in SUPPORTED_PROGRAMS and program not in seen:
-            seen.add(program)
-            blockers.append({
-                "program_id": program,
-                "label": "unsupported_or_unreviewed",
-                "observations": count,
-                "supported": False,
-            })
+        seen.add(program)
+        label = KNOWN_BLOCKING_PROGRAMS.get(program, "unsupported_or_unreviewed")
+        blockers.append({
+            "program_id": program,
+            "label": label,
+            "observations": count,
+            "value_sol": str(value.get(program, Decimal("0"))),
+            "supported": False,
+        })
     supported_hits = sum(count for program, count in counts.items() if program in SUPPORTED_PROGRAMS)
     blocking_hits = sum(row["observations"] for row in blockers)
     total = supported_hits + blocking_hits
+    supported_value = sum((val for program, val in value.items() if program in SUPPORTED_PROGRAMS), Decimal("0"))
+    blocking_value = sum((val for program, val in value.items() if program not in SUPPORTED_PROGRAMS), Decimal("0"))
+    value_total = supported_value + blocking_value
     return {
         "program_counts": counts,
+        "program_value_sol": {key: str(val) for key, val in value.items()},
         "blockers": blockers,
         "supported_observations": supported_hits,
         "unsupported_observations": blocking_hits,
+        "supported_value_sol": str(supported_value),
+        "unsupported_value_sol": str(blocking_value),
         "decodable_share": None if not total else str((Decimal(supported_hits) / Decimal(total)).quantize(Decimal("0.0001"))),
+        "supported_venue_value_share": (
+            None if not value_total
+            else str((supported_value / value_total).quantize(Decimal("0.0001")))
+        ),
     }
+
+
+def compute_bot_rate(sig_records, window_days):
+    """In-window txs per day over the report window (minimum 1 day)."""
+    count = len(sig_records or [])
+    span = max(int(window_days or 1), 1)
+    times = []
+    for row in sig_records or []:
+        stamp = None
+        if isinstance(row, dict):
+            stamp = row.get("blockTime") or row.get("timestamp")
+            if stamp is None:
+                stamp = ((row.get("transaction") or {}).get("blockTime"))
+        if type(stamp) is int:
+            times.append(stamp)
+    if times:
+        observed = max((max(times) - min(times)) / 86400, 1)
+        span = max(span, int(observed))
+    return (Decimal(count) / Decimal(span)).quantize(Decimal("0.0001"))
+
+
+def prescreen_rank_score(row):
+    """(supported-venue share by value) x (has known-basis buys) x (not bundle/bot)."""
+    share = Decimal(str(row.get("supported_venue_value_share") or "0"))
+    has_buys = Decimal("1") if row.get("has_known_basis_buys") else Decimal("0")
+    clean = Decimal("0") if row.get("bundle") or row.get("bot") else Decimal("1")
+    return (share * has_buys * clean).quantize(Decimal("0.0001"))
 
 
 def phase3_wallets(config, state=None):
@@ -410,31 +601,51 @@ def plan_request_counts(config, state=None):
     wallets = list(config["wallets"])
     phases = set(config["phases"])
     discovery = bool(config.get("discovery"))
-    birdeye_requests = 1 if 1 in phases and (discovery or not wallets) else 0
+    source = config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS
+    tokens = list(config.get("birdeye_tokens") or [])
+    if 1 in phases and (discovery or not wallets):
+        if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
+            birdeye_requests = max(len(tokens), 1)
+            birdeye_units = birdeye_requests * BIRDEYE_TOP_TRADERS_UNITS
+        else:
+            birdeye_requests = 1
+            birdeye_units = BIRDEYE_UNITS
+    else:
+        birdeye_requests = 0
+        birdeye_units = 0
     if 1 in phases and wallets and not discovery:
         birdeye_requests = 0
+        birdeye_units = 0
     n = len(wallets)
     n3 = len(phase3_wallets(config, state)) if 3 in phases else 0
     helius_phase2 = (2 * n) if 2 in phases else 0
-    helius_phase3 = n3 if 3 in phases else 0
-    birdeye_units = birdeye_requests * BIRDEYE_UNITS
+    # Real minimum is 2 pages per wallet (a full page plus the next page that
+    # proves the end). Short-page stop removes the extra empty fetch when the
+    # previous page already ends, but the planner still budgets 2.
+    helius_phase3 = (2 * n3) if 3 in phases else 0
     helius_units = 0
     if 2 in phases:
         helius_units += n * (SIG_ONLY_UNITS + FULL_100_UNITS)
     if 3 in phases:
-        helius_units += n3 * FULL_1000_UNITS
+        helius_units += n3 * 2 * FULL_1000_UNITS
     return {
         "kind": "live-e2e-request-plan-v1",
         "dry_run": True,
         "phases": list(config["phases"]),
         "wallet_count": n,
+        "discovery_source": source,
+        "birdeye_cu_docs": BIRDEYE_CU_DOCS,
         "per_phase": {
             "1": {
                 "provider": "birdeye",
                 "requests": birdeye_requests,
                 "units": birdeye_units,
                 "billing_unit": "birdeye_compute_unit",
-                "note": "0 when a wallet list is supplied without --discovery",
+                "note": (
+                    "0 when a wallet list is supplied without --discovery. "
+                    f"{source}: documented "
+                    f"{BIRDEYE_CU_DOCS.get(source, {}).get('documented_cu')} CU/call."
+                ),
             },
             "2": {
                 "provider": "helius",
@@ -446,13 +657,14 @@ def plan_request_counts(config, state=None):
             "3": {
                 "provider": "helius",
                 "requests": helius_phase3,
-                "units": n3 * FULL_1000_UNITS if 3 in phases else 0,
+                "units": n3 * 2 * FULL_1000_UNITS if 3 in phases else 0,
                 "billing_unit": "helius_credit",
                 "note": (
-                    "Dry-run recorder returns empty pages, so paging stops after "
-                    "one full limit=1000 page per wallet. Live continues until "
+                    "Planner minimum is 2 full limit=1000 pages per wallet. "
+                    "A short page (len < limit) or empty page stops without "
+                    "fetching an extra empty terminal page. Live continues until "
                     "the window is covered or the cap is hit. Units are the "
-                    "documented worst case (100 credits / 1000 txs)."
+                    "documented worst case for those 2 pages (100 credits / 1000 txs)."
                 ),
             },
             "4": {"provider": None, "requests": 0, "units": 0, "note": "offline only"},
@@ -621,11 +833,56 @@ def _account_spend(state, *, provider, units, phase):
     bucket[f"{provider}_units"] += units
 
 
+def _helius_min_interval():
+    text = os.environ.get(HELIUS_MIN_INTERVAL_ENV)
+    if text in (None, ""):
+        return DEFAULT_HELIUS_MIN_INTERVAL
+    try:
+        value = float(text)
+    except (TypeError, ValueError):
+        return DEFAULT_HELIUS_MIN_INTERVAL
+    return max(value, 0.0)
+
+
+def _helius_backoff_seconds():
+    text = os.environ.get(HELIUS_BACKOFF_ENV)
+    if text in (None, ""):
+        return DEFAULT_HELIUS_BACKOFF
+    try:
+        value = float(text)
+    except (TypeError, ValueError):
+        return DEFAULT_HELIUS_BACKOFF
+    return max(value, 0.0)
+
+
+async def pace_helius_call():
+    """Default 2 rps (0.5s). Every live attempt is still receipted by the caller."""
+    global _HELIUS_LAST_CALL
+    interval = _helius_min_interval()
+    if interval <= 0:
+        return interval
+    lock = _HELIUS_PACE_LOCK
+    if lock is None:
+        now = time.monotonic()
+        wait = interval - (now - _HELIUS_LAST_CALL)
+        if wait > 0:
+            await asyncio.sleep(wait)
+        _HELIUS_LAST_CALL = time.monotonic()
+        return interval
+    async with lock:
+        now = time.monotonic()
+        wait = interval - (now - _HELIUS_LAST_CALL)
+        if wait > 0:
+            await asyncio.sleep(wait)
+        _HELIUS_LAST_CALL = time.monotonic()
+    return interval
+
+
 async def _live_birdeye(method, path, params):
     key = os.environ.get(BIRDEYE_KEY_ENV)
     if not key:
         raise SourceError("UNAUTHORIZED", "BIRDEYE_API_KEY is not present in this runtime")
-    if path != ALLOWED_BIRDEYE_PATH:
+    if path not in ALLOWED_BIRDEYE_PATHS:
         raise SourceError("UNAUTHORIZED", "Birdeye path is not allowlisted")
     import httpx
 
@@ -655,6 +912,7 @@ async def _live_helius(address, *, options, page_index=0):
         raise SourceError("UNAUTHORIZED", "HELIUS_API_KEY is not present in this runtime")
     import httpx
 
+    await pace_helius_call()
     payload = {"jsonrpc": "2.0", "id": page_index + 1, "method": HELIUS_METHOD, "params": [address, options]}
     headers = {"content-type": "application/json"}
     async with httpx.AsyncClient(follow_redirects=False, timeout=httpx.Timeout(40, connect=10)) as client:
@@ -664,6 +922,9 @@ async def _live_helius(address, *, options, page_index=0):
     if status in (401, 403):
         raise SourceError("ENTITLEMENT_BLOCKED", "Helius rejected the key or plan", http_status=status)
     if status == 429:
+        backoff = _helius_backoff_seconds()
+        if backoff:
+            await asyncio.sleep(backoff)
         raise SourceError("RATE_LIMITED", "Helius rate limit", http_status=status, retryable=True)
     try:
         body = response.json()
@@ -728,30 +989,43 @@ def _next_receipt_key(store, base, *, explicit_retry):
     return base, existing, False
 
 
+def _verify_saved_page(path, relative=None):
+    """Require integrity receipt + result body. Error JSON is blocked, never empty."""
+    path = Path(path)
+    label = relative or str(path)
+    if not path.is_file() or path.stat().st_size == 0:
+        raise SourceError("MISSING_CAPTURE", f"raw page missing: {label}; not covered")
+    raw = path.read_bytes()
+    integrity_path = path.with_name(path.name + ".integrity.json")
+    if not integrity_path.is_file():
+        raise SourceError("MISSING_CAPTURE", f"integrity receipt missing: {label}; not covered")
+    try:
+        integrity = json.loads(integrity_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise SourceError("MISSING_CAPTURE", f"integrity receipt unreadable: {label}; not covered") from error
+    written = integrity.get("written_sha256")
+    if written != _sha256_bytes(raw):
+        raise SourceError("MISSING_CAPTURE", f"raw page hash mismatch: {label}; not covered")
+    try:
+        body = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise SourceError("MISSING_CAPTURE", f"raw page unreadable: {label}; not covered") from error
+    if not isinstance(body, dict) or body.get("error") is not None or "result" not in body:
+        raise SourceError("MISSING_CAPTURE", f"raw page is an error body: {label}; not covered")
+    result = body.get("result")
+    data = result.get("data") if isinstance(result, dict) else result
+    if data is None:
+        raise SourceError("MISSING_CAPTURE", f"raw page has no result records: {label}; not covered")
+    if not isinstance(data, list):
+        raise SourceError("MISSING_CAPTURE", f"raw page result is not a list: {label}; not covered")
+    token = result.get("paginationToken") if isinstance(result, dict) else None
+    return raw, data, token
+
+
 def _replay_saved_page(config, phase, address, page_index, units):
     relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
     path = Path(config["output_dir"]) / relative
-    if not path.is_file() or path.stat().st_size == 0:
-        raise SourceError(
-            "MISSING_CAPTURE",
-            f"raw page missing: {relative}; not covered",
-        )
-    raw = path.read_bytes()
-    records = []
-    token = None
-    try:
-        body = json.loads(raw.decode("utf-8"))
-        result = body.get("result") if isinstance(body, dict) else {}
-        data = (result or {}).get("data") if isinstance(result, dict) else result
-        if isinstance(data, list):
-            records = data
-        if isinstance(result, dict):
-            token = result.get("paginationToken")
-    except (UnicodeDecodeError, json.JSONDecodeError, AttributeError) as error:
-        raise SourceError(
-            "MISSING_CAPTURE",
-            f"raw page unreadable: {relative}; not covered",
-        ) from error
+    raw, records, token = _verify_saved_page(path, relative)
     return {
         "records": records,
         "pagination_token": token,
@@ -860,8 +1134,14 @@ async def phase1_discovery(store, grant, config, state, recorder):
         return {"skipped": True}
     if config["wallets"] and not config.get("discovery"):
         return {"skipped": True, "reason": "wallet_list_supplied"}
+    source = config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS
+    if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
+        token_count = max(len(config.get("birdeye_tokens") or []), 1)
+        phase1_units = token_count * BIRDEYE_TOP_TRADERS_UNITS
+    else:
+        phase1_units = BIRDEYE_UNITS
     hard_stop_if_needed(
-        config, state["spend"], provider="birdeye", units=BIRDEYE_UNITS,
+        config, state["spend"], provider="birdeye", units=phase1_units,
         phase=1, phase_spend=state.get("phase_spend"),
     )
     params = {
@@ -871,6 +1151,9 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "offset": 0,
         "limit": int(config.get("birdeye_limit") or BIRDEYE_DEFAULT_LIMIT),
     }
+    if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
+        params["time_frame"] = params.pop("type")
+        params["tokens"] = list(config.get("birdeye_tokens") or [])
     base = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=None)
     key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
     if replay:
@@ -883,12 +1166,46 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "wallet": "_",
         "phase": 1,
         "page": 0,
-        "units": BIRDEYE_UNITS,
+        "units": phase1_units,
         "state": "reserved",
     })
     charged = False
     try:
-        if config["dry_run"]:
+        if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
+            tokens = list(config.get("birdeye_tokens") or [])
+            if not tokens:
+                raise LiveE2EError("top-traders discovery requires --birdeye-tokens")
+            addresses = []
+            raw_parts = []
+            for index, token in enumerate(tokens):
+                call_params = {
+                    "address": token,
+                    "time_frame": params.get("time_frame") or BIRDEYE_DEFAULT_WINDOW,
+                    "sort_by": params.get("sort_by") or "volume",
+                    "sort_type": "desc",
+                    "offset": 0,
+                    "limit": min(int(params.get("limit") or 10), 10),
+                }
+                if config["dry_run"]:
+                    response = await recorder.birdeye("GET", BIRDEYE_TOP_TRADERS_PATH, call_params)
+                    raw_parts.append(response.get("raw_bytes") or b"{}")
+                    continue
+                if not grant.get("enabled"):
+                    raise SourceError("UNAUTHORIZED", grant.get("reason") or "grant disabled")
+                if "token_top_traders" not in (provider_entry(grant, "birdeye").get("allowed_operations") or []):
+                    raise SourceError("UNAUTHORIZED", "Authorization does not include Birdeye token_top_traders")
+                response = await _live_birdeye("GET", BIRDEYE_TOP_TRADERS_PATH, call_params)
+                body = response.get("body") if isinstance(response.get("body"), dict) else {}
+                items = body.get("data", {}).get("items") if isinstance(body.get("data"), dict) else body.get("items")
+                if not isinstance(items, list):
+                    items = body.get("data") if isinstance(body.get("data"), list) else []
+                for row in items or []:
+                    addr = row.get("address") or row.get("wallet") or row.get("owner")
+                    if addr:
+                        addresses.append(addr)
+                raw_parts.append(response.get("raw_bytes") or b"{}")
+            raw = b"\n".join(raw_parts) if raw_parts else b"{}"
+        elif config["dry_run"]:
             response = await recorder.birdeye("GET", ALLOWED_BIRDEYE_PATH, params)
             raw = response.get("raw_bytes") or b"{}"
             addresses = []
@@ -914,7 +1231,7 @@ async def phase1_discovery(store, grant, config, state, recorder):
             page = await adapter.fetch_page(
                 offset=0,
                 limit=int(params["limit"]),
-                window=params["type"],
+                window=params.get("type") or BIRDEYE_DEFAULT_WINDOW,
                 authorization=grant,
                 store=None,
                 sort_by=params["sort_by"],
@@ -937,11 +1254,11 @@ async def phase1_discovery(store, grant, config, state, recorder):
             "wallet": "_",
             "phase": 1,
             "page": 0,
-            "units": BIRDEYE_UNITS,
+            "units": phase1_units,
             "state": "failed",
             "reservation_id": reservation,
         })
-        _account_spend(state, provider="birdeye", units=BIRDEYE_UNITS, phase=1)
+        _account_spend(state, provider="birdeye", units=phase1_units, phase=1)
         save_state(config["output_dir"], state)
         raise
     digest = _save_raw(config["output_dir"], "raw/phase1/birdeye.bin", raw)
@@ -950,12 +1267,12 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "wallet": "_",
         "phase": 1,
         "page": 0,
-        "units": BIRDEYE_UNITS,
+        "units": phase1_units,
         "state": "consumed",
         "sha256": digest,
         "reservation_id": reservation,
     })
-    _account_spend(state, provider="birdeye", units=BIRDEYE_UNITS, phase=1)
+    _account_spend(state, provider="birdeye", units=phase1_units, phase=1)
     save_state(config["output_dir"], state)
     if not config["wallets"]:
         config["wallets"] = addresses
@@ -991,11 +1308,21 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             end_unix=bounds["report_end_unix"],
         )
         sample = await _dispatch_helius(store, grant, config, state, transport, address, sample_opts, phase=2, page_index=1)
-        programs = classify_programs(sample.get("records") or [])
+        sample_records = sample.get("records") or []
+        programs = classify_programs(sample_records, address)
         in_window = len(sigs.get("records") or [])
         unsupported_share = Decimal(programs["decodable_share"] or "1")
         unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
-        bot_rate = Decimal("0")
+        bot_rate = compute_bot_rate(sigs.get("records") or [], config.get("window_days") or 30)
+        bundle = detect_bundle_or_distribution(sample_records, address)
+        decoded_sigs = _decoded_swap_signatures(sample_records, address)
+        has_known_basis_buys = False
+        try:
+            from scanner.mass_search.canonical_records import canonical_decode_records
+            decoded = decode_supported_swaps(canonical_decode_records(sample_records), address)
+            has_known_basis_buys = any(event.get("kind") == "buy" for event in decoded.get("events") or [])
+        except Exception:
+            has_known_basis_buys = bool(decoded_sigs)
         dropped = False
         drop_reason = None
         if in_window < min_in_window:
@@ -1007,14 +1334,28 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         elif bot_rate > max_bot_rate:
             dropped = True
             drop_reason = "bot_rate"
+        elif bundle.get("excluded"):
+            dropped = True
+            drop_reason = bundle.get("reason") or "bundle_or_distribution"
         row = {
             "address": address,
             "in_window_tx_count": in_window,
-            "sample_records": len(sample.get("records") or []),
+            "sample_records": len(sample_records),
             "decodable_share": programs["decodable_share"],
             "unsupported_share": str(unsupported_share),
+            "supported_venue_value_share": programs.get("supported_venue_value_share"),
+            "has_known_basis_buys": has_known_basis_buys,
+            "bundle": bundle.get("excluded"),
+            "bundle_reasons": bundle.get("reasons") or [],
+            "bot": bot_rate > max_bot_rate,
+            "bot_rate": str(bot_rate),
             "program_blockers": programs["blockers"],
-            "coverability_rank_key": programs["decodable_share"] or "0",
+            "coverability_rank_key": str(prescreen_rank_score({
+                "supported_venue_value_share": programs.get("supported_venue_value_share") or "0",
+                "has_known_basis_buys": has_known_basis_buys,
+                "bundle": bundle.get("excluded"),
+                "bot": bot_rate > max_bot_rate,
+            })),
             "dropped": dropped,
             "drop_reason": drop_reason,
             "requests": 2,
@@ -1023,7 +1364,11 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         state.setdefault("phase2", {})[address] = row
         save_state(config["output_dir"], state)
         rows.append(row)
-    ranked = sorted(rows, key=lambda row: (row.get("dropped") is True, -float(row.get("coverability_rank_key") or 0), row["address"]))
+    ranked = sorted(rows, key=lambda row: (
+        row.get("dropped") is True,
+        -float(row.get("coverability_rank_key") or 0),
+        row["address"],
+    ))
     kept = [row["address"] for row in ranked if not row.get("dropped")]
     return {"wallets": ranked, "kept": kept}
 
@@ -1064,7 +1409,13 @@ async def phase3_history(store, grant, config, state, recorder):
                 stamp = row.get("blockTime") or row.get("timestamp") or ((row.get("transaction") or {}).get("blockTime"))
                 if type(stamp) is int:
                     oldest = stamp if oldest is None else min(oldest, stamp)
-            covered = not token or not records or (oldest is not None and oldest <= bounds["history_start_unix"])
+            limit = int(options.get("limit") or GTA_MAX_LIMIT)
+            short_page = len(records) < limit
+            covered = (
+                not records
+                or short_page
+                or (oldest is not None and oldest <= bounds["history_start_unix"])
+            )
             if covered or config["dry_run"]:
                 cursor["done"] = True
                 cursor["window_covered"] = bool(covered)
@@ -1087,6 +1438,10 @@ def _phase4_wallet_row(report, profile):
         blocker = None
     completed = int((profile or {}).get("completed_known_cost_positions") or 0)
     realized = (vector or {}) if completed else {}
+    bundle = (report.get("bundle_or_distribution") or {}) if isinstance(report, dict) else {}
+    if bundle.get("excluded"):
+        level = {"level": "insufficient_evidence"}
+        blocker = bundle.get("reason") or "bundle_or_distribution"
     return {
         "address": report.get("address"),
         "coverage_count_share": shares.get("coverage_count_share"),
@@ -1106,6 +1461,15 @@ def _phase4_wallet_row(report, profile):
         "blocker": blocker,
         "coverage_status": fields.get("coverage_status"),
         "program_blockers": ((report.get("prescreen") or {}).get("program_blockers")),
+        "bundle": bundle.get("excluded"),
+        "bundle_reasons": bundle.get("reasons") or [],
+        "bot": ((report.get("prescreen") or {}).get("bot")),
+        "bot_rate": ((report.get("prescreen") or {}).get("bot_rate")),
+        "supported_venue_value_share": (
+            (report.get("prescreen") or {}).get("supported_venue_value_share")
+            or shares.get("coverage_value_share")
+        ),
+        "has_known_basis_buys": ((report.get("prescreen") or {}).get("has_known_basis_buys")),
         "PRODUCT_READY": False,
     }
 
@@ -1129,15 +1493,12 @@ def phase4_offline(store, config, state):
         if raw_dir.is_dir() and not missing_page:
             for path in sorted(raw_dir.glob("page*.bin")):
                 try:
-                    body = json.loads(path.read_bytes().decode("utf-8"))
-                except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                    _raw, data, _token = _verify_saved_page(path, f"raw/phase3/{address}/{path.name}")
+                except SourceError:
                     missing_page = True
                     records = []
                     break
-                result = body.get("result") if isinstance(body, dict) else None
-                data = (result or {}).get("data") if isinstance(result, dict) else result
-                if isinstance(data, list):
-                    records.extend(data)
+                records.extend(data)
         if missing_page:
             rows.append({
                 "address": address,
@@ -1171,7 +1532,8 @@ def phase4_offline(store, config, state):
                 "PRODUCT_READY": False,
             })
             continue
-        decoded = decode_supported_swaps(records, address)
+        decoded = inject_undecoded_buy_taints(decode_supported_swaps(records, address), records, address)
+        bundle = detect_bundle_or_distribution(records, address)
         result = replay_cached_history_to_report(
             store,
             address=address,
@@ -1185,6 +1547,7 @@ def phase4_offline(store, config, state):
         )
         report = result["report"]
         report["prescreen"] = (state.get("phase2") or {}).get(address) or {}
+        report["bundle_or_distribution"] = bundle
         profile = build_research_profile(report, filters=default_filters(), decoded=decoded)
         report["research_profile"] = profile
         store.put("reports", report["id"], report)
@@ -1224,27 +1587,60 @@ def human_summary(results):
     return "\n".join(lines) + "\n"
 
 
-def load_committed_draft():
+def load_committed_draft(rel=DRAFT_REL):
     try:
-        return committed_draft_payload(DRAFT_REL, repo_root=ROOT)
+        return committed_draft_payload(rel, repo_root=ROOT)
     except ValueError as error:
         raise LiveE2EError(str(error)) from error
+
+
+def assert_live_ledger_identity(grant):
+    recorded_home = grant.get("armed_home")
+    recorded_ledger = grant.get("ledger_home")
+    if not recorded_home or not recorded_ledger:
+        raise LiveE2EError(
+            "armed grant must record armed_home and ledger_home; "
+            "ledger identity is not relocatable for --live"
+        )
+    if Path(recorded_home).expanduser().resolve() != Path.home().resolve():
+        raise LiveE2EError("HOME differs from armed_home recorded at arming")
+    env_home = os.environ.get(LEDGER_HOME_ENV) or os.environ.get(LEDGER_ENV)
+    pinned = Path(recorded_ledger).expanduser().resolve()
+    if env_home:
+        if Path(env_home).expanduser().resolve() != pinned:
+            raise LiveE2EError(
+                "refusing SCANNER_LIVE_LEDGER_* override that differs from "
+                "grant-recorded ledger_home"
+            )
+    else:
+        default = (Path.home() / ".scanner" / "live-e2e-ledgers").resolve()
+        if default != pinned:
+            raise LiveE2EError("default ledger home differs from grant-recorded ledger_home")
+    return pinned
 
 
 def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
     caps = provider_caps(grant)
     caps["phase_caps"] = phase_caps_from_grant(grant)
-    if mode == "live" and grant.get("authorization_id") == AUTHORIZATION_ID:
-        draft, draft_hash = load_committed_draft()
-        draft_caps = provider_caps(draft)
+    auth_id = grant.get("authorization_id")
+    if mode == "live" and auth_id in KNOWN_DRAFTS:
+        pinned = PINNED_DRAFT_HASHES.get(auth_id)
         bound = grant.get("draft_artifact_hash")
         if not bound:
             raise LiveE2EError("draft_artifact_hash is required for --live")
+        if pinned and bound != pinned:
+            raise LiveE2EError("armed grant is not bound to the pinned draft artifact")
+        draft, draft_hash = load_committed_draft(KNOWN_DRAFTS[auth_id])
         if bound != draft_hash:
             raise LiveE2EError("armed grant is not bound to the committed draft artifact")
+        draft_caps = provider_caps(draft)
         if not grant.get("phase_caps"):
             caps["phase_caps"] = phase_caps_from_grant(draft)
         for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
+            if caps[key] > HARD_CEILINGS[key]:
+                raise LiveE2EError(f"armed {key} {caps[key]} exceeds hard ceiling {HARD_CEILINGS[key]}")
+            if draft_caps[key] > HARD_CEILINGS[key]:
+                raise LiveE2EError(f"committed draft {key} exceeds hard ceiling {HARD_CEILINGS[key]}")
             if caps[key] > draft_caps[key]:
                 raise LiveE2EError(
                     f"armed {key} {caps[key]} exceeds committed draft cap {draft_caps[key]}"
@@ -1253,11 +1649,16 @@ def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
         for phase, limits in (caps.get("phase_caps") or {}).items():
             allowed = draft_phase.get(phase) or {}
             for key, value in limits.items():
+                if key in HARD_CEILINGS and value > HARD_CEILINGS[key]:
+                    raise LiveE2EError(
+                        f"armed phase {phase} {key} {value} exceeds hard ceiling {HARD_CEILINGS[key]}"
+                    )
                 if key in allowed and value > allowed[key]:
                     raise LiveE2EError(
                         f"armed phase {phase} {key} {value} exceeds draft {allowed[key]}"
                     )
         caps["draft_artifact_hash"] = draft_hash
+        caps["pinned_draft_hash"] = pinned
     for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
         if overrides.get(key) is not None:
             value = int(overrides[key])
@@ -1278,8 +1679,10 @@ def validate_config(raw):
     grant = load_grant(grant_path)
     if raw["mode"] == "live" and not grant.get("enabled"):
         raise LiveE2EError(grant.get("reason") or "grant disabled")
-    if raw["mode"] == "live" and grant.get("authorization_id") != AUTHORIZATION_ID:
-        raise LiveE2EError(f"live runner expects {AUTHORIZATION_ID}")
+    if raw["mode"] == "live" and grant.get("authorization_id") not in KNOWN_DRAFTS:
+        raise LiveE2EError(f"live runner expects one of {sorted(KNOWN_DRAFTS)}")
+    if raw["mode"] == "live":
+        assert_live_ledger_identity(grant)
     output_dir = Path(raw["output_dir"])
     authorization_id = grant.get("authorization_id")
     ledger_dir = raw.get("ledger_dir")
@@ -1291,6 +1694,11 @@ def validate_config(raw):
     wallets_raw = raw.get("wallets")
     wallets = parse_wallets(wallets_raw)
     wallets_supplied = wallets_raw not in (None, "", [])
+    tokens_raw = raw.get("birdeye_tokens")
+    if isinstance(tokens_raw, str):
+        raw["birdeye_tokens"] = [part.strip() for part in tokens_raw.split(",") if part.strip()]
+    elif tokens_raw in (None, ""):
+        raw["birdeye_tokens"] = []
     window_days = 30 if raw.get("window_days") is None else int(raw.get("window_days"))
     earlier = 60 if raw.get("earlier_history_days") is None else int(raw.get("earlier_history_days"))
     caps = bind_caps_from_grant(grant, {
@@ -1318,6 +1726,8 @@ def validate_config(raw):
         "wallets": wallets,
         "wallets_supplied": wallets_supplied,
         "discovery": bool(raw.get("discovery")),
+        "discovery_source": raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS,
+        "birdeye_tokens": list(raw.get("birdeye_tokens") or []),
         "window_days": window_days,
         "earlier_history_days": earlier,
         "bounds": window_bounds(window_days, earlier),
@@ -1393,8 +1803,23 @@ async def run_live_e2e(raw):
                 state["phases_done"] = sorted(done | {1})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
-            if 2 in config["phases"] and 2 not in done:
+            wanted = list(config.get("wallets") or [])
+            phase2_pending = [
+                addr for addr in wanted
+                if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
+            ]
+            if 2 in config["phases"] and (2 not in done or phase2_pending):
                 state["phase2_result"] = await phase2_prescreen(store, config["grant"], config, state, recorder)
+                still = [
+                    addr for addr in wanted
+                    if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
+                ]
+                if still:
+                    state["phases_done"] = sorted(item for item in done if item != 2)
+                    raise SourceError(
+                        "INCOMPLETE_SCOPE",
+                        f"phase 2 has {len(still)} unscreened wallets; not completed",
+                    )
                 state["phases_done"] = sorted(done | {2})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
@@ -1410,9 +1835,23 @@ async def run_live_e2e(raw):
                 save_state(output_dir, state)
             else:
                 phase4 = {"wallets": state.get("phase4_wallets") or []}
-            state["status"] = "completed"
-            status = "completed"
-            blocker = None
+            pending = [
+                addr for addr in wanted
+                if 2 in config["phases"]
+                and not ((state.get("phase2") or {}).get(addr) or {}).get("done")
+            ]
+            if pending:
+                state["status"] = "incomplete"
+                state["blocker"] = "unprocessed_wallets"
+                state["detail"] = f"{len(pending)} wallets not yet screened"
+                status = "incomplete"
+                blocker = "unprocessed_wallets"
+            else:
+                state["status"] = "completed"
+                state["blocker"] = None
+                state["detail"] = None
+                status = "completed"
+                blocker = None
         except BaseException as error:
             state["status"] = "blocked"
             state["blocker"] = getattr(error, "state", None) or error.__class__.__name__
@@ -1462,6 +1901,19 @@ def build_arg_parser():
     parser.add_argument("--phases", default="all")
     parser.add_argument("--wallets", default="")
     parser.add_argument("--discovery", action="store_true")
+    parser.add_argument(
+        "--discovery-source",
+        dest="discovery_source",
+        default=BIRDEYE_DISCOVERY_GAINERS,
+        choices=(BIRDEYE_DISCOVERY_GAINERS, BIRDEYE_DISCOVERY_TOP_TRADERS),
+        help="gainers-losers (30 CU) or top-traders-per-token (35 CU). See BIRDEYE_CU_DOCS.",
+    )
+    parser.add_argument(
+        "--birdeye-tokens",
+        dest="birdeye_tokens",
+        default="",
+        help="Comma-separated liquid token mints for --discovery-source top-traders",
+    )
     parser.add_argument("--window-days", dest="window_days", type=int, default=30)
     parser.add_argument("--earlier-history-days", dest="earlier_history_days", type=int, default=60)
     parser.add_argument("--per-wallet-cap", dest="per_wallet_cap", type=int)
@@ -1484,20 +1936,35 @@ def build_arg_parser():
     return parser
 
 
-def main(argv=None):
-    args = build_arg_parser().parse_args(argv)
-    raw = vars(args)
-    raw["mode"] = "dry-run" if args.dry_run else "live"
-    import asyncio
+def _install_redacting_excepthook():
+    def hook(exc_type, exc, tb):
+        sys.stderr.write(redact_text(f"{getattr(exc_type, '__name__', 'Error')}: {exc}\n"))
 
+    sys.excepthook = hook
+
+
+def main(argv=None):
+    _install_redacting_excepthook()
     try:
+        args = build_arg_parser().parse_args(argv)
+        raw = vars(args)
+        raw["mode"] = "dry-run" if args.dry_run else "live"
+        tokens = raw.get("birdeye_tokens")
+        if isinstance(tokens, str) and tokens.strip():
+            raw["birdeye_tokens"] = [part.strip() for part in tokens.split(",") if part.strip()]
+        elif not tokens:
+            raw["birdeye_tokens"] = []
         result = asyncio.run(run_live_e2e(raw))
-    except (LiveE2EError, SourceError, QuotaExceeded, LockHeld) as error:
-        print(redact_text(str(error)))
-        return 2
-    except Exception as error:
-        print(redact_text(str(error)))
-        return 2
+    except BaseException as error:
+        if isinstance(error, SystemExit):
+            raise
+        text = redact_text(f"{error.__class__.__name__}: {error}")
+        print(text, file=sys.stderr)
+        if isinstance(error, KeyboardInterrupt):
+            return 130
+        if isinstance(error, (LiveE2EError, SourceError, QuotaExceeded, LockHeld, Exception)):
+            return 2
+        raise
     print(json.dumps(redact_secrets({
         "status": result["status"],
         "dry_run": result["dry_run"],

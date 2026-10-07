@@ -21,6 +21,8 @@ from .plan import canonical_json
 ADAPTER_VERSION = "mass-search-adapter-v1"
 ALLOWED_BIRDEYE_HOST = "public-api.birdeye.so"
 ALLOWED_BIRDEYE_PATH = "/trader/gainers-losers"
+BIRDEYE_TOP_TRADERS_PATH = "/defi/v2/tokens/top_traders"
+ALLOWED_BIRDEYE_PATHS = frozenset({ALLOWED_BIRDEYE_PATH, BIRDEYE_TOP_TRADERS_PATH})
 
 
 class SourceError(Exception):
@@ -161,7 +163,10 @@ class BirdeyeTraderAdapter:
         if not checked.get("enabled"):
             raise SourceError("UNAUTHORIZED", checked.get("reason") or "Live authorization is disabled", retryable=False)
         for entry in checked["providers"]:
-            if entry["provider_id"] == "birdeye" and "trader_gainers_losers" in entry["allowed_operations"]:
+            if entry["provider_id"] == "birdeye" and (
+                "trader_gainers_losers" in entry["allowed_operations"]
+                or "token_top_traders" in entry["allowed_operations"]
+            ):
                 return checked, entry
         raise SourceError("UNAUTHORIZED", "Authorization does not include Birdeye trader_gainers_losers")
 

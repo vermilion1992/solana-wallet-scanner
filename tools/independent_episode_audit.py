@@ -27,6 +27,7 @@ PUMP_SWAP = "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
 JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 METEORA_DAMM_V2 = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
 RFQ_FILL = "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
+OKX = "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
 SYSTEM = "11111111111111111111111111111111"
 LAMPORTS = Decimal(1_000_000_000)
 USDC_DECIMALS = Decimal(10) ** 6
@@ -49,6 +50,10 @@ PINNED = {
     (JUPITER, "d19853937cfed8e9"): ("shared_accounts_route_v2", 1, (2, 5)),
     (METEORA_DAMM_V2, "f8c69e91e17587c8"): ("swap", 8, (2, 3)),
     (RFQ_FILL, "a860b7a35c0a28a0"): ("Fill", 0, (4,)),
+    # Independent OKX DEX v2 SwapTob. Layout taken from the published OKX
+    # router accounts (payer 0, source token 1, dest token 2). Written here
+    # without importing scanner.investigation.
+    (OKX, "aa2955b184501f35"): ("SwapTob", 0, (1, 2)),
 }
 AUDITOR_TIP_LIST = Path(__file__).with_name("published_tip_accounts.json")
 

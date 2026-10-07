@@ -137,7 +137,13 @@ def test_phase4_uses_genuine_replay(tmp_path, monkeypatch, fake_keys):
     address = WALLETS[0]
     raw_dir = tmp_path / "out" / "raw" / "phase3" / address
     raw_dir.mkdir(parents=True)
-    (raw_dir / "page0.bin").write_bytes(b'{"result":{"data":[{"signature":"s"}]}}')
+    raw = b'{"result":{"data":[{"signature":"s"}]}}'
+    (raw_dir / "page0.bin").write_bytes(raw)
+    digest = hashlib.sha256(raw).hexdigest()
+    (raw_dir / "page0.bin.integrity.json").write_text(
+        json.dumps({"written_sha256": digest, "original_sha256": digest, "scrubbed": False}),
+        encoding="utf-8",
+    )
     store = Store(tmp_path / "store")
     config = {
         "phases": (4,),
@@ -301,7 +307,7 @@ def test_n2_missing_hash_and_working_tree_hash_refused(tmp_path, fake_keys):
     with pytest.raises(LiveE2EError, match="draft_artifact_hash is required"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out", WALLETS[:1]))
     grant = _arm_grant(tmp_path, extra={"draft_artifact_hash": "ab" * 32})
-    with pytest.raises(LiveE2EError, match="not bound to the committed draft"):
+    with pytest.raises(LiveE2EError, match="not bound to the (pinned|committed) draft"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out", WALLETS[:1]))
     committed = committed_draft_hash(
         "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json",

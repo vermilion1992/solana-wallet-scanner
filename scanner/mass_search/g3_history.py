@@ -305,8 +305,61 @@ def further_page_allowed(first_page, episodes, *, recorded_reason, classificatio
     return True, recorded_reason
 
 
+def inject_undecoded_buy_taints(decoded, records, address):
+    """Insert undecoded earlier buys so later sales cannot skip them in FIFO."""
+    decoded = decoded or {}
+    events = list(decoded.get("events") or [])
+    known = {
+        event.get("signature")
+        for event in events
+        if event.get("kind") in ("buy", "sell") and event.get("signature")
+    }
+    for record in records or []:
+        raw = record
+        if isinstance(record, dict) and isinstance(record.get("raw"), dict):
+            raw = record["raw"]
+        if isinstance(raw, dict) and isinstance(raw.get("result"), dict) and "transaction" not in raw:
+            raw = raw["result"]
+        if not isinstance(raw, dict) or (raw.get("meta") or {}).get("err") is not None:
+            continue
+        signature = record.get("signature") if isinstance(record, dict) else None
+        if not signature:
+            sigs = ((raw.get("transaction") or {}).get("signatures") or [])
+            signature = sigs[0] if sigs else None
+        if signature in known:
+            continue
+        meta = raw.get("meta") or {}
+        pre, post = {}, {}
+        for field, dest in (("preTokenBalances", pre), ("postTokenBalances", post)):
+            for balance in meta.get(field) or []:
+                if not isinstance(balance, dict) or balance.get("owner") != address:
+                    continue
+                mint = balance.get("mint")
+                amount = (balance.get("uiTokenAmount") or {}).get("amount")
+                if mint and amount not in (None, ""):
+                    dest[mint] = dest.get(mint, 0) + int(str(amount))
+        timestamp = raw.get("blockTime")
+        slot = raw.get("slot")
+        for mint in set(pre) | set(post):
+            delta = post.get(mint, 0) - pre.get(mint, 0)
+            if delta <= 0:
+                continue
+            events.append({
+                "kind": "undecoded_buy",
+                "undecoded_buy": True,
+                "mint": mint,
+                "quantity_raw": str(delta),
+                "signature": signature,
+                "timestamp": timestamp,
+                "slot": slot,
+                "reason": "Earlier buy is undecoded; later sales are unknown-basis",
+            })
+    decoded["events"] = events
+    return decoded
+
+
 def decoder_events_by_mint(decoded, *, address, window_start, window_end=None, acquisition_start=None):
-    events = [row for row in (decoded.get("events") or []) if row.get("kind") in ("buy", "sell")]
+    events = [row for row in (decoded.get("events") or []) if row.get("kind") in ("buy", "sell", "undecoded_buy")]
     start = datetime.fromisoformat(window_start.replace("Z", "+00:00"))
     start_unix = start.timestamp()
     acq_unix = None

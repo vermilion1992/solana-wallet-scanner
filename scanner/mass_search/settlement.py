@@ -110,8 +110,17 @@ def isolate_known_cost_events(rows):
             opening_unknown += units
             continue
         if event["kind"] == "buy":
-            lots.append({"units": units, "settlement": settlement_of(event)})
+            lots.append({
+                "units": units,
+                "settlement": settlement_of(event),
+                "undecoded": bool(event.get("undecoded_buy")),
+            })
+            if event.get("undecoded_buy"):
+                continue
             known.append(event)
+            continue
+        if event["kind"] == "undecoded_buy":
+            lots.append({"units": units, "settlement": None, "undecoded": True})
             continue
         if event["kind"] != "sell":
             continue
@@ -124,10 +133,13 @@ def isolate_known_cost_events(rows):
         sale_settlement = settlement_of(event)
         same_take = Decimal("0")
         cross_take = Decimal("0")
+        undecoded_take = Decimal("0")
         while remaining > 0 and lots:
             lot = lots[0]
             take = lot["units"] if lot["units"] <= remaining else remaining
-            if lot["settlement"] != sale_settlement:
+            if lot.get("undecoded"):
+                undecoded_take += take
+            elif lot["settlement"] != sale_settlement:
                 cross_take += take
             else:
                 same_take += take
@@ -136,7 +148,13 @@ def isolate_known_cost_events(rows):
             if lot["units"] == 0:
                 lots.pop(0)
         leftover_take = remaining
-        dirty = opening_take > 0 or cross_take > 0 or leftover_take > 0
+        if undecoded_take > 0:
+            # An earlier undecoded buy taints this sale. Never emit a partial
+            # matched-fragment figure; the whole sale is unknown-basis.
+            leftover_take += same_take + cross_take + undecoded_take
+            same_take = Decimal("0")
+            cross_take = Decimal("0")
+        dirty = opening_take > 0 or cross_take > 0 or leftover_take > 0 or undecoded_take > 0
         allocations = [
             (same_take, "known", {
                 "result_scope": "conditional_on_captured_inventory",
@@ -523,6 +541,7 @@ def map_decoder_trade(row, *, address, seconds, timestamp_missing, role, window_
         "instruction": row.get("instruction"),
         "venue": row.get("venue") or row.get("source"),
         "classification": row.get("classification") or "market",
+        "undecoded_buy": bool(row.get("undecoded_buy") or row.get("kind") == "undecoded_buy"),
         "order": row.get("order") if isinstance(row.get("order"), int) else row.get("transaction_index"),
         "timestamp": row.get("timestamp") or row.get("block_time"),
         "observed_pre_quantity_raw": row.get("observed_pre_quantity_raw"),

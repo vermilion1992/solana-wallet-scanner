@@ -59,10 +59,14 @@ def _empty_birdeye(*_args, **_kwargs):
 
 def _arm_grant(tmp_path, *, helius_req=500, helius_units=5000, birdeye_req=3, birdeye_units=91,
                phase_caps=None, extra=None, bind_hash=True):
+    import os
+    from pathlib import Path
     raw = json.loads(DRAFT_PATH.read_text(encoding="utf-8"))
     raw["enabled"] = True
     raw["authorized_by_user_at"] = "2026-10-07T00:00:00Z"
     raw["expires_at"] = "2099-01-01T00:00:00Z"
+    raw["armed_home"] = str(Path.home())
+    raw["ledger_home"] = os.environ.get("SCANNER_LIVE_LEDGER_HOME") or str(tmp_path / "ledger")
     if bind_hash:
         raw["draft_artifact_hash"] = committed_draft_hash(
             "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json",
@@ -138,13 +142,13 @@ def test_ss1_grant_cap_is_shared_across_output_dirs(tmp_path, monkeypatch, fake_
 
 def test_ss2_live_refuses_armed_caps_above_draft(tmp_path, fake_keys):
     grant = _arm_grant(tmp_path, helius_req=50000, helius_units=5_000_000, birdeye_units=99999)
-    with pytest.raises(LiveE2EError, match="exceeds committed draft"):
+    with pytest.raises(LiveE2EError, match="hard ceiling|exceeds committed draft"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out", WALLETS[:1]))
 
 
 def test_ss2_wrong_draft_hash_refused(tmp_path, fake_keys):
     grant = _arm_grant(tmp_path, extra={"draft_artifact_hash": "0" * 64})
-    with pytest.raises(LiveE2EError, match="not bound to the committed draft"):
+    with pytest.raises(LiveE2EError, match="not bound to the (pinned|committed) draft"):
         validate_config(_live_kwargs(tmp_path, grant, tmp_path / "out", WALLETS[:1]))
 
 
@@ -263,7 +267,7 @@ def test_ss6_phase3_honours_wallets(tmp_path, monkeypatch, fake_keys):
     phase3_calls = [item for item in calls[12:] if item[1] == "full"]
     assert len(phase3_calls) == 1
     assert phase3_calls[0][0] == WALLETS[0]
-    assert result["plan"]["totals"]["helius_requests"] == 1
+    assert result["plan"]["totals"]["helius_requests"] == 2
     assert result["plan"]["within_caps"] is True
 
 

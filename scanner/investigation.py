@@ -56,6 +56,12 @@ WHIRLPOOL = 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc'
 OKX_DEX_ROUTER = 'proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u'
 METEORA_DAMM_V2 = 'cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'
 DFLOW = 'DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH'
+DFLOW_DST = 'dst5MGcFPoBeREFAA5E3tU5ij8m5uVYwkzkSAbsLbNo'
+FLASHX = 'FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9'
+GMGN = 'GMGNreQcJFufBiCTLDBgKhYEfEe9B454UjpDr5CaSLA1'
+PHOTON = '99vQwtBwYtrqqD9YSXbdum3KBdxPAVxYTaQ3cfnJSrN2'
+METEORA_DLMM = 'LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'
+PUMP_FEE_PROGRAM = 'pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ'
 RFQ_FILL = '61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH'
 TOKEN_2022_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
 # Lighthouse assertions. Not a venue. Bundled with swaps; never a trade.
@@ -67,12 +73,18 @@ OKX_SWAPTOB = bytes.fromhex('aa2955b184501f35')
 RFQ_FILL_DISC = bytes.fromhex('a860b7a35c0a28a0')
 DFLOW_SWAP = bytes.fromhex('f8c69e91e17587c8')
 DFLOW_SWAP_WITH_DESTINATION = bytes.fromhex('a8ac184dc59c8765')
+DFLOW_DST_FULFILL = bytes.fromhex('3dd627f841d49924')
+GMGN_SWAP = bytes.fromhex('f8c69e91e17587c8')
+PHOTON_SWAP = bytes.fromhex('0b9c60da27a3b413')
+PHOTON_SWAP_ALT = bytes.fromhex('0d9e0ddf5fd51c06')
+DLMM_SWAP2 = bytes.fromhex('414b3f4ceb5b5b88')
 REVIEWED_OUTER_VENUES = (
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
-    METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER,
+    METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER, DFLOW, DFLOW_DST,
+    FLASHX, GMGN, PHOTON, METEORA_DLMM,
 )
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v13-token2022-okx-dflow-lighthouse-infra-v1'
+DECODER_VERSION = 'spot-v14-flashx-gmgn-photon-dlmm-dst-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -345,11 +357,29 @@ def _route(instruction, keys):
         if payload[:8] == OKX_SWAPTOB and len(payload) >= 61 and len(accounts) >= 5:
             name, authority, owned_positions = 'SwapTob', 0, (1, 2)
     elif program == DFLOW:
-        # Official DFlow Aggregator v4.
+        # Official DFlow Aggregator v4. Wallet is account 3 on the observed swap.
         if payload[:8] == DFLOW_SWAP_WITH_DESTINATION and len(payload) >= 16 and len(accounts) >= 9:
             name, authority, owned_positions = 'swap_with_destination', 3, (4,)
         elif payload[:8] == DFLOW_SWAP and len(payload) >= 16 and len(accounts) >= 6:
             name, authority, owned_positions = 'swap', 3, ()
+    elif program == DFLOW_DST:
+        # Native Flow FulfillOrder. Wallet at 3 on the attached CfNx page.
+        if payload[:8] == DFLOW_DST_FULFILL and len(payload) >= 16 and len(accounts) >= 4:
+            name, authority, owned_positions = 'FulfillOrder', 3, ()
+    elif program == FLASHX:
+        # Observed Axiom FLASHX routed swap: 23-byte payload starting 0x00,
+        # wallet at index 1. 10-byte 0x01 wraps are not swaps.
+        if len(payload) >= 23 and payload[0] == 0 and len(accounts) >= 20:
+            name, authority, owned_positions = 'flashx_swap', 1, ()
+    elif program == GMGN:
+        if payload[:8] == GMGN_SWAP and len(payload) >= 24 and len(accounts) >= 8:
+            name, authority, owned_positions = 'gmgn_swap', 0, ()
+    elif program == PHOTON:
+        if payload[:8] in (PHOTON_SWAP, PHOTON_SWAP_ALT) and len(payload) >= 16 and len(accounts) >= 5:
+            name, authority, owned_positions = 'photon_swap', 1, ()
+    elif program == METEORA_DLMM:
+        if payload[:8] == DLMM_SWAP2 and len(payload) >= 16 and len(accounts) > 10:
+            name, authority, owned_positions = 'swap2', 10, ()
     if name is None:
         raise ValueError('No reviewed spot swap instruction for this program and discriminator')
     return {'program': program, 'instruction': name, 'authority': accounts[authority],
@@ -646,7 +676,8 @@ def _unresolved_native_roles(flat, owned, wrapped, keys, before, address, route,
 # Outer nonce/authority mutations must not inherit this exception.
 _REVIEWED_LIFECYCLE_OWNERS = frozenset({
     *TOKEN_IDS, PUMP, PUMP_SWAP, JUPITER, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
-    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, RFQ_FILL,
+    OKX_DEX_ROUTER, METEORA_DAMM_V2, DFLOW, DFLOW_DST, RFQ_FILL,
+    FLASHX, GMGN, PHOTON, METEORA_DLMM,
 })
 _REVIEWED_ALLOCATE_SPACES = frozenset({137, 165, 170})
 

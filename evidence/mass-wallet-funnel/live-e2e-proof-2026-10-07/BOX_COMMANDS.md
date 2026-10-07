@@ -1,77 +1,136 @@
-# Box commands — LIVE E2E proof 2026-10-07
+# Box commands — LIVE E2E proof (next run: 2026-10-09 draft)
 
-Arm a **local** copy of `config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json`:
-set `enabled: true`, `authorized_by_user_at`, `existing_plan_confirmed`, and
-`remaining_quota_confirmed_at`. Do not commit that copy. Expiry is
-`2026-10-09T00:00:00+10:30` (`2026-10-08T13:30:00Z`).
+The **next** live grant is `config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json`
+(`enabled: false` in repo). Expiry is `2026-10-10T00:00:00+10:30`
+(`2026-10-09T13:30:00Z`). Caps: Birdeye ≤10 requests / ≤300 CU; Helius ≤1,500
+requests / ≤15,000 credits. Hard ceilings in `scanner/mass_search/live_e2e.py`
+(`HARD_CEILINGS`) cannot be raised by a local commit. `PINNED_DRAFT_HASHES`
+must match the armed `draft_artifact_hash`.
 
-Replace `$ARMED` with the local armed grant path and `$OUT` with a writable
-directory on the box. Spend is ledgered per `authorization_id` under the
-fixed home `$SCANNER_LIVE_LEDGER_HOME` (default
-`~/.scanner/live-e2e-ledgers/<authorization_id>`). `--ledger-dir` must equal
-that home or the runner refuses a second ledger for the same grant. Armed
-copies must set `draft_artifact_hash` to `git show HEAD:config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json | sha256sum`
-(the committed blob, not a working-tree edit). Missing hash is refused for
-`--live`. Missing `phase_caps` inherit the draft. `--explicit-retry` appends
-a new receipt. A different `--window-days` on `--resume` is an error. Helius
-auth is `?api-key=` on the query string; the key is redacted in every written
-string. Phase 4 is offline `GENUINE_REPLAY` on captured pages. Do not run two
-`--resume` processes on the same grant or output.
+The retired 2026-10-07 draft stays `enabled: false`. Do not re-arm it for a
+new spend. PRODUCT_READY stays false. Do not merge.
 
-## Dry-run (no spend) — already committed
+## Arming (local copy only)
+
+1. Copy the 2026-10-09 draft outside the repo.
+2. Set `enabled: true`, `authorized_by_user_at`, `existing_plan_confirmed`,
+   `remaining_quota_confirmed_at`.
+3. Set `draft_artifact_hash` to the **pinned** SHA-256 in
+   `PINNED_DRAFT_HASHES["live-e2e-proof-2026-10-09-mitch"]` (must also equal
+   `git show HEAD:config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json | sha256sum`).
+4. Record identity (required for `--live`):
+   - `armed_home`: `python -c "from pathlib import Path; print(Path.home())"`
+   - `ledger_home`: `$HOME/.scanner/live-e2e-ledgers` (must match the path
+     `--ledger-dir` will use)
+5. Mode 0600. Never commit the armed copy.
+
+`--live` refuses `SCANNER_LIVE_LEDGER_HOME` / `SCANNER_LIVE_LEDGER_DIR` unless
+they equal `ledger_home`, and refuses if `HOME` differs from `armed_home`.
+Leave those env vars unset on the box. `--ledger-dir` must equal `ledger_home`.
+
+Helius pacing defaults to 0.5s min interval (2 rps) and 2s backoff on 429
+(`SCANNER_HELIUS_MIN_INTERVAL_SEC`, `SCANNER_HELIUS_BACKOFF_SEC`). Every
+attempt is receipted. Phase 2 resume screens wallets that are not yet
+`done`; it never reports `completed` with unscreened wallets. Phase 3 stops
+on a short or empty page (no extra empty terminal fetch). Planner budgets 2
+full-history pages per wallet.
+
+Replace `$ARMED` and `$OUT`. One process at a time.
+
+## Birdeye CU (docs.birdeye.so/docs/compute-unit-cost, reviewed 2026-10-07)
+
+| Flag | Endpoint | Documented CU |
+|---|---|---|
+| `--discovery-source gainers-losers` (default) | `GET /trader/gainers-losers` | 30 CU fixed |
+| `--discovery-source top-traders` | `GET /defi/v2/tokens/top_traders` | 35 CU fixed |
+
+Gainers-losers windows: `yesterday`, `today`, `1W`, `30d`, `90d`. Sorts:
+`PnL`, `realized_pnl`, `unrealized_pnl`, `trader_score`.
+Top-traders time frames: `30m`–`24h` plus `2d`–`90d`. Sorts: `volume`,
+`trade`, `total_pnl`, `unrealized_pnl`, `realized_pnl`, `volume_usd`.
+10× gainers-losers = 300 CU. 8× top-traders = 280 CU. 1× gainers-losers +
+7× top-traders = 275 CU.
+
+## Dry-run planner (must show the plan fits)
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --dry-run \
-  --grant config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json \
-  --wallets config/live_e2e_search_b_cohort.json \
+  --grant config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json \
   --discovery \
+  --discovery-source gainers-losers \
+  --birdeye-window 1W \
+  --birdeye-sort PnL \
   --phases all \
   --window-days 30 \
   --earlier-history-days 60 \
+  --max-bot-rate 50 \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers-dry-run" \
-  --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run
+  --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-2026-10-09
 ```
 
-## Phase 1 — Birdeye discovery (≤1 request / 30 CU; grant 3 / 91)
+Top-traders alternative (35 CU per liquid token; supply mints):
+
+```bash
+.venv/bin/python scripts/live_e2e.py \
+  --dry-run \
+  --grant config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json \
+  --discovery \
+  --discovery-source top-traders \
+  --birdeye-tokens So11111111111111111111111111111111111111112,EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v \
+  --birdeye-window 24h \
+  --birdeye-sort volume \
+  --phases 1 \
+  --ledger-dir "$HOME/.scanner/live-e2e-ledgers-dry-run" \
+  --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-top-traders
+```
+
+## Phase 1 — discovery (≤10 / 300 CU)
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --live \
   --grant "$ARMED" \
   --discovery \
+  --discovery-source gainers-losers \
   --phases 1 \
-  --birdeye-window 30d \
-  --birdeye-sort trader_score \
+  --birdeye-window 1W \
+  --birdeye-sort PnL \
   --birdeye-limit 100 \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
 
-## Phase 2 — signatures-only + one full sample page (2 req / 20 credits per wallet)
+## Phase 2 — pre-screen (~100 wallets × 2 pages)
+
+Rank key: (supported-venue share by value) × (has known-basis buys) × (not bundle/bot).
+Bundles / zero-basis distribution are dropped with an explicit reason.
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --live \
   --grant "$ARMED" \
-  --wallets config/live_e2e_search_b_cohort.json \
   --phases 2 \
   --window-days 30 \
   --earlier-history-days 60 \
   --min-in-window-tx 0 \
   --max-unsupported-share 1 \
+  --max-bot-rate 50 \
   --resume \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
 ```
 
-## Phase 3 — full history, limit 1000, window + 60d earlier (hard stop at remaining cap)
+A 429 is receipted (failed) and back-off sleeps. Resume with `--explicit-retry`
+for that wallet; new `--wallets` are screened even if phase 2 was previously
+marked done.
+
+## Phase 3 — full history for ~25 wallets (planner min 2 pages; cap 200 / 12,000)
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --live \
   --grant "$ARMED" \
-  --wallets config/live_e2e_search_b_cohort.json \
   --phases 3 \
   --window-days 30 \
   --earlier-history-days 60 \
@@ -80,40 +139,16 @@ string. Phase 4 is offline `GENUINE_REPLAY` on captured pages. Do not run two
   --output "$OUT"
 ```
 
-## Phase 4 — offline replay / decode / qualify (0 provider calls)
+## Phase 4 — offline replay (0 provider calls)
+
+Every replayed page must match its `.integrity.json` `written_sha256`. A JSON
+error body or hash mismatch is `blocked`, never “no records”.
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --dry-run \
-  --grant config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json \
-  --wallets config/live_e2e_search_b_cohort.json \
+  --grant config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json \
   --phases 4 \
-  --resume \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
-  --output "$OUT"
-```
-
-Phase 4 can also run as `--live --phases 4`; it still makes no provider calls.
-
-To replay the attached `cfe6e78` Phase-3 pages with no provider calls, copy
-`live-out/raw/phase3/<wallet>/page*.bin` into `$OUT/raw/phase3/` (23 pages,
-11 wallets) and run `--dry-run --phases 4`. The runner uses `GENUINE_REPLAY`,
-the persisted report window, and refuses a missing page (never an empty
-covered page). Bounds for that capture: report
-`2026-09-07T07:51:22Z` → `2026-10-07T07:51:22Z`, history start
-`2026-07-09T07:51:22Z`.
-
-## All remaining phases after arming
-
-```bash
-.venv/bin/python scripts/live_e2e.py \
-  --live \
-  --grant "$ARMED" \
-  --wallets config/live_e2e_search_b_cohort.json \
-  --discovery \
-  --phases all \
-  --window-days 30 \
-  --earlier-history-days 60 \
   --resume \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"

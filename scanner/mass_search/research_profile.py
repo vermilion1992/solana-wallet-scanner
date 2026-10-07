@@ -853,6 +853,16 @@ def independently_audited(report, profile=None):
 
 
 def qualification_level(report, profile):
+    bundle = (report or {}).get("bundle_or_distribution") or (profile or {}).get("bundle_or_distribution") or {}
+    if bundle.get("excluded"):
+        return {
+            "level": "insufficient_evidence",
+            "label": "bundle or distribution",
+            "reason": bundle.get("reason") or "bundle_or_distribution",
+            "not": "unprofitable",
+            "qualifying_ledger": "completed_episode_ledger",
+            "lead_eligible": False,
+        }
     completed = int(profile.get("completed_known_cost_positions") or 0)
     profit, _unit, _vector = qualifying_profit(profile, report)
     gate = mandatory_coverage_gate(report, profile)
@@ -1019,9 +1029,16 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         ledger_contradiction = True
     matched_fragment_pnl = None
     matched_fragment_unit = None
-    if completed < 1 and scoped_pnl not in (None, ""):
+    tainted = any(
+        row.get("undecoded_buy") or row.get("kind") == "undecoded_buy"
+        for row in mapped
+    )
+    if completed < 1 and scoped_pnl not in (None, "") and not tainted:
         matched_fragment_pnl = scoped_pnl
         matched_fragment_unit = settlement
+        scoped_pnl = None
+        scoped_by_asset = {}
+    elif completed < 1:
         scoped_pnl = None
         scoped_by_asset = {}
     sale_count = report.get("wallet_sale_count")
