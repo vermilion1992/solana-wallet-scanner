@@ -863,6 +863,16 @@ def qualification_level(report, profile):
             "qualifying_ledger": "completed_episode_ledger",
             "lead_eligible": False,
         }
+    history = (report or {}).get("history") or {}
+    if (report or {}).get("history_complete") is False or history.get("history_complete") is False:
+        return {
+            "level": "insufficient_evidence",
+            "label": "history incomplete",
+            "reason": history.get("history_complete_reason") or "history_incomplete",
+            "not": "unprofitable",
+            "qualifying_ledger": "completed_episode_ledger",
+            "lead_eligible": False,
+        }
     completed = int(profile.get("completed_known_cost_positions") or 0)
     profit, _unit, _vector = qualifying_profit(profile, report)
     gate = mandatory_coverage_gate(report, profile)
@@ -951,7 +961,44 @@ def _mapped_trade_row(row):
         "order": row.get("order"),
         "role": row.get("role"),
         "window_qualified": row.get("window_qualified"),
+        "undecoded_buy": bool(row.get("undecoded_buy") or row.get("kind") == "undecoded_buy"),
     }
+
+
+def _merge_decoded_taints(mapped, decoded):
+    """Wire undecoded earlier buys from the decoder into FIFO mapped events."""
+    if not decoded:
+        return mapped
+    seen = {
+        (row.get("signature"), row.get("mint"), row.get("kind"))
+        for row in mapped
+    }
+    out = list(mapped)
+    for event in decoded.get("events") or []:
+        if not (event.get("kind") == "undecoded_buy" or event.get("undecoded_buy")):
+            continue
+        key = (event.get("signature"), event.get("mint"), "undecoded_buy")
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({
+            "kind": "undecoded_buy",
+            "undecoded_buy": True,
+            "units": str(event.get("quantity_raw") or event.get("units") or "0"),
+            "mint": event.get("mint"),
+            "seconds_from_start": event.get("seconds_from_start") or 0,
+            "signature": event.get("signature"),
+            "settlement_mint": event.get("settlement_mint"),
+            "consideration_usdc": event.get("amount_usdc") or event.get("consideration_usdc"),
+            "consideration_sol": event.get("amount_sol") or event.get("consideration_sol"),
+            "wallet_fee_sol": event.get("fee_sol") or event.get("wallet_fee_sol"),
+            "timestamp": event.get("timestamp") or event.get("block_time"),
+            "timestamp_missing": event.get("timestamp") is None and event.get("block_time") is None,
+            "order": event.get("order"),
+            "role": event.get("role"),
+            "window_qualified": event.get("window_qualified"),
+        })
+    return out
 
 
 def build_research_profile(report, *, filters=None, classification=None, decoded=None):
@@ -960,8 +1007,8 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     classification = classification or report.get("classification") or {}
     counts = classification.get("counts") or {}
     worksheet = report.get("worksheet") or report.get("independent_worksheet") or {}
-    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell")]
-    mapped = [_mapped_trade_row(row) for row in events]
+    events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell", "undecoded_buy")]
+    mapped = _merge_decoded_taints([_mapped_trade_row(row) for row in events], decoded)
     known, unresolved = isolate_known_cost_by_mint(mapped) if mapped else ([], [])
     known_sells = [row for row in known if row["kind"] == "sell"]
     known_buys = [row for row in known if row["kind"] == "buy"]
@@ -1151,7 +1198,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "safe_to_copy": False,
         "not_safe_to_copy": True,
         "PRODUCT_READY": False,
-        "history_complete": False,
+        "history_complete": bool((report or {}).get("history_complete") or ((report or {}).get("history") or {}).get("history_complete")),
         "notes": [
             "Scoped subset only. Unset thresholds are not applied.",
             "Holder rewards and network fees are not trading P&L.",
@@ -1392,6 +1439,19 @@ def evaluate_thresholds(profile, thresholds):
             results[key] = {"state": "NOT_SET", "passed": None, "applied": False, "note": "not set"}
             unset.append(key)
             continue
+        if key in ("min_scoped_pnl_sol", "min_scoped_pnl_usdc"):
+            completed = int(profile.get("completed_known_cost_positions") or 0)
+            if completed < 1:
+                results[key] = {
+                    "state": "FAIL",
+                    "passed": False,
+                    "applied": True,
+                    "actual": None,
+                    "threshold": str(raw),
+                    "note": "zero completed episodes cannot pass min P&L",
+                }
+                evaluated.append(key)
+                continue
         field = spec[0]
         direction = spec[1]
         required_asset = spec[2] if len(spec) > 2 else None

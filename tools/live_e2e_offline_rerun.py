@@ -26,8 +26,11 @@ from scanner.mass_search.live_e2e import (
     AUTHORIZATION_ID_NEXT,
     HARD_CEILINGS,
     _verify_saved_page,
+    assess_history_completeness,
     classify_programs,
     compute_bot_rate,
+    estimate_phase3_pages,
+    page_sort_key,
     phase4_offline,
     plan_request_counts,
     prescreen_rank_score,
@@ -36,16 +39,17 @@ from scanner.storage import Store
 import tools.independent_episode_audit as auditor
 
 RAW_ROOTS = [
+    Path("/tmp/live-raw-06cea26/live-out/main/raw"),
     Path("/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw"),
     Path("/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw"),
 ]
 EVIDENCE = ROOT / "evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07"
-MAX_BOT_RATE = Decimal("50")
+MAX_BOT_RATE = Decimal("25")
 FULL_HISTORY_SLOTS = 25
 BOUNDS = {
-    "report_start_inclusive": "2026-09-07T07:51:22Z",
-    "report_end_exclusive": "2026-10-07T07:51:22Z",
-    "history_start_inclusive": "2026-07-09T07:51:22Z",
+    "report_start_inclusive": "2026-09-07T10:52:20Z",
+    "report_end_exclusive": "2026-10-07T10:52:20Z",
+    "history_start_inclusive": "2026-07-09T10:52:20Z",
 }
 
 
@@ -69,7 +73,7 @@ def _load_pages(wallet_dirs):
     records_by_page = {}
     blocked = None
     for wallet_dir in wallet_dirs:
-        for path in sorted(wallet_dir.glob("page*.bin")):
+        for path in sorted(wallet_dir.glob("page*.bin"), key=page_sort_key):
             index = path.name[4:-4]
             try:
                 _raw, data, _token = _verify_saved_page(path, f"{wallet_dir}/{path.name}")
@@ -201,7 +205,19 @@ def _phase4(phase3_dirs):
                     if integrity.is_file():
                         shutil.copy2(integrity, dest / integrity.name)
                     pages += 1
-        state["phase3"][address] = {"pages": pages}
+        leftover = None
+        dest_pages = sorted(dest.glob("page*.bin"), key=page_sort_key)
+        if dest_pages:
+            try:
+                _raw, _data, leftover = _verify_saved_page(dest_pages[-1])
+            except SourceError:
+                leftover = None
+        state["phase3"][address] = {
+            "pages": pages,
+            "done": True,
+            "pagination_token": leftover,
+            "leftover_pagination_token": bool(leftover),
+        }
     config = {
         "phases": (4,),
         "wallets": wallets,
@@ -319,6 +335,51 @@ def main():
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     out = EVIDENCE / "PHASE4_OFFLINE_RERUN.json"
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    md = EVIDENCE / "PHASE4_OFFLINE_RERUN.md"
+    lines = [
+        "# Offline Phase 4 replay (06cea26 attached pages)",
+        "",
+        f"Bounds: report `{BOUNDS['report_start_inclusive']}` → `{BOUNDS['report_end_exclusive']}`; "
+        f"history start `{BOUNDS['history_start_inclusive']}`.",
+        f"{len(phase3)} Phase-3 wallets. `max_bot_rate`={MAX_BOT_RATE}/day. PRODUCT_READY false. No live calls.",
+        "",
+        "## Phase 4 replay",
+        "",
+        "| Wallet | history_complete | Bundle flags | Venue share | Cov count / value | In-window completed | Realized P&L | Auditor clean / net | App − auditor | Lead | Blocker |",
+        "|---|---|---|---:|---|---:|---|---|---|---|---|",
+    ]
+    for row in wallets:
+        if not row.get("completed_trades") and row.get("auditor") is None and not row.get("phase3_pages"):
+            continue
+        if not row.get("phase3_pages") and row.get("completed_trades") in (None, 0) and not (row.get("auditor") or {}).get("clean_episodes"):
+            if row.get("address") not in phase3:
+                continue
+        addr = row["address"]
+        short = addr[:8]
+        hist = row.get("history_complete")
+        reason = row.get("history_complete_reason") or ""
+        hist_txt = f"{'yes' if hist else 'no'}" + (f" ({reason})" if reason else "")
+        flags = ",".join(row.get("bundle_reasons") or row.get("phase4_bundle_reasons") or []) or "none"
+        venue = row.get("supported_venue_value_share") or "—"
+        cov = f"{row.get('coverage_count_share') or '—'} / {row.get('coverage_value_share') or '—'}"
+        completed = row.get("completed_trades")
+        pnl = row.get("realized_pnl_sol")
+        aud = row.get("auditor") or {}
+        aud_txt = "—"
+        delta = "—"
+        if aud.get("clean_episodes") not in (None, 0) or aud.get("independently_audited_episode_net") not in (None, ""):
+            aud_txt = f"{aud.get('clean_episodes')} / {aud.get('independently_audited_episode_net')}"
+            if pnl not in (None, "") and aud.get("independently_audited_episode_net") not in (None, ""):
+                try:
+                    delta = str(Decimal(str(pnl)) - Decimal(str(aud["independently_audited_episode_net"])))
+                except Exception:
+                    delta = "—"
+        lines.append(
+            f"| `{short}` | {hist_txt} | {flags} | {venue} | {cov} | {completed} | {pnl} | {aud_txt} | {delta} | "
+            f"{row.get('lead_level') or '—'} | {row.get('blocker') or '—'} |"
+        )
+    lines.extend(["", f"JSON: `{out.relative_to(ROOT)}`", ""])
+    md.write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps({
         "wallets": len(wallets),
         "phase2": len(phase2),
@@ -327,6 +388,7 @@ def main():
         "plan_fits": payload["plan_fits"],
         "plan": plan["totals"],
         "out": str(out),
+        "md": str(md),
     }, indent=2))
     return 0
 

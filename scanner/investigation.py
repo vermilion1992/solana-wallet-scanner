@@ -78,13 +78,18 @@ GMGN_SWAP = bytes.fromhex('f8c69e91e17587c8')
 PHOTON_SWAP = bytes.fromhex('0b9c60da27a3b413')
 PHOTON_SWAP_ALT = bytes.fromhex('0d9e0ddf5fd51c06')
 DLMM_SWAP2 = bytes.fromhex('414b3f4ceb5b5b88')
+# Photon and DFlow DST layouts are pinned below but stay unsupported: every
+# attached real tx fails balance-delta reconciliation (no opposing SOL or
+# multi-asset). FLASHX wraps (10-byte 0x01) are not swaps; only the later
+# 0x00 swap instruction is routed.
 REVIEWED_OUTER_VENUES = (
     JUPITER, PUMP, PUMP_SWAP, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL,
-    METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER, DFLOW, DFLOW_DST,
-    FLASHX, GMGN, PHOTON, METEORA_DLMM,
+    METEORA_DAMM_V2, RFQ_FILL, OKX_DEX_ROUTER, DFLOW,
+    FLASHX, GMGN, METEORA_DLMM,
 )
+UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v14-flashx-gmgn-photon-dlmm-dst-v1'
+DECODER_VERSION = 'spot-v16-flashx-wrap-skip-token2022-close-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -138,6 +143,15 @@ def _integer(value):
     if not isinstance(value, int) or isinstance(value, bool) or value < 0:
         raise ValueError('Missing unsigned RPC integer')
     return value
+
+
+def _flashx_is_wrap(instruction):
+    """FLASHX 10-byte 0x01 (and other short 0x01) instructions are wraps, not swaps."""
+    try:
+        payload = _data(instruction.get('data'))
+    except (ValueError, TypeError, KeyError):
+        return False
+    return bool(payload) and payload[0] == 1
 
 
 def _anchor(name):
@@ -367,9 +381,9 @@ def _route(instruction, keys):
         if payload[:8] == DFLOW_DST_FULFILL and len(payload) >= 16 and len(accounts) >= 4:
             name, authority, owned_positions = 'FulfillOrder', 3, ()
     elif program == FLASHX:
-        # Observed Axiom FLASHX routed swap: 23-byte payload starting 0x00,
-        # wallet at index 1. 10-byte 0x01 wraps are not swaps.
-        if len(payload) >= 23 and payload[0] == 0 and len(accounts) >= 20:
+        # Observed Axiom FLASHX routed swap: payload starting 0x00 with
+        # wallet at index 1. 10-byte 0x01 wraps are skipped before _route.
+        if len(payload) >= 16 and payload[0] == 0 and len(accounts) >= 20:
             name, authority, owned_positions = 'flashx_swap', 1, ()
     elif program == GMGN:
         if payload[:8] == GMGN_SWAP and len(payload) >= 24 and len(accounts) >= 8:
@@ -819,7 +833,10 @@ def decode_supported_swaps(transactions, address):
             for index, instruction in enumerate(instructions):
                 if not isinstance(instruction, dict):
                     raise ValueError('Malformed instruction')
-                if _program(instruction, keys) in REVIEWED_OUTER_VENUES:
+                program = _program(instruction, keys)
+                if program == FLASHX and _flashx_is_wrap(instruction):
+                    continue
+                if program in REVIEWED_OUTER_VENUES:
                     route = _route(instruction, keys)
                     route.update(index=index, path=f'instructions.{index}')
                     routes.append(route)

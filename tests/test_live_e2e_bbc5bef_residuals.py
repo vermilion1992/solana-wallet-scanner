@@ -258,26 +258,37 @@ def test_bundle_detection_on_gv3ksnug_page():
 
 
 def test_venue_decoders_on_attached_txs():
-    cases = [
-        ("flashx-swap.json", FLASHX),
+    from scanner.investigation import UNSUPPORTED_PINNED_OUTER
+
+    supported = [
         ("gmgn-swap.json", GMGN),
-        ("photon-swap.json", PHOTON),
         ("dlmm-swap2.json", METEORA_DLMM),
     ]
-    decoded_any = False
-    for name, program in cases:
+    for name, program in supported:
         payload = _load(name)
         decoded = decode_supported_swaps(canonical_decode_records([payload["record"]]), payload["address"])
         trades = [row for row in decoded.get("events") or [] if row.get("kind") in ("buy", "sell")]
         if trades:
-            decoded_any = True
-            assert trades[0].get("program") == program or True
+            assert trades[0].get("program") == program or trades[0].get("source") == program or trades[0].get("venue") == program
             qty = Decimal(str(trades[0].get("quantity_raw") or "0"))
             assert qty > 0
         else:
-            # Fail-closed is allowed; the fixture still pins the layout.
-            assert decoded.get("unresolved") or decoded.get("events")
-    assert decoded_any or True
+            kinds = {row.get("kind") for row in decoded.get("events") or []}
+            assert "unsupported" in kinds or decoded.get("unresolved")
+
+    honest = [
+        ("flashx-swap.json", FLASHX),
+        ("photon-swap.json", PHOTON),
+    ]
+    for name, program in honest:
+        payload = _load(name)
+        decoded = decode_supported_swaps(canonical_decode_records([payload["record"]]), payload["address"])
+        trades = [row for row in decoded.get("events") or [] if row.get("kind") in ("buy", "sell")]
+        assert trades == []
+        if program == PHOTON:
+            assert program in UNSUPPORTED_PINNED_OUTER
+        kinds = {row.get("kind") for row in decoded.get("events") or []}
+        assert "unsupported" in kinds or decoded.get("unresolved") or kinds <= {"fee"} or not trades
 
 
 def test_discovery_cu_docs_and_top_traders_plan():

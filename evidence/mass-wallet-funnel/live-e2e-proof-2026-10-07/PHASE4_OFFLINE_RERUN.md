@@ -1,130 +1,78 @@
-# Offline Phase 4 + pre-screen ranking (attached cfe6e78 + bbc5bef pages)
+# Offline Phase 4 replay (06cea26 attached pages)
 
-Bounds: report `2026-09-07T07:51:22Z` → `2026-10-07T07:51:22Z`; history start `2026-07-09T07:51:22Z`.
-78 distinct Phase-2 wallets, 14 with Phase-3 pages. `max_bot_rate`=50/day. PRODUCT_READY false. No live calls.
+Bounds: report `2026-09-07T10:52:20Z` → `2026-10-07T10:52:20Z`; history start `2026-07-09T10:52:20Z`.
+26 Phase-3 wallets. `max_bot_rate`=25/day. PRODUCT_READY false. No live calls.
 
-## Chosen for full history (rank > 0, not bundle/bot, known-basis buys)
+## Phase 4 replay
 
-| Wallet | Rank | Venue share | In-window txs | Bot rate | Bundle | Known buys | Source |
-|---|---:|---:|---:|---:|---|---|---|
-| `8wmGrD3F5bd439r2k7eJWcHk9UgssuQDLF6kNawBRBRF` | 0.9999 | 0.9999 | 111 | 3.7000 | no | yes | cfe6e78 |
-| `DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx` | 0.9997 | 0.9997 | 262 | 8.7333 | no | yes | bbc5bef |
-| `BSTs43nNTc3wBidj8ueY92RJbGn4wxvF8VYYKMVWGdNR` | 0.7939 | 0.7939 | 179 | 5.9667 | no | yes | bbc5bef |
+| Wallet | history_complete | Bundle flags | Venue share | Cov count / value | In-window completed | Realized P&L | Auditor clean / net | App − auditor | Lead | Blocker |
+|---|---|---|---:|---|---:|---|---|---|---|---|
+| `25865JdB` | yes (no_leftover_pagination_token) | transfer_in_zero_basis | 0.0000 | 0.77124183 / 0.814790942 | 10 | 0.410996069 | 12 / None | — | insufficient_evidence | transfer_in_zero_basis |
+| `4WFgxbFD` | no (pagination_token_remaining_earlier_history) | transfer_in_zero_basis,multi_signer_bundle_buy | 0.9880 | 0.749174917 / 0 | 12 | 87.27162175 | 13 / 208.269877931 | -120.998256181 | insufficient_evidence | pagination_token_remaining_earlier_history |
+| `5Qfie4Tb` | yes (no_leftover_pagination_token) | transfer_in_zero_basis | 0.9757 | 0.473451327 / 0.396756262 | 0 | None | — | — | insufficient_evidence | transfer_in_zero_basis |
+| `6i4nSG48` | yes (wallet_created_in_range) | transfer_in_zero_basis,multi_signer_bundle_buy | 0.4996 | 0.989071038 / 0.999170274 | 0 | None | — | — | insufficient_evidence | transfer_in_zero_basis |
+| `6qVcd9kp` | yes (wallet_created_in_range) | multi_signer_bundle_buy | 0.3467 | 0.125 / 0.000457643 | 0 | None | — | — | insufficient_evidence | multi_signer_bundle_buy |
+| `8B3KyNP6` | yes (no_leftover_pagination_token) | transfer_in_zero_basis | 0.7986 | 0.647058824 / 0.663924597 | 20 | 173.180468671 | 17 / 320.992044616 | -147.811575945 | insufficient_evidence | transfer_in_zero_basis |
+| `8wmGrD3F` | yes (wallet_created_in_range) | transfer_in_zero_basis | 0.9999 | 0.865384615 / 0.872713136 | 1 | 193.910824519 | 3 / 414.674391225 | -220.763566706 | insufficient_evidence | transfer_in_zero_basis |
+| `96d9GKPQ` | yes (wallet_created_in_range) | transfer_in_zero_basis,multi_signer_bundle_buy | 1.0000 | 0 / 0 | 0 | None | — | — | insufficient_evidence | transfer_in_zero_basis |
+| `9R3m89gX` | yes (wallet_created_in_range) | transfer_in_zero_basis | 1.0000 | 0.878718535 / 0.595349492 | 87 | -362.320121371 | 172 / 8220.714490507 | -8583.034611878 | insufficient_evidence | transfer_in_zero_basis |
+| `AMMLTuy9` | yes (wallet_created_in_range) | transfer_in_zero_basis,multi_signer_bundle_buy | 0.9165 | 0.968152866 / 0.022276203 | 18 | -0.004837792 | — | — | insufficient_evidence | transfer_in_zero_basis |
+| `AN344abT` | yes (wallet_created_in_range) | transfer_in_zero_basis,multi_signer_bundle_buy | 1.0000 | 0.932960894 / 0.186643139 | 6 | -73.641140525 | 7 / -77.417969728 | 3.776829203 | insufficient_evidence | transfer_in_zero_basis |
+| `AUiycVsy` | yes (wallet_created_in_range) | multi_signer_bundle_buy | 0.4638 | 0.1 / 0.037340676 | 0 | None | — | — | insufficient_evidence | multi_signer_bundle_buy |
+| `B8wZgcJA` | yes (no_leftover_pagination_token) | transfer_in_zero_basis | 0.1807 | 0 / 0 | 0 | None | — | — | insufficient_evidence | transfer_in_zero_basis |
+| `BRjVGhFn` | yes (wallet_created_in_range) | transfer_in_zero_basis | 1.0000 | 0.782135076 / 0.661087475 | 61 | 44.384845345 | 99 / 4232.114655222 | -4187.729809877 | insufficient_evidence | transfer_in_zero_basis |
+| `BSTs43nN` | yes (wallet_created_in_range) | transfer_in_zero_basis | 0.0503 | 1 / 1 | 1 | 218.241694699 | 1 / 218.2416947 | -1E-9 | insufficient_evidence | transfer_in_zero_basis |
+| `BkRUpYSo` | no (pagination_token_remaining_earlier_history) | multi_signer_bundle_buy | 1.0000 | 0.495677233 / 0.082552061 | 0 | None | — | — | insufficient_evidence | pagination_token_remaining_earlier_history |
+| `CfNx9LxW` | yes (no_leftover_pagination_token) | transfer_in_zero_basis,multi_signer_bundle_buy | 1.0000 | 0.577235772 / 0.723830738 | 1 | 444.861224407 | 1 / 444.861224406 | 1E-9 | insufficient_evidence | transfer_in_zero_basis |
+| `DKyapYGf` | no (pagination_token_remaining_earlier_history) | transfer_in_zero_basis,multi_signer_bundle_buy | 0.1747 | 0.992125984 / 0.985793097 | 2 | 2.486627429 | 3 / 512.633417334 | -510.146789905 | insufficient_evidence | pagination_token_remaining_earlier_history |
+| `DXCWcAiB` | yes (wallet_created_in_range) | multi_signer_bundle_buy,sell_proceeds_to_cosigner,transfer_in_zero_basis | 0.9964 | 0.967213115 / 0.030765613 | 0 | None | — | — | insufficient_evidence | multi_signer_bundle_buy |
+| `DtCiNAXm` | yes (no_leftover_pagination_token) | transfer_in_zero_basis | 0.3658 | 0.5 / 0.999584059 | 0 | None | — | — | insufficient_evidence | transfer_in_zero_basis |
+| `E7KevJv8` | yes (wallet_created_in_range) | multi_signer_bundle_buy,transfer_in_zero_basis | 0.7133 | 0.936170213 / 0.944283872 | 0 | None | 2 / 37.547732525 | — | insufficient_evidence | multi_signer_bundle_buy |
+| `FWgfv6jS` | yes (wallet_created_in_range) | multi_signer_bundle_buy,sell_proceeds_to_cosigner,transfer_in_zero_basis | 0.9992 | 0.956521739 / 0.271892428 | 0 | None | — | — | insufficient_evidence | multi_signer_bundle_buy |
+| `GnDVZMfX` | yes (wallet_created_in_range) | transfer_in_zero_basis | 0.0000 | 0.985507246 / 0.988437893 | 2 | -6.137550943 | 1 / 457.027411065 | -463.164962008 | insufficient_evidence | transfer_in_zero_basis |
+| `Gv3ksNUG` | yes (wallet_created_in_range) | multi_signer_bundle_buy,sell_proceeds_to_cosigner,transfer_in_zero_basis | 0.9995 | 0.9375 / 0.005337297 | 0 | None | — | — | insufficient_evidence | multi_signer_bundle_buy |
+| `jXtCVtdQ` | no (pagination_token_remaining_earlier_history) | transfer_in_zero_basis,multi_signer_bundle_buy | 0.9970 | 0.835260116 / 0.878796994 | 21 | 197.82971516 | 44 / 310.784669009 | -112.954953849 | insufficient_evidence | pagination_token_remaining_earlier_history |
+| `wae8YMC7` | yes (wallet_created_in_range) | transfer_in_zero_basis | 1.0000 | 0.870496592 / 0.632272895 | 10 | -51.216373895 | 113 / 7401.957035847 | -7453.173409742 | insufficient_evidence | transfer_in_zero_basis |
 
-**3 wallets** would be sent to Phase 3 under the 2026-10-09 plan (25 slots). None of the 14 already-fetched Phase-3 wallets remain eligible.
+JSON: `evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/PHASE4_OFFLINE_RERUN.json`
 
-## Phase 4 replay (14 wallets with attached full-history pages)
+## 06cea26 live cohort (12 wallets, re-replayed after B1–B5)
 
-| Wallet | Bundle / reasons | Venue share | Cov count / value | In-window completed | Realized P&L | Auditor (clean / net) | Lead |
-|---|---|---:|---|---:|---|---|---|
-| 25865JdB | yes / transfer_in_zero_basis,multi_signer_bundle_buy | 0.0000 | 0.77124183 / 0.814790942 | 10 | SOL 0.410996069, USDC 12620.493155 | 12 mixed: USDC 28896.882878358, SOL 0.410996069 | insufficient_evidence |
-| 5Qfie4Tb | yes / transfer_in_zero_basis | 1.0000 | 0.473451327 / 0.396756262 | 0 | — | 0 | insufficient_evidence |
-| 6i4nSG48 | yes / transfer_in_zero_basis | 0.4996 | 0.989071038 / 0.999170274 | 0 | — | 0 | insufficient_evidence |
-| 8B3KyNP6 | yes / transfer_in_zero_basis | 0.7986 | 0.647058824 / 0.663924597 | 20 | SOL 173.180468671 | 17 / 320.992044616 SOL | insufficient_evidence |
-| 96d9GKPQ | no | 1.0000 | 0 / 0 | 0 | — | 0 | insufficient_evidence |
-| AMMLTuy9 | yes / multi_signer_bundle_buy | 0.9165 | 0.968152866 / 0.022276203 | 18 | SOL -0.004837792 | 0 | insufficient_evidence |
-| B8wZgcJA | yes / transfer_in_zero_basis | 0.1807 | 0 / 0 | 0 | — | 0 | insufficient_evidence |
-| CfNx9LxW | yes / transfer_in_zero_basis,multi_signer_bundle_buy | 1.0000 | 0.577235772 / 0.723830738 | 1 | SOL 444.861224407 | 1 / 444.861224406 SOL | insufficient_evidence |
-| DXCWcAiB | yes / sell_proceeds_to_cosigner,multi_signer_bundle_buy | 0.9964 | 0.967213115 / 0.030765613 | 0 | — | 0 | insufficient_evidence |
-| DtCiNAXm | yes / transfer_in_zero_basis | 0.3658 | 0.5 / 0.999584059 | 0 | — | 0 | insufficient_evidence |
-| E7KevJv8 | yes / multi_signer_bundle_buy | 0.7133 | 0.936170213 / 0.944283872 | 0 | — | 2 / 37.547732525 SOL | insufficient_evidence |
-| FWgfv6jS | yes / sell_proceeds_to_cosigner,multi_signer_bundle_buy | 0.9992 | 0.956521739 / 0.271892428 | 0 | — | 0 | insufficient_evidence |
-| GnDVZMfX | yes / transfer_in_zero_basis | 0.9993 | 0.985507246 / 0.988437893 | 2 | SOL -6.137550943 | 1 / 457.027411065 SOL | insufficient_evidence |
-| Gv3ksNUG | yes / sell_proceeds_to_cosigner,multi_signer_bundle_buy | 0.9995 | 0.9375 / 0.005337297 | 0 | — | 0 | insufficient_evidence |
+Report window 2026-09-07T10:52:20Z–2026-10-07T10:52:20Z. Bundle detector now sees
+token-owner inflows and fee-payer multi-signer buys; never-sold airdrops and
+Token-2022 ATA closes are not zero-basis. BST's missing PumpSwap close now
+decodes. Truncated history is an explicit blocker.
 
-## All 78 pre-screen wallets
+| Wallet | history_complete | Bundle flags | Venue share | Cov count / value | Completed | P&L (SOL) | Auditor clean / net | App − auditor | Lead | Blocker |
+|---|---|---|---:|---|---:|---|---|---|---|---|
+| `8wmGrD3F` | yes (created in range) | multi_signer_bundle_buy | 0.873 | 0.865 / 0.873 | 1 | 193.911 | 3 / 414.674 | −220.764 | insufficient_evidence | multi_signer_bundle_buy |
+| `DKyapYGf` | **no** (leftover token, not created in range) | multi_signer_bundle_buy | 0.986 | 0.992 / 0.986 | 2 | 2.487 | 3 / 512.633 | −510.147 | insufficient_evidence | history_incomplete (also a bundle) |
+| `BSTs43nN` | yes (created in range) | none | 1.000 | 1.000 / 1.000 | 1 | 218.242 | 1 / 218.242 | −1e-9 | **conditional_captured_lot_result** | 1 episode < min 3; not independently audited |
+| `BkRUpYSo` | **no** (leftover token) | multi_signer, proceeds, zero-basis | 0.083 | 0.496 / 0.083 | 0 | — | 0 | — | insufficient_evidence | history_incomplete |
+| `jXtCVtdQ` | **no** (oldest 08-27, preBalance 4.3 SOL) | multi_signer_bundle_buy | 0.879 | 0.835 / 0.879 | 21 | 197.830 | 44 / 310.785 | −112.955 | insufficient_evidence | history_incomplete |
+| `AUiycVsy` | yes (created in range) | multi_signer_bundle_buy | 0.037 | 0.100 / 0.037 | 0 | — | 0 | — | insufficient_evidence | multi_signer_bundle_buy |
+| `6qVcd9kp` | yes (created in range) | multi_signer_bundle_buy | 0.000 | 0.125 / 0.000 | 0 | — | 0 | — | insufficient_evidence | multi_signer_bundle_buy |
+| `BRjVGhFn` | yes (created in range) | transfer_in_zero_basis | 0.661 | 0.782 / 0.661 | 61 | 44.385 | 99 / 4232.115 | −4187.730 | insufficient_evidence | transfer_in_zero_basis |
+| `9R3m89gX` | yes (created in range) | zero-basis + multi_signer | 0.595 | 0.879 / 0.595 | 87 | −362.320 | 172 / 8220.714 | −8583.035 | insufficient_evidence | transfer_in_zero_basis |
+| `4WFgxbFD` | **no** (leftover token) | zero-basis + multi_signer | 0.000 | 0.749 / 0.000 | 12 | 87.272 | 13 / 208.270 | −120.998 | insufficient_evidence | history_incomplete |
+| `AN344abT` | yes (created in range) | zero-basis + multi_signer | 0.187 | 0.933 / 0.187 | 6 | −73.641 | 7 / −77.418 | 3.777 | insufficient_evidence | transfer_in_zero_basis |
+| `wae8YMC7` | yes (created in range) | zero-basis + multi_signer | 0.632 | 0.870 / 0.632 | 10 | −51.216 | 113 / 7401.957 | −7453.173 | insufficient_evidence | transfer_in_zero_basis |
 
-| Wallet | Bundle | Bot | Venue share | Rank | Known buys | In-window | Cov count/value | Completed | P&L | Auditor | Lead | Chosen | Drop |
-|---|---|---|---:|---:|---|---:|---|---:|---|---|---|---|---|
-| 8wmGrD3F | no | no 3.7000 | 0.9999 | 0.9999 | yes | 111 | — | — | — | — | — | yes | — |
-| DKyapYGf | no | no 8.7333 | 0.9997 | 0.9997 | yes | 262 | — | — | — | — | — | yes | — |
-| BSTs43nN | no | no 5.9667 | 0.7939 | 0.7939 | yes | 179 | — | — | — | — | — | yes | — |
-| A6PSQFRf | no | no 33.3333 | 0.0000 | 0.0000 | yes | 1000 | — | — | — | — | — | no | — |
-| An9sREpL | no | no 33.3333 | 0.0000 | 0.0000 | yes | 1000 | — | — | — | — | — | no | — |
-| 25865JdB | yes:transfer_in_zero_basis | no 20.9000 | 0.0000 | 0.0000 | no | 627 | 0.77124183 / 0.814790942 | 10 | 0.410996069 | 12/— mixed | insufficient_evidence | no | transfer_in_zero_basis |
-| 291Yj2Yf | no | no 33.3333 | 1.0000 | 0.0000 | no | 1000 | — | — | — | — | — | no | no_known_basis_buys |
-| 2apSyUwJ | no | no 8.7000 | 0.9992 | 0.0000 | no | 261 | — | — | — | — | — | no | no_known_basis_buys |
-| 2ueo5yNJ | no | no 4.3667 | 1.0000 | 0.0000 | no | 131 | — | — | — | — | — | no | no_known_basis_buys |
-| 3hcUVXt8 | no | no 4.7000 | 1.0000 | 0.0000 | no | 141 | — | — | — | — | — | no | no_known_basis_buys |
-| 3oX6CE66 | no | no 5.3000 | 0.9920 | 0.0000 | no | 159 | — | — | — | — | — | no | no_known_basis_buys |
-| 43VE6RJA | no | no 5.8000 | 1.0000 | 0.0000 | no | 174 | — | — | — | — | — | no | no_known_basis_buys |
-| 4Gbhd8qD | no | no 8.1333 | 0.9980 | 0.0000 | no | 244 | — | — | — | — | — | no | no_known_basis_buys |
-| 4JiNkbS5 | no | no 6.2667 | 1.0000 | 0.0000 | no | 188 | — | — | — | — | — | no | no_known_basis_buys |
-| 4h4qaaQu | no | no 7.7000 | 0.9975 | 0.0000 | no | 231 | — | — | — | — | — | no | no_known_basis_buys |
-| 4hiobwqg | yes:transfer_in_zero_basis | no 33.3333 | 0.5025 | 0.0000 | yes | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| 5BFNwxC8 | no | no 5.1000 | 1.0000 | 0.0000 | no | 153 | — | — | — | — | — | no | no_known_basis_buys |
-| 5DAubjPG | yes:transfer_in_zero_basis | no 33.3333 | 0.0155 | 0.0000 | yes | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| 5H9w3ux1 | no | no 4.9000 | 0.9991 | 0.0000 | no | 147 | — | — | — | — | — | no | no_known_basis_buys |
-| 5Qfie4Tb | no | no 6.0000 | 1.0000 | 0.0000 | no | 180 | 0.473451327 / 0.396756262 | 0 | — | 0/— | insufficient_evidence | no | no_known_basis_buys |
-| 5azbu8CH | yes:transfer_in_zero_basis | no 33.3333 | 0.9875 | 0.0000 | yes | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| 6i4nSG48 | yes:transfer_in_zero_basis | no 10.0000 | 0.4996 | 0.0000 | yes | 300 | 0.989071038 / 0.999170274 | 0 | — | 0/— | insufficient_evidence | no | transfer_in_zero_basis |
-| 6rSQ5r58 | no | no 16.7667 | 0.9988 | 0.0000 | no | 503 | — | — | — | — | — | no | no_known_basis_buys |
-| 6yDW8qpr | yes:transfer_in_zero_basis | no 33.3333 | 0.5000 | 0.0000 | no | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| 71EqtHHU | no | no 6.1000 | 0.9995 | 0.0000 | no | 183 | — | — | — | — | — | no | no_known_basis_buys |
-| 7JVtPBiQ | yes:transfer_in_zero_basis | no 31.4667 | — | 0.0000 | no | 944 | — | — | — | — | — | no | transfer_in_zero_basis |
-| 7meYKsaz | no | no 4.6667 | 0.0000 | 0.0000 | no | 140 | — | — | — | — | — | no | no_known_basis_buys |
-| 7vPV34sJ | yes:sell_proceeds_to_cosigner | no 1.4000 | 0.9986 | 0.0000 | yes | 42 | — | — | — | — | — | no | sell_proceeds_to_cosigner |
-| 847CFpCv | no | no 17.1000 | 0.9986 | 0.0000 | no | 513 | — | — | — | — | — | no | no_known_basis_buys |
-| 8B3KyNP6 | yes:transfer_in_zero_basis | no 12.8000 | 0.7986 | 0.0000 | yes | 384 | 0.647058824 / 0.663924597 | 20 | 173.180468671 | 17/320.992044616 SOL | insufficient_evidence | no | transfer_in_zero_basis |
-| 8JLN2NsV | yes:multi_signer_bundle_buy | no 12.9333 | 0.9917 | 0.0000 | yes | 388 | — | — | — | — | — | no | multi_signer_bundle_buy |
-| 8qgXwVpn | no | no 4.9000 | 0.9909 | 0.0000 | no | 147 | — | — | — | — | — | no | no_known_basis_buys |
-| 8vjChJhB | yes:transfer_in_zero_basis | no 33.3333 | 0.0075 | 0.0000 | yes | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| 91XzVsoZ | no | no 4.8667 | 1.0000 | 0.0000 | no | 146 | — | — | — | — | — | no | no_known_basis_buys |
-| 96d9GKPQ | no | no 6.0667 | 1.0000 | 0.0000 | no | 182 | 0 / 0 | 0 | — | 0/— | insufficient_evidence | no | no_known_basis_buys |
-| 96vJSNV4 | no | no 33.3333 | 0.6280 | 0.0000 | no | 1000 | — | — | — | — | — | no | no_known_basis_buys |
-| 9Ad9QK8f | no | no 5.1000 | 1.0000 | 0.0000 | no | 153 | — | — | — | — | — | no | no_known_basis_buys |
-| 9cyDJyYf | no | no 4.6000 | 0.9987 | 0.0000 | no | 138 | — | — | — | — | — | no | no_known_basis_buys |
-| 9iG79XSB | no | no 4.8333 | 0.9975 | 0.0000 | no | 145 | — | — | — | — | — | no | no_known_basis_buys |
-| AMMLTuy9 | yes:multi_signer_bundle_buy | no 7.8000 | 0.9165 | 0.0000 | yes | 234 | 0.968152866 / 0.022276203 | 18 | -0.004837792 | 0/— | insufficient_evidence | no | multi_signer_bundle_buy |
-| AQWEYPwk | yes:multi_signer_bundle_buy,sell_proceeds_to_cosigner,transfer_in_zero_basis | no 33.3333 | 0.9548 | 0.0000 | no | 1000 | — | — | — | — | — | no | multi_signer_bundle_buy |
-| AUn7v7iA | yes:transfer_in_zero_basis | no 13.9000 | 0.4999 | 0.0000 | no | 417 | — | — | — | — | — | no | transfer_in_zero_basis |
-| AmDF6YBB | no | no 6.7000 | 0.9888 | 0.0000 | no | 201 | — | — | — | — | — | no | no_known_basis_buys |
-| AyvDiGvj | no | no 5.4000 | 0.9960 | 0.0000 | no | 162 | — | — | — | — | — | no | no_known_basis_buys |
-| B8wZgcJA | yes:transfer_in_zero_basis | no 5.6667 | 0.1807 | 0.0000 | no | 170 | 0 / 0 | 0 | — | 0/— | insufficient_evidence | no | transfer_in_zero_basis |
-| BSN5bh8A | yes:transfer_in_zero_basis | no 33.3333 | 0.1072 | 0.0000 | no | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| BYzCun17 | no | no 5.7667 | 1.0000 | 0.0000 | no | 173 | — | — | — | — | — | no | no_known_basis_buys |
-| Bbu8XAvx | no | no 7.2333 | 0.9997 | 0.0000 | no | 217 | — | — | — | — | — | no | no_known_basis_buys |
-| Bn6UXZQx | no | no 4.8667 | 0.9980 | 0.0000 | no | 146 | — | — | — | — | — | no | no_known_basis_buys |
-| C74ibw78 | yes:transfer_in_zero_basis | no 11.8333 | 0.0009 | 0.0000 | no | 355 | — | — | — | — | — | no | transfer_in_zero_basis |
-| CfNx9LxW | no | no 32.9333 | 1.0000 | 0.0000 | no | 988 | 0.577235772 / 0.723830738 | 1 | 444.861224407 | 1/444.861224406 SOL | insufficient_evidence | no | no_known_basis_buys |
-| D5WjrRpQ | no | no 4.8000 | 1.0000 | 0.0000 | no | 144 | — | — | — | — | — | no | no_known_basis_buys |
-| DSJVxpK1 | yes:transfer_in_zero_basis,multi_signer_bundle_buy | no 23.3333 | 0.4534 | 0.0000 | no | 700 | — | — | — | — | — | no | transfer_in_zero_basis |
-| DXCWcAiB | yes:sell_proceeds_to_cosigner,multi_signer_bundle_buy | no 2.8000 | 0.9964 | 0.0000 | yes | 84 | 0.967213115 / 0.030765613 | 0 | — | 0/— | insufficient_evidence | no | sell_proceeds_to_cosigner |
-| DY1f83rw | no | no 8.2333 | 0.9946 | 0.0000 | no | 247 | — | — | — | — | — | no | no_known_basis_buys |
-| Do3BUVky | no | no 4.0667 | 0.9993 | 0.0000 | no | 122 | — | — | — | — | — | no | no_known_basis_buys |
-| DtCiNAXm | yes:transfer_in_zero_basis | no 3.0667 | 0.3658 | 0.0000 | yes | 92 | 0.5 / 0.999584059 | 0 | — | 0/— | insufficient_evidence | no | transfer_in_zero_basis |
-| E7KevJv8 | yes:multi_signer_bundle_buy | no 2.1667 | 0.7133 | 0.0000 | yes | 65 | 0.936170213 / 0.944283872 | 0 | — | 2/37.547732525 SOL | insufficient_evidence | no | multi_signer_bundle_buy |
-| EP87qz6X | no | no 8.6000 | 0.9950 | 0.0000 | no | 258 | — | — | — | — | — | no | no_known_basis_buys |
-| F1a7cR49 | yes:multi_signer_bundle_buy | no 33.3333 | 0.9998 | 0.0000 | no | 1000 | — | — | — | — | — | no | multi_signer_bundle_buy |
-| FBfChxAZ | yes:transfer_in_zero_basis | no 9.1667 | 0.6417 | 0.0000 | no | 275 | — | — | — | — | — | no | transfer_in_zero_basis |
-| FNvuekiK | no | no 8.2333 | — | 0.0000 | no | 247 | — | — | — | — | — | no | no_known_basis_buys |
-| FWgfv6jS | yes:sell_proceeds_to_cosigner,multi_signer_bundle_buy | no 2.5000 | 0.9992 | 0.0000 | yes | 75 | 0.956521739 / 0.271892428 | 0 | — | 0/— | insufficient_evidence | no | sell_proceeds_to_cosigner |
-| FvUNFkLV | no | no 7.2000 | 1.0000 | 0.0000 | no | 216 | — | — | — | — | — | no | no_known_basis_buys |
-| G6SeWJ9f | yes:multi_signer_bundle_buy,transfer_in_zero_basis | no 33.3333 | 0.0000 | 0.0000 | no | 1000 | — | — | — | — | — | no | multi_signer_bundle_buy |
-| GCGoRXVx | yes:multi_signer_bundle_buy,transfer_in_zero_basis | no 4.8333 | 0.5013 | 0.0000 | no | 145 | — | — | — | — | — | no | multi_signer_bundle_buy |
-| GRJh4kKC | no | no 6.8667 | 0.9925 | 0.0000 | no | 206 | — | — | — | — | — | no | no_known_basis_buys |
-| GnDVZMfX | yes:transfer_in_zero_basis | no 22.1333 | 0.9993 | 0.0000 | yes | 664 | 0.985507246 / 0.988437893 | 2 | -6.137550943 | 1/457.027411065 SOL | insufficient_evidence | no | transfer_in_zero_basis |
-| GoSddySD | no | no 7.0000 | 1.0000 | 0.0000 | no | 210 | — | — | — | — | — | no | no_known_basis_buys |
-| Gv3ksNUG | yes:sell_proceeds_to_cosigner,multi_signer_bundle_buy | no 1.7333 | 0.9995 | 0.0000 | yes | 52 | 0.9375 / 0.005337297 | 0 | — | 0/— | insufficient_evidence | no | sell_proceeds_to_cosigner |
-| H3KxmKBy | no | no 5.5000 | 0.9988 | 0.0000 | no | 165 | — | — | — | — | — | no | no_known_basis_buys |
-| J1WANisY | no | no 5.5000 | 0.9944 | 0.0000 | no | 165 | — | — | — | — | — | no | no_known_basis_buys |
-| J6Q3tdQC | no | no 5.0000 | 1.0000 | 0.0000 | no | 150 | — | — | — | — | — | no | no_known_basis_buys |
-| fJD8FEGY | no | no 4.8000 | 1.0000 | 0.0000 | no | 144 | — | — | — | — | — | no | no_known_basis_buys |
-| gtfoTELA | yes:transfer_in_zero_basis | no 33.3333 | 0.5068 | 0.0000 | yes | 1000 | — | — | — | — | — | no | transfer_in_zero_basis |
-| ji1bQ5he | yes:multi_signer_bundle_buy | no 27.8000 | 1.0000 | 0.0000 | no | 834 | — | — | — | — | — | no | multi_signer_bundle_buy |
-| rQnGUGo5 | no | no 8.1000 | 0.9457 | 0.0000 | no | 243 | — | — | — | — | — | no | no_known_basis_buys |
-| vumPmr5Q | no | no 4.9000 | 0.9985 | 0.0000 | no | 147 | — | — | — | — | — | no | no_known_basis_buys |
+**Proven leads: 0.** Closest is `BSTs43nN` (P&L matches the isolated auditor to 1e-9; history complete; no bundle). It cannot become a provisional lead with only one completed episode.
 
-Drop reasons: no_known_basis_buys=43, transfer_in_zero_basis=18, multi_signer_bundle_buy=8, eligible=5, sell_proceeds_to_cosigner=4.
-Eligible-but-rank-0 (known buys, not bundle/bot, unsupported venue share 0) are not given a full-history slot.
+### Unresolved sales (jXt / BST)
 
-## Next-run planner (100 pre-screen, 25 kept)
+| Wallet | Unresolved sales | Causes | Decoder/logic gaps fixed |
+|---|---:|---|---|
+| `jXtCVtdQ` | 147 | 152 undecoded-venue / tainted mints; 91 FIFO leftover (earlier-history buys missing or Token-2022 / unreviewed outer). Oldest capture 08-27 with 4.3 SOL already held. | Truncated history is now an explicit blocker. Remaining gaps are unreviewed outers and Token-2022 permission/burn (fail-closed). |
+| `BSTs43nN` | 0 | Previously 0 completed because Token-2022 CloseAccount (duplicate owner accounts) fail-closed the PumpSwap sell that closed CZJfrAmM. | Token-2022 close with repeated owner now decodes; 1 completed episode / +218.242 SOL. |
 
-| Phase | Provider | Requests | Units | Cap |
-|---|---|---:|---:|---|
-| 1 discovery | Birdeye | 1 | 30 CU | 10 / 300 |
-| 2 pre-screen | Helius | 200 | 2000 credits | 200 / 2,000 |
-| 3 history (planner min 2 pages) | Helius | 50 | 5000 credits | 200 / 12,000 |
-| 4 offline | — | 0 | 0 | — |
-| **Total** | | **1 + 250** | **30 CU + 7000 credits** | **fits** |
+### Further live data to prove or reject
 
+| Wallet | Verdict now | Further live data | Pages estimate |
+|---|---|---|---|
+| `jXtCVtdQ` | Genuine-looking but unprovable: truncated history + a 2-signer relayer buy + 147 unresolved sales. | `--history-to-first --per-wallet-cap 8` until oldest native preBalance is 0 (or the cap hits). Pre-screen density 357 in-window txs / 30d ⇒ ~3 pages to the 90-day bound; first-tx is unknown so budget the remaining 7 pages (700 reserved credits). | 1 captured + up to 7 more |
+| `BSTs43nN` | Conditional lot result. History complete. No bundle. Auditor agrees. | No more Helius pages. Binding an independent-audit certificate would mark `independently_audited`; the 3-episode provisional gate still fails (only 1 episode exists). | 0 |
+| `DKyapYGf` | Reject as bundle (fee-payer multi-signer buy of GSRkwgt5, proceeds to funder). | No more pages needed to reject. Leftover token is recorded (`history_complete=false`) so bundle P&L cannot become a lead if decoders improve. | 0 |
+
+No new draft grant: 2026-10-09 remaining headroom (Birdeye 2 req / 20 CU, Helius ~1,282 req / ~10,480 credits reserved) covers `--history-to-first` for jXt under `--per-wallet-cap 8`.

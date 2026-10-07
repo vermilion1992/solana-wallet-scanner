@@ -381,7 +381,15 @@ def _token(data, accounts, signers, inner, path, program):
                 required = _signer_fields(info, accounts, 1, 'owner', signers, inner, path, program)
             elif tag == 9:
                 info = {'account': accounts[0], 'destination': accounts[1]}
-                required = _signer_fields(info, accounts, 2, 'owner', signers, inner, path, program)
+                # Token-2022 clients often repeat the owner as extra accounts.
+                # Allow that encoding; other extra parties stay fail-closed.
+                extra = accounts[3:]
+                owner = accounts[2] if len(accounts) > 2 else None
+                duplicate_owner = bool(extra) and program == TOKEN_2022_ID and owner and all(item == owner for item in extra)
+                required = _signer_fields(
+                    info, accounts, 2, 'owner', signers, inner, path, program,
+                    allow_extension_accounts=duplicate_owner,
+                )
             else:
                 amount, decimals = int.from_bytes(data[1:9], 'little'), data[9]
                 digits = str(amount).rjust(decimals + 1, '0')

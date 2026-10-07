@@ -14,6 +14,7 @@ from scanner.mass_search.adapters import SourceError
 from scanner.mass_search.evidence_integrity import redact_text
 from scanner.mass_search.live_e2e import (
     DRAFT_PATH,
+    DRAFT_REL_NEXT,
     LiveE2EError,
     parse_wallets,
     run_live_e2e,
@@ -61,7 +62,8 @@ def _arm_grant(tmp_path, *, helius_req=500, helius_units=5000, birdeye_req=3, bi
                phase_caps=None, extra=None, bind_hash=True):
     import os
     from pathlib import Path
-    raw = json.loads(DRAFT_PATH.read_text(encoding="utf-8"))
+    draft_path = DRAFT_PATH.parents[1] / DRAFT_REL_NEXT
+    raw = json.loads(draft_path.read_text(encoding="utf-8"))
     raw["enabled"] = True
     raw["authorized_by_user_at"] = "2026-10-07T00:00:00Z"
     raw["expires_at"] = "2099-01-01T00:00:00Z"
@@ -69,7 +71,7 @@ def _arm_grant(tmp_path, *, helius_req=500, helius_units=5000, birdeye_req=3, bi
     raw["ledger_home"] = os.environ.get("SCANNER_LIVE_LEDGER_HOME") or str(tmp_path / "ledger")
     if bind_hash:
         raw["draft_artifact_hash"] = committed_draft_hash(
-            "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json",
+            DRAFT_REL_NEXT,
             repo_root=DRAFT_PATH.parents[1],
         )
     for entry in raw["providers"]:

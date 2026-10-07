@@ -7,8 +7,11 @@ requests / ≤15,000 credits. Hard ceilings in `scanner/mass_search/live_e2e.py`
 (`HARD_CEILINGS`) cannot be raised by a local commit. `PINNED_DRAFT_HASHES`
 must match the armed `draft_artifact_hash`.
 
-The retired 2026-10-07 draft stays `enabled: false`. Do not re-arm it for a
-new spend. PRODUCT_READY stays false. Do not merge.
+The 2026-10-07 draft is **retired for `--live` immediately** (it is still
+`enabled: false` in repo). `--live` refuses `live-e2e-proof-2026-10-07-mitch`.
+PRODUCT_READY stays false. Do not merge. No new draft is required: the 09
+grant still has Birdeye 2 req / 20 CU and Helius ~1,282 req / ~10,480 credits
+of reserved headroom.
 
 ## Arming (local copy only)
 
@@ -29,11 +32,17 @@ they equal `ledger_home`, and refuses if `HOME` differs from `armed_home`.
 Leave those env vars unset on the box. `--ledger-dir` must equal `ledger_home`.
 
 Helius pacing defaults to 0.5s min interval (2 rps) and 2s backoff on 429
-(`SCANNER_HELIUS_MIN_INTERVAL_SEC`, `SCANNER_HELIUS_BACKOFF_SEC`). Every
-attempt is receipted. Phase 2 resume screens wallets that are not yet
-`done`; it never reports `completed` with unscreened wallets. Phase 3 stops
-on a short or empty page (no extra empty terminal fetch). Planner budgets 2
-full-history pages per wallet.
+(`SCANNER_HELIUS_MIN_INTERVAL_SEC`, `SCANNER_HELIUS_BACKOFF_SEC`). Birdeye
+pacing defaults to 4s (`SCANNER_BIRDEYE_MIN_INTERVAL_SEC`) and 4s backoff
+on 429; a 429 or `success: false` body is an error in the ledger, not an
+empty success. Every attempt is receipted. Phase 2 resume screens wallets
+that are not yet `done`. Phase 3 resume fetches wallets that are not yet
+`done`. A leftover `paginationToken` is not the end unless the wallet was
+created in range (oldest native preBalance 0). Planner estimates pages per
+wallet from pre-screen tx density (minimum 2). `--history-to-first` fetches
+back to the first transaction (or `--history-start-unix`) under
+`--per-wallet-cap`. Multiple `--discovery` requests in one output dir
+(different source/window/sort/tokens) merge into one pool; each is counted.
 
 Replace `$ARMED` and `$OUT`. One process at a time.
 
@@ -64,7 +73,9 @@ Top-traders time frames: `30m`–`24h` plus `2d`–`90d`. Sorts: `volume`,
   --phases all \
   --window-days 30 \
   --earlier-history-days 60 \
-  --max-bot-rate 50 \
+  --max-bot-rate 25 \
+  --history-to-first \
+  --per-wallet-cap 8 \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers-dry-run" \
   --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-2026-10-09
 ```
@@ -115,7 +126,7 @@ Bundles / zero-basis distribution are dropped with an explicit reason.
   --earlier-history-days 60 \
   --min-in-window-tx 0 \
   --max-unsupported-share 1 \
-  --max-bot-rate 50 \
+  --max-bot-rate 25 \
   --resume \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
@@ -125,7 +136,11 @@ A 429 is receipted (failed) and back-off sleeps. Resume with `--explicit-retry`
 for that wallet; new `--wallets` are screened even if phase 2 was previously
 marked done.
 
-## Phase 3 — full history for ~25 wallets (planner min 2 pages; cap 200 / 12,000)
+## Phase 3 — full history for ~25 wallets (density-estimated pages; cap 200 / 12,000)
+
+`--history-to-first` walks back to wallet creation (or `--history-start-unix`)
+so open lots at window start get a real cost basis. Record `history_complete`
+honestly: leftover token + preBalance > 0 is truncated.
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
@@ -133,7 +148,8 @@ marked done.
   --grant "$ARMED" \
   --phases 3 \
   --window-days 30 \
-  --earlier-history-days 60 \
+  --history-to-first \
+  --per-wallet-cap 8 \
   --resume \
   --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
   --output "$OUT"
