@@ -15,6 +15,7 @@ from scanner.mass_search.bundle_detect import detect_bundle_or_distribution
 from scanner.mass_search.canonical_records import canonical_decode_records
 from scanner.mass_search.live_e2e import (
     AUTHORIZATION_ID_11,
+    AUTHORIZATION_ID_12,
     BIRDEYE_DISCOVERY_TOP_TRADERS,
     BIRDEYE_TOP_TRADERS_DEFAULT_SORT,
     BIRDEYE_TOP_TRADERS_SORTS,
@@ -474,7 +475,7 @@ def test_top_traders_books_one_receipt_per_token(tmp_path, fake_keys, monkeypatc
     assert result["spend"]["birdeye_units"] == 105
     assert len(calls) == 3
     from scanner.mass_search.live_e2e import PINNED_LEDGER_REL
-    store = Store(Path.home() / PINNED_LEDGER_REL / AUTHORIZATION_ID_11)
+    store = Store(Path.home() / PINNED_LEDGER_REL / AUTHORIZATION_ID_12)
     receipts = [row for row in (store.list(RECEIPT_KIND) or []) if row.get("provider") == "birdeye"]
     store.close()
     assert len(receipts) == 3

@@ -1,33 +1,34 @@
-# Box commands — LIVE E2E proof (next run: 2026-10-11 draft)
+# Box commands — LIVE E2E proof (next run: 2026-10-12 draft)
 
-The **next** live grant is `config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json`
-(`enabled: false` in repo). Expiry is `2026-10-11T00:00:00+10:30`
-(`2026-10-10T13:30:00Z`). Caps: Birdeye ≤30 requests / ≤1,000 CU; Helius ≤3,000
-requests / ≤30,000 credits. Hard ceilings in `scanner/mass_search/live_e2e.py`
-(`HARD_CEILINGS`) cannot be raised by a local commit. `PINNED_DRAFT_HASHES`
-must match the armed `draft_artifact_hash`.
+The **next** live grant is `config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json`
+(`enabled: false` in repo). Expiry is `2026-10-12T00:00:00+10:30`
+(`2026-10-11T13:30:00Z`). Caps: Birdeye ≤40 requests / ≤1,400 CU; Helius ≤3,000
+requests / ≤30,000 credits. Phase 2 ≥600 req. Hard ceilings in
+`scanner/mass_search/live_e2e.py` (`HARD_CEILINGS`) cannot be raised by a local
+commit. `PINNED_DRAFT_HASHES` must match the armed `draft_artifact_hash`.
 
-The 2026-10-07 and 2026-10-09 drafts are **retired for `--live`**. `--live`
-refuses `live-e2e-proof-2026-10-07-mitch` and `live-e2e-proof-2026-10-09-mitch`.
-PRODUCT_READY stays false. Do not merge. No paid spend, overages, or upgrades.
+The 2026-10-07, 2026-10-09 and 2026-10-11 drafts are **retired for `--live`**.
+`--live` refuses those authorization ids. The 10-11 leftover P2 cap cannot
+support ~250 pre-screens. PRODUCT_READY stays false. Do not merge. No paid
+spend, overages, or upgrades.
 
 The ledger home is the **absolute** path pinned in the committed draft
 (`pinned_ledger_home` = `/home/box/.scanner/live-e2e-ledgers`) and in
 `COMMITTED_LEDGER_ABSOLUTE`. It must not depend on `HOME`. Re-arming with a
 new ledger home, or a fresh HOME that relocates `~/.scanner/...`, is refused.
 
-Phase caps are sized for ~300 pre-screens (600 req / 6,000 credits) and ~40
+Phase caps are sized for ~250–300 pre-screens (600 req / 6,000 credits) and
 deep histories at `--per-wallet-cap 10` (400 req; 24,000 credit unit budget
-binds first).
+binds first). The ledger is hash-chained and verified on every start.
 
 ## Arming (local copy only)
 
-1. Copy the 2026-10-11 draft outside the repo.
+1. Copy the 2026-10-12 draft outside the repo.
 2. Set `enabled: true`, `authorized_by_user_at`, `existing_plan_confirmed`,
    `remaining_quota_confirmed_at`.
 3. Set `draft_artifact_hash` to the **pinned** SHA-256 in
-   `PINNED_DRAFT_HASHES["live-e2e-proof-2026-10-11-mitch"]` (must also equal
-   `git show HEAD:config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json | sha256sum`).
+   `PINNED_DRAFT_HASHES["live-e2e-proof-2026-10-12-mitch"]` (must also equal
+   `git show HEAD:config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json | sha256sum`).
 4. Record identity (required for `--live`):
    - `armed_home`: `python -c "from pathlib import Path; print(Path.home())"`
      (must be `/home/box` on the operator box)
@@ -83,7 +84,7 @@ set (SOL, USDC, USDT, JUP, BONK).
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --dry-run \
-  --grant config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json \
+  --grant config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json \
   --discovery \
   --discovery-source gainers-losers \
   --birdeye-window 1W \
@@ -95,7 +96,7 @@ set (SOL, USDC, USDT, JUP, BONK).
   --per-wallet-cap 10 \
   --max-bot-rate 25 \
   --ledger-dir /home/box/.scanner/live-e2e-ledgers-dry-run \
-  --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-2026-10-11
+  --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-2026-10-12
 ```
 
 Top-traders on liquid established tokens (35 CU each):
@@ -103,7 +104,7 @@ Top-traders on liquid established tokens (35 CU each):
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --dry-run \
-  --grant config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json \
+  --grant config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json \
   --discovery \
   --discovery-source top-traders \
   --birdeye-window 7d \
@@ -113,7 +114,7 @@ Top-traders on liquid established tokens (35 CU each):
   --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-top-traders
 ```
 
-## Phase 1 — discovery (≤30 / 1,000 CU)
+## Phase 1 — discovery (≤40 / 1,400 CU)
 
 ```bash
 .venv/bin/python scripts/live_e2e.py \
@@ -178,7 +179,7 @@ rewrite of `written_sha256` alone is rejected.
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --dry-run \
-  --grant config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json \
+  --grant config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json \
   --phases 4 \
   --resume \
   --ledger-dir /home/box/.scanner/live-e2e-ledgers \
@@ -190,7 +191,7 @@ Optional longer report window (default stays 30d):
 ```bash
 .venv/bin/python scripts/live_e2e.py \
   --dry-run \
-  --grant config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json \
+  --grant config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json \
   --phases 4 \
   --resume \
   --window-days 30 \

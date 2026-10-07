@@ -89,7 +89,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v18-pumpswap-native-tip-close-v1'
+DECODER_VERSION = 'spot-v19-episode-rent-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -569,6 +569,40 @@ def _canonical_user_volume_address(address):
         if not on_curve:
             return candidate, bump
     raise ValueError('User-volume PDA has no supported canonical bump')
+
+
+def _episode_rent_exclusion(flat, keys, before, after, address, skip_accounts):
+    """Long-lived account rent is not trade cost; same-tx create+close nets out.
+
+    Independent of tools/independent_episode_audit.py (no shared helper).
+    A wallet-funded system create whose account is still funded at the native
+    endpoint is a refundable deposit, not this swap's consideration. A create
+    that is closed in the same transaction already nets to zero in the wallet
+    native delta and is not added here.
+    """
+    skip = set(skip_accounts or ())
+    excluded = 0
+    for _outer, _path, instruction, _nested in flat:
+        if _program(instruction, keys) != SYSTEM_ID:
+            continue
+        parsed = instruction.get('parsed')
+        if not isinstance(parsed, dict):
+            continue
+        if parsed.get('type') not in ('createAccount', 'createAccountWithSeed'):
+            continue
+        info = parsed.get('info') or {}
+        if info.get('source') != address:
+            continue
+        account = info.get('newAccount')
+        if not account or account in skip or account not in keys:
+            continue
+        index = keys.index(account)
+        if index >= len(before) or index >= len(after):
+            continue
+        net = after[index] - before[index]
+        if net > 0:
+            excluded += net
+    return excluded
 
 
 def _retained_user_volume_funding(flat, keys, before, after, address, route):
@@ -1074,6 +1108,10 @@ def decode_supported_swaps(transactions, address):
             _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
                                       post_lamports, address, route, fee)
             retained_funding = _retained_user_volume_funding(flat, keys, pre_lamports, post_lamports, address, route)
+            rent_skip = set(owned) | set(allowed_wrapped) | {item['account'] for item in retained_funding}
+            episode_rent = _episode_rent_exclusion(
+                flat, keys, pre_lamports, post_lamports, address, rent_skip,
+            )
             if retained_funding:
                 from .transaction_format import original_instruction_paths
                 original = record.get('raw')
@@ -1183,7 +1221,8 @@ def decode_supported_swaps(transactions, address):
             wallet_index = keys.index(address)
             settlement = (post_lamports[wallet_index] - pre_lamports[wallet_index]
                           + (fee if paid else 0) + rent_correction + deltas.pop(WSOL, 0)
-                          - outside_native_delta + sum(item['lamports'] for item in retained_funding))
+                          - outside_native_delta + sum(item['lamports'] for item in retained_funding)
+                          + episode_rent)
             wsol_accounts = allowed_wrapped | {account for account, identity in owned.items() if identity['mint'] == WSOL}
             owned_wsol_accounts = {account for account, identity in owned.items() if identity['mint'] == WSOL}
             if wsol_accounts and settlement != sum(flow[account] for account in wsol_accounts):
@@ -1243,7 +1282,7 @@ def decode_supported_swaps(transactions, address):
                     context.prec = 192
                     amount_usdc = canonical(Decimal(abs(usdc_delta)) / (Decimal(10) ** usdc_decimals))
                 allocate_fee = paid and not outside_native and not native_roles
-                excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding)
+                excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding) + episode_rent
                 excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
                 t22_fee = token_2022_fees[-1] if token_2022_fees else None
                 rfq_fee = None
@@ -1363,7 +1402,7 @@ def decode_supported_swaps(transactions, address):
             with localcontext() as context:
                 context.prec = 192
                 amount = canonical(Decimal(abs(settlement)) / LAMPORTS)
-            excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding)
+            excluded_funding_lamports = rent_correction + sum(item['lamports'] for item in retained_funding) + episode_rent
             excluded_funding_sol = canonical(Decimal(excluded_funding_lamports) / LAMPORTS)
             emit(kind, route['path'], mint=mint, quantity_raw=str(abs(quantity)),
                  decimals=decimals[mint], amount_sol=amount, classification='unknown',

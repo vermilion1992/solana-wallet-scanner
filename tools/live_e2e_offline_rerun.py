@@ -11,7 +11,7 @@ import shutil
 import sys
 import tempfile
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -55,15 +55,31 @@ RAW_ROOTS = [
     Path("/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw"),
     Path("/tmp/live-raw-4bbb364-a"),
     Path("/tmp/live-raw-4bbb364-b"),
+    Path("/tmp/live-raw-df3278c/live-out/main/raw"),
 ]
 EVIDENCE = ROOT / "evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07"
 MAX_BOT_RATE = Decimal("25")
 FULL_HISTORY_SLOTS = 25
-BOUNDS = {
-    "report_start_inclusive": "2026-09-07T10:52:20Z",
-    "report_end_exclusive": "2026-10-07T10:52:20Z",
-    "history_start_inclusive": "2026-07-09T10:52:20Z",
-}
+CLOCK_END = "2026-10-07T10:52:20Z"
+
+
+def bounds_for(report_days):
+    end = datetime.fromisoformat(CLOCK_END.replace("Z", "+00:00"))
+    start = end - timedelta(days=int(report_days))
+    history = datetime(2020, 3, 16, tzinfo=timezone.utc)
+    return {
+        "report_start_inclusive": start.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "report_end_exclusive": end.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "history_start_inclusive": history.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "report_window_days": int(report_days),
+        "window_days": 30,
+        "report_start_unix": int(start.timestamp()),
+        "report_end_unix": int(end.timestamp()),
+        "history_start_unix": int(history.timestamp()),
+    }
+
+
+BOUNDS = bounds_for(30)
 
 
 def _iso_to_unix(text):
@@ -182,10 +198,11 @@ def _prescreen_row(address, phase2_dirs):
     }
 
 
-def _audit(address, records):
-    auditor.REPORT_START = _iso_to_unix(BOUNDS["report_start_inclusive"])
-    auditor.REPORT_END = _iso_to_unix(BOUNDS["report_end_exclusive"])
-    auditor.ACQUISITION = _iso_to_unix(BOUNDS["history_start_inclusive"])
+def _audit(address, records, bounds=None):
+    bounds = bounds or BOUNDS
+    auditor.REPORT_START = _iso_to_unix(bounds["report_start_inclusive"])
+    auditor.REPORT_END = _iso_to_unix(bounds["report_end_exclusive"])
+    auditor.ACQUISITION = _iso_to_unix(bounds["history_start_inclusive"])
     trades = []
     for record in records:
         event = auditor.reconstruct_record(record, address)
@@ -206,7 +223,8 @@ def _audit(address, records):
     }
 
 
-def _phase4(phase3_dirs):
+def _phase4(phase3_dirs, bounds=None):
+    bounds = bounds or BOUNDS
     tmp = Path(tempfile.mkdtemp(prefix="live-e2e-phase4-"))
     store = Store(tmp / "store")
     wallets = sorted(phase3_dirs)
@@ -242,7 +260,7 @@ def _phase4(phase3_dirs):
         "phases": (4,),
         "wallets": wallets,
         "output_dir": str(out),
-        "bounds": BOUNDS,
+        "bounds": bounds,
         "authorization_id": AUTHORIZATION_ID_NEXT,
     }
     result = phase4_offline(store, config, state)
@@ -251,7 +269,7 @@ def _phase4(phase3_dirs):
     for address, dirs in phase3_dirs.items():
         records, _pages, _blocked, _count = _load_pages(dirs)
         rows.setdefault(address, {"address": address})
-        rows[address]["auditor"] = _audit(address, records) if records else {
+        rows[address]["auditor"] = _audit(address, records, bounds) if records else {
             "clean_episodes": 0,
             "independently_audited_episode_net": None,
             "independently_audited_episode_net_unit": None,
@@ -401,7 +419,16 @@ def main():
         row["chosen_for_full_history"] = True
         chosen.append(row["address"])
 
-    phase4_rows = _phase4(phase3) if phase3 else {}
+    summaries = []
+    for report_days in (30, 90):
+        bounds = bounds_for(report_days)
+        summaries.append(_write_window(ranked, phase2, phase3, chosen, plan, report_days, bounds))
+    print(json.dumps(summaries, indent=2))
+    return 0
+
+
+def _write_window(ranked, phase2, phase3, chosen, plan, report_days, bounds):
+    phase4_rows = _phase4(phase3, bounds) if phase3 else {}
     wallets = []
     seen = set()
     for row in ranked:
@@ -448,11 +475,11 @@ def main():
             "buy_sell_events": jxt_uncovered["buy_sell_events"],
         }
 
-    plan = _plan()
     payload = {
-        "kind": "live-e2e-phase4-offline-rerun-v2",
+        "kind": "live-e2e-phase4-offline-rerun-v3",
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "bounds": BOUNDS,
+        "report_window_days": report_days,
+        "bounds": bounds,
         "max_bot_rate": str(MAX_BOT_RATE),
         "full_history_slots": FULL_HISTORY_SLOTS,
         "wallet_count": len(wallets),
@@ -473,14 +500,17 @@ def main():
         "PRODUCT_READY": False,
     }
     EVIDENCE.mkdir(parents=True, exist_ok=True)
-    out = EVIDENCE / "PHASE4_OFFLINE_RERUN.json"
+    suffix = f"{report_days}D"
+    out = EVIDENCE / f"PHASE4_OFFLINE_RERUN_{suffix}.json"
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    md = EVIDENCE / "PHASE4_OFFLINE_RERUN.md"
+    if report_days == 30:
+        (EVIDENCE / "PHASE4_OFFLINE_RERUN.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    md = EVIDENCE / f"PHASE4_OFFLINE_RERUN_{suffix}.md"
     lines = [
-        "# Offline Phase 4 replay (all five live-run attached pages)",
+        f"# Offline Phase 4 replay ({report_days}d) — all six live-run attached pages",
         "",
-        f"Bounds: report `{BOUNDS['report_start_inclusive']}` → `{BOUNDS['report_end_exclusive']}`; "
-        f"history start `{BOUNDS['history_start_inclusive']}`.",
+        f"Bounds: report `{bounds['report_start_inclusive']}` → `{bounds['report_end_exclusive']}`; "
+        f"history start `{bounds['history_start_inclusive']}`.",
         f"{len(phase3)} Phase-3 wallets. `max_bot_rate`={MAX_BOT_RATE}/day. PRODUCT_READY false. No live calls.",
         f"Decoder `{DECODER_VERSION}`.",
         "",
@@ -556,9 +586,22 @@ def main():
             "App-vs-auditor gap is decoded-subset FIFO vs full balance-delta. Jupiter is closed; "
             "remaining uncovered txs are non-swap (transfers / unresolved programId / absent keys).",
         ])
+    dkx_row = next((row for row in wallets if (row.get("address") or "").startswith("DKxKrP4y")), None)
+    if dkx_row:
+        lines.extend([
+            "",
+            "## DKxKrP4y",
+            "",
+            f"Completed: `{dkx_row.get('completed_trades')}`; P&L SOL: `{dkx_row.get('realized_pnl_sol')}`.",
+            f"Audit: `{dkx_row.get('audit_status')}`; lead: `{dkx_row.get('lead_level')}`; blocker: `{dkx_row.get('blocker')}`.",
+            f"Flags: `{','.join(dkx_row.get('bundle_reasons') or []) or 'none'}`.",
+        ])
     lines.extend(["", f"JSON: `{out.relative_to(ROOT)}`", ""])
     md.write_text("\n".join(lines), encoding="utf-8")
-    print(json.dumps({
+    if report_days == 30:
+        (EVIDENCE / "PHASE4_OFFLINE_RERUN.md").write_text(md.read_text(encoding="utf-8"), encoding="utf-8")
+    return {
+        "report_window_days": report_days,
         "wallets": len(wallets),
         "phase2": len(phase2),
         "phase3": len(phase3),
@@ -572,11 +615,20 @@ def main():
             "value": (jxt_row or {}).get("coverage_value_share"),
             "completed": (jxt_row or {}).get("completed_trades"),
             "pnl": (jxt_row or {}).get("realized_pnl_sol"),
+            "audit": (jxt_row or {}).get("audit_status"),
+            "level": (jxt_row or {}).get("lead_level"),
+            "blocker": (jxt_row or {}).get("blocker"),
+        },
+        "dkx": {
+            "completed": (dkx_row or {}).get("completed_trades"),
+            "pnl": (dkx_row or {}).get("realized_pnl_sol"),
+            "audit": (dkx_row or {}).get("audit_status"),
+            "level": (dkx_row or {}).get("lead_level"),
+            "blocker": (dkx_row or {}).get("blocker"),
         },
         "out": str(out),
         "md": str(md),
-    }, indent=2))
-    return 0
+    }
 
 
 if __name__ == "__main__":

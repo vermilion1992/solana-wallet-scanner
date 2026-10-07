@@ -303,7 +303,9 @@ def test_bot_rate_burst_is_not_96_per_day():
 
 def test_retired_09_draft_refused_for_live(tmp_path, monkeypatch):
     assert AUTHORIZATION_ID_NEXT in RETIRED_LIVE_DRAFTS
-    assert AUTHORIZATION_ID_11 in LIVE_KNOWN_DRAFTS
+    assert AUTHORIZATION_ID_11 in RETIRED_LIVE_DRAFTS
+    from scanner.mass_search.live_e2e import AUTHORIZATION_ID_12
+    assert AUTHORIZATION_ID_12 in LIVE_KNOWN_DRAFTS
     monkeypatch.setenv("HELIUS_API_KEY", "dummy-helius-key-f635")
     raw = json.loads((ROOT / "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json").read_text())
     raw["enabled"] = True
@@ -329,17 +331,20 @@ def test_retired_09_draft_refused_for_live(tmp_path, monkeypatch):
 
 
 def test_new_draft_is_disabled_and_pinned():
-    draft = json.loads((ROOT / DRAFT_REL_11).read_text(encoding="utf-8"))
+    from scanner.mass_search.live_e2e import AUTHORIZATION_ID_12, DRAFT_REL_12
+    draft = json.loads((ROOT / DRAFT_REL_12).read_text(encoding="utf-8"))
     assert draft["enabled"] is False
     assert draft["PRODUCT_READY"] is False
-    assert draft["authorization_id"] == AUTHORIZATION_ID_11
-    assert draft["expires_at"] == "2026-10-10T13:30:00Z"
+    assert draft["authorization_id"] == AUTHORIZATION_ID_12
+    assert draft["expires_at"] == "2026-10-11T13:30:00Z"
     assert draft["overages_enabled"] is False
     assert draft["allow_paid_upgrade"] is False
     assert draft["pinned_ledger_home"] == "/home/box/.scanner/live-e2e-ledgers"
-    digest = hashlib.sha256((ROOT / DRAFT_REL_11).read_bytes()).hexdigest()
-    assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_11] == digest
-    assert HARD_CEILINGS["birdeye_requests"] == 30
+    assert int((draft.get("phase_caps") or {}).get("2", {}).get("helius_requests") or 0) >= 600
+    digest = hashlib.sha256((ROOT / DRAFT_REL_12).read_bytes()).hexdigest()
+    assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_12] == digest
+    assert HARD_CEILINGS["birdeye_requests"] == 40
+    assert HARD_CEILINGS["birdeye_units"] == 1400
     assert HARD_CEILINGS["helius_units"] == 30000
 
 

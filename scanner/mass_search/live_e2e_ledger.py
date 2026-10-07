@@ -19,6 +19,9 @@ LEDGER_ENV = "SCANNER_LIVE_LEDGER_DIR"
 # Absolute. --live must not relocate the ledger when HOME changes.
 DEFAULT_LEDGER_ROOT = Path("/home/box/.scanner/live-e2e-ledgers")
 RECEIPT_KIND = "live_e2e_receipt"
+CHAIN_ENTRY_KIND = "live_e2e_chain_entry"
+CHAIN_HEAD_KIND = "live_e2e_chain"
+SPEND_SEAL_KIND = "live_e2e_spend_seal"
 GRANT_LOCK_NAME = "GRANT.lock"
 OUTPUT_LOCK_NAME = "RUN.lock"
 SPENT_STATES = frozenset({"reserved", "dispatched", "consumed", "failed"})
@@ -177,61 +180,96 @@ def verify_receipt_integrity(receipt):
     return expected
 
 
-def verify_receipt_chain(store):
-    """Walk current receipts and the live_e2e_chain head.
+def _chain_entries(store):
+    if not hasattr(store, "list"):
+        return []
+    rows = list(store.list(CHAIN_ENTRY_KIND) or [])
+    return sorted(rows, key=lambda row: int(row.get("seq") or 0))
 
-    Overwritten prior states are not retained, so a prev_receipt_hash that is
-    no longer listed is allowed only after every present row hashes cleanly.
-    A cycle or a present row whose prev points at a different live row with a
-    mismatched hash fails closed.
+
+def _spend_seal(store):
+    if not hasattr(store, "get"):
+        return None
+    return store.get(SPEND_SEAL_KIND, "current")
+
+
+def _seal_nonzero(seal):
+    spend = (seal or {}).get("spend") if isinstance(seal, dict) else None
+    if not isinstance(spend, dict):
+        return False
+    return any(int(spend.get(key) or 0) > 0 for key in SPEND_KEYS)
+
+
+def verify_receipt_chain(store):
+    """Verify the append-only receipt log and current receipt bodies.
+
+    Empty store (no receipts, no log, no head, no spend seal) is OK.
+    A broken, rewritten, or deleted chain is refused. Missing prev hashes
+    are not skipped.
     """
     rows = list(store.list(RECEIPT_KIND) or []) if hasattr(store, "list") else []
+    entries = _chain_entries(store)
+    head = store.get(CHAIN_HEAD_KIND, "head") if hasattr(store, "get") else None
+    seal = _spend_seal(store)
+    if not rows and not entries:
+        if _seal_nonzero(seal):
+            raise ValueError("spend seal exists but chain log and receipts are missing")
+        if isinstance(head, dict) and head.get("receipt_hash"):
+            raise ValueError("chain head exists without receipts or log")
+        return True
+    if rows and not entries:
+        raise ValueError("receipts exist but append-only chain log is missing")
+    if entries and not rows:
+        raise ValueError("chain log exists but receipts were deleted")
     by_hash = {}
     for row in rows:
         digest = verify_receipt_integrity(row)
         if digest in by_hash and by_hash[digest].get("request_id") != row.get("request_id"):
             raise ValueError("duplicate receipt_hash for distinct request ids")
         by_hash[digest] = row
-    head = store.get("live_e2e_chain", "head") if hasattr(store, "get") else None
+    logged = {entry.get("receipt_hash") for entry in entries}
+    for row in rows:
+        if row.get("receipt_hash") not in logged:
+            raise ValueError("receipt missing from append-only chain log")
+    prev = None
+    latest_by_key = {}
+    for entry in entries:
+        if entry.get("prev_receipt_hash") != prev:
+            raise ValueError("append-only chain prev mismatch")
+        latest_by_key[entry.get("request_id")] = entry
+        prev = entry.get("receipt_hash")
+    for row in rows:
+        latest = latest_by_key.get(row.get("request_id"))
+        if not latest or latest.get("receipt_hash") != row.get("receipt_hash"):
+            raise ValueError("receipt rewritten off the append-only chain")
     if not isinstance(head, dict) or not head.get("receipt_hash"):
-        if rows:
-            raise ValueError("receipts exist but live_e2e_chain head is missing")
-        return True
-    current = head.get("receipt_hash")
-    if current not in by_hash:
-        raise ValueError("live_e2e_chain head is not a current receipt")
-    seen = set()
-    while current:
-        if current in seen:
-            raise ValueError("receipt hash chain cycle")
-        seen.add(current)
-        row = by_hash.get(current)
-        if row is None:
-            break
-        current = row.get("prev_receipt_hash")
-        if current and current in by_hash:
-            continue
-        break
+        raise ValueError("receipts exist but live_e2e_chain head is missing")
+    if head.get("receipt_hash") != entries[-1].get("receipt_hash"):
+        raise ValueError("chain head does not match last log entry")
     return True
 
 
-def put_receipt(store, grant, key, payload):
-    head = store.get("live_e2e_chain", "head") if hasattr(store, "get") else None
-    prev_hash = (head or {}).get("receipt_hash") if isinstance(head, dict) else None
-    receipt = {
-        "request_id": key,
-        "authorization_id": grant.get("authorization_id"),
-        "consumed": payload.get("state") == "consumed",
-        "prev_receipt_hash": prev_hash,
-        **payload,
-    }
-    receipt["receipt_hash"] = hashlib.sha256(_receipt_canonical_bytes(receipt)).hexdigest()
-    store.put(RECEIPT_KIND, key, receipt)
-    store.put("live_e2e_chain", "head", {"receipt_hash": receipt["receipt_hash"], "request_id": key})
-    return receipt
+def _reservation_spend(store):
+    spend = empty_spend()
+    if not hasattr(store, "db") or store.db is None:
+        return spend
+    try:
+        rows = store.db.execute(
+            "SELECT provider, cost, state, charged FROM reservations"
+        ).fetchall()
+    except Exception:
+        return spend
+    for provider, cost, state, charged in rows:
+        if provider not in ("birdeye", "helius"):
+            continue
+        if state not in ("reserved", "dispatched") and not (state == "settled" and charged):
+            continue
+        spend[f"{provider}_requests"] += 1
+        spend[f"{provider}_units"] += int(cost or 0)
+    return spend
 
 
-def spend_from_ledger(store):
+def _receipt_spend(store):
     spend = empty_spend()
     phase_spend = empty_phase_spend()
     for row in store.list(RECEIPT_KIND) or []:
@@ -247,6 +285,71 @@ def spend_from_ledger(store):
         if phase in phase_spend:
             phase_spend[phase][f"{provider}_requests"] += 1
             phase_spend[phase][f"{provider}_units"] += units
+    return spend, phase_spend
+
+
+def _write_spend_seal(store, spend, phase_spend):
+    previous = _spend_seal(store) if hasattr(store, "get") else None
+    prev_hash = (previous or {}).get("seal_hash") if isinstance(previous, dict) else None
+    body = {
+        "spend": spend,
+        "phase_spend": phase_spend,
+        "prev_seal_hash": prev_hash,
+    }
+    digest = hashlib.sha256(
+        json.dumps(body, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+    ).hexdigest()
+    store.put(SPEND_SEAL_KIND, "current", {**body, "seal_hash": digest})
+    return digest
+
+
+def put_receipt(store, grant, key, payload):
+    head = store.get(CHAIN_HEAD_KIND, "head") if hasattr(store, "get") else None
+    prev_hash = (head or {}).get("receipt_hash") if isinstance(head, dict) else None
+    seq = int((head or {}).get("seq") or 0) + 1
+    receipt = {
+        "request_id": key,
+        "authorization_id": grant.get("authorization_id"),
+        "consumed": payload.get("state") == "consumed",
+        "prev_receipt_hash": prev_hash,
+        **payload,
+    }
+    receipt["receipt_hash"] = hashlib.sha256(_receipt_canonical_bytes(receipt)).hexdigest()
+    store.put(RECEIPT_KIND, key, receipt)
+    store.put(CHAIN_ENTRY_KIND, f"{seq:08d}", {
+        "seq": seq,
+        "request_id": key,
+        "receipt_hash": receipt["receipt_hash"],
+        "prev_receipt_hash": prev_hash,
+        "state": receipt.get("state"),
+        "sha256": receipt.get("sha256"),
+        "units": receipt.get("units"),
+        "provider": receipt.get("provider"),
+        "phase": receipt.get("phase"),
+    })
+    store.put(CHAIN_HEAD_KIND, "head", {
+        "receipt_hash": receipt["receipt_hash"],
+        "request_id": key,
+        "seq": seq,
+    })
+    spend, phase_spend = spend_from_ledger(store)
+    _write_spend_seal(store, spend, phase_spend)
+    return receipt
+
+
+def spend_from_ledger(store):
+    receipt_spend, receipt_phase = _receipt_spend(store)
+    reserve_spend = _reservation_spend(store)
+    seal = _spend_seal(store)
+    seal_spend = (seal or {}).get("spend") if isinstance(seal, dict) else None
+    seal_phase = (seal or {}).get("phase_spend") if isinstance(seal, dict) else None
+    spend = merge_spend(receipt_spend, reserve_spend, seal_spend)
+    phase_spend = empty_phase_spend()
+    for phase in phase_spend:
+        phase_spend[phase] = merge_spend(
+            (receipt_phase or {}).get(phase),
+            (seal_phase or {}).get(phase),
+        )
     return spend, phase_spend
 
 

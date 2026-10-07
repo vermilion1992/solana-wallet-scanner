@@ -879,12 +879,18 @@ def attach_live_independent_audit(report, profile, records, address):
         "source": "live_phase4_independent_episode_audit",
         "PRODUCT_READY": False,
     }
-    if omitted_losing:
+    in_window_drops = [
+        row for row in (omitted_losing or [])
+        if row.get("reason") != "not_in_window_or_unresolved"
+    ]
+    if in_window_drops:
         return {
             **base,
             "status": "not_independently_audited",
             "independently_audited": False,
             "reason": "auditor_dropped_losing_episodes",
+            "dropped_losing_episodes": in_window_drops,
+            "dropped_losers": True,
             "one_to_one_membership": False,
         }
     app_ids = {}
@@ -1209,9 +1215,21 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         mint for mint in (bundle.get("quarantined_mints") or []) if mint
     }
     if sold_quarantined:
+        completed_buy_sell = {
+            mint
+            for mint in {row.get("mint") for row in known if row.get("mint")}
+            if any(row.get("kind") == "buy" and row.get("mint") == mint for row in known)
+            and any(row.get("kind") == "sell" and row.get("mint") == mint for row in known)
+        }
         kept = []
         for row in known:
-            if row.get("kind") == "sell" and row.get("mint") in sold_quarantined:
+            mint = row.get("mint")
+            # A later dust transfer-in must not erase an existing buy-sell episode.
+            if (
+                row.get("kind") == "sell"
+                and mint in sold_quarantined
+                and mint not in completed_buy_sell
+            ):
                 unresolved.append({
                     **row,
                     "unresolved_basis": True,
@@ -1272,7 +1290,12 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
             })
     ledger = _episode_ledger_from_report(report)
     if sold_quarantined:
-        ledger = [item for item in ledger if item.get("mint") not in sold_quarantined]
+        # A later dust transfer-in must not erase an existing buy-sell episode.
+        ledger = [
+            item for item in ledger
+            if item.get("mint") not in sold_quarantined
+            or item.get("net") not in (None, "")
+        ]
     episode_net, episode_unit, episode_vector = episode_net_from_ledger(
         ledger, fallback_unit=settlement if settlement in ("SOL", "USDC") else None
     )

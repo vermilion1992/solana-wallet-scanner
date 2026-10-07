@@ -707,6 +707,14 @@ def _partial_findings(classification, decoded):
     ]
 
 
+def _report_window_days(window_start, window_end):
+    start = datetime.fromisoformat(str(window_start).replace("Z", "+00:00"))
+    end = datetime.fromisoformat(str(window_end).replace("Z", "+00:00"))
+    seconds = (end - start).total_seconds()
+    days = int(round(seconds / 86400.0))
+    return max(1, days)
+
+
 def replay_cached_history_to_report(
     store,
     *,
@@ -720,6 +728,8 @@ def replay_cached_history_to_report(
     corpus_kind="GENUINE_REPLAY",
     authorization_id=REPLAY_AUTHORIZATION_ID,
     source_id="archived-history-replay",
+    coverage_start=None,
+    coverage_end=None,
 ):
     """Exact shared path: cache → decoder → accounting → saved application report."""
     from .g3_history import (
@@ -730,10 +740,14 @@ def replay_cached_history_to_report(
         persist_page,
     )
 
+    report_days = _report_window_days(window_start, window_end)
+    cov_start = coverage_start or window_start
+    cov_end = coverage_end or window_end
     service = MassSearchService(store, clock=clock or (lambda: window_end))
     plan = deepcopy(service.preview_plan()["plan"])
     plan["live_enabled"] = False
-    plan["selection"]["report_window_days"] = 30
+    plan["selection"]["report_window_days"] = report_days
+    plan["selection"]["verification_window_days"] = max(90, report_days)
     run = service.create_run(plan, source_id=source_id, corpus_kind=corpus_kind)
     sanitized = sanitize_transaction_records(records)
     page = {
@@ -758,8 +772,8 @@ def replay_cached_history_to_report(
 
     breakdown = partition_records(
         wrapped, decoded, address,
-        window_start=window_start,
-        window_end=window_end,
+        window_start=cov_start,
+        window_end=cov_end,
         acquisition_start=acquisition_start,
     )
     by_mint, truncated = decoder_events_by_mint(
@@ -869,8 +883,10 @@ def replay_cached_history_to_report(
     reconstructed = service.reconstruct_candidate(
         run["run_id"], f"solana:{address}", events,
         corpus_kind=corpus_kind, mint=report_mint,
+        window_start=window_start, window_end=window_end,
     )
     report = reconstructed["report"]
+    report["window"] = {"start": window_start, "end": window_end}
     report["source"] = "mass-search"
     report["policy"] = report.get("policy") or "UNRESOLVED"
     production = reconstructed.get("worksheet") or report.get("worksheet")

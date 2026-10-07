@@ -93,6 +93,7 @@ from scanner.mass_search.live_e2e_ledger import (
     provider_caps,
     put_receipt,
     RECEIPT_KIND,
+    CHAIN_ENTRY_KIND,
     receipt_is_spent,
     request_identity,
     spend_from_ledger,
@@ -115,18 +116,21 @@ ROOT = Path(__file__).resolve().parents[2]
 AUTHORIZATION_ID = "live-e2e-proof-2026-10-07-mitch"
 AUTHORIZATION_ID_NEXT = "live-e2e-proof-2026-10-09-mitch"
 AUTHORIZATION_ID_11 = "live-e2e-proof-2026-10-11-mitch"
+AUTHORIZATION_ID_12 = "live-e2e-proof-2026-10-12-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
 DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 DRAFT_REL_11 = "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
+DRAFT_REL_12 = "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
-# --live accepts only the 2026-10-11 draft. 07 and 09 are retired for --live.
+# --live accepts only the 2026-10-12 draft. 07, 09 and 11 are retired for --live.
 # Dry-run may still load a retired draft.
 LIVE_KNOWN_DRAFTS = {
-    AUTHORIZATION_ID_11: DRAFT_REL_11,
+    AUTHORIZATION_ID_12: DRAFT_REL_12,
 }
 RETIRED_LIVE_DRAFTS = {
     AUTHORIZATION_ID: DRAFT_REL,
     AUTHORIZATION_ID_NEXT: DRAFT_REL_NEXT,
+    AUTHORIZATION_ID_11: DRAFT_REL_11,
 }
 KNOWN_DRAFTS = {**RETIRED_LIVE_DRAFTS, **LIVE_KNOWN_DRAFTS}
 # Pinned committed-blob hashes. A local commit of an inflated draft cannot
@@ -135,10 +139,11 @@ PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID: "ca4c3f9637d5d8ee11475a8c1704bb964a0a7bed4e126c69e92c65ef9043f410",
     AUTHORIZATION_ID_NEXT: "cda7b98d4d3bf0c219c53f4c37f2c6bc3b62d9480b60ad69d01f1709fc65af62",
     AUTHORIZATION_ID_11: "a2b6b4b53717f9d7dcb5f0f9a60bd073274af4e810aae3943af7edb9d003512b",
+    AUTHORIZATION_ID_12: "65b14ccd9e60e453760a1d1da55c825d1083c86c416bc8957985b361fc483270",
 }
 HARD_CEILINGS = {
-    "birdeye_requests": 30,
-    "birdeye_units": 1000,
+    "birdeye_requests": 40,
+    "birdeye_units": 1400,
     "helius_requests": 3000,
     "helius_units": 30000,
 }
@@ -386,6 +391,67 @@ def window_bounds(window_days, earlier_history_days, *, end=None, history_to_fir
         "report_window_days": report_days,
         "earlier_history_days": earlier,
         "history_to_first": bool(history_to_first or history_start_unix is not None),
+    }
+
+
+def _iso(dt):
+    if isinstance(dt, datetime):
+        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return str(dt)
+
+
+def _parse_iso(text):
+    return datetime.fromisoformat(str(text).replace("Z", "+00:00"))
+
+
+def record_block_times(records):
+    times = []
+    for row in records or []:
+        stamp = row.get("blockTime") or row.get("timestamp")
+        if stamp is None and isinstance(row.get("transaction"), dict):
+            stamp = row["transaction"].get("blockTime")
+        if type(stamp) is int:
+            times.append(stamp)
+    return times
+
+
+def align_wallet_bounds(records, bounds):
+    """Anchor report end to this wallet's last captured blockTime.
+
+    Coverage uses the captured span so a later run clock cannot hide an
+    uncovered earlier transaction. P&L still uses the requested report days
+    ending at min(configured_end, last+1).
+    """
+    times = record_block_times(records)
+    configured_end = _parse_iso(bounds["report_end_exclusive"])
+    configured_hist = _parse_iso(bounds["history_start_inclusive"])
+    last = max(times) if times else None
+    first = min(times) if times else None
+    end = configured_end
+    if last is not None:
+        last_end = datetime.fromtimestamp(last + 1, tz=timezone.utc)
+        if last_end < end:
+            end = last_end
+    report_days = int(bounds.get("report_window_days") or bounds.get("window_days") or 30)
+    start = end - timedelta(days=report_days)
+    hist = configured_hist
+    cov_start = configured_hist
+    if first is not None:
+        first_dt = datetime.fromtimestamp(first, tz=timezone.utc)
+        if first_dt < hist:
+            hist = first_dt
+        if first_dt < cov_start:
+            cov_start = first_dt
+    return {
+        "report_start_inclusive": _iso(start),
+        "report_end_exclusive": _iso(end),
+        "history_start_inclusive": _iso(hist),
+        "coverage_start_inclusive": _iso(cov_start),
+        "coverage_end_exclusive": _iso(end),
+        "report_window_days": report_days,
+        "report_start_unix": int(start.timestamp()),
+        "report_end_unix": int(end.timestamp()),
+        "history_start_unix": int(hist.timestamp()),
     }
 
 
@@ -777,14 +843,18 @@ def seed_counterparties_from_records(records, address):
     """Cheap solo-trader seeds: non-infra counterparties that did not co-sign.
 
     Exchange hot-wallet funders (single signer, no co-sign) and peer
-    withdraw destinations are candidates. Service co-signers are skipped.
+    withdraw destinations are candidates. Service co-signers, DEX pools,
+    fee vaults and token accounts are skipped.
     """
     from scanner.mass_search.bundle_detect import (
         INFRA,
+        _has_reviewed_swap,
         _native_counterparties,
         _signers,
+        _token_account_keys,
         _unwrap,
     )
+    from scanner.investigation import REVIEWED_OUTER_VENUES
 
     found = []
     seen = set()
@@ -796,9 +866,18 @@ def seed_counterparties_from_records(records, address):
             keys = _keys((raw.get("transaction") or {}).get("message") or {}, raw.get("meta") or {})
         except (ValueError, TypeError, KeyError, IndexError):
             continue
-        signers = _signers(raw, keys) if keys else []
+        if not keys:
+            continue
+        if _has_reviewed_swap(raw, keys):
+            continue
+        if any(key in REVIEWED_OUTER_VENUES for key in keys):
+            continue
+        token_accounts = _token_account_keys(raw, keys)
+        signers = _signers(raw, keys)
         for party, kind, amount in _native_counterparties(raw, keys, address):
-            if party in INFRA or party in seen:
+            if party in INFRA or party in seen or party in token_accounts:
+                continue
+            if party in REVIEWED_OUTER_VENUES:
                 continue
             if party in signers and address in signers:
                 continue
@@ -862,6 +941,26 @@ def prescreen_rank_score(row):
     dirty = row.get("bundle") or row.get("bot") or row.get("controlled_pair")
     clean = Decimal("0") if dirty else Decimal("1")
     return (share * has_buys * clean).quantize(Decimal("0.0001"))
+
+
+def phase4_targets(config, state=None):
+    """Phase 4 wallets: explicit --wallets, else phase-3 done wallets.
+
+    An empty selection is not a completed Phase 4.
+    """
+    state = state or {}
+    if config.get("wallets_supplied") and config.get("wallets"):
+        return list(config.get("wallets") or [])
+    done3 = [
+        addr
+        for addr, row in (state.get("phase3") or {}).items()
+        if isinstance(row, dict) and row.get("done") and addr
+    ]
+    if done3:
+        return done3
+    if config.get("wallets"):
+        return list(config.get("wallets") or [])
+    return []
 
 
 def phase3_wallets(config, state=None):
@@ -2075,7 +2174,7 @@ async def phase3_history(store, grant, config, state, recorder):
                 records, token, address=address,
             )
             reached_bound = oldest is not None and oldest <= bounds["history_start_unix"]
-            no_more = not records or (short_page and not token)
+            no_more = not records or not token
             created_complete = bool(created["wallet_created_in_range"]) and (short_page or not records)
             covered = no_more or created_complete or (
                 reached_bound and created["wallet_created_in_range"]
@@ -2195,12 +2294,14 @@ def phase4_offline(store, config, state):
                     missing_page = True
                     break
         leftover_token = None
-        store_has_receipts = bool(hasattr(store, "list") and store.list(RECEIPT_KIND))
-        if store_has_receipts:
-            try:
-                verify_receipt_chain(store)
-            except ValueError:
-                missing_page = True
+        try:
+            verify_receipt_chain(store)
+        except ValueError:
+            missing_page = True
+        store_has_receipts = bool(
+            hasattr(store, "list")
+            and (store.list(RECEIPT_KIND) or store.list(CHAIN_ENTRY_KIND))
+        )
         if raw_dir.is_dir() and not missing_page:
             for path in sorted(raw_dir.glob("page*.bin"), key=page_sort_key):
                 try:
@@ -2268,13 +2369,16 @@ def phase4_offline(store, config, state):
         if phase3_cursor.get("history_complete") is False:
             history["history_complete"] = False
             history["history_complete_reason"] = phase3_cursor.get("history_complete_reason") or history["history_complete_reason"]
+        aligned = align_wallet_bounds(records, bounds)
         result = replay_cached_history_to_report(
             store,
             address=address,
             records=records,
-            window_start=bounds["report_start_inclusive"],
-            window_end=bounds["report_end_exclusive"],
-            acquisition_start=bounds["history_start_inclusive"],
+            window_start=aligned["report_start_inclusive"],
+            window_end=aligned["report_end_exclusive"],
+            acquisition_start=aligned["history_start_inclusive"],
+            coverage_start=aligned["coverage_start_inclusive"],
+            coverage_end=aligned["coverage_end_exclusive"],
             corpus_kind="GENUINE_REPLAY",
             authorization_id=config.get("authorization_id") or AUTHORIZATION_ID,
             source_id="live-e2e-proof",
@@ -2447,8 +2551,8 @@ def validate_config(raw):
         raise LiveE2EError(grant.get("reason") or "grant disabled")
     if raw["mode"] == "live" and grant.get("authorization_id") in RETIRED_LIVE_DRAFTS:
         raise LiveE2EError(
-            "2026-10-07 and 2026-10-09 drafts are retired for --live; "
-            "use live-e2e-proof-2026-10-11-mitch"
+            "2026-10-07, 2026-10-09 and 2026-10-11 drafts are retired for --live; "
+            "use live-e2e-proof-2026-10-12-mitch"
         )
     if raw["mode"] == "live" and grant.get("authorization_id") not in LIVE_KNOWN_DRAFTS:
         raise LiveE2EError(f"live runner expects one of {sorted(LIVE_KNOWN_DRAFTS)}")
@@ -2592,9 +2696,28 @@ async def run_live_e2e(raw):
                     f"--earlier-history-days {config['earlier_history_days']} disagrees "
                     f"with persisted {persisted.get('earlier_history_days')}"
                 )
-            config["bounds"] = persisted
+            new_report_days = config.get("report_window_days")
+            persisted_report_days = persisted.get("report_window_days") or persisted.get("window_days")
+            if new_report_days and int(new_report_days) != int(persisted_report_days or 0):
+                end = _parse_iso(persisted["report_end_exclusive"])
+                updated = window_bounds(
+                    int(persisted["window_days"]),
+                    int(persisted.get("earlier_history_days") or config["earlier_history_days"] or 0),
+                    end=end,
+                    history_to_first=persisted_htf,
+                    history_start_unix=persisted.get("history_start_unix") if persisted_htf else None,
+                    report_window_days=int(new_report_days),
+                )
+                config["bounds"] = updated
+                state["bounds"] = dict(updated)
+            else:
+                config["bounds"] = persisted
         else:
             state["bounds"] = dict(config["bounds"])
+        try:
+            verify_receipt_chain(store)
+        except ValueError as error:
+            raise LiveE2EError(f"ledger receipt chain failed: {error}") from error
         reconcile_state_spend(store, state)
         save_state(output_dir, state)
         recorder = RecorderTransport()
@@ -2657,10 +2780,36 @@ async def run_live_e2e(raw):
                 state["phases_done"] = sorted(done | {3})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
-            if 4 in config["phases"] and 4 not in done:
-                phase4 = phase4_offline(store, config, state)
-                state["phase4_wallets"] = phase4.get("wallets") or []
-                state["phases_done"] = sorted(done | {4})
+            wanted4 = phase4_targets(config, state)
+            already4 = {
+                row.get("address")
+                for row in (state.get("phase4_wallets") or [])
+                if isinstance(row, dict) and row.get("address")
+            }
+            pending4 = [addr for addr in wanted4 if addr not in already4]
+            if 4 in config["phases"] and (4 not in done or pending4):
+                if not wanted4:
+                    phase4 = {"wallets": [], "processed": 0}
+                    state["phase4_wallets"] = []
+                    # Never mark Phase 4 done when nothing was processed.
+                else:
+                    prior = {
+                        row.get("address"): row
+                        for row in (state.get("phase4_wallets") or [])
+                        if isinstance(row, dict) and row.get("address")
+                    }
+                    replay_config = dict(config)
+                    replay_config["wallets"] = wanted4
+                    phase4 = phase4_offline(store, replay_config, state)
+                    processed = phase4.get("wallets") or []
+                    for row in processed:
+                        if row.get("address"):
+                            prior[row["address"]] = row
+                    state["phase4_wallets"] = list(prior.values())
+                    phase4 = {"wallets": state["phase4_wallets"]}
+                    if processed:
+                        state["phases_done"] = sorted(set(done) | {4})
+                        done = set(state["phases_done"])
                 save_state(output_dir, state)
             else:
                 phase4 = {"wallets": state.get("phase4_wallets") or []}

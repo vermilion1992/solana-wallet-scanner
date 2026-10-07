@@ -328,13 +328,31 @@ def _outside_native(movements, address, wrap_accounts, route_index=None):
     return delta
 
 
-def _non_token_creates(movements, address, skip_accounts):
+def _non_token_creates(movements, address, skip_accounts, raw=None, keys=None):
+    """Rent policy (independent of scanner.investigation):
+
+    Accounts created and closed in this transaction net out — do not add the
+    create amount as retained. Long-lived account rent is not trade cost —
+    add only the created account's remaining native delta.
+    """
     extra = Decimal("0")
+    meta = (raw or {}).get("meta") or {}
+    pre = meta.get("preBalances") or []
+    post = meta.get("postBalances") or []
+    key_list = list(keys or [])
     for movement in movements:
         if movement["kind"] != "create" or movement.get("source") != address:
             continue
-        if movement.get("destination") in skip_accounts:
+        dest = movement.get("destination")
+        if dest in skip_accounts:
             continue
+        if dest in key_list:
+            index = key_list.index(dest)
+            if index < len(pre) and index < len(post):
+                net = Decimal(post[index] - pre[index])
+                if net > 0:
+                    extra += net
+                continue
         extra += Decimal(movement["lamports"] or 0)
     return extra
 
@@ -422,7 +440,7 @@ def reconstruct_record(record, address):
     wrap_accounts = wsol_accounts | set(route.get("owned") or []) | closed
     rent = _rent_correction(raw, accounts)
     outside = _outside_native(movements, address, wrap_accounts, route.get("index"))
-    retained = _non_token_creates(movements, address, set(accounts) | wrap_accounts)
+    retained = _non_token_creates(movements, address, set(accounts) | wrap_accounts, raw=raw, keys=keys)
     # Isolate the swap quote: wallet SOL+wSOL minus tips/other transfers, ATA rent,
     # and program-account funding. Those are costs or residuals, not consideration.
     settlement = native + wsol + rent - outside + retained

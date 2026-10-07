@@ -249,18 +249,24 @@ def _wallet_traded_mints(deltas):
     return {mint for mint, qty in (deltas or {}).items() if qty != 0 and mint != WSOL}
 
 
-def _material_cosigner(raw, keys, other, wallet_deltas):
-    """True when the co-signer buys/sells the same mint or takes material SOL."""
+def _material_cosigner(raw, keys, other, wallet_deltas, wallet=None):
+    """True when the co-signer is on the same side of the fill.
+
+    An opposite-side counterparty (Jupiter RFQ maker, OTC taker) is not a
+    bundle partner. Same-mint or material SOL only counts when the sign
+    matches the wallet's position change.
+    """
     other_native, _ = _native_delta(raw, keys, other)
     other_tokens = _owned_token_deltas(raw, other)
     traded = _wallet_traded_mints(wallet_deltas)
     for mint, qty in other_tokens.items():
-        if mint in traded and qty != 0:
+        wallet_qty = (wallet_deltas or {}).get(mint) or Decimal("0")
+        if mint in traded and qty != 0 and wallet_qty != 0 and (qty > 0) == (wallet_qty > 0):
             return True
-    if other_native >= MATERIAL_SOL_LAMPORTS:
-        return True
-    if other_native <= -MATERIAL_SOL_LAMPORTS:
-        return True
+    if wallet and abs(other_native) >= MATERIAL_SOL_LAMPORTS:
+        wallet_native, _ = _native_delta(raw, keys, wallet)
+        if abs(wallet_native) >= MATERIAL_SOL_LAMPORTS and (other_native > 0) == (wallet_native > 0):
+            return True
     return False
 
 
@@ -297,16 +303,34 @@ def _native_counterparties(raw, keys, address):
     return found
 
 
+def _token_account_keys(raw, keys):
+    found = set()
+    meta = raw.get("meta") or {}
+    for side in ("preTokenBalances", "postTokenBalances"):
+        for item in meta.get(side) or []:
+            if not isinstance(item, dict):
+                continue
+            index = item.get("accountIndex")
+            if isinstance(index, int) and 0 <= index < len(keys):
+                found.add(keys[index])
+    return found
+
+
 def _one_hop_forwarders(parsed_rows, address, destinations):
-    """Fresh addresses funded only by this wallet that later send to a controller."""
+    """Fresh addresses funded only by this wallet that later send to a controller.
+
+    Token-account rent (create ATA / closeAccount refund) is not a hop.
+    """
     funded_only_by_wallet = {}
     other_funders = set()
     forwards = {}
+    unknown_forwards = {}
     for raw, keys, _deltas, _record, _signers, has_swap in parsed_rows:
         if has_swap:
             continue
+        token_accounts = _token_account_keys(raw, keys)
         for key in keys:
-            if key == address or key in INFRA:
+            if key == address or key in INFRA or key in token_accounts:
                 continue
             other_delta, _ = _native_delta(raw, keys, key)
             wallet_delta, _ = _native_delta(raw, keys, address)
@@ -315,17 +339,31 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
             elif other_delta > 0 and wallet_delta >= 0:
                 other_funders.add(key)
         for dest in destinations:
-            if dest not in keys:
+            if dest not in keys or dest in token_accounts:
                 continue
             dest_delta, _ = _native_delta(raw, keys, dest)
             if dest_delta <= 0:
                 continue
             for key in keys:
-                if key in (address, dest) or key in INFRA:
+                if key in (address, dest) or key in INFRA or key in token_accounts:
                     continue
                 hop_delta, _ = _native_delta(raw, keys, key)
                 if hop_delta < 0 and dest_delta >= MATERIAL_SOL_LAMPORTS:
                     forwards.setdefault(key, set()).add(dest)
+        # Any later material send from a wallet-only-funded hop is a forward,
+        # even when the destination is not yet a known controller.
+        for key in keys:
+            if key == address or key in INFRA or key in token_accounts:
+                continue
+            hop_delta, _ = _native_delta(raw, keys, key)
+            if hop_delta >= 0 or abs(hop_delta) < MATERIAL_SOL_LAMPORTS:
+                continue
+            for other in keys:
+                if other in (address, key) or other in INFRA or other in token_accounts:
+                    continue
+                other_delta, _ = _native_delta(raw, keys, other)
+                if other_delta >= MATERIAL_SOL_LAMPORTS:
+                    unknown_forwards.setdefault(key, set()).add(other)
     hops = {}
     for hop, controllers in forwards.items():
         if hop in other_funders:
@@ -333,7 +371,14 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
         if hop not in funded_only_by_wallet:
             continue
         hops[hop] = controllers
-    return hops
+    unknown = {}
+    for hop, dests in unknown_forwards.items():
+        if hop in other_funders or hop not in funded_only_by_wallet:
+            continue
+        if hop in hops:
+            continue
+        unknown[hop] = dests
+    return hops, unknown
 
 
 def _detect_controlled_pair(parsed_rows, address):
@@ -397,7 +442,7 @@ def _detect_controlled_pair(parsed_rows, address):
                 explanations.append(
                     f"{party[:8]} is a fee-paying / swap co-signer that later sweeps proceeds"
                 )
-    hops = _one_hop_forwarders(parsed_rows, address, set(flagged) | set(funding) | swap_cosigners)
+    hops, unknown_hops = _one_hop_forwarders(parsed_rows, address, set(flagged) | set(funding) | swap_cosigners)
     for hop, controllers in hops.items():
         for controller in controllers:
             if controller not in flagged:
@@ -406,7 +451,7 @@ def _detect_controlled_pair(parsed_rows, address):
                 f"{hop[:8]} is a one-hop forwarder funded only by this wallet "
                 f"that sends proceeds to {controller[:8]}"
             )
-    return flagged, explanations
+    return flagged, explanations, unknown_hops
 
 
 def detect_bundle_or_distribution(records, address):
@@ -449,7 +494,7 @@ def detect_bundle_or_distribution(records, address):
             partners = []
             for other in others:
                 # Same-mint / material SOL wins over a Jito-tip disguise.
-                if not _material_cosigner(raw, keys, other, deltas):
+                if not _material_cosigner(raw, keys, other, deltas, wallet=address):
                     continue
                 partners.append(other)
             if partners:
@@ -515,11 +560,25 @@ def detect_bundle_or_distribution(records, address):
             if any(mint in later_sold for mint in gained if mint != WSOL):
                 sold_quarantined.update(mint for mint in gained if mint in later_sold and mint != WSOL)
                 zero_basis.append(signature)
+    swap_traded = set()
+    for raw, keys, deltas, _record, _signers, _has_swap in parsed_rows:
+        if keys and _has_reviewed_swap(raw, keys):
+            swap_traded.update(_wallet_traded_mints(deltas))
+    sold_quarantined -= swap_traded
+    quarantined -= swap_traded
     if shared_funders and multi_signer:
         reasons.append("shared_funder")
-    controlled, controlled_explanations = _detect_controlled_pair(parsed_rows, address)
+    controlled, controlled_explanations, unknown_hops = _detect_controlled_pair(parsed_rows, address)
     if controlled:
         reasons.append("controlled_pair")
+    if unknown_hops:
+        reasons.append("unknown_destination")
+        for hop, dests in unknown_hops.items():
+            dest = next(iter(dests))
+            controlled_explanations.append(
+                f"{hop[:8]} is a fresh address funded only by this wallet that "
+                f"forwards onward (unknown destination {dest[:8]})"
+            )
     # Wallet-level zero-basis is gone. Never-sold inflows are quarantined
     # inventory only. A later sale of a quarantined mint is unresolved, not
     # a wallet-level lead block.
