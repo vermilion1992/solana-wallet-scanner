@@ -18,6 +18,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 EVIDENCE = ROOT / "evidence/mass-wallet-funnel/research-search-b-2026-10-06"
 OUT = EVIDENCE / "offline-acceptance"
 DRAFT = ROOT / "config/live_authorization.ranked100-depth-biased-next-capture-draft.json"
