@@ -10,11 +10,12 @@ must never produce a dummy live call.
 """
 from __future__ import annotations
 
-from collections import Counter, defaultdict
+from collections import defaultdict
 from datetime import datetime, timezone
 from decimal import Decimal
 
 from scanner.config import validate_address
+from scanner.mass_search.qualification_gates import economic_trades_by_utc_day
 
 SEED_BIRDEYE_TOP = "birdeye_top"
 SEED_TOKEN_INTERSECT = "token_intersect"
@@ -847,20 +848,8 @@ def cheap_prescreen_decision(signals, *, max_trades_per_day=None, min_history_da
     }
 
 
-def economic_trades_by_utc_day(events):
-    """Count decoded buy/sell events per UTC date. Not raw transactions."""
-    counts = Counter()
-    for event in events or []:
-        if not isinstance(event, dict):
-            continue
-        if event.get("kind") not in ("buy", "sell"):
-            continue
-        stamp = event.get("block_time") or event.get("blockTime") or event.get("timestamp")
-        if type(stamp) is not int:
-            continue
-        day = datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
-        counts[day] += 1
-    return dict(counts)
+# economic_trades_by_utc_day: shared helper. (signature, kind, mint)
+# dedupe; ISO or unix timestamps; route legs are not trades.
 
 
 def helius_triage_decision(samples, *, now_unix, bundle=None, created_in_range=False):
