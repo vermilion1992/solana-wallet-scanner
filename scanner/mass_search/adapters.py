@@ -24,11 +24,13 @@ ALLOWED_BIRDEYE_PATH = "/trader/gainers-losers"
 BIRDEYE_TOP_TRADERS_PATH = "/defi/v2/tokens/top_traders"
 BIRDEYE_TOKEN_LIST_PATH = "/defi/v3/token/list"
 BIRDEYE_FIRST_BUYERS_PATH = "/token/v1/first-buyers"
+BIRDEYE_TOKEN_TX_SEEK_PATH = "/defi/txs/token/seek_by_time"
 ALLOWED_BIRDEYE_PATHS = frozenset({
     ALLOWED_BIRDEYE_PATH,
     BIRDEYE_TOP_TRADERS_PATH,
     BIRDEYE_TOKEN_LIST_PATH,
     BIRDEYE_FIRST_BUYERS_PATH,
+    BIRDEYE_TOKEN_TX_SEEK_PATH,
 })
 
 

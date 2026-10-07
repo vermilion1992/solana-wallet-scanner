@@ -5,7 +5,7 @@
   "authorized_by_user_at": null,
   "expires_at": "2026-10-14T13:30:00Z",
   "pinned_ledger_home": "/home/box/.scanner/live-e2e-ledgers",
-  "purpose": "DRAFT only. Phase 1 seed-source expansion after run 7: Birdeye early-buyers-of-durable-tokens (token-list + first-buyers) and cheap pre-spend filters. Smart-money leaderboards (GMGN/Cielo/Kolscan) are not viable without a key or ToS-problematic scrape; leaderboard caps stay 0. Feeds the unchanged prove-it pipeline. A seed is never evidence. Not a permission grant in repo.",
+  "purpose": "DRAFT only. Phase 1 seed sources after run 7: combinable birdeye_top, token_intersect (seasoned-token ordinary-period buyers, intersect >=3 cohorts), optional Nansen pnl-leaderboard + profiler. Cheap Helius triage (3 bounded samples) before --history-to-first. A seed is never evidence. Not a permission grant in repo.",
   "first_live_target_after_grant": "LIVE_E2E_PROOF_ONLY",
   "max_additional_spend_usd": "0",
   "overages_enabled": false,
@@ -14,15 +14,15 @@
   "do_not_reset_setup_pilot": true,
   "PRODUCT_READY": false,
   "phase_caps": {
-    "1": {"birdeye_requests": 40, "birdeye_units": 1400, "helius_requests": 0, "helius_units": 0, "leaderboard_requests": 0, "leaderboard_units": 0},
-    "2": {"birdeye_requests": 0, "birdeye_units": 0, "helius_requests": 600, "helius_units": 6000, "leaderboard_requests": 0, "leaderboard_units": 0},
-    "3": {"birdeye_requests": 0, "birdeye_units": 0, "helius_requests": 400, "helius_units": 24000, "leaderboard_requests": 0, "leaderboard_units": 0},
-    "4": {"birdeye_requests": 0, "birdeye_units": 0, "helius_requests": 0, "helius_units": 0, "leaderboard_requests": 0, "leaderboard_units": 0}
+    "1": {"birdeye_requests": 40, "birdeye_units": 1400, "helius_requests": 0, "helius_units": 0, "nansen_requests": 20, "nansen_units": 100, "leaderboard_requests": 0, "leaderboard_units": 0},
+    "2": {"birdeye_requests": 0, "birdeye_units": 0, "helius_requests": 900, "helius_units": 9000, "nansen_requests": 0, "nansen_units": 0, "leaderboard_requests": 0, "leaderboard_units": 0},
+    "3": {"birdeye_requests": 0, "birdeye_units": 0, "helius_requests": 180, "helius_units": 18000, "nansen_requests": 0, "nansen_units": 0, "leaderboard_requests": 0, "leaderboard_units": 0},
+    "4": {"birdeye_requests": 0, "birdeye_units": 0, "helius_requests": 0, "helius_units": 0, "nansen_requests": 0, "nansen_units": 0, "leaderboard_requests": 0, "leaderboard_units": 0}
   },
   "providers": [
     {
       "provider_id": "birdeye",
-      "allowed_operations": ["trader_gainers_losers", "token_top_traders", "token_list", "token_first_buyers"],
+      "allowed_operations": ["trader_gainers_losers", "token_top_traders", "token_list", "token_txs_seek"],
       "billing_unit": "birdeye_compute_unit",
       "existing_plan_confirmed": false,
       "remaining_quota_confirmed_at": null,
@@ -32,7 +32,7 @@
       "max_units": 1400,
       "max_concurrency": 1,
       "max_duration_seconds": 600,
-      "purpose": "Phase 1 seed sources only. Ceiling 40 requests / 1400 CU. Documented: gainers-losers 30 CU; top_traders 35 CU; token list V3 60 CU; first-buyers 25 CU (docs.birdeye.so compute-unit-cost, reviewed 2026-10-07). Early-buyers default plan is 1 list + 4 first-buyer pages = 160 CU. A seed is never evidence. No paid spend."
+      "purpose": "Phase 1 seeds only. Ceiling 40 requests / 1400 CU. Documented: gainers-losers 30 CU; top_traders 35 CU; token list V3 60 CU; token txs seek_by_time 10 CU. token_intersect default plan is 1 list + 10 tokens x 3 windows x 1 page = 31 req / 360 CU. A seed is never evidence. No paid spend."
     },
     {
       "provider_id": "helius",
@@ -46,7 +46,21 @@
       "max_units": 30000,
       "max_concurrency": 1,
       "max_duration_seconds": 7200,
-      "purpose": "Unchanged prove-it path. Phase 2 cheap sample then Phase 3 history. Cheap pre-spend filters drop >25 trades/day or <30 days of history using already-captured signals before Phase 3. Ledger pinned. No paid spend."
+      "purpose": "Phase 2 cheap triage ~9000 credits (3 bounded full samples/wallet). Phase 3 full history ~18000. Reserve 3000. Only triage survivors get --history-to-first. Ledger pinned. No paid spend."
+    },
+    {
+      "provider_id": "nansen",
+      "allowed_operations": ["smart_money_pnl_leaderboard", "profiler_pnl_summary", "profiler_first_funder"],
+      "billing_unit": "nansen_credit",
+      "existing_plan_confirmed": false,
+      "remaining_quota_confirmed_at": null,
+      "cycle_start": "2026-10-07T00:00:00Z",
+      "cycle_end_exclusive": "2026-10-14T13:30:00Z",
+      "max_requests": 20,
+      "max_units": 100,
+      "max_concurrency": 1,
+      "max_duration_seconds": 600,
+      "purpose": "Optional. Disabled when NANSEN_API_KEY is absent; never a dummy call. Allowlisted: POST /api/v1/smart-money/pnl-leaderboard (5 credits, 90d/180d) and profiler pnl-summary/first-funder (1 credit). Forbidden: labels (100 credits) and premium_labels."
     },
     {
       "provider_id": "leaderboard",
@@ -60,7 +74,7 @@
       "max_units": 0,
       "max_concurrency": 1,
       "max_duration_seconds": 0,
-      "purpose": "Reserved. GMGN has no official API (unofficial scrape is ToS-problematic). Cielo official API requires a paid key. Kolscan has no official public GET. Caps stay 0. Live fetch is refused."
+      "purpose": "Reserved unused. GMGN/Cielo/Kolscan are not viable. Nansen is the only official smart-money path and has its own provider block."
     }
   ],
   "notes": [
@@ -69,7 +83,7 @@
     "Zero extra spend. No overages. No paid upgrade. No plan upgrade. No setup-pilot reset.",
     "Do not put API keys, tokens, or signing secrets in this file.",
     "HTTP product routes never dispatch. Live calls go only through scripts/live_e2e.py on the operator box.",
-    "Armed local copies must set draft_artifact_hash to the pinned SHA-256 in scanner/mass_search/live_e2e.py PINNED_DRAFT_HASHES. Armed provider and phase caps must be <= these draft caps and <= HARD_CEILINGS (Birdeye 40/1400, Helius 3000/30000, leaderboard 0/0). A local commit cannot raise those ceilings.",
+    "Armed local copies must set draft_artifact_hash to the pinned SHA-256 in scanner/mass_search/live_e2e.py PINNED_DRAFT_HASHES. Armed provider and phase caps must be <= these draft caps and <= HARD_CEILINGS (Birdeye 40/1400, Helius 3000/30000, Nansen 20/100, leaderboard 0/0). A local commit cannot raise those ceilings.",
     "pinned_ledger_home is the absolute path /home/box/.scanner/live-e2e-ledgers. --live refuses a HOME-relative pin, a different armed ledger_home, or a SCANNER_LIVE_LEDGER_* override that differs. Re-arming with a new ledger home is refused.",
     "A seed source is never evidence. Phase 2-4 gates and the independent auditor are unchanged.",
     "Spend is ledgered per authorization_id, not per output folder. The ledger is hash-chained and verified on every start."

@@ -51,7 +51,7 @@ MANDATORY = [
     "tests/test_bot_rate_lead_gate.py",
     "tests/test_live_e2e_seed_sources.py",
 ]
-FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL")
+FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 
 
 def _run(command, log_path, env):

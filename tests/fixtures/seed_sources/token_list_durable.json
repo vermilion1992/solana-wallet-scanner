@@ -22,7 +22,8 @@
         "liquidity": 8000000,
         "mc": 900000000,
         "recent_listing_time": 1680000000,
-        "last_trade_unix_time": 1791290000
+        "last_trade_unix_time": 1791290000,
+        "price_change_24h_percent": -3.5
       },
       {
         "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
