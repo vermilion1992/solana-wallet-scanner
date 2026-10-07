@@ -297,8 +297,47 @@ def _native_counterparties(raw, keys, address):
     return found
 
 
+def _one_hop_forwarders(parsed_rows, address, destinations):
+    """Fresh addresses funded only by this wallet that later send to a controller."""
+    funded_only_by_wallet = {}
+    other_funders = set()
+    forwards = {}
+    for raw, keys, _deltas, _record, _signers, has_swap in parsed_rows:
+        if has_swap:
+            continue
+        for key in keys:
+            if key == address or key in INFRA:
+                continue
+            other_delta, _ = _native_delta(raw, keys, key)
+            wallet_delta, _ = _native_delta(raw, keys, address)
+            if wallet_delta < 0 and other_delta > 0 and key in destinations:
+                funded_only_by_wallet[key] = funded_only_by_wallet.get(key, Decimal("0")) + other_delta
+            elif other_delta > 0 and wallet_delta >= 0:
+                other_funders.add(key)
+        for dest in destinations:
+            if dest not in keys:
+                continue
+            dest_delta, _ = _native_delta(raw, keys, dest)
+            if dest_delta <= 0:
+                continue
+            for key in keys:
+                if key in (address, dest) or key in INFRA:
+                    continue
+                hop_delta, _ = _native_delta(raw, keys, key)
+                if hop_delta < 0 and dest_delta >= MATERIAL_SOL_LAMPORTS:
+                    forwards.setdefault(key, set()).add(dest)
+    hops = {}
+    for hop, controllers in forwards.items():
+        if hop in other_funders:
+            continue
+        if hop not in funded_only_by_wallet:
+            continue
+        hops[hop] = controllers
+    return hops
+
+
 def _detect_controlled_pair(parsed_rows, address):
-    """Funding and withdrawals dominated by one co-signing counterparty."""
+    """Funding and withdrawals dominated by one counterparty (need not co-sign)."""
     funding = {}
     withdrawals = {}
     cosigned_with = set()
@@ -349,14 +388,24 @@ def _detect_controlled_pair(parsed_rows, address):
         if dominated or swept:
             flagged.append(party)
             if dominated:
+                signed = "signs funding and dominates" if inbound.get("party_signed") else "dominates"
                 explanations.append(
-                    f"{party[:8]} co-signs and dominates funding "
+                    f"{party[:8]} {signed} funding "
                     f"({in_share:.2%}) and withdrawals ({out_share:.2%})"
                 )
             if swept:
                 explanations.append(
                     f"{party[:8]} is a fee-paying / swap co-signer that later sweeps proceeds"
                 )
+    hops = _one_hop_forwarders(parsed_rows, address, set(flagged) | set(funding) | swap_cosigners)
+    for hop, controllers in hops.items():
+        for controller in controllers:
+            if controller not in flagged:
+                flagged.append(controller)
+            explanations.append(
+                f"{hop[:8]} is a one-hop forwarder funded only by this wallet "
+                f"that sends proceeds to {controller[:8]}"
+            )
     return flagged, explanations
 
 
@@ -386,6 +435,8 @@ def detect_bundle_or_distribution(records, address):
     multi_signer = []
     proceeds_to_cosigner = []
     zero_basis = []
+    quarantined = set()
+    sold_quarantined = set()
     counterparts = set()
     for raw, keys, deltas, record, signers, has_swap in parsed_rows:
         native, paid = _native_delta(raw, keys, address) if keys else (Decimal("0"), False)
@@ -397,8 +448,7 @@ def detect_bundle_or_distribution(records, address):
             others = [item for item in signers if item != address]
             partners = []
             for other in others:
-                if _cosigner_is_tip_payer(raw, keys, other):
-                    continue
+                # Same-mint / material SOL wins over a Jito-tip disguise.
                 if not _material_cosigner(raw, keys, other, deltas):
                     continue
                 partners.append(other)
@@ -458,15 +508,21 @@ def detect_bundle_or_distribution(records, address):
             # history problem, not a bundle transfer-in.
             if native <= -MATERIAL_SOL_LAMPORTS and gained:
                 continue
-            if _benign_inflow(gained, later_sold):
-                continue
-            zero_basis.append(signature)
-            reasons.append("transfer_in_zero_basis")
+            for mint in gained:
+                if mint in (WSOL,):
+                    continue
+                quarantined.add(mint)
+            if any(mint in later_sold for mint in gained if mint != WSOL):
+                sold_quarantined.update(mint for mint in gained if mint in later_sold and mint != WSOL)
+                zero_basis.append(signature)
     if shared_funders and multi_signer:
         reasons.append("shared_funder")
     controlled, controlled_explanations = _detect_controlled_pair(parsed_rows, address)
     if controlled:
         reasons.append("controlled_pair")
+    # Wallet-level zero-basis is gone. Never-sold inflows are quarantined
+    # inventory only. A later sale of a quarantined mint is unresolved, not
+    # a wallet-level lead block.
     unique = []
     for item in reasons:
         if item not in unique:
@@ -480,6 +536,8 @@ def detect_bundle_or_distribution(records, address):
         "multi_signer_buys": multi_signer,
         "sell_proceeds_to_cosigner": proceeds_to_cosigner,
         "zero_basis_signatures": [item for item in zero_basis if item],
+        "quarantined_mints": sorted(quarantined),
+        "sold_quarantined_mints": sorted(sold_quarantined),
         "controlled_pair": controlled,
         "controlled_pair_explanation": "; ".join(controlled_explanations) if controlled_explanations else None,
         "lead_eligible": not excluded,

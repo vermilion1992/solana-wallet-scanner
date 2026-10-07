@@ -105,8 +105,9 @@ def test_b1_truncated_history_is_explicit():
 def test_b2_token_inflow_without_account_keys():
     payload = _load("token-in-no-account-keys.json")
     detected = detect_bundle_or_distribution(payload["records"], payload["address"])
-    assert detected["excluded"] is True
-    assert "transfer_in_zero_basis" in detected["reasons"]
+    # Never-sold inflows are quarantined inventory, not a wallet-level block.
+    assert "transfer_in_zero_basis" not in (detected.get("reasons") or [])
+    assert detected.get("quarantined_mints")
 
 
 def test_b3_fee_payer_multi_signer_is_flagged():

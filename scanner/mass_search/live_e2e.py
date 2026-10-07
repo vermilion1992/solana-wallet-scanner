@@ -92,12 +92,19 @@ from scanner.mass_search.live_e2e_ledger import (
     phase_caps_from_grant,
     provider_caps,
     put_receipt,
+    RECEIPT_KIND,
     receipt_is_spent,
     request_identity,
     spend_from_ledger,
+    verify_receipt_chain,
 )
 from scanner.mass_search.qualification_gates import coverage_shares, qualifying_profit
-from scanner.mass_search.research_profile import build_research_profile, default_filters, independently_audited
+from scanner.mass_search.research_profile import (
+    attach_live_independent_audit,
+    build_research_profile,
+    default_filters,
+    independently_audited,
+)
 from scanner.mass_search.workflow import _authoritative_saved_profile
 from scanner.storage import QuotaExceeded, Store
 
@@ -127,7 +134,7 @@ KNOWN_DRAFTS = {**RETIRED_LIVE_DRAFTS, **LIVE_KNOWN_DRAFTS}
 PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID: "ca4c3f9637d5d8ee11475a8c1704bb964a0a7bed4e126c69e92c65ef9043f410",
     AUTHORIZATION_ID_NEXT: "cda7b98d4d3bf0c219c53f4c37f2c6bc3b62d9480b60ad69d01f1709fc65af62",
-    AUTHORIZATION_ID_11: "d0a44d99a64500258ac6afde52010b88a933edb51bd1f90eeb2b7e5643897534",
+    AUTHORIZATION_ID_11: "a2b6b4b53717f9d7dcb5f0f9a60bd073274af4e810aae3943af7edb9d003512b",
 }
 HARD_CEILINGS = {
     "birdeye_requests": 30,
@@ -136,7 +143,10 @@ HARD_CEILINGS = {
     "helius_units": 30000,
 }
 # Ledger home is pinned here and in the committed draft, not in the armed copy.
+# --live uses this absolute path. It must not depend on HOME.
 PINNED_LEDGER_REL = ".scanner/live-e2e-ledgers"
+COMMITTED_LEDGER_ABSOLUTE = "/home/box/.scanner/live-e2e-ledgers"
+PINNED_LEDGER_ABSOLUTE = COMMITTED_LEDGER_ABSOLUTE
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
 HELIUS_KEY_ENV = "HELIUS_API_KEY"
 HELIUS_ENDPOINT = "https://mainnet.helius-rpc.com/"
@@ -164,6 +174,10 @@ BIRDEYE_TOP_TRADERS_UNITS = 35
 BIRDEYE_DEFAULT_LIMIT = 100
 BIRDEYE_DEFAULT_WINDOW = "30d"
 BIRDEYE_DEFAULT_SORT = "trader_score"
+BIRDEYE_TOP_TRADERS_SORTS = frozenset({
+    "volume", "trade", "total_pnl", "unrealized_pnl", "realized_pnl", "volume_usd",
+})
+BIRDEYE_TOP_TRADERS_DEFAULT_SORT = "realized_pnl"
 BIRDEYE_DISCOVERY_GAINERS = "gainers-losers"
 BIRDEYE_DISCOVERY_TOP_TRADERS = "top-traders"
 # Liquid established tokens for solo-trader top-traders discovery.
@@ -335,16 +349,19 @@ def parse_wallets(value):
     return [part.strip() for part in str(value).split(",") if part.strip()]
 
 
-def window_bounds(window_days, earlier_history_days, *, end=None, history_to_first=False, history_start_unix=None):
+def window_bounds(window_days, earlier_history_days, *, end=None, history_to_first=False, history_start_unix=None, report_window_days=None):
     if type(window_days) is not int or not 1 <= window_days <= 365:
         raise LiveE2EError("window_days must be an integer 1-365")
+    report_days = window_days if report_window_days is None else report_window_days
+    if type(report_days) is not int or not 1 <= report_days <= 365:
+        raise LiveE2EError("report_window_days must be an integer 1-365")
     if history_to_first or history_start_unix is not None:
         if type(earlier_history_days) is not int or earlier_history_days < 0:
             raise LiveE2EError("earlier_history_days must be a non-negative integer")
     elif type(earlier_history_days) is not int or not 0 <= earlier_history_days <= 365:
         raise LiveE2EError("earlier_history_days must be an integer 0-365")
     end = end or datetime.now(timezone.utc).replace(microsecond=0)
-    report_start = end - timedelta(days=window_days)
+    report_start = end - timedelta(days=report_days)
     if history_start_unix is not None:
         if type(history_start_unix) is not int or history_start_unix < 0:
             raise LiveE2EError("history_start_unix must be a non-negative Unix timestamp")
@@ -366,6 +383,7 @@ def window_bounds(window_days, earlier_history_days, *, end=None, history_to_fir
         "report_end_unix": int(end.timestamp()),
         "history_start_unix": int(history_start.timestamp()),
         "window_days": window_days,
+        "report_window_days": report_days,
         "earlier_history_days": earlier,
         "history_to_first": bool(history_to_first or history_start_unix is not None),
     }
@@ -1377,7 +1395,7 @@ def _receipt_sha_for_page(store, address, page_name, phase=None):
     return None
 
 
-def _verify_saved_page(path, relative=None, expected_sha=None):
+def _verify_saved_page(path, relative=None, expected_sha=None, *, require_ledger_sha=False):
     """Require integrity receipt + result body. Sidecar rewrite alone cannot pass.
 
     The immutable ledger receipt sha256 is the source of truth. A tampered
@@ -1402,23 +1420,21 @@ def _verify_saved_page(path, relative=None, expected_sha=None):
     scrubbed = bool(integrity.get("scrubbed"))
     if written != file_sha:
         raise SourceError("MISSING_CAPTURE", f"raw page hash mismatch: {label}; not covered")
-    if expected_sha:
-        if scrubbed:
-            if original != expected_sha:
-                raise SourceError(
-                    "MISSING_CAPTURE",
-                    f"ledger receipt sha mismatch (scrubbed original): {label}; not covered",
-                )
-        elif file_sha != expected_sha:
-            raise SourceError(
-                "MISSING_CAPTURE",
-                f"ledger receipt sha mismatch: {label}; file was rewritten; not covered",
-            )
-        if not scrubbed and original and original != expected_sha:
-            raise SourceError(
-                "MISSING_CAPTURE",
-                f"sidecar original_sha256 disagrees with ledger: {label}; not covered",
-            )
+    if require_ledger_sha and not expected_sha:
+        raise SourceError(
+            "MISSING_CAPTURE",
+            f"no ledger receipt sha for {label}; refusing unreceipted page; not covered",
+        )
+    if expected_sha and file_sha != expected_sha:
+        raise SourceError(
+            "MISSING_CAPTURE",
+            f"ledger receipt sha mismatch: {label}; file was rewritten; not covered",
+        )
+    if expected_sha and original and original != expected_sha:
+        raise SourceError(
+            "MISSING_CAPTURE",
+            f"sidecar original_sha256 disagrees with ledger: {label}; not covered",
+        )
     try:
         body = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -1463,7 +1479,9 @@ def _import_paid_page(config, store, phase, address, page_index, expected_sha):
             sidecar = candidate.with_name(candidate.name + ".integrity.json")
             if sidecar.is_file():
                 dest.with_name(dest.name + ".integrity.json").write_bytes(sidecar.read_bytes())
-            raw, records, token = _verify_saved_page(dest, relative, expected_sha=expected_sha)
+            raw, records, token = _verify_saved_page(
+                dest, relative, expected_sha=expected_sha, require_ledger_sha=True,
+            )
             return raw, records, token
     guidance = (
         f"Paid page sha256={expected_sha} is not in this output dir "
@@ -1492,7 +1510,14 @@ def _replay_saved_page(config, phase, address, page_index, units, store=None):
                 f"<prior-raw-root> or copy the paid page plus sidecar. "
                 f"Refusing to re-send.",
             )
-        raw, records, token = _verify_saved_page(path, relative, expected_sha=expected_sha)
+        if store is not None:
+            try:
+                verify_receipt_chain(store)
+            except ValueError as error:
+                raise SourceError("MISSING_CAPTURE", f"receipt hash chain failed: {error}; not covered") from error
+        raw, records, token = _verify_saved_page(
+            path, relative, expected_sha=expected_sha, require_ledger_sha=True,
+        )
     return {
         "records": records,
         "pagination_token": token,
@@ -1516,9 +1541,30 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
         save_state(config["output_dir"], state)
         return _replay_saved_page(config, phase, address, page_index, units, store=store)
     existing_page = Path(config["output_dir"]) / f"raw/phase{phase}/{address}/page{page_index}.bin"
-    if existing_page.is_file() and existing_page.stat().st_size > 0:
-        # Kill between save_raw and consumed receipt: adopt the file, no re-send.
-        adopted = _replay_saved_page(config, phase, address, page_index, units, store=store)
+    reserved_pending = isinstance(existing, dict) and existing.get("state") in ("reserved", "dispatched")
+    if existing_page.is_file() and existing_page.stat().st_size > 0 and not reserved_pending:
+        raise SourceError(
+            "UNRECEIPTED_PAGE",
+            f"refusing unreceipted page in output dir: raw/phase{phase}/{address}/page{page_index}.bin; not covered",
+        )
+    if existing_page.is_file() and existing_page.stat().st_size > 0 and reserved_pending:
+        # Kill between save_raw and consumed receipt: adopt the reserved file.
+        relative = f"raw/phase{phase}/{address}/page{page_index}.bin"
+        try:
+            verify_receipt_chain(store)
+        except ValueError as error:
+            raise SourceError("MISSING_CAPTURE", f"receipt hash chain failed: {error}; not covered") from error
+        raw, records, token = _verify_saved_page(existing_page, relative, require_ledger_sha=False)
+        adopted = {
+            "records": records,
+            "pagination_token": token,
+            "http_status": 200,
+            "raw_bytes": raw,
+            "evidence_sha256": _sha256_bytes(raw),
+            "units": units,
+            "external_requests": 0,
+            "replayed_from_receipt": True,
+        }
         put_receipt(store, grant, key, {
             "provider": "helius",
             "wallet": address,
@@ -1639,6 +1685,9 @@ async def phase1_discovery(store, grant, config, state, recorder):
     if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
         params["time_frame"] = params.pop("type")
         params["tokens"] = list(config.get("birdeye_tokens") or [])
+        sort = params.get("sort_by") or BIRDEYE_TOP_TRADERS_DEFAULT_SORT
+        if sort not in BIRDEYE_TOP_TRADERS_SORTS:
+            params["sort_by"] = BIRDEYE_TOP_TRADERS_DEFAULT_SORT
     identity = discovery_identity(config)
     base = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=identity)
     key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
@@ -1655,14 +1704,16 @@ async def phase1_discovery(store, grant, config, state, recorder):
             "count": len(addresses),
         }
     reservation = None
-    put_receipt(store, grant, key, {
-        "provider": "birdeye",
-        "wallet": "_",
-        "phase": 1,
-        "page": 0,
-        "units": phase1_units,
-        "state": "reserved",
-    })
+    batch_receipt = source != BIRDEYE_DISCOVERY_TOP_TRADERS
+    if batch_receipt:
+        put_receipt(store, grant, key, {
+            "provider": "birdeye",
+            "wallet": "_",
+            "phase": 1,
+            "page": 0,
+            "units": phase1_units,
+            "state": "reserved",
+        })
     charged = False
     try:
         if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
@@ -1671,40 +1722,72 @@ async def phase1_discovery(store, grant, config, state, recorder):
                 raise LiveE2EError("top-traders discovery requires --birdeye-tokens")
             addresses = []
             raw_parts = []
+            sort = params.get("sort_by") or BIRDEYE_TOP_TRADERS_DEFAULT_SORT
+            if sort not in BIRDEYE_TOP_TRADERS_SORTS:
+                sort = BIRDEYE_TOP_TRADERS_DEFAULT_SORT
             if not config["dry_run"]:
                 if not grant.get("enabled"):
                     raise SourceError("UNAUTHORIZED", grant.get("reason") or "grant disabled")
                 if "token_top_traders" not in (provider_entry(grant, "birdeye").get("allowed_operations") or []):
                     raise SourceError("UNAUTHORIZED", "Authorization does not include Birdeye token_top_traders")
-                entry = provider_entry(grant, "birdeye")
-                reservation = store.reserve(
-                    "birdeye", "token_top_traders", phase1_units, entry["cycle_start"], entry["max_units"],
-                )
-                store.dispatch(reservation)
-                put_receipt(store, grant, key, {
-                    "provider": "birdeye",
-                    "wallet": "_",
-                    "phase": 1,
-                    "page": 0,
-                    "units": phase1_units,
-                    "state": "dispatched",
-                    "reservation_id": reservation,
-                    "discovery_identity": identity,
-                })
             for index, token in enumerate(tokens):
+                token_key = request_identity(
+                    "birdeye", wallet=token, phase=1, page=index, cursor=f"{identity}:{token}",
+                )
+                token_units = BIRDEYE_TOP_TRADERS_UNITS
+                hard_stop_if_needed(
+                    config, state["spend"], provider="birdeye", units=token_units,
+                    phase=1, phase_spend=state.get("phase_spend"),
+                )
                 call_params = {
                     "address": token,
                     "time_frame": params.get("time_frame") or BIRDEYE_DEFAULT_WINDOW,
-                    "sort_by": params.get("sort_by") or "volume",
+                    "sort_by": sort,
                     "sort_type": "desc",
                     "offset": 0,
                     "limit": min(int(params.get("limit") or 10), 10),
                 }
+                token_res = None
                 if config["dry_run"]:
+                    put_receipt(store, grant, token_key, {
+                        "provider": "birdeye", "wallet": token, "phase": 1, "page": index,
+                        "units": token_units, "state": "consumed", "discovery_identity": identity,
+                    })
                     response = await recorder.birdeye("GET", BIRDEYE_TOP_TRADERS_PATH, call_params)
                     raw_parts.append(response.get("raw_bytes") or b"{}")
+                    _account_spend(state, provider="birdeye", units=token_units, phase=1)
                     continue
-                response = await _live_birdeye("GET", BIRDEYE_TOP_TRADERS_PATH, call_params)
+                try:
+                    entry = provider_entry(grant, "birdeye")
+                    token_res = store.reserve(
+                        "birdeye", "token_top_traders", token_units, entry["cycle_start"], entry["max_units"],
+                    )
+                    store.dispatch(token_res)
+                    put_receipt(store, grant, token_key, {
+                        "provider": "birdeye", "wallet": token, "phase": 1, "page": index,
+                        "units": token_units, "state": "dispatched", "reservation_id": token_res,
+                        "discovery_identity": identity,
+                    })
+                    response = await _live_birdeye("GET", BIRDEYE_TOP_TRADERS_PATH, call_params)
+                    store.settle(token_res, charge=True)
+                    put_receipt(store, grant, token_key, {
+                        "provider": "birdeye", "wallet": token, "phase": 1, "page": index,
+                        "units": token_units, "state": "consumed", "reservation_id": token_res,
+                        "discovery_identity": identity,
+                    })
+                    _account_spend(state, provider="birdeye", units=token_units, phase=1)
+                except Exception:
+                    if token_res:
+                        try:
+                            store.settle(token_res, charge=True)
+                        except ValueError:
+                            pass
+                    put_receipt(store, grant, token_key, {
+                        "provider": "birdeye", "wallet": token, "phase": 1, "page": index,
+                        "units": token_units, "state": "failed", "reservation_id": token_res,
+                    })
+                    _account_spend(state, provider="birdeye", units=token_units, phase=1)
+                    raise
                 body = response.get("body") if isinstance(response.get("body"), dict) else {}
                 items = body.get("data", {}).get("items") if isinstance(body.get("data"), dict) else body.get("items")
                 if not isinstance(items, list):
@@ -1714,9 +1797,8 @@ async def phase1_discovery(store, grant, config, state, recorder):
                     if addr:
                         addresses.append(addr)
                 raw_parts.append(response.get("raw_bytes") or b"{}")
-            if reservation and not config["dry_run"]:
-                store.settle(reservation, charge=True)
-                charged = True
+            charged = True
+            reservation = None
             raw = b"\n".join(raw_parts) if raw_parts else b"{}"
         elif config["dry_run"]:
             response = await recorder.birdeye("GET", ALLOWED_BIRDEYE_PATH, params)
@@ -1762,33 +1844,35 @@ async def phase1_discovery(store, grant, config, state, recorder):
                 store.settle(reservation, charge=True)
             except ValueError:
                 pass
+        if batch_receipt:
+            put_receipt(store, grant, key, {
+                "provider": "birdeye",
+                "wallet": "_",
+                "phase": 1,
+                "page": 0,
+                "units": phase1_units,
+                "state": "failed",
+                "reservation_id": reservation,
+            })
+            _account_spend(state, provider="birdeye", units=phase1_units, phase=1)
+        save_state(config["output_dir"], state)
+        raise
+    digest_name = "birdeye-" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12] + ".bin"
+    digest = _save_raw(config["output_dir"], f"raw/phase1/{digest_name}", raw)
+    _save_raw(config["output_dir"], "raw/phase1/birdeye.bin", raw)
+    if batch_receipt:
         put_receipt(store, grant, key, {
             "provider": "birdeye",
             "wallet": "_",
             "phase": 1,
             "page": 0,
             "units": phase1_units,
-            "state": "failed",
+            "state": "consumed",
+            "sha256": digest,
             "reservation_id": reservation,
+            "discovery_identity": identity,
         })
         _account_spend(state, provider="birdeye", units=phase1_units, phase=1)
-        save_state(config["output_dir"], state)
-        raise
-    digest_name = "birdeye-" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12] + ".bin"
-    digest = _save_raw(config["output_dir"], f"raw/phase1/{digest_name}", raw)
-    _save_raw(config["output_dir"], "raw/phase1/birdeye.bin", raw)
-    put_receipt(store, grant, key, {
-        "provider": "birdeye",
-        "wallet": "_",
-        "phase": 1,
-        "page": 0,
-        "units": phase1_units,
-        "state": "consumed",
-        "sha256": digest,
-        "reservation_id": reservation,
-        "discovery_identity": identity,
-    })
-    _account_spend(state, provider="birdeye", units=phase1_units, phase=1)
     state.setdefault("discoveries", {})[identity] = {
         "addresses": list(addresses),
         "sha256": digest,
@@ -1826,14 +1910,29 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             start_unix=bounds["report_start_unix"],
             end_unix=bounds["report_end_unix"],
         )
-        sigs = await _dispatch_helius(store, grant, config, state, transport, address, sig_opts, phase=2, page_index=0)
-        sample_opts = gta_options(
-            details="full",
-            limit=GTA_SAMPLE_LIMIT,
-            start_unix=bounds["history_start_unix"],
-            end_unix=bounds["report_end_unix"],
-        )
-        sample = await _dispatch_helius(store, grant, config, state, transport, address, sample_opts, phase=2, page_index=1)
+        try:
+            sigs = await _dispatch_helius(store, grant, config, state, transport, address, sig_opts, phase=2, page_index=0)
+            sample_opts = gta_options(
+                details="full",
+                limit=GTA_SAMPLE_LIMIT,
+                start_unix=bounds["history_start_unix"],
+                end_unix=bounds["report_end_unix"],
+            )
+            sample = await _dispatch_helius(store, grant, config, state, transport, address, sample_opts, phase=2, page_index=1)
+        except SourceError as error:
+            if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
+                row = {
+                    "address": address,
+                    "dropped": True,
+                    "drop_reason": str(getattr(error, "state")).lower(),
+                    "done": True,
+                    "history_complete": False,
+                }
+                state.setdefault("phase2", {})[address] = row
+                save_state(config["output_dir"], state)
+                rows.append(row)
+                continue
+            raise
         sample_records = sample.get("records") or []
         programs = classify_programs(sample_records, address)
         in_window = len(sigs.get("records") or [])
@@ -1841,6 +1940,15 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
         bot_rate = compute_bot_rate(sigs.get("records") or [], config.get("window_days") or 30)
         bundle = detect_bundle_or_distribution(sample_records, address)
+        seeds = seed_counterparties_from_records(sample_records, address)
+        if seeds:
+            state.setdefault("seed_counterparties", {})[address] = list(seeds)
+            pooled = list(state.get("wallets") or config.get("wallets") or [])
+            for seed in seeds:
+                addr = seed.get("address") if isinstance(seed, dict) else seed
+                if addr and addr not in pooled:
+                    pooled.append(addr)
+            state["wallets"] = pooled
         decoded_sigs = _decoded_swap_signatures(sample_records, address)
         has_known_basis_buys = False
         try:
@@ -1939,10 +2047,13 @@ async def phase3_history(store, grant, config, state, recorder):
                     phase=3, page_index=cursor["pages"],
                 )
             except SourceError as error:
-                if getattr(error, "state", None) == "WALLET_CAP":
+                code = getattr(error, "state", None)
+                if code in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
                     cursor["done"] = True
                     cursor["history_complete"] = False
-                    cursor["history_complete_reason"] = "per_wallet_cap"
+                    cursor["history_complete_reason"] = (
+                        "per_wallet_cap" if code == "WALLET_CAP" else str(code).lower()
+                    )
                     cursor["leftover_pagination_token"] = bool(token)
                     cursor["window_covered"] = False
                     break
@@ -2060,6 +2171,9 @@ def _phase4_wallet_row(report, profile):
             if shares.get("coverage_count_share") not in (None, "", "1", "1.0000")
             else None
         ),
+        "quarantined_mints": bundle.get("quarantined_mints") or [],
+        "sold_quarantined_mints": bundle.get("sold_quarantined_mints") or [],
+        "quarantine_never_sold": len(bundle.get("quarantined_mints") or []) - len(bundle.get("sold_quarantined_mints") or []),
         "PRODUCT_READY": False,
     }
 
@@ -2081,12 +2195,21 @@ def phase4_offline(store, config, state):
                     missing_page = True
                     break
         leftover_token = None
+        store_has_receipts = bool(hasattr(store, "list") and store.list(RECEIPT_KIND))
+        if store_has_receipts:
+            try:
+                verify_receipt_chain(store)
+            except ValueError:
+                missing_page = True
         if raw_dir.is_dir() and not missing_page:
             for path in sorted(raw_dir.glob("page*.bin"), key=page_sort_key):
                 try:
                     expected_sha = _receipt_sha_for_page(store, address, path.name, phase=3)
                     _raw, data, token = _verify_saved_page(
-                        path, f"raw/phase3/{address}/{path.name}", expected_sha=expected_sha,
+                        path,
+                        f"raw/phase3/{address}/{path.name}",
+                        expected_sha=expected_sha,
+                        require_ledger_sha=store_has_receipts,
                     )
                 except SourceError:
                     missing_page = True
@@ -2162,6 +2285,14 @@ def phase4_offline(store, config, state):
         report["history"] = history
         report["history_complete"] = history.get("history_complete")
         profile = build_research_profile(report, filters=default_filters(), decoded=decoded)
+        audit = attach_live_independent_audit(report, profile, records, address)
+        report["independent_audit"] = audit
+        if audit and audit.get("status") == "independently_audited":
+            profile = build_research_profile(report, filters=default_filters(), decoded=decoded)
+        else:
+            profile["independent_audit"] = audit
+            from scanner.mass_search.research_profile import qualification_level
+            profile["qualification_level"] = qualification_level(report, profile)
         report["research_profile"] = profile
         store.put("reports", report["id"], report)
         row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
@@ -2207,9 +2338,9 @@ def load_committed_draft(rel=DRAFT_REL):
         raise LiveE2EError(str(error)) from error
 
 
-def expected_pinned_ledger(armed_home):
-    """Ledger home is Path(armed_home)/PINNED_LEDGER_REL. Armed copies cannot relocate it."""
-    return (Path(armed_home).expanduser() / PINNED_LEDGER_REL).resolve()
+def expected_pinned_ledger(armed_home=None):
+    """Absolute ledger home. --live must not depend on HOME."""
+    return Path(PINNED_LEDGER_ABSOLUTE).expanduser().resolve()
 
 
 def assert_live_ledger_identity(grant):
@@ -2222,7 +2353,7 @@ def assert_live_ledger_identity(grant):
         )
     if Path(recorded_home).expanduser().resolve() != Path.home().resolve():
         raise LiveE2EError("HOME differs from armed_home recorded at arming")
-    pinned = expected_pinned_ledger(recorded_home)
+    pinned = expected_pinned_ledger()
     auth_id = grant.get("authorization_id")
     if auth_id in LIVE_KNOWN_DRAFTS:
         try:
@@ -2230,13 +2361,11 @@ def assert_live_ledger_identity(grant):
         except LiveE2EError:
             draft = {}
         draft_pin = draft.get("pinned_ledger_home")
-        if draft_pin:
-            if str(draft_pin).startswith("~/"):
-                draft_path = (Path(recorded_home) / str(draft_pin)[2:]).resolve()
-            else:
-                draft_path = Path(draft_pin).expanduser().resolve()
-            if draft_path != pinned:
-                raise LiveE2EError("committed draft pinned_ledger_home disagrees with PINNED_LEDGER_REL")
+        if not draft_pin or not Path(str(draft_pin)).is_absolute():
+            raise LiveE2EError("committed draft pinned_ledger_home must be an absolute path")
+        if PINNED_LEDGER_ABSOLUTE == COMMITTED_LEDGER_ABSOLUTE:
+            if Path(draft_pin).resolve() != Path(COMMITTED_LEDGER_ABSOLUTE).resolve():
+                raise LiveE2EError("committed draft pinned_ledger_home disagrees with the code constant")
     if Path(recorded_ledger).expanduser().resolve() != pinned:
         raise LiveE2EError(
             "armed ledger_home is not the pinned ledger home "
@@ -2347,6 +2476,11 @@ def validate_config(raw):
     if isinstance(import_raw, str):
         import_raw = [part.strip() for part in import_raw.split(",") if part.strip()]
     window_days = 30 if raw.get("window_days") is None else int(raw.get("window_days"))
+    report_window_days = raw.get("report_window_days")
+    if report_window_days not in (None, ""):
+        report_window_days = int(report_window_days)
+    else:
+        report_window_days = None
     earlier = 60 if raw.get("earlier_history_days") is None else int(raw.get("earlier_history_days"))
     history_to_first = bool(raw.get("history_to_first"))
     history_start_unix = raw.get("history_start_unix")
@@ -2370,6 +2504,7 @@ def validate_config(raw):
         window_days, earlier,
         history_to_first=history_to_first,
         history_start_unix=history_start_unix,
+        report_window_days=report_window_days,
     )
     if history_to_first or history_start_unix is not None:
         earlier = bounds["earlier_history_days"]
@@ -2389,6 +2524,7 @@ def validate_config(raw):
         "discovery_source": raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS,
         "birdeye_tokens": list(raw.get("birdeye_tokens") or []),
         "window_days": window_days,
+        "report_window_days": bounds.get("report_window_days"),
         "earlier_history_days": earlier,
         "history_to_first": history_to_first,
         "history_start_unix": history_start_unix,
@@ -2608,6 +2744,12 @@ def build_arg_parser():
         help="Comma-separated liquid token mints for --discovery-source top-traders",
     )
     parser.add_argument("--window-days", dest="window_days", type=int, default=30)
+    parser.add_argument(
+        "--report-window-days",
+        dest="report_window_days",
+        type=int,
+        help="Optional longer report window (default = --window-days, typically 30)",
+    )
     parser.add_argument("--earlier-history-days", dest="earlier_history_days", type=int, default=60)
     parser.add_argument(
         "--history-to-first",
@@ -2628,7 +2770,7 @@ def build_arg_parser():
     parser.add_argument("--max-helius-units", dest="max_helius_units", type=int)
     parser.add_argument("--birdeye-limit", dest="birdeye_limit", type=int, default=100)
     parser.add_argument("--birdeye-window", dest="birdeye_window", default="30d")
-    parser.add_argument("--birdeye-sort", dest="birdeye_sort", default="trader_score")
+    parser.add_argument("--birdeye-sort", dest="birdeye_sort", default=BIRDEYE_TOP_TRADERS_DEFAULT_SORT)
     parser.add_argument("--min-in-window-tx", dest="min_in_window_tx", type=int, default=0)
     parser.add_argument("--max-unsupported-share", dest="max_unsupported_share", default="1")
     parser.add_argument("--max-bot-rate", dest="max_bot_rate", default="1")
@@ -2688,3 +2830,7 @@ def main(argv=None):
     if result.get("status") == "blocked":
         return 2
     return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

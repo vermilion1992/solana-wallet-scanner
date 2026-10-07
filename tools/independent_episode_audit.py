@@ -533,6 +533,7 @@ def _fifo(trades):
     episodes = []
     unresolved = 0
     known_sales = 0
+    omitted_losing = []
     for mint, rows in by_mint.items():
         rows = sorted(rows, key=lambda row: (
             row.get("slot") if isinstance(row.get("slot"), int) else 0,
@@ -629,6 +630,12 @@ def _fifo(trades):
                         "verified_costs_sol": _canonical(episode_costs),
                         "net_profit_sol": _canonical(episode_pnl),
                     })
+                elif episode_pnl < 0 and matched > 0:
+                    omitted_losing.append({
+                        "mint": mint,
+                        "net_profit_sol": _canonical(episode_pnl),
+                        "reason": "opening_inventory" if episode_consumed_opening else "not_in_window_or_unresolved",
+                    })
                 opened = False
                 episode_consumed_opening = False
                 episode_pnl = Decimal("0")
@@ -639,7 +646,13 @@ def _fifo(trades):
         if first_buy and Decimal(str(first_buy["observed_pre_quantity_raw"])) > 0:
             # Opening inventory consumed before captured buys; leftover opening is not a clean episode.
             pass
-    return episodes, unresolved, known_sales
+        if episode_pnl < 0 and opened:
+            omitted_losing.append({
+                "mint": mint,
+                "net_profit_sol": _canonical(episode_pnl),
+                "reason": "unflattened_losing_inventory",
+            })
+    return episodes, unresolved, known_sales, omitted_losing
 
 
 def episode_net_totals(episodes):
@@ -668,7 +681,7 @@ def audit_address(address, pages):
         event = reconstruct_record(record, address)
         if event:
             trades.append(event)
-    episodes, unresolved, known_sales = _fifo(trades)
+    episodes, unresolved, known_sales, omitted_losing = _fifo(trades)
     wins = sum(1 for item in episodes if Decimal(item["net_profit_sol"]) > 0)
     episode_mints = {item["mint"] for item in episodes}
     reconstructed_mints = []
@@ -699,6 +712,8 @@ def audit_address(address, pages):
         "independently_audited_episode_nets_by_unit": episode_nets_by_unit,
         "episode_win_rate": _canonical(Decimal(wins) / Decimal(len(episodes))) if episodes else None,
         "unresolved_basis_sales": unresolved,
+        "dropped_losing_episodes": omitted_losing,
+        "dropped_losers": bool(omitted_losing),
         "known_cost_sales": known_sales,
         "episodes": episodes,
         "reconstructed_mints": reconstructed_mints,

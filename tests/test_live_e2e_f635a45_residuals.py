@@ -49,12 +49,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.fixture(autouse=True)
 def ledger_home(tmp_path, monkeypatch):
-    home = tmp_path / "home"
-    home.mkdir()
-    monkeypatch.setenv("HOME", str(home))
-    pin = home / PINNED_LEDGER_REL
-    pin.mkdir(parents=True)
-    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(pin))
+    from tests.test_live_e2e_spend_safety import pin_test_ledger
+    return pin_test_ledger(tmp_path, monkeypatch)
 JXT = "jXtCVtdQhrn7GAHTPKxRHM94dbnmZwpBdGbswa3EeGZ"
 DKY = "DKyapYGfvKCBUTzKSCbTbvVVHbj9yMBKrHrkjdXZ24xx"
 NINE = "9R3m89gXeC6BWc2aN9CFqWDZA5WUJP3umQUerC7gjoFs"
@@ -340,7 +336,7 @@ def test_new_draft_is_disabled_and_pinned():
     assert draft["expires_at"] == "2026-10-10T13:30:00Z"
     assert draft["overages_enabled"] is False
     assert draft["allow_paid_upgrade"] is False
-    assert draft["pinned_ledger_home"] == "~/.scanner/live-e2e-ledgers"
+    assert draft["pinned_ledger_home"] == "/home/box/.scanner/live-e2e-ledgers"
     digest = hashlib.sha256((ROOT / DRAFT_REL_11).read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_11] == digest
     assert HARD_CEILINGS["birdeye_requests"] == 30

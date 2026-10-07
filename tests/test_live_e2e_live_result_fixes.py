@@ -47,13 +47,8 @@ from tests.test_live_e2e_spend_safety import (
 
 @pytest.fixture(autouse=True)
 def ledger_home(tmp_path, monkeypatch):
-    from scanner.mass_search.live_e2e import PINNED_LEDGER_REL
-    home = tmp_path / "home"
-    home.mkdir()
-    monkeypatch.setenv("HOME", str(home))
-    pin = home / PINNED_LEDGER_REL
-    pin.mkdir(parents=True)
-    monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(pin))
+    from tests.test_live_e2e_spend_safety import pin_test_ledger
+    return pin_test_ledger(tmp_path, monkeypatch)
 
 
 @pytest.fixture

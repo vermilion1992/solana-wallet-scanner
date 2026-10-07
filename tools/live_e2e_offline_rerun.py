@@ -53,6 +53,8 @@ RAW_ROOTS = [
     Path("/tmp/live-raw-06cea26/live-out/main/raw"),
     Path("/tmp/live-raw-both/live-e2e-cfe6e78/live-out/raw"),
     Path("/tmp/live-raw-both/live-e2e-bbc5bef/live-out/raw"),
+    Path("/tmp/live-raw-4bbb364-a"),
+    Path("/tmp/live-raw-4bbb364-b"),
 ]
 EVIDENCE = ROOT / "evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07"
 MAX_BOT_RATE = Decimal("25")
@@ -71,12 +73,17 @@ def _iso_to_unix(text):
 def _wallet_dirs(phase):
     found = {}
     for root in RAW_ROOTS:
+        candidates = []
         phase_dir = root / f"phase{phase}"
-        if not phase_dir.is_dir():
-            continue
-        for wallet_dir in phase_dir.iterdir():
-            if wallet_dir.is_dir() and not wallet_dir.name.startswith("."):
-                found.setdefault(wallet_dir.name, []).append(wallet_dir)
+        if phase_dir.is_dir():
+            candidates.append(phase_dir)
+        # Attached 4bbb364 tarballs unpack as wallet dirs (phase-3 pages).
+        if phase == 3 and root.is_dir() and any(root.glob("*/page*.bin")):
+            candidates.append(root)
+        for parent in candidates:
+            for wallet_dir in parent.iterdir():
+                if wallet_dir.is_dir() and not wallet_dir.name.startswith(".") and any(wallet_dir.glob("page*.bin")):
+                    found.setdefault(wallet_dir.name, []).append(wallet_dir)
     return found
 
 
@@ -184,7 +191,7 @@ def _audit(address, records):
         event = auditor.reconstruct_record(record, address)
         if event:
             trades.append(event)
-    episodes, unresolved, known_sales = auditor._fifo(trades)
+    episodes, unresolved, known_sales, omitted_losing = auditor._fifo(trades)
     net, unit, by_unit = auditor.episode_net_totals(episodes)
     return {
         "clean_episodes": len(episodes),
@@ -194,6 +201,8 @@ def _audit(address, records):
         "unresolved_basis_sales": unresolved,
         "known_cost_sales": known_sales,
         "reconstructed_trades": len(trades),
+        "dropped_losers": bool(omitted_losing),
+        "dropped_losing_episodes": omitted_losing,
     }
 
 
@@ -250,6 +259,8 @@ def _phase4(phase3_dirs):
             "unresolved_basis_sales": 0,
             "known_cost_sales": 0,
             "reconstructed_trades": 0,
+            "dropped_losers": False,
+            "dropped_losing_episodes": [],
         }
         rows[address]["phase3_pages"] = state["phase3"][address]["pages"]
     shutil.rmtree(tmp, ignore_errors=True)
@@ -466,7 +477,7 @@ def main():
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     md = EVIDENCE / "PHASE4_OFFLINE_RERUN.md"
     lines = [
-        "# Offline Phase 4 replay (all four live-run attached pages)",
+        "# Offline Phase 4 replay (all five live-run attached pages)",
         "",
         f"Bounds: report `{BOUNDS['report_start_inclusive']}` → `{BOUNDS['report_end_exclusive']}`; "
         f"history start `{BOUNDS['history_start_inclusive']}`.",
@@ -475,8 +486,8 @@ def main():
         "",
         "## Phase 4 replay",
         "",
-        "| Wallet | history_complete | Bundle / pair flags | controlled_pair | Flag verdict | Venue share | Cov count / value | In-window completed | Realized P&L | Auditor clean / net | App − auditor | Lead | Blocker |",
-        "|---|---|---|---|---|---:|---|---:|---|---|---|---|---|",
+        "| Wallet | history_complete | Bundle / pair flags | controlled_pair | Flag verdict | Venue share | Cov count / value | In-window completed | Realized P&L | Quarantine never-sold / sold | Audit | Auditor clean / net | App − auditor | Lead | Blocker |",
+        "|---|---|---|---|---|---:|---|---:|---|---|---|---|---|---|---|",
     ]
     for row in wallets:
         if not row.get("completed_trades") and row.get("auditor") is None and not row.get("phase3_pages"):
@@ -506,8 +517,14 @@ def main():
                     delta = str(Decimal(str(pnl)) - Decimal(str(aud["independently_audited_episode_net"])))
                 except Exception:
                     delta = "—"
+        q_never = row.get("quarantine_never_sold")
+        q_sold = len(row.get("sold_quarantined_mints") or [])
+        if isinstance(q_never, list):
+            q_never = len(q_never)
+        q_txt = f"{q_never if q_never is not None else '—'} / {q_sold}"
+        audit_txt = row.get("audit_status") or "not_independently_audited"
         lines.append(
-            f"| `{short}` | {hist_txt} | {flags} | {pair} | {verdict} | {venue} | {cov} | {completed} | {pnl} | {aud_txt} | {delta} | "
+            f"| `{short}` | {hist_txt} | {flags} | {pair} | {verdict} | {venue} | {cov} | {completed} | {pnl} | {q_txt} | {audit_txt} | {aud_txt} | {delta} | "
             f"{row.get('lead_level') or '—'} | {row.get('blocker') or '—'} |"
         )
     if jxt_row:

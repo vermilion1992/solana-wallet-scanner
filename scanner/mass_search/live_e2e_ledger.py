@@ -16,7 +16,8 @@ from scanner.storage import Store
 
 LEDGER_HOME_ENV = "SCANNER_LIVE_LEDGER_HOME"
 LEDGER_ENV = "SCANNER_LIVE_LEDGER_DIR"
-DEFAULT_LEDGER_ROOT = Path.home() / ".scanner" / "live-e2e-ledgers"
+# Absolute. --live must not relocate the ledger when HOME changes.
+DEFAULT_LEDGER_ROOT = Path("/home/box/.scanner/live-e2e-ledgers")
 RECEIPT_KIND = "live_e2e_receipt"
 GRANT_LOCK_NAME = "GRANT.lock"
 OUTPUT_LOCK_NAME = "RUN.lock"
@@ -163,6 +164,55 @@ def receipt_is_spent(receipt):
 def _receipt_canonical_bytes(receipt):
     body = {name: receipt[name] for name in sorted(receipt) if name != "receipt_hash"}
     return json.dumps(body, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+
+
+def verify_receipt_integrity(receipt):
+    """Recompute receipt_hash from the immutable body. Tampered rows fail."""
+    if not isinstance(receipt, dict):
+        raise ValueError("receipt is not an object")
+    stored = receipt.get("receipt_hash")
+    expected = hashlib.sha256(_receipt_canonical_bytes(receipt)).hexdigest()
+    if not stored or stored != expected:
+        raise ValueError("receipt_hash does not match the receipt body")
+    return expected
+
+
+def verify_receipt_chain(store):
+    """Walk current receipts and the live_e2e_chain head.
+
+    Overwritten prior states are not retained, so a prev_receipt_hash that is
+    no longer listed is allowed only after every present row hashes cleanly.
+    A cycle or a present row whose prev points at a different live row with a
+    mismatched hash fails closed.
+    """
+    rows = list(store.list(RECEIPT_KIND) or []) if hasattr(store, "list") else []
+    by_hash = {}
+    for row in rows:
+        digest = verify_receipt_integrity(row)
+        if digest in by_hash and by_hash[digest].get("request_id") != row.get("request_id"):
+            raise ValueError("duplicate receipt_hash for distinct request ids")
+        by_hash[digest] = row
+    head = store.get("live_e2e_chain", "head") if hasattr(store, "get") else None
+    if not isinstance(head, dict) or not head.get("receipt_hash"):
+        if rows:
+            raise ValueError("receipts exist but live_e2e_chain head is missing")
+        return True
+    current = head.get("receipt_hash")
+    if current not in by_hash:
+        raise ValueError("live_e2e_chain head is not a current receipt")
+    seen = set()
+    while current:
+        if current in seen:
+            raise ValueError("receipt hash chain cycle")
+        seen.add(current)
+        row = by_hash.get(current)
+        if row is None:
+            break
+        current = row.get("prev_receipt_hash")
+        if current and current in by_hash:
+            continue
+        break
+    return True
 
 
 def put_receipt(store, grant, key, payload):

@@ -11,16 +11,19 @@ from scanner.mass_search.qualification_gates import (
     ACCOUNTING_POLICY_VERSION,
     CROSS_CURRENCY_SENSITIVITY,
     SENSITIVITY_NOT_ESTABLISHED,
+    aggregate_rounding_bridge,
     amounts_agree,
     audit_fingerprint_matches,
     bindable_independent_audit,
     certificate_comparison_proof,
     completed_episode_ledger,
+    component_bridge,
     compute_audit_fingerprint,
     concentration_from_episodes,
     coverage_shares,
     episode_net_from_ledger,
     exposure_outside_completed_episodes,
+    format_auditor_confirmation,
     hold_time_stats,
     is_synthetic_case,
     mandatory_coverage_gate,
@@ -823,6 +826,194 @@ def load_committed_independent_audit(address, fingerprint=None, ledger=None):
     return None
 
 
+def _iso_to_unix(text):
+    if not text:
+        return None
+    return int(datetime.fromisoformat(str(text).replace("Z", "+00:00")).timestamp())
+
+
+def attach_live_independent_audit(report, profile, records, address):
+    """Bind tools/independent_episode_audit.py to this wallet's live Phase 4.
+
+    Dropped losers or a net / membership mismatch is never independently_audited.
+    """
+    import tools.independent_episode_audit as auditor
+
+    window = (report or {}).get("window") or {}
+    start = _iso_to_unix(window.get("start") or window.get("start_inclusive"))
+    end = _iso_to_unix(window.get("end") or window.get("end_exclusive"))
+    acquisition = (report or {}).get("acquisition_start") or ((report or {}).get("history") or {}).get("history_start_inclusive")
+    acq_unix = _iso_to_unix(acquisition)
+    if start is not None:
+        auditor.REPORT_START = start
+    if end is not None:
+        auditor.REPORT_END = end
+    if acq_unix is not None:
+        auditor.ACQUISITION = acq_unix
+    trades = []
+    for record in records or []:
+        event = auditor.reconstruct_record(record, address)
+        if event:
+            trades.append(event)
+    episodes, unresolved, known_sales, omitted_losing = auditor._fifo(trades)
+    net, unit, by_unit = auditor.episode_net_totals(episodes)
+    ledger = list((profile or {}).get("completed_episode_ledger") or [])
+    fingerprint = (profile or {}).get("audit_fingerprint")
+    app_net = (profile or {}).get("completed_episode_net")
+    app_unit = (profile or {}).get("completed_episode_net_unit")
+    base = {
+        "content_fingerprint": fingerprint,
+        "accounting_policy_version": ACCOUNTING_POLICY_VERSION,
+        "auditor_clean_episodes": len(episodes),
+        "app_completed_episodes": len(ledger),
+        "independently_audited_episode_net": net,
+        "independently_audited_episode_net_unit": unit,
+        "independently_audited_episode_nets_by_unit": by_unit,
+        "app_completed_episode_net": app_net,
+        "app_completed_episode_net_unit": app_unit,
+        "unresolved_basis_sales": unresolved,
+        "known_cost_sales": known_sales,
+        "dropped_losing_episodes": omitted_losing,
+        "dropped_losers": bool(omitted_losing),
+        "reconstructed_trades": len(trades),
+        "source": "live_phase4_independent_episode_audit",
+        "PRODUCT_READY": False,
+    }
+    if omitted_losing:
+        return {
+            **base,
+            "status": "not_independently_audited",
+            "independently_audited": False,
+            "reason": "auditor_dropped_losing_episodes",
+            "one_to_one_membership": False,
+        }
+    app_ids = {}
+    for item in ledger:
+        key = (str(item.get("mint") or ""), str(item.get("close_signature") or item.get("close") or ""))
+        if not key[0] or not key[1]:
+            return {
+                **base,
+                "status": "not_independently_audited",
+                "independently_audited": False,
+                "reason": "app_episode_missing_identity",
+                "one_to_one_membership": False,
+            }
+        if key in app_ids:
+            return {
+                **base,
+                "status": "not_independently_audited",
+                "independently_audited": False,
+                "reason": "app_episode_duplicate_identity",
+                "one_to_one_membership": False,
+            }
+        app_ids[key] = item
+    aud_ids = {}
+    for item in episodes:
+        key = (str(item.get("mint") or ""), str(item.get("close_signature") or ""))
+        if not key[0] or not key[1] or key in aud_ids:
+            return {
+                **base,
+                "status": "not_independently_audited",
+                "independently_audited": False,
+                "reason": "auditor_episode_identity",
+                "one_to_one_membership": False,
+            }
+        aud_ids[key] = item
+    if not app_ids or set(app_ids) != set(aud_ids):
+        return {
+            **base,
+            "status": "not_independently_audited",
+            "independently_audited": False,
+            "reason": "episode_membership_mismatch",
+            "one_to_one_membership": False,
+        }
+    bridges = []
+    episode_rows = []
+    all_agree = True
+    for key, app_ep in app_ids.items():
+        aud_ep = aud_ids[key]
+        ep_unit = app_ep.get("unit") or app_ep.get("settlement_asset") or aud_ep.get("settlement_asset") or "SOL"
+        app_norm = {
+            "mint": app_ep.get("mint"),
+            "close_signature": app_ep.get("close_signature") or app_ep.get("close"),
+            "basis": app_ep.get("basis") or app_ep.get("acquisition") or app_ep.get("basis_sol"),
+            "proceeds": app_ep.get("proceeds") or app_ep.get("proceeds_sol"),
+            "verified_costs": app_ep.get("verified_costs") or app_ep.get("costs") or app_ep.get("verified_costs_sol"),
+            "net": app_ep.get("net") or app_ep.get("net_profit_sol") or app_ep.get("pnl"),
+        }
+        aud_norm = {
+            "mint": aud_ep.get("mint"),
+            "close_signature": aud_ep.get("close_signature"),
+            "basis": aud_ep.get("basis_sol"),
+            "proceeds": aud_ep.get("proceeds_sol"),
+            "verified_costs": aud_ep.get("verified_costs_sol"),
+            "net": aud_ep.get("net_profit_sol"),
+        }
+        bridge = component_bridge(app_norm, aud_norm, ep_unit)
+        bridges.append(bridge)
+        if not bridge.get("agree"):
+            all_agree = False
+        episode_rows.append({
+            "mint": key[0],
+            "close_signature": key[1],
+            "unit": ep_unit,
+            "app": {name: app_norm.get(name) for name in ("basis", "proceeds", "verified_costs", "net")},
+            "auditor": {name: aud_norm.get(name) for name in ("basis", "proceeds", "verified_costs", "net")},
+            "match": bridge.get("agree"),
+            "component_bridge": bridge,
+        })
+    if not all_agree:
+        return {
+            **base,
+            "status": "not_independently_audited",
+            "independently_audited": False,
+            "reason": "component_mismatch",
+            "one_to_one_membership": True,
+            "component_bridges": bridges,
+            "episodes": episode_rows,
+        }
+    if unit in (None, "", "mixed") or app_unit in (None, "", "mixed") or unit != app_unit:
+        return {
+            **base,
+            "status": "not_independently_audited",
+            "independently_audited": False,
+            "reason": "unit_mismatch",
+            "one_to_one_membership": True,
+            "component_bridges": bridges,
+            "episodes": episode_rows,
+        }
+    if not amounts_agree(app_net, net, unit):
+        return {
+            **base,
+            "status": "not_independently_audited",
+            "independently_audited": False,
+            "reason": "net_mismatch",
+            "one_to_one_membership": True,
+            "component_bridges": bridges,
+            "episodes": episode_rows,
+        }
+    headlines = {
+        "app_completed_episode_net": str(app_net),
+        "app_completed_episode_net_unit": app_unit,
+        "independently_audited_episode_net": str(net),
+        "independently_audited_episode_net_unit": unit,
+        "auditor_confirmation": format_auditor_confirmation(
+            str(app_net), str(net), unit, independently_audited=True
+        ),
+        "aggregate_rounding_bridge": aggregate_rounding_bridge(app_net, net, unit),
+    }
+    return {
+        **base,
+        **headlines,
+        "status": "independently_audited",
+        "independently_audited": True,
+        "reason": None,
+        "one_to_one_membership": True,
+        "component_bridges": bridges,
+        "episodes": episode_rows,
+    }
+
+
 def independently_audited(report, profile=None):
     """Genuine corpus requires a matching content fingerprint. No bypass.
 
@@ -1010,6 +1201,26 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     events = [row for row in (report.get("events") or []) if row.get("kind") in ("buy", "sell", "undecoded_buy")]
     mapped = _merge_decoded_taints([_mapped_trade_row(row) for row in events], decoded)
     known, unresolved = isolate_known_cost_by_mint(mapped) if mapped else ([], [])
+    bundle = (report or {}).get("bundle_or_distribution") or {}
+    sold_quarantined = {
+        mint for mint in (bundle.get("sold_quarantined_mints") or []) if mint
+    }
+    quarantined_mints = {
+        mint for mint in (bundle.get("quarantined_mints") or []) if mint
+    }
+    if sold_quarantined:
+        kept = []
+        for row in known:
+            if row.get("kind") == "sell" and row.get("mint") in sold_quarantined:
+                unresolved.append({
+                    **row,
+                    "unresolved_basis": True,
+                    "reason": "sold_quarantined_mint",
+                    "split_part": "unresolved",
+                })
+            else:
+                kept.append(row)
+        known = kept
     known_sells = [row for row in known if row["kind"] == "sell"]
     known_buys = [row for row in known if row["kind"] == "buy"]
     open_lots = _open_lot_count(known) if known else 0
@@ -1060,10 +1271,21 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
                 "signature": row.get("signature"),
             })
     ledger = _episode_ledger_from_report(report)
+    if sold_quarantined:
+        ledger = [item for item in ledger if item.get("mint") not in sold_quarantined]
     episode_net, episode_unit, episode_vector = episode_net_from_ledger(
         ledger, fallback_unit=settlement if settlement in ("SOL", "USDC") else None
     )
     completed = len(ledger)
+    if completed >= 1 and episode_vector:
+        scoped_by_asset = {
+            asset: str(amount)
+            for asset, amount in episode_vector.items()
+            if amount not in (None, "")
+        }
+        scoped_pnl = str(episode_net) if episode_net is not None else None
+        if episode_unit in ("SOL", "USDC"):
+            settlement = episode_unit
     summary_net = report.get("completed_episode_net")
     summary_count = report.get("wallet_completed_episodes")
     ledger_contradiction = False
@@ -1151,6 +1373,9 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         "sale_count": sale_count,
         "known_cost_trades": len(known),
         "unresolved_basis_sales": len(unresolved),
+        "quarantined_mints": sorted(quarantined_mints),
+        "sold_quarantined_mints": sorted(sold_quarantined),
+        "quarantine_never_sold": sorted(quarantined_mints - sold_quarantined),
         "open_buys_in_sample": open_lots,
         "sizes": sizes,
         "hold_t90_seconds": hold_t90,
@@ -1230,6 +1455,9 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
     elif bound:
         profile["independent_audit"] = bound
         report["independent_audit"] = bound
+    elif attached and attached.get("status") == "not_independently_audited":
+        profile["independent_audit"] = attached
+        report["independent_audit"] = attached
     elif attached and is_synthetic_case(report) and not attached.get("content_fingerprint") and not attached.get("fingerprint"):
         # Explicit synthetic marker only. Fingerprintless audits never certify.
         profile["independent_audit"] = {
@@ -1457,14 +1685,17 @@ def evaluate_thresholds(profile, thresholds):
         required_asset = spec[2] if len(spec) > 2 else None
         if required_asset:
             by_quote = profile.get("scoped_pnl_by_quote_asset") or {}
-            has_asset = required_asset in by_quote or profile.get("settlement_asset") == required_asset
+            has_asset = required_asset in by_quote
             if not has_asset:
                 results[key] = {
-                    "state": "NOT_APPLICABLE",
-                    "passed": None,
-                    "applied": False,
-                    "note": f"not set for this wallet — settlement is not {required_asset}",
+                    "state": "FAIL",
+                    "passed": False,
+                    "applied": True,
+                    "actual": None,
+                    "threshold": str(raw),
+                    "note": f"wallet has no {required_asset} completed-episode P&L",
                 }
+                evaluated.append(key)
                 continue
         if required_asset and field == "scoped_pnl":
             actual = (profile.get("scoped_pnl_by_quote_asset") or {}).get(required_asset)

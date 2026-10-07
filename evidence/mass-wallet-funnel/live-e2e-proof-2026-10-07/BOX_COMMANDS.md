@@ -11,9 +11,10 @@ The 2026-10-07 and 2026-10-09 drafts are **retired for `--live`**. `--live`
 refuses `live-e2e-proof-2026-10-07-mitch` and `live-e2e-proof-2026-10-09-mitch`.
 PRODUCT_READY stays false. Do not merge. No paid spend, overages, or upgrades.
 
-The ledger home is pinned in the committed draft (`pinned_ledger_home`) and in
-`PINNED_LEDGER_REL` (`.scanner/live-e2e-ledgers` under `armed_home`). Re-arming
-with a new ledger home is refused.
+The ledger home is the **absolute** path pinned in the committed draft
+(`pinned_ledger_home` = `/home/box/.scanner/live-e2e-ledgers`) and in
+`COMMITTED_LEDGER_ABSOLUTE`. It must not depend on `HOME`. Re-arming with a
+new ledger home, or a fresh HOME that relocates `~/.scanner/...`, is refused.
 
 Phase caps are sized for ~300 pre-screens (600 req / 6,000 credits) and ~40
 deep histories at `--per-wallet-cap 10` (400 req; 24,000 credit unit budget
@@ -29,7 +30,9 @@ binds first).
    `git show HEAD:config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json | sha256sum`).
 4. Record identity (required for `--live`):
    - `armed_home`: `python -c "from pathlib import Path; print(Path.home())"`
-   - `ledger_home`: `$HOME/.scanner/live-e2e-ledgers` (must equal the pinned path)
+     (must be `/home/box` on the operator box)
+   - `ledger_home`: `/home/box/.scanner/live-e2e-ledgers` (absolute; must equal
+     the committed draft `pinned_ledger_home` and `COMMITTED_LEDGER_ABSOLUTE`)
 5. Mode 0600. Never commit the armed copy.
 
 `--live` refuses `SCANNER_LIVE_LEDGER_HOME` / `SCANNER_LIVE_LEDGER_DIR` unless
@@ -87,10 +90,11 @@ set (SOL, USDC, USDT, JUP, BONK).
   --birdeye-sort PnL \
   --phases all \
   --window-days 30 \
+  --report-window-days 30 \
   --history-to-first \
   --per-wallet-cap 10 \
   --max-bot-rate 25 \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers-dry-run" \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers-dry-run \
   --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-2026-10-11
 ```
 
@@ -105,7 +109,7 @@ Top-traders on liquid established tokens (35 CU each):
   --birdeye-window 7d \
   --birdeye-sort realized_pnl \
   --phases 1 \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers-dry-run" \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers-dry-run \
   --output evidence/mass-wallet-funnel/live-e2e-proof-2026-10-07/dry-run-top-traders
 ```
 
@@ -121,7 +125,8 @@ Top-traders on liquid established tokens (35 CU each):
   --birdeye-window 1W \
   --birdeye-sort PnL \
   --birdeye-limit 100 \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
+  --history-to-first \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers \
   --output "$OUT"
 ```
 
@@ -142,7 +147,7 @@ Rank key: (supported-venue share by value) × (has known-basis buys) ×
   --max-unsupported-share 1 \
   --max-bot-rate 25 \
   --resume \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers \
   --output "$OUT"
 ```
 
@@ -158,7 +163,7 @@ Rank key: (supported-venue share by value) × (has known-basis buys) ×
   --per-wallet-cap 10 \
   --resume \
   --import-raw-dir "$PRIOR_RAW" \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers \
   --output "$OUT"
 ```
 
@@ -176,6 +181,20 @@ rewrite of `written_sha256` alone is rejected.
   --grant config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json \
   --phases 4 \
   --resume \
-  --ledger-dir "$HOME/.scanner/live-e2e-ledgers" \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers \
+  --output "$OUT"
+```
+
+Optional longer report window (default stays 30d):
+
+```bash
+.venv/bin/python scripts/live_e2e.py \
+  --dry-run \
+  --grant config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json \
+  --phases 4 \
+  --resume \
+  --window-days 30 \
+  --report-window-days 90 \
+  --ledger-dir /home/box/.scanner/live-e2e-ledgers \
   --output "$OUT"
 ```

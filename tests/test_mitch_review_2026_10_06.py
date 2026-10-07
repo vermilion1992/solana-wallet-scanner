@@ -507,7 +507,7 @@ def test_gtfo_2af7_same_slot_order_closes_missing_episode():
         event = reconstruct_record(record, GTFO)
         if event and event.get("mint") == mint:
             trades.append(event)
-    episodes, _unresolved, _known = _fifo(trades)
+    episodes, _unresolved, _known, _omitted = _fifo(trades)
     assert len(episodes) == 1
     assert episodes[0]["close_signature"] == GTFO_2AF7_CLOSE
     assert episodes[0]["venue"] == "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"

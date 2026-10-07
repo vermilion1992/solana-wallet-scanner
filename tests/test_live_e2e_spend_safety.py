@@ -110,15 +110,22 @@ def _live_kwargs(tmp_path, grant, output, wallets, **extra):
     return payload
 
 
-@pytest.fixture(autouse=True)
-def ledger_home(tmp_path, monkeypatch):
-    from pathlib import Path
+def pin_test_ledger(tmp_path, monkeypatch):
+    """Pin --live ledger identity to a tmp absolute path. Does not use HOME."""
+    from scanner.mass_search import live_e2e
     home = tmp_path / "home"
-    home.mkdir()
+    home.mkdir(exist_ok=True)
     monkeypatch.setenv("HOME", str(home))
     pin = home / PINNED_LEDGER_REL
     pin.mkdir(parents=True)
+    monkeypatch.setattr(live_e2e, "PINNED_LEDGER_ABSOLUTE", str(pin))
     monkeypatch.setenv("SCANNER_LIVE_LEDGER_HOME", str(pin))
+    return pin
+
+
+@pytest.fixture(autouse=True)
+def ledger_home(tmp_path, monkeypatch):
+    return pin_test_ledger(tmp_path, monkeypatch)
 
 
 @pytest.fixture

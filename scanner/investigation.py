@@ -89,7 +89,7 @@ REVIEWED_OUTER_VENUES = (
 )
 UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v17-jup-native-settle-token2022-close-v1'
+DECODER_VERSION = 'spot-v18-pumpswap-native-tip-close-v1'
 SWAPTOB_UNSUPPORTED_REASON = (
     'proVF4p SwapTob is reviewed: discriminator aa2955b184501f35, payer at 0, '
     'source_token_account at 1, destination_token_account at 2 from the '
@@ -1059,8 +1059,20 @@ def decode_supported_swaps(transactions, address):
                     raise ValueError('Unreviewed outer program may bundle other economic activity')
                 # CPIs are part of a successful, verified route; net owned legs
                 # still require exact parsed-transfer reconciliation below.
-            _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
-                                      post_lamports, address, route, fee)
+            try:
+                _verify_ephemeral_wrapped(flat, allowed_wrapped, owned, keys, pre_lamports,
+                                          post_lamports, address, route, fee)
+            except ValueError as error:
+                # Pump AMM / Jupiter native-SOL buys often close an ephemeral
+                # wSOL ATA to a tipper or shared account. Wallet legs still
+                # have to reconcile below.
+                if (
+                    route['program'] in (PUMP_SWAP, PUMP, JUPITER)
+                    and 'closure and rent refund must belong' in str(error)
+                ):
+                    pass
+                else:
+                    raise
             retained_funding = _retained_user_volume_funding(flat, keys, pre_lamports, post_lamports, address, route)
             if retained_funding:
                 from .transaction_format import original_instruction_paths
@@ -1075,6 +1087,11 @@ def decode_supported_swaps(transactions, address):
             if route['program'] == OKX_DEX_ROUTER:
                 if not any(account in owned or account in allowed_wrapped for account in route['owned_accounts']):
                     raise ValueError('OKX SwapTob user token accounts lack event-time wallet ownership')
+            elif route['program'] == RFQ_FILL:
+                # RFQ Fill account 4 is often the maker/vault ATA, not the
+                # investigated wallet. Wallet token and SOL/USDC legs still
+                # have to reconcile below.
+                pass
             else:
                 for account in route['owned_accounts']:
                     if account not in owned and account not in allowed_wrapped:

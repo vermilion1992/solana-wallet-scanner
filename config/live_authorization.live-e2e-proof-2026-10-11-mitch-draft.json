@@ -4,7 +4,7 @@
   "authorization_id": "live-e2e-proof-2026-10-11-mitch",
   "authorized_by_user_at": null,
   "expires_at": "2026-10-10T13:30:00Z",
-  "pinned_ledger_home": "~/.scanner/live-e2e-ledgers",
+  "pinned_ledger_home": "/home/box/.scanner/live-e2e-ledgers",
   "purpose": "DRAFT only. Next LIVE end-to-end proof after f635a45 residuals: Birdeye solo-trader discovery (gainers-losers 1W/PnL and top-traders on liquid established tokens), Helius pre-screen of ~300 wallets x2 pages, then full history for ~40 wallets at per-wallet cap 10. Not a permission grant in repo.",
   "first_live_target_after_grant": "LIVE_E2E_PROOF_ONLY",
   "max_additional_spend_usd": "0",
@@ -56,7 +56,7 @@
     "Do not put API keys, tokens, or signing secrets in this file.",
     "HTTP product routes never dispatch. Live calls go only through scripts/live_e2e.py on the operator box.",
     "Armed local copies must set draft_artifact_hash to the pinned SHA-256 in scanner/mass_search/live_e2e.py PINNED_DRAFT_HASHES. Armed provider and phase caps must be <= these draft caps and <= HARD_CEILINGS (Birdeye 30/1000, Helius 3000/30000). A local commit cannot raise those ceilings.",
-    "pinned_ledger_home is ~/.scanner/live-e2e-ledgers relative to armed_home. --live refuses a different armed ledger_home or SCANNER_LIVE_LEDGER_* override. Re-arming with a new ledger home is refused.",
+    "pinned_ledger_home is the absolute path /home/box/.scanner/live-e2e-ledgers. --live refuses a HOME-relative pin, a different armed ledger_home, or a SCANNER_LIVE_LEDGER_* override that differs. Re-arming with a new ledger home is refused.",
     "The 2026-10-09 draft is retired for --live once this draft exists.",
     "Spend is ledgered per authorization_id, not per output folder."
   ]
