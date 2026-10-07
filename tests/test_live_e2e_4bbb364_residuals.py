@@ -302,7 +302,7 @@ def test_scoped_pnl_uses_completed_episode_not_worksheet():
     }
     profile = build_research_profile(report, filters=default_filters())
     assert Decimal(str(profile["scoped_pnl"])) == Decimal("63.40")
-    assert profile["scoped_pnl_by_quote_asset"]["USDC"] == "63.40"
+    assert Decimal(str(profile["scoped_pnl_by_quote_asset"]["USDC"])) == Decimal("63.40")
 
 
 def test_report_window_days_optional_default_30():
@@ -326,10 +326,25 @@ def test_auditor_dropped_losers_cannot_certify():
             "signature": "buy1",
             "slot": 1,
             "transaction_index": 0,
-            "timestamp": 1_700_000_000,
+            "timestamp": 1,
             "observed_pre_quantity_raw": "0",
             "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
             "instruction": "buy",
+        },
+        {
+            "mint": "LoseMint111111111111111111111111111111111",
+            "kind": "sell",
+            "quantity_raw": "10",
+            "consideration_sol": "1",
+            "fees_and_tips_sol": "0",
+            "settlement_asset": "SOL",
+            "signature": "sell1",
+            "slot": 2,
+            "transaction_index": 0,
+            "timestamp": 2,
+            "observed_pre_quantity_raw": "10",
+            "program": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+            "instruction": "sell",
         },
     ]
     episodes, _unresolved, _known, omitted = _fifo(trades)
@@ -385,7 +400,16 @@ def test_unreceipted_page_is_refused(tmp_path, fake_keys):
         "written_sha256": digest, "original_sha256": digest, "scrubbed": False,
     }), encoding="utf-8")
     store = Store(tmp_path / "store")
-    grant = {"authorization_id": AUTHORIZATION_ID_11, "enabled": True, "providers": []}
+    grant = {
+        "authorization_id": AUTHORIZATION_ID_11,
+        "enabled": True,
+        "providers": [{
+            "provider_id": "helius",
+            "allowed_operations": ["getTransactionsForAddress"],
+            "cycle_start": "2026-10-07T00:00:00Z",
+            "max_units": 30000,
+        }],
+    }
     config = {"output_dir": str(tmp_path / "out"), "dry_run": True, "explicit_retry": False}
     state = {"spend": {"helius_requests": 0, "helius_units": 0, "birdeye_requests": 0, "birdeye_units": 0}}
 

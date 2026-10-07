@@ -310,7 +310,7 @@ def _one_hop_forwarders(parsed_rows, address, destinations):
                 continue
             other_delta, _ = _native_delta(raw, keys, key)
             wallet_delta, _ = _native_delta(raw, keys, address)
-            if wallet_delta < 0 and other_delta > 0 and key in destinations:
+            if wallet_delta < 0 and other_delta > 0:
                 funded_only_by_wallet[key] = funded_only_by_wallet.get(key, Decimal("0")) + other_delta
             elif other_delta > 0 and wallet_delta >= 0:
                 other_funders.add(key)
