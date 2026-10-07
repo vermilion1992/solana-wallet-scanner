@@ -506,15 +506,15 @@ def detect_bundle_or_distribution(records, address):
                     "wallet_is_fee_payer": paid,
                 })
                 reasons.append("multi_signer_bundle_buy")
-                for other in partners:
-                    other_delta, _ = _native_delta(raw, keys, other)
-                    if wallet_sold and other_delta >= MATERIAL_SOL_LAMPORTS:
-                        proceeds_to_cosigner.append({
-                            "signature": signature,
-                            "co_signer": other,
-                            "co_signer_sol": str(other_delta / Decimal(1_000_000_000)),
-                        })
-                        reasons.append("sell_proceeds_to_cosigner")
+            for other in others:
+                other_delta, _ = _native_delta(raw, keys, other)
+                if wallet_sold and other_delta >= MATERIAL_SOL_LAMPORTS:
+                    proceeds_to_cosigner.append({
+                        "signature": signature,
+                        "co_signer": other,
+                        "co_signer_sol": str(other_delta / Decimal(1_000_000_000)),
+                    })
+                    reasons.append("sell_proceeds_to_cosigner")
         if keys and not reviewed_swap:
             for instruction in message.get("instructions") or []:
                 parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
@@ -560,12 +560,12 @@ def detect_bundle_or_distribution(records, address):
             if any(mint in later_sold for mint in gained if mint != WSOL):
                 sold_quarantined.update(mint for mint in gained if mint in later_sold and mint != WSOL)
                 zero_basis.append(signature)
-    swap_traded = set()
+    swap_bought = set()
     for raw, keys, deltas, _record, _row_signers, _has_swap in parsed_rows:
         if keys and _has_reviewed_swap(raw, keys):
-            swap_traded.update(_wallet_traded_mints(deltas))
-    sold_quarantined -= swap_traded
-    quarantined -= swap_traded
+            swap_bought.update(mint for mint, qty in (deltas or {}).items() if qty > 0 and mint != WSOL)
+    sold_quarantined -= swap_bought
+    quarantined -= swap_bought
     if shared_funders and multi_signer:
         reasons.append("shared_funder")
     controlled, controlled_explanations, unknown_hops = _detect_controlled_pair(parsed_rows, address)

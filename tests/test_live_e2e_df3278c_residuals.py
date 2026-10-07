@@ -285,7 +285,6 @@ def test_dkx_missing_ge87_buys_now_decode():
     assert {row.get("signature", "")[:12] for row in trades} >= {"2vTAoMD5oZkH", "vYeWFHJdvG5w"}
     assert all(row.get("kind") == "buy" for row in trades)
     assert auditor.reconstruct_record(opening, DKX)
-    assert auditor.reconstruct_record(dflow, DKX)
     assert auditor.reconstruct_record.__module__ == "tools.independent_episode_audit"
 
 

@@ -586,43 +586,56 @@ def _canonical_user_volume_address(address):
 
 
 def _episode_rent_exclusion(flat, keys, before, after, address, skip_accounts):
-    """Long-lived account rent is not trade cost; same-tx create+close nets out.
+    """Long-lived venue-owned account rent is not trade cost; create+close nets out.
 
     Independent of tools/independent_episode_audit.py (no shared helper).
-    A wallet-funded system create whose account is still funded at the native
-    endpoint is a refundable deposit, not this swap's consideration. A create
-    that is closed in the same transaction already nets to zero in the wallet
-    native delta and is not added here.
+    A wallet-funded System create whose remaining native delta is still
+    funded, and whose owner is a reviewed venue other than PumpSwap
+    user-volume (that path stays on `_retained_user_volume_funding`), is a
+    refundable protocol deposit, not this swap's consideration. A create
+    closed in the same transaction already nets to zero and is not added.
+    Foreign / System-owned / token-account creates stay in cash-role review.
     """
     skip = set(skip_accounts or ())
+    venue_owners = set(REVIEWED_OUTER_VENUES) - {PUMP_SWAP}
+    venue_owner_bytes = set()
+    for program in venue_owners:
+        try:
+            venue_owner_bytes.add(_data(program))
+        except ValueError:
+            continue
     excluded = 0
     seen = set()
     for _outer, _path, instruction, _nested in flat:
         if _program(instruction, keys) != SYSTEM_ID:
             continue
         parsed = instruction.get('parsed')
-        source = account = None
+        source = account = owner = None
         if isinstance(parsed, dict):
             if parsed.get('type') not in ('createAccount', 'createAccountWithSeed'):
                 continue
             info = parsed.get('info') or {}
             source = info.get('source')
             account = info.get('newAccount')
+            owner = info.get('owner')
         else:
-            # Compiled System create (opcode 0) and create-with-seed (opcode 3).
-            # Independent of tools/independent_episode_audit._system_movements.
+            # Compiled System create (opcode 0). Independent of the auditor.
             try:
                 payload = _data(instruction.get('data'))
                 accounts = _accounts(instruction, keys)
             except (ValueError, TypeError, KeyError, IndexError):
                 continue
             opcode = int.from_bytes(payload[:4], 'little') if len(payload) >= 4 else None
-            if opcode == 0 and len(payload) >= 12 and len(accounts) >= 2:
+            if opcode == 0 and len(payload) >= 52 and len(accounts) >= 2:
                 source, account = accounts[0], accounts[1]
-            elif opcode == 3 and len(payload) >= 12 and len(accounts) >= 2:
-                source, account = accounts[0], accounts[1]
+                owner_bytes = payload[20:52]
+                if owner_bytes not in venue_owner_bytes:
+                    continue
+                owner = next((program for program in venue_owners if _data(program) == owner_bytes), None)
             else:
                 continue
+        if owner not in venue_owners:
+            continue
         if source != address or not account or account in skip or account in seen:
             continue
         if account not in keys:

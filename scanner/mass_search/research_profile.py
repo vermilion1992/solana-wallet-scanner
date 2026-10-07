@@ -1297,7 +1297,7 @@ def build_research_profile(report, *, filters=None, classification=None, decoded
         ledger = [
             item for item in ledger
             if item.get("mint") not in sold_quarantined
-            or item.get("net") not in (None, "")
+            or item.get("mint") in completed_buy_sell
         ]
     episode_net, episode_unit, episode_vector = episode_net_from_ledger(
         ledger, fallback_unit=settlement if settlement in ("SOL", "USDC") else None
