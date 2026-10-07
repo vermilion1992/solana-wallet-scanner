@@ -22,7 +22,14 @@ ADAPTER_VERSION = "mass-search-adapter-v1"
 ALLOWED_BIRDEYE_HOST = "public-api.birdeye.so"
 ALLOWED_BIRDEYE_PATH = "/trader/gainers-losers"
 BIRDEYE_TOP_TRADERS_PATH = "/defi/v2/tokens/top_traders"
-ALLOWED_BIRDEYE_PATHS = frozenset({ALLOWED_BIRDEYE_PATH, BIRDEYE_TOP_TRADERS_PATH})
+BIRDEYE_TOKEN_LIST_PATH = "/defi/v3/token/list"
+BIRDEYE_FIRST_BUYERS_PATH = "/token/v1/first-buyers"
+ALLOWED_BIRDEYE_PATHS = frozenset({
+    ALLOWED_BIRDEYE_PATH,
+    BIRDEYE_TOP_TRADERS_PATH,
+    BIRDEYE_TOKEN_LIST_PATH,
+    BIRDEYE_FIRST_BUYERS_PATH,
+})
 
 
 class SourceError(Exception):

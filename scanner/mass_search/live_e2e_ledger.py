@@ -100,6 +100,10 @@ def provider_caps(grant):
         if provider in ("birdeye", "helius"):
             caps[f"{provider}_requests"] = int(entry.get("max_requests") or 0)
             caps[f"{provider}_units"] = int(entry.get("max_units") or 0)
+        elif provider == "leaderboard":
+            # Reserved. Not in SPEND_KEYS — live fetch is refused and caps stay 0.
+            caps["leaderboard_requests"] = int(entry.get("max_requests") or 0)
+            caps["leaderboard_units"] = int(entry.get("max_units") or 0)
     return caps
 
 

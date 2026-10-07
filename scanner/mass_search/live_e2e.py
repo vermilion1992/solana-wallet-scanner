@@ -65,6 +65,8 @@ from scanner.mass_search.adapters import (
     ALLOWED_BIRDEYE_HOST,
     ALLOWED_BIRDEYE_PATH,
     ALLOWED_BIRDEYE_PATHS,
+    BIRDEYE_FIRST_BUYERS_PATH,
+    BIRDEYE_TOKEN_LIST_PATH,
     BIRDEYE_TOP_TRADERS_PATH,
     BirdeyeTraderAdapter,
     SourceError,
@@ -101,6 +103,34 @@ from scanner.mass_search.live_e2e_ledger import (
     verify_receipt_chain,
 )
 from scanner.mass_search.qualification_gates import coverage_shares, qualifying_profit
+from scanner.mass_search.seed_sources import (
+    BIRDEYE_FIRST_BUYERS_UNITS,
+    BIRDEYE_TOKEN_LIST_UNITS,
+    DURABLE_TOKEN_MIN_LIQUIDITY_USD,
+    DURABLE_TOKEN_MIN_MARKET_CAP_USD,
+    EARLY_BUYER_MAX_TOKENS,
+    EARLY_BUYER_PAGE_LIMIT,
+    SEED_CU_DOCS,
+    SEED_EARLY_BUYERS,
+    SEED_PRESCREEN_FILTER,
+    SEED_SMART_MONEY,
+    SeedSourceError,
+    cheap_prescreen_decision,
+    cheap_prescreen_enabled,
+    estimate_seed_plan,
+    first_buyer_rows,
+    history_span_days,
+    leaderboard_not_viable_reason,
+    parse_seed_sources,
+    primary_seed_source,
+    record_seed_metadata,
+    resolve_seed_sources,
+    seed_fields_for_wallet,
+    select_durable_tokens,
+    select_early_buyers_sold_well,
+    token_list_items,
+    utc_now_unix,
+)
 from scanner.mass_search.research_profile import (
     attach_live_independent_audit,
     build_research_profile,
@@ -118,15 +148,18 @@ AUTHORIZATION_ID = "live-e2e-proof-2026-10-07-mitch"
 AUTHORIZATION_ID_NEXT = "live-e2e-proof-2026-10-09-mitch"
 AUTHORIZATION_ID_11 = "live-e2e-proof-2026-10-11-mitch"
 AUTHORIZATION_ID_12 = "live-e2e-proof-2026-10-12-mitch"
+AUTHORIZATION_ID_13 = "live-e2e-proof-2026-10-13-mitch"
 DRAFT_REL = "config/live_authorization.live-e2e-proof-2026-10-07-mitch-draft.json"
 DRAFT_REL_NEXT = "config/live_authorization.live-e2e-proof-2026-10-09-mitch-draft.json"
 DRAFT_REL_11 = "config/live_authorization.live-e2e-proof-2026-10-11-mitch-draft.json"
 DRAFT_REL_12 = "config/live_authorization.live-e2e-proof-2026-10-12-mitch-draft.json"
+DRAFT_REL_13 = "config/live_authorization.live-e2e-proof-2026-10-13-mitch-draft.json"
 DRAFT_PATH = ROOT / DRAFT_REL
-# --live accepts only the 2026-10-12 draft. 07, 09 and 11 are retired for --live.
+# --live accepts the 2026-10-12 and 2026-10-13 drafts. 07, 09 and 11 are retired.
 # Dry-run may still load a retired draft.
 LIVE_KNOWN_DRAFTS = {
     AUTHORIZATION_ID_12: DRAFT_REL_12,
+    AUTHORIZATION_ID_13: DRAFT_REL_13,
 }
 RETIRED_LIVE_DRAFTS = {
     AUTHORIZATION_ID: DRAFT_REL,
@@ -141,12 +174,15 @@ PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID_NEXT: "cda7b98d4d3bf0c219c53f4c37f2c6bc3b62d9480b60ad69d01f1709fc65af62",
     AUTHORIZATION_ID_11: "a2b6b4b53717f9d7dcb5f0f9a60bd073274af4e810aae3943af7edb9d003512b",
     AUTHORIZATION_ID_12: "65b14ccd9e60e453760a1d1da55c825d1083c86c416bc8957985b361fc483270",
+    AUTHORIZATION_ID_13: "b28d9fea34dfe9eb3f66ca9b9d014601c5453542f6ecd5371f0bd76f0ee93c15",
 }
 HARD_CEILINGS = {
     "birdeye_requests": 40,
     "birdeye_units": 1400,
     "helius_requests": 3000,
     "helius_units": 30000,
+    "leaderboard_requests": 0,
+    "leaderboard_units": 0,
 }
 # Ledger home is pinned here and in the committed draft, not in the armed copy.
 # --live uses this absolute path. It must not depend on HOME.
@@ -210,6 +246,21 @@ BIRDEYE_CU_DOCS = {
         "path": BIRDEYE_TOP_TRADERS_PATH,
         "documented_cu": BIRDEYE_TOP_TRADERS_UNITS,
         "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+        "reviewed_on": "2026-10-07",
+    },
+    SEED_EARLY_BUYERS: {
+        "path": BIRDEYE_TOKEN_LIST_PATH,
+        "documented_cu": BIRDEYE_TOKEN_LIST_UNITS,
+        "first_buyers_path": BIRDEYE_FIRST_BUYERS_PATH,
+        "first_buyers_cu": BIRDEYE_FIRST_BUYERS_UNITS,
+        "docs": "https://docs.birdeye.so/docs/compute-unit-cost",
+        "reviewed_on": "2026-10-07",
+    },
+    SEED_SMART_MONEY: {
+        "path": None,
+        "documented_cu": 0,
+        "viable": False,
+        "docs": None,
         "reviewed_on": "2026-10-07",
     },
 }
@@ -906,24 +957,65 @@ def seed_counterparties_from_records(records, address):
 
 def discovery_identity(config):
     """Distinct Phase-1 identity: source|window|sort|tokens."""
-    source = config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS
+    sources = config.get("seed_sources") or [config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS]
+    source = ",".join(sources)
     window = config.get("birdeye_window") or BIRDEYE_DEFAULT_WINDOW
     sort = config.get("birdeye_sort") or BIRDEYE_DEFAULT_SORT
     tokens = ",".join(config.get("birdeye_tokens") or [])
     return f"{source}|{window}|{sort}|{tokens}"
 
 
-def _merge_discovery_wallets(config, state, addresses):
+def _merge_discovery_wallets(config, state, addresses, *, source=None, extras=None):
     """Union newly discovered addresses into the run wallet pool."""
     existing = list(state.get("wallets") or config.get("wallets") or [])
     seen = set(existing)
+    extras = extras or {}
     for address in addresses or []:
         if address and address not in seen:
             existing.append(address)
             seen.add(address)
+        if address and source:
+            record_seed_metadata(state, address, source, extras.get(address))
     config["wallets"] = existing
     state["wallets"] = existing
     return existing
+
+
+def _seed_window_days(config):
+    text = str(config.get("birdeye_window") or "")
+    if text.endswith("d") and text[:-1].isdigit():
+        return max(int(text[:-1]), 1)
+    if text in ("1W", "7d"):
+        return 7
+    if text in ("yesterday", "today"):
+        return 1
+    return max(int(config.get("window_days") or 30), 1)
+
+
+def apply_cheap_prescreen_phase1(config, state):
+    """Drop high-rate seeds using Phase 1 provider rows. No extra calls."""
+    if not cheap_prescreen_enabled(config.get("seed_sources")):
+        return []
+    window = _seed_window_days(config)
+    dropped = []
+    kept = []
+    for address in list(state.get("wallets") or config.get("wallets") or []):
+        meta = (state.get("seed_metadata") or {}).get(address) or {}
+        decision = cheap_prescreen_decision({
+            "trade_count": meta.get("trade_count"),
+            "window_days": window,
+            "trades_per_day": meta.get("trades_per_day"),
+        })
+        if decision["dropped"]:
+            dropped.append(address)
+            state.setdefault("cheap_prescreen", {})[address] = decision
+            record_seed_metadata(state, address, SEED_PRESCREEN_FILTER, decision)
+        else:
+            kept.append(address)
+    config["wallets"] = kept
+    state["wallets"] = kept
+    state["cheap_prescreen_dropped"] = dropped
+    return dropped
 
 
 def estimate_phase3_pages(config, state=None):
@@ -1000,15 +1092,15 @@ def plan_request_counts(config, state=None):
     wallets = list(config["wallets"])
     phases = set(config["phases"])
     discovery = bool(config.get("discovery"))
-    source = config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS
+    sources = list(config.get("seed_sources") or [config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS])
+    source = primary_seed_source(sources)
     tokens = list(config.get("birdeye_tokens") or [])
+    seed_plan = estimate_seed_plan(
+        sources, tokens=tokens, discovery=discovery or (1 in phases and not wallets), wallets=wallets,
+    )
     if 1 in phases and (discovery or not wallets):
-        if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
-            birdeye_requests = max(len(tokens), 1)
-            birdeye_units = birdeye_requests * BIRDEYE_TOP_TRADERS_UNITS
-        else:
-            birdeye_requests = 1
-            birdeye_units = BIRDEYE_UNITS
+        birdeye_requests = seed_plan["totals"]["birdeye_requests"]
+        birdeye_units = seed_plan["totals"]["birdeye_units"]
     else:
         birdeye_requests = 0
         birdeye_units = 0
@@ -1040,9 +1132,12 @@ def plan_request_counts(config, state=None):
         "phases": list(config["phases"]),
         "wallet_count": n,
         "discovery_source": source,
+        "seed_sources": sources,
+        "seed_plan": seed_plan,
         "phase3_page_estimates": page_estimates,
         "per_wallet_cap": per_wallet_cap,
         "birdeye_cu_docs": BIRDEYE_CU_DOCS,
+        "seed_cu_docs": SEED_CU_DOCS,
         "per_phase": {
             "1": {
                 "provider": "birdeye",
@@ -1051,9 +1146,9 @@ def plan_request_counts(config, state=None):
                 "billing_unit": "birdeye_compute_unit",
                 "note": (
                     "0 when a wallet list is supplied without --discovery. "
-                    f"{source}: documented "
-                    f"{BIRDEYE_CU_DOCS.get(source, {}).get('documented_cu')} CU/call."
+                    f"{source}: see seed_plan.per_source. A seed is never evidence."
                 ),
+                "per_source": seed_plan.get("per_source") or {},
             },
             "2": {
                 "provider": "helius",
@@ -1083,6 +1178,8 @@ def plan_request_counts(config, state=None):
             "birdeye_units": birdeye_units,
             "helius_requests": helius_phase2 + helius_phase3,
             "helius_units": helius_units,
+            "leaderboard_requests": seed_plan["totals"].get("leaderboard_requests") or 0,
+            "leaderboard_units": seed_plan["totals"].get("leaderboard_units") or 0,
         },
         "caps": config["caps"],
         "PRODUCT_READY": False,
@@ -1106,18 +1203,37 @@ class RecorderTransport:
         self.calls = []
 
     async def birdeye(self, method, path, params):
+        units = BIRDEYE_UNITS
+        if path == BIRDEYE_TOP_TRADERS_PATH:
+            units = BIRDEYE_TOP_TRADERS_UNITS
+        elif path == BIRDEYE_TOKEN_LIST_PATH:
+            units = BIRDEYE_TOKEN_LIST_UNITS
+        elif path == BIRDEYE_FIRST_BUYERS_PATH:
+            units = BIRDEYE_FIRST_BUYERS_UNITS
+        fixture = (getattr(self, "fixtures", None) or {}).get(path)
+        if fixture is not None:
+            body = fixture if isinstance(fixture, dict) else {}
+            raw = json.dumps(body, separators=(",", ":")).encode() if isinstance(fixture, dict) else bytes(fixture)
+            if not isinstance(fixture, dict):
+                try:
+                    body = json.loads(raw.decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError):
+                    body = {"data": {"items": []}}
+        else:
+            body = {"data": {"items": []}}
+            raw = b'{"data":{"items":[]}}'
         self.calls.append({
             "provider": "birdeye",
             "method": method,
             "path": path,
             "params": dict(params or {}),
-            "units": BIRDEYE_UNITS,
+            "units": units,
         })
         return {
             "status": 200,
             "fetched_at": utc_now(),
-            "body": {"data": {"items": []}},
-            "raw_bytes": b'{"data":{"items":[]}}',
+            "body": body,
+            "raw_bytes": raw,
         }
 
     async def helius(self, address, *, options, page_index=0):
@@ -1772,11 +1888,252 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
         raise
 
 
+async def _birdeye_seed_call(store, grant, config, state, recorder, *, path, params, operation, units, wallet, page, identity):
+    """Ledgered, grant-gated Birdeye GET. Dry-run uses the recorder only."""
+    token_key = request_identity("birdeye", wallet=wallet, phase=1, page=page, cursor=f"{identity}:{path}:{wallet}")
+    hard_stop_if_needed(
+        config, state["spend"], provider="birdeye", units=units,
+        phase=1, phase_spend=state.get("phase_spend"),
+    )
+    reservation = None
+    if config["dry_run"]:
+        put_receipt(store, grant, token_key, {
+            "provider": "birdeye", "wallet": wallet, "phase": 1, "page": page,
+            "units": units, "state": "consumed", "discovery_identity": identity,
+            "path": path,
+        })
+        response = await recorder.birdeye("GET", path, params)
+        _account_spend(state, provider="birdeye", units=units, phase=1)
+        return response
+    if not grant.get("enabled"):
+        raise SourceError("UNAUTHORIZED", grant.get("reason") or "grant disabled")
+    if operation not in (provider_entry(grant, "birdeye").get("allowed_operations") or []):
+        raise SourceError("UNAUTHORIZED", f"Authorization does not include Birdeye {operation}")
+    try:
+        entry = provider_entry(grant, "birdeye")
+        reservation = store.reserve(
+            "birdeye", operation, units, entry["cycle_start"], entry["max_units"],
+        )
+        store.dispatch(reservation)
+        put_receipt(store, grant, token_key, {
+            "provider": "birdeye", "wallet": wallet, "phase": 1, "page": page,
+            "units": units, "state": "dispatched", "reservation_id": reservation,
+            "discovery_identity": identity, "path": path,
+        })
+        response = await _live_birdeye("GET", path, params)
+        store.settle(reservation, charge=True)
+        put_receipt(store, grant, token_key, {
+            "provider": "birdeye", "wallet": wallet, "phase": 1, "page": page,
+            "units": units, "state": "consumed", "reservation_id": reservation,
+            "discovery_identity": identity, "path": path,
+        })
+        _account_spend(state, provider="birdeye", units=units, phase=1)
+        return response
+    except Exception:
+        if reservation:
+            try:
+                store.settle(reservation, charge=True)
+            except ValueError:
+                pass
+        put_receipt(store, grant, token_key, {
+            "provider": "birdeye", "wallet": wallet, "phase": 1, "page": page,
+            "units": units, "state": "failed", "reservation_id": reservation,
+            "path": path,
+        })
+        _account_spend(state, provider="birdeye", units=units, phase=1)
+        raise
+
+
+async def _phase1_smart_money(store, grant, config, state, recorder, identity):
+    """Refuse live unofficial scrapes. Dry-run records the viability note."""
+    reason = leaderboard_not_viable_reason()
+    if not config["dry_run"]:
+        raise SourceError("NOT_VIABLE", reason)
+    raw = json.dumps({
+        "viable": False,
+        "vendors": SEED_CU_DOCS[SEED_SMART_MONEY]["vendors"],
+        "reason": reason,
+        "seed_is_not": "evidence",
+        "PRODUCT_READY": False,
+    }, sort_keys=True, separators=(",", ":")).encode()
+    digest_name = "leaderboard-" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12] + ".bin"
+    digest = _save_raw(config["output_dir"], f"raw/phase1/{digest_name}", raw)
+    _save_raw(config["output_dir"], "raw/phase1/leaderboard.bin", raw)
+    key = request_identity("leaderboard", wallet="_", phase=1, page=0, cursor=identity)
+    put_receipt(store, grant, key, {
+        "provider": "leaderboard", "wallet": "_", "phase": 1, "page": 0,
+        "units": 0, "state": "consumed", "discovery_identity": identity,
+        "sha256": digest, "viable": False,
+    })
+    state.setdefault("discoveries", {})[identity] = {
+        "addresses": [],
+        "sha256": digest,
+        "count": 0,
+        "units": 0,
+        "viable": False,
+        "blocker": reason,
+        "seed_source": SEED_SMART_MONEY,
+        "seed_is_not": "evidence",
+    }
+    save_state(config["output_dir"], state)
+    return {
+        "addresses": [],
+        "sha256": digest,
+        "count": 0,
+        "discovery_identity": identity,
+        "pool_size": len(state.get("wallets") or []),
+        "viable": False,
+        "blocker": reason,
+        "seed_source": SEED_SMART_MONEY,
+        "seed_is_not": "evidence",
+    }
+
+
+async def _phase1_early_buyers(store, grant, config, state, recorder, identity):
+    tokens = list(config.get("birdeye_tokens") or [])
+    raw_parts = []
+    extras = {}
+    durable = []
+    if tokens:
+        durable = [{"address": token} for token in tokens]
+    else:
+        list_params = {
+            "sort_by": "liquidity",
+            "sort_type": "desc",
+            "offset": 0,
+            "limit": 50,
+            "min_liquidity": DURABLE_TOKEN_MIN_LIQUIDITY_USD,
+            "min_market_cap": DURABLE_TOKEN_MIN_MARKET_CAP_USD,
+        }
+        response = await _birdeye_seed_call(
+            store, grant, config, state, recorder,
+            path=BIRDEYE_TOKEN_LIST_PATH,
+            params=list_params,
+            operation="token_list",
+            units=BIRDEYE_TOKEN_LIST_UNITS,
+            wallet="_token_list",
+            page=0,
+            identity=identity,
+        )
+        raw_parts.append(response.get("raw_bytes") or b"{}")
+        durable = select_durable_tokens(
+            token_list_items(response.get("body")),
+            now_unix=utc_now_unix(),
+            limit=EARLY_BUYER_MAX_TOKENS,
+        )
+    addresses = []
+    for index, token_row in enumerate(durable[:EARLY_BUYER_MAX_TOKENS]):
+        token = token_row.get("address") if isinstance(token_row, dict) else token_row
+        if not token:
+            continue
+        call_params = {
+            "token_address": token,
+            "offset": 0,
+            "limit": min(int(config.get("birdeye_limit") or EARLY_BUYER_PAGE_LIMIT), 100),
+        }
+        response = await _birdeye_seed_call(
+            store, grant, config, state, recorder,
+            path=BIRDEYE_FIRST_BUYERS_PATH,
+            params=call_params,
+            operation="token_first_buyers",
+            units=BIRDEYE_FIRST_BUYERS_UNITS,
+            wallet=token,
+            page=index + 1,
+            identity=identity,
+        )
+        raw_parts.append(response.get("raw_bytes") or b"{}")
+        for buyer in select_early_buyers_sold_well(first_buyer_rows(response.get("body")), token=token):
+            addr = buyer["address"]
+            if addr not in addresses:
+                addresses.append(addr)
+            extras[addr] = {
+                "token": token,
+                "position_status": buyer.get("position_status"),
+                "first_buy_volume_usd": buyer.get("first_buy_volume_usd"),
+            }
+    raw = b"\n".join(raw_parts) if raw_parts else b"{}"
+    digest_name = "early-buyers-" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:12] + ".bin"
+    digest = _save_raw(config["output_dir"], f"raw/phase1/{digest_name}", raw)
+    _save_raw(config["output_dir"], "raw/phase1/early-buyers.bin", raw)
+    phase1_units = (0 if tokens else BIRDEYE_TOKEN_LIST_UNITS) + (
+        min(len(durable), EARLY_BUYER_MAX_TOKENS) * BIRDEYE_FIRST_BUYERS_UNITS
+    )
+    state.setdefault("discoveries", {})[identity] = {
+        "addresses": list(addresses),
+        "sha256": digest,
+        "count": len(addresses),
+        "units": phase1_units,
+        "durable_tokens": [row.get("address") if isinstance(row, dict) else row for row in durable],
+        "seed_source": SEED_EARLY_BUYERS,
+        "seed_is_not": "evidence",
+    }
+    _merge_discovery_wallets(config, state, addresses, source=SEED_EARLY_BUYERS, extras=extras)
+    save_state(config["output_dir"], state)
+    return {
+        "addresses": addresses,
+        "sha256": digest,
+        "count": len(addresses),
+        "discovery_identity": identity,
+        "pool_size": len(state.get("wallets") or []),
+        "seed_source": SEED_EARLY_BUYERS,
+        "seed_is_not": "evidence",
+    }
+
+
 async def phase1_discovery(store, grant, config, state, recorder):
     if 1 not in config["phases"]:
         return {"skipped": True}
     if config["wallets"] and not config.get("discovery"):
         return {"skipped": True, "reason": "wallet_list_supplied"}
+    sources = list(config.get("seed_sources") or [config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS])
+    source = primary_seed_source(sources)
+    if source == SEED_SMART_MONEY:
+        identity = discovery_identity(config)
+        base = request_identity("leaderboard", wallet="_", phase=1, page=0, cursor=identity)
+        key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
+        if replay:
+            reconcile_state_spend(store, state)
+            prior = ((state.get("discoveries") or {}).get(identity) or {})
+            addresses = list(prior.get("addresses") or [])
+            _merge_discovery_wallets(config, state, addresses, source=SEED_SMART_MONEY)
+            save_state(config["output_dir"], state)
+            return {
+                "addresses": addresses,
+                "replayed_from_receipt": True,
+                "discovery_identity": identity,
+                "count": len(addresses),
+                "viable": prior.get("viable", False),
+                "blocker": prior.get("blocker"),
+                "seed_source": SEED_SMART_MONEY,
+                "seed_is_not": "evidence",
+            }
+        return await _phase1_smart_money(store, grant, config, state, recorder, identity)
+    if source == SEED_EARLY_BUYERS:
+        token_count = len(config.get("birdeye_tokens") or []) or EARLY_BUYER_MAX_TOKENS
+        list_units = 0 if config.get("birdeye_tokens") else BIRDEYE_TOKEN_LIST_UNITS
+        phase1_units = list_units + token_count * BIRDEYE_FIRST_BUYERS_UNITS
+        hard_stop_if_needed(
+            config, state["spend"], provider="birdeye", units=phase1_units,
+            phase=1, phase_spend=state.get("phase_spend"),
+        )
+        identity = discovery_identity(config)
+        base = request_identity("birdeye", wallet="_", phase=1, page=0, cursor=identity)
+        key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
+        if replay:
+            reconcile_state_spend(store, state)
+            prior = ((state.get("discoveries") or {}).get(identity) or {})
+            addresses = list(prior.get("addresses") or [])
+            _merge_discovery_wallets(config, state, addresses, source=SEED_EARLY_BUYERS)
+            save_state(config["output_dir"], state)
+            return {
+                "addresses": addresses,
+                "replayed_from_receipt": True,
+                "discovery_identity": identity,
+                "count": len(addresses),
+                "seed_source": SEED_EARLY_BUYERS,
+                "seed_is_not": "evidence",
+            }
+        return await _phase1_early_buyers(store, grant, config, state, recorder, identity)
     source = config.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS
     if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
         token_count = max(len(config.get("birdeye_tokens") or []), 1)
@@ -1807,7 +2164,7 @@ async def phase1_discovery(store, grant, config, state, recorder):
         reconcile_state_spend(store, state)
         prior = ((state.get("discoveries") or {}).get(identity) or {})
         addresses = list(prior.get("addresses") or [])
-        _merge_discovery_wallets(config, state, addresses)
+        _merge_discovery_wallets(config, state, addresses, source=source)
         save_state(config["output_dir"], state)
         return {
             "addresses": addresses,
@@ -1827,6 +2184,7 @@ async def phase1_discovery(store, grant, config, state, recorder):
             "state": "reserved",
         })
     charged = False
+    extras = {}
     try:
         if source == BIRDEYE_DISCOVERY_TOP_TRADERS:
             tokens = list(config.get("birdeye_tokens") or [])
@@ -1908,6 +2266,10 @@ async def phase1_discovery(store, grant, config, state, recorder):
                     addr = row.get("address") or row.get("wallet") or row.get("owner")
                     if addr:
                         addresses.append(addr)
+                        extras[addr] = {
+                            "trade_count": row.get("trade_count") or row.get("trade"),
+                            "token": token,
+                        }
                 raw_parts.append(response.get("raw_bytes") or b"{}")
             charged = True
             reservation = None
@@ -1949,7 +2311,11 @@ async def phase1_discovery(store, grant, config, state, recorder):
             raw = page.get("raw_bytes")
             if not isinstance(raw, (bytes, bytearray)):
                 raw = json.dumps(page.get("raw_body") or {}, sort_keys=True, separators=(",", ":")).encode()
-            addresses = [row["address"] for row in (page.get("rows") or []) if row.get("valid") and row.get("address")]
+            addresses = []
+            for row in (page.get("rows") or []):
+                if row.get("valid") and row.get("address"):
+                    addresses.append(row["address"])
+                    extras[row["address"]] = {"trade_count": row.get("trade_count")}
     except Exception:
         if reservation and not charged:
             try:
@@ -1991,7 +2357,7 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "count": len(addresses),
         "units": phase1_units,
     }
-    _merge_discovery_wallets(config, state, addresses)
+    _merge_discovery_wallets(config, state, addresses, source=source, extras=extras)
     save_state(config["output_dir"], state)
     return {
         "addresses": addresses,
@@ -1999,6 +2365,8 @@ async def phase1_discovery(store, grant, config, state, recorder):
         "count": len(addresses),
         "discovery_identity": identity,
         "pool_size": len(state.get("wallets") or []),
+        "seed_source": source,
+        "seed_is_not": "evidence",
     }
 
 
@@ -2083,6 +2451,28 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         elif bundle.get("excluded"):
             dropped = True
             drop_reason = bundle.get("reason") or "bundle_or_distribution"
+        elif cheap_prescreen_enabled(config.get("seed_sources")):
+            created = False
+            try:
+                created = bool(
+                    assess_history_completeness(sample_records, None, address=address).get("wallet_created_in_range")
+                )
+            except Exception:
+                created = False
+            history_days = history_span_days(
+                sample_records,
+                created_in_range=created,
+                now_unix=bounds.get("report_end_unix"),
+            )
+            decision = cheap_prescreen_decision({
+                "trades_per_day": bot_rate,
+                "history_days": history_days,
+            })
+            if decision["dropped"]:
+                dropped = True
+                drop_reason = ",".join(decision["drop_reasons"])
+                state.setdefault("cheap_prescreen", {})[address] = decision
+                record_seed_metadata(state, address, SEED_PRESCREEN_FILTER, decision)
         row = {
             "address": address,
             "in_window_tx_count": in_window,
@@ -2109,6 +2499,7 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             "drop_reason": drop_reason,
             "requests": 2,
             "done": True,
+            **seed_fields_for_wallet(state, address),
         }
         state.setdefault("phase2", {})[address] = row
         save_state(config["output_dir"], state)
@@ -2310,6 +2701,9 @@ def _phase4_wallet_row(report, profile):
         "configured_report_end_exclusive": ((report.get("window") or {}).get("configured_report_end_exclusive")),
         "aligned_report_end_exclusive": ((report.get("window") or {}).get("aligned_report_end_exclusive")),
         "report_end_anchored_to_last_tx": ((report.get("window") or {}).get("report_end_anchored_to_last_tx")),
+        "seed_source": (report.get("seed_source") if isinstance(report, dict) else None),
+        "seed_sources": (report.get("seed_sources") if isinstance(report, dict) else None) or [],
+        "seed_is_not": "evidence",
         "PRODUCT_READY": False,
     }
 
@@ -2378,6 +2772,7 @@ def phase4_offline(store, config, state):
                 "blocker": page_blocker,
                 "coverage_status": "blocked",
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
+                **seed_fields_for_wallet(state, address),
                 "PRODUCT_READY": False,
             })
             continue
@@ -2394,6 +2789,7 @@ def phase4_offline(store, config, state):
                 "lead_level": "insufficient_evidence",
                 "blocker": "no captured history in this run",
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
+                **seed_fields_for_wallet(state, address),
                 "PRODUCT_READY": False,
             })
             continue
@@ -2440,6 +2836,7 @@ def phase4_offline(store, config, state):
         })
         report["window"] = window_doc
         report["prescreen"] = (state.get("phase2") or {}).get(address) or {}
+        report.update(seed_fields_for_wallet(state, address))
         report["bundle_or_distribution"] = bundle
         report["history"] = history
         report["history_complete"] = history.get("history_complete")
@@ -2561,7 +2958,13 @@ def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
         draft_caps = provider_caps(draft)
         if not grant.get("phase_caps"):
             caps["phase_caps"] = phase_caps_from_grant(draft)
-        for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
+        for key in HARD_CEILINGS:
+            if key not in caps and key not in draft_caps:
+                continue
+            if key not in caps:
+                caps[key] = 0
+            if key not in draft_caps:
+                draft_caps[key] = 0
             if caps[key] > HARD_CEILINGS[key]:
                 raise LiveE2EError(f"armed {key} {caps[key]} exceeds hard ceiling {HARD_CEILINGS[key]}")
             if draft_caps[key] > HARD_CEILINGS[key]:
@@ -2584,13 +2987,17 @@ def bind_caps_from_grant(grant, overrides, *, mode="dry-run"):
                     )
         caps["draft_artifact_hash"] = draft_hash
         caps["pinned_draft_hash"] = pinned
-    for key in ("birdeye_requests", "birdeye_units", "helius_requests", "helius_units"):
+    for key in HARD_CEILINGS:
         if overrides.get(key) is not None:
             value = int(overrides[key])
             if value < 0:
                 raise LiveE2EError(f"{key} cannot be negative")
-            if value > caps[key]:
-                raise LiveE2EError(f"{key} cannot exceed grant ceiling {caps[key]}")
+            ceiling = caps.get(key)
+            if ceiling is None:
+                ceiling = HARD_CEILINGS[key]
+                caps[key] = ceiling
+            if value > ceiling:
+                raise LiveE2EError(f"{key} cannot exceed grant ceiling {ceiling}")
             caps[key] = value
     return caps
 
@@ -2629,7 +3036,16 @@ def validate_config(raw):
         raw["birdeye_tokens"] = [part.strip() for part in tokens_raw.split(",") if part.strip()]
     elif tokens_raw in (None, ""):
         raw["birdeye_tokens"] = []
-    if (raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS) == BIRDEYE_DISCOVERY_TOP_TRADERS and not raw["birdeye_tokens"]:
+    try:
+        seed_sources = resolve_seed_sources(
+            parse_seed_sources(raw.get("seed_source") or raw.get("seed_sources")),
+            raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS,
+        )
+    except SeedSourceError as error:
+        raise LiveE2EError(str(error)) from error
+    raw["seed_sources"] = seed_sources
+    raw["discovery_source"] = primary_seed_source(seed_sources)
+    if raw["discovery_source"] == BIRDEYE_DISCOVERY_TOP_TRADERS and not raw["birdeye_tokens"]:
         raw["birdeye_tokens"] = list(ESTABLISHED_LIQUID_MINTS)
     import_raw = raw.get("import_raw_dir") or raw.get("import_raw_dirs") or []
     if isinstance(import_raw, str):
@@ -2655,7 +3071,12 @@ def validate_config(raw):
     }, mode=raw["mode"])
     if raw["mode"] == "live":
         presence = credential_presence()
-        if 1 in phases and (raw.get("discovery") or not wallets) and not presence["birdeye"]:
+        needs_birdeye = (
+            1 in phases
+            and (raw.get("discovery") or not wallets)
+            and raw.get("discovery_source") != SEED_SMART_MONEY
+        )
+        if needs_birdeye and not presence["birdeye"]:
             raise LiveE2EError("missing_provider_credentials: BIRDEYE_API_KEY")
         if (2 in phases or 3 in phases) and not presence["helius"]:
             raise LiveE2EError("missing_provider_credentials: HELIUS_API_KEY")
@@ -2681,6 +3102,7 @@ def validate_config(raw):
         "wallets_supplied": wallets_supplied,
         "discovery": bool(raw.get("discovery")),
         "discovery_source": raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS,
+        "seed_sources": list(raw.get("seed_sources") or [raw.get("discovery_source") or BIRDEYE_DISCOVERY_GAINERS]),
         "birdeye_tokens": list(raw.get("birdeye_tokens") or []),
         "window_days": window_days,
         "report_window_days": bounds.get("report_window_days"),
@@ -2798,6 +3220,7 @@ async def run_live_e2e(raw):
             discovery_done = identity in (state.get("discoveries") or {})
             if 1 in config["phases"] and (1 not in done or (config.get("discovery") and not discovery_done)):
                 state["phase1"] = await phase1_discovery(store, config["grant"], config, state, recorder)
+                apply_cheap_prescreen_phase1(config, state)
                 state["phases_done"] = sorted(done | {1})
                 done = set(state["phases_done"])
                 save_state(output_dir, state)
@@ -2945,7 +3368,17 @@ def build_arg_parser():
         dest="discovery_source",
         default=BIRDEYE_DISCOVERY_GAINERS,
         choices=(BIRDEYE_DISCOVERY_GAINERS, BIRDEYE_DISCOVERY_TOP_TRADERS),
-        help="gainers-losers (30 CU) or top-traders-per-token (35 CU). See BIRDEYE_CU_DOCS.",
+        help="Legacy alias for --seed-source gainers-losers|top-traders.",
+    )
+    parser.add_argument(
+        "--seed-source",
+        dest="seed_source",
+        default="",
+        help=(
+            "Comma-separated Phase 1 seeds: gainers-losers, top-traders, "
+            "early-buyers-durable, smart-money-leaderboard, and optional "
+            "prescreen-filter. A seed is never evidence. Overrides --discovery-source."
+        ),
     )
     parser.add_argument(
         "--birdeye-tokens",
