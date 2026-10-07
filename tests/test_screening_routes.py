@@ -40,6 +40,9 @@ class Native:
 
 
 def test_import_identity_sample_screen_is_saved_without_strict_promotion(tmp_path, monkeypatch):
+    monkeypatch.delenv("HELIUS_API_KEY", raising=False)
+    monkeypatch.delenv("BIRDEYE_API_KEY", raising=False)
+    monkeypatch.delenv("HELIUS_KEY", raising=False)
     monkeypatch.setitem(sys.modules, 'keyring', SimpleNamespace(get_keyring=lambda: object()))
     monkeypatch.setattr('scanner.observer.PublicRPC', Native)
     app = create_app(tmp_path, 'private-token')

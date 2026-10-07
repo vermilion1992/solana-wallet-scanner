@@ -81,15 +81,14 @@ def classify_candidate(
         b_reasons.append("holder_rewards_are_not_trading_pnl")
 
     c_state = "NOT_EVALUATED"
-    c_reasons = ["unset_thresholds_do_not_pass"]
+    c_reasons = ["unset_thresholds_are_not_applied"]
     if profile.get("evaluated_thresholds"):
         c_state = "MET" if criteria_met else "NOT_MET"
         c_reasons = ["evaluated_local_thresholds"]
-        if not criteria_met:
+        if criteria_met:
+            c_reasons.append("meets_the_screen_on_matched_trades_in_the_captured_window")
+        else:
             c_reasons.append("one_or_more_set_thresholds_failed_or_unknown")
-    if profile.get("unset_thresholds") and profile.get("evaluated_thresholds"):
-        c_state = "NOT_MET"
-        c_reasons.append("remaining_unset_thresholds_do_not_pass")
 
     next_action = _next_action(
         provider_rank=provider_rank,

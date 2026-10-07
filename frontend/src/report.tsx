@@ -37,13 +37,29 @@ import {
   WindowLabel,
   metricDefinitions,
 } from "./components";
-import { count, date, dateTime, decimal, label, shorten } from "./format";
+import {
+  authoritativeCategory,
+  authoritativeFunnel,
+  completedEpisodeFields,
+  count,
+  date,
+  dateTime,
+  decimal,
+  formatCompletedEpisodeHeadline,
+  formatWorksheetEpisodeBridge,
+  formatWorksheetTotal,
+  joinAmount,
+  label,
+  shorten,
+  WORKSHEET_LABEL,
+} from "./format";
 import { samePresetSnapshot } from "./Discovery";
 import { reportDisplay } from "./api";
 import { SelectedCohortSection } from "./SelectedCohorts";
 import { InventoryObservations } from "./InventoryObservations";
 import { NativeCashObservations } from "./NativeCashObservations";
 import { HistoricalSourceNotice } from "./HistoricalSourceNotice";
+import { ReportCertificationView } from "./researchSurfaces";
 
 export function subsetHoldText(seconds?: number | null) {
   if (seconds === null || seconds === undefined) return "unknown";
@@ -67,18 +83,32 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
   const observations = report.observations || [];
   const trades = (report.events || []).filter((row) => row.kind === "buy" || row.kind === "sell");
   const closedPositions = (report.positions || []).filter((row) => row.status === "closed" || row.end);
-  const productionPnl = settlement === "USDC" ? worksheet?.total_profit_usdc : worksheet?.total_profit_sol;
+  const audit = (report.independent_audit || {}) as {
+    worksheet_total?: string | null;
+    worksheet_total_unit?: string | null;
+  };
+  const profile = (report.research_profile || {}) as {
+    scoped_pnl?: string | null;
+    scoped_pnl_unit?: string | null;
+  };
+  const productionPnl = audit.worksheet_total
+    || profile.scoped_pnl
+    || worksheet?.total_profit_usdc
+    || (settlement === "USDC" ? worksheet?.total_profit_usdc : worksheet?.total_profit_sol);
+  const productionUnit = audit.worksheet_total_unit
+    || profile.scoped_pnl_unit
+    || (worksheet?.total_profit_usdc ? "USDC" : settlement === "mixed" ? "USDC" : settlement);
   const independentPnl = settlement === "USDC"
     ? (independent?.total_profit_usdc || worksheet?.total_profit_usdc)
     : (independent?.total_profit_sol || worksheet?.total_profit_sol);
   return (
     <section className="panel subset-worksheet" data-subset-worksheet="independent">
       <SectionHeading
-        title="Reconstructed subset / independent worksheet"
+        title="Reconstructed subset worksheet"
         subtitle="Supported closed trades and unresolved observations. Not a wallet-wide MATCH. Below-G3 reports stay visible."
       />
       <p className="subset-worksheet-note">
-        Independently reconciled subset from reconstructed buy/sell events.
+        Reconstructed subset from supported buy/sell events.
         Standard report cards stay on full-wallet evidence and may remain unknown.
         Policy remains {report.policy || "UNRESOLVED"}.
         {report.g3_status ? ` G3 status: ${report.g3_status}.` : ""}
@@ -86,14 +116,48 @@ export function SubsetWorksheetPanel({ report }: { report: Report }) {
         {report.research?.supported_swaps != null ? ` Supported swaps: ${report.research.supported_swaps}.` : ""}
       </p>
       <div className="subset-worksheet-metrics">
-        <div>
-          <span>Production subset P&amp;L</span>
-          <strong>{productionPnl ? `${decimal(productionPnl, 4)} ${settlement}` : "unknown"}</strong>
+        <div data-worksheet-total="true">
+          <span>{WORKSHEET_LABEL}</span>
+          <strong>{productionPnl ? `${decimal(String(productionPnl), 4)} ${productionUnit}` : "unknown"}</strong>
+          <small>{formatWorksheetTotal(productionPnl ? String(productionPnl) : null, productionUnit) || WORKSHEET_LABEL}</small>
         </div>
-        <div>
-          <span>Independent subset P&amp;L</span>
-          <strong>{independentPnl ? `${decimal(independentPnl, 4)} ${settlement}` : "unknown"}</strong>
-        </div>
+        {independentPnl && String(independentPnl) !== String(productionPnl || "") ? (
+          <div data-worksheet-total="true">
+            <span>{WORKSHEET_LABEL}</span>
+            <strong>{`${decimal(String(independentPnl), 4)} ${productionUnit}`}</strong>
+            <small>{formatWorksheetTotal(String(independentPnl), productionUnit)}</small>
+          </div>
+        ) : null}
+        {(() => {
+          const headline = formatCompletedEpisodeHeadline(completedEpisodeFields(report));
+          if (!headline) return null;
+          return (
+            <div data-completed-episode-net="true">
+              <span>completed-episode net</span>
+              <strong>{headline.split("; auditor confirms")[0]}</strong>
+              <small>{headline}</small>
+            </div>
+          );
+        })()}
+        {(() => {
+          const profile = (report.research_profile || {}) as {
+            worksheet_episode_bridge?: { worksheet_total?: string; completed_episode_net?: string; bridge?: string; unit?: string };
+            completed_episode_net_vector?: Record<string, string>;
+          };
+          const audit = (report.independent_audit || {}) as {
+            worksheet_episode_bridge?: { worksheet_total?: string; completed_episode_net?: string; bridge?: string; unit?: string };
+          };
+          const bridge = profile.worksheet_episode_bridge || audit.worksheet_episode_bridge;
+          const text = formatWorksheetEpisodeBridge(bridge);
+          if (!text) return null;
+          return (
+            <div data-worksheet-episode-bridge="true">
+              <span>worksheet-vs-completed-episode bridge</span>
+              <strong>{bridge?.bridge} {bridge?.unit || ""}</strong>
+              <small>{text}</small>
+            </div>
+          );
+        })()}
         <div>
           <span>Material-exit t90 (from open)</span>
           <strong>{exit?.exit_90_seconds != null ? `${exit.exit_90_seconds} seconds` : "unknown"}</strong>
@@ -223,12 +287,28 @@ function funnelState(funnel: Record<string, unknown> | null | undefined, key: st
 
 export function ResearchProfilePanel({ report }: { report: Report }) {
   const profile = report.research_profile || {};
-  const funnel = report.funnel || {};
+  const funnel = authoritativeFunnel(report) as Record<string, unknown>;
+  const category = authoritativeCategory(report);
   if (!report.research_profile && !report.funnel) return null;
   const market = (profile.market_vs_rewards || {}) as Record<string, unknown>;
+  const displayedLedger = report.completed_episode_ledger
+    ?? (profile.completed_episode_ledger as unknown[] | undefined)
+    ?? null;
+  const completedKnown = Array.isArray(displayedLedger)
+    ? displayedLedger.length
+    : Number(profile.completed_known_cost_positions ?? 0);
+  const audit = (report.independent_audit || profile.independent_audit || {}) as {
+    worksheet_total?: string | null;
+    worksheet_total_unit?: string | null;
+  };
+  const worksheetFigure = (profile.scoped_pnl as string | null | undefined) || audit.worksheet_total;
+  const worksheetUnit = audit.worksheet_total_unit
+    || (profile.scoped_pnl_unit && profile.scoped_pnl_unit !== "mixed" ? String(profile.scoped_pnl_unit) : "")
+    || "";
   return (
     <div className="research-profile" data-research-profile="local">
-      <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds do not pass. Not safe to copy." />
+      <SectionHeading title="Research profile" subtitle="Local scoped metrics. Unset thresholds are not applied. Not safe to copy." />
+      <ReportCertificationView report={report} />
       <div className="research-metrics mass-search-funnel">
         <div>
           <span>Funnel A</span>
@@ -246,17 +326,130 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
           <small>meets research criteria</small>
         </div>
         <div>
-          <span>Scoped P&amp;L</span>
-          <strong>{profile.scoped_pnl ? `${decimal(String(profile.scoped_pnl), 4)} ${String(profile.scoped_pnl_unit || "")}` : "unknown"}</strong>
+          <span>{completedKnown >= 1 ? "Worksheet total" : "Matched fragments"}</span>
+          <strong>{
+            completedKnown >= 1 && worksheetFigure
+              ? `${decimal(String(worksheetFigure), 4)} ${worksheetUnit}`
+              : (profile.matched_fragment_pnl
+                ? `${decimal(String(profile.matched_fragment_pnl), 4)} ${String(profile.matched_fragment_unit || "")} (not a completed-episode net)`
+                : "unknown")
+          }</strong>
+          {completedKnown >= 1 && worksheetFigure
+            ? <small>{WORKSHEET_LABEL}</small>
+            : null}
         </div>
+        {(() => {
+          const fields = completedEpisodeFields(report);
+          const headline = formatCompletedEpisodeHeadline(fields);
+          if (completedKnown < 1 || !headline) {
+            return null;
+          }
+          return (
+            <div data-independently-audited={fields.independentlyAudited ? "true" : "false"} data-completed-episode-net="true">
+              <span>completed-episode net</span>
+              <strong>{joinAmount(fields.appNet, fields.appUnit)}</strong>
+              <small>{headline}</small>
+            </div>
+          );
+        })()}
       </div>
       <p className="subset-worksheet-note">
         Completed known-cost {String(profile.completed_known_cost_positions ?? 0)}
         {profile.hold_t90_seconds != null ? ` · t90 ${String(profile.hold_t90_seconds)}s` : ""}
         {profile.final_hold_seconds != null ? ` · hold ${String(profile.final_hold_seconds)}s` : ""}
         {profile.unresolved_basis_sales != null ? ` · unresolved basis ${String(profile.unresolved_basis_sales)}` : ""}
+        {profile.sale_count != null ? ` · sales ${String(profile.sale_count)}` : ""}
         {` · market ${String(market.market_swaps ?? 0)} / holder-fee ${String(market.holder_fee_distributions ?? 0)}`}
+        {report.unsupported_swaps_in_window != null
+          ? ` · unsupported swaps in window ${String(report.unsupported_swaps_in_window)} of ${String(report.in_window_swaps ?? 0)}`
+          : report.unsupported_tx_count != null ? ` · unsupported tx ${String(report.unsupported_tx_count)}` : ""}
+        {report.in_window_span?.hours != null ? ` · in-window span ${String(report.in_window_span.hours)} h` : ""}
+        {Array.isArray(report.conversions) && report.conversions.length ? ` · conversions ${String(report.conversions.length)}` : ""}
+        {(() => {
+          const detail = (profile.concentration_detail || {}) as { label?: string; largest_winner?: string; result_excluding_largest_winner?: string };
+          return detail.label ? ` · concentration ${detail.label}` : "";
+        })()}
+        {report.residual_sol_note ? ` · residual ${String(report.residual_sol || "")} SOL ${String(report.residual_sol_note)}` : ""}
+        {(() => {
+          const audit = (report.independent_audit || profile.independent_audit || {}) as {
+            worksheet_total?: string | null;
+            worksheet_total_unit?: string | null;
+            worksheet_total_independently_audited?: boolean;
+          };
+          const worksheet = audit.worksheet_total || (completedKnown >= 1 ? profile.scoped_pnl : null);
+          const worksheetUnit = audit.worksheet_total_unit || profile.scoped_pnl_unit || "";
+          const labelledWorksheet = formatWorksheetTotal(worksheet != null ? String(worksheet) : null, String(worksheetUnit || ""));
+          const worksheetNote = labelledWorksheet ? ` ${labelledWorksheet}` : "";
+          const headline = formatCompletedEpisodeHeadline(completedEpisodeFields(report));
+          if (completedKnown >= 1 && headline) {
+            return ` Headline is the app completed-episode sum. ${headline}.${worksheetNote}`;
+          }
+          return worksheetNote;
+        })()}
+        {(() => {
+          const bridge = (profile.worksheet_episode_bridge || (report.independent_audit as { worksheet_episode_bridge?: { bridge?: string; unit?: string } } | undefined)?.worksheet_episode_bridge) as { worksheet_total?: string; completed_episode_net?: string; bridge?: string; unit?: string } | undefined;
+          const text = formatWorksheetEpisodeBridge(bridge);
+          return text ? ` · ${text}` : "";
+        })()}
+        {(() => {
+          const vector = (profile.completed_episode_net_vector || {}) as Record<string, string>;
+          const keys = Object.keys(vector);
+          if (keys.length < 2) return "";
+          return ` · result vector ${keys.map((unit) => `${vector[unit]} ${unit}`).join(" + ")}`;
+        })()}
+        {(() => {
+          const exposure = (profile.exposure_outside_completed_episodes || {}) as Record<string, unknown>;
+          const parts = [
+            exposure.known_cost_open_inventory != null ? `known-cost open inventory ${String(exposure.known_cost_open_inventory)}${exposure.known_cost_open_inventory_unit ? ` ${String(exposure.known_cost_open_inventory_unit)}` : ""}` : "",
+            exposure.inventory_of_unknown_cost != null
+              ? `unknown-cost inventory ${String(exposure.inventory_of_unknown_cost)}${exposure.inventory_of_unknown_cost_unit ? ` ${String(exposure.inventory_of_unknown_cost_unit)}` : ""}`
+              : (exposure.inventory_of_unknown_cost_status === "unknown" ? "unknown-cost inventory not established" : ""),
+            exposure.open_lots != null ? `open lots ${String(exposure.open_lots)} lots` : "",
+            exposure.failed_attempt_expenses != null ? `failed-attempt expenses ${String(exposure.failed_attempt_expenses)} SOL` : "",
+            exposure.unallocated_verified_costs != null ? `unallocated verified costs ${String(exposure.unallocated_verified_costs)} SOL` : "",
+          ].filter(Boolean);
+          return parts.length ? ` · exposure outside completed episodes: ${parts.join("; ")}` : "";
+        })()}
+        {(() => {
+          const interval = (profile.requested_history_interval || {}) as { requested_history_interval_actually_traversed?: { start?: string; end?: string; hours?: number; status?: string } };
+          const traversed = interval.requested_history_interval_actually_traversed;
+          if (!traversed) return "";
+          if (traversed.status === "not_evaluated" || !traversed.start || !traversed.end) {
+            return " · requested history interval actually traversed not evaluated";
+          }
+          return ` · requested history interval actually traversed ${String(traversed.start)} → ${String(traversed.end)}${traversed.hours != null ? ` (${String(traversed.hours)} h)` : ""}`;
+        })()}
+        {(() => {
+          const holds = (profile.hold_time_stats || {}) as { completed_episodes?: { median_seconds?: number; sample_count?: number }; open_positions?: { median_age_seconds?: number; sample_count?: number; status?: string } };
+          const completed = holds.completed_episodes || {};
+          const open = holds.open_positions || {};
+          const bits = [];
+          if (completed.median_seconds != null) bits.push(`completed-episode median hold ${completed.median_seconds}s n=${completed.sample_count ?? 0}`);
+          if (open.status === "not_evaluated") bits.push("open-position ages not evaluated");
+          else if (open.median_age_seconds != null) bits.push(`open-position median age ${open.median_age_seconds}s n=${open.sample_count ?? 0}`);
+          return bits.length ? ` · ${bits.join(" · ")}` : "";
+        })()}
+        {report.worksheet_error ? ` · worksheet error ${String(report.worksheet_error)}` : ""}
         . Rewards and fees are not profitability. PRODUCT_READY remains false.
+      </p>
+      <p className="subset-worksheet-note" data-verified-sensitivity="true">
+        Verified tips {String(report.verified_tips_sol || "0")} SOL
+        {report.proven_platform_fees_sol != null ? ` · network/platform costs ${String(report.proven_platform_fees_sol)} SOL` : ""}
+        {` · sensitivity unverified debits ${
+          report.sensitivity_unverified_debits_sol == null
+          && (profile as { sensitivity_evidence_state?: string }).sensitivity_evidence_state === "not_established"
+            ? "not established"
+            : report.sensitivity_unverified_debits_sol == null
+              ? "not established"
+              : `${String(report.sensitivity_unverified_debits_sol)} SOL`
+        }`}
+        {` · ${String(report.sensitivity_unverified_debits_note || "Arbitrary outside SOL withdrawals are not tips.")}`}
+        {(() => {
+          const level = (profile.qualification_level || {}) as { level?: string; label?: string };
+          const coverage = String(profile.coverage_status_display || profile.coverage_status || report.coverage_status || "");
+          const reason = String(profile.blocking_reason || report.blocking_reason || "");
+          return `${level.level ? ` qualification_level ${level.level}.` : ""}${coverage ? ` coverage_status ${coverage}.` : ""}${reason ? ` blocking_reason ${reason}.` : ""}`;
+        })()}
       </p>
       <p className="subset-worksheet-note" data-report-provenance="true">
         Provenance {report.corpus_kind || "unknown corpus"}
@@ -267,10 +460,9 @@ export function ResearchProfilePanel({ report }: { report: Report }) {
         . Reopened reports keep this capture and window; they are not a later live refresh.
       </p>
       <p className="subset-worksheet-note" data-result-scope="true">
-        Results are conditional on captured inventory. A positive matched trade never qualifies the account.
+        Results are conditional on captured inventory. Qualifying always reads meets the screen on matched trades in the captured window, never account performance.
         {(() => {
-          const qual = (profile.qualification_category || {}) as { category?: string };
-          return qual.category ? ` Qualification ${String(qual.category).replaceAll("_", " ")} (evidence quality, not a screen pass).` : "";
+          return category.category ? ` Qualification ${String(category.category).replaceAll("_", " ")} (evidence quality, not a screen pass).` : "";
         })()}
         {(() => {
           const evidence = (profile.evidence_class || {}) as { position?: { label?: string }; account?: { label?: string } };

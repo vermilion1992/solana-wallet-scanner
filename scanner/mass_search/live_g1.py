@@ -28,6 +28,12 @@ from .plan import load_default_plan
 from .service import MassSearchService
 from .universe import ingest_page, seal_universe
 
+
+def _sol_canonical(value):
+    quantized = Decimal(str(value)).quantize(Decimal("0.000000001"))
+    text = format(quantized, "f")
+    return text.rstrip("0").rstrip(".") if "." in text else text
+
 ROOT = Path(__file__).resolve().parents[2]
 GRANT_PATH = ROOT / "config" / "live_authorization.g1-granted.json"
 EXAMPLE_PATH = ROOT / "work_packages" / "mass_wallet_search_v1" / "config" / "live_authorization.example.json"
@@ -74,40 +80,95 @@ def _provider(grant, provider_id):
 
 def independent_fifo_worksheet(events):
     """Oracle FIFO. Does not import production ranking or fifo_sale_results."""
+    indexed = [event for event in events if event.get("kind") in ("buy", "sell")]
+    mints = {event.get("mint") for event in indexed if event.get("mint")}
+    if len(mints) > 1:
+        basis = []
+        profits = []
+        sale_rows = []
+        total = Decimal("0")
+        total_gross = Decimal("0")
+        total_fees = Decimal("0")
+        used = []
+        for mint in sorted(mints):
+            part = independent_fifo_worksheet([event for event in indexed if event.get("mint") == mint])
+            basis.extend(part.get("sale_fifo_basis_sol") or [])
+            profits.extend(part.get("sale_net_profit_sol") or [])
+            sale_rows.extend(part.get("sale_rows") or [])
+            if part.get("total_profit_sol") not in (None, ""):
+                total += Decimal(str(part["total_profit_sol"]))
+                used.append(mint)
+            if part.get("total_gross_profit_sol") not in (None, ""):
+                total_gross += Decimal(str(part["total_gross_profit_sol"]))
+            if part.get("total_fees_and_tips_sol") not in (None, ""):
+                total_fees += Decimal(str(part["total_fees_and_tips_sol"]))
+        return {
+            "sale_fifo_basis_sol": basis,
+            "sale_net_profit_sol": profits,
+            "sale_rows": sale_rows,
+            "total_profit_sol": _sol_canonical(total) if used else None,
+            "total_gross_profit_sol": _sol_canonical(total_gross) if used else None,
+            "total_fees_and_tips_sol": _sol_canonical(total_fees) if used else None,
+            "settlement_asset": "SOL",
+            "oracle": "independent-g1-fifo-v1",
+            "declared_mints": used,
+        }
     with localcontext() as ctx:
         ctx.prec = 192
         lots = []
         sales = []
-        for event in events:
+        for event in indexed:
             units = Decimal(str(event["units"]))
             if event["kind"] == "buy":
                 consideration = Decimal(str(event["consideration_sol"]))
                 fee = Decimal(str(event.get("wallet_fee_sol") or "0"))
-                lots.append({"units": units, "unit_cost": (consideration + fee) / units})
+                lots.append({
+                    "units": units,
+                    "unit_cost": (consideration + fee) / units,
+                    "unit_consideration": consideration / units,
+                })
             elif event["kind"] == "sell":
                 remaining = units
                 basis = Decimal("0")
+                gross_basis = Decimal("0")
                 while remaining > 0:
                     if not lots:
                         raise ValueError("Sale exceeds supported inventory")
                     lot = lots[0]
                     take = min(lot["units"], remaining)
                     basis += lot["unit_cost"] * take
+                    gross_basis += lot.get("unit_consideration", lot["unit_cost"]) * take
                     lot["units"] -= take
                     remaining -= take
                     if lot["units"] == 0:
                         lots.pop(0)
                 fee = Decimal(str(event.get("wallet_fee_sol") or "0"))
                 proceeds = Decimal(str(event["consideration_sol"]))
+                buy_fees = basis - gross_basis
+                fees_and_tips = buy_fees + fee
+                gross = proceeds - gross_basis
+                net = proceeds - basis - fee
                 sales.append({
-                    "basis": format(basis, "f"),
-                    "net_profit": format(proceeds - basis - fee, "f"),
+                    "signature": event.get("signature"),
+                    "split_part": event.get("split_part") or "matched",
+                    "mint": event.get("mint"),
+                    "units": event.get("units"),
+                    "basis": _sol_canonical(gross_basis),
+                    "gross_profit": _sol_canonical(gross),
+                    "fees_and_tips": _sol_canonical(fees_and_tips),
+                    "net_profit": _sol_canonical(net),
                 })
         total = sum((Decimal(sale["net_profit"]) for sale in sales), Decimal("0"))
+        total_gross = sum((Decimal(sale["gross_profit"]) for sale in sales), Decimal("0"))
+        total_fees = sum((Decimal(sale["fees_and_tips"]) for sale in sales), Decimal("0"))
         return {
             "sale_fifo_basis_sol": [sale["basis"] for sale in sales],
             "sale_net_profit_sol": [sale["net_profit"] for sale in sales],
-            "total_profit_sol": format(total, "f"),
+            "sale_rows": sales,
+            "total_profit_sol": _sol_canonical(total) if sales else None,
+            "total_gross_profit_sol": _sol_canonical(total_gross) if sales else None,
+            "total_fees_and_tips_sol": _sol_canonical(total_fees) if sales else None,
+            "settlement_asset": "SOL",
             "oracle": "independent-g1-fifo-v1",
         }
 
@@ -128,18 +189,21 @@ def independent_usdc_fifo_worksheet(events):
     if len(mints) > 1:
         basis = []
         profits = []
+        sale_rows = []
         total = Decimal("0")
         used = []
         for mint in sorted(mints):
             part = independent_usdc_fifo_worksheet([event for event in indexed if event.get("mint") == mint])
             basis.extend(part["sale_fifo_basis_usdc"])
             profits.extend(part["sale_net_profit_usdc"])
+            sale_rows.extend(part.get("sale_rows") or [])
             if part.get("total_profit_usdc") not in (None, ""):
                 total += Decimal(str(part["total_profit_usdc"]))
                 used.append(mint)
         return {
             "sale_fifo_basis_usdc": basis,
             "sale_net_profit_usdc": profits,
+            "sale_rows": sale_rows,
             "total_profit_usdc": _usdc_amount(total) if used else None,
             "total_profit_sol": None,
             "settlement_mint": USDC,
@@ -174,15 +238,23 @@ def independent_usdc_fifo_worksheet(events):
                     if lot["remaining_units"] == 0:
                         lots.pop(0)
                 proceeds = Decimal(str(event["consideration_usdc"]))
+                profit = _usdc_amount(Decimal(str(proceeds - basis)).quantize(Decimal("0.000000001")))
                 sales.append({
-                    "basis": _usdc_amount(basis),
-                    "net_profit": _usdc_amount(proceeds - basis),
+                    "signature": event.get("signature"),
+                    "split_part": event.get("split_part") or "matched",
+                    "mint": event.get("mint"),
+                    "units": event.get("units"),
+                    "basis": _usdc_amount(Decimal(str(basis)).quantize(Decimal("0.000000001"))),
+                    "gross_profit": profit,
+                    "fees_and_tips": "0",
+                    "net_profit": profit,
                 })
         total = sum((Decimal(sale["net_profit"]) for sale in sales), Decimal("0"))
         return {
             "sale_fifo_basis_usdc": [sale["basis"] for sale in sales],
             "sale_net_profit_usdc": [sale["net_profit"] for sale in sales],
-            "total_profit_usdc": _usdc_amount(total) if sales else None,
+            "sale_rows": sales,
+            "total_profit_usdc": _usdc_amount(Decimal(str(total)).quantize(Decimal("0.000000001"))) if sales else None,
             "total_profit_sol": None,
             "settlement_mint": USDC,
             "settlement_asset": "USDC",
@@ -210,7 +282,11 @@ def decoder_events_to_subset(decoded, *, address, window_start):
             "kind": row["kind"],
             "units": str(row.get("quantity_raw") or "0"),
             "consideration_sol": str(row.get("amount_sol") or "0"),
-            "wallet_fee_sol": str(row.get("fee_sol") or "0"),
+            "wallet_fee_sol": str(
+                row.get("fees_and_tips_sol")
+                if row.get("fees_and_tips_sol") not in (None, "")
+                else row.get("fee_sol") or "0"
+            ),
             "seconds_from_start": seconds,
             "signature": row.get("signature"),
             "mint": mint,

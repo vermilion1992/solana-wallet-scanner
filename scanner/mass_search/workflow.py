@@ -25,9 +25,12 @@ from scanner.mass_search.research_profile import (
     RESEARCH_SCREEN_DEFAULTS,
     build_research_profile,
     evaluate_thresholds,
+    independently_audited,
+    load_committed_independent_audit,
     load_filters,
     qualification_category,
 )
+from scanner.mass_search.qualification_gates import reconcile_saved_profile
 from scanner.mass_search.service import MassSearchService
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -230,6 +233,26 @@ def reports_by_address(store):
 def _attach_research(store, result, *, address, filters=None, ranked_row=None, entry=None):
     report = result["report"]
     filters = filters or load_filters(store)
+    from scanner.mass_search.qualification_gates import (
+        bindable_independent_audit,
+        compute_audit_fingerprint,
+    )
+    from scanner.mass_search.research_profile import _episode_ledger_from_report
+    ledger = _episode_ledger_from_report(report)
+    fingerprint = compute_audit_fingerprint(
+        report,
+        entry=entry,
+        episodes=ledger,
+    )
+    report["audit_fingerprint"] = fingerprint
+    audit = load_committed_independent_audit(address, fingerprint, ledger)
+    if audit and bindable_independent_audit(audit, fingerprint, ledger):
+        report["independent_audit"] = audit
+    elif report.get("independent_audit"):
+        attached = report["independent_audit"]
+        if attached.get("content_fingerprint") or attached.get("fingerprint"):
+            if not bindable_independent_audit(attached, fingerprint, ledger):
+                report["independent_audit"] = None
     profile = build_research_profile(
         report,
         filters=filters,
@@ -280,11 +303,10 @@ def _attach_research(store, result, *, address, filters=None, ranked_row=None, e
         persist_visible_report(report, False)
     else:
         worksheet = report.get("worksheet") or report.get("independent_worksheet")
-        completed = (
-            report.get("wallet_completed_episodes")
-            or (profile or {}).get("completed_known_cost_positions")
-            or 0
-        )
+        if report.get("wallet_completed_episodes") is not None:
+            completed = int(report["wallet_completed_episodes"])
+        else:
+            completed = int((profile or {}).get("completed_known_cost_positions") or 0)
         persist_visible_report(report, visible_report_allowed(worksheet=worksheet, completed_positions=completed))
     result["visible_report"] = visible_report_passes(report)
     report["result_scope"] = "conditional_on_captured_inventory"
@@ -466,9 +488,58 @@ def _funnel_counts(rows):
     return counts
 
 
-def ranked_workflow_view(store, *, filters=None):
+def _authoritative_saved_profile(report):
+    """Reuse a saved profile only after ledger-authoritative overlay. No rebuild."""
+    if not report:
+        return None
+    profile = report.get("research_profile")
+    if not profile:
+        return None
+    try:
+        return reconcile_saved_profile(report, profile)
+    except Exception:
+        return {
+            "completed_episode_ledger": [],
+            "completed_known_cost_positions": 0,
+            "independent_audit": None,
+            "qualification_category": {"category": "analysed_incomplete"},
+            "qualification_level": {"level": "insufficient_evidence"},
+            "funnel": {"A": {"state": "unknown"}, "B": {"state": "unknown"}, "C": {"state": "NOT_MET"}},
+            "ledger_summary_contradiction": True,
+            "failed_closed": True,
+        }
+
+
+def visible_mass_search_report(report):
+    """Copy whose funnel, category, and profile follow reconciled evidence."""
+    if not report:
+        return report
+    visible = dict(report)
+    profile = _authoritative_saved_profile(visible)
+    if not profile:
+        return visible
+    visible["research_profile"] = profile
+    visible["funnel"] = classify_candidate(
+        capture_available=True,
+        profile=profile,
+        classification=visible.get("classification"),
+        worksheet=visible.get("worksheet"),
+    )
+    visible["qualification_category"] = profile.get("qualification_category")
+    visible["independent_audit"] = profile.get("independent_audit")
+    visible["audit_fingerprint"] = profile.get("audit_fingerprint")
+    visible["completed_episode_ledger"] = profile.get("completed_episode_ledger")
+    return visible
+
+
+def ranked_workflow_view(store, *, filters=None, extra_universe_rows=None):
     filters = filters or load_filters(store)
     universe = load_ranked_universe()
+    if extra_universe_rows:
+        universe = {
+            **universe,
+            "rows": list(universe["rows"]) + list(extra_universe_rows),
+        }
     user_short = user_shortlist_addresses(store)
     reports = reports_by_address(store)
     catalog = catalog_by_address()
@@ -477,11 +548,11 @@ def ranked_workflow_view(store, *, filters=None):
     rows = []
     for row in screened:
         report = reports.get(row["address"])
-        profile = (report or {}).get("research_profile")
+        profile = _authoritative_saved_profile(report)
         reconstructed_ok = _reconstructed_pass(profile, filters) if profile else None
         if reconstructed_ok is False:
             continue
-        funnel = (report or {}).get("funnel") or classify_candidate(
+        funnel = classify_candidate(
             provider_rank=row["provider_rank"],
             provider_trade_count=row.get("trade_count"),
             provider_score=row.get("provider_score"),
@@ -494,20 +565,30 @@ def ranked_workflow_view(store, *, filters=None):
             **row,
             "report_id": (report or {}).get("id"),
             "funnel": funnel,
+            "completed_episode_ledger": (profile or {}).get("completed_episode_ledger"),
+            "independent_audit": (profile or {}).get("independent_audit"),
+            "audit_fingerprint": (profile or {}).get("audit_fingerprint"),
             "research_profile": profile,
             "analytics": (report or {}).get("analytics"),
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+            "qualification_level": (profile or {}).get("qualification_level"),
+            "coverage_status": (profile or {}).get("coverage_status"),
+            "coverage_status_display": (profile or {}).get("coverage_status_display") or (profile or {}).get("coverage_status"),
+            "blocking_reason": (profile or {}).get("blocking_reason"),
             "user_shortlisted": row["address"] in user_short,
             "history_required": not row["capture_available"] and not (report or {}).get("id"),
             "history_required_label": "History required — not analysed" if not row["capture_available"] and not (report or {}).get("id") else None,
             "can_open_report": bool((report or {}).get("id") or row["capture_available"]),
             "reconstructed_rejected": reconstructed_ok is False,
+            "in_window_span": (report or {}).get("in_window_span") or (profile or {}).get("in_window_span"),
+            "unsupported_swaps_in_window": (report or {}).get("unsupported_swaps_in_window"),
+            "in_window_swaps": (report or {}).get("in_window_swaps"),
         })
     all_classified = []
     for row in universe["rows"]:
         report = reports.get(row["address"])
-        profile = (report or {}).get("research_profile")
-        funnel = (report or {}).get("funnel") or classify_candidate(
+        profile = _authoritative_saved_profile(report)
+        funnel = classify_candidate(
             provider_rank=row["provider_rank"],
             provider_trade_count=row.get("trade_count"),
             provider_score=row.get("provider_score"),
@@ -528,6 +609,7 @@ def ranked_workflow_view(store, *, filters=None):
         if entry["address"] in {row["address"] for row in universe["rows"]}:
             continue
         report = reports.get(entry["address"])
+        extra_profile = _authoritative_saved_profile(report)
         extras.append({
             "address": entry["address"],
             "provider_rank": None,
@@ -540,8 +622,13 @@ def ranked_workflow_view(store, *, filters=None):
             "not_proof": bool(entry.get("not_proof") or entry.get("corpus_kind") == "SYNTHETIC"),
             "corpus_kind": entry.get("corpus_kind"),
             "report_id": (report or {}).get("id"),
-            "funnel": (report or {}).get("funnel"),
-            "research_profile": (report or {}).get("research_profile"),
+            "funnel": classify_candidate(
+                capture_available=True,
+                profile=extra_profile or {},
+                classification=(report or {}).get("classification"),
+                worksheet=(report or {}).get("worksheet"),
+            ),
+            "research_profile": extra_profile,
             "analytics": (report or {}).get("analytics"),
             "user_shortlisted": entry["address"] in user_short,
             "history_required": False,
@@ -575,6 +662,79 @@ def ranked_workflow_view(store, *, filters=None):
     }
 
 
+def coverage_eligibility(report, profile=None):
+    """Item 12: shared count-AND-value gate. 99% eligible, 95-99% watchlist, else blocked."""
+    from decimal import Decimal
+
+    from scanner.mass_search.qualification_gates import (
+        CROSS_CURRENCY_SENSITIVITY,
+        SENSITIVITY_NOT_ESTABLISHED,
+        mandatory_coverage_gate,
+    )
+    from scanner.mass_search.research_profile import sensitivity_sign_flips
+
+    gate = mandatory_coverage_gate(report, profile)
+    unresolved = (profile or {}).get("unresolved_basis_sales")
+    if unresolved in (None, ""):
+        unresolved = ((report or {}).get("worksheet") or {}).get("unresolved_basis_sales")
+    cost_dependency = sensitivity_sign_flips(report, profile or {})
+    coverage_cost = cost_dependency not in (None, False, SENSITIVITY_NOT_ESTABLISHED)
+    dependency = int(unresolved or 0) > 0 or bool(coverage_cost)
+    count_share = Decimal(str(gate["count_share"])) if gate.get("count_share") not in (None, "") else None
+    value_share = Decimal(str(gate["value_share"])) if gate.get("value_share") not in (None, "") else None
+    if count_share is None and value_share is None:
+        status = "blocked_unknown_denominator"
+    else:
+        # Watchlist/block bands still use the worse of the two shares, including
+        # unsupported suspected trading in the denominator. Lead eligibility
+        # requires the mandatory conjunction (count AND value).
+        parts = [share for share in (count_share, value_share) if share is not None]
+        resolved = min(parts) if parts and value_share is not None and count_share is not None else (
+            min(parts) if parts else None
+        )
+        if resolved is None:
+            status = "blocked_unknown_denominator"
+        elif gate["passed"] and not dependency:
+            status = "provisional_eligible"
+        elif gate["passed"] and dependency:
+            status = "coverage_eligibility_pending_reassessment"
+        elif resolved >= Decimal("0.95"):
+            status = "watchlist_incomplete_evidence"
+        else:
+            status = "coverage_blocked"
+        if value_share is None or count_share is None:
+            if resolved is not None and resolved >= Decimal("0.99"):
+                status = "blocked_unknown_denominator"
+    if dependency and status in ("provisional_eligible", "watchlist_incomplete_evidence"):
+        status = "coverage_eligibility_pending_reassessment"
+    if cost_dependency == CROSS_CURRENCY_SENSITIVITY and status == "provisional_eligible":
+        status = "coverage_eligibility_pending_reassessment"
+        dependency = True
+    return {
+        "status": status,
+        "dependency_unresolved_basis": int(unresolved or 0) > 0,
+        "dependency_unresolved_costs": bool(coverage_cost),
+        "coverage_gate": gate,
+        "note": (
+            "A missing purchase or unresolved adjacent cost that could change "
+            "the decision blocks regardless of percentage. Count and value "
+            "coverage are both required; the denominator includes unsupported "
+            "suspected trading."
+        ),
+    }
+
+
+def _decoder_coverage_block(report, profile):
+    judged = coverage_eligibility(report, profile)
+    if judged["status"] in ("provisional_eligible",):
+        return None
+    if judged["status"] == "coverage_eligibility_pending_reassessment":
+        return "coverage eligibility pending reassessment"
+    if judged["status"] == "watchlist_incomplete_evidence":
+        return "inconclusive: decoder coverage watchlist (95-99%)"
+    return f"inconclusive: decoder coverage ({judged['status']})"
+
+
 def research_screen_run(universe_rows, reports, filters):
     """Evaluate the saved snapshot against thresholds fixed before the run.
 
@@ -591,6 +751,8 @@ def research_screen_run(universe_rows, reports, filters):
             screen[key] = value
         elif default not in (None, ""):
             screen[key] = default
+    from scanner.mass_search.labels import research_label_tables, wallet_status_fields
+
     inconclusive = 0
     qualified = 0
     zero_qualified = 0
@@ -600,38 +762,80 @@ def research_screen_run(universe_rows, reports, filters):
         report = reports.get(row["address"])
         if not row.get("capture_available") and not report:
             inconclusive += 1
+            labels = wallet_status_fields(report, None)
             rows.append({
                 "address": row["address"],
                 "outcome": "inconclusive",
                 "reason": "insufficient history — History required — not analysed",
                 "qualification_category": qualification_category(None, None),
+                "qualification_level": {"level": "insufficient_evidence", "label": "insufficient evidence"},
+                "coverage_status": labels["coverage_status"],
+                "blocking_reason": labels["blocking_reason"],
             })
             continue
-        profile = (report or {}).get("research_profile")
+        profile = _authoritative_saved_profile(report)
         if not profile:
             not_executed += 1
+            labels = wallet_status_fields(report, None)
             rows.append({
                 "address": row["address"],
                 "outcome": "not_executed",
                 "reason": "capture available; analysis not executed",
                 "qualification_category": qualification_category(report, None),
+                "qualification_level": {"level": "insufficient_evidence", "label": "insufficient evidence"},
+                "coverage_status": labels["coverage_status"],
+                "blocking_reason": labels["blocking_reason"],
+            })
+            continue
+        labels = wallet_status_fields(report, profile)
+        audited = independently_audited(report, profile)
+        sensitivity_state = (profile or {}).get("sensitivity_evidence_state")
+        certified = audited and sensitivity_state not in (None, "not_established")
+        coverage_block = _decoder_coverage_block(report, profile)
+        if coverage_block:
+            inconclusive += 1
+            rows.append({
+                "address": row["address"],
+                "outcome": "inconclusive",
+                "reason": coverage_block,
+                "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+                "qualification_level": (profile or {}).get("qualification_level"),
+                "coverage_status": labels["coverage_status"],
+                "coverage_status_display": labels.get("coverage_status_display") or labels["coverage_status"],
+                "blocking_reason": labels["blocking_reason"],
+                "independently_audited": audited,
+                "certified_research_wallet": False,
+                "screen_match_kind": None,
+                "in_window_span": (report.get("in_window_span") or profile.get("in_window_span")),
             })
             continue
         judged = evaluate_thresholds(profile, screen)
         if judged["criteria_met"]:
             qualified += 1
             outcome = "completed"
+            reason = (
+                "sample/activity filter match; not a certified research wallet"
+                if not certified
+                else "meets the screen on matched trades in the captured window"
+            )
         else:
             zero_qualified += 1
             outcome = "zero_qualified"
+            reason = "documented screen thresholds not met"
         rows.append({
             "address": row["address"],
             "outcome": outcome,
-            "reason": "unknown never passes" if judged["unset"] else (
-                "criteria met" if judged["criteria_met"] else "documented screen thresholds not met"
-            ),
+            "reason": reason,
             "threshold_results": judged["results"],
             "qualification_category": (profile or {}).get("qualification_category") or qualification_category(report, profile),
+            "qualification_level": (profile or {}).get("qualification_level"),
+            "coverage_status": labels["coverage_status"],
+            "coverage_status_display": labels.get("coverage_status_display") or labels["coverage_status"],
+            "blocking_reason": labels["blocking_reason"],
+            "independently_audited": audited,
+            "certified_research_wallet": bool(certified and judged["criteria_met"]),
+            "screen_match_kind": "sample_activity_filter_match" if judged["criteria_met"] else None,
+            "in_window_span": (report.get("in_window_span") or profile.get("in_window_span")),
         })
     if qualified:
         run_outcome = "completed"
@@ -641,6 +845,7 @@ def research_screen_run(universe_rows, reports, filters):
         run_outcome = "zero_qualified"
     else:
         run_outcome = "not_executed"
+    label_tables = research_label_tables(rows)
     return {
         "kind": "research-screen-run-v1",
         "thresholds_fixed_before_evaluation": screen,
@@ -664,14 +869,36 @@ def research_screen_run(universe_rows, reports, filters):
                 "positive_net_realised_over_window": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "positive_net_realised_over_window"),
                 "profitable_account_performance": sum(1 for item in rows if (item.get("qualification_category") or {}).get("category") == "profitable_account_performance"),
             },
+            "qualification_level": label_tables["qualification_level_counts"],
+            "coverage_status": label_tables["coverage_status_counts"],
         },
+        "label_tables": label_tables,
+        "completed_qualified_are_sample_activity_filter_matches": True,
+        "completed_qualified_are_not_certified_research_wallets": True,
         "note": (
             "Today's run over the saved snapshot is inconclusive for wallets "
-            "without a genuine capture. A single matched trade never qualifies the account."
+            "without a genuine capture. A single matched trade never qualifies the account. "
+            "coverage_status and qualification_level are different fields. "
+            "completed_qualified counts sample/activity filter matches. It is not "
+            "independent-audit or sensitivity certification."
         ),
         "rows": rows,
         "PRODUCT_READY": False,
     }
+
+
+def _format_unknown_basis(value):
+    if not isinstance(value, dict):
+        return value
+    sales = value.get("sales")
+    quantity = value.get("quantity")
+    proceeds = value.get("proceeds")
+    unit = value.get("unit") or ""
+    from scanner.mass_search.research_profile import _display_decimal
+
+    return (
+        f"sales {sales} · qty {_display_decimal(quantity)} · proceeds {_display_decimal(proceeds)} {unit}"
+    ).strip()
 
 
 def compare_reports(store, left_id, right_id):
@@ -680,8 +907,8 @@ def compare_reports(store, left_id, right_id):
     if not left or not right:
         raise ValueError("Both reports must already be saved")
     filters = load_filters(store)
-    left_profile = left.get("research_profile") or build_research_profile(left, filters=filters)
-    right_profile = right.get("research_profile") or build_research_profile(right, filters=filters)
+    left_profile = _authoritative_saved_profile(left) or build_research_profile(left, filters=filters)
+    right_profile = _authoritative_saved_profile(right) or build_research_profile(right, filters=filters)
     left_analytics = left.get("analytics") or build_wallet_analytics({**left, "research_profile": left_profile})
     right_analytics = right.get("analytics") or build_wallet_analytics({**right, "research_profile": right_profile})
     keys = (
@@ -713,8 +940,8 @@ def compare_reports(store, left_id, right_id):
         {"key": "result_scope", "left": left.get("result_scope"), "right": right.get("result_scope")},
         {
             "key": "unknown_basis_quantity_and_proceeds",
-            "left": (left_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds"),
-            "right": (right_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds"),
+            "left": _format_unknown_basis((left_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds")),
+            "right": _format_unknown_basis((right_profile.get("candidate_assessment") or {}).get("unknown_basis_quantity_and_proceeds")),
         },
     ])
     mismatches = []
@@ -746,8 +973,12 @@ def compare_reports(store, left_id, right_id):
         "window_policy": {
             "kind": "own_windows_shown_mismatch_blocks",
             "detail": (
-                "Each report keeps its own window. Differing windows are not "
-                "recomputed onto a common interval. Compare is blocked."
+                "Each report keeps its own window. Windows match; compare is shown."
+                if (left.get("window") or {}) == (right.get("window") or {})
+                else (
+                    "Each report keeps its own window. Differing windows are not "
+                    "recomputed onto a common interval. Compare is blocked."
+                )
             ),
             "left_window": left_window,
             "right_window": right_window,
@@ -759,10 +990,52 @@ def compare_reports(store, left_id, right_id):
             "right_sample_size": right_profile.get("completed_known_cost_positions"),
             "left_scoped_pnl": left_profile.get("scoped_pnl") or left_analytics.get("scoped_pnl"),
             "right_scoped_pnl": right_profile.get("scoped_pnl") or right_analytics.get("scoped_pnl"),
+            "left_scoped_pnl_unit": left_profile.get("scoped_pnl_unit") or left_analytics.get("scoped_pnl_unit"),
+            "right_scoped_pnl_unit": right_profile.get("scoped_pnl_unit") or right_analytics.get("scoped_pnl_unit"),
+            "left_completed_episode_net": left_profile.get("completed_episode_net"),
+            "right_completed_episode_net": right_profile.get("completed_episode_net"),
+            "left_completed_episode_net_unit": left_profile.get("completed_episode_net_unit"),
+            "right_completed_episode_net_unit": right_profile.get("completed_episode_net_unit"),
+            "left_independently_audited": independently_audited(left, left_profile),
+            "right_independently_audited": independently_audited(right, right_profile),
+            "left_independently_audited_episode_net": (
+                (left_profile.get("independent_audit") or {}).get("independently_audited_episode_net")
+                if independently_audited(left, left_profile) else None
+            ),
+            "right_independently_audited_episode_net": (
+                (right_profile.get("independent_audit") or {}).get("independently_audited_episode_net")
+                if independently_audited(right, right_profile) else None
+            ),
+            "left_independently_audited_episode_net_unit": (
+                (left_profile.get("independent_audit") or {}).get("independently_audited_episode_net_unit")
+                if independently_audited(left, left_profile) else None
+            ),
+            "right_independently_audited_episode_net_unit": (
+                (right_profile.get("independent_audit") or {}).get("independently_audited_episode_net_unit")
+                if independently_audited(right, right_profile) else None
+            ),
             "result_scope": "conditional_on_captured_inventory",
         },
-        "left_funnel": left.get("funnel"),
-        "right_funnel": right.get("funnel"),
+        "left_funnel": classify_candidate(
+            capture_available=True,
+            profile=left_profile,
+            classification=left.get("classification"),
+            worksheet=left.get("worksheet"),
+        ),
+        "right_funnel": classify_candidate(
+            capture_available=True,
+            profile=right_profile,
+            classification=right.get("classification"),
+            worksheet=right.get("worksheet"),
+        ),
+        "left_qualification_category": left_profile.get("qualification_category"),
+        "right_qualification_category": right_profile.get("qualification_category"),
+        "left_independent_audit": left_profile.get("independent_audit"),
+        "right_independent_audit": right_profile.get("independent_audit"),
+        "left_audit_fingerprint": left_profile.get("audit_fingerprint"),
+        "right_audit_fingerprint": right_profile.get("audit_fingerprint"),
+        "left_completed_episode_ledger": left_profile.get("completed_episode_ledger"),
+        "right_completed_episode_ledger": right_profile.get("completed_episode_ledger"),
         "left_analytics": left_analytics,
         "right_analytics": right_analytics,
         "not_safe_to_copy": True,

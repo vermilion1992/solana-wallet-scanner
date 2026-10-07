@@ -185,12 +185,13 @@ def test_filters_and_shortlist_persist_and_stay_separated(store):
     assert loaded["provider_proxy"]["min_provider_trade_count"] == "20"
     assert loaded["thresholds"]["min_completed_known_cost"] == "1"
     assert loaded["reconstructed"]["thresholds"]["min_completed_known_cost"] == "1"
-    target = universe["rows"][1]["address"]
+    target = next(row["address"] for row in universe["rows"] if not row["capture_available"])
     set_user_shortlist(store, target, True)
     view = ranked_workflow_view(store)
     assert target in view["user_shortlist"]
     assert view["filters"]["provider_proxy"]["only_user_shortlist"] is True
     assert len(view["rows"]) == 1
+    assert view["rows"][0]["capture_available"] is False
     assert view["rows"][0]["history_required_label"] == "History required — not analysed"
     assert view["phone_access"]["preview_available"] is False
     assert "No permitted remote preview" in view["phone_access"]["blocker"]
@@ -283,7 +284,7 @@ def test_auth_gate_blocks_before_provider_and_under_concurrency(store):
     assert proposal["history_boundaries"]["optional_rank1_earlier_page_for_unbacked_sale"] is False
     assert len(proposal["selected_candidates"]) == 5
     assert all(len(row["address"]) >= 32 for row in proposal["selected_candidates"])
-    assert {row["provider_rank"] for row in proposal["selected_candidates"]} == {4, 2, 15, 17, 90}
+    assert {row["provider_rank"] for row in proposal["selected_candidates"]} == {3, 6, 9, 16, 28}
     access = phone_access_status()
     assert access["preview_available"] is False
 
@@ -306,7 +307,7 @@ def test_ranked_workflow_routes_cover_filters_shortlist_batch_and_gate(session):
     assert view["snapshot_id"] == "ranked100-discovery-pilot-2026-10-05"
     assert view["snapshot_raw_sha256"]
     assert view["phone_access"]["preview_available"] is False
-    assert view["funnel_counts"]["history_required"] >= 99
+    assert view["funnel_counts"]["history_required"] == 89
     no_history = next(row["address"] for row in view["rows"] if row.get("history_required"))
     saved = client.put("/api/mass-search/research-filters", json={
         "provider_proxy": {"min_provider_trade_count": "10"},
@@ -437,4 +438,4 @@ def test_universe_exposes_stable_snapshot_identity():
     assert universe["ranked_count"] == 100
     assert universe["snapshot_id"] == "ranked100-discovery-pilot-2026-10-05"
     assert len(universe["snapshot_raw_sha256"]) == 64
-    assert universe["capture_count"] == 1
+    assert universe["capture_count"] == 11

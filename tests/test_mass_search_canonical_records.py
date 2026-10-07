@@ -116,8 +116,8 @@ def test_classify_every_tx_independently_of_swap_reconstruction():
     assert counts.get("unreviewed_jupiter_discriminator", 0) == 0
     assert counts["reviewed_jupiter_route"] == 6
     assert counts["inner_pumpswap_without_reviewed_outer"] == 2
-    assert counts["unsupported_transaction_version"] == 1
-    assert counts["wallet_absent_from_account_keys"] == 5
+    assert counts.get("unsupported_transaction_version", 0) == 0
+    assert counts["wallet_absent_from_account_keys"] == 6
     first = classified["rows"][0]
     assert first["class"] == "pump_holder_fee_distribution"
     assert first["outer_venues"][0]["program"] == PUMP

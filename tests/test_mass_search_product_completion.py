@@ -142,13 +142,19 @@ def test_usdc_fifo_does_not_put_sol_fees_in_unit_cost():
     assert independent["sol_fees_not_converted"] is True
 
 
-def test_mixed_sol_and_usdc_worksheet_is_refused():
+def test_mixed_sol_and_usdc_worksheet_is_per_quote_asset():
     rows = [
         {"kind": "buy", "units": "1", "consideration_sol": "1", "seconds_from_start": 1, "mint": "a", "settlement_mint": WSOL},
         {"kind": "sell", "units": "1", "consideration_usdc": "2", "seconds_from_start": 2, "mint": "a", "settlement_mint": USDC},
     ]
-    with pytest.raises(ValueError, match="no FX"):
-        settlement_aware_worksheet(rows)
+    worksheet = settlement_aware_worksheet(rows)
+    assert worksheet["not_fx"] is True
+    assert worksheet.get("cross_currency_policy") == "unconverted_unresolved_never_zero" or any(
+        (part or {}).get("cross_currency_policy") == "unconverted_unresolved_never_zero"
+        for part in (worksheet.get("by_quote_asset") or {}).values()
+    )
+    known, unresolved = isolate_known_cost_events(rows)
+    assert any(row.get("cross_currency_unconverted") for row in unresolved)
 
 
 def test_g1_synthetic_oracle_fifo_is_unchanged():
@@ -167,8 +173,9 @@ def test_g1_synthetic_oracle_fifo_is_unchanged():
 
 def test_unset_thresholds_do_not_pass():
     profile = {
-        "completed_known_cost_positions": 1,
+        "completed_known_cost_positions": 3,
         "scoped_pnl": "376.028087",
+        "scoped_pnl_by_quote_asset": {"USDC": "376.028087"},
         "settlement_asset": "USDC",
         "hold_t90_seconds": 852,
         "concentration": "1",
@@ -178,11 +185,14 @@ def test_unset_thresholds_do_not_pass():
     unset = evaluate_thresholds(profile, default_filters()["thresholds"])
     assert unset["criteria_met"] is False
     assert unset["unset"]
-    assert all(row["state"] == "UNSET" and row["passed"] is False for row in unset["results"].values())
-    passed = evaluate_thresholds(profile, {"min_completed_known_cost": "1", "min_scoped_pnl_usdc": "300"})
+    assert all(row["state"] == "NOT_SET" and row.get("applied") is False and row.get("passed") is None for row in unset["results"].values())
+    passed = evaluate_thresholds(profile, {"min_completed_known_cost": "1", "min_sample_positions": "3", "min_scoped_pnl_usdc": "300"})
     assert passed["results"]["min_completed_known_cost"]["passed"] is True
     assert passed["results"]["min_scoped_pnl_usdc"]["passed"] is True
-    assert passed["criteria_met"] is False
+    assert passed["criteria_met"] is True
+    failed = evaluate_thresholds(profile, {"min_completed_known_cost": "1", "min_sample_positions": "5"})
+    assert failed["results"]["min_sample_positions"]["state"] == "FAIL"
+    assert failed["criteria_met"] is False
 
 
 def test_funnel_separates_provider_rank_and_points_at_next_shortlist():

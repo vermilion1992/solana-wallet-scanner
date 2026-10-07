@@ -44,6 +44,7 @@ import {
   label,
   listRealisedProfit,
   parseAddresses,
+  WORKSHEET_LABEL,
   shorten,
   validAddress,
 } from "./format";
@@ -1079,9 +1080,9 @@ export function WatchlistView({ state, busy, run, open }: Actions) {
                       <Badge value={report.policy} />
                       {subset && (
                         <>
-                          <small className="subset-list-label">Reconstructed subset</small>
+                          <small className="subset-list-label">{WORKSHEET_LABEL}</small>
                           <small>not a wallet-wide MATCH</small>
-                          <ListRealisedProfitCell report={report} hideLabel />
+                          <ListRealisedProfitCell report={report} />
                         </>
                       )}
                     </div>

@@ -420,7 +420,9 @@ def test_compare_same_window_control_and_differing_included_trades(store):
     assert same["comparable"] is True or "currency" not in {item["kind"] for item in same["mismatches"]}
     assert set(same["window_policy"]["left_included_tx"]) != set(same["window_policy"]["right_included_tx"])
     assert same["window_policy"]["left_sample_size"] == 1
-    assert same["window_policy"]["right_sample_size"] == 1
+    # Fee-free fixture is buy 6 / sell 10: matched fragment is kept, but item 6
+    # says a partly backed sale is not a clean flat-to-flat episode.
+    assert same["window_policy"]["right_sample_size"] == 0
     assert Decimal(str(same["window_policy"]["left_scoped_pnl"])) == Decimal("30")
     assert Decimal(str(same["window_policy"]["right_scoped_pnl"])) == Decimal("24")
 
@@ -489,24 +491,31 @@ def test_cache_key_includes_window():
     shifted["windows"]["report_end_exclusive"] = "2026-09-01T00:00:00Z"
     key2 = evidence_cache_key(shifted)
     assert key1 != key2
-    assert ANALYSIS_VERSION == "analysis-v4-research-screen-v1+partial-match-v1+material-exit-v2+usdc-fifo-v1"
+    assert ANALYSIS_VERSION == (
+        "analysis-v6-research-screen-v2+sol-isolate-v1+mixed-quote-v1+"
+        "sig-keyed-v1+quote-conversion-v1+fees-tips-v1+coverage-v1+mitch-review-v1+"
+        "chatgpt-review-2026-10-07-v1+rereview-0346-v1+rereview-0547-v1+rereview-0714-v1+rereview-0842-v1+rereview-2fe60bd-v1"
+    )
 
 
 def test_research_screen_is_inconclusive_for_99_without_history(store):
     view = ranked_workflow_view(store)
     screen = view["research_screen"]
     assert screen["unknown_never_passes"] is True
-    assert screen["counts"]["inconclusive"] == 99
-    assert screen["counts"]["not_executed"] == 1
+    assert screen["counts"]["inconclusive"] == 89
+    assert screen["counts"]["not_executed"] == 11
     assert screen["outcome"] == "inconclusive"
     assert screen["counts"]["qualification"]["not_evaluated"] == 100
     assert all(row["qualification_category"]["category"] == "not_evaluated" for row in view["rows"])
     replay_captured_wallet(store, ALLOWED_WALLET)
     after = ranked_workflow_view(store)
     screen_after = after["research_screen"]
-    assert screen_after["counts"]["inconclusive"] == 99
     assert screen_after["counts"]["completed_qualified"] == 0
-    assert screen_after["counts"]["zero_qualified"] == 1
+    assert screen_after["counts"]["not_executed"] == 10
+    # Item 12: a missing FIFO basis blocks coverage regardless of percentage.
+    # Rank-1 may be zero-qualified or coverage-pending/inconclusive.
+    assert screen_after["counts"]["inconclusive"] + screen_after["counts"]["zero_qualified"] == 90
+    assert screen_after["counts"]["inconclusive"] >= 89
     profile = store.list("reports")[0]["research_profile"]
     assert profile["evidence_class"]["account"]["class"] == 5
     assert profile["evidence_class"]["position"]["class"] in (1, 2)
