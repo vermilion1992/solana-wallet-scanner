@@ -169,12 +169,17 @@ def _is_swap_heuristic(raw, address, keys):
     return True
 
 
+READ_KINDS = frozenset({
+    "buy", "sell", "conversion", "non_trade", "transfer_in", "transfer_out", "lp",
+})
+
+
 def _decoded_kinds(decoded, signature):
     kinds = []
     for event in decoded.get("events") or []:
         if event.get("signature") != signature:
             continue
-        if event.get("kind") in ("buy", "sell", "conversion"):
+        if event.get("kind") in READ_KINDS:
             kinds.append(event.get("kind"))
     return kinds
 
@@ -253,7 +258,7 @@ def partition_records(records, decoded, address, *, window_start, window_end, ac
     decoded_by_sig = {}
     for event in decoded.get("events") or []:
         signature = event.get("signature")
-        if event.get("kind") in ("buy", "sell", "conversion"):
+        if event.get("kind") in READ_KINDS:
             decoded_by_sig.setdefault(signature, []).append(event)
     rows = []
     counts = Counter()

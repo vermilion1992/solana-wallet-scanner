@@ -34,6 +34,9 @@ JUPITER = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 METEORA_DAMM_V2 = "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
 RFQ_FILL = "61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH"
 OKX = "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u"
+OKX_VAULT = "va1t8sdGkReA6XFgAeZGXmdQoiEtMirwy4ifLv7yGdH"
+G2G_SPAM = "G2GMMDKkw3LXXNRNLyLMy3myki3yi7tjdyxbBbGrBqrg"
+JITO_TIP_ROUTER = "RouterBmuRBkPUbgEDMtdvTZ75GBdSREZR5uGUxxxpb"
 DFLOW = "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH"
 FLASHX = "FLASHX8DrLbgeR8FcfNV1F5krxYcYMUdBkrP1EPBtxB9"
 TITAN = "T1TANpTeScyeqVzzgNViGDNrkQ6qHz9KrSBS4aNXvGT"
@@ -2073,6 +2076,391 @@ def _same_reconstructed_trade(left, right):
     )
 
 
+AUDITOR_PLAIN_PROGRAMS = frozenset({
+    SYSTEM, COMPUTE, ASSOCIATED, LIGHTHOUSE, *TOKEN_PROGRAMS, *MEMO_PROGRAMS,
+})
+AUDITOR_PUMP_DISTRIBUTE = bytes.fromhex("623691610246ad2b")
+AUDITOR_PUMP_MULTI_BUY = bytes.fromhex("66063d1201daebea")
+AUDITOR_DFLOW_SETUP = bytes.fromhex("414b3f4ceb5b5b88")
+AUDITOR_DFLOW_SWAP = bytes.fromhex("f8c69e91e17587c8")
+AUDITOR_SOL_DUST = Decimal("100000")
+AUDITOR_READ_KINDS = frozenset({
+    "buy", "sell", "conversion", "non_trade", "transfer_in", "transfer_out", "lp",
+})
+
+
+def _auditor_int(value):
+    if value in (None, ""):
+        return None
+    try:
+        return int(str(value))
+    except (TypeError, ValueError):
+        return None
+
+
+def _auditor_all_programs(raw, keys):
+    found = []
+    for _index, _path, instruction, _inner in _iter_instructions(raw):
+        program = _program(instruction, keys)
+        if program:
+            found.append(program)
+    return found
+
+
+def _auditor_outer_discs(raw, keys, program):
+    message = (raw.get("transaction") or {}).get("message") or {}
+    discs = []
+    for instruction in message.get("instructions") or []:
+        if isinstance(instruction, dict) and _program(instruction, keys) == program:
+            discs.append(_b58decode(instruction.get("data"))[:8])
+    return discs
+
+
+def _auditor_actual(raw, address, keys):
+    if address not in keys:
+        return None
+    native, paid = _native_delta(raw, address, keys)
+    token_deltas, _pre, _post = _owned_token_deltas(raw, address)
+    decimals = {}
+    meta = raw.get("meta") or {}
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict) or row.get("owner") != address:
+                continue
+            mint = row.get("mint")
+            dec = (row.get("uiTokenAmount") or {}).get("decimals")
+            if mint and isinstance(dec, int) and not isinstance(dec, bool):
+                decimals[mint] = dec
+    return {
+        "native": int(native),
+        "tokens": {mint: int(qty) for mint, qty in token_deltas.items()},
+        "decimals": decimals,
+        "paid": paid,
+    }
+
+
+def _auditor_plain_explained(raw, address, keys, actual):
+    """Independent C1 reconcile. Any non-plain program or unexplained delta fails."""
+    owned = {}
+    meta = raw.get("meta") or {}
+    pre_native = meta.get("preBalances") or []
+    running = {}
+    for idx, amount in enumerate(pre_native):
+        if idx < len(keys):
+            try:
+                running[keys[idx]] = int(amount)
+            except (TypeError, ValueError):
+                return None
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict) or row.get("owner") != address:
+                continue
+            index = row.get("accountIndex")
+            mint = row.get("mint")
+            if isinstance(index, int) and 0 <= index < len(keys) and mint:
+                owned[keys[index]] = mint
+    explained_native = 0
+    explained_tokens = defaultdict(int)
+    for _index, _path, instruction, _inner in _iter_instructions(raw):
+        program = _program(instruction, keys)
+        if not program or program not in AUDITOR_PLAIN_PROGRAMS:
+            return None
+        if program in {COMPUTE, LIGHTHOUSE, *MEMO_PROGRAMS}:
+            continue
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        kind = parsed.get("type") if parsed else None
+        info = parsed.get("info") if parsed and isinstance(parsed.get("info"), dict) else {}
+        if program == ASSOCIATED:
+            if kind not in ("create", "createIdempotent", None):
+                return None
+            continue
+        if program == SYSTEM:
+            if kind == "transfer":
+                lamports = _auditor_int(info.get("lamports"))
+                if lamports is None:
+                    return None
+                source, dest = info.get("source"), info.get("destination")
+                if source == address:
+                    explained_native -= lamports
+                if dest == address:
+                    explained_native += lamports
+                if source in running:
+                    running[source] -= lamports
+                if dest:
+                    running[dest] = running.get(dest, 0) + lamports
+                continue
+            if kind in ("createAccount", "createAccountWithSeed"):
+                lamports = _auditor_int(info.get("lamports"))
+                if lamports is None:
+                    return None
+                source = info.get("source")
+                new_account = info.get("newAccount")
+                if source == address:
+                    explained_native -= lamports
+                if source in running:
+                    running[source] -= lamports
+                if new_account:
+                    running[new_account] = running.get(new_account, 0) + lamports
+                continue
+            if kind in ("allocate", "assign", "advanceNonce", "allocateWithSeed", "assignWithSeed"):
+                continue
+            return None
+        if program in TOKEN_PROGRAMS:
+            if kind in (
+                "initializeAccount", "initializeAccount2", "initializeAccount3",
+                "getAccountDataSize", "initializeImmutableOwner", "syncNative",
+                "setAuthority", "approve", "approveChecked", "revoke",
+            ):
+                continue
+            if kind == "closeAccount":
+                account = info.get("account")
+                dest = info.get("destination")
+                refund = running.get(account)
+                if refund is None and account in keys:
+                    acc_idx = keys.index(account)
+                    if acc_idx < len(pre_native):
+                        try:
+                            refund = int(pre_native[acc_idx])
+                        except (TypeError, ValueError):
+                            return None
+                if dest == address and refund is not None:
+                    explained_native += refund
+                if account in running:
+                    running[account] = 0
+                continue
+            if kind in ("transfer", "transferChecked", "transferCheckedWithFee"):
+                checked = info.get("tokenAmount") if kind in ("transferChecked", "transferCheckedWithFee") else None
+                qty = _auditor_int((checked or {}).get("amount") if checked else info.get("amount"))
+                mint = info.get("mint") or owned.get(info.get("source")) or owned.get(info.get("destination"))
+                if qty is None or not mint:
+                    return None
+                source, dest = info.get("source"), info.get("destination")
+                if dest and dest not in owned:
+                    for row in meta.get("postTokenBalances") or []:
+                        if not isinstance(row, dict):
+                            continue
+                        index = row.get("accountIndex")
+                        if isinstance(index, int) and 0 <= index < len(keys) and keys[index] == dest:
+                            if row.get("owner") == address:
+                                owned[dest] = row.get("mint") or mint
+                                mint = mint or row.get("mint")
+                            break
+                if source in owned:
+                    explained_tokens[mint] -= qty
+                if dest in owned:
+                    explained_tokens[mint] += qty
+                continue
+            if kind in ("mintTo", "mintToChecked"):
+                checked = info.get("tokenAmount") if kind == "mintToChecked" else None
+                qty = _auditor_int((checked or {}).get("amount") if checked else info.get("amount"))
+                dest = info.get("account") or info.get("destination")
+                mint = info.get("mint") or owned.get(dest)
+                if qty is None or not mint:
+                    return None
+                if dest in owned:
+                    explained_tokens[mint] += qty
+                continue
+            if kind in ("burn", "burnChecked"):
+                checked = info.get("tokenAmount") if kind == "burnChecked" else None
+                qty = _auditor_int((checked or {}).get("amount") if checked else info.get("amount"))
+                account = info.get("account")
+                mint = info.get("mint") or owned.get(account)
+                if qty is None or not mint:
+                    return None
+                if account in owned:
+                    explained_tokens[mint] -= qty
+                continue
+            return None
+    leftover_native = actual["native"] - explained_native
+    leftover_wsol = actual["tokens"].get(WSOL, 0) - explained_tokens.get(WSOL, 0)
+    if leftover_native + leftover_wsol == 0:
+        explained_native += leftover_native
+        if leftover_wsol:
+            explained_tokens[WSOL] += leftover_wsol
+    actual_tokens = {mint: qty for mint, qty in actual["tokens"].items() if qty}
+    explained = {mint: qty for mint, qty in explained_tokens.items() if qty}
+    if actual["native"] != explained_native or actual_tokens != explained:
+        return None
+    return True
+
+
+def _auditor_read_effects(actual, *, program=None, instruction=None, reason=""):
+    tokens = {mint: qty for mint, qty in actual["tokens"].items() if qty and mint != WSOL}
+    wsol = actual["tokens"].get(WSOL, 0)
+    sol = actual["native"] + wsol
+    events = []
+    non_quote = {mint: qty for mint, qty in tokens.items() if mint not in RAW_QUOTE_ASSETS}
+    if not non_quote:
+        events.append({
+            "kind": "non_trade",
+            "mint": None,
+            "quantity_raw": "0",
+            "consideration_sol": _canonical(Decimal(abs(sol)) / LAMPORTS) if sol else "0",
+            "program": program,
+            "instruction": instruction,
+            "never_a_trade": True,
+            "reason": reason or "Independent plain/SOL-only read; no lot effect",
+        })
+        return events
+    for mint, qty in sorted(non_quote.items()):
+        row = {
+            "mint": mint,
+            "quantity_raw": str(abs(qty)),
+            "program": program,
+            "instruction": instruction,
+            "consideration_sol": _canonical(Decimal(abs(sol)) / LAMPORTS) if sol else None,
+        }
+        if qty > 0:
+            row.update({
+                "kind": "transfer_in",
+                "unknown_basis": True,
+                "never_lowers_cost": True,
+                "reason": reason or "Independent transfer-in; unknown-basis lot; never lowers cost",
+            })
+        else:
+            row.update({
+                "kind": "transfer_out",
+                "unknown_proceeds": True,
+                "never_zero_proceeds": True,
+                "never_completed_profitable_episode": True,
+                "unknown_quote": True,
+                "reason": reason or "Independent transfer-out; unknown proceeds; never a completed profitable episode",
+            })
+        events.append(row)
+    return events
+
+
+def _auditor_two_leg(actual, *, program, instruction, reason):
+    tokens = {mint: qty for mint, qty in actual["tokens"].items() if qty}
+    wsol = tokens.pop(WSOL, 0)
+    sol = actual["native"] + wsol
+    if abs(sol) <= int(AUDITOR_SOL_DUST):
+        sol = 0
+    non_quote = {mint: qty for mint, qty in tokens.items() if mint not in RAW_QUOTE_ASSETS}
+    quotes = {mint: qty for mint, qty in tokens.items() if mint in RAW_QUOTE_ASSETS}
+    if sol:
+        quotes["SOL"] = quotes.get("SOL", 0) + sol
+    if len(non_quote) == 1 and len(quotes) == 1:
+        mint, qty = next(iter(non_quote.items()))
+        quote_mint, quote_qty = next(iter(quotes.items()))
+        if (qty > 0) == (quote_qty > 0):
+            return None
+        dec = actual["decimals"].get(mint, 0)
+        row = {
+            "kind": "buy" if qty > 0 else "sell",
+            "mint": mint,
+            "quantity_raw": str(abs(qty)),
+            "decimals": dec,
+            "program": program,
+            "instruction": instruction,
+            "reason": reason,
+        }
+        if quote_mint == USDC:
+            row["settlement_asset"] = "USDC"
+            row["consideration_usdc"] = _canonical(Decimal(abs(quote_qty)) / Decimal(10 ** actual["decimals"].get(USDC, 6)))
+        elif quote_mint == USDT:
+            row["settlement_asset"] = "USDT"
+            row["consideration_usdt"] = _canonical(Decimal(abs(quote_qty)) / Decimal(10 ** actual["decimals"].get(USDT, 6)))
+        else:
+            row["settlement_asset"] = "SOL"
+            row["consideration_sol"] = _canonical(Decimal(abs(quote_qty)) / LAMPORTS)
+        return [row]
+    if len(non_quote) == 2 and not quotes:
+        downs = [(mint, qty) for mint, qty in non_quote.items() if qty < 0]
+        ups = [(mint, qty) for mint, qty in non_quote.items() if qty > 0]
+        if len(downs) != 1 or len(ups) != 1:
+            return None
+        from_mint, from_qty = downs[0]
+        to_mint, to_qty = ups[0]
+        del to_qty
+        return [{
+            "kind": "conversion",
+            "mint": from_mint,
+            "quantity_raw": str(abs(from_qty)),
+            "from_asset": from_mint,
+            "to_asset": to_mint,
+            "program": program,
+            "instruction": instruction,
+            "reason": reason,
+        }]
+    return None
+
+
+def auditor_classify_read(raw, address):
+    """Independent C1/C2 READ. At least as strict as the app. No scanner import."""
+    if not isinstance(raw, dict) or not address:
+        return None
+    meta = raw.get("meta") or {}
+    if meta.get("err") is not None:
+        return None
+    keys = _keys(raw)
+    if address not in keys:
+        return None
+    programs = set(_auditor_all_programs(raw, keys))
+    actual = _auditor_actual(raw, address, keys)
+    if actual is None:
+        return None
+    tokens = {mint: qty for mint, qty in actual["tokens"].items() if qty and mint != WSOL}
+    zero_token = not tokens
+
+    if METEORA_DLMM in programs:
+        non_quote = [mint for mint in tokens if mint not in RAW_QUOTE_ASSETS]
+        return [{
+            "kind": "lp",
+            "mint": non_quote[0] if non_quote else None,
+            "quantity_raw": str(abs(tokens[non_quote[0]])) if non_quote else "0",
+            "program": METEORA_DLMM,
+            "instruction": "lp",
+            "lp_action": True,
+            "never_a_trade": True,
+            "touches_result_relevant_mint": bool(non_quote),
+            "reason": "Independent DLMM LP read; never a trade",
+        }]
+    if G2G_SPAM in programs:
+        if not zero_token:
+            return None
+        return _auditor_read_effects(actual, program=G2G_SPAM, instruction="afaf6d1f", reason="Independent G2G zero-token non-trade")
+    if JITO_TIP_ROUTER in programs:
+        if not zero_token:
+            return None
+        return _auditor_read_effects(actual, program=JITO_TIP_ROUTER, instruction="claim", reason="Independent Jito claim non-trade")
+    if OKX_VAULT in programs:
+        return _auditor_read_effects(actual, program=OKX_VAULT, instruction="custody", reason="Independent OKX Vault custody/transfer")
+    if PUMP in programs:
+        discs = _auditor_outer_discs(raw, keys, PUMP)
+        if AUDITOR_PUMP_DISTRIBUTE in discs:
+            if abs(actual["native"] + actual["tokens"].get(WSOL, 0)) > int(AUDITOR_SOL_DUST):
+                return None
+            if any(qty < 0 and mint not in RAW_QUOTE_ASSETS for mint, qty in tokens.items()):
+                return None
+            return _auditor_read_effects(actual, program=PUMP, instruction="623691610246ad2b", reason="Independent Pump distribution transfer-in")
+        if AUDITOR_PUMP_MULTI_BUY in discs:
+            return _auditor_two_leg(actual, program=PUMP, instruction="66063d1201daebea", reason="Independent Pump wallet-edge including multi-buy")
+    if DFLOW in programs:
+        discs = _auditor_outer_discs(raw, keys, DFLOW)
+        if AUDITOR_DFLOW_SETUP in discs and AUDITOR_DFLOW_SWAP not in discs:
+            classified = _auditor_two_leg(actual, program=DFLOW, instruction="414b3f4ceb5b5b88", reason="Independent DFlow setup-or-swap")
+            if classified:
+                return classified
+            if zero_token or not any(qty and mint not in RAW_QUOTE_ASSETS for mint, qty in tokens.items()):
+                return _auditor_read_effects(actual, program=DFLOW, instruction="414b3f4ceb5b5b88", reason="Independent DFlow order-setup non-trade")
+            return None
+        return _auditor_two_leg(actual, program=DFLOW, instruction="f8c69e91e17587c8", reason="Independent DFlow wallet-edge")
+    for program, label in (
+        (OKX, "Independent OKX wallet-edge"),
+        (JUPITER, "Independent Jupiter wallet-edge"),
+        (RFQ_FILL, "Independent RFQ wallet-edge"),
+        (PUMP_SWAP, "Independent PumpSwap wallet-edge"),
+    ):
+        if program in programs:
+            return _auditor_two_leg(actual, program=program, instruction="wallet_edge", reason=label)
+    if programs and not (programs - AUDITOR_PLAIN_PROGRAMS):
+        if _auditor_plain_explained(raw, address, keys, actual) is None:
+            return None
+        return _auditor_read_effects(actual, reason="Independent plain System/Token/ATA reconcile")
+    return None
+
+
 def reconstruct_record(record, address):
     """Layout or independent net-balance. Disagreement fails closed."""
     raw = _unwrap(record)
@@ -2101,7 +2489,16 @@ def reconstruct_record(record, address):
         chosen = net
     else:
         chosen = layout or net
-    return chosen
+    if chosen:
+        return chosen
+    classified = auditor_classify_read(raw, address)
+    if not classified:
+        return None
+    first = dict(classified[0])
+    first["signature"] = _auditor_record_signature(record, raw)
+    first["timestamp"] = _auditor_block_time(record, raw)
+    first["slot"] = raw.get("slot")
+    return first
 
 
 def _gta_records(payload):
@@ -2240,6 +2637,36 @@ def _fifo(trades):
                 else:
                     group = sells + buys
             for row in group:
+                if row["kind"] in ("non_trade",):
+                    continue
+                if row["kind"] == "lp":
+                    if row.get("mint") and row.get("mint") not in RAW_QUOTE_ASSETS:
+                        unresolved += 1
+                    continue
+                if row["kind"] == "transfer_in":
+                    opening += Decimal(row["quantity_raw"])
+                    continue
+                if row["kind"] == "transfer_out":
+                    remaining_out = Decimal(row["quantity_raw"])
+                    if opening > 0:
+                        take = opening if opening <= remaining_out else remaining_out
+                        opening -= take
+                        remaining_out -= take
+                    while remaining_out > 0 and lots:
+                        lot = lots[0]
+                        take = lot["qty"] if lot["qty"] <= remaining_out else remaining_out
+                        lot["qty"] -= take
+                        remaining_out -= take
+                        inventory -= take
+                        if lot["qty"] == 0:
+                            lots.pop(0)
+                    unresolved += 1
+                    opened = False
+                    episode_pnl = Decimal("0")
+                    episode_basis = Decimal("0")
+                    episode_proceeds = Decimal("0")
+                    episode_costs = Decimal("0")
+                    continue
                 qty = Decimal(row["quantity_raw"])
                 asset = row.get("settlement_asset") or "SOL"
                 if asset == "USDC" and row.get("consideration_usdc") not in (None, ""):
@@ -2983,9 +3410,10 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
         if not include:
             continue
         signatures.append(signature)
-        if reconstructed:
+        read_events = auditor_classify_read(raw, address) if not reconstructed else None
+        if reconstructed or read_events:
             decoded_n += 1
-            for trade in reconstructed[:1]:
+            for trade in (reconstructed or read_events)[:1]:
                 asset = trade.get("settlement_asset") or "SOL"
                 if asset == "USDC" and trade.get("consideration_usdc") not in (None, ""):
                     decoded_value["USDC"] += abs(Decimal(str(trade["consideration_usdc"])))
@@ -2993,6 +3421,19 @@ def result_relevant_coverage(address, records, trades, episodes, report_start=No
                     decoded_value["USDT"] += abs(Decimal(str(trade["consideration_usdt"])))
                 elif trade.get("consideration_sol") not in (None, ""):
                     decoded_value["SOL"] += abs(Decimal(str(trade["consideration_sol"])))
+                elif trade.get("kind") in AUDITOR_READ_KINDS:
+                    token_deltas, _pre, _post = _owned_token_deltas(raw, address) if isinstance(raw, dict) else ({}, {}, {})
+                    native, _paid = _native_delta(raw, address, _keys(raw)) if isinstance(raw, dict) else (Decimal("0"), False)
+                    wsol = token_deltas.get(WSOL, Decimal("0"))
+                    sol = abs(native + wsol) / LAMPORTS
+                    if sol > Decimal("0.003"):
+                        decoded_value["SOL"] += sol
+                    usdc = abs(token_deltas.get(USDC, Decimal("0")))
+                    if usdc >= Decimal("1000000"):
+                        decoded_value["USDC"] += usdc / Decimal("1000000")
+                    usdt = abs(token_deltas.get(USDT, Decimal("0")))
+                    if usdt >= Decimal("1000000"):
+                        decoded_value["USDT"] += usdt / Decimal("1000000")
         else:
             # DC-2: every included row is counted, including lineage-only.
             # Independent of the app: any material remaining SOL is

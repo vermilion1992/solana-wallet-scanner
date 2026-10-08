@@ -127,7 +127,7 @@ UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 # discriminator in _route. Jupiter/Whirlpool/AMMv4 stay in both sets so an
 # unknown discriminator can still reconstruct when the net is unambiguous.
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v30-d14-top3-net-v1'
+DECODER_VERSION = 'spot-v31-plain-read-v1'
 D14_TOP3_DEFERRED_PROGRAMS = frozenset({OKX_DEX_ROUTER, JUPITER, WHIRLPOOL})
 NET_BALANCE_INSTRUCTION = 'net_balance'
 NET_BALANCE_SOL_DUST_LAMPORTS = 100_000
@@ -3085,6 +3085,19 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                     net = None
             if net and reason.startswith('Unrelated token transfer'):
                 unknown(reason)
+            if not net:
+                from scanner.mass_search.plain_tx_read import classify_read_tx
+                classified = classify_read_tx(raw, address)
+                if classified:
+                    for item in classified:
+                        kind = item.get('kind')
+                        fields = dict(item.get('fields') or {})
+                        emit(kind, item.get('path') or 'meta.wallet_edge', **fields)
+                        if kind in ('buy', 'sell'):
+                            supported += 1
+                        elif kind == 'conversion':
+                            conversions += 1
+                    continue
             if net:
                 quote_mint = net.get('quote_mint')
                 mint = net['mint']
@@ -3158,7 +3171,13 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                 used_routes.add((net['program'], net['instruction']))
                 continue
             unknown(str(exc))
-    decoded_sigs = {event.get('signature') for event in events if event.get('kind') in ('buy', 'sell', 'conversion')}
+    decoded_sigs = {
+        event.get('signature')
+        for event in events
+        if event.get('kind') in (
+            'buy', 'sell', 'conversion', 'non_trade', 'transfer_in', 'transfer_out', 'lp',
+        )
+    }
     unsupported = []
     decoded_unresolved_cash = []
     seen_unsupported = set()

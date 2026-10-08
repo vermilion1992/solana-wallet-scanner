@@ -507,7 +507,7 @@ def test_pda_unsigned_debit_is_not_a_cosigner():
 
 
 def test_decoder_version_is_pinned():
-    assert DECODER_VERSION == "spot-v30-d14-top3-net-v1"
+    assert DECODER_VERSION == "spot-v31-plain-read-v1"
 
 
 def test_research_program_ids_are_split_into_pinned_and_unverified():
