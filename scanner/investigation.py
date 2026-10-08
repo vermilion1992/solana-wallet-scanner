@@ -3107,22 +3107,13 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
                         'Missing unsigned RPC integer',
                         'Unsupported token permission',
                         'Unsupported system operation',
-                        'Incomplete native balance evidence',
                     )
-                )
-                # C2 trades fill only intentional coverage gaps. Nonce,
-                # authority, wrapper, and layout proofs stay unreadable.
-                coverage_gap_trade = (
-                    reason.startswith('No reviewed outer spot swap')
-                    or reason.startswith('Jupiter route')
-                    or reason.startswith('Transaction version has no reviewed')
-                    or reason.startswith('No reviewed spot swap instruction for this program')
                 )
                 if classified:
                     kept = []
                     for item in classified:
                         kind = item.get('kind')
-                        if kind in TRADE_KINDS and (fail_closed or not coverage_gap_trade):
+                        if kind in TRADE_KINDS and fail_closed:
                             continue
                         kept.append(item)
                     if kept:
