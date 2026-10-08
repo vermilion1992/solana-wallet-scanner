@@ -68,14 +68,29 @@ NANSEN_LEADERBOARD_PATH = "/api/v1/smart-money/pnl-leaderboard"
 NANSEN_PNL_SUMMARY_PATH = "/api/v1/profiler/address/pnl-summary"
 NANSEN_FIRST_FUNDER_PATH = "/api/v1/profiler/address/first-funder"
 NANSEN_LABELS_PATH = "/api/v1/profiler/address/labels"
+NANSEN_DEX_TRADES_PATH = "/api/v1/profiler/dex-trades"
+NANSEN_TGM_PNL_LEADERBOARD_PATH = "/api/v1/tgm/pnl-leaderboard"
 ALLOWED_NANSEN_PATHS = frozenset({
     NANSEN_LEADERBOARD_PATH,
     NANSEN_PNL_SUMMARY_PATH,
     NANSEN_FIRST_FUNDER_PATH,
+    NANSEN_DEX_TRADES_PATH,
+    NANSEN_TGM_PNL_LEADERBOARD_PATH,
 })
 NANSEN_LEADERBOARD_UNITS = 5
+NANSEN_TGM_PNL_LEADERBOARD_UNITS = 5
 NANSEN_PROFILER_UNITS = 1
+NANSEN_DEX_TRADES_UNITS = 1
 NANSEN_LEADERBOARD_PER_PAGE = 50
+NANSEN_LEADERBOARD_PER_PAGE_MAX = 1000
+NANSEN_DEX_TRADES_MAX_PAGES = 3
+NANSEN_DEX_TRADES_HISTORY_FROM = "2020-03-17"
+NANSEN_DEX_TRADES_MAX_PER_DAY = Decimal("25")
+NANSEN_DEX_TRADES_MIN_HISTORY_DAYS = Decimal("60")
+RULE_A_MAX_AVG_TRADES_PER_DAY = Decimal("2.5")
+RULE_A_MIN_TOKENS = 3
+RULE_A_MAX_TOKENS = 10
+RULE_A_MIN_REALIZED_PNL = Decimal("0")
 NANSEN_TIMEFRAME_ENUM = (1, 7, 30, 90, 180)
 NANSEN_TIMEFRAMES = (90, 180)
 NANSEN_CHAIN = "solana"
@@ -121,6 +136,29 @@ NANSEN_SCHEMAS = {
         "properties": {
             "address": {"type": "string"},
             "chain": {"enum": [NANSEN_FIRST_FUNDER_CHAIN]},
+        },
+    },
+    "dex_trades": {
+        "additionalProperties": False,
+        "required": ["address", "chain", "date"],
+        "properties": {
+            "address": {"type": "string"},
+            "chain": {"type": "string"},
+            "date": {"type": "object", "required": ["from", "to"], "properties": {"from": {"type": "string"}, "to": {"type": "string"}}},
+            "pagination": {"type": "object"},
+            "order_by": {"type": "array"},
+        },
+    },
+    "tgm_pnl_leaderboard": {
+        "additionalProperties": False,
+        "required": ["chain", "token_address"],
+        "properties": {
+            "chain": {"type": "string"},
+            "token_address": {"type": "string"},
+            "date": {"type": "object"},
+            "pagination": {"type": "object"},
+            "filters": {"type": "object"},
+            "order_by": {"type": "array"},
         },
     },
 }
@@ -314,14 +352,40 @@ def validate_nansen_body(kind, body):
             for part in (spec.get("required") or ()):
                 if part not in value or not value.get(part):
                     raise SeedSourceError(f"Nansen {kind} date.{part} is required")
+    if kind == "tgm_pnl_leaderboard":
+        refuse_nansen_premium_labels(body)
     return True
+
+
+def refuse_nansen_premium_labels(body):
+    """tgm/pnl-leaderboard charges 150 credits when premium_labels is true."""
+    if not isinstance(body, dict):
+        return True
+    if body.get("premium_labels") not in (None, False):
+        raise SeedSourceError("Nansen tgm/pnl-leaderboard refuses premium_labels")
+    filters = body.get("filters")
+    if isinstance(filters, dict) and filters.get("premium_labels") not in (None, False):
+        raise SeedSourceError("Nansen tgm/pnl-leaderboard refuses premium_labels")
+    return True
+
+
+def nansen_per_page(value, default=NANSEN_LEADERBOARD_PER_PAGE):
+    try:
+        page = int(value if value not in (None, "") else default)
+    except (TypeError, ValueError):
+        page = int(default)
+    if page < 1 or page > NANSEN_LEADERBOARD_PER_PAGE_MAX:
+        raise SeedSourceError(
+            f"Nansen per_page must be 1..{NANSEN_LEADERBOARD_PER_PAGE_MAX}, got {page}"
+        )
+    return page
 
 
 def nansen_leaderboard_body(*, timeframe, page=1, per_page=50):
     body = {
         "chains": [NANSEN_CHAIN],
         "timeframe": int(timeframe),
-        "pagination": {"page": int(page), "per_page": int(per_page)},
+        "pagination": {"page": int(page), "per_page": nansen_per_page(per_page)},
     }
     validate_nansen_body("leaderboard", body)
     return body
@@ -342,6 +406,45 @@ def nansen_first_funder_supported(*, chain=NANSEN_CHAIN):
     return False if chain == NANSEN_CHAIN else True
 
 
+def nansen_dex_trades_body(*, address, date_from, date_to, page=1, per_page=1000):
+    body = {
+        "address": address,
+        "chain": NANSEN_CHAIN,
+        "date": {"from": date_from, "to": date_to},
+        "pagination": {"page": int(page), "per_page": nansen_per_page(per_page)},
+        "order_by": [{"field": "block_timestamp", "direction": "DESC"}],
+    }
+    validate_nansen_body("dex_trades", body)
+    return body
+
+
+def nansen_tgm_pnl_leaderboard_body(
+    *,
+    token_address,
+    date_from=None,
+    date_to=None,
+    page=1,
+    per_page=1000,
+    nof_trades_min=2,
+    nof_trades_max=20,
+    pnl_usd_realised_min=2000,
+):
+    body = {
+        "chain": NANSEN_CHAIN,
+        "token_address": token_address,
+        "pagination": {"page": int(page), "per_page": nansen_per_page(per_page)},
+        "filters": {
+            "nof_trades": {"min": int(nof_trades_min), "max": int(nof_trades_max)},
+            "pnl_usd_realised": {"min": int(pnl_usd_realised_min)},
+        },
+    }
+    if date_from and date_to:
+        body["date"] = {"from": date_from, "to": date_to}
+    refuse_nansen_premium_labels(body)
+    validate_nansen_body("tgm_pnl_leaderboard", body)
+    return body
+
+
 def nansen_schema_kind_for_path(path):
     if path == NANSEN_LEADERBOARD_PATH:
         return "leaderboard"
@@ -349,6 +452,10 @@ def nansen_schema_kind_for_path(path):
         return "pnl_summary"
     if path == NANSEN_FIRST_FUNDER_PATH:
         return "first_funder"
+    if path == NANSEN_DEX_TRADES_PATH:
+        return "dex_trades"
+    if path == NANSEN_TGM_PNL_LEADERBOARD_PATH:
+        return "tgm_pnl_leaderboard"
     raise SeedSourceError(f"no Nansen schema for path {path}")
 
 
@@ -492,11 +599,18 @@ def estimate_nansen_profiler_count(
     already_requests=0,
     already_units=0,
     leaderboard_pages=1,
+    per_page=None,
 ):
     """Upper bound on pnl-summary calls. Runtime must not exceed this."""
     leaderboard_req = len(NANSEN_TIMEFRAMES) * nansen_leaderboard_page_count(leaderboard_pages)
     leaderboard_units = leaderboard_req * NANSEN_LEADERBOARD_UNITS
-    worst = NANSEN_LEADERBOARD_PER_PAGE * leaderboard_req
+    page_size = NANSEN_LEADERBOARD_PER_PAGE
+    try:
+        if per_page not in (None, ""):
+            page_size = nansen_per_page(per_page)
+    except SeedSourceError:
+        page_size = NANSEN_LEADERBOARD_PER_PAGE
+    worst = page_size * leaderboard_req
     profile_n = worst
     if profile_cap is not None:
         profile_n = min(profile_n, max(0, int(profile_cap)))
@@ -507,6 +621,32 @@ def estimate_nansen_profiler_count(
         remaining_units = max(0, int(unit_cap) - int(already_units) - leaderboard_units)
         profile_n = min(profile_n, remaining_units // NANSEN_PROFILER_UNITS)
     return profile_n
+
+
+def estimate_nansen_dex_trades_count(
+    *,
+    wallet_cap=0,
+    max_pages=NANSEN_DEX_TRADES_MAX_PAGES,
+    request_cap=None,
+    unit_cap=None,
+    already_requests=0,
+    already_units=0,
+):
+    """Upper bound on profiler/dex-trades calls. Counts calls, not rows."""
+    try:
+        wallets = max(0, int(wallet_cap or 0))
+    except (TypeError, ValueError):
+        wallets = 0
+    try:
+        pages = max(0, int(max_pages if max_pages not in (None, "") else NANSEN_DEX_TRADES_MAX_PAGES))
+    except (TypeError, ValueError):
+        pages = NANSEN_DEX_TRADES_MAX_PAGES
+    bound = wallets * pages
+    if request_cap is not None:
+        bound = min(bound, max(0, int(request_cap) - int(already_requests)))
+    if unit_cap is not None:
+        bound = min(bound, max(0, int(unit_cap) - int(already_units)) // NANSEN_DEX_TRADES_UNITS)
+    return bound
 
 
 def estimate_seed_plan(
@@ -521,14 +661,17 @@ def estimate_seed_plan(
     nansen_request_cap=None,
     nansen_unit_cap=None,
     nansen_leaderboard_pages=1,
+    nansen_per_page=None,
+    nansen_dex_trades_wallet_cap=0,
+    nansen_dex_trades_max_pages=NANSEN_DEX_TRADES_MAX_PAGES,
+    nansen_token_pnl_tokens=None,
+    nansen_token_pnl_max_calls=0,
     birdeye_retry_headroom=2,
 ):
     """Dry-run request/credit estimates per selected source. No HTTP.
 
-    Nansen includes leaderboard calls plus the profiler loop. The profiler
-    count is min(profile_cap, remaining request/unit cap, 50×timeframes).
-    That is a strict upper bound; with an explicit --nansen-profile-cap it
-    equals runtime on a fixture that yields that many unique seeds.
+    Nansen includes leaderboard calls plus optional profiler / dex-trades /
+    per-token pnl-leaderboard loops. Planner counts calls, not rows.
     """
     sources = [canonicalize_seed_name(item) for item in (sources or [])]
     tokens = list(tokens or [])
@@ -603,9 +746,36 @@ def estimate_seed_plan(
                 request_cap=nansen_request_cap,
                 unit_cap=nansen_unit_cap,
                 leaderboard_pages=pages,
+                per_page=nansen_per_page,
             )
-            nansen_requests += leaderboard_req + profile_n
-            nansen_units += leaderboard_units + profile_n * NANSEN_PROFILER_UNITS
+            after_profile_req = leaderboard_req + profile_n
+            after_profile_units = leaderboard_units + profile_n * NANSEN_PROFILER_UNITS
+            dex_n = estimate_nansen_dex_trades_count(
+                wallet_cap=nansen_dex_trades_wallet_cap,
+                max_pages=nansen_dex_trades_max_pages,
+                request_cap=nansen_request_cap,
+                unit_cap=nansen_unit_cap,
+                already_requests=after_profile_req,
+                already_units=after_profile_units,
+            )
+            token_n = 0
+            tokens = list(nansen_token_pnl_tokens or [])
+            if tokens:
+                try:
+                    token_n = min(len(tokens), max(0, int(nansen_token_pnl_max_calls or 0)))
+                except (TypeError, ValueError):
+                    token_n = 0
+                if nansen_request_cap is not None:
+                    token_n = min(token_n, max(0, int(nansen_request_cap) - after_profile_req - dex_n))
+                if nansen_unit_cap is not None:
+                    leftover = max(0, int(nansen_unit_cap) - after_profile_units - dex_n * NANSEN_DEX_TRADES_UNITS)
+                    token_n = min(token_n, leftover // NANSEN_TGM_PNL_LEADERBOARD_UNITS)
+            nansen_requests += after_profile_req + dex_n + token_n
+            nansen_units += (
+                after_profile_units
+                + dex_n * NANSEN_DEX_TRADES_UNITS
+                + token_n * NANSEN_TGM_PNL_LEADERBOARD_UNITS
+            )
             per_source[SEED_NANSEN] = {
                 "provider": "nansen",
                 "requests": nansen_requests,
@@ -614,15 +784,18 @@ def estimate_seed_plan(
                 "timeframes": list(NANSEN_TIMEFRAMES),
                 "leaderboard_requests": leaderboard_req,
                 "leaderboard_pages": pages,
+                "leaderboard_per_page": nansen_per_page or NANSEN_LEADERBOARD_PER_PAGE,
                 "profiler_requests": profile_n,
                 "profile_cap": nansen_profile_cap,
+                "dex_trades_requests": dex_n,
+                "token_pnl_requests": token_n,
                 "note": (
                     f"{leaderboard_req} leaderboard calls "
-                    f"({len(NANSEN_TIMEFRAMES)} timeframes × {pages} page(s)) plus up to "
-                    f"{profile_n} profiler pnl-summary calls (1 credit). "
-                    "Already-known wallets from --exclude-known-from are skipped. "
-                    "Plan is a strict upper bound of runtime; set "
-                    "--nansen-profile-cap to pin the profiler count."
+                    f"({len(NANSEN_TIMEFRAMES)} timeframes × {pages} page(s), "
+                    f"per_page={nansen_per_page or NANSEN_LEADERBOARD_PER_PAGE}) plus up to "
+                    f"{profile_n} pnl-summary, {dex_n} dex-trades and {token_n} "
+                    "tgm/pnl-leaderboard calls. Planner counts calls, not rows. "
+                    "Already-known wallets from --exclude-known-from are skipped."
                 ),
             }
         else:
@@ -663,8 +836,11 @@ def estimate_seed_plan(
             "nansen_units": nansen_units,
             "helius_triage_requests": helius_triage_requests,
             "helius_triage_units": helius_triage_units,
-            "leaderboard_requests": 0,
-            "leaderboard_units": 0,
+            "leaderboard_requests": (per_source.get(SEED_NANSEN) or {}).get("leaderboard_requests") or 0,
+            "leaderboard_units": (
+                ((per_source.get(SEED_NANSEN) or {}).get("leaderboard_requests") or 0)
+                * NANSEN_LEADERBOARD_UNITS
+            ),
         },
         "seed_is_not": "evidence",
         "PRODUCT_READY": False,
@@ -910,6 +1086,11 @@ def select_nansen_wallets(rows, *, timeframe, seen=None):
                 "n_trades": row.get("n_trades"),
                 "n_tokens": row.get("n_tokens"),
                 "win_rate": row.get("win_rate"),
+                "held_tokens_count": row.get("held_tokens_count"),
+                "open_trades": row.get("open_trades"),
+                "avg_trade_roi": row.get("avg_trade_roi"),
+                "total_pnl_usd": row.get("total_pnl_usd"),
+                "address_label": row.get("address_label") or row.get("label"),
                 "is_not": "independently_verified_profit_or_copyability",
             },
         }
@@ -952,11 +1133,20 @@ NANSEN_HOLD_FIELDS = (
 )
 
 
-def nansen_high_frequency_drop(vendor_metrics, *, timeframe=None):
+def nansen_high_frequency_drop(
+    vendor_metrics,
+    *,
+    timeframe=None,
+    max_avg_trades_per_day=None,
+    min_tokens=None,
+    max_tokens=None,
+    min_realized_pnl=None,
+):
     """Drop-only vendor pre-filter. Missing fields never pass a wallet.
 
-    Uses leaderboard/profiler trade counts and holding-time fields when
-    present. Absence of those fields is not a pass; it is simply no drop.
+    Rule A (defaults): avg trades/day ≤ 2.5, 3 ≤ n_tokens ≤ 10, realized
+    PnL > 0. Short-hold ≤ 300s still drops when present. Absence of a field
+    is not a pass; it is simply no drop for that rule.
     """
     metrics = dict(vendor_metrics or {})
     profiler = metrics.get("profiler_pnl_summary")
@@ -964,6 +1154,9 @@ def nansen_high_frequency_drop(vendor_metrics, *, timeframe=None):
         metrics = {**metrics, **profiler}
     reasons = []
     evidence = {}
+    max_avg = _as_number(max_avg_trades_per_day)
+    if max_avg is None:
+        max_avg = RULE_A_MAX_AVG_TRADES_PER_DAY
     trades = _as_number(
         metrics.get("n_trades")
         if metrics.get("n_trades") is not None
@@ -983,10 +1176,37 @@ def nansen_high_frequency_drop(vendor_metrics, *, timeframe=None):
         evidence["n_trades"] = str(trades)
         evidence["timeframe_days"] = str(days)
         evidence["implied_trades_per_day"] = str(rate)
-        if rate > CHEAP_MAX_TRADES_PER_DAY:
+        if rate > max_avg:
+            reasons.append(
+                f"nansen_rule_a_avg_trades_per_day:{rate}/d > {max_avg}/d over {days}d ({trades} trades)"
+            )
+        elif rate > CHEAP_MAX_TRADES_PER_DAY:
             reasons.append(
                 f"nansen_vendor_gt_25_trades_per_day:{rate}/d over {days}d ({trades} trades)"
             )
+    tokens = _as_number(metrics.get("n_tokens") if metrics.get("n_tokens") is not None else metrics.get("held_tokens_count"))
+    min_tok = _as_number(min_tokens)
+    max_tok = _as_number(max_tokens)
+    if min_tok is None:
+        min_tok = Decimal(RULE_A_MIN_TOKENS)
+    if max_tok is None:
+        max_tok = Decimal(RULE_A_MAX_TOKENS)
+    if tokens is not None:
+        evidence["n_tokens"] = str(tokens)
+        if tokens < min_tok or tokens > max_tok:
+            reasons.append(f"nansen_rule_a_token_count:{tokens} not in [{min_tok},{max_tok}]")
+    pnl = _as_number(
+        metrics.get("realized_pnl_usd")
+        if metrics.get("realized_pnl_usd") is not None
+        else metrics.get("total_pnl_usd")
+    )
+    min_pnl = _as_number(min_realized_pnl)
+    if min_pnl is None:
+        min_pnl = RULE_A_MIN_REALIZED_PNL
+    if pnl is not None:
+        evidence["realized_pnl_usd"] = str(pnl)
+        if pnl <= min_pnl:
+            reasons.append(f"nansen_rule_a_realized_pnl:{pnl} <= {min_pnl}")
     hold = None
     hold_field = None
     for field in NANSEN_HOLD_FIELDS:
@@ -1015,6 +1235,114 @@ def nansen_high_frequency_drop(vendor_metrics, *, timeframe=None):
         "dropped": bool(reasons),
         "drop_reasons": reasons,
         "evidence": evidence,
+        "can_only_drop": True,
+        "seed_is_not": "evidence",
+    }
+
+
+def nansen_dex_trades_rows(body):
+    if not isinstance(body, dict):
+        return []
+    data = body.get("data")
+    if isinstance(data, list):
+        return [row for row in data if isinstance(row, dict)]
+    if isinstance(data, dict):
+        items = data.get("items") or data.get("trades") or data.get("data")
+        if isinstance(items, list):
+            return [row for row in items if isinstance(row, dict)]
+    items = body.get("items") or body.get("trades")
+    return [row for row in items if isinstance(row, dict)] if isinstance(items, list) else []
+
+
+def _dex_trade_hash(row):
+    return row.get("transaction_hash") or row.get("tx_hash") or row.get("signature")
+
+
+def _dex_trade_timestamp(row):
+    raw = row.get("block_timestamp") or row.get("timestamp") or row.get("blockTime")
+    if raw in (None, ""):
+        return None
+    if type(raw) is int and not isinstance(raw, bool):
+        return raw if raw > 10_000_000_000 else raw  # already seconds or ms?
+    if isinstance(raw, str):
+        text = raw.replace("Z", "+00:00")
+        try:
+            return int(datetime.fromisoformat(text).timestamp())
+        except (TypeError, ValueError):
+            if raw.isdigit():
+                return int(raw)
+    return None
+
+
+def dex_trades_per_utc_day(rows):
+    """Distinct transaction_hash per UTC day. Legs of one tx count once."""
+    days = defaultdict(set)
+    earliest = None
+    seen = set()
+    for row in rows or []:
+        if not isinstance(row, dict):
+            continue
+        digest = _dex_trade_hash(row)
+        if not digest or digest in seen:
+            continue
+        seen.add(digest)
+        ts = _dex_trade_timestamp(row)
+        if ts is None:
+            continue
+        if ts > 10_000_000_000:
+            ts = ts // 1000
+        day = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
+        days[day].add(digest)
+        if earliest is None or ts < earliest:
+            earliest = ts
+    counts = {day: len(hashes) for day, hashes in days.items()}
+    busiest = max(counts.values()) if counts else 0
+    busiest_day = max(counts, key=counts.get) if counts else None
+    return {
+        "per_day": counts,
+        "max_per_day": busiest,
+        "busiest_day": busiest_day,
+        "earliest_unix": earliest,
+        "distinct_hashes": len(seen),
+        "days": len(counts),
+    }
+
+
+def nansen_dex_trades_drop(stats, *, now_unix=None, max_per_day=None, min_history_days=None):
+    """Drop-only. Error/empty stats mean no drop."""
+    if not isinstance(stats, dict) or not stats:
+        return {
+            "dropped": False,
+            "drop_reasons": [],
+            "can_only_drop": True,
+            "seed_is_not": "evidence",
+            "empty_or_error": True,
+        }
+    reasons = []
+    cap = _as_number(max_per_day)
+    if cap is None:
+        cap = NANSEN_DEX_TRADES_MAX_PER_DAY
+    busiest = _as_number(stats.get("max_per_day"))
+    if busiest is not None and busiest > cap:
+        reasons.append(f"nansen_dex_trades_gt_{cap}_per_day:{busiest} on {stats.get('busiest_day')}")
+    min_age = _as_number(min_history_days)
+    if min_age is None:
+        min_age = NANSEN_DEX_TRADES_MIN_HISTORY_DAYS
+    earliest = _as_unix(stats.get("earliest_unix"))
+    if earliest is not None:
+        now = _as_unix(now_unix) or utc_now_unix()
+        age_days = Decimal(now - earliest) / Decimal(86400)
+        if age_days < min_age:
+            reasons.append(f"nansen_dex_trades_history_lt_{min_age}d:{age_days.quantize(Decimal('0.1'))}d")
+    return {
+        "dropped": bool(reasons),
+        "drop_reasons": reasons,
+        "evidence": {
+            "max_per_day": stats.get("max_per_day"),
+            "busiest_day": stats.get("busiest_day"),
+            "earliest_unix": stats.get("earliest_unix"),
+            "distinct_hashes": stats.get("distinct_hashes"),
+        },
         "can_only_drop": True,
         "seed_is_not": "evidence",
     }

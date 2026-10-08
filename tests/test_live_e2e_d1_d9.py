@@ -40,7 +40,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_is_v23():
-    assert DECODER_VERSION == "spot-v24-wallet-rent-quote-v1"
+    assert DECODER_VERSION == "spot-v25-net-balance-v1"
 
 
 def test_d1_auditor_includes_dgmg_router_fee():

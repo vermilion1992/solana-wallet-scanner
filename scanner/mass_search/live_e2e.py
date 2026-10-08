@@ -129,14 +129,25 @@ from scanner.mass_search.seed_sources import (
     FIRST_BLOCK_EXCLUSION_SECONDS,
     TOKEN_INTERSECT_WINDOWS,
     TRIAGE_SAMPLES,
+    NANSEN_DEX_TRADES_HISTORY_FROM,
+    NANSEN_DEX_TRADES_MAX_PAGES,
+    NANSEN_DEX_TRADES_PATH,
+    NANSEN_DEX_TRADES_UNITS,
     NANSEN_FIRST_FUNDER_PATH,
     NANSEN_HOST,
     NANSEN_LABELS_PATH,
     NANSEN_LEADERBOARD_PATH,
+    NANSEN_LEADERBOARD_PER_PAGE,
     NANSEN_LEADERBOARD_UNITS,
     NANSEN_PNL_SUMMARY_PATH,
     NANSEN_PROFILER_UNITS,
+    NANSEN_TGM_PNL_LEADERBOARD_PATH,
+    NANSEN_TGM_PNL_LEADERBOARD_UNITS,
     NANSEN_TIMEFRAMES,
+    RULE_A_MAX_AVG_TRADES_PER_DAY,
+    RULE_A_MAX_TOKENS,
+    RULE_A_MIN_REALIZED_PNL,
+    RULE_A_MIN_TOKENS,
     SEED_BIRDEYE_TOP,
     SEED_CU_DOCS,
     SEED_NANSEN,
@@ -148,6 +159,12 @@ from scanner.mass_search.seed_sources import (
     cheap_prescreen_decision,
     cheap_prescreen_enabled,
     nansen_high_frequency_drop,
+    dex_trades_per_utc_day,
+    nansen_dex_trades_body,
+    nansen_dex_trades_drop,
+    nansen_dex_trades_rows,
+    nansen_per_page,
+    nansen_tgm_pnl_leaderboard_body,
     cost_per_audit_worthy,
     densest_utc_day_bounds,
     estimate_seed_plan,
@@ -1217,19 +1234,30 @@ def apply_cheap_prescreen_phase1(config, state):
     return dropped
 
 
-def nansen_vendor_drop_decision(meta):
+def nansen_rule_a_kwargs(config=None):
+    cfg = config or {}
+    return {
+        "max_avg_trades_per_day": cfg.get("nansen_max_avg_trades_per_day", RULE_A_MAX_AVG_TRADES_PER_DAY),
+        "min_tokens": cfg.get("nansen_min_tokens", RULE_A_MIN_TOKENS),
+        "max_tokens": cfg.get("nansen_max_tokens", RULE_A_MAX_TOKENS),
+        "min_realized_pnl": cfg.get("nansen_min_realized_pnl", RULE_A_MIN_REALIZED_PNL),
+    }
+
+
+def nansen_vendor_drop_decision(meta, config=None):
     """Drop-only decision from leaderboard/profiler vendor fields. Missing fields never pass."""
     vendor = (meta or {}).get("vendor_metrics") or {}
     timeframes = (meta or {}).get("timeframes") or {}
+    rule = nansen_rule_a_kwargs(config)
     decisions = []
     if timeframes:
         for tf, payload in timeframes.items():
             vm = dict(vendor)
             if isinstance(payload, dict) and payload.get("vendor_metrics"):
                 vm.update(payload.get("vendor_metrics") or {})
-            decisions.append(nansen_high_frequency_drop(vm, timeframe=tf))
+            decisions.append(nansen_high_frequency_drop(vm, timeframe=tf, **rule))
     else:
-        decisions.append(nansen_high_frequency_drop(vendor, timeframe=(meta or {}).get("timeframe")))
+        decisions.append(nansen_high_frequency_drop(vendor, timeframe=(meta or {}).get("timeframe"), **rule))
     return next((item for item in decisions if item.get("dropped")), None)
 
 
@@ -1268,7 +1296,7 @@ def apply_nansen_vendor_prefilter(config, state):
         if meta.get("primary_seed_source") != SEED_NANSEN and SEED_NANSEN not in sources:
             kept.append(address)
             continue
-        hit = nansen_vendor_drop_decision(meta)
+        hit = nansen_vendor_drop_decision(meta, config)
         if hit:
             dropped.append(address)
             row = {"address": address, **hit}
@@ -1557,6 +1585,11 @@ def plan_request_counts(config, state=None):
         nansen_request_cap=(config.get("caps") or {}).get("nansen_requests"),
         nansen_unit_cap=(config.get("caps") or {}).get("nansen_units"),
         nansen_leaderboard_pages=config.get("nansen_leaderboard_pages"),
+        nansen_per_page=config.get("nansen_per_page"),
+        nansen_dex_trades_wallet_cap=config.get("nansen_dex_trades_wallet_cap"),
+        nansen_dex_trades_max_pages=config.get("nansen_dex_trades_max_pages"),
+        nansen_token_pnl_tokens=config.get("nansen_token_pnl_tokens"),
+        nansen_token_pnl_max_calls=config.get("nansen_token_pnl_max_calls"),
         birdeye_retry_headroom=BIRDEYE_RATE_LIMIT_RETRIES,
     )
     if 1 in phases and (discovery or not wallets):
@@ -1773,7 +1806,10 @@ class RecorderTransport:
         if path not in ALLOWED_NANSEN_PATHS:
             raise SourceError("UNAUTHORIZED", "Nansen path is not allowlisted")
         validate_nansen_body(nansen_schema_kind_for_path(path), body or {})
-        units = NANSEN_LEADERBOARD_UNITS if path == NANSEN_LEADERBOARD_PATH else NANSEN_PROFILER_UNITS
+        if path in {NANSEN_LEADERBOARD_PATH, NANSEN_TGM_PNL_LEADERBOARD_PATH}:
+            units = NANSEN_LEADERBOARD_UNITS if path == NANSEN_LEADERBOARD_PATH else NANSEN_TGM_PNL_LEADERBOARD_UNITS
+        else:
+            units = NANSEN_PROFILER_UNITS
         fixture = (getattr(self, "fixtures", None) or {}).get(path)
         if fixture is not None:
             payload = fixture if isinstance(fixture, dict) else {}
@@ -2094,6 +2130,12 @@ def _validate_nansen_request(path, body):
     nansen_path_allowed(path)
     if path == NANSEN_FIRST_FUNDER_PATH and not nansen_first_funder_supported():
         raise SourceError("UNAUTHORIZED", "Nansen first-funder is EVM-only; not called for Solana")
+    if path == NANSEN_TGM_PNL_LEADERBOARD_PATH:
+        from scanner.mass_search.seed_sources import refuse_nansen_premium_labels
+        try:
+            refuse_nansen_premium_labels(body or {})
+        except SeedSourceError as error:
+            raise SourceError("UNAUTHORIZED", str(error)) from error
     validate_nansen_body(nansen_schema_kind_for_path(path), body or {})
     return True
 
@@ -2925,6 +2967,228 @@ async def _nansen_seed_call(store, grant, config, state, recorder, *, path, body
         raise
 
 
+def _load_calibrate_wallets(path):
+    """Address list or JSON [{address, label}, ...]. No network."""
+    text = Path(path).read_text(encoding="utf-8")
+    rows = []
+    stripped = text.strip()
+    if stripped.startswith("{") or stripped.startswith("["):
+        payload = json.loads(stripped)
+        items = payload.get("wallets") if isinstance(payload, dict) else payload
+        for item in items or []:
+            if isinstance(item, str):
+                rows.append({"address": item, "label": None})
+            elif isinstance(item, dict):
+                address = item.get("address") or item.get("wallet")
+                if address:
+                    rows.append({"address": address, "label": item.get("label") or item.get("class")})
+        return rows
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "," in line:
+            address, label = line.split(",", 1)
+            rows.append({"address": address.strip(), "label": label.strip() or None})
+        else:
+            parts = line.split()
+            rows.append({"address": parts[0], "label": parts[1] if len(parts) > 1 else None})
+    return rows
+
+
+async def _phase1_nansen_dex_trades(
+    store, grant, config, state, recorder, identity, rows, extras, raw_parts, page,
+):
+    """Drop-only per-day screen. Errors or empty pages never drop a wallet."""
+    cap = config.get("nansen_dex_trades_wallet_cap")
+    try:
+        cap = int(cap or 0)
+    except (TypeError, ValueError):
+        cap = 0
+    if cap <= 0 or not rows:
+        return list(rows), []
+    try:
+        max_pages = max(1, int(config.get("nansen_dex_trades_max_pages") or NANSEN_DEX_TRADES_MAX_PAGES))
+    except (TypeError, ValueError):
+        max_pages = NANSEN_DEX_TRADES_MAX_PAGES
+    date_to = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    date_from = NANSEN_DEX_TRADES_HISTORY_FROM
+    kept = []
+    dropped = []
+    screened = 0
+    now_unix = int(datetime.now(timezone.utc).timestamp())
+    for row in rows:
+        if screened >= cap:
+            kept.append(row)
+            continue
+        address = row["address"]
+        collected = []
+        failed = False
+        empty = True
+        for page_num in range(1, max_pages + 1):
+            left = remaining_caps(config, state["spend"])
+            if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_DEX_TRADES_UNITS:
+                failed = True
+                break
+            body = nansen_dex_trades_body(
+                address=address, date_from=date_from, date_to=date_to, page=page_num, per_page=1000,
+            )
+            try:
+                response = await _nansen_seed_call(
+                    store, grant, config, state, recorder,
+                    path=NANSEN_DEX_TRADES_PATH,
+                    body=body,
+                    operation="profiler_dex_trades",
+                    units=NANSEN_DEX_TRADES_UNITS,
+                    wallet=address,
+                    page=page + screened * max_pages + page_num,
+                    identity=identity,
+                )
+            except Exception as error:
+                extras.setdefault(address, {})["dex_trades_error"] = str(error)
+                failed = True
+                break
+            raw_parts.append(response.get("raw_bytes") or b"{}")
+            batch = nansen_dex_trades_rows(response.get("body"))
+            if batch:
+                empty = False
+                collected.extend(batch)
+            if len(batch) < 1000:
+                break
+            stats_so_far = dex_trades_per_utc_day(collected)
+            if (stats_so_far.get("max_per_day") or 0) > 25:
+                break
+        vendor = dict((extras.get(address) or {}).get("vendor_metrics") or {})
+        if failed or empty:
+            vendor["profiler_dex_trades"] = {
+                "empty_or_error": True,
+                "can_only_drop": True,
+            }
+            extras.setdefault(address, {})["vendor_metrics"] = vendor
+            kept.append(row)
+            screened += 1
+            continue
+        stats = dex_trades_per_utc_day(collected)
+        vendor["profiler_dex_trades"] = stats
+        extras.setdefault(address, {})["vendor_metrics"] = vendor
+        hit = nansen_dex_trades_drop(stats, now_unix=now_unix)
+        if hit.get("dropped"):
+            dropped.append({"address": address, **hit})
+        else:
+            kept.append(row)
+        screened += 1
+    return kept, dropped
+
+
+async def _phase1_nansen_token_pnl(store, grant, config, state, recorder, identity, extras, raw_parts, page):
+    """Optional per-token tgm/pnl-leaderboard. Hard-refuses premium_labels."""
+    tokens = list(config.get("nansen_token_pnl_tokens") or [])
+    try:
+        max_calls = max(0, int(config.get("nansen_token_pnl_max_calls") or 0))
+    except (TypeError, ValueError):
+        max_calls = 0
+    if not tokens or max_calls <= 0:
+        return [], 0
+    date_from, date_to = nansen_date_range_from_bounds(config.get("bounds"))
+    appearances = {}
+    selected = []
+    used = 0
+    for token in tokens:
+        if used >= max_calls:
+            break
+        left = remaining_caps(config, state["spend"])
+        if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_TGM_PNL_LEADERBOARD_UNITS:
+            break
+        body = nansen_tgm_pnl_leaderboard_body(
+            token_address=token, date_from=date_from, date_to=date_to, page=1, per_page=1000,
+        )
+        response = await _nansen_seed_call(
+            store, grant, config, state, recorder,
+            path=NANSEN_TGM_PNL_LEADERBOARD_PATH,
+            body=body,
+            operation="tgm_pnl_leaderboard",
+            units=NANSEN_TGM_PNL_LEADERBOARD_UNITS,
+            wallet=f"_tgm_{token[:8]}",
+            page=page + used,
+            identity=identity,
+        )
+        raw_parts.append(response.get("raw_bytes") or b"{}")
+        used += 1
+        for row in nansen_leaderboard_rows(response.get("body")):
+            address = row.get("address") or row.get("wallet") or row.get("wallet_address")
+            if not address:
+                continue
+            appearances.setdefault(address, set()).add(token)
+    for address, token_set in appearances.items():
+        if len(token_set) < 2:
+            continue
+        extras.setdefault(address, {}).setdefault("vendor_metrics", {})["token_pnl_tokens"] = sorted(token_set)
+        extras[address]["selection_reason"] = "nansen_tgm_pnl_leaderboard_intersect"
+        selected.append({"address": address, "already_seen": False, "vendor_metrics": extras[address]["vendor_metrics"]})
+    return selected, used
+
+
+async def _phase1_nansen_calibrate(store, grant, config, state, recorder, identity):
+    """dex-trades only. No Helius. Reports per-wallet max/day against optional labels."""
+    rows = _load_calibrate_wallets(config["nansen_calibrate_wallets"])
+    extras = {}
+    raw_parts = []
+    profile_rows = [{"address": row["address"]} for row in rows if row.get("address")]
+    labels = {row["address"]: row.get("label") for row in rows if row.get("address")}
+    config = dict(config)
+    config["nansen_dex_trades_wallet_cap"] = len(profile_rows)
+    kept, dropped = await _phase1_nansen_dex_trades(
+        store, grant, config, state, recorder, identity, profile_rows, extras, raw_parts, 0,
+    )
+    dropped_set = {row["address"] for row in dropped}
+    report = []
+    for row in profile_rows:
+        address = row["address"]
+        stats = ((extras.get(address) or {}).get("vendor_metrics") or {}).get("profiler_dex_trades") or {}
+        report.append({
+            "address": address,
+            "label": labels.get(address),
+            "max_per_day": stats.get("max_per_day"),
+            "busiest_day": stats.get("busiest_day"),
+            "earliest_unix": stats.get("earliest_unix"),
+            "dropped": address in dropped_set,
+            "seed_is_not": "evidence",
+        })
+    digest = _save_seed_raw_parts(config, identity, SEED_NANSEN, raw_parts)
+    payload = {
+        "kind": "nansen-dex-trades-calibration-v1",
+        "wallets": report,
+        "dropped": dropped,
+        "count": len(report),
+        "can_only_drop": True,
+        "seed_is_not": "evidence",
+        "PRODUCT_READY": False,
+    }
+    if config.get("output_dir"):
+        _write_json(Path(config["output_dir"]) / "NANSEN_DEX_TRADES_CALIBRATION.json", payload)
+    state.setdefault("discoveries", {})[identity] = {
+        "addresses": [row["address"] for row in kept],
+        "sha256": digest,
+        "count": len(kept),
+        "calibration": True,
+        "seed_source": SEED_NANSEN,
+        "seed_is_not": "evidence",
+        "enabled": True,
+    }
+    save_state(config["output_dir"], state)
+    return {
+        "addresses": [row["address"] for row in kept],
+        "sha256": digest,
+        "count": len(kept),
+        "discovery_identity": identity,
+        "calibration": True,
+        "report": report,
+        "enabled": True,
+        "seed_source": SEED_NANSEN,
+        "seed_is_not": "evidence",
+    }
+
+
 async def _phase1_nansen(store, grant, config, state, recorder, identity):
     """Optional official leaderboard. Missing key disables the source; never a dummy call."""
     enabled = bool(config.get("nansen_enabled"))
@@ -2956,6 +3220,8 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
             "seed_source": SEED_NANSEN,
             "seed_is_not": "evidence",
         }
+    if config.get("nansen_calibrate_wallets"):
+        return await _phase1_nansen_calibrate(store, grant, config, state, recorder, identity)
     raw_parts = []
     extras = {}
     exclude = set(config.get("exclude_known_wallets") or [])
@@ -2965,13 +3231,17 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
     date_from, date_to = nansen_date_range_from_bounds(config.get("bounds"))
     pages_per_tf = nansen_leaderboard_page_count(config.get("nansen_leaderboard_pages"))
     try:
+        per_page = nansen_per_page(config.get("nansen_per_page") or NANSEN_LEADERBOARD_PER_PAGE)
+    except SeedSourceError as error:
+        raise LiveE2EError(str(error)) from error
+    try:
         page = 0
         for timeframe in NANSEN_TIMEFRAMES:
             for page_num in range(1, pages_per_tf + 1):
                 left = remaining_caps(config, state["spend"])
                 if left["nansen_requests"] < 1 or left["nansen_units"] < NANSEN_LEADERBOARD_UNITS:
                     break
-                body = nansen_leaderboard_body(timeframe=timeframe, page=page_num, per_page=50)
+                body = nansen_leaderboard_body(timeframe=timeframe, page=page_num, per_page=per_page)
                 response = await _nansen_seed_call(
                     store, grant, config, state, recorder,
                     path=NANSEN_LEADERBOARD_PATH,
@@ -3011,18 +3281,35 @@ async def _phase1_nansen(store, grant, config, state, recorder, identity):
                         extras[row["address"]]["timeframes"] = timeframes
                     if not row.get("already_seen"):
                         selected.append(row)
+        token_rows, token_used = await _phase1_nansen_token_pnl(
+            store, grant, config, state, recorder, identity, extras, raw_parts, page,
+        )
+        page += int(token_used or 0)
+        already = {row["address"] for row in selected}
+        for row in token_rows:
+            address = row.get("address")
+            if not address or address in exclude or address in already:
+                continue
+            selected.append(row)
+            already.add(address)
         prefilter_log = []
         profile_rows = []
         for row in selected:
             meta = extras.get(row["address"]) or {}
-            hit = nansen_vendor_drop_decision(meta)
+            hit = nansen_vendor_drop_decision(meta, config)
             if hit:
                 prefilter_log.append({"address": row["address"], **hit})
             else:
                 profile_rows.append(row)
         merge_nansen_prefilter_dropped(state, prefilter_log)
-        profile_page = page
+        profile_rows, dex_log = await _phase1_nansen_dex_trades(
+            store, grant, config, state, recorder, identity, profile_rows, extras, raw_parts, page,
+        )
+        merge_nansen_prefilter_dropped(state, dex_log)
+        profile_page = page + 1
         profile_cap = config.get("nansen_profile_cap")
+        if profile_cap is None:
+            profile_cap = 0
         profiled = 0
         for row in profile_rows:
             address = row["address"]
@@ -4650,6 +4937,24 @@ def validate_config(raw):
     if isinstance(exclude_wallets, str):
         exclude_wallets = [part.strip() for part in exclude_wallets.split(",") if part.strip()]
     raw["exclude_known_wallets"] = list(exclude_wallets)
+    token_pnl_raw = raw.get("nansen_token_pnl_tokens") or []
+    if isinstance(token_pnl_raw, str):
+        raw["nansen_token_pnl_tokens"] = [part.strip() for part in token_pnl_raw.split(",") if part.strip()]
+    elif token_pnl_raw in (None, ""):
+        raw["nansen_token_pnl_tokens"] = []
+    if raw.get("nansen_calibrate_wallets"):
+        raw["discovery"] = True
+        raw["seed_source"] = raw.get("seed_source") or SEED_NANSEN
+        raw["phases"] = raw.get("phases") or "1"
+        raw["seed_sources"] = resolve_seed_sources(
+            parse_seed_sources(raw.get("seed_source") or raw.get("seed_sources")),
+            requested_discovery,
+        )
+    try:
+        if raw.get("nansen_per_page") not in (None, ""):
+            nansen_per_page(raw.get("nansen_per_page"))
+    except SeedSourceError as error:
+        raise LiveE2EError(str(error)) from error
     window_days = 30 if raw.get("window_days") is None else int(raw.get("window_days"))
     report_window_days = raw.get("report_window_days")
     if report_window_days not in (None, ""):
@@ -4716,12 +5021,55 @@ def validate_config(raw):
         "caps": caps,
         "per_wallet_cap": raw.get("per_wallet_cap"),
         "nansen_profile_cap": (
-            int(raw["nansen_profile_cap"]) if raw.get("nansen_profile_cap") not in (None, "") else None
+            int(raw["nansen_profile_cap"])
+            if raw.get("nansen_profile_cap") not in (None, "")
+            else (int(raw["nansen_profiles"]) if raw.get("nansen_profiles") not in (None, "") else 0)
+        ),
+        "nansen_profiles": (
+            int(raw["nansen_profiles"]) if raw.get("nansen_profiles") not in (None, "") else 0
         ),
         "nansen_leaderboard_pages": (
             int(raw["nansen_leaderboard_pages"])
             if raw.get("nansen_leaderboard_pages") not in (None, "")
             else 1
+        ),
+        "nansen_per_page": (
+            int(raw["nansen_per_page"])
+            if raw.get("nansen_per_page") not in (None, "")
+            else NANSEN_LEADERBOARD_PER_PAGE
+        ),
+        "nansen_max_avg_trades_per_day": (
+            raw.get("nansen_max_avg_trades_per_day")
+            if raw.get("nansen_max_avg_trades_per_day") not in (None, "")
+            else str(RULE_A_MAX_AVG_TRADES_PER_DAY)
+        ),
+        "nansen_min_tokens": (
+            int(raw["nansen_min_tokens"]) if raw.get("nansen_min_tokens") not in (None, "") else RULE_A_MIN_TOKENS
+        ),
+        "nansen_max_tokens": (
+            int(raw["nansen_max_tokens"]) if raw.get("nansen_max_tokens") not in (None, "") else RULE_A_MAX_TOKENS
+        ),
+        "nansen_min_realized_pnl": (
+            raw.get("nansen_min_realized_pnl")
+            if raw.get("nansen_min_realized_pnl") not in (None, "")
+            else str(RULE_A_MIN_REALIZED_PNL)
+        ),
+        "nansen_dex_trades_max_pages": (
+            int(raw["nansen_dex_trades_max_pages"])
+            if raw.get("nansen_dex_trades_max_pages") not in (None, "")
+            else NANSEN_DEX_TRADES_MAX_PAGES
+        ),
+        "nansen_dex_trades_wallet_cap": (
+            int(raw["nansen_dex_trades_wallet_cap"])
+            if raw.get("nansen_dex_trades_wallet_cap") not in (None, "")
+            else 0
+        ),
+        "nansen_calibrate_wallets": raw.get("nansen_calibrate_wallets") or None,
+        "nansen_token_pnl_tokens": list(raw.get("nansen_token_pnl_tokens") or []),
+        "nansen_token_pnl_max_calls": (
+            int(raw["nansen_token_pnl_max_calls"])
+            if raw.get("nansen_token_pnl_max_calls") not in (None, "")
+            else 0
         ),
         "exclude_known_from": list(raw.get("exclude_known_from") or []),
         "exclude_known_wallets": list(raw.get("exclude_known_wallets") or []),
@@ -5054,14 +5402,86 @@ def build_arg_parser():
         "--nansen-profile-cap",
         dest="nansen_profile_cap",
         type=int,
-        help="Max Nansen pnl-summary calls after the two leaderboard pages. Plan equals this bound.",
+        help="Max Nansen pnl-summary calls after leaderboard pages. Default is --nansen-profiles (0).",
+    )
+    parser.add_argument(
+        "--nansen-profiles",
+        dest="nansen_profiles",
+        type=int,
+        default=0,
+        help="pnl-summary calls. Off by default (0). Alias bound for --nansen-profile-cap when that flag is omitted.",
     )
     parser.add_argument(
         "--nansen-leaderboard-pages",
         dest="nansen_leaderboard_pages",
         type=int,
         default=1,
-        help="Leaderboard pages per timeframe (90d/180d). Plan is timeframes × pages.",
+        help="Leaderboard pages per timeframe (90d/180d). Plan counts calls, not rows.",
+    )
+    parser.add_argument(
+        "--nansen-per-page",
+        dest="nansen_per_page",
+        type=int,
+        default=50,
+        help="Leaderboard page size (1-1000, default 50).",
+    )
+    parser.add_argument(
+        "--nansen-max-avg-trades-per-day",
+        dest="nansen_max_avg_trades_per_day",
+        default="2.5",
+        help="Rule A: drop when n_trades/timeframe_days exceeds this (default 2.5).",
+    )
+    parser.add_argument(
+        "--nansen-min-tokens",
+        dest="nansen_min_tokens",
+        type=int,
+        default=3,
+        help="Rule A: drop when n_tokens is below this (default 3). Missing field is no drop.",
+    )
+    parser.add_argument(
+        "--nansen-max-tokens",
+        dest="nansen_max_tokens",
+        type=int,
+        default=10,
+        help="Rule A: drop when n_tokens is above this (default 10). Missing field is no drop.",
+    )
+    parser.add_argument(
+        "--nansen-min-realized-pnl",
+        dest="nansen_min_realized_pnl",
+        default="0",
+        help="Rule A: drop when realized_pnl_usd is <= this (default 0). Missing field is no drop.",
+    )
+    parser.add_argument(
+        "--nansen-dex-trades-max-pages",
+        dest="nansen_dex_trades_max_pages",
+        type=int,
+        default=3,
+        help="Per-wallet page cap for profiler/dex-trades (default 3).",
+    )
+    parser.add_argument(
+        "--nansen-dex-trades-wallet-cap",
+        dest="nansen_dex_trades_wallet_cap",
+        type=int,
+        default=0,
+        help="Max wallets to screen with dex-trades (default 0 = off). Planner uses this × max-pages.",
+    )
+    parser.add_argument(
+        "--nansen-calibrate-wallets",
+        dest="nansen_calibrate_wallets",
+        help="File of labelled wallets. Runs only profiler/dex-trades (no Helius).",
+    )
+    parser.add_argument(
+        "--nansen-token-pnl-tokens",
+        dest="nansen_token_pnl_tokens",
+        default="",
+        help="Optional comma-separated mints for tgm/pnl-leaderboard. Never sets premium_labels.",
+    )
+    parser.add_argument(
+        "--nansen-token-pnl-max-calls",
+        dest="nansen_token_pnl_max_calls",
+        type=int,
+        default=0,
+        help="Hard cap on tgm/pnl-leaderboard calls (default 0 = off).",
     )
     parser.add_argument(
         "--exclude-known-from",

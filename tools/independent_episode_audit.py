@@ -385,6 +385,20 @@ REVIEWED_SWAP_PROGRAM_IDS = frozenset({
     DGMG, PHOTON, DFLOW_DST, RAYDIUM_CLMM, RAYDIUM_CPMM, RAYDIUM_AMM,
     WHIRLPOOL, GMGN, METEORA_DLMM, *WELL_KNOWN_INNER_AMMS,
 })
+# Independent copy of the app net-balance allowlist. This module does not
+# import scanner.investigation. CLMM is included because it has no PINNED layout.
+NET_BALANCE_SWAP_PROGRAMS = frozenset({
+    PUMP, PUMP_SWAP, JUPITER, METEORA_DAMM_V2, RFQ_FILL, OKX, DFLOW, FLASHX,
+    DGMG, RAYDIUM_CLMM, RAYDIUM_CPMM, RAYDIUM_AMM, WHIRLPOOL, GMGN, METEORA_DLMM,
+})
+# Independent DFlow swap vs non-swap discs. Copied here; no scanner import.
+_DFLOW_SWAP_DISCS = frozenset({
+    "f8c69e91e17587c8",
+    "a8ac184dc59c8765",
+    "414b3f4ceb5b5b88",
+})
+NET_BALANCE_SOL_DUST_LAMPORTS = Decimal("100000")
+NET_BALANCE_INSTRUCTION = "net_balance"
 # v3 / probe counter: swap-type log or instruction name. Unknown venues that
 # log Swap/Buy/Sell/Route still count when the wallet signed and a wallet-owned
 # token balance changed.
@@ -739,6 +753,212 @@ def _unwrap(record):
     return record
 
 
+def _wallet_is_signer(raw, address, keys):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    header = message.get("header") if isinstance(message.get("header"), dict) else {}
+    needed = header.get("numRequiredSignatures")
+    if type(needed) is not int or isinstance(needed, bool) or needed < 1:
+        needed = 1
+    return bool(address) and address in keys[:needed]
+
+
+def _first_net_balance_program(raw, keys):
+    """OUTER reviewed swap program only. Inners under B311/Photon do not qualify."""
+    for _outer, _path, instruction, nested in _iter_instructions(raw):
+        if nested:
+            continue
+        program = _program(instruction, keys)
+        if program not in NET_BALANCE_SWAP_PROGRAMS:
+            continue
+        payload = _b58decode(instruction.get("data"))
+        if program == DFLOW:
+            disc = payload[:8].hex() if len(payload) >= 8 else ""
+            if disc not in _DFLOW_SWAP_DISCS:
+                continue
+        if program == FLASHX and not (payload and payload[0] == 0 and len(payload) >= 16):
+            continue
+        return program
+    return None
+
+
+def _net_balance_unknown_inner_blocks(raw, keys, address):
+    """Independent D3: unknown inner touching wallet assets fails closed."""
+    accounts = _token_accounts(raw, address, keys)
+    wallet_assets = {address, *accounts}
+    for _outer, _path, instruction, nested in _iter_instructions(raw):
+        if not nested:
+            continue
+        program = _program(instruction, keys)
+        if not program or program in REVIEWED_INNER_PROGRAMS:
+            continue
+        touched = set(_accounts(instruction, keys))
+        parsed = instruction.get("parsed") if isinstance(instruction, dict) else None
+        info = parsed.get("info") if isinstance(parsed, dict) else None
+        if isinstance(info, dict):
+            for field in ("source", "destination", "account", "newAccount", "owner", "authority", "wallet"):
+                value = info.get(field)
+                if isinstance(value, str) and value:
+                    touched.add(value)
+        if touched.intersection(wallet_assets):
+            return True
+    return False
+
+
+def _net_balance_reconstruct(raw, address, keys):
+    """Independent net-balance path. Uses mint-aggregated deltas + rent + published tips.
+
+    This is not the app's owner-walk + parsed-transfer tip method.
+    """
+    if not _wallet_is_signer(raw, address, keys):
+        return None
+    program = _first_net_balance_program(raw, keys)
+    if not program:
+        return None
+    if _net_balance_unknown_inner_blocks(raw, keys, address):
+        return None
+    token_deltas, pre, post = _owned_token_deltas(raw, address)
+    accounts = _token_accounts(raw, address, keys)
+    native, paid = _native_delta(raw, address, keys)
+    wsol = token_deltas.pop(WSOL, Decimal("0"))
+    rent = _rent_correction(raw, accounts)
+    tips = _verified_tips(raw, keys, address)
+    settlement = native + wsol + rent + tips
+    if abs(settlement) <= NET_BALANCE_SOL_DUST_LAMPORTS:
+        settlement = Decimal("0")
+    for mint, qty in list(token_deltas.items()):
+        decimals = next((info.get("decimals") for info in accounts.values() if info.get("mint") == mint), None)
+        if decimals == 0 and abs(qty) <= 1:
+            return None
+    quote_mint = None
+    quote_delta = Decimal("0")
+    for mint in QUOTE_MINTS:
+        delta = token_deltas.pop(mint, Decimal("0"))
+        if delta == 0:
+            continue
+        if quote_mint is not None:
+            # Two stables plus optional SOL: conversion only when no other mint.
+            if settlement == 0 and not any(qty != 0 for qty in token_deltas.values()):
+                return {
+                    "kind": "conversion",
+                    "mint": mint if mint == USDC else quote_mint,
+                    "quantity_raw": str(abs(delta if mint == USDC else quote_delta)),
+                    "consideration_sol": "0",
+                    "consideration_usdc": _canonical(abs(delta if mint == USDC else quote_delta) / USDC_DECIMALS) if USDC in (mint, quote_mint) else None,
+                    "consideration_usdt": None,
+                    "settlement_asset": "USDC" if USDC in (mint, quote_mint) else "USDT",
+                    "network_fee_sol": _canonical((Decimal((raw.get("meta") or {}).get("fee") or 0) if paid else Decimal("0")) / LAMPORTS),
+                    "tips_sol": _canonical(tips / LAMPORTS),
+                    "fees_and_tips_sol": _canonical(((Decimal((raw.get("meta") or {}).get("fee") or 0) if paid else Decimal("0")) + tips) / LAMPORTS),
+                    "inner_venues": [],
+                    "signature": ((raw.get("transaction") or {}).get("signatures") or [None])[0],
+                    "timestamp": raw.get("blockTime"),
+                    "slot": raw.get("slot"),
+                    "transaction_index": raw.get("transactionIndex"),
+                    "program": program,
+                    "instruction": NET_BALANCE_INSTRUCTION,
+                    "discriminator": None,
+                    "path": "meta.net_balance",
+                    "observed_pre_quantity_raw": str(pre.get(USDC, Decimal("0"))),
+                    "observed_post_quantity_raw": str(post.get(USDC, Decimal("0"))),
+                    "source": "independent-net-balance",
+                }
+            return None
+        quote_mint, quote_delta = mint, delta
+    assets = [(mint, qty) for mint, qty in token_deltas.items() if qty != 0]
+    meta = raw.get("meta") or {}
+    fee = Decimal(meta.get("fee") or 0) if paid else Decimal("0")
+    if quote_mint and not assets and settlement != 0 and (quote_delta > 0) != (settlement > 0):
+        quote_decimals = next(
+            (info.get("decimals") for info in accounts.values() if info.get("mint") == quote_mint),
+            6,
+        )
+        try:
+            quote_scale = Decimal(10) ** int(quote_decimals)
+        except (TypeError, ValueError, OverflowError):
+            quote_scale = USDC_DECIMALS
+        quote_amount = _canonical(abs(quote_delta) / quote_scale)
+        return {
+            "kind": "conversion",
+            "mint": quote_mint,
+            "quantity_raw": str(abs(quote_delta)),
+            "consideration_sol": _canonical(abs(settlement) / LAMPORTS),
+            "consideration_usdc": quote_amount if quote_mint == USDC else None,
+            "consideration_usdt": quote_amount if quote_mint == USDT else None,
+            "settlement_asset": QUOTE_ASSET[quote_mint],
+            "network_fee_sol": _canonical(fee / LAMPORTS),
+            "tips_sol": _canonical(tips / LAMPORTS),
+            "fees_and_tips_sol": _canonical((fee + tips) / LAMPORTS),
+            "inner_venues": [],
+            "signature": ((raw.get("transaction") or {}).get("signatures") or [None])[0],
+            "timestamp": raw.get("blockTime"),
+            "slot": raw.get("slot"),
+            "transaction_index": raw.get("transactionIndex"),
+            "program": program,
+            "instruction": NET_BALANCE_INSTRUCTION,
+            "discriminator": None,
+            "path": "meta.net_balance",
+            "observed_pre_quantity_raw": str(pre.get(quote_mint, Decimal("0"))),
+            "observed_post_quantity_raw": str(post.get(quote_mint, Decimal("0"))),
+            "source": "independent-net-balance",
+        }
+    if quote_mint and not assets:
+        return None
+    if len(assets) != 1:
+        return None
+    mint, quantity = assets[0]
+    quote_settled = settlement == 0 and quote_delta != 0 and (quantity > 0) != (quote_delta > 0)
+    sol_settled = settlement != 0 and quote_delta == 0 and (quantity > 0) != (settlement > 0)
+    if not quote_settled and not sol_settled:
+        return None
+    kind = "buy" if quantity > 0 else "sell"
+    signature = ((raw.get("transaction") or {}).get("signatures") or [None])[0]
+    timestamp = raw.get("blockTime")
+    fees = _canonical((fee + tips) / LAMPORTS)
+    if quote_settled:
+        quote_decimals = next(
+            (info.get("decimals") for info in accounts.values() if info.get("mint") == quote_mint),
+            6,
+        )
+        try:
+            quote_scale = Decimal(10) ** int(quote_decimals)
+        except (TypeError, ValueError, OverflowError):
+            quote_scale = USDC_DECIMALS
+        consideration_sol = "0"
+        quote_amount = _canonical(abs(quote_delta) / quote_scale)
+        settlement_asset = QUOTE_ASSET[quote_mint]
+        consideration_usdc = quote_amount if quote_mint == USDC else None
+        consideration_usdt = quote_amount if quote_mint == USDT else None
+    else:
+        consideration_sol = _canonical(abs(settlement) / LAMPORTS)
+        consideration_usdc = None
+        consideration_usdt = None
+        settlement_asset = "SOL"
+    return {
+        "kind": kind,
+        "mint": mint,
+        "quantity_raw": str(abs(quantity)),
+        "consideration_sol": consideration_sol,
+        "consideration_usdc": consideration_usdc,
+        "consideration_usdt": consideration_usdt,
+        "settlement_asset": settlement_asset,
+        "network_fee_sol": _canonical(fee / LAMPORTS),
+        "tips_sol": _canonical(tips / LAMPORTS),
+        "fees_and_tips_sol": fees,
+        "inner_venues": [],
+        "signature": signature,
+        "timestamp": timestamp,
+        "slot": raw.get("slot"),
+        "transaction_index": raw.get("transactionIndex"),
+        "program": program,
+        "instruction": NET_BALANCE_INSTRUCTION,
+        "discriminator": None,
+        "path": "meta.net_balance",
+        "observed_pre_quantity_raw": str(pre.get(mint, Decimal("0"))),
+        "observed_post_quantity_raw": str(post.get(mint, Decimal("0"))),
+        "source": "independent-net-balance",
+    }
+
+
 def reconstruct_record(record, address):
     raw = _unwrap(record)
     if not isinstance(raw, dict):
@@ -751,7 +971,7 @@ def reconstruct_record(record, address):
         return None
     route = _route(raw, address, keys)
     if not route:
-        return None
+        return _net_balance_reconstruct(raw, address, keys)
     token_deltas, pre, post = _owned_token_deltas(raw, address)
     accounts = _token_accounts(raw, address, keys)
     native, paid = _native_delta(raw, address, keys)

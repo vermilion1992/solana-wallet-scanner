@@ -58,6 +58,8 @@ MANDATORY = [
     "tests/test_live_e2e_verify584.py",
     "tests/test_d9_3_maxday_undercount.py",
     "tests/test_live_e2e_run10.py",
+    "tests/test_net_balance_venues.py",
+    "tests/test_run11_nansen_discovery.py",
 ]
 FORBIDDEN_ENV = ("HELIUS_API_KEY", "BIRDEYE_API_KEY", "HELIUS_API_KEYS", "HELIUS_RPC_URL", "NANSEN_API_KEY")
 
