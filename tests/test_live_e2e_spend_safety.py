@@ -305,7 +305,7 @@ def test_ss7_per_phase_caps_enforced(tmp_path, monkeypatch, fake_keys):
     result = asyncio.run(run_live_e2e(_live_kwargs(
         tmp_path, grant, tmp_path / "phasecap", WALLETS[:1], phases="2",
     )))
-    assert result["status"] == "blocked"
+    assert result["status"] == "cap_reached"
     assert len(calls) == 1
     assert result["spend"]["helius_requests"] == 1
 

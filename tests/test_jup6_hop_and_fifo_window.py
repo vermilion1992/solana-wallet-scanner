@@ -19,6 +19,7 @@ import tools.independent_episode_audit as auditor
 
 HUMIDIFI = "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp"
 GOONFI = "goonERTdGsjnkZqWuVjs73BZ3Pb9qoCUdBUL17BnS5j"
+UNKNOWN_PROP_AMM = "UnkPropAmmC6Example11111111111111111111111"
 SCORCH = "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn"
 SRC5QY = "src5qyOrderEscrow11111111111111111111111111"
 TOKEN = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
@@ -51,13 +52,14 @@ def _jup6_hop_tx(
     extra_outer=None,
     approve=False,
     outer_program=JUPITER,
+    hop_amm=HUMIDIFI,
     stack3_child=False,
     usdc_amount="77140299024",
     sol_out=1_000_000_000_000,
 ):
     keys = [
         wallet, USDC_ATA, POOL_USDC, POOL_AUTH, outer_program,
-        HUMIDIFI, TOKEN, SYSTEM, COMPUTE, SCORCH, SRC5QY,
+        hop_amm, TOKEN, SYSTEM, COMPUTE, SCORCH, SRC5QY,
     ]
     outers = [
         {"programId": COMPUTE, "accounts": [], "data": "3"},
@@ -100,7 +102,7 @@ def _jup6_hop_tx(
         })
     inners = [
         {
-            "programId": HUMIDIFI,
+            "programId": hop_amm,
             "stackHeight": 2,
             "accounts": [wallet, USDC_ATA, POOL_USDC],
             "data": "11111111",
@@ -175,10 +177,13 @@ def _app_keys(raw):
 
 
 def test_prop_amms_stay_off_well_known_inner_allowlist():
-    assert HUMIDIFI not in WELL_KNOWN_INNER_AMMS
+    # Published HumidiFi (9H6tua7) is the live pin; unpublished stand-ins stay off.
+    assert HUMIDIFI in WELL_KNOWN_INNER_AMMS
     assert GOONFI not in WELL_KNOWN_INNER_AMMS
-    assert HUMIDIFI not in auditor.WELL_KNOWN_INNER_AMMS
+    assert UNKNOWN_PROP_AMM not in WELL_KNOWN_INNER_AMMS
+    assert HUMIDIFI in auditor.WELL_KNOWN_INNER_AMMS
     assert GOONFI not in auditor.WELL_KNOWN_INNER_AMMS
+    assert UNKNOWN_PROP_AMM not in auditor.WELL_KNOWN_INNER_AMMS
     src = auditor.__file__
     text = open(src, encoding="utf-8").read()
     assert not any(
@@ -226,7 +231,7 @@ def test_c6_example3_src5qy_outer_stays_blocked():
 
 
 def test_c6_synthetic_approve_hop_stays_blocked():
-    raw = _jup6_hop_tx(ENAAT, ENAAT_SIG, approve=True)
+    raw = _jup6_hop_tx(ENAAT, ENAAT_SIG, approve=True, hop_amm=UNKNOWN_PROP_AMM)
     keys = _app_keys(raw)
     assert _jupiter_hop_inner_ok(raw, ENAAT, keys) is False
     assert auditor._jupiter_hop_inner_ok(raw, ENAAT, auditor._keys(raw)) is False

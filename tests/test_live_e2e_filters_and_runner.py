@@ -445,7 +445,7 @@ def test_runner_rejects_bad_params_and_caps_of_zero(tmp_path, monkeypatch):
         "window_days": 30,
         "earlier_history_days": 60,
     }))
-    assert result["status"] == "blocked"
+    assert result["status"] == "cap_reached"
     assert result["spend"]["helius_requests"] == 0
     assert result["PRODUCT_READY"] is False
 
