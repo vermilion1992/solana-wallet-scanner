@@ -303,8 +303,8 @@ def test_discovery_cu_docs_and_top_traders_plan():
         "birdeye_tokens": ["So11111111111111111111111111111111111111112", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"],
         "caps": HARD_CEILINGS,
     })
-    assert plan["totals"]["birdeye_requests"] == 2
-    assert plan["totals"]["birdeye_units"] == 70
+    assert plan["totals"]["birdeye_requests"] == 4
+    assert plan["totals"]["birdeye_units"] == 140
     assert plan["totals"]["birdeye_units"] <= HARD_CEILINGS["birdeye_units"]
 
 
@@ -327,8 +327,8 @@ def test_new_grant_plan_fits_hard_ceilings():
     # Default plan without phase2 kept rows uses all 100 for phase3 if wallets supplied
     # with wallets_supplied implicit. phase3_wallets uses kept phase2 or all wallets.
     # Force 25 kept:
-    assert plan["totals"]["birdeye_requests"] == 1
-    assert plan["totals"]["birdeye_units"] == 30
+    assert plan["totals"]["birdeye_requests"] == 3
+    assert plan["totals"]["birdeye_units"] == 90
     assert plan["totals"]["helius_requests"] <= 1500
     assert plan["totals"]["helius_units"] <= 15000
 

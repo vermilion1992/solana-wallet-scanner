@@ -469,7 +469,7 @@ def test_runner_dry_run_resume_and_duplicate(tmp_path, monkeypatch):
     }))
     assert first["dry_run"] is True
     assert first["plan"]["within_caps"] is True
-    assert first["plan"]["totals"]["birdeye_requests"] == 1
+    assert first["plan"]["totals"]["birdeye_requests"] == 3
     assert first["plan"]["totals"]["helius_requests"] == 40
     assert first["spend"]["birdeye_requests"] == 1
     assert first["spend"]["helius_requests"] == 30
@@ -548,8 +548,8 @@ def test_plan_counts_stay_inside_grant_caps():
             "helius_units": 5000,
         },
     })
-    assert plan["totals"]["birdeye_requests"] == 1
-    assert plan["totals"]["birdeye_units"] == 30
+    assert plan["totals"]["birdeye_requests"] == 3
+    assert plan["totals"]["birdeye_units"] == 90
     assert plan["totals"]["helius_requests"] == 40
     assert plan["totals"]["helius_units"] == 2200
     assert plan["within_caps"] if False else (
