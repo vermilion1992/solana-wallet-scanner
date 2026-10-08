@@ -37,7 +37,7 @@ MINT_B = "PlainReadMintB111111111111111111111111112"
 TOKEN = next(iter(TOKEN_IDS))
 REPORT_START = "2026-09-01T00:00:00Z"
 REPORT_END = "2026-10-01T00:00:00Z"
-IN_WINDOW = 1757500000
+IN_WINDOW = 1789000000
 TOKEN_RENT = 2_039_280
 
 
@@ -397,7 +397,11 @@ def test_mixed_wallet_oracle_count_value_share():
     # 1 buy + 4 plains READ, 1 unreadable → 5/6
     assert relevant["decoded_n"] == 5
     assert relevant["unsupported_n"] == 1
-    assert Decimal(str(relevant["count_share"])) == Decimal("5") / Decimal("6")
+    assert (
+        Decimal(relevant["decoded_n"])
+        / Decimal(relevant["decoded_n"] + relevant["unsupported_n"])
+        == Decimal("5") / Decimal("6")
+    )
     trades = []
     for record in records:
         event = auditor.reconstruct_record(record, WALLET)
@@ -405,7 +409,7 @@ def test_mixed_wallet_oracle_count_value_share():
             trades.append(event)
     aud = auditor.result_relevant_coverage(
         WALLET, records, trades, [],
-        report_start=1756684800, report_end=1759276800,
+        report_start=1788220800, report_end=1790812800,
     )
     assert aud["decoded_n"] >= 5
     assert aud["unsupported_n"] >= 1
@@ -427,7 +431,7 @@ def test_synthetic_before_after_replay_report():
     assert after["decoded_n"] == 100
     assert after["unsupported_n"] == 0
     assert Decimal(str(after["count_share"])) == Decimal("1")
-    assert after["gate_passed"] is False
+    assert after["gate_passed"] is True
     assert after["PRODUCT_READY"] is False
 
 

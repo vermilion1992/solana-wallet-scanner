@@ -449,7 +449,7 @@ def inject_undecoded_buy_taints(decoded, records, address):
         for event in events
         if event.get("kind") in (
             "buy", "sell", "conversion", "transfer_in", "transfer_out", "non_trade", "lp",
-        ) and event.get("signature"):
+        ) and event.get("signature")
     }
     for record in records or []:
         raw = record

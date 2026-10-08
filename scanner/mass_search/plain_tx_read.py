@@ -24,6 +24,8 @@ from scanner.investigation import (
     USDT,
     WSOL,
     _keys,
+    _route_flow_disagrees_with_wallet,
+    _third_party_pool_leg,
 )
 
 READ_KINDS = frozenset({
@@ -476,6 +478,61 @@ def classify_plain_tx(raw, address):
     )
 
 
+def _owned_account_set(raw, address, keys):
+    owned = {address}
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict) or row.get("owner") != address:
+                continue
+            index = row.get("accountIndex")
+            if isinstance(index, int) and not isinstance(index, bool) and 0 <= index < len(keys):
+                owned.add(keys[index])
+    return owned
+
+
+def _edge_trade_dirty(raw, address, keys, actual):
+    """Refuse C2 trades that look 2-leg but include third-party credits or CPI mismatch.
+
+    Wallet-edge 2-leg alone would lower cost (DC-9) when someone else pays SOL
+    or adds inventory. Unknown stays unreadable.
+    """
+    try:
+        if _third_party_pool_leg(raw, address, keys):
+            return True
+    except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+        return True
+    owned = _owned_account_set(raw, address, keys)
+    for _role, _index, instruction in _iter_instructions(raw):
+        program = _program_of(instruction, keys)
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        kind = parsed.get("type") if parsed else None
+        info = parsed.get("info") if parsed and isinstance(parsed.get("info"), dict) else {}
+        if program == SYSTEM_ID and kind == "transfer":
+            dest = info.get("destination")
+            source = info.get("source")
+            if dest in owned and source not in owned:
+                return True
+        if program in TOKEN_IDS and kind == "closeAccount":
+            dest = info.get("destination")
+            owner = info.get("owner")
+            account = info.get("account")
+            if dest in owned and owner not in (None, "", address):
+                return True
+            if dest in owned and account and account not in owned:
+                return True
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    if meta.get("innerInstructions"):
+        assets = {mint: qty for mint, qty in actual["tokens"].items() if qty}
+        assets["SOL"] = actual["native"] + actual["tokens"].get(WSOL, 0)
+        try:
+            if _route_flow_disagrees_with_wallet(raw, address, keys, assets):
+                return True
+        except (ValueError, TypeError, KeyError, IndexError, AttributeError):
+            return True
+    return False
+
+
 def _two_leg_or_conversion(actual, *, program, instruction, reason):
     tokens = {mint: qty for mint, qty in actual["tokens"].items() if qty}
     wsol = tokens.pop(WSOL, 0)
@@ -541,6 +598,15 @@ def _two_leg_or_conversion(actual, *, program, instruction, reason):
         # Token-only movement on a venue is not a 2-leg trade.
         return None
     return None
+
+
+def _accepted_edge_trade(raw, address, keys, actual, classified):
+    if not classified:
+        return None
+    if any(item.get("kind") in TRADE_KINDS for item in classified):
+        if _edge_trade_dirty(raw, address, keys, actual):
+            return None
+    return classified
 
 
 def classify_edge_tx(raw, address):
@@ -627,9 +693,7 @@ def classify_edge_tx(raw, address):
                 actual, program=PUMP, instruction="66063d1201daebea",
                 reason="Pump.fun wallet-edge (including multi-buy in one tx); exact 2-leg",
             )
-            if classified:
-                return classified
-            return None
+            return _accepted_edge_trade(raw, address, keys, actual, classified)
 
     if DFLOW in programs:
         discs = _outer_discs(raw, keys, DFLOW)
@@ -638,8 +702,9 @@ def classify_edge_tx(raw, address):
                 actual, program=DFLOW, instruction="414b3f4ceb5b5b88",
                 reason="DFlow 414b3f4c wallet-edge swap",
             )
-            if classified:
-                return classified
+            accepted = _accepted_edge_trade(raw, address, keys, actual, classified)
+            if accepted:
+                return accepted
             if zero_token or not any(qty and mint not in QUOTE_MINTS for mint, qty in tokens.items()):
                 return _classify_token_effects(
                     actual, program=DFLOW, instruction="414b3f4ceb5b5b88",
@@ -650,9 +715,7 @@ def classify_edge_tx(raw, address):
             actual, program=DFLOW, instruction="f8c69e91e17587c8",
             reason="DFlow wallet-edge swap; exact 2-leg",
         )
-        if classified:
-            return classified
-        return None
+        return _accepted_edge_trade(raw, address, keys, actual, classified)
 
     for program, label in (
         (OKX_DEX_ROUTER, "OKX DEX router wallet-edge; exact 2-leg"),
@@ -665,9 +728,7 @@ def classify_edge_tx(raw, address):
         classified = _two_leg_or_conversion(
             actual, program=program, instruction="wallet_edge", reason=label,
         )
-        if classified:
-            return classified
-        return None
+        return _accepted_edge_trade(raw, address, keys, actual, classified)
     return None
 
 

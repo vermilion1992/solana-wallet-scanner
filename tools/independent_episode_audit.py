@@ -2426,6 +2426,19 @@ def auditor_classify_read(raw, address):
         return _auditor_read_effects(actual, program=JITO_TIP_ROUTER, instruction="claim", reason="Independent Jito claim non-trade")
     if OKX_VAULT in programs:
         return _auditor_read_effects(actual, program=OKX_VAULT, instruction="custody", reason="Independent OKX Vault custody/transfer")
+    def _accept_trade(classified):
+        if not classified:
+            return None
+        if any(row.get("kind") in ("buy", "sell", "conversion") for row in classified):
+            if _auditor_third_party_pool_leg(raw, address, keys):
+                return None
+            if _auditor_system_credit_to_wallet(raw, address, keys):
+                return None
+            if (raw.get("meta") or {}).get("innerInstructions"):
+                if _route_cpi_disagrees_with_wallet(raw, address, keys):
+                    return None
+        return classified
+
     if PUMP in programs:
         discs = _auditor_outer_discs(raw, keys, PUMP)
         if AUDITOR_PUMP_DISTRIBUTE in discs:
@@ -2435,17 +2448,17 @@ def auditor_classify_read(raw, address):
                 return None
             return _auditor_read_effects(actual, program=PUMP, instruction="623691610246ad2b", reason="Independent Pump distribution transfer-in")
         if AUDITOR_PUMP_MULTI_BUY in discs:
-            return _auditor_two_leg(actual, program=PUMP, instruction="66063d1201daebea", reason="Independent Pump wallet-edge including multi-buy")
+            return _accept_trade(_auditor_two_leg(actual, program=PUMP, instruction="66063d1201daebea", reason="Independent Pump wallet-edge including multi-buy"))
     if DFLOW in programs:
         discs = _auditor_outer_discs(raw, keys, DFLOW)
         if AUDITOR_DFLOW_SETUP in discs and AUDITOR_DFLOW_SWAP not in discs:
-            classified = _auditor_two_leg(actual, program=DFLOW, instruction="414b3f4ceb5b5b88", reason="Independent DFlow setup-or-swap")
+            classified = _accept_trade(_auditor_two_leg(actual, program=DFLOW, instruction="414b3f4ceb5b5b88", reason="Independent DFlow setup-or-swap"))
             if classified:
                 return classified
             if zero_token or not any(qty and mint not in RAW_QUOTE_ASSETS for mint, qty in tokens.items()):
                 return _auditor_read_effects(actual, program=DFLOW, instruction="414b3f4ceb5b5b88", reason="Independent DFlow order-setup non-trade")
             return None
-        return _auditor_two_leg(actual, program=DFLOW, instruction="f8c69e91e17587c8", reason="Independent DFlow wallet-edge")
+        return _accept_trade(_auditor_two_leg(actual, program=DFLOW, instruction="f8c69e91e17587c8", reason="Independent DFlow wallet-edge"))
     for program, label in (
         (OKX, "Independent OKX wallet-edge"),
         (JUPITER, "Independent Jupiter wallet-edge"),
@@ -2453,7 +2466,7 @@ def auditor_classify_read(raw, address):
         (PUMP_SWAP, "Independent PumpSwap wallet-edge"),
     ):
         if program in programs:
-            return _auditor_two_leg(actual, program=program, instruction="wallet_edge", reason=label)
+            return _accept_trade(_auditor_two_leg(actual, program=program, instruction="wallet_edge", reason=label))
     if programs and not (programs - AUDITOR_PLAIN_PROGRAMS):
         if _auditor_plain_explained(raw, address, keys, actual) is None:
             return None
@@ -2493,6 +2506,10 @@ def reconstruct_record(record, address):
         return chosen
     classified = auditor_classify_read(raw, address)
     if not classified:
+        return None
+    # A reviewed swap venue already failed layout/net. Do not override that
+    # fail-closed with a looser wallet-edge trade (DC-9 third-party credits).
+    if first_nb and classified[0].get("kind") in ("buy", "sell", "conversion"):
         return None
     first = dict(classified[0])
     first["signature"] = _auditor_record_signature(record, raw)
