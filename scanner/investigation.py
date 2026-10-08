@@ -3086,18 +3086,39 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
             if net and reason.startswith('Unrelated token transfer'):
                 unknown(reason)
             if not net:
-                from scanner.mass_search.plain_tx_read import classify_read_tx
+                from scanner.mass_search.plain_tx_read import TRADE_KINDS, classify_read_tx
                 classified = classify_read_tx(raw, address)
+                fail_closed = any(
+                    marker in reason
+                    for marker in (
+                        'Unknown inner',
+                        '2440',
+                        'not a reviewed account layout',
+                        'Unrelated token transfer',
+                        'Third-party',
+                        'third-party',
+                        'Wallet token delta does not reconcile',
+                        'Missing wrapped SOL',
+                        'Route user account lacks',
+                    )
+                )
                 if classified:
+                    kept = []
                     for item in classified:
                         kind = item.get('kind')
-                        fields = dict(item.get('fields') or {})
-                        emit(kind, item.get('path') or 'meta.wallet_edge', **fields)
-                        if kind in ('buy', 'sell'):
-                            supported += 1
-                        elif kind == 'conversion':
-                            conversions += 1
-                    continue
+                        if kind in TRADE_KINDS and fail_closed:
+                            continue
+                        kept.append(item)
+                    if kept:
+                        for item in kept:
+                            kind = item.get('kind')
+                            fields = dict(item.get('fields') or {})
+                            emit(kind, item.get('path') or 'meta.wallet_edge', **fields)
+                            if kind in ('buy', 'sell'):
+                                supported += 1
+                            elif kind == 'conversion':
+                                conversions += 1
+                        continue
             if net:
                 quote_mint = net.get('quote_mint')
                 mint = net['mint']

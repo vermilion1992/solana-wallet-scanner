@@ -50,6 +50,18 @@ PUMP_DISTRIBUTE_DISC = bytes.fromhex("623691610246ad2b")
 PUMP_BUY_DISC = bytes.fromhex("66063d1201daebea")
 DFLOW_ORDER_SETUP_DISC = bytes.fromhex("414b3f4ceb5b5b88")
 DFLOW_SWAP_DISC = bytes.fromhex("f8c69e91e17587c8")
+OKX_EDGE_DISCS = frozenset({
+    bytes.fromhex("aa2955b184501f35"),
+    bytes.fromhex("93f17b64f484ae76"),
+    bytes.fromhex("bbc9d433109bec3c"),
+})
+JUPITER_EDGE_DISCS = frozenset({
+    bytes.fromhex("bb64facc31c4af14"),
+    bytes.fromhex("e517cb977ae3ad2a"),
+    bytes.fromhex("d19853937cfed8e9"),
+})
+RFQ_EDGE_DISCS = frozenset({bytes.fromhex("a860b7a35c0a28a0")})
+PUMPSWAP_EDGE_DISCS = frozenset({bytes.fromhex("33e685a4017f83ad")})
 LAMPORTS = Decimal(1_000_000_000)
 SOL_DUST_LAMPORTS = 100_000
 _B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -571,7 +583,7 @@ def _two_leg_or_conversion(actual, *, program, instruction, reason):
             "reason": reason,
         })
         return [_event(kind, **fields)]
-    if len(non_quote) == 2 and not quotes:
+    if program == RFQ_FILL and len(non_quote) == 2 and not quotes:
         items = list(non_quote.items())
         downs = [(mint, qty) for mint, qty in items if qty < 0]
         ups = [(mint, qty) for mint, qty in items if qty > 0]
@@ -628,7 +640,12 @@ def classify_edge_tx(raw, address):
     sol = actual["native"] + wsol
     zero_token = not tokens
 
-    if METEORA_DLMM in programs:
+    outer_programs = {
+        _program_of(instruction, keys)
+        for instruction in (((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}).get("instructions") or []
+        if isinstance(instruction, dict)
+    }
+    if METEORA_DLMM in outer_programs:
         non_quote = [mint for mint, qty in tokens.items() if mint not in QUOTE_MINTS]
         mint = non_quote[0] if non_quote else None
         fields, _sol_amt = _sol_fields(actual["native"], actual.get("decimals") or {}, actual["tokens"])
@@ -711,23 +728,30 @@ def classify_edge_tx(raw, address):
                     reason="DFlow 414b3f4c order-setup; non-trade when no opposing trade legs",
                 )
             return None
+        if DFLOW_SWAP_DISC not in discs:
+            return None
         classified = _two_leg_or_conversion(
             actual, program=DFLOW, instruction="f8c69e91e17587c8",
             reason="DFlow wallet-edge swap; exact 2-leg",
         )
         return _accepted_edge_trade(raw, address, keys, actual, classified)
 
-    for program, label in (
-        (OKX_DEX_ROUTER, "OKX DEX router wallet-edge; exact 2-leg"),
-        (JUPITER, "Jupiter v6 wallet-edge including fee ATAs; exact 2-leg"),
-        (RFQ_FILL, "Jupiter Ultra RFQ Fill wallet-edge; conversion or 2-leg"),
-        (PUMP_SWAP, "PumpSwap AMM wallet-edge; exact 2-leg"),
+    for program, allowed, label in (
+        (OKX_DEX_ROUTER, OKX_EDGE_DISCS, "OKX DEX router wallet-edge; exact 2-leg"),
+        (JUPITER, JUPITER_EDGE_DISCS, "Jupiter v6 wallet-edge including fee ATAs; exact 2-leg"),
+        (RFQ_FILL, RFQ_EDGE_DISCS, "Jupiter Ultra RFQ Fill wallet-edge; conversion or 2-leg"),
+        (PUMP_SWAP, PUMPSWAP_EDGE_DISCS, "PumpSwap AMM wallet-edge; exact 2-leg"),
     ):
         if program not in programs:
             continue
+        discs = _outer_discs(raw, keys, program)
+        if not any(disc in allowed for disc in discs):
+            return None
         classified = _two_leg_or_conversion(
             actual, program=program, instruction="wallet_edge", reason=label,
         )
+        if program == RFQ_FILL and classified and classified[0].get("kind") != "conversion":
+            return None
         return _accepted_edge_trade(raw, address, keys, actual, classified)
     return None
 

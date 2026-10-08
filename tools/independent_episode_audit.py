@@ -2365,7 +2365,7 @@ def _auditor_two_leg(actual, *, program, instruction, reason):
             row["settlement_asset"] = "SOL"
             row["consideration_sol"] = _canonical(Decimal(abs(quote_qty)) / LAMPORTS)
         return [row]
-    if len(non_quote) == 2 and not quotes:
+    if program == RFQ_FILL and len(non_quote) == 2 and not quotes:
         downs = [(mint, qty) for mint, qty in non_quote.items() if qty < 0]
         ups = [(mint, qty) for mint, qty in non_quote.items() if qty > 0]
         if len(downs) != 1 or len(ups) != 1:
@@ -2403,7 +2403,14 @@ def auditor_classify_read(raw, address):
     tokens = {mint: qty for mint, qty in actual["tokens"].items() if qty and mint != WSOL}
     zero_token = not tokens
 
-    if METEORA_DLMM in programs:
+    outer_programs = set()
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    for instruction in message.get("instructions") or []:
+        if isinstance(instruction, dict):
+            program = _program(instruction, keys)
+            if program:
+                outer_programs.add(program)
+    if METEORA_DLMM in outer_programs:
         non_quote = [mint for mint in tokens if mint not in RAW_QUOTE_ASSETS]
         return [{
             "kind": "lp",
@@ -2458,15 +2465,27 @@ def auditor_classify_read(raw, address):
             if zero_token or not any(qty and mint not in RAW_QUOTE_ASSETS for mint, qty in tokens.items()):
                 return _auditor_read_effects(actual, program=DFLOW, instruction="414b3f4ceb5b5b88", reason="Independent DFlow order-setup non-trade")
             return None
+        if AUDITOR_DFLOW_SWAP not in discs:
+            return None
         return _accept_trade(_auditor_two_leg(actual, program=DFLOW, instruction="f8c69e91e17587c8", reason="Independent DFlow wallet-edge"))
-    for program, label in (
-        (OKX, "Independent OKX wallet-edge"),
-        (JUPITER, "Independent Jupiter wallet-edge"),
-        (RFQ_FILL, "Independent RFQ wallet-edge"),
-        (PUMP_SWAP, "Independent PumpSwap wallet-edge"),
+    AUDITOR_OKX_DISCS = {bytes.fromhex("aa2955b184501f35"), bytes.fromhex("93f17b64f484ae76"), bytes.fromhex("bbc9d433109bec3c")}
+    AUDITOR_JUP_DISCS = {bytes.fromhex("bb64facc31c4af14"), bytes.fromhex("e517cb977ae3ad2a"), bytes.fromhex("d19853937cfed8e9")}
+    AUDITOR_RFQ_DISCS = {bytes.fromhex("a860b7a35c0a28a0")}
+    AUDITOR_PSWAP_DISCS = {bytes.fromhex("33e685a4017f83ad")}
+    for program, allowed, label in (
+        (OKX, AUDITOR_OKX_DISCS, "Independent OKX wallet-edge"),
+        (JUPITER, AUDITOR_JUP_DISCS, "Independent Jupiter wallet-edge"),
+        (RFQ_FILL, AUDITOR_RFQ_DISCS, "Independent RFQ wallet-edge"),
+        (PUMP_SWAP, AUDITOR_PSWAP_DISCS, "Independent PumpSwap wallet-edge"),
     ):
         if program in programs:
-            return _accept_trade(_auditor_two_leg(actual, program=program, instruction="wallet_edge", reason=label))
+            discs = _auditor_outer_discs(raw, keys, program)
+            if not any(disc in allowed for disc in discs):
+                return None
+            classified = _accept_trade(_auditor_two_leg(actual, program=program, instruction="wallet_edge", reason=label))
+            if program == RFQ_FILL and classified and classified[0].get("kind") != "conversion":
+                return None
+            return classified
     if programs and not (programs - AUDITOR_PLAIN_PROGRAMS):
         if _auditor_plain_explained(raw, address, keys, actual) is None:
             return None
@@ -2507,9 +2526,10 @@ def reconstruct_record(record, address):
     classified = auditor_classify_read(raw, address)
     if not classified:
         return None
-    # A reviewed swap venue already failed layout/net. Do not override that
-    # fail-closed with a looser wallet-edge trade (DC-9 third-party credits).
-    if first_nb and classified[0].get("kind") in ("buy", "sell", "conversion"):
+    # Reconstruct stays a trade path. READ non-trades/transfers may fill a
+    # coverage hole; LP and wallet-edge trades must not override fail-closed
+    # layout/net (DC-9, unknown inner, DLMM-as-trade fixtures).
+    if classified[0].get("kind") not in ("non_trade", "transfer_in", "transfer_out"):
         return None
     first = dict(classified[0])
     first["signature"] = _auditor_record_signature(record, raw)
