@@ -2110,6 +2110,33 @@ def bind_run_spend(config, state):
     return run_spend
 
 
+def _spend_lock(config):
+    lock = (config or {}).get("_spend_lock")
+    if not isinstance(lock, asyncio.Lock):
+        lock = asyncio.Lock()
+        if config is not None:
+            config["_spend_lock"] = lock
+    return lock
+
+
+async def _reserve_provider_spend(config, state, *, provider, units, phase):
+    """Check remaining caps and book spend before the request starts.
+
+    Concurrent workers used to read leftover, then all fire, then all
+    account. The run cap is a hard ceiling only when reserve+account is
+    one critical section that happens before await transport.
+    """
+    async with _spend_lock(config):
+        bind_run_spend(config, state)
+        hard_stop_if_needed(
+            config, state["spend"], provider=provider, units=units,
+            phase=phase, phase_spend=state.get("phase_spend"),
+            run_spend=state.get("run_spend"),
+        )
+        _account_spend(state, provider=provider, units=units, phase=phase)
+        save_state(config["output_dir"], state)
+
+
 def _empty_state(config):
     run_spend = empty_spend()
     if config is not None:
@@ -3366,15 +3393,14 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
     )
     if cached is not None:
         return cached
-    hard_stop_if_needed(
-        config, state["spend"], provider="helius", units=units,
-        phase=phase, phase_spend=state.get("phase_spend"),
-    )
     if config.get("per_wallet_cap") is not None:
         used = int((state.get("phase3") or {}).get(address, {}).get("requests") or 0)
         used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
         if used >= int(config["per_wallet_cap"]):
             raise SourceError("WALLET_CAP", "Per-wallet request cap reached; continue with other wallets")
+    await _reserve_provider_spend(
+        config, state, provider="helius", units=units, phase=phase,
+    )
     reservation = None
     _put_receipt(config, store, grant, key, {
         "provider": "helius",
@@ -3426,7 +3452,6 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
             "sha256": digest,
             "reservation_id": reservation,
         })
-        _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
         _store_raw_page_cache(config, address, options, page_index, raw, method=HELIUS_METHOD)
         return {**result, "evidence_sha256": digest, "units": units}
@@ -3446,7 +3471,6 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
             "state": "failed",
             "reservation_id": reservation,
         })
-        _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
         raise
 
@@ -3482,15 +3506,14 @@ async def _dispatch_signatures(store, grant, config, state, transport, address, 
                 "external_requests": 0,
                 "replayed_from_receipt": True,
             }
-    hard_stop_if_needed(
-        config, state["spend"], provider="helius", units=units,
-        phase=phase, phase_spend=state.get("phase_spend"),
-    )
     if config.get("per_wallet_cap") is not None:
         used = int((state.get("phase3") or {}).get(address, {}).get("requests") or 0)
         used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
         if used >= int(config["per_wallet_cap"]):
             raise SourceError("WALLET_CAP", "Per-wallet request cap reached; continue with other wallets")
+    await _reserve_provider_spend(
+        config, state, provider="helius", units=units, phase=phase,
+    )
     reservation = None
     _put_receipt(config, store, grant, key, {
         "provider": "helius",
@@ -3540,7 +3563,6 @@ async def _dispatch_signatures(store, grant, config, state, transport, address, 
             "sha256": digest,
             "reservation_id": reservation,
         })
-        _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
         _store_raw_page_cache(config, address, options, page_index, raw, method=HELIUS_SIGNATURES_METHOD)
         return {**result, "evidence_sha256": digest, "units": units}
@@ -3561,17 +3583,62 @@ async def _dispatch_signatures(store, grant, config, state, transport, address, 
             "state": "failed",
             "reservation_id": reservation,
         })
-        _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
         raise
 
 
+DEFAULT_ECONOMIC_PROBE_DAYS = 8
+
+
+def economic_probe_day_budget(config):
+    raw = (config or {}).get("helius_economic_probe_days")
+    if raw in (None, ""):
+        return DEFAULT_ECONOMIC_PROBE_DAYS
+    try:
+        return max(0, int(raw))
+    except (TypeError, ValueError):
+        return DEFAULT_ECONOMIC_PROBE_DAYS
+
+
+def rank_over_days_for_probe(over_days):
+    """Highest raw tx count first. Ties break on the date string."""
+    if isinstance(over_days, dict):
+        ranked = []
+        for day, count in over_days.items():
+            try:
+                ranked.append((str(day), int(count)))
+            except (TypeError, ValueError):
+                ranked.append((str(day), 0))
+        return sorted(ranked, key=lambda item: (-item[1], item[0]))
+    return [(str(day), 0) for day in (over_days or [])]
+
+
+def _stamp_cheap_bot_flags(row, cheap):
+    if not cheap:
+        return row
+    drop = cheap.get("economic_drop") or {}
+    screen = cheap.get("screen") or {}
+    bot_unknown = bool(drop.get("bot_unknown") or screen.get("bot_unknown"))
+    row["bot_unknown"] = bot_unknown
+    row["cannot_fail_bot_rule"] = bool(screen.get("cannot_fail_bot_rule")) and not bot_unknown
+    if drop:
+        row["economic_drop"] = drop
+    return row
+
+
 async def _phase2_economic_probe_over_days(store, grant, config, state, transport, address, over_days):
-    """Targeted GTA for UTC days whose raw tx count is >15. Drop only when proven."""
+    """Targeted GTA for UTC days whose raw tx count is >15. Drop only when proven.
+
+    Probe days ranked by raw count (highest first). Stop at the first day
+    proven above the economic-trade cap. A budget (default 8) leaves leftover
+    over-days as bot_unknown instead of probing every busy day.
+    """
     if not over_days:
         return {"dropped": False}
-    bounds = config.get("bounds") or {}
-    for index, day in enumerate(sorted(over_days)):
+    ranked = rank_over_days_for_probe(over_days)
+    budget = economic_probe_day_budget(config)
+    probed = []
+    for day, _raw_count in ranked[:budget]:
         try:
             start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc)
         except ValueError:
@@ -3598,6 +3665,7 @@ async def _phase2_economic_probe_over_days(store, grant, config, state, transpor
             address=address,
         )
         maximum = int(rate.get("max") or 0)
+        probed.append(day)
         if maximum > MAX_ECONOMIC_TRADES_PER_UTC_DAY:
             return {
                 "dropped": True,
@@ -3605,17 +3673,29 @@ async def _phase2_economic_probe_over_days(store, grant, config, state, transpor
                 "max": maximum,
                 "max_on": rate.get("max_on") or day,
                 "day": day,
+                "probed_days": probed,
                 "can_only_drop_or_defer": True,
             }
-    return {"dropped": False, "probed_days": list(over_days)}
+    leftover = [day for day, _count in ranked if day not in probed]
+    if leftover:
+        return {
+            "dropped": False,
+            "bot_unknown": True,
+            "reason": "economic_probe_budget",
+            "probed_days": probed,
+            "unprobed_days": leftover,
+            "cannot_fail_bot_rule": False,
+        }
+    return {"dropped": False, "bot_unknown": False, "probed_days": probed}
 
 
 async def _phase2_cheap_signatures(store, grant, config, state, transport, address, *, helius_transport=None):
     """Full-history getSignaturesForAddress walk. Drop or defer only.
 
-    After the first page, a day with >15 economic trades drops immediately
-    even if history would hit the 10k signature cap. Raw tx count alone
-    never drops. Every-day ≤15 txs cannot fail the bot rule.
+    Finish the signatures walk first. Then probe over-days ranked by raw
+    tx count (highest first) and stop at the first day proven above 15
+    economic trades. Raw tx count alone never drops. Every-day ≤15 txs
+    cannot fail the bot rule. Unprobed leftover over-days are bot_unknown.
     """
     history_cap = first_defined_int(config.get("helius_signatures_history_cap"))
     if history_cap is None:
@@ -3626,7 +3706,6 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
     before = None
     requests = 0
     units = 0
-    economic_drop = None
     probe_transport = helius_transport or transport
     for page_index in range(max_pages):
         page = await _dispatch_signatures(
@@ -3637,27 +3716,6 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
         requests += 1
         units += int(page.get("units") or 0)
         rows.extend(records)
-        screen = screen_signatures(rows, history_cap=history_cap)
-        over_days = screen.get("over_days") or {}
-        if over_days and economic_drop is None:
-            try:
-                economic_drop = await _phase2_economic_probe_over_days(
-                    store, grant, config, state, probe_transport, address, over_days,
-                )
-            except SourceError as error:
-                if getattr(error, "state", None) == "CAP_EXCEEDED":
-                    raise
-                economic_drop = {"dropped": False, "probe_error": getattr(error, "state", None)}
-            if economic_drop.get("dropped"):
-                screen = {**screen, "dropped": True, "deferred": False}
-                return {
-                    "screen": screen,
-                    "rows": rows,
-                    "requests": requests,
-                    "units": units,
-                    "credit_note": signatures_credit_note(),
-                    "economic_drop": economic_drop,
-                }
         if len(records) < page_size:
             break
         before = records[-1].get("signature")
@@ -3666,6 +3724,21 @@ async def _phase2_cheap_signatures(store, grant, config, state, transport, addre
         if len(rows) >= history_cap:
             break
     screen = screen_signatures(rows, history_cap=history_cap)
+    over_days = screen.get("over_days") or {}
+    economic_drop = None
+    if over_days:
+        try:
+            economic_drop = await _phase2_economic_probe_over_days(
+                store, grant, config, state, probe_transport, address, over_days,
+            )
+        except SourceError as error:
+            if getattr(error, "state", None) == "CAP_EXCEEDED":
+                raise
+            economic_drop = {"dropped": False, "probe_error": getattr(error, "state", None)}
+        if economic_drop.get("dropped"):
+            screen = {**screen, "dropped": True, "deferred": False, "cannot_fail_bot_rule": False}
+        elif economic_drop.get("bot_unknown"):
+            screen = {**screen, "cannot_fail_bot_rule": False, "bot_unknown": True}
     return {
         "screen": screen,
         "rows": rows,
@@ -5249,6 +5322,29 @@ async def _phase2_one_wallet(
                 state.setdefault("phase2", {})[address] = row
                 save_state(config["output_dir"], state)
             return row
+        if (economic_drop.get("bot_unknown") or screen.get("bot_unknown")):
+            row = {
+                "address": address,
+                "dropped": False,
+                "deferred": False,
+                "bot_unknown": True,
+                "drop_reason": None,
+                "funnel_decision": "keep",
+                "funnel_reason": "bot_unknown",
+                "done": True,
+                "history_complete": bool(not screen.get("deferred")),
+                "signatures_screen": screen,
+                "economic_drop": economic_drop,
+                "requests": cheap["requests"],
+                "can_only_drop_or_defer": True,
+                "cannot_fail_bot_rule": False,
+                "helius_signatures": cheap.get("credit_note"),
+                **seed_fields_for_wallet(state, address),
+            }
+            async with state_lock:
+                state.setdefault("phase2", {})[address] = row
+                save_state(config["output_dir"], state)
+            return row
     if triage:
         samples = []
         sample_records = []
@@ -5376,7 +5472,7 @@ async def _phase2_one_wallet(
             row["first_sig_unix"] = cheap["screen"].get("first_sig_unix")
             row["requests"] = int(row.get("requests") or 0) + int(cheap.get("requests") or 0)
             row["can_only_drop_or_defer"] = True
-            row["cannot_fail_bot_rule"] = bool(cheap["screen"].get("cannot_fail_bot_rule"))
+            _stamp_cheap_bot_flags(row, cheap)
         async with state_lock:
             state.setdefault("phase2", {})[address] = row
             save_state(config["output_dir"], state)
@@ -5522,7 +5618,7 @@ async def _phase2_one_wallet(
         row["first_sig_unix"] = cheap["screen"].get("first_sig_unix")
         row["can_only_drop_or_defer"] = True
         row["helius_signatures"] = cheap.get("credit_note")
-        row["cannot_fail_bot_rule"] = bool(cheap["screen"].get("cannot_fail_bot_rule"))
+        _stamp_cheap_bot_flags(row, cheap)
     row = _stamp_readable_first(row, sample_records, address, config)
     async with state_lock:
         state.setdefault("phase2", {})[address] = row
@@ -6561,6 +6657,11 @@ def validate_config(raw):
             if raw.get("helius_signatures_history_cap") not in (None, "")
             else HELIUS_SIGNATURES_HISTORY_CAP
         ),
+        "helius_economic_probe_days": (
+            int(raw["helius_economic_probe_days"])
+            if raw.get("helius_economic_probe_days") not in (None, "")
+            else DEFAULT_ECONOMIC_PROBE_DAYS
+        ),
         "nansen_timeframes": (
             parse_timeframes(raw.get("nansen_timeframes") or raw.get("funnel_windows"))
             or (
@@ -7188,6 +7289,17 @@ def build_arg_parser():
         type=int,
         default=HELIUS_SIGNATURES_HISTORY_CAP,
         help=f"Defer wallets whose raw history exceeds this many signatures (default {HELIUS_SIGNATURES_HISTORY_CAP}).",
+    )
+    parser.add_argument(
+        "--helius-economic-probe-days",
+        dest="helius_economic_probe_days",
+        type=int,
+        default=DEFAULT_ECONOMIC_PROBE_DAYS,
+        help=(
+            "After the signatures walk, probe at most this many over-15 raw "
+            f"UTC days (highest raw count first). Default {DEFAULT_ECONOMIC_PROBE_DAYS}. "
+            "Leftover over-days mark the wallet bot_unknown."
+        ),
     )
     parser.add_argument(
         "--readable-share-threshold",

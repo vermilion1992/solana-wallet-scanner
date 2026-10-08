@@ -37,15 +37,19 @@ from scanner.mass_search.live_e2e import (
     _phase1_nansen,
     _phase1_nansen_token_pnl,
     _rid,
+    DEFAULT_ECONOMIC_PROBE_DAYS,
+    _dispatch_helius,
     assess_history_completeness,
     bind_run_spend,
     empty_phase_spend,
     empty_spend,
+    gta_options,
     load_grant,
     nansen_tgm_pnl_leaderboard_body,
     nansen_vendor_drop_decision,
     parse_run_caps,
     phase2_prescreen,
+    rank_over_days_for_probe,
     validate_config,
 )
 from scanner.mass_search.live_e2e_ledger import (
@@ -1482,3 +1486,270 @@ def test_d15_1_live_e2e_has_no_undefined_names():
                 if child.id not in local and child.id not in module_defined:
                     issues.append(f"{node.name}: undefined name {child.id!r}")
     assert not issues, "undefined names in live_e2e.py:\n" + "\n".join(issues[:40])
+
+
+# --- D15-3 ----------------------------------------------------------------
+
+GGG = "GgG65z3M111111111111111111111111111111112"
+D5Z = "D5ZhwMF611111111111111111111111111111112"
+
+
+def _d15_sig_rows(prefix, stamp, n):
+    return [{"signature": f"{prefix}-{i}", "blockTime": stamp + i} for i in range(n)]
+
+
+def _gta_day(options):
+    filters = (options or {}).get("filters") or {}
+    block = filters.get("blockTime") if isinstance(filters.get("blockTime"), dict) else {}
+    start = block.get("gte")
+    if start in (None, ""):
+        start = (options or {}).get("start_unix") or 0
+    return datetime.fromtimestamp(int(start), tz=timezone.utc).date().isoformat()
+
+
+def test_d15_3_rank_over_days_highest_raw_count_first():
+    ranked = rank_over_days_for_probe({"2026-09-20": 16, "2025-09-14": 120, "2024-11-08": 44})
+    assert [day for day, _count in ranked] == ["2025-09-14", "2024-11-08", "2026-09-20"]
+    assert DEFAULT_ECONOMIC_PROBE_DAYS == 8
+
+
+def test_d15_3_later_page_bot_day_is_probed_and_dropped(tmp_path, monkeypatch):
+    """GgG65z3M/D5ZhwMF6 shape: newest page is an over-day, bot day is later."""
+    import scanner.mass_search.live_e2e as live
+    monkeypatch.setattr(live, "HELIUS_SIGNATURES_PAGE_SIZE", 16)
+    newest = datetime(2026, 9, 20, tzinfo=timezone.utc)
+    bot_day = datetime(2025, 9, 14, tzinfo=timezone.utc)
+    newest_ts = int(newest.timestamp())
+    bot_ts = int(bot_day.timestamp())
+    gta_days = []
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        if page_index == 0:
+            rows = _d15_sig_rows("new", newest_ts, 16)
+        elif page_index == 1:
+            rows = _d15_sig_rows("bot", bot_ts, 16)
+        else:
+            rows = _d15_sig_rows("bot2", bot_ts + 16, 8)
+        return {"records": rows, "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        day = _gta_day(options)
+        start = int(((options or {}).get("filters") or {}).get("blockTime", {}).get("gte") or 0)
+        gta_days.append(day)
+        n = 16 if day == "2025-09-14" else 4
+        recs = [_d15_econ_swap(address, f"{address[:4]}-{day}-{i}", start + i) for i in range(n)]
+        return {"records": recs, "units": 10, "pagination_token": None}
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=D14_WALLET,
+        helius_signatures_prescreen=True,
+        helius_economic_probe_days=8,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    row = result["wallets"][0]
+    assert row["dropped"] is True
+    assert row["drop_reason"] == GT_ECONOMIC_TRADES_RULE
+    assert (row.get("economic_drop") or {}).get("day") == "2025-09-14"
+    assert gta_days[0] == "2025-09-14"
+    assert "2025-09-14" in gta_days
+    assert row.get("cannot_fail_bot_rule") is False
+
+
+def test_d15_3_probe_budget_marks_bot_unknown_and_ranks_below_clean(tmp_path, monkeypatch):
+    import scanner.mass_search.live_e2e as live
+    days = [datetime(2026, 1, 1 + i, tzinfo=timezone.utc) for i in range(9)]
+    probed = []
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        if address != D14_WALLET:
+            stamp = int(days[0].timestamp())
+            return {"records": _d15_sig_rows("clean", stamp, 5), "units": 1, "pagination_token": None}
+        rows = []
+        for day in days:
+            stamp = int(day.timestamp())
+            rows.extend(_d15_sig_rows(day.date().isoformat(), stamp, 16))
+        return {"records": rows, "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        day = _gta_day(options)
+        start = int(((options or {}).get("filters") or {}).get("blockTime", {}).get("gte") or 0)
+        if page_index >= 900000:
+            probed.append(day)
+        recs = [_d15_econ_swap(address, f"{address[:4]}-{day}-{i}", start + i) for i in range(4)]
+        return {"records": recs, "units": 10, "pagination_token": None}
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=f"{D14_WALLET},{JXT}",
+        helius_signatures_prescreen=True,
+        helius_economic_probe_days=8,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET, JXT]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    by_addr = {row["address"]: row for row in result["wallets"]}
+    unknown = by_addr[D14_WALLET]
+    clean = by_addr[JXT]
+    assert unknown["dropped"] is False
+    assert unknown.get("bot_unknown") is True
+    assert unknown.get("cannot_fail_bot_rule") is False
+    assert len(probed) == 8
+    assert (unknown.get("economic_drop") or {}).get("unprobed_days")
+    # JXT has no over-days on the same fake_sigs? Wait, fake_sigs ignores address
+    # and gives both wallets 9 over-days. Use a clean second wallet via address branch.
+    del probed[:]  # ranking uses the stamped flags; rebuild a clean neighbor.
+    ranked = rank_by_nansen_pnl([
+        {"address": "clean", "cannot_fail_bot_rule": True, "nansen_realized_pnl_usd": "1"},
+        {"address": D14_WALLET, "cannot_fail_bot_rule": False, "bot_unknown": True, "nansen_realized_pnl_usd": "999"},
+        {"address": "probed-ok", "cannot_fail_bot_rule": False, "nansen_realized_pnl_usd": "50"},
+    ])
+    assert [row["address"] for row in ranked] == ["clean", "probed-ok", D14_WALLET]
+
+
+def test_d15_3_neighbor_budget_covers_all_over_days_not_unknown(tmp_path, monkeypatch):
+    import scanner.mass_search.live_e2e as live
+    day = datetime(2026, 2, 1, tzinfo=timezone.utc)
+    stamp = int(day.timestamp())
+
+    async def fake_sigs(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+        return {"records": _d15_sig_rows("one", stamp, 16), "units": 1, "pagination_token": None}
+
+    async def fake_gta(store, grant, config, state, transport, address, options, *, phase, page_index):
+        recs = [_d15_econ_swap(address, f"ok-{i}", stamp + i) for i in range(4)]
+        return {"records": recs, "units": 10, "pagination_token": None}
+
+    monkeypatch.setattr(live, "_dispatch_signatures", fake_sigs)
+    monkeypatch.setattr(live, "_dispatch_helius", fake_gta)
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=D14_WALLET,
+        helius_signatures_prescreen=True,
+        helius_economic_probe_days=8,
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    state["wallets"] = [D14_WALLET]
+    result = asyncio.run(phase2_prescreen(store, grant, config, state, RecorderTransport()))
+    store.close()
+    row = result["wallets"][0]
+    assert row["dropped"] is False
+    assert row.get("bot_unknown") is not True
+
+
+# --- D15-2 ----------------------------------------------------------------
+
+def test_d15_2_run_cap_is_hard_ceiling_under_concurrency(tmp_path):
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=JXT,
+        run_caps="helius_requests=8,helius_units=25",
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+    started = []
+    released = asyncio.Event()
+
+    async def slow_transport(address, *, options, page_index=0):
+        started.append(page_index)
+        if len(started) < 4:
+            await asyncio.sleep(0.05)
+        raw = b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'
+        return {
+            "records": [],
+            "pagination_token": None,
+            "http_status": 200,
+            "raw_bytes": raw,
+            "units": 0,
+        }
+
+    options = gta_options(
+        details="full",
+        limit=100,
+        start_unix=1_700_000_000,
+        end_unix=1_700_086_400,
+    )
+
+    async def one(index):
+        return await _dispatch_helius(
+            store, grant, config, state, slow_transport, f"{JXT[:-1]}{index}",
+            options, phase=2, page_index=index,
+        )
+
+    async def run():
+        return await asyncio.gather(*(one(i) for i in range(4)), return_exceptions=True)
+
+    outcomes = asyncio.run(run())
+    store.close()
+    units = int(state["run_spend"]["helius_units"])
+    requests = int(state["run_spend"]["helius_requests"])
+    assert units <= 25
+    assert requests <= 2
+    assert units == 20
+    exceeded = [item for item in outcomes if isinstance(item, SourceError) and item.state == "CAP_EXCEEDED"]
+    assert exceeded
+    ok = [item for item in outcomes if isinstance(item, dict)]
+    assert len(ok) == 2
+
+
+def test_d15_2_neighbor_serial_requests_still_stop_at_the_cap(tmp_path):
+    config = _dry_config(
+        tmp_path,
+        seed_source="birdeye_top",
+        phases="2",
+        discovery=False,
+        wallets=JXT,
+        run_caps="helius_requests=2,helius_units=20",
+    )
+    grant = load_grant(DRAFT)
+    store, _ = open_grant_store(config["authorization_id"])
+    state = _empty_state(config)
+    bind_run_spend(config, state)
+
+    async def transport(address, *, options, page_index=0):
+        raw = b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'
+        return {"records": [], "pagination_token": None, "http_status": 200, "raw_bytes": raw}
+
+    options = gta_options(details="full", limit=100, start_unix=1_700_000_000, end_unix=1_700_086_400)
+
+    async def run():
+        await _dispatch_helius(store, grant, config, state, transport, JXT, options, phase=2, page_index=0)
+        await _dispatch_helius(store, grant, config, state, transport, JXT, options, phase=2, page_index=1)
+        with pytest.raises(SourceError) as raised:
+            await _dispatch_helius(store, grant, config, state, transport, JXT, options, phase=2, page_index=2)
+        assert raised.value.state == "CAP_EXCEEDED"
+
+    asyncio.run(run())
+    store.close()
+    assert state["run_spend"]["helius_units"] == 20
+    assert state["run_spend"]["helius_requests"] == 2

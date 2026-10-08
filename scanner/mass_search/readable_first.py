@@ -575,6 +575,7 @@ def rank_by_nansen_pnl(rows):
         pnl = _pnl(row)
         return (
             0 if (row or {}).get("cannot_fail_bot_rule") else 1,
+            1 if (row or {}).get("bot_unknown") else 0,
             -_pass_probability(row),
             0 if pnl is not None else 1,
             Decimal("0") if pnl is None else -pnl,
