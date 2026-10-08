@@ -490,6 +490,7 @@
   "qualification_level_counts": {
     "insufficient_evidence": 3,
     "conditional_captured_lot_result": 7,
+    "early_watch": 0,
     "provisional_research_lead": 0,
     "stronger_research_shortlist": 0
   },
