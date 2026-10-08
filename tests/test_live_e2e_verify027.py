@@ -39,7 +39,7 @@ def tb(idx, mint, amt, owner=A):
     return {"accountIndex": idx, "mint": mint, "owner": owner, "uiTokenAmount": {"amount": str(amt)}}
 
 
-def rec(sig, bt, pre_tok, post_tok, native=0, fee=5000, err=None, n_acc=8, pre_lamports=None, post_lamports=None):
+def rec(sig, bt, pre_tok, post_tok, native=0, fee=5000, err=None, n_acc=8, pre_lamports=None, post_lamports=None, swap=True):
     pre = [10_000_000_000] + [2_039_280] * (n_acc - 1)
     post = list(pre)
     post[0] += native - fee
@@ -49,27 +49,35 @@ def rec(sig, bt, pre_tok, post_tok, native=0, fee=5000, err=None, n_acc=8, pre_l
     if post_lamports:
         for i, value in post_lamports.items():
             post[i] = value
+    meta = {
+        "err": err,
+        "fee": fee,
+        "preBalances": pre,
+        "postBalances": post,
+        "preTokenBalances": pre_tok,
+        "postTokenBalances": post_tok,
+        "loadedAddresses": {"writable": [], "readonly": []},
+    }
+    if swap:
+        meta["logMessages"] = ["Program log: Instruction: Swap"]
     return {
         "blockTime": bt,
         "transaction": {
             "signatures": [sig],
-            "message": {"accountKeys": [A] + [f"Acc{i}" for i in range(1, n_acc)]},
+            "message": {
+                "header": {"numRequiredSignatures": 1},
+                "accountKeys": [A] + [f"Acc{i}" for i in range(1, n_acc)],
+            },
         },
-        "meta": {
-            "err": err,
-            "fee": fee,
-            "preBalances": pre,
-            "postBalances": post,
-            "preTokenBalances": pre_tok,
-            "postTokenBalances": post_tok,
-            "loadedAddresses": {"writable": [], "readonly": []},
-        },
+        "meta": meta,
     }
 
 
 def test_rent_aware_floor_is_1e5():
     assert RAW_SOL_FLOOR_LAMPORTS == 100_000
-    assert auditor.INDEPENDENT_SOL_FLOOR_LAMPORTS == 100_000
+    assert hasattr(auditor, "SWAP_LOG_RE")
+    assert hasattr(auditor, "REVIEWED_SWAP_PROGRAM_IDS")
+    assert "INDEPENDENT_SOL_FLOOR_LAMPORTS" not in auditor.__dict__
 
 
 def test_d1_micro_sol_swaps_count_and_rent_only_does_not():
@@ -77,11 +85,11 @@ def test_d1_micro_sol_swaps_count_and_rent_only_does_not():
     micro_sell = rec("ms", T0 + 20, [tb(1, X, 1000)], [tb(1, X, 0)], native=2_000_000)
     airdrop_two = rec(
         "ad2", T0 + 30, [], [tb(1, X, 1000), tb(2, Y, 5)],
-        native=-4_078_560, pre_lamports={1: 0, 2: 0},
+        native=-4_078_560, pre_lamports={1: 0, 2: 0}, swap=False,
     )
     close_two = rec(
         "to2", T0 + 40, [tb(1, X, 1000), tb(2, Y, 5)], [],
-        native=4_078_560, post_lamports={1: 0, 2: 0},
+        native=4_078_560, post_lamports={1: 0, 2: 0}, swap=False,
     )
     app = raw_economic_trade_rate([micro_buy, micro_sell, airdrop_two, close_two], A)
     aud, inc = auditor.raw_economic_trades_by_utc_day([micro_buy, micro_sell, airdrop_two, close_two], A)
@@ -123,8 +131,11 @@ def test_d2_auditor_count_is_not_a_clone():
     import difflib
     ratio = difflib.SequenceMatcher(None, app_src, aud_src).ratio()
     assert ratio < 0.85
-    assert "_independent_legs" in inspect.getsource(auditor)
-    assert "INDEPENDENT_SOL_FLOOR_LAMPORTS" in inspect.getsource(auditor)
+    aud_src = inspect.getsource(auditor)
+    assert "SWAP_LOG_RE" in aud_src
+    assert "REVIEWED_SWAP_PROGRAM_IDS" in aud_src
+    assert "INDEPENDENT_SOL_FLOOR_LAMPORTS" not in aud_src
+    assert "_has_swap_signal" in aud_src
 
 
 def test_d2_disagreement_gate_names_both_numbers():

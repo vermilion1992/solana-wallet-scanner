@@ -108,6 +108,7 @@ from scanner.mass_search.qualification_gates import (
     BOT_RULE_DEFINITION,
     coverage_shares,
     combined_economic_trade_rate,
+    day_for_stored_max,
     economic_trade_rate,
     first_defined_int,
     qualifying_profit,
@@ -489,6 +490,7 @@ def known_trade_rate_from_state(state, address):
             source.get("economic_trades_by_utc_day")
             or nested.get("economic_trades_by_utc_day")
             or nested.get("economic_trades_by_day")
+            or source.get("economic_trades_by_day")
             or {}
         )
         return {
@@ -499,6 +501,7 @@ def known_trade_rate_from_state(state, address):
                 or nested.get("max_economic_trades_on")
                 or source.get("max_trades_per_day_on")
                 or nested.get("max_trades_per_day_on")
+                or day_for_stored_max(by_day, stored)
             ),
         }
     return None

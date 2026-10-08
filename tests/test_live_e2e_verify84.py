@@ -68,13 +68,17 @@ def _token_usdt_swap(wallet, sig, block_time, token=TOKEN_A):
     return {
         "transaction": {
             "signatures": [sig],
-            "message": {"accountKeys": [wallet, "11111111111111111111111111111111"]},
+            "message": {
+                "header": {"numRequiredSignatures": 1},
+                "accountKeys": [wallet, "11111111111111111111111111111111"],
+            },
         },
         "meta": {
             "err": None,
             "fee": 5000,
             "preBalances": [1_000_000_000, 1],
             "postBalances": [999_995_000, 1],
+            "logMessages": ["Program log: Instruction: Swap"],
             "preTokenBalances": [
                 {"owner": wallet, "mint": token, "uiTokenAmount": {"amount": "100"}},
                 {"owner": wallet, "mint": USDT, "uiTokenAmount": {"amount": "0"}},
@@ -232,6 +236,16 @@ def test_d4_oversold_flatten_records_losing_episode():
         assert loss_visible(case3)
         assert loss_visible(case4)
         assert loss_visible(case8)
+        same_tx = [
+            row("buy", "rt", 4, 100, 1, 100),
+            row("sell", "rt", 4, 100, 0.8, 0),
+        ]
+        assert loss_visible(same_tx)
+        same_tx_sell_first = [
+            row("sell", "rt", 5, 100, 0.8, 0),
+            row("buy", "rt", 5, 100, 1, 100),
+        ]
+        assert loss_visible(same_tx_sell_first)
     finally:
         auditor.REPORT_START, auditor.REPORT_END = original
 

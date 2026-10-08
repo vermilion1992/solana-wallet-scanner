@@ -12,6 +12,7 @@ import gzip
 import hashlib
 import json
 import math
+import re
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation, localcontext
@@ -26,7 +27,6 @@ USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 QUOTE_MINTS = frozenset({USDC, USDT})
 RAW_QUOTE_ASSETS = frozenset({WSOL, USDC, USDT, "SOL"})
-INDEPENDENT_SOL_FLOOR_LAMPORTS = 100_000
 QUOTE_ASSET = {USDC: "USDC", USDT: "USDT"}
 PUMP = "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 PUMP_SWAP = "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
@@ -380,6 +380,22 @@ REVIEWED_INNER_PROGRAMS = frozenset({
     DGMG, PHOTON, DFLOW_DST, PUMP_FEE, RAYDIUM_CLMM, RAYDIUM_CPMM, RAYDIUM_AMM,
     WHIRLPOOL, GMGN, METEORA_DLMM, *WELL_KNOWN_INNER_AMMS,
 })
+REVIEWED_SWAP_PROGRAM_IDS = frozenset({
+    PUMP, PUMP_SWAP, JUPITER, METEORA_DAMM_V2, RFQ_FILL, OKX, DFLOW, FLASHX,
+    DGMG, PHOTON, DFLOW_DST, RAYDIUM_CLMM, RAYDIUM_CPMM, RAYDIUM_AMM,
+    WHIRLPOOL, GMGN, METEORA_DLMM, *WELL_KNOWN_INNER_AMMS,
+})
+# v3 / probe counter: swap-type log or instruction name. Unknown venues that
+# log Swap/Buy/Sell/Route still count when the wallet signed and a wallet-owned
+# token balance changed.
+SWAP_LOG_RE = re.compile(
+    r"Instruction: (?:\w*Swap\w*|Buy\w*|Sell\w*|\w*Route\w*|Fill\w*|\w*Exact\w*In\w*|\w*Exact\w*Out\w*)|SwapEvent",
+    re.I,
+)
+SWAP_IX_NAME_RE = re.compile(
+    r"^(?:\w*Swap\w*|Buy\w*|Sell\w*|\w*Route\w*|Fill\w*|\w*Exact\w*In\w*|\w*Exact\w*Out\w*)$",
+    re.I,
+)
 
 
 def _inner_venues(raw, keys, route, address, owned_accounts):
@@ -890,9 +906,8 @@ def _fifo(trades):
         rows = sorted(rows, key=lambda row: (
             row.get("slot") if isinstance(row.get("slot"), int) else 0,
             row.get("transaction_index") if isinstance(row.get("transaction_index"), int) else 0,
-            row.get("timestamp") or 0,
+            row.get("timestamp") if row.get("timestamp") is not None else 0,
             row.get("signature") or "",
-            0 if row.get("kind") == "sell" else 1,
         ))
         first_buy = next((row for row in rows if row["kind"] == "buy"), None)
         opening = Decimal(str(first_buy["observed_pre_quantity_raw"])) if first_buy else Decimal("0")
@@ -905,131 +920,148 @@ def _fifo(trades):
         episode_costs = Decimal("0")
         episode_asset = None
         episode_consumed_opening = False
-        for row in rows:
-            qty = Decimal(row["quantity_raw"])
-            asset = row.get("settlement_asset") or "SOL"
-            if asset == "USDC" and row.get("consideration_usdc") not in (None, ""):
-                consideration = Decimal(row["consideration_usdc"])
-                # SOL fees stay on the event (fees_and_tips_sol). Mixing them
-                # into a USDC episode net would change the quote unit.
-                fees = Decimal("0")
-            elif asset == "USDT" and row.get("consideration_usdt") not in (None, ""):
-                consideration = Decimal(row["consideration_usdt"])
-                fees = Decimal("0")
-            else:
-                consideration = Decimal(row["consideration_sol"])
-                fees = Decimal(row.get("fees_and_tips_sol") or 0)
-            if episode_asset is None:
-                episode_asset = asset
-            elif asset != episode_asset:
-                # Mixed quote assets on one mint cannot form a clean independent episode.
-                unresolved += 1
-                continue
-            if row["kind"] == "buy":
-                if opening > 0 and not lots and inventory == 0:
-                    pass
-                lots.append({"qty": qty, "cost": consideration, "fees": fees})
-                inventory += qty
-                opened = True
-                continue
-            remaining = qty
-            if opening > 0:
-                take = opening if opening <= remaining else remaining
-                if take > 0:
-                    episode_consumed_opening = True
-                opening -= take
-                remaining -= take
-                unresolved += 1
-                if remaining <= 0:
+        idx = 0
+        while idx < len(rows):
+            sig = rows[idx].get("signature")
+            end = idx + 1
+            if sig:
+                while end < len(rows) and rows[end].get("signature") == sig:
+                    end += 1
+            group = rows[idx:end]
+            idx = end
+            kinds = {row["kind"] for row in group}
+            if kinds == {"buy", "sell"}:
+                buys = [row for row in group if row["kind"] == "buy"]
+                sells = [row for row in group if row["kind"] == "sell"]
+                if not opened and inventory == 0 and opening == 0:
+                    group = buys + sells
+                else:
+                    group = sells + buys
+            for row in group:
+                qty = Decimal(row["quantity_raw"])
+                asset = row.get("settlement_asset") or "SOL"
+                if asset == "USDC" and row.get("consideration_usdc") not in (None, ""):
+                    consideration = Decimal(row["consideration_usdc"])
+                    # SOL fees stay on the event (fees_and_tips_sol). Mixing them
+                    # into a USDC episode net would change the quote unit.
+                    fees = Decimal("0")
+                elif asset == "USDT" and row.get("consideration_usdt") not in (None, ""):
+                    consideration = Decimal(row["consideration_usdt"])
+                    fees = Decimal("0")
+                else:
+                    consideration = Decimal(row["consideration_sol"])
+                    fees = Decimal(row.get("fees_and_tips_sol") or 0)
+                if episode_asset is None:
+                    episode_asset = asset
+                elif asset != episode_asset:
+                    # Mixed quote assets on one mint cannot form a clean independent episode.
+                    unresolved += 1
                     continue
-            basis = Decimal("0")
-            buy_fees = Decimal("0")
-            matched = Decimal("0")
-            while remaining > 0 and lots:
-                lot = lots[0]
-                take = lot["qty"] if lot["qty"] <= remaining else remaining
-                share = lot["cost"] * take / lot["qty"]
-                fee_share = lot["fees"] * take / lot["qty"]
-                basis += share
-                buy_fees += fee_share
-                lot["cost"] -= share
-                lot["fees"] -= fee_share
-                lot["qty"] -= take
-                remaining -= take
-                matched += take
-                inventory -= take
-                if lot["qty"] == 0:
-                    lots.pop(0)
-            if remaining > 0:
-                unresolved += 1
-            if matched > 0:
-                proceeds = consideration * matched / qty
-                sale_fees = fees * matched / qty
-                pnl = proceeds - basis - buy_fees - sale_fees
-                known_sales += 1
-                episode_pnl += pnl
-                episode_basis += basis
-                episode_proceeds += proceeds
-                episode_costs += buy_fees + sale_fees
-            observed_post = row.get("observed_post_quantity_raw")
-            flattened = False
-            if observed_post not in (None, ""):
-                try:
-                    flattened = Decimal(str(observed_post)) == 0
-                except (InvalidOperation, ValueError, TypeError):
-                    flattened = False
-            # Reconstructed buy qty can miss dust transfers. An observed
-            # flatten (wallet token balance back to 0) with unmatched sell
-            # qty is the app's oversell reset: abandon the lot, do not emit,
-            # and do not glue the next flat on (AX5FaYB3 4k3Dyjzv 58590 raw
-            # dust used to merge 319/321 into a mint-wide 583/640).
-            if opened and flattened and remaining > 0 and opening == 0:
-                if episode_pnl < 0:
-                    omitted_losing.append({
-                        "mint": mint,
-                        "net_profit_sol": _canonical(episode_pnl),
-                        "reason": "oversold_flatten_reset",
-                    })
-                opened = False
-                episode_consumed_opening = False
-                episode_pnl = Decimal("0")
-                episode_basis = Decimal("0")
-                episode_proceeds = Decimal("0")
-                episode_costs = Decimal("0")
-                episode_asset = None
-                lots = []
-                inventory = Decimal("0")
-                continue
-            if opened and inventory == 0 and remaining == 0 and opening == 0:
-                timestamp = row.get("timestamp")
-                in_window = timestamp is not None and REPORT_START <= timestamp < REPORT_END
-                # Opening inventory is unknown cost. A flatten that consumed any
-                # of it is not a clean completed episode (same rule as the app).
-                if in_window and not episode_consumed_opening:
-                    episodes.append({
-                        "mint": mint,
-                        "close_signature": row["signature"],
-                        "venue": row.get("program"),
-                        "instruction": row.get("instruction"),
-                        "settlement_asset": episode_asset or row.get("settlement_asset") or "SOL",
-                        "basis_sol": _canonical(episode_basis),
-                        "proceeds_sol": _canonical(episode_proceeds),
-                        "verified_costs_sol": _canonical(episode_costs),
-                        "net_profit_sol": _canonical(episode_pnl),
-                    })
-                elif episode_pnl < 0:
-                    omitted_losing.append({
-                        "mint": mint,
-                        "net_profit_sol": _canonical(episode_pnl),
-                        "reason": "opening_inventory" if episode_consumed_opening else "not_in_window_or_unresolved",
-                    })
-                opened = False
-                episode_consumed_opening = False
-                episode_pnl = Decimal("0")
-                episode_basis = Decimal("0")
-                episode_proceeds = Decimal("0")
-                episode_costs = Decimal("0")
-                episode_asset = None
+                if row["kind"] == "buy":
+                    if opening > 0 and not lots and inventory == 0:
+                        pass
+                    lots.append({"qty": qty, "cost": consideration, "fees": fees})
+                    inventory += qty
+                    opened = True
+                    continue
+                remaining = qty
+                if opening > 0:
+                    take = opening if opening <= remaining else remaining
+                    if take > 0:
+                        episode_consumed_opening = True
+                    opening -= take
+                    remaining -= take
+                    unresolved += 1
+                    if remaining <= 0:
+                        continue
+                basis = Decimal("0")
+                buy_fees = Decimal("0")
+                matched = Decimal("0")
+                while remaining > 0 and lots:
+                    lot = lots[0]
+                    take = lot["qty"] if lot["qty"] <= remaining else remaining
+                    share = lot["cost"] * take / lot["qty"]
+                    fee_share = lot["fees"] * take / lot["qty"]
+                    basis += share
+                    buy_fees += fee_share
+                    lot["cost"] -= share
+                    lot["fees"] -= fee_share
+                    lot["qty"] -= take
+                    remaining -= take
+                    matched += take
+                    inventory -= take
+                    if lot["qty"] == 0:
+                        lots.pop(0)
+                if remaining > 0:
+                    unresolved += 1
+                if matched > 0:
+                    proceeds = consideration * matched / qty
+                    sale_fees = fees * matched / qty
+                    pnl = proceeds - basis - buy_fees - sale_fees
+                    known_sales += 1
+                    episode_pnl += pnl
+                    episode_basis += basis
+                    episode_proceeds += proceeds
+                    episode_costs += buy_fees + sale_fees
+                observed_post = row.get("observed_post_quantity_raw")
+                flattened = False
+                if observed_post not in (None, ""):
+                    try:
+                        flattened = Decimal(str(observed_post)) == 0
+                    except (InvalidOperation, ValueError, TypeError):
+                        flattened = False
+                # Reconstructed buy qty can miss dust transfers. An observed
+                # flatten (wallet token balance back to 0) with unmatched sell
+                # qty is the app's oversell reset: abandon the lot, do not emit,
+                # and do not glue the next flat on (AX5FaYB3 4k3Dyjzv 58590 raw
+                # dust used to merge 319/321 into a mint-wide 583/640).
+                if opened and flattened and remaining > 0 and opening == 0:
+                    if episode_pnl < 0:
+                        omitted_losing.append({
+                            "mint": mint,
+                            "net_profit_sol": _canonical(episode_pnl),
+                            "reason": "oversold_flatten_reset",
+                        })
+                    opened = False
+                    episode_consumed_opening = False
+                    episode_pnl = Decimal("0")
+                    episode_basis = Decimal("0")
+                    episode_proceeds = Decimal("0")
+                    episode_costs = Decimal("0")
+                    episode_asset = None
+                    lots = []
+                    inventory = Decimal("0")
+                    continue
+                if opened and inventory == 0 and remaining == 0 and opening == 0:
+                    timestamp = row.get("timestamp")
+                    in_window = timestamp is not None and REPORT_START <= timestamp < REPORT_END
+                    # Opening inventory is unknown cost. A flatten that consumed any
+                    # of it is not a clean completed episode (same rule as the app).
+                    if in_window and not episode_consumed_opening:
+                        episodes.append({
+                            "mint": mint,
+                            "close_signature": row["signature"],
+                            "venue": row.get("program"),
+                            "instruction": row.get("instruction"),
+                            "settlement_asset": episode_asset or row.get("settlement_asset") or "SOL",
+                            "basis_sol": _canonical(episode_basis),
+                            "proceeds_sol": _canonical(episode_proceeds),
+                            "verified_costs_sol": _canonical(episode_costs),
+                            "net_profit_sol": _canonical(episode_pnl),
+                        })
+                    elif episode_pnl < 0:
+                        omitted_losing.append({
+                            "mint": mint,
+                            "net_profit_sol": _canonical(episode_pnl),
+                            "reason": "opening_inventory" if episode_consumed_opening else "not_in_window_or_unresolved",
+                        })
+                    opened = False
+                    episode_consumed_opening = False
+                    episode_pnl = Decimal("0")
+                    episode_basis = Decimal("0")
+                    episode_proceeds = Decimal("0")
+                    episode_costs = Decimal("0")
+                    episode_asset = None
         if first_buy and Decimal(str(first_buy["observed_pre_quantity_raw"])) > 0:
             # Opening inventory consumed before captured buys; leftover opening is not a clean episode.
             pass
@@ -1066,8 +1098,20 @@ def independent_economic_trade_keys(events):
     return keys
 
 
+def _first_present(*values):
+    for value in values:
+        if value is None or isinstance(value, bool) or value == "":
+            continue
+        return value
+    return None
+
+
 def _event_unix(event):
-    stamp = (event or {}).get("block_time") or (event or {}).get("blockTime") or (event or {}).get("timestamp")
+    stamp = _first_present(
+        (event or {}).get("block_time"),
+        (event or {}).get("blockTime"),
+        (event or {}).get("timestamp"),
+    )
     if isinstance(stamp, bool):
         return None
     if type(stamp) is int:
@@ -1138,96 +1182,117 @@ def _owned_index(row, pubkeys, wallet):
     return None
 
 
-def _independent_legs(record, wallet):
-    """Per-signature pre/post map. Own rent handling. Not a port of the app."""
-    body = _unwrap_envelope(record)
-    pubkeys, meta = _pubkeys_in_order(body)
-    if meta.get("err") is not None:
-        return {}, 0
-    pre_map = {}
-    post_map = {}
-    owned = set()
-    for row in meta.get("preTokenBalances") or ():
-        idx = _owned_index(row, pubkeys, wallet)
-        if idx is None:
-            continue
-        pre_map[idx] = row
-        owned.add(idx)
-    for row in meta.get("postTokenBalances") or ():
-        idx = _owned_index(row, pubkeys, wallet)
-        if idx is None:
-            continue
-        post_map[idx] = row
-        owned.add(idx)
-    token_delta = {}
-    rent_lamports = 0
-    pre_sol = meta.get("preBalances") or ()
-    post_sol = meta.get("postBalances") or ()
-    for idx in owned:
-        pre_row = pre_map.get(idx)
-        post_row = post_map.get(idx)
-        mint = ((post_row or pre_row) or {}).get("mint")
-        before = _amt(pre_row)
-        after = _amt(post_row)
-        if mint:
-            token_delta[mint] = token_delta.get(mint, 0) + (after - before)
-        created = pre_row is None and post_row is not None
-        closed = pre_row is not None and post_row is None
-        if created and idx < len(post_sol):
-            rent_lamports += int(post_sol[idx]) - (after if mint == WSOL else 0)
-        if closed and idx < len(pre_sol):
-            rent_lamports -= int(pre_sol[idx]) - (before if mint == WSOL else 0)
-    if not owned:
-        for row in meta.get("preTokenBalances") or ():
-            if not isinstance(row, dict):
-                continue
-            owner = row.get("owner")
-            mint = row.get("mint")
-            if owner == wallet and mint:
-                token_delta[mint] = token_delta.get(mint, 0) - _amt(row)
-        for row in meta.get("postTokenBalances") or ():
-            if not isinstance(row, dict):
-                continue
-            owner = row.get("owner")
-            mint = row.get("mint")
-            if owner == wallet and mint:
-                token_delta[mint] = token_delta.get(mint, 0) + _amt(row)
-    try:
-        wallet_pos = pubkeys.index(wallet)
-    except ValueError:
-        wallet_pos = None
-    native = 0
-    if wallet_pos is not None and wallet_pos < len(pre_sol) and wallet_pos < len(post_sol):
-        native = int(post_sol[wallet_pos]) - int(pre_sol[wallet_pos])
-    fee = int(meta.get("fee") or 0) if pubkeys and pubkeys[0] == wallet else 0
-    wsol = token_delta.pop(WSOL, 0)
-    sol_net = native + fee + wsol
-    if (wallet_pos is not None and native < 0) or rent_lamports < 0:
-        sol_net += rent_lamports
-    legs = {mint: qty for mint, qty in token_delta.items() if qty}
-    if abs(sol_net) > INDEPENDENT_SOL_FLOOR_LAMPORTS:
-        legs["SOL"] = sol_net
-    return legs, sol_net
-
-
-def wallet_asset_deltas(record, address):
-    """Independent entry: accountIndex map + rent back-out, not the app clone."""
-    if not isinstance(record, dict) or not address:
+def _ix_program_id(ix, pubkeys):
+    if not isinstance(ix, dict):
         return None
-    legs, _sol = _independent_legs(record, address)
-    return legs or None
+    if ix.get("programId"):
+        return ix["programId"]
+    idx = ix.get("programIdIndex")
+    if type(idx) is int and 0 <= idx < len(pubkeys):
+        return pubkeys[idx]
+    parsed = ix.get("parsed")
+    if isinstance(parsed, dict) and parsed.get("programId"):
+        return parsed["programId"]
+    return None
+
+
+def _ix_looks_like_swap(ix):
+    if not isinstance(ix, dict):
+        return False
+    parsed = ix.get("parsed") if isinstance(ix.get("parsed"), dict) else {}
+    for value in (
+        ix.get("name"),
+        ix.get("instruction"),
+        ix.get("type"),
+        parsed.get("type"),
+        parsed.get("instruction"),
+        parsed.get("name"),
+    ):
+        if value and SWAP_IX_NAME_RE.search(str(value)):
+            return True
+    return False
+
+
+def _all_instructions(body, meta):
+    tx = body.get("transaction") if isinstance(body.get("transaction"), dict) else {}
+    msg = tx.get("message") if isinstance(tx.get("message"), dict) else {}
+    for ix in msg.get("instructions") or ():
+        yield ix
+    for group in meta.get("innerInstructions") or ():
+        if isinstance(group, dict):
+            for ix in group.get("instructions") or ():
+                yield ix
+        elif isinstance(group, list):
+            for ix in group:
+                yield ix
+
+
+def _wallet_owned_token_changed(meta, wallet):
+    delta = Counter()
+    for row in meta.get("preTokenBalances") or ():
+        if isinstance(row, dict) and row.get("owner") == wallet and row.get("mint"):
+            delta[row["mint"]] -= _amt(row)
+    for row in meta.get("postTokenBalances") or ():
+        if isinstance(row, dict) and row.get("owner") == wallet and row.get("mint"):
+            delta[row["mint"]] += _amt(row)
+    return {mint: qty for mint, qty in delta.items() if qty}
+
+
+def _auditor_wallet_signed(body, pubkeys, wallet):
+    tx = body.get("transaction") if isinstance(body.get("transaction"), dict) else {}
+    msg = tx.get("message") if isinstance(tx.get("message"), dict) else {}
+    header = msg.get("header") if isinstance(msg.get("header"), dict) else {}
+    needed = header.get("numRequiredSignatures")
+    if type(needed) is not int or needed < 1:
+        needed = 1
+    static = []
+    for key in msg.get("accountKeys") or ():
+        static.append(key["pubkey"] if isinstance(key, dict) else key)
+    keys = static or list(pubkeys)
+    return bool(wallet) and wallet in keys[:needed]
+
+
+def _has_swap_signal(body, pubkeys, meta, changed):
+    logs = " ".join(meta.get("logMessages") or [])
+    if SWAP_LOG_RE.search(logs):
+        return True
+    saw_reviewed = False
+    for ix in _all_instructions(body, meta):
+        if _ix_looks_like_swap(ix):
+            return True
+        if _ix_program_id(ix, pubkeys) in REVIEWED_SWAP_PROGRAM_IDS:
+            saw_reviewed = True
+    if not (saw_reviewed and changed):
+        return False
+    # Unknown / log-stripped venue: reviewed swap program plus a material
+    # wallet-owned token move. +1-only (LP position NFT / mint) is not a swap.
+    if any(abs(qty) > 1 for qty in changed.values()):
+        return True
+    return any(qty < 0 for qty in changed.values())
 
 
 def raw_economic_keys_for_tx(record, address):
-    legs, _sol = _independent_legs(record, address)
-    if not legs:
+    """v3: one signed swap-program tx with a wallet-owned token change.
+
+    Orthogonal to the app's rent-aware SOL floor. Unknown venues count when
+    logs/instruction names show Swap/Buy/Sell/Route, or a reviewed swap
+    program is present with a material wallet-owned token balance change.
+    One key per signature.
+    """
+    if not isinstance(record, dict) or not address:
         return 0
-    gained = any(qty > 0 for qty in legs.values())
-    spent = any(qty < 0 for qty in legs.values())
-    if not (gained and spent):
+    body = _unwrap_envelope(record)
+    pubkeys, meta = _pubkeys_in_order(body)
+    if not isinstance(meta, dict) or meta.get("err") is not None:
         return 0
-    non_quote = [mint for mint in legs if mint != "SOL" and mint not in (USDC, USDT)]
-    return len(non_quote) if non_quote else 1
+    if not _auditor_wallet_signed(body, pubkeys, address):
+        return 0
+    changed = _wallet_owned_token_changed(meta, address)
+    if not changed:
+        return 0
+    if not _has_swap_signal(body, pubkeys, meta, changed):
+        return 0
+    return 1
 
 
 def _tx_signature(record):
@@ -1241,15 +1306,19 @@ def _tx_signature(record):
 
 def _record_unix(record):
     body = _unwrap_envelope(record)
-    stamp = body.get("blockTime") or body.get("block_time") or body.get("timestamp")
-    if stamp is None:
-        tx = body.get("transaction") if isinstance(body.get("transaction"), dict) else {}
-        stamp = tx.get("blockTime") or tx.get("timestamp")
+    tx = body.get("transaction") if isinstance(body.get("transaction"), dict) else {}
+    stamp = _first_present(
+        body.get("blockTime"),
+        body.get("block_time"),
+        body.get("timestamp"),
+        tx.get("blockTime"),
+        tx.get("timestamp"),
+    )
     return _event_unix({"timestamp": stamp})
 
 
 def raw_economic_trades_by_utc_day(records, address):
-    """Per-signature independent count from pre/post balances. Own rent handling."""
+    """One signed swap-program tx per signature, bucketed by UTC day."""
     by_sig = {}
     anonymous = []
     for record in records or []:

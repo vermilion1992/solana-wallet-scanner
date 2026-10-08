@@ -673,10 +673,25 @@ USDT_MINT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
 RAW_QUOTE_ASSETS = frozenset({WSOL_MINT, USDC_MINT, USDT_MINT, "SOL"})
 RAW_SOL_FLOOR_LAMPORTS = 100_000
 RAW_SOL_NOISE_LAMPORTS = RAW_SOL_FLOOR_LAMPORTS
+RAW_TOKEN_DUST_UNITS = 1
+RAW_TIP_SOL_LAMPORTS = 500_000
+
+
+def _first_present(*values):
+    """Return the first real value. 0 is present; None/''/bool are not."""
+    for value in values:
+        if value is None or isinstance(value, bool) or value == "":
+            continue
+        return value
+    return None
 
 
 def _event_unix(event):
-    stamp = (event or {}).get("block_time") or (event or {}).get("blockTime") or (event or {}).get("timestamp")
+    stamp = _first_present(
+        (event or {}).get("block_time"),
+        (event or {}).get("blockTime"),
+        (event or {}).get("timestamp"),
+    )
     if isinstance(stamp, bool):
         return None
     if type(stamp) is int:
@@ -746,10 +761,11 @@ def with_gt25_blocker(blocker, rate):
         return extra
     parts = [part.strip() for part in str(blocker).split(";") if part.strip()]
     kept = []
+    prefix = GT25_ECONOMIC_TRADES_RULE
     for part in parts:
         if part == extra or extra in part:
             continue
-        if part == GT25_ECONOMIC_TRADES_RULE:
+        if part == prefix or part.startswith(prefix + ":") or part.startswith(prefix + " "):
             continue
         kept.append(part)
     kept.append(extra)
@@ -1050,33 +1066,74 @@ def wallet_asset_deltas(record, address):
     return legs
 
 
-def raw_economic_keys_for_tx(record, address):
-    """One successful economic-swap tx: count once per (kind, mint).
+def _wallet_signed(record, address):
+    """True when address is among the required signers."""
+    if not isinstance(record, dict) or not address:
+        return False
+    raw = _unwrap_raw_record(record)
+    tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+    msg = tx.get("message") if isinstance(tx.get("message"), dict) else {}
+    keys = []
+    for key in msg.get("accountKeys") or []:
+        keys.append(key["pubkey"] if isinstance(key, dict) else key)
+    header = msg.get("header") if isinstance(msg.get("header"), dict) else {}
+    needed = header.get("numRequiredSignatures")
+    if type(needed) is not int or needed < 1:
+        needed = 1
+    return address in keys[:needed]
 
-    Opposite-direction asset legs (including token-to-token and stable legs)
-    make a swap. Non-quote tokens each contribute one key; a pure
-    SOL↔USDC/USDT conversion counts 1. Multi-hop nets to the wallet's
-    legs, so one route is one tx.
+
+def raw_economic_keys_for_tx(record, address):
+    """Signed economic-swap keys for one successful tx.
+
+    A token the wallet sold counts even when both legs go down (proceeds
+    landed in another account). Dust leftovers of 1 raw unit are not a
+    second key. Liquidity-position NFTs, 1-unit mints, rent-only SOL and
+    tip-plus-airdrop are not trades.
     """
+    if not _wallet_signed(record, address):
+        return 0
     legs = wallet_asset_deltas(record, address)
     if not legs:
         return 0
-    ups = [mint for mint, qty in legs.items() if qty > 0]
-    downs = [mint for mint, qty in legs.items() if qty < 0]
-    if not ups or not downs:
+    material = {}
+    for mint, qty in legs.items():
+        if mint in RAW_QUOTE_ASSETS or abs(qty) > RAW_TOKEN_DUST_UNITS:
+            material[mint] = qty
+    if not material:
         return 0
-    tokens = [mint for mint in legs if mint not in RAW_QUOTE_ASSETS]
-    return len(tokens) if tokens else 1
+    token_downs = [mint for mint, qty in material.items() if qty < 0 and mint not in RAW_QUOTE_ASSETS]
+    token_ups = [mint for mint, qty in material.items() if qty > 0 and mint not in RAW_QUOTE_ASSETS]
+    quote_downs = [mint for mint, qty in material.items() if qty < 0 and mint in RAW_QUOTE_ASSETS]
+    quote_ups = [mint for mint, qty in material.items() if qty > 0 and mint in RAW_QUOTE_ASSETS]
+    if token_downs and token_ups:
+        return len(token_downs + token_ups)
+    if token_downs and (quote_downs or quote_ups):
+        return len(token_downs)
+    if token_ups and quote_downs:
+        sol_down = -material["SOL"] if material.get("SOL", 0) < 0 else 0
+        stable_down = any(material.get(mint, 0) < 0 for mint in (USDC_MINT, USDT_MINT))
+        if not stable_down and 0 < sol_down <= RAW_TIP_SOL_LAMPORTS:
+            return 0
+        return len(token_ups)
+    if quote_ups and quote_downs:
+        return 1
+    return 0
 
 
 def _record_unix(record):
     raw = _unwrap_raw_record(record) if isinstance(record, dict) else {}
-    stamp = raw.get("blockTime") or raw.get("block_time") or raw.get("timestamp")
-    if stamp is None:
-        tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
-        stamp = tx.get("blockTime") or tx.get("timestamp")
-    if stamp is None and isinstance(record, dict):
-        stamp = record.get("blockTime") or record.get("block_time") or record.get("timestamp")
+    tx = raw.get("transaction") if isinstance(raw.get("transaction"), dict) else {}
+    stamp = _first_present(
+        raw.get("blockTime"),
+        raw.get("block_time"),
+        raw.get("timestamp"),
+        tx.get("blockTime"),
+        tx.get("timestamp"),
+        record.get("blockTime") if isinstance(record, dict) else None,
+        record.get("block_time") if isinstance(record, dict) else None,
+        record.get("timestamp") if isinstance(record, dict) else None,
+    )
     return _event_unix({"timestamp": stamp})
 
 
@@ -1144,6 +1201,7 @@ def merge_trade_rates(*rates):
     payload = _rate_from_by_day(by_day, incomplete=incomplete, incomplete_uncounted=uncounted)
     if dateless_max is not None and dateless_max > (payload["max"] or 0):
         payload["max"] = dateless_max
+        payload["max_on"] = None
     if payload.get("max_on") in ("stored", "unknown"):
         payload["max_on"] = None
     return payload
@@ -1167,18 +1225,42 @@ def _events_from_report_or_profile(report, profile):
     return events
 
 
+def day_for_stored_max(by_day, stored=None):
+    """Date of a saved max. Prefer the by_day entry that equals stored."""
+    usable = {}
+    for day, count in (by_day or {}).items():
+        if day in (None, "", "stored", "unknown"):
+            continue
+        try:
+            usable[str(day)] = int(count)
+        except (TypeError, ValueError):
+            continue
+    if not usable:
+        return None
+    if stored is not None:
+        matching = [day for day, count in usable.items() if count == stored]
+        if matching:
+            return max(matching)
+    return max(usable, key=lambda day: (usable[day], day))
+
+
 def _stored_trade_rate(source):
     if not source:
         return None
     stored = first_defined_int(source.get("max_economic_trades_in_one_day"))
     if stored is None:
         stored = first_defined_int(source.get("max_trades_per_day"))
-    if stored is None and not source.get("economic_trades_by_utc_day"):
+    by_day = source.get("economic_trades_by_utc_day") or source.get("economic_trades_by_day") or {}
+    if stored is None and not by_day:
         return None
     return {
-        "by_day": source.get("economic_trades_by_utc_day") or {},
+        "by_day": by_day,
         "max": stored if stored is not None else 0,
-        "max_on": source.get("max_economic_trades_on") or source.get("max_trades_per_day_on"),
+        "max_on": (
+            source.get("max_economic_trades_on")
+            or source.get("max_trades_per_day_on")
+            or day_for_stored_max(by_day, stored)
+        ),
         "incomplete": bool(source.get("economic_trade_rate_incomplete")),
         "incomplete_uncounted": int(source.get("economic_trade_rate_incomplete_uncounted") or 0),
     }
