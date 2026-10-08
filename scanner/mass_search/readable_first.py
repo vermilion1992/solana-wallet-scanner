@@ -90,6 +90,11 @@ def _event_value(event):
 
 
 def _delta_value(raw, address, keys):
+    """Price a sample swap from the quote-side leg when one exists.
+
+    Proof gates are unchanged. An unpriced swap-like row no longer poisons
+    the whole sample denominator if any other row has a quote leg.
+    """
     deltas = _owned_asset_deltas(raw, address, keys)
     usdc = abs(deltas.get(USDC, Decimal("0")))
     if usdc > 0:
@@ -97,6 +102,9 @@ def _delta_value(raw, address, keys):
     usdt = abs(deltas.get(USDT, Decimal("0")))
     if usdt > 0:
         return usdt
+    wsol = abs(deltas.get(WSOL, Decimal("0")))
+    if wsol > 0:
+        return wsol
     sol = abs(deltas.get("SOL", Decimal("0")))
     return sol if sol > 0 else None
 
@@ -180,6 +188,61 @@ def classify_sample_tx(record, address, *, events_by_sig=None):
     }
 
 
+def estimate_sample_round_trips(records, address, *, decoded=None):
+    """Cheap sample estimate of buy-then-sell round trips.
+
+    Transfer-in sells (token in, no quote out, then a sell) are not episodes.
+    Used only to skip or rank deep pulls. Proof gates are unchanged.
+    """
+    grouped, decoded = _events_by_signature(records, address, decoded)
+    buys, sells, transfer_ins = set(), set(), set()
+    for record in records or []:
+        raw = unwrap_gta_record(record) if isinstance(record, dict) else None
+        if not isinstance(raw, dict) or not address:
+            continue
+        try:
+            keys = _account_keys(raw)
+            deltas = _owned_asset_deltas(raw, address, keys)
+        except Exception:
+            continue
+        quote_down = any(deltas.get(mint, 0) < 0 for mint in QUOTE_MINTS)
+        quote_up = any(deltas.get(mint, 0) > 0 for mint in QUOTE_MINTS)
+        for mint, qty in deltas.items():
+            if mint in QUOTE_MINTS or qty == 0:
+                continue
+            if qty > 0 and quote_down:
+                buys.add(mint)
+            elif qty > 0 and not quote_down:
+                transfer_ins.add(mint)
+            elif qty < 0 and quote_up:
+                sells.add(mint)
+    for events in grouped.values():
+        for event in events:
+            mint = event.get("mint")
+            if not mint or mint in QUOTE_MINTS:
+                continue
+            if event.get("kind") == "buy":
+                buys.add(mint)
+            elif event.get("kind") == "sell":
+                sells.add(mint)
+    round_trips = len(buys & sells)
+    transfer_in_sells = len((transfer_ins & sells) - buys)
+    skip = round_trips == 0
+    reason = None
+    if skip and transfer_in_sells:
+        reason = "sample_transfer_in_sells"
+    elif skip:
+        reason = "sample_no_round_trips"
+    return {
+        "expected_completed_episodes": round_trips,
+        "transfer_in_sells": transfer_in_sells,
+        "buy_mints": len(buys),
+        "sell_mints": len(sells),
+        "skip_deep_pull": skip,
+        "skip_deep_pull_reason": reason,
+    }
+
+
 def _events_by_signature(records, address, decoded=None):
     if decoded is None:
         decoded = decode_supported_swaps(canonical_decode_records(records or []), address)
@@ -202,13 +265,17 @@ def sample_readable_shares(records, address, *, decoded=None):
     unreadable = [row for row in swap_like if row.get("class") == SAMPLE_CLASS_UNREADABLE]
     count_n = len(swap_like)
     count_share = (Decimal(len(readable)) / Decimal(count_n)) if count_n else None
-    values = [_dec(row.get("value")) for row in swap_like]
-    if any(item is None for item in values) or not values:
+    priced = [row for row in swap_like if _dec(row.get("value")) is not None]
+    if not priced:
         value_share = None
         value_denom = None
     else:
-        value_denom = sum(values)
-        readable_value = sum(_dec(row.get("value")) or Decimal("0") for row in readable)
+        value_denom = sum(_dec(row.get("value")) for row in priced)
+        readable_value = sum(
+            _dec(row.get("value")) or Decimal("0")
+            for row in readable
+            if _dec(row.get("value")) is not None
+        )
         value_share = (readable_value / value_denom) if value_denom > 0 else None
     programs = Counter()
     for row in unreadable:
@@ -313,10 +380,19 @@ def _pnl(row):
     return amount if amount is not None else Decimal("0")
 
 
+def _expected_episodes(row):
+    amount = _dec((row or {}).get("expected_completed_episodes"))
+    return amount if amount is not None else Decimal("0")
+
+
 def rank_by_nansen_pnl(rows):
     return sorted(
         list(rows or []),
-        key=lambda row: (-_pnl(row), str((row or {}).get("address") or "")),
+        key=lambda row: (
+            -_expected_episodes(row),
+            -_pnl(row),
+            str((row or {}).get("address") or ""),
+        ),
     )
 
 
@@ -345,6 +421,13 @@ def walk_ranked(rows, *, n, cap=None):
         # DC-8: Phase-2 drop wins over a 0.97 keep stamp.
         if row.get("dropped") is True:
             dropped.append({**row, "funnel_status": DROP})
+            continue
+        if row.get("skip_deep_pull"):
+            dropped.append({
+                **row,
+                "funnel_status": DROP,
+                "funnel_reason": row.get("skip_deep_pull_reason") or "sample_no_round_trips",
+            })
             continue
         decision = row.get("funnel_decision") or row.get("decision") or DROP
         if decision == KEEP:
@@ -421,6 +504,12 @@ def attach_sample(row, records, address, *, decoded=None, threshold=None):
         "reason": decision.get("reason"),
         "threshold": str(threshold or READABLE_SHARE_THRESHOLD),
     }
+    trips = estimate_sample_round_trips(records, address, decoded=decoded)
+    payload["expected_completed_episodes"] = trips["expected_completed_episodes"]
+    payload["skip_deep_pull"] = bool(trips["skip_deep_pull"] and decision["decision"] == KEEP)
+    payload["skip_deep_pull_reason"] = trips.get("skip_deep_pull_reason")
+    payload["readable_first"]["expected_completed_episodes"] = trips["expected_completed_episodes"]
+    payload["readable_first"]["transfer_in_sells"] = trips["transfer_in_sells"]
     payload["funnel_decision"] = decision["decision"]
     payload["funnel_reason"] = decision.get("reason")
     if decision["decision"] == DEFER_UNREADABLE:
@@ -649,13 +738,50 @@ def format_funnel_markdown(report):
     return "\n".join(lines) + "\n"
 
 
+def merge_funnel_reports(prior, incoming):
+    """D12-8: accumulate funnel rows across batches. Address is the identity."""
+    if not isinstance(prior, dict) or prior.get("kind") != "readable-first-funnel-v1":
+        return incoming
+    merged = dict(incoming or {})
+    for key in ("kept",):
+        seen = set(prior.get(key) or [])
+        out = list(prior.get(key) or [])
+        for address in (incoming or {}).get(key) or []:
+            if address not in seen:
+                out.append(address)
+                seen.add(address)
+        merged[key] = out
+    for key in ("deferred_unreadable", "dropped", "unscreened"):
+        seen = {row.get("address") for row in (prior.get(key) or []) if isinstance(row, dict)}
+        out = list(prior.get(key) or [])
+        for row in (incoming or {}).get(key) or []:
+            address = row.get("address") if isinstance(row, dict) else None
+            if address and address not in seen:
+                out.append(row)
+                seen.add(address)
+        merged[key] = out
+    programs = Counter()
+    for program, count in (prior.get("dominant_unreadable_programs") or []):
+        programs[program] += int(count or 0)
+    for program, count in (incoming or {}).get("dominant_unreadable_programs") or []:
+        programs[program] += int(count or 0)
+    merged["dominant_unreadable_programs"] = programs.most_common()
+    merged["examined"] = int(prior.get("examined") or 0) + int((incoming or {}).get("examined") or 0)
+    merged["accumulated"] = True
+    return merged
+
+
 def write_funnel_report(output_dir, walked, *, extra=None):
     report = funnel_report(walked, extra=extra)
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=True)
-    (root / "READABLE_FIRST_FUNNEL.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    path = root / "READABLE_FIRST_FUNNEL.json"
+    if path.exists():
+        try:
+            prior = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, TypeError):
+            prior = None
+        report = merge_funnel_reports(prior, report)
+    path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (root / "READABLE_FIRST_FUNNEL.md").write_text(format_funnel_markdown(report), encoding="utf-8")
     return report

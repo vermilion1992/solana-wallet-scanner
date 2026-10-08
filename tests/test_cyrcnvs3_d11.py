@@ -82,7 +82,7 @@ def _replay(tmp_path, records):
 def test_humidifi_published_id_is_reviewed():
     assert HUMIDIFI in WELL_KNOWN_INNER_AMMS
     assert HUMIDIFI in auditor.WELL_KNOWN_INNER_AMMS
-    assert DECODER_VERSION == "spot-v28-humidifi-9h6tua7-v1"
+    assert DECODER_VERSION == "spot-v29-jup6-exact-out-v2-v1"
 
 
 def test_cyrc_dflow_decodes_and_jup_allocate_2440_stays_blocked(tmp_path):
@@ -109,13 +109,19 @@ def test_cyrc_app_keeps_je3_flatten_auditor_drops_cdhzy_in_window(tmp_path):
     app_net = Decimal(str(profile.get("completed_episode_net")))
     aud_net = Decimal(str(audit.get("independently_audited_episode_net")))
     assert abs(app_net - aud_net) <= Decimal("0.000002")
-    assert app_net == Decimal("1839.123183") or abs(app_net - Decimal("1839.123183")) <= Decimal("0.01")
     drops = audit.get("dropped_losing_episodes") or []
     assert drops, "auditor must still drop the in-window CdhZy loser"
     cdh = [row for row in drops if str(row.get("mint") or "").startswith("CdhZy8wr")]
     assert cdh
     assert cdh[0]["reason"] == "unflattened_losing_inventory"
     assert 1790612980 == int(cdh[0]["timestamp"])
+    loss = Decimal(str(cdh[0]["net_profit"]))
+    assert loss < 0
+    # Both headlines used to exclude −46.66 USDC and overstate P&L. Include it.
+    expected = Decimal("1839.123183") + loss
+    assert abs(app_net - expected) <= Decimal("0.01"), (app_net, expected, loss)
+    assert abs(aud_net - expected) <= Decimal("0.01"), (aud_net, expected, loss)
+    assert audit.get("included_dropped_losing_pnl")
     assert audit.get("status") == "not_independently_audited"
     assert audit.get("reason") == "auditor_dropped_losing_episodes"
     assert audit.get("episodes"), "D11-7: dropped-loser audits still persist episode details"
@@ -153,17 +159,18 @@ def test_auth15_draft_hash_and_ceilings():
     assert draft["authorization_id"] == AUTHORIZATION_ID_15
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     assert PINNED_DRAFT_HASHES[AUTHORIZATION_ID_15] == digest
-    assert digest == "a0cf00c35e906970e1cd10d76548813e69a682bd4ae5f4c60439efde876f2e1c"
+    assert digest == "f8167778625e87c9c8af5014b1760606013d10ce5c18c606fbbed5afbf49e4b6"
     nansen = next(row for row in draft["providers"] if row["provider_id"] == "nansen")
     helius = next(row for row in draft["providers"] if row["provider_id"] == "helius")
     birdeye = next(row for row in draft["providers"] if row["provider_id"] == "birdeye")
     assert nansen["max_requests"] == 200
     assert nansen["max_units"] == 400
     assert "profiler_dex_trades" in nansen["allowed_operations"]
+    assert "tgm_pnl_leaderboard" in nansen["allowed_operations"]
     assert helius["max_units"] == 40000
     assert "getSignaturesForAddress" in helius["allowed_operations"]
-    assert birdeye["max_requests"] == 40
-    assert birdeye["max_units"] == 1400
+    assert birdeye["max_requests"] == 0
+    assert birdeye["max_units"] == 0
     assert HARD_CEILINGS["nansen_requests"] == 200
     assert HARD_CEILINGS["nansen_units"] == 400
     assert HARD_CEILINGS["helius_units"] == 40000

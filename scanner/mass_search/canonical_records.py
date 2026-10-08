@@ -53,6 +53,8 @@ JUPITER_REVIEWED = (
     "shared_accounts_exact_out_route",
     "route_v2",
     "shared_accounts_route_v2",
+    "exact_out_route_v2",
+    "shared_accounts_exact_out_route_v2",
 )
 PUMPSWAP_REVIEWED = ("buy", "sell", "buy_exact_quote_in")
 DECODED_OUTER_PROGRAMS = {

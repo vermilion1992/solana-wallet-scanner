@@ -123,6 +123,7 @@ from scanner.mass_search.throughput import (
 from scanner.mass_search.readable_first import (
     FUNNEL_VERSION as READABLE_FIRST_VERSION,
     SAMPLE_PAGES_DEFAULT,
+    UNSCREENED,
     attach_sample,
     format_dry_run_plan,
     readable_first_plan,
@@ -220,6 +221,9 @@ from scanner.mass_search.seed_sources import (
     nansen_first_funder_supported,
     nansen_leaderboard_body,
     nansen_leaderboard_rows,
+    select_discovery_tokens,
+    select_tgm_wallets,
+    tgm_pre_rank_key,
     nansen_pnl_summary_body,
     nansen_schema_kind_for_path,
     redact_nansen_error_body,
@@ -292,7 +296,7 @@ PINNED_DRAFT_HASHES = {
     AUTHORIZATION_ID_12: "65b14ccd9e60e453760a1d1da55c825d1083c86c416bc8957985b361fc483270",
     AUTHORIZATION_ID_13: "e9629ca44a48671bb9a61c1b3c2ec19a42aa5338b1fc53e00c55498fe3254a2e",
     AUTHORIZATION_ID_14: "4d3c5ad01fea6c99ee51f0c8e59519206f31edb7d1de1717aa8e1805fc56c50d",
-    AUTHORIZATION_ID_15: "a0cf00c35e906970e1cd10d76548813e69a682bd4ae5f4c60439efde876f2e1c",
+    AUTHORIZATION_ID_15: "f8167778625e87c9c8af5014b1760606013d10ce5c18c606fbbed5afbf49e4b6",
 }
 HARD_CEILINGS = {
     "birdeye_requests": 40,
@@ -1714,7 +1718,11 @@ def plan_request_counts(config, state=None):
         nansen_per_page=config.get("nansen_per_page"),
         nansen_dex_trades_wallet_cap=dex_wallet_cap,
         nansen_dex_trades_max_pages=config.get("nansen_dex_trades_max_pages"),
-        nansen_token_pnl_tokens=config.get("nansen_token_pnl_tokens"),
+        nansen_token_pnl_tokens=select_discovery_tokens(
+            configured=config.get("nansen_token_pnl_tokens"),
+            observed=config.get("nansen_token_pnl_observed"),
+            limit=config.get("nansen_token_pnl_max_calls") or 0,
+        ),
         nansen_token_pnl_max_calls=config.get("nansen_token_pnl_max_calls"),
         birdeye_retry_headroom=BIRDEYE_RATE_LIMIT_RETRIES,
         nansen_calibrate=bool(calibrate_path),
@@ -1878,11 +1886,23 @@ def plan_request_counts(config, state=None):
         rf_plan = readable_first_plan(
             leaderboard_pages=config.get("nansen_leaderboard_pages") or 1,
             timeframes=config.get("nansen_timeframes") or NANSEN_TIMEFRAMES_FUNNEL,
-            token_count=len(config.get("nansen_token_pnl_tokens") or []),
+            token_count=len(select_discovery_tokens(
+                configured=config.get("nansen_token_pnl_tokens"),
+                observed=config.get("nansen_token_pnl_observed"),
+                limit=config.get("nansen_token_pnl_max_calls") or 0,
+            )),
             token_pnl_calls=config.get("nansen_token_pnl_max_calls") or 0,
             discovered_wallets=n,
-            dex_pages=config.get("nansen_dex_trades_max_pages") or 0,
-            sample_pages=config.get("readable_first_sample_pages") or SAMPLE_PAGES_DEFAULT,
+            dex_pages=(
+                0
+                if not config.get("nansen_dex_trades_wallet_cap")
+                else (config.get("nansen_dex_trades_max_pages") or 0)
+            ),
+            sample_pages=(
+                TRIAGE_SAMPLES
+                if (config.get("readable_first") or config.get("batch"))
+                else (config.get("readable_first_sample_pages") or SAMPLE_PAGES_DEFAULT)
+            ),
             deep_n=readable_first_target_n(config),
             history_cap=config.get("helius_signatures_history_cap"),
             nansen_profile_cap=config.get("nansen_profile_cap") or 0,
@@ -2116,6 +2136,29 @@ def reconcile_state_spend(store, state):
         merged_phase[phase] = merge_spend(existing.get(phase), ledger_phase.get(phase))
     state["phase_spend"] = merged_phase
     return state
+
+
+def parse_run_caps(value):
+    """D12-3: per-run caps from the CLI (`helius_units=1000,nansen_requests=20`)."""
+    if value in (None, ""):
+        return None
+    if isinstance(value, dict):
+        parsed = {}
+        for key, raw in value.items():
+            if raw in (None, ""):
+                continue
+            parsed[str(key)] = int(raw)
+        return parsed or None
+    parsed = {}
+    for part in str(value).split(","):
+        item = part.strip()
+        if not item:
+            continue
+        key, sep, raw = item.partition("=")
+        if not sep or not key.strip():
+            raise LiveE2EError("run_caps must be comma-separated key=int pairs")
+        parsed[key.strip()] = int(raw.strip())
+    return parsed or None
 
 
 def remaining_caps(config, spend, *, run_spend=None):
@@ -3713,16 +3756,20 @@ async def _phase1_nansen_dex_trades(
 
 
 async def _phase1_nansen_token_pnl(store, grant, config, state, recorder, identity, extras, raw_parts, page):
-    """Optional per-token tgm/pnl-leaderboard. Hard-refuses premium_labels."""
-    tokens = list(config.get("nansen_token_pnl_tokens") or [])
+    """Per-token tgm/pnl-leaderboard. Main discovery source. Hard-refuses premium_labels."""
     try:
         max_calls = max(0, int(config.get("nansen_token_pnl_max_calls") or 0))
     except (TypeError, ValueError):
         max_calls = 0
+    tokens = select_discovery_tokens(
+        configured=config.get("nansen_token_pnl_tokens"),
+        observed=config.get("nansen_token_pnl_observed"),
+        limit=max_calls,
+    )
     if not tokens or max_calls <= 0:
         return [], 0
     date_from, date_to = nansen_date_range_from_bounds(config.get("bounds"))
-    appearances = {}
+    seen = {}
     selected = []
     used = 0
     for token in tokens:
@@ -3746,17 +3793,24 @@ async def _phase1_nansen_token_pnl(store, grant, config, state, recorder, identi
         )
         raw_parts.append(response.get("raw_bytes") or b"{}")
         used += 1
-        for row in nansen_leaderboard_rows(response.get("body")):
-            address = row.get("address") or row.get("wallet") or row.get("wallet_address")
-            if not address:
-                continue
-            appearances.setdefault(address, set()).add(token)
-    for address, token_set in appearances.items():
-        if len(token_set) < 2:
-            continue
-        extras.setdefault(address, {}).setdefault("vendor_metrics", {})["token_pnl_tokens"] = sorted(token_set)
-        extras[address]["selection_reason"] = "nansen_tgm_pnl_leaderboard_intersect"
-        selected.append({"address": address, "already_seen": False, "vendor_metrics": extras[address]["vendor_metrics"]})
+        billing = response.get("billing")
+        batch = select_tgm_wallets(
+            nansen_leaderboard_rows(response.get("body")),
+            token=token,
+            seen=seen,
+            billing=billing,
+        )
+        selected.extend(batch)
+    selected.sort(key=lambda row: tgm_pre_rank_key(row.get("vendor_metrics") or {}))
+    for row in selected:
+        address = row["address"]
+        extras.setdefault(address, {})
+        extras[address]["selection_reason"] = row.get("selection_reason")
+        extras[address]["vendor_metrics"] = dict(row.get("vendor_metrics") or {})
+        extras[address]["vendor_metrics"]["token_pnl_tokens"] = list(row.get("source_tokens") or [])
+        extras[address]["source_tokens"] = list(row.get("source_tokens") or [])
+        extras[address]["billing"] = row.get("billing")
+        extras[address]["nansen_realized_pnl_usd"] = (row.get("vendor_metrics") or {}).get("realized_pnl_usd")
     return selected, used
 
 
@@ -4757,14 +4811,37 @@ async def _phase2_one_wallet(
                 store, grant, config, state, sig_transport, address,
             )
         except SourceError as error:
-            if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE", "CAP_EXCEEDED"):
+            state_name = getattr(error, "state", None)
+            if state_name == "CAP_EXCEEDED":
+                # D12-2: a spend cap during the signatures walk is unscreened,
+                # not deferred_unreadable.
+                row = {
+                    "address": address,
+                    "dropped": False,
+                    "deferred": False,
+                    "funnel_decision": UNSCREENED,
+                    "funnel_reason": "cap_reached",
+                    "funnel_status": UNSCREENED,
+                    "done": True,
+                    "history_complete": False,
+                    "can_only_drop_or_defer": True,
+                    "unscreened_reason": "cap_reached",
+                    "helius_signatures": signatures_credit_note(),
+                    **seed_fields_for_wallet(state, address),
+                }
+                async with state_lock:
+                    record_unscreened(state, [address], reason="cap_reached", screen="signatures_walk")
+                    state.setdefault("phase2", {})[address] = row
+                    save_state(config["output_dir"], state)
+                return row
+            if state_name in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
                 row = {
                     "address": address,
                     "dropped": False,
                     "deferred": True,
-                    "drop_reason": "signatures_history_cap" if getattr(error, "state", None) != "WALLET_CAP" else "wallet_cap",
+                    "drop_reason": "signatures_history_cap" if state_name != "WALLET_CAP" else "wallet_cap",
                     "funnel_decision": "deferred_unreadable",
-                    "funnel_reason": str(getattr(error, "state")).lower(),
+                    "funnel_reason": str(state_name).lower(),
                     "done": True,
                     "history_complete": False,
                     "can_only_drop_or_defer": True,
@@ -5875,6 +5952,11 @@ def validate_config(raw):
         raw["nansen_token_pnl_tokens"] = [part.strip() for part in token_pnl_raw.split(",") if part.strip()]
     elif token_pnl_raw in (None, ""):
         raw["nansen_token_pnl_tokens"] = []
+    observed_raw = raw.get("nansen_token_pnl_observed") or []
+    if isinstance(observed_raw, str):
+        raw["nansen_token_pnl_observed"] = [part.strip() for part in observed_raw.split(",") if part.strip()]
+    elif observed_raw in (None, ""):
+        raw["nansen_token_pnl_observed"] = []
     if raw.get("nansen_calibrate_wallets"):
         raw["discovery"] = True
         raw["seed_source"] = raw.get("seed_source") or SEED_NANSEN
@@ -6005,7 +6087,11 @@ def validate_config(raw):
         "nansen_token_pnl_max_calls": (
             int(raw["nansen_token_pnl_max_calls"])
             if raw.get("nansen_token_pnl_max_calls") not in (None, "")
-            else 0
+            else (
+                len(select_discovery_tokens(limit=200))
+                if (raw.get("readable_first") or raw.get("batch"))
+                else 0
+            )
         ),
         "exclude_known_from": list(raw.get("exclude_known_from") or []),
         "exclude_known_wallets": list(raw.get("exclude_known_wallets") or []),
@@ -6019,7 +6105,8 @@ def validate_config(raw):
             "max_unsupported_share": str(raw.get("max_unsupported_share") or "1"),
             "max_bot_rate": str(raw.get("max_bot_rate") or "1"),
         },
-        "run_caps": raw.get("run_caps") or None,
+        "run_caps": parse_run_caps(raw.get("run_caps")),
+        "nansen_token_pnl_observed": list(raw.get("nansen_token_pnl_observed") or []),
         "history_age_rule": raw.get("history_age_rule") or HISTORY_AGE_RULE,
         "bot_threshold_rule": raw.get("bot_threshold_rule") or BOT_THRESHOLD_RULE,
         "readable_first": bool(raw.get("readable_first") or raw.get("batch")),
@@ -6544,11 +6631,23 @@ def build_arg_parser():
         help="Optional comma-separated mints for tgm/pnl-leaderboard. Never sets premium_labels.",
     )
     parser.add_argument(
+        "--nansen-token-pnl-observed",
+        dest="nansen_token_pnl_observed",
+        default="",
+        help="Comma-separated mints observed on readable wallets; ranked ahead of the pin.",
+    )
+    parser.add_argument(
         "--nansen-token-pnl-max-calls",
         dest="nansen_token_pnl_max_calls",
         type=int,
         default=0,
-        help="Hard cap on tgm/pnl-leaderboard calls (default 0 = off).",
+        help="Hard cap on tgm/pnl-leaderboard calls (default 0 = off; funnel defaults to the liquid pin).",
+    )
+    parser.add_argument(
+        "--run-caps",
+        dest="run_caps",
+        default="",
+        help="Per-run caps, e.g. helius_units=4000,nansen_requests=80. Cannot raise grant ceilings.",
     )
     parser.add_argument(
         "--readable-first",

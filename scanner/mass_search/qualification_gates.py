@@ -17,7 +17,8 @@ from statistics import median
 
 ACCOUNTING_POLICY_VERSION = (
     "completed-episode-ledger-v1+asset-atomic-v1+coverage-count-and-value-v1+"
-    "audit-1to1-v1+result-relevant-coverage-v1+gt15-v1+dc-verify-c85388e-v1"
+    "audit-1to1-v1+result-relevant-coverage-v1+gt15-v1+dc-verify-c85388e-v1+"
+    "include-in-window-dropped-loser-headline-v1"
 )
 
 # Asset-specific atomic units. Tolerances are integer atomics, then converted.

@@ -93,6 +93,8 @@ PINNED = {
     (PUMP_SWAP, "c62e1552b4d9e870"): ("buy_exact_quote_in", 1, (5, 6)),
     (JUPITER, "bb64facc31c4af14"): ("route_v2", 0, (1, 2)),
     (JUPITER, "d19853937cfed8e9"): ("shared_accounts_route_v2", 1, (2, 5)),
+    (JUPITER, "9d8ab85215f4f324"): ("exact_out_route_v2", 0, (1, 2)),
+    (JUPITER, "3560e5cad8bbfa18"): ("shared_accounts_exact_out_route_v2", 1, (2, 5)),
     (METEORA_DAMM_V2, "f8c69e91e17587c8"): ("swap", 8, (2, 3)),
     (RFQ_FILL, "a860b7a35c0a28a0"): ("Fill", 0, (4,)),
     # Independent OKX DEX v2 SwapTob. Layout taken from the published OKX

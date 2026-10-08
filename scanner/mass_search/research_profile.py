@@ -923,6 +923,40 @@ def _iso_to_unix(text):
     return int(datetime.fromisoformat(str(text).replace("Z", "+00:00")).timestamp())
 
 
+def _headline_including_dropped_losers(clean_net, clean_unit, dropped):
+    """Add in-window same-unit dropped-loser PnL so headlines are not overstated.
+
+    CYrC CdhZy (−46.66 USDC) was excluded from both app and auditor headlines.
+    Membership still fails independently_audited when losers were dropped.
+    """
+    if clean_unit in (None, "", "mixed"):
+        return clean_net, clean_unit, []
+    included = []
+    total = Decimal(str(clean_net)) if clean_net not in (None, "") else None
+    for row in dropped or []:
+        if not isinstance(row, dict):
+            continue
+        unit = row.get("settlement_asset") or "SOL"
+        if unit != clean_unit:
+            continue
+        try:
+            amount = Decimal(str(row.get("net_profit") if row.get("net_profit") not in (None, "") else (
+                row.get("net_profit_usdc") if unit == "USDC" else
+                row.get("net_profit_usdt") if unit == "USDT" else
+                row.get("net_profit_sol")
+            )))
+        except (InvalidOperation, TypeError, ValueError):
+            continue
+        included.append(row)
+        total = amount if total is None else total + amount
+    if not included:
+        return clean_net, clean_unit, []
+    text = format(total, "f") if total is not None else None
+    if text and "." in text:
+        text = text.rstrip("0").rstrip(".")
+    return text, clean_unit, included
+
+
 def attach_live_independent_audit(report, profile, records, address):
     """Bind tools/independent_episode_audit.py to this wallet's live Phase 4.
 
@@ -996,6 +1030,27 @@ def attach_live_independent_audit(report, profile, records, address):
     ]
     base["dropped_losing_episodes"] = in_window_drops
     base["dropped_losers"] = bool(in_window_drops)
+    headline_net, headline_unit, included_drops = _headline_including_dropped_losers(
+        net, unit, in_window_drops,
+    )
+    if included_drops:
+        base["independently_audited_episode_net"] = headline_net
+        base["independently_audited_episode_net_unit"] = headline_unit
+        base["included_dropped_losing_pnl"] = included_drops
+        # App silently omitted the same in-window losers (CYrC CdhZy -46.66).
+        # Headline P&L must include them; membership stays not independently audited.
+        if profile is not None and amounts_agree(app_net, net, unit or headline_unit or "USDC"):
+            profile["completed_episode_net"] = headline_net
+            profile["completed_episode_net_unit"] = headline_unit
+            if isinstance(profile.get("completed_episode_net_vector"), dict) and headline_unit:
+                vector = dict(profile["completed_episode_net_vector"])
+                vector[headline_unit] = headline_net
+                profile["completed_episode_net_vector"] = vector
+            base["app_completed_episode_net"] = headline_net
+            base["app_completed_episode_net_unit"] = headline_unit
+            if isinstance(report, dict):
+                report["completed_episode_net"] = headline_net
+                report["completed_episode_net_unit"] = headline_unit
     if in_window_drops:
         return {
             **base,

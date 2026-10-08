@@ -127,7 +127,7 @@ UNSUPPORTED_PINNED_OUTER = (PHOTON, DFLOW_DST)
 # discriminator in _route. Jupiter/Whirlpool/AMMv4 stay in both sets so an
 # unknown discriminator can still reconstruct when the net is unambiguous.
 LAMPORTS = Decimal(1_000_000_000)
-DECODER_VERSION = 'spot-v28-humidifi-9h6tua7-v1'
+DECODER_VERSION = 'spot-v29-jup6-exact-out-v2-v1'
 NET_BALANCE_INSTRUCTION = 'net_balance'
 NET_BALANCE_SOL_DUST_LAMPORTS = 100_000
 # Fee/referral SOL residue that may be peeled as cost, never as a third trade leg.
@@ -167,6 +167,16 @@ _RAW_FIXTURE_ROUTES = {
         'state': 'PINNED_OFFICIAL_LAYOUT',
         'discriminator': 'd19853937cfed8e9',
         'scope': 'Official shared_accounts_route_v2 discriminator; authority index 1 and user token accounts 2/5 from genuine ranked pages',
+    },
+    (JUPITER, 'exact_out_route_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'discriminator': '9d8ab85215f4f324',
+        'scope': 'Official exact_out_route_v2 discriminator; same wallet/user-token indices as route_v2; fail-closed if truncated',
+    },
+    (JUPITER, 'shared_accounts_exact_out_route_v2'): {
+        'state': 'PINNED_OFFICIAL_LAYOUT',
+        'discriminator': '3560e5cad8bbfa18',
+        'scope': 'Official shared_accounts_exact_out_route_v2 discriminator; authority index 1 and user token accounts 2/5; fail-closed if truncated',
     },
     (PUMP, 'sell_v2'): {
         'state': 'PINNED_OFFICIAL_LAYOUT',
@@ -385,14 +395,18 @@ def _route(instruction, keys):
                 name = candidate
                 authority, owned_positions = (2, (3, 6)) if shared else (1, (2, 3))
                 break
-        if name is None and payload[:8] == _anchor('route_v2'):
-            if len(payload) < 28 or len(accounts) < 10:
-                raise ValueError('Jupiter route_v2 layout is absent or truncated')
-            name, authority, owned_positions = 'route_v2', 0, (1, 2)
-        if name is None and payload[:8] == _anchor('shared_accounts_route_v2'):
-            if len(payload) < 28 or len(accounts) < 12:
-                raise ValueError('Jupiter shared_accounts_route_v2 layout is absent or truncated')
-            name, authority, owned_positions = 'shared_accounts_route_v2', 1, (2, 5)
+        if name is None:
+            for candidate, auth_idx, owned, min_accounts in (
+                ('route_v2', 0, (1, 2), 10),
+                ('exact_out_route_v2', 0, (1, 2), 10),
+                ('shared_accounts_route_v2', 1, (2, 5), 12),
+                ('shared_accounts_exact_out_route_v2', 1, (2, 5), 12),
+            ):
+                if payload[:8] == _anchor(candidate):
+                    if len(payload) < 28 or len(accounts) < min_accounts:
+                        raise ValueError(f'Jupiter {candidate} layout is absent or truncated')
+                    name, authority, owned_positions = candidate, auth_idx, owned
+                    break
     elif program in (PUMP, PUMP_SWAP):
         names = ('buy', 'sell', 'buy_exact_sol_in') if program == PUMP else ('buy', 'sell', 'buy_exact_quote_in')
         for candidate in names:

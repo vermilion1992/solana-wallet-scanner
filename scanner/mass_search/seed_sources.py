@@ -834,12 +834,16 @@ def estimate_seed_plan(
                 already_units=after_profile_units,
             )
             token_n = 0
-            tokens = list(nansen_token_pnl_tokens or [])
-            if tokens:
-                try:
-                    token_n = min(len(tokens), max(0, int(nansen_token_pnl_max_calls or 0)))
-                except (TypeError, ValueError):
-                    token_n = 0
+            try:
+                call_cap = max(0, int(nansen_token_pnl_max_calls or 0))
+            except (TypeError, ValueError):
+                call_cap = 0
+            planned_tokens = select_discovery_tokens(
+                configured=nansen_token_pnl_tokens,
+                limit=call_cap,
+            )
+            if planned_tokens:
+                token_n = len(planned_tokens)
                 if nansen_request_cap is not None:
                     token_n = min(token_n, max(0, int(nansen_request_cap) - after_profile_req - dex_n))
                 if nansen_unit_cap is not None:
@@ -1166,6 +1170,122 @@ def nansen_leaderboard_rows(body):
     return items if isinstance(items, list) else []
 
 
+def tgm_row_address(row):
+    """D12-4: tgm/pnl-leaderboard puts the wallet in trader_address."""
+    if not isinstance(row, dict):
+        return None
+    return _safe_address(
+        row.get("trader_address")
+        or row.get("address")
+        or row.get("wallet")
+        or row.get("wallet_address")
+    )
+
+
+def tgm_row_metrics(row):
+    """Vendor fields already on the tgm row. Used to pre-rank before Helius."""
+    if not isinstance(row, dict):
+        return {}
+    return {
+        "realized_pnl_usd": (
+            row.get("pnl_usd_realised")
+            or row.get("realized_pnl_usd")
+            or row.get("realizedPnlUsd")
+        ),
+        "n_trades": row.get("nof_trades") or row.get("n_trades") or row.get("trades"),
+        "unrealized_pnl_usd": row.get("pnl_usd_unrealised") or row.get("unrealized_pnl_usd"),
+        "win_rate": row.get("win_rate"),
+        "is_not": "independently_verified_profit_or_copyability",
+    }
+
+
+def tgm_pre_rank_key(metrics):
+    """Cheapest pre-rank: realized PnL, then trade count. Before any Helius spend."""
+    try:
+        pnl = Decimal(str((metrics or {}).get("realized_pnl_usd") or 0))
+    except (TypeError, ValueError, ArithmeticError):
+        pnl = Decimal("0")
+    try:
+        trades = int((metrics or {}).get("n_trades") or 0)
+    except (TypeError, ValueError):
+        trades = 0
+    return (-pnl, -trades)
+
+
+# Seasoned liquid tokens that readable wallets actually trade (run-12 keep tokens
+# plus the established set). Quotes are excluded. Configurable count, hundreds.
+DISCOVERY_LIQUID_MINTS = (
+    "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",  # JUP
+    "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",  # RAY
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",  # BONK
+    "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",  # WIF
+    "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr",  # POPCAT
+    "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",  # FARTCOIN
+    "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",  # PENGU
+    "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN",  # TRUMP
+    "MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScDhz",  # MEW
+    "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",  # JTO
+    "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ",  # W
+    "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",  # PYTH
+)
+
+
+def select_discovery_tokens(*, configured=None, observed=None, limit=200):
+    """Liquid seasoned mints. Observed readable-wallet tokens win, then the pin."""
+    try:
+        cap = max(0, int(limit or 0))
+    except (TypeError, ValueError):
+        cap = 0
+    ordered = []
+    seen = set()
+    for mint in list(configured or []) + list(observed or []) + list(DISCOVERY_LIQUID_MINTS):
+        if not isinstance(mint, str) or not mint or mint in seen or mint in QUOTE_MINTS:
+            continue
+        seen.add(mint)
+        ordered.append(mint)
+        if cap and len(ordered) >= cap:
+            break
+    return ordered
+
+
+def select_tgm_wallets(rows, *, token, seen=None, billing=None):
+    """Every unique tgm trader. No ≥2-token intersect. Record the source token."""
+    if seen is None:
+        seen = {}
+    selected = []
+    for row in rows or []:
+        if not isinstance(row, dict):
+            continue
+        address = tgm_row_address(row)
+        if not address:
+            continue
+        metrics = tgm_row_metrics(row)
+        entry = seen.get(address)
+        if entry is None:
+            entry = {
+                "address": address,
+                "selection_reason": "nansen_tgm_pnl_leaderboard",
+                "seed_source": SEED_NANSEN,
+                "seed_is_not": "evidence",
+                "already_seen": False,
+                "vendor_metrics": dict(metrics),
+                "source_tokens": [token] if token else [],
+                "billing": billing,
+            }
+            seen[address] = entry
+            selected.append(entry)
+        else:
+            tokens = list(entry.get("source_tokens") or [])
+            if token and token not in tokens:
+                tokens.append(token)
+            entry["source_tokens"] = tokens
+            if metrics.get("realized_pnl_usd") and not entry["vendor_metrics"].get("realized_pnl_usd"):
+                entry["vendor_metrics"].update(metrics)
+            if billing and not entry.get("billing"):
+                entry["billing"] = billing
+    return selected
+
+
 def select_nansen_wallets(rows, *, timeframe, seen=None):
     """Provider-ranked wallets. Metrics are stored separately, never evidence.
 
@@ -1178,7 +1298,7 @@ def select_nansen_wallets(rows, *, timeframe, seen=None):
     for index, row in enumerate(rows or [], start=1):
         if not isinstance(row, dict):
             continue
-        address = _safe_address(row.get("address") or row.get("wallet") or row.get("wallet_address"))
+        address = tgm_row_address(row)
         if not address:
             continue
         payload = {
@@ -1427,7 +1547,8 @@ def helius_signatures_prescreen(rows, *, max_per_day=None, history_cap=None):
     maximum = max(by_day.values()) if by_day else 0
     over_days = {day: count for day, count in by_day.items() if count > cap}
     total = len(seen) if seen else sum(by_day.values())
-    deferred = bool(total > length_cap)
+    # D12-7: a history exactly at the cap is incomplete (pagination stopped).
+    deferred = bool(total >= length_cap)
     passed = bool(by_day) and not over_days and incomplete == 0 and not deferred
     return {
         "passed": passed,

@@ -36,7 +36,7 @@ def _app_trades(payload):
 
 
 def test_decoder_version_bumped_for_dgmg_dflow():
-    assert DECODER_VERSION == "spot-v28-humidifi-9h6tua7-v1"
+    assert DECODER_VERSION == "spot-v29-jup6-exact-out-v2-v1"
 
 
 def test_app_and_auditor_are_independent_modules():
