@@ -1044,9 +1044,12 @@ def app_omitted_losing_episodes(mapped, report, ledger=None):
         if start is None or end is None or stamp is None:
             return True
         try:
-            return start <= int(stamp) < end
+            ts = int(stamp)
         except (TypeError, ValueError):
+            ts = _iso_to_unix(stamp)
+        if ts is None:
             return True
+        return start <= ts < end
 
     by_mint = defaultdict(list)
     for row in mapped or []:
