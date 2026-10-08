@@ -337,8 +337,12 @@ def _analyze(events, start, end, opening_equity, closing_equity, deposits, withd
             raise ValueError('Evidence must be a list of hashes')
         in_window = start <= when < end
         classification = event.get('classification', 'unknown')
+        if classification in ('market', 'read_non_trade', 'lp', 'quote_conversion'):
+            classification = 'unknown'
         if classification not in ('meme', 'settlement', 'unknown'):
             raise ValueError('Invalid classification')
+        if kind in ('non_trade', 'lp', 'conversion'):
+            continue
         paid = event.get('paid_by_wallet', True)
         if not isinstance(paid, bool):
             raise ValueError('paid_by_wallet must be boolean')

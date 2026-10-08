@@ -46,6 +46,19 @@ EDGE_SWAP_PROGRAMS = frozenset({
 EDGE_NON_TRADE_PROGRAMS = frozenset({
     G2G_SPAM, JITO_TIP_ROUTER, OKX_VAULT,
 })
+REVIEWED_OUTER_PROGRAMS = frozenset({
+    *PLAIN_PROGRAMS, *EDGE_SWAP_PROGRAMS, *EDGE_NON_TRADE_PROGRAMS, METEORA_DLMM,
+})
+# Coverage-gap first-path reasons that may fill a C2 trade. Anything else stays
+# unreadable. Prefix match; keep this list explicit and short.
+C2_COVERAGE_GAP_PREFIXES = (
+    "No reviewed outer spot swap",
+    "No reviewed spot swap instruction for this program",
+    "Jupiter route",
+    "Transaction version has no reviewed",
+)
+G2G_MAX_NATIVE_LAMPORTS = 10_000_000
+JITO_MAX_NATIVE_LAMPORTS = 1_000_000_000
 PUMP_DISTRIBUTE_DISC = bytes.fromhex("623691610246ad2b")
 PUMP_BUY_DISC = bytes.fromhex("66063d1201daebea")
 DFLOW_ORDER_SETUP_DISC = bytes.fromhex("414b3f4ceb5b5b88")
@@ -251,6 +264,67 @@ def _sol_fields(native_lamports, decimals_map, tokens):
     return fields, sol
 
 
+def _hydrate_plain_instruction(instruction, keys):
+    """Parse compiled System/Token/ATA/Compute so C1 can read live compiled plains."""
+    program = _program_of(instruction, keys)
+    data = _b58decode(instruction.get("data"))
+    accounts = instruction.get("accounts") or []
+    resolved = []
+    for item in accounts:
+        if isinstance(item, str):
+            resolved.append(item)
+        elif isinstance(item, int) and 0 <= item < len(keys):
+            resolved.append(keys[item])
+    accounts = resolved
+    if program == COMPUTE_ID:
+        return {"type": "setComputeUnitLimit", "info": {}}
+    if program in MEMO_IDS:
+        return {"type": "memo", "info": {}}
+    if program == ASSOCIATED_ID:
+        return {"type": "createIdempotent" if data == b"\x01" else "create", "info": {
+            "source": accounts[0] if accounts else None,
+            "account": accounts[1] if len(accounts) > 1 else None,
+            "wallet": accounts[2] if len(accounts) > 2 else None,
+        }}
+    if program == SYSTEM_ID and len(data) >= 4:
+        tag = int.from_bytes(data[:4], "little")
+        amount = int.from_bytes(data[4:12], "little") if len(data) >= 12 else 0
+        if tag == 2 and len(accounts) >= 2:
+            return {"type": "transfer", "info": {"source": accounts[0], "destination": accounts[1], "lamports": amount}}
+        if tag == 0 and len(accounts) >= 2:
+            return {"type": "createAccount", "info": {"source": accounts[0], "newAccount": accounts[1], "lamports": amount}}
+        if tag == 4:
+            return {"type": "advanceNonce", "info": {}}
+        if tag == 1:
+            return {"type": "assign", "info": {}}
+        if tag == 8:
+            return {"type": "allocate", "info": {}}
+        return None
+    if program in TOKEN_IDS and data:
+        tag = data[0]
+        if tag == 3 and len(data) >= 9 and len(accounts) >= 3:
+            return {"type": "transfer", "info": {
+                "source": accounts[0], "destination": accounts[1], "authority": accounts[2],
+                "amount": str(int.from_bytes(data[1:9], "little")),
+            }}
+        if tag == 12 and len(data) >= 10 and len(accounts) >= 4:
+            return {"type": "transferChecked", "info": {
+                "source": accounts[0], "mint": accounts[1], "destination": accounts[2],
+                "authority": accounts[3],
+                "tokenAmount": {"amount": str(int.from_bytes(data[1:9], "little")), "decimals": data[9]},
+            }}
+        if tag == 9 and len(accounts) >= 2:
+            return {"type": "closeAccount", "info": {
+                "account": accounts[0], "destination": accounts[1],
+                "owner": accounts[2] if len(accounts) > 2 else None,
+            }}
+        if tag == 17:
+            return {"type": "syncNative", "info": {"account": accounts[0] if accounts else None}}
+        if tag in (1, 16, 18):
+            return {"type": "initializeAccount3", "info": {"account": accounts[0] if accounts else None}}
+    return None
+
+
 def _plain_explained(raw, address, keys, actual):
     """Explain wallet deltas from System/Token/ATA/ComputeBudget/Memo only.
 
@@ -260,6 +334,20 @@ def _plain_explained(raw, address, keys, actual):
     owned, _decimals = _wallet_owned_accounts(raw, address, keys)
     meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
     pre_native = meta.get("preBalances") or []
+    wsol_pre = {}
+    for row in meta.get("preTokenBalances") or []:
+        if not isinstance(row, dict) or row.get("owner") != address or row.get("mint") != WSOL:
+            continue
+        index = row.get("accountIndex")
+        qty = _int_amount((row.get("uiTokenAmount") or {}).get("amount"))
+        if isinstance(index, int) and 0 <= index < len(keys) and qty is not None:
+            wsol_pre[keys[index]] = qty
+    for row in meta.get("postTokenBalances") or []:
+        if not isinstance(row, dict) or row.get("owner") != address or row.get("mint") != WSOL:
+            continue
+        index = row.get("accountIndex")
+        if isinstance(index, int) and 0 <= index < len(keys):
+            owned[keys[index]] = WSOL
     running = {}
     for idx, amount in enumerate(pre_native):
         if idx < len(keys):
@@ -278,6 +366,8 @@ def _plain_explained(raw, address, keys, actual):
         if program in {COMPUTE_ID, LIGHTHOUSE, *MEMO_IDS}:
             continue
         parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        if not parsed or not parsed.get("type"):
+            parsed = _hydrate_plain_instruction(instruction, keys) or parsed
         kind = parsed.get("type") if parsed else None
         info = parsed.get("info") if parsed and isinstance(parsed.get("info"), dict) else {}
         if program == ASSOCIATED_ID:
@@ -294,6 +384,8 @@ def _plain_explained(raw, address, keys, actual):
                     explained_native -= lamports
                 if dest == address:
                     explained_native += lamports
+                if dest and owned.get(dest) == WSOL:
+                    explained_tokens[WSOL] += lamports
                 if source in running:
                     running[source] -= lamports
                 if dest:
@@ -336,6 +428,8 @@ def _plain_explained(raw, address, keys, actual):
                             return None
                 if dest == address and refund is not None:
                     explained_native += refund
+                if account in wsol_pre:
+                    explained_tokens[WSOL] -= wsol_pre[account]
                 if account in running:
                     running[account] = 0
                 continue
@@ -417,7 +511,7 @@ def _classify_token_effects(actual, *, program=None, instruction=None, reason=""
     if not non_quote:
         extra = dict(fields_base)
         extra.update({
-            "classification": "read_non_trade",
+            "classification": "unknown",
             "source": program,
             "venue": program,
             "instruction": instruction,
@@ -475,6 +569,8 @@ def classify_plain_tx(raw, address):
     programs = set(_programs_present(raw, keys))
     if not programs or programs - PLAIN_PROGRAMS:
         return None
+    if _sponsored_token_account_rent(raw, address, keys):
+        return None
     actual = _wallet_actual_deltas(raw, address, keys)
     if actual is None:
         return None
@@ -488,6 +584,147 @@ def classify_plain_tx(raw, address):
         actual,
         reason="Plain System/Token/ATA/ComputeBudget/Memo; deltas reconcile exactly",
     )
+
+
+def _outer_programs(raw, keys):
+    message = ((raw.get("transaction") or {}).get("message") if isinstance(raw.get("transaction"), dict) else {}) or {}
+    found = []
+    for instruction in message.get("instructions") or []:
+        if isinstance(instruction, dict):
+            program = _program_of(instruction, keys)
+            if program:
+                found.append(program)
+    return found
+
+
+def _instruction_has_nonce(instruction, keys):
+    program = _program_of(instruction, keys)
+    parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+    kind = parsed.get("type") if parsed else None
+    if program == SYSTEM_ID and kind in ("advanceNonce", "advanceNonceAccount"):
+        return True
+    data = _b58decode(instruction.get("data"))
+    if program == SYSTEM_ID and len(data) >= 4 and int.from_bytes(data[:4], "little") == 4:
+        return True
+    return False
+
+
+def _instruction_allocate_assign(instruction, keys):
+    program = _program_of(instruction, keys)
+    parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+    kind = parsed.get("type") if parsed else None
+    if program == SYSTEM_ID and kind in ("allocate", "assign", "allocateWithSeed", "assignWithSeed"):
+        return True
+    data = _b58decode(instruction.get("data"))
+    if program == SYSTEM_ID and len(data) >= 4 and int.from_bytes(data[:4], "little") in (1, 8):
+        return True
+    return False
+
+
+def _mixed_parsed_opaque(instruction):
+    parsed = instruction.get("parsed")
+    if not isinstance(parsed, dict):
+        return False
+    # Empty accounts on an already-parsed ix is the compiled-report conflict.
+    # Live RPC often carries parsed+data together; that is not a conflict.
+    return instruction.get("accounts") == []
+
+
+def _transfer_identity_mismatch(raw, keys):
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    by_account = {}
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict):
+                continue
+            index = row.get("accountIndex")
+            if not isinstance(index, int) or not (0 <= index < len(keys)):
+                continue
+            mint = row.get("mint")
+            dec = (row.get("uiTokenAmount") or {}).get("decimals")
+            if mint:
+                by_account[keys[index]] = (mint, dec)
+    for _role, _index, instruction in _iter_instructions(raw):
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        if not parsed:
+            continue
+        kind = parsed.get("type")
+        info = parsed.get("info") if isinstance(parsed.get("info"), dict) else {}
+        if kind not in ("transfer", "transferChecked", "transferCheckedWithFee"):
+            continue
+        mint = info.get("mint")
+        dec = (info.get("tokenAmount") or {}).get("decimals") if isinstance(info.get("tokenAmount"), dict) else None
+        for field in ("source", "destination"):
+            account = info.get(field)
+            identity = by_account.get(account)
+            if not identity:
+                continue
+            if mint and identity[0] and mint != identity[0]:
+                return True
+            if dec is not None and identity[1] is not None and dec != identity[1]:
+                return True
+    return False
+
+
+def _sponsored_token_account_rent(raw, address, keys):
+    """Wallet-owned token-account lamports rose with no matching funding ix."""
+    meta = raw.get("meta") if isinstance(raw.get("meta"), dict) else {}
+    pre_native = meta.get("preBalances") or []
+    post_native = meta.get("postBalances") or []
+    owned_indexes = set()
+    for field in ("preTokenBalances", "postTokenBalances"):
+        for row in meta.get(field) or []:
+            if not isinstance(row, dict) or row.get("owner") != address:
+                continue
+            index = row.get("accountIndex")
+            if isinstance(index, int) and not isinstance(index, bool) and 0 <= index < len(keys):
+                if keys[index] != address:
+                    owned_indexes.add(index)
+    funded = set()
+    for _role, _index, instruction in _iter_instructions(raw):
+        parsed = instruction.get("parsed") if isinstance(instruction.get("parsed"), dict) else None
+        info = parsed.get("info") if parsed and isinstance(parsed.get("info"), dict) else {}
+        kind = parsed.get("type") if parsed else None
+        program = _program_of(instruction, keys)
+        dest = info.get("destination") or info.get("newAccount") or info.get("account")
+        if program == SYSTEM_ID and kind in ("transfer", "createAccount", "createAccountWithSeed"):
+            if dest in keys:
+                funded.add(keys.index(dest) if dest in keys else -1)
+        if program == ASSOCIATED_ID:
+            account = info.get("account")
+            if account in keys:
+                funded.add(keys.index(account))
+    for index in owned_indexes:
+        if index >= len(pre_native) or index >= len(post_native):
+            continue
+        try:
+            before, after = int(pre_native[index]), int(post_native[index])
+        except (TypeError, ValueError):
+            return True
+        if after > before and index not in funded:
+            return True
+    return False
+
+
+def _c2_fail_closed_preconditions(raw, address, keys):
+    """Any nonce / unknown outer / allocate / conflict / sponsored-rent blocks C2."""
+    if not keys or not address:
+        return True
+    for program in _outer_programs(raw, keys):
+        if program not in REVIEWED_OUTER_PROGRAMS:
+            return True
+    for _role, _index, instruction in _iter_instructions(raw):
+        if _instruction_has_nonce(instruction, keys):
+            return True
+        if _role == "outer" and _instruction_allocate_assign(instruction, keys):
+            return True
+        if _mixed_parsed_opaque(instruction):
+            return True
+    if _transfer_identity_mismatch(raw, keys):
+        return True
+    if _sponsored_token_account_rent(raw, address, keys):
+        return True
+    return False
 
 
 def _owned_account_set(raw, address, keys):
@@ -576,7 +813,7 @@ def _two_leg_or_conversion(actual, *, program, instruction, reason):
             "mint": mint,
             "quantity_raw": str(abs(qty)),
             "decimals": dec,
-            "classification": "market",
+            "classification": "unknown",
             "source": program,
             "venue": program,
             "instruction": instruction,
@@ -616,6 +853,8 @@ def _accepted_edge_trade(raw, address, keys, actual, classified):
     if not classified:
         return None
     if any(item.get("kind") in TRADE_KINDS for item in classified):
+        if _c2_fail_closed_preconditions(raw, address, keys):
+            return None
         if _edge_trade_dirty(raw, address, keys, actual):
             return None
     return classified
@@ -630,6 +869,8 @@ def classify_edge_tx(raw, address):
         return None
     keys = _account_keys(raw)
     if address not in keys:
+        return None
+    if _c2_fail_closed_preconditions(raw, address, keys):
         return None
     programs = set(_programs_present(raw, keys))
     actual = _wallet_actual_deltas(raw, address, keys)
@@ -666,36 +907,43 @@ def classify_edge_tx(raw, address):
         })
         return [_event("lp", **fields)]
 
-    if G2G_SPAM in programs:
-        if not zero_token:
+    if G2G_SPAM in outer_programs:
+        if not zero_token or abs(sol) > G2G_MAX_NATIVE_LAMPORTS:
             return None
         return _classify_token_effects(
             actual, program=G2G_SPAM, instruction="afaf6d1f0d989bed",
-            reason="G2GMMDK zero-token (or SOL-only) verified; non-trade",
+            reason="G2GMMDK outer zero-token spam within cap; non-trade",
         )
 
-    if JITO_TIP_ROUTER in programs:
-        if not zero_token:
+    if JITO_TIP_ROUTER in outer_programs:
+        if not zero_token or abs(sol) > JITO_MAX_NATIVE_LAMPORTS:
             return None
         return _classify_token_effects(
             actual, program=JITO_TIP_ROUTER, instruction="claim",
-            reason="Jito Tip Router claim; zero token delta verified; non-trade",
+            reason="Jito Tip Router outer claim within cap; non-trade",
         )
 
-    if OKX_VAULT in programs:
-        if zero_token:
+    if OKX_VAULT in outer_programs:
+        if not zero_token:
             return _classify_token_effects(
                 actual, program=OKX_VAULT, instruction="custody",
-                reason="OKX Vault SOL-only custody move; non-trade",
+                reason="OKX Vault with token deltas uses transfer semantics",
             )
         return _classify_token_effects(
             actual, program=OKX_VAULT, instruction="custody",
-            reason="OKX Vault with token deltas uses transfer semantics",
+            reason="OKX Vault outer SOL-only custody move; non-trade",
         )
 
     if PUMP in programs:
         discs = _outer_discs(raw, keys, PUMP)
         if PUMP_DISTRIBUTE_DISC in discs:
+            quote_out = any(qty < 0 and mint in QUOTE_MINTS for mint, qty in tokens.items())
+            if quote_out:
+                classified = _two_leg_or_conversion(
+                    actual, program=PUMP, instruction="623691610246ad2b",
+                    reason="Pump disc 62369161 with quote out is a priced buy or unreadable, never transfer-in",
+                )
+                return _accepted_edge_trade(raw, address, keys, actual, classified)
             if abs(sol) > SOL_DUST_LAMPORTS:
                 return None
             outs = [mint for mint, qty in tokens.items() if qty < 0 and mint not in QUOTE_MINTS]

@@ -3086,35 +3086,24 @@ def decode_supported_swaps(transactions, address, *, allow_net_balance=True):
             if net and reason.startswith('Unrelated token transfer'):
                 unknown(reason)
             if not net:
-                from scanner.mass_search.plain_tx_read import TRADE_KINDS, classify_read_tx
+                from scanner.mass_search.plain_tx_read import (
+                    C2_COVERAGE_GAP_PREFIXES,
+                    TRADE_KINDS,
+                    classify_read_tx,
+                )
                 classified = classify_read_tx(raw, address)
-                fail_closed = any(
-                    marker in reason
-                    for marker in (
-                        'Unknown inner',
-                        '2440',
-                        'not a reviewed account layout',
-                        'Unrelated token transfer',
-                        'Third-party',
-                        'third-party',
-                        'Wallet token delta does not reconcile',
-                        'Missing wrapped SOL',
-                        'Route user account lacks',
-                        'nonce',
-                        'Nonce',
-                        'Recognized swap authority is not the investigated wallet',
-                        'Token account closes to another recipient',
-                        'Missing unsigned RPC integer',
-                        'Unsupported token permission',
-                        'Unsupported system operation',
-                        'Unreviewed outer program',
-                    )
+                # Invert: C2 trades run only for an explicit "no reviewed
+                # decoder for this venue" first-path reason. Allocate/assign,
+                # identity mismatch, mixed parsed/opaque, sponsored rent,
+                # nonce, unknown outer, and every other refusal stay unread.
+                allow_c2_trade = any(
+                    reason.startswith(prefix) for prefix in C2_COVERAGE_GAP_PREFIXES
                 )
                 if classified:
                     kept = []
                     for item in classified:
                         kind = item.get('kind')
-                        if kind in TRADE_KINDS and fail_closed:
+                        if kind in TRADE_KINDS and not allow_c2_trade:
                             continue
                         kept.append(item)
                     if kept:

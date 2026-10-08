@@ -53,7 +53,14 @@ def _record(signature, keys, instructions, *, pre_native, post_native, pre_token
         "slot": 100,
         "transaction": {
             "signatures": [signature],
-            "message": {"accountKeys": keys, "instructions": instructions},
+            "message": {
+                "accountKeys": [
+                    {"pubkey": key, "signer": index == 0, "writable": True} if isinstance(key, str) else key
+                    for index, key in enumerate(keys)
+                ] if keys and isinstance(keys[0], str) else keys,
+                "header": {"numRequiredSignatures": 1, "numReadonlySignedAccounts": 0, "numReadonlyUnsignedAccounts": max(0, len(keys) - 1)},
+                "instructions": instructions,
+            },
         },
         "meta": {
             "err": None,
@@ -390,6 +397,9 @@ def test_mixed_wallet_oracle_count_value_share():
     unread["meta"]["preBalances"].append(1)
     unread["meta"]["postBalances"].append(1)
     records = [_wrap(buy), *[_wrap(row) for row in plains], _wrap(unread)]
+    for offset, row in enumerate(records):
+        row["raw"]["slot"] = 100 + offset
+        row["slot"] = 100 + offset
     decoded = decode_supported_swaps(records, WALLET)
     relevant = build_result_relevant(
         records, decoded, WALLET, report_start=REPORT_START, report_end=REPORT_END,
@@ -420,6 +430,9 @@ def test_synthetic_before_after_replay_report():
     plains = [_sol_transfer(f"before-sol{i}", 3_000_000) for i in range(99)]
     buy = _edge_swap("before-buy", PUMP_SWAP, "33e685a4017f83ad", token_pre="0", token_post="1000", usdc_pre="2000000", usdc_post="0")
     records = [_wrap(row) for row in plains] + [_wrap(buy)]
+    for offset, row in enumerate(records):
+        row["raw"]["slot"] = 200 + offset
+        row["slot"] = 200 + offset
     decoded = decode_supported_swaps(records, WALLET)
     after = build_result_relevant(records, decoded, WALLET, report_start=REPORT_START, report_end=REPORT_END)
     # Pretend-before: only buy/sell/conversion count.
@@ -439,5 +452,201 @@ def test_auditor_does_not_import_scanner_classifier():
     import inspect
     source = inspect.getsource(auditor)
     assert "scanner.mass_search.plain_tx_read" not in source
-    assert "from scanner" not in source.split("auditor_classify_read")[0][-200:] or True
+    assert "import scanner" not in source
+    assert "from scanner" not in source
     assert auditor.auditor_classify_read is not classify_read_tx
+
+
+def test_c2_allocate_assign_identity_mixed_sponsored_and_graft_stay_unreadable():
+    """Material-1 negatives: first-path fail-closed proofs stay unread on app and auditor."""
+    sale = _edge_swap("fc-sale", PUMP_SWAP, "33e685a4017f83ad", token_pre="1000", token_post="0", usdc_pre="0", usdc_post="2000000")
+    cases = []
+
+    allocate = json.loads(__import__("json").dumps(sale))
+    allocate["transaction"]["message"]["instructions"].insert(0, {
+        "programId": SYSTEM_ID, "parsed": {"type": "allocate", "info": {"account": WALLET, "space": 1}},
+    })
+    allocate["transaction"]["message"]["accountKeys"].append({"pubkey": SYSTEM_ID, "signer": False, "writable": False})
+    allocate["meta"]["preBalances"].append(1)
+    allocate["meta"]["postBalances"].append(1)
+    cases.append(("allocate", allocate))
+
+    assign = json.loads(__import__("json").dumps(sale))
+    assign["transaction"]["message"]["instructions"].insert(0, {
+        "programId": SYSTEM_ID, "parsed": {"type": "assign", "info": {"account": WALLET, "owner": SYSTEM_ID}},
+    })
+    cases.append(("assign", assign))
+
+    nonce = json.loads(__import__("json").dumps(sale))
+    nonce["transaction"]["message"]["instructions"].insert(0, {
+        "programId": SYSTEM_ID, "parsed": {"type": "advanceNonce", "info": {
+            "nonceAccount": COUNTER, "nonceAuthority": WALLET,
+            "recentBlockhashesSysvar": "SysvarRecentB1ockHashes11111111111111111111",
+        }},
+    })
+    cases.append(("nonce", nonce))
+
+    unknown_outer = json.loads(__import__("json").dumps(sale))
+    unknown_outer["transaction"]["message"]["instructions"].insert(0, {
+        "programId": "UnknownOuter11111111111111111111111111111",
+        "accounts": [WALLET], "data": _disc("deadbeefdeadbeef"),
+    })
+    unknown_outer["transaction"]["message"]["accountKeys"].append(
+        {"pubkey": "UnknownOuter11111111111111111111111111111", "signer": False, "writable": False}
+    )
+    unknown_outer["meta"]["preBalances"].append(1)
+    unknown_outer["meta"]["postBalances"].append(1)
+    cases.append(("unknown-outer", unknown_outer))
+
+    mixed = json.loads(__import__("json").dumps(sale))
+    mixed["meta"]["innerInstructions"] = [{
+        "index": 0,
+        "instructions": [{
+            "programId": TOKEN,
+            "parsed": {"type": "transferChecked", "info": {
+                "source": TOKEN_ATA, "destination": COUNTER_ATA, "mint": MINT,
+                "tokenAmount": {"amount": "1000", "decimals": 6},
+            }},
+            "accounts": [],
+        }],
+    }]
+    cases.append(("mixed-empty-accounts", mixed))
+
+    identity = json.loads(__import__("json").dumps(sale))
+    identity["meta"]["innerInstructions"] = [{
+        "index": 0,
+        "instructions": [{
+            "programId": TOKEN,
+            "parsed": {"type": "transferChecked", "info": {
+                "source": TOKEN_ATA, "destination": COUNTER_ATA, "mint": MINT,
+                "tokenAmount": {"amount": "1000", "decimals": 9},
+            }},
+        }],
+    }]
+    cases.append(("wrong-decimals", identity))
+
+    sponsored = json.loads(__import__("json").dumps(sale))
+    sponsored["meta"]["postBalances"][1] = TOKEN_RENT + 500_000_000
+    cases.append(("sponsored-rent", sponsored))
+
+    pump = _edge_swap("fc-pump", PUMP, "66063d1201daebea", token_pre="0", token_post="1000", usdc_pre="0", usdc_post="0")
+    pump["meta"]["preBalances"][0] = 30_000_000_000
+    pump["meta"]["postBalances"][0] = 30_000_000_000 - 1_000_000_000 - 5000
+    pump["transaction"]["message"]["instructions"].insert(0, {
+        "programId": SYSTEM_ID, "parsed": {"type": "advanceNonce", "info": {
+            "nonceAccount": COUNTER, "nonceAuthority": WALLET,
+            "recentBlockhashesSysvar": "SysvarRecentB1ockHashes11111111111111111111",
+        }},
+    })
+    cases.append(("pump-nonce-graft", pump))
+
+    okx = _edge_swap("fc-okx", OKX_DEX_ROUTER, "aa2955b184501f35", token_pre="0", token_post="1000", usdc_pre="5000000", usdc_post="0")
+    okx["transaction"]["message"]["instructions"].insert(0, {
+        "programId": "UnknownOuter11111111111111111111111111111",
+        "accounts": [WALLET], "data": _disc("deadbeefdeadbeef"),
+    })
+    okx["transaction"]["message"]["accountKeys"].append(
+        {"pubkey": "UnknownOuter11111111111111111111111111111", "signer": False, "writable": False}
+    )
+    okx["meta"]["preBalances"].append(1)
+    okx["meta"]["postBalances"].append(1)
+    cases.append(("okx-unknown-outer", okx))
+
+    for label, raw in cases:
+        assert classify_read_tx(raw, WALLET) is None or all(
+            item.get("kind") not in ("buy", "sell", "conversion") for item in (classify_read_tx(raw, WALLET) or [])
+        ), label
+        decoded = _decode([raw])
+        assert "buy" not in _kinds(decoded, raw["signature"])
+        assert "sell" not in _kinds(decoded, raw["signature"])
+        assert auditor.auditor_classify_read(raw, WALLET) is None or all(
+            row.get("kind") not in ("buy", "sell", "conversion")
+            for row in (auditor.auditor_classify_read(raw, WALLET) or [])
+        ), label
+        assert auditor.reconstruct_record(_wrap(raw), WALLET) is None or auditor.reconstruct_record(_wrap(raw), WALLET).get("kind") not in ("buy", "sell", "conversion"), label
+
+
+def test_c2_g2g_inner_large_sol_unreadable():
+    raw = _sol_transfer("g2g-inner", 7_000_000_000)
+    raw["transaction"]["message"]["accountKeys"].append({"pubkey": G2G_SPAM, "signer": False, "writable": False})
+    raw["transaction"]["message"]["accountKeys"].append({"pubkey": "UnknownOuter11111111111111111111111111111", "signer": False, "writable": False})
+    raw["meta"]["preBalances"].extend([1, 1])
+    raw["meta"]["postBalances"].extend([1, 1])
+    raw["transaction"]["message"]["instructions"].insert(0, {
+        "programId": "UnknownOuter11111111111111111111111111111",
+        "accounts": [WALLET], "data": _disc("afaf6d1f0d989bed"),
+    })
+    raw["transaction"]["message"]["instructions"].insert(1, {
+        "programId": G2G_SPAM, "accounts": [WALLET], "data": _disc("afaf6d1f0d989bed"),
+    })
+    # Move G2G to inner so only unknown is outer.
+    raw["meta"]["innerInstructions"] = [{"index": 0, "instructions": [raw["transaction"]["message"]["instructions"].pop(1)]}]
+    assert classify_read_tx(raw, WALLET) is None
+    assert auditor.auditor_classify_read(raw, WALLET) is None
+
+
+def test_c2_pump_distribute_usdc_out_is_not_transfer_in():
+    raw = _edge_swap("pump-usdc", PUMP, "623691610246ad2b", token_pre="0", token_post="1000", usdc_pre="5000000", usdc_post="0")
+    classified = classify_read_tx(raw, WALLET)
+    assert classified is None or classified[0]["kind"] != "transfer_in"
+    aud = auditor.auditor_classify_read(raw, WALLET)
+    assert aud is None or aud[0]["kind"] != "transfer_in"
+
+
+def test_auditor_reads_compiled_system_transfer():
+    lamports = 1_000_000
+    payload = (2).to_bytes(4, "little") + lamports.to_bytes(8, "little")
+    encoded = base64.b64encode(payload).decode("ascii")
+    start = 2_000_000_000
+    fee = 5000
+    raw = _record(
+        "compiled-sol",
+        [WALLET, COUNTER, SYSTEM_ID, COMPUTE_ID],
+        [
+            {"programId": COMPUTE_ID, "accounts": [], "data": _disc("00")},
+            {"programId": SYSTEM_ID, "accounts": [WALLET, COUNTER], "data": [encoded, "base64"]},
+        ],
+        pre_native=[start, 1_000_000_000, 1, 1],
+        post_native=[start - lamports - fee, 1_000_000_000 + lamports, 1, 1],
+        pre_token=[], post_token=[],
+    )
+    classified = auditor.auditor_classify_read(raw, WALLET)
+    assert classified and classified[0]["kind"] == "non_trade"
+    assert classify_read_tx(raw, WALLET)[0]["kind"] == "non_trade"
+
+
+def test_c1_wrap_and_unwrap_reconcile_or_neither():
+    wsol_ata = "PlainReadWsolAta1111111111111111111111112"
+    keys = [WALLET, wsol_ata, SYSTEM_ID, TOKEN]
+    wrap = _record(
+        "wrap1", keys,
+        [
+            {"programId": SYSTEM_ID, "parsed": {"type": "transfer", "info": {"source": WALLET, "destination": wsol_ata, "lamports": 1_000_000_000}}},
+            {"programId": TOKEN, "parsed": {"type": "syncNative", "info": {"account": wsol_ata}}},
+        ],
+        pre_native=[3_000_000_000, TOKEN_RENT, 1, 1],
+        post_native=[1_999_995_000, TOKEN_RENT + 1_000_000_000, 1, 1],
+        pre_token=[{"accountIndex": 1, "mint": "So11111111111111111111111111111111111111112", "owner": WALLET, "uiTokenAmount": {"amount": "0", "decimals": 9}}],
+        post_token=[{"accountIndex": 1, "mint": "So11111111111111111111111111111111111111112", "owner": WALLET, "uiTokenAmount": {"amount": "1000000000", "decimals": 9}}],
+    )
+    unwrap = _record(
+        "unwrap1", keys,
+        [{"programId": TOKEN, "parsed": {"type": "closeAccount", "info": {"account": wsol_ata, "destination": WALLET, "owner": WALLET}}}],
+        pre_native=[1_000_000_000, TOKEN_RENT + 1_000_000_000, 1, 1],
+        post_native=[1_999_995_000 + TOKEN_RENT, 0, 1, 1],
+        pre_token=[{"accountIndex": 1, "mint": "So11111111111111111111111111111111111111112", "owner": WALLET, "uiTokenAmount": {"amount": "1000000000", "decimals": 9}}],
+        post_token=[],
+    )
+    wrap_app = classify_read_tx(wrap, WALLET)
+    wrap_aud = auditor.auditor_classify_read(wrap, WALLET)
+    unwrap_app = classify_read_tx(unwrap, WALLET)
+    unwrap_aud = auditor.auditor_classify_read(unwrap, WALLET)
+    # Either both wrap and unwrap read, or neither does.
+    assert bool(wrap_app) == bool(unwrap_app)
+    assert bool(wrap_aud) == bool(unwrap_aud)
+    if wrap_app:
+        assert wrap_app[0]["kind"] == "non_trade"
+        assert unwrap_app[0]["kind"] == "non_trade"
+    if wrap_aud:
+        assert wrap_aud[0]["kind"] == "non_trade"
+        assert unwrap_aud[0]["kind"] == "non_trade"
