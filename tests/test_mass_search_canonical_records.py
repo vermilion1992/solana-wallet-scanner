@@ -213,7 +213,8 @@ def test_replay_saves_honest_partial_report(store):
     assert report["coverage"]["decoded_swaps"] == 8
     assert report["coverage"]["failed_transactions"] == 19
     assert report["coverage"]["not_pnl"] is True
-    assert report["research_profile"]["scoped_pnl"] == "376.028087"
+    assert report["research_profile"]["headline_includes_losing_episodes"] is True
+    assert Decimal(str(report["research_profile"]["scoped_pnl"])) < 0
     assert report["research_profile"]["not_safe_to_copy"] is True
     assert report["funnel"]["A"]["state"] == "YES"
     assert report["funnel"]["B"]["state"] == "PARTIAL"

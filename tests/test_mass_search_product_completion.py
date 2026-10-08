@@ -102,7 +102,8 @@ def test_genuine_capture_market_trades_are_usdc_not_sol_or_rewards(store):
     assert report["material_exit"]["final_hold_seconds"] == 852
     assert report["material_exit"]["exit_90_seconds"] == 852
     assert report["material_exit"]["method_version"] == "material-exit-v2"
-    assert report["research_profile"]["scoped_pnl"] == "376.028087"
+    assert report["research_profile"]["headline_includes_losing_episodes"] is True
+    assert Decimal(str(report["research_profile"]["scoped_pnl"])) < 0
     assert report["research_profile"]["completed_known_cost_positions"] == 1
     assert report["research_profile"]["unresolved_basis_sales"] == 1
     assert report["research_profile"]["safe_to_copy"] is False

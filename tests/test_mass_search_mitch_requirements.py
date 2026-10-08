@@ -519,7 +519,11 @@ def test_research_screen_is_inconclusive_for_99_without_history(store):
     assert screen_after["counts"]["inconclusive"] >= 89
     profile = store.list("reports")[0]["research_profile"]
     assert profile["evidence_class"]["account"]["class"] == 5
-    assert profile["evidence_class"]["position"]["class"] in (1, 2)
+    # Rank-1 has an in-window unflattened USDC loser. Folding it makes the
+    # headline negative, so the position is not a positive known-basis result.
+    assert profile["evidence_class"]["position"]["class"] == 5
+    assert profile["headline_includes_losing_episodes"] is True
+    assert Decimal(str(profile["completed_episode_net"])) < 0
     assert profile["candidate_assessment"]["net_realised"] is None
     assert profile["qualification_category"]["category"] == "analysed_incomplete"
     assert profile["qualification_category"]["screening_separate"] is True
