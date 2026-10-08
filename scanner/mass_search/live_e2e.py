@@ -105,6 +105,21 @@ from scanner.mass_search.live_e2e_ledger import (
     spend_from_ledger,
     verify_receipt_chain,
 )
+from scanner.mass_search.throughput import (
+    DEFAULT_WORKERS,
+    THROUGHPUT_VERSION,
+    TokenBucket,
+    batch_funnel_report,
+    gather_capped,
+    load_cached_page,
+    raw_page_cache_key,
+    run_phase4_pool,
+    screen_signatures,
+    signatures_credit_note,
+    signatures_rpc_body,
+    store_cached_page,
+    write_batch_report,
+)
 from scanner.mass_search.readable_first import (
     FUNNEL_VERSION as READABLE_FIRST_VERSION,
     SAMPLE_PAGES_DEFAULT,
@@ -143,6 +158,11 @@ from scanner.mass_search.seed_sources import (
     DURABLE_TOKEN_MIN_LIQUIDITY_USD,
     DURABLE_TOKEN_MIN_MARKET_CAP_USD,
     FIRST_BLOCK_EXCLUSION_SECONDS,
+    HELIUS_SIGNATURES_CREDIT_NOTE,
+    HELIUS_SIGNATURES_HISTORY_CAP,
+    HELIUS_SIGNATURES_METHOD,
+    HELIUS_SIGNATURES_PAGE_SIZE,
+    HELIUS_SIGNATURES_UNITS,
     TOKEN_INTERSECT_WINDOWS,
     TRIAGE_SAMPLES,
     NANSEN_DEX_TRADES_HISTORY_FROM,
@@ -295,6 +315,7 @@ PINNED_LEDGER_ABSOLUTE = COMMITTED_LEDGER_ABSOLUTE
 MIN_FREE_DISK_MB = 2048
 MIN_FREE_DISK_ENV = "SCANNER_MIN_FREE_DISK_MB"
 DRY_RUN_HELIUS_PLACEHOLDER_RAW = b'{"jsonrpc":"2.0","result":{"data":[],"paginationToken":null}}'
+DRY_RUN_SIGNATURES_PLACEHOLDER_RAW = b'{"jsonrpc":"2.0","result":[]}'
 PHASE4_RESULT_VERSION = "phase4-raw-bot-rate-v1"
 DRY_RUN_LEDGER_DIRNAME = ".dry-run-ledger"
 BIRDEYE_KEY_ENV = "BIRDEYE_API_KEY"
@@ -634,6 +655,28 @@ def parse_wallets(value):
                 out.append(str(row["address"]).strip())
         return out
     return [part.strip() for part in str(value).split(",") if part.strip()]
+
+
+def _stage_spend_blob(bucket, provider):
+    spend = bucket if isinstance(bucket, dict) else {}
+    return {
+        "provider": provider,
+        "units": int(spend.get(f"{provider}_units") or spend.get("units") or 0),
+        "requests": int(spend.get(f"{provider}_requests") or spend.get("requests") or 0),
+    }
+
+
+def parse_timeframes(value):
+    """30/90/180 funnel windows. Empty keeps the caller default."""
+    if value in (None, "", []):
+        return None
+    if isinstance(value, (list, tuple)):
+        items = [int(item) for item in value]
+    else:
+        items = [int(part.strip()) for part in str(value).split(",") if part.strip()]
+    if not items or any(item < 1 for item in items):
+        raise LiveE2EError("timeframes must be positive day counts")
+    return list(dict.fromkeys(items))
 
 
 def window_bounds(window_days, earlier_history_days, *, end=None, history_to_first=False, history_start_unix=None, report_window_days=None):
@@ -1625,12 +1668,18 @@ def plan_request_counts(config, state=None):
         birdeye_retry_headroom=BIRDEYE_RATE_LIMIT_RETRIES,
         nansen_calibrate=bool(calibrate_path),
         helius_signatures_prescreen=bool(
-            config.get("helius_signatures_prescreen") or config.get("readable_first")
+            config.get("helius_signatures_prescreen")
+            or config.get("readable_first")
+            or config.get("batch")
         ),
         helius_signatures_history_cap=config.get("helius_signatures_history_cap"),
         nansen_timeframes=(
             config.get("nansen_timeframes")
-            or (NANSEN_TIMEFRAMES_FUNNEL if config.get("readable_first") else None)
+            or (
+                NANSEN_TIMEFRAMES_FUNNEL
+                if (config.get("readable_first") or config.get("batch"))
+                else None
+            )
         ),
     )
     if 1 in phases and (discovery or not wallets):
@@ -1651,7 +1700,22 @@ def plan_request_counts(config, state=None):
     n = len(wallets)
     n3 = len(phase3_wallets(config, state)) if 3 in phases else 0
     triage = helius_triage_enabled(sources)
-    helius_phase2 = ((3 * n) if triage else (2 * n)) if 2 in phases else 0
+    signatures_on = bool(
+        config.get("helius_signatures_prescreen")
+        or config.get("readable_first")
+        or config.get("batch")
+    )
+    sample_pages = (
+        int(config.get("readable_first_sample_pages") or SAMPLE_PAGES_DEFAULT)
+        if (config.get("readable_first") or config.get("batch"))
+        else 1
+    )
+    sig_blob = (seed_plan.get("per_source") or {}).get("helius_signatures_prescreen") or {}
+    if 2 in phases and signatures_on:
+        sig_requests = int(sig_blob.get("requests") or 0)
+        helius_phase2 = sig_requests + ((3 * n) if triage else (n * sample_pages))
+    else:
+        helius_phase2 = ((3 * n) if triage else (2 * n)) if 2 in phases else 0
     page_estimates = estimate_phase3_pages(config, state) if 3 in phases else {}
     per_wallet_cap = config.get("per_wallet_cap")
     if 3 in phases:
@@ -1664,11 +1728,16 @@ def plan_request_counts(config, state=None):
         remaining = phase3_remaining_budget(config, state, None, triage=triage)
         helius_phase3 = min(2, remaining if remaining is not None else 2) * n3
     helius_units = 0
+    helius_phase2_units = 0
     if 2 in phases:
-        if triage:
-            helius_units += n * 3 * FULL_100_UNITS
+        if signatures_on:
+            helius_phase2_units = int(sig_blob.get("units") or 0)
+            helius_phase2_units += (n * 3 * FULL_100_UNITS) if triage else (n * sample_pages * FULL_100_UNITS)
+        elif triage:
+            helius_phase2_units = n * 3 * FULL_100_UNITS
         else:
-            helius_units += n * (SIG_ONLY_UNITS + FULL_100_UNITS)
+            helius_phase2_units = n * (SIG_ONLY_UNITS + FULL_100_UNITS)
+        helius_units += helius_phase2_units
     if 3 in phases:
         helius_units += helius_phase3 * FULL_1000_UNITS
     payload = {
@@ -1700,14 +1769,25 @@ def plan_request_counts(config, state=None):
             "2": {
                 "provider": "helius",
                 "requests": helius_phase2,
-                "units": (
-                    (n * 3 * FULL_100_UNITS) if triage else (n * (SIG_ONLY_UNITS + FULL_100_UNITS))
-                ) if 2 in phases else 0,
+                "units": helius_phase2_units if 2 in phases else 0,
                 "billing_unit": "helius_credit",
+                "helius_signatures": signatures_credit_note() if signatures_on else None,
                 "note": (
-                    "3 bounded full samples (earliest/recent/older-month, limit 100, 10 CU each) per wallet"
-                    if triage else
-                    "1 signatures-only (limit 1000, 10 CU) + 1 full sample (limit 100, 10 CU) per wallet"
+                    (
+                        f"Cheap {HELIUS_SIGNATURES_METHOD} (1 credit / {HELIUS_SIGNATURES_PAGE_SIZE} "
+                        f"sigs) then "
+                        + (
+                            "3 bounded full samples (10 CU each)"
+                            if triage else
+                            f"{sample_pages} enhanced sample page(s) (10 CU each)"
+                        )
+                    )
+                    if signatures_on else
+                    (
+                        "3 bounded full samples (earliest/recent/older-month, limit 100, 10 CU each) per wallet"
+                        if triage else
+                        "1 signatures-only (limit 1000, 10 CU) + 1 full sample (limit 100, 10 CU) per wallet"
+                    )
                 ),
             },
             "3": {
@@ -1743,7 +1823,7 @@ def plan_request_counts(config, state=None):
         "caps": config["caps"],
         "PRODUCT_READY": False,
     }
-    if config.get("readable_first"):
+    if config.get("readable_first") or config.get("batch"):
         rf_plan = readable_first_plan(
             leaderboard_pages=config.get("nansen_leaderboard_pages") or 1,
             timeframes=config.get("nansen_timeframes") or NANSEN_TIMEFRAMES_FUNNEL,
@@ -1762,8 +1842,14 @@ def plan_request_counts(config, state=None):
             "readable_first_version": READABLE_FIRST_VERSION,
             "readable_first_plan": rf_plan,
             "readable_first_dry_run": format_dry_run_plan(rf_plan),
+            "throughput_version": THROUGHPUT_VERSION,
+            "batch": bool(config.get("batch")),
+            "helius_signatures": signatures_credit_note(),
         }
         return payload
+    if signatures_on:
+        payload["helius_signatures"] = signatures_credit_note()
+        payload["throughput_version"] = THROUGHPUT_VERSION
     return payload
 
 
@@ -1855,6 +1941,27 @@ class RecorderTransport:
             "units": units,
         })
         raw = DRY_RUN_HELIUS_PLACEHOLDER_RAW
+        return {
+            "records": [],
+            "pagination_token": None,
+            "http_status": 200,
+            "raw_bytes": raw,
+            "evidence_sha256": _sha256_bytes(raw),
+            "units": units,
+            "external_requests": 1,
+        }
+
+    async def signatures(self, address, *, options, page_index=0):
+        units = HELIUS_SIGNATURES_UNITS
+        self.calls.append({
+            "provider": "helius",
+            "method": HELIUS_SIGNATURES_METHOD,
+            "address": address,
+            "page_index": page_index,
+            "options": dict(options or {}),
+            "units": units,
+        })
+        raw = DRY_RUN_SIGNATURES_PLACEHOLDER_RAW
         return {
             "records": [],
             "pagination_token": None,
@@ -2383,6 +2490,147 @@ async def _live_helius(address, *, options, page_index=0):
     }
 
 
+async def _live_signatures(address, *, options, page_index=0):
+    """Helius Standard JSON-RPC getSignaturesForAddress. 1 credit / 1000 sigs."""
+    key = os.environ.get(HELIUS_KEY_ENV) or os.environ.get("HELIUS_KEY")
+    if not key:
+        raise SourceError("UNAUTHORIZED", "HELIUS_API_KEY is not present in this runtime")
+    import httpx
+
+    await pace_helius_call()
+    payload = signatures_rpc_body(
+        address,
+        limit=int((options or {}).get("limit") or HELIUS_SIGNATURES_PAGE_SIZE),
+        before=(options or {}).get("before"),
+    )
+    payload["id"] = page_index + 1
+    headers = {"content-type": "application/json"}
+    async with httpx.AsyncClient(follow_redirects=False, timeout=httpx.Timeout(40, connect=10)) as client:
+        response = await client.post(HELIUS_ENDPOINT, params={"api-key": key}, json=payload, headers=headers)
+    raw = response.content
+    status = response.status_code
+    if status in (401, 403):
+        raise SourceError("ENTITLEMENT_BLOCKED", "Helius rejected the key or plan", http_status=status)
+    if status == 429:
+        backoff = _helius_backoff_seconds()
+        if backoff:
+            await asyncio.sleep(backoff)
+        raise SourceError("RATE_LIMITED", "Helius rate limit", http_status=status, retryable=True)
+    try:
+        body = response.json()
+    except ValueError as error:
+        raise SourceError("UNSUPPORTED_SCHEMA", "Helius returned non-JSON", http_status=status) from error
+    if status != 200 or not isinstance(body, dict) or body.get("error"):
+        raise SourceError("UNSUPPORTED_SCHEMA", "Unexpected Helius signatures response", http_status=status)
+    records = _signatures_records_from_body(body)
+    return {
+        "records": records,
+        "pagination_token": (records[-1].get("signature") if records else None),
+        "http_status": status,
+        "raw_bytes": raw,
+        "evidence_sha256": _sha256_bytes(raw),
+        "cleaned": sanitize_jsonrpc_body(body),
+        "units": HELIUS_SIGNATURES_UNITS,
+        "external_requests": 1,
+    }
+
+
+def _signatures_records_from_body(body):
+    result = (body or {}).get("result")
+    if isinstance(result, list):
+        return [row for row in result if isinstance(row, dict)]
+    if isinstance(result, dict):
+        for key in ("value", "data", "signatures"):
+            rows = result.get(key)
+            if isinstance(rows, list):
+                return [row for row in rows if isinstance(row, dict)]
+    return []
+
+
+def _helius_records_from_raw(raw, *, signatures=False):
+    try:
+        body = json.loads(raw.decode("utf-8") if isinstance(raw, (bytes, bytearray)) else raw)
+    except (UnicodeDecodeError, json.JSONDecodeError, AttributeError):
+        return [], None
+    if not isinstance(body, dict):
+        return [], None
+    if signatures:
+        records = _signatures_records_from_body(body)
+        token = records[-1].get("signature") if records else None
+        return records, token
+    result = body.get("result") or {}
+    data = result.get("data") if isinstance(result, dict) else None
+    if data is None and isinstance(result, list):
+        data = result
+    records = list(data) if isinstance(data, list) else []
+    token = result.get("paginationToken") if isinstance(result, dict) else None
+    return records, token
+
+
+def page_cache_root(config):
+    root = config.get("page_cache_dir") or config.get("output_dir")
+    return Path(root)
+
+
+def _raw_page_key(address, options, page_index, *, method):
+    opts = options or {}
+    start = opts.get("startTime") or opts.get("start_unix")
+    end = opts.get("endTime") or opts.get("end_unix")
+    block = ((opts.get("filters") or {}).get("blockTime") or {})
+    if start in (None, ""):
+        start = block.get("gte") or 0
+    if end in (None, ""):
+        end = block.get("lt") or block.get("lte") or 0
+    return raw_page_cache_key(
+        wallet=address,
+        start_unix=start,
+        end_unix=end,
+        method=method,
+        page=page_index,
+        extra={
+            "limit": opts.get("limit"),
+            "details": opts.get("transactionDetails"),
+            "before": opts.get("before"),
+            "paginationToken": opts.get("paginationToken"),
+        },
+    )
+
+
+def _lookup_raw_page_cache(config, address, options, page_index, *, method, units):
+    if config.get("dry_run"):
+        return None
+    root = page_cache_root(config)
+    key = _raw_page_key(address, options, page_index, method=method)
+    cached = load_cached_page(root, key)
+    if cached is None or is_dry_run_helius_placeholder(cached):
+        return None
+    records, token = _helius_records_from_raw(cached, signatures=(method == HELIUS_SIGNATURES_METHOD))
+    return {
+        "records": records,
+        "pagination_token": token,
+        "http_status": 200,
+        "raw_bytes": cached,
+        "evidence_sha256": _sha256_bytes(cached),
+        "units": 0,
+        "external_requests": 0,
+        "cache_hit": True,
+        "cache_key": key,
+        "planned_units": units,
+    }
+
+
+def _store_raw_page_cache(config, address, options, page_index, raw, *, method):
+    if config.get("dry_run") or not raw:
+        return
+    if is_dry_run_helius_placeholder(raw):
+        return
+    store_cached_page(
+        page_cache_root(config),
+        _raw_page_key(address, options, page_index, method=method),
+        raw if isinstance(raw, (bytes, bytearray)) else bytes(raw),
+    )
+
+
 def _runtime_secrets():
     values = []
     for name in ("BIRDEYE_API_KEY", "HELIUS_API_KEY", "HELIUS_KEY", NANSEN_KEY_ENV):
@@ -2857,6 +3105,11 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
         _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
         return {**adopted, "adopted_existing_file": True}
+    cached = _lookup_raw_page_cache(
+        config, address, options, page_index, method=HELIUS_METHOD, units=units,
+    )
+    if cached is not None:
+        return cached
     hard_stop_if_needed(
         config, state["spend"], provider="helius", units=units,
         phase=phase, phase_spend=state.get("phase_spend"),
@@ -2919,6 +3172,7 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
         })
         _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
+        _store_raw_page_cache(config, address, options, page_index, raw, method=HELIUS_METHOD)
         return {**result, "evidence_sha256": digest, "units": units}
     except Exception:
         if reservation and not charged:
@@ -2939,6 +3193,158 @@ async def _dispatch_helius(store, grant, config, state, transport, address, opti
         _account_spend(state, provider="helius", units=units, phase=phase)
         save_state(config["output_dir"], state)
         raise
+
+
+async def _dispatch_signatures(store, grant, config, state, transport, address, *, before=None, phase=2, page_index=0):
+    """Ledgered getSignaturesForAddress. 1 credit. Cache hit pays nothing."""
+    entry = provider_entry(grant, "helius")
+    units = HELIUS_SIGNATURES_UNITS
+    options = {"limit": HELIUS_SIGNATURES_PAGE_SIZE, "before": before}
+    cursor = f"{HELIUS_SIGNATURES_METHOD}:{before or ''}"
+    cached = _lookup_raw_page_cache(
+        config, address, options, page_index, method=HELIUS_SIGNATURES_METHOD, units=units,
+    )
+    if cached is not None:
+        return cached
+    base = request_identity("helius", wallet=address, phase=phase, page=page_index, cursor=cursor)
+    key, existing, replay = _next_receipt_key(store, base, explicit_retry=config.get("explicit_retry"))
+    if replay:
+        reconcile_state_spend(store, state)
+        save_state(config["output_dir"], state)
+        relative = f"raw/phase{phase}/{address}/signatures{page_index}.bin"
+        path = Path(config["output_dir"]) / relative
+        if path.is_file() and path.stat().st_size > 0:
+            raw = path.read_bytes()
+            records, token = _helius_records_from_raw(raw, signatures=True)
+            return {
+                "records": records,
+                "pagination_token": token,
+                "http_status": 200,
+                "raw_bytes": raw,
+                "evidence_sha256": _sha256_bytes(raw),
+                "units": 0,
+                "external_requests": 0,
+                "replayed_from_receipt": True,
+            }
+    hard_stop_if_needed(
+        config, state["spend"], provider="helius", units=units,
+        phase=phase, phase_spend=state.get("phase_spend"),
+    )
+    if config.get("per_wallet_cap") is not None:
+        used = int((state.get("phase3") or {}).get(address, {}).get("requests") or 0)
+        used += int((state.get("phase2") or {}).get(address, {}).get("requests") or 0)
+        if used >= int(config["per_wallet_cap"]):
+            raise SourceError("WALLET_CAP", "Per-wallet request cap reached; continue with other wallets")
+    reservation = None
+    _put_receipt(config, store, grant, key, {
+        "provider": "helius",
+        "wallet": address,
+        "phase": phase,
+        "page": page_index,
+        "cursor": cursor,
+        "method": HELIUS_SIGNATURES_METHOD,
+        "units": units,
+        "state": "reserved",
+        "response_id": uuid.uuid4().hex,
+    })
+    if not config.get("dry_run"):
+        reservation = store.reserve("helius", HELIUS_SIGNATURES_METHOD, units, entry["cycle_start"], entry["max_units"])
+        store.dispatch(reservation)
+        _put_receipt(config, store, grant, key, {
+            **(load_receipt(store, key) or {}),
+            "state": "dispatched",
+            "reservation_id": reservation,
+            "units": units,
+            "method": HELIUS_SIGNATURES_METHOD,
+        })
+    charged = False
+    try:
+        result = await transport(address, options=options, page_index=page_index)
+        if reservation:
+            store.settle(reservation, charge=True)
+            charged = True
+        raw = result.get("raw_bytes") or b""
+        if config.get("dry_run"):
+            digest = result.get("evidence_sha256") or _sha256_bytes(raw)
+        else:
+            digest = _save_raw(
+                config["output_dir"],
+                f"raw/phase{phase}/{address}/signatures{page_index}.bin",
+                raw,
+            )
+        _put_receipt(config, store, grant, key, {
+            "provider": "helius",
+            "wallet": address,
+            "phase": phase,
+            "page": page_index,
+            "cursor": cursor,
+            "method": HELIUS_SIGNATURES_METHOD,
+            "units": units,
+            "state": "consumed",
+            "sha256": digest,
+            "reservation_id": reservation,
+        })
+        _account_spend(state, provider="helius", units=units, phase=phase)
+        save_state(config["output_dir"], state)
+        _store_raw_page_cache(config, address, options, page_index, raw, method=HELIUS_SIGNATURES_METHOD)
+        return {**result, "evidence_sha256": digest, "units": units}
+    except Exception:
+        if reservation and not charged:
+            try:
+                store.settle(reservation, charge=True)
+            except ValueError:
+                pass
+        _put_receipt(config, store, grant, key, {
+            "provider": "helius",
+            "wallet": address,
+            "phase": phase,
+            "page": page_index,
+            "cursor": cursor,
+            "method": HELIUS_SIGNATURES_METHOD,
+            "units": units,
+            "state": "failed",
+            "reservation_id": reservation,
+        })
+        _account_spend(state, provider="helius", units=units, phase=phase)
+        save_state(config["output_dir"], state)
+        raise
+
+
+async def _phase2_cheap_signatures(store, grant, config, state, transport, address):
+    """Full-history getSignaturesForAddress walk. Drop or defer only."""
+    history_cap = first_defined_int(config.get("helius_signatures_history_cap"))
+    if history_cap is None:
+        history_cap = HELIUS_SIGNATURES_HISTORY_CAP
+    page_size = HELIUS_SIGNATURES_PAGE_SIZE
+    max_pages = (max(history_cap, 1) + page_size - 1) // page_size
+    rows = []
+    before = None
+    requests = 0
+    units = 0
+    for page_index in range(max_pages):
+        page = await _dispatch_signatures(
+            store, grant, config, state, transport, address,
+            before=before, phase=2, page_index=page_index,
+        )
+        records = [row for row in (page.get("records") or []) if isinstance(row, dict)]
+        requests += 1
+        units += int(page.get("units") or 0)
+        rows.extend(records)
+        if len(records) < page_size:
+            break
+        before = records[-1].get("signature")
+        if not before:
+            break
+        if len(rows) >= history_cap:
+            break
+    screen = screen_signatures(rows, history_cap=history_cap)
+    return {
+        "screen": screen,
+        "rows": rows,
+        "requests": requests,
+        "units": units,
+        "credit_note": signatures_credit_note(),
+    }
 
 
 async def _birdeye_seed_call(store, grant, config, state, recorder, *, path, params, operation, units, wallet, page, identity, source=None):
@@ -4172,9 +4578,12 @@ def _triage_third_sample(bounds, samples, *, address=None):
 
 
 def _stamp_readable_first(row, records, address, config, *, decoded=None):
-    if not config.get("readable_first"):
+    if not (config.get("readable_first") or config.get("batch")):
         return row
-    attached = attach_sample(row, records, address, decoded=decoded)
+    attached = attach_sample(
+        row, records, address, decoded=decoded,
+        threshold=config.get("readable_share_threshold"),
+    )
     if row.get("bot") or row.get("drop_reason") == GT_ECONOMIC_TRADES_RULE:
         attached["funnel_decision"] = "dropped"
         attached["funnel_reason"] = GT_ECONOMIC_TRADES_RULE
@@ -4190,157 +4599,156 @@ async def phase2_prescreen(store, grant, config, state, recorder):
         return {"skipped": True}
     bounds = config["bounds"]
     transport = recorder.helius if config["dry_run"] else _live_helius
+    sig_transport = recorder.signatures if config["dry_run"] else _live_signatures
     thresholds = config.get("prescreen") or {}
     min_in_window = int(thresholds.get("min_in_window_tx") or 0)
     max_unsupported_share = Decimal(str(thresholds.get("max_unsupported_share") or "1"))
     max_bot_rate = Decimal(str(thresholds.get("max_bot_rate") or "1"))
     triage = helius_triage_enabled(config.get("seed_sources"))
+    signatures_on = bool(
+        config.get("helius_signatures_prescreen")
+        or config.get("readable_first")
+        or config.get("batch")
+    )
+    concurrency = max(1, int(config.get("helius_concurrency") or 1))
     rows = []
+    state_lock = asyncio.Lock()
+
+    async def _one(address):
+        return await _phase2_one_wallet(
+            store, grant, config, state, recorder, address,
+            bounds=bounds,
+            transport=transport,
+            sig_transport=sig_transport,
+            min_in_window=min_in_window,
+            max_unsupported_share=max_unsupported_share,
+            max_bot_rate=max_bot_rate,
+            triage=triage,
+            signatures_on=signatures_on,
+            state_lock=state_lock,
+        )
+
+    if concurrency > 1:
+        interval = os.environ.get(HELIUS_MIN_INTERVAL_ENV)
+        try:
+            interval_s = float(interval) if interval not in (None, "") else DEFAULT_HELIUS_MIN_INTERVAL
+        except (TypeError, ValueError):
+            interval_s = DEFAULT_HELIUS_MIN_INTERVAL
+        bucket = TokenBucket(
+            1.0 / max(interval_s, 0.001),
+            burst=concurrency,
+        )
+        return _phase2_finish(
+            config, state,
+            await gather_capped([lambda a=address: _one(a) for address in config["wallets"]], bucket, concurrency=concurrency),
+        )
     for address in config["wallets"]:
-        if address in (state.get("phase2") or {}) and (state["phase2"][address] or {}).get("done"):
-            rows.append(state["phase2"][address])
-            continue
-        if triage:
-            samples = []
-            sample_records = []
-            try:
-                specs = list(_triage_sample_options(bounds))
-                for page_index in range(TRIAGE_SAMPLES):
-                    if page_index == 2:
-                        name, options = _triage_third_sample(bounds, samples, address=address)
-                    else:
-                        name, options = specs[page_index]
-                    page = await _dispatch_helius(
-                        store, grant, config, state, transport, address, options,
-                        phase=2, page_index=page_index,
-                    )
-                    records = page.get("records") or []
-                    events = []
-                    try:
-                        from scanner.mass_search.canonical_records import canonical_decode_records
-                        decoded = decode_supported_swaps(canonical_decode_records(records), address)
-                        events = list(decoded.get("events") or [])
-                    except Exception:
-                        events = []
-                    samples.append({"name": name, "records": records, "events": events})
-                    sample_records.extend(records)
-                    seed_source = seed_fields_for_wallet(state, address).get("seed_source") or "helius_triage"
-                    _account_source_spend(state, seed_source, provider="helius", units=FULL_100_UNITS)
-            except SourceError as error:
-                if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
-                    row = {
-                        "address": address,
-                        "dropped": True,
-                        "drop_reason": str(getattr(error, "state")).lower(),
-                        "done": True,
-                        "history_complete": False,
-                        "triage": True,
-                        **seed_fields_for_wallet(state, address),
-                    }
+        rows.append(await _one(address))
+    return _phase2_finish(config, state, rows)
+
+
+def _phase2_finish(config, state, rows):
+    ranked = sorted(rows, key=lambda row: (
+        row.get("dropped") is True,
+        -float(row.get("coverability_rank_key") or 0),
+        row["address"],
+    ))
+    kept = [row["address"] for row in ranked if not row.get("dropped") and not row.get("deferred")]
+    if config.get("readable_first") or config.get("batch"):
+        walked = walk_ranked(ranked, n=config.get("readable_first_n") or 0)
+        extra = {
+            "phase2_kept": kept,
+            "readable_first_n": config.get("readable_first_n"),
+            "throughput_version": THROUGHPUT_VERSION,
+            "batch": bool(config.get("batch")),
+        }
+        write_funnel_report(config["output_dir"], walked, extra=extra)
+        kept = [row.get("address") for row in walked["kept"] if row.get("address")]
+        state["funnel_walk"] = walked
+    return {"wallets": ranked, "kept": kept}
+
+
+async def _phase2_one_wallet(
+    store, grant, config, state, recorder, address, *,
+    bounds, transport, sig_transport, min_in_window, max_unsupported_share,
+    max_bot_rate, triage, signatures_on, state_lock,
+):
+    if address in (state.get("phase2") or {}) and (state["phase2"][address] or {}).get("done"):
+        return state["phase2"][address]
+    cheap = None
+    if signatures_on:
+        try:
+            cheap = await _phase2_cheap_signatures(
+                store, grant, config, state, sig_transport, address,
+            )
+        except SourceError as error:
+            if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE", "CAP_EXCEEDED"):
+                row = {
+                    "address": address,
+                    "dropped": False,
+                    "deferred": True,
+                    "drop_reason": "signatures_history_cap" if getattr(error, "state", None) != "WALLET_CAP" else "wallet_cap",
+                    "funnel_decision": "deferred_unreadable",
+                    "funnel_reason": str(getattr(error, "state")).lower(),
+                    "done": True,
+                    "history_complete": False,
+                    "can_only_drop_or_defer": True,
+                    "helius_signatures": signatures_credit_note(),
+                    **seed_fields_for_wallet(state, address),
+                }
+                async with state_lock:
                     state.setdefault("phase2", {})[address] = row
                     save_state(config["output_dir"], state)
-                    rows.append(row)
-                    continue
-                raise
-            programs = classify_programs(sample_records, address)
-            in_window = len(samples[1]["records"] if len(samples) > 1 else sample_records)
-            unsupported_share = Decimal(programs["decodable_share"] or "1")
-            unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
-            bot_rate = compute_bot_rate(sample_records, config.get("window_days") or 30)
-            triage_events = [
-                event
-                for sample in samples
-                for event in (sample.get("events") or [])
-            ]
-            econ_rate = economic_trade_rate(triage_events) if triage_events else {"max": None, "max_on": None}
-            bot_flag = is_economic_bot(econ_rate.get("max"))
-            bundle = detect_bundle_or_distribution(sample_records, address)
-            seeds = seed_counterparties_from_records(sample_records, address)
-            if seeds:
-                state.setdefault("seed_counterparties", {})[address] = list(seeds)
-                pooled = list(state.get("wallets") or config.get("wallets") or [])
-                for seed in seeds:
-                    addr = seed.get("address") if isinstance(seed, dict) else seed
-                    if addr and addr not in pooled:
-                        pooled.append(addr)
-                state["wallets"] = pooled
-            decoded_sigs = _decoded_swap_signatures(sample_records, address)
-            has_known_basis_buys = any(
-                event.get("kind") == "buy"
-                for sample in samples
-                for event in (sample.get("events") or [])
-            ) or bool(decoded_sigs)
-            created = False
-            try:
-                created = bool(
-                    assess_history_completeness(sample_records, None, address=address).get("wallet_created_in_range")
-                )
-            except Exception:
-                created = False
-            decision = helius_triage_decision(
-                samples,
-                now_unix=bounds.get("report_end_unix"),
-                bundle=bundle,
-                created_in_range=created,
-                address=address,
-            )
-            dropped = bool(decision["dropped"])
-            drop_reason = ",".join(decision["drop_reasons"]) if dropped else None
+                return row
+            raise
+        screen = cheap["screen"]
+        if screen.get("deferred"):
             row = {
                 "address": address,
-                "in_window_tx_count": in_window,
-                "sample_records": len(sample_records),
-                "decodable_share": programs["decodable_share"],
-                "unsupported_share": str(unsupported_share),
-                "supported_venue_value_share": programs.get("supported_venue_value_share"),
-                "has_known_basis_buys": has_known_basis_buys,
-                "bundle": bundle.get("excluded"),
-                "bundle_reasons": bundle.get("reasons") or [],
-                "controlled_pair": bundle.get("controlled_pair") or [],
-                "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
-                "bot": bot_flag,
-                "bot_rate": str(bot_rate),
-                "bot_threshold_rule": BOT_THRESHOLD_RULE,
-                "program_blockers": programs["blockers"],
-                "coverability_rank_key": str(prescreen_rank_score({
-                    "supported_venue_value_share": programs.get("supported_venue_value_share") or "0",
-                    "has_known_basis_buys": has_known_basis_buys,
-                    "bundle": bundle.get("excluded"),
-                    "bot": bot_flag,
-                    "controlled_pair": bundle.get("controlled_pair"),
-                })),
-                "dropped": dropped,
-                "drop_reason": drop_reason,
-                "requests": 3,
+                "dropped": False,
+                "deferred": True,
+                "drop_reason": "history_above_cap",
+                "funnel_decision": "deferred_unreadable",
+                "funnel_reason": "history_above_cap",
                 "done": True,
-                "triage": True,
-                "triage_decision": decision,
-                "max_economic_trades_in_one_day": decision.get("max_economic_trades_in_one_day"),
-                "max_economic_trades_on": decision.get("max_economic_trades_on"),
-                "economic_trades_by_utc_day": decision.get("economic_trades_by_utc_day") or decision.get("economic_trades_by_day"),
-                "count_kinds": list(COUNT_KINDS),
+                "history_complete": False,
+                "signatures_screen": screen,
+                "first_sig_unix": screen.get("first_sig_unix"),
+                "requests": cheap["requests"],
+                "can_only_drop_or_defer": True,
+                "helius_signatures": cheap.get("credit_note"),
                 **seed_fields_for_wallet(state, address),
             }
-            row = _stamp_readable_first(row, sample_records, address, config)
-            state.setdefault("phase2", {})[address] = row
-            save_state(config["output_dir"], state)
-            rows.append(row)
-            continue
-        sig_opts = gta_options(
-            details="signatures",
-            limit=GTA_MAX_LIMIT,
-            start_unix=bounds["report_start_unix"],
-            end_unix=bounds["report_end_unix"],
-        )
+            async with state_lock:
+                state.setdefault("phase2", {})[address] = row
+                save_state(config["output_dir"], state)
+            return row
+    if triage:
+        samples = []
+        sample_records = []
         try:
-            sigs = await _dispatch_helius(store, grant, config, state, transport, address, sig_opts, phase=2, page_index=0)
-            sample_opts = gta_options(
-                details="full",
-                limit=GTA_SAMPLE_LIMIT,
-                start_unix=bounds["history_start_unix"],
-                end_unix=bounds["report_end_unix"],
-            )
-            sample = await _dispatch_helius(store, grant, config, state, transport, address, sample_opts, phase=2, page_index=1)
+            specs = list(_triage_sample_options(bounds))
+            for page_index in range(TRIAGE_SAMPLES):
+                if page_index == 2:
+                    name, options = _triage_third_sample(bounds, samples, address=address)
+                else:
+                    name, options = specs[page_index]
+                page = await _dispatch_helius(
+                    store, grant, config, state, transport, address, options,
+                    phase=2, page_index=page_index,
+                )
+                records = page.get("records") or []
+                events = []
+                try:
+                    from scanner.mass_search.canonical_records import canonical_decode_records
+                    decoded = decode_supported_swaps(canonical_decode_records(records), address)
+                    events = list(decoded.get("events") or [])
+                except Exception:
+                    events = []
+                samples.append({"name": name, "records": records, "events": events})
+                sample_records.extend(records)
+                seed_source = seed_fields_for_wallet(state, address).get("seed_source") or "helius_triage"
+                _account_source_spend(state, seed_source, provider="helius", units=FULL_100_UNITS)
         except SourceError as error:
             if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
                 row = {
@@ -4349,26 +4757,25 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                     "drop_reason": str(getattr(error, "state")).lower(),
                     "done": True,
                     "history_complete": False,
+                    "triage": True,
+                    **seed_fields_for_wallet(state, address),
                 }
-                state.setdefault("phase2", {})[address] = row
-                save_state(config["output_dir"], state)
-                rows.append(row)
-                continue
+                async with state_lock:
+                    state.setdefault("phase2", {})[address] = row
+                    save_state(config["output_dir"], state)
+                return row
             raise
-        sample_records = sample.get("records") or []
         programs = classify_programs(sample_records, address)
-        in_window = len(sigs.get("records") or [])
+        in_window = len(samples[1]["records"] if len(samples) > 1 else sample_records)
         unsupported_share = Decimal(programs["decodable_share"] or "1")
         unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
-        bot_rate = compute_bot_rate(sigs.get("records") or [], config.get("window_days") or 30)
-        sample_events = []
-        try:
-            from scanner.mass_search.canonical_records import canonical_decode_records
-            decoded_sample = decode_supported_swaps(canonical_decode_records(sample_records), address)
-            sample_events = list(decoded_sample.get("events") or [])
-        except Exception:
-            sample_events = []
-        econ_rate = economic_trade_rate(sample_events) if sample_events else {"max": None, "max_on": None}
+        bot_rate = compute_bot_rate(sample_records, config.get("window_days") or 30)
+        triage_events = [
+            event
+            for sample in samples
+            for event in (sample.get("events") or [])
+        ]
+        econ_rate = economic_trade_rate(triage_events) if triage_events else {"max": None, "max_on": None}
         bot_flag = is_economic_bot(econ_rate.get("max"))
         bundle = detect_bundle_or_distribution(sample_records, address)
         seeds = seed_counterparties_from_records(sample_records, address)
@@ -4381,49 +4788,27 @@ async def phase2_prescreen(store, grant, config, state, recorder):
                     pooled.append(addr)
             state["wallets"] = pooled
         decoded_sigs = _decoded_swap_signatures(sample_records, address)
-        has_known_basis_buys = False
+        has_known_basis_buys = any(
+            event.get("kind") == "buy"
+            for sample in samples
+            for event in (sample.get("events") or [])
+        ) or bool(decoded_sigs)
+        created = False
         try:
-            from scanner.mass_search.canonical_records import canonical_decode_records
-            decoded = decode_supported_swaps(canonical_decode_records(sample_records), address)
-            has_known_basis_buys = any(event.get("kind") == "buy" for event in decoded.get("events") or [])
-        except Exception:
-            has_known_basis_buys = bool(decoded_sigs)
-        dropped = False
-        drop_reason = None
-        if in_window < min_in_window:
-            dropped = True
-            drop_reason = "below_min_in_window_tx"
-        elif unsupported_share > max_unsupported_share:
-            dropped = True
-            drop_reason = "unsupported_program_heavy"
-        elif bot_flag:
-            dropped = True
-            drop_reason = GT_ECONOMIC_TRADES_RULE
-        elif bundle.get("excluded"):
-            dropped = True
-            drop_reason = bundle.get("reason") or "bundle_or_distribution"
-        elif cheap_prescreen_enabled(config.get("seed_sources")):
-            created = False
-            try:
-                created = bool(
-                    assess_history_completeness(sample_records, None, address=address).get("wallet_created_in_range")
-                )
-            except Exception:
-                created = False
-            history_days = history_span_days(
-                sample_records,
-                created_in_range=created,
-                now_unix=bounds.get("report_end_unix"),
+            created = bool(
+                assess_history_completeness(sample_records, None, address=address).get("wallet_created_in_range")
             )
-            decision = cheap_prescreen_decision({
-                "trades_per_day": bot_rate,
-                "history_days": history_days,
-            })
-            if decision["dropped"]:
-                dropped = True
-                drop_reason = ",".join(decision["drop_reasons"])
-                state.setdefault("cheap_prescreen", {})[address] = decision
-                record_seed_metadata(state, address, SEED_PRESCREEN_FILTER, decision)
+        except Exception:
+            created = False
+        decision = helius_triage_decision(
+            samples,
+            now_unix=bounds.get("report_end_unix"),
+            bundle=bundle,
+            created_in_range=created,
+            address=address,
+        )
+        dropped = bool(decision["dropped"])
+        drop_reason = ",".join(decision["drop_reasons"]) if dropped else None
         row = {
             "address": address,
             "in_window_tx_count": in_window,
@@ -4439,8 +4824,6 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             "bot": bot_flag,
             "bot_rate": str(bot_rate),
             "bot_threshold_rule": BOT_THRESHOLD_RULE,
-            "max_economic_trades_in_one_day": econ_rate.get("max"),
-            "max_economic_trades_on": econ_rate.get("max_on"),
             "program_blockers": programs["blockers"],
             "coverability_rank_key": str(prescreen_rank_score({
                 "supported_venue_value_share": programs.get("supported_venue_value_share") or "0",
@@ -4451,28 +4834,172 @@ async def phase2_prescreen(store, grant, config, state, recorder):
             })),
             "dropped": dropped,
             "drop_reason": drop_reason,
-            "requests": 2,
+            "requests": 3,
             "done": True,
+            "triage": True,
+            "triage_decision": decision,
+            "max_economic_trades_in_one_day": decision.get("max_economic_trades_in_one_day"),
+            "max_economic_trades_on": decision.get("max_economic_trades_on"),
+            "economic_trades_by_utc_day": decision.get("economic_trades_by_utc_day") or decision.get("economic_trades_by_day"),
+            "count_kinds": list(COUNT_KINDS),
             **seed_fields_for_wallet(state, address),
         }
         row = _stamp_readable_first(row, sample_records, address, config)
+        if cheap:
+            row["signatures_screen"] = cheap["screen"]
+            row["first_sig_unix"] = cheap["screen"].get("first_sig_unix")
+            row["requests"] = int(row.get("requests") or 0) + int(cheap.get("requests") or 0)
+            row["can_only_drop_or_defer"] = True
+        async with state_lock:
+            state.setdefault("phase2", {})[address] = row
+            save_state(config["output_dir"], state)
+        return row
+    sample_opts = gta_options(
+        details="full",
+        limit=GTA_SAMPLE_LIMIT,
+        start_unix=bounds["history_start_unix"],
+        end_unix=bounds["report_end_unix"],
+    )
+    try:
+        if signatures_on:
+            sigs = {"records": (cheap or {}).get("rows") or []}
+            sample = await _dispatch_helius(
+                store, grant, config, state, transport, address, sample_opts,
+                phase=2, page_index=10000,
+            )
+        else:
+            sig_opts = gta_options(
+                details="signatures",
+                limit=GTA_MAX_LIMIT,
+                start_unix=bounds["report_start_unix"],
+                end_unix=bounds["report_end_unix"],
+            )
+            sigs = await _dispatch_helius(store, grant, config, state, transport, address, sig_opts, phase=2, page_index=0)
+            sample = await _dispatch_helius(store, grant, config, state, transport, address, sample_opts, phase=2, page_index=1)
+    except SourceError as error:
+        if getattr(error, "state", None) in ("WALLET_CAP", "MISSING_CAPTURE", "UNRECEIPTED_PAGE"):
+            row = {
+                "address": address,
+                "dropped": True,
+                "drop_reason": str(getattr(error, "state")).lower(),
+                "done": True,
+                "history_complete": False,
+            }
+            async with state_lock:
+                state.setdefault("phase2", {})[address] = row
+                save_state(config["output_dir"], state)
+            return row
+        raise
+    sample_records = sample.get("records") or []
+    programs = classify_programs(sample_records, address)
+    in_window = len(sigs.get("records") or [])
+    unsupported_share = Decimal(programs["decodable_share"] or "1")
+    unsupported_share = Decimal("1") - unsupported_share if programs["decodable_share"] is not None else Decimal("0")
+    bot_rate = compute_bot_rate(sigs.get("records") or [], config.get("window_days") or 30)
+    sample_events = []
+    try:
+        from scanner.mass_search.canonical_records import canonical_decode_records
+        decoded_sample = decode_supported_swaps(canonical_decode_records(sample_records), address)
+        sample_events = list(decoded_sample.get("events") or [])
+    except Exception:
+        sample_events = []
+    econ_rate = economic_trade_rate(sample_events) if sample_events else {"max": None, "max_on": None}
+    bot_flag = is_economic_bot(econ_rate.get("max"))
+    bundle = detect_bundle_or_distribution(sample_records, address)
+    seeds = seed_counterparties_from_records(sample_records, address)
+    if seeds:
+        state.setdefault("seed_counterparties", {})[address] = list(seeds)
+        pooled = list(state.get("wallets") or config.get("wallets") or [])
+        for seed in seeds:
+            addr = seed.get("address") if isinstance(seed, dict) else seed
+            if addr and addr not in pooled:
+                pooled.append(addr)
+        state["wallets"] = pooled
+    decoded_sigs = _decoded_swap_signatures(sample_records, address)
+    has_known_basis_buys = False
+    try:
+        from scanner.mass_search.canonical_records import canonical_decode_records
+        decoded = decode_supported_swaps(canonical_decode_records(sample_records), address)
+        has_known_basis_buys = any(event.get("kind") == "buy" for event in decoded.get("events") or [])
+    except Exception:
+        has_known_basis_buys = bool(decoded_sigs)
+    dropped = False
+    drop_reason = None
+    if in_window < min_in_window:
+        dropped = True
+        drop_reason = "below_min_in_window_tx"
+    elif unsupported_share > max_unsupported_share:
+        dropped = True
+        drop_reason = "unsupported_program_heavy"
+    elif bot_flag:
+        dropped = True
+        drop_reason = GT_ECONOMIC_TRADES_RULE
+    elif bundle.get("excluded"):
+        dropped = True
+        drop_reason = bundle.get("reason") or "bundle_or_distribution"
+    elif cheap_prescreen_enabled(config.get("seed_sources")):
+        created = False
+        try:
+            created = bool(
+                assess_history_completeness(sample_records, None, address=address).get("wallet_created_in_range")
+            )
+        except Exception:
+            created = False
+        history_days = history_span_days(
+            sample_records,
+            created_in_range=created,
+            now_unix=bounds.get("report_end_unix"),
+        )
+        decision = cheap_prescreen_decision({
+            "trades_per_day": bot_rate,
+            "history_days": history_days,
+        })
+        if decision["dropped"]:
+            dropped = True
+            drop_reason = ",".join(decision["drop_reasons"])
+            state.setdefault("cheap_prescreen", {})[address] = decision
+            record_seed_metadata(state, address, SEED_PRESCREEN_FILTER, decision)
+    row = {
+        "address": address,
+        "in_window_tx_count": in_window,
+        "sample_records": len(sample_records),
+        "decodable_share": programs["decodable_share"],
+        "unsupported_share": str(unsupported_share),
+        "supported_venue_value_share": programs.get("supported_venue_value_share"),
+        "has_known_basis_buys": has_known_basis_buys,
+        "bundle": bundle.get("excluded"),
+        "bundle_reasons": bundle.get("reasons") or [],
+        "controlled_pair": bundle.get("controlled_pair") or [],
+        "controlled_pair_explanation": bundle.get("controlled_pair_explanation"),
+        "bot": bot_flag,
+        "bot_rate": str(bot_rate),
+        "bot_threshold_rule": BOT_THRESHOLD_RULE,
+        "max_economic_trades_in_one_day": econ_rate.get("max"),
+        "max_economic_trades_on": econ_rate.get("max_on"),
+        "program_blockers": programs["blockers"],
+        "coverability_rank_key": str(prescreen_rank_score({
+            "supported_venue_value_share": programs.get("supported_venue_value_share") or "0",
+            "has_known_basis_buys": has_known_basis_buys,
+            "bundle": bundle.get("excluded"),
+            "bot": bot_flag,
+            "controlled_pair": bundle.get("controlled_pair"),
+        })),
+        "dropped": dropped,
+        "drop_reason": drop_reason,
+        "requests": (1 if signatures_on else 2) + (int((cheap or {}).get("requests") or 0) if signatures_on else 0),
+        "done": True,
+        **seed_fields_for_wallet(state, address),
+    }
+    if cheap:
+        row["signatures_screen"] = cheap["screen"]
+        row["first_sig_unix"] = cheap["screen"].get("first_sig_unix")
+        row["can_only_drop_or_defer"] = True
+        row["helius_signatures"] = cheap.get("credit_note")
+    row = _stamp_readable_first(row, sample_records, address, config)
+    async with state_lock:
         state.setdefault("phase2", {})[address] = row
         save_state(config["output_dir"], state)
-        rows.append(row)
-    ranked = sorted(rows, key=lambda row: (
-        row.get("dropped") is True,
-        -float(row.get("coverability_rank_key") or 0),
-        row["address"],
-    ))
-    kept = [row["address"] for row in ranked if not row.get("dropped")]
-    if config.get("readable_first"):
-        walked = walk_ranked(ranked, n=config.get("readable_first_n") or 0)
-        write_funnel_report(config["output_dir"], walked, extra={
-            "phase2_kept": kept,
-            "readable_first_n": config.get("readable_first_n"),
-        })
-        kept = [row.get("address") for row in walked["kept"] if row.get("address")]
-    return {"wallets": ranked, "kept": kept}
+    return row
 
 
 async def phase3_history(store, grant, config, state, recorder):
@@ -4796,13 +5323,58 @@ def _phase4_insufficient_row(state, address, reason, expected_pages):
     }
 
 
+def phase4_process_worker(payload):
+    """Picklable per-wallet Phase 4 worker. Own store. Fail-closed isolation."""
+    address = (payload or {}).get("address")
+    config = (payload or {}).get("config") or {}
+    state = (payload or {}).get("state") or {}
+    store = None
+    try:
+        store, _ = open_grant_store(
+            payload.get("authorization_id") or config.get("authorization_id"),
+            payload.get("ledger_dir") or config.get("ledger_dir"),
+            home=payload.get("ledger_home") or config.get("ledger_home"),
+        )
+        return _phase4_one_wallet(store, config, state, address)
+    except Exception as error:
+        return {
+            "address": address,
+            "independently_audited": False,
+            "lead_level": "insufficient_evidence",
+            "blocker": f"phase4_wallet_failed:{type(error).__name__}: {error}",
+            "PRODUCT_READY": False,
+        }
+    finally:
+        if store is not None:
+            store.close()
+
+
 def phase4_offline(store, config, state):
     if 4 not in config["phases"]:
         return {"skipped": True}
+    wallets = list(config.get("wallets") or [])
+    workers = max(1, int(config.get("phase4_workers") or 1))
+    if workers > 1 and len(wallets) > 1:
+        payloads = [{
+            "address": address,
+            "config": config,
+            "state": state,
+            "authorization_id": config.get("authorization_id"),
+            "ledger_dir": config.get("ledger_dir"),
+            "ledger_home": config.get("ledger_home"),
+        } for address in wallets]
+        return {
+            "wallets": run_phase4_pool(
+                payloads, phase4_process_worker, workers=workers, backend="process",
+            ),
+        }
+    return {"wallets": [_phase4_one_wallet(store, config, state, address) for address in wallets]}
+
+
+def _phase4_one_wallet(store, config, state, address):
     bounds = config["bounds"]
-    rows = []
     timeout_sec = phase4_wallet_timeout_sec(config)
-    for address in config["wallets"]:
+    if True:
         raw_dir = Path(config["output_dir"]) / "raw" / "phase3" / address
         records = []
         expected_pages = int(((state.get("phase3") or {}).get(address) or {}).get("pages") or 0)
@@ -4849,7 +5421,7 @@ def phase4_offline(store, config, state):
                 records.extend(data)
         if missing_page:
             known = known_trade_rate_from_state(state, address)
-            rows.append({
+            return {
                 "address": address,
                 "coverage_count_share": None,
                 "coverage_value_share": None,
@@ -4869,11 +5441,10 @@ def phase4_offline(store, config, state):
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 **seed_fields_for_wallet(state, address),
                 "PRODUCT_READY": False,
-            })
-            continue
+            }
         if not records:
             known = known_trade_rate_from_state(state, address)
-            rows.append({
+            return {
                 "address": address,
                 "coverage_count_share": None,
                 "coverage_value_share": None,
@@ -4892,8 +5463,7 @@ def phase4_offline(store, config, state):
                 "program_blockers": ((state.get("phase2") or {}).get(address) or {}).get("program_blockers") or [],
                 **seed_fields_for_wallet(state, address),
                 "PRODUCT_READY": False,
-            })
-            continue
+            }
         def _on_phase4_alarm(signum, frame):
             raise Phase4Timeout(f"wallet {address} exceeded {timeout_sec}s")
 
@@ -4977,23 +5547,22 @@ def phase4_offline(store, config, state):
             if deadline is not None and time.monotonic() >= deadline:
                 raise Phase4Timeout(f"wallet {address} exceeded {timeout_sec}s")
             row = _phase4_wallet_row(report, _authoritative_saved_profile(report) or profile)
-            rows.append(row)
+            return row
         except Phase4Timeout as error:
-            rows.append(_phase4_insufficient_row(
+            return _phase4_insufficient_row(
                 state, address, f"phase4_timeout: {error}", expected_pages,
-            ))
+            )
         except Exception as error:
-            rows.append(_phase4_insufficient_row(
+            return _phase4_insufficient_row(
                 state, address,
                 f"phase4_wallet_failed:{type(error).__name__}: {error}",
                 expected_pages,
-            ))
+            )
         finally:
             if timeout_sec:
                 signal.setitimer(signal.ITIMER_REAL, 0)
                 if old_handler is not None:
                     signal.signal(signal.SIGALRM, old_handler)
-    return {"wallets": rows}
 
 
 def human_summary(results):
@@ -5378,7 +5947,7 @@ def validate_config(raw):
         "run_caps": raw.get("run_caps") or None,
         "history_age_rule": raw.get("history_age_rule") or HISTORY_AGE_RULE,
         "bot_threshold_rule": raw.get("bot_threshold_rule") or BOT_THRESHOLD_RULE,
-        "readable_first": bool(raw.get("readable_first")),
+        "readable_first": bool(raw.get("readable_first") or raw.get("batch")),
         "readable_first_n": (
             int(raw["readable_first_n"])
             if raw.get("readable_first_n") not in (None, "")
@@ -5389,14 +5958,41 @@ def validate_config(raw):
             if raw.get("readable_first_sample_pages") not in (None, "")
             else SAMPLE_PAGES_DEFAULT
         ),
+        "readable_share_threshold": (
+            str(raw["readable_share_threshold"])
+            if raw.get("readable_share_threshold") not in (None, "")
+            else None
+        ),
+        "batch": bool(raw.get("batch")),
+        "phase4_workers": (
+            int(raw["phase4_workers"])
+            if raw.get("phase4_workers") not in (None, "")
+            else DEFAULT_WORKERS if raw.get("batch") else 1
+        ),
+        "helius_concurrency": (
+            int(raw["helius_concurrency"])
+            if raw.get("helius_concurrency") not in (None, "")
+            else (4 if raw.get("batch") else 1)
+        ),
         "helius_signatures_prescreen": bool(
-            raw.get("helius_signatures_prescreen") or raw.get("readable_first")
+            raw.get("helius_signatures_prescreen")
+            or raw.get("readable_first")
+            or raw.get("batch")
+        ),
+        "helius_signatures_history_cap": (
+            int(raw["helius_signatures_history_cap"])
+            if raw.get("helius_signatures_history_cap") not in (None, "")
+            else HELIUS_SIGNATURES_HISTORY_CAP
         ),
         "nansen_timeframes": (
-            list(raw.get("nansen_timeframes"))
-            if raw.get("nansen_timeframes")
-            else (list(NANSEN_TIMEFRAMES_FUNNEL) if raw.get("readable_first") else None)
+            parse_timeframes(raw.get("nansen_timeframes") or raw.get("funnel_windows"))
+            or (
+                list(NANSEN_TIMEFRAMES_FUNNEL)
+                if (raw.get("readable_first") or raw.get("batch") or raw.get("funnel_windows"))
+                else None
+            )
         ),
+        "page_cache_dir": raw.get("page_cache_dir") or None,
         "PRODUCT_READY": False,
     }
 
@@ -5489,6 +6085,7 @@ async def run_live_e2e(raw):
         reconcile_state_spend(store, state)
         save_state(output_dir, state)
         recorder = RecorderTransport()
+        wall_s_by_stage = {}
         plan = plan_request_counts(config, state)
         plan["within_caps"] = within_caps(plan, config["caps"])
         plan["gta_page_size"] = gta_page_size_note()
@@ -5504,7 +6101,9 @@ async def run_live_e2e(raw):
             identity = discovery_identity(config)
             discovery_done = identity in (state.get("discoveries") or {})
             if 1 in config["phases"] and (1 not in done or (config.get("discovery") and not discovery_done)):
+                _t = time.monotonic()
                 state["phase1"] = await phase1_discovery(store, config["grant"], config, state, recorder)
+                wall_s_by_stage["discovery"] = round(time.monotonic() - _t, 4)
                 apply_cheap_prescreen_phase1(config, state)
                 apply_nansen_vendor_prefilter(config, state)
                 state["phases_done"] = sorted(done | {1})
@@ -5530,7 +6129,10 @@ async def run_live_e2e(raw):
                 if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
             ]
             if 2 in config["phases"] and (2 not in done or phase2_pending):
+                _t = time.monotonic()
                 state["phase2_result"] = await phase2_prescreen(store, config["grant"], config, state, recorder)
+                wall_s_by_stage["bot_prescreen"] = round(time.monotonic() - _t, 4)
+                wall_s_by_stage["decodability_sample"] = wall_s_by_stage["bot_prescreen"]
                 still = [
                     addr for addr in wanted
                     if not ((state.get("phase2") or {}).get(addr) or {}).get("done")
@@ -5552,7 +6154,9 @@ async def run_live_e2e(raw):
                 if phase3_needs_more_pages(config, state, addr, triage=triage)
             ]
             if 3 in config["phases"] and (3 not in done or phase3_pending):
+                _t = time.monotonic()
                 state["phase3_result"] = await phase3_history(store, config["grant"], config, state, recorder)
+                wall_s_by_stage["deep_pull"] = round(time.monotonic() - _t, 4)
                 still3 = [
                     addr for addr in wanted3
                     if not ((state.get("phase3") or {}).get(addr) or {}).get("done")
@@ -5583,7 +6187,9 @@ async def run_live_e2e(raw):
                 else:
                     replay_config = dict(config)
                     replay_config["wallets"] = wanted4
+                    _t = time.monotonic()
                     phase4 = phase4_offline(store, replay_config, state)
+                    wall_s_by_stage["phase4"] = round(time.monotonic() - _t, 4)
                     state["phase4_wallets"] = list(phase4.get("wallets") or [])
                     state["phase4_fingerprint"] = fingerprint
                     if state["phase4_wallets"]:
@@ -5666,6 +6272,37 @@ async def run_live_e2e(raw):
         results["cost_per_audit_worthy"] = cost_per_audit_worthy(state.get("source_spend") or {}, audit_worthy)
         results["seed_is_not"] = "evidence"
         results["count_kinds"] = list(COUNT_KINDS)
+        if config.get("batch") or config.get("readable_first"):
+            phase_spend = state.get("phase_spend") or {}
+            spend_by_stage = {
+                "discovery": _stage_spend_blob(phase_spend.get("1"), "nansen"),
+                "rule_a": _stage_spend_blob(phase_spend.get("1"), "nansen"),
+                "bot_prescreen": _stage_spend_blob(phase_spend.get("2"), "helius"),
+                "decodability_sample": _stage_spend_blob(phase_spend.get("2"), "helius"),
+                "deep_pull": _stage_spend_blob(phase_spend.get("3"), "helius"),
+            }
+            walked = state.get("funnel_walk") or {
+                "kept": [
+                    row for row in results["wallets"]
+                    if row.get("independently_audited") or row.get("funnel_decision") == "keep"
+                ],
+                "deferred_unreadable": [],
+                "dropped": [],
+                "unscreened": list(state.get("unscreened_wallets") or []),
+            }
+            batch_report = batch_funnel_report(
+                walked,
+                spend_by_stage=spend_by_stage,
+                wall_s_by_stage=wall_s_by_stage,
+                audit_worthy=sum(audit_worthy.values()) if audit_worthy else 0,
+                extra={
+                    "plan": plan.get("readable_first_plan") or plan,
+                    "status": status,
+                    "throughput_version": THROUGHPUT_VERSION,
+                },
+            )
+            write_batch_report(output_dir, batch_report)
+            results["throughput_batch"] = batch_report
         _write_json(output_dir / RESULTS_NAME, redact_secrets(results))
         (output_dir / SUMMARY_NAME).write_text(redact_text(human_summary(results)), encoding="utf-8")
         return results
@@ -5843,6 +6480,66 @@ def build_arg_parser():
         type=int,
         default=SAMPLE_PAGES_DEFAULT,
         help="Enhanced pages for the decodability sample (default 2, ~100 txs).",
+    )
+    parser.add_argument(
+        "--batch",
+        dest="batch",
+        action="store_true",
+        help=(
+            "Run the full funnel for N seeds: 30/90/180 discovery, cheap "
+            "getSignaturesForAddress pre-screen, decodability sample, deep-pull "
+            "top N. Writes THROUGHPUT_BATCH.json. Drop or defer only."
+        ),
+    )
+    parser.add_argument(
+        "--phase4-workers",
+        dest="phase4_workers",
+        type=int,
+        default=None,
+        help="Phase 4 process-pool workers (default 1; batch default 2). Isolation fail-closed.",
+    )
+    parser.add_argument(
+        "--helius-concurrency",
+        dest="helius_concurrency",
+        type=int,
+        default=None,
+        help="Concurrent Helius wallets under the token bucket (default 1; batch default 4).",
+    )
+    parser.add_argument(
+        "--funnel-windows",
+        dest="funnel_windows",
+        default="",
+        help="Comma-separated Nansen windows in days (default 30,90,180 with --batch/--readable-first).",
+    )
+    parser.add_argument(
+        "--nansen-timeframes",
+        dest="nansen_timeframes",
+        default="",
+        help="Alias for --funnel-windows.",
+    )
+    parser.add_argument(
+        "--helius-signatures-prescreen",
+        dest="helius_signatures_prescreen",
+        action="store_true",
+        help="Cheap getSignaturesForAddress full-history screen before any enhanced pull (1 credit / 1000).",
+    )
+    parser.add_argument(
+        "--helius-signatures-history-cap",
+        dest="helius_signatures_history_cap",
+        type=int,
+        default=HELIUS_SIGNATURES_HISTORY_CAP,
+        help=f"Defer wallets whose raw history exceeds this many signatures (default {HELIUS_SIGNATURES_HISTORY_CAP}).",
+    )
+    parser.add_argument(
+        "--readable-share-threshold",
+        dest="readable_share_threshold",
+        default="",
+        help="Decodability sample keep threshold (default 0.97). Drop or defer only.",
+    )
+    parser.add_argument(
+        "--page-cache-dir",
+        dest="page_cache_dir",
+        help="Reuse paid raw pages across runs (keyed by wallet+range+method). Never pay twice.",
     )
     parser.add_argument(
         "--exclude-known-from",
